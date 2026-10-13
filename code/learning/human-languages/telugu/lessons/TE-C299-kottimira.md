@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU299-KOTTIMIRA
 prerequisites: [TE-C299-sanagalu, TE-C299-avalu]
 sounds: []
 roots: [telugu-kottimira-coriander]
-etymology_hook: "kottimīra: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'coriander'"
+etymology_hook: "kottimīra: probably the northern kothmīr, from Sanskrit kustumbarī 'coriander' (CDIAL 3380)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C299-avalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **కొత్తిమీర** (*kottimīra*) is uncertain. DEDR and CDIAL list no word of this shape meaning "coriander".
+**కొత్తిమీర** (*kottimīra*) probably comes from the northern coriander word, Hindi *kothmīr*, Oriya *kothimiri*, which CDIAL 3380 traces to Sanskrit *kustumbarī*, "coriander"; CDIAL calls that word non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

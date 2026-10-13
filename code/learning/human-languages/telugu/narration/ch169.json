@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Sore, Blister, Rash, Scar, Sprain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e42f54248b140425",
+  "sourceHash": "fnv1a64:19ab850b15490ffd",
   "lessons": [
     {
       "id": "TE-C169-pundu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7297afb0e282b4ea",
+      "sourceHash": "fnv1a64:4bc503324fb5148c",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "బొబ్బ (bobba) is native Dravidian. DEDR 4455 lists bobba, \"blister\", with Kannada bobbe and Malayalam pokkuḷa, \"blister\". DEDR compares Nepali phoko, \"blister\" (CDIAL 8391)."
+              "text": "బొబ్బ (bobba) is native Dravidian. DEDR 4455 lists bobba, \"blister\", with Kannada bobbe and Malayalam pokkuḷa, \"blister\". DEDR compares Nepali phoko, \"blister\" (CDIAL 8391), a word group CDIAL thinks probably came from Dravidian."
             }
           ]
         },

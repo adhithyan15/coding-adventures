@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU302-DUDA
 prerequisites: [TE-C301-petrolu, TE-C302-eddu]
 sounds: []
 roots: [dravidian-duuda-calf]
-etymology_hook: "dūḍa: Dravidian as far as DEDR records it; DEDR 3378 lists dūḍa 'calf'"
+etymology_hook: "dūḍa: native Dravidian; DEDR 3378 lists dūḍa 'calf' with Gondi ḍuḍḍe 'buffalo calf'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C302-eddu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**దూడ** (*dūḍa*) is Dravidian as far as DEDR records it: DEDR 3378 lists *dūḍa*, "a calf".
+**దూడ** (*dūḍa*) is native Dravidian. DEDR 3378 lists *dūḍa*, "a calf", with Gondi *ḍuḍḍe*, "female young of a buffalo".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

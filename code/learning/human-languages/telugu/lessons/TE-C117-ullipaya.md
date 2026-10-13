@@ -15,7 +15,7 @@ concept_tag: TE-THINGS117-ULLIPAYA
 prerequisites: [TE-C117-mamidipandu, TE-C117-kobbari]
 sounds: []
 roots: [telugu-ulli-onion, dravidian-kaay-fruit]
-etymology_hook: "ullipāya: origin of ulli 'onion' uncertain; pāya is kāya 'fruit, pod' (DEDR 1459)"
+etymology_hook: "ullipāya: native ulli 'onion' (DEDR 705) + pāya, from kāya 'fruit, pod' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C117-kobbari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of *ulli*, "onion", the first part of **ఉల్లిపాయ** (*ullipāya*), is uncertain: DEDR does not list it in this sense. The second part is *kāya*, "unripe fruit, pod" (DEDR 1459), which DEDR compares with the Indo-Aryan *\*kacca*, "raw" (CDIAL 2613).
+*Ulli*, "onion", the first part of **ఉల్లిపాయ** (*ullipāya*), is native Dravidian: DEDR 705 lists Telugu *ulli*, "onion, garlic", with Tamil and Kannada *uḷḷi*, and compares Sanskrit *ūlī*. The second part is *kāya*, "unripe fruit, pod" (DEDR 1459), which DEDR compares with the Indo-Aryan *\*kacca*, "raw" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

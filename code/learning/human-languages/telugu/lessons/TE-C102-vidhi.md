@@ -15,7 +15,7 @@ concept_tag: TE-LOC102-VIDHI
 prerequisites: [TE-C101-venaka, TE-C102-madhyalo]
 sounds: []
 roots: [sanskrit-vithi]
-etymology_hook: "vīdhi ← Sanskrit vīthi 'road, street', a tatsama (CDIAL 12050)"
+etymology_hook: "vīdhi ← Sanskrit vīthi 'road, street' (CDIAL 12050), lightly reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C102-madhyalo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**వీధి** (*vīdhi*) is Sanskrit *vīthi*, "road, street", taken over whole as a learned loan, a tatsama (CDIAL 12050).
+**వీధి** (*vīdhi*) comes from Sanskrit *vīthi*, "road, street" (CDIAL 12050), lightly reshaped (*th* to *dh*): a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

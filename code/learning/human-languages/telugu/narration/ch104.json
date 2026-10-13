@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Shore, Office, Garden, Corner, Turn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:03b93e53dd52d7dd",
+  "sourceHash": "fnv1a64:cada1c870754079b",
   "lessons": [
     {
       "id": "TE-C104-tiram",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65e69788a54de3fd",
+      "sourceHash": "fnv1a64:a781eb553b084926",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of మలుపు (malupu) is uncertain. DEDR lists the same shape only as a verb meaning \"to extinguish\" (DEDR 4831), a different word."
+              "text": "మలుపు (malupu) is probably native Dravidian. DEDR 4734 lists Telugu malapu, \"to turn back\", and maluku, \"a turn, twist\", with Kannada malaku, \"a turn, bend\", but not malupu itself. DEDR 4831 malupu, \"to extinguish\", is a different word."
             }
           ]
         },

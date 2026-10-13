@@ -15,7 +15,7 @@ concept_tag: TE-THINGS132-DHOTI
 prerequisites: [TE-C132-saksu, TE-C132-kotu]
 sounds: []
 roots: [hindustani-dhoti]
-etymology_hook: "dhōti ← Hindustani dhotī, which CDIAL 6883 sets under *dhauta 'cloth'"
+etymology_hook: "dhōti ← Hindustani dhotī, which CDIAL 6881 sets under *dhōtta 'cloth'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C132-kotu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ధోతి** (*dhōti*) is a loan from Hindustani *dhotī*, which CDIAL 6883 sets under a reconstructed \*dhauta, "cloth", perhaps the same as *dhauta*, "washed".
+**ధోతి** (*dhōti*) is a loan from Hindustani *dhotī*, which CDIAL 6881 sets under a reconstructed \*dhōtta, "cloth", perhaps related to *dhauta*, "washed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ softens any request.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**గట్టిగా** (*gaṭṭigā*) is native Dravidian: *gaṭṭi*, "hard, firm", which DEDR 1148 lists with Tamil *kaṭṭu*, "to harden", followed by the adverb ending *-gā*. DEDR compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650).
+**గట్టిగా** (*gaṭṭigā*) is native Dravidian: *gaṭṭi*, "hard, firm", which DEDR 1148 lists with Tamil *kaṭṭu*, "to harden", followed by the adverb ending *-gā*. DEDR compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650); CDIAL reports the view that *kaṭhina* came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

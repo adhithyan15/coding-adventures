@@ -47,7 +47,7 @@ reviews_of: [TE-C255-raccabanda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **సందు** (*sandu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "lane".
+The origin of **సందు** (*sandu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "lane". It may come from Sanskrit *saṁdhi*, "joint, junction" (CDIAL 12913), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

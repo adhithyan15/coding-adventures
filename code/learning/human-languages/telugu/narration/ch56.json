@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:39ea71fb62677693",
+  "sourceHash": "fnv1a64:be029324661d79a3",
   "lessons": [
     {
       "id": "TE-C56-mat",
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15790ec30d33ce83",
+      "sourceHash": "fnv1a64:8cf0ef51a4962c63",
       "notice": null,
       "blocks": [
         {
@@ -689,7 +689,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పెట్టె (peṭṭe) is native Dravidian, one word with Tamil peṭṭi and Kannada peṭṭi, \"box\" (DEDR 4388). DEDR compares Sanskrit peṭaka, \"box\" (CDIAL 8164)."
+              "text": "పెట్టె (peṭṭe) is native Dravidian, one word with Tamil peṭṭi and Kannada peṭṭi, \"box\" (DEDR 4388). DEDR compares Sanskrit peṭaka, \"box\" (CDIAL 8164), a word CDIAL calls non-Aryan."
             }
           ]
         },

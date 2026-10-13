@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:467afe802e723b62",
+  "sourceHash": "fnv1a64:0e97057ec95669c1",
   "lessons": [
     {
       "id": "TE-C62-thread",
@@ -625,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85ebd0b7260ff4a0",
+      "sourceHash": "fnv1a64:429558f2f831b002",
       "notice": null,
       "blocks": [
         {
@@ -656,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — usually traced, through Prakrit addāa, to Sanskrit ādarśa, \"what shows back\"."
+              "text": "అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one whose name is probably borrowed — usually traced, through Prakrit addāa, to Sanskrit ādarśa, \"what shows back\"."
             },
             {
               "kind": "speech",

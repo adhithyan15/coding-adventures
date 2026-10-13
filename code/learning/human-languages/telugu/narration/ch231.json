@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "Fan, Pliers, Ladder, Glue, Ruler",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4403c25f0036d205",
+  "sourceHash": "fnv1a64:2bddc400624d4eb8",
   "lessons": [
     {
       "id": "TE-C231-phyanu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001a58e114480bd6",
+      "sourceHash": "fnv1a64:135904bc861b0e15",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of నిచ్చెన (niccena) is uncertain. DEDR and CDIAL list no word of this shape meaning \"ladder\"."
+              "text": "నిచ్చెన (niccena) probably comes from Sanskrit niśrayaṇī, \"ladder\", Prakrit ṇissēṇi (CDIAL 7458): a tadbhava."
             }
           ]
         },

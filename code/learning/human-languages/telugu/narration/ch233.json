@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Shoulder cloth, Bubble, Rust, Soot, Charcoal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e8274e30a9ab653",
+  "sourceHash": "fnv1a64:a3245561cfa05611",
   "lessons": [
     {
       "id": "TE-C233-kanduva",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a96085df007a8717",
+      "sourceHash": "fnv1a64:7fe0d758a3255973",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "DEDR 1180 lists కండువా (kaṇḍuvā), \"upper garment\", with Tamil kaṇṭai, \"a small cloth\", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801 has Oriya khaṇḍuā, \"shawl\"."
+              "text": "DEDR 1180 lists కండువా (kaṇḍuvā), \"upper garment\", with Tamil kaṇṭai, \"a small cloth\", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801, the other way round, takes Oriya khaṇḍuā, \"shawl\", from Dravidian, citing Telugu kaṇḍuvā."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc496267834eb038",
+      "sourceHash": "fnv1a64:d4ea5cb6297e39d6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "బొగ్గు (boggu) is Dravidian as far as DEDR records it: DEDR 4467 lists boggu, \"charcoal\", from Telugu alone."
+              "text": "బొగ్గు (boggu) is native Dravidian. DEDR 4467 lists boggu, \"charcoal\", with Kolami bogg and Parji bog, \"charcoal\"."
             }
           ]
         },

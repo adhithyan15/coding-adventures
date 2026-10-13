@@ -95,5 +95,5 @@ shared root, *il-*. Telugu's *lē-* looks different, but DEDR 2559 files it with
 *uṇḍ-*, *-ta-*, *-ānu*.) How do you say "I am not there"? (**లేను**, *lēnu* — a
 different verb entirely.) So what kind of word is *lēdu*? (**The
 it-form of the negative verb** *lē-*.) Which root do the other three
-sisters use, and does Telugu? (***il-***; Telugu does **not**.) Next: the same
+sisters use, and does Telugu? (***il-***; Telugu too, as *lē-*.) Next: the same
 machine, tense piece swapped.

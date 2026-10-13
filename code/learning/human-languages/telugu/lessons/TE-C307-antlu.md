@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU307-ANTLU
 prerequisites: [TE-C307-phrijju, TE-C307-miksi]
 sounds: []
 roots: [dravidian-antu-stick]
-etymology_hook: "aṇṭlu: native Dravidian; DEDR 96 lists aṇṭu 'defilement by touch' with Kannada aṇṭu"
+etymology_hook: "aṇṭlu: native Dravidian; DEDR 120 lists aṇṭu 'defilement by touch' with Kannada aṇṭu 'to touch'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C307-miksi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**అంట్లు** (*aṇṭlu*) is native Dravidian, from *aṇṭu*, "to stick; uncleanness, defilement by touch", which DEDR 96 lists with Kannada *aṇṭu*, "to stick; an impurity".
+**అంట్లు** (*aṇṭlu*) is native Dravidian, from *aṇṭu*, "touch; uncleanness, defilement by touch", which DEDR 120 lists with Kannada *aṇṭu*, "to touch", and Tamil *aṇai*, "to come near, touch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: TE-VERB-TAVVU
 prerequisites: [TE-C283-vadincu, TE-C284-vadulu]
 sounds: []
 roots: [dravidian-tavvu-dig]
-etymology_hook: "tavvu: Dravidian as far as DEDR records it; DEDR 3122 lists t(r)avvu 'to dig'"
+etymology_hook: "tavvu: native Dravidian; DEDR 3122 lists t(r)avvu 'to dig' with Kolami tavv- 'to dig'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C284-vadulu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**తవ్వు** (*tavvu*) is Dravidian as far as DEDR records it: DEDR 3122 lists *tavvu*, "to dig, excavate", from Telugu.
+**తవ్వు** (*tavvu*) is native Dravidian. DEDR 3122 lists *tavvu*, "to dig, excavate", with Kolami and Naiki *tavv-*, "to dig".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

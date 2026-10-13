@@ -4,7 +4,7 @@
   "chapter": 192,
   "title": "Wick, Latch, Paintbrush, Necklace, Braid",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f05d50c2db9d3947",
+  "sourceHash": "fnv1a64:4d16405db1211589",
   "lessons": [
     {
       "id": "TE-C192-vatti",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95c0ff51f5c8236b",
+      "sourceHash": "fnv1a64:776df2b216fe3a06",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of కుంచె (kuñce) is uncertain. DEDR and CDIAL list no word of this shape meaning \"brush\"."
+              "text": "కుంచె (kuñce) is probably native Dravidian. DEDR 1639 does not list it, but has Kannada kuñca, \"tassel, brush\", and Tamil kuñcam, \"weaver's brush\", and compares Sanskrit kūrca, \"brush\" (CDIAL 3408)."
             }
           ]
         },

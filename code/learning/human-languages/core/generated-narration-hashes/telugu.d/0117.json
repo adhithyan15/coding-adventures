@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 117,
-  "sourceHash": "fnv1a64:d8cbd52beea3b187",
+  "sourceHash": "fnv1a64:77e33cd7ecc7aab8",
   "lessonIds": [
     "TE-C117-kuragayalu",
     "TE-C117-aratipandu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch117.txt",
   "json": "telugu/narration/ch117.json",
-  "textHash": "fnv1a64:d0e14f5618b25881",
-  "jsonHash": "fnv1a64:d89799f8adaa11a9",
+  "textHash": "fnv1a64:f326cb4e548d4e6a",
+  "jsonHash": "fnv1a64:a62df261b8d1062a",
   "findings": []
 }

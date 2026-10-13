@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 104,
-  "sourceHash": "fnv1a64:03b93e53dd52d7dd",
+  "sourceHash": "fnv1a64:cada1c870754079b",
   "lessonIds": [
     "TE-C104-tiram",
     "TE-C104-karyalayam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch104.txt",
   "json": "telugu/narration/ch104.json",
-  "textHash": "fnv1a64:5983596d8a217230",
-  "jsonHash": "fnv1a64:9eb6d8126f57fd69",
+  "textHash": "fnv1a64:0ace63330b3482e6",
+  "jsonHash": "fnv1a64:7d2be06f008e6565",
   "findings": []
 }

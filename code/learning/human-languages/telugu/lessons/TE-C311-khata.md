@@ -15,7 +15,7 @@ concept_tag: TE-PANI311-KHATA
 prerequisites: [TE-C311-digri, TE-C311-anubhavam]
 sounds: []
 roots: [hindustani-khata]
-etymology_hook: "khātā: like Hindustani khātā 'account book'"
+etymology_hook: "khātā: like Hindustani khātā 'account book' (CDIAL 3648)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C311-anubhavam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ఖాతా** (*khātā*) matches Hindustani *khātā*, "account, ledger", which DEDR and CDIAL do not list.
+**ఖాతా** (*khātā*) matches Hindustani *khātā*, "account book", which CDIAL 3648 sets under Sanskrit *kṣatra*, "might, rule".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

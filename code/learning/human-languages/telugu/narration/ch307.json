@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "Fridge, Mixer-grinder, Dirty dishes, Incense stick, Kumkum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1e258277d150d994",
+  "sourceHash": "fnv1a64:aabb25ad08a8df6b",
   "lessons": [
     {
       "id": "TE-C307-phrijju",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4288dac003f0372c",
+      "sourceHash": "fnv1a64:b553eb12c45115a4",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "అంట్లు (aṇṭlu) is native Dravidian, from aṇṭu, \"to stick; uncleanness, defilement by touch\", which DEDR 96 lists with Kannada aṇṭu, \"to stick; an impurity\"."
+              "text": "అంట్లు (aṇṭlu) is native Dravidian, from aṇṭu, \"touch; uncleanness, defilement by touch\", which DEDR 120 lists with Kannada aṇṭu, \"to touch\", and Tamil aṇai, \"to come near, touch\"."
             }
           ]
         },

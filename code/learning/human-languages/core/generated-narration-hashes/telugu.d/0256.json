@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 256,
-  "sourceHash": "fnv1a64:0dd8bcf135e85be4",
+  "sourceHash": "fnv1a64:b6e3df53b736fc9a",
   "lessonIds": [
     "TE-C256-sandu",
     "TE-C256-sorangam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch256.txt",
   "json": "telugu/narration/ch256.json",
-  "textHash": "fnv1a64:91b60167a38116c3",
-  "jsonHash": "fnv1a64:7c0c32fef77ffd68",
+  "textHash": "fnv1a64:e4f235d3e03454da",
+  "jsonHash": "fnv1a64:157cc736027db261",
   "findings": []
 }

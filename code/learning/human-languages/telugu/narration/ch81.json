@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Counting in Order",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0bfcaee2131c9ba",
+  "sourceHash": "fnv1a64:00e8cc08eb822124",
   "lessons": [
     {
       "id": "TE-C81-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1412dcb880815625",
+      "sourceHash": "fnv1a64:b0c3b4acebcccaf5",
       "notice": null,
       "blocks": [
         {
@@ -123,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is worth noticing because ఒకటి was already the maverick of the cardinals: Tamil says oṉṟu, Kannada ondu, Malayalam onnu, and Telugu alone says okaṭi. Now the number one turns out to be doubly on its own — the sisters do not share its cardinal, and Telugu does not build its ordinal on it either."
+              "text": "That is worth noticing because ఒకటి already looked least like its cousins: Tamil says oṉṟu, Kannada ondu, Malayalam onnu, and Telugu okaṭi, though DEDR 990 files all four in one entry. Now the number one turns out to be odd in a second way: Telugu does not build its ordinal on it."
             },
             {
               "kind": "speech",

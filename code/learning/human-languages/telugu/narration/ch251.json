@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Mind, Breathlessness, Muscle, Injection, Vaccination",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c7a1b6c7c65090fc",
+  "sourceHash": "fnv1a64:3e97e8c3038f10ac",
   "lessons": [
     {
       "id": "TE-C251-manasu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cfeb5341d0694d9",
+      "sourceHash": "fnv1a64:89425a54ed73220e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of టీకా (ṭīkā) is uncertain. DEDR and CDIAL list no word of this shape meaning \"vaccination\"."
+              "text": "టీకా (ṭīkā) is probably a northern loan, like Hindi ṭīkā, \"a mark on the forehead\", which CDIAL 5458 sets under a reconstructed ṭikka, \"mark, spot\"."
             }
           ]
         },

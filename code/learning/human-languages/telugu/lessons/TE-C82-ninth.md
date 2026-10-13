@@ -12,7 +12,7 @@ concept_tag: TE-ORDINAL-NINTH
 prerequisites: [TE-C82-eighth, TE-C81-fourth, TE-C70-squirrel, TE-C72-bargain, TE-C41-this, TE-C41-that]
 sounds: [telugu-geminate-kk, gemination-cc]
 roots: [proto-dravidian-numbers]
-etymology_hook: "tommidava: native tommidi 'nine' (DEDR 1025) + the ordinal ending -va"
+etymology_hook: "tommidava: native tommidi 'nine' (DEDR 3532) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -59,7 +59,7 @@ Second *i*-ending in a row, and the same trade. One more and the ten are closed.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**తొమ్మిదవ** (*tommidava*) is native Dravidian: *tommidi*, "nine", filed with Tamil *oṉpatu* (DEDR 1025), with the ordinal ending *-va*.
+**తొమ్మిదవ** (*tommidava*) is native Dravidian: *tommidi*, "nine", which DEDR 3532 files with old Tamil *toṇṭu*, "nine", with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C82-ORDINAL-04] -->

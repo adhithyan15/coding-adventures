@@ -4,7 +4,7 @@
   "chapter": 300,
   "title": "Shoes, Chain, Earrings, Button, Handkerchief",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:50702916202990c6",
+  "sourceHash": "fnv1a64:9e4cb8473da66d9b",
   "lessons": [
     {
       "id": "TE-C300-butlu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08b2991c7d833c03",
+      "sourceHash": "fnv1a64:a184e76200b5451e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of గుండీ (guṇḍī) is uncertain. DEDR and CDIAL list no word of this shape meaning \"button\"."
+              "text": "గుండీ (guṇḍī) is probably a northern loan, like Hindi ghuṇḍī, \"tag, button\", which CDIAL 4483 sets under a reconstructed ghuṇṭa, \"knot, button\"."
             }
           ]
         },

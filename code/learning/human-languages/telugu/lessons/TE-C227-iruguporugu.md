@@ -47,7 +47,7 @@ reviews_of: [TE-C227-peddalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ఇరుగుపొరుగు** (*iruguporugu*) is native Dravidian: *irugu* (DEDR 480) and *porugu* (DEDR 4541), both "neighbourhood". For the second, DEDR compares, with a query, Prakrit *pora*, "joint".
+**ఇరుగుపొరుగు** (*iruguporugu*) is native Dravidian: *irugu* (DEDR 480) and *porugu* (DEDR 4541), both "neighbourhood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

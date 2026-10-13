@@ -50,7 +50,7 @@ The house is furnished now: a చాప on the floor, a బుట్ట by the d
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**పెట్టె** (*peṭṭe*) is native Dravidian, one word with Tamil *peṭṭi* and Kannada *peṭṭi*, "box" (DEDR 4388). DEDR compares Sanskrit *peṭaka*, "box" (CDIAL 8164).
+**పెట్టె** (*peṭṭe*) is native Dravidian, one word with Tamil *peṭṭi* and Kannada *peṭṭi*, "box" (DEDR 4388). DEDR compares Sanskrit *peṭaka*, "box" (CDIAL 8164), a word CDIAL calls non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

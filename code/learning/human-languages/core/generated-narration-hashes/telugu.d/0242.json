@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 242,
-  "sourceHash": "fnv1a64:8a742ead6f6c1bae",
+  "sourceHash": "fnv1a64:6d32a10aef7e8a5f",
   "lessonIds": [
     "TE-C242-teccu",
     "TE-C242-upayogincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch242.txt",
   "json": "telugu/narration/ch242.json",
-  "textHash": "fnv1a64:2da3042da6d5f619",
-  "jsonHash": "fnv1a64:dd0babfd21e1660f",
+  "textHash": "fnv1a64:60d7e5ccd7562a12",
+  "jsonHash": "fnv1a64:25ceaaea563eaae0",
   "findings": []
 }

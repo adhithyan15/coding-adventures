@@ -50,7 +50,7 @@ City Telugu now uses it for a friend, roughly where English says mate. That irri
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Where **బావ** (*bāva*) comes from is not settled, and DEDR does not list it. CDIAL 9455 cites Sanskrit *bhāvuka*, "sister's husband", a word of the drama, beside *bhāma*, which it takes as a pet name made from *bhrātṛ*, "brother"; the Telugu word may belong with them.
+Where **బావ** (*bāva*) comes from is not settled, and DEDR does not list it. CDIAL 9455 cites Sanskrit *bhāvuka*, "sister's husband", a word of the drama, beside *bhāma*, which it takes as probably a pet name made from *bhrātṛ*, "brother"; the Telugu word may belong with them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

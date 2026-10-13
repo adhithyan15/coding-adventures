@@ -47,7 +47,7 @@ reviews_of: [TE-C147-tuducu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**కట్టు** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Kannada *kaṭṭu* (DEDR 1147). DEDR lists Telugu *kaṭṭu*, "to tie, bind, build". DEDR 1147 compares Sanskrit *ghaṭṭa*.
+**కట్టు** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Kannada *kaṭṭu* (DEDR 1147). DEDR lists Telugu *kaṭṭu*, "to tie, bind, build".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

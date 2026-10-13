@@ -15,7 +15,7 @@ concept_tag: TE-AROGYAM287-CHATI
 prerequisites: [TE-C286-varcu, TE-C286-anuko]
 sounds: []
 roots: [telugu-chati-chest]
-etymology_hook: "chātī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'chest'"
+etymology_hook: "chātī: probably a northern loan, like Hindi chātī 'chest' (CDIAL 5014)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C286-anuko]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ఛాతీ** (*chātī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "chest".
+**ఛాతీ** (*chātī*) is probably a northern loan, like Hindi *chātī*, "chest", which CDIAL 5014 sets under a reconstructed \*chātti, "chest, breast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

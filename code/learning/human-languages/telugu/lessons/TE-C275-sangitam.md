@@ -15,7 +15,7 @@ concept_tag: TE-PANI275-SANGITAM
 prerequisites: [TE-C275-kalakarudu, TE-C275-kavi]
 sounds: []
 roots: [sanskrit-sangita]
-etymology_hook: "saṅgītaṁ ← Sanskrit saṅgīta 'music', a tatsama"
+etymology_hook: "saṅgītaṁ ← Sanskrit saṅgīta 'chorus, concert', a tatsama (CDIAL 12849)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C275-kavi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**సంగీతం** (*saṅgītaṁ*) is Sanskrit *saṅgīta*, "song with music", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
+**సంగీతం** (*saṅgītaṁ*) is Sanskrit *saṅgīta*, "chorus, concert", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

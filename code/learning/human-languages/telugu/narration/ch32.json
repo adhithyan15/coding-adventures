@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0a2d114e035a1f87",
+  "sourceHash": "fnv1a64:f197e1c871c67fc3",
   "lessons": [
     {
       "id": "TE-C32-undu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3aeca5c12f3747",
+      "sourceHash": "fnv1a64:a4074a544702f27b",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three pieces of uṇṭānu? (Stem, tense, person — uṇḍ-, -ta-, -ānu.) How do you say \"I am not there\"? (లేను, lēnu — a different verb entirely.) So what kind of word is lēdu? (The it-form of the negative verb lē-.) Which root do the other three sisters use, and does Telugu? (il-; Telugu does not.) Next: the same machine, tense piece swapped."
+              "text": "What are the three pieces of uṇṭānu? (Stem, tense, person — uṇḍ-, -ta-, -ānu.) How do you say \"I am not there\"? (లేను, lēnu — a different verb entirely.) So what kind of word is lēdu? (The it-form of the negative verb lē-.) Which root do the other three sisters use, and does Telugu? (il-; Telugu too, as lē-.) Next: the same machine, tense piece swapped."
             }
           ]
         }
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d289870004693398",
+      "sourceHash": "fnv1a64:ef7c3eb253ecf775",
       "notice": null,
       "blocks": [
         {
@@ -554,7 +554,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is Telugu's Sanskrit habit in miniature, and it is worth naming plainly. The verbs at the centre of living — be, go, come, eat — stayed Dravidian. The formal and ceremonial vocabulary layered on top came from Sanskrit. You met the same split in Chapter 1, where the greeting namaskāram is Sanskrit while avunu and sarē are native. Telugu borrowed far more of that top layer than Tamil ever did; it did not borrow the floor."
+              "text": "That is Telugu's Sanskrit habit in miniature, and it is worth naming plainly. The verbs at the centre of living — be, go, come, eat — stayed Dravidian. The formal and ceremonial vocabulary layered on top came from Sanskrit. You met the same split in Chapter 1, where the greeting namaskāram is Sanskrit while avunu and lēdu are native. Telugu borrowed far more of that top layer than Tamil ever did; it did not borrow the floor."
             }
           ]
         },

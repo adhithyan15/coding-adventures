@@ -4,7 +4,7 @@
   "chapter": 227,
   "title": "Young man, Elders, Neighbours, Enemy, Bridegroom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cf8069137f687252",
+  "sourceHash": "fnv1a64:c8a137f4b4103d77",
   "lessons": [
     {
       "id": "TE-C227-yuvakudu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15e798c6af9fe9e5",
+      "sourceHash": "fnv1a64:6c47192426fe7e6d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఇరుగుపొరుగు (iruguporugu) is native Dravidian: irugu (DEDR 480) and porugu (DEDR 4541), both \"neighbourhood\". For the second, DEDR compares, with a query, Prakrit pora, \"joint\"."
+              "text": "ఇరుగుపొరుగు (iruguporugu) is native Dravidian: irugu (DEDR 480) and porugu (DEDR 4541), both \"neighbourhood\"."
             }
           ]
         },

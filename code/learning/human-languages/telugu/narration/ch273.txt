@@ -13,7 +13,7 @@ You'll want to know: వడ్డీ.
 వడ్డీ — vaḍḍī — "interest (on money)".
 
 The word, taken apart.
-The origin of వడ్డీ (vaḍḍī) is uncertain. DEDR and CDIAL list no word of this shape meaning "interest on money".
+వడ్డీ (vaḍḍī) comes from Sanskrit vṛddhi, "increase", through Prakrit vaḍḍhi (CDIAL 12076): a tadbhava. CDIAL lists words for "interest" from it in Hindi, Bengali and Old Sinhala.
 
 What you've built.
 One more word for this chapter.

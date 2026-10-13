@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 193,
-  "sourceHash": "fnv1a64:f67c01d369004c19",
+  "sourceHash": "fnv1a64:d858f1c4959eb415",
   "lessonIds": [
     "TE-C193-gita",
     "TE-C193-vrttam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch193.txt",
   "json": "telugu/narration/ch193.json",
-  "textHash": "fnv1a64:85f8babe18b634cf",
-  "jsonHash": "fnv1a64:4ec77ae0b020f00c",
+  "textHash": "fnv1a64:5bdc42e585665a54",
+  "jsonHash": "fnv1a64:649c719731406a2c",
   "findings": []
 }

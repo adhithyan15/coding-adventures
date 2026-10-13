@@ -47,7 +47,7 @@ reviews_of: [TE-C133-misalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**కంటినీరు** (*kaṇṭinīru*) is native Dravidian: *kaṇṭi*, "of the eye", from *kannu* (DEDR 1159), and *nīru*, "water" (DEDR 3690). DEDR compares Sanskrit *nīra*, "water", with *nīru* (CDIAL 7552).
+**కంటినీరు** (*kaṇṭinīru*) is native Dravidian: *kaṇṭi*, "of the eye", from *kannu* (DEDR 1159), and *nīru*, "water" (DEDR 3690). DEDR compares Sanskrit *nīra*, "water", with *nīru* (CDIAL 7552); CDIAL reports the view that *nīra* came from Dravidian, though one scholar takes it as Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

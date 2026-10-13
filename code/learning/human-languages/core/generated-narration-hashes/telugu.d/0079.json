@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 79,
-  "sourceHash": "fnv1a64:5441bdd7eb3854c5",
+  "sourceHash": "fnv1a64:25d04852e170d056",
   "lessonIds": [
     "TE-C79-friends",
     "TE-C79-our",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch79.txt",
   "json": "telugu/narration/ch79.json",
-  "textHash": "fnv1a64:e217c82c8cb3d976",
-  "jsonHash": "fnv1a64:6f3682a751873ebe",
+  "textHash": "fnv1a64:df0d16634e09c1bf",
+  "jsonHash": "fnv1a64:c64d8dcd2d058cac",
   "findings": []
 }

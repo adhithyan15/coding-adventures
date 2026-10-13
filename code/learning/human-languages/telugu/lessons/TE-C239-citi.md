@@ -15,7 +15,7 @@ concept_tag: TE-PANI239-CITI
 prerequisites: [TE-C239-nivedika, TE-C239-samstha]
 sounds: []
 roots: [telugu-citi-chit]
-etymology_hook: "cīṭī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'chit'"
+etymology_hook: "cīṭī: probably a northern loan, like Hindi ciṭṭhī 'letter, note' (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C239-samstha]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **చీటీ** (*cīṭī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "a slip of paper".
+**చీటీ** (*cīṭī*) is probably a northern loan, like Hindi *ciṭṭhī*, "letter, note", which CDIAL 4832 sets under a reconstructed \*ciṣṭa, "message".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

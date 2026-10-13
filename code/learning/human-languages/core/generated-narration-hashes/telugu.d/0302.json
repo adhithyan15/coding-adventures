@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 302,
-  "sourceHash": "fnv1a64:9d7a97bec26f013a",
+  "sourceHash": "fnv1a64:75910c4ed34b109f",
   "lessonIds": [
     "TE-C302-eddu",
     "TE-C302-duda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch302.txt",
   "json": "telugu/narration/ch302.json",
-  "textHash": "fnv1a64:afdf2c58ce944c78",
-  "jsonHash": "fnv1a64:8c9ed8194f058420",
+  "textHash": "fnv1a64:c20f5759e7ca0282",
+  "jsonHash": "fnv1a64:e4bcb2d9cf21c450",
   "findings": []
 }

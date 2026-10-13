@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "Report, Organization, Chit, Pension, Agreement",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bbca490b303ba1e2",
+  "sourceHash": "fnv1a64:b9629ddb11251ce5",
   "lessons": [
     {
       "id": "TE-C239-nivedika",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6979c900dfef09de",
+      "sourceHash": "fnv1a64:5d711fc820c3135a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of చీటీ (cīṭī) is uncertain. DEDR and CDIAL list no word of this shape meaning \"a slip of paper\"."
+              "text": "చీటీ (cīṭī) is probably a northern loan, like Hindi ciṭṭhī, \"letter, note\", which CDIAL 4832 sets under a reconstructed ciṣṭa, \"message\"."
             }
           ]
         },

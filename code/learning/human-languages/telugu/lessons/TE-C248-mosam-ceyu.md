@@ -15,7 +15,7 @@ concept_tag: TE-VERB-MOSAM-CEYU
 prerequisites: [TE-C248-molakettu, TE-C248-pituku]
 sounds: []
 roots: [telugu-mosam-deceit, sey-do-dravidian]
-etymology_hook: "mōsaṁ cēyu: mōsaṁ 'deceit', of uncertain origin, + native cēyu (DEDR 1957)"
+etymology_hook: "mōsaṁ cēyu: mōsaṁ, probably Sanskrit mōṣa 'theft' (CDIAL 10358), + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C248-pituku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of *mōsaṁ*, "deceit", the first word of **మోసం చేయు** (*mōsaṁ cēyu*), is uncertain; DEDR and CDIAL do not list it. *Cēyu*, "to do", is native (DEDR 1957).
+*Mōsaṁ*, "deceit", the first word of **మోసం చేయు** (*mōsaṁ cēyu*), is probably Sanskrit *mōṣa*, "theft", Prakrit *mōsa*, "stealing" (CDIAL 10358). *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

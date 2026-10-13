@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "Jar, Sack, Tub, Barrel, Mug",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:942bf6720e4c73fb",
+  "sourceHash": "fnv1a64:5fa874c31274d4ee",
   "lessons": [
     {
       "id": "TE-C232-jadi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dac27645f0fa7447",
+      "sourceHash": "fnv1a64:28f240703f35cca9",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of జాడీ (jāḍī) is uncertain. DEDR and CDIAL list no word of this shape meaning \"jar\"."
+              "text": "జాడీ (jāḍī) is probably native Dravidian. DEDR does not list it, but CDIAL 4736 cites Telugu jāḍi with Tamil cāṭi, \"jar\", and takes the northern pot word from Dravidian."
             }
           ]
         },

@@ -277,7 +277,8 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // the full article lists and keeping its "Cf. Skt.", "?" and Indo-Aryan-appendix notes;
   // Sanskrit loans cite Turner's CDIAL where it has the form, with its "<- Drav." notes; both
   // read from the moli-mandala/data files, no source text copied. English, Persian, Arabic and
-  // Portuguese loans name the donor. 98 say the origin is uncertain; 26 give the usual account.
+  // Portuguese loans name the donor. 79 say the origin is uncertain, after a search of both
+  // sources by form and by gloss.
   telugu: { withoutHook: 0, withoutVisible: 0 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
 };

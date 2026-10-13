@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "Class, Lesson, Answer, Subject, Mathematics",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:30d5c11686046a6b",
+  "sourceHash": "fnv1a64:358ff4f6ca3552d2",
   "lessons": [
     {
       "id": "TE-C274-taragati",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2ef49db1ede8d00",
+      "sourceHash": "fnv1a64:b6ef1f5dbda847c8",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "విషయం (viṣayaṁ) is Sanskrit viṣaya, \"scope; sphere, region\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 11973). The sense \"subject, matter\" is the one Telugu gives it."
+              "text": "విషయం (viṣayaṁ) is Sanskrit viṣaya, \"scope; sphere, region\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 11973). Sanskrit already used it for \"subject matter\" too."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c530018d3c84c6c",
+      "sourceHash": "fnv1a64:813ee3159583de52",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గణితం (gaṇitaṁ) is Sanskrit gaṇita, \"counted\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3996). The sense \"mathematics\" is the one Telugu gives it."
+              "text": "గణితం (gaṇitaṁ) is Sanskrit gaṇita, \"counted\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3996). Sanskrit already used it for \"arithmetic\" too."
             }
           ]
         },

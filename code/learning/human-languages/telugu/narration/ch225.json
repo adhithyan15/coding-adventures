@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "Leafy greens, Spinach, Papaya, Watermelon, Cashew nuts",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b9f05f92fc225ac9",
+  "sourceHash": "fnv1a64:a8cc5da60ec1b218",
   "lessons": [
     {
       "id": "TE-C225-akukura",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c883a9a8072a85af",
+      "sourceHash": "fnv1a64:51aef3e6b0f465f9",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పాలకూర (pālakūra) is pāla-, whose origin is uncertain, and native kūra, \"vegetable, curry-stuff\" (DEDR 1760)."
+              "text": "పాలకూర (pālakūra) is pāla-, probably the spinach name of Sanskrit pālakyā, Prakrit pālakkā (CDIAL 8126), and native kūra, \"vegetable, curry-stuff\" (DEDR 1760)."
             }
           ]
         },

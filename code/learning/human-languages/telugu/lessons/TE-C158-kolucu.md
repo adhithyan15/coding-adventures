@@ -47,7 +47,7 @@ reviews_of: [TE-C158-vippu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**కొలుచు** (*kolucu*) is Dravidian. DEDR 1827 lists *kolucu*, "to measure", with *kola*, "measurement", but doubts whether this group belongs with Tamil *kuḷakam*, "a grain measure". DEDR compares Sanskrit *kuḍava*, "a grain measure" (CDIAL 3246), which CDIAL takes from Dravidian.
+**కొలుచు** (*kolucu*) is Dravidian. DEDR 1827 lists *kolucu*, "to measure", with *kola*, "measurement", but doubts whether this group belongs with Tamil *kuḷakam*, "a grain measure". DEDR compares the Tamil measure words with Sanskrit *kuḍava*, "a grain measure" (CDIAL 3246), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

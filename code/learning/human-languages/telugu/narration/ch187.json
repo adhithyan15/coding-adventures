@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Bee, Lizard, Insect, Sparrow, Koel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d9d2af3c539b6178",
+  "sourceHash": "fnv1a64:dfb7458cbd37ea88",
   "lessons": [
     {
       "id": "TE-C187-tenetiga",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc24da9d0fa75026",
+      "sourceHash": "fnv1a64:5f4b5fb14bfcce86",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పురుగు (purugu) is native Dravidian. DEDR 4312 lists purugu, \"worm, any insect\", with Tamil puḻu, \"worm\", and Kannada puḻu, \"worm, insect\". DEDR compares several Sanskrit words for \"worm\", among them pīlu, \"worm\" (CDIAL 8240)."
+              "text": "పురుగు (purugu) is native Dravidian. DEDR 4312 lists purugu, \"worm, any insect\", with Tamil puḻu, \"worm\", and Kannada puḻu, \"worm, insect\". DEDR compares several Sanskrit words for \"worm\", among them pīlu, \"worm\" (CDIAL 8240), which CDIAL takes from Dravidian."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c035e9f418327c1b",
+      "sourceHash": "fnv1a64:b65c7dcd3d693ce9",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పిచ్చుక (piccuka) is Dravidian as far as DEDR records it: DEDR 4190 lists piccuka, \"sparrow\", from Telugu alone."
+              "text": "పిచ్చుక (piccuka) is native Dravidian. DEDR 4190 lists piccuka, \"sparrow\", with Gadba piske, \"sparrow\", and Kuwi piṛska, \"sparrow\"."
             }
           ]
         },

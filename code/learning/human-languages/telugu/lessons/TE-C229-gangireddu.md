@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU229-GANGIREDDU
 prerequisites: [TE-C228-toka, TE-C229-tapakayalu]
 sounds: []
 roots: [dravidian-erutu-ox]
-etymology_hook: "gaṅgireddu: native Dravidian; DEDR 815 lists gaṅgi-reddu 'temple bull' under eddu 'ox'"
+etymology_hook: "gaṅgireddu: gaṅgi + native reddu, eddu 'ox' (DEDR 815, which lists gaṅgi-reddu 'temple bull')"
 duration:
   max_seconds: 200
 requires:

@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Clothes, Moustache, Tears, Boat, Train",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:13ea76c6f268ab8b",
+  "sourceHash": "fnv1a64:15a89237c952c546",
   "lessons": [
     {
       "id": "TE-C133-guddalu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7adacd9428c15903",
+      "sourceHash": "fnv1a64:147aa6d4b4d8b2b1",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "కంటినీరు (kaṇṭinīru) is native Dravidian: kaṇṭi, \"of the eye\", from kannu (DEDR 1159), and nīru, \"water\" (DEDR 3690). DEDR compares Sanskrit nīra, \"water\", with nīru (CDIAL 7552)."
+              "text": "కంటినీరు (kaṇṭinīru) is native Dravidian: kaṇṭi, \"of the eye\", from kannu (DEDR 1159), and nīru, \"water\" (DEDR 3690). DEDR compares Sanskrit nīra, \"water\", with nīru (CDIAL 7552); CDIAL reports the view that nīra came from Dravidian, though one scholar takes it as Indo-European."
             }
           ]
         },

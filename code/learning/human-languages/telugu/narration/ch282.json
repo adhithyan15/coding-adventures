@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "To graze, To plant, To decorate, To share out, To visit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:403e0f79b4b81bcb",
+  "sourceHash": "fnv1a64:163adfd9a2469822",
   "lessons": [
     {
       "id": "TE-C282-meyu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce8e6f1403876527",
+      "sourceHash": "fnv1a64:25e16cc88e961bda",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సందర్శించు (sandarśiñcu) is Sanskrit sandarśana, \"seeing, visiting\", made into a verb with the Telugu ending -iñcu."
+              "text": "సందర్శించు (sandarśiñcu) is Sanskrit sandarśana, \"view; seeing\" (CDIAL 12899), made into a verb with the Telugu ending -iñcu."
             }
           ]
         },

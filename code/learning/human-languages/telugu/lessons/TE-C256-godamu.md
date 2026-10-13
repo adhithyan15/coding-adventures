@@ -15,7 +15,7 @@ concept_tag: TE-STHALAM256-GODAMU
 prerequisites: [TE-C256-sorangam, TE-C256-sivaru]
 sounds: []
 roots: [telugu-godamu-warehouse]
-etymology_hook: "gōdāmu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'warehouse'"
+etymology_hook: "gōdāmu: not settled; matches godown, and DEDR 1525 lists giḍḍaṅgi 'storehouse, godown'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C256-sivaru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **గోదాము** (*gōdāmu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "warehouse".
+The origin of **గోదాము** (*gōdāmu*) is not settled. It matches *godown*, the British-Indian word for a warehouse; DEDR 1525 lists Telugu *giḍḍaṅgi*, "storehouse, godown", with Tamil *kiṭaṅku*, and points to that word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Tongue, Knee, Shoulder, Eyebrow, Cheek",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1edf01ee5450168",
+  "sourceHash": "fnv1a64:0afdd863e1bc61e0",
   "lessons": [
     {
       "id": "TE-C127-naluka",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4478c8078d3014ea",
+      "sourceHash": "fnv1a64:02734f704baad7e8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "బుగ్గ (bugga) is probably native Dravidian. DEDR 4242 lists Kannada buggi, \"cheek\", with Telugu pukkili, \"inside of the cheek\", but does not list bugga in this sense."
+              "text": "బుగ్గ (bugga) is native Dravidian. DEDR 4242 lists Telugu bugga, \"cheek, inside of the cheek\", with Kannada buggi, \"cheek\"."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [TE-C274-javabu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**విషయం** (*viṣayaṁ*) is Sanskrit *viṣaya*, "scope; sphere, region", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11973). The sense "subject, matter" is the one Telugu gives it.
+**విషయం** (*viṣayaṁ*) is Sanskrit *viṣaya*, "scope; sphere, region", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11973). Sanskrit already used it for "subject matter" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

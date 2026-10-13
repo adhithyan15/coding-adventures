@@ -47,7 +47,7 @@ reviews_of: [TE-C191-balbu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **కట్టెలు** (*kaṭṭelu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "firewood".
+The origin of **కట్టెలు** (*kaṭṭelu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "firewood". It may come from Prakrit *kaṭṭha*, "wood", from Sanskrit *kāṣṭha* (CDIAL 3120), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 299,
   "title": "Chickpeas, Mustard seeds, Coriander leaves, Curry leaves, Buttermilk",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9498b5bc2a479588",
+  "sourceHash": "fnv1a64:914ec631897f9add",
   "lessons": [
     {
       "id": "TE-C299-sanagalu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:429bbe6c008842d2",
+      "sourceHash": "fnv1a64:d9a5c47e813c24ef",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of కొత్తిమీర (kottimīra) is uncertain. DEDR and CDIAL list no word of this shape meaning \"coriander\"."
+              "text": "కొత్తిమీర (kottimīra) probably comes from the northern coriander word, Hindi kothmīr, Oriya kothimiri, which CDIAL 3380 traces to Sanskrit kustumbarī, \"coriander\"; CDIAL calls that word non-Aryan."
             }
           ]
         },

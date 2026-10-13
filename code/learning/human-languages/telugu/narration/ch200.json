@@ -4,7 +4,7 @@
   "chapter": 200,
   "title": "To save, To choose, To try, To serve, To chew",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f1b8eb4df675b222",
+  "sourceHash": "fnv1a64:4f9912b9c66c7a36",
   "lessons": [
     {
       "id": "TE-C200-podupu-ceyu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79a76b78ca55a6a1",
+      "sourceHash": "fnv1a64:a49264a3bc738573",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of వడ్డించు (vaḍḍiñcu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"to serve food\"."
+              "text": "The origin of వడ్డించు (vaḍḍiñcu) is uncertain. It may come from Sanskrit vardhayati, \"cuts, divides\", whose Oriya and Marathi descendants mean \"to serve out food\" (CDIAL 11381), but no source says so."
             }
           ]
         },

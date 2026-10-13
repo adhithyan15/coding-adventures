@@ -29,13 +29,13 @@ variety: standard-colloquial
 reviews_of: [TE-C01-avunu, TE-C01-ledu]
 ---
 
-# సరే (sarē) — "okay," the family word in Telugu dress
+# సరే (sarē) — "okay," the shared word in Telugu dress
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The easy middle between "yes" and "no": "okay, alright, fine." It's
-the same Dravidian word you'd meet as *sari* in Tamil and Kannada — Telugu just
+the same word you'd meet as *sari* in Tamil and Kannada — Telugu just
 rounds it off to *sarē*.
 
 ## The letters in this word
@@ -55,7 +55,7 @@ Left to right: **స · రే** = *sa-rē* →
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-SARE-02]; assesses=[] -->
 
 **సరే** (*sarē*) means "correct, right → okay, agreed" — the
-verbal nod of Telugu. It is the same family word as Kannada **ಸರಿ** and
+verbal nod of Telugu. It is the same word as Kannada **ಸರಿ** and
 Tamil **சரி** (*sari*), worn to *sarē* in Telugu. Say it once to agree; say
 *sarē sarē* to mean "yes yes, fine, enough." Its origin is uncertain: DEDR has no
 entry, and it is usually traced to Sanskrit *sadṛśa*, "like, equal" (CDIAL 13120).

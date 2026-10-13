@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU304-CADARANGAM
 prerequisites: [TE-C304-atagadu, TE-C304-kriket]
 sounds: []
 roots: [sanskrit-caturanga]
-etymology_hook: "cadaraṅgaṁ ← Sanskrit caturaṅga 'having four limbs; consisting of four parts', a tatsama (CDIAL 4596)"
+etymology_hook: "cadaraṅgaṁ ← Sanskrit caturaṅga 'having four limbs' (CDIAL 4596), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C304-kriket]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**చదరంగం** (*cadaraṅgaṁ*) is Sanskrit *caturaṅga*, "having four limbs; consisting of four parts", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4596). The game of the four arms of an army took the name.
+**చదరంగం** (*cadaraṅgaṁ*) comes from Sanskrit *caturaṅga*, "having four limbs; consisting of four parts" (CDIAL 4596), reshaped to Telugu sounds (*t* to *d*): a tadbhava. The game of the four arms of an army took the name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

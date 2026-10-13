@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "Headache, Diarrhoea, Tablet, Sweat, Swelling",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bd6f82d0418bbdf4",
+  "sourceHash": "fnv1a64:7bef9c3578f59ff1",
   "lessons": [
     {
       "id": "TE-C167-talanoppi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4540a1bdc0c96b4",
+      "sourceHash": "fnv1a64:090fde61f1ba9ead",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "DEDR 2539 lists చెమట (cemaṭa), \"sweat\", beside cemma, \"moisture\", and sets these Telugu forms, with a question mark, beside Tamil cemmal, \"water\"."
+              "text": "చెమట (cemaṭa) is native Dravidian. DEDR 2539 lists it, \"sweat\", beside cemma, \"moisture\", with Tamil cemmal, \"water\"."
             }
           ]
         },

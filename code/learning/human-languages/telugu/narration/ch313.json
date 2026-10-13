@@ -4,7 +4,7 @@
   "chapter": 313,
   "title": "Piece of chalk, Slate, Slate pencil, Ink, Attendance",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:508348f50476ba1b",
+  "sourceHash": "fnv1a64:9e544eb8717c40d9",
   "lessons": [
     {
       "id": "TE-C313-suddamukka",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5727153b90936fd",
+      "sourceHash": "fnv1a64:94e9c3d47f52805d",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of పలక (palaka) is uncertain. DEDR lists palaka only inside compounds for boards, such as nettapalaka, \"dice-board\" (DEDR 3742)."
+              "text": "పలక (palaka) probably comes from Sanskrit phalaka, \"board\" (CDIAL 9053), reshaped to Telugu sounds: a tadbhava. CDIAL lists Assamese phali, \"slate\", from it."
             }
           ]
         },

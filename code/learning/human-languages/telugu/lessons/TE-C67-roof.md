@@ -50,7 +50,7 @@ To be under somebody's కప్పు is to be their guest, and it binds the pe
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**కప్పు** (*kappu*) is native Dravidian, from the verb *kappu*, "to cover", one word with Tamil *kappu*, "to overspread", and Kannada *kappu*, "to cover" (DEDR 1221). DEDR compares Sanskrit *kavaca*, "armour" (CDIAL 2957).
+**కప్పు** (*kappu*) is native Dravidian, from the verb *kappu*, "to cover", one word with Tamil *kappu*, "to overspread", and Kannada *kappu*, "to cover" (DEDR 1221). DEDR compares Sanskrit *kavaca*, "armour" (CDIAL 2957), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

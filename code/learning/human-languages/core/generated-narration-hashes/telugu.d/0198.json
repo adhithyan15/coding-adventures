@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 198,
-  "sourceHash": "fnv1a64:2c4a68025856fe3d",
+  "sourceHash": "fnv1a64:db152df0ea78e958",
   "lessonIds": [
     "TE-C198-tyusanu",
     "TE-C198-intarvyu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch198.txt",
   "json": "telugu/narration/ch198.json",
-  "textHash": "fnv1a64:40ea37a556492811",
-  "jsonHash": "fnv1a64:015e3ffe9b68be92",
+  "textHash": "fnv1a64:e8e370144aae713b",
+  "jsonHash": "fnv1a64:82a52999005e1823",
   "findings": []
 }

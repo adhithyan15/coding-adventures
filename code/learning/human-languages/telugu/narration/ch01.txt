@@ -333,13 +333,13 @@ Which character is this — ◌ా? What vowel does it put on the consonant it a
 
 
 Lesson 9 of 12.
-లేదు (lēdu) — "no," where Telugu parts ways with its sisters.
+లేదు (lēdu) — "no," where Telugu only looks different from its sisters.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
-The partner of avunu — and a small surprise. Tamil, Kannada, and Malayalam all say "no" with a word built on il- (illai / illa). Telugu does not: it goes its own way with lēdu.
+The partner of avunu — and a small surprise. Tamil, Kannada, and Malayalam all say "no" with a word built on il- (illai / illa). Telugu says lēdu, which looks nothing like them, yet comes from the same root.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
@@ -383,17 +383,17 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 [once you have stopped driving — read: లేదు (lēdu)]
-What does it deny — existence or identity? (Existence — "there isn't"; kādu denies identity.) How does Telugu's "no" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)
+What does it deny — existence or identity? (Existence — "there isn't"; kādu denies identity.) How does Telugu's "no" differ from Tamil's and Kannada's? (Only in shape: DEDR files lē- with their il-.)
 
 
 Lesson 10 of 12.
-సరే (sarē) — "okay," the family word in Telugu dress.
+సరే (sarē) — "okay," the shared word in Telugu dress.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
-The easy middle between "yes" and "no": "okay, alright, fine." It's the same Dravidian word you'd meet as sari in Tamil and Kannada — Telugu just rounds it off to sarē.
+The easy middle between "yes" and "no": "okay, alright, fine." It's the same word you'd meet as sari in Tamil and Kannada — Telugu just rounds it off to sarē.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
@@ -404,7 +404,7 @@ Left to right: స, రే = sa-rē, which gives:
 సరే = sarē = "okay / alright."
 
 The word, taken apart.
-సరే (sarē) means "correct, right becomes okay, agreed" — the verbal nod of Telugu. It is the same family word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean "yes yes, fine, enough." Its origin is uncertain: DEDR has no entry, and it is usually traced to Sanskrit sadṛśa, "like, equal" (CDIAL 13120).
+సరే (sarē) means "correct, right becomes okay, agreed" — the verbal nod of Telugu. It is the same word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean "yes yes, fine, enough." Its origin is uncertain: DEDR has no entry, and it is usually traced to Sanskrit sadṛśa, "like, equal" (CDIAL 13120).
 
 Grammar Lens: one shared word, three scripts.
 sari / sarē is a clean demonstration of how much the sisters share: one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. Spotting a shared word in three scripts is the quickest way to feel the relationship.
@@ -482,10 +482,10 @@ Sound each out, left to right, before checking:
 Read: నమస్కారం namaskāram. Meaning: hello / greetings. Origin: Sanskrit.
 Read: ధన్యవాదములు dhanyavādamulu. Meaning: thank you. Origin: Sanskrit stem + Telugu plural.
 Read: అవును avunu. Meaning: yes. Origin: native.
-Read: లేదు lēdu. Meaning: no / there isn't. Origin: native (root lē-, not il-).
-Read: సరే sarē. Meaning: okay. Origin: native (= sari).
+Read: లేదు lēdu. Meaning: no / there isn't. Origin: native (lē-, filed with il-).
+Read: సరే sarē. Meaning: okay. Origin: uncertain (= sari).
 The letters that did it: consonants carry a built-in "a" (many under the little talakaṭṭu hat); a vowel sign swaps that vowel (ా ā, ు u, ే ē); a virama lets a consonant stack below the next as a conjunct (స్క); a dot anusvāra (ం) adds a final nasal; and a word-initial vowel gets a full letter (అ).
-The now-familiar pattern: the two greeting/politeness words are Sanskrit; the three everyday grammar words are native — though Telugu's "no" (lēdu) takes a different native root from its sisters' il-.
+The now-familiar pattern: the two greeting/politeness words are Sanskrit; avunu and lēdu are native, and lēdu only looks unlike its sisters' il-; sarē's origin is uncertain.
 
 Why it's said this way — a promise for later.
 Telugu has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part.
@@ -500,5 +500,5 @@ Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 [pause 3 seconds]
-Read all five aloud. Which two are Sanskrit, which three native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu, sarē.) How does Telugu's "no" differ from its sisters'? (Different root — lē- / kā-, not il-.) Which word means "okay"? (sarē.)
+Read all five aloud. Which two are Sanskrit, which two native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu; sarē is uncertain.) How does Telugu's "no" differ from its sisters'? (Only in shape — DEDR files lē- with their il-.) Which word means "okay"? (sarē.)
 Next chapter starts introducing yourself, one short possession form at a time.

@@ -15,7 +15,7 @@ concept_tag: TE-LOC104-MALUPU
 prerequisites: [TE-C104-tota, TE-C104-mula]
 sounds: []
 roots: [telugu-malupu-bend]
-etymology_hook: "malupu: origin uncertain; DEDR lists the shape only as 'to extinguish'"
+etymology_hook: "malupu: probably native; DEDR 4734 lists maluku 'a turn' with Kannada malaku 'a turn, bend'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C104-mula]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **మలుపు** (*malupu*) is uncertain. DEDR lists the same shape only as a verb meaning "to extinguish" (DEDR 4831), a different word.
+**మలుపు** (*malupu*) is probably native Dravidian. DEDR 4734 lists Telugu *malapu*, "to turn back", and *maluku*, "a turn, twist", with Kannada *malaku*, "a turn, bend", but not *malupu* itself. DEDR 4831 *malupu*, "to extinguish", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

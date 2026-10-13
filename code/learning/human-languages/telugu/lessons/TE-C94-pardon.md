@@ -47,7 +47,7 @@ a mistake; **మన్నించండి** is the one to use with an elder.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of *manniñcu*, the verb in **మన్నించండి** (*manniñcaṇḍi*), is uncertain: neither DEDR nor CDIAL records it. The polite ending *-aṇḍi* is the one in *raṇḍi*.
+The origin of *manniñcu*, the verb in **మన్నించండి** (*manniñcaṇḍi*), is uncertain: neither DEDR nor CDIAL records it. It may come from Sanskrit *manyatē*, "thinks, honours" (CDIAL 9857), but no source says so. The polite ending *-aṇḍi* is the one in *raṇḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

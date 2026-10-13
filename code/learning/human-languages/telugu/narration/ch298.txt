@@ -45,7 +45,7 @@ You'll want to know: వంకర.
 వంకర — vaṅkara — "crooked, bent".
 
 The word, taken apart.
-వంకర (vaṅkara) is Sanskrit vaṅkara, "crooked", taken over whole as a learned loan, a tatsama (CDIAL 11193). CDIAL ties vaṅka, "bent, crooked", to a probably non-Aryan word-group.
+వంకర (vaṅkara) matches Sanskrit vaṅkara (CDIAL 11193), a lexicon word for "bend of a river"; CDIAL only infers the sense "crooked". CDIAL ties vaṅka, "bent, crooked", to a probably non-Aryan word-group.
 
 What you've built.
 One more word for this chapter.

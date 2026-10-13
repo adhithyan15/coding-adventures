@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 147,
-  "sourceHash": "fnv1a64:86c73585c5802904",
+  "sourceHash": "fnv1a64:d03a74b36774ffff",
   "lessonIds": [
     "TE-C147-tuducu",
     "TE-C147-kattu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch147.txt",
   "json": "telugu/narration/ch147.json",
-  "textHash": "fnv1a64:50dad70f4d5d5265",
-  "jsonHash": "fnv1a64:7747168f5858b1bb",
+  "textHash": "fnv1a64:5f5ebcbacfcf6525",
+  "jsonHash": "fnv1a64:99da248bbb615648",
   "findings": []
 }

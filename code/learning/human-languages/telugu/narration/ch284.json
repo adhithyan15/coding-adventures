@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "To let go, To dig, To happen, To sweep, To knead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1ce21bad43de08d5",
+  "sourceHash": "fnv1a64:73ed7100ecaf9333",
   "lessons": [
     {
       "id": "TE-C284-vadulu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98184e22486cf95b",
+      "sourceHash": "fnv1a64:3c445ed44e15b546",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వదులు (vadulu) is Dravidian as far as DEDR records it: DEDR 5243 lists vadalu, \"to leave, let loose\", from Telugu."
+              "text": "వదులు (vadulu) is native Dravidian. DEDR 5243 lists vadalu, \"to leave, let loose\", with Kurux odoxnā, \"to loosen, get rid of\"."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60c9e95d9eb85944",
+      "sourceHash": "fnv1a64:ed121c9bc9ad88e0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "తవ్వు (tavvu) is Dravidian as far as DEDR records it: DEDR 3122 lists tavvu, \"to dig, excavate\", from Telugu."
+              "text": "తవ్వు (tavvu) is native Dravidian. DEDR 3122 lists tavvu, \"to dig, excavate\", with Kolami and Naiki tavv-, \"to dig\"."
             }
           ]
         },

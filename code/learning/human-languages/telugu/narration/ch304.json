@@ -4,7 +4,7 @@
   "chapter": 304,
   "title": "Nature, Sport, Player, Cricket, Chess",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d250cf7cad228d03",
+  "sourceHash": "fnv1a64:c2a0e419277cc853",
   "lessons": [
     {
       "id": "TE-C304-prakrti",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:078f13aa958752e6",
+      "sourceHash": "fnv1a64:4715a23c2d7543f7",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "చదరంగం (cadaraṅgaṁ) is Sanskrit caturaṅga, \"having four limbs; consisting of four parts\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 4596). The game of the four arms of an army took the name."
+              "text": "చదరంగం (cadaraṅgaṁ) comes from Sanskrit caturaṅga, \"having four limbs; consisting of four parts\" (CDIAL 4596), reshaped to Telugu sounds (t to d): a tadbhava. The game of the four arms of an army took the name."
             }
           ]
         },

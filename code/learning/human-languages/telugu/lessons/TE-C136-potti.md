@@ -47,7 +47,7 @@ reviews_of: [TE-C136-podavu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**పొట్టి** (*poṭṭi*) is native Dravidian, one word with Tamil *poṭi*, "that which is small", and Kannada *puṭṭa*, "smallness" (DEDR 4259). DEDR compares Sanskrit *puṭṭ-*, "to be small" (CDIAL 8256), and Prakrit *phiḍḍa*, "dwarf".
+**పొట్టి** (*poṭṭi*) is native Dravidian, one word with Tamil *poṭi*, "that which is small", and Kannada *puṭṭa*, "smallness" (DEDR 4259). DEDR compares Sanskrit *puṭṭ-*, "to be small" (CDIAL 8256), and Prakrit *phiḍḍa*, "dwarf"; CDIAL, after Burrow, takes the Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

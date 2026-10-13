@@ -29,14 +29,14 @@ variety: standard-colloquial
 reviews_of: [TE-C01-avunu, TE-C01-namaskaram]
 ---
 
-# లేదు (lēdu) — "no," where Telugu parts ways with its sisters
+# లేదు (lēdu) — "no," where Telugu only looks different from its sisters
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The partner of *avunu* — and a small surprise. Tamil, Kannada, and
 Malayalam all say "no" with a word built on *il-* (*illai / illa*). Telugu
-does **not**: it goes its own way with *lēdu*.
+says *lēdu*, which looks nothing like them, yet comes from the same root.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[TE-LEX-C01-LEDU-01]; assesses=[] -->
@@ -105,4 +105,4 @@ draws the line most sharply.)
 
 [PAUSE 3s] [YOU READ: **లేదు**] What does it deny — existence or identity? (Existence
 — "there isn't"; *kādu* denies identity.) How does Telugu's "no" differ from
-Tamil's and Kannada's? (Different root: *lē-* / *kā-*, not the shared *il-*.)
+Tamil's and Kannada's? (Only in shape: DEDR files *lē-* with their *il-*.)

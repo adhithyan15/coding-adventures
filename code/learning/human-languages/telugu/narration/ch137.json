@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Light, Soft, Hard, Clean, Dirty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5eab9acf8e018235",
+  "sourceHash": "fnv1a64:0a24825070403d6a",
   "lessons": [
     {
       "id": "TE-C137-telika",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab4f3549d9b7d168",
+      "sourceHash": "fnv1a64:9dd7acab0dfb19a0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గట్టి (gaṭṭi) is native Dravidian. DEDR 1148 lists gaṭṭi, \"hard, firm\", with Tamil kaṭṭu, \"to harden\", and Kannada gaṭṭi, \"firmness\". DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650)."
+              "text": "గట్టి (gaṭṭi) is native Dravidian. DEDR 1148 lists gaṭṭi, \"hard, firm\", with Tamil kaṭṭu, \"to harden\", and Kannada gaṭṭi, \"firmness\". DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650); CDIAL reports the view that kaṭhina came from Dravidian."
             }
           ]
         },

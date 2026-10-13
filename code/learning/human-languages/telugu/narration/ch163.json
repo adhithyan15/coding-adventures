@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "To suspect, To realize, To pay attention to, To compete, To kick",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:632bd6ee0d42d09d",
+  "sourceHash": "fnv1a64:653077c952ed94fe",
   "lessons": [
     {
       "id": "TE-C163-anumanincu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ac811a3f58f4971",
+      "sourceHash": "fnv1a64:71d975e11da1e5be",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "తన్ను (tannu) is Dravidian as far as DEDR records it: DEDR 3053 lists tannu, \"to kick; a kick\", from Telugu alone."
+              "text": "తన్ను (tannu) is native Dravidian. DEDR 3053 lists tannu, \"to kick; a kick\", with Kolami tanḍ-, \"to kick\", and Konda dand-, \"to kick, beat\"."
             }
           ]
         },

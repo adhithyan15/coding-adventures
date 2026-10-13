@@ -15,7 +15,7 @@ concept_tag: TE-VERB-VYATIREKINCU
 prerequisites: [TE-C283-tolagincu, TE-C283-gurtupattu]
 sounds: []
 roots: [sanskrit-vyatireka]
-etymology_hook: "vyatirēkiñcu: Sanskrit vyatirēka 'contrast, opposition' + the Telugu verb ending -iñcu"
+etymology_hook: "vyatirēkiñcu: Sanskrit vyatirēka 'contrast, exclusion' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:

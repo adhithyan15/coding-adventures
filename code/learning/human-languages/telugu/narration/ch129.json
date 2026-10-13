@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Window curtain, Clay pot, Water pot, Cupboard, Table",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ccd010c7abdb768d",
+  "sourceHash": "fnv1a64:13fbe8a8cda7b710",
   "lessons": [
     {
       "id": "TE-C129-kitikitera",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca39cdd5ce62d521",
+      "sourceHash": "fnv1a64:9f6468a95f98f1eb",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "చట్టి (caṭṭi) is a Dravidian word, one with Tamil caṭṭi and Kannada caṭṭi, \"earthen pot\" (DEDR 2306). DEDR points to the northern pot words in CDIAL 4736 and notes that some forms are borrowed back from them."
+              "text": "చట్టి (caṭṭi) is a Dravidian word, one with Tamil caṭṭi and Kannada caṭṭi, \"earthen pot\" (DEDR 2306). DEDR points to the northern pot words in CDIAL 4736, which CDIAL takes from Dravidian, and notes that some forms are borrowed back from them."
             }
           ]
         },

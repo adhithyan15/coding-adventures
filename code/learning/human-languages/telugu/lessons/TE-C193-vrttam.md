@@ -47,7 +47,7 @@ reviews_of: [TE-C193-gita]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**వృత్తం** (*vṛttaṁ*) is Sanskrit *vṛtta*, "turned; rounded", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12069). The sense "circle" is the one Telugu gives it.
+**వృత్తం** (*vṛttaṁ*) is Sanskrit *vṛtta*, "turned; rounded", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12069). Sanskrit already used it for "circle" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

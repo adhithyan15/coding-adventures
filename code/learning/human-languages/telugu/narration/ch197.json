@@ -4,7 +4,7 @@
   "chapter": 197,
   "title": "Carpenter, Writer, Problem, Solution, Opinion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37b7907aaeb1498d",
+  "sourceHash": "fnv1a64:cc2c825a25c0a8d3",
   "lessons": [
     {
       "id": "TE-C197-vadrangi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75b4a86a8134f5b2",
+      "sourceHash": "fnv1a64:c02756f40cebe2a0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of వడ్రంగి (vaḍraṅgi) is uncertain. DEDR and CDIAL list no word of this shape meaning \"carpenter\"."
+              "text": "The origin of వడ్రంగి (vaḍraṅgi) is uncertain. CDIAL 11375 has Sanskrit vardhaki, Prakrit vaḍḍhaï, \"carpenter\", which may be behind its first part, but no source says so."
             }
           ]
         },

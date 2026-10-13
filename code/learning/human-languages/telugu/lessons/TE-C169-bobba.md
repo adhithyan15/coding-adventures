@@ -47,7 +47,7 @@ reviews_of: [TE-C169-pundu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**బొబ్బ** (*bobba*) is native Dravidian. DEDR 4455 lists *bobba*, "blister", with Kannada *bobbe* and Malayalam *pokkuḷa*, "blister". DEDR compares Nepali *phoko*, "blister" (CDIAL 8391).
+**బొబ్బ** (*bobba*) is native Dravidian. DEDR 4455 lists *bobba*, "blister", with Kannada *bobbe* and Malayalam *pokkuḷa*, "blister". DEDR compares Nepali *phoko*, "blister" (CDIAL 8391), a word group CDIAL thinks probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

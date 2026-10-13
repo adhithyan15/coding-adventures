@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The House Itself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:478eead78ab2f692",
+  "sourceHash": "fnv1a64:de2d7b7485576fb9",
   "lessons": [
     {
       "id": "TE-C67-wall",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce52bf231564df4e",
+      "sourceHash": "fnv1a64:55e33422b62c04ae",
       "notice": null,
       "blocks": [
         {
@@ -224,7 +224,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "కప్పు (kappu) is native Dravidian, from the verb kappu, \"to cover\", one word with Tamil kappu, \"to overspread\", and Kannada kappu, \"to cover\" (DEDR 1221). DEDR compares Sanskrit kavaca, \"armour\" (CDIAL 2957)."
+              "text": "కప్పు (kappu) is native Dravidian, from the verb kappu, \"to cover\", one word with Tamil kappu, \"to overspread\", and Kannada kappu, \"to cover\" (DEDR 1221). DEDR compares Sanskrit kavaca, \"armour\" (CDIAL 2957), which CDIAL takes from Dravidian."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [TE-C232-maggu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-DEDR 1180 lists **కండువా** (*kaṇḍuvā*), "upper garment", with Tamil *kaṇṭai*, "a small cloth", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801 has Oriya *khaṇḍuā*, "shawl".
+DEDR 1180 lists **కండువా** (*kaṇḍuvā*), "upper garment", with Tamil *kaṇṭai*, "a small cloth", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801, the other way round, takes Oriya *khaṇḍuā*, "shawl", from Dravidian, citing Telugu *kaṇḍuvā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

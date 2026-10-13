@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 220,
-  "sourceHash": "fnv1a64:1c2e617fa47dc237",
+  "sourceHash": "fnv1a64:492fbab764dfac16",
   "lessonIds": [
     "TE-C220-ucitam",
     "TE-C220-nindu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch220.txt",
   "json": "telugu/narration/ch220.json",
-  "textHash": "fnv1a64:0b72d313040b4586",
-  "jsonHash": "fnv1a64:38e27cdb1d9d0671",
+  "textHash": "fnv1a64:0ac3eb5e1eb503fa",
+  "jsonHash": "fnv1a64:ee1190e9df491ad4",
   "findings": []
 }

@@ -50,7 +50,7 @@ It carries over into speech unchanged. చేదు news is bad news, and a చ�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**చేదు** (*cēdu*) is native Dravidian. DEDR 1249 lists the Telugu word for "bitterness; bitter" with Tamil *kaya*, "to be bitter", and Kannada *kay*, "bitterness". DEDR compares Sanskrit *kaṣāya*, "astringent" (CDIAL 2974).
+**చేదు** (*cēdu*) is native Dravidian. DEDR 1249 lists the Telugu word for "bitterness; bitter" with Tamil *kaya*, "to be bitter", and Kannada *kay*, "bitterness". DEDR compares Sanskrit *kaṣāya*, "astringent" (CDIAL 2974), which CDIAL thinks points to a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

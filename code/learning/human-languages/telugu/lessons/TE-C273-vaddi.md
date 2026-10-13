@@ -15,7 +15,7 @@ concept_tag: TE-PANI273-VADDI
 prerequisites: [TE-C272-kandam, TE-C272-rekka]
 sounds: []
 roots: [telugu-vaddi-interest]
-etymology_hook: "vaḍḍī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'interest'"
+etymology_hook: "vaḍḍī ← Sanskrit vṛddhi 'increase', Prakrit vaḍḍhi (CDIAL 12076), a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C272-rekka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **వడ్డీ** (*vaḍḍī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "interest on money".
+**వడ్డీ** (*vaḍḍī*) comes from Sanskrit *vṛddhi*, "increase", through Prakrit *vaḍḍhi* (CDIAL 12076): a tadbhava. CDIAL lists words for "interest" from it in Hindi, Bengali and Old Sinhala.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

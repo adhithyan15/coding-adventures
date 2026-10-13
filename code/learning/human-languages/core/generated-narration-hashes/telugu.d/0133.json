@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 133,
-  "sourceHash": "fnv1a64:13ea76c6f268ab8b",
+  "sourceHash": "fnv1a64:15a89237c952c546",
   "lessonIds": [
     "TE-C133-guddalu",
     "TE-C133-misalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch133.txt",
   "json": "telugu/narration/ch133.json",
-  "textHash": "fnv1a64:d0542095e6a93a21",
-  "jsonHash": "fnv1a64:0ef6668518af0e07",
+  "textHash": "fnv1a64:c06764dacd849f23",
+  "jsonHash": "fnv1a64:5f71d4d8e1a381ec",
   "findings": []
 }

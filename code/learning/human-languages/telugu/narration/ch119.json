@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Honey, Idli, Dosa, Vada, Coffee",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e3be6ef3139c19aa",
+  "sourceHash": "fnv1a64:c59458966ede3a66",
   "lessons": [
     {
       "id": "TE-C119-tene",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4e53f18d1295721",
+      "sourceHash": "fnv1a64:b48b77ac0016e1f1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వడ (vaḍa) is Sanskrit vaṭa, \"round cake of pulse fried in oil\", taken over whole as a learned loan, a tatsama (CDIAL 11213). Telugu softened the ṭ to ḍ."
+              "text": "వడ (vaḍa) comes from Sanskrit vaṭa, \"round cake of pulse fried in oil\" (CDIAL 11213), with the ṭ softened to ḍ: a tadbhava."
             }
           ]
         },

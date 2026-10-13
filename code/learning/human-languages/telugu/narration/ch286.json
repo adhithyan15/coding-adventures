@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "To postpone, To hesitate, To escape, To drain, To lean",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9b8d9a7555a81c2a",
+  "sourceHash": "fnv1a64:3ff780d87d4db4d7",
   "lessons": [
     {
       "id": "TE-C286-vayida-veyu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0d2878a1d20653",
+      "sourceHash": "fnv1a64:a3341e26fe431c34",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of vāyidā, \"postponement\", the first word of వాయిదా వేయు (vāyidā vēyu), is uncertain; DEDR and CDIAL do not list it. Vēyu, \"to put, place\", is native (DEDR 5549)."
+              "text": "Vāyidā, \"postponement\", the first word of వాయిదా వేయు (vāyidā vēyu), is a loan from Arabic waʿda, \"promise, appointed time\", which came through Persian and Hindustani. Vēyu, \"to put, place\", is native (DEDR 5549)."
             }
           ]
         },

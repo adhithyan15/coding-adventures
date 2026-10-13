@@ -4,7 +4,7 @@
   "chapter": 248,
   "title": "To sprout, To milk, To cheat, To rob, To hand over",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0fe1d268dee45658",
+  "sourceHash": "fnv1a64:8e10a7d6d3387878",
   "lessons": [
     {
       "id": "TE-C248-molakettu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d88fa700cac42a0",
+      "sourceHash": "fnv1a64:ee327ce4e418d42f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of mōsaṁ, \"deceit\", the first word of మోసం చేయు (mōsaṁ cēyu), is uncertain; DEDR and CDIAL do not list it. Cēyu, \"to do\", is native (DEDR 1957)."
+              "text": "Mōsaṁ, \"deceit\", the first word of మోసం చేయు (mōsaṁ cēyu), is probably Sanskrit mōṣa, \"theft\", Prakrit mōsa, \"stealing\" (CDIAL 10358). Cēyu, \"to do\", is native (DEDR 1957)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b26f0856dbb7e84b",
+      "sourceHash": "fnv1a64:a887a4ce6b4124ce",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of అప్పగించు (appagiñcu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"to hand over, entrust\"."
+              "text": "The origin of అప్పగించు (appagiñcu) is uncertain. DEDR does not list it, but compare oppincu, \"to make over, entrust\", which DEDR 924 lists under oppu, \"to consent\"."
             }
           ]
         },

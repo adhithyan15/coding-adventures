@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 281,
-  "sourceHash": "fnv1a64:d6a1b0db60b030ab",
+  "sourceHash": "fnv1a64:5595160415638526",
   "lessonIds": [
     "TE-C281-raddu-ceyu",
     "TE-C281-samarpincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch281.txt",
   "json": "telugu/narration/ch281.json",
-  "textHash": "fnv1a64:b0a209f7b5481597",
-  "jsonHash": "fnv1a64:474cff4edd112459",
+  "textHash": "fnv1a64:08691cc1e220ad2d",
+  "jsonHash": "fnv1a64:07880103c8914e8b",
   "findings": []
 }

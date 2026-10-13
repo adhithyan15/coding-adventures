@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 282,
-  "sourceHash": "fnv1a64:403e0f79b4b81bcb",
+  "sourceHash": "fnv1a64:163adfd9a2469822",
   "lessonIds": [
     "TE-C282-meyu",
     "TE-C282-natu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch282.txt",
   "json": "telugu/narration/ch282.json",
-  "textHash": "fnv1a64:940c1bbd2a45d041",
-  "jsonHash": "fnv1a64:0a90a76d38000661",
+  "textHash": "fnv1a64:bbdf2a0ef1addf0f",
+  "jsonHash": "fnv1a64:5d7e428e2211b5e0",
   "findings": []
 }

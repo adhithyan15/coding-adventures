@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 109,
-  "sourceHash": "fnv1a64:0f4719c0a2e54eb7",
+  "sourceHash": "fnv1a64:b532e46b4b9f2e8d",
   "lessonIds": [
     "TE-C109-anduke",
     "TE-C109-mancam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch109.txt",
   "json": "telugu/narration/ch109.json",
-  "textHash": "fnv1a64:1bcad5e2cfa031fb",
-  "jsonHash": "fnv1a64:ad13ebcf750392dd",
+  "textHash": "fnv1a64:34b75d3da6121c37",
+  "jsonHash": "fnv1a64:4b26a2de6c76b1e1",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Offers, Apologies, Introductions",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca20cb75540e07b6",
+  "sourceHash": "fnv1a64:5fe136bc00f49c97",
   "lessons": [
     {
       "id": "TE-C94-pardon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88cc4d73bc5b3038",
+      "sourceHash": "fnv1a64:0e30f9f8eefb8110",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of manniñcu, the verb in మన్నించండి (manniñcaṇḍi), is uncertain: neither DEDR nor CDIAL records it. The polite ending -aṇḍi is the one in raṇḍi."
+              "text": "The origin of manniñcu, the verb in మన్నించండి (manniñcaṇḍi), is uncertain: neither DEDR nor CDIAL records it. It may come from Sanskrit manyatē, \"thinks, honours\" (CDIAL 9857), but no source says so. The polite ending -aṇḍi is the one in raṇḍi."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 302,
   "title": "Ox, Calf, Sheep, Wolf, Crocodile",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d7a97bec26f013a",
+  "sourceHash": "fnv1a64:75910c4ed34b109f",
   "lessons": [
     {
       "id": "TE-C302-eddu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3210e689c05d4c05",
+      "sourceHash": "fnv1a64:9f799bd493f57681",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "దూడ (dūḍa) is Dravidian as far as DEDR records it: DEDR 3378 lists dūḍa, \"a calf\"."
+              "text": "దూడ (dūḍa) is native Dravidian. DEDR 3378 lists dūḍa, \"a calf\", with Gondi ḍuḍḍe, \"female young of a buffalo\"."
             }
           ]
         },

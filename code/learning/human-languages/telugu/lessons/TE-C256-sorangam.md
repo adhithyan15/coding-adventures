@@ -15,7 +15,7 @@ concept_tag: TE-STHALAM256-SORANGAM
 prerequisites: [TE-C255-raccabanda, TE-C256-sandu]
 sounds: []
 roots: [sanskrit-suranga]
-etymology_hook: "soraṅgaṁ ← Sanskrit suraṅgā 'subterranean passage, mine', a tatsama (CDIAL 13506)"
+etymology_hook: "soraṅgaṁ ← Sanskrit suraṅgā 'subterranean passage, mine' (CDIAL 13506), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C256-sandu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**సొరంగం** (*soraṅgaṁ*) is Sanskrit *suraṅgā*, "subterranean passage, mine", taken over whole as a learned loan, a tatsama (CDIAL 13506).
+**సొరంగం** (*soraṅgaṁ*) comes from Sanskrit *suraṅgā*, "subterranean passage, mine" (CDIAL 13506), reshaped to Telugu sounds: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

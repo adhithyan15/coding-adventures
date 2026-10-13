@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Vegetables, Banana, Mango, Coconut, Onion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d8cbd52beea3b187",
+  "sourceHash": "fnv1a64:77e33cd7ecc7aab8",
   "lessons": [
     {
       "id": "TE-C117-kuragayalu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3eb2d8b2bd3c95f",
+      "sourceHash": "fnv1a64:c13cc09585ec0d22",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ulli, \"onion\", the first part of ఉల్లిపాయ (ullipāya), is uncertain: DEDR does not list it in this sense. The second part is kāya, \"unripe fruit, pod\" (DEDR 1459), which DEDR compares with the Indo-Aryan kacca, \"raw\" (CDIAL 2613)."
+              "text": "Ulli, \"onion\", the first part of ఉల్లిపాయ (ullipāya), is native Dravidian: DEDR 705 lists Telugu ulli, \"onion, garlic\", with Tamil and Kannada uḷḷi, and compares Sanskrit ūlī. The second part is kāya, \"unripe fruit, pod\" (DEDR 1459), which DEDR compares with the Indo-Aryan kacca, \"raw\" (CDIAL 2613)."
             }
           ]
         },

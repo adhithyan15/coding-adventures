@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Interest, Bill, Discount, Groceries, Purchase",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c1b038c7b86b1727",
+  "sourceHash": "fnv1a64:8953adae686d6e0c",
   "lessons": [
     {
       "id": "TE-C273-vaddi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57c28c9838ee6e58",
+      "sourceHash": "fnv1a64:1228290cde898767",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of వడ్డీ (vaḍḍī) is uncertain. DEDR and CDIAL list no word of this shape meaning \"interest on money\"."
+              "text": "వడ్డీ (vaḍḍī) comes from Sanskrit vṛddhi, \"increase\", through Prakrit vaḍḍhi (CDIAL 12076): a tadbhava. CDIAL lists words for \"interest\" from it in Hindi, Bengali and Old Sinhala."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 239,
-  "sourceHash": "fnv1a64:bbca490b303ba1e2",
+  "sourceHash": "fnv1a64:b9629ddb11251ce5",
   "lessonIds": [
     "TE-C239-nivedika",
     "TE-C239-samstha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch239.txt",
   "json": "telugu/narration/ch239.json",
-  "textHash": "fnv1a64:ee923e09c9b54f75",
-  "jsonHash": "fnv1a64:b7d18f3c6671dfb4",
+  "textHash": "fnv1a64:9018e9e88c770fa7",
+  "jsonHash": "fnv1a64:8d71ea3322be3e10",
   "findings": []
 }

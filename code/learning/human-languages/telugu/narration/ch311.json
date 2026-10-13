@@ -4,7 +4,7 @@
   "chapter": 311,
   "title": "College, University, Degree, Experience, Account",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4f5153ff41c5670b",
+  "sourceHash": "fnv1a64:52b24f30f1ad98e5",
   "lessons": [
     {
       "id": "TE-C311-kalasala",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3196accf106b544",
+      "sourceHash": "fnv1a64:5e9223cd0b508ba5",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఖాతా (khātā) matches Hindustani khātā, \"account, ledger\", which DEDR and CDIAL do not list."
+              "text": "ఖాతా (khātā) matches Hindustani khātā, \"account book\", which CDIAL 3648 sets under Sanskrit kṣatra, \"might, rule\"."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: TE-VERB-VADULU
 prerequisites: [TE-C283-vyatirekincu, TE-C283-vadincu]
 sounds: []
 roots: [dravidian-vadalu-leave]
-etymology_hook: "vadulu: Dravidian; DEDR 5243 lists vadalu 'to leave, let loose'"
+etymology_hook: "vadulu: native Dravidian; DEDR 5243 lists vadalu 'to leave, let loose' with Kurux odoxnā"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C283-vadincu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**వదులు** (*vadulu*) is Dravidian as far as DEDR records it: DEDR 5243 lists *vadalu*, "to leave, let loose", from Telugu.
+**వదులు** (*vadulu*) is native Dravidian. DEDR 5243 lists *vadalu*, "to leave, let loose", with Kurux *odoxnā*, "to loosen, get rid of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

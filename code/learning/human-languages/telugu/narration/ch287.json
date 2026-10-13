@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "Chest, Accident, Ambulance, Insurance, Emergency",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69b1c328687add91",
+  "sourceHash": "fnv1a64:2bb15af1888df384",
   "lessons": [
     {
       "id": "TE-C287-chati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:461c9c18ce7720bf",
+      "sourceHash": "fnv1a64:fb91ce89d56aa868",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ఛాతీ (chātī) is uncertain. DEDR and CDIAL list no word of this shape meaning \"chest\"."
+              "text": "ఛాతీ (chātī) is probably a northern loan, like Hindi chātī, \"chest\", which CDIAL 5014 sets under a reconstructed chātti, \"chest, breast\"."
             }
           ]
         },

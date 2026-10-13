@@ -15,7 +15,7 @@ concept_tag: TE-PANI197-VADRANGI
 prerequisites: [TE-C196-badhyata, TE-C196-darakhastu]
 sounds: []
 roots: [telugu-vadrangi-carpenter]
-etymology_hook: "vaḍraṅgi: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'carpenter'"
+etymology_hook: "vaḍraṅgi: origin uncertain; perhaps Sanskrit vardhaki 'carpenter' (CDIAL 11375)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C196-darakhastu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **వడ్రంగి** (*vaḍraṅgi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "carpenter".
+The origin of **వడ్రంగి** (*vaḍraṅgi*) is uncertain. CDIAL 11375 has Sanskrit *vardhaki*, Prakrit *vaḍḍhaï*, "carpenter", which may be behind its first part, but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

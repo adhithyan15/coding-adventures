@@ -4,7 +4,7 @@
   "chapter": 198,
   "title": "Tuition, Interview, Work shift, Uniform, Staff",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2c4a68025856fe3d",
+  "sourceHash": "fnv1a64:db152df0ea78e958",
   "lessons": [
     {
       "id": "TE-C198-tyusanu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e316f8745080cd44",
+      "sourceHash": "fnv1a64:0104b43a04ba9bf8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of సిబ్బంది (sibbandi) is uncertain. DEDR and CDIAL list no word of this shape meaning \"staff\"."
+              "text": "The origin of సిబ్బంది (sibbandi) is uncertain. DEDR and CDIAL list no word of this shape meaning \"staff\". It is probably Hindustani sibandī, the \"sebundy\" of British India, a word for hired staff and irregular troops."
             }
           ]
         },

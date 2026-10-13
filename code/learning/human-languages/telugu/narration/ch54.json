@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "The Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8f3b068089beee1",
+  "sourceHash": "fnv1a64:dd70f7e1a9ad103a",
   "lessons": [
     {
       "id": "TE-C54-tree",
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d143069686bcddc4",
+      "sourceHash": "fnv1a64:188bf408504a0672",
       "notice": null,
       "blocks": [
         {
@@ -689,7 +689,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of మొక్క (mokka) is uncertain. DEDR does not list it in this sense; its nearest entry is DEDR 4997, which lists Telugu molaka and mōka, \"sprout, shoot\", with Tamil muḷai, \"to sprout\"."
+              "text": "మొక్క (mokka) is native Dravidian. DEDR 4997 lists Telugu mokka, \"young plant, shoot, sprout\", beside molaka and mōka, \"sprout\", with Tamil muḷai, \"to sprout\"."
             }
           ]
         },

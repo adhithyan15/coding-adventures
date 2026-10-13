@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 169,
-  "sourceHash": "fnv1a64:e42f54248b140425",
+  "sourceHash": "fnv1a64:19ab850b15490ffd",
   "lessonIds": [
     "TE-C169-pundu",
     "TE-C169-bobba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch169.txt",
   "json": "telugu/narration/ch169.json",
-  "textHash": "fnv1a64:19c23ad203f0e405",
-  "jsonHash": "fnv1a64:c9518adb3f37840b",
+  "textHash": "fnv1a64:61b4cb5763c4bd2e",
+  "jsonHash": "fnv1a64:a9aeddbcad49dc25",
   "findings": []
 }

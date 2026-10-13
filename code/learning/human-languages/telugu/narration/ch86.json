@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Slower, Please",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:56fca76651172ff8",
+  "sourceHash": "fnv1a64:f8a17c286e2b4b79",
   "lessons": [
     {
       "id": "TE-C86-slowly",
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d42e5328803703e",
+      "sourceHash": "fnv1a64:73129e93afe104b6",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గట్టిగా (gaṭṭigā) is native Dravidian: gaṭṭi, \"hard, firm\", which DEDR 1148 lists with Tamil kaṭṭu, \"to harden\", followed by the adverb ending -gā. DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650)."
+              "text": "గట్టిగా (gaṭṭigā) is native Dravidian: gaṭṭi, \"hard, firm\", which DEDR 1148 lists with Tamil kaṭṭu, \"to harden\", followed by the adverb ending -gā. DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650); CDIAL reports the view that kaṭhina came from Dravidian."
             }
           ]
         },

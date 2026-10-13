@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Guava, Sugar, Tall, Short, Heavy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b5b94007c7b1fe7c",
+  "sourceHash": "fnv1a64:d3b821a1208ac8fa",
   "lessons": [
     {
       "id": "TE-C136-jamapandu",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05483de130d7e83d",
+      "sourceHash": "fnv1a64:6d93efb99fa46fe9",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పొట్టి (poṭṭi) is native Dravidian, one word with Tamil poṭi, \"that which is small\", and Kannada puṭṭa, \"smallness\" (DEDR 4259). DEDR compares Sanskrit puṭṭ-, \"to be small\" (CDIAL 8256), and Prakrit phiḍḍa, \"dwarf\"."
+              "text": "పొట్టి (poṭṭi) is native Dravidian, one word with Tamil poṭi, \"that which is small\", and Kannada puṭṭa, \"smallness\" (DEDR 4259). DEDR compares Sanskrit puṭṭ-, \"to be small\" (CDIAL 8256), and Prakrit phiḍḍa, \"dwarf\"; CDIAL, after Burrow, takes the Sanskrit from Dravidian."
             }
           ]
         },

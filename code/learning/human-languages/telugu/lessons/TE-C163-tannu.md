@@ -15,7 +15,7 @@ concept_tag: TE-VERB-TANNU
 prerequisites: [TE-C163-pattincuko, TE-C163-potipadu]
 sounds: []
 roots: [dravidian-tannu-kick]
-etymology_hook: "tannu: Dravidian as far as DEDR records it; DEDR 3053 lists tannu 'to kick' from Telugu alone"
+etymology_hook: "tannu: native Dravidian; DEDR 3053 lists tannu 'to kick' with Kolami tanḍ- 'to kick'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C163-potipadu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**తన్ను** (*tannu*) is Dravidian as far as DEDR records it: DEDR 3053 lists *tannu*, "to kick; a kick", from Telugu alone.
+**తన్ను** (*tannu*) is native Dravidian. DEDR 3053 lists *tannu*, "to kick; a kick", with Kolami *tanḍ-*, "to kick", and Konda *dand-*, "to kick, beat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: TE-PANI313-PALAKA
 prerequisites: [TE-C312-injaniru, TE-C313-suddamukka]
 sounds: []
 roots: [telugu-palaka-slate]
-etymology_hook: "palaka: origin uncertain; DEDR lists the shape only in compounds for boards"
+etymology_hook: "palaka: probably Sanskrit phalaka 'board' (CDIAL 9053), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C313-suddamukka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **పలక** (*palaka*) is uncertain. DEDR lists *palaka* only inside compounds for boards, such as *nettapalaka*, "dice-board" (DEDR 3742).
+**పలక** (*palaka*) probably comes from Sanskrit *phalaka*, "board" (CDIAL 9053), reshaped to Telugu sounds: a tadbhava. CDIAL lists Assamese *phali*, "slate", from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

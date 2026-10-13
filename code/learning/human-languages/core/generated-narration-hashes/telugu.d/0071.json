@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 71,
-  "sourceHash": "fnv1a64:ef20071767e83d7e",
+  "sourceHash": "fnv1a64:7195f613a970ac6c",
   "lessonIds": [
     "TE-C71-uncle",
     "TE-C71-aunt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch71.txt",
   "json": "telugu/narration/ch71.json",
-  "textHash": "fnv1a64:7f9b3df81f5354af",
-  "jsonHash": "fnv1a64:26bb3d1d8a94a115",
+  "textHash": "fnv1a64:abe5b5b9aa01ece2",
+  "jsonHash": "fnv1a64:b9c7ba81f311c3eb",
   "findings": []
 }

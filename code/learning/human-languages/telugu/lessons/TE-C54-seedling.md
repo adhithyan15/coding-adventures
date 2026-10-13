@@ -12,7 +12,7 @@ concept_tag: TE-NOUN-SEEDLING
 prerequisites: [TE-C54-seed]
 sounds: []
 roots: [telugu-mokka-plant]
-etymology_hook: "mokka: origin uncertain; perhaps related to molaka, mōka 'sprout' (DEDR 4997)"
+etymology_hook: "mokka: native Dravidian; DEDR 4997 lists mokka 'young plant, sprout' with Tamil muḷai 'to sprout'"
 duration:
   max_seconds: 210
 requires:
@@ -50,7 +50,7 @@ Do not tie it to మొక్కు, "to bow, to make a vow", which sounds close
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **మొక్క** (*mokka*) is uncertain. DEDR does not list it in this sense; its nearest entry is DEDR 4997, which lists Telugu *molaka* and *mōka*, "sprout, shoot", with Tamil *muḷai*, "to sprout".
+**మొక్క** (*mokka*) is native Dravidian. DEDR 4997 lists Telugu *mokka*, "young plant, shoot, sprout", beside *molaka* and *mōka*, "sprout", with Tamil *muḷai*, "to sprout".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

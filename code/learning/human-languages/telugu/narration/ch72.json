@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Market",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d4a029a1b08c0ee",
+  "sourceHash": "fnv1a64:7a751e0da9625c4f",
   "lessons": [
     {
       "id": "TE-C72-shop",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ed7b211b4ed08db",
+      "sourceHash": "fnv1a64:71a363a960fa73af",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of తూకం (tūkaṁ) is uncertain. Neither DEDR nor CDIAL records it."
+              "text": "తూకం (tūkaṁ) is probably native Dravidian. DEDR 3376 lists a nasalised Telugu tūgu, \"to hang, weigh\", and tūcu, \"to weigh\", with Kannada tūka, \"weighing, weight\"; it does not list tūkaṁ itself."
             }
           ]
         },

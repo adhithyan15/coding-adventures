@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "To hurry, To brush, To change, To take off, To measure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7d162de915aa1ad9",
+  "sourceHash": "fnv1a64:53651d1b3b0782e9",
   "lessons": [
     {
       "id": "TE-C158-tondarapadu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:622baaa10d0ff341",
+      "sourceHash": "fnv1a64:d38c47532fab4281",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "తోము (tōmu) is Dravidian as far as DEDR records it: DEDR 3552 lists tōmu, \"to rub, clean\", from Telugu alone."
+              "text": "తోము (tōmu) is native Dravidian. DEDR 3552 lists tōmu, \"to rub, clean\", with Gadba dōm-, \"to wash and clean by rubbing\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae5409da9bcb0dc2",
+      "sourceHash": "fnv1a64:de5f2006cd54d746",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "కొలుచు (kolucu) is Dravidian. DEDR 1827 lists kolucu, \"to measure\", with kola, \"measurement\", but doubts whether this group belongs with Tamil kuḷakam, \"a grain measure\". DEDR compares Sanskrit kuḍava, \"a grain measure\" (CDIAL 3246), which CDIAL takes from Dravidian."
+              "text": "కొలుచు (kolucu) is Dravidian. DEDR 1827 lists kolucu, \"to measure\", with kola, \"measurement\", but doubts whether this group belongs with Tamil kuḷakam, \"a grain measure\". DEDR compares the Tamil measure words with Sanskrit kuḍava, \"a grain measure\" (CDIAL 3246), which CDIAL takes from Dravidian."
             }
           ]
         },

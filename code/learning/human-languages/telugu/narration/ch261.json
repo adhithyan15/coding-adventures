@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "Natural, Thick, Greasy, Sticky, Rough",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:48ac3cf678f0afd2",
+  "sourceHash": "fnv1a64:7d9034669438a2a0",
   "lessons": [
     {
       "id": "TE-C261-sahajamaina",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:593933f0a40b92e3",
+      "sourceHash": "fnv1a64:f8e93b7c8d05f8ae",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of గరుకు (garuku) is uncertain. DEDR and CDIAL list no word of this shape meaning \"rough\"."
+              "text": "గరుకు (garuku) is probably native Dravidian. DEDR 1265 lists Telugu kaṟaku, \"roughness; rough\", with Kannada garaku, \"rough surface\", and Tulu garu, \"rough\", and compares Sanskrit karkaśa, \"rough\"."
             }
           ]
         },

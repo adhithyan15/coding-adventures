@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 269,
-  "sourceHash": "fnv1a64:fb7ad746f23a6095",
+  "sourceHash": "fnv1a64:93c1b18dfa60bd19",
   "lessonIds": [
     "TE-C269-dabba",
     "TE-C269-kancam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch269.txt",
   "json": "telugu/narration/ch269.json",
-  "textHash": "fnv1a64:60460af2e52c481a",
-  "jsonHash": "fnv1a64:e42115e18b9cd287",
+  "textHash": "fnv1a64:07036e53b77263ae",
+  "jsonHash": "fnv1a64:6f7141484fa2d8b4",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [TE-C257-rahasyam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**స్నేహం** (*snēhaṁ*) is Sanskrit *snēha*, "grease; oiliness; love", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13802). The sense "friendship" is the one Telugu gives it.
+**స్నేహం** (*snēhaṁ*) is Sanskrit *snēha*, "grease; oiliness; love", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13802). Sanskrit already used it for "friendship" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

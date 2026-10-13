@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2af2730c6d1d8c02",
+  "sourceHash": "fnv1a64:d33639607e1cb936",
   "lessons": [
     {
       "id": "TE-C61-curd",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0dcebd645ffd2e6",
+      "sourceHash": "fnv1a64:6a9c374babe14a18",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "CDIAL 12337 lists Sanskrit śarkarā, \"gravel, grit\"; Telugu reshaped it, as Prakrit sakkarā had."
+              "text": "CDIAL 12338 lists Sanskrit śarkarā, \"candied sugar\", with Prakrit sakkarā, \"granulated sugar\"; Telugu reshaped it, as Prakrit had."
             }
           ]
         },

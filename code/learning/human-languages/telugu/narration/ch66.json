@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2cfec944f2fcedb",
+  "sourceHash": "fnv1a64:98bb29415b5d8bc9",
   "lessons": [
     {
       "id": "TE-C66-field",
@@ -322,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d258b665fc7769a",
+      "sourceHash": "fnv1a64:dac5ff71f5fa8bfe",
       "notice": null,
       "blocks": [
         {
@@ -372,7 +372,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గడ్డి (gaḍḍi) is native Dravidian. DEDR 1158 lists gaḍḍi, \"grass, straw, hay\", with Kolami gaḍḍi, \"grass\", and compares the Sanskrit grass words kaṭa and khaṭa, known only from lexicons (CDIAL 2630, 3769)."
+              "text": "గడ్డి (gaḍḍi) is native Dravidian. DEDR 1158 lists gaḍḍi, \"grass, straw, hay\", with Kolami gaḍḍi, \"grass\", and compares the Sanskrit grass words kaṭa and khaṭa, known only from lexicons (CDIAL 2630, 3769); CDIAL takes khaṭa from Dravidian."
             }
           ]
         },

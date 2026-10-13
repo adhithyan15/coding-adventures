@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Tin, Eating plate, Sieve, Wood, Brass",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb7ad746f23a6095",
+  "sourceHash": "fnv1a64:93c1b18dfa60bd19",
   "lessons": [
     {
       "id": "TE-C269-dabba",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91b5456419378435",
+      "sourceHash": "fnv1a64:83b84f9c8614962c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ఇత్తడి (ittaḍi) is uncertain. DEDR and CDIAL list no word of this shape meaning \"brass\"."
+              "text": "The origin of ఇత్తడి (ittaḍi) is uncertain. DEDR does not list it. CDIAL 8184 has Sanskrit pittala, \"brass\", which may be its source, but no source says so."
             }
           ]
         },

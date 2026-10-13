@@ -4,7 +4,7 @@
   "chapter": 298,
   "title": "Blunt, Crooked, Flat, Hollow, Dim",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9695cf1fe60a7096",
+  "sourceHash": "fnv1a64:f137ab31f2ef1906",
   "lessons": [
     {
       "id": "TE-C298-moddu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43e0cc4cb8c8e155",
+      "sourceHash": "fnv1a64:1c56635565461efe",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వంకర (vaṅkara) is Sanskrit vaṅkara, \"crooked\", taken over whole as a learned loan, a tatsama (CDIAL 11193). CDIAL ties vaṅka, \"bent, crooked\", to a probably non-Aryan word-group."
+              "text": "వంకర (vaṅkara) matches Sanskrit vaṅkara (CDIAL 11193), a lexicon word for \"bend of a river\"; CDIAL only infers the sense \"crooked\". CDIAL ties vaṅka, \"bent, crooked\", to a probably non-Aryan word-group."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "To bring, To use, To finish, To begin, To iron",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8a742ead6f6c1bae",
+  "sourceHash": "fnv1a64:6d32a10aef7e8a5f",
   "lessons": [
     {
       "id": "TE-C242-teccu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53d0037d2b498e5c",
+      "sourceHash": "fnv1a64:e3f573a300af5fb4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of istrī, \"an iron for clothes\", the first word of ఇస్త్రీ చేయు (istrī cēyu), is uncertain; DEDR and CDIAL do not list it. Cēyu, \"to do\", is native (DEDR 1957)."
+              "text": "The origin of istrī, \"an iron for clothes\", the first word of ఇస్త్రీ చేయు (istrī cēyu), is uncertain; DEDR and CDIAL do not list it. It may come from Portuguese estirar, \"to stretch\". Cēyu, \"to do\", is native (DEDR 1957)."
             }
           ]
         },

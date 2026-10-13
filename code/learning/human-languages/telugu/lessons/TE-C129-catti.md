@@ -47,7 +47,7 @@ reviews_of: [TE-C129-kitikitera]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**చట్టి** (*caṭṭi*) is a Dravidian word, one with Tamil *caṭṭi* and Kannada *caṭṭi*, "earthen pot" (DEDR 2306). DEDR points to the northern pot words in CDIAL 4736 and notes that some forms are borrowed back from them.
+**చట్టి** (*caṭṭi*) is a Dravidian word, one with Tamil *caṭṭi* and Kannada *caṭṭi*, "earthen pot" (DEDR 2306). DEDR points to the northern pot words in CDIAL 4736, which CDIAL takes from Dravidian, and notes that some forms are borrowed back from them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

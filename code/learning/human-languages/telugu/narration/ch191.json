@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Rubber, Light bulb, Firewood, Net, Weighing scale",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:34aa24eabaaf6af3",
+  "sourceHash": "fnv1a64:52773d73fd700520",
   "lessons": [
     {
       "id": "TE-C191-rabbaru",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db5657c834107a4a",
+      "sourceHash": "fnv1a64:bfc7025ed484c722",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of కట్టెలు (kaṭṭelu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"firewood\"."
+              "text": "The origin of కట్టెలు (kaṭṭelu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"firewood\". It may come from Prakrit kaṭṭha, \"wood\", from Sanskrit kāṣṭha (CDIAL 3120), but no source says so."
             }
           ]
         },

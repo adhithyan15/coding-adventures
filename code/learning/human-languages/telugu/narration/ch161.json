@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "To dance, To celebrate, To greet, To feel shy, To be surprised",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0007f04ee9ad9081",
+  "sourceHash": "fnv1a64:e86de6edf1aa2e69",
   "lessons": [
     {
       "id": "TE-C161-natyam-ceyu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60741e7b85d17567",
+      "sourceHash": "fnv1a64:55ecef334d96ca6e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of పలకరించు (palakariñcu) is uncertain. DEDR 3887 lists paluku, \"to sound, answer, say\", which it resembles, but not this verb itself."
+              "text": "పలకరించు (palakariñcu) is native Dravidian. DEDR 3887 lists palukarincu, \"to accost, speak to\", under paluku, \"to sound, answer, say\"."
             }
           ]
         },

@@ -12,7 +12,7 @@ concept_tag: TE-CASE-GENITIVE
 prerequisites: [TE-C78-isthere, TE-C32-cuudu]
 sounds: []
 roots: [sanskrit-sneha]
-etymology_hook: "snēhituḍi: snēhituḍu 'friend', from Sanskrit sneha 'love' (CDIAL 13802), + the Telugu possessive"
+etymology_hook: "snēhituḍi: snēhituḍu 'friend', Sanskrit snehita, from sneha 'love' (CDIAL 13802), + the Telugu possessive"
 duration:
   max_seconds: 210
 requires:
@@ -48,7 +48,7 @@ A Telugu noun becomes an owner by changing its own ending: స్నేహిత
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**స్నేహితుడి** (*snēhituḍi*) is the possessive of *snēhituḍu*, "friend", built on Sanskrit *sneha*, "affection, love" (CDIAL 13802), with Telugu endings.
+**స్నేహితుడి** (*snēhituḍi*) is the possessive of *snēhituḍu*, "friend", from Sanskrit *snehita*, "loved; a friend", which is built on *sneha*, "affection, love" (CDIAL 13802); the endings are Telugu.
 
 ## Grammar Lens: the noun changes shape before it does a job
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C79-WHO-01]; assesses=[] -->

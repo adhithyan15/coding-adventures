@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "Socks, Coat, Dhoti, Blouse, Lotus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66da0b813188984c",
+  "sourceHash": "fnv1a64:78e70aa92d040372",
   "lessons": [
     {
       "id": "TE-C132-saksu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27b9b81b01e7a737",
+      "sourceHash": "fnv1a64:3de69e852db400cf",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ధోతి (dhōti) is a loan from Hindustani dhotī, which CDIAL 6883 sets under a reconstructed dhauta, \"cloth\", perhaps the same as dhauta, \"washed\"."
+              "text": "ధోతి (dhōti) is a loan from Hindustani dhotī, which CDIAL 6881 sets under a reconstructed dhōtta, \"cloth\", perhaps related to dhauta, \"washed\"."
             }
           ]
         },

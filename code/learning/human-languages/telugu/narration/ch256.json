@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Lane, Tunnel, Outskirts, Warehouse, Court",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0dd8bcf135e85be4",
+  "sourceHash": "fnv1a64:b6e3df53b736fc9a",
   "lessons": [
     {
       "id": "TE-C256-sandu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78adafe5421a40e3",
+      "sourceHash": "fnv1a64:0e7738f8d7683033",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of సందు (sandu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"lane\"."
+              "text": "The origin of సందు (sandu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"lane\". It may come from Sanskrit saṁdhi, \"joint, junction\" (CDIAL 12913), but no source says so."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72e3e28b89fe6611",
+      "sourceHash": "fnv1a64:b11cf5a0462b0153",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సొరంగం (soraṅgaṁ) is Sanskrit suraṅgā, \"subterranean passage, mine\", taken over whole as a learned loan, a tatsama (CDIAL 13506)."
+              "text": "సొరంగం (soraṅgaṁ) comes from Sanskrit suraṅgā, \"subterranean passage, mine\" (CDIAL 13506), reshaped to Telugu sounds: a tadbhava."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7521f487318aca0",
+      "sourceHash": "fnv1a64:611cc6167d4e2ca1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of గోదాము (gōdāmu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"warehouse\"."
+              "text": "The origin of గోదాము (gōdāmu) is not settled. It matches godown, the British-Indian word for a warehouse; DEDR 1525 lists Telugu giḍḍaṅgi, \"storehouse, godown\", with Tamil kiṭaṅku, and points to that word."
             }
           ]
         },

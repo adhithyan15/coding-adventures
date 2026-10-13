@@ -47,7 +47,7 @@ reviews_of: [TE-C187-balli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**పురుగు** (*purugu*) is native Dravidian. DEDR 4312 lists *purugu*, "worm, any insect", with Tamil *puḻu*, "worm", and Kannada *puḻu*, "worm, insect". DEDR compares several Sanskrit words for "worm", among them *pīlu*, "worm" (CDIAL 8240).
+**పురుగు** (*purugu*) is native Dravidian. DEDR 4312 lists *purugu*, "worm, any insect", with Tamil *puḻu*, "worm", and Kannada *puḻu*, "worm, insect". DEDR compares several Sanskrit words for "worm", among them *pīlu*, "worm" (CDIAL 8240), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

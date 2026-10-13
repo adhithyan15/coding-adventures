@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 136,
-  "sourceHash": "fnv1a64:b5b94007c7b1fe7c",
+  "sourceHash": "fnv1a64:d3b821a1208ac8fa",
   "lessonIds": [
     "TE-C136-jamapandu",
     "TE-C136-pancadara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch136.txt",
   "json": "telugu/narration/ch136.json",
-  "textHash": "fnv1a64:6a3c98ceb68b879f",
-  "jsonHash": "fnv1a64:e7818ff45f2d6567",
+  "textHash": "fnv1a64:5a82fdcc05ea2ff6",
+  "jsonHash": "fnv1a64:c3af978727a464ea",
   "findings": []
 }

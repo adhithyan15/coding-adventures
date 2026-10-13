@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Tomato, Potato, Aubergine, Ginger, Garlic",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6270c54daeec5089",
+  "sourceHash": "fnv1a64:44996ac0211bc13b",
   "lessons": [
     {
       "id": "TE-C118-tamata",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91e98830fea5dc6d",
+      "sourceHash": "fnv1a64:6b04e5ffccbb839c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వెల్లుల్లి (vellulli) is \"white onion\": native vel-, \"white\" (DEDR 5496), and ulli, \"onion\", whose origin is uncertain."
+              "text": "వెల్లుల్లి (vellulli) is \"white onion\": native vel-, \"white\" (DEDR 5496), and ulli, \"onion, garlic\", one word with Tamil uḷḷi (DEDR 705)."
             }
           ]
         },

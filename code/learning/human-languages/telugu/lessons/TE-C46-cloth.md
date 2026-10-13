@@ -48,7 +48,7 @@ Sanskrit has *paṭṭa*, "a strip of cloth, a bandage", and here the borrowing 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **బట్ట** (*baṭṭa*) is uncertain, and DEDR does not list it. It is often set beside Sanskrit *paṭṭa*, "cloth, woven silk", which CDIAL 7700 itself takes from a non-Aryan source, without naming which.
+The origin of **బట్ట** (*baṭṭa*) is uncertain, and DEDR does not list it. It is often set beside Sanskrit *paṭṭa*, "cloth, woven silk", which CDIAL 7700 itself thinks probably came from a non-Aryan source, without naming which.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 309,
   "title": "Bund, Cattle, Pillar, Water tap, Flag",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8a670bdce81308a3",
+  "sourceHash": "fnv1a64:2e2a7bf93f44908a",
   "lessons": [
     {
       "id": "TE-C309-gattu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c92a0ca305f4ea91",
+      "sourceHash": "fnv1a64:a2caaca1775ae6cd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of గట్టు (gaṭṭu) is uncertain. DEDR and CDIAL list no word of this shape meaning \"bund, embankment\"."
+              "text": "గట్టు (gaṭṭu) is native Dravidian. DEDR 1147 lists gaṭṭu, \"dam, embankment\", under kaṭṭu, \"to tie, build\", with Kannada gaṭṭu, and compares Sanskrit ghaṭṭa, \"landing place\" (CDIAL 4414)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3594709182f09b82",
+      "sourceHash": "fnv1a64:86c2d2b02e7637b5",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "జెండా (jeṇḍā) matches Hindustani jhaṇḍā, \"flag\", which DEDR and CDIAL do not list."
+              "text": "జెండా (jeṇḍā) matches Hindustani jhaṇḍā, \"flagstaff, flag\", which CDIAL 6898 sets under a reconstructed dhvajadaṇḍa, \"flagstaff\"."
             }
           ]
         },

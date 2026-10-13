@@ -4,7 +4,7 @@
   "chapter": 206,
   "title": "To roll, To slip, To hang, To tread on, To hit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7f8ad517427505ff",
+  "sourceHash": "fnv1a64:df763f751dc500a3",
   "lessons": [
     {
       "id": "TE-C206-dorlu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de072f77a9d1ef42",
+      "sourceHash": "fnv1a64:e1e9f02cd993b219",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "దొర్లు (dorlu) is Dravidian as far as DEDR records it: DEDR 3514 lists doralu, \"to roll, turn over\", from Telugu alone."
+              "text": "దొర్లు (dorlu) is native Dravidian. DEDR 3514 lists doralu, \"to roll, turn over\", with Kui tronga, \"to roll\", and Gondi dorg-, \"to wallow\"."
             }
           ]
         },

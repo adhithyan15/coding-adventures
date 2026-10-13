@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 163,
-  "sourceHash": "fnv1a64:632bd6ee0d42d09d",
+  "sourceHash": "fnv1a64:653077c952ed94fe",
   "lessonIds": [
     "TE-C163-anumanincu",
     "TE-C163-grahincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch163.txt",
   "json": "telugu/narration/ch163.json",
-  "textHash": "fnv1a64:813290339a2b1a75",
-  "jsonHash": "fnv1a64:5cbc6b0b5977ddf2",
+  "textHash": "fnv1a64:cfa977f9e10d28b7",
+  "jsonHash": "fnv1a64:8fbe88172dcf27fb",
   "findings": []
 }

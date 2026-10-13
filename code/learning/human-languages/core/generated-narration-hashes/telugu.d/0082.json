@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 82,
-  "sourceHash": "fnv1a64:b076e49f60aa5a4d",
+  "sourceHash": "fnv1a64:634a6bee014b9744",
   "lessonIds": [
     "TE-C82-sixth",
     "TE-C82-seventh",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "telugu/narration/ch82.txt",
   "json": "telugu/narration/ch82.json",
-  "textHash": "fnv1a64:76e50ceb557e1f7c",
-  "jsonHash": "fnv1a64:fc5763e0b06e1486",
+  "textHash": "fnv1a64:6894b34dbaffaad3",
+  "jsonHash": "fnv1a64:e4ab9af0efdf8908",
   "findings": []
 }

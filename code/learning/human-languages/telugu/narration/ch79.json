@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "He, She, and Whose",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5441bdd7eb3854c5",
+  "sourceHash": "fnv1a64:25d04852e170d056",
   "lessons": [
     {
       "id": "TE-C79-friends",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a662c6c0b42de6c7",
+      "sourceHash": "fnv1a64:222fcc9f6e0a680f",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "స్నేహితుడి (snēhituḍi) is the possessive of snēhituḍu, \"friend\", built on Sanskrit sneha, \"affection, love\" (CDIAL 13802), with Telugu endings."
+              "text": "స్నేహితుడి (snēhituḍi) is the possessive of snēhituḍu, \"friend\", from Sanskrit snehita, \"loved; a friend\", which is built on sneha, \"affection, love\" (CDIAL 13802); the endings are Telugu."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [TE-C242-modalupettu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of *istrī*, "an iron for clothes", the first word of **ఇస్త్రీ చేయు** (*istrī cēyu*), is uncertain; DEDR and CDIAL do not list it. *Cēyu*, "to do", is native (DEDR 1957).
+The origin of *istrī*, "an iron for clothes", the first word of **ఇస్త్రీ చేయు** (*istrī cēyu*), is uncertain; DEDR and CDIAL do not list it. It may come from Portuguese *estirar*, "to stretch". *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

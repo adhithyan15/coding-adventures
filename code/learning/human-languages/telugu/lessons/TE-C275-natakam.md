@@ -47,7 +47,7 @@ reviews_of: [TE-C275-sangitam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**నాటకం** (*nāṭakaṁ*) is Sanskrit *nāṭaka*, "dancer, actor", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7045). The sense "a play" is the one Telugu gives it.
+**నాటకం** (*nāṭakaṁ*) is Sanskrit *nāṭaka*, "dancer, actor", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7045). Sanskrit already used it for "a play" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

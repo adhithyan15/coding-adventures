@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 263,
-  "sourceHash": "fnv1a64:7c236d3b35a3cd62",
+  "sourceHash": "fnv1a64:7623184e79b77313",
   "lessonIds": [
     "TE-C263-verusanaga",
     "TE-C263-ruci",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch263.txt",
   "json": "telugu/narration/ch263.json",
-  "textHash": "fnv1a64:67e35cb174db6f4e",
-  "jsonHash": "fnv1a64:463076ae36832434",
+  "textHash": "fnv1a64:be6bc37808d82fdd",
+  "jsonHash": "fnv1a64:a2b7188274975de4",
   "findings": []
 }

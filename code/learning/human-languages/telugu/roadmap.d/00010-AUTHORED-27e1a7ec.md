@@ -11,7 +11,7 @@
 
 - **Ch. 3 — How Are You**: elā (how; the native *e-* questions) → mīru elā
   unnāru? (the verb *uṇḍu* "to be") → nēnu (I ← Proto-Dravidian) → bāgā (well) →
-  paravālēdu (you're welcome = "no harm," on Telugu's own *lēdu* — where its
+  paravālēdu (you're welcome = "no harm," on Telugu's *lēdu* — where its
   sisters use *illa*) → practice.
 - **Ch. 4 — Farewells**: veḷḷu/vaccu (go/come) → veḷḷi vastānu ("I'll go and come
   back") → rēpu kaluddām (see you tomorrow) → maḷḷī kaluddām (we'll meet again;
@@ -36,8 +36,8 @@
 
 - **Ch. 32 — The Core Verbs**: **ఉండు** (*uṇḍu*, "be") — stem + tense + person on
   Telugu's own be-verb, and the fact that it **has no negative**: Telugu switches
-  to the separate verb **లే-**, the root behind Ch. 1's *lēdu*, where Tamil,
-  Kannada and Malayalam all negate on the shared *il-* → **వెళ్ళు** (*veḷḷu*,
+  to the separate verb **లే-**, the root behind Ch. 1's *lēdu*, which DEDR files
+  with the *il-* Tamil, Kannada and Malayalam all negate on → **వెళ్ళు** (*veḷḷu*,
   "go") — one tense-piece covering both "I go" and "I will go", with "right now"
   built by welding *unnā-* onto the stem (*veḷtunnānu*); the inherited *pō-* root
   survives beside it as **పోవు** → **రా** (*rā*, "come!") — the command and the

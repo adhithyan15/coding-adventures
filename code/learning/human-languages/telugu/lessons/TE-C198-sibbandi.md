@@ -15,7 +15,7 @@ concept_tag: TE-PANI198-SIBBANDI
 prerequisites: [TE-C198-siphtu, TE-C198-yunipharam]
 sounds: []
 roots: [telugu-sibbandi-staff]
-etymology_hook: "sibbandi: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'staff'"
+etymology_hook: "sibbandi: probably Hindustani sibandī 'hired staff'; DEDR and CDIAL do not list it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C198-yunipharam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **సిబ్బంది** (*sibbandi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "staff".
+The origin of **సిబ్బంది** (*sibbandi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "staff". It is probably Hindustani *sibandī*, the "sebundy" of British India, a word for hired staff and irregular troops.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

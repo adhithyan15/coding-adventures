@@ -47,7 +47,7 @@ reviews_of: [TE-C274-visayam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**గణితం** (*gaṇitaṁ*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3996). The sense "mathematics" is the one Telugu gives it.
+**గణితం** (*gaṇitaṁ*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3996). Sanskrit already used it for "arithmetic" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

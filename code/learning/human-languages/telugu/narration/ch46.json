@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb68a21dd928c125",
+  "sourceHash": "fnv1a64:43b71e1b92faa1b7",
   "lessons": [
     {
       "id": "TE-C46-fruit",
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6caeab97d5cb08ee",
+      "sourceHash": "fnv1a64:e49ece9ee53478bc",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +198,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of బట్ట (baṭṭa) is uncertain, and DEDR does not list it. It is often set beside Sanskrit paṭṭa, \"cloth, woven silk\", which CDIAL 7700 itself takes from a non-Aryan source, without naming which."
+              "text": "The origin of బట్ట (baṭṭa) is uncertain, and DEDR does not list it. It is often set beside Sanskrit paṭṭa, \"cloth, woven silk\", which CDIAL 7700 itself thinks probably came from a non-Aryan source, without naming which."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Priest, Artist, Poet, Music, Play",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a381e4d672be04da",
+  "sourceHash": "fnv1a64:8de8add984fda4f2",
   "lessons": [
     {
       "id": "TE-C275-pujari",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37e31dd1f7a8fe34",
+      "sourceHash": "fnv1a64:e546c806588a88d1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సంగీతం (saṅgītaṁ) is Sanskrit saṅgīta, \"song with music\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ."
+              "text": "సంగీతం (saṅgītaṁ) is Sanskrit saṅgīta, \"chorus, concert\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 12849)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19b983672ca628f2",
+      "sourceHash": "fnv1a64:2d14dd96f41ea81e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నాటకం (nāṭakaṁ) is Sanskrit nāṭaka, \"dancer, actor\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7045). The sense \"a play\" is the one Telugu gives it."
+              "text": "నాటకం (nāṭakaṁ) is Sanskrit nāṭaka, \"dancer, actor\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7045). Sanskrit already used it for \"a play\" too."
             }
           ]
         },

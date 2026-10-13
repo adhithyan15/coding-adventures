@@ -47,7 +47,7 @@ reviews_of: [TE-C263-verusanaga]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**రుచి** (*ruci*) is Sanskrit *ruci*, "light, beauty", taken over whole as a learned loan, a tatsama (CDIAL 10762). The sense "taste" is the one Telugu gives it.
+**రుచి** (*ruci*) is Sanskrit *ruci*, "light, beauty", taken over whole as a learned loan, a tatsama (CDIAL 10762). Sanskrit already used it for "taste" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

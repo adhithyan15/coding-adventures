@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "Promise, Secret, Friendship, Quarrel, Culture",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7df95379c14050cb",
+  "sourceHash": "fnv1a64:d5bd3bf1892c7e02",
   "lessons": [
     {
       "id": "TE-C257-vagdanam",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a31ad9878934edb",
+      "sourceHash": "fnv1a64:0db3a631df357399",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "స్నేహం (snēhaṁ) is Sanskrit snēha, \"grease; oiliness; love\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13802). The sense \"friendship\" is the one Telugu gives it."
+              "text": "స్నేహం (snēhaṁ) is Sanskrit snēha, \"grease; oiliness; love\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13802). Sanskrit already used it for \"friendship\" too."
             }
           ]
         },

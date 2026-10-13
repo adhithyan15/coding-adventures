@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Wish, Hope, Dream, Intention, Plan",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c93dac6f67b5136e",
+  "sourceHash": "fnv1a64:a3470c0ccc3bad36",
   "lessons": [
     {
       "id": "TE-C107-korika",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebda8273e205cb70",
+      "sourceHash": "fnv1a64:8a5c0f54b804ab70",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఉద్దేశం (uddēśaṁ) is Sanskrit uddeśa, \"pointing out\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 1998). The sense \"intention\" is the one Telugu gives it."
+              "text": "ఉద్దేశం (uddēśaṁ) is Sanskrit uddeśa, \"pointing out\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 1998). Telugu uses it for \"intention\"."
             }
           ]
         },

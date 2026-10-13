@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 231,
-  "sourceHash": "fnv1a64:4403c25f0036d205",
+  "sourceHash": "fnv1a64:2bddc400624d4eb8",
   "lessonIds": [
     "TE-C231-phyanu",
     "TE-C231-patakaru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch231.txt",
   "json": "telugu/narration/ch231.json",
-  "textHash": "fnv1a64:1135dd7e38efaa99",
-  "jsonHash": "fnv1a64:272e301d7ac0aeac",
+  "textHash": "fnv1a64:5ba02c316b34b9fa",
+  "jsonHash": "fnv1a64:5c4de4cdb6e545f7",
   "findings": []
 }

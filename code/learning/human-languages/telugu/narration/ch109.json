@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "That is exactly why, Bed, Pillow, Blanket, Curtain",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0f4719c0a2e54eb7",
+  "sourceHash": "fnv1a64:b532e46b4b9f2e8d",
   "lessons": [
     {
       "id": "TE-C109-anduke",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1446d5fa6cb2926a",
+      "sourceHash": "fnv1a64:fc58e1aa222c5b7e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "దుప్పటి (duppaṭi) is probably a loan of the northern word for a double cloth, Hindi dupaṭṭā, which CDIAL 6413 traces to a reconstructed dupaṭṭikā, \"two cloths\"."
+              "text": "దుప్పటి (duppaṭi) is probably a loan of the northern word for a double cloth, Hindi dupaṭṭā. CDIAL does not list dupaṭṭā; its entry 6413 reconstructs dupaṭṭikā, \"two cloths\", from a single Ḍogrī word."
             }
           ]
         },

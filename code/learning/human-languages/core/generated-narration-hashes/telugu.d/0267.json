@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 267,
-  "sourceHash": "fnv1a64:02a15bb4e41cd00f",
+  "sourceHash": "fnv1a64:20414979f44d0fb0",
   "lessonIds": [
     "TE-C267-indradhanussu",
     "TE-C267-varada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch267.txt",
   "json": "telugu/narration/ch267.json",
-  "textHash": "fnv1a64:d7b4807e3131c43a",
-  "jsonHash": "fnv1a64:bab0817feb42ae5b",
+  "textHash": "fnv1a64:52d8068744a4d9c8",
+  "jsonHash": "fnv1a64:d704b3c36718142e",
   "findings": []
 }

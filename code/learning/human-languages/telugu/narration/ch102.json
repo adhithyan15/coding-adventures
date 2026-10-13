@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "In the middle, Street, Road, Bridge, Park",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8318c3dba3b503e6",
+  "sourceHash": "fnv1a64:c5b4e488b94f6115",
   "lessons": [
     {
       "id": "TE-C102-madhyalo",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c12558ba3b639492",
+      "sourceHash": "fnv1a64:983574406a2f24d1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వీధి (vīdhi) is Sanskrit vīthi, \"road, street\", taken over whole as a learned loan, a tatsama (CDIAL 12050)."
+              "text": "వీధి (vīdhi) comes from Sanskrit vīthi, \"road, street\" (CDIAL 12050), lightly reshaped (th to dh): a tadbhava."
             }
           ]
         },

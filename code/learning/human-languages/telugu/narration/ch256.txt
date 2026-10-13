@@ -13,7 +13,7 @@ You'll want to know: సందు.
 సందు — sandu — "a lane, an alley".
 
 The word, taken apart.
-The origin of సందు (sandu) is uncertain. DEDR and CDIAL list no word of this shape meaning "lane".
+The origin of సందు (sandu) is uncertain. DEDR and CDIAL list no word of this shape meaning "lane". It may come from Sanskrit saṁdhi, "joint, junction" (CDIAL 12913), but no source says so.
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: సొరంగం.
 సొరంగం — soraṅgaṁ — "a tunnel".
 
 The word, taken apart.
-సొరంగం (soraṅgaṁ) is Sanskrit suraṅgā, "subterranean passage, mine", taken over whole as a learned loan, a tatsama (CDIAL 13506).
+సొరంగం (soraṅgaṁ) comes from Sanskrit suraṅgā, "subterranean passage, mine" (CDIAL 13506), reshaped to Telugu sounds: a tadbhava.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: గోదాము.
 గోదాము — gōdāmu — "a warehouse".
 
 The word, taken apart.
-The origin of గోదాము (gōdāmu) is uncertain. DEDR and CDIAL list no word of this shape meaning "warehouse".
+The origin of గోదాము (gōdāmu) is not settled. It matches godown, the British-Indian word for a warehouse; DEDR 1525 lists Telugu giḍḍaṅgi, "storehouse, godown", with Tamil kiṭaṅku, and points to that word.
 
 What you've built.
 One more word for this chapter.

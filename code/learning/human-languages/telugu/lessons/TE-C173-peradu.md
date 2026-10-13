@@ -47,7 +47,7 @@ reviews_of: [TE-C173-varanda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **పెరడు** (*peraḍu*) is uncertain. DEDR has no entry for it; the nearest is *peḍalu*, "backyard", which DEDR 4146 lists under *peḍa*, "back".
+The origin of **పెరడు** (*peraḍu*) is uncertain. DEDR has no entry for it; the nearest is *peḍalu*, "backyard", which DEDR 4146 lists under *peḍa*, "back". DEDR 4205 also has Kannada *peṟagu*, "backside", and *pittil*, "backyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -22,12 +22,12 @@ pieces taught before the whole; and a book you can read straight through.
   the page after కృతజ్ఞత. A letter never appears in this chain before a word
   the reader can already pronounce needs it, and something else is always
   learned in between.
-- **Telugu as the Sanskritised Dravidian — and the family's odd one out on
+- **Telugu as the Sanskritised Dravidian — and the family's odd-looking
   "no."** Like Kannada, Telugu borrowed heavily from Sanskrit (*namaskāram*,
-  *dhanyavādamulu*) yet keeps native Dravidian for the everyday grammar. But
-  where Tamil, Kannada, and Malayalam all say "no" on the root *il-*, Telugu
-  goes its own way with *lēdu* / *kādu* — a reminder the family has real
-  branches. Each lesson carries an **"Across the family"** cognate box, every
+  *dhanyavādamulu*) yet keeps native Dravidian for the everyday grammar. Where
+  Tamil, Kannada, and Malayalam all say "no" on the root *il-*, Telugu says
+  *lēdu* / *kādu*; DEDR files *lē-* with *il-*, so the difference is one of
+  shape — a reminder the family has real branches. Each lesson carries an **"Across the family"** cognate box, every
   form supplied so nothing is assumed.
 - **Grammar introduced inline**: agglutination (the plural *-mulu*) at
   *dhanyavādamulu*, yes/no as statements of being at *avunu*, the
@@ -35,8 +35,8 @@ pieces taught before the whole; and a book you can read straight through.
 - **Two verbs that break the machine, and both breaks are Telugu's own.**
   Chapter 32 builds every verb as stem + tense + person, then names the two
   exceptions honestly: **ఉండు** has no negative of its own, so Telugu fetches
-  one from the separate verb *lē-* (where all three sisters negate on the shared
-  *il-*); and **తెలుసు** carries no person-ending at all, so the knower moves
+  one from the separate verb *lē-* (which DEDR files with the *il-* all three
+  sisters negate on); and **తెలుసు** carries no person-ending at all, so the knower moves
   into the dative — *nāku telusu*, "to me it is known."
 - **The ending that hands a verb back to its doer.** Chapters 33–34 build three
   verbs on **-కొను / -కో**: *anukō* is "say it **to yourself**" (so Telugu's
@@ -44,10 +44,10 @@ pieces taught before the whole; and a book you can read straight through.
   **your own**," and *tīsukō* is "pull it out **for yourself**." The ending is
   not Telugu's alone — Tamil **கொள்** and Malayalam **കൊള്ളുക** are the same
   verb doing the same job.
-- **Why Telugu keeps going its own way — finally named.** The track had
-  recorded the symptom five times (*lēdu* against *il-*, *uṇḍu* against *iru*,
-  *enimidi*/*tommidi* against *eṭṭu*/*oṉpatu*). Chapter 34's **అడుగు** names the
-  cause: Telugu is **South-Central Dravidian**, with Gondi, Konda, Kui and Kuvi,
+- **Why Telugu so often looks different — finally named.** The track had met
+  the symptom several times: *lēdu*, *uṇḍu*, *enimidi* and *tommidi* look unlike
+  their Tamil cousins, though DEDR files them with *il-*, *uṇṭu*, *eṭṭu* and old
+  *toṇṭu*. Chapter 34's **అడుగు** names the cause: Telugu is **South-Central Dravidian**, with Gondi, Konda, Kui and Kuvi,
   while Tamil, Kannada and Malayalam are **South Dravidian**. One branch away on
   the tree, nearest neighbour on the map.
 
@@ -64,7 +64,7 @@ pieces taught before the whole; and a book you can read straight through.
   book.
 - **Chapter 3 — How Are You** ([`lessons/TE-C03-*`](./lessons/)): elā, **mīru
   elā unnāru?**, nēnu, bāgā, paravālēdu, practice. The verb *uṇḍu* ("to be");
-  Telugu's own *lēdu* where its sisters use *illa*. In the book.
+  Telugu's *lēdu* where its sisters use *illa*. In the book.
 - **Chapter 4 — Farewells** ([`lessons/TE-C04-*`](./lessons/)): veḷḷu/vaccu,
   **veḷḷi vastānu** ("I'll go and come back"), rēpu kaluddām, maḷḷī kaluddām,
   practice. The Dravidian promise-of-return goodbye. In the book.

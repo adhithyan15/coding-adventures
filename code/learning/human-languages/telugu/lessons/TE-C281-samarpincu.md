@@ -15,7 +15,7 @@ concept_tag: TE-VERB-SAMARPINCU
 prerequisites: [TE-C280-jama-ceyu, TE-C281-raddu-ceyu]
 sounds: []
 roots: [sanskrit-samarpana]
-etymology_hook: "samarpiñcu: Sanskrit samarpaṇa 'offering' + the Telugu verb ending -iñcu"
+etymology_hook: "samarpiñcu: Sanskrit samarpaṇa 'presenting' (CDIAL 13191) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C281-raddu-ceyu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**సమర్పించు** (*samarpiñcu*) is Sanskrit *samarpaṇa*, "offering, handing over", made into a verb with the Telugu ending *-iñcu*.
+**సమర్పించు** (*samarpiñcu*) is Sanskrit *samarpaṇa*, "delivering over, presenting" (CDIAL 13191), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

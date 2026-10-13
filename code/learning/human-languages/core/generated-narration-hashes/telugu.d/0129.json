@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 129,
-  "sourceHash": "fnv1a64:ccd010c7abdb768d",
+  "sourceHash": "fnv1a64:13fbe8a8cda7b710",
   "lessonIds": [
     "TE-C129-kitikitera",
     "TE-C129-catti",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch129.txt",
   "json": "telugu/narration/ch129.json",
-  "textHash": "fnv1a64:cc91ff3da1440362",
-  "jsonHash": "fnv1a64:600371ded54afccb",
+  "textHash": "fnv1a64:d174e3b36aced334",
+  "jsonHash": "fnv1a64:f4674627ae6782ee",
   "findings": []
 }

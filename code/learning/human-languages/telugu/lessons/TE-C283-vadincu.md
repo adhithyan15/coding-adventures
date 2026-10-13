@@ -15,7 +15,7 @@ concept_tag: TE-VERB-VADINCU
 prerequisites: [TE-C283-gurtupattu, TE-C283-vyatirekincu]
 sounds: []
 roots: [vada]
-etymology_hook: "vādiñcu: Sanskrit vāda 'speech, dispute' (CDIAL 11507) + the Telugu verb ending -iñcu"
+etymology_hook: "vādiñcu: Sanskrit vāda 'speech' (CDIAL 11507), also 'debate', + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C283-vyatirekincu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**వాదించు** (*vādiñcu*) is Sanskrit *vāda*, "speech, dispute" (CDIAL 11507), made into a verb with the Telugu ending *-iñcu*.
+**వాదించు** (*vādiñcu*) is Sanskrit *vāda*, "speech" (CDIAL 11507), also "debate", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

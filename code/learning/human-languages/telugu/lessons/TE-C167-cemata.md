@@ -15,7 +15,7 @@ concept_tag: TE-AROGYAM167-CEMATA
 prerequisites: [TE-C167-virecanalu, TE-C167-matra]
 sounds: []
 roots: [dravidian-cemmal-water]
-etymology_hook: "cemaṭa: DEDR 2539 lists it beside cemma 'moisture', with a query"
+etymology_hook: "cemaṭa: native Dravidian; DEDR 2539 lists it beside cemma 'moisture', with Tamil cemmal"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C167-matra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-DEDR 2539 lists **చెమట** (*cemaṭa*), "sweat", beside *cemma*, "moisture", and sets these Telugu forms, with a question mark, beside Tamil *cemmal*, "water".
+**చెమట** (*cemaṭa*) is native Dravidian. DEDR 2539 lists it, "sweat", beside *cemma*, "moisture", with Tamil *cemmal*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

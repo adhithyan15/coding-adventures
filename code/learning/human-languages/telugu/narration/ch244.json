@@ -4,7 +4,7 @@
   "chapter": 244,
   "title": "To blow, To shine, To freeze, To wilt, To bark",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f68382567af11e03",
+  "sourceHash": "fnv1a64:ea1fd6810f8cf3a5",
   "lessons": [
     {
       "id": "TE-C244-vicu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5ab7e6e611776b5",
+      "sourceHash": "fnv1a64:e43010ecacd95fed",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గడ్డకట్టు (gaḍḍakaṭṭu) is native Dravidian: gaḍḍa, \"lump, clod, clot\" (DEDR 1148), with kaṭṭu, \"to bind, form\": \"to form a lump\". DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650), with the first."
+              "text": "గడ్డకట్టు (gaḍḍakaṭṭu) is native Dravidian: gaḍḍa, \"lump, clod, clot\" (DEDR 1148), with kaṭṭu, \"to bind, form\": \"to form a lump\". DEDR compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650), with the first; CDIAL reports the view that kaṭhina came from Dravidian."
             }
           ]
         },

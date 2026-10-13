@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 251,
-  "sourceHash": "fnv1a64:c7a1b6c7c65090fc",
+  "sourceHash": "fnv1a64:3e97e8c3038f10ac",
   "lessonIds": [
     "TE-C251-manasu",
     "TE-C251-ayasam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch251.txt",
   "json": "telugu/narration/ch251.json",
-  "textHash": "fnv1a64:08264810354ce453",
-  "jsonHash": "fnv1a64:aff0fecb09e61c15",
+  "textHash": "fnv1a64:6a3ad126a65149b0",
+  "jsonHash": "fnv1a64:657f0bc1175e16e5",
   "findings": []
 }

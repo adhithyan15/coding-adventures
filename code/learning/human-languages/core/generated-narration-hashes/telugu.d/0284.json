@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 284,
-  "sourceHash": "fnv1a64:1ce21bad43de08d5",
+  "sourceHash": "fnv1a64:73ed7100ecaf9333",
   "lessonIds": [
     "TE-C284-vadulu",
     "TE-C284-tavvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch284.txt",
   "json": "telugu/narration/ch284.json",
-  "textHash": "fnv1a64:f78666f47c97ff72",
-  "jsonHash": "fnv1a64:d3c023b15d533f71",
+  "textHash": "fnv1a64:9d7898aebc3ceec0",
+  "jsonHash": "fnv1a64:2dc58f7280e1d3b9",
   "findings": []
 }

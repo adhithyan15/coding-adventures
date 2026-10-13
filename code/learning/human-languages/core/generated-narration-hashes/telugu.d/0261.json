@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 261,
-  "sourceHash": "fnv1a64:48ac3cf678f0afd2",
+  "sourceHash": "fnv1a64:7d9034669438a2a0",
   "lessonIds": [
     "TE-C261-sahajamaina",
     "TE-C261-cikkani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch261.txt",
   "json": "telugu/narration/ch261.json",
-  "textHash": "fnv1a64:701b5ad586ea4f08",
-  "jsonHash": "fnv1a64:3979dfa32eb8ad32",
+  "textHash": "fnv1a64:10c89573a5a88823",
+  "jsonHash": "fnv1a64:3389aec9d63bfaba",
   "findings": []
 }

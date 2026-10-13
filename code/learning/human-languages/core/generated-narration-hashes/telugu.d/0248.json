@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 248,
-  "sourceHash": "fnv1a64:0fe1d268dee45658",
+  "sourceHash": "fnv1a64:8e10a7d6d3387878",
   "lessonIds": [
     "TE-C248-molakettu",
     "TE-C248-pituku",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch248.txt",
   "json": "telugu/narration/ch248.json",
-  "textHash": "fnv1a64:1326889c36cf0098",
-  "jsonHash": "fnv1a64:7070db23c3f9e2db",
+  "textHash": "fnv1a64:76e1910f9087efd7",
+  "jsonHash": "fnv1a64:f8d004f26b47be5c",
   "findings": []
 }

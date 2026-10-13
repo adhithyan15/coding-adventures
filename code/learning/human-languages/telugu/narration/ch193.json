@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Line, Circle, Square, Triangle, Wheel",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f67c01d369004c19",
+  "sourceHash": "fnv1a64:d858f1c4959eb415",
   "lessons": [
     {
       "id": "TE-C193-gita",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb37e928f797629",
+      "sourceHash": "fnv1a64:aa67f5aa2cb92481",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వృత్తం (vṛttaṁ) is Sanskrit vṛtta, \"turned; rounded\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 12069). The sense \"circle\" is the one Telugu gives it."
+              "text": "వృత్తం (vṛttaṁ) is Sanskrit vṛtta, \"turned; rounded\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 12069). Sanskrit already used it for \"circle\" too."
             }
           ]
         },

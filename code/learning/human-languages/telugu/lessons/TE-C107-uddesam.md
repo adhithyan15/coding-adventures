@@ -47,7 +47,7 @@ reviews_of: [TE-C107-kala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ఉద్దేశం** (*uddēśaṁ*) is Sanskrit *uddeśa*, "pointing out", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1998). The sense "intention" is the one Telugu gives it.
+**ఉద్దేశం** (*uddēśaṁ*) is Sanskrit *uddeśa*, "pointing out", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1998). Telugu uses it for "intention".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

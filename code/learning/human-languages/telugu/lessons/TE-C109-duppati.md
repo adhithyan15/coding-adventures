@@ -15,7 +15,7 @@ concept_tag: TE-WHY109-DUPPATI
 prerequisites: [TE-C109-mancam, TE-C109-dindu]
 sounds: []
 roots: [hindustani-dupatta]
-etymology_hook: "duppaṭi: probably a loan of the northern dupaṭṭā, which CDIAL 6413 traces to *dupaṭṭikā 'two cloths'"
+etymology_hook: "duppaṭi: probably a loan of the northern dupaṭṭā; CDIAL 6413 reconstructs *dupaṭṭikā 'two cloths'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C109-dindu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**దుప్పటి** (*duppaṭi*) is probably a loan of the northern word for a double cloth, Hindi *dupaṭṭā*, which CDIAL 6413 traces to a reconstructed \*dupaṭṭikā, "two cloths".
+**దుప్పటి** (*duppaṭi*) is probably a loan of the northern word for a double cloth, Hindi *dupaṭṭā*. CDIAL does not list *dupaṭṭā*; its entry 6413 reconstructs \*dupaṭṭikā, "two cloths", from a single Ḍogrī word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

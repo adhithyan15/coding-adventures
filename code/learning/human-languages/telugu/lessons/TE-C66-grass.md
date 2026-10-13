@@ -50,7 +50,7 @@ The word is inherited. It covers straw as well, meaning what is left of the వ�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**గడ్డి** (*gaḍḍi*) is native Dravidian. DEDR 1158 lists *gaḍḍi*, "grass, straw, hay", with Kolami *gaḍḍi*, "grass", and compares the Sanskrit grass words *kaṭa* and *khaṭa*, known only from lexicons (CDIAL 2630, 3769).
+**గడ్డి** (*gaḍḍi*) is native Dravidian. DEDR 1158 lists *gaḍḍi*, "grass, straw, hay", with Kolami *gaḍḍi*, "grass", and compares the Sanskrit grass words *kaṭa* and *khaṭa*, known only from lexicons (CDIAL 2630, 3769); CDIAL takes *khaṭa* from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

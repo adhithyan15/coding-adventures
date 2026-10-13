@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "To charge, To remove, To recognize, To oppose, To argue",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ee2ed71c8984367",
+  "sourceHash": "fnv1a64:eefdf3c2c5840fe6",
   "lessons": [
     {
       "id": "TE-C283-charj-ceyu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b333cfddddcb2c50",
+      "sourceHash": "fnv1a64:812526b6aa1ca050",
       "notice": null,
       "blocks": [
         {
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:242f16c382d7d78d",
+      "sourceHash": "fnv1a64:95f97c04431caed1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వాదించు (vādiñcu) is Sanskrit vāda, \"speech, dispute\" (CDIAL 11507), made into a verb with the Telugu ending -iñcu."
+              "text": "వాదించు (vādiñcu) is Sanskrit vāda, \"speech\" (CDIAL 11507), also \"debate\", made into a verb with the Telugu ending -iñcu."
             }
           ]
         },

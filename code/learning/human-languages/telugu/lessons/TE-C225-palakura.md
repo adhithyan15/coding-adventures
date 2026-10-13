@@ -15,7 +15,7 @@ concept_tag: TE-VASTUVU225-PALAKURA
 prerequisites: [TE-C224-pindi, TE-C225-akukura]
 sounds: []
 roots: [telugu-pala-spinach, dravidian-kuura-vegetable]
-etymology_hook: "pālakūra: pāla-, of uncertain origin, + native kūra 'vegetable' (DEDR 1760)"
+etymology_hook: "pālakūra: pāla-, probably Sanskrit pālakyā 'spinach' (CDIAL 8126), + native kūra 'vegetable' (DEDR 1760)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TE-C225-akukura]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**పాలకూర** (*pālakūra*) is *pāla-*, whose origin is uncertain, and native *kūra*, "vegetable, curry-stuff" (DEDR 1760).
+**పాలకూర** (*pālakūra*) is *pāla-*, probably the spinach name of Sanskrit *pālakyā*, Prakrit *pālakkā* (CDIAL 8126), and native *kūra*, "vegetable, curry-stuff" (DEDR 1760).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

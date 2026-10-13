@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Free, Full, Fat, Thin, Raw",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1c2e617fa47dc237",
+  "sourceHash": "fnv1a64:492fbab764dfac16",
   "lessons": [
     {
       "id": "TE-C220-ucitam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:566ed39b2a0cf361",
+      "sourceHash": "fnv1a64:c02147a1aab20b53",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of సన్నని (sannani) is uncertain. DEDR and CDIAL list no word of this shape meaning \"thin\"."
+              "text": "The origin of సన్నని (sannani) is uncertain. It may come from Prakrit saṇha, \"fine, small\", from Sanskrit ślakṣṇa, \"smooth; thin\" (CDIAL 12732), but no source says so."
             }
           ]
         },
