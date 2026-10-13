@@ -2308,6 +2308,20 @@ fn swimlane_ignore_cross_lane_edges_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default rank optimization should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: true\n---\n{source}"))
+        .expect("rank crossing optimization should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: false\n---\n{source}"))
+        .expect("disabled rank crossing optimization should parse");
+
+    assert!(defaulted.optimize_ranks_by_crossings);
+    assert!(enabled.optimize_ranks_by_crossings);
+    assert!(!disabled.optimize_ranks_by_crossings);
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");

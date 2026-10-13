@@ -1530,6 +1530,8 @@ where
     }
     if !diagram.ignore_cross_lane_edges {
         metadata.insert("swimlane.ignoreCrossLaneEdges".into(), "false".into());
+        metadata.insert("swimlane.optimizeRanksByCrossings".into(),
+            diagram.optimize_ranks_by_crossings.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
