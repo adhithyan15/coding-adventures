@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
     "wordLessonsWithoutEtymologyHook": 15888,
-    "wordLessonsWithoutVisibleEtymology": 15567,
+    "wordLessonsWithoutVisibleEtymology": 15563,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341582,7 +341582,7 @@
         "language": "tamil",
         "wordLessons": 1247,
         "wordLessonsWithoutEtymologyHook": 0,
-        "wordLessonsWithoutVisibleEtymology": 4,
+        "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0
       },
       {
@@ -341603,7 +341603,7 @@
     "summary": {
       "wordLessons": 25682,
       "wordLessonsWithoutEtymologyHook": 15888,
-      "wordLessonsWithoutVisibleEtymology": 15567,
+      "wordLessonsWithoutVisibleEtymology": 15563,
       "wordLessonsWithoutAnyEtymology": 15038,
       "hookPercent": 38,
       "visiblePercent": 39
@@ -454062,13 +454062,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28844,
-    "usesBeforeIntroduction": 49170,
-    "technicalUsesBeforeIntroduction": 7799,
-    "technicalLessons": 4803,
+    "usesBeforeIntroduction": 49171,
+    "technicalUsesBeforeIntroduction": 7800,
+    "technicalLessons": 4804,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2838
+        "lessons": 2839
       },
       {
         "term": "noun",
