@@ -1,6 +1,6 @@
 # Shared XAML table viewport events
 
-Status: specified, not implemented or accepted. Tracks #14277 and the scroll workload required by #16865; active PR #17287.
+Status: implemented with native Debug evidence; full acceptance remains open. Tracks #14277 and the scroll workload required by #16865; active PR #17287.
 
 ## Evidence and owning layer
 
@@ -33,3 +33,56 @@ Maintain selected-cell visibility and focus across row-window replacement. Nativ
 ## Native layout prerequisite discovered during implementation
 
 The authored shared styles use `flex: 1` on the sheet scroll port. XAML only recognized `flex-grow`, producing an Auto grid row that kept its content height after window resize. Before viewport acceptance, lower the exact `flex: 1` shorthand through the reusable Row/Column star-sizing hints and report it as consumed. Other shorthand forms remain explicitly unsupported; this does not claim general CSS flex equivalence. Add Row and Column regression coverage.
+
+## Implementation and evidence (2026-10-12)
+
+The shared emitter now validates callback schemas/bindings (including renamed
+emits), rejects opted-in noncanonical shapes, emits typed component handlers,
+and supplies a data-only native viewport producer. Capacity reporting is queued
+and deduplicated; detached-generation callbacks are ignored. Virtual tables use
+one outer scroll port, top alignment and bounded fractional wheel shifts. The
+finite viewport comes from WinUI EffectiveViewportChanged in table coordinates:
+https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.frameworkelement.effectiveviewportchanged
+
+Only the proposed visible rows are checked for uniform geometry. Native resize
+testing showed that retained ItemsRepeater cells outside that window can have
+stale/unarranged geometry; treating those as visible blocked valid resizing.
+Capacity uses available viewport space, capped by the authored MaxHeight, rather
+than the previous row window's ActualHeight, so it can grow as well as shrink.
+
+Validation: 386 emitter unit tests plus 14 integration tests pass; an additional
+nested-table scope regression also passes (one ignored
+doctest). The generated C# probe executes capacity/fractional-delta/boundary
+arithmetic and queue coalescing, unload/reload generation checks and queue
+refusal. Generated WinUI Debug build passes with zero errors and two existing
+unused PropertyChanged event warnings. Security subagent review passed after
+repairing its finding that valid callbacks could disappear on fallback shapes.
+
+Actual interaction used the isolated release-fixture-state.json and the retained
+Oct 7 Rust DLL (not a matched new release runtime):
+
+- Wheel delta 600 moved rows 1-20 to 16-35; headers stayed fixed. Clicking B22
+  selected B22, then Right selected C22. Entering =20+22 and committing produced
+  42. Normal close/restart restored C22, 42, formula =20+22 in both screenshot
+  and accessibility text.
+- After the shared flex shorthand fix, ordinary window capacity was 19. A
+  shorter window measured 12; persisted cursor size confirmed 12, offset 15.
+- Final growth probe restored 19 rows, then maximization measured 31, showing
+  rows 16-46 with headers anchored at the top. Wheel delta 2400 reached rows
+  70-100; another 600 left the boundary unchanged. Persisted cursor offset 69,
+  size 31 confirms the bound.
+- Final growth profile is adjacent in mosaic-xaml-table-viewport-growth-20261012.jsonl.
+  Its three interaction-to-next-render samples are 201.8829, 628.3800 and
+  13.9605 ms (startup capacity, maximize capacity, wheel respectively). The
+  extra boundary wheel produced no fourth interaction. These are callback
+  timings, not presentation timestamps or meaningful warm percentiles.
+
+## Remaining acceptance
+
+#14277 and #16865 remain open. Required next evidence includes matched warm
+Release/Debug percentile workloads, full projected/native realization counts,
+horizontal wheel/editor interaction and keyboard movement across window edges.
+The accessibility tree exposed another existing shared gap under #14278: with
+row header 16, cell names still say row 1 (relative window coordinate). Absolute
+accessible row labels need repair before full accessibility acceptance. No native
+release or epic completion is claimed.

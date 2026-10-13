@@ -267,3 +267,22 @@ package fixtures on every platform.
 Queued table focus validates retained cells against their current coordinates
 and table ancestry before reuse, falling back to tree lookup after replacement
 or reparenting. This avoids repeated whole-prefix walks for unchanged cells.
+
+## Native row-window tables
+
+Canonical HostTable layouts can emit `onViewportRows` and `onViewportShift`, each
+with one numeric `rows` payload. Shifting requires numeric `viewport-offset` and
+`total-rows` slots. Invalid declarations and unsupported table shapes produce a
+compiler diagnostic. Renamed emits dispatch through the component's typed union.
+
+The native table queues deduplicated capacity reports after layout, measures
+visible uniform-row pitch, and drops callbacks from a detached generation.
+Unmeasurable or nonuniform visible rows retain their existing capacity. Virtual
+windows remove the nested vertical scroll viewer, anchor at the top, and convert
+vertical wheel deltas into bounded row shifts; horizontal wheels and embedded
+editors keep their own input. Exact `flex: 1` on Row/Column children now uses the
+existing star-track lowering; other flex shorthand forms remain unsupported.
+
+See `code/specs/mosaic-xaml-table-viewport-20261012.md` for executed native evidence
+and outstanding performance/accessibility acceptance. This is not native release
+acceptance.

@@ -1555,6 +1555,10 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
     for p in props {
         let value = p.value.trim();
         match p.name.as_str() {
+            // The single-number shorthand used by shared Mosaic shells means
+            // grow=1, shrink=1, basis=0. Within this emitter's boolean grow
+            // model it must reserve a star track, just like flex-grow: 1.
+            "flex" if value == "1" => hints.flex_grow = true,
             "flex-grow" => {
                 hints.flex_grow = value.parse::<f64>().map(|n| n != 0.0).unwrap_or(false);
             }
@@ -2691,6 +2695,7 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             }
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
+                "flex" => drop.value.trim() == "1",
                 "align-items" => drop.value.trim() == "center",
                 "align" => {
                     let v = drop.value.trim();
@@ -5943,6 +5948,155 @@ fn emit_native_table_support_source(component: &str) -> String {
 /// </summary>
 public sealed class __COMPONENT__MosaicTable : Grid
 {
+    public event EventHandler<int>? MosaicViewportRows;
+    public event EventHandler<int>? MosaicViewportShift;
+    public bool MosaicVirtualWindow { get; set; }
+    public double MosaicViewportOffset
+    {
+        get => (double)GetValue(MosaicViewportOffsetProperty);
+        set => SetValue(MosaicViewportOffsetProperty, value);
+    }
+    public static readonly DependencyProperty MosaicViewportOffsetProperty =
+        DependencyProperty.Register(nameof(MosaicViewportOffset), typeof(double), typeof(__COMPONENT__MosaicTable), new PropertyMetadata(0.0));
+    public double MosaicTotalRows
+    {
+        get => (double)GetValue(MosaicTotalRowsProperty);
+        set => SetValue(MosaicTotalRowsProperty, value);
+    }
+    public static readonly DependencyProperty MosaicTotalRowsProperty =
+        DependencyProperty.Register(nameof(MosaicTotalRows), typeof(double), typeof(__COMPONENT__MosaicTable), new PropertyMetadata(0.0));
+
+    private bool mosaicLoaded, mosaicLayoutPending, mosaicCapturedMaxHeight;
+    private int mosaicGeneration, mosaicCapacity;
+    private double mosaicViewportHeight, mosaicWheelRemainder;
+    private double mosaicAuthoredMaxHeight = double.PositiveInfinity;
+
+    public __COMPONENT__MosaicTable()
+    {
+        PointerWheelChanged += MosaicOnPointerWheelChanged;
+        Loaded += (_, _) => { mosaicLoaded = true; QueueViewportReport(); };
+        Unloaded += (_, _) => {
+            mosaicLoaded = false;
+            mosaicGeneration++;
+            mosaicLayoutPending = false;
+            mosaicCapacity = 0;
+            mosaicWheelRemainder = 0;
+        };
+        EffectiveViewportChanged += (_, args) => {
+            // Coordinates are local to this element. This is the intersection
+            // of ancestor scroll ports, not the potentially infinite measure
+            // constraint passed to content by a ScrollViewer.
+            mosaicViewportHeight = args.EffectiveViewport.Bottom - Math.Max(0, args.EffectiveViewport.Top);
+            QueueViewportReport();
+        };
+        LayoutUpdated += (_, _) => QueueViewportReport();
+    }
+
+    private void QueueViewportReport()
+    {
+        if (!mosaicLoaded || MosaicViewportRows is null || mosaicLayoutPending) return;
+        mosaicLayoutPending = true;
+        var generation = mosaicGeneration;
+        if (!DispatcherQueue.TryEnqueue(() => {
+            if (generation != mosaicGeneration || !mosaicLoaded) return;
+            mosaicLayoutPending = false;
+            ReportViewport();
+        })) mosaicLayoutPending = false;
+    }
+
+    private void ReportViewport()
+    {
+        if (!double.IsFinite(mosaicViewportHeight) || mosaicViewportHeight <= 0) return;
+        if (MosaicVirtualWindow) {
+            // A short row window must remain anchored at the viewport top.
+            // Centering it changes local viewport coordinates while growing.
+            VerticalAlignment = VerticalAlignment.Top;
+            // Constrain the whole table once; its Auto header and star body
+            // share this finite space. Only the authored outer scroll port
+            // remains, preserving the horizontal alignment of both sections.
+            if (!mosaicCapturedMaxHeight) { mosaicAuthoredMaxHeight = MaxHeight; mosaicCapturedMaxHeight = true; }
+            var maximum = Math.Min(mosaicAuthoredMaxHeight, mosaicViewportHeight);
+            if (Math.Abs(MaxHeight - maximum) > 0.5) { MaxHeight = maximum; return; }
+        }
+        var cells = new List<__COMPONENT__MosaicTableCell>();
+        CollectFirstColumn(this, cells);
+        cells.Sort((left, right) => left.Row.CompareTo(right.Row));
+        if (cells.Count == 0 || cells[0].Row != 0) return;
+        var first = cells[0];
+        if (first.ActualHeight <= 0) return;
+        var firstY = first.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point()).Y;
+        var pitch = first.ActualHeight;
+        var second = cells.Count > 1 && cells[1].Row == 1 ? cells[1] : null;
+        if (second is not null) pitch = second.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point()).Y - firstY;
+        if (!double.IsFinite(pitch) || pitch <= 0) return;
+        var capacity = ViewportCapacity(Math.Min(MaxHeight, mosaicViewportHeight) - firstY, pitch, MosaicTotalRows);
+        // Inspect the proposed visible window only. ItemsRepeater may retain
+        // unarranged cached cells outside it during resize; their old positions
+        // are not evidence of variable row geometry in the current viewport.
+        // Variable-height visible rows keep the authored capacity.
+        foreach (var cell in cells) {
+            var row = cell.Row;
+            if (row >= capacity || cell.ActualHeight <= 0) continue;
+            var y = cell.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point()).Y;
+            if (Math.Abs(y - firstY - row * pitch) > 0.5 || Math.Abs(cell.ActualHeight - first.ActualHeight) > 0.5) return;
+        }
+        if (capacity <= 0 || capacity == mosaicCapacity) return;
+        mosaicCapacity = capacity; // publish before reentrant adapter dispatch
+        MosaicViewportRows?.Invoke(this, capacity);
+    }
+
+    private static void CollectFirstColumn(DependencyObject root, List<__COMPONENT__MosaicTableCell> cells)
+    {
+        for (var index = 0; index < VisualTreeHelper.GetChildrenCount(root); index++) {
+            var child = VisualTreeHelper.GetChild(root, index);
+            if (child is __COMPONENT__MosaicTable) continue;
+            if (child is __COMPONENT__MosaicTableCell cell) {
+                if (cell.Column == 0) cells.Add(cell);
+                continue; // cell contents cannot define another outer row
+            }
+            CollectFirstColumn(child, cells);
+        }
+    }
+
+    internal static int ViewportCapacity(double bodyHeight, double pitch, double total)
+    {
+        if (!double.IsFinite(bodyHeight) || !double.IsFinite(pitch) || bodyHeight <= 0 || pitch <= 0) return 0;
+        var count = Math.Max(1, Math.Min(int.MaxValue, Math.Floor(bodyHeight / pitch)));
+        if (double.IsFinite(total) && total > 0) count = Math.Min(count, Math.Max(1, Math.Floor(total)));
+        return (int)count;
+    }
+
+    internal static int ViewportShift(int delta, double offset, double total, int capacity, ref double remainder)
+    {
+        if (!double.IsFinite(offset) || !double.IsFinite(total) || offset < 0 || total < 0 || capacity <= 0) { remainder = 0; return 0; }
+        // WinUI uses 120 units per wheel detent. Retain fractional movement
+        // across precision-wheel packets, with three rows per detent.
+        remainder += -(double)delta / 120.0 * 3;
+        var rows = Math.Truncate(remainder);
+        remainder -= rows;
+        var shift = Math.Clamp(rows, -Math.Floor(offset), Math.Max(0, Math.Floor(total) - capacity - Math.Floor(offset)));
+        if (shift != rows) remainder = 0;
+        return (int)Math.Clamp(shift, int.MinValue, int.MaxValue);
+    }
+
+    private void MosaicOnPointerWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        if (e.Handled || !MosaicVirtualWindow || !mosaicLoaded || MosaicViewportShift is null) return;
+        // A nested table or editor owns its own input. Do not convert its wheel
+        // into an outer row-window shift, even if it has reached a boundary.
+        var source = e.OriginalSource as DependencyObject;
+        while (source is not null && !ReferenceEquals(source, this)) {
+            if (source is TextBox || source is PasswordBox || source is NumberBox || source is __COMPONENT__MosaicTable) return;
+            source = VisualTreeHelper.GetParent(source);
+        }
+        var point = e.GetCurrentPoint(this);
+        if (point.Properties.IsHorizontalMouseWheel || point.Properties.MouseWheelDelta == 0) return;
+        var shift = ViewportShift(point.Properties.MouseWheelDelta, MosaicViewportOffset, MosaicTotalRows,
+            mosaicCapacity > 0 ? mosaicCapacity : RowCount, ref mosaicWheelRemainder);
+        e.Handled = true;
+        if (shift != 0) MosaicViewportShift?.Invoke(this, shift);
+    }
+
     public int RowCount
     {
         get => (int)GetValue(RowCountProperty);
@@ -14033,6 +14187,74 @@ pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
     xaml_native_table_shape(host_table).is_some()
 }
 
+/// Validate the optional row-window protocol at the authored table boundary.
+/// This precedes both native-shape and fallback emission: a malformed callback
+/// must not disappear merely because another child prevents native lowering.
+fn validate_table_viewport_contract(
+    node: &LayoutNode,
+    ctx: &EmitContext<'_>,
+) -> Result<(), PipelineEmitError> {
+    let error = |message: String| PipelineEmitError::UnsupportedExpression(
+        format!("HostTable viewport: {message}"));
+    let mut measured = false;
+    let mut shifted = false;
+    for prop in ["onViewportRows", "onViewportShift"] {
+        let Some(value) = find_prop_value(node, prop) else { continue; };
+        let LayoutPropValue::EmitRef(name) = value else {
+            return Err(error(format!("{prop} requires an emit reference")));
+        };
+        let Some(params) = ctx.emit_payloads.get(name) else {
+            return Err(error(format!("{prop} references undeclared emit {name:?}")));
+        };
+        if !matches!(params.as_slice(), [(name, kind)] if name == "rows" && kind == "double") {
+            return Err(error(format!("{prop} requires one numeric rows parameter")));
+        }
+        if prop == "onViewportRows" { measured = true; } else { shifted = true; }
+    }
+    if shifted && !measured {
+        return Err(error("onViewportShift requires measured onViewportRows".into()));
+    }
+    // A measurement-only table need not supply a total. When supplied it must
+    // be typed too; window shifting always needs both current numeric bindings.
+    for prop in ["viewport-offset", "total-rows"] {
+        match find_prop_value(node, prop) {
+            Some(LayoutPropValue::SlotRef(slot)) if ctx.slot_types.get(slot).is_some_and(|kind| kind == "double") => {}
+            None if !shifted => {}
+            _ if measured || shifted => return Err(error(format!("{prop} requires a numeric slot binding"))),
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+/// Native controls report data only. The component owns the typed event union,
+/// including renamed emits; no runtime or application-specific dependency is
+/// allowed into the generated table control.
+fn native_table_viewport_attrs(node: &LayoutNode, ctx: &mut EmitContext<'_>) -> String {
+    let mut attrs = String::new();
+    for (prop, event) in [("onViewportRows", "MosaicViewportRows"), ("onViewportShift", "MosaicViewportShift")] {
+        if let Some(LayoutPropValue::EmitRef(name)) = find_prop_value(node, prop) {
+            let handler = format!("{}_{event}", ctx.next_state_target_name());
+            let case = kebab_to_pascal_case(&strip_on_prefix(name));
+            let union = ctx.event_union();
+            ctx.add_host_handler(HostHandler {
+                name: handler.clone(),
+                source: format!("    private void {handler}(object? sender, int rows) => Dispatch?.Invoke(this, new {union}.{case}(rows));"),
+            });
+            write!(attrs, " {event}=\"{handler}\"").unwrap();
+        }
+    }
+    if find_prop_value(node, "onViewportShift").is_some() {
+        attrs.push_str(" MosaicVirtualWindow=\"True\"");
+    }
+    for (prop, native) in [("viewport-offset", "MosaicViewportOffset"), ("total-rows", "MosaicTotalRows")] {
+        if let Some(LayoutPropValue::SlotRef(slot)) = find_prop_value(node, prop) {
+            write!(attrs, " {native}=\"{{x:Bind {}, Mode=OneWay}}\"", ctx.slot_xbind_path(slot)).unwrap();
+        }
+    }
+    attrs
+}
+
 fn emit_native_host_table(
     node: &LayoutNode,
     shape: XamlNativeTableShape<'_>,
@@ -14045,6 +14267,8 @@ fn emit_native_host_table(
     let (style, text_setters) = partition_box_style(node.part_name.as_deref(), part_styles);
     let component = ctx.component_name;
     let table_type = format!("{component}MosaicTable");
+    let viewport_attrs = native_table_viewport_attrs(node, ctx);
+    let virtual_window = find_prop_value(node, "onViewportShift").is_some();
     let header_path = ctx.slot_property_name(shape.header_slot);
     let rows_path = ctx.slot_property_name(shape.rows_slot);
     // #13040: `dir` already intentionally silently ignores an
@@ -14121,7 +14345,7 @@ fn emit_native_host_table(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<local:{table_type} RowCount=\"{{x:Bind {rows_path}.Count, Mode=OneWay}}\" ColumnCount=\"{{x:Bind {header_path}.Count, Mode=OneWay}}\" AutomationProperties.Name=\"{}\"{flow_direction_attr}{style}>",
+        "{pad}<local:{table_type} RowCount=\"{{x:Bind {rows_path}.Count, Mode=OneWay}}\" ColumnCount=\"{{x:Bind {header_path}.Count, Mode=OneWay}}\" AutomationProperties.Name=\"{}\"{flow_direction_attr}{viewport_attrs}{style}>",
         escape_xaml_attr(&table_name)
     )
     .unwrap();
@@ -14158,7 +14382,7 @@ fn emit_native_host_table(
         indent + 4,
         part_styles,
         ctx,
-        true,
+        !virtual_window,
     )?);
     ctx.native_table = previous_table;
 
@@ -14228,8 +14452,13 @@ fn emit_host_table_contents(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    validate_table_viewport_contract(node, ctx)?;
     if let Some(shape) = xaml_native_table_shape(node) {
         return emit_native_host_table(node, shape, indent, part_styles, ctx);
+    }
+    if find_prop_value(node, "onViewportRows").is_some() {
+        return Err(PipelineEmitError::UnsupportedExpression(
+            "HostTable viewport callbacks require the canonical native table structure".into()));
     }
 
     let pad = " ".repeat(indent);
@@ -17225,6 +17454,117 @@ mod tests {
                 ),
             ],
         )
+    }
+
+    #[test]
+    fn flex_one_shorthand_reserves_the_remaining_row_or_column() {
+        let c = component("Foo", vec![], vec![]);
+        for (tag, definition) in [("Column", "RowDefinition Height"), ("Row", "ColumnDefinition Width")] {
+            let mut node = LayoutNode { tag: tag.into(), part_name: None, props: vec![], children: vec![] };
+            for part in ["fixed", "viewport"] {
+                node.children.push(LayoutNode { tag: "HostScroll".into(), part_name: Some(part.into()), props: vec![], children: vec![] });
+            }
+            let style = style_for_box("viewport", vec![("flex", "1")]);
+            let result = compile(&c, &layout_with_root("Foo", node), &style);
+            assert!(result.xaml.contains(&format!("<{definition}=\"Auto\"/>")), "{}", result.xaml);
+            assert!(result.xaml.contains(&format!("<{definition}=\"*\"/>")), "{}", result.xaml);
+            assert!(!dropped_style_properties(&style).iter().any(|p| p.name == "flex"));
+        }
+    }
+
+    fn viewport_test_component() -> MosmodelComponent {
+        component("Sheet", vec![
+            slot("headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+            slot("rows", SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))), true),
+            slot("offset", SlotType::Number, true),
+            slot("total", SlotType::Number, true),
+        ], vec![
+            emit("onMeasureRenamed", vec![param("rows", EmitPayloadType::Number)]),
+            emit("onShiftRenamed", vec![param("rows", EmitPayloadType::Number)]),
+        ])
+    }
+
+    fn viewport_test_table() -> LayoutNode {
+        let mut table = canonical_native_table_node();
+        table.props.extend([
+            LayoutProp { name: "onViewportRows".into(), value: LayoutPropValue::EmitRef("onMeasureRenamed".into()) },
+            LayoutProp { name: "onViewportShift".into(), value: LayoutPropValue::EmitRef("onShiftRenamed".into()) },
+            LayoutProp { name: "viewport-offset".into(), value: LayoutPropValue::SlotRef("offset".into()) },
+            LayoutProp { name: "total-rows".into(), value: LayoutPropValue::SlotRef("total".into()) },
+        ]);
+        table
+    }
+
+    #[test]
+    fn table_viewport_contract_accepts_renamed_and_measurement_only_events() {
+        let c = viewport_test_component();
+        let table = viewport_test_table();
+        let emitted = compile(&c, &layout_with_root("Sheet", table.clone()), &empty_style("Sheet"));
+        assert!(emitted.code_behind.contains("new SheetEvent.MeasureRenamed(rows)"));
+        assert!(emitted.code_behind.contains("new SheetEvent.ShiftRenamed(rows)"));
+        assert!(emitted.xaml.contains("MosaicVirtualWindow=\"True\""));
+        assert!(!emitted.xaml.contains("<ScrollViewer"));
+        assert!(emitted.xaml.contains("MosaicViewportOffset=\"{x:Bind Offset, Mode=OneWay}\""));
+        let mut fallback = table.clone();
+        fallback.children.clear();
+        let error = from_pipeline(&c, &layout_with_root("Sheet", fallback), &empty_style("Sheet"), None, &opts()).unwrap_err();
+        assert!(error.to_string().contains("canonical native table structure"));
+        let mut measurement = table;
+        measurement.props.retain(|p| p.name == "onViewportRows");
+        compile(&c, &layout_with_root("Sheet", measurement), &empty_style("Sheet"));
+        compile(&component("Sheet", c.slots.clone(), vec![]),
+            &layout_with_root("Sheet", canonical_native_table_node()), &empty_style("Sheet"));
+    }
+
+    #[test]
+    fn table_viewport_nested_tables_keep_distinct_typed_handlers() {
+        let c = viewport_test_component();
+        let mut outer = viewport_test_table();
+        // Put a second opted-in table in an authored outer data cell. It has
+        // its own viewport events while the emitter restores the outer scope.
+        outer.children[1].children[0].children[0].children[0].children = vec![viewport_test_table()];
+        let result = compile(&c, &layout_with_root("Sheet", outer), &empty_style("Sheet"));
+        assert_eq!(result.xaml.matches("MosaicViewportRows=\"").count(), 2);
+        assert_eq!(result.xaml.matches("MosaicViewportShift=\"").count(), 2);
+        assert_eq!(result.code_behind.matches("new SheetEvent.MeasureRenamed(rows)").count(), 2);
+        assert_eq!(result.code_behind.matches("new SheetEvent.ShiftRenamed(rows)").count(), 2);
+        assert!(result.code_behind.contains("if (child is SheetMosaicTable) continue;"));
+    }
+
+    #[test]
+    fn table_viewport_contract_rejects_invalid_authored_protocols() {
+        let c = viewport_test_component();
+        for (prop, value, expected) in [
+            ("onViewportRows", None, "requires measured onViewportRows"),
+            ("onViewportRows", Some(LayoutPropValue::String("onMeasureRenamed".into())), "requires an emit reference"),
+            ("onViewportShift", Some(LayoutPropValue::EmitRef("onMissing".into())), "undeclared emit"),
+            ("viewport-offset", None, "viewport-offset requires a numeric slot"),
+            ("total-rows", None, "total-rows requires a numeric slot"),
+            ("total-rows", Some(LayoutPropValue::SlotRef("headers".into())), "total-rows requires a numeric slot"),
+            ("viewport-offset", Some(LayoutPropValue::SlotRef("missing".into())), "viewport-offset requires a numeric slot"),
+            ("total-rows", Some(LayoutPropValue::Number(100.0)), "total-rows requires a numeric slot"),
+        ] {
+            let mut table = viewport_test_table();
+            table.props.retain(|p| p.name != prop);
+            if let Some(value) = value { table.props.push(LayoutProp { name: prop.into(), value }); }
+            // Validate both native and fallback shapes; neither can swallow it.
+            for fallback in [false, true] {
+                let mut node = table.clone();
+                if fallback { node.children.clear(); }
+                let error = from_pipeline(&c, &layout_with_root("Sheet", node), &empty_style("Sheet"), None, &opts()).unwrap_err();
+                assert!(error.to_string().contains(expected), "{prop}: {error}");
+            }
+        }
+        for params in [vec![], vec![param("count", EmitPayloadType::Number)],
+            vec![param("rows", EmitPayloadType::Text)],
+            vec![param("rows", EmitPayloadType::Number), param("extra", EmitPayloadType::Number)]] {
+            for name in ["onMeasureRenamed", "onShiftRenamed"] {
+                let mut invalid = c.clone();
+                invalid.emits.iter_mut().find(|e| e.name == name).unwrap().params = params.clone();
+                let error = from_pipeline(&invalid, &layout_with_root("Sheet", viewport_test_table()), &empty_style("Sheet"), None, &opts()).unwrap_err();
+                assert!(error.to_string().contains("requires one numeric rows parameter"), "{error}");
+            }
+        }
     }
 
     #[test]
@@ -27768,6 +28108,67 @@ METHODS
     }
 }
 "#.replace("METHODS", &support[start..end]));
+        let math_start = support.find("    internal static int ViewportCapacity(").unwrap();
+        let math_end = support[math_start..].find("    private void MosaicOnPointerWheelChanged(").unwrap() + math_start;
+        let source = source.replace("var owner = new Owner();", "ViewportProbe.CheckMath(); var owner = new Owner();");
+        let source = format!("{source}\n{}", r#"
+static class ViewportProbe {
+MATH
+    public static void CheckMath() {
+        void Check(bool ok) { if (!ok) throw new Exception("viewport arithmetic"); }
+        Check(ViewportCapacity(640, 32, 100) == 20);
+        Check(ViewportCapacity(1, 32, 100) == 1);
+        Check(ViewportCapacity(640, 32, 5) == 5);
+        Check(ViewportCapacity(640, 32, 0) == 20);
+        Check(ViewportCapacity(0, 32, 100) == 0);
+        Check(ViewportCapacity(double.PositiveInfinity, 32, 100) == 0);
+        Check(ViewportCapacity(640, double.NaN, 100) == 0);
+        Check(ViewportCapacity(640, 0, 100) == 0);
+        double rest = 0;
+        Check(ViewportShift(-10, 0, 100, 20, ref rest) == 0 && rest == .25);
+        Check(ViewportShift(-30, 0, 100, 20, ref rest) == 1 && rest == 0);
+        Check(ViewportShift(-120, 79, 100, 20, ref rest) == 1);
+        Check(ViewportShift(-120, 80, 100, 20, ref rest) == 0);
+        Check(ViewportShift(120, 1, 100, 20, ref rest) == -1);
+        Check(ViewportShift(120, 0, 100, 20, ref rest) == 0);
+        Check(ViewportShift(-120, 0, 2, 20, ref rest) == 0);
+        Check(ViewportShift(-120, double.NaN, 100, 20, ref rest) == 0);
+        Check(ViewportShift(int.MinValue, 0, 100, 20, ref rest) == 80);
+    }
+}
+"#.replace("MATH", &support[math_start..math_end]));
+        let queue_start = support.find("    private void QueueViewportReport()").unwrap();
+        let queue_end = support[queue_start..].find("    private void ReportViewport()").unwrap() + queue_start;
+        let source = source.replace("ViewportProbe.CheckMath();", "ViewportProbe.CheckMath(); LifecycleProbe.CheckQueue();");
+        let source = format!("{source}\n{}", r#"
+class QueueProbe {
+    public bool Accept = true;
+    public Queue<Action> Work = new();
+    public bool TryEnqueue(Action action) { if (!Accept) return false; Work.Enqueue(action); return true; }
+}
+class LifecycleProbe {
+    bool mosaicLoaded, mosaicLayoutPending;
+    int mosaicGeneration, Reports;
+    Action? MosaicViewportRows = () => {};
+    QueueProbe DispatcherQueue = new();
+    void ReportViewport() { Reports++; }
+QUEUE
+    public static void CheckQueue() {
+        void Check(bool ok) { if (!ok) throw new Exception("viewport lifecycle"); }
+        var p = new LifecycleProbe();
+        p.QueueViewportReport(); Check(p.DispatcherQueue.Work.Count == 0);
+        p.mosaicLoaded = true;
+        p.QueueViewportReport(); p.QueueViewportReport(); Check(p.DispatcherQueue.Work.Count == 1);
+        p.mosaicLoaded = false; p.mosaicGeneration++; p.mosaicLayoutPending = false;
+        p.mosaicLoaded = true; p.QueueViewportReport();
+        p.DispatcherQueue.Work.Dequeue()(); Check(p.Reports == 0 && p.mosaicLayoutPending);
+        p.DispatcherQueue.Work.Dequeue()(); Check(p.Reports == 1 && !p.mosaicLayoutPending);
+        p.DispatcherQueue.Accept = false; p.QueueViewportReport(); Check(!p.mosaicLayoutPending);
+        p.DispatcherQueue.Accept = true; p.MosaicViewportRows = null; p.QueueViewportReport();
+        Check(p.DispatcherQueue.Work.Count == 0);
+    }
+}
+"#.replace("QUEUE", &support[queue_start..queue_end]));
         fs::write(dir.join("Program.cs"), source).unwrap();
         let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).current_dir(&dir).output().unwrap();
         assert!(output.status.success(), "{}\n{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
