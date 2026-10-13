@@ -1049,7 +1049,8 @@ invisible layout links,
 minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
-thick, and dotted links, titles, and accessibility metadata with named and numeric entity
+thick, and dotted links, including labeled bidirectional point arrows, titles, and accessibility
+metadata with named and numeric entity
 decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
