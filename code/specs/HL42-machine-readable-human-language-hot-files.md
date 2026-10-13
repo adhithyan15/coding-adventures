@@ -58,10 +58,12 @@ that commit.
   and similarity score;
 - an unsupported or malformed Git status is an error, not a skipped row.
 
-File rows contain the path, number of commits touching it, status counts, and
-the full commit identities that contributed. They sort by descending touch
-count and then raw Unicode code-point path order. Status keys and commit lists
-have deterministic order.
+File rows contain the path, number of commits touching it, status counts, the
+full commit identities that contributed, and `present_at_revision`. The latter
+is false when the newest selected status for that path is deletion. Deleted hot
+spots stay visible as historical evidence without being mistaken for current
+work. They sort by descending touch count and then raw Unicode code-point path
+order. Status keys and commit lists have deterministic order.
 
 ## 4. Direct-owner families
 

@@ -90,6 +90,30 @@ class HotFileReportTests(unittest.TestCase):
         )
         self.assertEqual(report["files"][0]["status_counts"], {"A": 1, "M": 1})
         self.assertEqual(report["files"][0]["commits"], [newer, older])
+        self.assertTrue(report["files"][0]["present_at_revision"])
+
+    def test_keeps_deleted_hot_spots_as_history_but_marks_them_absent(self) -> None:
+        path = "code/learning/human-languages/punjabi/retired.json"
+        self.fixture.write(path, "one\n")
+        self.fixture.commit("add aggregate")
+        self.fixture.write(path, "two\n")
+        self.fixture.commit("update aggregate")
+        (self.fixture.root / path).unlink()
+        deleted_at = self.fixture.commit("retire aggregate")
+
+        report = hot_files.build_report(
+            self.fixture.root,
+            revision="HEAD",
+            commit_count=10,
+            path_scope=("code/learning/human-languages",),
+        )
+
+        self.assertEqual(len(report["files"]), 1)
+        row = report["files"][0]
+        self.assertEqual(row["commits_touching"], 3)
+        self.assertEqual(row["commits"][0], deleted_at)
+        self.assertEqual(row["status_counts"], {"A": 1, "D": 1, "M": 1})
+        self.assertFalse(row["present_at_revision"])
 
     def test_aggregates_direct_owner_families_without_hiding_members(self) -> None:
         family = "code/learning/human-languages/punjabi/session-map.d"
@@ -138,6 +162,7 @@ class HotFileReportTests(unittest.TestCase):
 
         self.assertEqual([row["path"] for row in report["files"]], [new_path])
         self.assertEqual(report["files"][0]["status_counts"], {"R": 1})
+        self.assertTrue(report["files"][0]["present_at_revision"])
         self.assertEqual(
             report["renames"],
             [
