@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 15,
-  "sourceHash": "fnv1a64:4c56cb67d28901bc",
+  "sourceHash": "fnv1a64:9684181b90ce6800",
   "lessons": [
     {
       "id": "GE-C05-wohnen",
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9801acf327d5b742",
+      "sourceHash": "fnv1a64:bba0d17c5aad4e8f",
       "notice": null,
       "blocks": [
         {
@@ -511,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wir from Old High German wir from Proto-Germanic wīz, \"we\" — inherited, the same word as English we. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: wir takes -en",
           "segments": [
@@ -533,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -573,7 +584,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -886,7 +897,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9261c0f9f366d0f3",
+      "sourceHash": "fnv1a64:cc542d9a1ceac551",
       "notice": null,
       "blocks": [
         {
@@ -927,6 +938,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "in from Old High German in from Proto-Germanic in — inherited, the same word as English in. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: Ich wohne in …",
           "segments": [
@@ -945,7 +967,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -985,7 +1007,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1016,7 +1038,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d550f7cc53e514e",
+      "sourceHash": "fnv1a64:77e87dc513e7d68a",
       "notice": null,
       "blocks": [
         {
@@ -1127,11 +1149,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"wo\", \"wie\", \"wer\", \"wann\"",
+              "instruction": "the two of the family you own — \"wo\", \"wie\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"wo\", \"wie\", \"wer\", \"wann\"]"
+              "source": "[YOU SAY: the two of the family you own — \"wo\", \"wie\"]"
             }
           ]
         },
@@ -1318,7 +1340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af372d9f83faaffa",
+      "sourceHash": "fnv1a64:e510ad9acef5026b",
       "notice": null,
       "blocks": [
         {
@@ -1373,6 +1395,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "was from Old High German waz from Proto-Germanic hwat — inherited, the same word as English what, with German s where English kept t. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: Was machst du?",
           "segments": [
@@ -1391,7 +1424,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1431,7 +1464,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1764,7 +1797,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74b013dd48e7d337",
+      "sourceHash": "fnv1a64:b12c90c7a0735e2d",
       "notice": null,
       "blocks": [
         {
@@ -1820,6 +1853,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ich lerne Deutsch is three inherited words: lernen from Old High German lernēn, and Deutsch from Old High German diutisc, \"of the people\" from Proto-Germanic þiudiskaz (EtymDB 2.1). lernen is a cousin of English learn."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: swap the pieces",
           "segments": [
@@ -1838,7 +1882,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1878,7 +1922,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

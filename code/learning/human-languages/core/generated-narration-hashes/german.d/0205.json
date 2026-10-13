@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 205,
-  "sourceHash": "fnv1a64:fb2d83f063eccd73",
+  "sourceHash": "fnv1a64:2f5c03b56f9764dd",
   "lessonIds": [
     "GE-C205-knochen",
     "GE-C205-zahnarzt",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch205.txt",
   "json": "german/narration/ch205.json",
-  "textHash": "fnv1a64:9b08379509adbc08",
-  "jsonHash": "fnv1a64:1af758fad06e2cba",
+  "textHash": "fnv1a64:5b42688f868c1f53",
+  "jsonHash": "fnv1a64:38eca443047f0917",
   "findings": []
 }

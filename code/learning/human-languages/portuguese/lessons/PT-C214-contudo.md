@@ -13,7 +13,8 @@ gloss: "nevertheless"
 concept_tag: PT-PORQUE214-CONTUDO
 prerequisites: [PT-C214-apenas, PT-C214-juntos-juntas]
 sounds: []
-roots: []
+roots: [totus-latin]
+etymology_hook: "contudo — 'with all that': com 'with' + tudo 'everything' (← Latin totus)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C214-juntos-juntas]
 <!-- hl-knowledge: introduces=[PT-LEX-C214-PORQUE214-03]; assesses=[] -->
 
 **contudo** — "nevertheless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contudo** is "with all that": *com*, "with", and *tudo*, "everything" (← Latin *totus*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

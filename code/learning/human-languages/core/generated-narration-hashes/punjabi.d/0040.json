@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 40,
-  "sourceHash": "fnv1a64:1ff5a7904526f142",
+  "sourceHash": "fnv1a64:af1727f41c8f028b",
   "lessonIds": [
     "PA-C40-ki",
     "PA-C40-sochda-ki",
@@ -9,11 +9,11 @@
     "PA-C40-kyon",
     "PA-C40-kyunki"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
   "text": "punjabi/narration/ch40.txt",
   "json": "punjabi/narration/ch40.json",
-  "textHash": "fnv1a64:68260b7ef171e9c1",
-  "jsonHash": "fnv1a64:a120dc3c2167f6d1",
+  "textHash": "fnv1a64:c184c3585e98cc34",
+  "jsonHash": "fnv1a64:f387774d45eacb47",
   "findings": []
 }

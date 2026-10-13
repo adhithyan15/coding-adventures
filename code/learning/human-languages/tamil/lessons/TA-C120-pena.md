@@ -14,7 +14,8 @@ romanization: "pēṉā"
 concept_tag: TA-THINGS120-PENA
 prerequisites: [TA-C120-coppu, TA-C120-vali, TA-C33-ezhutu]
 sounds: []
-roots: []
+roots: [english-pen]
+etymology_hook: "பேனா ← English pen"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C120-vali]
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **பேனா** — *pēṉā* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பேனா** (*pēṉā*) is a loan from English *pen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

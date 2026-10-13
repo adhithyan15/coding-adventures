@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 110,
-  "sourceHash": "fnv1a64:f616dd64b0065a8b",
+  "sourceHash": "fnv1a64:825b4821e0ddddec",
   "lessonIds": [
     "FR-C110-droite",
     "FR-C110-gauche",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch110.txt",
   "json": "french/narration/ch110.json",
-  "textHash": "fnv1a64:4a92d829eeabfa95",
-  "jsonHash": "fnv1a64:d508fb6cc08e23b1",
+  "textHash": "fnv1a64:892fc2b13e884b19",
+  "jsonHash": "fnv1a64:f5cc5cd0740366c1",
   "findings": []
 }

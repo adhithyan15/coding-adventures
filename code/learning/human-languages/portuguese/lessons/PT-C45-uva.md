@@ -13,7 +13,8 @@ gloss: "a grape"
 concept_tag: PT-FRUTA-UVA
 prerequisites: [PT-C45-banana, PT-C45-laranja]
 sounds: []
-roots: []
+roots: [uva-latin]
+etymology_hook: "uva ← Latin uva 'grape, bunch of grapes'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C45-laranja]
 <!-- hl-knowledge: introduces=[PT-LEX-C45-FRUTA-05]; assesses=[] -->
 
 **a uva** — "a grape". What **o vinho** is made from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uva** ← Latin *uva*, "grape, bunch of grapes" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

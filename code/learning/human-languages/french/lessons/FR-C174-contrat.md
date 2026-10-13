@@ -13,7 +13,8 @@ gloss: "a contract"
 concept_tag: FR-TRAV174-CONTRAT
 prerequisites: [FR-C174-salaire, FR-C174-reunion]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "contrat ← Latin contractum 'an agreement', from contrahere — English contract"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C174-reunion]
 <!-- hl-knowledge: introduces=[FR-LEX-C174-TRAV174-05]; assesses=[] -->
 
 **le contrat** — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contrat** ← Old French *contract* ← Latin *contractum*, "a thing drawn together, an agreement" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

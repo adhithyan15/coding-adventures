@@ -13,7 +13,8 @@ gloss: "to smoke"
 concept_tag: IT-VERB-FUMARE
 prerequisites: [IT-C144-preoccuparsi, IT-C144-innamorarsi]
 sounds: []
-roots: []
+roots: [fumare-latin]
+etymology_hook: "fumare ← Latin fumare 'to smoke', from fumus 'smoke' — English fume shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C144-innamorarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C144-VERBI144-04]; assesses=[] -->
 
 **fumare** — "to smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumare** ← Latin *fumare*, "to smoke" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

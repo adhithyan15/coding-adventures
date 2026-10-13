@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does このむ (konomu) mean? ("To like, to prefer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to like, to prefer'.
+Say the Japanese for 'to like, to prefer'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does このみ (konomi) mean? ("A liking, taste".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a liking, taste'.
+Say the Japanese for 'a liking, taste'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しゅみ (shumi) mean? ("A hobby".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hobby'.
+Say the Japanese for 'a hobby'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たのしみ (tanoshimi) mean? ("Something to look forward to".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'something to look forward to'.
+Say the Japanese for 'something to look forward to'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あい (ai) mean? ("Love".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'love'.
+Say the Japanese for 'love'.

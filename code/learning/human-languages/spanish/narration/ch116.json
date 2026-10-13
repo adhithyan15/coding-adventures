@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 116,
   "title": "Hablado, Comido, Vivido --- The Participle",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a8fc69defea2fec8",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:5875abb1c6012f4c",
   "lessons": [
     {
       "id": "ES-C49-participio",
@@ -14,20 +14,13 @@
       "romanization": "hablado / comido / vivido",
       "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d4dfe4873aceca5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:0b3c4d5af44d7475",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -88,7 +81,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
+              "text": "The adjective half shows immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
             },
             {
               "kind": "speech",
@@ -128,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-ar",
               "prompt": "Give the participle of hablar.",
               "assesses": [
@@ -147,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-erir",
               "prompt": "Give the participles of comer and vivir.",
               "assesses": [
@@ -167,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-person",
               "prompt": "Does the participle change for who is speaking?",
               "assesses": [

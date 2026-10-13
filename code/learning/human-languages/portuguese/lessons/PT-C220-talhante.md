@@ -13,7 +13,8 @@ gloss: "a butcher"
 concept_tag: PT-COISAS220-TALHANTE
 prerequisites: [PT-C220-dentista, PT-C220-farmaceutico]
 sounds: []
-roots: []
+roots: [taliare-latin]
+etymology_hook: "talhante — 'one who cuts': the verb to cut (← Late Latin taliare) + -ante"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C220-farmaceutico]
 <!-- hl-knowledge: introduces=[PT-LEX-C220-COISAS220-05]; assesses=[] -->
 
 **o talhante** — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**talhante** is "one who cuts": the verb "to cut, to carve" (← Late Latin *taliare*) with *-ante*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

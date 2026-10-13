@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 9,
   "title": "Taking, Asking, Helping, and What Pleases You",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5235f0a0d7c2cad1",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4c09d75cb784a904",
   "lessons": [
     {
       "id": "PA-C09-laina",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -151,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-laina-labhate",
               "prompt": "Which Sanskrit verb is laina worn down from?",
               "assesses": [
@@ -195,7 +196,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -338,6 +339,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-puchhna-addak",
               "prompt": "What does the addak mark tell you to do to the consonant after it?",
               "assesses": [
@@ -375,7 +377,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8bc4a201b34db3da",
+      "sourceHash": "fnv1a64:c5bc605d6803cea8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -386,7 +388,7 @@
           "Script you'll notice: ੁ, ੰ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ੁ, ੰ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ੁ, ੰ and Guided Practice."
       },
       "blocks": [
         {
@@ -446,7 +448,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਪ + ਸ + ੰ + ਦ becomes ਪਸੰਦ (pasand) ਪਸੰਦ — pasand — pleasing."
+              "text": "ਪ + ੰ + ਜ becomes ਪੰਜ (panj) ਪੰਜ — panj — five."
             },
             {
               "kind": "speech",
@@ -483,20 +485,20 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ਪਸੰਦ (pasand) and point to each of today's pieces in turn",
+              "instruction": "at ਪੰਜ and point to the one of today's pieces it holds",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **ਪਸੰਦ** and point to each of today's pieces in turn]"
+              "source": "[YOU LOOK: at **ਪੰਜ** and point to the one of today's pieces it holds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "-u, (nasal), then the whole word — pasand",
+              "instruction": "-u, (nasal), then the whole word — panj",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *-u*, *(nasal)*, then the whole word — *pasand*]"
+              "source": "[YOU SAY: *-u*, *(nasal)*, then the whole word — *panj*]"
             },
             {
               "kind": "prompt",
@@ -522,7 +524,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name today's pieces: auṅkaṛ, ṭippī. Which of them is a mātrā or a mark rather than a letter, and what does ਪਸੰਦ say? (pasand, “pleasing”.)"
+              "text": "Name today's pieces: auṅkaṛ, ṭippī. Which of them is a mātrā or a mark rather than a letter, and what does ਪੰਜ say? (panj, “five”.)"
             },
             {
               "kind": "speech",
@@ -554,7 +556,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -710,6 +712,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-madad-karna-root",
               "prompt": "Which language does the word madad come from originally?",
               "assesses": [
@@ -746,7 +749,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:56f31397e283390b",
+      "sourceHash": "fnv1a64:8dea41032edf4b0f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -757,7 +760,7 @@
           "Script you'll notice: ੂ, ਉ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ੂ, ਉ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ੂ, ਉ and Guided Practice."
       },
       "blocks": [
         {
@@ -817,7 +820,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਮ + ੈ + ਨ + ੂ + ੰ becomes ਮੈਨੂੰ ਮੈਨੂੰ — mainū̃ — to me."
+              "text": "ਤ + ੂ + ੰ becomes ਤੂੰ (tū̃) ਤੂੰ — tū̃ — you (familiar)."
             },
             {
               "kind": "speech",
@@ -854,20 +857,20 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ਮੈਨੂੰ and point to each of today's pieces in turn",
+              "instruction": "at ਤੂੰ and point to the one of today's pieces it holds",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **ਮੈਨੂੰ** and point to each of today's pieces in turn]"
+              "source": "[YOU LOOK: at **ਤੂੰ** and point to the one of today's pieces it holds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "-ū, u, then the whole word — mainū̃",
+              "instruction": "-ū, u, then the whole word — tū̃",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *-ū*, *u*, then the whole word — *mainū̃*]"
+              "source": "[YOU SAY: *-ū*, *u*, then the whole word — *tū̃*]"
             },
             {
               "kind": "prompt",
@@ -893,7 +896,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name today's pieces: dulaiṅkaṛ, ūṛā. Which of them is a mātrā or a mark rather than a letter, and what does ਮੈਨੂੰ say? (mainū̃, “to me”.)"
+              "text": "Name today's pieces: dulaiṅkaṛ, ūṛā. Which of them is a mātrā or a mark rather than a letter, and what does ਤੂੰ say? (tū̃, “you”, familiar.)"
             },
             {
               "kind": "speech",
@@ -925,7 +928,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1070,8 +1073,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-pasand-dative",
-              "prompt": "Type the Punjabi for 'to me' — the form main takes when it cannot be the subject.",
+              "prompt": "Say the Punjabi for 'to me' — the form main takes when it cannot be the subject.",
               "assesses": [
                 "PA-GRAMMAR-DATIVE-LIKING"
               ],

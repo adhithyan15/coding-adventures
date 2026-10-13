@@ -13,7 +13,7 @@ sounds: [w-as-v, ie-long-ee, h-silent-lengthening]
 roots: [wieder-german, sehwan-germanic]
 etymology_hook: "auf Wiedersehen is auf plus wieder plus sehen, on the seeing-again, and it is the exact twin of French au revoir"
 duration:
-  max_seconds: 180
+  max_seconds: 243
 requires:
   knowledge: [GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [GE-CULTURE-FAREWELL-METAPHORS-01]
 practises:
-  knowledge: [GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02]
+  knowledge: [GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-WIEDER-WITH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,6 +56,11 @@ So it reads **"on the seeing-again"** → "until we see each other again." Note 
 capital **W**: welded together the three words became a *noun*, and German
 capitalises every noun. *Ein Wiedersehen* on its own is "a reunion."
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**auf Wiedersehen** is built from *auf*, *wieder* and *sehen*. *auf* ← Old High German *ūf*, the same word as English *up*; *sehen* ← Old High German *sehan* ← Proto-Germanic *\*sehwaną*, the same verb as English *see*. (EtymDB 2.1)
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01] -->
 
@@ -81,8 +86,10 @@ from each language's own parts.
 - [YOU SAY: "auf Wiedersehen" then "au revoir" — the same sentence, twice]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-SEHEN-01, GE-LEX-WIEDER-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-SEHEN-01, GE-LEX-WIEDER-01, GE-ETYMON-WIEDER-WITH-02] -->
 
 [PAUSE 3s] What does *auf Wiedersehen* literally say? ("On the seeing-again.")
 What are its three pieces? (*Auf*, *wieder*, *sehen*.) Why the capital **W**?
 (The welded word is a noun, and German capitalises nouns.)
+
+[PAUSE 2s] And which English *with-* is *wieder*'s real cousin? (The *with-* of ***withdraw*** — back, again — not *wither*.)

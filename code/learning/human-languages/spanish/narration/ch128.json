@@ -86,6 +86,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-querer-subjuntivo-forms",
               "prompt": "Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -106,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-querer-subjuntivo-stem",
               "prompt": "Which known present yo form gives the stem quier-?",
               "assesses": [
@@ -125,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-querer-subjuntivo-wanted",
               "prompt": "Complete 'Quiero que ___ hablar español' for one friend.",
               "assesses": [
@@ -243,6 +246,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-poder-subjuntivo-forms",
               "prompt": "Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -263,6 +267,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-poder-subjuntivo-stem",
               "prompt": "Which known present yo form gives the stem pued-?",
               "assesses": [
@@ -282,6 +287,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-poder-subjuntivo-wanted",
               "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
               "assesses": [
@@ -401,6 +407,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-hacer-subjuntivo-forms",
               "prompt": "Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -421,6 +428,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-hacer-subjuntivo-stem",
               "prompt": "Which known present yo form gives the stem hag-?",
               "assesses": [
@@ -440,6 +448,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-hacer-subjuntivo-wanted",
               "prompt": "Say 'I want you to make coffee' to one friend.",
               "assesses": [

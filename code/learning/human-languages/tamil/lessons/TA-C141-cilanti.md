@@ -14,7 +14,8 @@ romanization: "cilanti"
 concept_tag: TA-THINGS141-CILANTI
 prerequisites: [TA-C141-tivu, TA-C141-pucci]
 sounds: []
-roots: []
+roots: [dravidian-cilanti-spider]
+etymology_hook: "சிலந்தி — native Dravidian (DEDR 2562); Malayalam cilanni, Kannada selandi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C141-pucci]
 <!-- hl-knowledge: introduces=[TA-LEX-C141-THINGS141-03]; assesses=[] -->
 
 **சிலந்தி** — *cilanti* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிலந்தி** (*cilanti*) is native Dravidian. DEDR 2562 lists Malayalam *cilanni* and Kannada *selandi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

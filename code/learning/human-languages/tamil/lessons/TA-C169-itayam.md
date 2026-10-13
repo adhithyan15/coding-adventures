@@ -14,7 +14,8 @@ romanization: "itayam"
 concept_tag: TA-NALAM169-ITAYAM
 prerequisites: [TA-C169-ituppu, TA-C169-tontai]
 sounds: []
-roots: []
+roots: [sanskrit-hrdaya]
+etymology_hook: "இதயம் ← Sanskrit hṛdaya 'heart' (CDIAL 14152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C169-tontai]
 <!-- hl-knowledge: introduces=[TA-LEX-C169-NALAM169-04]; assesses=[] -->
 
 **இதயம்** — *itayam* — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இதயம்** (*itayam*) is a loan from Sanskrit *hṛdaya*, "heart" (CDIAL 14152). Tamil dropped the *h* and the *ṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

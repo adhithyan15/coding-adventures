@@ -10,10 +10,10 @@ gloss: a, an — the form the word takes for a masculine thing you have, and the
 concept_tag: GE-ARTICLE-INDEFINITE-ACC
 prerequisites: [GE-C14-b-verlust, GE-C10-geschwister]
 sounds: [diphthong-ei]
-roots: []
+roots: [germanic-ainaz]
 etymology_hook: "ein is the number one doing a second job, exactly as English a/an is a worn-down one — and German marks it when the thing is what you HAVE rather than what is there"
 duration:
-  max_seconds: 160
+  max_seconds: 201
 requires:
   knowledge: [GE-GRAMMAR-HABEN-B-DROP-01, GE-LEX-DER-DIE-DAS-02, GE-GRAMMAR-HABEN-REGULAR-01]
 introduces:
@@ -60,6 +60,11 @@ Take this one as a word for now, not as a system. The system behind it —
 German's cases — gets a chapter of its own later; this is the first place the
 book cannot avoid it, because a sentence with *haben* in it needs something
 to have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einen** is a form of *ein* ← Old High German *ein* ← Proto-Germanic *\*ainaz*, "one" — inherited, the same word as English *one*. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EINEN-01, GE-GRAMMAR-HABEN-B-DROP-01] -->

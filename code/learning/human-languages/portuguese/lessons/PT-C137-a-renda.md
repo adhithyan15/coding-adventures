@@ -13,7 +13,8 @@ gloss: "the rent"
 concept_tag: PT-LER137-A-RENDA
 prerequisites: [PT-C137-o-horario, PT-C137-o-aviso]
 sounds: []
-roots: []
+roots: [reddere-latin]
+etymology_hook: "renda — from Vulgar Latin *rendere 'to yield', from reddere 'to give back' — English rent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C137-o-aviso]
 <!-- hl-knowledge: introduces=[PT-LEX-C137-LER137-03]; assesses=[] -->
 
 **a renda** — "the rent". The money for a **quarto**, paid every **mês**: **A renda é de 400 euros por mês.** In Brazil the rent is **o aluguel**; the verb **alugar** is the same in both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**renda** comes from Vulgar Latin *\*rendere*, "to give back, to yield" (EtymDB 2.1), from Latin *reddere*, "to give back" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

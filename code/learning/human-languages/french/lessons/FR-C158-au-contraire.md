@@ -14,6 +14,7 @@ concept_tag: FR-POURQUOI158-AU-CONTRAIRE
 prerequisites: [FR-C158-pourtant, FR-C158-de-toute-facon]
 sounds: []
 roots: []
+etymology_hook: "au contraire — 'to the opposite'; contraire ← Latin contrarius — English contrary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C158-de-toute-facon]
 <!-- hl-knowledge: introduces=[FR-LEX-C158-POURQUOI158-04]; assesses=[] -->
 
 **au contraire** — "on the contrary".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**au contraire** — *au*, "to the", and *contraire*, "opposite", ← Latin *contrarius*, "lying opposite" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

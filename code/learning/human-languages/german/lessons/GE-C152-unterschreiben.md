@@ -13,7 +13,8 @@ gloss: "to sign"
 concept_tag: GE-VERB-UNTERSCHREIBEN
 prerequisites: [GE-C151-ueberlegen, GE-C151-umziehen]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "unterschreiben ← Middle High German underschrīben: 'under' + schreiben 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C151-umziehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C152-VERB152-01]; assesses=[] -->
 
 **unterschreiben** — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unterschreiben** ← Middle High German *underschrīben* (EtymDB 2.1): the word for "under" + *schreiben*, "to write". You sign underneath. *schreiben* comes from Latin *scrībere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

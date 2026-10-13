@@ -2349,6 +2349,45 @@ describe("Persian ی — its freehand S and bowl stay in one pen-down run", () =
   });
 });
 
+// The Persian digits ۰-۹ (and Urdu ۰-۳, the same paths): POH-Db's writers
+// draw each in one stroke, so every movement stays in stroke zero and the
+// strip reports one unbroken stroke over the Noto Naskh outline.
+const PERSIAN_DIGIT_MOVEMENTS: ReadonlyArray<readonly [glyph: string, movements: number]> = [
+  ["۰", 1],
+  ["۱", 1],
+  ["۲", 3],
+  ["۳", 3],
+  ["۴", 4],
+  ["۵", 3],
+  ["۶", 3],
+  ["۷", 2],
+  ["۸", 2],
+  ["۹", 2],
+];
+
+describe("Persian digits ۰-۹ — one unbroken stroke each", () => {
+  for (const [glyph, movements] of PERSIAN_DIGIT_MOVEMENTS) {
+    for (const script of glyph <= "۳" ? ["perso-arabic", "urdu-nastaliq"] : ["perso-arabic"]) {
+      it(`${script} ${glyph} draws ${movements} movement${movements === 1 ? "" : "s"} without a lift`, () => {
+        const letter = ductusFor(glyph, script)!;
+        expect(letter).toBe(DUCTUS[ductusKey(script, glyph)]);
+        const steps = ductusSteps(letter);
+        const outline = naskhOutline(glyph);
+        const strip = ductusFilmstrip(letter, outline);
+        expect(steps.every((step) => !step.startsAfterLift)).toBe(true);
+        expect(steps.every((step) => step.strokeIndex === 0)).toBe(true);
+        expect(strip.frames).toHaveLength(movements);
+        expect(strip.penLifts).toBe(0);
+        expect(strip.summary).toBe(
+          `one unbroken stroke · ${movements} movement${movements === 1 ? "" : "s"}`,
+        );
+        const last = byTag(strip.frames[movements - 1], "path");
+        expect(last.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(outline.path);
+      });
+    }
+  }
+});
+
 // ---------------------------------------------------------------------------
 // Generic multi-stroke edge cases still use a synthetic ductus so the test can
 // vary stroke counts independently of curriculum data. Nothing in this fixture

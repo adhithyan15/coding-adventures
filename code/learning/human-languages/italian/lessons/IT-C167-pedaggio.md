@@ -13,7 +13,8 @@ gloss: "a toll"
 concept_tag: IT-COSE167-PEDAGGIO
 prerequisites: [IT-C166-pacco, IT-C166-cartolina]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "pedaggio ← Medieval Latin pedaticum, a toll for passing on foot, from pes 'foot'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C166-cartolina]
 <!-- hl-knowledge: introduces=[IT-LEX-C167-COSE167-01]; assesses=[] -->
 
 **il pedaggio** — "a toll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pedaggio** ← Medieval Latin *pedaticum*, a toll for passing, built on *pes*, "foot" — taken from Medieval Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

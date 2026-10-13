@@ -14,6 +14,7 @@ concept_tag: IT-CIBO109-BISTECCA
 prerequisites: [IT-C109-yogurt, IT-C109-gelato]
 sounds: []
 roots: []
+etymology_hook: "bistecca ← English beefsteak — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C109-gelato]
 <!-- hl-knowledge: introduces=[IT-LEX-C109-CIBO109-04]; assesses=[] -->
 
 **la bistecca** — "a steak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bistecca** ← English *beefsteak* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

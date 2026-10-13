@@ -13,7 +13,8 @@ gloss: "a hare"
 concept_tag: GE-THING198-HASE
 prerequisites: [GE-C197-blitz, GE-C198-tier]
 sounds: []
-roots: []
+roots: [germanic-haso]
+etymology_hook: "Hase ← Old High German haso — the same word as English hare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C198-tier]
 <!-- hl-knowledge: introduces=[GE-LEX-C198-THING198-02]; assesses=[] -->
 
 **der Hase** — "a hare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hase** ← Middle High German *hase* ← Old High German *haso* — inherited. EtymDB 2.1 traces English *hare* to Proto-Germanic *\*hasô*: the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

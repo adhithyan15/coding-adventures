@@ -13,7 +13,8 @@ gloss: "building works, roadworks"
 concept_tag: PT-COISAS163-OBRAS
 prerequisites: [PT-C162-encomenda, PT-C163-tunel]
 sounds: []
-roots: []
+roots: [opus-latin]
+etymology_hook: "obras — plural of obra ← Latin opera 'work, labour' — English opera"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C163-tunel]
 <!-- hl-knowledge: introduces=[PT-LEX-C163-COISAS163-02]; assesses=[] -->
 
 **as obras** — "building works, roadworks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obras** ← Latin *opera*, "work, labour" — inherited. EtymDB 2.1 has no row for the plural; it derives *obra* from *opera*, the plural of *opus*. *obras* is the plural of *obra*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

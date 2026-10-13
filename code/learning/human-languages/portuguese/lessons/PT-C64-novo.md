@@ -13,7 +13,8 @@ gloss: "new; young"
 concept_tag: PT-ADJ1-NOVO
 prerequisites: [PT-C64-grande, PT-C64-pequeno]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "novo ← Latin novus 'new' — English novel and novice share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C64-pequeno]
 <!-- hl-knowledge: introduces=[PT-LEX-C64-ADJ1-03]; assesses=[] -->
 
 **novo** — "new; young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**novo** ← Latin *novus*, "new" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

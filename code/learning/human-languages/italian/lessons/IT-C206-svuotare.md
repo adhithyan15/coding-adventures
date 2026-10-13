@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SVUOTARE
 prerequisites: [IT-C206-raffreddare, IT-C206-riempire]
 sounds: []
 roots: []
+etymology_hook: "svuotare — s- + vuoto 'empty' ← Vulgar Latin vocitus — English void is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C206-riempire]
 <!-- hl-knowledge: introduces=[IT-LEX-C206-VERBI206-03]; assesses=[] -->
 
 **svuotare** — "to empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**svuotare** — built from *vuoto*, "empty", with *s-*: to make empty. *vuoto* ← Vulgar Latin *vocitus*, "empty". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

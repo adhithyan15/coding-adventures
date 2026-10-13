@@ -14,6 +14,7 @@ concept_tag: IT-VERDURA-PATATA
 prerequisites: [IT-C52-arancia, IT-C52-uva]
 sounds: []
 roots: []
+etymology_hook: "patata ← Spanish patata, from Taino batata 'sweet potato' — English potato is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C52-uva]
 <!-- hl-knowledge: introduces=[IT-LEX-C53-VERDURA-01]; assesses=[] -->
 
 **la patata** — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patata** ← Spanish *patata*, "potato" — borrowed; Spanish took it from Taino *batata*, "sweet potato". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

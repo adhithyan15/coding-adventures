@@ -13,7 +13,8 @@ gloss: "a cloud"
 concept_tag: PT-CEU-NUVEM
 prerequisites: [PT-C58-sol, PT-C58-estrela]
 sounds: []
-roots: []
+roots: [nubes-latin]
+etymology_hook: "nuvem ← Latin nubes 'cloud': the Latin -b- became -v-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C58-estrela]
 <!-- hl-knowledge: introduces=[PT-LEX-C58-CEU-05]; assesses=[] -->
 
 **a nuvem** — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuvem** ← Latin *nubes*, "cloud" (EtymDB 2.1) — inherited. The Latin *-b-* became *-v-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

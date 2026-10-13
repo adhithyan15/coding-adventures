@@ -13,7 +13,8 @@ gloss: "an address"
 concept_tag: FR-NATURE86-ADRESSE
 prerequisites: [FR-C134-levre, FR-C134-numero]
 sounds: []
-roots: []
+roots: [directus-latin]
+etymology_hook: "adresse — from the verb 'to direct', from Latin directus 'straight' — English address"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C134-numero]
 <!-- hl-knowledge: introduces=[FR-LEX-C134-NATURE86-05]; assesses=[] -->
 
 **l'adresse** — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adresse** — formed from the verb for "to direct, to send", ← Vulgar Latin *\*addirectiare*, built on Latin *directus*, "straight" (Lewis & Short): where a letter is sent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

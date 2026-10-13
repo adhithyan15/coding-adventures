@@ -13,7 +13,8 @@ gloss: "really"
 concept_tag: PT-PORQUE184-REALMENTE
 prerequisites: [PT-C184-felizmente, PT-C184-certamente]
 sounds: []
-roots: []
+roots: [res-latin]
+etymology_hook: "realmente — real (← Late Latin realis, from res 'thing') + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C184-certamente]
 <!-- hl-knowledge: introduces=[PT-LEX-C184-PORQUE184-03]; assesses=[] -->
 
 **realmente** — "really".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**realmente** is built from *real*, "real" (← Late Latin *realis*, from *res*, "thing"), and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

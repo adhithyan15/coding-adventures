@@ -13,7 +13,8 @@ gloss: "a key"
 concept_tag: IT-CASA1-CHIAVE
 prerequisites: [IT-C56-tavolo, IT-C56-sedia]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "chiave ← Latin clavis 'key' — English clavicle, the 'little key' bone, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C56-sedia]
 <!-- hl-knowledge: introduces=[IT-LEX-C56-CASA1-05]; assesses=[] -->
 
 **la chiave** — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiave** ← Latin *clavis*, "key" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

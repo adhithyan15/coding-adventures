@@ -38,11 +38,12 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // `width: 100%` outside a Row (the editor's fields sit in a Column). The
     // search field (J4a) is a text field INSIDE a Row, where Compose still
     // keeps its intrinsic width; that is not reported, so it is not pinned
-    // here (tracked as a separate emitter change). Qt and Flutter lower
-    // neither on a text field yet. Checked both ways below.
-    (Backend::Qt, "width"),
+    // here (tracked as a separate emitter change). Qt now preserves both the
+    // row and column fill widths through `Layout.fillWidth` (#17338), while
+    // Flutter preserves the Column-owned width through
+    // `SizedBox(width: double.infinity)`. `min-height` remains a measured drop
+    // on both backends. Checked both ways below.
     (Backend::Qt, "min-height"),
-    (Backend::Flutter, "width"),
     (Backend::Flutter, "min-height"),
     // Flutter's former `border-radius` drop on DraftEditor's outlined text
     // fields is implemented by #16944. Keep this list limited to properties

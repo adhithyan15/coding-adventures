@@ -14,7 +14,8 @@ romanization: "ūṟukāy"
 concept_tag: TA-THINGS140-URUKAY
 prerequisites: [TA-C140-tiratcai, TA-C140-matulai]
 sounds: []
-roots: []
+roots: [dravidian-ooru-soak, dravidian-kaay-fruit]
+etymology_hook: "ஊறுகாய் — native: ūṟu 'to soak' (DEDR 761) + kāy 'unripe fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C140-matulai]
 <!-- hl-knowledge: introduces=[TA-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **ஊறுகாய்** — *ūṟukāy* — "a pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊறுகாய்** (*ūṟukāy*) is native: *ūṟu*, "to soak, to be steeped" (DEDR 761), and *kāy*, "unripe fruit" (DEDR 1459): fruit left to steep.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 4,
-  "sourceHash": "fnv1a64:3a993b74986ed9b9",
+  "sourceHash": "fnv1a64:45b81edeaec0eeac",
   "lessonIds": [
     "PT-C04-adeus",
     "PT-C04-ate-logo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch04.txt",
   "json": "portuguese/narration/ch04.json",
-  "textHash": "fnv1a64:de40031c8e2ec75d",
-  "jsonHash": "fnv1a64:f76e66d91e86dc8b",
+  "textHash": "fnv1a64:5b85f61ff915df53",
+  "jsonHash": "fnv1a64:28e8409117c770b8",
   "findings": []
 }

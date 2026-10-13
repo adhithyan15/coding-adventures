@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES89-BAIRRO
 prerequisites: [PT-C89-ao-lado, PT-C89-entre]
 sounds: []
 roots: []
+etymology_hook: "bairro ← Andalusian Arabic barrī 'outer': a district outside the walls"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C89-entre]
 <!-- hl-knowledge: introduces=[PT-LEX-C89-LUGARES89-05]; assesses=[] -->
 
 **o bairro** — "a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bairro** ← Andalusian Arabic *barrī*, "outer" (EtymDB 2.1) — borrowed. A district lay outside the walls.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

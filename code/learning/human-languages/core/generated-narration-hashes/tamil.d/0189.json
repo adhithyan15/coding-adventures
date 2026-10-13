@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 189,
-  "sourceHash": "fnv1a64:4e1477e4da49940b",
+  "sourceHash": "fnv1a64:e7e7db9f678d12b4",
   "lessonIds": [
     "TA-C189-pacai",
     "TA-C189-melukuvartti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch189.txt",
   "json": "tamil/narration/ch189.json",
-  "textHash": "fnv1a64:682def84744208b0",
-  "jsonHash": "fnv1a64:f3dda0a09ffd1bec",
+  "textHash": "fnv1a64:ecc58fb8f1e55532",
+  "jsonHash": "fnv1a64:1aaad6ac47457dfb",
   "findings": []
 }

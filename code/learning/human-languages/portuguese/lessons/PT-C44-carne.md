@@ -13,7 +13,8 @@ gloss: "meat"
 concept_tag: PT-COMIDA1-CARNE
 prerequisites: [PT-C43-dar, PT-C43-viver]
 sounds: []
-roots: []
+roots: [caro-latin]
+etymology_hook: "carne ← Latin caro, carnis 'flesh' — English carnal and carnivore share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C43-viver]
 <!-- hl-knowledge: introduces=[PT-LEX-C44-COMIDA1-01]; assesses=[] -->
 
 **a carne** — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carne** ← Latin *caro, carnis*, "flesh" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

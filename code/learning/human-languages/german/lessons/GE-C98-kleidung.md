@@ -13,7 +13,8 @@ gloss: "clothes"
 concept_tag: GE-STADT3-KLEIDUNG
 prerequisites: [GE-C98-fahrrad, GE-C98-haltestelle]
 sounds: []
-roots: []
+roots: [germanic-klaitha]
+etymology_hook: "Kleidung ← Middle High German kleidunge: the verb 'to clothe' + -ung; its root is kin to English cloth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C98-haltestelle]
 <!-- hl-knowledge: introduces=[GE-LEX-C98-STADT3-04]; assesses=[] -->
 
 **die Kleidung** — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kleidung** ← Middle High German *kleidunge*, from the verb "to clothe" + *-ung* (EtymDB 2.1). Its root is the word for "dress", Proto-Germanic *\*klaiþą*, "cloth", English *cloth*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

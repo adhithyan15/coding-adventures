@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES88-OESTE
 prerequisites: [PT-C88-sul, PT-C88-leste]
 sounds: []
 roots: []
+etymology_hook: "oeste ← French ouest, from Old English west — English west is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C88-leste]
 <!-- hl-knowledge: introduces=[PT-LEX-C88-LUGARES88-05]; assesses=[] -->
 
 **o oeste** — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oeste** ← French *ouest*, "west" (EtymDB 2.1) — borrowed. The French word came from Old English *west*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

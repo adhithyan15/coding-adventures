@@ -14,7 +14,8 @@ romanization: "paruppu"
 concept_tag: TA-THINGS121-PARUPPU
 prerequisites: [TA-C121-pavatai, TA-C121-celai]
 sounds: []
-roots: []
+roots: [dravidian-paruppu-pulse]
+etymology_hook: "பருப்பு — native Dravidian (DEDR 3978); Malayalam parippu, Kannada pappu, Telugu pappu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C121-celai]
 <!-- hl-knowledge: introduces=[TA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **பருப்பு** — *paruppu* — "lentils, dal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பருப்பு** (*paruppu*) is native Dravidian. DEDR 3978 lists Malayalam *parippu*, Kannada *pappu* and Telugu *pappu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to exist"
 concept_tag: PT-VERB-EXISTIR
 prerequisites: [PT-C209-gravar, PT-C209-manter]
 sounds: []
-roots: []
+roots: [sistere-latin]
+etymology_hook: "existir ← Latin existere 'to stand out, to appear' — English exist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C209-manter]
 <!-- hl-knowledge: introduces=[PT-LEX-C209-VERBOS209-04]; assesses=[] -->
 
 **existir** — "to exist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**existir** ← Latin *existere*, "to stand out, to appear" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

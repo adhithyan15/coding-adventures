@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ea809afc2a0d041",
+  "sourceHash": "fnv1a64:4c645afb4c1643fe",
   "lessons": [
     {
       "id": "TA-C44-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fbbc948f6a860b4",
+      "sourceHash": "fnv1a64:338bb2e042765f00",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:591bcb2f2bc7b089",
+      "sourceHash": "fnv1a64:618a6e0d6cf04ef2",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +195,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துணி (tuṇi) is native Dravidian. DEDR 3307 lists Malayalam tuṇi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +216,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -263,7 +274,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -294,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db2e855a901c8d35",
+      "sourceHash": "fnv1a64:f56ba301b7d4bea7",
       "notice": null,
       "blocks": [
         {
@@ -339,6 +350,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விளக்கு (viḷakku) is native Dravidian, from the verb viḷakku, \"to make clear, to brighten\". DEDR 5496 files it among words for white and shining, with Malayalam viḷakku, \"lamp\", and veḷiccam, \"light\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -349,7 +371,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -407,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -438,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1068a7f7d78efde8",
+      "sourceHash": "fnv1a64:b681f37842cb41cf",
       "notice": null,
       "blocks": [
         {
@@ -578,7 +600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:733ec5732a12c7d6",
+      "sourceHash": "fnv1a64:9b5043f8872ebb40",
       "notice": null,
       "blocks": [
         {

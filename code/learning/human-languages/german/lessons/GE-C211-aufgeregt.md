@@ -14,6 +14,7 @@ concept_tag: GE-QUAL211-AUFGEREGT
 prerequisites: [GE-C211-aengstlich, GE-C211-anstrengend]
 sounds: []
 roots: []
+etymology_hook: "aufgeregt — auf 'up' + the verb 'to stir': stirred up"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C211-anstrengend]
 <!-- hl-knowledge: introduces=[GE-LEX-C211-QUAL211-03]; assesses=[] -->
 
 **aufgeregt** — "excited, nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aufgeregt** is the past participle of *auf* + an old verb meaning "to stir, to move": stirred up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to decrease"
 concept_tag: IT-VERB-DIMINUIRE
 prerequisites: [IT-C208-attraversare, IT-C208-aumentare]
 sounds: []
-roots: []
+roots: [minuere-latin]
+etymology_hook: "diminuire ← Latin deminuere 'to make smaller' — English diminish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C208-aumentare]
 <!-- hl-knowledge: introduces=[IT-LEX-C208-VERBI208-05]; assesses=[] -->
 
 **diminuire** — "to decrease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diminuire** ← Latin *deminuere*, "to make smaller" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

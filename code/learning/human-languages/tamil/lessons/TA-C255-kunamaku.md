@@ -14,7 +14,8 @@ romanization: "kuṇamāku"
 concept_tag: TA-VERB-KUNAMAKU
 prerequisites: [TA-C254-veliyeru, TA-C255-cuvaci]
 sounds: []
-roots: []
+roots: [sanskrit-guna, tamil-aaku-become]
+etymology_hook: "குணமாகு — kuṇam ← Sanskrit guṇa 'quality' (CDIAL 4190) + native āku 'become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C255-cuvaci]
 <!-- hl-knowledge: introduces=[TA-LEX-C255-ACT255-02]; assesses=[] -->
 
 **குணமாகு** — *kuṇamāku* — "to recover, to get well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குணமாகு** (*kuṇamāku*) is *kuṇam*, "good quality, health", from Sanskrit *guṇa*, "quality" (CDIAL 4190), and native *āku*, "to become" (DEDR 333): "become well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

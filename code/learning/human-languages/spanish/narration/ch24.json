@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-dad-make",
               "prompt": "Turn the English word university into Spanish.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-dad-read",
               "prompt": "You see the word realidad and have never met it. What does it mean?",
               "assesses": [
@@ -164,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-dad-why",
               "prompt": "Why does -dad look less like -ty than -cion looks like -tion?",
               "assesses": [

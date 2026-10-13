@@ -11,7 +11,8 @@ romanization: "tūkkam"
 concept_tag: TA-NOUN-SLEEP
 prerequisites: [TA-C61-thirst, TA-C59-oil, TA-C60-umbrella]
 sounds: []
-roots: []
+roots: [dravidian-tuunku-hang-sleep]
+etymology_hook: "தூக்கம் — native Dravidian (DEDR 3376); Malayalam tūṅṅuka 'to hang, be drowsy'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C61-thirst]
 Sleep as a state — the sleep you get, lose, or need more of. Kannada ನಿದ್ದೆ (*nidde*) and Telugu నిద్ర (*nidra*) both took the Sanskrit word; Tamil kept its own and stayed out of it.
 
 Open it on a long ஊ, the same long ஊ that opens ஊசி, and then hold the க்க twice.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தூக்கம்** (*tūkkam*) is native Dravidian. DEDR 3376 lists Malayalam *tūṅṅuka*, "to hang, be drowsy". It comes from *tūṅku*, "to hang, to droop, to sleep": sleep is the head drooping.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

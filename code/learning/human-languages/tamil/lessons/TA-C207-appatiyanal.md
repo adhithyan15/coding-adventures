@@ -14,7 +14,8 @@ romanization: "appaṭiyāṉāl"
 concept_tag: TA-KARANAM207-APPATIYANAL
 prerequisites: [TA-C206-maitanam, TA-C206-niccal-kulam]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, tamil-aaku-become]
+etymology_hook: "அப்படியானால் — native: appaṭi 'thus' (DEDR 1) + āṉāl 'if it is', from ā (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C206-niccal-kulam]
 <!-- hl-knowledge: introduces=[TA-LEX-C207-KARANAM207-01]; assesses=[] -->
 
 **அப்படியானால்** — *appaṭiyāṉāl* — "in that case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்படியானால்** (*appaṭiyāṉāl*) is native: *appaṭi*, "thus" (DEDR 1), and *āṉāl*, "if it is", from *ā*, "to become" (DEDR 333): "if it is so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

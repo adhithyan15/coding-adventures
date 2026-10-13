@@ -72,4 +72,4 @@ speaking for.
 
 [PAUSE 3s] Say "they love us." (***Nos quieren***.) And which slot did *nos*
 take? (The one in **front of the verb**.) Next: where *nos* came from, and the
-verb ending that has been carrying it all along.
+verb ending that has been saying "we" without it.

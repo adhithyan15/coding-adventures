@@ -14,6 +14,7 @@ concept_tag: IT-VERB-RISCHIARE
 prerequisites: [IT-C180-piegare, IT-C180-possedere]
 sounds: []
 roots: []
+etymology_hook: "rischiare — from rischio 'risk', a word of uncertain origin — English risk is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C180-possedere]
 <!-- hl-knowledge: introduces=[IT-LEX-C181-VERBI181-01]; assesses=[] -->
 
 **rischiare** — "to risk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rischiare** — built from *rischio*, "risk", with *-are*. Where *rischio* came from is uncertain; EtymDB 2.1 records none.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

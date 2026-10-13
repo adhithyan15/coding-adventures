@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 156,
-  "sourceHash": "fnv1a64:d56b1adec77d02f7",
+  "sourceHash": "fnv1a64:c82fe2b7f94107ee",
   "lessonIds": [
     "IT-C156-comodo",
     "IT-C156-scomodo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch156.txt",
   "json": "italian/narration/ch156.json",
-  "textHash": "fnv1a64:4eab0fe1dd18c819",
-  "jsonHash": "fnv1a64:776c055a3972265e",
+  "textHash": "fnv1a64:af25a0ab79a48699",
+  "jsonHash": "fnv1a64:e092e1926ad8498c",
   "findings": []
 }

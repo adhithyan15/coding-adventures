@@ -11,7 +11,8 @@ romanization: "āṅkilam"
 concept_tag: TA-ABOUT-ENGLISH
 prerequisites: [TA-C103-petname, TA-C104-language]
 sounds: []
-roots: []
+roots: [english-angle]
+etymology_hook: "ஆங்கிலம் ← Āṅgla, the Sanskrit-style name for the English, from the Angles; + Tamil -am"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C104-language]
 **ஆங்கிலம்** (*āṅkilam*) — "English".
 
 **எனக்கு ஆங்கிலம் தெரியும்** — "I know English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆங்கிலம்** (*āṅkilam*) usually comes from *Āṅgla*, the Sanskrit-style name for the English, which itself goes back to the English people's own name, the Angles (as in *Anglo-*). Tamil added its *-am*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

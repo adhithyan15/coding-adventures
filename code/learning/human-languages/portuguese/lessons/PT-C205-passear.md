@@ -13,7 +13,8 @@ gloss: "to go for a walk"
 concept_tag: PT-VERB-PASSEAR
 prerequisites: [PT-C205-observar, PT-C205-participar]
 sounds: []
-roots: []
+roots: [passus]
+etymology_hook: "passear — built from passo 'step' (← Latin passus) + -ear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C205-participar]
 <!-- hl-knowledge: introduces=[PT-LEX-C205-VERBOS205-05]; assesses=[] -->
 
 **passear** — "to go for a walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passear** is built from *passo*, "step" (EtymDB 2.1), and *-ear*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

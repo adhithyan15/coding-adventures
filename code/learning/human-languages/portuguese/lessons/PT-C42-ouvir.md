@@ -13,7 +13,8 @@ gloss: "to hear, to listen"
 concept_tag: PT-VERB-OUVIR
 prerequisites: [PT-C41-sentar, PT-C42-correr]
 sounds: []
-roots: []
+roots: [audire-latin]
+etymology_hook: "ouvir ← Latin audire 'to hear' — English audio and audience share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C42-correr]
 <!-- hl-knowledge: introduces=[PT-LEX-C42-VERBOS3-02]; assesses=[] -->
 
 **ouvir** — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ouvir** ← Latin *audire*, "to hear" (EtymDB 2.1) — inherited. Old Portuguese said *ouir*; the *v* grew in later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

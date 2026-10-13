@@ -56,8 +56,8 @@ writing and after a small drop of the voice in speech.
 taught. *Tu* is an old particle meaning "however". So *but* in Bengali is
 literally *what-however*, a shrug frozen into a conjunction.
 
-Look at the middle of the written word: **ন্ত** is **ন** and **ত** fused by the
-mark chapter two taught for deleting the inherent vowel. Two letters, one shape,
+[YOU LOOK: at the middle of the written word.] **ন্ত** is **ন** and **ত** fused by
+the mark chapter two taught for deleting the inherent vowel. Two letters, one shape,
 and no new letter to learn.
 
 ## Guided Practice

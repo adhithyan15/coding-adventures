@@ -13,7 +13,8 @@ gloss: "suddenly"
 concept_tag: PT-TEMPO182-DE-REPENTE
 prerequisites: [PT-C181-ciume, PT-C181-tedio]
 sounds: []
-roots: []
+roots: [repens-latin]
+etymology_hook: "de repente — 'of a sudden': repente ← Latin repens 'sudden'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C181-tedio]
 <!-- hl-knowledge: introduces=[PT-LEX-C182-TEMPO182-01]; assesses=[] -->
 
 **de repente** — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**de repente** is "of a sudden": *repente* ← Latin *repens*, "sudden, unexpected" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

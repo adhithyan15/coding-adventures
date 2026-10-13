@@ -13,7 +13,8 @@ gloss: "to move (something)"
 concept_tag: IT-VERB-SPOSTARE
 prerequisites: [IT-C233-costruire, IT-C234-cambiare]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "spostare — s- + posto 'a place': to put out of place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C234-cambiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C234-VERBI234-02]; assesses=[] -->
 
 **spostare** — "to move (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spostare** — built from *posto*, "a place", with *s-*, "out of": to put out of place. *posto* ← Latin *postus*, "placed". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

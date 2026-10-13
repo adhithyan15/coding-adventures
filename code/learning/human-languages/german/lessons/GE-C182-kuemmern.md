@@ -14,6 +14,7 @@ concept_tag: GE-VERB-KUEMMERN
 prerequisites: [GE-C182-kaempfen, GE-C182-klettern]
 sounds: []
 roots: []
+etymology_hook: "kümmern ← Middle High German kumbern 'to burden', from the word for 'grief, burden'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C182-klettern]
 <!-- hl-knowledge: introduces=[GE-LEX-C182-VERB182-03]; assesses=[] -->
 
 **kümmern** — "to take care (sich kümmern um)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kümmern** ← Middle High German *kumbern*, "to burden, to trouble" (EtymDB 2.1), from the word for "grief, burden", which EtymDB lists beside English *encumbrance*. To take care is to take the burden on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

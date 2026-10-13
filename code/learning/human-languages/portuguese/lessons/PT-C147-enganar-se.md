@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ENGANAR-SE
 prerequisites: [PT-C147-corar, PT-C147-sangrar]
 sounds: []
 roots: []
+etymology_hook: "enganar-se — enganar ← Vulgar Latin *ingannare 'to mock, to trick', with -se 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C147-sangrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C147-VERBOS147-04]; assesses=[] -->
 
 **enganar-se** — "to make a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enganar** ← Vulgar Latin *\*ingannare*, "to mock, to trick" — inherited; EtymDB 2.1 traces it only to Old Portuguese *enganar*. *-se* means "oneself": to trick yourself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 83,
-  "sourceHash": "fnv1a64:6ee6e8e30a6015b6",
+  "sourceHash": "fnv1a64:41b25c74c4fa6a2a",
   "lessonIds": [
     "FR-C83-soleil",
     "FR-C83-etoile",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch83.txt",
   "json": "french/narration/ch83.json",
-  "textHash": "fnv1a64:b6db392636e35d3f",
-  "jsonHash": "fnv1a64:816ed2bc118ddba3",
+  "textHash": "fnv1a64:59e4ca6bfa7abb55",
+  "jsonHash": "fnv1a64:998cddb999734bcc",
   "findings": []
 }

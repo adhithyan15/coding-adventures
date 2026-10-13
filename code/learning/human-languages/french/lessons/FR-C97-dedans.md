@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS49-DEDANS
 prerequisites: [FR-C97-dessus, FR-C97-dessous]
 sounds: []
 roots: []
+etymology_hook: "dedans — de + Old French denz 'within', from Latin de intus 'from inside'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C97-dessous]
 <!-- hl-knowledge: introduces=[FR-LEX-C97-TEMPS49-03]; assesses=[] -->
 
 **dedans** — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dedans** — built from *de*, "of, from", and Old French *denz*, "within", ← Latin *de intus*, "from inside" (Lewis & Short for *intus*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

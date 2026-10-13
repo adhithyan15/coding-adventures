@@ -14,6 +14,7 @@ concept_tag: PT-VERB-DESPERDICAR
 prerequisites: [PT-C236-empurrar, PT-C236-puxar]
 sounds: []
 roots: []
+etymology_hook: "desperdiçar — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C236-puxar]
 <!-- hl-knowledge: introduces=[PT-LEX-C236-VERBOS236-04]; assesses=[] -->
 
 **desperdiçar** — "to waste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desperdiçar** — its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

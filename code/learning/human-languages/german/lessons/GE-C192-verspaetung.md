@@ -13,7 +13,8 @@ gloss: "a delay"
 concept_tag: GE-THING192-VERSPAETUNG
 prerequisites: [GE-C192-ankunft, GE-C192-abflug]
 sounds: []
-roots: []
+roots: [spaet-german]
+etymology_hook: "Verspätung — ver- + spät 'late' + -ung: a making late"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C192-abflug]
 <!-- hl-knowledge: introduces=[GE-LEX-C192-THING192-04]; assesses=[] -->
 
 **die Verspätung** — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verspätung** is *ver-* + *spät*, "late", + *-ung*: being made late. *spät* ← Old High German *spāti*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

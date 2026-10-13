@@ -15,6 +15,9 @@ You'll want to know: இன்று.
 You already have நாள் (nāḷ), the day itself, and நாளை (nāḷai), tomorrow. இன்று (iṉṟu) is the day you are standing in, and it completes the middle of that little set.
 This is the careful, written form, and it is the one printed on a page. In fast speech you will also hear இன்னைக்கு (iṉṉaikku) for the same thing — worth recognising, but இன்று (iṉṟu) is the one to say.
 
+The word, taken apart.
+இன்று (iṉṟu) is native Dravidian. DEDR 410 lists Malayalam innu. It is the near base i-: "this day".
+
 What you've built.
 The day you are standing in.
 
@@ -48,6 +51,9 @@ You'll want to know: நேற்று.
 The middle is a doubled ற்ற, the hard r held long, and it is the sound that most often catches a new speaker out. Say it slowly: the first ற has a புள்ளி and no vowel, so it leans straight onto the second.
 With three words you can now place any day against the one you are in.
 
+The word, taken apart.
+நேற்று (nēṟṟu) is native. DEDR 3758 gives the older Tamil forms nerunal and nerunaṟṟu, "yesterday", with Kannada ninne and Telugu ninna. Modern nēṟṟu is most likely the shortened form.
+
 What you've built.
 Two, and the days on either side of today are named.
 
@@ -73,12 +79,13 @@ Say the three days in order, starting with yesterday. (நேற்று (nē�
 Lesson 3 of 6.
 இன்று (iṉṟu) — a word that opens on a vowel.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இன்று — a word that opens on a vowel and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: இன்று — a word that opens on a vowel, Guided Practice and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
 Before the page: you can say iṉṟu and nēṟṟu. Now read the first one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: இன்று — a word that opens on a vowel.
 இன்று (iṉṟu) puts together two things you have read separately: a word that begins with an independent vowel, and a புள்ளி making one consonant lean on the next.
 [a table of 3 rows, read aloud]
@@ -88,6 +95,7 @@ piece: று, ṟu, ற with the ு sign.
 இ, ன், று becomes இன்று (iṉṟu).
 This is why the letters ஓ and உ were taught on their own. A vowel at the front of a word cannot be a sign — there is nothing for it to sit on — so Tamil keeps a separate shape for exactly this job, and இன்று (iṉṟu) is that shape doing it.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: இ — then ன் — then று]
@@ -96,6 +104,7 @@ Guided Practice.
 [your turn — recall: say iṉṟu, then say nēṟṟu, then read இன்று]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 [pause 3 seconds]
 Read இன்று (iṉṟu). Why is the first shape a letter and not a sign? (Because the word begins with the vowel, so there is no consonant for a sign to sit on.)
@@ -114,6 +123,9 @@ You'll want to know: முன்பு.
 "Before" — the general one, for anything earlier than the moment you are standing in.
 You already have பிறகு (piṟaku), "afterwards". முன்பு (muṉbu) is its opposite, and between them the two put events in order without your needing a single verb tense to do it.
 The ன் in its middle is closed by a புள்ளி and leans on the ப after it — the same joint you read a moment ago inside இன்று (iṉṟu).
+
+The word, taken apart.
+முன்பு (muṉbu) is native Dravidian. DEDR 5020 lists Malayalam mun, Kannada mun and Telugu muni, "first, former".
 
 What you've built.
 Before and after, and a day on each side of today.
@@ -153,6 +165,9 @@ A month.
 You already know twelve of them by name — the Tamil months you met in their own chapter. This is the word for the unit itself, the one you need to say "one month" rather than to name a particular one.
 And another ம் ending — like கோபம், பயம் and பணம் before it — on a word whose middle vowel is the long ா.
 
+The word, taken apart.
+மாதம் (mādam) is a loan from Sanskrit māsa, "moon, month" (CDIAL 10104). Tamil wrote the s as t.
+
 What you've built.
 Above the day: the month.
 
@@ -187,6 +202,9 @@ A year — and it is the unit hiding inside a question you can already ask.
 When you ask about someone's வயது (vayathu), their age, what is being counted is ஆண்டு (āṇḍu). The question was yours a long time ago; this is the word for what the answer is made of.
 It opens on the free-standing ஆ, because the word begins with that vowel — the same reason இன்று (iṉṟu) opens on இ. In the middle is the ண்ட you first read in வண்டி.
 Three sizes now, each holding the one before it: நாள், மாதம் (mādam), ஆண்டு (āṇḍu).
+
+The word, taken apart.
+ஆண்டு (āṇḍu) is native Dravidian. DEDR 5153 lists Malayalam āṇṭu and Kannada ēḍu.
 
 What you've built.
 Five: today, yesterday, and the three units above the day.

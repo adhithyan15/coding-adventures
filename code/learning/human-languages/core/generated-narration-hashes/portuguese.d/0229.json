@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 229,
-  "sourceHash": "fnv1a64:3ae34c62cdcf9d1c",
+  "sourceHash": "fnv1a64:fe9efb743344acf8",
   "lessonIds": [
     "PT-C229-lavatorio",
     "PT-C229-sanita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch229.txt",
   "json": "portuguese/narration/ch229.json",
-  "textHash": "fnv1a64:3c4007f2812e884c",
-  "jsonHash": "fnv1a64:b8622bbbef914e3c",
+  "textHash": "fnv1a64:4844fc09404bf419",
+  "jsonHash": "fnv1a64:cfbd3822d8b6d7b2",
   "findings": []
 }

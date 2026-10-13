@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-casa-article",
               "prompt": "Say the house in Spanish.",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-casa-have",
               "prompt": "Say I have a house.",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-casa-french",
               "prompt": "Which French word is casa worn all the way down?",
               "assesses": [

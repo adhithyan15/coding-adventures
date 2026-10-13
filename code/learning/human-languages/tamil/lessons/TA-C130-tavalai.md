@@ -14,7 +14,8 @@ romanization: "tavaḷai"
 concept_tag: TA-THINGS130-TAVALAI
 prerequisites: [TA-C130-pampu, TA-C130-eli]
 sounds: []
-roots: []
+roots: [dravidian-tavalai-frog]
+etymology_hook: "தவளை — native Dravidian (DEDR 3110); Malayalam tavaḷa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C130-eli]
 <!-- hl-knowledge: introduces=[TA-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **தவளை** — *tavaḷai* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தவளை** (*tavaḷai*) is native Dravidian. DEDR 3110 lists Malayalam *tavaḷa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

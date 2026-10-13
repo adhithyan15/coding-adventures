@@ -3,31 +3,24 @@
   "language": "french",
   "chapter": 64,
   "title": "Look at, Listen to, Wait for, Buy, Know",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:611b1a92324eacbc",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:af999bb936babb03",
   "lessons": [
     {
       "id": "FR-C64-regarder",
       "sequence": 2560,
-      "title": "regarder — to look at, to watch",
+      "title": "regarder — \"to look at, to watch\"",
       "headword": "regarder",
       "romanization": "regarder",
       "gloss": "to look at, to watch",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2ffec0da0eae5c9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f26c2d20b9b73e6c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -59,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "regarder — built from re- and the French verb for \"to keep, to watch over\", which from Frankish wardon, \"to watch\". EtymDB 2.1 traces Italian guardare to the same Frankish verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -69,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,7 +153,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e7695de37d998212",
+      "sourceHash": "fnv1a64:fd0efa8744ad8b2b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "écouter from Old French escouter from Latin auscultare, \"to listen\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -199,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -248,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,7 +294,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3d126528a3c3874f",
+      "sourceHash": "fnv1a64:a7137880f4168d78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -319,6 +334,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "attendre from Latin attendere, \"to stretch toward, to pay heed\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -329,7 +355,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -378,7 +404,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -409,7 +435,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:260191cb1c8596b2",
+      "sourceHash": "fnv1a64:5be4db58287b34d2",
       "notice": null,
       "blocks": [
         {
@@ -442,6 +468,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acheter from Old French acheter (EtymDB 2.1) from Vulgar Latin accaptare, from Latin captare, \"to try to catch\" (Lewis & Short) — inherited: Latin ca- became French che-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -452,7 +489,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -501,7 +538,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -532,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c121cbecb9928135",
+      "sourceHash": "fnv1a64:b9845e8e4785524a",
       "notice": null,
       "blocks": [
         {
@@ -565,6 +602,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "savoir from Latin sapere, \"to taste, to be wise\" (EtymDB 2.1) — inherited, through a Vulgar Latin sapere stressed on its middle syllable."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -575,7 +623,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -624,7 +672,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

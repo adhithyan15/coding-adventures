@@ -14,6 +14,7 @@ concept_tag: PT-VERB-TIRAR
 prerequisites: [PT-C171-estacionar, PT-C172-mover]
 sounds: []
 roots: []
+etymology_hook: "tirar — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C172-mover]
 <!-- hl-knowledge: introduces=[PT-LEX-C172-VERBOS172-02]; assesses=[] -->
 
 **tirar** — "to take off, to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tirar** — its origin is uncertain. EtymDB 2.1 traces it only to Old Portuguese *tirar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to row"
 concept_tag: GE-VERB-RUDERN
 prerequisites: [GE-C184-reinigen, GE-C185-retten]
 sounds: []
-roots: []
+roots: [germanic-rothra]
+etymology_hook: "rudern — the verb of Ruder 'oar' ← Proto-Germanic *rōþrą, the same word as English rudder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C185-retten]
 <!-- hl-knowledge: introduces=[GE-LEX-C185-VERB185-02]; assesses=[] -->
 
 **rudern** — "to row".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rudern** ← Old High German *ruoderōn*, the verb of the word for "oar", Old High German *ruodar* ← Proto-Germanic *\*rōþrą* — the same word as English *rudder*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

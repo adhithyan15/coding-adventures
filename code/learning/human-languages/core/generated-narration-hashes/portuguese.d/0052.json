@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 52,
-  "sourceHash": "fnv1a64:07f2a15278827500",
+  "sourceHash": "fnv1a64:d01bcb34a127e0cd",
   "lessonIds": [
     "PT-C52-caneta",
     "PT-C52-papel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch52.txt",
   "json": "portuguese/narration/ch52.json",
-  "textHash": "fnv1a64:e944ffc084765973",
-  "jsonHash": "fnv1a64:fe7a8bdb61fa9f70",
+  "textHash": "fnv1a64:2d3aad7d600fcb3a",
+  "jsonHash": "fnv1a64:22a3eb6d190c7e2e",
   "findings": []
 }

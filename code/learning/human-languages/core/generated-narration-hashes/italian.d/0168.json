@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 168,
-  "sourceHash": "fnv1a64:626d105fd09889b3",
+  "sourceHash": "fnv1a64:7d375e6de090f8a7",
   "lessonIds": [
     "IT-C168-soffitta",
     "IT-C168-orto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch168.txt",
   "json": "italian/narration/ch168.json",
-  "textHash": "fnv1a64:3de346e53b197929",
-  "jsonHash": "fnv1a64:4775ac332b65dca3",
+  "textHash": "fnv1a64:0370c466cd6bede8",
+  "jsonHash": "fnv1a64:ec14536b75204ac9",
   "findings": []
 }

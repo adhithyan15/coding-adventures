@@ -13,7 +13,8 @@ gloss: "thin, lean"
 concept_tag: GE-QUAL218-MAGER
 prerequisites: [GE-C218-lieb, GE-C218-locker]
 sounds: []
-roots: []
+roots: [germanic-magraz]
+etymology_hook: "mager ← Old High German magar ← Proto-Germanic *magraz 'thin' — Dutch mager is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C218-locker]
 <!-- hl-knowledge: introduces=[GE-LEX-C218-QUAL218-04]; assesses=[] -->
 
 **mager** — "thin, lean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mager** ← Old High German *magar*, "thin" ← Proto-Germanic *\*magraz* — inherited. (EtymDB 2.1) Dutch *mager* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

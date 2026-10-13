@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-ER-IR-PRETERITE-2PL, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-ORTHOGRAPHY-IMPERFECT-ACCENT, ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL, ES-GRAMMAR-DAR-PRETERITE, ES-LEX-DAR]
+  knowledge: [ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-ER-IR-PRETERITE-2PL, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-ORTHOGRAPHY-IMPERFECT-ACCENT, ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL, ES-GRAMMAR-DAR-PRETERITE, ES-LEX-DAR, ES-GRAMMAR-NARRATIVE-10]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -79,8 +79,10 @@ the preterite it took the *-er* endings and went as bare as *vi*: **di**. I gave
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-STRONG-PRETERITE-2PL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PRETERITE-COMPLETE, ES-GRAMMAR-IMPERFECT-COMPLETE, ES-GRAMMAR-STRONG-PRETERITE-2PL, ES-GRAMMAR-NARRATIVE-10] -->
 
 [PAUSE 3s] Which ending closed the preterite for everything that is not an *-ar*
 verb? (**-isteis**, strong stems included.) And how many verbs break the
 imperfect? (**Three** — *ser*, *ir*, *ver*.)
+
+[PAUSE 2s] Now use both: tell a three-line story, the scene first and then two events. (*Llovía. Me levanté, luego leí.* — the imperfect holds the scene still; the preterite drops the events in.)

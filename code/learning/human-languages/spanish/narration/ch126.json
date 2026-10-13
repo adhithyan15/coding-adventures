@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-quiero-que-meaning",
               "prompt": "Which form asserts that one friend speaks: hablas or hables?",
               "assesses": [
@@ -133,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-quiero-que-one-doer",
               "prompt": "Say 'I want to speak Spanish' in Spanish.",
               "assesses": [
@@ -154,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-quiero-que-two-doers",
               "prompt": "Say 'I want you to speak Spanish' to one friend.",
               "assesses": [

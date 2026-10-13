@@ -12,7 +12,7 @@ headword: फिर
 gloss: again, then
 romanization: "phir"
 concept_tag: HI-WORD-PHIR
-prerequisites: []
+prerequisites: [HI-C01-alvida]
 sounds: [matra-i, retroflex-ra]
 roots: []
 duration:

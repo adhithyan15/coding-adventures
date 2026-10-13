@@ -13,7 +13,8 @@ gloss: "the sky; heaven"
 concept_tag: GE-NATUR2-HIMMEL
 prerequisites: [GE-C83-insel, GE-C83-feld]
 sounds: []
-roots: []
+roots: [germanic-himilaz]
+etymology_hook: "Himmel ← Old High German himil ← Proto-Germanic *himilaz — a cousin of English heaven"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C83-feld]
 <!-- hl-knowledge: introduces=[GE-LEX-C83-NATUR2-05]; assesses=[] -->
 
 **der Himmel** — "the sky; heaven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Himmel** ← Old High German *himil* ← Proto-Germanic *\*himilaz* — inherited; EtymDB 2.1 lists it beside English *heaven* and Dutch *hemel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

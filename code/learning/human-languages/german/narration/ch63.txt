@@ -12,6 +12,9 @@ Before the new one: say the German for an uncle, then the German for an aunt.
 You'll want to know: der Nachbar.
 der Nachbar — "a neighbour".
 
+The word, taken apart.
+Nachbar from Middle High German nāchbūre (EtymDB 2.1), "the one who dwells near": the word for "near" + an old word for "dweller". English neighbour is built the same way.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an aunt, then the German for a neighbour.
 
 You'll want to know: der Gast.
 der Gast — "a guest".
+
+The word, taken apart.
+Gast from Old High German gast from Proto-Germanic gastiz, "guest, stranger" — inherited, the same word as English guest. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a neighbour, then the German for a guest.
 You'll want to know: der Enkel.
 der Enkel — "a grandson".
 
+The word, taken apart.
+Enkel from Middle High German enikel from Old High German eniklīn, a diminutive of ano, "grandfather" (EtymDB 2.1) — a grandson was once a "little grandfather".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a guest, then the German for a grandson.
 You'll want to know: der Schüler.
 der Schüler — "a pupil (a boy)".
 
+The word, taken apart.
+Schüler from Middle High German schuolære, built on the word for "school", Old High German scuola from Latin schola (EtymDB 2.1) — a borrowed stem with the German ending -er.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a grandson, then the German for a pupil.
 
 You'll want to know: die Schülerin.
 die Schülerin — "a pupil (a girl)".
+
+The word, taken apart.
+Schülerin is Schüler + -in, the ending that names a woman or girl (EtymDB 2.1). The stem goes back to Latin schola, "school".
 
 What you've built.
 One more word for this chapter.

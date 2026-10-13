@@ -13,7 +13,8 @@ gloss: "anxiety"
 concept_tag: PT-SAUDE149-ANSIEDADE
 prerequisites: [PT-C148-rim, PT-C149-sonho]
 sounds: []
-roots: []
+roots: [anxius-latin]
+etymology_hook: "ansiedade ← Latin anxietas, from anxius 'troubled' — English anxiety"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C149-sonho]
 <!-- hl-knowledge: introduces=[PT-LEX-C149-SAUDE149-02]; assesses=[] -->
 
 **a ansiedade** — "anxiety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ansiedade** ← Latin *anxietas, anxietatis*, "anxiety" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

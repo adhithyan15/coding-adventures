@@ -13,7 +13,7 @@ sounds: [r-tap]
 roots: []
 etymology_hook: "signore is Latin senior, 'the elder' — a comparative of senex, 'old', so calling a man signore is literally calling him the older one; the same word is French monsieur, Spanish señor and English senior and sir"
 duration:
-  max_seconds: 250
+  max_seconds: 299
 requires:
   knowledge: [IT-GRAMMAR-IL-MIO-NOME-02, IT-NOTICE-IL-MIO-NOME-03, IT-PRAGMATIC-QUESTO-E-02, IT-LEX-ANCHE-02, IT-GRAMMAR-ANCHE-03, IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
 introduces:
@@ -69,6 +69,11 @@ more readily than English does.
 
 *Signorina* is going out of use for the reason *Miss* is, and **signora** is the
 safe choice for any adult woman.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**signore** ← Latin *senior*, "older" — inherited. (EtymDB 2.1)
 
 ## Grammar lens: speaking to somebody, by name or by title
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-SIGNORE-SIGNORA-03]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the government"
 concept_tag: FR-CHOSES222-GOUVERNEMENT
 prerequisites: [FR-C221-peche, FR-C222-societe]
 sounds: []
-roots: []
+roots: [gubernare-latin]
+etymology_hook: "gouvernement — from the verb 'to govern', Latin gubernare 'to steer' — English government"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C222-societe]
 <!-- hl-knowledge: introduces=[FR-LEX-C222-CHOSES222-02]; assesses=[] -->
 
 **le gouvernement** — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gouvernement** — built from the verb for "to govern", ← Latin *gubernare*, "to steer a ship" (Lewis & Short), with *-ment*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

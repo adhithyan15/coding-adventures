@@ -4,18 +4,21 @@
     "language": "kannada",
     "chapter": 6,
     "sequence": 330,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b6cdaf03c942582b"
+    "sourceHash": "fnv1a64:8cc3026c8a31a665",
+    "detachableSegments": [
+      "Script — ದ"
+    ]
   },
   "findings": []
 }

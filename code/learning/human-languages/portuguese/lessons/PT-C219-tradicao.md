@@ -13,7 +13,8 @@ gloss: "a tradition"
 concept_tag: PT-COISAS219-TRADICAO
 prerequisites: [PT-C219-exercito, PT-C219-soldado]
 sounds: []
-roots: []
+roots: [tradere-latin]
+etymology_hook: "tradição ← Latin traditio 'a handing over' — learned; its inherited twin means betrayal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C219-soldado]
 <!-- hl-knowledge: introduces=[PT-LEX-C219-COISAS219-05]; assesses=[] -->
 
 **a tradição** — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tradição** ← Latin *traditio, traditionis*, "a handing over" (EtymDB 2.1) — a learned borrowing from Latin. The inherited form of the same Latin word, *traição*, means "betrayal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,6 +6,7 @@ sequence: 520
 chapter: 10
 type: word
 headword: أب أم
+romanization: "ab umm"
 gloss: father and mother — ancient Semitic roots, cousins of Hebrew's own family words
 concept_tag: AR-FAMILY-PARENTS
 prerequisites: [AR-C09-ahmar-azraq]

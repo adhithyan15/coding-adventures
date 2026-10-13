@@ -13,7 +13,8 @@ gloss: "the future"
 concept_tag: IT-FUT138-IL-FUTURO
 prerequisites: [IT-C137-recentemente, IT-C137-succedere]
 sounds: []
-roots: []
+roots: [futurus-latin]
+etymology_hook: "futuro ← Latin futurus 'about to be', a learned word — English future is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C137-succedere]
 <!-- hl-knowledge: introduces=[IT-LEX-C138-FUT138-01]; assesses=[] -->
 
 **il futuro** — "the future". Italian builds the future on the infinitive: **parlare** becomes **parlerò** — "I will speak" — then **parlerai**, **parlerà**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**futuro** ← Latin *futurus*, "about to be" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

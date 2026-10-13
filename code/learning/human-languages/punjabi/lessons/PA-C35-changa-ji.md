@@ -97,6 +97,6 @@ memory, so neither goes cold.
 <!-- hl-activity: {"id": "PA-C35-changa-ji-parts", "kind": "text", "assesses": ["PA-LEX-CHANGA-JI"], "prompt": "Write the two-word casual Punjabi goodbye in Gurmukhi.", "answer": "ਚੰਗਾ ਜੀ", "accepted": [], "feedback": {"correct": "ਚੰਗਾ ਜੀ - good, with respect, spoken at the door.", "incorrect": "ਚੰਗਾ ਜੀ. Both words were already yours."}, "response_seconds": 14} -->
 
 [PAUSE 3s] Close a conversation. (**ਚੰਗਾ ਜੀ**.) What does each word mean on its
-own? (Good; respect.) Write the welcome from the last chapter once more.
+own? (Good; respect.) [YOU WRITE: the welcome from the last chapter once more]
 
 Sources: [Wiktionary: changa](https://en.wiktionary.org/wiki/%E0%A8%9A%E0%A9%B0%E0%A8%97%E0%A8%BE); [Wiktionary: ji](https://en.wiktionary.org/wiki/%E0%A8%9C%E0%A9%80).

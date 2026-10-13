@@ -11,7 +11,8 @@ romanization: "mikka naṉṟi"
 concept_tag: TA-COURTESY-MANY-THANKS
 prerequisites: [TA-C49-good-wish, TA-C47-just-so, TA-C48-set-out]
 sounds: []
-roots: []
+roots: [dravidian-miku-exceed, nal-good-dravidian]
+etymology_hook: "மிக்க நன்றி — native mikka 'great' (DEDR 4838; Malayalam mikka) + naṉṟi 'goodness' (DEDR 3610)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C49-good-wish]
 *naṉṟi* has been with you since the very beginning. *mikka* is the new piece in front of it: from *migu*, 'to exceed', so it means abundant, more than the usual measure.
 
 Tamil does not raise its voice to be warm. It puts *mikka* at the front and leaves everything else exactly where it was. Set this beside *tayavu seytu* and *maṉṉikkavum* and the courtesy kit is complete.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மிக்க நன்றி** (*mikka naṉṟi*) is two native words: *mikka*, "great, much", from *miku*, "to exceed" (DEDR 4838; Malayalam *mikka*), and *naṉṟi*, "goodness" (DEDR 3610).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

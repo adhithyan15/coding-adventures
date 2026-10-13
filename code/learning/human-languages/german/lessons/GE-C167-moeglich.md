@@ -13,7 +13,8 @@ gloss: "possible"
 concept_tag: GE-QUAL167-MOEGLICH
 prerequisites: [GE-C167-hoeflich, GE-C167-spannend]
 sounds: []
-roots: []
+roots: [germanic-magan]
+etymology_hook: "möglich — mögen 'to be able' + -lich: what can be; English may is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C167-spannend]
 <!-- hl-knowledge: introduces=[GE-LEX-C167-QUAL167-05]; assesses=[] -->
 
 **möglich** — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**möglich** is the stem of *mögen*, "to be able", + *-lich*: what can be. EtymDB 2.1 traces *mögen* to Old High German *mugan* ← Proto-Germanic *\*maganą*, the verb behind English *may*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a shoulder"
 concept_tag: FR-CORPS2-EPAULE
 prerequisites: [FR-C49-dent, FR-C50-cou]
 sounds: []
-roots: []
+roots: [spatula-latin]
+etymology_hook: "épaule ← Late Latin spatula 'flat piece, shoulder blade' — English epaulette and spatula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C50-cou]
 <!-- hl-knowledge: introduces=[FR-LEX-C50-CORPS2-02]; assesses=[] -->
 
 **l'épaule** — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**épaule** ← Old French *espalle* ← Late Latin *spatula*, "a flat piece, a shoulder blade" — inherited. (EtymDB 2.1) The *é-* stands where an *s* once was: *espaule*, then *épaule*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

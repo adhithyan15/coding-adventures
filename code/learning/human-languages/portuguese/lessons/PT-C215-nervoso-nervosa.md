@@ -13,7 +13,8 @@ gloss: "nervous"
 concept_tag: PT-QUAL215-NERVOSO-NERVOSA
 prerequisites: [PT-C215-ciumento-ciumenta, PT-C215-orgulhoso-orgulhosa]
 sounds: []
-roots: []
+roots: [nervus-latin]
+etymology_hook: "nervoso ← Latin nervosus 'sinewy', from nervus 'sinew' — English nervous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C215-orgulhoso-orgulhosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C215-QUAL215-03]; assesses=[] -->
 
 **nervoso / nervosa** — "nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nervoso** ← Latin *nervosus*, "sinewy" (EtymDB 2.1), from *nervus*, "sinew" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

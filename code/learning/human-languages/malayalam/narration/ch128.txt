@@ -98,7 +98,7 @@ Warm-up.
 Before the new one: say the Malayalam for a room, then the Malayalam for the kitchen.
 
 You'll want to know: കുളിമുറി.
-കുളിമുറി (kuḷimuṟi) — "the bathroom": കുളി (kuḷi), "a bath", with മുറി, "room".
+കുളിമുറി (kuḷimuṟi) — "the bathroom": കുളി (kuḷi), "a bath", with മുറി (muṟi), "room".
 
 What you've built.
 A room word you can take apart.

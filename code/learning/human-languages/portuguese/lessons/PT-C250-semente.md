@@ -13,7 +13,8 @@ gloss: "a seed"
 concept_tag: PT-COISAS250-SEMENTE
 prerequisites: [PT-C249-multa, PT-C249-capacete]
 sounds: []
-roots: []
+roots: [semen-latin]
+etymology_hook: "semente ← Latin sementis 'sowing, seed', from semen 'seed' — English semen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C249-capacete]
 <!-- hl-knowledge: introduces=[PT-LEX-C250-COISAS250-01]; assesses=[] -->
 
 **a semente** — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semente** ← Latin *sementis*, "sowing, seed" (EtymDB 2.1), from *semen*, "seed" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

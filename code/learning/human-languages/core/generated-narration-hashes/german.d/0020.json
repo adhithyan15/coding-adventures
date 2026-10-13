@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:c70f068dcba8dcab",
+  "sourceHash": "fnv1a64:76a4eaabef61ee63",
   "lessonIds": [
     "GE-C13-schwarz",
     "GE-C13-schwarz-swarthy",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch20.txt",
   "json": "german/narration/ch20.json",
-  "textHash": "fnv1a64:20aa6667bbc0f659",
-  "jsonHash": "fnv1a64:21ce5447b2c90a40",
+  "textHash": "fnv1a64:0838ee0aa553dbac",
+  "jsonHash": "fnv1a64:18368e1f6c03c5b9",
   "findings": []
 }

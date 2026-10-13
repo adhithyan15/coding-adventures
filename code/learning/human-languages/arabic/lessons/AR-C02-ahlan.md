@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **أَهْلًا** — *ahlan* — "welcome".
 
-Say it: *ahlan*. Look at its shape as you say it: the lessons that follow take pieces of it, the no-vowel mark **ـْ** and the ending **ـً**, and write each one on its own.
+Say it: *ahlan*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, the no-vowel mark **ـْ** and the ending **ـً**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-AHLAN] -->

@@ -13,7 +13,8 @@ gloss: "to move (house)"
 concept_tag: GE-VERB-UMZIEHEN
 prerequisites: [GE-C151-ueben, GE-C151-ueberlegen]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "umziehen — um- 'around, over' + the verb 'to pull, to move': to move house"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C151-ueberlegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C151-VERB151-05]; assesses=[] -->
 
 **umziehen** — "to move (house)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**umziehen** is *um-*, "around, over", + the verb "to pull, to move", Old High German *ziohan* ← Proto-Germanic *\*teuhaną* (EtymDB 2.1): to move from one house to another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -26,8 +26,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -64,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M01-reader-greeting-check",
               "prompt": "Write the greeting line addressed to Mira.",
               "assesses": [
@@ -94,16 +97,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c476356288d39382",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -140,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M02-name-line-check",
               "prompt": "Copy the complete Arun identity line, including punctuation.",
               "assesses": [
@@ -170,16 +179,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6a27a7359f2845b5",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -216,6 +230,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M03-meeting-line-check",
               "prompt": "Write the familiar pleased-to-meet-you line and close it.",
               "assesses": [
@@ -254,8 +269,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -292,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M04-language-line-check",
               "prompt": "After a short delay, write the line that says Arun knows Marathi.",
               "assesses": [
@@ -330,8 +348,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -368,6 +388,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M05-reading-line-check",
               "prompt": "Write Arun's known Marathi-reading line after a delay.",
               "assesses": [
@@ -398,16 +419,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4e9cfaed1116c8e8",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -444,6 +470,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M06-writing-line-check",
               "prompt": "After a delay, write Arun's known name-writing line.",
               "assesses": [
@@ -484,8 +511,10 @@
           "a pen and something to write on",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -522,6 +551,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M07-speaking-line-check",
               "prompt": "Write Arun's speaking line after a delay.",
               "assesses": [
@@ -560,8 +590,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -598,6 +630,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M08-thinking-line-check",
               "prompt": "Write Arun's complete thinking line after a delay.",
               "assesses": [
@@ -636,8 +669,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -674,6 +709,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M09-understanding-line-check",
               "prompt": "After a delay, write the line saying Marathi is understood by Arun.",
               "assesses": [
@@ -704,16 +740,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:cc992ff0f7e7bcc9",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -750,6 +791,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M10-thanks-line-check",
               "prompt": "Write the one-word thanks line with its boundary.",
               "assesses": [
@@ -788,8 +830,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -826,6 +870,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M11-again-line-check",
               "prompt": "Write the see-you-again closing line.",
               "assesses": [
@@ -864,8 +909,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -902,6 +949,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M12-tomorrow-line-check",
               "prompt": "Write the see-you-tomorrow closing line.",
               "assesses": [
@@ -940,8 +988,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -994,6 +1044,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M13-opening-block-check",
               "prompt": "Order and write the three opening lines for Mira and Arun.",
               "assesses": [
@@ -1034,8 +1085,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -1072,6 +1125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M14-skills-block-one-check",
               "prompt": "Write the known know-Marathi, read-Marathi, and write-my-name lines in that order.",
               "assesses": [
@@ -1112,8 +1166,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -1150,6 +1206,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M15-skills-block-two-check",
               "prompt": "Write the known speak, think, and understand-Marathi lines in that order.",
               "assesses": [
@@ -1190,8 +1247,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -1228,6 +1287,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M16-closing-block-check",
               "prompt": "Write the thanks, see-you-again, and see-you-tomorrow lines in that order.",
               "assesses": [
@@ -1268,8 +1328,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -1310,6 +1372,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M17-guided-message-check",
               "prompt": "Connect the four practised blocks into the 32-word message for Mira.",
               "assesses": [
@@ -1359,8 +1422,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall — independent evidence"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall — independent evidence."
       },
       "blocks": [
         {
@@ -1401,6 +1466,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1M18-independent-message-check",
               "prompt": "Without a model, write the practised 30-40-word message to Mira for Arun's introduction and Marathi-study purpose.",
               "assesses": [

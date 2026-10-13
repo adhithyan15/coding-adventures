@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 112,
-  "sourceHash": "fnv1a64:0f7a4df38db3c18e",
+  "sourceHash": "fnv1a64:2a296936d255074a",
   "lessonIds": [
     "GE-C112-teppich",
     "GE-C112-fernseher",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch112.txt",
   "json": "german/narration/ch112.json",
-  "textHash": "fnv1a64:f5bf9fc1b8adb769",
-  "jsonHash": "fnv1a64:6943cbb1891602c2",
+  "textHash": "fnv1a64:03a3b1bc37718d81",
+  "jsonHash": "fnv1a64:b9f8b30968dde8c0",
   "findings": []
 }

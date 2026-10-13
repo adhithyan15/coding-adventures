@@ -13,7 +13,8 @@ gloss: "a reason, a motive"
 concept_tag: PT-PORQUE84-MOTIVO
 prerequisites: [PT-C83-desejo, PT-C84-razao]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "motivo ← Medieval Latin motivus 'moving', from movere 'to move' — English motive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C84-razao]
 <!-- hl-knowledge: introduces=[PT-LEX-C84-PORQUE84-02]; assesses=[] -->
 
 **o motivo** — "a reason, a motive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**motivo** ← Medieval Latin *motivus*, "moving" (EtymDB 2.1), from Latin *movere*, "to move" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

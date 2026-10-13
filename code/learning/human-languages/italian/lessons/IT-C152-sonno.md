@@ -13,7 +13,8 @@ gloss: "sleep"
 concept_tag: IT-SAL152-SONNO
 prerequisites: [IT-C152-dieta, IT-C152-riposo]
 sounds: []
-roots: []
+roots: [somnus-latin]
+etymology_hook: "sonno ← Latin somnus 'sleep' — English insomnia shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C152-riposo]
 <!-- hl-knowledge: introduces=[IT-LEX-C152-SAL152-04]; assesses=[] -->
 
 **il sonno** — "sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sonno** ← Latin *somnus*, "sleep" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

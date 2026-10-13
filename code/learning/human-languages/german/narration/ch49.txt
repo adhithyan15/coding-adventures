@@ -129,6 +129,9 @@ ihr — "her".
 ihr Bruder, ihre Schwester, ihren Bruder.
 Said eer: the h is silent and stretches the i, exactly as it does in Ihnen. The endings are ein's, for the fourth time.
 
+The word, taken apart.
+ihr from Old High German iru, iro, "her, their" (EtymDB 2.1) — inherited, a form of the pronoun for "she".
+
 Grammar Lens: three jobs, all settled by position.
 Where the word stands says which job it is doing:
 ihr wohnt — a verb with -t follows, so this is you all.
@@ -169,6 +172,9 @@ das ist — "this is", "that is".
 Das ist mein Bruder. — "This is my brother."
 Das ist meine Schwester. — "This is my sister."
 And the reply is one you have owned since your first introduction: Freut mich.
+
+The phrase, taken apart.
+Das ist mein Bruder — mein from Old High German mīn from Proto-Germanic mīnaz, English mine; Bruder from Proto-Germanic brōþēr, English brother. (EtymDB 2.1).
 
 Grammar Lens: the das that ignores gender.
 Look at the second sentence again. Schwester is a die-word, and the phrase still opens with das. That is not a mistake, and it is not the article.

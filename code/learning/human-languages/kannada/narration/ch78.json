@@ -32,7 +32,7 @@
           "Script you'll notice: ಆ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಆ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಆ and Guided Practice."
       },
       "blocks": [
         {
@@ -214,7 +214,7 @@
     {
       "id": "KA-S156-letter-e",
       "sequence": 2750,
-      "title": "ಎ — one run of the pen, four movements",
+      "title": "ಎ (e) — one run of the pen, four movements",
       "headword": "ಎ",
       "romanization": "e",
       "gloss": "the single character ಎ — the vowel that opens two of the numbers you count with",
@@ -237,7 +237,7 @@
           "Script you'll notice: ಎ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಎ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಎ and Guided Practice."
       },
       "blocks": [
         {
@@ -351,7 +351,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two numbers and find ಎ at the front of each",
+              "instruction": "at these two numbers and find ಎ (e) at the front of each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -364,7 +364,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಎ three times without letting the pen leave the page",
+              "instruction": "ಎ (e) three times without letting the pen leave the page",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -373,7 +373,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of ಆ (ā) and ಎ needs a lift and which does not",
+              "instruction": "which of ಆ (ā) and ಎ (e) needs a lift and which does not",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -413,20 +413,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5bd965e2274e9ca9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ಏ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಏ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಏ and Guided Practice."
       },
       "blocks": [
         {
@@ -442,7 +444,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ಎ — what sound, and how many lifts?"
+              "text": "Before the new one: ಎ (e) — what sound, and how many lifts?"
             },
             {
               "kind": "pause",
@@ -608,7 +610,7 @@
     {
       "id": "KA-S158-letter-o",
       "sequence": 2770,
-      "title": "ಒ — the letter the counting starts on",
+      "title": "ಒ (o) — the letter the counting starts on",
       "headword": "ಒ",
       "romanization": "o",
       "gloss": "the single character ಒ — the vowel the counting starts on",
@@ -631,7 +633,7 @@
           "Script you'll notice: ಒ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಒ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಒ and Guided Practice."
       },
       "blocks": [
         {
@@ -723,7 +725,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice the first movement goes counterclockwise. ಆ (ā), ಎ and ಏ (ē) all opened with a clockwise turn around their left loop; this one turns the other way. It is the kind of difference the eye slides over and the hand does not."
+              "text": "Notice the first movement goes counterclockwise. ಆ (ā), ಎ (e) and ಏ (ē) all opened with a clockwise turn around their left loop; this one turns the other way. It is the kind of difference the eye slides over and the hand does not."
             },
             {
               "kind": "speech",
@@ -745,7 +747,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two numbers and find ಒ at the front of each",
+              "instruction": "at these two numbers and find ಒ (o) at the front of each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -758,7 +760,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಒ three times, starting counterclockwise each time",
+              "instruction": "ಒ (o) three times, starting counterclockwise each time",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -767,7 +769,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which way the pen turns first for ಒ, and which way for ಏ (ē)",
+              "instruction": "which way the pen turns first for ಒ (o), and which way for ಏ (ē)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -820,7 +822,7 @@
           "Script you'll notice: ಐ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಐ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಐ and Guided Practice."
       },
       "blocks": [
         {
@@ -836,7 +838,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ಒ — what sound, and which way does the first turn go?"
+              "text": "Before the new one: ಒ (o) — what sound, and which way does the first turn go?"
             },
             {
               "kind": "pause",
@@ -997,7 +999,7 @@
           "Script you'll notice: ಋ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಋ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಋ and Guided Practice."
       },
       "blocks": [
         {
@@ -1147,7 +1149,7 @@
     {
       "id": "KA-R78-vowels-recall",
       "sequence": 2800,
-      "title": "(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen",
+      "title": "(ಆ (ā) ಎ (e) ಏ (ē) ಒ (o) ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen",
       "headword": "(ಆ ಎ ಏ ಒ ಐ ಋ)",
       "romanization": "svaragalu",
       "gloss": "cold retrieval of the six vowel letters this chapter taught, sorted by what the pen does",
@@ -1167,7 +1169,7 @@
           "Script: the six, sorted by what the pen does",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the six, sorted by what the pen does and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the six, sorted by what the pen does and Guided Practice."
       },
       "blocks": [
         {
@@ -1210,7 +1212,7 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "pen lifts: none. characters: ಎ, ಒ, ಐ (ai). what that means: one run, start to finish.",
+                "pen lifts: none. characters: ಎ (e), ಒ (o), ಐ (ai). what that means: one run, start to finish.",
                 "pen lifts: one. characters: ಆ (ā), ಏ (ē). what that means: a body, then one added piece.",
                 "pen lifts: two. characters: ಋ (ṛ). what that means: three separate runs."
               ]
@@ -1291,7 +1293,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)"
+              "text": "Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ (e), ಒ (o), ಐ (ai).) Which one is the long partner of ಎ (e)? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)"
             }
           ]
         }

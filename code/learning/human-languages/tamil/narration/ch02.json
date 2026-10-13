@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:2062f4c0a998ee19",
+  "sourceHash": "fnv1a64:61ce273da096fa28",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95b4bcbb6bab9261",
+      "sourceHash": "fnv1a64:0a95aff7bb32efcc",
       "notice": null,
       "blocks": [
         {
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:057c19828b8210fe",
+      "sourceHash": "fnv1a64:07e6255f1d84d967",
       "notice": null,
       "blocks": [
         {
@@ -242,7 +242,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c132ee50a6e93580",
+      "sourceHash": "fnv1a64:bbcd18e8a7d6054a",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0da88d14ff4ec9f6",
+      "sourceHash": "fnv1a64:f47360416e386c02",
       "notice": null,
       "blocks": [
         {
@@ -460,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc3ddcd146399d51",
+      "sourceHash": "fnv1a64:11b627e8a80d21fe",
       "notice": null,
       "blocks": [
         {
@@ -554,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00fd058b12c349fc",
+      "sourceHash": "fnv1a64:c3658b4529ab7f95",
       "notice": null,
       "blocks": [
         {
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c66a4c678aed4e7",
+      "sourceHash": "fnv1a64:61ead2b4781ea396",
       "notice": null,
       "blocks": [
         {
@@ -772,7 +772,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f24b19132b1b683",
+      "sourceHash": "fnv1a64:9237e9837a768813",
       "notice": null,
       "blocks": [
         {

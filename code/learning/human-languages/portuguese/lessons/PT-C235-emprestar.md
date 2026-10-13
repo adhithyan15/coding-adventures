@@ -13,7 +13,8 @@ gloss: "to lend"
 concept_tag: PT-VERB-EMPRESTAR
 prerequisites: [PT-C235-preparar, PT-C235-apresentar]
 sounds: []
-roots: []
+roots: [praestare-latin]
+etymology_hook: "emprestar ← Vulgar Latin *impraestare, from praestare 'to provide'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C235-apresentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C235-VERBOS235-05]; assesses=[] -->
 
 **emprestar** — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emprestar** ← Vulgar Latin *\*impraestare*, from Latin *praestare*, "to provide, to stand surety" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

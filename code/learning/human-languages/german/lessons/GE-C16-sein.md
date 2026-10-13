@@ -13,7 +13,7 @@ sounds: [s-voiced, diphthong-ei, final-t]
 roots: [pie-h1es]
 etymology_hook: "sein wears the same -en infinitive ending as gehen and sehen, and is the one German verb whose forms will not follow from it"
 duration:
-  max_seconds: 165
+  max_seconds: 232
 requires:
   knowledge: [GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-GEHEN-01, GE-LEX-SEHEN-01]
 introduces:
@@ -56,6 +56,11 @@ present forms contains the letters *s-e-i-n* in that order.
 This is the only verb in the book that has to be met one form at a time, and
 the next several lessons do exactly that: one form each, said until it is
 automatic, before any of them are ever seen side by side.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sein** ← Middle High German *sīn* — inherited. Its forms come from three old roots; *ist* is the same word as English *is*, which EtymDB 2.1 traces to Proto-Germanic *\*isti*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-SEIN-01]; assesses=[GE-LEX-SEIN-01] -->

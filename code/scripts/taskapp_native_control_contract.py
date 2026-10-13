@@ -45,11 +45,13 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-style": 4,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when SwiftUI emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "cursor": 2,
         "display": 1,
-        "elevation": 10,
         "flex-direction": 1,
         # Compact TaskApp scroll/name wrappers need flexible sizing in Flutter.
         # SwiftUI currently preserves the authored structure but reports those
@@ -75,7 +77,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-left-style": 1,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Compose emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "cursor": 2,
         "display": 1,
@@ -94,31 +99,30 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "white-space": 1,
     },
     "qt": {
-        # Recording Qt's existing elevation lowering makes TaskApp's two
-        # HostDraggable board-card parts visible to the reporter. Their 22
-        # pre-existing container-style omissions are tracked by #17128.
-        "background": 2,
-        "border-bottom-color": 3,
-        "border-bottom-width": 3,
-        "border-color": 3,
-        "border-left-color": 4,
-        "border-left-style": 4,
-        "border-left-width": 4,
-        "border-radius": 2,
-        "border-right-color": 6,
+        # HostDraggable now lowers container paint, spacing, per-edge accents,
+        # supported cursors, inherited color/font size, and the complete
+        # hidden/ellipsis/nowrap trio. Raw CSS shadows remain explicit debt
+        # because Qt uses the separate Mosaic elevation token.
+        "border-color": 1,
+        "border-left-color": 2,
+        "border-left-style": 2,
+        "border-left-width": 2,
+        "border-right-color": 3,
         "border-right-style": 3,
-        "border-right-width": 6,
+        "border-right-width": 3,
         "border-style": 4,
-        "border-top-color": 3,
+        "border-top-color": 1,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
         "border-top-style": 1,
-        "border-top-width": 3,
-        "border-width": 3,
-        "box-shadow": 11,
+        "border-top-width": 1,
+        "border-width": 1,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Qt emits equivalent MultiEffect depth. The
+        # inset theme-toggle moon remains unsupported drawing-effect debt.
+        "box-shadow": 1,
         "box-sizing": 1,
         "color": 2,
-        "cursor": 2,
         # The compact task identity uses flexible name sizing in Flutter. Qt
         # keeps the portable row structure and records that task-name flex
         # occurrence until the emitter grows an equivalent lowering (#16949).
@@ -127,40 +131,40 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-wrap": 1,
         "font": 1,
         "font-size": 2,
-        "gap": 2,
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
         "min-height": 1,
         "outline": 2,
-        "padding": 2,
         "position": 6,
         "text-align": 6,
         "top": 6,
         "transform": 2,
-        "width": 18,
+        # Exact control `width: 100%` declarations now lower to
+        # `Layout.fillWidth`; the three remaining drops are Text geometry.
+        "width": 3,
     },
     "flutter": {
-        "background": 10,
+        "background": 2,
         "border-color": 1,
         "border-left-color": 2,
         "border-left-style": 3,
         "border-left-width": 2,
-        "border-radius": 15,
         "border-style": 4,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
         "border-width": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Flutter emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "color": 3,
         "cursor": 2,
         "display": 1,
         "flex-direction": 1,
         "flex-shrink": 9,
-        "flex-wrap": 1,
         "font-family": 1,
-        "gap": 4,
         "height": 3,
         "left": 6,
         "margin-bottom": 1,
@@ -169,12 +173,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "min-width": 2,
         "overflow": 1,
         "position": 6,
-        "text-align": 14,
         "text-overflow": 1,
         "top": 6,
         "transform": 2,
         "white-space": 1,
-        "width": 23,
     },
 }
 

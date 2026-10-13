@@ -13,7 +13,8 @@ gloss: "a mistake"
 concept_tag: IT-LAV259-ERRORE
 prerequisites: [IT-C259-voto, IT-C259-insegnante]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "errore ← Latin error 'a wandering', from errare — English error"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C259-insegnante]
 <!-- hl-knowledge: introduces=[IT-LEX-C259-LAV259-04]; assesses=[] -->
 
 **l'errore** — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**errore** ← Latin *error*, "a wandering, a mistake" — inherited. EtymDB 2.1 has no row for *errore*; it derives Spanish *error* from *error*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

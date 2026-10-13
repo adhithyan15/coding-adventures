@@ -13,7 +13,8 @@ gloss: "lips"
 concept_tag: IT-CORPO122-LABBRA
 prerequisites: [IT-C122-polso, IT-C122-guancia]
 sounds: []
-roots: []
+roots: [labrum-latin]
+etymology_hook: "labbra ← Latin labra, plural of labrum 'lip' — English labial shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C122-guancia]
 <!-- hl-knowledge: introduces=[IT-LEX-C122-CORPO122-05]; assesses=[] -->
 
 **le labbra** — "lips".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**labbra** is the old Latin plural *labra*, of *labrum*, "lip" — inherited; the singular is *labbro*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

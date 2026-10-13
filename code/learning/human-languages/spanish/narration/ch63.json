@@ -163,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ario-decode",
               "prompt": "You have never seen imaginario. What is it?",
               "assesses": [
@@ -181,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ario-place",
               "prompt": "Why does diccionario mean dictionary rather than word-ish?",
               "assesses": [
@@ -199,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ario-shift",
               "prompt": "Necesario, said of a feminine noun. What changes?",
               "assesses": [

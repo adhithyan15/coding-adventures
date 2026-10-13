@@ -14,7 +14,8 @@ romanization: "talaiyaṇai"
 concept_tag: TA-THINGS119-TALAIYANAI
 prerequisites: [TA-C119-puttu, TA-C119-tuntu]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-anai-support]
+etymology_hook: "தலையணை — native: talai 'head' (DEDR 3103) + aṇai 'support' (DEDR 123; Malayalam aṇa 'pillow')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C119-tuntu]
 <!-- hl-knowledge: introduces=[TA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **தலையணை** — *talaiyaṇai* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தலையணை** (*talaiyaṇai*) is native: *talai*, "head" (DEDR 3103), and *aṇai*, "support, prop" (DEDR 123; Malayalam *aṇa*, "support, pillow"): "the head's support".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

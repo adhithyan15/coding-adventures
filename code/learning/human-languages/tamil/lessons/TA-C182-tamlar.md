@@ -14,7 +14,8 @@ romanization: "ṭamḷar"
 concept_tag: TA-PORUL182-TAMLAR
 prerequisites: [TA-C182-kulircatanap-petti, TA-C182-kulay]
 sounds: []
-roots: []
+roots: [english-tumbler]
+etymology_hook: "டம்ளர் ← English tumbler"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C182-kulay]
 <!-- hl-knowledge: introduces=[TA-LEX-C182-PORUL182-03]; assesses=[] -->
 
 **டம்ளர்** — *ṭamḷar* — "a tumbler, a drinking glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**டம்ளர்** (*ṭamḷar*) is a loan from English *tumbler*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

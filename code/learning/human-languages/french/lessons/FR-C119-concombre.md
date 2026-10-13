@@ -14,6 +14,7 @@ concept_tag: FR-REPAS71-CONCOMBRE
 prerequisites: [FR-C119-champignon, FR-C119-haricots]
 sounds: []
 roots: []
+etymology_hook: "concombre ← Old Provençal cocombre, from Latin cucumis — English cucumber"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C119-haricots]
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-05]; assesses=[] -->
 
 **le concombre** — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**concombre** ← Old Provençal *cocombre* ← Latin *cucumis*, *cucumeris*, "cucumber" — borrowed from the south. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

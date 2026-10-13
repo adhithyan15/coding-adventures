@@ -13,7 +13,8 @@ gloss: "the face"
 concept_tag: IT-CORPO3-VISO
 prerequisites: [IT-C38-capelli, IT-C39-pancia]
 sounds: []
-roots: []
+roots: [visus-latin]
+etymology_hook: "viso ← Latin visus 'a look, appearance' — English visage and vision are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C39-pancia]
 <!-- hl-knowledge: introduces=[IT-LEX-C39-CORPO3-02]; assesses=[] -->
 
 **il viso** — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viso** ← Latin *visus*, "sight, a look" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

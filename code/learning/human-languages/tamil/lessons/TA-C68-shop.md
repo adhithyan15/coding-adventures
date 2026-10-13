@@ -11,7 +11,8 @@ romanization: "kaḍai"
 concept_tag: TA-NOUN-SHOP
 prerequisites: [TA-C67-cap, TA-C66-up, TA-C66-down, TA-C67-shirt]
 sounds: []
-roots: []
+roots: [dravidian-kadai-shop]
+etymology_hook: "கடை — native Dravidian (DEDR 1142); Malayalam kaṭa 'market'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ split the word by what is sold — a கடை is a கடை, and what is insid
 
 It ends in the same **ை** as தலை and சட்டை, and it is where every garment of the last chapter
 came from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடை** (*kaḍai*) is native Dravidian. DEDR 1142 lists Malayalam *kaṭa*, "market".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

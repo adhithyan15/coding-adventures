@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-unos-unas-say",
               "prompt": "Say: some books.",
               "assesses": [
@@ -179,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-unos-unas-fem",
               "prompt": "And some houses?",
               "assesses": [
@@ -197,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-unos-unas-bare",
               "prompt": "Which one talks about books in general -- compro libros, or compro unos libros?",
               "assesses": [

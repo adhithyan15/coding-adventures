@@ -13,7 +13,8 @@ gloss: "the belly"
 concept_tag: GE-KOERPER2-BAUCH
 prerequisites: [GE-C57-haut, GE-C57-haar]
 sounds: []
-roots: []
+roots: [germanic-bukaz]
+etymology_hook: "Bauch ← Old High German būh ← Proto-Germanic *būkaz 'belly'; Old English būc is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C57-haar]
 <!-- hl-knowledge: introduces=[GE-LEX-C57-KOERPER2-05]; assesses=[] -->
 
 **der Bauch** — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bauch** ← Old High German *būh* ← Proto-Germanic *\*būkaz*, "belly" — inherited. Old English *būc*, "belly", is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 57,
-  "sourceHash": "fnv1a64:ac65874fe159106b",
+  "sourceHash": "fnv1a64:580bb9b7ac15d6fa",
   "lessonIds": [
     "FR-C57-mari",
     "FR-C57-femme",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch57.txt",
   "json": "french/narration/ch57.json",
-  "textHash": "fnv1a64:d73242dc6af824b6",
-  "jsonHash": "fnv1a64:0d2d0ba2642036c1",
+  "textHash": "fnv1a64:f8211b244916d12d",
+  "jsonHash": "fnv1a64:2146c08b2f85b1ef",
   "findings": []
 }

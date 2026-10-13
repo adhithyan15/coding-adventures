@@ -13,7 +13,8 @@ gloss: "to go up"
 concept_tag: PT-VERB-SUBIR
 prerequisites: [PT-C132-sentar-se, PT-C132-cair]
 sounds: []
-roots: []
+roots: [subire-latin]
+etymology_hook: "subir ← Latin subire 'to go up to, to come under'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C132-cair]
 <!-- hl-knowledge: introduces=[PT-LEX-C132-VERBOS132-05]; assesses=[] -->
 
 **subir** — "to go up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**subir** ← Latin *subire*, "to go up to, to come under" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *subir*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

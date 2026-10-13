@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:e38865bffa6b2aac",
+  "sourceHash": "fnv1a64:be311ae1d6f8c821",
   "lessons": [
     {
       "id": "PT-C02-de-nada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9db25f6cae40c7d",
+      "sourceHash": "fnv1a64:6993678097c6ffea",
       "notice": null,
       "blocks": [
         {
@@ -136,7 +136,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did nada originally mean in Latin? (A born thing — nāta.) Which language shares de nada exactly, and which uses de rien instead? (Spanish; French.) Next: como, \"how.\""
+              "text": "What did nada originally mean in Latin? (A born thing — nāta.) Which language shares de nada exactly, and which uses de rien instead? (Spanish; French.) Next: the Portuguese for \"how.\""
             }
           ]
         }
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dbf653867168ffe",
+      "sourceHash": "fnv1a64:d6dd730952f727e9",
       "notice": null,
       "blocks": [
         {
@@ -220,15 +220,15 @@
             },
             {
               "kind": "speech",
-              "text": "Como vai? — \"how do you go?\" (verb ir, \"to go\" — like French/German)."
+              "text": "Como vai? — \"how do you go?\" (the verb \"to go\" — like French/German)."
             },
             {
               "kind": "speech",
-              "text": "Como está? — \"how do you stand/are?\" (verb estar — like Spanish)."
+              "text": "Como está? — \"how do you stand/are?\" (the verb \"to stand, to be\" — like Spanish)."
             },
             {
               "kind": "speech",
-              "text": "Plus a third, verb-free favourite — Tudo bem? — coming up."
+              "text": "Plus a third, verb-free favourite — \"all good?\" — coming up."
             }
           ]
         },
@@ -285,7 +285,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gives como, and name two siblings. (quōmodo becomes cómo, come, comment.) What's the only written difference between Portuguese como and Spanish cómo? (The Spanish accent that marks a question.) Next: the word behind Portuguese's favourite greeting — tudo."
+              "text": "What Latin word gives como, and name two siblings. (quōmodo becomes cómo, come, comment.) What's the only written difference between Portuguese como and Spanish cómo? (The Spanish accent that marks a question.) Next: the word behind Portuguese's favourite greeting — \"everything.\""
             }
           ]
         }
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9b331478ad86930",
+      "sourceHash": "fnv1a64:4d5dab20dbb3f9d1",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b82290f797999a3c",
+      "sourceHash": "fnv1a64:5a4e3454da1b33a3",
       "notice": null,
       "blocks": [
         {
@@ -491,6 +491,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tudo bem? is built from tudo, \"everything\" from Latin totus, \"all, whole\" (EtymDB 2.1), and bem, \"well\" from Latin bene, \"well\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: Add the listener only when useful",
           "segments": [
@@ -513,7 +524,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -562,7 +573,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -593,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e4d0120e0b027e5",
+      "sourceHash": "fnv1a64:88c5f6d6ed0a309c",
       "notice": null,
       "blocks": [
         {
@@ -621,13 +632,13 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "question: Como vai? literally: “How does it go?” verb: ir, to go.",
-                "question: Como está? literally: “How do you stand?” verb: estar, to be / stand."
+                "question: Como vai? literally: “How does it go?” verb: “to go”.",
+                "question: Como está? literally: “How do you stand?” verb: “to be / to stand”."
               ]
             },
             {
               "kind": "speech",
-              "text": "Vai comes from ir, whose Latin ancestor īre also sits inside English exit and transit. Está comes from Latin stāre, “to stand.”"
+              "text": "Vai comes from Latin vādere, “to advance” (English invade, evade); the same verb’s infinitive comes from a different Latin verb, īre (English exit, transit). Está comes from Latin stāre, “to stand.”"
             },
             {
               "kind": "speech",
@@ -713,7 +724,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which question has no verb? (Tudo bem?) Which uses “go”? (Como vai?, from ir.) Which uses “stand”? (Como está?, from estar.) Portuguese keeps how many metaphors? (Both.) Next: the “more or less” answer."
+              "text": "Which question has no verb? (Tudo bem?) Which uses “go”? (Como vai?, from vādere.) Which uses “stand”? (Como está?, from stāre.) Portuguese keeps how many metaphors? (Both.) Next: the “more or less” answer."
             }
           ]
         }
@@ -891,7 +902,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aca1be415cde7665",
+      "sourceHash": "fnv1a64:33e2a60dbf9300c9",
       "notice": null,
       "blocks": [
         {
@@ -1016,6 +1027,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C02-practice-neutral-question",
               "prompt": "Which Portuguese phrase is the safest register-neutral wellbeing question?",
               "assesses": [
@@ -1048,7 +1060,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f718ed94c477a750",
+      "sourceHash": "fnv1a64:29da31a201f940be",
       "notice": null,
       "blocks": [
         {

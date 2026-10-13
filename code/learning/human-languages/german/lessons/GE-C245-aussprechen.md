@@ -13,7 +13,8 @@ gloss: "to pronounce"
 concept_tag: GE-VERB-AUSSPRECHEN
 prerequisites: [GE-C245-aufpassen, GE-C245-ausgeben]
 sounds: []
-roots: []
+roots: [germanic-sprekana]
+etymology_hook: "aussprechen — aus- 'out' + the verb 'to speak': to speak out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C245-ausgeben]
 <!-- hl-knowledge: introduces=[GE-LEX-C245-VERB245-03]; assesses=[] -->
 
 **aussprechen** — "to pronounce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aussprechen** is *aus-*, "out", + the verb "to speak", Old High German *sprehhan* ← Proto-Germanic *\*sprekaną*, English *speak* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 245,
-  "sourceHash": "fnv1a64:6d2a2559275323fb",
+  "sourceHash": "fnv1a64:b7359f6dfb39da5d",
   "lessonIds": [
     "GE-C245-aufpassen",
     "GE-C245-ausgeben",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch245.txt",
   "json": "german/narration/ch245.json",
-  "textHash": "fnv1a64:1304b67b96d56559",
-  "jsonHash": "fnv1a64:6b4ed7c2e33e19de",
+  "textHash": "fnv1a64:c5bdcf83d86a49d1",
+  "jsonHash": "fnv1a64:d5740da29127c447",
   "findings": []
 }

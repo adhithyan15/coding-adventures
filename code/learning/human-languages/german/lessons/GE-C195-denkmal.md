@@ -13,7 +13,8 @@ gloss: "a monument"
 concept_tag: GE-THING195-DENKMAL
 prerequisites: [GE-C195-fussgaengerzone, GE-C195-dom]
 sounds: []
-roots: []
+roots: [germanic-thankijana, germanic-mela]
+etymology_hook: "Denkmal — denken 'to think' + Mal 'mark': a mark that makes you think, after Greek mnēmósynon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C195-dom]
 <!-- hl-knowledge: introduces=[GE-LEX-C195-THING195-03]; assesses=[] -->
 
 **das Denkmal** — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Denkmal** is *denken*, "to think, to remember", + the old word for "a mark", Old High German *māl* (EtymDB 2.1): a mark to remember by, copying Greek *mnēmósynon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "big, fat"
 concept_tag: FR-ADJ45-GROS
 prerequisites: [FR-C92-etroit, FR-C93-mince]
 sounds: []
-roots: []
+roots: [grossus-latin]
+etymology_hook: "gros ← Late Latin grossus 'thick, coarse' — English gross and grocer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C93-mince]
 <!-- hl-knowledge: introduces=[FR-LEX-C93-ADJ45-02]; assesses=[] -->
 
 **gros** — "big, fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gros** ← Late Latin *grossus*, "thick, coarse" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to lose"
 concept_tag: IT-VERB-PERDERE
 prerequisites: [IT-C234-togliere, IT-C234-lasciare]
 sounds: []
-roots: []
+roots: [perdere-latin]
+etymology_hook: "perdere ← Latin perdere 'to lose' — English perdition shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C234-lasciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C234-VERBI234-05]; assesses=[] -->
 
 **perdere** — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perdere** ← Latin *perdere*, "to lose, to destroy" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

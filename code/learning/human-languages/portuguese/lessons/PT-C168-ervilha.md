@@ -13,7 +13,8 @@ gloss: "a pea"
 concept_tag: PT-COISAS168-ERVILHA
 prerequisites: [PT-C168-espinafres, PT-C168-abobora]
 sounds: []
-roots: []
+roots: [ervilia-latin]
+etymology_hook: "ervilha ← Latin ervilia, a kind of vetch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C168-abobora]
 <!-- hl-knowledge: introduces=[PT-LEX-C168-COISAS168-05]; assesses=[] -->
 
 **a ervilha** — "a pea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ervilha** ← Latin *ervilia*, "a kind of vetch" (EtymDB 2.1) — inherited. The *-li-* became the *lh* sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

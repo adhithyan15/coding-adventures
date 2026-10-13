@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-dos-continentes-madrid",
               "prompt": "In Madrid, to a group of friends: which verb form?",
               "assesses": [
@@ -142,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-dos-continentes-bogota",
               "prompt": "The same friends, in Bogota: which form?",
               "assesses": [
@@ -160,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-dos-continentes-which",
               "prompt": "Which of the two is the correct one?",
               "assesses": [

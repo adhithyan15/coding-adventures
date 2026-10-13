@@ -13,7 +13,8 @@ gloss: "to drink"
 concept_tag: IT-VERB-BERE
 prerequisites: [IT-C49-aprire, IT-C50-chiudere]
 sounds: []
-roots: []
+roots: [bibere-latin]
+etymology_hook: "bere ← Latin bibere 'to drink' — English imbibe shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-chiudere]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-02]; assesses=[] -->
 
 **bere** — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bere** ← Latin *bibere*, "to drink" — inherited. EtymDB 2.1 has no row for *bere*; it derives Dalmatian *bar* from *bibere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

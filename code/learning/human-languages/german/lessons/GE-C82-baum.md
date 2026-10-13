@@ -13,7 +13,8 @@ gloss: "a tree"
 concept_tag: GE-NATUR1-BAUM
 prerequisites: [GE-C81-geld, GE-C82-telefon]
 sounds: []
-roots: []
+roots: [germanic-baumaz]
+etymology_hook: "Baum ← Old High German boum ← Proto-Germanic *baumaz 'tree, beam' — the same word as English beam"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C82-telefon]
 <!-- hl-knowledge: introduces=[GE-LEX-C82-NATUR1-02]; assesses=[] -->
 
 **der Baum** — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Baum** ← Old High German *boum* ← Proto-Germanic *\*baumaz*, "tree, beam" — inherited, the same word as English *beam*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

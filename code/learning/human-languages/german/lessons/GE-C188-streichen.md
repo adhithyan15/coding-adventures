@@ -13,7 +13,8 @@ gloss: "to paint, to spread"
 concept_tag: GE-VERB-STREICHEN
 prerequisites: [GE-C187-stehlen, GE-C187-steigen]
 sounds: []
-roots: []
+roots: [germanic-strikana]
+etymology_hook: "streichen ← Old High German strīhhan 'to stroke, to spread' — the same verb as English strike"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C187-steigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C188-VERB188-01]; assesses=[] -->
 
 **streichen** — "to paint, to spread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**streichen** ← Middle High German *strīchen* ← Old High German *strīhhan*, "to stroke, to smooth, to spread" — inherited, the same verb as English *strike*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

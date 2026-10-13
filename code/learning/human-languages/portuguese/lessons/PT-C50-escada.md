@@ -13,7 +13,8 @@ gloss: "stairs; a ladder"
 concept_tag: PT-CASA3-ESCADA
 prerequisites: [PT-C50-sala, PT-C50-chao]
 sounds: []
-roots: []
+roots: [scala-latin]
+etymology_hook: "escada ← Vulgar Latin *scalata, from scala 'ladder' — English scale and escalator share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C50-chao]
 <!-- hl-knowledge: introduces=[PT-LEX-C50-CASA3-04]; assesses=[] -->
 
 **a escada** — "stairs; a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escada** ← Vulgar Latin *\*scalata* (EtymDB 2.1), from Latin *scala*, "ladder, flight of steps" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

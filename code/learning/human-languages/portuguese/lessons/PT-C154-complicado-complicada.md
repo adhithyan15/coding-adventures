@@ -13,7 +13,8 @@ gloss: "complicated"
 concept_tag: PT-QUAL154-COMPLICADO-COMPLICADA
 prerequisites: [PT-C153-mal-educado-mal-educada, PT-C153-desagradavel]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "complicado — 'folded together': from Latin complicare, from plicare 'to fold'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C153-desagradavel]
 <!-- hl-knowledge: introduces=[PT-LEX-C154-QUAL154-01]; assesses=[] -->
 
 **complicado / complicada** — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**complicado** is "folded together": the participle of the verb ← Latin *complicare*, from *plicare*, "to fold" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

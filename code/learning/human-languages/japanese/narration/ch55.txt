@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふん (fun) mean? ("A minute".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a minute'.
+Say the Japanese for 'a minute'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なつ (natsu) mean? ("Summer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'summer'.
+Say the Japanese for 'summer'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふゆ (fuyu) mean? ("Winter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'winter'.
+Say the Japanese for 'winter'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いつも (itsumo) mean? ("Always".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'always'.
+Say the Japanese for 'always'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まだ (mada) mean? ("Still, not yet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'still, not yet'.
+Say the Japanese for 'still, not yet'.

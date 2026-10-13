@@ -13,7 +13,8 @@ gloss: "clean"
 concept_tag: FR-QUAL244-PROPRE
 prerequisites: [FR-C243-regime, FR-C244-silencieux-silencieuse]
 sounds: []
-roots: []
+roots: [proprius-latin]
+etymology_hook: "propre ← Latin proprius 'one's own' — English proper and property"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C244-silencieux-silencieuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C244-QUAL244-02]; assesses=[] -->
 
 **propre** — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**propre** ← Latin *proprius*, "one's own" (EtymDB 2.1) — taken from Latin; "clean" grew out of "proper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

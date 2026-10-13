@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 141,
-  "sourceHash": "fnv1a64:42540c08e04e4e4e",
+  "sourceHash": "fnv1a64:3568b338b63bbe22",
   "lessonIds": [
     "FR-C141-lavenir",
     "FR-C141-ce-soir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch141.txt",
   "json": "french/narration/ch141.json",
-  "textHash": "fnv1a64:15bd205d95d577a7",
-  "jsonHash": "fnv1a64:12044e508e0e8e60",
+  "textHash": "fnv1a64:8498198de52a102e",
+  "jsonHash": "fnv1a64:e2d0f6ebcfa4f420",
   "findings": []
 }

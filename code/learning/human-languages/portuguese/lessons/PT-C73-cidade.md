@@ -13,7 +13,8 @@ gloss: "a city"
 concept_tag: PT-CIDADE1-CIDADE
 prerequisites: [PT-C72-perto, PT-C72-depressa]
 sounds: []
-roots: []
+roots: [civitas-latin]
+etymology_hook: "cidade ← Latin civitas, civitatis 'city, citizenship' — English city"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C72-depressa]
 <!-- hl-knowledge: introduces=[PT-LEX-C73-CIDADE1-01]; assesses=[] -->
 
 **a cidade** — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cidade** ← Latin *civitas, civitatis*, "city, citizenship" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

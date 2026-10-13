@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES83-OUVERT
 prerequisites: [FR-C131-occupe, FR-C131-libre, FR-C27-ouvrir, FR-C27-ouvrir, FR-C27-fermer]
 sounds: []
 roots: []
+etymology_hook: "ouvert — 'opened', from ouvrir; Latin apertus 'open' — English overt"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C131-libre]
 <!-- hl-knowledge: introduces=[FR-LEX-C131-QUALITES83-03]; assesses=[] -->
 
 **ouvert** — "open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ouvert** is the past participle of *ouvrir*, "to open": opened. It goes back to Vulgar Latin *\*opertus*, from Latin *apertus*, "open". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -56,8 +56,8 @@ blue," the very same root behind Hindi's **नीला** (*nīlā*). This *nīl
 also the name of the indigo plant and its dye — part of why blue dye is so
 historically linked to India — but be careful: the English word **indigo**
 itself is a *separate*, Greek-derived word (describing where the dye was
-imported *from*, not descended from *nīla* by sound change; see the Hindi
-color lesson for that careful distinction).
+imported *from*, not descended from *nīla* by sound change; the Hindi
+color lesson draws that careful distinction).
 
 ## Why it's said this way: Be honest about why blue is the odd one out
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-NIRANGAL-03]; assesses=[] -->

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C73-nuvo-type",
-              "prompt": "Type the Marwadi for 'new'.",
+              "prompt": "Say the Marwadi for 'new'.",
               "assesses": [
                 "MW-LEX-C73-ADJ73-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C73-juno-type",
-              "prompt": "Type the Marwadi for 'old'.",
+              "prompt": "Say the Marwadi for 'old'.",
               "assesses": [
                 "MW-LEX-C73-ADJ73-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C73-achho-type",
-              "prompt": "Type the Marwadi for 'good'.",
+              "prompt": "Say the Marwadi for 'good'.",
               "assesses": [
                 "MW-LEX-C73-ADJ73-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C73-maro-type",
-              "prompt": "Type the Marwadi for 'bad'.",
+              "prompt": "Say the Marwadi for 'bad'.",
               "assesses": [
                 "MW-LEX-C73-ADJ73-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C73-labo-type",
-              "prompt": "Type the Marwadi for 'long, tall'.",
+              "prompt": "Say the Marwadi for 'long, tall'.",
               "assesses": [
                 "MW-LEX-C73-ADJ73-05"
               ],

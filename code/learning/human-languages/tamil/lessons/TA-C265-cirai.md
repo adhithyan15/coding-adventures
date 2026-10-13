@@ -14,7 +14,8 @@ romanization: "ciṟai"
 concept_tag: TA-IDAM265-CIRAI
 prerequisites: [TA-C265-kuticai, TA-C265-kopuram]
 sounds: []
-roots: []
+roots: [dravidian-cirai-confine]
+etymology_hook: "சிறை — native Dravidian (DEDR 1980); Telugu ceṟa 'prison'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C265-kopuram]
 <!-- hl-knowledge: introduces=[TA-LEX-C265-IDAM265-04]; assesses=[] -->
 
 **சிறை** — *ciṟai* — "a prison".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிறை** (*ciṟai*) is native Dravidian. DEDR 1980 lists Telugu *ceṟa*, "prison". The entry glosses the Tamil verb as "to restrain, to imprison".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

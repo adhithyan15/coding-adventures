@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "The Household",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1b9e0ce5630c2648",
+  "sourceHash": "fnv1a64:278b5c463de165a2",
   "lessons": [
     {
       "id": "TA-C43-child",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a78beafeb9ea8e0d",
+      "sourceHash": "fnv1a64:b885e77f0fdec4a4",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குழந்தை (kuḻandai) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam koḻuntu, \"tender twig\", and Telugu koḍuku, \"son\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ec20fd535320a2c",
+      "sourceHash": "fnv1a64:2c06c0b1f6eb9f64",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மகன் (makaṉ) is native Dravidian. DEDR 4616 lists Malayalam makan, Kannada maga and Telugu maga, \"male\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -202,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -251,7 +273,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -282,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f24194da2555b4c",
+      "sourceHash": "fnv1a64:035a49accad2ef46",
       "notice": null,
       "blocks": [
         {
@@ -319,6 +341,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மகள் (makaḷ) is native Dravidian. DEDR 4616 lists Malayalam mōḷ. It is the feminine of the same word as makaṉ, \"son\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -329,7 +362,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -378,7 +411,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -409,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72bc53ae0d7d60cf",
+      "sourceHash": "fnv1a64:b001c9520c9eb0e3",
       "notice": null,
       "blocks": [
         {

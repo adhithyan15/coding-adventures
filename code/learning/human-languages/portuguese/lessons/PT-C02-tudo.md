@@ -8,7 +8,7 @@ type: word
 headword: tudo
 gloss: everything / all
 concept_tag: PT-WORD-TUDO
-prerequisites: []
+prerequisites: [PT-C02-como, PT-C01-bom]
 sounds: [final-o-is-u]
 roots: [totus-latin]
 etymology_hook: "tudo ← Latin tōtus 'whole, entire' → English total, totally, teetotal"

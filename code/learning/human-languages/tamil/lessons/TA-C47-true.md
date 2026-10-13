@@ -11,7 +11,8 @@ romanization: "uṇmai"
 concept_tag: TA-REPLY-TRUE
 prerequisites: [TA-C46-guest, TA-C45-eye, TA-C46-teacher]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "உண்மை — native Dravidian (DEDR 697); Malayalam uḷ 'to be there'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C46-guest]
 It is built out of *uḷ*, 'to be, to exist', and the *-mai* Tamil adds to turn a quality into something you can name. The truth, then, is is-ness: what is the case.
 
 As a reply it stands on its own. Somebody tells you something surprising and *uṇmai* means "true" — and *uṇmaiyā?*, with the question fixed to the end, means "really?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உண்மை** (*uṇmai*) is native Dravidian. DEDR 697 lists Malayalam *uḷ*, "to be there". It is the noun of *uḷ*, "to be, to exist": the truth is what is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

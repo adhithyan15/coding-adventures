@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04, FR-LEX-OEIL-01, FR-ETYMON-OEIL-02, FR-GRAMMAR-COMPRENDRE-STEM-03]
+  knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04, FR-LEX-OEIL-01, FR-ETYMON-OEIL-02, FR-GRAMMAR-COMPRENDRE-STEM-03, FR-ETYMON-SEL-06, FR-ETYMON-OEUF-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -47,7 +47,7 @@ reviews_of: [FR-C31-oeil]
 **le nez** — the nose. **Masculine**, final **z** **silent**: *NAY*.
 
 ## The word, taken apart: cousin, not borrowing
-<!-- hl-knowledge: introduces=[FR-ETYMON-NEZ-04]; assesses=[FR-ETYMON-OEIL-02] -->
+<!-- hl-knowledge: introduces=[FR-ETYMON-NEZ-04]; assesses=[FR-ETYMON-OEIL-02, FR-ETYMON-SEL-06, FR-ETYMON-OEUF-08] -->
 
 **nez** ← Latin **nāsus**, from PIE **\*nas-**. English **nose** descends
 from the *same* root, down the Germanic branch — a genuine cousin, exactly

@@ -61,12 +61,12 @@ into **أ** and **خذ** — the two-piece shape of **ذهب**.
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AKHADHA-02]; assesses=[] -->
 
 **أَخَذَ** (*ʾakhadha*) = "**he took**." Root **أ-خ-ذ**, the plain
-**فَعَلَ** shape — the last verb in this book to wear it unaltered.
+*faʿala* shape — the last verb in this book to wear it unaltered.
 
 - **أَخْذ** (*akhdh*) — "**taking**."
-- **آخِذ** (*ākhidh*) — "one **taking**," the **doer** shape of *kātib*,
-  where the root's own *alif* and the pattern's fuse into long **آ** —
-  the fusion seen in **آكِل** (*ākil*), "an eater."
+- *ākhidh* — "one **taking**," the **doer** shape of *kātib*,
+  where the root's own *alif* and the pattern's fuse into long *alif madda* —
+  the fusion seen in *ākil*, "an eater."
 - **مَأْخوذ** (*maʾkhūdh*) — "**taken**," the **done-to** shape of *maktūb*.
 
 Its Hebrew twin is **אָחַז** (*ʾaḥaz*), "he seized." Two regular swaps carry
@@ -90,7 +90,7 @@ guesses about this pair. English took nothing from either.
 
 [PAUSE 3s] Which letter keeps **أخذ** from running as one piece, and which
 Chapter 31 verb did run as one? (**The *alif***, a non-joiner — against
-**كتب**.) What turns **د** into **ذ**? (**One dot above** — *d* becomes the
-*th* of "this.") Which two words fuse their alifs into **آ**? (***Ākil***
+**كتب**.) What turns *dāl* into **ذ**? (**One dot above** — *d* becomes the
+*th* of "this.") Which two words fuse their alifs into *alif madda*? (***Ākil***
 and ***ākhidh***.) Which Hebrew consonants answer Arabic **خ** and **ذ**?
 (**ח** and **ז** — in **אָחַז**, *ʾaḥaz*.)

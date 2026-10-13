@@ -14,7 +14,8 @@ romanization: "kāram"
 concept_tag: TA-QUAL146-KARAM
 prerequisites: [TA-C146-kacappu, TA-C146-pulippu]
 sounds: []
-roots: []
+roots: [dravidian-kaar-pungent]
+etymology_hook: "காரம் — native Dravidian (DEDR 1466); Malayalam kāram 'caustic'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C146-pulippu]
 <!-- hl-knowledge: introduces=[TA-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **காரம்** — *kāram* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காரம்** (*kāram*) is native Dravidian. DEDR 1466 lists Malayalam *kāram*, "caustic". The entry adds that the word was probably influenced by Sanskrit *kṣāra*, "caustic".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

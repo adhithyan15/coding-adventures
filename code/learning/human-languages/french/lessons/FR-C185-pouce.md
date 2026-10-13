@@ -14,6 +14,7 @@ concept_tag: FR-SANTE185-POUCE
 prerequisites: [FR-C184-emprunter, FR-C185-muscle]
 sounds: []
 roots: []
+etymology_hook: "pouce ← Latin pollex, pollicis 'thumb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C185-muscle]
 <!-- hl-knowledge: introduces=[FR-LEX-C185-SANTE185-02]; assesses=[] -->
 
 **le pouce** — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pouce** ← Old French *pouce* ← Latin *pollex*, *pollicis*, "thumb" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

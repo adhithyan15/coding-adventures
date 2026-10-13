@@ -13,7 +13,8 @@ gloss: "to quarrel"
 concept_tag: IT-VERB-LITIGARE
 prerequisites: [IT-C143-telefonare, IT-C143-discutere]
 sounds: []
-roots: []
+roots: [litigare-latin]
+etymology_hook: "litigare ← Latin litigare 'to go to law', a learned word — English litigate is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C143-discutere]
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-03]; assesses=[] -->
 
 **litigare** — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**litigare** ← Latin *litigare*, "to quarrel, to go to law" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

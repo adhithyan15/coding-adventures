@@ -12,7 +12,7 @@ concept_tag: VERB-TAKE
 prerequisites: [TA-C33-ezhutu, TA-C32-saappidu, TA-C15-thanneer-arisi]
 sounds: [tamil-retroflex-tta, tamil-vowel-sign-u, tamil-geminate-kka]
 roots: [dravidian-edu-lift-take]
-etymology_hook: "எடு is native Dravidian *eṭu 'lift, take up' — Malayalam എടുക്കുക exactly, Kannada and Telugu ಎತ್ತು/ఎత్తు 'lift'; and it is a minimal pair with இடு, the light verb inside சாப்பிடு"
+etymology_hook: "எடு is native Dravidian *eṭu 'lift, take up' — Malayalam എടുക്കുക exactly; Kannada and Telugu ಎತ್ತು/ఎత్తు 'lift' look alike but are filed under a separate root; and it is a minimal pair with இடு, the light verb inside சாப்பிடு"
 duration:
   max_seconds: 245
 requires:
@@ -77,8 +77,9 @@ a gift to your memory and **not** an etymology: Tamil's dictionaries keep them a
 fools people. Use it to remember; never as evidence.
 
 What *is* inherited is *eḍu* itself. Malayalam has **എടുക്കുക** (*eṭukkuka*),
-the same verb; Kannada and Telugu say **ಎತ್ತು** / **ఎత్తు** (*ettu*), "to lift,"
-from the same old root with a doubled *t* where Tamil keeps its retroflex.
+the same verb; the etymological dictionary files them together. Kannada and Telugu
+**ಎತ್ತು** / **ఎత్తు** (*ettu*), "to lift," look close but are filed under a
+**separate root**: perhaps a cousin, not a proven one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-EDU-01, TA-ETYMON-EDU-02, TA-ETYMON-SAAPPIDU-02, TA-LEX-SAAPPIDU-01, TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-GRAMMAR-PAAR-02, TA-LEX-EZHUTU-01, TA-LEX-PADI-01, TA-LEX-PURI-01] -->
@@ -87,7 +88,7 @@ from the same old root with a doubled *t* where Tamil keeps its retroflex.
 - [YOU SAY: the opposed pair — "iḍu, put … eḍu, take"]
 - [YOU SAY: "nāṉ taṇṇīr eḍukkiṟēṉ" — I take water]
 - [YOU SAY: "nāṉ arisi eḍukkiṟēṉ" — I take rice]
-- [YOU SAY: the cousins lifting — "eṭukkuka … ettu … ettu"]
+- [YOU SAY: the true cousin, then the look-alike — "eṭukkuka … ettu"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-EDU-01, TA-ETYMON-EDU-02, TA-ETYMON-SAAPPIDU-02, TA-LEX-SAAPPIDU-01, TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-GRAMMAR-PAAR-02, TA-LEX-EZHUTU-01, TA-LEX-PADI-01, TA-LEX-PURI-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 64,
-  "sourceHash": "fnv1a64:611b1a92324eacbc",
+  "sourceHash": "fnv1a64:af999bb936babb03",
   "lessonIds": [
     "FR-C64-regarder",
     "FR-C64-ecouter",
@@ -9,11 +9,11 @@
     "FR-C64-acheter",
     "FR-C64-savoir"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
   "text": "french/narration/ch64.txt",
   "json": "french/narration/ch64.json",
-  "textHash": "fnv1a64:7d26adea1a61342c",
-  "jsonHash": "fnv1a64:4872d91cbbeb1306",
+  "textHash": "fnv1a64:881514b80616421b",
+  "jsonHash": "fnv1a64:5dd196ff51a62bee",
   "findings": []
 }

@@ -37,7 +37,7 @@ reviews_of: [FA-C11-pa, FA-C11-dast, FA-C11-cheshm, FA-C05-khodahafez, FA-C04-kh
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-PA, FA-LEX-DAST, FA-LEX-CHESHM] -->
 
-[PAUSE 2s] Say **چشم، دست، پا** — eye, hand, foot. One organ this list has
+[PAUSE 2s] Say *cheshm, dast, pâ* — eye, hand, foot. One organ this list has
 left out names something bigger than itself.
 
 ## You'll want to know first — one word, one new letter
@@ -57,7 +57,7 @@ Indo-European word for “tongue.” English **tongue** is the same root, worn
 down at home. Latin took the same root and, by a well-documented but still
 debated *d*-to-*l* shift, turned it into *lingua* — the ancestor of English
 **language** and **linguistics**. Persian, like English, never split the
-organ from the ability: **زبانِ فارسی** *zabân-e fârsi*, “the Persian
+organ from the ability: *zabân-e fârsi*, “the Persian
 tongue,” is simply the Persian **language** — the same word this whole track
 has been teaching you to use.
 
@@ -67,14 +67,14 @@ has been teaching you to use.
 One short scene, built entirely from independently learned pieces, chapter by
 chapter:
 
-- [YOU READ: **اسمِ من ... است** — the very first sentence this track built]
-- [YOU READ: **شما** against **تو** — the register this track built next]
-- [YOU READ: **حال شما چطور است؟** — the careful question that followed]
-- [YOU SAY: **خوبم** — the reply that answered it]
-- [YOU SAY: **آب، لطفاً** / **کلیدِ من، لطفاً** — this chapter's own requests]
-- [YOU NAME: **مادر، پدر، برادر، دختر، چشم، دست، پا، زبان** — eight new words,
+- [YOU SAY: *esm-e man ... ast* — the very first sentence this track built]
+- [YOU SAY: *shomâ* against *to* — the register this track built next]
+- [YOU SAY: *hâl-e shomâ chetor ast?* — the careful question that followed]
+- [YOU SAY: *khubam* — the reply that answered it]
+- [YOU SAY: *âb, lotfan* / *kelid-e man, lotfan* — this chapter's own requests]
+- [YOU NAME: *mâdar, pedar, barâdar, dokhtar, cheshm, dast, pâ, zabân* — eight new words,
   three chapters]
-- [YOU READ: **خداحافظ**, and recall what it leaves unsaid — no verb, just the
+- [YOU SAY: *khodâ hâfez*, and recall what it leaves unsaid — no verb, just the
   two halves an earlier lesson joined]
 - [YOU CONNECT: **zabân** ← old “tongue” word → English **tongue**, Latin
   *lingua* → **language**, **linguistics**]
@@ -87,7 +87,7 @@ chapter:
 **language**.) Which new letter did it need? (**ز**, *ze*.) Which two English
 words trace to the same root by a disputed sound shift? (**Tongue**
 directly; **language** and **linguistics** through Latin's *d*-to-*l* turn.)
-What is **زبانِ فارسی**? (The Persian language — the one this whole track
+What is *zabân-e fârsi*? (The Persian language — the one this whole track
 teaches.)
 
 Source: [Wiktionary: زبان](https://en.wiktionary.org/wiki/%D8%B2%D8%A8%D8%A7%D9%86).

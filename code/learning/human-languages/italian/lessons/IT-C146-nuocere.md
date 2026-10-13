@@ -13,7 +13,8 @@ gloss: "to harm"
 concept_tag: IT-VERB-NUOCERE
 prerequisites: [IT-C146-migliorare, IT-C146-peggiorare]
 sounds: []
-roots: []
+roots: [nocere-latin]
+etymology_hook: "nuocere ← Latin nocere 'to harm' — English innocent and noxious share the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C146-peggiorare]
 <!-- hl-knowledge: introduces=[IT-LEX-C146-VERBI146-04]; assesses=[] -->
 
 **nuocere** — "to harm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuocere** ← Latin *nocere*, "to hurt, to harm" — inherited. EtymDB 2.1 has no row for *nuocere*; it derives Catalan *noure* from *nocere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

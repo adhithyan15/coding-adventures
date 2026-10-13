@@ -14,7 +14,8 @@ romanization: "pantu"
 concept_tag: TA-THINGS136-PANTU
 prerequisites: [TA-C135-eni, TA-C136-kuppi]
 sounds: []
-roots: []
+roots: [dravidian-pantu-ball]
+etymology_hook: "பந்து — native Dravidian (DEDR 3925); Malayalam pantu, Telugu banti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C136-kuppi]
 <!-- hl-knowledge: introduces=[TA-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **பந்து** — *pantu* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பந்து** (*pantu*) is native Dravidian. DEDR 3925 lists Malayalam *pantu* and Telugu *banti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

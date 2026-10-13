@@ -2,6 +2,42 @@
 
 All notable changes to the Japanese curriculum track are recorded here.
 
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **1 anchor-word lesson** (JA-C02-wani): the anchor word's "Look at its shape as you say it: …" is now `[YOU LOOK: at its shape as you say it.]`, so the narration says it after "once you have stopped driving" and the rest of the lesson, which teaches the word by ear, is drivable at the core.
+- No chapter's hands-free start moves; the lesson sits after a writing lesson.
+
+## Fixed — no lesson announced as drivable asks a driver to read, write or gesture
+
+A lesson whose core is `voice` is announced as "you can do this one in the car", and
+only its detachable sections (writing, the letters in a word, script) wait behind the
+stop guard. The modality rule now reads the sections a driver hears plainly for a step
+that needs eyes or hands (reason `eyes-or-hands-step`, human-language-data); before it,
+such steps in the core of a lesson with a letters or writing section were read out at
+the wheel.
+
+- **Rewritten, still drivable (5).** The review-pulse writing steps defer:
+  JA-C01-arigatou "[YOU WRITE: **か** once from memory, then add the two dakuten strokes]",
+  JA-C01-iie "Say **はい**. [YOU WRITE: **い** once from memory, …]", JA-C01-konnichiwa
+  "[YOU WRITE: **ん** from memory, then give it one full mora]", JA-C01-nihongo "[YOU WRITE:
+  日, 本, and 語 once each]", JA-C03-practice "[YOU WRITE: ありがとう — five signs, no help]".
+  JA-C01-konnichiwa's rule "read **は** as *ha* inside a word and as *wa* …" is said for the
+  ear: "**は** is *ha* inside a word and *wa* when it is the particle."
+
+- **Now not drivable at the core (1):** JA-C13-family-check ("Write distant katakana
+  **ヒ**. Then read **コーヒー** …", "hear, say, read, and write these four").
+
+## Fixed — ふ and む count strokes, not lifts
+
+JA-W16-fu asked the learner to trace ふ "counting the four lifts aloud", and
+JA-W17-mu to trace む "counting three lifts". Those are the stroke counts.
+A lift comes between strokes, so ふ (four strokes) has three and む (three
+strokes) has two, as their records and filmstrips say. Both Guided Practice
+steps now count strokes and name the lifts correctly, and the wrap-up
+activities' feedback says "Count the strokes" instead of "Count the lifts".
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

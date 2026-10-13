@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 107,
-  "sourceHash": "fnv1a64:faa6690c3a249c75",
+  "sourceHash": "fnv1a64:737db578b5ef0c6f",
   "lessonIds": [
     "PT-C107-sandes",
     "PT-C107-molho",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch107.txt",
   "json": "portuguese/narration/ch107.json",
-  "textHash": "fnv1a64:f372f38fec5f28bd",
-  "jsonHash": "fnv1a64:61e42dfa9ada7b4f",
+  "textHash": "fnv1a64:30f122c6663e0c64",
+  "jsonHash": "fnv1a64:63a9903bc6dcfb7f",
   "findings": []
 }

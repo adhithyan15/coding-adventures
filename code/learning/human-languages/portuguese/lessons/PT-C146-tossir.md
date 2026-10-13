@@ -13,7 +13,8 @@ gloss: "to cough"
 concept_tag: PT-VERB-TOSSIR
 prerequisites: [PT-C145-interromper, PT-C145-amarrar]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tossir ← Latin tussire 'to cough', from tussis — the same root as tosse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C145-amarrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C146-VERBOS146-01]; assesses=[] -->
 
 **tossir** — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tossir** ← Latin *tussire*, "to cough" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

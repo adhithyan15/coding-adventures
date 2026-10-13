@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 191,
-  "sourceHash": "fnv1a64:677668b4ff64c65e",
+  "sourceHash": "fnv1a64:05c802f91823c33a",
   "lessonIds": [
     "GE-C191-vorbereiten",
     "GE-C191-waehlen",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch191.txt",
   "json": "german/narration/ch191.json",
-  "textHash": "fnv1a64:e7b0ee4db165a19b",
-  "jsonHash": "fnv1a64:e1754d4621df08a6",
+  "textHash": "fnv1a64:572207768e77d6c0",
+  "jsonHash": "fnv1a64:4e1fe180da3be98a",
   "findings": []
 }

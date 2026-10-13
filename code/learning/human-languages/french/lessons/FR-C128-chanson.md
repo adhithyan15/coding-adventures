@@ -13,7 +13,8 @@ gloss: "a song"
 concept_tag: FR-LOISIRS80-CHANSON
 prerequisites: [FR-C128-jeu, FR-C128-film]
 sounds: []
-roots: []
+roots: [canere-latin]
+etymology_hook: "chanson ← Latin cantio 'a song', from canere 'to sing' — English chant and cantor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C128-film]
 <!-- hl-knowledge: introduces=[FR-LEX-C128-LOISIRS80-05]; assesses=[] -->
 
 **la chanson** — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chanson** ← Old French *chançon* ← Latin *cantio*, *cantionis*, "a song", from *canere*, "to sing" (EtymDB 2.1) — inherited: *ca-* became *cha-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

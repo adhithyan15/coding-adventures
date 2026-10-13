@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 82,
-  "sourceHash": "fnv1a64:f4ede508519e6f37",
+  "sourceHash": "fnv1a64:6e99967b865dbe49",
   "lessonIds": [
     "PT-C82-poder",
     "PT-C82-dever",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch82.txt",
   "json": "portuguese/narration/ch82.json",
-  "textHash": "fnv1a64:c8461ffba2b7006a",
-  "jsonHash": "fnv1a64:20f162daad68a8cd",
+  "textHash": "fnv1a64:ba8a7b8b714927e0",
+  "jsonHash": "fnv1a64:d78900e4f28f411d",
   "findings": []
 }

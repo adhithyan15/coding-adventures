@@ -53,20 +53,20 @@ familiar *-tan*. The opening shape is **گ** *g*, called *gâf*: a long slanting
 stroke with a second slanting stroke laid above it.
 
 Arabic has no *g*, so Persian made one. Persian adds four letters to the
-inherited Arabic set — **پ** *p*, **چ** *ch*, **ژ** *zh*, and **گ** *g* — and
-you have already read one of them, the **چ** inside **چیست** *chist*. Each is an
+inherited Arabic set, for *p*, *ch*, *zh*, and *g* (**گ**), and
+you have already met one of them, the *ch* of *chist*. Each is an
 Arabic letter with extra strokes: **گ** is the *k* shape wearing a second bar.
 
 ## The word, taken apart — two stems, frozen into one noun
 <!-- hl-knowledge: introduces=[FA-STEM-GU]; assesses=[] -->
 
-The present stem is **گو** *gu*: **گ** then **و**, no join between them.
+The present stem is *gu*: **گ** then the letter *vâv*, no join between them.
 *Mi-guyam* is “I say.” Store the pair as **goftan, gu-**.
 
 Now the part that makes the pair unforgettable. Persian has an ordinary,
-everyday word for “conversation”: **گفتگو** *goftogu*. Pull it apart and it is
+everyday word for “conversation”: *goftogu*. Pull it apart and it is
 the past stem **گفت** *goft*, a linking *-o-* meaning “and,” and the present
-stem **گو** *gu*. A conversation is literally *said-and-say*. The two halves of
+stem *gu*. A conversation is literally *said-and-say*. The two halves of
 the verb, sitting next to each other in a noun you can hear on any Iranian news
 broadcast.
 
@@ -81,13 +81,13 @@ somewhere else entirely.
 
 - [YOU SAY: **goftan** — to say]
 - [YOU SAY: the pair as one item — **goftan, gu-**]
-- [YOU READ: **گ**, then **گو**, then **گفتن**]
+- [YOU READ: **گ**, then **گفتن**, and say the stem *gu*]
 - [YOU BUILD: **goft** + *-o-* + **gu** → **goftogu**, conversation]
 - [YOU RETRIEVE: the pair for “to come” — **âmadan, â-**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-GOFTAN, FA-SCRIPT-GAF, FA-STEM-GU, FA-GRAMMAR-INFINITIVE-TAN-DAN] -->
-<!-- hl-activity: {"id":"FA-C06-goftan-stem","kind":"text","assesses":["FA-STEM-GU"],"prompt":"Give the present stem that goes with گفتن (goftan).","answer":"گو","accepted":["gu","gu-","gū","goo"],"feedback":{"correct":"Right: گفتن goftan pairs with the present stem گو gu-.","incorrect":"The present stem is گو — gu-."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"FA-C06-goftan-stem","kind":"text","assesses":["FA-STEM-GU"],"prompt":"Give the present stem that goes with گفتن (goftan).","answer":"gu","accepted":["gu-","gū","goo"],"feedback":{"correct":"Right: گفتن goftan pairs with the present stem gu-.","incorrect":"The present stem is gu-."},"response_seconds":9} -->
 
 [PAUSE 3s] Which letter opens **گفتن**, and why is it not in Arabic?
 (**گ** *gâf*; Arabic has no *g* sound.) What two pieces of the verb hide inside

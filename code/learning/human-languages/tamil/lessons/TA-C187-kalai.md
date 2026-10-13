@@ -14,7 +14,8 @@ romanization: "kāḷai"
 concept_tag: TA-PORUL187-KALAI
 prerequisites: [TA-C186-natpu, TA-C187-cellappirani]
 sounds: []
-roots: []
+roots: [dravidian-kaalai-bull]
+etymology_hook: "காளை — native Dravidian (DEDR 1502); Malayalam kāḷa 'bull'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C187-cellappirani]
 <!-- hl-knowledge: introduces=[TA-LEX-C187-PORUL187-02]; assesses=[] -->
 
 **காளை** — *kāḷai* — "a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காளை** (*kāḷai*) is native Dravidian. DEDR 1502 lists Malayalam *kāḷa*, "bull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

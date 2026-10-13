@@ -13,7 +13,8 @@ gloss: "a school"
 concept_tag: IT-CITTA1-SCUOLA
 prerequisites: [IT-C81-negozio, IT-C81-mercato]
 sounds: []
-roots: []
+roots: [schola-latin]
+etymology_hook: "scuola ← Latin schola, from Greek schole 'leisure' — English school"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C81-mercato]
 <!-- hl-knowledge: introduces=[IT-LEX-C81-CITTA1-04]; assesses=[] -->
 
 **la scuola** — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scuola** ← Latin *schola*, "school" — inherited; Latin took it from Greek *schole*, "leisure". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "which one"
 concept_tag: FR-NEG139-LEQUEL
 prerequisites: [FR-C139-aucun, FR-C139-non-plus]
 sounds: []
-roots: []
+roots: [qualis]
+etymology_hook: "lequel — le + quel 'which', from Latin qualis 'of what kind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C139-non-plus]
 <!-- hl-knowledge: introduces=[FR-LEX-C139-NEG139-04]; assesses=[] -->
 
 **lequel / laquelle** — "which one". A question that picks from a set, and it agrees with what is picked: **Lequel ?** for a train, **Laquelle ?** for a chambre.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lequel** — *le* and *quel*, "which", ← Latin *qualis*, "of what kind" (Lewis & Short): "the which".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

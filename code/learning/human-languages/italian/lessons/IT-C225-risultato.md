@@ -13,7 +13,8 @@ gloss: "a result"
 concept_tag: IT-COSE225-RISULTATO
 prerequisites: [IT-C225-occasione, IT-C225-motivo]
 sounds: []
-roots: []
+roots: [resultare-latin]
+etymology_hook: "risultato — from risultare ← Latin resultare 'to spring back' — English result"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C225-motivo]
 <!-- hl-knowledge: introduces=[IT-LEX-C225-COSE225-05]; assesses=[] -->
 
 **il risultato** — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**risultato** is the past participle of *risultare*, "to result", used as a noun. *risultare* ← Latin *resultare*, "to spring back". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

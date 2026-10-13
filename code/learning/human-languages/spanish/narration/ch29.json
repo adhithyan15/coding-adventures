@@ -138,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-ll-claim",
               "prompt": "Which English words are llamar's cousins?",
               "assesses": [
@@ -158,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-ll-three",
               "prompt": "Which three Latin clusters all became ll-?",
               "assesses": [
@@ -176,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-ll-decode",
               "prompt": "You meet llave and have never seen it. Try the three clusters and decode it.",
               "assesses": [
@@ -195,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-ll-shape",
               "prompt": "What do all three sound laws have in common?",
               "assesses": [

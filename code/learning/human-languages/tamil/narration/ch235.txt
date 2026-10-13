@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a capital city, then the Tamil for a cross
 You'll want to know: திசை.
 திசை — ticai — "a direction".
 
+The word, taken apart.
+திசை (ticai) is a well-established loan from Sanskrit diśā, "direction, quarter of the sky".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a crossroads, then the Tamil for a directi
 
 You'll want to know: வடக்கு.
 வடக்கு — vaṭakku — "north".
+
+The word, taken apart.
+வடக்கு (vaṭakku) is native Dravidian. DEDR 5218 lists Malayalam vaṭakku.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a direction, then the Tamil for north.
 You'll want to know: தெற்கு.
 தெற்கு — teṟku — "south".
 
+The word, taken apart.
+தெற்கு (teṟku) is native Dravidian. DEDR 3449 lists Malayalam tekku, "south".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for north, then the Tamil for south.
 You'll want to know: கிழக்கு.
 கிழக்கு — kiḻakku — "east".
 
+The word, taken apart.
+கிழக்கு (kiḻakku) is native Dravidian (DEDR 1619). The entry lists kiḻakku, "east, the lowland of the Tamil country", under kīḻ, "below".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for south, then the Tamil for east.
 
 You'll want to know: மேற்கு.
 மேற்கு — mēṟku — "west".
+
+The word, taken apart.
+மேற்கு (mēṟku) is native Dravidian (DEDR 5086). The entry lists mēṟku, "west", under mē, "height, high place".
 
 What you've built.
 One more word for this chapter.

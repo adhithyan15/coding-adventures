@@ -139,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-type",
-              "prompt": "Type the Japanese for 'tea', in rōmaji.",
+              "prompt": "Say the Japanese for 'tea'.",
               "assesses": [
                 "JA-LEX-ANCHOR-OCHA"
               ],
@@ -169,19 +170,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1f316ce347008e00",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -318,6 +324,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-ya-write",
               "prompt": "How many beats is ちゃ, and how many is ちや?",
               "assesses": [
@@ -480,8 +487,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-isha-type",
-              "prompt": "Type the Japanese for 'a doctor'.",
+              "prompt": "Say the Japanese for 'a doctor'.",
               "assesses": [
                 "JA-LEX-C131-ISHA"
               ],
@@ -641,8 +649,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-chotto-type",
-              "prompt": "Type the Japanese for 'a little', in rōmaji.",
+              "prompt": "Say the Japanese for 'a little'.",
               "assesses": [
                 "JA-LEX-ANCHOR-CHOTTO"
               ],
@@ -671,19 +680,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ea5e55830c5e0650",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -828,6 +842,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-yo-write",
               "prompt": "How many beats is ちょっと (chotto), and which small sign in it is a beat of its own?",
               "assesses": [
@@ -981,8 +996,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-toshokan-type",
-              "prompt": "Type the Japanese for 'a library'.",
+              "prompt": "Say the Japanese for 'a library'.",
               "assesses": [
                 "JA-LEX-C131-TOSHOKAN"
               ],
@@ -1141,8 +1157,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-o-kudasai-type",
-              "prompt": "Ask for tea politely, in rōmaji.",
+              "prompt": "Ask for tea politely.",
               "assesses": [
                 "JA-GRAMMAR-OBJECT-WO"
               ],
@@ -1172,19 +1189,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ad45a54835a0e6aa",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -1288,7 +1309,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this once already. は is read wa when it is the topic marker; を is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
+              "text": "You have met this once already. は is read wa when it is the topic marker; を (wo) is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
             }
           ]
         },
@@ -1327,8 +1348,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W131-wo-write",
-              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を?",
+              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を (wo)?",
               "assesses": [
                 "JA-SCRIPT-WO-01"
               ],
@@ -1411,7 +1433,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the four words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1473,7 +1495,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write the request",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1517,6 +1539,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R131-tea-please-type",
               "prompt": "Type 'tea, please' in hiragana.",
               "assesses": [

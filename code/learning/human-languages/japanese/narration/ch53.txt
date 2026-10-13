@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つめたい (tsumetai) mean? ("Cold (to the touch)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'cold (to the touch)'.
+Say the Japanese for 'cold (to the touch)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おいしい (oishii) mean? ("Tasty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tasty'.
+Say the Japanese for 'tasty'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あつい (atsui) mean? ("Hot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'hot'.
+Say the Japanese for 'hot'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さむい (samui) mean? ("Cold (weather)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'cold (weather)'.
+Say the Japanese for 'cold (weather)'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさ (asa) mean? ("Morning".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'morning'.
+Say the Japanese for 'morning'.

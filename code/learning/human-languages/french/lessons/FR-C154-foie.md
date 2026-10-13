@@ -13,7 +13,8 @@ gloss: "the liver"
 concept_tag: FR-SANTE154-FOIE
 prerequisites: [FR-C154-cerveau, FR-C154-poumon]
 sounds: []
-roots: []
+roots: [ficus-latin]
+etymology_hook: "foie ← Late Latin ficatum 'fig-fed (liver)', from ficus 'fig' — the cook's word won"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C154-poumon]
 <!-- hl-knowledge: introduces=[FR-LEX-C154-SANTE154-04]; assesses=[] -->
 
 **le foie** — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**foie** ← Late Latin *ficatum*, short for *iecur ficatum*, "liver fattened on figs", from *ficus*, "fig" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

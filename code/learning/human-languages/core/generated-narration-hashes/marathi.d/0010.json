@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:7cc95ee2f0bfb43b",
+  "sourceHash": "fnv1a64:00f79a750272efa3",
   "lessonIds": [
     "MR-C03-kasa",
     "MR-C03-tumhi-kase-aahat",
@@ -11,10 +11,10 @@
     "MR-C03-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "marathi/narration/ch10.txt",
   "json": "marathi/narration/ch10.json",
-  "textHash": "fnv1a64:8438cba2cdea8a91",
-  "jsonHash": "fnv1a64:7f9f8ef6ec3bda2c",
+  "textHash": "fnv1a64:4254406fe9595001",
+  "jsonHash": "fnv1a64:f40c0fa3ee470e3e",
   "findings": []
 }

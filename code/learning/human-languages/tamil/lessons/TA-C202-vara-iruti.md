@@ -14,7 +14,8 @@ romanization: "vāra iṟuti"
 concept_tag: TA-NERAM202-VARA-IRUTI
 prerequisites: [TA-C201-ullankai, TA-C201-vayirruvali]
 sounds: []
-roots: []
+roots: [sanskrit-vara-turn, dravidian-ira-end]
+etymology_hook: "வார இறுதி — vāram ← Sanskrit vāra 'day of the week' (CDIAL 11547) + native iṟuti 'end' (DEDR 514)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C201-vayirruvali]
 <!-- hl-knowledge: introduces=[TA-LEX-C202-NERAM202-01]; assesses=[] -->
 
 **வார இறுதி** — *vāra iṟuti* — "a weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வார இறுதி** (*vāra iṟuti*) is *vāram*, "week", from Sanskrit *vāra*, "one's turn, day of the week" (CDIAL 11547), and native *iṟuti*, "end", from *iṟa*, "to end, to pass away" (DEDR 514).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

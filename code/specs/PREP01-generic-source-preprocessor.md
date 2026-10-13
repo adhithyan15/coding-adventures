@@ -2,6 +2,15 @@
 
 **Status:** Draft — design spec, committed before implementation (sign-off = merge).
 
+**Consumer priority (user clarification, 2026-10-11):** MacroNib and MacroOct
+are the first consumers and the near-term proving ground for this generic
+engine. Prioritize their source-to-preprocessor-to-parser-to-IIR composition,
+expansion provenance, resource bounds and identity against hand-expanded Nib
+and Oct. Choose further generic-engine work from a demonstrated need in those
+consumers. Existing bounded C stages remain recorded evidence; completing C
+preprocessing is a long-term horizon and does not drive the next PREP01 slice.
+This ordering does not authorize adding C-shaped semantics to the engine.
+
 ## 1. Why this exists
 
 Several languages in this repo need a text- or token-level rewriting pass that
@@ -909,3 +918,117 @@ bounds through the rooted C frontend and generic engine. The existing fuel
 budget also charges the new parameter scan. Token paste and broader
 stringizing, including whitespace collapse and escaping within literals,
 remain pending.
+
+## 11. Bounded C identifier-prefix paste stage
+
+The next C paste stage accepts exactly one `##` in a function-like macro
+replacement list, in the shape `<literal identifier> ## <parameter>`. The
+argument must contain exactly one raw identifier token. Concatenate the two
+spellings into one token that the C lexer classifies as a `NAME`, excluding
+keywords formed by paste, then make it available for the normal macro rescan.
+The pasted parameter uses its raw spelling instead of
+its pre-expanded value, as required for a parameter adjacent to `##` by
+WG14 N843 §6.10.3.3. Source:
+<https://www.open-std.org/jtc1/sc22/wg14/www/docs/n843.pdf>.
+For example, with `#define NAME tail`, `#define preNAME 7`, and
+`#define PREFIX(x) pre ## x`, `PREFIX(NAME)` must yield `7`, not a name
+formed from `tail`.
+
+Keep all existing source, token, text, fuel, expansion-depth, and output
+bounds. Project the pasted spelling's bytes, per-token spelling, and token
+count before building it, validate the dialect hook's returned token type and
+exact spelling, and
+retain the raw argument's source position and expansion chain alongside the
+invocation. Reject empty or multi-token arguments; numeric, string, and
+punctuation operands; multiple paste operators; paste at either end; two
+argument operands; object-like paste; and combinations with stringize.
+Other dialects continue to reject paste. No placemarker, variadic, general
+preprocessing-token concatenation, or arbitrary retokenization is claimed.
+Tests cover raw-versus-preexpanded spelling, rescan, each rejected shape,
+provenance, and tight budgets through the generic engine and rooted C path.
+
+
+## 12. Bounded C identifier-suffix paste stage
+
+Extend the single-paste function-like macro subset with the symmetric shape
+`<parameter> ## <literal identifier>`. Keep the existing prefix shape.
+Exactly one operand must be a parameter; its argument must contain exactly
+one raw identifier token. The literal operand must be an identifier that is
+not a parameter. Concatenate in source order and accept only a C `NAME`,
+excluding keywords. With `#define NAME tail`, `#define NAMEpost 7`, and
+`#define SUFFIX(x) x ## post`, `SUFFIX(NAME)` emits `7` after rescan.
+The parameter is not pre-expanded when used only next to paste. A separate
+plain occurrence still uses its pre-expanded value. This implements the
+preceded-or-followed rule in WG14 N843 sections 6.10.3.1 and 6.10.3.3:
+<https://www.open-std.org/jtc1/sc22/wg14/www/docs/n843.htm>.
+
+Resolve the raw operand without cloning it, project token and spelling bytes
+before invoking the dialect hook, charge aggregate synthesized bytes, and
+validate the returned token's type and exact concatenated spelling. Preserve
+the raw argument's physical locus and expansion chain, including forwarded
+arguments. Retain hide sets and ordinary rescan; a pasted self-name must not
+re-expand recursively. No new bound or dialect-specific policy belongs in
+the engine. Non-C dialects continue to decline the hook.
+
+Empty/multi-token, numeric, string, punctuation, and keyword-forming operands
+remain rejected. Two parameters, two literal operands, object-like paste,
+multiple paste operators, edge operators, and stringize combinations remain
+unsupported. Placemarker, variadic, and arbitrary-token paste remain pending.
+
+## 13. Bounded C hexadecimal integer stringize stage
+
+Extend the single raw-token stringize subset with unsuffixed hexadecimal
+integer spellings matching `0[xX][0-9a-fA-F]+`. The C compiled lexer already
+recognizes these as integer tokens. Preserve their exact prefix case, digit
+case and leading hexadecimal zeroes: `S(0X00aF)` produces `"0X00aF"`, without
+parsing the numeric value or imposing an integer-width limit. Decimal and
+identifier stringization retain their existing behavior. C's named `INT_LIT`
+tokens use the shared lexer's `Name` fallback with a grammar-kind override;
+recognize that kind for both the newly admitted hex spellings and the already
+declared plain-decimal subset. A source plain decimal must not be refused merely
+because it carries this named-token representation.
+
+The generic engine continues to supply raw arguments at `#` and pre-expanded
+arguments at plain parameter occurrences. Thus `S(H)` preserves `H`, while
+an indirection macro forwarding `H` after expansion can stringize its hex
+replacement. This follows the existing raw-argument rule described by
+[GCC's stringizing documentation](https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html).
+
+The dialect admits ASCII hex digits only. Empty hex bodies, integer suffixes,
+floating-point spellings, octal-style decimal spellings, signs, multi-token
+arguments and quoted literals remain outside this subset. No literal escaping
+or whitespace collapse is added. Existing generic projection and precharge
+checks still bound the raw spelling plus two quote bytes, aggregate synthesized
+text, produced tokens and expansion work before construction. Direct and
+forwarded source loci and expansion ancestry must be preserved. Acceptance,
+refusal, exact/over-limit spelling and text boundaries, and rooted lowering
+with independently executed native C/emitted output must cover this extension.
+Tests cover suffix raw/plain use, rescan and self-name termination, direct and
+forwarded provenance, pre-hook budget rejection, invalid hook results, explicit
+unsupported shapes, and rooted C success/error locations.
+
+## 14. Bounded C octal integer stringize stage
+
+Extend the single raw-token stringize subset with unsuffixed octal integer
+spellings matching `0[0-7]+`. Preserve every leading zero and digit exactly:
+`S(00047)` produces `"00047"`. This supersedes the octal stringize refusal
+in the earlier stages; decimal, hex and identifier behavior is retained.
+Recognize source named `INT_LIT` tokens and generic Number tokens, validate
+ASCII spelling, and perform no numeric conversion or machine-width check.
+Octal `#if` evaluation remains outside the decimal condition handoff.
+
+Keep raw arguments at `#`, separately pre-expanded plain occurrences and
+forwarded expansion ancestry, as described by
+[GCC's stringizing documentation](https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html).
+With `#define O 00721`, `S(O)` yields `"O"` while an outer forwarding macro
+can produce `"00721"`. The generic engine remains unchanged and precharges
+the raw spelling plus two quotes before constructing the result.
+
+Reject spellings containing 8 or 9 after a leading zero, suffixes, floats,
+binary forms, signs, multiple tokens and quoted literals. Broader literal
+escaping, whitespace collapse, token paste and full C `#if` remain pending.
+Cover source acceptance/refusal, raw/plain/forwarded provenance, exact and
+over-limit spelling/text bounds, cumulative charges and the default 64 KiB
+result boundary without argument pre-expansion. A rooted local-header fixture
+must reach lowering and compare independently executed native C, emitted C
+and emitted Ruby output bytes when those oracle tools are available.

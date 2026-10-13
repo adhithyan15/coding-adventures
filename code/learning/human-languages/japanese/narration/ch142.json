@@ -152,8 +152,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C142-chuui-type",
-              "prompt": "Type the Japanese for 'caution (on a sign)'.",
+              "prompt": "Say the Japanese for 'caution (on a sign)'.",
               "assesses": [
                 "JA-LEX-C142-CHUUI"
               ],
@@ -310,8 +311,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C142-kinen-type",
-              "prompt": "Type the Japanese for 'no smoking (on a sign)'.",
+              "prompt": "Say the Japanese for 'no smoking (on a sign)'.",
               "assesses": [
                 "JA-LEX-C142-KINEN"
               ],
@@ -476,8 +478,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C142-uketsuke-type",
-              "prompt": "Type the Japanese for 'reception'.",
+              "prompt": "Say the Japanese for 'reception'.",
               "assesses": [
                 "JA-LEX-C142-UKETSUKE"
               ],
@@ -646,8 +649,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C142-eigyouchuu-type",
-              "prompt": "Type the Japanese for 'open, on a shop door'.",
+              "prompt": "Say the Japanese for 'open, on a shop door'.",
               "assesses": [
                 "JA-LEX-C142-EIGYOUCHUU"
               ],
@@ -822,8 +826,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C142-junbichuu-type",
-              "prompt": "Type the Japanese for 'not yet open, on a shop door'.",
+              "prompt": "Say the Japanese for 'not yet open, on a shop door'.",
               "assesses": [
                 "JA-LEX-C142-JUNBICHUU"
               ],
@@ -987,8 +992,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R142-first-pass-my-day-no-and-the-past-type",
-              "prompt": "Type the Japanese for 'I get up', politely.",
+              "prompt": "Say the Japanese for 'I get up', politely.",
               "assesses": [
                 "JA-LEX-C138-OKIMASU"
               ],
@@ -1136,8 +1142,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R142-second-pass-the-future-and-notices-type",
-              "prompt": "Type the Japanese for 'reception', as it appears on a sign.",
+              "prompt": "Say the Japanese for 'reception', as it appears on a sign.",
               "assesses": [
                 "JA-LEX-C142-UKETSUKE"
               ],

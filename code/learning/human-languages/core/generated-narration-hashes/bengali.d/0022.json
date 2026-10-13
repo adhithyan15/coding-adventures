@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 22,
-  "sourceHash": "fnv1a64:ffeee9a065ba816a",
+  "sourceHash": "fnv1a64:201005a28b8a4baf",
   "lessonIds": [
     "BN-C13-doya-kore",
     "BN-C13-dukkhito",
@@ -9,10 +9,10 @@
     "BN-C13-sbagotom"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch22.txt",
   "json": "bengali/narration/ch22.json",
-  "textHash": "fnv1a64:f0919d3dd249945d",
-  "jsonHash": "fnv1a64:cc9870531e9de847",
+  "textHash": "fnv1a64:f48d5ab482b55cc9",
+  "jsonHash": "fnv1a64:1a4cc0f27689c009",
   "findings": []
 }

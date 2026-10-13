@@ -13,7 +13,8 @@ gloss: "a rope"
 concept_tag: FR-CHOSES202-CORDE
 prerequisites: [FR-C202-brique, FR-C202-sachet]
 sounds: []
-roots: []
+roots: [chorda-latin]
+etymology_hook: "corde ← Latin chorda 'a string of gut', from Greek chorde — English cord and chord"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C202-sachet]
 <!-- hl-knowledge: introduces=[FR-LEX-C202-CHOSES202-05]; assesses=[] -->
 
 **la corde** — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corde** ← Old French *corde* ← Latin *chorda*, "a string of gut", from Greek *chorde* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

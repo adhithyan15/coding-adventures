@@ -13,7 +13,8 @@ gloss: "light (not heavy)"
 concept_tag: FR-ADJ45-LEGER
 prerequisites: [FR-C93-gros, FR-C93-lourd]
 sounds: []
-roots: []
+roots: [levis-latin]
+etymology_hook: "léger ← Vulgar Latin *leviarius, from levis 'light' — English levity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C93-lourd]
 <!-- hl-knowledge: introduces=[FR-LEX-C93-ADJ45-04]; assesses=[] -->
 
 **léger** — "light (not heavy)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**léger** ← Vulgar Latin *\*leviarius*, from Latin *levis*, "light" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an egg"
 concept_tag: IT-DISPENSA-UOVO
 prerequisites: [IT-C55-riso, IT-C55-formaggio]
 sounds: []
-roots: []
+roots: [ovum-latin]
+etymology_hook: "uovo ← Latin ovum 'egg' — English oval shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C55-formaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C55-DISPENSA-05]; assesses=[] -->
 
 **l'uovo** — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uovo** ← Latin *ovum*, "egg" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

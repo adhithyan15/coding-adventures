@@ -13,7 +13,8 @@ gloss: "the stomach"
 concept_tag: PT-CORPO4-ESTOMAGO
 prerequisites: [PT-C33-queixo, PT-C33-garganta]
 sounds: []
-roots: []
+roots: [stomachus-latin]
+etymology_hook: "estômago ← Latin stomachus, from Greek stoma 'mouth' — English stomach is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C33-garganta]
 <!-- hl-knowledge: introduces=[PT-LEX-C33-CORPO4-05]; assesses=[] -->
 
 **o estômago** — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estômago** ← Latin *stomachus*, "stomach" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *stomachos*, from *stoma*, "mouth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

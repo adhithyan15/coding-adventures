@@ -13,7 +13,8 @@ gloss: "to pretend"
 concept_tag: IT-VERB-FINGERE
 prerequisites: [IT-C208-aumentare, IT-C208-diminuire]
 sounds: []
-roots: []
+roots: [fingere-latin]
+etymology_hook: "fingere ← Latin fingere 'to shape, to feign' — English feign and fiction share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C208-diminuire]
 <!-- hl-knowledge: introduces=[IT-LEX-C209-VERBI209-01]; assesses=[] -->
 
 **fingere** — "to pretend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fingere** ← Latin *fingere*, "to shape, to feign" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

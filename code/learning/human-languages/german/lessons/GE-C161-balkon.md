@@ -14,6 +14,7 @@ concept_tag: GE-THING161-BALKON
 prerequisites: [GE-C161-schlafzimmer, GE-C161-wohnzimmer]
 sounds: []
 roots: []
+etymology_hook: "Balkon ← French balcon ← Italian balcone, from a Lombardic word for 'beam' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C161-wohnzimmer]
 <!-- hl-knowledge: introduces=[GE-LEX-C161-THING161-04]; assesses=[] -->
 
 **der Balkon** — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Balkon** ← French *balcon* ← Italian *balcone*, from a Lombardic word for "beam" (EtymDB 2.1) — borrowed, like English *balcony*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

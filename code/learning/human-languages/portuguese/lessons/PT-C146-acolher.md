@@ -13,7 +13,8 @@ gloss: "to welcome"
 concept_tag: PT-VERB-ACOLHER
 prerequisites: [PT-C146-tremer, PT-C146-votar]
 sounds: []
-roots: []
+roots: [colligere-latin]
+etymology_hook: "acolher ← Vulgar Latin *accolligere 'to gather in', from colligere — English collect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C146-votar]
 <!-- hl-knowledge: introduces=[PT-LEX-C146-VERBOS146-04]; assesses=[] -->
 
 **acolher** — "to welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acolher** ← Vulgar Latin *\*accolligere* (EtymDB 2.1), from Latin *colligere*, "to gather" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

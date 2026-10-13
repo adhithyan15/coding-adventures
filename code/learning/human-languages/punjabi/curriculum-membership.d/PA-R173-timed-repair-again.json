@@ -1,0 +1,11 @@
+{
+  "id": "PA-R173-timed-repair-again",
+  "pathSegment": "PA-PATH-173-TIMED-WRITING-RETURN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-173-TIMED-WRITING-RETURN",
+      "order": 1
+    }
+  ]
+}

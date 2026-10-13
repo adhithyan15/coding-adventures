@@ -13,7 +13,8 @@ gloss: "a bride"
 concept_tag: FR-CHOSES197-MARIEE
 prerequisites: [FR-C196-ouvrier, FR-C197-marie]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "mariée — the feminine of marié as a noun: the bride"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C197-marie]
 <!-- hl-knowledge: introduces=[FR-LEX-C197-CHOSES197-02]; assesses=[] -->
 
 **la mariée** — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mariée** — the feminine of *marié*, used as a noun: the bride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

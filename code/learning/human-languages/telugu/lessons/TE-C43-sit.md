@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [TE-LEX-COME]
+  knowledge: [TE-LEX-C32-RAA-01]
 introduces:
   knowledge: [TE-LEX-SIT]
 practises:
-  knowledge: [TE-LEX-COME, TE-LEX-SIT]
+  knowledge: [TE-LEX-C32-RAA-01, TE-LEX-SIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -31,7 +31,7 @@ reviews_of: [TE-C43-come]
 # కూర్చో (kūrcō) — sit
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01] -->
 
 [PAUSE 2s] Before the new one: what did *rā* mean?
 
@@ -48,7 +48,7 @@ A command you will hear on entering any home, usually before anything else is sa
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-COME, TE-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01, TE-LEX-SIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūrcō*]
@@ -56,6 +56,6 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 - [YOU SAY: it after *rā*, so the two sit together]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-COME, TE-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01, TE-LEX-SIT] -->
 
 [PAUSE 3s] What does కూర్చో mean? ("sit".) Say it once more.

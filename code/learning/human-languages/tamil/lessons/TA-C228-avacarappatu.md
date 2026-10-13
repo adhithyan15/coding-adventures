@@ -14,7 +14,8 @@ romanization: "avacarappaṭu"
 concept_tag: TA-VERB-AVACARAPPATU
 prerequisites: [TA-C228-molipeyar, TA-C228-rattu-cey]
 sounds: []
-roots: []
+roots: [sanskrit-avasara]
+etymology_hook: "அவசரப்படு — avacaram ← Sanskrit avasara 'occasion' (CDIAL 858) + native paṭu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C228-rattu-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C228-ACT228-04]; assesses=[] -->
 
 **அவசரப்படு** — *avacarappaṭu* — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவசரப்படு** (*avacarappaṭu*) is *avacaram*, "haste", from Sanskrit *avasara*, "occasion, opportunity" (CDIAL 858), with native *paṭu*, "to undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

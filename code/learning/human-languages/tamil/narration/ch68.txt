@@ -14,6 +14,9 @@ You'll want to know: கடை.
 Any shop at all: the tea shop, the cloth shop, the one at the end of the street. Tamil does not split the word by what is sold — a கடை (kaḍai) is a கடை (kaḍai), and what is inside it is said separately.
 It ends in the same ை as தலை and சட்டை, and it is where every garment of the last chapter came from.
 
+The word, taken apart.
+கடை (kaḍai) is native Dravidian. DEDR 1142 lists Malayalam kaṭa, "market".
+
 What you've built.
 The place the next four words happen in.
 
@@ -49,6 +52,9 @@ The number the shopkeeper says back to you.
 This one word turns a question you already own into a whole sentence. You have எவ்வளவு (evvaḷavu), "how much". Put them together and you have விலை (vilai) எவ்வளவு? — "the price, how much?"
 Notice what is not there: no verb, and no word for "is". Tamil names the thing, then asks about it, and stops.
 
+The word, taken apart.
+விலை (vilai) is native Dravidian. DEDR 5421 lists Malayalam vila and Kannada bele. It belongs with the native verb "to sell".
+
 What you've built.
 Two words, and a question you can already ask.
 
@@ -74,12 +80,13 @@ How do you ask what something costs? (விலை (vilai) எவ்வளவு
 Lesson 3 of 6.
 கடை (kaḍai) — a sign that wraps the letter.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: கடை — a sign that wraps the letter and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: கடை — a sign that wraps the letter, Guided Practice and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
 Before the page: you can already say kaḍai and vilai. Now read the first one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: கடை — a sign that wraps the letter.
 கடை (kaḍai) is as short as a Tamil word gets: two letters, one sign, nothing new.
 [a table of 2 rows, read aloud]
@@ -89,6 +96,7 @@ piece: டை, ṭai, ட with the ை sign, the same one you read at the end of
 Look at where the ை sits. It is drawn to the left of its letter but said after it, which is the habit you first met on the ே of மேலே. Two signs now, both hanging in front of the letter they belong to.
 And notice what the same two letters do without the sign: கடு, கடி and கடை (kaḍai) are three different words with the same skeleton. In Tamil the sign is not decoration.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: க — then டை — then கடை (kaḍai)]
@@ -97,6 +105,7 @@ Guided Practice.
 [your turn — recall: say kaḍai, then say vilai, then read கடை]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 [pause 3 seconds]
 Read கடை (kaḍai). On which side of ட is the ை drawn, and when is it said? (Drawn on the left; said after.)
@@ -114,6 +123,9 @@ You'll want to know: பணம்.
 பணம் (paṇam) — "money".
 Money, in the plain everyday sense — what is in your hand, not what is in a bank.
 The ண in the middle is the curled-back one, the same ண you have been saying since வணக்கம் on the very first page. And it closes with ம், the ending that finishes so many Tamil nouns: வணக்கம், தூக்கம், and now பணம் (paṇam).
+
+The word, taken apart.
+பணம் (paṇam) is a loan from Sanskrit paṇa, "a coin" (CDIAL 7715).
 
 What you've built.
 Three: the shop, the price, and what you pay it with.
@@ -151,6 +163,9 @@ The verb that makes a shop work.
 It is also the ordinary Tamil verb for receiving. Buying something and being handed something are the same act here, and one word covers both — so வாங்கு (vāṅgu) is as useful at a doorway as at a counter.
 Set it against கொடு (koṭu), "give", which you already have. One hand out, one hand in, and the pair covers most of what happens over a counter.
 
+The word, taken apart.
+வாங்கு (vāṅgu) is native Dravidian. DEDR 5336 lists Malayalam vāṅṅuka, "to take, receive".
+
 What you've built.
 Four, and now something can change hands.
 
@@ -184,6 +199,9 @@ You'll want to know: பை.
 One of the shortest words in this book: ப with the ை sign, and that is all of it.
 A பை (pai) is what everything you வாங்கு (vāṅgu) goes into. It is the last piece of the shop, and the one you carry home.
 Five words now stand in a row you can walk through in order: the கடை (kaḍai) you go to, the விலை (vilai) you ask for, the பணம் (paṇam) you hand over, the வாங்கு (vāṅgu) that does it, and the பை (pai) it all leaves in.
+
+The word, taken apart.
+பை (pai) is native Dravidian. DEDR 4450 lists Malayalam pai.
 
 What you've built.
 Five, and the shop is closed.

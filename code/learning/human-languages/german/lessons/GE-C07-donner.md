@@ -13,7 +13,7 @@ sounds: [vowel-o, r-uvular-german]
 roots: [germanic-thunraz]
 etymology_hook: "Donner is English thunder with the sound shift applied, and it is also the god Donar — the Norse called him Thor, so the weather and the god are one word"
 duration:
-  max_seconds: 155
+  max_seconds: 157
 requires:
   knowledge: [GE-LEX-DIENSTAG-01, GE-GRAMMAR-SOUND-LAW-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -49,6 +49,11 @@ put a *d* there, and you have most of the German word already.
 
 This is the second time that rule has paid, and it will keep paying: German
 *d* answers English *th* right across the vocabulary.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Donner** ← Middle High German *doner* (EtymDB 2.1), from Proto-Germanic *\*þunraz*, "thunder" — inherited, the same word as English *thunder* and the god's name *Thor*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DONNER-01] -->

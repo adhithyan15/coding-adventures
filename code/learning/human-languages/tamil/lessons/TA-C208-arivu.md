@@ -14,7 +14,8 @@ romanization: "aṟivu"
 concept_tag: TA-KARANAM208-ARIVU
 prerequisites: [TA-C207-potuvaka, TA-C207-valakkamaka]
 sounds: []
-roots: []
+roots: [dravidian-ari-know]
+etymology_hook: "அறிவு — native Dravidian (DEDR 314); Malayalam aṟivu 'knowledge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C207-valakkamaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C208-KARANAM208-01]; assesses=[] -->
 
 **அறிவு** — *aṟivu* — "knowledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அறிவு** (*aṟivu*) is native Dravidian. DEDR 314 lists Malayalam *aṟivu*, "knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

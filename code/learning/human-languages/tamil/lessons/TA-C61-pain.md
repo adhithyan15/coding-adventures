@@ -11,7 +11,8 @@ romanization: "vali"
 concept_tag: TA-NOUN-PAIN
 prerequisites: [TA-C61-fever, TA-C59-sugar, TA-C60-comb]
 sounds: []
-roots: []
+roots: [dravidian-vali-pain]
+etymology_hook: "வலி — native Dravidian (DEDR 5281); Malayalam valayuka 'to be distressed'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C61-fever]
 Pain, plainly: the ache itself, wherever it sits. Kannada says ನೋವು (*nōvu*). Put it with what you already have for the body and it does its work at once — a வலி in the முதுகு, a வலி in the பல்.
 
 Keep it away from *vaḻi*, the way or the route, which came up beside பாதை. வலி takes the plain ல; *vaḻi* takes the ழ you learned to curl the tongue back for. Two letters English would spell alike, and Tamil holds them apart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வலி** (*vali*) is native Dravidian. DEDR 5281 lists Malayalam *valayuka*, "to be distressed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

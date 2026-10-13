@@ -709,6 +709,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-concordancia-why-buenos",
               "prompt": "Why does bueno become buenos in buenos dias?",
               "assesses": [
@@ -729,6 +730,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-concordancia-why-buenas",
               "prompt": "And why buenas in buenas tardes?",
               "assesses": [

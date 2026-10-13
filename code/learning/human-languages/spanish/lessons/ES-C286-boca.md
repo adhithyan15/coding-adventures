@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-C286-BODY-02]
 practises:
-  knowledge: [ES-LEX-C285-ROLE-05, ES-LEX-C286-BODY-01, ES-LEX-C286-BODY-02]
+  knowledge: [ES-LEX-C285-ROLE-05, ES-LEX-C286-BODY-01, ES-LEX-C286-BODY-02, ES-ETYMON-CABEZA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,7 +49,7 @@ is the cousin.)
   [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-C286-BODY-02]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-C286-BODY-02]; assesses=[ES-ETYMON-CABEZA-02] -->
 
 **la boca** — "the mouth."
 

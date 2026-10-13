@@ -4,18 +4,21 @@
     "language": "spanish",
     "chapter": 1,
     "sequence": 10,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7a030311d9732cc3"
+    "sourceHash": "fnv1a64:a935d4f58f0a4d38",
+    "detachableSegments": [
+      "Writing — trace the silent h"
+    ]
   },
   "findings": []
 }

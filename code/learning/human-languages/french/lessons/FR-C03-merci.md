@@ -8,7 +8,7 @@ type: word
 headword: merci
 gloss: thank you
 concept_tag: COURTESY-THANKS
-prerequisites: []
+prerequisites: [FR-C02-practice]
 sounds: [r-uvular]
 roots: [merces-latin]
 etymology_hook: "merci ← Latin mercēs 'wages, reward, price' → English mercy, mercenary, merchant, commerce"
@@ -93,4 +93,4 @@ Same feeling, three metaphors — this is exactly the kind of thing worth
 [PAUSE 3s] What everyday English word is *merci* a cousin of? (*Mercy*.) And its
 "trade" cousins? (Merchant, commerce, market, mercenary.) How does its metaphor
 differ from Spanish *gracias*? (*merci* = reward/mercy; *gracias* = grace.) Next:
-the reply — **de rien**.
+the reply to a thank-you.

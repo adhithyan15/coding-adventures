@@ -14,7 +14,8 @@ romanization: "matiya uṇavu"
 concept_tag: TA-PORUL184-MATIYA-UNAVU
 prerequisites: [TA-C184-panikkatti, TA-C184-kalai-unavu]
 sounds: []
-roots: []
+roots: [sanskrit-madhya-middle, dravidian-un-eat]
+etymology_hook: "மதிய உணவு — matiyam 'noon' ← Sanskrit madhya 'middle' (CDIAL 9804) + native uṇavu 'food' (DEDR 600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C184-kalai-unavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C184-PORUL184-03]; assesses=[] -->
 
 **மதிய உணவு** — *matiya uṇavu* — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மதிய உணவு** (*matiya uṇavu*) is *matiyam*, "noon", from Sanskrit *madhya*, "middle" (CDIAL 9804), and native *uṇavu*, "food" (DEDR 600).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

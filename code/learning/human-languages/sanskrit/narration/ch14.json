@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9b2e80531be69dce",
+  "sourceHash": "fnv1a64:f3296d3861ab9a28",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b43d7ae89f88f937",
+      "sourceHash": "fnv1a64:ac93d19c12f62eaa",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत् tat, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson, and it is this same word with the e- taken off. So the e- at the front is what brings the thing near — and the last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
@@ -102,7 +102,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (a- — near.)"
+              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (e- — near.)"
             }
           ]
         }
@@ -134,7 +134,7 @@
           "Script you'll notice: ट",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ट and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ट and Guided Practice."
       },
       "blocks": [
         {
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098b4f4568bb74b7",
+      "sourceHash": "fnv1a64:3ca6d57374573553",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is एतत् etat, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is एतत् etat, which you have just met: the same word with an e- in front. Take the e- away and t- leads, and t- is far. The last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fa51570f16bb193",
+      "sourceHash": "fnv1a64:5f23ddbc8fb3c63b",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत्र tatra, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes shortly. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -529,7 +529,7 @@
           "Script you'll notice: ल",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ल and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ल and Guided Practice."
       },
       "blocks": [
         {
@@ -717,7 +717,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5772d91944b0c8e7",
+      "sourceHash": "fnv1a64:387006f629a3ac2d",
       "notice": null,
       "blocks": [
         {
@@ -752,7 +752,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is अत्र atra, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is अत्र atra, which you have just met. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:301210e249208f34",
+      "sourceHash": "fnv1a64:53767b7dfa1ef5ec",
       "notice": null,
       "blocks": [
         {
@@ -835,7 +835,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -850,11 +850,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is कुत्र kutra, which you will meet in a moment. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson, and it opens with the same k-. Sanskrit asks with k-, where the far words you know, तत् tat and तत्र tatra, open with t-. It is the same old question sound that became the qu- of Latin quis and the wh- of English who."
             }
           ]
         },
@@ -872,11 +872,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कः (kaḥ)\" three times, picturing something different each time",
+              "instruction": "\"कः (kaḥ)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कः\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कः\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -911,7 +911,7 @@
     {
       "id": "SA-S214-vowel-sign-o",
       "sequence": 641,
-      "title": "◌ो — one character, met inside words you already say",
+      "title": "◌ो (o) — one character, met inside words you already say",
       "headword": "ो",
       "romanization": "o",
       "gloss": "the single character ◌ो — recognised inside words you already say",
@@ -923,7 +923,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88d33216e9e128bb",
+      "sourceHash": "fnv1a64:e342785b2aea7569",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -934,7 +934,7 @@
           "Script you'll notice: ◌ो",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ो and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ो and Guided Practice."
       },
       "blocks": [
         {
@@ -983,11 +983,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ो = नो — no."
+              "text": "Worked through: न + ◌ो (o) = नो — no."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ो somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ो (o) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1002,15 +1002,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ो — copy what you see",
+          "title": "Writing: ◌ो — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ो and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ो (o) yourself — slowly, and larger than it is printed. The short bar on top stays grey in the strip: in a word it is part of the headline, which you draw last, once, across the whole word."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1050,7 +1050,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ो once more",
+              "instruction": "back at any page of this chapter and find ◌ो (o) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1090,7 +1090,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1643a5b851914084",
+      "sourceHash": "fnv1a64:48df1e0e9b532c12",
       "notice": null,
       "blocks": [
         {
@@ -1106,7 +1106,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -1121,11 +1121,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is कः kaḥ, which you will meet just now. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is कः kaḥ, which you have just met: both open with k-, the asking sound. Its other partners, अत्र atra and तत्र tatra, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -1143,11 +1143,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कुत्र (kutra)\" three times, picturing something different each time",
+              "instruction": "\"कुत्र (kutra)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कुत्र\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कुत्र\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -1192,7 +1192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75112cae5f05dd92",
+      "sourceHash": "fnv1a64:0a9f7b684e4e92c2",
       "notice": null,
       "blocks": [
         {
@@ -1219,7 +1219,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You did not learn six words. You learned three beginnings and reused them."
+              "text": "You did not learn six unrelated words. Five of them hang on three beginnings; the sixth, etat, is tat with an e- in front."
             },
             {
               "kind": "table",
@@ -1245,7 +1245,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same three beginnings run the thing-words too: एतत् etat and तत् tat start exactly like the first two rows. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
+              "text": "The thing-words share one of these beginnings, not both: तत् tat starts with the far t- of tatra, but एतत् etat does not start with a-. It is tat with an e- in front: \"that one\", brought near. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
             },
             {
               "kind": "speech",
@@ -1306,7 +1306,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which beginning means near? (a-) Far? (t-) And which one turns the word into a question? (k-)."
+              "text": "For places, which beginning means near? (a-, atra) Far? (t-) And which one turns the word into a question? (k-)."
             }
           ]
         }
@@ -1338,7 +1338,7 @@
           "Script you'll notice: थ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: थ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: थ and Guided Practice."
       },
       "blocks": [
         {
@@ -1354,7 +1354,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: ट (ṭa), ल (la), ◌ो. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: ट (ṭa), ल (la), ◌ो (o). Say what each of them does."
             },
             {
               "kind": "pause",

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-FACHER
 prerequisites: [FR-C146-ennuyer, FR-C146-amuser]
 sounds: []
 roots: []
+etymology_hook: "se fâcher — origin uncertain, usually traced to Latin fastidium 'disgust'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C146-amuser]
 <!-- hl-knowledge: introduces=[FR-LEX-C146-VERBES146-03]; assesses=[] -->
 
 **se fâcher** — "to get angry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se fâcher** — its origin is uncertain; the usual account derives it from Vulgar Latin *\*fasticare*, built on Latin *fastidium*, "disgust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

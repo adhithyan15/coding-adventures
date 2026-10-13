@@ -33,25 +33,27 @@ reviews_of: [TE-C41-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-03, TE-LEX-C41-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ఎవరు
 <!-- hl-knowledge: introduces=[TE-LEX-C41-DEIXIS-05]; assesses=[] -->
 
 **ఎవరు** — *evaru* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **ఎక్కడ** *ekkaḍa*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the question word for place, comes in the next lesson, and it
+opens with the same **e-**. That is the pattern: the near words you know open
+with **i-** (**ఇది** *idi*, **ఇక్కడ** *ikkaḍa*), the far ones with **a-** (**అది**
+*adi*, **అక్కడ** *akkaḍa*), and the asking words with **e-**. The last lesson
+of this chapter lays it out.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ఎవరు" three times, picturing something different each time]
+- [YOU SAY: "ఎవరు" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

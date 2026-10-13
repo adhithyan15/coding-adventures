@@ -9,9 +9,13 @@
   "payoff": {
     "lesson": "HI-C06-paanch-nasal",
     "kind": "task",
-    "summary": "Say पाँच beside Sanskrit pañca and point to the moon-dot that is all that survives of the lost nasal consonant.",
+    "summary": "Count एक to पाँच, trace तीन and चार back through the Prakrits to neuter Sanskrit forms, then say पाँच beside pañca and point to the moon-dot that is all that survives of the lost nasal consonant.",
     "assesses": [
+      "HI-CONCEPT-C06-NUMBERS-1-5-01",
+      "HI-CONCEPT-C06-TIN-CHAR-HISTORY-01",
+      "HI-CONCEPT-C06-TIN-CHAR-HISTORY-02",
       "HI-CONCEPT-C06-PAANCH-NASAL-01"
-    ]
+    ],
+    "note": "HI-C06-paanch-nasal is the chapter's last speaking lesson and now recalls the five numbers and the tīn/chār weight trade as well as its own nasal story: 4 of the chapter's 6 atoms. The other two are one-character recognition segments (HI-S01-letter-ma, HI-S110-letter-ra, sequence 485-486) that come after the payoff in reading order, so it cannot honestly assess them, and neither later segment is a closing lesson for the chapter."
   }
 }

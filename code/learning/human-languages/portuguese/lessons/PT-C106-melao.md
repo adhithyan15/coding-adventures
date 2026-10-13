@@ -13,7 +13,8 @@ gloss: "a melon"
 concept_tag: PT-COMIDA106-MELAO
 prerequisites: [PT-C105-morango, PT-C106-cereja]
 sounds: []
-roots: []
+roots: [melo-latin]
+etymology_hook: "melão ← Late Latin melo, short for Greek melopepon 'apple-melon' — English melon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C106-cereja]
 <!-- hl-knowledge: introduces=[PT-LEX-C106-COMIDA106-02]; assesses=[] -->
 
 **o melão** — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**melão** ← Late Latin *melo, melonis*, "melon" (EtymDB 2.1) — inherited. It is short for Greek *mēlopepōn*, "apple-melon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

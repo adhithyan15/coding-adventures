@@ -13,7 +13,8 @@ gloss: "a steak"
 concept_tag: PT-COMIDA108-BIFE
 prerequisites: [PT-C108-iogurte, PT-C108-gelado]
 sounds: []
-roots: []
+roots: [bos-latin]
+etymology_hook: "bife ← English beef, from French bœuf, from Latin bos 'ox'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C108-gelado]
 <!-- hl-knowledge: introduces=[PT-LEX-C108-COMIDA108-03]; assesses=[] -->
 
 **o bife** — "a steak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bife** ← English *beef*, "beef" (EtymDB 2.1) — borrowed. English took it from French *bœuf*, from Latin *bos*, "ox".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

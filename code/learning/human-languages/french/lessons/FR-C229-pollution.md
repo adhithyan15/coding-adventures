@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES229-POLLUTION
 prerequisites: [FR-C229-climat, FR-C229-environnement]
 sounds: []
 roots: []
+etymology_hook: "pollution ← Latin pollutio 'a defiling' — English pollution"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C229-environnement]
 <!-- hl-knowledge: introduces=[FR-LEX-C229-CHOSES229-05]; assesses=[] -->
 
 **la pollution** — "pollution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pollution** ← Latin *pollutio*, "a defiling" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

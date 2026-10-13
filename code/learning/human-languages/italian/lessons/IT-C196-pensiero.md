@@ -14,6 +14,7 @@ concept_tag: IT-COSE196-PENSIERO
 prerequisites: [IT-C195-turista, IT-C196-esperienza]
 sounds: []
 roots: []
+etymology_hook: "pensiero — from pensare 'to think', through Old Provençal pensier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C196-esperienza]
 <!-- hl-knowledge: introduces=[IT-LEX-C196-COSE196-02]; assesses=[] -->
 
 **il pensiero** — "a thought".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pensiero** — built on *pensare*, "to think", but it came into Italian from Old Provençal *pensier*, as its *-iero* shows. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

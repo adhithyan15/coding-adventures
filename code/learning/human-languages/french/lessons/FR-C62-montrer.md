@@ -13,7 +13,8 @@ gloss: "to show"
 concept_tag: FR-VERB-MONTRER
 prerequisites: [FR-C62-payer, FR-C62-utiliser]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "montrer ← Latin monstrare 'to show' — English demonstrate and muster share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C62-utiliser]
 <!-- hl-knowledge: introduces=[FR-LEX-C62-VERBES14-05]; assesses=[] -->
 
 **montrer** — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montrer** ← Old French *monstrer* ← Latin *monstrare*, "to show", from *monere*, "to warn, to remind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

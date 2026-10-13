@@ -14,6 +14,7 @@ concept_tag: GE-THING236-REIHE
 prerequisites: [GE-C236-qualitaet, GE-C236-rede]
 sounds: []
 roots: []
+etymology_hook: "Reihe ← Middle High German rīhe 'row, line' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C236-rede]
 <!-- hl-knowledge: introduces=[GE-LEX-C236-THING236-04]; assesses=[] -->
 
 **die Reihe** — "a row, a turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Reihe** ← Middle High German *rīhe*, "row, line" (EtymDB 2.1) — inherited. Your turn is your place in the row.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

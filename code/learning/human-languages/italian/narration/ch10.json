@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:19dbcedcb0ef5c37",
+  "sourceHash": "fnv1a64:7480005b80d6c340",
   "lessons": [
     {
       "id": "IT-C10-genitori",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8076eaa79a5dacfc",
+      "sourceHash": "fnv1a64:00495ac966031b76",
       "notice": null,
       "blocks": [
         {
@@ -130,7 +130,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with articles. (il padre, la madre.) What single sound did Latin pater/māter soften to? (The -t- became -d-.) What does genitori literally mean, and name an English cousin. (\"The begetters\"; genesis/gene/progenitor.) What does the false friend parenti mean? (Relatives, not parents.) Next: fratello and sorella."
+              "text": "Give \"father\" and \"mother\" with articles. (il padre, la madre.) What single sound did Latin pater/māter soften to? (The -t- became -d-.) What does genitori literally mean, and name an English cousin. (\"The begetters\"; genesis/gene/progenitor.) What does the false friend parenti mean? (Relatives, not parents.) Next: brother and sister."
             }
           ]
         }

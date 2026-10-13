@@ -14,7 +14,8 @@ romanization: "kaṭavuḷ"
 concept_tag: TA-PORUL274-KATAVUL
 prerequisites: [TA-C274-patal, TA-C274-katai]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "கடவுள் — native: DEDR 1109 lists it under kaṭa 'to pass beyond': 'the one who transcends'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C274-katai]
 <!-- hl-knowledge: introduces=[TA-LEX-C274-PORUL274-04]; assesses=[] -->
 
 **கடவுள்** — *kaṭavuḷ* — "God, a god".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடவுள்** (*kaṭavuḷ*) is native: DEDR 1109 lists it under *kaṭa*, "to pass beyond", glossing it "god (who transcends speech and mind)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

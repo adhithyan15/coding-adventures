@@ -14,7 +14,8 @@ romanization: "uruṭṭu"
 concept_tag: TA-VERB-URUTTU
 prerequisites: [TA-C167-ottu, TA-C167-tonku]
 sounds: []
-roots: []
+roots: [dravidian-urul-roll]
+etymology_hook: "உருட்டு — native Dravidian (DEDR 664); Malayalam uruḷuka 'to roll'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C167-tonku]
 <!-- hl-knowledge: introduces=[TA-LEX-C167-ACT167-05]; assesses=[] -->
 
 **உருட்டு** — *uruṭṭu* — "to roll (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உருட்டு** (*uruṭṭu*) is native Dravidian. DEDR 664 lists Malayalam *uruḷuka*, "to roll". It is the causative of *uruḷ*, "to roll".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

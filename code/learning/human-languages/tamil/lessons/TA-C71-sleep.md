@@ -11,7 +11,8 @@ romanization: "tūṅgu"
 concept_tag: TA-VERB-TUUNGU
 prerequisites: [TA-C71-rise, TA-C69-bus, TA-C70-bed]
 sounds: []
-roots: []
+roots: [dravidian-tuunku-hang-sleep]
+etymology_hook: "தூங்கு — native Dravidian (DEDR 3376); Malayalam tūṅṅuka, Kannada tūgu"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ again and again, and once you can hear it you get two words for the price of one
 தூக்கம் sits still, and the verb தூங்கு does something.
 
 Its **ங்க** is the same nasal-plus-க you say inside வாங்கு.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தூங்கு** (*tūṅgu*) is native Dravidian. DEDR 3376 lists Malayalam *tūṅṅuka* and Kannada *tūgu*. The verb first meant "to hang, to droop": sleep is the head drooping.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -106,6 +106,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Count to five. (Eins, zwei, drei, vier, fünf.) Now backwards. (Fünf, vier, drei, zwei, eins.) Which of the five is borrowed from Latin? (None of them.)
+[pause 2 seconds]
+And the two dots on fünf: what letter are they a flattened ghost of? (An e — which is why fünf can be typed fuenf.)
 
 
 Lesson 4 of 4.
@@ -124,6 +126,9 @@ The word takes: das. So "a" is: ein.
 The word takes: die. So "a" is: eine.
 Two of the three groups share one form, so there is really only one thing to remember: die words take the extra -e. On the two nouns inside guten Tag and gute Nacht:
 der Tag becomes ein Tag, "a day", die Nacht becomes eine Nacht, "a night".
+
+The word, taken apart.
+ein from Old High German ein from Proto-Germanic ainaz, "one" — inherited, the same word as English one, and English a, an wore down from it too. (EtymDB 2.1).
 
 Grammar Lens: the counting -s drops.
 Counting form: eins. In front of a naming word: ein / eine. The -s belongs to counting and to nothing else.

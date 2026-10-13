@@ -13,7 +13,8 @@ gloss: "dirty"
 concept_tag: PT-ADJ6-SUJO
 prerequisites: [PT-C69-doce, PT-C69-limpo]
 sounds: []
-roots: []
+roots: [sucus-latin]
+etymology_hook: "sujo ← Latin sucidus 'juicy, greasy', from sucus 'juice'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C69-limpo]
 <!-- hl-knowledge: introduces=[PT-LEX-C69-ADJ6-05]; assesses=[] -->
 
 **sujo** — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sujo** ← Latin *sucidus*, "juicy, greasy" (EtymDB 2.1), from *sucus*, "juice" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

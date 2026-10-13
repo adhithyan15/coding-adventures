@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 187,
-  "sourceHash": "fnv1a64:bf4e897a8acd5619",
+  "sourceHash": "fnv1a64:03932e8120b4b231",
   "lessonIds": [
     "PT-C187-trabalhador-trabalhadora",
     "PT-C187-falador-faladora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch187.txt",
   "json": "portuguese/narration/ch187.json",
-  "textHash": "fnv1a64:9f884fac7fc2faca",
-  "jsonHash": "fnv1a64:44afc24fcfc441e3",
+  "textHash": "fnv1a64:6362482db4aabeb7",
+  "jsonHash": "fnv1a64:a6dd5661ad33a757",
   "findings": []
 }

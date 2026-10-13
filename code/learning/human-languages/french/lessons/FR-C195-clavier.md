@@ -13,7 +13,8 @@ gloss: "a keyboard"
 concept_tag: FR-CHOSES195-CLAVIER
 prerequisites: [FR-C195-publicite, FR-C195-ecran]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "clavier — from Latin clavis 'key', the Latin of clé: a row of keys"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C195-ecran]
 <!-- hl-knowledge: introduces=[FR-LEX-C195-CHOSES195-05]; assesses=[] -->
 
 **le clavier** — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clavier** — built from Latin *clavis*, "key", the Latin of *clé*, with *-ier*: a row of keys. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

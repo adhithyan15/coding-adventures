@@ -176,8 +176,8 @@ export const SCRIPTS: ScriptData[] = [
  * Resolve a cited letter back to the exact canonical script font that owns it.
  *
  * A script's own digits count as letters here: a digit row that carries a
- * `strokeOrderSource` (Kannada ೧-೯) is held to its font exactly as a letter
- * is, and a digit row without one resolves to nothing.
+ * `strokeOrderSource` (Kannada ೧-೯, Malayalam ൧-൯) is held to its font
+ * exactly as a letter is, and a digit row without one resolves to nothing.
  */
 export function verifiedLetterFont(
   glyph: string,

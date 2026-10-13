@@ -1,0 +1,11 @@
+{
+  "id": "SA-W65-a1-timed-production",
+  "pathSegment": "SA-PATH-64-READING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-064-READING",
+      "order": 4
+    }
+  ]
+}

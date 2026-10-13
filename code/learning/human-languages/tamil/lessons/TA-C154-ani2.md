@@ -14,7 +14,8 @@ romanization: "aṇi"
 concept_tag: TA-VERB-ANI2
 prerequisites: [TA-C153-cer, TA-C153-kuli]
 sounds: []
-roots: []
+roots: [dravidian-ani-adorn]
+etymology_hook: "அணி — native Dravidian (DEDR 116); Malayalam aṇiyuka 'to wear (jewels)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C153-kuli]
 <!-- hl-knowledge: introduces=[TA-LEX-C154-ACT154-01]; assesses=[] -->
 
 **அணி** — *aṇi* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அணி** (*aṇi*) is native Dravidian. DEDR 116 lists Malayalam *aṇiyuka*, "to wear (jewels)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

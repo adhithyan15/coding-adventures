@@ -13,7 +13,8 @@ gloss: "a husband"
 concept_tag: PT-FAMILIA1-MARIDO
 prerequisites: [PT-C37-avo-m, PT-C37-avo-f]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "marido ← Latin maritus 'husband' — English marital shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C37-avo-f]
 <!-- hl-knowledge: introduces=[PT-LEX-C37-FAMILIA1-04]; assesses=[] -->
 
 **o marido** — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marido** ← Latin *maritus*, "husband" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-COMMENCER
 prerequisites: [FR-C136-quatre-vingt-dix, FR-C136-mille]
 sounds: []
 roots: []
+etymology_hook: "commencer ← Vulgar Latin *cominitiare, from initiare 'to begin' — English commence"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C136-mille]
 <!-- hl-knowledge: introduces=[FR-LEX-C137-VERBES89-01]; assesses=[] -->
 
 **commencer** — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commencer** ← Old French *comencier* ← Vulgar Latin *\*cominitiare*, from *com-* and Latin *initiare*, "to begin" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE231-SCONFITTA
 prerequisites: [IT-C230-seta, IT-C231-vittoria]
 sounds: []
 roots: []
+etymology_hook: "sconfitta — from sconfiggere 'to defeat', modelled on Old French desconfire — English discomfit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C231-vittoria]
 <!-- hl-knowledge: introduces=[IT-LEX-C231-COSE231-02]; assesses=[] -->
 
 **la sconfitta** — "a defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sconfitta** is the past participle of *sconfiggere*, "to defeat", used as a noun. The verb is modelled on Old French *desconfire*, "to undo, to rout". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

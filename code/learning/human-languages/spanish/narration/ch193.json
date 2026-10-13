@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-que-say",
               "prompt": "Say you have to speak Spanish, without naming anybody.",
               "assesses": [
@@ -127,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-que-form",
               "prompt": "What form of the verb follows hay que?",
               "assesses": [
@@ -147,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-que-pair",
               "prompt": "Name the other Spanish construction that leaves the person out.",
               "assesses": [

@@ -11,15 +11,16 @@ romanization: "uṭkār"
 concept_tag: TA-VERB-SIT
 prerequisites: [TA-C42-come]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside]
+etymology_hook: "உட்கார் — probably uḷ 'inside' (DEDR 698) + a verb; DEDR has no entry for it, so its origin is uncertain"
 duration:
   max_seconds: 210
 requires:
-  knowledge: [TA-LEX-COME]
+  knowledge: [TA-LEX-VAA-01]
 introduces:
   knowledge: [TA-LEX-SIT]
 practises:
-  knowledge: [TA-LEX-COME, TA-LEX-SIT]
+  knowledge: [TA-LEX-VAA-01, TA-LEX-SIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -31,7 +32,7 @@ reviews_of: [TA-C42-come]
 # உட்கார் (uṭkār) — sit
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01] -->
 
 [PAUSE 2s] Before the new one: what did *vā* mean?
 
@@ -42,13 +43,18 @@ reviews_of: [TA-C42-come]
 
 Built from *uḷ*, 'inside', and *kār* — to settle oneself in. Tamil often builds a verb from a place-word plus an action this way.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உட்கார்** (*uṭkār*) looks like a compound whose first part is *uḷ*, "inside", the native word for being within (DEDR 698), and it is usually taken that way. But DEDR has no entry for the verb itself, and the second part is not clear, so its origin is uncertain.
+
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME, TA-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01, TA-LEX-SIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṭkār*]
@@ -56,6 +62,6 @@ One more everyday action. Three follow, and each reuses the ones before.
 - [YOU SAY: it after *vā*, so the two sit together]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME, TA-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01, TA-LEX-SIT] -->
 
 [PAUSE 3s] What does உட்கார் mean? ("sit".) Say it once more.

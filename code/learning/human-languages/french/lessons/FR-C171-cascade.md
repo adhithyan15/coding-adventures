@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES171-CASCADE
 prerequisites: [FR-C171-volcan, FR-C171-plaine]
 sounds: []
 roots: []
+etymology_hook: "cascade ← Italian cascata, from cascare 'to fall' — English cascade"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C171-plaine]
 <!-- hl-knowledge: introduces=[FR-LEX-C171-CHOSES171-03]; assesses=[] -->
 
 **la cascade** — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cascade** ← Italian *cascata*, from *cascare*, "to fall" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

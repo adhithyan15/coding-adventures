@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 173,
-  "sourceHash": "fnv1a64:68eae2d528f5ce0c",
+  "sourceHash": "fnv1a64:ec8ada78a4e80203",
   "lessonIds": [
     "IT-C173-geografia",
     "IT-C173-matematica",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch173.txt",
   "json": "italian/narration/ch173.json",
-  "textHash": "fnv1a64:d4bd46fe0c9906b5",
-  "jsonHash": "fnv1a64:6de7a72efdc37338",
+  "textHash": "fnv1a64:8a5e3dd01205955d",
+  "jsonHash": "fnv1a64:7afdabefe7403be4",
   "findings": []
 }

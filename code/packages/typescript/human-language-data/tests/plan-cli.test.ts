@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, afterEach } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { tmpdir } from "node:os";
@@ -11,17 +11,32 @@ import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 // presence list, the coverage measurement, and what happens when they disagree.
 
 const roots: string[] = [];
-// The cleanup states its own budget, as every case below does. Each full-corpus
-// copy is about 100,000 files, and deleting one is real filesystem work that grows
-// with every content PR. The package-wide 30s `hookTimeout` covered it until the
-// Sanskrit, Italian and French A2 tranches added some 6,000 files between them.
-// After that, the delete overran 30s on a loaded CI runner while the test it
-// followed had passed, so the hook failed even though nothing asserted wrongly.
-// The hook gets the same 120s as the cases it cleans up after. Since the copy
-// below stopped taking the whole corpus, the hook deletes about half as much.
+// Undo for every edit a case makes to the SHARED corpus below, newest first.
+const restores: Array<() => void> = [];
+// The cleanup states its own budget, as every case below does. The package-wide
+// 30s `hookTimeout` covered the per-case corpus deletes until the Sanskrit, Italian
+// and French A2 tranches added some 6,000 files between them. After that, a delete
+// overran 30s on a loaded CI runner while the test it followed had passed, so the
+// hook failed even though nothing asserted wrongly. The hook keeps the same 120s as
+// the cases it cleans up after. It now deletes only the small inventories-only
+// fixture and rewrites at most one edited file; the full copy is deleted once, in
+// `afterAll` at the bottom of this file.
 afterEach(() => {
-  for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
-  vi.restoreAllMocks();
+  // Each step runs even if an earlier one throws, so one failed restore cannot
+  // leave the next case a corrupted copy or strand a private corpus on disk.
+  // The first error is rethrown once everything has had its turn.
+  const errors: unknown[] = [];
+  const attempt = (step: () => void) => {
+    try {
+      step();
+    } catch (error) {
+      errors.push(error);
+    }
+  };
+  for (const restore of restores.splice(0).reverse()) attempt(restore);
+  for (const root of roots.splice(0)) attempt(() => rmSync(root, { recursive: true, force: true }));
+  attempt(() => vi.restoreAllMocks());
+  if (errors.length > 0) throw errors[0];
 }, 120_000);
 
 // What the plan CLI never reads, so a case's copy can leave it behind.
@@ -57,9 +72,20 @@ function readByPlan(source: string): boolean {
   return !(parts[1] === "book" && NEVER_READ_BOOK_DIRS.has(parts[2] ?? ""));
 }
 
-function corpus(inventoriesOnly = false): string {
+function copyCorpus(inventoriesOnly: boolean): string {
   const root = mkdtempSync(join(tmpdir(), "hl-plan-"));
-  roots.push(root);
+  try {
+    copyInto(root, inventoriesOnly);
+  } catch (error) {
+    // A copy that fails partway must not leave its temp directory behind: the
+    // caller never receives the path, so no afterEach/afterAll could remove it.
+    rmSync(root, { recursive: true, force: true });
+    throw error;
+  }
+  return root;
+}
+
+function copyInto(root: string, inventoriesOnly: boolean): void {
   if (inventoriesOnly) {
     // The same NEVER_READ_* pruning applies here. core/ alone is about 26,500
     // files, and about 25,500 of them are the modality manifest and the
@@ -77,7 +103,47 @@ function corpus(inventoriesOnly = false): string {
   } else {
     cpSync(defaultCurriculumRoot(), root, { recursive: true, filter: readByPlan });
   }
+}
+
+/** A small corpus of the inventory ledgers alone, private to one case. */
+function inventoriesOnlyCorpus(): string {
+  const root = copyCorpus(true);
+  roots.push(root);
   return root;
+}
+
+// ONE pruned full-corpus copy for the whole file, made at import.
+//
+// Every case used to make its own. Each copy is about 85,000 files: some 20s to
+// copy and 9s to delete on an idle machine, which a loaded runner multiplies.
+// Four cases paid that four times over, and the first case paid it inside its own
+// 120s budget, on top of two full plan runs, which is how it came to sit near that
+// budget under contention while every assertion held.
+//
+// Nothing in this file needs a private copy. The plan only reads, so the clean
+// cases can share one. The two cases that corrupt an inventory do it through
+// `editInventory`, which records the file's exact original bytes and has
+// `afterEach` write them back, so the next case sees the clean corpus again
+// whether or not the edit's case passed. Import time carries no per-test budget;
+// see lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md.
+const sharedRoot = copyCorpus(false);
+afterAll(() => {
+  rmSync(sharedRoot, { recursive: true, force: true });
+}, 120_000);
+
+// The plan over the clean shared copy, computed at most once.
+//
+// The first case needs it at head 200 to compare against the real corpus; the
+// last case needs only its exit code, to show `--root` with a real value is fine
+// before showing `--root --format` is refused. The exit code does not depend on
+// the head size (it is non-zero only for an unreadable inventory), so the last
+// case reads the same run instead of planning the whole corpus again. Memoising
+// is safe because the shared copy is clean whenever no case is mid-edit, and the
+// value is computed lazily, so either case alone still computes it for itself.
+let cleanShared: { code: number; out: string; err: string } | undefined;
+function cleanSharedRun(): { code: number; out: string; err: string } {
+  cleanShared ??= run(sharedRoot, 200);
+  return cleanShared;
 }
 
 function run(root: string, headSize = 25): { code: number; out: string; err: string } {
@@ -91,7 +157,10 @@ function run(root: string, headSize = 25): { code: number; out: string; err: str
 
 function editInventory(root: string, name: string, edit: (doc: Record<string, unknown>) => void): void {
   const path = join(root, "core", name);
-  const doc = JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
+  const original = readFileSync(path);
+  // Registered BEFORE the write, so a throw from `edit` or the write still restores.
+  restores.push(() => writeFileSync(path, original));
+  const doc = JSON.parse(original.toString("utf8")) as Record<string, unknown>;
   edit(doc);
   writeFileSync(path, JSON.stringify(doc));
 }
@@ -123,7 +192,7 @@ describe("the plan CLI", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
     // work. Ask for the complete enumerable queue so this test continues to
     // assert that the measured French/German exam gaps survive behind that gate.
-    const { code, out, err } = run(corpus(), 200);
+    const { code, out, err } = cleanSharedRun();
     // This case also guards NEVER_READ_* above. The plan only reads, so running it
     // on the committed corpus is safe, and the pruned copy must plan identically.
     // If it ever differs, one of those directories has become an input and must
@@ -235,7 +304,7 @@ describe("the plan CLI", () => {
     // (so no `exam-inventory` item) and threw on load (so no `exam-point` item) —
     // the track vanished from both families while the report asserted its
     // inventory existed, silently, at exit 0.
-    const root = corpus();
+    const root = sharedRoot;
     editInventory(root, "exam-inventory-french-a1.json", (doc) => {
       doc.points = [];
     });
@@ -272,7 +341,7 @@ describe("the plan CLI", () => {
     // `covered` is `probe !== null && …`, and a missing key is `undefined`, which
     // is not `null` — so an inventory with every probe deleted reported 100% and
     // suppressed its own work item. It never reached the try/catch.
-    const root = corpus();
+    const root = sharedRoot;
     editInventory(root, "exam-inventory-french-a1.json", (doc) => {
       for (const point of doc.points as Record<string, unknown>[]) delete point.probe;
     });
@@ -307,7 +376,7 @@ describe("the plan CLI", () => {
     // but no lesson coverage. Keep all points uncovered in this fixture so
     // duplicating an inventory must still leave both projection totals intact.
     // The clean-corpus test above separately exercises real lesson coverage.
-    const root = corpus(true);
+    const root = inventoriesOnlyCorpus();
     const clean = run(root);
     cpSync(
       join(root, "core", "exam-inventory-french-a1.json"),
@@ -335,7 +404,7 @@ describe("the plan CLI", () => {
   });
 
   it("rejects a flag used as another flag's value", () => {
-    expect(run(corpus()).code).toBe(0);
+    expect(cleanSharedRun().code).toBe(0);
     let err = "";
     vi.spyOn(process.stderr, "write").mockImplementation((chunk) => ((err += chunk), true));
     expect(runCompletionPlan(["--root", "--format"])).toBe(2);

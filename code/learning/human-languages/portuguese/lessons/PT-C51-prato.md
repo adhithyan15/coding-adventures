@@ -13,7 +13,8 @@ gloss: "a plate; a dish"
 concept_tag: PT-MESA-PRATO
 prerequisites: [PT-C50-espelho, PT-C51-copo]
 sounds: []
-roots: []
+roots: [plattus-latin]
+etymology_hook: "prato ← Vulgar Latin *plattus 'flat', from Greek platys 'broad' — English plate and plateau"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-copo]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-02]; assesses=[] -->
 
 **o prato** — "a plate; a dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prato** ← Vulgar Latin *\*plattus*, "flat" (EtymDB 2.1), from Greek *platys*, "broad" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

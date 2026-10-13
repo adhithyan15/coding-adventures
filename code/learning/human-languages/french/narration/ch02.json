@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0221a1b964965213",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:1da96b6a080e9803",
   "lessons": [
     {
       "id": "FR-C02-je",
@@ -14,20 +14,13 @@
       "romanization": "je",
       "gloss": "I",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4f4e9cfe9b250e1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:9005a29636420a32",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before a vowel it elides: je ai becomes j'ai (\"I have\"). You'll see the same squeeze in je m'appelle."
+              "text": "Before a vowel it elides: the e drops and an apostrophe takes its place, j'. You'll meet the same squeeze in je m'appelle."
             }
           ]
         },
@@ -103,11 +96,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the elision — \"je ai\" becomes \"j'ai\"",
+              "instruction": "\"je\", then the bare zh of j' — all that is left when the e drops",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the elision — \"je ai\" → \"j'ai\"]"
+              "source": "[YOU SAY: \"je\", then the bare *zh* of **j'** — all that is left when the *e* drops]"
             },
             {
               "kind": "prompt",
@@ -152,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82cf3bce59f1e291",
+      "sourceHash": "fnv1a64:d009252146ed8a89",
       "notice": null,
       "blocks": [
         {
@@ -229,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "Only me does any work here: it is what gives your own name, je m'appelle. te turns up once, in the informal \"what's your name?\" (comment tu t'appelles?), and se waits for a lesson that needs it. The set is named so its shape is familiar, not laid out as a grid to memorize — you meet each one where it earns its place."
+              "text": "Only me does any work here: it is what gives your own name, je m'appelle. te turns up once, in the informal \"what's your name?\" at the end of this chapter, and se waits for a lesson that needs it. The set is named so its shape is familiar, not laid out as a grid to memorize — you meet each one where it earns its place."
             }
           ]
         },

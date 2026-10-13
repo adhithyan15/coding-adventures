@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ZEIGEN
 prerequisites: [GE-C66-singen, GE-C66-reisen]
 sounds: []
 roots: []
+etymology_hook: "zeigen ← Old High German zeigōn — from the same old root as English teach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C66-reisen]
 <!-- hl-knowledge: introduces=[GE-LEX-C66-VERBEN3-03]; assesses=[] -->
 
 **zeigen** — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zeigen** ← Middle High German *zeigen* ← Old High German *zeigōn* — inherited. EtymDB 2.1 lists it beside English *teach*: both grew from an old root meaning "to point out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

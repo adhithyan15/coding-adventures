@@ -3,31 +3,24 @@
   "language": "gujarati",
   "chapter": 42,
   "title": "Which One in the Line",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66d571c82a96ad98",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:84130f05d6fea674",
   "lessons": [
     {
       "id": "GU-C38-panchmu",
       "sequence": 2143,
-      "title": "પાંચમું (pā̃chmũ) — fifth, and the ending you can see",
+      "title": "પાંચમું (pā̃chmũ) — fifth, and the ending you can hear",
       "headword": "પાંચમું",
       "romanization": "pā̃chmũ",
       "gloss": "fifth — the only ordinal in this chapter you could have built yourself",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc8188673c02d6ae",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:48e1c73c566e1d00",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -73,12 +66,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write મહિનો — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "મહિનો — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **મહિનો** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **મહિનો** — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -97,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it before anything is said about it. પાંચ is still there, whole, and -મું sits behind it."
+              "text": "Hear it once before anything is said about it. પાંચ is still there, whole, and -મું sits behind it."
             },
             {
               "kind": "speech",
@@ -183,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-panchmu-r1",
               "prompt": "Take paanchmun apart into two pieces and name each one.",
               "assesses": [
@@ -374,6 +368,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-triju-r1",
               "prompt": "Why is the third not traanmun?",
               "assesses": [
@@ -428,16 +423,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5bab2ae1ee9d79e8",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -589,6 +588,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-biju-r1",
               "prompt": "Which ending do beejun and treejun share, and which of the two still shows its number?",
               "assesses": [
@@ -781,6 +781,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-chothu-r1",
               "prompt": "Order treejun, chothun and beejun by how much of their number is still visible, most first.",
               "assesses": [
@@ -986,6 +987,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-pahelu-r1",
               "prompt": "Which Gujarati letter in pahelun stands where the Sanskrit -ma of prathama used to be?",
               "assesses": [
@@ -1124,6 +1126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R38-first-to-fifth-run",
               "prompt": "Say first to fifth, then say which of the five you could have worked out without being told.",
               "assesses": [
@@ -1148,6 +1151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R38-first-to-fifth-agree",
               "prompt": "Give the three agreeing forms of treejun.",
               "assesses": [

@@ -13,7 +13,8 @@ gloss: "to study"
 concept_tag: FR-VERB-ETUDIER
 prerequisites: [FR-C61-vivre, FR-C62-revenir]
 sounds: []
-roots: []
+roots: [studere-latin]
+etymology_hook: "étudier ← Old French estudier, from Latin studium 'eagerness, study' — English study"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C62-revenir]
 <!-- hl-knowledge: introduces=[FR-LEX-C62-VERBES14-02]; assesses=[] -->
 
 **étudier** — "to study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étudier** ← Old French *estudier*, a medieval scholars' word built on Latin *studium*, "eagerness, study", from *studere*, "to be eager" — a learned borrowing. (EtymDB 2.1 records the Latin verb.) The *é-* stands where an *s* once was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

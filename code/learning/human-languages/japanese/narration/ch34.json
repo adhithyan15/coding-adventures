@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C34-suika-type",
-              "prompt": "Type the Japanese for 'a watermelon'.",
+              "prompt": "Say the Japanese for 'a watermelon'.",
               "assesses": [
                 "JA-LEX-C34-FOOD34-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C34-daikon-type",
-              "prompt": "Type the Japanese for 'a white radish'.",
+              "prompt": "Say the Japanese for 'a white radish'.",
               "assesses": [
                 "JA-LEX-C34-FOOD34-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C34-ninjin-type",
-              "prompt": "Type the Japanese for 'a carrot'.",
+              "prompt": "Say the Japanese for 'a carrot'.",
               "assesses": [
                 "JA-LEX-C34-FOOD34-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C34-toufu-type",
-              "prompt": "Type the Japanese for 'tofu'.",
+              "prompt": "Say the Japanese for 'tofu'.",
               "assesses": [
                 "JA-LEX-C34-FOOD34-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C34-shio-type",
-              "prompt": "Type the Japanese for 'salt'.",
+              "prompt": "Say the Japanese for 'salt'.",
               "assesses": [
                 "JA-LEX-C34-FOOD34-05"
               ],

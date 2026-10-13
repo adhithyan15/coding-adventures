@@ -13,7 +13,8 @@ gloss: "old"
 concept_tag: PT-ADJ1-VELHO
 prerequisites: [PT-C64-pequeno, PT-C64-novo]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "velho ← Latin vetulus 'oldish', a small form of vetus 'old' — English veteran"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C64-novo]
 <!-- hl-knowledge: introduces=[PT-LEX-C64-ADJ1-04]; assesses=[] -->
 
 **velho** — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**velho** ← Latin *vetulus*, "oldish" (EtymDB 2.1), through Vulgar Latin *\*veclus* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a baker"
 concept_tag: GE-BERUF125-BAECKER
 prerequisites: [GE-C124-verkaeufer, GE-C125-bauer]
 sounds: []
-roots: []
+roots: [germanic-bakana]
+etymology_hook: "Bäcker — the verb 'to bake' + -er; bake ← Old High German backan, the same verb as English bake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C125-bauer]
 <!-- hl-knowledge: introduces=[GE-LEX-C125-BERUF125-02]; assesses=[] -->
 
 **der Bäcker** — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bäcker** is the verb "to bake" + *-er*: the one who bakes. The verb ← Old High German *backan*, the same verb as English *bake*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

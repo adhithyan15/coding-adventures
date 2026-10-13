@@ -13,7 +13,8 @@ gloss: "a granddaughter"
 concept_tag: PT-FAMILIA2-NETA
 prerequisites: [PT-C38-primo, PT-C38-neto]
 sounds: []
-roots: []
+roots: [neptis-latin]
+etymology_hook: "neta ← Vulgar Latin *nepta, from Latin neptis 'granddaughter' — English niece is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C38-neto]
 <!-- hl-knowledge: introduces=[PT-LEX-C38-FAMILIA2-05]; assesses=[] -->
 
 **a neta** — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neta** ← Vulgar Latin *\*nepta*, "granddaughter" (EtymDB 2.1), from Latin *neptis* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

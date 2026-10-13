@@ -13,7 +13,7 @@ sounds: [participle-e-acute, er-ending]
 roots: []
 etymology_hook: "parler, parlé and parlez are pronounced identically — the infinitive, the participle and the vous form all end in the same bright ay"
 duration:
-  max_seconds: 200
+  max_seconds: 206
 requires:
   knowledge: [FR-GRAM-PARTICIPE-ER-01, FR-GRAM-PASSE-COMPOSE-02, FR-VERB-AVOIR-AVEZ-06]
 introduces:
@@ -57,7 +57,7 @@ sentence around them says which one you heard.
 
 The good news is that the sentence always does. *Vous parlez* has a pronoun in
 front of it. *J'ai parlé* has *avoir* in front of it. **Parler** has nothing in
-front of it, or a verb like *vouloir*. In practice you never have to decide —
+front of it, or another verb, the way English *speak* follows *want to*. In practice you never have to decide —
 which is why French speakers are untroubled by a distinction that looks
 impossible written down.
 

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 34,
   "title": "Comer --- the Second Verb Family, One Slot at a Time",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:06e8bed365549ea6",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3cdb920d0f0bcc4b",
   "lessons": [
     {
       "id": "ES-C07-comer",
@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comer-family",
               "prompt": "Which ending makes comer a different family from hablar?",
               "assesses": [
@@ -284,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-form",
               "prompt": "Turn comer into I eat.",
               "assesses": [
@@ -302,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-same",
               "prompt": "Which ending is identical in the -ar and -er families?",
               "assesses": [
@@ -444,6 +447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-form",
               "prompt": "Turn comer into you eat, to a friend.",
               "assesses": [
@@ -462,6 +466,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-s",
               "prompt": "What does a final -s on a Spanish verb always tell you?",
               "assesses": [
@@ -608,6 +613,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-form",
               "prompt": "Turn comer into he eats.",
               "assesses": [
@@ -626,6 +632,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-usted",
               "prompt": "Which form goes with usted: comes or come?",
               "assesses": [
@@ -671,22 +678,13 @@
       "romanization": "(review)",
       "gloss": "review — the -er singular, earned one slot at a time",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8985d315bebb970",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the table you have earned"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:17e41f8a48d94f92",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -715,21 +713,23 @@
               "text": "Three slots, three lessons. Now they are worth seeing beside the family you already had:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
                 "who",
                 "-ar",
-                "-er",
-                ""
+                "-er"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, -ar, -er, one with no heading. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: I. -ar: -o: hablo. -er: -o: como.",
+                "who: tú. -ar: -as: hablas. -er: -es: comes.",
+                "who: él, ella, usted. -ar: -a: habla. -er: -e: come."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Read the middle two columns down and the whole -er family is one observation: the yo slot is shared, and the other two swap a for e."
+              "text": "Set the two endings in each row side by side and the whole -er family is one observation: the yo slot is shared, and the other two swap a for e."
             },
             {
               "kind": "speech",
@@ -774,6 +774,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-i",
               "prompt": "I eat.",
               "assesses": [
@@ -792,6 +793,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-you",
               "prompt": "You eat, to a friend.",
               "assesses": [
@@ -810,6 +812,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-diff",
               "prompt": "Which of the three slots is identical between the -ar and -er families?",
               "assesses": [

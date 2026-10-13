@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:52d8628edfa63297",
+  "sourceHash": "fnv1a64:ac0c748afc9730a0",
   "lessons": [
     {
       "id": "KA-C06-dative-ge",
@@ -196,7 +196,7 @@
           "Script you'll notice: ದ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ದ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ದ and Guided Practice."
       },
       "blocks": [
         {
@@ -488,6 +488,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "KA-C06-dative-stacking-agglutinative",
               "prompt": "Why is Kannada called agglutinative?",
               "assesses": [
@@ -516,13 +517,22 @@
       "romanization": "nanage kannaḍa gottu",
       "gloss": "'I know Kannada' — built with no subject, because knowing happens TO you",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:b6cdaf03c942582b",
-      "notice": null,
+      "sourceHash": "fnv1a64:8cc3026c8a31a665",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ದ"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — ದ."
+      },
       "blocks": [
         {
           "index": 0,
@@ -566,7 +576,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two things to notice. You are not the subject — nānu is gone, moved into the dative, leaving kannaḍa as the unmarked word the sentence is about. And gottu isn't really a verb doing an action; it's closer to \"[is] known.\" So nothing in this sentence is doing anything at all."
+              "text": "You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is \"[is] known.\" Nothing here is doing anything."
             }
           ]
         },
@@ -577,7 +587,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. But knowing, liking, wanting, being hungry — these arrive. Kannada marks that by putting the person in the dative."
+              "text": "Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. Knowing, liking, wanting arrive — so the person goes in the dative."
             },
             {
               "kind": "table",
@@ -595,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "English keeps one fossil of the same idea: \"methinks\" — where me is a dative, \"it seems to me.\" Kannada made it a rule."
+              "text": "English keeps one fossil of it: \"methinks\" — dative me, \"it seems to me.\" Kannada made it a rule."
             }
           ]
         },
@@ -622,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "One construction, four languages, four suffixes that are visibly the same suffix — Kannada's g being the softened k of the others. The Dravidian family showing its bones, exactly as blanc/bianco/branco did for Romance."
+              "text": "One construction, four visibly related suffixes — Kannada's g the softened k of the others: the Dravidian family showing its bones."
             }
           ]
         },
@@ -658,15 +668,6 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the literal — \"to-me Kannada known\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the literal — \"to-me Kannada known\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "the four cousins — \"-ge, -ukku, -ku, -ikku\"",
               "spoken": true,
               "scored": false,
@@ -677,6 +678,45 @@
         },
         {
           "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — the ending underneath",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say \"to the name\", then \"for work\". (hesarige, kelasakke — one suffix, two shapes.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why g where Tamil has k? (Kannada voiced the k between vowels; doubled -kke resisted and kept it.)"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "script",
+          "title": "Script — ದ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧನ್ಯವಾದ, ಹೌದು, ನಮಸ್ಕಾರ."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ದ, da, in each word that has it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: ದ, *da*, in each word that has it]"
+            },
+            {
+              "kind": "speech",
+              "text": "(ಹೌದು ends on it, and so does ಧನ್ಯವಾದ; ನಮಸ್ಕಾರ has none.)"
+            }
+          ]
+        },
+        {
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -688,7 +728,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? (\"To-me Kannada known.\") What has English got that Kannada hasn't? (A nominative \"I\" — nānu is replaced by the dative nanage.) Is gottu an action verb? (No — it's \"[is] known\"; nothing is doing anything.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)"
+              "text": "What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? (\"To-me Kannada known\" — gottu is no action.) Where did nānu go, and why? (Into the dative, nanage — knowing happens to you.) Which English word keeps the idea? (Methinks.)"
             }
           ]
         }
@@ -697,7 +737,7 @@
     {
       "id": "KA-S114-vowel-sign-o",
       "sequence": 332,
-      "title": "◌ೊ — one character, met inside words you already say",
+      "title": "◌ೊ (o) — one character, met inside words you already say",
       "headword": "ೊ",
       "romanization": "o",
       "gloss": "the single character ೊ — recognised inside words you already say",
@@ -720,7 +760,7 @@
           "Script you'll notice: ◌ೊ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೊ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ೊ and Guided Practice."
       },
       "blocks": [
         {
@@ -765,7 +805,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ೊ somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ೊ (o) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -780,7 +820,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ೊ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ೊ (o) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -802,7 +842,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ೊ in the ones that have it",
+              "instruction": "at these words, and find ◌ೊ (o) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -824,7 +864,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ೊ once more",
+              "instruction": "back at any page of this chapter and find ◌ೊ (o) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -854,7 +894,7 @@
     {
       "id": "KA-S115-letter-i",
       "sequence": 333,
-      "title": "ಇ — one character, met inside words you already say",
+      "title": "ಇ (i) — one character, met inside words you already say",
       "headword": "ಇ",
       "romanization": "i",
       "gloss": "the single character ಇ — recognised inside words you already say",
@@ -877,7 +917,7 @@
           "Script you'll notice: ಇ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಇ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಇ and Guided Practice."
       },
       "blocks": [
         {
@@ -893,7 +933,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ೊ — what does it do?"
+              "text": "Before the new one: ◌ೊ (o) — what does it do?"
             },
             {
               "kind": "pause",
@@ -922,7 +962,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ಇ somewhere inside it:"
+              "text": "You already say these, and every one of them has ಇ (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -941,7 +981,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -963,7 +1003,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ಇ in the ones that have it",
+              "instruction": "at these words, and find ಇ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -985,7 +1025,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಇ once more",
+              "instruction": "back at any page of this chapter and find ಇ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

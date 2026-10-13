@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C61-sahava-r1",
               "prompt": "Build sixth from six, and say what you did.",
               "assesses": [
@@ -348,6 +349,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C61-satva-r1",
               "prompt": "Say sixth and seventh, then say which of the two an 1857 dictionary bothered to print.",
               "assesses": [
@@ -547,6 +549,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C61-aathva-r1",
               "prompt": "Take the ending off chauthā and off āṭhvā. Which one leaves a number behind?",
               "assesses": [
@@ -749,6 +752,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C61-navva-r1",
               "prompt": "Say ninth, then say why it is not naūvā.",
               "assesses": [
@@ -943,6 +947,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C61-dahava-r1",
               "prompt": "Say tenth, then build twelfth from bārā.",
               "assesses": [
@@ -1095,6 +1100,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R61-sixth-to-tenth-run",
               "prompt": "Say first to tenth without stopping, then say which one of the ten broke the rule and how.",
               "assesses": [

@@ -13,7 +13,8 @@ gloss: "to allow"
 concept_tag: IT-VERB-PERMETTERE
 prerequisites: [IT-C176-scaldare, IT-C177-promettere]
 sounds: []
-roots: []
+roots: [permittere-latin]
+etymology_hook: "permettere ← Latin permittere 'to let through' — English permit is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C177-promettere]
 <!-- hl-knowledge: introduces=[IT-LEX-C177-VERBI177-02]; assesses=[] -->
 
 **permettere** — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permettere** ← Latin *permittere*, "to let through" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

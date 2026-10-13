@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 139,
-  "sourceHash": "fnv1a64:e6a2adc518688be3",
+  "sourceHash": "fnv1a64:eb20012d6cc5a7db",
   "lessonIds": [
     "PT-C139-decidir",
     "PT-C139-experimentar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch139.txt",
   "json": "portuguese/narration/ch139.json",
-  "textHash": "fnv1a64:57ace4dcbb2916ca",
-  "jsonHash": "fnv1a64:af809650fb61d31e",
+  "textHash": "fnv1a64:91215b6da60ef02d",
+  "jsonHash": "fnv1a64:87f35a7d8c80f7b7",
   "findings": []
 }

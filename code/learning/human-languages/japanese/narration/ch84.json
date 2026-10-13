@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C84-donna-type",
-              "prompt": "Type the Japanese for 'what kind of'.",
+              "prompt": "Say the Japanese for 'what kind of'.",
               "assesses": [
                 "JA-LEX-C84-DEF84-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C84-hoka-type",
-              "prompt": "Type the Japanese for 'other, another'.",
+              "prompt": "Say the Japanese for 'other, another'.",
               "assesses": [
                 "JA-LEX-C84-DEF84-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C84-minna-type",
-              "prompt": "Type the Japanese for 'everybody'.",
+              "prompt": "Say the Japanese for 'everybody'.",
               "assesses": [
                 "JA-LEX-C84-DEF84-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C84-kouiu-type",
-              "prompt": "Type the Japanese for 'this sort of'.",
+              "prompt": "Say the Japanese for 'this sort of'.",
               "assesses": [
                 "JA-LEX-C84-DEF84-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C84-aaiu-type",
-              "prompt": "Type the Japanese for 'that sort of'.",
+              "prompt": "Say the Japanese for 'that sort of'.",
               "assesses": [
                 "JA-LEX-C84-DEF84-05"
               ],

@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Synthesis --- Saying Something About Your Own Life",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:afee8de04003bab2",
+  "sourceHash": "fnv1a64:45cab1ef43e9eec4",
   "lessons": [
     {
       "id": "ES-C40-sintesis-describir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02fa49f5adf17f87",
+      "sourceHash": "fnv1a64:7271c444669285f0",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Nothing new in this chapter. Say the words for dog and for black."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And blanco took over from Latin's own white, albus. Where does albus survive? (In corners — alba, the dawn.)"
             }
           ]
         },
@@ -133,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-have",
               "prompt": "Say I have a black dog.",
               "assesses": [
@@ -152,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-article",
               "prompt": "You are mentioning your cat for the first time. Un gato or el gato?",
               "assesses": [
@@ -172,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-weather",
               "prompt": "Say it is cold.",
               "assesses": [
@@ -221,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26c2170065e78b04",
+      "sourceHash": "fnv1a64:14c8e1ebc2ab091d",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +351,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-colores",
               "prompt": "Red, blue, green, yellow.",
               "assesses": [
@@ -359,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-hora",
               "prompt": "Say it is two twenty.",
               "assesses": [
@@ -378,6 +393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-llueve",
               "prompt": "Say it is raining at noon.",
               "assesses": [
@@ -397,6 +413,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-amarillo",
               "prompt": "Which colour word started life meaning a little bitter?",
               "assesses": [
@@ -429,6 +446,16 @@
             {
               "kind": "speech",
               "text": "Name the season after el verano. (El otoño.) The month after noviembre. (Diciembre.) And which of your colour words was borrowed rather than inherited? (Azul.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which season is literally first spring, and which one is built on the same vēr? (La primavera; el verano.)"
             }
           ]
         }
@@ -447,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66ab3bad6a27491b",
+      "sourceHash": "fnv1a64:c3b10f63eb926c48",
       "notice": null,
       "blocks": [
         {
@@ -558,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-hora",
               "prompt": "Say it is nine twenty.",
               "assesses": [
@@ -577,6 +605,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-lluvia",
               "prompt": "Say at midnight it is still raining.",
               "assesses": [
@@ -596,6 +625,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-ocho",
               "prompt": "Octubre carries which number, and which month is it really?",
               "assesses": [
@@ -615,6 +645,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-estacion",
               "prompt": "Which season is octubre in, north of the equator?",
               "assesses": [
@@ -648,6 +679,16 @@
             {
               "kind": "speech",
               "text": "What day was it? (Sábado.) What colour was the sky at noon? (Amarillo.) And what number is hiding in diciembre? (Diez — ten, in the tenth month's old position.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two everyday words make medianoche? (Media and noche — mid-night.) And what did Latin pluere lose on the way to llueve? (Its pl-, turned to ll-.)"
             }
           ]
         }

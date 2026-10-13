@@ -14,7 +14,8 @@ romanization: "perukku"
 concept_tag: TA-VERB-PERUKKU
 prerequisites: [TA-C155-tuvai, TA-C156-tutai]
 sounds: []
-roots: []
+roots: [dravidian-perukku-sweep]
+etymology_hook: "பெருக்கு — native Dravidian (DEDR 4415); Malayalam perukkuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C156-tutai]
 <!-- hl-knowledge: introduces=[TA-LEX-C156-ACT156-02]; assesses=[] -->
 
 **பெருக்கு** — *perukku* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெருக்கு** (*perukku*) is native Dravidian. DEDR 4415 lists Malayalam *perukkuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

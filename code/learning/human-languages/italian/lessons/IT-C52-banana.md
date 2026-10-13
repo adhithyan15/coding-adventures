@@ -14,6 +14,7 @@ concept_tag: IT-FRUTTA-BANANA
 prerequisites: [IT-C52-frutta, IT-C52-mela]
 sounds: []
 roots: []
+etymology_hook: "banana — a loan word; EtymDB traces Portuguese and English banana to Wolof banaana"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C52-mela]
 <!-- hl-knowledge: introduces=[IT-LEX-C52-FRUTTA-03]; assesses=[] -->
 
 **la banana** — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banana** — a loan word. EtymDB 2.1 has no row for the Italian word, but traces Portuguese and English *banana* to Wolof *banaana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

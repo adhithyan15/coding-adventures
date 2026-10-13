@@ -13,7 +13,8 @@ gloss: "caution"
 concept_tag: GE-THING242-VORSICHT
 prerequisites: [GE-C242-vertrauen, GE-C242-verein]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "Vorsicht — 'before' + Sicht 'sight': looking ahead"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C242-verein]
 <!-- hl-knowledge: introduces=[GE-LEX-C242-THING242-04]; assesses=[] -->
 
 **die Vorsicht** — "caution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vorsicht** is the word for "before" + the word for "sight", from *sehen*: looking ahead. See *vorsichtig*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

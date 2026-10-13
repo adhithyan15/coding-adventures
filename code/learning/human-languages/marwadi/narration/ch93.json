@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C93-savan-type",
-              "prompt": "Type the Marwadi for 'Savan (July-August)'.",
+              "prompt": "Say the Marwadi for 'Savan (July-August)'.",
               "assesses": [
                 "MW-LEX-C93-TIME93-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C93-bhadvo-type",
-              "prompt": "Type the Marwadi for 'Bhadvo (August-September)'.",
+              "prompt": "Say the Marwadi for 'Bhadvo (August-September)'.",
               "assesses": [
                 "MW-LEX-C93-TIME93-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C93-asoj-type",
-              "prompt": "Type the Marwadi for 'Asoj (September-October)'.",
+              "prompt": "Say the Marwadi for 'Asoj (September-October)'.",
               "assesses": [
                 "MW-LEX-C93-TIME93-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C93-kati-type",
-              "prompt": "Type the Marwadi for 'Kati (October-November)'.",
+              "prompt": "Say the Marwadi for 'Kati (October-November)'.",
               "assesses": [
                 "MW-LEX-C93-TIME93-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C93-migsar-type",
-              "prompt": "Type the Marwadi for 'Migsar (November-December)'.",
+              "prompt": "Say the Marwadi for 'Migsar (November-December)'.",
               "assesses": [
                 "MW-LEX-C93-TIME93-05"
               ],

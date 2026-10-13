@@ -153,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-pero-say",
               "prompt": "Say: I am tired, but I study.",
               "assesses": [
@@ -171,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-pero-keeps",
               "prompt": "Does pero cancel the first half of the sentence?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-pero-origin",
               "prompt": "How many Latin words is pero, originally?",
               "assesses": [

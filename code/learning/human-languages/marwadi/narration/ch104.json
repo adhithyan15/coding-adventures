@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C104-kharidno-type",
-              "prompt": "Type the Marwadi for 'to buy'.",
+              "prompt": "Say the Marwadi for 'to buy'.",
               "assesses": [
                 "MW-LEX-C104-ACT104-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C104-ugharno-type",
-              "prompt": "Type the Marwadi for 'to uncover, to open up'.",
+              "prompt": "Say the Marwadi for 'to uncover, to open up'.",
               "assesses": [
                 "MW-LEX-C104-ACT104-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C104-bulavno-type",
-              "prompt": "Type the Marwadi for 'to call'.",
+              "prompt": "Say the Marwadi for 'to call'.",
               "assesses": [
                 "MW-LEX-C104-ACT104-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C104-mangno-type",
-              "prompt": "Type the Marwadi for 'to ask for'.",
+              "prompt": "Say the Marwadi for 'to ask for'.",
               "assesses": [
                 "MW-LEX-C104-ACT104-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C104-jovno-type",
-              "prompt": "Type the Marwadi for 'to look, to look for'.",
+              "prompt": "Say the Marwadi for 'to look, to look for'.",
               "assesses": [
                 "MW-LEX-C104-ACT104-05"
               ],

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-RUBARE
 prerequisites: [IT-C181-rischiare, IT-C181-risolvere]
 sounds: []
 roots: []
+etymology_hook: "rubare ← Frankish raubon 'to rob', through Medieval Latin — borrowed; English rob is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C181-risolvere]
 <!-- hl-knowledge: introduces=[IT-LEX-C181-VERBI181-03]; assesses=[] -->
 
 **rubare** — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rubare** ← Frankish *raubon*, "to rob" — borrowed, through Medieval Latin *raubare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

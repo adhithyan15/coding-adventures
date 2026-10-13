@@ -26,8 +26,17 @@
 // one stroke fewer than the source, and copyist counts are a ceiling on native
 // lifts. Those three keep the source's order and join one restart on the ink.
 //
+// WORDS. A word shares one headline, so it is not these letters side by side:
+// `headline-word.ts` composes it from them. Each letter's body is drawn as
+// below WITHOUT its first (headline) stroke, the split-bar letters ਅ ਖ ਘ ਪ ਮ
+// whole, and then ONE headline last, left to right, along the word's printed
+// bar. That word-level order is this book's convention (the order fluent
+// writers are described as using, and the one it draws Devanagari words in),
+// not something this source records; a letter's own strip keeps the source's
+// headline-first order.
+//
 // Vowel signs, bindi, tippi, addak, halant and the dot below have no source, so
-// they are absent, and a word (which shares one headline) is never composed.
+// they are absent, and a word holding one is never composed.
 // ---------------------------------------------------------------------------
 
 import type { StrokeSource } from "../strokes.ts";

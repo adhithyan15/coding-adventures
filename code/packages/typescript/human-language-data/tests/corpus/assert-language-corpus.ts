@@ -1,7 +1,12 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect } from "vitest";
-import { measureContinuity } from "../../src/continuity.js";
+import {
+  measureContinuity,
+  REINFORCEMENT_WINDOWS,
+  type ContinuityReport,
+  type ReinforcementDefect,
+} from "../../src/continuity.js";
 import {
   defaultCurriculumRoot,
   loadAssessmentPolicy,
@@ -20,6 +25,39 @@ import {
 import { modalityOwnerContents } from "../../src/modality-shards.js";
 import { measureRamp } from "../../src/ramp.js";
 import { measureWritingStages, type TrackWritingStageCoverage } from "../../src/writing-stages.js";
+
+/**
+ * Atoms that no later lesson ever practises, although the track carried on for a
+ * whole R1 window after the lesson that introduced them.
+ *
+ * `atomsNeverRevisited` cannot be gated directly, and the shared continuity test
+ * explains why: every atom introduced by a track's last lessons is unrevisited
+ * until something is appended after it, so a ceiling on the raw count would fail
+ * on a legitimate new chapter. The R1 window (n+1 … n+3) is the honest line to
+ * draw. An atom with fewer than three lessons after it is the tail, still waiting
+ * for its first retrieval; an atom with three or more lessons after it and no
+ * retrieval anywhere is an absence — HL09 §7.2's "not a scheduling problem".
+ *
+ * | lessons after the introducer | practised later? | reported here? |
+ * |------------------------------|------------------|----------------|
+ * | fewer than 3                 | no               | no — the tail  |
+ * | 3 or more                    | no               | **yes**        |
+ * | any                          | yes, anywhere    | no             |
+ *
+ * `report.reinforcement` already lists every atom that misses a judged window,
+ * with its total `revisits`; a zero-revisit atom past the tail always misses R1,
+ * so filtering that list is enough.
+ */
+export function atomsNeverRevisitedPastTheTail(
+  report: ContinuityReport,
+): ReinforcementDefect[] {
+  const r1 = REINFORCEMENT_WINDOWS[0].to;
+  const lastIndex = new Map(report.tracks.map((track) => [track.language, track.lessonCount - 1]));
+  return report.reinforcement.filter(
+    (finding) =>
+      finding.revisits === 0 && finding.introducedAt + r1 <= (lastIndex.get(finding.language) ?? -1),
+  );
+}
 
 export function expectLanguageContinuity(language: string): void {
   const root = defaultCurriculumRoot();
@@ -44,6 +82,18 @@ export function expectLanguageContinuity(language: string): void {
     Object.values(report.summary.missedByWindow).reduce((sum, count) => sum + count, 0),
     `${language} reinforcement-window arithmetic`,
   ).toBe(report.reinforcement.reduce((sum, finding) => sum + finding.missed.length, 0));
+  // CEILING at zero, per track: every atom the track has moved three lessons past
+  // must be practised again somewhere. This was 133 corpus-wide before the
+  // revisit pass that declared the later lessons already using these atoms and
+  // added short spoken recalls where none did; the one atom left
+  // (ZH-SKILL-CONNECTED-READING) is introduced by the Chinese track's final lesson,
+  // which is the tail this gate deliberately does not judge. A new chapter whose
+  // non-final lessons introduce an atom nothing retrieves fails here — practise it
+  // in a later lesson of the chapter rather than loosening this.
+  expect(
+    atomsNeverRevisitedPastTheTail(report).map((finding) => `${finding.atom} (${finding.introducedBy})`),
+    `${language} atoms never practised again although the track went on past R1`,
+  ).toEqual([]);
 }
 
 export function expectLanguageModality(language: string): void {

@@ -42,7 +42,7 @@ variety: standard
 
 **टाळी** — *ṭāḷī* — "a clap".
 
-Say it: *ṭāḷī*. Look at its shape as you say it: the lessons that follow take pieces of it, **ट**, and write each one on its own.
+Say it: *ṭāḷī*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ट**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TAALI] -->

@@ -13,7 +13,8 @@ gloss: "to connect"
 concept_tag: IT-VERB-COLLEGARE
 prerequisites: [IT-C212-avvicinarsi, IT-C212-chiacchierare]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "collegare ← Latin colligare 'to bind together' — English ligament shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C212-chiacchierare]
 <!-- hl-knowledge: introduces=[IT-LEX-C212-VERBI212-05]; assesses=[] -->
 
 **collegare** — "to connect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collegare** ← Latin *colligare*, "to bind together" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

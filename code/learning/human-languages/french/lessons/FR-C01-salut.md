@@ -13,7 +13,7 @@ sounds: [silent-final, vowel-u]
 roots: [salus]
 etymology_hook: "salut ← Latin salūs, salūtem, 'health, safety' — the greeting is a wish of health, like old English 'hail'"
 duration:
-  max_seconds: 180
+  max_seconds: 198
 requires:
   knowledge: []
 introduces:
@@ -23,7 +23,7 @@ introduces_senses: []
 introduces_culture_claims: [FR-CULTURE-SALUT-INFORMAL-01]
 practises:
   knowledge: [FR-LEX-SALUT-01]
-skills: [listening, speaking, reading]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 variety: standard-contemporary
@@ -68,8 +68,17 @@ you already own in English:
 
 *Salut* is strictly **informal** — friends, family, peers — and it doubles as
 "bye." For anyone you'd show respect to, or a first meeting, you reach past
-it for *bonjour* (coming in a few lessons), exactly as Spanish reaches past
+it for the formal greeting (a few lessons on), exactly as Spanish reaches past
 *hola* for *buenos días*.
+
+## Writing — trace the silent t
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SALUT-01] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Keep **salut** visible. Trace only its final **t**, once, then say *sa-LU*:
+you stop on the **u**, but the page keeps the **t**.
+
+Do not copy the word yet; the next lesson traces all of it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SALUT-01] -->

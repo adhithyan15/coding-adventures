@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-DOKHTAR]
+  knowledge: [FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-DOKHTAR, FA-ETYMON-DOKHTAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [FA-C12-nam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM] -->
 
-[PAUSE 2s] Say **نام** (*nâm*), and its English cousin. This lesson's word has an
+[PAUSE 2s] Say *nâm*, and its English cousin. This lesson's word has an
 even more famous one.
 
 ## You'll want to know first — one word
@@ -58,13 +58,14 @@ rather than only the organ — a later chapter's word for "want" will lean on
 it too.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-NAM, FA-LEX-DOKHTAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-NAM, FA-LEX-DOKHTAR, FA-ETYMON-DOKHTAR] -->
 
 - [YOU SAY: **del** — heart]
 - [YOU CONNECT: **del** ← \**ḱḗr* → English **heart**, Sanskrit **hṛdaya**,
   Armenian **sirt**]
 - [YOU RUN: **nâm, del** — name, heart]
-- [YOU RETRIEVE: **دختر** — daughter, from a few lessons back]
+- [YOU RETRIEVE: *dokhtar* — daughter, from a few lessons back, and its
+  English cousin, **daughter** itself]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DEL, FA-ETYMON-DEL] -->

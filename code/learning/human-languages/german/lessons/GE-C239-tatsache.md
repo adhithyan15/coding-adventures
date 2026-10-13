@@ -14,6 +14,7 @@ concept_tag: GE-THING239-TATSACHE
 prerequisites: [GE-C239-studium, GE-C239-stufe]
 sounds: []
 roots: []
+etymology_hook: "Tatsache — Tat 'deed' + Sache 'matter': a German copy of English matter of fact"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C239-stufe]
 <!-- hl-knowledge: introduces=[GE-LEX-C239-THING239-05]; assesses=[] -->
 
 **die Tatsache** — "a fact".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tatsache** ← the word for "deed", Old High German *tāt*, English *deed*, + *Sache*, "matter" (EtymDB 2.1): a German copy of English *matter of fact*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

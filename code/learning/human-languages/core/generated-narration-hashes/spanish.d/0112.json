@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 112,
-  "sourceHash": "fnv1a64:0f680a4402f3f1c4",
+  "sourceHash": "fnv1a64:0858b607d8a991ad",
   "lessonIds": [
     "ES-C48-cuando"
   ],
@@ -10,6 +10,6 @@
   "text": "spanish/narration/ch112.txt",
   "json": "spanish/narration/ch112.json",
   "textHash": "fnv1a64:dee1328f8aec5757",
-  "jsonHash": "fnv1a64:391025ff6cfba434",
+  "jsonHash": "fnv1a64:2a7ac025f6431a3e",
   "findings": []
 }

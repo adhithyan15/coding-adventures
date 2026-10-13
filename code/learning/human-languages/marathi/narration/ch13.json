@@ -77,6 +77,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-a-r3-check",
               "prompt": "Write dhanyavad, visarga, independent aa, and bha after a durable gap.",
               "assesses": [
@@ -160,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-b-r3-check",
               "prompt": "Write e-mark, anusvara, and ta after a durable gap.",
               "assesses": [
@@ -242,6 +244,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-c-r3-check",
               "prompt": "Write da, dha, and ba after a durable gap.",
               "assesses": [
@@ -324,6 +327,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-d-r3-check",
               "prompt": "Write ya, lla, and va after a durable gap.",
               "assesses": [
@@ -639,6 +643,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C06-number-differences-don-ending",
               "prompt": "Did Marathi don preserve an ancient final n?",
               "assesses": [
@@ -751,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-marks-r3-check",
               "prompt": "Say where each of the six marks (sahā khuṇā) goes, and which of the two below-the-line hooks travels further.",
               "assesses": [
@@ -849,6 +855,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-two-rows-r3-check",
               "prompt": "Say the four velar letters and the four palatal ones in order, naming the voice and breath state of each.",
               "assesses": [
@@ -938,6 +945,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-curled-r3-check",
               "prompt": "Name the four curled letters in order and the lip letter that differs from ba by one dot.",
               "assesses": [
@@ -1035,6 +1043,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-sibilants-r3-check",
               "prompt": "Name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that also have marks.",
               "assesses": [

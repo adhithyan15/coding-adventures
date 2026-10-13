@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गिणणो (giṇṇo) mean? ("To count".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to count'.
+Say the Marwadi for 'to count'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पकड़णो (pakaṛṇo) mean? ("To catch".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to catch'.
+Say the Marwadi for 'to catch'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काटणो (kāṭṇo) mean? ("To cut".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to cut'.
+Say the Marwadi for 'to cut'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रोकणो (rokṇo) mean? ("To stop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to stop'.
+Say the Marwadi for 'to stop'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बताणो (batāṇo) mean? ("To tell".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to tell'.
+Say the Marwadi for 'to tell'.

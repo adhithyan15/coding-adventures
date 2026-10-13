@@ -13,7 +13,8 @@ gloss: "a thousand"
 concept_tag: GE-ZAHLEN-TAUSEND
 prerequisites: [GE-C101-fuenfzig, GE-C101-hundert]
 sounds: []
-roots: []
+roots: [germanic-thusundi]
+etymology_hook: "tausend ← Old High German dūsunt ← Proto-Germanic *þūsundī — the same word as English thousand"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C101-hundert]
 <!-- hl-knowledge: introduces=[GE-LEX-C101-ZAHLEN-05]; assesses=[] -->
 
 **tausend** — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tausend** ← Old High German *dūsunt* ← Proto-Germanic *\*þūsundī*, "thousand" — inherited, the same word as English *thousand*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

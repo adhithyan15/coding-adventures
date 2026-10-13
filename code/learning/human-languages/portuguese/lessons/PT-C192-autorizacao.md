@@ -13,7 +13,8 @@ gloss: "permission"
 concept_tag: PT-COISAS192-AUTORIZACAO
 prerequisites: [PT-C192-mentira, PT-C192-regra]
 sounds: []
-roots: []
+roots: [auctor-latin]
+etymology_hook: "autorização — from the verb to authorise, from Latin auctor 'originator' — English author"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C192-regra]
 <!-- hl-knowledge: introduces=[PT-LEX-C192-COISAS192-03]; assesses=[] -->
 
 **a autorização** — "permission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autorização** is built from the verb "to authorise", which goes back to Latin *auctor*, "originator, guarantor" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

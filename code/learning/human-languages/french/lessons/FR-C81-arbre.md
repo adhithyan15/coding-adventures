@@ -13,7 +13,8 @@ gloss: "a tree"
 concept_tag: FR-NATURE33-ARBRE
 prerequisites: [FR-C80-carte, FR-C80-photo]
 sounds: []
-roots: []
+roots: [arbor-latin]
+etymology_hook: "arbre ← Latin arbor 'tree' — English arboretum shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C80-photo]
 <!-- hl-knowledge: introduces=[FR-LEX-C81-NATURE33-01]; assesses=[] -->
 
 **l'arbre** — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arbre** ← Latin *arbor*, "tree" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does となり (tonari) mean? ("Next door; a neighbour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'next door'.
+Say the Japanese for 'next door'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なかま (nakama) mean? ("A companion".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a companion'.
+Say the Japanese for 'a companion'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いく (iku) mean? ("To go".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to go'.
+Say the Japanese for 'to go'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かう (kau) mean? ("To buy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to buy'.
+Say the Japanese for 'to buy'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のむ (nomu) mean? ("To drink".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to drink'.
+Say the Japanese for 'to drink'.

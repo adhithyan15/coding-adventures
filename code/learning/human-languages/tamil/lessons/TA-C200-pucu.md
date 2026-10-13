@@ -14,7 +14,8 @@ romanization: "pūcu"
 concept_tag: TA-VERB-PUCU
 prerequisites: [TA-C200-killu, TA-C200-valai]
 sounds: []
-roots: []
+roots: [dravidian-puucu-smear]
+etymology_hook: "பூசு — native Dravidian (DEDR 4352); Malayalam pūcuka, Kannada pūsu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C200-valai]
 <!-- hl-knowledge: introduces=[TA-LEX-C200-ACT200-03]; assesses=[] -->
 
 **பூசு** — *pūcu* — "to paint (a wall), to coat, to smear on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூசு** (*pūcu*) is native Dravidian. DEDR 4352 lists Malayalam *pūcuka* and Kannada *pūsu*. The entry compares Sanskrit *pusta*, "plastering, modelling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

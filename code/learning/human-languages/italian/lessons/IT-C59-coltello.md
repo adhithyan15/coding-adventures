@@ -13,7 +13,8 @@ gloss: "a knife"
 concept_tag: IT-TAVOLA-COLTELLO
 prerequisites: [IT-C59-piatto, IT-C59-cucchiaio]
 sounds: []
-roots: []
+roots: [cultellus-latin]
+etymology_hook: "coltello ← Latin cultellus 'small knife' — English cutlery shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C59-cucchiaio]
 <!-- hl-knowledge: introduces=[IT-LEX-C59-TAVOLA-04]; assesses=[] -->
 
 **il coltello** — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coltello** ← Latin *cultellus*, "a small knife" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

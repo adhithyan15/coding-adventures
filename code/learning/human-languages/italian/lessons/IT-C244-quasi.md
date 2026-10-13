@@ -13,7 +13,8 @@ gloss: "almost"
 concept_tag: IT-PERCHE244-QUASI
 prerequisites: [IT-C243-incidente, IT-C244-proprio]
 sounds: []
-roots: []
+roots: [quasi-latin]
+etymology_hook: "quasi ← Latin quasi 'as if', quam + si — English quasi- is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C244-proprio]
 <!-- hl-knowledge: introduces=[IT-LEX-C244-PERCHE244-02]; assesses=[] -->
 
 **quasi** — "almost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quasi** ← Latin *quasi*, "as if", from *quam*, "as", and *si*, "if" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

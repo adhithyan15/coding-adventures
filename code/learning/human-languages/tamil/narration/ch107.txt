@@ -13,6 +13,9 @@ You'll want to know: விடைபெறுகிறேன்.
 விடைபெறுகிறேன் (viṭaipeṟukiṟēṉ) — "I take my leave", literally "I receive leave".
 விடை is "leave, permission". The formal goodbye.
 
+The word, taken apart.
+விடைபெறுகிறேன் (viṭaipeṟukiṟēṉ) is native: viṭai, "leave, permission to go" (DEDR 5393), and peṟu, "to get" (DEDR 4422): "I get my leave".
+
 What you've built.
 A formal way out of a room.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a holiday, then the Tamil for I take my le
 You'll want to know: கிளம்பலாமா?
 கிளம்பலாமா? (kiḷampalāmā?) — "shall we leave?".
 கிளம்பு is "to set out"; -லாமா asks "shall we?".
+
+The word, taken apart.
+கிளம்பலாமா? (kiḷampalāmā?) is native Dravidian. DEDR 1583 lists Malayalam kiḷampuka, "to rise". The entry lists kiḷampu, "to rise, to start up": to leave is to get up and go.
 
 What you've built.
 A gentle nudge to go.
@@ -73,6 +79,9 @@ You'll want to know: அப்புறம் பார்க்கலாம்.
 அப்புறம் பார்க்கலாம் (appuṟam pārkkalām) — "see you later".
 அப்புறம் is "afterwards"; பார்க்கலாம் is "we can see (each other)". To one friend: உன்னை அப்புறம் பார்க்கிறேன் — "I'll see you later", with உன்னை, "you" as the one it is done to.
 
+The word, taken apart.
+அப்புறம் பார்க்கலாம் (appuṟam pārkkalām) is native: appuṟam, "after that", from the far base a- (DEDR 1) and puṟam, "side" (DEDR 4333), and pārkkalām, "let us see", from pār (DEDR 4091).
+
 What you've built.
 A casual goodbye.
 
@@ -103,6 +112,9 @@ You'll want to know: இனிய பயணம்.
 இனிய பயணம் (iṉiya payaṇam) — "have a good journey", literally "a sweet journey".
 இனிய is "sweet, pleasant".
 
+The word, taken apart.
+இனிய பயணம் (iṉiya payaṇam) is native iṉiya, "sweet, pleasant" (DEDR 530), and payaṇam, "journey", from Sanskrit prayāṇa (CDIAL 8732).
+
 What you've built.
 A wish for someone setting off.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for see you later, then the Tamil for a good j
 You'll want to know: மீண்டும் வாருங்கள்.
 மீண்டும் வாருங்கள் (mīṇṭum vāruṅkaḷ) — "please come again".
 மீண்டும் is "again", with the welcome வாருங்கள்.
+
+The word, taken apart.
+மீண்டும் வாருங்கள் (mīṇṭum vāruṅkaḷ) is native: mīṇṭum, "again", from mīḷ, "to return" (DEDR 4883), and vā, "come" (DEDR 5270), with the polite ending.
 
 What you've built.
 Take leave, shall we go, see you, a good journey, come again.

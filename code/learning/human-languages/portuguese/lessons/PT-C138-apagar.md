@@ -13,7 +13,8 @@ gloss: "to switch off, to put out"
 concept_tag: PT-VERB-APAGAR
 prerequisites: [PT-C137-a-fatura, PT-C138-acender]
 sounds: []
-roots: []
+roots: [pacare-latin]
+etymology_hook: "apagar — probably a- + pagar in its old sense 'to quiet, to pacify' (← Latin pacare)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C138-acender]
 <!-- hl-knowledge: introduces=[PT-LEX-C138-VERBOS138-02]; assesses=[] -->
 
 **apagar** — "to switch off, to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apagar** is probably built from *a-* and *pagar* in its old sense "to quiet, to pacify" (← Latin *pacare*): to quiet a flame. That is the usual account, not a certain one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

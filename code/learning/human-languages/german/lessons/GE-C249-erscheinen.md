@@ -13,7 +13,8 @@ gloss: "to appear"
 concept_tag: GE-VERB-ERSCHEINEN
 prerequisites: [GE-C249-ergaenzen, GE-C249-erledigen]
 sounds: []
-roots: []
+roots: [germanic-skinana]
+etymology_hook: "erscheinen — er- + scheinen 'to shine, to seem', the same verb as English shine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C249-erledigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C249-VERB249-03]; assesses=[] -->
 
 **erscheinen** — "to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erscheinen** is *er-* + the verb "to shine, to seem", Old High German *skīnan*, the same verb as English *shine* (EtymDB 2.1): to come into view.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

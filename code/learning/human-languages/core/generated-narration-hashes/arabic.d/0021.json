@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 21,
-  "sourceHash": "fnv1a64:256c818548f473c0",
+  "sourceHash": "fnv1a64:4f171090428fbb3f",
   "lessonIds": [
     "AR-C21-kalb-qitt"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch21.txt",
   "json": "arabic/narration/ch21.json",
-  "textHash": "fnv1a64:0c652781dfa6d9c5",
-  "jsonHash": "fnv1a64:236ff950ba71538b",
+  "textHash": "fnv1a64:546c03710c7ea176",
+  "jsonHash": "fnv1a64:d1797248c6a477af",
   "findings": []
 }

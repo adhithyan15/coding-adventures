@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bringing, Getting, Waiting, Buying",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7ff5695d9db780ff",
+  "sourceHash": "fnv1a64:b6bad3a30811ed57",
   "lessons": [
     {
       "id": "PT-C21-trazer",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed7563b8ec1c0301",
+      "sourceHash": "fnv1a64:d246f5f4f5f309e0",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1deca3aa1883f77e",
+      "sourceHash": "fnv1a64:9cef9148fc76e584",
       "notice": null,
       "blocks": [
         {
@@ -519,6 +519,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "espero is a form of esperar from Latin sperare, \"to hope\" (EtymDB 2.1). sim from Latin sic, \"thus, so\" (EtymDB 2.1). Both are inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -549,7 +560,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -580,7 +591,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d72b3279da911e82",
+      "sourceHash": "fnv1a64:70e2c34e489cc4d5",
       "notice": null,
       "blocks": [
         {
@@ -633,6 +644,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "esperar from Latin sperare, \"to hope, to look for\" (EtymDB 2.1) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

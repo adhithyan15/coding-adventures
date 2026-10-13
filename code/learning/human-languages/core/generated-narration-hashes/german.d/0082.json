@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 82,
-  "sourceHash": "fnv1a64:37f9e6c3b48ee60a",
+  "sourceHash": "fnv1a64:57b7107fca6f78f6",
   "lessonIds": [
     "GE-C82-telefon",
     "GE-C82-baum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch82.txt",
   "json": "german/narration/ch82.json",
-  "textHash": "fnv1a64:35e7becc840c5b12",
-  "jsonHash": "fnv1a64:fcc76d7598ca2867",
+  "textHash": "fnv1a64:2a176424e2d1109a",
+  "jsonHash": "fnv1a64:e201dde48aa10d23",
   "findings": []
 }

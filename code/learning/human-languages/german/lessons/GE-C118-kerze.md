@@ -14,6 +14,7 @@ concept_tag: GE-DINGE118-KERZE
 prerequisites: [GE-C117-geschenk, GE-C117-foto]
 sounds: []
 roots: []
+etymology_hook: "Kerze ← Old High German kerza; its origin is uncertain, perhaps Latin charta 'papyrus' for the wick"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C117-foto]
 <!-- hl-knowledge: introduces=[GE-LEX-C118-DINGE118-01]; assesses=[] -->
 
 **die Kerze** — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kerze** ← Middle High German *kerze* ← Old High German *kerza* (EtymDB 2.1). Its origin is uncertain; one account derives it from Latin *charta*, "papyrus", used as a wick.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

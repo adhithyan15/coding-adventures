@@ -14,6 +14,7 @@ concept_tag: IT-CIBO108-CIOCCOLATO
 prerequisites: [IT-C107-aglio, IT-C107-farina]
 sounds: []
 roots: []
+etymology_hook: "cioccolato ← Spanish chocolate, a word from Nahuatl — English chocolate is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-farina]
 <!-- hl-knowledge: introduces=[IT-LEX-C108-CIBO108-01]; assesses=[] -->
 
 **il cioccolato** — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cioccolato** ← Spanish *chocolate* — borrowed; Spanish took it from Nahuatl. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

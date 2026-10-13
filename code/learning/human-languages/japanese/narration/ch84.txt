@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does どんな (donna) mean? ("What kind of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'what kind of'.
+Say the Japanese for 'what kind of'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほか (hoka) mean? ("Other, another".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'other, another'.
+Say the Japanese for 'other, another'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みんな (minna) mean? ("Everybody".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'everybody'.
+Say the Japanese for 'everybody'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こういう (kouiu) mean? ("This sort of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'this sort of'.
+Say the Japanese for 'this sort of'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ああいう (aaiu) mean? ("That sort of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'that sort of'.
+Say the Japanese for 'that sort of'.

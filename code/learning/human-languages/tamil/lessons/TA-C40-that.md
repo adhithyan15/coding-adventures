@@ -11,7 +11,8 @@ romanization: "adu"
 concept_tag: TA-DEIXIS-THAT
 prerequisites: [TA-C40-this]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அது — native: the far base a- (DEDR 1); Malayalam atu, Kannada adu"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: [TA-C40-this]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **இது** *idu*, which you will meet just now. The two of them
+Its partner is **இது** *idu*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அது** (*adu*) is native Dravidian: the far base *a-* (DEDR 1). Malayalam has *atu* and Kannada *adu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-02] -->

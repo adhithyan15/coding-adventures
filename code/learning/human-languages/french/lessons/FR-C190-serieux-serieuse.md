@@ -13,7 +13,8 @@ gloss: "serious"
 concept_tag: FR-QUAL190-SERIEUX-SERIEUSE
 prerequisites: [FR-C189-vraiment, FR-C190-joyeux-joyeuse]
 sounds: []
-roots: []
+roots: [serius-latin]
+etymology_hook: "sérieux ← Medieval Latin seriosus, from serius 'earnest' — English serious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C190-joyeux-joyeuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C190-QUAL190-02]; assesses=[] -->
 
 **sérieux / sérieuse** — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sérieux** ← Medieval Latin *seriosus*, from *serius*, "earnest" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

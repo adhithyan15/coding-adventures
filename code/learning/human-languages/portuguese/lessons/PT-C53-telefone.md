@@ -14,6 +14,7 @@ concept_tag: PT-COISAS2-TELEFONE
 prerequisites: [PT-C52-lapis, PT-C52-bolsa]
 sounds: []
 roots: []
+etymology_hook: "telefone ← French téléphone, coined from Greek tele 'far' + phone 'voice'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C52-bolsa]
 <!-- hl-knowledge: introduces=[PT-LEX-C53-COISAS2-01]; assesses=[] -->
 
 **o telefone** — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefone** — borrowed, probably from French *téléphone*. The French word was coined from Greek *tēle*, "far", and *phōnē*, "voice" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

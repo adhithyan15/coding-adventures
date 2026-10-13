@@ -54,13 +54,14 @@ You met it on an earlier page, in the middle of a word you already say:
 <!-- hl-writing-stage: observe-trace -->
 
 Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left
-curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts
-and sweeps right and upward around the lower-right bowl. Movement 4 curves
-left around the upper-right shoulder. Movement 5 finishes with the separate
-top flourish.
+curve. Movement 2 turns right around the lower-left bowl. Without lifting,
+movement 3 sweeps right and upward around the lower-right bowl, and movement 4
+curves left around the upper-right shoulder. Lift once; movement 5 finishes
+with the separate top flourish.
 
 This is one attested school-style order. Telugu handwriting varies, so keep
-the five movements distinct and let the round shape grow from them.
+the five movements distinct, with the round body as one unbroken run, and let
+the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-123] -->

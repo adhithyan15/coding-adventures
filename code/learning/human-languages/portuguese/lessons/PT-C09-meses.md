@@ -43,20 +43,20 @@ war-god, and *setembro–dezembro* are the Latin numbers 7–10.
 ## The months, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-MESES-02]; assesses=[] -->
 
-| Portuguese | ← Latin | who / what | Spanish twin |
-|---|---|---|---|
-| **janeiro** | *Januarius* | **Janus**, god of beginnings | *enero* |
-| **fevereiro** | *Februarius* | the *Februa* purification | *febrero* |
-| **março** | *Martius* | **Mars**, the war-god | *marzo* |
-| **abril** | *Aprilis* | *aperire* "to open" | *abril* |
-| **maio** | *Maius* | **Maia**, growth-goddess | *mayo* |
-| **junho** | *Junius* | **Juno**, queen of gods | *junio* |
-| **julho** | *Julius* | **Julius Caesar** | *julio* |
-| **agosto** | *Augustus* | emperor **Augustus** | *agosto* |
-| **setembro** | *september* | "**7th**" (*septem*) | *septiembre* |
-| **outubro** | *october* | "**8th**" (*octo*) | *octubre* |
-| **novembro** | *november* | "**9th**" (*novem*) | *noviembre* |
-| **dezembro** | *december* | "**10th**" (*decem*) | *diciembre* |
+| Portuguese ← Latin | who / what | Spanish twin |
+|---|---|---|
+| **janeiro** ← *Januarius* | **Janus**, god of beginnings | *enero* |
+| **fevereiro** ← *Februarius* | the *Februa* purification | *febrero* |
+| **março** ← *Martius* | **Mars**, the war-god | *marzo* |
+| **abril** ← *Aprilis* | *aperire* "to open" | *abril* |
+| **maio** ← *Maius* | **Maia**, growth-goddess | *mayo* |
+| **junho** ← *Junius* | **Juno**, queen of gods | *junio* |
+| **julho** ← *Julius* | **Julius Caesar** | *julio* |
+| **agosto** ← *Augustus* | emperor **Augustus** | *agosto* |
+| **setembro** ← *september* | "**7th**" (*septem*) | *septiembre* |
+| **outubro** ← *october* | "**8th**" (*octo*) | *octubre* |
+| **novembro** ← *november* | "**9th**" (*novem*) | *noviembre* |
+| **dezembro** ← *december* | "**10th**" (*decem*) | *diciembre* |
 
 Portuguese tells: *janeiro/fevereiro* kept the *-eiro* ending (← *-arius*, the same
 suffix in *feira*), and *setembro/dezembro* echo the numbers *sete/dez* you learned.
@@ -80,5 +80,4 @@ Two payoffs:
 
 [PAUSE 3s] Which god is *março* named for? (**Mars**, the war-god.) Why is
 *dezembro* Latin for "ten"? (The Roman year began in March.) Which two months honour
-real **people**? (*Julho* — Julius; *agosto* — Augustus.) Next: the **estações**,
-the seasons.
+real **people**? (*Julho* — Julius; *agosto* — Augustus.) Next: the seasons.

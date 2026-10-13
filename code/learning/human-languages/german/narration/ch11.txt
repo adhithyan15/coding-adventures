@@ -147,6 +147,9 @@ Sonnabend — "Saturday," in northern Germany.
 Sonn- is the sun and -abend is the evening, both of which you own. It is "Sun-eve": the evening before Sunday, standing in for the whole day.
 That is the same reckoning English keeps in Christmas Eve and New Year's Eve — the day taking its name from the night that runs up to it.
 
+The word, taken apart.
+Sonnabend from Middle High German sunābent (EtymDB 2.1): Sonne + Abend, the eve of Sunday.
+
 Why it's said this way.
 Both words are correct German and a speaker will use one or the other by where they are from: Sonnabend in the north, Samstag in the south and west, with Samstag the more widely used of the two.
 So Saturday has two names in German and neither is a mistake — which is worth knowing before you hear the one you did not learn and assume you misheard it.
@@ -229,7 +232,7 @@ Grammar Lens: two marks, two different jobs.
 Both marks are in words you have been saying for weeks, and they do opposite kinds of work:
 [a table of 2 rows, read aloud]
 mark: ä in spät. what it is: two dots that were once an e. what it tells you: grammar — a changed vowel, marking a form.
-mark: ß in Fuß. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long.
+mark: ß in heiße. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long.
 The umlaut is a grammatical signal: it marks that something has happened to the word. The eszett is a phonetic one: it tells you how long to hold the vowel before it. One points backwards at the word's history, the other forwards at your mouth.
 That is why spät becomes später changes nothing about the ä. The comparative is built by adding -er, and the vowel was already what it was.
 

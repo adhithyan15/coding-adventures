@@ -220,6 +220,12 @@ struct Case {
 fn corpus() -> Vec<Case> {
     vec![
         Case {
+            label: "PREP01 raw/forwarded hex stringization preserves case and zeroes",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                  #define H 0X00aF\n#define S(x) #x\n#define OUTER(x) S(x)\n\
+                  int main(void) { printf(S(0x00Ab)); printf(S(H)); printf(OUTER(H)); printf(S(123)); return 0; }",
+        },
+        Case {
             label: "uint8 literal overflow → 44",
             src: "#include <stdio.h>\n#include <stdint.h>\n\
                    int main(void) { uint8_t c = 200 + 100; printf(\"%d\\n\", c); return 0; }",

@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ഊഞ്ഞാൽ** — *ūññāl* — "a swing".
 
-Say it: *ūññāl*. Look at its shape as you say it: the next lesson takes one
+Say it: *ūññāl*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഊ**, and writes it on its own.
 
 ## Guided Practice

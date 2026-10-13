@@ -14,7 +14,8 @@ romanization: "moḻipeyar"
 concept_tag: TA-VERB-MOLIPEYAR
 prerequisites: [TA-C227-vinnappi, TA-C228-tattaccu-cey]
 sounds: []
-roots: []
+roots: [dravidian-mozhi-word, dravidian-peyar-move]
+etymology_hook: "மொழிபெயர் — native: moḻi 'language' (DEDR 4989) + peyar 'to move' (DEDR 4409)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C228-tattaccu-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C228-ACT228-02]; assesses=[] -->
 
 **மொழிபெயர்** — *moḻipeyar* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மொழிபெயர்** (*moḻipeyar*) is native: *moḻi*, "language" (DEDR 4989), and *peyar*, "to move, to shift" (DEDR 4409): "move into another language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

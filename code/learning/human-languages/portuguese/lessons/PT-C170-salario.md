@@ -13,7 +13,8 @@ gloss: "a salary"
 concept_tag: PT-TRAB170-SALARIO
 prerequisites: [PT-C170-empresa, PT-C170-colega]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salário ← Latin salarium 'salt money', from sal 'salt' — English salary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C170-colega]
 <!-- hl-knowledge: introduces=[PT-LEX-C170-TRAB170-03]; assesses=[] -->
 
 **o salário** — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salário** ← Latin *salarium*, "salt money" (EtymDB 2.1), from *sal*, "salt" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

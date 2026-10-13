@@ -35,7 +35,7 @@ reviews_of: [ES-C54-hay, ES-C49-he-hablado]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-LEX-HABER, ES-GRAMMAR-PERFECT-COMPLETE] -->
 
 [PAUSE 2s] *Hay* looks like nothing. Say the *haber* form for he/she. (*Ha*.)
-Now look at *hay* again with that in mind.
+Now think about *hay* again with that in mind.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ETYMON-HAY-IBI]; assesses=[ES-ETYMON-HABERE, ES-LEX-HABER, ES-GRAMMAR-HAY-NO-AGREEMENT] -->

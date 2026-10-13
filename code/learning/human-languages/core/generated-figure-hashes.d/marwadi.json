@@ -59,6 +59,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MW-W04-ii-matra",
+      "sourceHash": "fnv1a64:ea5f3a13d43100e6",
+      "svgHash": "fnv1a64:067e381021405371",
+      "svg": "marwadi/book/figures/MW-W04-ii-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MW-W04-nna",
       "sourceHash": "fnv1a64:92687716958e5205",
       "svgHash": "fnv1a64:17fb052a6c884987",
@@ -91,6 +98,13 @@
       "sourceHash": "fnv1a64:c3736c72251f4b06",
       "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "marwadi/book/figures/MW-W05-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MW-W05-o-matra",
+      "sourceHash": "fnv1a64:5ee9e3eb446d7388",
+      "svgHash": "fnv1a64:c76e2fe5f76a85af",
+      "svg": "marwadi/book/figures/MW-W05-o-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

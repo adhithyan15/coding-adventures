@@ -8,10 +8,10 @@
     "KA-R81-ten-consonants"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "kannada/narration/ch81.txt",
   "json": "kannada/narration/ch81.json",
-  "textHash": "fnv1a64:1f72bf0773615e26",
-  "jsonHash": "fnv1a64:2b41e9c7c0a00890",
+  "textHash": "fnv1a64:05d22d9ad39f4913",
+  "jsonHash": "fnv1a64:1f04f83f5f582b31",
   "findings": []
 }

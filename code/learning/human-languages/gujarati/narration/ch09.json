@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 9,
   "title": "How Are You?",
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "sourceHash": "fnv1a64:bf462c3f4701478a",
   "lessons": [
     {
@@ -29,7 +29,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-hun-ya-retrieval",
               "prompt": "Without looking back, write ય once.",
               "assesses": [
@@ -192,7 +193,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -277,6 +278,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-kem-bha-retrieval",
               "prompt": "Without looking back, write ભ once.",
               "assesses": [
@@ -334,7 +336,7 @@
         "waitUntilStopped": [
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script retrieval."
       },
       "blocks": [
         {
@@ -436,6 +438,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-tame-kem-chho-dha-retrieval",
               "prompt": "Without looking back, write ધ once.",
               "assesses": [
@@ -494,7 +497,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -599,6 +602,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-majaa-vocalic-r-retrieval",
               "prompt": "Without looking back, write the vowel sign ૃ once.",
               "assesses": [
@@ -656,7 +660,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {

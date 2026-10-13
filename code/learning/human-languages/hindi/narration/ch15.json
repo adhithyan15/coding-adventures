@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 15,
   "title": "Water and Bread",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c0a3aa77b904ed6a",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bfa6d2446e44da0c",
   "lessons": [
     {
       "id": "HI-C15-dhol",
@@ -14,20 +14,13 @@
       "romanization": "ḍhol",
       "gloss": "a drum",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c28e1fcb4b72ed88",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:01c93bd2bc0efeb6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḍhol. Look at its shape as you say it: the next lesson takes one piece of it, ढ (ḍha), and writes it on its own."
+              "text": "Say it: ḍhol."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ढ (ḍha), and writes it on its own."
             }
           ]
         },
@@ -124,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f708474a0e1b7fb",
+      "sourceHash": "fnv1a64:fb0ea537782ae1c6",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +214,17 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the drum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word from this chapter: what is \"a drum\"? (Ḍhol.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -251,7 +268,7 @@
           "Script you'll notice: ष",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ष and Guided Practice."
       },
       "blocks": [
         {
@@ -409,7 +426,7 @@
           "Script: the shortest build, and the last one early",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ढ, Script: the shortest build, and the last one early and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ढ, Script: the shortest build, and the last one early and Guided Practice."
       },
       "blocks": [
         {

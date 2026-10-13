@@ -13,7 +13,8 @@ gloss: "a radio"
 concept_tag: GE-THING162-RADIO
 prerequisites: [GE-C161-keller, GE-C162-sofa]
 sounds: []
-roots: []
+roots: [radius-latin]
+etymology_hook: "Radio ← English radio, from Latin radius 'ray, spoke' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C162-sofa]
 <!-- hl-knowledge: introduces=[GE-LEX-C162-THING162-02]; assesses=[] -->
 
 **das Radio** — "a radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Radio** ← English *radio* (EtymDB 2.1), short for *radiotelegraphy* and built on Latin *radius*, "ray, spoke" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

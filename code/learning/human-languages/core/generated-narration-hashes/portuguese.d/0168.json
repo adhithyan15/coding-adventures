@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 168,
-  "sourceHash": "fnv1a64:4dea5e10618bd68d",
+  "sourceHash": "fnv1a64:ab37c4eca192ccc5",
   "lessonIds": [
     "PT-C168-polvo",
     "PT-C168-alface",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch168.txt",
   "json": "portuguese/narration/ch168.json",
-  "textHash": "fnv1a64:e2f29e02294e8604",
-  "jsonHash": "fnv1a64:4bb3f60eba2c8669",
+  "textHash": "fnv1a64:30a106c77fa3aded",
+  "jsonHash": "fnv1a64:f7ad166021cebc42",
   "findings": []
 }

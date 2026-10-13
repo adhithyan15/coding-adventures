@@ -4,9 +4,10 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; pre-A1 and A1 task inventories and mock pairs are
-checked in. A2-C2 inventories and mocks, calibration, and human validation
-remain backlog. No book-only readiness is claimed.
+**Status:** all seven task inventories, two timed mock forms per rung, shared
+rubrics, answer keys, and the machine-readable assessment contract are checked
+in. Calibration and human validation remain backlog. No book-only readiness is
+claimed.
 
 This specification names the assessment that the complete Bengali book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -14,11 +15,11 @@ qualification, and it does not claim that the current book is exam-ready. The
 learner-facing name at each rung is **Coding Adventures Bengali <Level>
 Assessment — project-defined equivalent**.
 
-No `assessment.json` is checked in for Bengali yet, and that omission is
-deliberate. The machine-readable contract names required artifacts by path, and
-the artifact gate treats a path that leads nowhere as an error rather than as a
-promise. The contract is therefore written after the inventories, mocks, rubrics
-and answer keys it points at, not before them.
+The machine-readable contract was added only after every inventory, mock,
+rubric, and answer key it names existed. The artifact gate treats a path that
+leads nowhere as an error rather than as a promise, so the contract records
+checked-in assessment structure without implying calibration or human
+validation.
 
 ## Evidence and scope
 

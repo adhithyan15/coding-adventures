@@ -11,6 +11,11 @@
     "kind": "task",
     "summary": "Say el agua, el vino and el pan, then open compañero into com- plus pānis and follow the root out to panadería and panadero.",
     "assesses": [
+      "ES-LEX-AGUA-01",
+      "ES-ETYMON-AGUA-02",
+      "ES-GRAMMAR-AGUA-ARTICLE-03",
+      "ES-LEX-VINO-04",
+      "ES-ETYMON-VINO-05",
       "ES-LEX-PAN-01",
       "ES-ETYMON-PAN-02",
       "ES-ETYMON-COMPANION-03"

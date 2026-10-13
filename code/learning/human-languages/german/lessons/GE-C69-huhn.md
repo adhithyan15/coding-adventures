@@ -13,7 +13,8 @@ gloss: "a chicken"
 concept_tag: GE-ESSEN1-HUHN
 prerequisites: [GE-C69-fisch, GE-C69-fleisch]
 sounds: []
-roots: []
+roots: [germanic-hona]
+etymology_hook: "Huhn ← Old High German huon ← Proto-Germanic *hōną 'hen, chicken' — from the same root as English hen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C69-fleisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C69-ESSEN1-03]; assesses=[] -->
 
 **das Huhn** — "a chicken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Huhn** ← Old High German *huon* ← Proto-Germanic *\*hōną*, "hen, chicken" — inherited. (EtymDB 2.1) It shares its root with English *hen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

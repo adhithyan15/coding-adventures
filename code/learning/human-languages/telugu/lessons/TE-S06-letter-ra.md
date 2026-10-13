@@ -57,12 +57,15 @@ You already say these, and every one of them has ర somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 loops
-counterclockwise around the main bowl. Lift; movement 2 travels down and up
-through the separate upper chevron, from left to right.
+counterclockwise around the main bowl. Without lifting, movement 2 climbs a
+short way up the chevron's left arm, and movement 3 travels down and up through
+the upper chevron, from left to right. The strip gives that short climb a panel
+of its own, so the two movements are numbered as three.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the two movements
-clear and make the short lift between them.
+the printed shape here; Telugu handwriting varies, but most native writers draw
+ర as one unbroken stroke, so keep the pen on the paper from the bowl to the end
+of the chevron.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->

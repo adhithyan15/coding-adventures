@@ -14,7 +14,8 @@ romanization: "kalāccāram"
 concept_tag: TA-PORUL246-KALACCARAM
 prerequisites: [TA-C246-kontattam, TA-C246-pattacu]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art, sanskrit-acara]
+etymology_hook: "கலாச்சாரம் — a coinage from Sanskrit kalā 'art' (CDIAL 2927) + ācāra 'custom' (CDIAL 1071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C246-pattacu]
 <!-- hl-knowledge: introduces=[TA-LEX-C246-PORUL246-03]; assesses=[] -->
 
 **கலாச்சாரம்** — *kalāccāram* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கலாச்சாரம்** (*kalāccāram*) is a modern coinage from Sanskrit *kalā*, "art" (CDIAL 2927), and *ācāra*, "conduct, custom" (CDIAL 1071). Which way *kalā* travelled is debated: CDIAL takes it from Dravidian, while DEDR files the native Tamil word for "art" under the verb "to learn" (DEDR 1297) and only compares *kalā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C121-shikakui-type",
-              "prompt": "Type the Japanese for 'square'.",
+              "prompt": "Say the Japanese for 'square'.",
               "assesses": [
                 "JA-LEX-C121-QUAL121-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C121-momoiro-type",
-              "prompt": "Type the Japanese for 'pink'.",
+              "prompt": "Say the Japanese for 'pink'.",
               "assesses": [
                 "JA-LEX-C121-QUAL121-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C121-haiiro-type",
-              "prompt": "Type the Japanese for 'grey'.",
+              "prompt": "Say the Japanese for 'grey'.",
               "assesses": [
                 "JA-LEX-C121-QUAL121-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C121-usui-type",
-              "prompt": "Type the Japanese for 'thin, weak (of taste or colour)'.",
+              "prompt": "Say the Japanese for 'thin, weak (of taste or colour)'.",
               "assesses": [
                 "JA-LEX-C121-QUAL121-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C121-asai-type",
-              "prompt": "Type the Japanese for 'shallow'.",
+              "prompt": "Say the Japanese for 'shallow'.",
               "assesses": [
                 "JA-LEX-C121-QUAL121-05"
               ],

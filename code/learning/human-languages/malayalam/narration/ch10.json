@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 10,
   "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0c0b443388811b9",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:5196537eb7b44c16",
   "lessons": [
     {
       "id": "ML-C10-azhcha",
@@ -14,22 +14,13 @@
       "romanization": "tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
       "gloss": "the seven weekdays — Malayalam shares Tamil's native planet-words, being its closest cousin",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65858357f72d9127",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f9cd8c657bfc1f5f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -54,17 +45,23 @@
           "title": "You'll want to know",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 7,
+              "kind": "table",
               "headers": [
                 "Malayalam",
-                "planet-word",
-                "meaning",
+                "planet-word, and its meaning",
                 "compare Tamil"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 7 rows, and it has more columns than can be held in the ear at once. Its columns are: Malayalam, planet-word, meaning, compare Tamil. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "Malayalam: തിങ്കളാഴ്ച. planet-word, and its meaning: tiṅkaḷ, \"Moon\". compare Tamil: thiṅgaḷ — nearly identical.",
+                "Malayalam: ചൊവ്വാഴ്ച. planet-word, and its meaning: covva, traditionally \"the red one\". compare Tamil: cevvāy — the same word, worn differently.",
+                "Malayalam: ബുധനാഴ്ച. planet-word, and its meaning: budhan, Mercury. compare Tamil: Sanskrit Budha, same as Tamil pudhaṉ.",
+                "Malayalam: വ്യാഴാഴ്ച. planet-word, and its meaning: vyāzham, Jupiter. compare Tamil: matches Tamil's viyāzhaṉ closely.",
+                "Malayalam: വെള്ളിയാഴ്ച. planet-word, and its meaning: veḷḷi, traditionally \"silver\". compare Tamil: veḷḷi — the same word.",
+                "Malayalam: ശനിയാഴ്ച. planet-word, and its meaning: śani, Saturn. compare Tamil: Sanskrit Śani, same as Tamil saṉi.",
+                "Malayalam: ഞായറാഴ്ച. planet-word, and its meaning: ñāyar, \"Sun\". compare Tamil: ñāyiṟu — the same root."
+              ]
             }
           ]
         },
@@ -164,7 +161,7 @@
           "Script you'll notice: ന",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ന and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ന and Guided Practice."
       },
       "blocks": [
         {

@@ -14,7 +14,8 @@ romanization: "ūñcal"
 concept_tag: TA-PORUL250-UNCAL
 prerequisites: [TA-C249-potti, TA-C250-kutaram]
 sounds: []
-roots: []
+roots: [dravidian-uunjal-swing]
+etymology_hook: "ஊஞ்சல் — native Dravidian (DEDR 731); Malayalam ūñcal 'swing', Kannada uyyāle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C250-kutaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C250-PORUL250-02]; assesses=[] -->
 
 **ஊஞ்சல்** — *ūñcal* — "a swing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊஞ்சல்** (*ūñcal*) is native Dravidian. DEDR 731 lists Malayalam *ūñcal*, "swing" and Kannada *uyyāle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

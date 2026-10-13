@@ -13,7 +13,7 @@ sounds: [eszett]
 roots: []
 etymology_hook: "eszett means s-z: a long s joined to a following s or z in the old German hand, fused into one letter"
 duration:
-  max_seconds: 240
+  max_seconds: 289
 requires:
   knowledge: [GE-LEX-HEISSEN-02, GE-SOUND-HEISSEN-01]
 introduces:
@@ -53,6 +53,11 @@ It is a **ligature**: two letters fused into one shape. Its name says which two.
 drawn like an *f* without its crossbar) was joined to a following *s* or *z*, and
 the join hardened into **ß**.
 
+## The letter, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ß** is a letter, not a word: in the old German hand a long *s* joined to a following *s* or *z* fused into one shape, which is why it is called *Es-zett*, "s-z".
+
 ## Grammar Lens: ß after long, ss after short
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02]; assesses=[GE-LEX-ESZETT-01] -->
 
@@ -62,8 +67,7 @@ letter tells you how long to hold the vowel *before* it.
 | ß — long vowel | ss — short vowel |
 |---|---|
 | *Straße* (long *a*) | *Fluss* (short *u*) |
-| *Fuß* (long *u*) | *muss* (short *u*) |
-| *weiß* (diphthong *ei*) | *Kuss* (short *u*) |
+| *heiße* (diphthong *ei*) | *muss* (short *u*) |
 | *groß* (long *o*) | *Schloss* (short *o*) |
 
 So seeing **ß** means "the vowel before me is long." *Straße* stretches its *a*;
@@ -74,7 +78,7 @@ So seeing **ß** means "the vowel before me is long." *Straße* stretches its *a
 <!-- hl-writing-stage: guided-copy -->
 
 Draw it as a tall loop joined to a descending tail — the long-s curve, then the
-s/z finish. Copy **weiß** once with the model in view, then **Straße**.
+s/z finish. Copy **heiße** once with the model in view, then **Straße**.
 
 Say each word as you finish it, and stretch the vowel the **ß** is telling you to
 stretch.

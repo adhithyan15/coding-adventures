@@ -37,14 +37,14 @@ variety: standard
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 
-[PAUSE 2s] From memory, write **વ**, **ય** and **ક** once each. Then say *kaṇ* and *śak*, and what each means.
+[PAUSE 2s] [YOU WRITE: **વ**, **ય** and **ક** once each, from memory.] Then say *kaṇ* and *śak*, and what each means.
 
 ## You'll want to know: દિવાળી
 <!-- hl-knowledge: introduces=[GU-LEX-ANCHOR-DIVAALI]; assesses=[] -->
 
 **દિવાળી** — *divāḷī* — "Diwali, the festival of lights".
 
-Say it: *divāḷī*. Look at its shape as you say it: the lessons that follow take pieces of it, **ળ** and **િ**, and write each one on its own.
+Say it: *divāḷī*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ળ** and **િ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-DIVAALI] -->

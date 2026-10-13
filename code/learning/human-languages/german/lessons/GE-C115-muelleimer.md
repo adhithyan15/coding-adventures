@@ -13,7 +13,8 @@ gloss: "a bin"
 concept_tag: GE-HAUS115-MUELLEIMER
 prerequisites: [GE-C114-zahnpasta, GE-C115-kamm]
 sounds: []
-roots: []
+roots: [amphora-latin]
+etymology_hook: "Mülleimer — Müll 'rubbish' + Eimer 'bucket': a rubbish bucket"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C115-kamm]
 <!-- hl-knowledge: introduces=[GE-LEX-C115-HAUS115-02]; assesses=[] -->
 
 **der Mülleimer** — "a bin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mülleimer** is the word for "rubbish" + the word for "bucket" (EtymDB 2.1). The bucket word, Middle High German *eimer*, goes back to Latin *amphora*, reshaped as if it meant "one-carrier".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

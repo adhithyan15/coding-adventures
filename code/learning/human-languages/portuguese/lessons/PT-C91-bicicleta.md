@@ -14,6 +14,7 @@ concept_tag: PT-VIAGEM91-BICICLETA
 prerequisites: [PT-C91-viagem, PT-C91-ferias]
 sounds: []
 roots: []
+etymology_hook: "bicicleta ← French bicyclette, from bi- 'two' + Greek kyklos 'wheel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C91-ferias]
 <!-- hl-knowledge: introduces=[PT-LEX-C91-VIAGEM91-05]; assesses=[] -->
 
 **a bicicleta** — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bicicleta** ← French *bicyclette* (EtymDB 2.1) — borrowed. It was built from Latin *bi-*, "two", and Greek *kyklos*, "wheel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

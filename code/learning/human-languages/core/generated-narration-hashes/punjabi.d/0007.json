@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:b18c4bccdb60327a",
+  "sourceHash": "fnv1a64:0a3ad19c57fb23fb",
   "lessonIds": [
     "PA-C07-hona",
     "PA-C07-hona-two-roots",
@@ -19,7 +19,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch07.txt",
   "json": "punjabi/narration/ch07.json",
-  "textHash": "fnv1a64:901617cde2500e2b",
-  "jsonHash": "fnv1a64:26911ed54394e3f6",
+  "textHash": "fnv1a64:79779fed798eb18c",
+  "jsonHash": "fnv1a64:00bb815a53dc3152",
   "findings": []
 }

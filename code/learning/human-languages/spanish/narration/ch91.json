@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-repaso-ocho-all",
               "prompt": "Give all eight direct object pronouns.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-repaso-ocho-quarter",
               "prompt": "Which four of the eight need you to know a noun's gender?",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-repaso-ocho-free",
               "prompt": "Which two of the eight did you never have to be taught?",
               "assesses": [

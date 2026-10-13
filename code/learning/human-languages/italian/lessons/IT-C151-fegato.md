@@ -13,7 +13,8 @@ gloss: "the liver"
 concept_tag: IT-SAL151-FEGATO
 prerequisites: [IT-C151-cervello, IT-C151-polmone]
 sounds: []
-roots: []
+roots: [ficus-latin]
+etymology_hook: "fegato ← Late Latin ficatum, from iecur ficatum 'fig-fattened liver' — ficus 'fig'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C151-polmone]
 <!-- hl-knowledge: introduces=[IT-LEX-C151-SAL151-03]; assesses=[] -->
 
 **il fegato** — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fegato** ← Late Latin *ficatum*, "liver", short for *iecur ficatum*, "liver fattened with figs" (EtymDB 2.1) — inherited. Fig-fattened liver was a Roman delicacy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

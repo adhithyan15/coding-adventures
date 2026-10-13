@@ -4,8 +4,138 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.1` accumulate here until the next version is
+Entries added after `task-app-v0.5.4` accumulate here until the next version is
 cut.
+
+### Fixed — Qt elevation shadows leave the degradation report (#17386)
+
+Qt now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits equivalent native `MultiEffect`
+depth. Fresh strict generation retires ten false-positive shadow omissions and
+reduces the measured Qt style inventory from 93 to 83. A raw shadow without
+elevation and the inset theme-toggle moon effect remain explicit debt.
+
+## [0.5.4] - 2026-10-12
+
+### Fixed — SwiftUI elevation tokens emit native shadows (#17365)
+
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to fixed
+native `.shadow` modifiers. Fresh strict generation retires ten elevation drops
+and ten paired non-inset shadow omissions, reducing the measured SwiftUI style
+inventory from 83 to 63. Standalone raw shadows, inset shadows, and unsupported
+elevation values remain explicit debt.
+
+### Fixed — Compose elevation shadows leave the degradation report (#17356)
+
+Compose now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Compose style inventory from 50 to 40. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Qt controls preserve fill widths (#17338)
+
+Qt now lowers exact `width: 100%` declarations on TaskApp inputs and buttons
+to `Layout.fillWidth: true`. Fresh strict generation retires all 15 affected
+control-width omissions and reduces the measured Qt style inventory from 108
+to 93. The three remaining Qt width drops are `Text` geometry; other
+percentages and mixed fixed/fill states remain explicit debt.
+
+## [0.5.3] - 2026-10-12
+
+### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
+
+Flutter now emits the shared gap helper whenever an undecorated drag/drop body
+starting with `If`/`Else` calls it, and decorated conditional bodies retain any
+following ordinary child in the evaluated vertical list. This prevents an
+undefined Dart helper and silent child loss without changing TaskApp's current
+style-degradation inventory or native drag semantics.
+
+### Fixed — Flutter elevation shadows leave the degradation report (#17308)
+
+Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Flutter style inventory from 79 to 69. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
+
+Flutter now applies authored `gap` values to the evaluated vertical child lists
+inside `HostDraggable` and `HostDropTarget`. Board-card single-child gaps remain
+safe no-ops, while the board-column and calendar drop targets preserve spacing
+between loop-produced cards and events. Fresh strict generation retires all
+four Flutter `gap` omissions and reduces the measured style inventory from 83
+to 79 without changing native drag, keyboard, or drop semantics.
+
+### Fixed — Flutter preserves the seven-column calendar layout (#17289)
+
+Flutter now lowers valid percentage widths on bounded direct row children to
+proportional flex shares and lowers wrapping rows to native `Wrap` widgets with
+fractionally sized children. TaskApp's seven weekday headers and 42 day cells
+therefore preserve their authored seven-column geometry. Fresh strict generation
+retires seven `width` omissions and the calendar grid's `flex-wrap` omission,
+reducing Flutter's measured style inventory from 91 to 83. Invalid percentages
+and percentages without a finite parent remain explicit debt.
+
+### Fixed — Flutter style-ratchet tests match the retired width debt (#17273)
+
+The focused native-control-contract suite now expects Flutter's measured 91
+style degradations and rejects an eighth dropped `width`, matching the
+post-#17254 baseline of seven. This is a test-only correction; it does not
+change TaskApp runtime or release coverage.
+
+## [0.5.2] - 2026-10-11
+
+### Fixed — Flutter leaves preserve bounded fill widths (#17251)
+
+Flutter now lowers `width: 100%` on text, input, and button leaves when the
+parent supplies a finite horizontal constraint. Bounded columns use an
+infinite-width `SizedBox` that resolves against the parent, while direct row
+children and matching conditional branches use exactly one parent-owned
+`Expanded`. Fresh strict generation retires all 16 TaskApp fill-width
+omissions and reduces Flutter's measured style inventory from 107 to 91. The
+seven calendar weekday `14.2857%` widths remain explicit debt.
+
+### Fixed — Flutter text and button alignment (#17237)
+
+Flutter now lowers supported `text-align` declarations on `Text` and
+`HostButton` leaves through native text and button alignment APIs. Calendar
+headings and today's day number retain their authored centering, while project,
+notes, and task buttons retain their authored left alignment. Fresh strict
+generation retires all 14 alignment omissions and reduces Flutter's measured
+style inventory from 121 to 107. Unsupported values remain reported debt.
+
+### Fixed — Flutter surfaces preserve authored corner radii (#17224)
+
+Flutter now lowers supported fixed `border-radius` declarations through native
+decorations, clips, and input borders across TaskApp's draggable cards,
+calendar events, text chips, inputs, and timeline grid. The rounded text
+surface also paints its authored background in the same decoration. Fresh
+strict generation retires all 15 radius omissions and eight coupled background
+omissions, reducing Flutter's measured style inventory from 144 to 121.
+Relative, negative, and otherwise unsafe radius values remain explicit debt.
+
+### Fixed — Qt calendar events preserve text styling and elision (#17146)
+
+Qt `HostDraggable` now passes supported authored color and font size to its
+descendant labels and lowers the calendar event's complete
+hidden/ellipsis/nowrap trio to native surface clipping and single-line right
+elision. Fresh strict generation retires all five remaining calendar-event
+omissions and reduces the honest Qt style inventory from 113 to 108; partial
+or unsupported values remain reported debt.
+
+### Fixed — Qt draggable cards preserve their authored surfaces (#17128)
+
+Qt `HostDraggable` now lowers TaskApp's card fill, padding, internal gap,
+uniform border, overdue left accent, radius, and grab cursor on the same native
+surface that owns drag and elevation behavior. Fresh strict generation retires
+20 of the 22 board-card omissions surfaced by #17126; the two raw CSS
+`box-shadow` values remain explicit debt because native shadowing comes from
+the separate `elevation` token. The generic draggable-surface and per-edge
+reporting fixes retire 36 previously omitted declarations while exposing five
+existing calendar-event text omissions tracked by #17146, reducing the honest
+Qt inventory from 144 to 113.
 
 ### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
 

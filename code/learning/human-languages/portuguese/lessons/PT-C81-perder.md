@@ -13,7 +13,8 @@ gloss: "to lose"
 concept_tag: PT-VERB-PERDER
 prerequisites: [PT-C81-esquecer, PT-C81-procurar]
 sounds: []
-roots: []
+roots: [perdere-latin]
+etymology_hook: "perder ← Latin perdere 'to lose, to destroy' — English perdition shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C81-procurar]
 <!-- hl-knowledge: introduces=[PT-LEX-C81-VERBOS7-04]; assesses=[] -->
 
 **perder** — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perder** ← Latin *perdere*, "to lose, to destroy" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

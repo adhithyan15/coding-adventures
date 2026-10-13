@@ -14,6 +14,7 @@ concept_tag: PT-VERB-GRAVAR
 prerequisites: [PT-C208-escorregar, PT-C209-desaparecer]
 sounds: []
 roots: []
+etymology_hook: "gravar ← French graver 'to engrave', a Germanic verb — English engrave"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C209-desaparecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C209-VERBOS209-02]; assesses=[] -->
 
 **gravar** — "to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gravar** ← French *graver*, "to engrave" — borrowed. The French verb is Germanic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

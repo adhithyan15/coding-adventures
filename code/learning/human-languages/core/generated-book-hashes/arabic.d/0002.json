@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 2,
-  "sourceHash": "fnv1a64:c3224804a4501653",
+  "sourceHash": "fnv1a64:3e68efc24b9ec30e",
   "lessonIds": [
     "AR-C02-ism",
     "AR-C02-ii-my",
@@ -18,7 +18,8 @@
     "AR-W06-harakat-and-hamza",
     "AR-C02-ahlan",
     "AR-W06-sukun-shadda-tanwin",
-    "AR-W06-hamza"
+    "AR-W06-hamza",
+    "AR-C02-checkpoint"
   ],
   "tex": "arabic/book/chapters/ch02-introductions.tex"
 }

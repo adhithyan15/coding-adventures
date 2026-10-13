@@ -13,7 +13,8 @@ gloss: "sadness"
 concept_tag: FR-SENTIR7-TRISTESSE
 prerequisites: [FR-C55-peur, FR-C55-colere]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "tristesse ← Latin tristitia 'sadness', from tristis 'sad'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C55-colere]
 <!-- hl-knowledge: introduces=[FR-LEX-C55-SENTIR7-04]; assesses=[] -->
 
 **la tristesse** — "sadness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tristesse** ← Latin *tristitia*, "sadness", from *tristis*, "sad" — inherited; Latin *-itia* became French *-esse*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an ointment"
 concept_tag: GE-THING206-SALBE
 prerequisites: [GE-C206-wunde, GE-C206-pflaster]
 sounds: []
-roots: []
+roots: [germanic-salbo]
+etymology_hook: "Salbe ← Old High German salba — the same Germanic word as English salve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C206-pflaster]
 <!-- hl-knowledge: introduces=[GE-LEX-C206-THING206-03]; assesses=[] -->
 
 **die Salbe** — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Salbe** ← Middle High German *salbe* ← Old High German *salba* — inherited, the same word as English *salve*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -45,15 +45,15 @@ verbs.
 
 > **думать** — *dúmat'* — **to think**
 
-No new letters, and the **-ть** of *знать*. Stress on the first syllable, and it
+No new letters, and the **-ть** of *znat'*. Stress on the first syllable, and it
 never moves: **DOO-mat'**.
 
-> **Я думаю.** — *ya dúmayu* — **I think.**
+> *ya dúmayu* — **I think.**
 
-That **-ю** is the one you put on *знаю*. And **ты думаешь** — an **-ешь**, so
-*думать* files with *знать*, not *говорить*.
+That **-ю** is the one you put on *znáyu*. And *ty dúmayesh* — an **-yesh**, so
+*думать* files with *znat'*, not *говорить*.
 
-Three verbs of the head now: **я знаю** is a fact I hold, **я вижу** is what
+Three verbs of the head now: *ya znáyu* is a fact I hold, *ya vízhu* is what
 reaches my eyes, **я думаю** is what goes on behind them.
 
 ## Grammar Lens: every Russian verb travels with a partner
@@ -85,21 +85,21 @@ relatives **by contact**, not by descent; a minority prefer an inherited root.
 
 Latin's *cogito, ergo sum* is built on the same idea, and its other pieces are
 yours: the **-o** of *cogito* is Latin **ego**, the pronoun Russian keeps as
-**я**; and *fuī*, "I was," is **быть**'s root, English **be**.
+**я**; and *fuī*, "I was," is *byt'*'s root, English **be**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DUMAT, RU-ETYMON-DUMAT-DUMA, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-ZNAT, RU-LEX-VIDET, RU-LEX-IDTI] -->
 
 [PAUSE 1s]
 - [YOU SAY: "думать" — *DOO-mat'*, stress on the front]
-- [YOU SAY: the three heads — "я знаю … я вижу … я думаю"]
+- [YOU SAY: the three heads — "ya znáyu … ya vízhu … ya dúmayu"]
 - [YOU SAY: the pair — "думать … подумать", the doing and the done]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DUMAT, RU-ETYMON-DUMAT-DUMA, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-YA, RU-ETYMON-YA-EGO, RU-LEX-BYT, RU-ETYMON-BYT-BE, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-ZNAT, RU-LEX-VIDET, RU-LEX-IDTI, RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL] -->
 
-[PAUSE 3s] Say "I think." (**Я думаю**.) Which family does *думать* join,
-*знаешь* or *говоришь*? (**Знаешь**.) What is *подумать* beside *думать*, and
+[PAUSE 3s] Say "I think." (*Ya dúmayu*.) Which family does *думать* join,
+*znáyesh* or *gavarísh*? (*Znáyesh*.) What is *подумать* beside *думать*, and
 how many verbs have such a partner? (The **finished** member; nearly **all**.)
 Which English word does the standard account attach *дума* to? (**Doom**, by
 borrowing.)

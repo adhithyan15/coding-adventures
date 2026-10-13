@@ -13,7 +13,8 @@ gloss: "far"
 concept_tag: FR-TEMPS48-LOIN
 prerequisites: [FR-C96-maintenant, FR-C96-puis]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "loin ← Latin longe 'far off', from longus 'long' — English long is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C96-puis]
 <!-- hl-knowledge: introduces=[FR-LEX-C96-TEMPS48-04]; assesses=[] -->
 
 **loin** — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loin** ← Latin *longe*, "far off", from *longus*, "long" (EtymDB 2.1 records the Latin word) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

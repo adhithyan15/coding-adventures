@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C40-kasa-type",
-              "prompt": "Type the Japanese for 'an umbrella'.",
+              "prompt": "Say the Japanese for 'an umbrella'.",
               "assesses": [
                 "JA-LEX-C40-HOME40-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C40-gakkou-type",
-              "prompt": "Type the Japanese for 'a school'.",
+              "prompt": "Say the Japanese for 'a school'.",
               "assesses": [
                 "JA-LEX-C40-HOME40-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C40-shukudai-type",
-              "prompt": "Type the Japanese for 'homework'.",
+              "prompt": "Say the Japanese for 'homework'.",
               "assesses": [
                 "JA-LEX-C40-HOME40-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C40-mondai-type",
-              "prompt": "Type the Japanese for 'a problem, a question'.",
+              "prompt": "Say the Japanese for 'a problem, a question'.",
               "assesses": [
                 "JA-LEX-C40-HOME40-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C40-kotae-type",
-              "prompt": "Type the Japanese for 'an answer'.",
+              "prompt": "Say the Japanese for 'an answer'.",
               "assesses": [
                 "JA-LEX-C40-HOME40-05"
               ],

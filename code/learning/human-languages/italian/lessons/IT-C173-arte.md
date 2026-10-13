@@ -13,7 +13,8 @@ gloss: "art"
 concept_tag: IT-LAV173-ARTE
 prerequisites: [IT-C173-matematica, IT-C173-scienza]
 sounds: []
-roots: []
+roots: [ars-latin]
+etymology_hook: "arte ← Latin ars, artem 'skill' — English art is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C173-scienza]
 <!-- hl-knowledge: introduces=[IT-LEX-C173-LAV173-04]; assesses=[] -->
 
 **l'arte** — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arte** ← Latin *artem*, "skill, art" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

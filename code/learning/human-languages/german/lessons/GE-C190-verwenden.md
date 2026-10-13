@@ -13,7 +13,8 @@ gloss: "to use"
 concept_tag: GE-VERB-VERWENDEN
 prerequisites: [GE-C190-verpassen, GE-C190-verschieben]
 sounds: []
-roots: []
+roots: [germanic-wandijana]
+etymology_hook: "verwenden — ver- + wenden 'to turn', the same verb as English wend: to turn something to use"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C190-verschieben]
 <!-- hl-knowledge: introduces=[GE-LEX-C190-VERB190-05]; assesses=[] -->
 
 **verwenden** — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verwenden** is *ver-* + the verb "to turn", Old High German *wenten* ← Proto-Germanic *\*wandijaną* (EtymDB 2.1), the same verb as English *wend*: to turn something to a use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

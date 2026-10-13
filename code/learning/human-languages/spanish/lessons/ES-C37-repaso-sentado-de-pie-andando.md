@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09, ES-LEX-DE-PIE-11, ES-LEX-CAMINAR-07, ES-LEX-ANDAR-08]
+  knowledge: [ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09, ES-LEX-DE-PIE-11, ES-LEX-CAMINAR-07, ES-LEX-ANDAR-08, ES-ETYMON-CABEZA-02, ES-ETYMON-TETE-COMPARISON-03]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -83,8 +83,10 @@ has settled.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SENTARSE-07, ES-LEX-DE-PIE-11, ES-LEX-ANDAR-08] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SENTARSE-07, ES-LEX-DE-PIE-11, ES-LEX-ANDAR-08, ES-ETYMON-CABEZA-02, ES-ETYMON-TETE-COMPARISON-03] -->
 
 [PAUSE 3s] What did Latin build *sentar* and *levantar* out of? (**A participle**
 — *sedēns* and *levāns*.) What does *de pie* mean literally? (**On foot**.)
 Which of the four verbs has no agreed origin? (***Andar***.)
+
+[PAUSE 2s] And the head you lift with *levantar*: which Latin word is *cabeza*, and why does French say *tête* instead? (***Caput***, as in *captain*; French swapped in *testa*, a clay pot — a Roman joke.)

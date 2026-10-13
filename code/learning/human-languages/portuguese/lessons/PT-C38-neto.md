@@ -13,7 +13,8 @@ gloss: "a grandson"
 concept_tag: PT-FAMILIA2-NETO
 prerequisites: [PT-C38-tia, PT-C38-primo]
 sounds: []
-roots: []
+roots: [neptis-latin]
+etymology_hook: "neto ← Vulgar Latin *neptus, a masculine made from Latin neptis 'granddaughter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C38-primo]
 <!-- hl-knowledge: introduces=[PT-LEX-C38-FAMILIA2-04]; assesses=[] -->
 
 **o neto** — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neto** ← Vulgar Latin *\*neptus*, "grandson", a masculine made from Latin *neptis*, "granddaughter" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *neto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

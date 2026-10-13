@@ -13,7 +13,8 @@ gloss: "full"
 concept_tag: PT-ADJ4-CHEIO
 prerequisites: [PT-C67-alto, PT-C67-baixo]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "cheio ← Latin plenus 'full': pl- became ch- — English plenty shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C67-baixo]
 <!-- hl-knowledge: introduces=[PT-LEX-C67-ADJ4-04]; assesses=[] -->
 
 **cheio** — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cheio** ← Latin *plenus*, "full" (EtymDB 2.1) — inherited. Latin *pl-* became *ch-*, and the *-n-* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

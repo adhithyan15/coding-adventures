@@ -13,7 +13,8 @@ gloss: "a station"
 concept_tag: PT-CIDADE2-ESTACAO
 prerequisites: [PT-C73-mercado, PT-C73-banco]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "estação ← Latin statio 'a standing, a post', from stare — English station"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C73-banco]
 <!-- hl-knowledge: introduces=[PT-LEX-C74-CIDADE2-01]; assesses=[] -->
 
 **a estação** — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estação** ← Latin *statio, stationis*, "a standing, a post" (EtymDB 2.1), from *stare*, "to stand" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

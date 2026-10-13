@@ -13,7 +13,8 @@ gloss: "to point out"
 concept_tag: FR-VERB-INDIQUER
 prerequisites: [FR-C209-profiter, FR-C209-imaginer]
 sounds: []
-roots: []
+roots: [indicare-latin]
+etymology_hook: "indiquer ← Latin indicare 'to point out' — English indicate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C209-imaginer]
 <!-- hl-knowledge: introduces=[FR-LEX-C209-VERBES209-03]; assesses=[] -->
 
 **indiquer** — "to point out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**indiquer** ← Latin *indicare*, "to point out" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

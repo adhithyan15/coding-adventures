@@ -13,7 +13,8 @@ gloss: "the government"
 concept_tag: IT-COSE248-GOVERNO
 prerequisites: [IT-C248-zanzara, IT-C248-societa]
 sounds: []
-roots: []
+roots: [gubernare-latin]
+etymology_hook: "governo — from governare, Latin gubernare 'to steer a ship' — English government"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C248-societa]
 <!-- hl-knowledge: introduces=[IT-LEX-C248-COSE248-05]; assesses=[] -->
 
 **il governo** — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**governo** is the noun of *governare*, "to govern", from Latin *gubernare*, "to steer a ship" (Lewis & Short), which Latin took from Greek *kybernan*. EtymDB 2.1 lists Portuguese *governo* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

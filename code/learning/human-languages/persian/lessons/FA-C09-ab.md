@@ -37,27 +37,27 @@ reviews_of: [FA-C08-dust-dashtan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DASHTAN, FA-STEM-DAR, FA-LEX-DUST-DASHTAN] -->
 
-[PAUSE 2s] The last chapter closed on **داشتن** *dâshtan*, “to have,” stem
-**دار** *dâr*. This chapter names what to ask for when you do not have it yet.
+[PAUSE 2s] The last chapter closed on *dâshtan*, “to have,” stem
+*dâr*. This chapter names what to ask for when you do not have it yet.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-AB]; assesses=[] -->
 
 > **آب** — *âb* — **water**
 
-Two letters, both already yours: **آ**, alef with *madde*, from **آمدن**; then
+Two letters, both already yours: **آ**, alef with *madde*, from *âmadan*; then
 **ب** *b*.
 
 ## Grammar Lens: your first Persian "please"
 <!-- hl-knowledge: introduces=[FA-PHRASE-LOTFAN]; assesses=[] -->
 
-> **آب، لطفاً.** — *âb, lotfan.* — **Water, please.**
+> *âb, lotfan.* — **Water, please.**
 
-Name the thing you want, add **لطفاً** *lotfan*, and the request is complete —
-no verb required. **لطفاً** ends in a small hooked mark, **ً**, called
+Name the thing you want, add *lotfan*, and the request is complete —
+no verb required. *lotfan* ends in a small doubled stroke above its alef, called
 *tanvin*: an Arabic grammatical ending, pronounced *-an*, that survives in
 Persian only inside a short list of frozen Arabic adverbs borrowed whole —
-**لطفاً** and **تقریباً** *taghriban*, “approximately,” are two of them — and
+*lotfan* and *taghriban*, “approximately,” are two of them — and
 plays no part in ordinary Persian spelling. This is the first request this
 track has built.
 
@@ -66,7 +66,7 @@ track has built.
 
 **آب** continues Old Persian ***āp-***, from Indo-European \**h₂ep-*, “water” —
 the root Sanskrit kept as **áp-**, still visible today inside a place-name:
-**Punjab** is usually explained as this same word, **پنج آب** *panj âb*,
+**Punjab** is usually explained as this same word, *panj âb*,
 “five waters,” naming the region's five rivers.
 
 Hindi and Marathi's everyday word for water, **pānī**, is not this word at
@@ -89,12 +89,12 @@ ancient words for the same thing, and Persian happened to keep the older one.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-AB, FA-PHRASE-LOTFAN, FA-ETYMON-AB] -->
-<!-- hl-activity: {"id":"FA-C09-ab-request","kind":"text","assesses":["FA-PHRASE-LOTFAN"],"prompt":"Type the Persian for 'water, please'.","answer":"آب، لطفاً","accepted":["ab lotfan","âb, lotfan","ab, lotfan","āb lotfan"],"feedback":{"correct":"Right: آب، لطفاً — âb, lotfan.","incorrect":"Use آب، لطفاً — âb, lotfan."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"FA-C09-ab-request","kind":"text","assesses":["FA-PHRASE-LOTFAN"],"prompt":"Type the Persian for 'water, please'.","answer":"âb, lotfan","accepted":["ab lotfan","ab, lotfan","āb lotfan"],"feedback":{"correct":"Right: âb, lotfan.","incorrect":"Use âb, lotfan."},"response_seconds":9} -->
 
-[PAUSE 3s] Ask for water politely. (**Âb, lotfan.**) What is the **ً** at the
-end of **لطفاً** called, and where else does Persian use it? (*Tanvin*; only
+[PAUSE 3s] Ask for water politely. (**Âb, lotfan.**) What is the small doubled stroke at the
+end of *lotfan* called, and where else does Persian use it? (*Tanvin*; only
 inside a few frozen Arabic adverbs.) Is Persian **آب** related to Hindi's
 **pānī**? (No — two separate old words.)
 
 Source: [Wiktionary: آب](https://en.wiktionary.org/wiki/%D8%A2%D8%A8);
-[Wiktionary: لطفاً](https://en.wiktionary.org/wiki/%D9%84%D8%B7%D9%81%D8%A7%D9%8B).
+[Wiktionary: *lotfan*](https://en.wiktionary.org/wiki/%D9%84%D8%B7%D9%81%D8%A7%D9%8B).

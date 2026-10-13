@@ -2,6 +2,15 @@
 
 ## Unreleased — bounded Python print calls
 
+- Validate direct-AST float literal enum kind and the complete versioned ASCII
+  spelling before underscore removal/f64 conversion. Reject malformed digit
+  groups, integer-only spellings, signs, special names and trailing bytes
+  without changing valid exponent overflow or runtime output behavior.
+
+- Validate canonical unary/binary arithmetic operator tokens and grouping
+  delimiters in caller-supplied ASTs. Reject forged kinds, effective types,
+  spellings and token/node substitutions while preserving source behavior.
+
 - Lower an exact zero-argument `print()` grammar call to a Rust `vm-core`
   builtin that writes one newline and retains it if a later VM instruction
   fails. Other call forms remain bounded by the existing pilot.

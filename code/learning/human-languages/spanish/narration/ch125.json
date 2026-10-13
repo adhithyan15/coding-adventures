@@ -132,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-sintesis-futuro-condicional-promise",
               "prompt": "You are committing to it. I will speak: which form?",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-sintesis-futuro-condicional-suppose",
               "prompt": "Now you are only supposing. I would speak: which form?",
               "assesses": [
@@ -171,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-sintesis-futuro-condicional-why",
               "prompt": "What single word is glued onto the infinitive in BOTH tenses?",
               "assesses": [

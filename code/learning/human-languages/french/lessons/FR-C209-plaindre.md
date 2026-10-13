@@ -13,7 +13,8 @@ gloss: "to complain"
 concept_tag: FR-VERB-PLAINDRE
 prerequisites: [FR-C209-indiquer, FR-C209-informer]
 sounds: []
-roots: []
+roots: [plangere-latin]
+etymology_hook: "se plaindre ← Latin plangere 'to beat the breast, to lament' — English plaintive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C209-informer]
 <!-- hl-knowledge: introduces=[FR-LEX-C209-VERBES209-05]; assesses=[] -->
 
 **se plaindre** — "to complain".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se plaindre** ← Latin *plangere*, "to beat the breast, to lament" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

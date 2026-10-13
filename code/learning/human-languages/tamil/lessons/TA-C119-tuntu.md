@@ -14,7 +14,8 @@ romanization: "tuṇṭu"
 concept_tag: TA-THINGS119-TUNTU
 prerequisites: [TA-C119-cavi, TA-C119-puttu]
 sounds: []
-roots: []
+roots: [dravidian-tundu-piece]
+etymology_hook: "துண்டு — native Dravidian (DEDR 3310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C119-puttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **துண்டு** — *tuṇṭu* — "a towel; a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துண்டு** (*tuṇṭu*) is native Dravidian (DEDR 3310). The entry glosses *tuṇṭu* "piece, bit, strip": the towel is a strip of cloth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

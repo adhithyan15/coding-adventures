@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3a993b74986ed9b9",
+  "sourceHash": "fnv1a64:45b81edeaec0eeac",
   "lessons": [
     {
       "id": "PT-C04-adeus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb30aa1a8e50f2d",
+      "sourceHash": "fnv1a64:a100d749e25f7ceb",
       "notice": null,
       "blocks": [
         {
@@ -139,7 +139,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does adeus literally mean, and from what? (\"To God,\" from ad Deum.) Name two sister-language goodbyes with the same \"to God\" origin. (adiós, adieu, addio.) What English goodbye hides \"God be with ye\"? (Goodbye.) Next: the softer \"see you\" goodbyes — starting with até logo."
+              "text": "What does adeus literally mean, and from what? (\"To God,\" from ad Deum.) Name two sister-language goodbyes with the same \"to God\" origin. (adiós, adieu, addio.) What English goodbye hides \"God be with ye\"? (Goodbye.) Next: the softer \"see you\" goodbyes — starting with \"see you later.\""
             }
           ]
         }
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0393a2a7258d175",
+      "sourceHash": "fnv1a64:40603dba1a6a7082",
       "notice": null,
       "blocks": [
         {
@@ -200,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "até = \"until, up to.\" Like Spanish hasta, it comes from Arabic ḥattā (حتى), \"until\" — carried into Iberian speech across the 800 years of al-Andalus. Both Iberian languages borrowed the same Arabic word for this everyday preposition. That's remarkable: languages freely borrow nouns (Portuguese has thousands from Arabic — almofada, açúcar, azeite), but a function word like \"until\" almost never crosses. até and hasta are twin survivors of that deep Arabic layer under Iberian Romance."
+              "text": "até = \"until, up to.\" Like Spanish hasta, it is usually traced to Arabic ḥattā (حتى), \"until\" — carried into Iberian speech across the 800 years of al-Andalus; some prefer Latin ad tenus, \"as far as\". If the Arabic account is right, both Iberian languages borrowed the same word for this everyday preposition. That would be remarkable: languages freely borrow nouns (Portuguese has thousands from Arabic — almofada, açúcar, azeite), but a function word like \"until\" almost never crosses."
             },
             {
               "kind": "speech",
@@ -235,11 +235,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Portuguese até and Spanish hasta — both from Arabic ḥattā",
+              "instruction": "Portuguese até and Spanish hasta — both usually traced to Arabic ḥattā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Portuguese *até* and Spanish *hasta* — both from Arabic *ḥattā*]"
+              "source": "[YOU SAY: Portuguese *até* and Spanish *hasta* — both usually traced to Arabic *ḥattā*]"
             },
             {
               "kind": "prompt",
@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does até come from, and which Spanish word is its twin? (Arabic ḥattā — Spanish hasta.) Why is borrowing it surprising? (It's a function word; languages rarely borrow those.) What does logo share with Spanish luego? (Both from Latin locō, \"in place\" becomes \"soon\".) Next: até amanhã."
+              "text": "Where does até come from, and which Spanish word is its twin? (Usually traced to Arabic ḥattā; some prefer Latin ad tenus — Spanish hasta.) Why would borrowing it be surprising? (It's a function word; languages rarely borrow those.) What does logo share with Spanish luego? (Both from Latin locō, \"in place\" becomes \"soon\".) Next: até amanhã."
             }
           ]
         }
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59dc1a6ec8551f1",
+      "sourceHash": "fnv1a64:a36fc85c3b8de22c",
       "notice": null,
       "blocks": [
         {
@@ -322,7 +322,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "até = \"until\" ( from Arabic ḥattā, from the last lesson)."
+              "text": "até = \"until\" (usually traced to Arabic ḥattā, from the last lesson)."
             },
             {
               "kind": "speech",
@@ -403,7 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does amanhã come from, and literally mean? (Ad māneāna — \"to the morning.\") How does Portuguese spell the ny sound that Spanish writes as ñ? (As nh.) Next: \"see you soon\" — até breve."
+              "text": "What does amanhã come from, and literally mean? (Ad māneāna — \"to the morning.\") How does Portuguese spell the ny sound that Spanish writes as ñ? (As nh.) Next: \"see you soon.\""
             }
           ]
         }
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12f07b0704caf03e",
+      "sourceHash": "fnv1a64:139e7036dd68ff0e",
       "notice": null,
       "blocks": [
         {
@@ -460,7 +460,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "até = \"until\" ( from Arabic ḥattā)."
+              "text": "até = \"until\" (usually traced to Arabic ḥattā)."
             },
             {
               "kind": "speech",
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1bc90956cb7e8f8",
+      "sourceHash": "fnv1a64:b7392ea5919a2eff",
       "notice": null,
       "blocks": [
         {
@@ -626,7 +626,7 @@
             },
             {
               "kind": "speech",
-              "text": "até logo — see you later (até from Arabic ḥattā, twin of Spanish hasta; logo from locō, kin of luego). Até logo = hasta luego."
+              "text": "até logo — see you later (até is usually traced to Arabic ḥattā; twin of Spanish hasta; logo from locō, kin of luego). Até logo = hasta luego."
             },
             {
               "kind": "speech",
@@ -670,11 +670,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "até logo and Spanish hasta luego — twins, Arabic até/hasta and all",
+              "instruction": "até logo and Spanish hasta luego — twins, até and hasta and all",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *até logo* and Spanish *hasta luego* — twins, Arabic *até/hasta* and all]"
+              "source": "[YOU SAY: *até logo* and Spanish *hasta luego* — twins, *até* and *hasta* and all]"
             },
             {
               "kind": "repeat",
@@ -700,7 +700,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Portuguese goodbye means \"to God\"? (Adeus.) Which word inside the até goodbyes came from Arabic, and what's its Spanish twin? (Até from ḥattā — Spanish hasta.) You can now run a Portuguese conversation start to finish — the full greet-to-goodbye arc."
+              "text": "Which Portuguese goodbye means \"to God\"? (Adeus.) Which word inside the até goodbyes is usually traced to Arabic, and what's its Spanish twin? (Até, from ḥattā — Spanish hasta.) You can now run a Portuguese conversation start to finish — the full greet-to-goodbye arc."
             }
           ]
         }

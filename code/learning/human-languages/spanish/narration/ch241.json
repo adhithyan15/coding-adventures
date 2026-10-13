@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 241,
   "title": "Hablasteis --- The Form You Were Promised",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:80b20521595b5b7f",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7728b2ddea1a5c7c",
   "lessons": [
     {
       "id": "ES-C63-hablasteis",
@@ -14,20 +14,13 @@
       "romanization": "hablasteis",
       "gloss": "you all spoke — the form the preterite review promised you and did not deliver, closing the tense at last",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0796815c679b7da0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:74bf07841c1992dc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -73,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it beside the you form you already know:"
+              "text": "Put it beside the you form you already know:"
             },
             {
               "kind": "table",
@@ -178,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-make",
               "prompt": "You all spoke.",
               "assesses": [
@@ -196,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-parts",
               "prompt": "Which form is hidden inside hablasteis?",
               "assesses": [
@@ -214,6 +209,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-whole",
               "prompt": "How many forms of the -ar preterite do you now hold?",
               "assesses": [

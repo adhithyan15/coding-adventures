@@ -13,7 +13,8 @@ gloss: "a wrist"
 concept_tag: PT-CORPO120-PULSO
 prerequisites: [PT-C119-cotovelo, PT-C120-tornozelo]
 sounds: []
-roots: []
+roots: [pellere-latin]
+etymology_hook: "pulso ← Latin pulsus 'a beat', from pellere 'to drive': the wrist where the pulse beats"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C120-tornozelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C120-CORPO120-02]; assesses=[] -->
 
 **o pulso** — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulso** ← Latin *pulsus*, "a beat" (EtymDB 2.1), from *pellere*, "to drive" — a learned borrowing from Latin. The wrist is where the pulse beats.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

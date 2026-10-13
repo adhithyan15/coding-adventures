@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にもつ (nimotsu) mean? ("Luggage".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'luggage'.
+Say the Japanese for 'luggage'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふね (fune) mean? ("A ship".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a ship'.
+Say the Japanese for 'a ship'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おと (oto) mean? ("A sound".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sound'.
+Say the Japanese for 'a sound'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いろ (iro) mean? ("A colour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a colour'.
+Say the Japanese for 'a colour'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かたち (katachi) mean? ("A shape".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a shape'.
+Say the Japanese for 'a shape'.

@@ -13,7 +13,8 @@ gloss: "to propose"
 concept_tag: FR-VERB-PROPOSER
 prerequisites: [FR-C180-presenter, FR-C180-preter]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "proposer ← Old French proposer, after Latin proponere 'to put forward' — English propose"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C180-preter]
 <!-- hl-knowledge: introduces=[FR-LEX-C180-VERBES180-04]; assesses=[] -->
 
 **proposer** — "to propose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proposer** ← Old French *proposer*, after Latin *proponere*, "to put forward" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

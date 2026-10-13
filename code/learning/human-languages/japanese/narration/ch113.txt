@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はんこ (hanko) mean? ("A personal seal".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a personal seal'.
+Say the Japanese for 'a personal seal'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だんご (dango) mean? ("A dumpling".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a dumpling'.
+Say the Japanese for 'a dumpling'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だし (dashi) mean? ("Soup stock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'soup stock'.
+Say the Japanese for 'soup stock'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かつお (katsuo) mean? ("A bonito".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bonito'.
+Say the Japanese for 'a bonito'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わかめ (wakame) mean? ("Wakame seaweed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'wakame seaweed'.
+Say the Japanese for 'wakame seaweed'.

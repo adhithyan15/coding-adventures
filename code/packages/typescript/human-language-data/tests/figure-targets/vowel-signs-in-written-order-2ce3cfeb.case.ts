@@ -57,7 +57,9 @@ describe("where each Tamil sign is written", () => {
       expect(writtenPiecesOf(grapheme, "tamil"), grapheme).toBeUndefined();
     }
     expect(writtenPiecesOf("லி", "tamil")).toEqual(["ல", "ி"]);
-    expect(writtenPiecesOf("௭", "tamil")).toBeUndefined();
+    // A digit is not a sign: it stands apart, one piece by itself, and the
+    // ledger decides whether it has a cited ductus.
+    expect(writtenPiecesOf("௭", "tamil")).toEqual(["௭"]);
   });
 
   it("keeps every other script's signs refused: only Tamil, Gujarati and Malayalam have a table", () => {

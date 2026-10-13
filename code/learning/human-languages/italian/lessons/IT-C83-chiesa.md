@@ -13,7 +13,8 @@ gloss: "a church"
 concept_tag: IT-CITTA3-CHIESA
 prerequisites: [IT-C83-ponte, IT-C83-parco]
 sounds: []
-roots: []
+roots: [ecclesia-latin]
+etymology_hook: "chiesa ← Latin ecclesia, from Greek ekklesia 'assembly' — English ecclesiastical"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C83-parco]
 <!-- hl-knowledge: introduces=[IT-LEX-C83-CITTA3-03]; assesses=[] -->
 
 **la chiesa** — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiesa** ← Latin *ecclesia*, "an assembly", later "the church" — inherited; Latin took it from Greek *ekklesia*. EtymDB 2.1 has no row for *chiesa*; it derives Venetian *ciesa* from *ecclesia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

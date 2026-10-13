@@ -13,7 +13,8 @@ gloss: "a sock"
 concept_tag: GE-KLEIDUNG-SOCKE
 prerequisites: [GE-C99-schuh, GE-C99-muetze]
 sounds: []
-roots: []
+roots: [soccus-latin]
+etymology_hook: "Socke ← Old High German soc ← Latin soccus 'slipper' — an early loan, like English sock"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C99-muetze]
 <!-- hl-knowledge: introduces=[GE-LEX-C99-KLEIDUNG-05]; assesses=[] -->
 
 **die Socke** — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Socke** ← Old High German *soc* ← Latin *soccus*, "slipper, low shoe" (EtymDB 2.1) — an early loan, like English *sock*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

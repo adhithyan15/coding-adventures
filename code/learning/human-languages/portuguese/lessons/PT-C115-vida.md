@@ -13,7 +13,8 @@ gloss: "life"
 concept_tag: PT-LAZER115-VIDA
 prerequisites: [PT-C114-cancao, PT-C115-desenho]
 sounds: []
-roots: []
+roots: [vita]
+etymology_hook: "vida ← Latin vita 'life': -t- became -d- — English vital shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C115-desenho]
 <!-- hl-knowledge: introduces=[PT-LEX-C115-LAZER115-02]; assesses=[] -->
 
 **a vida** — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vida** ← Latin *vita*, "life" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

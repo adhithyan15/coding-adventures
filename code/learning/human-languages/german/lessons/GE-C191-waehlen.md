@@ -13,7 +13,8 @@ gloss: "to choose, to vote, to dial"
 concept_tag: GE-VERB-WAEHLEN
 prerequisites: [GE-C190-verwenden, GE-C191-vorbereiten]
 sounds: []
-roots: []
+roots: [germanic-waljana]
+etymology_hook: "wählen ← Old High German wellen ← Proto-Germanic *waljaną 'to choose'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C191-vorbereiten]
 <!-- hl-knowledge: introduces=[GE-LEX-C191-VERB191-02]; assesses=[] -->
 
 **wählen** — "to choose, to vote, to dial".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wählen** ← Old High German *wellen* ← Proto-Germanic *\*waljaną*, "to choose, to select" — inherited. (EtymDB 2.1) It shares its root with *wollen*, "to want".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

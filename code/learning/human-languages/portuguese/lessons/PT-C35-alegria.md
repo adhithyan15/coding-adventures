@@ -13,7 +13,8 @@ gloss: "joy"
 concept_tag: PT-SAUDE2-ALEGRIA
 prerequisites: [PT-C35-sede, PT-C35-cansaco]
 sounds: []
-roots: []
+roots: [alacer-latin]
+etymology_hook: "alegria — built from the word for 'cheerful', which ← Latin alacer 'brisk' — English alacrity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C35-cansaco]
 <!-- hl-knowledge: introduces=[PT-LEX-C35-SAUDE2-05]; assesses=[] -->
 
 **a alegria** — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alegria** is built from the adjective for "cheerful" and *-ia*. That adjective ← Latin *alacer*, "brisk, eager" (EtymDB 2.1), through Vulgar Latin *\*alecrem*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

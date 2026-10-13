@@ -13,7 +13,8 @@ gloss: "to put"
 concept_tag: IT-VERB-METTERE
 prerequisites: [IT-C133-cominciare, IT-C133-visitare]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "mettere ← Latin mittere 'to send' — sending became putting; English mission shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C133-visitare]
 <!-- hl-knowledge: introduces=[IT-LEX-C133-VERBI133-03]; assesses=[] -->
 
 **mettere** — "to put".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mettere** ← Latin *mittere*, "to send, to let go" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

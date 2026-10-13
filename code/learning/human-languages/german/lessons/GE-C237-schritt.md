@@ -13,7 +13,8 @@ gloss: "a step"
 concept_tag: GE-THING237-SCHRITT
 prerequisites: [GE-C237-sache, GE-C237-schatten]
 sounds: []
-roots: []
+roots: [germanic-skridana]
+etymology_hook: "Schritt ← Old High German scrit, from the verb 'to stride'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C237-schatten]
 <!-- hl-knowledge: introduces=[GE-LEX-C237-THING237-05]; assesses=[] -->
 
 **der Schritt** — "a step".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schritt** ← Middle High German *schrit* ← Old High German *scrit* (EtymDB 2.1), from the verb "to stride", Old High German *skrītan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

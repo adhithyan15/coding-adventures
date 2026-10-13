@@ -13,7 +13,8 @@ gloss: "a form"
 concept_tag: IT-COSE253-MODULO
 prerequisites: [IT-C253-debito, IT-C253-tassa]
 sounds: []
-roots: []
+roots: [modus-latin]
+etymology_hook: "modulo ← Latin modulus 'a small measure', from modus — English module"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C253-tassa]
 <!-- hl-knowledge: introduces=[IT-LEX-C253-COSE253-05]; assesses=[] -->
 
 **il modulo** — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**modulo** ← Latin *modulus*, "a small measure" — a learned borrowing. EtymDB 2.1 has no row for *modulo*; it derives Spanish *módulo* and Catalan *mòdul* from *modulus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

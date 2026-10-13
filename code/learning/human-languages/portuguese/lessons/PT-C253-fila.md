@@ -13,7 +13,8 @@ gloss: "a queue"
 concept_tag: PT-COISAS253-FILA
 prerequisites: [PT-C253-troco, PT-C253-recibo]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "fila ← French file 'row, line', from Latin filum 'thread' — English file"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C253-recibo]
 <!-- hl-knowledge: introduces=[PT-LEX-C253-COISAS253-05]; assesses=[] -->
 
 **a fila** — "a queue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fila** ← French *file*, "row, line" — borrowed; behind it is Latin *filum*, "thread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

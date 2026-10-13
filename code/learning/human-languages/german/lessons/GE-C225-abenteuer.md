@@ -13,7 +13,8 @@ gloss: "an adventure"
 concept_tag: GE-THING225-ABENTEUER
 prerequisites: [GE-C224-windig, GE-C224-witzig]
 sounds: []
-roots: []
+roots: [advenire-latin]
+etymology_hook: "Abenteuer ← Middle High German āventiure, from Old French aventure — borrowed, like English adventure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C224-witzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C225-THING225-01]; assesses=[] -->
 
 **das Abenteuer** — "an adventure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Abenteuer** ← Middle High German *āventiure* (EtymDB 2.1), from Old French *aventure*, "what comes to you", ← Latin *advenīre*, "to arrive" — borrowed and reshaped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

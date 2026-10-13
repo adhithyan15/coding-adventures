@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [SA-LEX-AKSHI-EYE, SA-LEX-KARNAH-EAR, SA-LEX-MUKHAM-MOUTH, SA-LEX-NASIKA-NOSE, SA-LEX-HRIDAYAM-HEART, SA-GRAMMAR-NOUN-GENDER-THREE]
+  knowledge: [SA-LEX-AKSHI-EYE, SA-LEX-KARNAH-EAR, SA-LEX-MUKHAM-MOUTH, SA-LEX-NASIKA-NOSE, SA-LEX-HRIDAYAM-HEART, SA-GRAMMAR-NOUN-GENDER-THREE, SA-ETYMON-KERD-HEART]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -70,8 +70,8 @@ word and not of the thing — a heart is neuter, an ear is masculine, and no fac
 about bodies explains it.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HRIDAYAM-HEART, SA-LEX-NASIKA-NOSE, SA-LEX-KARNAH-EAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HRIDAYAM-HEART, SA-LEX-NASIKA-NOSE, SA-LEX-KARNAH-EAR, SA-ETYMON-KERD-HEART] -->
 
 [PAUSE 3s] Which of the five has the securest ancestry, and which has none
-anyone agrees on? (**हृदयम्**; **कर्णः**.) Is *nāsikā* the parent of its modern
+anyone agrees on? (**हृदयम्**, English *heart*; **कर्णः**.) Is *nāsikā* the parent of its modern
 look-alikes, or their cousin? (**Cousin.**)

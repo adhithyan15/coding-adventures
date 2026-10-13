@@ -14,6 +14,7 @@ concept_tag: GE-THING239-STIMMUNG
 prerequisites: [GE-C238-sorge, GE-C238-stimme]
 sounds: []
 roots: []
+etymology_hook: "Stimmung — the verb 'to tune', built on Stimme 'voice', + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C238-stimme]
 <!-- hl-knowledge: introduces=[GE-LEX-C239-THING239-01]; assesses=[] -->
 
 **die Stimmung** — "an atmosphere, a mood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stimmung** is the verb "to tune", built on *Stimme*, "voice" (EtymDB 2.1), + *-ung*: the key a room or a mood is tuned to.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

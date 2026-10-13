@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:333d9bb84bca2bca",
+  "sourceHash": "fnv1a64:ebff312a9525f3f2",
   "lessons": [
     {
       "id": "TA-C24-iravu",
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where did you already meet இரவு before this lesson? (Inside நள்ளிரவு, naḷḷiravu, \"midnight,\" Chapter 17.) Does ராத்திரி's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" the same false-cognate pattern already drawn for Hindi and Malayalam.) Next: treat the proposed register split as a hypothesis and keep \"darkness\" separate from \"night.\""
+              "text": "Where did you already meet இரவு (iravu) before this lesson? (Inside நள்ளிரவு, naḷḷiravu, \"midnight,\" Chapter 17.) Does ராத்திரி's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" the same false-cognate pattern already drawn for Hindi and Malayalam.) Next: treat the proposed register split as a hypothesis and keep \"darkness\" separate from \"night.\""
             }
           ]
         }
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39c3cb1f85922cf4",
+      "sourceHash": "fnv1a64:85ee59f02d1116c8",
       "notice": null,
       "blocks": [
         {
@@ -166,7 +166,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இருள் (iruḷ) means darkness, from Proto-Dravidian cirVḷ and cognate with Kannada, Telugu, and Malayalam forms. It is not iravu \"night as a time period\" and comes from a different reconstructed root despite the similar sound."
+              "text": "இருள் (iruḷ) means darkness, from Proto-Dravidian cirVḷ and cognate with Kannada, Telugu, and Malayalam forms. It is not iravu \"night as a time period\", but the two are not strangers: DEDR 2552 files iruḷ and iravu in one entry."
             }
           ]
         },
@@ -223,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is the rāttiri register claim settled? (No — limited sourcing, worth checking against native usage.) Is இருள் interchangeable with இரவு (iravu)? (No — darkness versus a time period, from different roots.)"
+              "text": "Is the rāttiri register claim settled? (No — limited sourcing, worth checking against native usage.) Is இருள் interchangeable with இரவு (iravu)? (No — darkness versus a time period, though DEDR files them in one entry.)"
             }
           ]
         }

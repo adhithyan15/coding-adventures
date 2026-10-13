@@ -14,7 +14,8 @@ romanization: "vācaṉai"
 concept_tag: TA-PORUL243-VACANAI
 prerequisites: [TA-C243-urulaikkilanku, TA-C243-kattarikkay]
 sounds: []
-roots: []
+roots: [sanskrit-vasa-perfume]
+etymology_hook: "வாசனை ← Sanskrit vāsanā 'scenting', from vāsa 'perfume' (CDIAL 11592)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C243-kattarikkay]
 <!-- hl-knowledge: introduces=[TA-LEX-C243-PORUL243-04]; assesses=[] -->
 
 **வாசனை** — *vācaṉai* — "a fragrance, a smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாசனை** (*vācaṉai*) is a loan from Sanskrit *vāsanā*, "scenting", built on *vāsa*, "perfume" (CDIAL 11592).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

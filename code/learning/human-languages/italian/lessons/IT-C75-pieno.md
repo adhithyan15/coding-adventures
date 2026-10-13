@@ -13,7 +13,8 @@ gloss: "full"
 concept_tag: IT-AGG4-PIENO
 prerequisites: [IT-C75-alto, IT-C75-basso]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "pieno ← Latin plenus 'full' — English plenty shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C75-basso]
 <!-- hl-knowledge: introduces=[IT-LEX-C75-AGG4-04]; assesses=[] -->
 
 **pieno** — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pieno** ← Latin *plenus*, "full" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "iṉimēl"
 concept_tag: TA-ETIR159-INIMEL
 prerequisites: [TA-C158-kali, TA-C159-atutta]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-mel-above]
+etymology_hook: "இனிமேல் — native: iṉi 'from now', near base i- (DEDR 410) + mēl 'above, after' (DEDR 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C159-atutta]
 <!-- hl-knowledge: introduces=[TA-LEX-C159-ETIR159-02]; assesses=[] -->
 
 **இனிமேல்** — *iṉimēl* — "from now on". **இனிமேல் நான் தினமும் நடப்பேன்** — *iṉimēl nāṉ tiṉamum naṭappēṉ* — "From now on I will walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இனிமேல்** (*iṉimēl*) is native: *iṉi*, "from now", on the near base *i-* (DEDR 410), and *mēl*, "above, after" (DEDR 5086).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

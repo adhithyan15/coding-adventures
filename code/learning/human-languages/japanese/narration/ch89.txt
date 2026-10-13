@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こわす (kowasu) mean? ("To break".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to break'.
+Say the Japanese for 'to break'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わかす (wakasu) mean? ("To boil (water)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to boil (water)'.
+Say the Japanese for 'to boil (water)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まわす (mawasu) mean? ("To turn round".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to turn round'.
+Say the Japanese for 'to turn round'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つかむ (tsukamu) mean? ("To grab".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to grab'.
+Say the Japanese for 'to grab'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たたむ (tatamu) mean? ("To fold".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to fold'.
+Say the Japanese for 'to fold'.

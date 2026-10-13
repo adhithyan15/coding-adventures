@@ -14,6 +14,7 @@ concept_tag: GE-FREIZEIT129-KONZERT
 prerequisites: [GE-C129-film, GE-C129-fussball]
 sounds: []
 roots: []
+etymology_hook: "Konzert ← Italian concerto 'agreement, harmony' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C129-fussball]
 <!-- hl-knowledge: introduces=[GE-LEX-C129-FREIZEIT129-04]; assesses=[] -->
 
 **das Konzert** — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Konzert** ← Italian *concerto*, "agreement, playing together" — borrowed. EtymDB 2.1 has the Italian word but not its Latin source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI89-SEMAFORO
 prerequisites: [IT-C89-angolo, IT-C89-incrocio]
 sounds: []
 roots: []
+etymology_hook: "semaforo — Greek sema 'sign' + -phoros 'bearing': a sign-bearer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C89-incrocio]
 <!-- hl-knowledge: introduces=[IT-LEX-C89-LUOGHI89-05]; assesses=[] -->
 
 **il semaforo** — "traffic lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semaforo** — built from Greek *sema*, "sign", and *-phoros*, "bearing": a sign-bearer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

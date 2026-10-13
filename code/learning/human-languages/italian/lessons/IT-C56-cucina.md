@@ -13,7 +13,8 @@ gloss: "a kitchen; cooking"
 concept_tag: IT-CASA1-CUCINA
 prerequisites: [IT-C55-formaggio, IT-C55-uovo]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "cucina ← Latin coquina 'kitchen' — English kitchen is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C55-uovo]
 <!-- hl-knowledge: introduces=[IT-LEX-C56-CASA1-01]; assesses=[] -->
 
 **la cucina** — "a kitchen; cooking". Built on **cucinare**, to cook.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cucina** ← Vulgar Latin *cocina*, from Latin *coquina*, "kitchen", built on *coquere*, "to cook" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

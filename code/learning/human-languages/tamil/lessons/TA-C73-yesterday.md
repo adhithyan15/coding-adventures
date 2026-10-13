@@ -11,7 +11,8 @@ romanization: "nēṟṟu"
 concept_tag: TA-ADVERB-YESTERDAY
 prerequisites: [TA-C73-today, TA-C71-sleep, TA-C72-fear]
 sounds: []
-roots: []
+roots: [dravidian-nerunal-yesterday]
+etymology_hook: "நேற்று — native: DEDR 3758 has older nerunaṟṟu 'yesterday', Kannada ninne, Telugu ninna"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ catches a new speaker out. Say it slowly: the first ற has a புள்ளி
 straight onto the second.
 
 With three words you can now place any day against the one you are in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேற்று** (*nēṟṟu*) is native. DEDR 3758 gives the older Tamil forms *nerunal* and *nerunaṟṟu*, "yesterday", with Kannada *ninne* and Telugu *ninna*. Modern *nēṟṟu* is most likely the shortened form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

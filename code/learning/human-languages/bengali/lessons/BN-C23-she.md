@@ -64,7 +64,7 @@ anywhere.
 
 Chapter two taught you that Bengali grades **you** for respect. It grades the
 third person the same way, on the same ladder, and the careful form arrives in
-the next lesson. What the table shows is that **সে** is the *plain* one: it is
+the next lesson. What those three rows show is that **সে** is the *plain* one: it is
 what you use of a child, a friend, a younger sibling — and what you must not use
 of somebody's grandmother.
 
@@ -74,7 +74,7 @@ of somebody's grandmother.
 [PAUSE 1s]
 - [YOU SAY: *she bhālo*]
 - [YOU SAY: the three persons in a row — *āmi*, *tumi*, *she*]
-- [YOU SAY: pointing and then naming — *ei bhāiṭi* … *she bhālo*]
+- [YOU SAY: first the brother beside you, then something about him — *ei bhāiṭi* … *she bhālo*]
 - [YOU SAY: it covers both — *she* for a brother, *she* for a sister]
 
 ## Wrap-up Recall

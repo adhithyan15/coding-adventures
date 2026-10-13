@@ -14,7 +14,8 @@ romanization: "toṭṭi"
 concept_tag: TA-PORUL190-TOTTI
 prerequisites: [TA-C190-panai, TA-C190-ammi]
 sounds: []
-roots: []
+roots: [dravidian-totti-trough]
+etymology_hook: "தொட்டி — native Dravidian (DEDR 3484); Malayalam toṭṭi 'trough', Kannada toṭṭi, Telugu toṭṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C190-ammi]
 <!-- hl-knowledge: introduces=[TA-LEX-C190-PORUL190-05]; assesses=[] -->
 
 **தொட்டி** — *toṭṭi* — "a tank, a tub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொட்டி** (*toṭṭi*) is native Dravidian. DEDR 3484 lists Malayalam *toṭṭi*, "trough", Kannada *toṭṭi* and Telugu *toṭṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

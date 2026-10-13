@@ -13,7 +13,8 @@ gloss: "ham"
 concept_tag: GE-ESSEN6-SCHINKEN
 prerequisites: [GE-C74-saft, GE-C74-wurst]
 sounds: []
-roots: []
+roots: [germanic-skinko]
+etymology_hook: "Schinken ← Old High German scinco ← Proto-Germanic *skinkô 'shank, thigh' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C74-wurst]
 <!-- hl-knowledge: introduces=[GE-LEX-C74-ESSEN6-03]; assesses=[] -->
 
 **der Schinken** — "ham".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schinken** ← Old High German *scinco* ← Proto-Germanic *\*skinkô*, "shank, thigh" — inherited; ham is the cured thigh. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

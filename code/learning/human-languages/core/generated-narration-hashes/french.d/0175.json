@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 175,
-  "sourceHash": "fnv1a64:a5e5e0898d002c60",
+  "sourceHash": "fnv1a64:575b7a478463a08d",
   "lessonIds": [
     "FR-C175-embrasser",
     "FR-C175-saluer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch175.txt",
   "json": "french/narration/ch175.json",
-  "textHash": "fnv1a64:d5dec143bb17ff5c",
-  "jsonHash": "fnv1a64:57b4a7a8a6021d55",
+  "textHash": "fnv1a64:cafc8063548a6b2d",
+  "jsonHash": "fnv1a64:c87fe0e5930a82ed",
   "findings": []
 }

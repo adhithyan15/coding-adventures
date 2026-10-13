@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f0896304118d2c99",
+  "sourceHash": "fnv1a64:03daa276154f22ae",
   "lessons": [
     {
       "id": "TA-C23-naal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5555c918817436eb",
+      "sourceHash": "fnv1a64:445f04bafe7f4ad5",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from the animal and colour lessons first. Is everyday mañcaḷ, yellow, borrowed from Sanskrit? (No — it is its own native root; the rare pacuppu is the one that shares paccai's root.) Do Kannada and Telugu name the cat with Tamil's pūnai? (No — bekku and pilli come from separate roots.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,
@@ -94,7 +104,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where did you already meet நாள் before this lesson? (Inside நாளை, nāḷai, \"tomorrow,\" Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam."
+              "text": "Where did you already meet நாள் (nāḷ) before this lesson? (Inside நாளை, nāḷai, \"tomorrow,\" Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் (nāḷ) is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam."
             }
           ]
         }
@@ -113,7 +123,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f11d4091607d07",
+      "sourceHash": "fnv1a64:a560c653219ff559",
       "notice": null,
       "blocks": [
         {
@@ -246,22 +256,25 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:de63145f8d8d3166",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ப and ய",
           "Script you'll notice: the ெ sign",
           "Script you'll notice: build the word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and ய, Script you'll notice: the ெ sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ப and ய, Script you'll notice: the ெ sign, Script you'll notice: build the word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {

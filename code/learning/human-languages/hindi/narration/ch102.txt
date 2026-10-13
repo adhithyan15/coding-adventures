@@ -267,7 +267,7 @@ Then check the count: two से means a swap. An item that asks how will B trav
 Grammar Lens: the chapter in one sentence.
 से marks a start and तक (tak) marks a stop, and between them they carry both a week and a working day:
 मैं सोमवार से शुक्रवार तक (somvār se śukravār tak) ट्रेन (ṭren) से जाऊँगा।.
-Two से in that sentence, doing different jobs — the first opens a span, the second names a means. Neither is a mistake, and telling them apart is a matter of looking for a तक further along.
+Two से in that sentence, doing different jobs — the first opens a span, the second names a means. Neither is a mistake, and telling them apart is a matter of looking for a तक (tak) further along.
 
 Guided Practice.
 [pause 1 second]

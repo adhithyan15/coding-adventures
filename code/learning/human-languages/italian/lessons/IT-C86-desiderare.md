@@ -13,7 +13,8 @@ gloss: "to wish, to want"
 concept_tag: IT-VERB-DESIDERARE
 prerequisites: [IT-C86-preferire, IT-C86-sperare]
 sounds: []
-roots: []
+roots: [desiderare-latin]
+etymology_hook: "desiderare ← Latin desiderare 'to long for' — English desire shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C86-sperare]
 <!-- hl-knowledge: introduces=[IT-LEX-C86-VOLERE86-05]; assesses=[] -->
 
 **desiderare** — "to wish, to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desiderare** ← Latin *desiderare*, "to long for" — taken from Latin. EtymDB 2.1 has no row for *desiderare*; it derives Dalmatian *desirur* from the Latin verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

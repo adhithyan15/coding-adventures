@@ -9,15 +9,14 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "script-block",
-      "wide-table"
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:bb8a64cd93966973",
+    "sourceHash": "fnv1a64:ee910b888ed7cfe7",
     "detachableSegments": [
       "Script — The ḥarakāt — three short-vowel marks"
     ]

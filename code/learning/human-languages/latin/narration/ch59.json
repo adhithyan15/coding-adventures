@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Reading — Objects, Places, and a Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1934a42f000548b2",
+  "sourceHash": "fnv1a64:5afab4706c9fa936",
   "lessons": [
     {
       "id": "LA-C59-a-objects",
@@ -174,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C59-a-objects-water",
               "prompt": "Complete the sentence meaning I drink water: ___ bibo.",
               "assesses": [
@@ -230,16 +231,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:854f9a6067c134ea",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -381,6 +386,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C59-m-objects-book",
               "prompt": "Complete the sentence meaning I read the book: ___ lego.",
               "assesses": [
@@ -590,6 +596,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C59-place-toward-school",
               "prompt": "Which two Latin words mean toward school?",
               "assesses": [
@@ -778,6 +785,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C59-social-exchange-afternoon",
               "prompt": "What does one speaker write after midday?",
               "assesses": [
@@ -839,7 +847,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:36fb9997de9300a7",
+      "sourceHash": "fnv1a64:80bb8f376d92ebc7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -885,7 +893,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nōmen meum est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus hic est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et mel et ōvum edō. Portam aperiō et portam claudō, et ad scholam ambulō. Schola mea bona est. In scholā sedeō. Magister meus bonus est. Magistrum videō et audiō. Prīmum librum accipiō et legō. Secundum librum nōn accipiō, quia secundus liber malus est. Epistulam scrībō. Cōgitō et intellegō. Amīcum meum videō et adiuvō. Amīcus meus discipulus est. Sexta hōra est. Lac bibō, et mel et ōvum edō. Vīnum nōn bibō. Aquam bibō. Mare et caelum videō. Post merīdiem domum eō. Hic sedeō, et librum iterum legō. Cūr iterum legō? Quia liber meus bonus est. Vesper est. Nox est. Bene valeō. Dormiō. Crās iterum ad scholam veniō. Crās magistrum et amīcum meum videō."
+              "text": "Mihi nōmen est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus hīc est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et mel et ōvum edō. Portam aperiō et portam claudō, et ad scholam ambulō. Schola mea bona est. In scholā sedeō. Magister meus bonus est. Magistrum videō et audiō. Prīmum librum accipiō et legō. Secundum librum nōn accipiō, quia secundus liber malus est. Epistulam scrībō. Cōgitō et intellegō. Amīcum meum videō et adiuvō. Amīcus meus discipulus est. Sexta hōra est. Lac bibō, et mel et ōvum edō. Vīnum nōn bibō. Aquam bibō. Mare et caelum videō. Post merīdiem domum eō. Hic sedeō, et librum iterum legō. Cūr iterum legō? Quia liber meus bonus est. Vesper est. Nox est. Bene valeō. Dormiō. Crās iterum ad scholam veniō. Crās magistrum et amīcum meum videō."
             },
             {
               "kind": "pause",
@@ -974,6 +982,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C59-dies-meus-books",
               "prompt": "Which book is not taken, and why?",
               "assesses": [

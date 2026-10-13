@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:d8a7c94b007992b1",
+  "sourceHash": "fnv1a64:481130ff7ab59c10",
   "lessonIds": [
     "ML-C03-engane",
     "ML-C03-ola",
@@ -15,11 +15,11 @@
     "ML-C03-practice",
     "ML-W03-santosham-delayed-copy"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 2,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:245d1e50305e0e42",
-  "jsonHash": "fnv1a64:f6e8ba242edb2b63",
+  "textHash": "fnv1a64:67ed23d7d0f8a7d7",
+  "jsonHash": "fnv1a64:230bd951b9b1e328",
   "findings": []
 }

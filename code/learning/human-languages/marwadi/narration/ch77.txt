@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लाल (lāl) mean? ("Red".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'red'.
+Say the Marwadi for 'red'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नीलो (nīlo) mean? ("Blue".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'blue'.
+Say the Marwadi for 'blue'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काळो (kāḷo) mean? ("Black".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'black'.
+Say the Marwadi for 'black'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भूरो (bhūro) mean? ("Brown".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'brown'.
+Say the Marwadi for 'brown'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मीठो (mīṭho) mean? ("Sweet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sweet'.
+Say the Marwadi for 'sweet'.

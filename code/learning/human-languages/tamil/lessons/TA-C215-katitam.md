@@ -14,7 +14,8 @@ romanization: "kaṭitam"
 concept_tag: TA-PORUL215-KATITAM
 prerequisites: [TA-C215-akarati, TA-C215-kattanam]
 sounds: []
-roots: []
+roots: [sanskrit-kaditra]
+etymology_hook: "கடிதம் — an Indo-Aryan loan (DEDR App. 23), first a writing-cloth; compare Sanskrit kaḍitra"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C215-kattanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C215-PORUL215-04]; assesses=[] -->
 
 **கடிதம்** — *kaṭitam* — "a letter (to post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடிதம்** (*kaṭitam*) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 23): it first meant a cloth covered with paste for writing on, then paper and a letter. The entry compares Sanskrit *kaḍitra*, "a skin for writing on".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

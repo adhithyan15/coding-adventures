@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 4,
-  "sourceHash": "fnv1a64:266b570390ad5dd4",
+  "sourceHash": "fnv1a64:9cff393d5fb55bcb",
   "lessonIds": [
     "AR-W10-ayn",
     "AR-W11-ha-and-ta-marbuta",
@@ -16,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch04.txt",
   "json": "arabic/narration/ch04.json",
-  "textHash": "fnv1a64:b4bde55d547c1a45",
-  "jsonHash": "fnv1a64:267b1f66baff2146",
+  "textHash": "fnv1a64:2efe43cc1d83808d",
+  "jsonHash": "fnv1a64:f508d05fcd11e20f",
   "findings": []
 }

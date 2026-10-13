@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 9,
   "title": "Months and Seasons",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb920ac85210535c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d6cb13fd8cfd97e7",
   "lessons": [
     {
       "id": "IT-C09-mesi",
@@ -14,22 +14,13 @@
       "romanization": "i mesi",
       "gloss": "the months — the Roman calendar, barely worn down",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1976e6af609af25",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The months, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The months, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:21dc4d868c95d7c5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -54,17 +45,28 @@
           "title": "The months, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 12,
+              "kind": "table",
               "headers": [
-                "Italian",
-                "from Latin",
+                "Italian from Latin",
                 "who / what",
                 "Spanish twin"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 12 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, who / what, Spanish twin. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 12,
+              "utterances": [
+                "Italian from Latin: gennaio from Januarius. who / what: Janus, god of beginnings. Spanish twin: enero.",
+                "Italian from Latin: febbraio from Februarius. who / what: the Februa purification. Spanish twin: febrero.",
+                "Italian from Latin: marzo from Martius. who / what: Mars — the god of martedì! Spanish twin: marzo.",
+                "Italian from Latin: aprile from Aprilis. who / what: aperire \"to open\". Spanish twin: abril.",
+                "Italian from Latin: maggio from Maius. who / what: Maia, growth-goddess. Spanish twin: mayo.",
+                "Italian from Latin: giugno from Junius. who / what: Juno, queen of gods. Spanish twin: junio.",
+                "Italian from Latin: luglio from Julius. who / what: Julius Caesar. Spanish twin: julio.",
+                "Italian from Latin: agosto from Augustus. who / what: emperor Augustus. Spanish twin: agosto.",
+                "Italian from Latin: settembre from september. who / what: \"7th\" (septem). Spanish twin: septiembre.",
+                "Italian from Latin: ottobre from october. who / what: \"8th\" (octo). Spanish twin: octubre.",
+                "Italian from Latin: novembre from november. who / what: \"9th\" (novem). Spanish twin: noviembre.",
+                "Italian from Latin: dicembre from december. who / what: \"10th\" (decem). Spanish twin: diciembre."
+              ]
             },
             {
               "kind": "speech",
@@ -133,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which god links marzo and martedì? (Mars.) Why is dicembre Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Luglio — Julius; agosto — Augustus.) Next: the stagioni, the seasons."
+              "text": "Which god links marzo and martedì? (Mars.) Why is dicembre Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Luglio — Julius; agosto — Augustus.) Next: the seasons."
             }
           ]
         }
@@ -145,14 +147,14 @@
       "title": "le stagioni — the four seasons",
       "headword": "le stagioni",
       "romanization": "le stagioni",
-      "gloss": "the seasons — and \"primavera,\" the first green",
+      "gloss": "the seasons — and \"primavera,\" the first spring",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e34b3c689a6f13d1",
+      "sourceHash": "fnv1a64:40505332d26c826a",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word for \"season,\" stagione, is itself a small lesson: it's Latin statiō, a \"standing\" — a fixed station of the year (cousin of English station, stage). And the loveliest of the four, primavera, means the \"first green.\""
+              "text": "The word for \"season,\" stagione, is itself a small lesson: it's Latin statiō, a \"standing\" — a fixed station of the year (cousin of English station, stage). And the loveliest of the four, primavera, means the \"first spring.\""
             }
           ]
         },
@@ -187,7 +189,7 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Italian: la primavera (spring). from Latin: prīma vēra. literally: \"first spring / first green\" (prima \"first\" + vera from ver \"spring\").",
+                "Italian: la primavera (spring). from Latin: prīma vēra. literally: \"first spring\" (prīma \"first\" + vēra from vēr \"spring\").",
                 "Italian: l'estate (summer). from Latin: aestas / aestātem. literally: \"the heat, the hot season\".",
                 "Italian: l'autunno (autumn). from Latin: autumnus. literally: \"autumn\" (twin of English autumn).",
                 "Italian: l'inverno (winter). from Latin: hibernum. literally: \"the wintry season\" (cousin of hibernate)."
@@ -195,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "primavera = prima + vera: the \"first spring.\" Latin vēr was the word for spring; Italian (and Spanish, and Portuguese) built \"prima-vera,\" the year's first season — the same idea French once had in primevère."
+              "text": "primavera from prīma vēra: the \"first spring.\" Latin vēr was the word for spring (Italian vera, \"true\", is another word); Italian, Spanish and Portuguese kept \"prima-vera,\" the year's first season — the same idea French once had in primevère."
             },
             {
               "kind": "speech",
@@ -226,11 +228,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera = prima + vera (first green)\"; \"inverno hibernate\"",
+              "instruction": "\"prīma + vēra becomes primavera (first spring)\"; \"inverno hibernate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera = prima + vera (first green)\"; \"inverno ~ hibernate\"]"
+              "source": "[YOU SAY: \"prīma + vēra → primavera (first spring)\"; \"inverno ~ hibernate\"]"
             },
             {
               "kind": "prompt",
@@ -256,7 +258,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four Italian seasons. (Primavera, estate, autunno, inverno.) What does primavera literally mean? (\"First spring / first green.\") What Latin word is stagione from, and its English cousin? (Statiō \"a standing\"; station.) Next chapter builds on this toward family and food."
+              "text": "Name the four Italian seasons. (Primavera, estate, autunno, inverno.) What does primavera literally mean? (\"First spring\" — Latin prīma vēra, vēr being \"spring\".) What Latin word is stagione from, and its English cousin? (Statiō \"a standing\"; station.) Next chapter builds on this toward family and food."
             }
           ]
         }

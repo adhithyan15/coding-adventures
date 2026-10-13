@@ -13,7 +13,8 @@ gloss: "a skirt"
 concept_tag: PT-ROUPA2-SAIA
 prerequisites: [PT-C78-chapeu, PT-C78-casaco]
 sounds: []
-roots: []
+roots: [sagum-latin]
+etymology_hook: "saia ← Vulgar Latin *sagia, from Latin sagum 'a soldier's cloak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C78-casaco]
 <!-- hl-knowledge: introduces=[PT-LEX-C78-ROUPA2-03]; assesses=[] -->
 
 **a saia** — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saia** ← Vulgar Latin *\*sagia* (EtymDB 2.1), from Latin *sagum*, "a soldier's cloak" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

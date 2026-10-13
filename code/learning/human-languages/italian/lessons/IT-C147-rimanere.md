@@ -13,7 +13,8 @@ gloss: "to remain"
 concept_tag: IT-VERB-RIMANERE
 prerequisites: [IT-C147-ridurre, IT-C147-rifiutare]
 sounds: []
-roots: []
+roots: [remanere-latin]
+etymology_hook: "rimanere ← Latin remanere 'to stay behind' — English remain is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C147-rifiutare]
 <!-- hl-knowledge: introduces=[IT-LEX-C147-VERBI147-03]; assesses=[] -->
 
 **rimanere** — "to remain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rimanere** ← Latin *remanere*, "to stay behind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

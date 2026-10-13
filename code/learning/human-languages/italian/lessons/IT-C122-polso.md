@@ -13,7 +13,8 @@ gloss: "a wrist"
 concept_tag: IT-CORPO122-POLSO
 prerequisites: [IT-C122-gomito, IT-C122-caviglia]
 sounds: []
-roots: []
+roots: [pulsus-latin]
+etymology_hook: "polso ← Latin pulsus 'a beating' — where the pulse beats; English pulse is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C122-caviglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C122-CORPO122-03]; assesses=[] -->
 
 **il polso** — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polso** ← Latin *pulsus*, "a beating" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

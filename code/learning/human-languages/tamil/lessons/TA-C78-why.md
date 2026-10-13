@@ -11,9 +11,10 @@ romanization: "ēṉ"
 concept_tag: TA-QUESTION-WHY
 prerequisites: [TA-C77-opinion, TA-C76-but]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "ஏன் — native Dravidian (DEDR 5151)"
 duration:
-  max_seconds: 215
+  max_seconds: 230
 requires:
   knowledge: [TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03]
 introduces:
@@ -59,6 +60,11 @@ Or in front of a sentence:
 
 This is the first question in the book that cannot be answered by naming a thing. Its answer
 is a sentence, and the next lesson is the word that lets you give one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏன்** (*ēṉ*) is native Dravidian (DEDR 5151). It is built on the native question base *e-*, "what".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to be missing"
 concept_tag: IT-VERB-MANCARE
 prerequisites: [IT-C238-inviare, IT-C238-lamentarsi]
 sounds: []
-roots: []
+roots: [mancus-latin]
+etymology_hook: "mancare — from Latin mancus 'maimed, lacking'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C238-lamentarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C238-VERBI238-05]; assesses=[] -->
 
 **mancare** — "to be missing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mancare** ← Latin *mancus*, "maimed, lacking", through the old adjective *manco* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

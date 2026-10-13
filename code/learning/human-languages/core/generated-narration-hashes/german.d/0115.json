@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 115,
-  "sourceHash": "fnv1a64:1fd6102909a336a9",
+  "sourceHash": "fnv1a64:c39af48ef46d9035",
   "lessonIds": [
     "GE-C115-kamm",
     "GE-C115-muelleimer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch115.txt",
   "json": "german/narration/ch115.json",
-  "textHash": "fnv1a64:e7c471859424ca57",
-  "jsonHash": "fnv1a64:186e218d4ecd9641",
+  "textHash": "fnv1a64:240f883b4276d4f0",
+  "jsonHash": "fnv1a64:b6c472f23489444e",
   "findings": []
 }

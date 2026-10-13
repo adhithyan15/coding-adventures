@@ -11,7 +11,8 @@ romanization: "kuṭiyuṅkaḷ"
 concept_tag: TA-HOST-DRINK
 prerequisites: [TA-C98-comein, TA-C98-eat, TA-C86-rational]
 sounds: []
-roots: []
+roots: [dravidian-kudi-drink]
+etymology_hook: "குடியுங்கள் — native Dravidian (DEDR 1654); Malayalam kuṭi, Kannada kuḍi"
 duration:
   max_seconds: 200
 requires:
@@ -42,8 +43,13 @@ reviews_of: [TA-C98-eat]
 
 **தண்ணீர் குடியுங்கள்** — "please have some water".
 
-Look at **தண்ணீர்**: it is the thing being drunk, and it carries no **-ஐ**. A thing can do without
+Notice **தண்ணீர்**: it is the thing being drunk, and it carries no **-ஐ**. A thing can do without
 the ending that a person must have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடியுங்கள்** (*kuṭiyuṅkaḷ*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*. It is *kuḍi*, "drink", with the polite ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

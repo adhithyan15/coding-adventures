@@ -13,7 +13,7 @@ sounds: [j-as-y, long-a, h-silent-lengthening]
 roots: [germanic-jera]
 etymology_hook: "the age sentence never says Jahr — it says Jahre, because you are counted in years and a count takes a plural, which is the one thing German and English agree on here"
 duration:
-  max_seconds: 160
+  max_seconds: 203
 requires:
   knowledge: [GE-LEX-JAHR-01, GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-PLURAL-DIE-01, GE-SOUND-H-LENGTHEN-01]
 introduces:
@@ -50,6 +50,11 @@ because German capitalises every noun in every number.
 Here is why it matters. The age sentence counts, and a count takes a plural: you
 are so many *Jahre* old, never so many *Jahr*. From here on it is *Jahre* that
 does the work, and *das Jahr* that sits behind it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Jahre** is the plural of *Jahr* ← Old High German *jār* ← Proto-Germanic *\*jērą* — inherited, the same word as English *year*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHR-01, GE-LEX-JAHRE-PLURAL-01, GE-SOUND-H-LENGTHEN-01] -->

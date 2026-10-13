@@ -13,7 +13,8 @@ gloss: "a customer"
 concept_tag: PT-ESCOLA112-CLIENTE
 prerequisites: [PT-C111-bombeiro, PT-C111-carteiro]
 sounds: []
-roots: []
+roots: [cliens-latin]
+etymology_hook: "cliente ← Latin cliens, clientis 'dependant, follower' — English client"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C111-carteiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-01]; assesses=[] -->
 
 **o cliente** — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cliente** ← Latin *cliens, clientis*, "dependant, follower" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

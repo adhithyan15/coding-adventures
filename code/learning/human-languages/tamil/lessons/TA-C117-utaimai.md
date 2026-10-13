@@ -14,7 +14,8 @@ romanization: "uṭaimai"
 concept_tag: TA-CAN117-UTAIMAI
 prerequisites: [TA-C117-vayppu, TA-C117-karuvi]
 sounds: []
-roots: []
+roots: [dravidian-udai-wealth]
+etymology_hook: "உடைமை — native Dravidian (DEDR 593); Kannada oḍame 'possession, wealth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C117-karuvi]
 <!-- hl-knowledge: introduces=[TA-LEX-C117-CAN117-05]; assesses=[] -->
 
 **உடைமை** — *uṭaimai* — "a possession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடைமை** (*uṭaimai*) is native Dravidian. DEDR 593 lists Kannada *oḍame*, "possession, wealth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "soap"
 concept_tag: FR-MAISON65-SAVON
 prerequisites: [FR-C113-couverture, FR-C113-serviette]
 sounds: []
-roots: []
+roots: [sapo-latin]
+etymology_hook: "savon ← Latin sapo 'soap', itself from Germanic — English soap is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C113-serviette]
 <!-- hl-knowledge: introduces=[FR-LEX-C113-MAISON65-04]; assesses=[] -->
 
 **le savon** — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**savon** ← Old French *savon* (EtymDB 2.1) ← Latin *sapo*, *saponis*, "soap", a Germanic word in Latin (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

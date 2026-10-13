@@ -13,7 +13,8 @@ gloss: "to explain"
 concept_tag: IT-VERB-SPIEGARE
 prerequisites: [IT-C141-fotografare, IT-C141-ripetere]
 sounds: []
-roots: []
+roots: [explicare-latin]
+etymology_hook: "spiegare ← Latin explicare 'to unfold' — English explain and explicit are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C141-ripetere]
 <!-- hl-knowledge: introduces=[IT-LEX-C141-VERBI141-05]; assesses=[] -->
 
 **spiegare** — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spiegare** ← Latin *explicare*, "to unfold" — inherited. EtymDB 2.1 has no row for *spiegare*; it derives Venetian *spiegar* from *explicare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

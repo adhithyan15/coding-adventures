@@ -42,7 +42,9 @@ reviews_of: [RU-W07-f, RU-W06-sh]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-TS-01]; assesses=[RU-SCRIPT-SH-01] -->
 
-> ц
+> ц   Ц
+
+The capital, **Ц**, is the same shape, tail and all, drawn to full height.
 
 A **new shape**, and one you should compare to ш immediately, because they are
 close:

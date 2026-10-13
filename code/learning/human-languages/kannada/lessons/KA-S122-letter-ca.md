@@ -45,10 +45,13 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *c*, it is **ca**.
 
-You already say these, and every one of them has ಚ somewhere inside it:
+You already say this word, and ಚ sits at the front of it:
 
 - **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
-- **ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ** — the twelve lunisolar months, which the months lesson will name
+
+And a first look ahead: the months lesson names twelve months, and ಚ opens the
+first. Here are the first three — **ಚೈತ್ರ, ವೈಶಾಖ, ಜ್ಯೇಷ್ಠ** (*caitra,
+vaiśākha, jyēṣṭha*). Find ಚ; the other shapes can wait.
 
 ## Writing: ಚ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-122] -->

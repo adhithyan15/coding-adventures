@@ -13,7 +13,7 @@ sounds: []
 roots: []
 etymology_hook: "French, German and Italian each built a compound past out of 'have' and each let it push the inherited simple past into writing — not three inventions but one change spreading across a connected block of neighbours"
 duration:
-  max_seconds: 210
+  max_seconds: 275
 requires:
   knowledge: [FR-ETYMON-PASSE-SIMPLE-ROMANCE-09, FR-GRAM-PASSE-COMPOSE-02]
 introduces:
@@ -69,6 +69,11 @@ So the map explains what the family tree cannot. Italian and Spanish are close
 relatives that behave differently here, and French and German are distant
 relatives that behave the same — because what mattered was who was standing next
 to whom.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passé simple** — *passé*, "passed", goes back to Latin *passus*, "a step"; *simple* ← Latin *simplex*. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PASSE-COMPOSE-02, FR-GRAM-PASSE-SIMPLE-08, FR-ETYMON-PASSE-SIMPLE-ROMANCE-09] -->

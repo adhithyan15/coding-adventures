@@ -6,6 +6,7 @@ sequence: 460
 chapter: 6
 type: phrase
 headword: من فضلك
+romanization: "min faḍlik"
 gloss: please (min faḍlik — literally "from your grace")
 concept_tag: COURTESY-PLEASE
 prerequisites: [AR-C01-shukran]

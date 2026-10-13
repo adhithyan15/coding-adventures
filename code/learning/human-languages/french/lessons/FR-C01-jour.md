@@ -50,7 +50,7 @@ the whole lesson, and it cracks open a shelf of English words.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `j-zh` — **j** is the soft *zh* of *measure*: *jour* starts *zh-*.
-- `vowel-ou` — **ou** = *oo*. So *jour* = *zhoor*. → [reference](../pronunciation-reference.md)
+- `vowel-ou` — the letters **o-u** say *oo*. So *jour* = *zhoor*. → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-JOUR-06]; assesses=[] -->

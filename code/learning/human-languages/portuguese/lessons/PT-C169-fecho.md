@@ -14,6 +14,7 @@ concept_tag: PT-COISAS169-FECHO
 prerequisites: [PT-C169-sandalia, PT-C169-bolso]
 sounds: []
 roots: []
+etymology_hook: "fecho — built from fechar 'to close', whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C169-bolso]
 <!-- hl-knowledge: introduces=[PT-LEX-C169-COISAS169-03]; assesses=[] -->
 
 **o fecho** — "a zip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fecho** is built from *fechar*, "to close", whose own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

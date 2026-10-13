@@ -13,7 +13,8 @@ gloss: "to fill in (a form)"
 concept_tag: IT-VERB-COMPILARE
 prerequisites: [IT-C235-controllare, IT-C235-firmare]
 sounds: []
-roots: []
+roots: [compilare-latin]
+etymology_hook: "compilare ← Latin compilare 'to gather up, to plunder' — English compile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C235-firmare]
 <!-- hl-knowledge: introduces=[IT-LEX-C235-VERBI235-03]; assesses=[] -->
 
 **compilare** — "to fill in (a form)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compilare** ← Latin *compilare*, "to gather up, to plunder" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

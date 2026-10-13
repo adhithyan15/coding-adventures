@@ -13,7 +13,8 @@ gloss: "fashion"
 concept_tag: GE-THING234-MODE
 prerequisites: [GE-C234-mannschaft, GE-C234-mehrheit]
 sounds: []
-roots: []
+roots: [modus-latin]
+etymology_hook: "Mode ← French mode 'fashion, manner' ← Latin modus 'measure' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C234-mehrheit]
 <!-- hl-knowledge: introduces=[GE-LEX-C234-THING234-04]; assesses=[] -->
 
 **die Mode** — "fashion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mode** ← French *mode*, "fashion, manner" ← Latin *modus*, "measure, manner" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

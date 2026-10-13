@@ -14,7 +14,8 @@ romanization: "kuḻu"
 concept_tag: TA-PORUL277-KULU
 prerequisites: [TA-C276-copa, TA-C276-tiruppuli]
 sounds: []
-roots: []
+roots: [dravidian-kuzhu-crowd]
+etymology_hook: "குழு — native Dravidian (DEDR 1821); Kannada guṇḍu 'crowd, heap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C276-tiruppuli]
 <!-- hl-knowledge: introduces=[TA-LEX-C277-PORUL277-01]; assesses=[] -->
 
 **குழு** — *kuḻu* — "a team, a group".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழு** (*kuḻu*) is native Dravidian. DEDR 1821 lists Kannada *guṇḍu*, "crowd, heap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

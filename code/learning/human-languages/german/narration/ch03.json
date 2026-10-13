@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea1e994c6b6448e0",
+  "sourceHash": "fnv1a64:cbd6c29e798bcc87",
   "lessons": [
     {
       "id": "GE-C03-danke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b0ded35a2fc98ca",
+      "sourceHash": "fnv1a64:784b8f83582f5798",
       "notice": null,
       "blocks": [
         {
@@ -118,11 +118,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"danke\" then \"denken\" — thanks, and the thinking inside it",
+              "instruction": "\"danke\" — thanks, with the thinking inside it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"danke\" then \"denken\" — thanks, and the thinking inside it]"
+              "source": "[YOU SAY: \"danke\" — thanks, with the thinking inside it]"
             },
             {
               "kind": "prompt",
@@ -148,7 +148,7 @@
             },
             {
               "kind": "speech",
-              "text": "What everyday verb is danke built from? (Denken, \"to think.\") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)"
+              "text": "What everyday idea is danke built from? (Thinking — \"to think.\") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)"
             }
           ]
         }
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28cbc995efa43e62",
+      "sourceHash": "fnv1a64:5bc4525f331e12ea",
       "notice": null,
       "blocks": [
         {
@@ -398,11 +398,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"danke\", \"Dank\", \"denken\"",
+              "instruction": "the family — \"danke\", \"Dank\" — thanks as a thought",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"danke\", \"Dank\", \"denken\"]"
+              "source": "[YOU SAY: the family — \"danke\", \"Dank\" — thanks as a thought]"
             }
           ]
         },
@@ -610,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100d0c8041c87a1c",
+      "sourceHash": "fnv1a64:70eb990958032242",
       "notice": null,
       "blocks": [
         {
@@ -656,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is worth banking now, because German uses the trick everywhere — sehr, Ihnen, Jahr all hide a lengthening h."
+              "text": "This is worth banking now, because German uses the trick everywhere — several words in the next few lessons hide a lengthening h."
             }
           ]
         },
@@ -766,7 +766,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:81b0d36ae99f80e0",
+      "sourceHash": "fnv1a64:7813afad79c82b38",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -869,11 +869,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"es geht\" — \"it goes\"",
+              "instruction": "\"es\" — \"it,\" for a thing or a state",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"es geht\" — \"it goes\"]"
+              "source": "[YOU SAY: \"es\" — \"it,\" for a thing or a state]"
             }
           ]
         },
@@ -890,7 +890,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is es? (\"It.\") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.) Say \"it goes.\" (Es geht.)"
+              "text": "What is es? (\"It.\") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.)"
             }
           ]
         }
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e184f543bb924d7b",
+      "sourceHash": "fnv1a64:11fdb2f724241cf7",
       "notice": null,
       "blocks": [
         {
@@ -1010,11 +1010,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"es geht mir\" — \"it goes to me\"",
+              "instruction": "\"to me\" then \"mir\" — the to-whom form",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"es geht mir\" — \"it goes to me\"]"
+              "source": "[YOU SAY: \"to me\" then \"mir\" — the to-whom form]"
             }
           ]
         },
@@ -1193,7 +1193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff3ccf944f886e14",
+      "sourceHash": "fnv1a64:ad7ceb6616d59ce9",
       "notice": null,
       "blocks": [
         {
@@ -1253,6 +1253,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "geht is a form of gehen from Old High German gān from Proto-Germanic gāną, \"to go\" — the same verb as English go. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: Wie geht's?",
           "segments": [
@@ -1279,7 +1290,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1328,7 +1339,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1494,7 +1505,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8641e981deede47",
+      "sourceHash": "fnv1a64:45dd79ef94e36818",
       "notice": null,
       "blocks": [
         {
@@ -1544,6 +1555,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ihnen is the \"to them\" form of sie, \"they\": German's polite \"you\" is the inherited word for \"they\", capitalised."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: politeness lives in the pronoun",
           "segments": [
@@ -1562,7 +1584,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1611,7 +1633,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2068,7 +2090,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc306b89f08c1a48",
+      "sourceHash": "fnv1a64:addecbb73922848c",
       "notice": null,
       "blocks": [
         {
@@ -2113,6 +2135,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "geht from Old High German gān from Proto-Germanic gāną, \"to go\", the same verb as English go; es from Old High German iz, \"it\", English it's twin. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the answer ladder",
           "segments": [
@@ -2143,7 +2176,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2183,7 +2216,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2214,7 +2247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f2469e222ce4463",
+      "sourceHash": "fnv1a64:b446c216d1d26079",
       "notice": null,
       "blocks": [
         {
@@ -2251,6 +2284,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "und from Old High German unti from Proto-Germanic andi — inherited, the same word as English and. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -2261,7 +2305,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: returning the question",
           "segments": [
@@ -2288,7 +2332,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2328,7 +2372,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2359,7 +2403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a06688c929400ba",
+      "sourceHash": "fnv1a64:13a362e0df6eb7e9",
       "notice": null,
       "blocks": [
         {
@@ -2479,6 +2523,16 @@
             {
               "kind": "speech",
               "text": "Run the casual exchange without looking. Which answer is the so-so one? (Es geht.) Which word answers danke? (Bitte.) Why dir and not du? (The question means \"how goes it to you\" — the to-whom form.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is hiding in sehr? (Sore — as in sorely missed.) And bitte is the asking-form of which word, cousin of English bid? (Bitten, to ask.)"
             }
           ]
         }
@@ -2497,7 +2551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3690d705450a1b",
+      "sourceHash": "fnv1a64:ff9633f2fff0149d",
       "notice": null,
       "blocks": [
         {
@@ -2624,6 +2678,16 @@
             {
               "kind": "speech",
               "text": "Which greeting opens the formal exchange? (Guten Tag.) Which dative pronoun appears twice? (Ihnen.) What changes from the casual version? (Dir becomes Ihnen — nothing else.) Where does German keep its politeness? (In the pronoun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Taken literally, who is Ihnen aimed at? (Them — to them: the polite you speaks of you as though you were a group.)"
             }
           ]
         }

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C137-masalo-type",
-              "prompt": "Type the Marwadi for 'spice'.",
+              "prompt": "Say the Marwadi for 'spice'.",
               "assesses": [
                 "MW-LEX-C137-THINGS137-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C137-papito-type",
-              "prompt": "Type the Marwadi for 'a papaya'.",
+              "prompt": "Say the Marwadi for 'a papaya'.",
               "assesses": [
                 "MW-LEX-C137-THINGS137-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C137-anar-type",
-              "prompt": "Type the Marwadi for 'a pomegranate'.",
+              "prompt": "Say the Marwadi for 'a pomegranate'.",
               "assesses": [
                 "MW-LEX-C137-THINGS137-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C137-khajur-type",
-              "prompt": "Type the Marwadi for 'dates'.",
+              "prompt": "Say the Marwadi for 'dates'.",
               "assesses": [
                 "MW-LEX-C137-THINGS137-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C137-narel-type",
-              "prompt": "Type the Marwadi for 'a coconut'.",
+              "prompt": "Say the Marwadi for 'a coconut'.",
               "assesses": [
                 "MW-LEX-C137-THINGS137-05"
               ],

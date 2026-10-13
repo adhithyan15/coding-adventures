@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f13093f622f35845",
+  "sourceHash": "fnv1a64:1336e030dec5b35a",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf6a0d868425c6c",
+      "sourceHash": "fnv1a64:193457cc918d0f4c",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं (nahīṃ), no."
+              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: the word for no."
             }
           ]
         }
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3abb8c926f1e2f",
+      "sourceHash": "fnv1a64:01811ddc778e8bed",
       "notice": null,
       "blocks": [
         {
@@ -270,6 +270,25 @@
         },
         {
           "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — yes, then no",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kyā āp ṭhīk haiṁ? Answer yes, then no. (Hāṃ … nahīṃ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark makes hāṃ hum through the nose? (The moon-dot, the chandrabindu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say yes to an elder. (Jī hāṃ — जी makes it courteous.)"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -313,7 +332,7 @@
           "Script you'll notice: न",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: न and Guided Practice."
       },
       "blocks": [
         {
@@ -498,7 +517,7 @@
           "Script you'll notice: क",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: क and Guided Practice."
       },
       "blocks": [
         {

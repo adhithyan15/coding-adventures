@@ -14,6 +14,7 @@ concept_tag: GE-RICHTUNG109-VORNE
 prerequisites: [GE-C109-oben, GE-C109-unten]
 sounds: []
 roots: []
+etymology_hook: "vorne ← Old High German forna 'in front' — built on the word for 'before', English fore"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C109-unten]
 <!-- hl-knowledge: introduces=[GE-LEX-C109-RICHTUNG109-03]; assesses=[] -->
 
 **vorne** — "at the front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorne** ← Old High German *forna*, "in front" — inherited, built on the word for "before". EtymDB 2.1 lists that word beside Dutch *voor*; English *fore* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

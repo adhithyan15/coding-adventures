@@ -13,7 +13,8 @@ gloss: "a result"
 concept_tag: GE-THING228-ERGEBNIS
 prerequisites: [GE-C228-erinnerung, GE-C228-erlaubnis]
 sounds: []
-roots: []
+roots: [germanic-gebana]
+etymology_hook: "Ergebnis — from a verb 'to yield, to result': er- + 'to give' + -nis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C228-erlaubnis]
 <!-- hl-knowledge: introduces=[GE-LEX-C228-THING228-04]; assesses=[] -->
 
 **das Ergebnis** — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ergebnis** comes from the verb "to yield, to result" (EtymDB 2.1): *er-* + the verb "to give", English *give*, + *-nis*. A result is what a thing gives out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

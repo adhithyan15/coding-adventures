@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 198,
-  "sourceHash": "fnv1a64:06bd732c1ecc1f2e",
+  "sourceHash": "fnv1a64:503988db9f08add9",
   "lessonIds": [
     "FR-C198-promesse",
     "FR-C198-reduction",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch198.txt",
   "json": "french/narration/ch198.json",
-  "textHash": "fnv1a64:c8c5ace9cd2897d9",
-  "jsonHash": "fnv1a64:f1f4531508b804af",
+  "textHash": "fnv1a64:2a7678fe56d319a5",
+  "jsonHash": "fnv1a64:44395b2ad5363f32",
   "findings": []
 }

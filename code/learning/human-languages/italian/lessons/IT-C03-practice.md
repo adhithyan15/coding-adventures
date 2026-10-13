@@ -11,8 +11,9 @@ concept_tag: CH3-PRACTICE
 prerequisites: [IT-C03-io, IT-C03-mi-chiamo, IT-C03-come-ti-chiami, IT-C03-piacere]
 sounds: []
 roots: []
+etymology_hook: "review: io ← Latin ego 'I'; chiamare ← Latin clamare 'to call out'; piacere ← Latin placere"
 duration:
-  max_seconds: 237
+  max_seconds: 245
 requires:
   knowledge: [IT-SOUND-IO-02, IT-ETYMON-IO-03, IT-GRAMMAR-IO-04, IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03, IT-GRAMMAR-MI-CHIAMO-04, IT-ETYMON-COME-TI-CHIAMI-02, IT-SOUND-PIACERE-02, IT-ETYMON-PIACERE-03, IT-GRAMMAR-PIACERE-04]
 introduces:
@@ -72,7 +73,7 @@ swap is automatic. This slots between your greetings (Ch. 1–2) and farewells
 - [YOU SAY: the full informal meeting, both voices]
 - [YOU SAY: the same formally — *ti chiami → si chiama*, *tu → Lei*]
 - [YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye:
-  "Ciao! Mi chiamo … Come ti chiami? … Come stai? … A domani!"]
+  "Ciao! Mi chiamo … Come ti chiami? … Come stai? … Ciao!"]
 
 [REPEAT x2] Run a whole first meeting start to finish.
 

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खरीदणो (kharīdṇo) mean? ("To buy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to buy'.
+Say the Marwadi for 'to buy'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उघाड़णो (ughāṛṇo) mean? ("To uncover, to open up".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to uncover, to open up'.
+Say the Marwadi for 'to uncover, to open up'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बुलावणो (bulāvṇo) mean? ("To call".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to call'.
+Say the Marwadi for 'to call'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मांगणो (māṅgṇo) mean? ("To ask for".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to ask for'.
+Say the Marwadi for 'to ask for'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जोवणो (jovṇo) mean? ("To look, to look for".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to look, to look for'.
+Say the Marwadi for 'to look, to look for'.

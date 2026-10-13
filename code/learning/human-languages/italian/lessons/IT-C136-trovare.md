@@ -14,6 +14,7 @@ concept_tag: IT-VERB-TROVARE
 prerequisites: [IT-C136-camminare, IT-C136-pulire]
 sounds: []
 roots: []
+etymology_hook: "trovare ← Vulgar Latin tropare, whose own origin is debated — French trouver is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C136-pulire]
 <!-- hl-knowledge: introduces=[IT-LEX-C136-VERBI136-04]; assesses=[] -->
 
 **trovare** — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trovare** ← Vulgar Latin *tropare* — inherited. (EtymDB 2.1) Where *tropare* itself came from is debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

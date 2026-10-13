@@ -13,7 +13,8 @@ gloss: "a sentence"
 concept_tag: GE-SCHULE128-SATZ
 prerequisites: [GE-C128-hausaufgabe, GE-C128-idee]
 sounds: []
-roots: []
+roots: [germanic-satjana]
+etymology_hook: "Satz ← Middle High German saz, from the verb 'to set': what is set down"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C128-idee]
 <!-- hl-knowledge: introduces=[GE-LEX-C128-SCHULE128-03]; assesses=[] -->
 
 **der Satz** — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Satz** ← Middle High German *saz*, "what is set", from the verb "to set", Old High German *sezzen* ← Proto-Germanic *\*satjaną*, English *set* (EtymDB 2.1). A sentence is words set together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

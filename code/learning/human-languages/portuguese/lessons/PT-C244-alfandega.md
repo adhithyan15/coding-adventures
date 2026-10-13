@@ -14,6 +14,7 @@ concept_tag: PT-COISAS244-ALFANDEGA
 prerequisites: [PT-C243-impossivel, PT-C243-principal]
 sounds: []
 roots: []
+etymology_hook: "alfândega ← Arabic al-funduq 'the inn, the warehouse'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C243-principal]
 <!-- hl-knowledge: introduces=[PT-LEX-C244-COISAS244-01]; assesses=[] -->
 
 **a alfândega** — "customs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alfândega** ← Arabic *al-funduq*, "the inn, the warehouse" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

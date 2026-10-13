@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C42-madhye-r1",
               "prompt": "Say 'in the house' twice: the short way and the sign way.",
               "assesses": [
@@ -275,6 +276,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C42-var-r1",
               "prompt": "Say 'on the house', then 'look up', and name why only one needed the oblique stem.",
               "assesses": [
@@ -306,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "When does वर NOT need an oblique stem in front of it? (When it stands alone as the adverb up.) What does Marathi put love on? (The thing loved — marāṭhīvar.)"
+              "text": "When does वर (var) NOT need an oblique stem in front of it? (When it stands alone as the adverb up.) What does Marathi put love on? (The thing loved — marāṭhīvar.)"
             },
             {
               "kind": "speech",
@@ -417,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C42-khaali-r1",
               "prompt": "Say 'on the house' and 'under the room', then the two bare adverbs.",
               "assesses": [
@@ -541,6 +544,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R42-inside-outside-run",
               "prompt": "Put a room in, on and under the house, all from the same stem.",
               "assesses": [

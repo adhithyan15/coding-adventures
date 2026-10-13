@@ -14,7 +14,8 @@ romanization: "nāṇayam"
 concept_tag: TA-VELAI222-NANAYAM
 prerequisites: [TA-C222-tallupati, TA-C222-rupay]
 sounds: []
-roots: []
+roots: [sanskrit-nanaka]
+etymology_hook: "நாணயம் ← Sanskrit nāṇaka 'coin, anything stamped' (CDIAL 7050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C222-rupay]
 <!-- hl-knowledge: introduces=[TA-LEX-C222-VELAI222-03]; assesses=[] -->
 
 **நாணயம்** — *nāṇayam* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாணயம்** (*nāṇayam*) is a loan from Sanskrit *nāṇaka*, "coin, anything stamped" (CDIAL 7050).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

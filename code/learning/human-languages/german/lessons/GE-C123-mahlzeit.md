@@ -13,7 +13,8 @@ gloss: "a meal"
 concept_tag: GE-ESSEN123-MAHLZEIT
 prerequisites: [GE-C123-essig, GE-C123-nachtisch]
 sounds: []
-roots: []
+roots: [germanic-tidiz]
+etymology_hook: "Mahlzeit — Mahl 'meal' + Zeit 'time': mealtime"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C123-nachtisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C123-ESSEN123-05]; assesses=[] -->
 
 **die Mahlzeit** — "a meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mahlzeit** is the word for "meal", English *meal*, + *Zeit*, "time": mealtime. EtymDB 2.1 lists it beside English *mealtide*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

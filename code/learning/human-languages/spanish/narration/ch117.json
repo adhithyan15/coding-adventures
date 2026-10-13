@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-he-hablado-say",
               "prompt": "Say I have spoken Spanish.",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-he-hablado-mean",
               "prompt": "What does haber mean in he hablado?",
               "assesses": [
@@ -169,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-he-hablado-english",
               "prompt": "Which English verb was hollowed out the same way?",
               "assesses": [

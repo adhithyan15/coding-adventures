@@ -13,7 +13,8 @@ gloss: "bitter"
 concept_tag: PT-QUALIDADES127-AMARGO
 prerequisites: [PT-C127-estreito, PT-C127-zangado]
 sounds: []
-roots: []
+roots: [amarus-latin]
+etymology_hook: "amargo ← Vulgar Latin *amaricus, from amarus 'bitter' — the same root as amarelo"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C127-zangado]
 <!-- hl-knowledge: introduces=[PT-LEX-C127-QUALIDADES127-03]; assesses=[] -->
 
 **amargo** — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amargo** ← Vulgar Latin *\*amaricus* (EtymDB 2.1), from Latin *amarus*, "bitter" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

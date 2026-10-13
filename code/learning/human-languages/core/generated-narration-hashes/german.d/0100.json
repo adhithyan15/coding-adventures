@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 100,
-  "sourceHash": "fnv1a64:ef31ab9e87c037c0",
+  "sourceHash": "fnv1a64:132bf0c09470cbbc",
   "lessonIds": [
     "GE-C100-guertel",
     "GE-C100-jacke",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch100.txt",
   "json": "german/narration/ch100.json",
-  "textHash": "fnv1a64:ffcdb4c38bd77e19",
-  "jsonHash": "fnv1a64:890e560cdcb00a93",
+  "textHash": "fnv1a64:ffc90a09132d3935",
+  "jsonHash": "fnv1a64:4de9deb81ee0f6fa",
   "findings": []
 }

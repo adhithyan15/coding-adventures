@@ -102,6 +102,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C74-kya-polar-r1",
               "prompt": "Say the two kya questions back to back: what can you do, and can you come.",
               "assesses": [
@@ -248,6 +249,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C74-question-rise-r1",
               "prompt": "Say the same four words twice — as a statement, then as a question — and name what changed.",
               "assesses": [
@@ -393,6 +395,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C74-na-tag-r1",
               "prompt": "Ask whether the tea is fine two ways: not knowing, then expecting agreement.",
               "assesses": [
@@ -485,6 +488,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R74-ask-run",
               "prompt": "Say four sentences with a clause underneath: a reported thought, a reason, a when-frame, and a chained pair.",
               "assesses": [

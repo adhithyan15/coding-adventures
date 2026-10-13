@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES85-ORAGE
 prerequisites: [FR-C133-mechant, FR-C133-chaleur]
 sounds: []
 roots: []
+etymology_hook: "orage — Old French ore 'wind', from Latin aura 'breeze', + -age — English aura"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C133-chaleur]
 <!-- hl-knowledge: introduces=[FR-LEX-C133-QUALITES85-04]; assesses=[] -->
 
 **l'orage** — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orage** — built from Old French *ore*, "a wind", ← Latin *aura*, "a breeze", from Greek *aura*, with *-age*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

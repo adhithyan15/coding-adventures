@@ -13,7 +13,8 @@ gloss: "ready"
 concept_tag: IT-QUALITA127-PRONTO
 prerequisites: [IT-C127-giusto, IT-C127-sbagliato]
 sounds: []
-roots: []
+roots: [promptus-latin]
+etymology_hook: "pronto ← Latin promptus 'ready, at hand' — English prompt is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C127-sbagliato]
 <!-- hl-knowledge: introduces=[IT-LEX-C127-QUALITA127-04]; assesses=[] -->
 
 **pronto** — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pronto** ← Latin *promptus*, "ready, at hand" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

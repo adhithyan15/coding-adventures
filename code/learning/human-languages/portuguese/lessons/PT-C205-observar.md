@@ -13,7 +13,8 @@ gloss: "to observe"
 concept_tag: PT-VERB-OBSERVAR
 prerequisites: [PT-C205-piorar, PT-C205-oferecer]
 sounds: []
-roots: []
+roots: [servare-latin]
+etymology_hook: "observar ← Latin observare 'to watch over' — English observe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C205-oferecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C205-VERBOS205-03]; assesses=[] -->
 
 **observar** — "to observe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**observar** ← Latin *observare*, "to watch over" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

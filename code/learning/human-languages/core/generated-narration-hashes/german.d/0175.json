@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 175,
-  "sourceHash": "fnv1a64:e3d5420ce2280c61",
+  "sourceHash": "fnv1a64:bd1cf098f2b6c471",
   "lessonIds": [
     "GE-C175-ausfuellen",
     "GE-C175-ausruhen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch175.txt",
   "json": "german/narration/ch175.json",
-  "textHash": "fnv1a64:3eeb61d0f2acc893",
-  "jsonHash": "fnv1a64:0c07b1df47e7f2b5",
+  "textHash": "fnv1a64:6b48658849d02bc0",
+  "jsonHash": "fnv1a64:6b19bcc6d7f87e2c",
   "findings": []
 }

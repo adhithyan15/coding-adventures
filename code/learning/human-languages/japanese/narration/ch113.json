@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C113-hanko-type",
-              "prompt": "Type the Japanese for 'a personal seal'.",
+              "prompt": "Say the Japanese for 'a personal seal'.",
               "assesses": [
                 "JA-LEX-C113-THINGS113-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C113-dango-type",
-              "prompt": "Type the Japanese for 'a dumpling'.",
+              "prompt": "Say the Japanese for 'a dumpling'.",
               "assesses": [
                 "JA-LEX-C113-THINGS113-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C113-dashi-type",
-              "prompt": "Type the Japanese for 'soup stock'.",
+              "prompt": "Say the Japanese for 'soup stock'.",
               "assesses": [
                 "JA-LEX-C113-THINGS113-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C113-katsuo-type",
-              "prompt": "Type the Japanese for 'a bonito'.",
+              "prompt": "Say the Japanese for 'a bonito'.",
               "assesses": [
                 "JA-LEX-C113-THINGS113-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C113-wakame-type",
-              "prompt": "Type the Japanese for 'wakame seaweed'.",
+              "prompt": "Say the Japanese for 'wakame seaweed'.",
               "assesses": [
                 "JA-LEX-C113-THINGS113-05"
               ],

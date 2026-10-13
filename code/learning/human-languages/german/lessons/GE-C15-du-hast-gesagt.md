@@ -10,10 +10,10 @@ gloss: you said — the second slot, where haben drops its b exactly as English 
 concept_tag: GE-PERFEKT-DU
 prerequisites: [GE-C15-ich-habe-gesagt]
 sounds: [ge-prefix, final-t]
-roots: [germanic-habjana]
+roots: [germanic-habjana, germanic-sagjana]
 etymology_hook: "du hast and thou hast are the same form of the same verb, both having lost the b of haben and have in the same place for the same reason"
 duration:
-  max_seconds: 150
+  max_seconds: 166
 requires:
   knowledge: [GE-GRAMMAR-PERFEKT-ICH-01, GE-GRAMMAR-PERFEKT-HABEN-01, GE-LEX-DU-SIE-02, GE-LEX-GESAGT-01]
 introduces:
@@ -55,6 +55,11 @@ inherited together rather than invented twice.
 
 The participle has not moved. *Gesagt* is *gesagt* whoever did the saying, so
 half of every sentence in this chapter is already yours.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**du hast gesagt** — *hast* ← Old High German *habēn*, English *have*; *gesagt* ← Old High German *sagēn*, English *say*. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-DU-01, GE-GRAMMAR-PERFEKT-ICH-01] -->

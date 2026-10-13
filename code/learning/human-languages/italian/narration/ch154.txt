@@ -12,6 +12,9 @@ Before the new one: say the Italian for meanwhile, then the Italian for by now.
 You'll want to know: intorno.
 intorno — "around".
 
+The word, taken apart.
+intorno is in torno, "in a turn": torno goes back to Latin tornus, "a lathe" (Lewis & Short), which Latin took from Greek tornos. EtymDB 2.1 has no row for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for by now, then the Italian for around.
 
 You'll want to know: dappertutto.
 dappertutto — "everywhere".
+
+The word, taken apart.
+dappertutto is "from through all": the word for "from", plus per from Latin per, and tutto, "all" from Latin totus. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for around, then the Italian for everywhere.
 You'll want to know: da nessuna parte.
 da nessuna parte — "nowhere".
 
+The phrase, taken apart.
+da nessuna parte is "from no part": da, "from"; nessuna, "not one", from Latin ne ipse una, "not even one"; and parte, "part" from Latin partem. (EtymDB 2.1 records da and parte, and derives Neapolitan nisciuno from ne ipse unus.)
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for everywhere, then the Italian for nowhere
 You'll want to know: altrove.
 altrove — "elsewhere".
 
+The word, taken apart.
+altrove is "other where", from a Latin phrase ending in ubi, "where". EtymDB 2.1 gives it as aliter ubi; other accounts give alter ubi, "the other where".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for nowhere, then the Italian for elsewhere.
 
 You'll want to know: laggiù.
 laggiù — "down there".
+
+The word, taken apart.
+laggiù is là, "there" from Latin illac, "that way", plus giù, "down", from Old Italian giuso. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

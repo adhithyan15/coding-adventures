@@ -152,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C335-repaso-seis-palabras-entrada",
               "prompt": "One Spanish noun names both a doorway and the ticket that gets you through it. Which?",
               "assesses": [
@@ -171,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C335-repaso-seis-palabras-cambio",
               "prompt": "You have paid, and you are owed coins back. Name what you are owed.",
               "assesses": [

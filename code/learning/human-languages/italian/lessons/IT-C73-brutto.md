@@ -13,7 +13,8 @@ gloss: "ugly"
 concept_tag: IT-AGG2-BRUTTO
 prerequisites: [IT-C72-vecchio, IT-C72-bello]
 sounds: []
-roots: []
+roots: [brutus-latin]
+etymology_hook: "brutto ← Latin brutus 'dull, stupid' — English brute shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C72-bello]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-01]; assesses=[] -->
 
 **brutto** — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brutto** ← Latin *brutus*, "dull, stupid" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

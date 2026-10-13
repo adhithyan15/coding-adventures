@@ -13,7 +13,8 @@ gloss: "to save (money)"
 concept_tag: PT-VERB-POUPAR
 prerequisites: [PT-C201-reservar, PT-C201-gastar]
 sounds: []
-roots: []
+roots: [palpare-latin]
+etymology_hook: "poupar ← Latin palpare 'to stroke, to treat gently': hence to spare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C201-gastar]
 <!-- hl-knowledge: introduces=[PT-LEX-C201-VERBOS201-03]; assesses=[] -->
 
 **poupar** — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poupar** ← Latin *palpare*, "to stroke, to treat gently" (EtymDB 2.1) — inherited. To treat gently became to spare.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 146,
-  "sourceHash": "fnv1a64:0a8c350ebf270e57",
+  "sourceHash": "fnv1a64:a492c3afd7d83e84",
   "lessonIds": [
     "IT-C146-meritare",
     "IT-C146-migliorare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch146.txt",
   "json": "italian/narration/ch146.json",
-  "textHash": "fnv1a64:f4fbe13fa74013b0",
-  "jsonHash": "fnv1a64:7da07ed088da2811",
+  "textHash": "fnv1a64:6fffbd398f3ee4c6",
+  "jsonHash": "fnv1a64:419153a2b906aa72",
   "findings": []
 }

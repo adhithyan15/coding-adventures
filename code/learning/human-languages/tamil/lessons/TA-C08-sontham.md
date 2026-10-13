@@ -12,9 +12,10 @@ headword: "சொந்தம்"
 romanization: "sontham"
 gloss: "one's own; a relative"
 concept_tag: TA-ANCHOR-SONTHAM
-prerequisites: []
+prerequisites: [TA-C07-numbers-practice]
 sounds: []
-roots: []
+roots: [sanskrit-svanta]
+etymology_hook: "சொந்தம் — probably Sanskrit svānta 'one's own' (from sva 'self'), through Telugu sonta; route not settled"
 duration:
   max_seconds: 120
 requires:
@@ -42,8 +43,13 @@ variety: standard-colloquial
 
 **சொந்தம்** — *sontham* — "one's own; a relative".
 
-Say it: *sontham*. Look at its shape as you say it: the next lesson takes one
+Say it: *sontham*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **சொ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சொந்தம்** (*sontham*) is not native, but its route is not settled. It is usually derived from Sanskrit *svānta*, "one's own", built on *sva*, "self", probably through Telugu *sonta*, "own". Treat the route as likely, not proven.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-ANCHOR-SONTHAM] -->

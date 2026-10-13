@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 181,
-  "sourceHash": "fnv1a64:136610552bd553cc",
+  "sourceHash": "fnv1a64:a7d43b52d8399a4d",
   "lessonIds": [
     "IT-C181-rischiare",
     "IT-C181-risolvere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch181.txt",
   "json": "italian/narration/ch181.json",
-  "textHash": "fnv1a64:f66088ba68831d8d",
-  "jsonHash": "fnv1a64:e5703b26a067c572",
+  "textHash": "fnv1a64:b952f27666597e48",
+  "jsonHash": "fnv1a64:e9819379df4720b5",
   "findings": []
 }

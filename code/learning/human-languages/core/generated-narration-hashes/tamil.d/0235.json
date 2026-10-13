@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 235,
-  "sourceHash": "fnv1a64:d9b670660f303674",
+  "sourceHash": "fnv1a64:4685be38a9280da9",
   "lessonIds": [
     "TA-C235-ticai",
     "TA-C235-vatakku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch235.txt",
   "json": "tamil/narration/ch235.json",
-  "textHash": "fnv1a64:ac4f3c99ebba7452",
-  "jsonHash": "fnv1a64:6318de8dadb2e6da",
+  "textHash": "fnv1a64:63ec31579782f214",
+  "jsonHash": "fnv1a64:62c28259d648695e",
   "findings": []
 }

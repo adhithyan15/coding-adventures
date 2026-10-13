@@ -13,7 +13,8 @@ gloss: "the rent"
 concept_tag: IT-READ139-LAFFITTO
 prerequisites: [IT-C139-lorario, IT-C139-lavviso]
 sounds: []
-roots: []
+roots: [fixus-latin]
+etymology_hook: "affitto — the noun of affittare 'to rent', built on fitto 'a fixed payment' ← Latin fixus"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [IT-C139-lavviso]
 
 The advert says **Camera libera. Affitto: 400 al mese.** A room is free, at 400
 a month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**affitto** is the noun of *affittare*, "to rent": both are built on *fitto*, "a fixed payment", from Latin *fixus*, "fixed". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

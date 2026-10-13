@@ -11,6 +11,7 @@ concept_tag: GREETING-EVENING
 prerequisites: [GE-C01-guten-tag, GE-C01-guten-morgen, GE-C01-abend]
 sounds: [vowel-u-german]
 roots: [godaz, abanths]
+etymology_hook: "Guten Abend — gut 'good' + Abend 'evening', masculine, so guten again: the third day-part in a row"
 duration:
   max_seconds: 120
 requires:

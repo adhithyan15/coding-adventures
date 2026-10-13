@@ -14,6 +14,7 @@ concept_tag: IT-COSE248-ZANZARA
 prerequisites: [IT-C248-temperatura, IT-C248-mosca]
 sounds: []
 roots: []
+etymology_hook: "zanzara ← Late Latin zinzala 'a gnat', a word that imitates the buzz"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C248-mosca]
 <!-- hl-knowledge: introduces=[IT-LEX-C248-COSE248-03]; assesses=[] -->
 
 **la zanzara** — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zanzara** ← Late Latin *zinzala*, "a gnat" — inherited; the word imitates the buzz. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

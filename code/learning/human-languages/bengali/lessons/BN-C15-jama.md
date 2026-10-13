@@ -42,7 +42,7 @@ supplies the word.
 
 > **জামা** — *jāmā* — **shirt**
 
-লাল জামা (*lāl jāmā*) — a red shirt.
+আমার জামা (*āmār jāmā*) — my shirt.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -64,9 +64,11 @@ vocabulary leans on the same trading world its colors did.
 
 [PAUSE 1s]
 - [YOU SAY: "jāmā" — shirt]
-- [YOU SAY: "lāl jāmā" — a red shirt]
+- [YOU SAY: "āmār jāmā" — my shirt]
 - [YOU SAY: the three Persian loans so far — "lāl … shôbuj … jāmā"]
-- [YOU RECALL: read **লাল**, then say *nil*, then read **কালো**]
+- [YOU READ: **লাল**]
+- [YOU RECALL: say *nil*]
+- [YOU READ: **কালো**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-JAMA-01] -->

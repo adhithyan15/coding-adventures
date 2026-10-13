@@ -13,7 +13,8 @@ gloss: "clear, pale (of a colour)"
 concept_tag: PT-QUAL242-CLARO-CLARA
 prerequisites: [PT-C242-maduro-madura, PT-C242-escuro-escura]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "claro ← Latin clarus 'bright, clear', a semi-learned form that kept its cl- — English clear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C242-escuro-escura]
 <!-- hl-knowledge: introduces=[PT-LEX-C242-QUAL242-04]; assesses=[] -->
 
 **claro / clara** — "clear, pale (of a colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**claro** ← Latin *clarus*, "bright, clear" (EtymDB 2.1) — semi-learned. It kept its *cl-*, though Latin *cl-* usually became *ch-*; Old Portuguese also said *craro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

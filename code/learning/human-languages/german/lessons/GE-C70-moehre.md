@@ -13,7 +13,8 @@ gloss: "a carrot"
 concept_tag: GE-ESSEN2-MOEHRE
 prerequisites: [GE-C70-tomate, GE-C70-zwiebel]
 sounds: []
-roots: []
+roots: [germanic-murho]
+etymology_hook: "Möhre ← Old High German morha ← Proto-Germanic *murhōn 'carrot' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C70-zwiebel]
 <!-- hl-knowledge: introduces=[GE-LEX-C70-ESSEN2-05]; assesses=[] -->
 
 **die Möhre** — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Möhre** ← Old High German *morha* ← Proto-Germanic *\*murhōn*, "carrot" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

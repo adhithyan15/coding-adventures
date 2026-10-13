@@ -14,7 +14,8 @@ romanization: "kāliyāṉa"
 concept_tag: TA-GUNAM209-KALIYANA
 prerequisites: [TA-C209-kettuppona, TA-C209-nirainta]
 sounds: []
-roots: []
+roots: [arabic-khali]
+etymology_hook: "காலியான — kāli ← Arabic khālī 'empty', through Hindustani, + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C209-nirainta]
 <!-- hl-knowledge: introduces=[TA-LEX-C209-GUNAM209-03]; assesses=[] -->
 
 **காலியான** — *kāliyāṉa* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காலியான** (*kāliyāṉa*) is *kāli*, "empty", a loan from Arabic *khālī*, "empty", through Hindustani, with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

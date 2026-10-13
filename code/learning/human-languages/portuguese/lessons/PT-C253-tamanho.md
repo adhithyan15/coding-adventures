@@ -13,7 +13,8 @@ gloss: "a size"
 concept_tag: PT-COISAS253-TAMANHO
 prerequisites: [PT-C252-adepto, PT-C253-provador]
 sounds: []
-roots: []
+roots: [magnus-latin]
+etymology_hook: "tamanho ← Latin tam magnus 'so great'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C253-provador]
 <!-- hl-knowledge: introduces=[PT-LEX-C253-COISAS253-02]; assesses=[] -->
 
 **o tamanho** — "a size".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tamanho** ← Latin *tam magnus*, "so great" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *tamanno*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

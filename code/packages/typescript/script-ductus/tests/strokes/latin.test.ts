@@ -43,15 +43,26 @@ const LA = (glyph: string): LetterDuctus => DUCTUS[ductusKey("latin", glyph)];
 const GLYPHS = [
   "b", "c", "e", "g", "h", "i", "l", "n", "o", "r", "s", "u", "w", "ß", "ñ", "G", "¿", "¡",
   "a", "d", "p", "q", "t", "y", "H", "á", "é", "í", "ó", "ú", "ü",
+  "v", "m", "R", "è", "ê", "ë", "ï", "ä", "ö", "ē", "ç",
 ] as const;
 /** The letters cited to the Grundschrift-App; the rest cite UJIpenchars2. */
 const SCHOOL = [
   "b", "c", "e", "g", "h", "i", "l", "n", "o", "r", "s", "u", "w", "ß", "G",
-  "a", "d", "p", "q", "t", "y", "H",
+  "a", "d", "p", "q", "t", "y", "H", "v", "m", "R",
 ] as const;
+/** Letters added when UJIpenchars2 was out of reach: no native-writer count. */
+const SCHOOL_ONLY = ["v", "m", "R"] as const;
 const NATIVE = ["ñ", "¿", "¡", "á", "é", "í", "ó", "ú", "ü"] as const;
 /** Each precomposed letter and the cited letter whose path it begins with. */
 const BASE: Record<string, string> = { "ñ": "n", "á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "ü": "u" };
+/**
+ * The letters drawn BY ANALOGY, not separately sourced (the coordinator's
+ * decision for the French, German and Latin lessons): each one's cited base
+ * letter, then its mark last, as the cited ü, acute and tilde are drawn.
+ */
+const ANALOGY: Record<string, string> = {
+  "è": "e", "ê": "e", "ë": "e", "ï": "i", "ä": "a", "ö": "o", "ē": "e", "ç": "c",
+};
 const GRUNDSCHRIFT =
   /^https:\/\/github\.com\/Medien-Treibhaus\/grundschrift-app-source\/blob\/f6dbd807adbb3fc2f94207fe578def439f6e9c49\/assets\/levels\/(kleinbuchstaben|GROSSBUCHSTABEN)\/(\w+)\/metadata\.json$/;
 const UJI = "https://archive.ics.uci.edu/dataset/177/uji+pen+characters+version+2";
@@ -91,15 +102,15 @@ describe("Latin handwriting ductus", () => {
     }
   });
 
-  it("authors exactly the 31 cited glyphs, in owner order", () => {
+  it("authors exactly the 42 glyphs (34 cited, 8 by analogy), in owner order", () => {
     expect(letters.map((letter) => letter.glyph)).toEqual([...GLYPHS]);
     expect(Object.keys(DUCTUS).filter((key) => key.startsWith("latin:"))).toEqual(
       GLYPHS.map((glyph) => `latin:${glyph}`),
     );
   });
 
-  it("draws no mark the sources do not cover, and no letter that would follow ü only by analogy", () => {
-    for (const glyph of ["à", "è", "â", "ê", "ç", "æ", "œ", "ē", "ä", "ö", "ë", "ï", "ÿ"]) {
+  it("draws no marked letter beyond the cited ones and the eight by analogy", () => {
+    for (const glyph of ["à", "â", "î", "ô", "û", "ù", "ã", "õ", "ā", "æ", "œ", "ÿ", "Ä", "Ö", "Ü", "É", "Ç"]) {
       expect(DUCTUS[ductusKey("latin", glyph)], glyph).toBeUndefined();
     }
   });
@@ -110,6 +121,8 @@ describe("Latin handwriting ductus", () => {
       "ß": 0, "ñ": 1, G: 0, "¿": 1, "¡": 1,
       a: 0, d: 0, p: 0, q: 0, t: 1, y: 1, H: 2,
       "á": 1, "é": 1, "í": 1, "ó": 1, "ú": 1, "ü": 2,
+      v: 0, m: 0, R: 1,
+      "è": 1, "ê": 1, "ë": 2, "ï": 2, "ä": 2, "ö": 2, "ē": 1, "ç": 1,
     });
   });
 
@@ -270,6 +283,10 @@ describe("Latin handwriting ductus", () => {
       expect(source.variation).toMatch(/no point is copied, and the path is fitted to the .* of the bundled LatinPrint-Subset\.ttf, a renamed subset of SIL Global's literacy typeface Andika 7\.000, which prints the one-storey a the school model teaches; the book's own text face is a different font\. Handwriting varies by writer\.$/);
       if (glyph === "ß") {
         expect(source.variation).toMatch(/has no ß, so no native-writer count is cited/);
+      } else if ((SCHOOL_ONLY as readonly string[]).includes(glyph)) {
+        expect(source.variation).toMatch(
+          new RegExp(`could not be reached when ${glyph} was added, so no native-writer count is cited for it`),
+        );
       } else {
         expect(source.variation).toMatch(/UJIpenchars2 \(Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4\.0\) holds 120 tablet pen traces/);
       }
@@ -301,5 +318,112 @@ describe("Latin handwriting ductus", () => {
     expect(LA("y").source.variation).toMatch(/ONE stroke \(91 of the 120\)/);
     expect(LA("q").source.variation).toMatch(/89 are two strokes/);
     expect(LA("H").source.variation).toMatch(/second in 37 and third in 25/);
+  });
+
+  it("draws v, m and R as the Grundschrift-App does", () => {
+    // v: one stroke from the top left, down to the point on the line, up to the top right.
+    const v = penPath(LA("v").strokes[0]);
+    expect(LA("v").strokes).toHaveLength(1);
+    expect(v[0].x).toBeLessThan(150);
+    expect(v[0].y).toBeGreaterThan(400);
+    const bottom = v.reduce((low, point) => (point.y < low.y ? point : low));
+    expect(bottom.y).toBeLessThan(100);
+    expect(bottom.x).toBeGreaterThan(200);
+    expect(bottom.x).toBeLessThan(320);
+    expect(v.at(-1)!.x).toBeGreaterThan(400);
+    expect(v.at(-1)!.y).toBeGreaterThan(400);
+    // m: one stroke of three movements, the stem down, then two arches, each
+    // after going back up the line just drawn; both arches turn clockwise.
+    const m = LA("m");
+    expect(m.strokes).toHaveLength(1);
+    expect(m.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "draw the stem down",
+      "back up, over and down",
+      "back up, over and down",
+    ]);
+    expect(first(m).x).toBeLessThan(150);
+    expect(first(m).y).toBeGreaterThan(400);
+    expect(segmentPath(m, 0, 0).at(-1)!.y).toBeLessThan(100);
+    for (const arch of [1, 2]) {
+      expect(turning(segmentPath(m, 0, arch)), `arch ${arch}`).toBeLessThan(-150);
+      expect(segmentPath(m, 0, arch).at(-1)!.y, `arch ${arch}`).toBeLessThan(100);
+    }
+    expect(segmentPath(m, 0, 1).at(-1)!.x).toBeGreaterThan(350);
+    expect(segmentPath(m, 0, 1).at(-1)!.x).toBeLessThan(450);
+    expect(last(m).x).toBeGreaterThan(650);
+    // R: the stem down; then from the top of the stem, over the top and
+    // clockwise round the bowl, back along its foot and down the leg.
+    const R = LA("R");
+    expect(R.strokes).toHaveLength(2);
+    expect(first(R).x).toBeLessThan(150);
+    expect(first(R).y).toBeGreaterThan(600);
+    expect(last(R).y).toBeLessThan(100);
+    expect(first(R, 1).y).toBeGreaterThan(600);
+    expect(first(R, 1).x).toBeLessThan(150);
+    expect(turning(segmentPath(R, 1, 0))).toBeLessThan(-150);
+    expect(segmentPath(R, 1, 1)[0].x).toBeLessThan(150);
+    expect(last(R, 1).x).toBeGreaterThan(500);
+    expect(last(R, 1).y).toBeLessThan(100);
+    expect(R.strokes[1].segments[1].label).toBe("back along the foot of the bowl and down the leg");
+  });
+
+  it("draws each letter by analogy as its cited base letter, then the mark last", () => {
+    for (const [glyph, base] of Object.entries(ANALOGY)) {
+      const letter = LA(glyph);
+      // The base letter's own first stroke, unchanged.
+      expect(letter.strokes[0], glyph).toEqual(LA(base).strokes[0]);
+      for (const mark of letter.strokes.slice(1)) {
+        expect(mark.segments, glyph).toHaveLength(1);
+        expect(mark.segments[0].label, glyph).toMatch(/^lift, then the /);
+        const markY = meanY(penPath(mark));
+        const bodyY = meanY(penPath(letter.strokes[0]));
+        // Every mark sits above its letter but the cedilla, which hangs below.
+        if (glyph === "ç") expect(markY, glyph).toBeLessThan(0);
+        else expect(markY, glyph).toBeGreaterThan(bodyY + 300);
+      }
+    }
+    // The diaeresis: two dots, the left one first, as the cited ü.
+    for (const glyph of ["ë", "ï", "ä", "ö"]) {
+      const letter = LA(glyph);
+      expect(letter.strokes, glyph).toHaveLength(3);
+      expect(letter.strokes[1].segments[0].label, glyph).toBe("lift, then the left dot");
+      expect(letter.strokes[2].segments[0].label, glyph).toBe("lift, then the right dot");
+      expect(first(letter, 1).x, glyph).toBeLessThan(first(letter, 2).x - 100);
+    }
+    // One mark each, in the direction these records give a mark no cited
+    // record covers: left to right and top to bottom.
+    const grave = LA("è");
+    expect(grave.strokes[1].segments[0].label).toBe("lift, then the grave, down to the right");
+    expect(last(grave, 1).x - first(grave, 1).x).toBeGreaterThan(100);
+    expect(first(grave, 1).y - last(grave, 1).y).toBeGreaterThan(100);
+    const roof = penPath(LA("ê").strokes[1]);
+    expect(roof.at(-1)!.x - roof[0].x).toBeGreaterThan(300);
+    const peak = roof.reduce((high, point) => (point.y > high.y ? point : high));
+    expect(peak.y - roof[0].y).toBeGreaterThan(100);
+    expect(peak.y - roof.at(-1)!.y).toBeGreaterThan(100);
+    const macron = LA("ē");
+    expect(last(macron, 1).x - first(macron, 1).x).toBeGreaterThan(250);
+    expect(Math.abs(last(macron, 1).y - first(macron, 1).y)).toBeLessThan(20);
+    const cedilla = LA("ç");
+    expect(first(cedilla, 1).y).toBeGreaterThan(-20);
+    expect(last(cedilla, 1).y).toBeLessThan(-150);
+    expect(last(cedilla, 1).x).toBeLessThan(first(cedilla, 1).x);
+  });
+
+  it("says plainly that a letter drawn by analogy is not separately sourced, and no other letter says so", () => {
+    for (const [glyph, base] of Object.entries(ANALOGY)) {
+      const source = LA(glyph).source;
+      // Its url is the base letter's Grundschrift level: the only part of the
+      // letter that is sourced.
+      expect(source.url, glyph).toBe(LA(base).source.url);
+      expect(source.citation, glyph).toMatch(/^By analogy with the cited (ü|é and ñ), not separately sourced: /);
+      expect(source.variation, glyph).toMatch(/^ORDER BY ANALOGY, NOT SEPARATELY SOURCED\. /);
+      expect(source.variation, glyph).toMatch(/only by analogy; no point is copied/);
+      expect(source.variation, glyph).toMatch(/LatinPrint-Subset\.ttf/);
+    }
+    for (const letter of letters.filter((entry) => !(entry.glyph in ANALOGY))) {
+      expect(letter.source.citation, letter.glyph).not.toMatch(/analogy/i);
+      expect(letter.source.variation, letter.glyph).not.toMatch(/analogy/i);
+    }
   });
 });

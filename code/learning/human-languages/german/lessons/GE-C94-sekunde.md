@@ -13,7 +13,8 @@ gloss: "a second (of time)"
 concept_tag: GE-WANN-SEKUNDE
 prerequisites: [GE-C94-grau, GE-C94-lila]
 sounds: []
-roots: []
+roots: [secundus-latin]
+etymology_hook: "Sekunde ← Medieval Latin secunda, 'the second small part' of an hour — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C94-lila]
 <!-- hl-knowledge: introduces=[GE-LEX-C94-WANN-03]; assesses=[] -->
 
 **die Sekunde** — "a second (of time)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sekunde** ← Medieval Latin *secunda*, "the second" small division of an hour, from *secundus*, "following, second" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

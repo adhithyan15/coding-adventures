@@ -14,7 +14,8 @@ romanization: "veṟṟi"
 concept_tag: TA-PORUL277-VERRI
 prerequisites: [TA-C276-tiruppuli, TA-C277-kulu]
 sounds: []
-roots: []
+roots: [dravidian-vel-conquer]
+etymology_hook: "வெற்றி — native Dravidian (DEDR 5493); Malayalam veṟṟi 'victory'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C277-kulu]
 <!-- hl-knowledge: introduces=[TA-LEX-C277-PORUL277-02]; assesses=[] -->
 
 **வெற்றி** — *veṟṟi* — "victory, a win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெற்றி** (*veṟṟi*) is native Dravidian. DEDR 5493 lists Malayalam *veṟṟi*, "victory". It comes from *vel*, "to conquer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

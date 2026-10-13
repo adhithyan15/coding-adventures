@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 89,
-  "sourceHash": "fnv1a64:3c7d3ac8899c9384",
+  "sourceHash": "fnv1a64:8198bd794b4c3090",
   "lessonIds": [
     "IT-C89-fabbrica",
     "IT-C89-ufficio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch89.txt",
   "json": "italian/narration/ch89.json",
-  "textHash": "fnv1a64:a57523c502fa0096",
-  "jsonHash": "fnv1a64:1f6be52264f0a6d0",
+  "textHash": "fnv1a64:dc084055a6c7a5dd",
+  "jsonHash": "fnv1a64:d425a5c7cf6aa98c",
   "findings": []
 }

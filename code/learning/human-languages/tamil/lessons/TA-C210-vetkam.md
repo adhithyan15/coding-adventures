@@ -14,7 +14,8 @@ romanization: "veṭkam"
 concept_tag: TA-GUNAM210-VETKAM
 prerequisites: [TA-C210-kunam, TA-C210-poramai]
 sounds: []
-roots: []
+roots: [dravidian-velku-shame]
+etymology_hook: "வெட்கம் — native Dravidian (DEDR 5500); Malayalam veḷkka 'to be ashamed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C210-poramai]
 <!-- hl-knowledge: introduces=[TA-LEX-C210-GUNAM210-04]; assesses=[] -->
 
 **வெட்கம்** — *veṭkam* — "shyness, shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெட்கம்** (*veṭkam*) is native Dravidian. DEDR 5500 lists Malayalam *veḷkka*, "to be ashamed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

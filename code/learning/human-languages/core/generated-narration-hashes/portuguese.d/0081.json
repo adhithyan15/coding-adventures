@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 81,
-  "sourceHash": "fnv1a64:8f03dac612cb03d2",
+  "sourceHash": "fnv1a64:58ad230c1d926368",
   "lessonIds": [
     "PT-C81-lembrar",
     "PT-C81-esquecer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch81.txt",
   "json": "portuguese/narration/ch81.json",
-  "textHash": "fnv1a64:c8ae6c02ca738ca1",
-  "jsonHash": "fnv1a64:242247af9e46d560",
+  "textHash": "fnv1a64:561753bfcb21b66b",
+  "jsonHash": "fnv1a64:a8aaa650ed8c5474",
   "findings": []
 }

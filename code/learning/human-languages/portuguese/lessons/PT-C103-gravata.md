@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA103-GRAVATA
 prerequisites: [PT-C102-arco-iris, PT-C103-camisola]
 sounds: []
 roots: []
+etymology_hook: "gravata ← French cravate, from Hrvat 'a Croat' — English cravat is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C103-camisola]
 <!-- hl-knowledge: introduces=[PT-LEX-C103-ROUPA103-02]; assesses=[] -->
 
 **a gravata** — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gravata** ← French *cravate*, "necktie" (EtymDB 2.1) — borrowed. The French word came from *Hrvat*, "a Croat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

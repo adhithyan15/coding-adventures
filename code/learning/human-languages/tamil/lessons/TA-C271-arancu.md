@@ -14,7 +14,8 @@ romanization: "ārañcu"
 concept_tag: TA-PORUL271-ARANCU
 prerequisites: [TA-C271-kariveppilai, TA-C271-appil]
 sounds: []
-roots: []
+roots: [english-orange]
+etymology_hook: "ஆரஞ்சு ← English orange"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C271-appil]
 <!-- hl-knowledge: introduces=[TA-LEX-C271-PORUL271-04]; assesses=[] -->
 
 **ஆரஞ்சு** — *ārañcu* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆரஞ்சு** (*ārañcu*) is a loan from English *orange*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS3-PATO
 prerequisites: [PT-C62-cobra, PT-C62-galinha]
 sounds: []
 roots: []
+etymology_hook: "pato — probably from Andalusian Arabic baṭṭ 'duck'; the link is not certain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C62-galinha]
 <!-- hl-knowledge: introduces=[PT-LEX-C62-ANIMAIS3-03]; assesses=[] -->
 
 **o pato** — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pato** probably ← Andalusian Arabic *baṭṭ*, "duck" (EtymDB 2.1), though the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

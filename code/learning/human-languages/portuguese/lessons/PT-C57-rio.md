@@ -13,7 +13,8 @@ gloss: "a river"
 concept_tag: PT-NATUREZA2-RIO
 prerequisites: [PT-C56-montanha, PT-C56-floresta]
 sounds: []
-roots: []
+roots: [rivus-latin]
+etymology_hook: "rio ← Latin rivus 'stream' — English rival first meant one sharing a stream"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C56-floresta]
 <!-- hl-knowledge: introduces=[PT-LEX-C57-NATUREZA2-01]; assesses=[] -->
 
 **o rio** — "a river". Rio de Janeiro is "the river of January".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rio** ← Latin *rivus*, "stream" (EtymDB 2.1), through Vulgar Latin *\*rius* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

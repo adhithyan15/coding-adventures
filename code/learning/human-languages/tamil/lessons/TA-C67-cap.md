@@ -11,7 +11,8 @@ romanization: "toppi"
 concept_tag: TA-NOUN-CAP
 prerequisites: [TA-C67-sandal, TA-C66-left]
 sounds: []
-roots: []
+roots: [hindustani-topi]
+etymology_hook: "தொப்பி ← Hindustani ṭopī 'cap' (CDIAL 5481, under ṭōppa 'hat, covering')"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ exactly like the doubled ட you took apart in சட்டை — a புள�
 the second.
 
 With this one the run has both ends: தொப்பி at the top, செருப்பு at the floor.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொப்பி** (*toppi*) is a loan from Hindustani *ṭopī*, "cap". CDIAL 5481 sets the North Indian forms under *ṭōppa*, "hat, covering", whose own origin is unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

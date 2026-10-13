@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The First Form Line: Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77bf1c3f5df1d8cd",
+  "sourceHash": "fnv1a64:9bbf6da3ee56509f",
   "lessons": [
     {
       "id": "HI-A1F01-name-label",
@@ -18,16 +18,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b3e1542dfe445283",
+      "sourceHash": "fnv1a64:f18ba0a76f797507",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know first — read the label"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and You'll want to know first — read the label."
       },
       "blocks": [
         {
@@ -74,11 +79,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Find नाम (nām) among काम, नाम (nām), शाम without writing the other words."
+              "text": "Find नाम (nām) among कान, नाम (nām), शाम without writing the other words."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-A1F01-name-label-meaning",
               "prompt": "A Hindi form shows नाम (nām). What information belongs on that line?",
               "assesses": [
@@ -108,16 +114,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b25a7754e953e9bf",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "The two words — attach one nonverbal cue to each person",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The two words — attach one nonverbal cue to each person and Wrap-up recall."
       },
       "blocks": [
         {
@@ -181,6 +192,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-A1F01-name-select-b",
               "prompt": "In this practice bank, select the Devanagari name paired with B.",
               "assesses": [
@@ -211,16 +223,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8f366b4b8ff3f3fd",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice — supported entry",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — supported entry and Wrap-up recall."
       },
       "blocks": [
         {
@@ -276,6 +294,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-A1F01-name-supported-a",
               "prompt": "With the two-value bank visible, complete the Hindi name field for A.",
               "assesses": [
@@ -316,8 +335,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -373,6 +394,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-A1F01-name-delayed-b",
               "prompt": "After hiding the bank for ten seconds, complete नाम (nām) for B. Do not reveal the bank until the attempt is finished.",
               "assesses": [
@@ -413,8 +435,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -470,6 +494,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-A1F01-name-no-model-a",
               "prompt": "With no bank, romanization, or copyable answer, complete the Hindi name field for A.",
               "assesses": [

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e123d64b9a2dbc65",
+  "sourceHash": "fnv1a64:c10633053a6e4a79",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -137,8 +137,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-meaning",
-              "prompt": "Type the Urdu word khudā, meaning 'God'.",
+              "prompt": "Say the Urdu word khudā, meaning 'God'.",
               "assesses": [
                 "UR-LEX-KHUDA"
               ],
@@ -171,20 +172,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ac024f39dc5b8b78",
+      "sourceHash": "fnv1a64:680a29af823c6ca6",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -227,7 +231,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met one already: کیا kyā, from two chapters back, uses the consonant. The other two are still ahead of you — نیلا nīlā uses the long ī, لینا lenā uses the e — and every letter in both is one you can already draw. Three words, one letter, three values, and only having heard them tells you which."
+              "text": "You have met one already: کیا kyā, from two chapters back, uses the consonant. The other two are still ahead of you, in words later chapters teach — one with the long ī, one with the e — and when they come, every letter in them will be one you can already draw. One letter, three values, and only having heard the word tells you which."
             }
           ]
         },
@@ -268,6 +272,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-ye-dots",
               "prompt": "How many dots does the standalone ye carry?",
               "assesses": [
@@ -408,8 +413,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-hafiz-meaning",
-              "prompt": "Type the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
+              "prompt": "Say the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
               "assesses": [
                 "UR-LEX-HAFIZ"
               ],
@@ -541,8 +547,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-goodbye",
-              "prompt": "Type the standard Urdu expression for 'goodbye'.",
+              "prompt": "Say the standard Urdu expression for 'goodbye'.",
               "assesses": [
                 "UR-LEX-KHUDA-HAFIZ"
               ],
@@ -585,7 +592,7 @@
         "waitUntilStopped": [
           "Script Bridge — shared history, local spacing"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Bridge — shared history, local spacing until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script Bridge — shared history, local spacing."
       },
       "blocks": [
         {
@@ -667,8 +674,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-more-spacing",
-              "prompt": "Type the Urdu goodbye with its conventional space between the two words.",
+              "prompt": "Say the Urdu goodbye with its conventional space between the two words.",
               "assesses": [
                 "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
               ],
@@ -700,22 +708,25 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:89a9e85d7a29bb60",
+      "sourceHash": "fnv1a64:d487b22504681bb4",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -789,11 +800,11 @@
             },
             {
               "kind": "speech",
-              "text": "ہم کہانی کمرہ."
+              "text": "ہم کہانی شکریہ."
             },
             {
               "kind": "speech",
-              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. کمرہ kamrā \"room\" — gol he closes it, flattened into a round curl hanging off the ر in front of it. Three positions, one letter, and every other shape in all three is one you have already drawn."
+              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. شکریہ shukriya \"thank you\" — gol he closes it, flattened into a round curl hanging off the ی (ye) in front of it. Three positions, one letter, and every other shape in all three is one you have already drawn."
             }
           ]
         },
@@ -858,6 +869,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-he-middle",
               "prompt": "What does gol he look like in the MIDDLE of a word?",
               "assesses": [
@@ -888,13 +900,23 @@
       "romanization": "salām ... khudā hāfiz",
       "gloss": "open and close a short Urdu interaction",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:a3bc426a6f965d87",
-      "notice": null,
+      "sourceHash": "fnv1a64:1075c7edea46f8ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Script — the farewell and two new letters"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Script — the farewell and two new letters."
+      },
       "blocks": [
         {
           "index": 0,
@@ -977,6 +999,58 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two halves of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does khudā mean? (God.) Where did Urdu get it? (From Persian khodā, whose Middle Persian ancestor xwadāy meant \"lord.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hāfiz mean? (Guardian, protector.) Its root? (Arabic ḥ-f-ẓ, \"guard, preserve.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces picture \"God [be] guardian.\" Is a verb needed to say goodbye? (No: the formula means goodbye.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the farewell and two new letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدا, حافظ, خدا حافظ (khudā hāfiz)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then حافظ, then خدا حافظ (khudā hāfiz) with its space, each from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then **حافظ**, then **خدا حافظ** with its space, each from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ی (ye), one S-curve with no dots; then ہ (gol he) alone, the loop and its falling tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ی**, one S-curve with no dots; then **ہ** alone, the loop and its falling tail]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Persian spell the same farewell? (Joined: خداحافظ.) The final ظ of حافظ (hāfiz) is said z; mid-word, ہ (gol he) splits into two small loops."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -987,8 +1061,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-practice-final-line",
-              "prompt": "The short Urdu interaction is ending. Type the final expression.",
+              "prompt": "The short Urdu interaction is ending. Say the final expression.",
               "assesses": [
                 "UR-DIALOGUE-TAKE-LEAVE"
               ],

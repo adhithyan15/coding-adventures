@@ -48,7 +48,9 @@ borrowed.
 
 Long, and worth saying slowly, because every piece has a name:
 
-- **ಅರ್ಥ** (*artha*) — "**meaning**," a Sanskrit noun taken in whole.
+**ಅರ್ಥ** + **ಮಾಡಿ** + **‑ಕೊ** → **ಅರ್ಥಮಾಡಿಕೊ**
+
+- *artha* — "**meaning**," a Sanskrit noun taken in whole.
 - **ಮಾಡಿ** (*māḍi*) — "**having done**," from the native **ಮಾಡು** (*māḍu*, "to
   do") of Chapter 5's *kelasa māḍu*, "to work."
 - **‑ಕೊ** (*‑ko*) — "**and take it for yourself**."

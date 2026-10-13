@@ -14,7 +14,8 @@ romanization: "vaṭai"
 concept_tag: TA-THINGS125-VATAI
 prerequisites: [TA-C125-itli, TA-C125-tocai]
 sounds: []
-roots: []
+roots: [sanskrit-vataka]
+etymology_hook: "வடை ← Sanskrit vaṭaka 'round cake of pulse fried in oil' (CDIAL 11213)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C125-tocai]
 <!-- hl-knowledge: introduces=[TA-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **வடை** — *vaṭai* — "a vadai, a savoury doughnut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வடை** (*vaṭai*) is a loan from Sanskrit *vaṭaka*, "round cake of pulse fried in oil" (CDIAL 11213).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

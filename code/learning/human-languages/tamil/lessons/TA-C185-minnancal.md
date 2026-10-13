@@ -14,7 +14,8 @@ romanization: "miṉṉañcal"
 concept_tag: TA-PORUL185-MINNANCAL
 prerequisites: [TA-C185-kurunceyti, TA-C185-ceyti]
 sounds: []
-roots: []
+roots: [dravidian-min-flash, dravidian-ancal-post]
+etymology_hook: "மின்னஞ்சல் — a coinage of native miṉ 'electricity' (DEDR 4876) + añcal 'letter post' (DEDR 54)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C185-ceyti]
 <!-- hl-knowledge: introduces=[TA-LEX-C185-PORUL185-05]; assesses=[] -->
 
 **மின்னஞ்சல்** — *miṉṉañcal* — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மின்னஞ்சல்** (*miṉṉañcal*) is a modern coinage from two native words: *miṉ*, "lightning, electricity" (DEDR 4876), and *añcal*, "relay, letter post" (DEDR 54, which lists Malayalam añcal and Telugu ance): "electric post".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

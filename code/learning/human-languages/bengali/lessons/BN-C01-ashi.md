@@ -39,7 +39,7 @@ why.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C01-ASHI-01]; assesses=[BN-CONCEPT-C01-ACHCHHA-01] -->
 
-New: **স** again — here truly "sh" — and the **ি** sign (*i*), which in Bengali
+New: **স** — here truly "sh," the *s→sh* shift you heard in *nômoshkar* — and the **ি** sign (*i*), which in Bengali
 is **written before** the consonant it follows but **read after** it. **আসি** =
 **আ** + **সি**, *ā-shi*.
 

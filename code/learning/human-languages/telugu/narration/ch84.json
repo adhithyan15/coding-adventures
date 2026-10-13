@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 84,
   "title": "When You Are Not Well",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7878a8dc24748151",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1bb4fa65e0354285",
   "lessons": [
     {
       "id": "TE-C84-fever",
@@ -14,20 +14,13 @@
       "romanization": "jvaraṁ",
       "gloss": "a fever",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb7ae89de52c299e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:18e3f330cda715e8",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -61,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the shape. The person sits in the dative నాకు and the fever arrives, on the same come-verb as నాకు తెలుగు వచ్చు. In Telugu an illness is something that comes to you."
+              "text": "Notice the shape. The person sits in the dative నాకు and the fever arrives, on the same come-verb as నాకు తెలుగు వచ్చు. In Telugu an illness is something that comes to you."
             }
           ]
         },

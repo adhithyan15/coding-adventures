@@ -11,7 +11,8 @@ romanization: "metuvāka"
 concept_tag: TA-AGAIN-SLOWLY
 prerequisites: [TA-C91-sleepy, TA-C91-well]
 sounds: []
-roots: []
+roots: [dravidian-metu-soft]
+etymology_hook: "மெதுவாக — native Dravidian (DEDR 5070)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C91-well]
 **மெதுவாக** (*metuvāka*) — "slowly".
 
 **மெதுவாகப் பேசுங்கள்** — "please speak slowly", with the verb **பேசு** you read long ago.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மெதுவாக** (*metuvāka*) is native Dravidian (DEDR 5070). The entry glosses *metu* "softness, gentleness, slowness"; *-āka* makes it "slowly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

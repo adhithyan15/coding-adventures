@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まちどおしい (machidooshii) mean? ("Long-awaited".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'long-awaited'.
+Say the Japanese for 'long-awaited'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いのり (inori) mean? ("A prayer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a prayer'.
+Say the Japanese for 'a prayer'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちゅうもん (chuumon) mean? ("An order".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an order'.
+Say the Japanese for 'an order'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こうほ (kouho) mean? ("A candidate, a choice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a candidate, a choice'.
+Say the Japanese for 'a candidate, a choice'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よてい (yotei) mean? ("A plan".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a plan'.
+Say the Japanese for 'a plan'.

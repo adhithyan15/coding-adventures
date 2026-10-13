@@ -212,8 +212,10 @@ may nest through a real name formal only when its actual has the same proof;
 unary signs, arithmetic composition with finite static operands, and
 real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
-may also widen through a real name formal. Selector calls paired with
-provenance-backed local or other real-name branches remain conservative.
+may also widen through a real name formal. Selector calls may also choose
+unaliased local runtime-real snapshots through unary signs, additive or
+multiplicative composition, and powers with finite static operands;
+standard-function transforms, globals, captured locals, and other real-name branches remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
@@ -255,6 +257,9 @@ dynamic, repeated-sign, denominator-sign, and overridden forms remain gated.
 An exact variable-free exponent chain evaluating to one may preserve that sign
 result as the power base; other exponents, a sign-rooted exponent, and
 overrides remain gated.
+A runtime conditional may likewise preserve the unit-bounded sign range when
+every branch retains a proven runtime-real sign root; unrestricted,
+non-runtime-real, and overridden branches remain gated.
 Built-in `abs` may normalize that sign-rooted result while retaining the same
 bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
 Built-in `sqrt` may similarly normalize a nonnegative unit-bounded sign-rooted
@@ -274,18 +279,57 @@ remain gated.
 Variable-free exact additive zero terms may surround that nonpositive unit
 range before `exp`; positive, repeated, dynamic, and overridden forms remain
 gated.
-Multiplication by one variable-free exact `-1` may likewise map a nonnegative
-unit sign-rooted range before `exp`; division, extra factors, positive units,
-repeated roots, dynamic factors, and overrides remain gated.
+Multiplication by one variable-free exact `-1`, or division by one such exact
+negative unit, may likewise map a nonnegative unit sign-rooted range before
+`exp`; extra factors, positive or dynamic units, denominator roots, repeated
+roots, and overrides remain gated.
+An exact variable-free exponent chain evaluating to one may preserve that
+nonpositive range before `exp`; other or dynamic exponents, a sign-rooted
+exponent, and overrides remain gated.
+Built-in `sign`, `entier`, `sin`, and `arctan` may preserve that nonpositive
+unit range before `exp`, including nested combinations; non-monotone,
+unrestricted, and overridden wrappers remain gated.
+A runtime conditional may select that range when every branch retains a
+proven nonpositive unit runtime-real sign root; positive, unrestricted,
+non-runtime-real, and overridden branches remain gated.
+A unary-negated runtime conditional may likewise form that range when every
+branch retains a proven nonnegative unit runtime-real sign root; negative,
+unrestricted, non-runtime-real, and overridden branches remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
-A single built-in `exp` may also map such a bounded chain before `entier`;
-nested exponential calls remain conservative to keep the finite bound explicit.
+A single built-in `exp` may also map such a bounded chain before `entier`,
+including a runtime conditional when every branch retains a proven runtime-real
+sign root; nested exponential calls and unproven branches remain conservative
+to keep the finite bound explicit.
 Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Built-in `sqrt` may also map a runtime conditional when every branch retains a
+proven nonnegative bounded runtime-real sign root; unrestricted,
+non-runtime-real, nested-exponential, and overridden branches remain gated.
+Built-in `ln` may map a runtime conditional when every branch is one built-in
+exponential over a proven bounded runtime-real sign root; missing, nested,
+non-runtime-real, and overridden exponential branches remain gated.
+Built-in `ln` may also map a runtime conditional when every branch is exactly
+two built-in exponentials over a proven bounded runtime-real sign root; missing,
+deeper, non-runtime-real, and overridden branches remain gated.
+The same exact two-exponential proof now applies to a direct sign-rooted
+operand; unrestricted roots and overrides remain gated.
+The direct proof extends to exactly three exponentials, whose complete
+sign-rooted tower remains finite. Exactly four exponentials are also accepted
+over a proven nonpositive unit sign root, whose narrower tower remains finite;
+a positive-capable fourth layer or a fifth nonpositive layer would overflow
+binary64 before `ln` and therefore remains gated.
+The same bounded proof extends to exactly three built-in exponentials per
+branch. It also extends to exactly four built-in exponentials per branch when
+every root is proven nonpositive; positive-capable, missing, deeper,
+non-runtime-real, and overridden branches remain gated.
+Across every bounded conditional family above, branch roots may be unaliased
+local real snapshots carrying runtime-real provenance across assignment;
+globals, captured locals, and by-name aliases remain gated across a selector
+call.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

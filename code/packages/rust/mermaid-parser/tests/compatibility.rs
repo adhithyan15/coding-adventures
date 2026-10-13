@@ -1650,6 +1650,204 @@ fn swimlane_fork_and_join_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_lightning_bolt_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Communication\n  first@{ shape: bolt }\n  second@{ shape: com-link }\n  third@{ shape: lightning-bolt }\nend\nfirst --> second --> third",
+    ).expect("Swimlane lightning-bolt aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LightningBolt));
+}
+
+#[test]
+fn swimlane_comment_brace_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Comments\n  first@{ shape: brace, label: \"Left\" }\n  second@{ shape: comment, label: \"Comment\" }\n  third@{ shape: brace-l, label: \"Alias\" }\n  fourth@{ shape: brace-r, label: \"Right\" }\n  fifth@{ shape: braces, label: \"Both\" }\nend\nfirst --> second --> third --> fourth --> fifth",
+    ).expect("Swimlane comment-brace aliases should parse");
+
+    let shapes = diagram.nodes.iter().map(|node| node.shape.clone()).collect::<Vec<_>>();
+    assert_eq!(shapes, [
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceLeft,
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceRight,
+        DiagramShape::CurlyBraces,
+    ]);
+}
+
+#[test]
+fn swimlane_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: doc, label: \"Draft\" }\n  second@{ shape: document, label: \"Final\" }\nend\nfirst --> second",
+    ).expect("Swimlane document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Document));
+    assert_eq!(diagram.nodes[0].label, "Draft");
+    assert_eq!(diagram.nodes[1].label, "Final");
+}
+
+#[test]
+fn swimlane_delay_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Waiting\n  first@{ shape: delay, label: \"Pause\" }\n  second@{ shape: half-rounded-rectangle, label: \"Resume later\" }\nend\nfirst --> second",
+    ).expect("Swimlane delay aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Delay));
+}
+
+#[test]
+fn swimlane_horizontal_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: h-cyl, label: \"Primary\" }\n  second@{ shape: das, label: \"Replica\" }\n  third@{ shape: horizontal-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane direct-access-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::HorizontalCylinder));
+}
+
+#[test]
+fn swimlane_lined_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Disks\n  first@{ shape: lin-cyl, label: \"Primary\" }\n  second@{ shape: disk, label: \"Replica\" }\n  third@{ shape: lined-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane disk-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedCylinder));
+}
+
+#[test]
+fn swimlane_display_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Screens\n  first@{ shape: curv-trap, label: \"Primary\" }\n  second@{ shape: curved-trapezoid, label: \"Secondary\" }\n  third@{ shape: display, label: \"Preview\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane display aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Display));
+}
+
+#[test]
+fn swimlane_divided_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: div-rect }\n  second@{ shape: div-proc }\n  third@{ shape: divided-rectangle }\n  fourth@{ shape: divided-process }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane divided-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DividedRect));
+}
+
+#[test]
+fn swimlane_internal_storage_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: win-pane }\n  second@{ shape: internal-storage }\n  third@{ shape: window-pane }\nend\nfirst --> second --> third",
+    ).expect("Swimlane internal-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::WindowPane));
+}
+
+#[test]
+fn swimlane_junction_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Junctions\n  first@{ shape: f-circ }\n  second@{ shape: junction }\n  third@{ shape: filled-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane junction aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::FilledCircle));
+}
+
+#[test]
+fn swimlane_loop_limit_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Loops\n  first@{ shape: notch-pent, label: \"First\" }\n  second@{ shape: loop-limit, label: \"Second\" }\n  third@{ shape: notched-pentagon, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane loop-limit aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LoopLimit));
+}
+
+#[test]
+fn swimlane_manual_input_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Input\n  first@{ shape: sl-rect, label: \"First\" }\n  second@{ shape: manual-input, label: \"Second\" }\n  third@{ shape: sloped-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane manual-input aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::ManualInput));
+}
+
+#[test]
+fn swimlane_multi_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: docs, label: \"First\" }\n  second@{ shape: documents, label: \"Second\" }\n  third@{ shape: st-doc, label: \"Third\" }\n  fourth@{ shape: stacked-document, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane multi-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::MultiDocument));
+}
+
+#[test]
+fn swimlane_multi_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: st-rect, label: \"First\" }\n  second@{ shape: procs, label: \"Second\" }\n  third@{ shape: processes, label: \"Third\" }\n  fourth@{ shape: stacked-rectangle, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane multi-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::MultiProcess));
+}
+
+#[test]
+fn swimlane_stored_data_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: bow-rect, label: \"First\" }\n  second@{ shape: stored-data, label: \"Second\" }\n  third@{ shape: bow-tie-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane stored-data aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::StoredData));
+}
+
+#[test]
+fn swimlane_summary_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Summary\n  first@{ shape: cross-circ }\n  second@{ shape: summary }\n  third@{ shape: crossed-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane summary aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Summary));
+}
+
+#[test]
+fn swimlane_tagged_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: tag-doc, label: \"First\" }\n  second@{ shape: tagged-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane tagged-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedDocument));
+}
+
+#[test]
+fn swimlane_tagged_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: tag-rect, label: \"First\" }\n  second@{ shape: tagged-rectangle, label: \"Second\" }\n  third@{ shape: tag-proc, label: \"Third\" }\n  fourth@{ shape: tagged-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane tagged-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedProcess));
+}
+
+#[test]
+fn swimlane_paper_tape_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Output\n  first@{ shape: flag, label: \"First\" }\n  second@{ shape: paper-tape, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane paper-tape aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::PaperTape));
+}
+
+#[test]
+fn swimlane_lined_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: lin-doc, label: \"First\" }\n  second@{ shape: lined-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane lined-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedDocument));
+}
+
+#[test]
+fn swimlane_data_store_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane data-store aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DataStore));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
@@ -1851,6 +2049,248 @@ fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     assert_eq!((diagram.edges[1].start_marker, diagram.edges[1].end_marker), (EdgeMarker::Circle, EdgeMarker::Cross));
     assert_eq!((diagram.edges[2].start_marker, diagram.edges[2].end_marker), (EdgeMarker::Cross, EdgeMarker::Point));
     assert_eq!((diagram.edges[3].start_marker, diagram.edges[3].end_marker), (EdgeMarker::None, EdgeMarker::Cross));
+}
+
+#[test]
+fn swimlane_invisible_links_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  published[Published]\nend\ndraft ~~~ published",
+    ).expect("Flowchart invisible links should parse");
+
+    assert_eq!(diagram.edges.len(), 1);
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+    assert_eq!(diagram.edges[0].start_marker, diagram_ir::EdgeMarker::None);
+    assert_eq!(diagram.edges[0].end_marker, diagram_ir::EdgeMarker::None);
+}
+
+#[test]
+fn swimlane_open_styled_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published",
+    ).expect("open dotted and thick Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!((diagram.edges[0].kind, diagram.edges[0].end_marker),
+        (SwimlaneEdgeKind::Dotted, EdgeMarker::None));
+    assert_eq!((diagram.edges[1].kind, diagram.edges[1].end_marker),
+        (SwimlaneEdgeKind::Thick, EdgeMarker::None));
+}
+
+#[test]
+fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\n  h[H]\n  i[I]\nend\na o-.-o b x-.-x c o-.-x d x-.-o e o-.-> f x-.-> g -.-o h -.-x i\na o==o b x==x c o==x d x==o e o==> f x==> g ==o h ==x i",
+    ).expect("dotted and thick endpoint markers should parse");
+
+    let expected_markers = [
+        (EdgeMarker::Circle, EdgeMarker::Circle),
+        (EdgeMarker::Cross, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::Cross, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::None, EdgeMarker::Cross),
+    ];
+    assert_eq!(diagram.edges.len(), 16);
+    for (edge, markers) in diagram.edges[..8].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+    for (edge, markers) in diagram.edges[8..].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Thick);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+}
+
+#[test]
+fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g",
+    ).expect("minimum-length Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 12);
+    assert!(diagram.edges[..6].iter().all(|edge| edge.min_length == 2));
+    assert!(diagram.edges[6..].iter().all(|edge| edge.min_length == 3));
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Directed);
+    assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
+    assert_eq!(diagram.edges[4].kind, diagram_ir::SwimlaneEdgeKind::Dotted);
+}
+
+#[test]
+fn swimlane_styled_inline_labels_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeKind;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na -- normal ---> b == thick ===> c -. dotted ...-> d",
+    ).expect("styled Flowchart inline labels should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+        vec![Some("normal"), Some("thick"), Some("dotted")]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(),
+        vec![SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Dotted]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![2, 2, 3]);
+}
+
+#[test]
+fn swimlane_edge_ids_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",
+    ).expect("Flowchart edge identifiers should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
+        vec![Some("submit"), Some("release")]);
+    assert_eq!(diagram.edges[0].from, "request");
+    assert_eq!(diagram.edges[1].to, "done");
+}
+
+#[test]
+fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46",
+    ).expect("Flowchart edge classes and direct styles should parse");
+
+    assert_eq!(diagram.edges[0].classes, ["urgent"]);
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(4.0));
+    assert_eq!(diagram.edges[0].style.stroke_dash.as_deref(), Some([8.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[0].style.text_color.as_deref(), Some("#991b1b"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#059669"));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
+    assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
+fn swimlane_edge_animation_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeAnimation;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nsubmit@{ animate: true, animation: fast }\nrelease@{ animation: slow }",
+    ).expect("Flowchart edge animation configuration should parse");
+
+    assert!(diagram.edges[0].animate);
+    assert_eq!(diagram.edges[0].animation, Some(SwimlaneEdgeAnimation::Fast));
+    assert!(diagram.edges[1].animate);
+    assert_eq!(diagram.edges[1].animation, Some(SwimlaneEdgeAnimation::Slow));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none link@--> two\nlink@{ animation: instant }"
+    ).is_err());
+}
+
+#[test]
+fn swimlane_edge_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest curved@--> done\nreview linear@--> done\ncurved@{ curve: basis }\nlinear@{ curve: linear }",
+    ).expect("Flowchart edge curve configuration should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::Linear));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none link@--> two\nlink@{ curve: imaginary }"
+    ).is_err());
+}
+
+#[test]
+fn swimlane_step_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst stepped@--> sixth\nsecond before@--> fifth\nthird after@--> fourth\nstepped@{ curve: step }\nbefore@{ curve: stepBefore }\nafter@{ curve: stepAfter }",
+    ).expect("Flowchart step curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Step),
+        Some(SwimlaneEdgeCurve::StepBefore),
+        Some(SwimlaneEdgeCurve::StepAfter),
+    ]);
+}
+
+#[test]
+fn swimlane_bump_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: bumpX }\nvertical@{ curve: bumpY }",
+    ).expect("Flowchart bump curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::BumpX), Some(SwimlaneEdgeCurve::BumpY),
+    ]);
+}
+
+#[test]
+fn swimlane_monotone_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }",
+    ).expect("Flowchart monotone curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::MonotoneX), Some(SwimlaneEdgeCurve::MonotoneY),
+    ]);
+}
+
+#[test]
+fn swimlane_spline_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst cardinal@--> sixth\nsecond catmull@--> fifth\nthird natural@--> fourth\ncardinal@{ curve: cardinal }\ncatmull@{ curve: catmullRom }\nnatural@{ curve: natural }",
+    ).expect("Flowchart spline curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Cardinal),
+        Some(SwimlaneEdgeCurve::CatmullRom),
+        Some(SwimlaneEdgeCurve::Natural),
+    ]);
+}
+
+#[test]
+fn swimlane_rounded_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\n  queued[Queued]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest rounded@--> done\nrounded@{ curve: rounded }",
+    ).expect("Flowchart rounded curve configuration should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Rounded));
+}
+
+#[test]
+fn swimlane_line_hops_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneLineHops;
+
+    let source = "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third";
+    let arc = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\n{source}"))
+        .expect("arc line hops should parse");
+    let gap = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: gap\n---\n{source}"))
+        .expect("gap line hops should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: false\n---\n{source}"))
+        .expect("disabled line hops should parse");
+
+    assert_eq!(arc.line_hops, Some(SwimlaneLineHops::Arc));
+    assert_eq!(gap.line_hops, Some(SwimlaneLineHops::Gap));
+    assert_eq!(disabled.line_hops, None);
+}
+
+#[test]
+fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: true\n---\n{source}"))
+        .expect("automatic lane ordering should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: false\n---\n{source}"))
+        .expect("disabled automatic lane ordering should parse");
+
+    assert!(enabled.automatic_lane_ordering);
+    assert!(!disabled.automatic_lane_ordering);
 }
 
 #[test]

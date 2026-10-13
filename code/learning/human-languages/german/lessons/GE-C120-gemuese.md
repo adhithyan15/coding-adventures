@@ -13,7 +13,8 @@ gloss: "vegetables"
 concept_tag: GE-KLEIDUNG120-GEMUESE
 prerequisites: [GE-C120-bluse, GE-C120-rindfleisch]
 sounds: []
-roots: []
+roots: [germanic-mosa]
+etymology_hook: "Gemüse ← Middle High German gemüese, from Mus 'mash, food': cooked greens"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C120-rindfleisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C120-KLEIDUNG120-04]; assesses=[] -->
 
 **das Gemüse** — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gemüse** ← Middle High German *gemüese*: *ge-* + the word for "mash, food", Old High German *muos* ← Proto-Germanic *\*mōsą* (EtymDB 2.1). Vegetables were what went into the pot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

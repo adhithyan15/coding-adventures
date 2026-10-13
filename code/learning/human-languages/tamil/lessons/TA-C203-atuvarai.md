@@ -14,7 +14,8 @@ romanization: "atuvarai"
 concept_tag: TA-NERAM203-ATUVARAI
 prerequisites: [TA-C203-ituvarai, TA-C203-kalakketu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-varampu-limit]
+etymology_hook: "அதுவரை — native: atu 'that' (DEDR 1) + varai 'up to' (DEDR 5261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C203-kalakketu]
 <!-- hl-knowledge: introduces=[TA-LEX-C203-NERAM203-04]; assesses=[] -->
 
 **அதுவரை** — *atuvarai* — "until then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதுவரை** (*atuvarai*) is native: *atu*, "that" (DEDR 1), and *varai*, "up to" (DEDR 5261): "up to that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to avoid"
 concept_tag: IT-VERB-EVITARE
 prerequisites: [IT-C179-dipendere, IT-C179-dividere]
 sounds: []
-roots: []
+roots: [evitare-latin]
+etymology_hook: "evitare ← Latin evitare 'to shun', a learned word — English inevitable shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C179-dividere]
 <!-- hl-knowledge: introduces=[IT-LEX-C179-VERBI179-04]; assesses=[] -->
 
 **evitare** — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**evitare** ← Latin *evitare*, "to shun, to avoid" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *evitare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

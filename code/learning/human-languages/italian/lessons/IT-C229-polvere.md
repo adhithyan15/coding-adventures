@@ -13,7 +13,8 @@ gloss: "dust"
 concept_tag: IT-COSE229-POLVERE
 prerequisites: [IT-C229-sasso, IT-C229-fango]
 sounds: []
-roots: []
+roots: [pulvis-latin]
+etymology_hook: "polvere ← Latin pulvis, pulverem 'dust' — English pulverise and powder share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C229-fango]
 <!-- hl-knowledge: introduces=[IT-LEX-C229-COSE229-04]; assesses=[] -->
 
 **la polvere** — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polvere** ← Latin *pulvis*, "dust" (*pulverem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

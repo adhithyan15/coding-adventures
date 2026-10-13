@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-RELATIVE-QUE, ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY, ES-GRAMMAR-LO-QUE, ES-LEX-QUE, ES-LEX-LIBRO, ES-LEX-CASA]
+  knowledge: [ES-GRAMMAR-RELATIVE-QUE, ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY, ES-GRAMMAR-LO-QUE, ES-LEX-QUE, ES-LEX-LIBRO, ES-LEX-CASA, ES-LEX-EXPLICAR-07, ES-ETYMON-PLICARE-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -82,13 +82,17 @@ something to hang from. Which means both chapters were about the same thing:
 
 [PAUSE 1s]
 
-- [YOU SAY: all three rows of the table]
+- [YOU SAY: all three examples — *el libro que compro*, *la casa que tengo*, *lo que digo*]
 
 [REPEAT x2] Until the missing English *that* is loud.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY, ES-GRAMMAR-LO-QUE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY, ES-GRAMMAR-LO-QUE, ES-LEX-EXPLICAR-07, ES-ETYMON-PLICARE-08] -->
 
 [PAUSE 3s] New words this rung? (**None**.) The error that outlives the others?
-(**Dropping *que***, because English drops *that*.) Next: sentences long enough
+(**Dropping *que***, because English drops *that*.)
+
+[PAUSE 2s] Say *I explain it*, then take *explicar* apart. (***Lo explico*** — *ex-* + *plicāre*: to **unfold**.)
+
+Next: sentences long enough
 to be worth saying.

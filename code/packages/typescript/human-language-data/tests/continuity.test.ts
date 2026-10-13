@@ -22,12 +22,23 @@
 //            references. This is STRICTER than the exact pin was: it turns a
 //            snapshot into a ratchet that cannot slip back.
 //
+//            Forward references PER TRACK are the one exception, and are
+//            pinned EXACTLY (FORWARD_REFERENCE_CEILINGS below). A ceiling
+//            alone is half a ratchet: a cleared reference leaves slack under
+//            it, and the next lesson can spend that slack on a new one without
+//            any test noticing. Debt falls only in a deliberate pass, so the
+//            pass lowers the pin in the same change and the slack never exists.
+//
 //   RATIO    for debt that grows with honest content -- the reinforcement
 //            windows, and atoms never revisited. Every atom at the tail of a
 //            track is unrevisited until something follows it, so a floor would
 //            bless the debt growing and a ceiling would fail on a legitimate
 //            new lesson. The share is what the raw number was always a proxy
-//            for, and it is the thing that should fall.
+//            for, and it is the thing that should fall. The per-track corpus
+//            pins do hold one slice of it at zero: atoms the track has gone a
+//            whole R1 window past without ever practising again
+//            (`atomsNeverRevisitedPastTheTail`), which excludes exactly the
+//            tail that made a raw ceiling unworkable.
 //
 // The running annotations stay. They are the valuable part -- they record WHY
 // each number moved, which is the institutional memory of this corpus. It is
@@ -47,6 +58,7 @@ import {
   REINFORCEMENT_WINDOWS,
 } from "../src/continuity.js";
 import { parseLesson } from "../src/parse.js";
+import { atomsNeverRevisitedPastTheTail } from "./corpus/assert-language-corpus.js";
 
 /** A lesson with a declared order, an optional headword, and atom directives. */
 function lesson(opts: {
@@ -231,6 +243,35 @@ describe("reinforcement windows", () => {
       // number grows with honest content and only its SHARE is meaningful;
     expect(report.summary.missedByWindow.R3).toBe(0);
     expect(report.summary.missedByWindow.R4).toBe(0);
+  });
+
+  it("gates a never-practised atom only once the track has gone a whole R1 past it", () => {
+    // Synthetic on purpose: the real corpus is held at zero by the per-track
+    // corpus pins, and a non-vacuity check that read the debt off the corpus
+    // would go red the day the debt was paid. Six lessons, three atoms:
+    //   A at 0, never practised, five lessons follow   -> gated
+    //   B at 1, practised at 4                         -> fine
+    //   C at 4, never practised, only one lesson after -> the tail, not judged
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+      lesson({ id: "ES-2", chapter: 1, sequence: 20, introduces: ["B"] }),
+      ...filler(3, 2),
+      lesson({ id: "ES-5", chapter: 1, sequence: 50, introduces: ["C"], practises: ["B"] }),
+      lesson({ id: "ES-6", chapter: 1, sequence: 60 }),
+    ]);
+    expect(report.summary.atomsNeverRevisited).toBe(2);
+    expect(atomsNeverRevisitedPastTheTail(report).map((finding) => finding.atom)).toEqual(["A"]);
+
+    // Exactly R1 after the introducer is enough to be judged; one short is not.
+    const atTheEdge = (after: number) =>
+      atomsNeverRevisitedPastTheTail(
+        measureContinuity([
+          lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+          ...filler(2, after),
+        ]),
+      ).length;
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to)).toBe(1);
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to - 1)).toBe(0);
   });
 
   it("uses practises, not reviews_of, because reviews_of names lessons", () => {
@@ -524,12 +565,156 @@ describe("forward references", () => {
   });
 });
 
+// The real corpus, loaded and measured ONCE, at import.
+//
+// Each case below used to call loadEverything() and, four of them,
+// measureContinuity() over all ~29,500 lessons inside its own 30s budget. Alone
+// that fits; in a loaded full run the first case to pay for it timed out while
+// every assertion held ("keeps Spanish reading order explicit", twice). Import
+// time carries no per-test budget, and the measurement is a pure function of
+// the lessons, so every case can read the same result. See
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md.
+const REAL_LESSONS = loadEverything().lessons;
+const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
+
+/**
+ * Forward references per track: AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * A forward reference is a lesson that writes a target-language word a LATER
+ * lesson teaches as its headword (`measureContinuity`, section (c)). Each track
+ * is pinned here EXACTLY, so this is a full ratchet rather than a ceiling with
+ * slack under it: a count that rises fails and lists the new borrowings, and a
+ * count that falls ALSO fails, asking for the pin to be lowered to match in the
+ * same change, so the cleared reference cannot be quietly spent on a new one.
+ * Lower a pin when you clear one; never raise it. When a new lesson pushes a
+ * track over, the fix
+ * is in the lessons — say the next word in English, swap in a word the reader
+ * already owns, move the example to the lesson that teaches it, or write a
+ * decomposition as one `parts + … → whole` line (the shape `forwardReferenceBody`
+ * already treats as a statement about parts) — not here.
+ *
+ * Measured when the gate was added, before → after the pass that added it:
+ * italian 34 → 0, german 29 → 1, kannada 13 → 2, malayalam 12 → 0, marathi
+ * 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic 10 → 0, urdu 9 → 5, tamil 8 → 0,
+ * punjabi 7 → 2, russian 5 → 0, sanskrit 3 → 0, persian 2 → 2. Spanish, French,
+ * Portuguese and Latin were not worked in that pass; their pins were the counts
+ * then. Hindi was worked next: 57 → 33. Portuguese later: 102 → 34. French
+ * later: 156 → 52.
+ *
+ * Every non-zero pin in a worked track is one shape, read in place each time: a
+ * phrase the track teaches WHOLE before a later lesson unpacks one of its words.
+ * A multi-word headword owns no single token (lessons.d: a-multi-word-headword-
+ * owns-no-single-token-so-a-later-one), so every earlier use of the phrase reads
+ * as borrowing the word. The phrase is genuinely taught; rewording it away would
+ * break the lesson that unpacks it, which says so. Hindi adds one more shape of
+ * the same kind: a BUNDLE headword (पानी रोटी) that teaches separate words under
+ * one string, so each word reads as untaught until a late lesson re-teaches it.
+ * Portuguese adds two shapes that are not borrowing at all: a late headword that
+ * is a HOMOGRAPH of a word inside a phrase taught whole (a chama, "a flame",
+ * against Como se chama?), and an ENGLISH gloss that spells a late headword
+ * (a massa, "pasta", against a pasta, "a folder").
+ * French adds one: a word a GRAMMAR lesson teaches, which registers no matcher
+ * (only word and phrase lessons do), so the credit falls to a later word lesson
+ * (au and aux in FR-C35-au-aux, credited instead to FR-C157-au-dessus).
+ */
+const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
+  arabic: 0,
+  // BN-R156 and BN-R187 recall ইস্ত্রি করা and নিঃশ্বাস নেওয়া, each the
+  // headword of an earlier phrase lesson, before ইস্ত্রি and নিঃশ্বাস get their own.
+  bengali: 2,
+  chinese: 0,
+  // Every French hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own, or is not
+  // French borrowing at all. Phrases: de rien (FR-C03-de-rien; four of rien,
+  // two of de), à plus tard (FR-C04; three of tard), au revoir (FR-C04; two of
+  // au), et vous ? / et toi ? (FR-C03-practice glosses it "and you?"; one of et),
+  // et quart / et demie (FR-C08; two of et), au printemps (FR-C09-en-saison;
+  // two of au), du pain, de l'eau (FR-C11-du; one of de), j'ai vingt ans (taught
+  // by the grammar lesson FR-C14-jai-vingt-ans, credited to
+  // FR-C14-avoir-etre-langues; one), passé simple (FR-C15-passe-simple; five of
+  // simple), les lettres que j'ai écrites (FR-C15-accord; two of que), j'ai mal
+  // au ventre and C'est combien ? / combien de (taught in place by FR-C31-ventre
+  // and FR-C32-combien; one of au, one of de, one of c'est), est-ce que
+  // (FR-C32-est-ce-que; three of que), la pomme de terre (FR-C68; one of
+  // terre), remplir un formulaire (FR-C145; one each of its two words), offrir
+  // un cadeau (FR-C210; one of offrir), and the être /
+  // ser · estar comparison headword (FR-C16-ser-estar), which credits être after
+  // seven chapter-19 lessons that name the verb FR-C16-suis introduces and
+  // FR-C16-etes derives. Two more of au follow the grammar lesson FR-C35-au-aux.
+  // Not borrowing: three uses of Mars are the Roman war-god behind mardi, where
+  // FR-C09-mars teaches mars, "March"; and five are the English gloss "to vote",
+  // which spells FR-C248's le vote.
+  french: 52,
+  // GE-C02-ich-heisse teaches "mein Name ist" whole; GE-C36-mein opens "You
+  // have said it since the second chapter as a single block."
+  german: 1,
+  gujarati: 0,
+  // Every Hindi hit names a word the learner was taught EARLIER, inside a
+  // multi-word headword, before a late vocabulary lesson gives it a headword of
+  // its own. Phrases: … या … (HI-C68-ya; four), मदद करना (HI-C35-madad; two),
+  // कितने साल के हो? (HI-C19-age-grammar; two), काम करना (HI-C05-karna; two),
+  // के साथ and के पीछे (HI-C93; two each), कुछ नहीं (HI-C113), शौक़ से (HI-C115),
+  // गर्मी है / ठंड है / बारिश हो रही है (HI-C20-mausam; four), एक मिनट (HI-C110).
+  // Bundles of separate words under one headword: पानी रोटी (HI-C15; six uses of
+  // रोटी), the six seasons (HI-C14-ritu; three of वसंत), and दोपहर आधी रात
+  // (HI-C17; two of दोपहर, one of रात). Splitting a bundle's headword would leave
+  // two lessons each claiming to introduce the same word.
+  hindi: 33,
+  italian: 0,
+  japanese: 0,
+  // KA-S114 finds ◌ೊ in ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (KA-C06's headword, two lessons
+  // earlier; KA-C32-gottu unpacks it), and KA-R175 recalls ಗೊರಕೆ ಹೊಡೆ (KA-C167).
+  kannada: 2,
+  // Every Latin hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own: grātiās
+  // (tibi) agō (LA-C01-gratias; five uses of agō), quid tibi nōmen est? / mihi
+  // nōmen est and puerō nōmen est (LA-C20; nine of nōmen), medius diēs, media
+  // nox (LA-C12; five of medius/media), nihil est (LA-C23; four of nihil), ante
+  // and post merīdiem (LA-C35) with salvē (post merīdiem) (LA-C36; four of
+  // ante/post), and the weekday phrases diēs Lūnae… (LA-C05; one each of diēs
+  // and lūnae).
+  latin: 29,
+  malayalam: 0,
+  // Chapter 1's script ladder writes हो and नाही (MR-W01-o-matra, MR-W01-ii-matra)
+  // before chapter 4's word lessons, and chapter 1 is at its twelve-atom ceiling;
+  // MR-R201 recalls सावध करणे (MR-C195) before सावध (MR-C207).
+  marathi: 4,
+  marwadi: 0,
+  // FA-R216 and FA-R252 recall لوله کش and چوب لباسی, each an earlier headword.
+  persian: 2,
+  // Every Portuguese hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own, or is not
+  // Portuguese borrowing at all. Phrases: Como se chama? (PT-C03-como-se-chama,
+  // which glosses se and chama itself; two uses of se, and one more in
+  // PT-C18-dizer's Como se diz…?), até logo / até amanhã / até breve (PT-C04;
+  // six of até, two of them the same "até + when" frame: PT-C07's Até sexta!
+  // and PT-C137's Pagar até segunda-feira), de nada (PT-C02; three
+  // of nada), a pasta de dentes (PT-C95; three of pasta), ao lado and noutro
+  // lado (PT-C89, PT-C151; three of lado), o fim de semana (PT-C128; five of
+  // fim), a partir de agora (PT-C150), deitar fora (PT-C204), and the ser vs.
+  // estar headword (PT-C16-ser-vs-estar; one of estar). Not borrowing: the four
+  // uses of chama are the verb "calls", where PT-C195 teaches a chama, "a
+  // flame"; and four are the English gloss "pasta; dough" of a massa (PT-C99),
+  // which spells PT-C193's a pasta, "a folder".
+  portuguese: 34,
+  // PA-C09-pasand teaches ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ whole and PA-C10-chaa recalls it;
+  // PA-C35-mainu takes it apart ("why the phrase could be used long before").
+  punjabi: 2,
+  russian: 0,
+  sanskrit: 0,
+  spanish: 622,
+  tamil: 0,
+  telugu: 0,
+  // UR-R155 (two), UR-R188 (two) and UR-R220 recall a "<noun> karnā/lenā"
+  // phrase lesson's headword before the noun's own lesson.
+  urdu: 5,
+};
+
 describe("the real corpus", () => {
   // Exact corpus state is checked per language in tests/corpus/*.test.ts.
   // Keep this shared file for algorithm fixtures and cross-track invariants only.
   it("keeps Spanish reading order explicit", () => {
-    const { lessons } = loadEverything();
-    const spanish = measureContinuity(lessons).tracks.find((track) => track.language === "spanish");
+    const spanish = REAL_CONTINUITY.tracks.find((track) => track.language === "spanish");
     expect(spanish).toMatchObject({
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
@@ -548,8 +733,7 @@ describe("the real corpus", () => {
     // 25 -> 30 after HL-C88 inserted the three friends chapters at 23, which is
     // why chapter 25 now holds -mente rather than the comer family.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
-    const { lessons } = loadEverything();
-    const chapter = lessons
+    const chapter = REAL_LESSONS
       .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 25)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
@@ -557,8 +741,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps the later forward-reference debt without Chapters 7-8 vocabulary leaks", () => {
-    const { lessons } = loadEverything();
-    const found = measureContinuity(lessons).forwardReferences;
+    const found = REAL_CONTINUITY.forwardReferences;
     const of = (word: string) => found.find((f) => f.language === "spanish" && f.word === word);
 
     // Chapter 7 now builds with previously learned café. Pan still leaks elsewhere;
@@ -573,31 +756,61 @@ describe("the real corpus", () => {
   });
 
   it("keeps German Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const german = measureContinuity(lessons).forwardReferences.filter(
+    const german = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "german",
     );
 
     // #12350 removes ten previews from the opening chapter. The learner now
     // meets each German form in its owning lesson instead of seeing evening,
     // night, farewell, and Chapter 2 pronoun vocabulary early. The remaining
-    // track-wide debt is explicit and may fall, never grow.
-    expect(german.length).toBeLessThanOrEqual(45);
+    // track-wide debt is explicit and may fall, never grow: it is now pinned
+    // exactly in FORWARD_REFERENCE_CEILINGS with every other track's (45 -> 1).
+    // This test keeps only the chapter-1 rule; the pin itself is checked there.
+    expect(german.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.german!);
     expect(german.filter((reference) => reference.lessonId.startsWith("GE-C01-"))).toEqual([]);
   });
 
   it("keeps Italian Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const italian = measureContinuity(lessons).forwardReferences.filter(
+    const italian = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "italian",
     );
 
     // #12352 removes ten previews from the opening chapter, including a food
     // word 69 lessons early and an introduction phrase ten lessons early. The
-    // remaining track-wide debt is explicit and may fall, never grow.
-    expect(italian.length).toBeLessThanOrEqual(34);
+    // remaining track-wide debt is explicit and may fall, never grow: it is now
+    // pinned exactly in FORWARD_REFERENCE_CEILINGS (34 -> 0).
+    expect(italian.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.italian!);
     expect(italian.filter((reference) => reference.lessonId.startsWith("IT-C01-"))).toEqual([]);
   });
+
+  it("pins a forward-reference ceiling for every track, and no track that is gone", () => {
+    expect(Object.keys(FORWARD_REFERENCE_CEILINGS).sort()).toEqual(
+      REAL_CONTINUITY.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pin] of Object.entries(FORWARD_REFERENCE_CEILINGS)) {
+    it(`holds ${language}'s forward references at exactly ${pin} (a pin that may only be lowered)`, () => {
+      const found = REAL_CONTINUITY.forwardReferences.filter(
+        (reference) => reference.language === language,
+      );
+      // The message depends on the direction, because the two failures want
+      // opposite fixes. A rise is a regression in the lessons: list WHICH lesson
+      // borrowed WHICH word, not only that a number moved. A fall is progress
+      // the table has not recorded yet: lower the pin so the slack is gone.
+      const listing = found
+        .map((reference) => `${reference.lessonId} uses ${reference.word} (${reference.taughtBy})`)
+        .join("; ");
+      const message =
+        found.length > pin
+          ? `${language} has ${found.length} forward references, above its pin of ${pin}. ` +
+            `Fix the lessons, not the pin: ${listing}`
+          : `${language} has ${found.length} forward references, below its pin of ${pin}. ` +
+            `Lower FORWARD_REFERENCE_CEILINGS.${language} to ${found.length} in this change.` +
+            (listing ? ` Remaining: ${listing}` : "");
+      expect(found.length, message).toBe(pin);
+    });
+  }
 
   it("keeps the windows expanding, which is the whole point", () => {
     let previous = 0;

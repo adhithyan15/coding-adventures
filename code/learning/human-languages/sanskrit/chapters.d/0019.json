@@ -9,9 +9,13 @@
   "payoff": {
     "lesson": "SA-C19-number-family",
     "kind": "production",
-    "summary": "Complete SA-C19-number-family and demonstrate the chapter promise.",
+    "summary": "Complete SA-C19-number-family: count to ten, give the English cousin of each number, keep navan apart from nava, and say why regular correspondences prove inheritance rather than borrowing.",
     "assesses": [
       "SA-LEX-C19-NUM-01",
+      "SA-LEX-C19-NUM-02",
+      "SA-LEX-C19-NUM-03",
+      "SA-LEX-C19-NUM-04",
+      "SA-LEX-C19-NUM-05",
       "SA-GRAMMAR-C19-NUMBER-FAMILY"
     ]
   }

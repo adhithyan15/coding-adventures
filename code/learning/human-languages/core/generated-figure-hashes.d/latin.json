@@ -1,0 +1,12 @@
+{
+  "track": "latin",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "LA-W01-salve-delayed-copy",
+      "sourceHash": "fnv1a64:ae5247b06a59a631",
+      "svgHash": "fnv1a64:be11c036123b7737",
+      "svg": "latin/book/figures/LA-W01-salve-delayed-copy-filmstrip.svg"
+    }
+  ]
+}

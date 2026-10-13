@@ -48,12 +48,12 @@ Three letter-shapes for four consonants. **أ** (hamza on its *alif* seat),
 the throat) and **ب** (*bāʾ*) — with the **shadda** on that final **ب**
 doubling it: **أَحَبَّ** is *ʾa-ḥab-ba*.
 
-The mark is the one that rode the **ك** of **فَكَّرَ**, doing a different
+The mark is the one that rode the **ك** of *fakkara*, doing a different
 job: there it built a new verb, here it only spells a root whose last two
 letters are the same.
 
 On the page the word breaks after the *alif* — **أ**, then **حبّ** — the
-two-piece split of **ساعد** and **أخذ** once again.
+two-piece split of *sāʿada* and *ʾakhadha* once again.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C32-AHABBA-02]; assesses=[] -->
@@ -61,7 +61,7 @@ two-piece split of **ساعد** and **أخذ** once again.
 **أَحَبَّ** (*ʾaḥabba*) = "**he loved**," and more mildly "he liked." Root
 **ح-ب-ب**.
 
-The **أَ** on the front is **Form IV**, **أَفْعَلَ** (*ʾafʿala*): the prefix
+The **أَ** on the front is **Form IV**, *ʾafʿala*: the prefix
 that makes a root **bring about** its own idea. Love, on this account, is
 something a person causes.
 
@@ -84,7 +84,7 @@ dictionaries.
 - [YOU SAY: the chapter's four — ʾakhadha, fakkara, sāʿada, ʾaḥabba]
 - [YOU SAY: the four shapes — plain, doubled, stretched, ʾa- prefix]
 - [YOU SAY: "ʾaḥabba," he loved — then ḥubb, love; ḥabīb, beloved]
-- [YOU SAY: the pieces — أ alone, then حبّ, as ساعد split into سا and عد]
+- [YOU SAY: the pieces — أ alone, then حبّ, as *sāʿada* split in two]
 - [YOU SAY: the done-to run — maktūb, maʾkhūdh, maḥbūb]
 - [YOU SAY: the ma- place shape from the first verb lesson — madhhab, maktab]
 - [YOU SAY: the rebuilt doers — mufakkir; musāʿid]
@@ -99,4 +99,4 @@ dictionaries.
 shadda, and is it *fakkara*'s reason? (**Because the root's last two letters
 are both ب** — **not** a Form II doubling.) Which Hebrew word is *ḥabīb*, and
 which root first showed you the *ma-* shapes? (***חָבִיב*** — while *ahav* is
-no relation — and **ذ-ه-ب**, in *madhhab*.)
+no relation — and *dh-h-b*, in *madhhab*.)

@@ -14,6 +14,7 @@ concept_tag: FR-NOMBRES88-ZERO
 prerequisites: [FR-C135-siecle, FR-C135-courriel]
 sounds: []
 roots: []
+etymology_hook: "zéro ← Italian zero, from Arabic sifr 'empty' — English cipher is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C135-courriel]
 <!-- hl-knowledge: introduces=[FR-LEX-C136-NOMBRES88-01]; assesses=[] -->
 
 **zéro** — "zero".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zéro** ← Italian *zero* ← Medieval Latin *zephirum*, from Arabic *sifr*, "empty" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

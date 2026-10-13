@@ -13,7 +13,8 @@ gloss: "elections"
 concept_tag: FR-CHOSES248-ELECTIONS
 prerequisites: [FR-C247-quai, FR-C248-maire]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "élections ← Latin electio 'a choosing', from eligere 'to pick out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C248-maire]
 <!-- hl-knowledge: introduces=[FR-LEX-C248-CHOSES248-02]; assesses=[] -->
 
 **les élections** — "elections".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**élections** is the plural of the word for "an election", ← Latin *electio*, "a choosing", from *eligere*, "to pick out" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

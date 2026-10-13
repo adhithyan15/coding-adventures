@@ -13,7 +13,8 @@ gloss: "free"
 concept_tag: PT-CORES121-LIVRE
 prerequisites: [PT-C121-castanho, PT-C121-ocupado]
 sounds: []
-roots: []
+roots: [liber-free-latin]
+etymology_hook: "livre ← Latin liber 'free' — English liberty and liberal share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C121-ocupado]
 <!-- hl-knowledge: introduces=[PT-LEX-C121-CORES121-05]; assesses=[] -->
 
 **livre** — "free".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**livre** ← Latin *liber*, "free" (EtymDB 2.1) — inherited. The Latin *-b-* became *-v-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

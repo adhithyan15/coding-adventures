@@ -13,7 +13,8 @@ gloss: "happy"
 concept_tag: IT-EMOZIONI-FELICE
 prerequisites: [IT-C43-rabbia, IT-C43-tristezza]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "felice ← Latin felix 'lucky, happy' — English felicity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C43-tristezza]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-04]; assesses=[] -->
 
 **felice** — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**felice** ← Latin *felix*, "lucky, happy" — taken from Latin, as EtymDB 2.1 records it: borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

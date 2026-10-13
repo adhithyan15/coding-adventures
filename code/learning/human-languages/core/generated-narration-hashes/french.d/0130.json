@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 130,
-  "sourceHash": "fnv1a64:aed343d305172d5f",
+  "sourceHash": "fnv1a64:b9d0d9b7844286d1",
   "lessonIds": [
     "FR-C130-rose",
     "FR-C130-violet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch130.txt",
   "json": "french/narration/ch130.json",
-  "textHash": "fnv1a64:f225bb9eeca323f1",
-  "jsonHash": "fnv1a64:5514dca3d48e4f6d",
+  "textHash": "fnv1a64:573e316bb1551441",
+  "jsonHash": "fnv1a64:e66e73d768501f17",
   "findings": []
 }

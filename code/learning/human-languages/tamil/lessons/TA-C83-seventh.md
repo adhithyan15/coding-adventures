@@ -11,7 +11,8 @@ gloss: "seventh — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-SEVENTH
 prerequisites: [TA-C83-sixth, TA-C82-first-full, TA-W33-read-een, TA-C67-shirt]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "ஏழாவது — native: ēḻu 'seven' (DEDR 910) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -48,6 +49,11 @@ and nothing else changes.
 **ஏழு** carries the curled **ḻ**, the sound in the name *Tamiḻ* itself and the
 one this language shares with Malayalam while Kannada and Telugu hardened it
 away. Adding the ending does not soften it: **ஏழாவது**, tongue still curled.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏழாவது** (*ēḻāvadu*) is native: *ēḻu*, "seven" (DEDR 910), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-02, TA-LEX-C83-ORDINAL-01, TA-LEX-C82-ORDINAL-05] -->

@@ -13,7 +13,8 @@ gloss: "an umbrella"
 concept_tag: PT-COISAS2-GUARDA-CHUVA
 prerequisites: [PT-C52-bolsa, PT-C53-telefone]
 sounds: []
-roots: []
+roots: [pluvia-latin]
+etymology_hook: "guarda-chuva — 'rain guard': guard (← Frankish wardōn) + rain (← Latin pluvia)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C53-telefone]
 <!-- hl-knowledge: introduces=[PT-LEX-C53-COISAS2-02]; assesses=[] -->
 
 **o guarda-chuva** — "an umbrella". Literally "guard-rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guarda-chuva** is built from "guard" and "rain" (EtymDB 2.1): a rain guard. The guard verb goes back to Frankish *wardōn*, "to keep, to guard"; the rain word ← Latin *pluvia* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

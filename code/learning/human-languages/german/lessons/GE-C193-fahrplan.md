@@ -13,7 +13,8 @@ gloss: "a timetable"
 concept_tag: GE-THING193-FAHRPLAN
 prerequisites: [GE-C192-verspaetung, GE-C192-gleis]
 sounds: []
-roots: []
+roots: [farana-germanic, planus-latin]
+etymology_hook: "Fahrplan — fahren 'to travel' + Plan 'plan' ← French plan ← Latin plānus 'flat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C192-gleis]
 <!-- hl-knowledge: introduces=[GE-LEX-C193-THING193-01]; assesses=[] -->
 
 **der Fahrplan** — "a timetable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fahrplan** is *fahren* + *Plan*, "plan" ← French *plan*, from Latin *plānus*, "flat" (EtymDB 2.1): a plan of journeys.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

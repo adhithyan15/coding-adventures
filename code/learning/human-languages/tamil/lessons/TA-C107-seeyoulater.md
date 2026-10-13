@@ -11,7 +11,8 @@ romanization: "appuṟam pārkkalām"
 concept_tag: TA-LEAVE-SEE-YOU
 prerequisites: [TA-C107-takeleave, TA-C107-shallwego, TA-C86-ennai-unnai]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-puram-outside, dravidian-paar-see]
+etymology_hook: "அப்புறம் பார்க்கலாம் — native: a- 'that' (DEDR 1) + puṟam 'side' (DEDR 4333); pār 'see' (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C107-shallwego]
 **அப்புறம்** is "afterwards"; **பார்க்கலாம்** is "we can see (each other)". To one friend:
 **உன்னை அப்புறம் பார்க்கிறேன்** — "I'll see you later", with **உன்னை**, "you" as the one it is
 done to.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்புறம் பார்க்கலாம்** (*appuṟam pārkkalām*) is native: *appuṟam*, "after that", from the far base *a-* (DEDR 1) and *puṟam*, "side" (DEDR 4333), and *pārkkalām*, "let us see", from *pār* (DEDR 4091).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

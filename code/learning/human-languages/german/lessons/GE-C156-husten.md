@@ -13,7 +13,8 @@ gloss: "a cough"
 concept_tag: GE-THING156-HUSTEN
 prerequisites: [GE-C156-schmerz, GE-C156-erkaeltung]
 sounds: []
-roots: []
+roots: [germanic-hwosto]
+etymology_hook: "Husten ← Old High German huosto ← Proto-Germanic *hwōstô 'cough' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C156-erkaeltung]
 <!-- hl-knowledge: introduces=[GE-LEX-C156-THING156-04]; assesses=[] -->
 
 **der Husten** — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Husten** ← Old High German *huosto* ← Proto-Germanic *\*hwōstô*, "cough" — inherited. (EtymDB 2.1) Old English *hwōsta* was the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

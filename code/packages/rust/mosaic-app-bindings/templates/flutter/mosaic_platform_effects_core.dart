@@ -109,9 +109,10 @@ const int mosaicMaxSaveBytes = 16 * 1024 * 1024;
 /// Whether this platform has the file dialogs this library drives.
 ///
 /// `file_selector` shows native dialogs on Linux, macOS and Windows. Android
-/// and iOS need a document picker and a share sheet (UI87 §7.1, UI89), which
-/// this library does not have yet; there each request fails with a message
-/// rather than pretending the person cancelled.
+/// and iOS have pickers only through a phone build's document plugin
+/// (UI89 §7.11), which the router is given as `phoneDocuments`; without it
+/// each request fails with a message rather than pretending the person
+/// cancelled.
 bool get mosaicPlatformHasFileDialogs =>
     Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
@@ -721,33 +722,71 @@ bool _mosaicIsBase64Alphabet(String encoded) {
   return true;
 }
 
+/// A `files.save` request that passed every check: the name, the decoded
+/// bytes and the accepted extensions.
+typedef _MosaicSaveRequest = ({
+  String name,
+  Uint8List bytes,
+  List<String> extensions,
+});
+
+/// The result of checking a `files.save` request: one of the two below.
+sealed class _MosaicSaveCheck {}
+
+final class _MosaicSaveChecked extends _MosaicSaveCheck {
+  _MosaicSaveChecked(this.request);
+
+  final _MosaicSaveRequest request;
+}
+
+final class _MosaicSaveRefused extends _MosaicSaveCheck {
+  _MosaicSaveRefused(this.outcome);
+
+  final Map<String, Object?> outcome;
+}
+
 /// `files.save`: the outcome map, never an exception from the file.
 Future<Map<String, Object?>> mosaicRunFilesSave(
   Object? payload,
   MosaicFileDialogs dialogs,
 ) async {
+  final checked = _mosaicCheckSaveRequest(payload);
+  if (checked case _MosaicSaveRefused(:final outcome)) return outcome;
+  final (:name, :bytes, :extensions) = (checked as _MosaicSaveChecked).request;
+  final target = await dialogs.chooseFileToSave(name, extensions);
+  if (target == null) return _mosaicCancelled();
+  // Up to 16 MiB written and flushed to disk: in a background isolate, as the
+  // read in files.open is. mosaicWriteReplacing never throws.
+  return _mosaicWriteInBackground(target, bytes);
+}
+
+/// Every check a `files.save` request meets before any dialog or picker is
+/// shown, on desktop and phone alike.
+_MosaicSaveCheck _mosaicCheckSaveRequest(Object? payload) {
+  _MosaicSaveRefused refused(String message) =>
+      _MosaicSaveRefused(mosaicFailed(message));
   final suggestedName = _mosaicText(payload, 'suggestedName') ?? '';
   if (!mosaicIsPlainFileName(suggestedName)) {
-    return mosaicFailed('suggestedName must be a plain file name');
+    return refused('suggestedName must be a plain file name');
   }
   final encoded = _mosaicText(payload, 'bytes');
-  if (encoded == null) return mosaicFailed('bytes must be base64 text');
+  if (encoded == null) return refused('bytes must be base64 text');
   // Checked on the encoded length before decoding, so an oversized payload is
   // refused without allocating its decoded copy (4 base64 chars = 3 bytes).
   if (encoded.length > (mosaicMaxSaveBytes ~/ 3 + 1) * 4) {
-    return mosaicFailed('the file is larger than $mosaicMaxSaveBytes bytes');
+    return refused('the file is larger than $mosaicMaxSaveBytes bytes');
   }
   final Uint8List bytes;
   try {
     if (!_mosaicIsBase64Alphabet(encoded)) {
-      return mosaicFailed('bytes must be base64 text');
+      return refused('bytes must be base64 text');
     }
     bytes = base64Decode(encoded);
   } on FormatException {
-    return mosaicFailed('bytes must be base64 text');
+    return refused('bytes must be base64 text');
   }
   if (bytes.length > mosaicMaxSaveBytes) {
-    return mosaicFailed('the file is larger than $mosaicMaxSaveBytes bytes');
+    return refused('the file is larger than $mosaicMaxSaveBytes bytes');
   }
   // When the app says what it is saving, the name must agree: a JSON export
   // cannot be offered as `notes.exe`. Compared as Compose compares it (lower
@@ -757,20 +796,20 @@ Future<Map<String, Object?>> mosaicRunFilesSave(
   final lowered = suggestedName.toLowerCase();
   if (extensions.isNotEmpty &&
       !extensions.any((extension) => lowered.endsWith('.$extension'))) {
-    return mosaicFailed(
+    return refused(
       'suggestedName must end in an extension of an accepted type',
     );
   }
   if (extensions.isEmpty && mosaicHasExecutableExtension(suggestedName)) {
-    return mosaicFailed(
+    return refused(
       'suggestedName must not end in an executable extension',
     );
   }
-  final target = await dialogs.chooseFileToSave(suggestedName, extensions);
-  if (target == null) return _mosaicCancelled();
-  // Up to 16 MiB written and flushed to disk: in a background isolate, as the
-  // read in files.open is. mosaicWriteReplacing never throws.
-  return _mosaicWriteInBackground(target, bytes);
+  return _MosaicSaveChecked((
+    name: suggestedName,
+    bytes: bytes,
+    extensions: extensions,
+  ));
 }
 
 /// [mosaicWriteReplacing] in a short-lived isolate; see
@@ -1334,6 +1373,365 @@ bool _mosaicSaveWindows(String full, String temporary, Uint8List bytes) {
   }
 }
 
+// ── Phones: the document plugin (UI89 §7.11) ─────────────────────────────
+//
+// On Android and iOS there are no file dialogs to return a path the library
+// reads and writes in place. A phone build's plugin, `mosaic_phone_files`,
+// shows the system's pickers instead and moves the bytes between the
+// person's document and a private file:
+//
+//     files.open                              files.save
+//     ----------                              ----------
+//     request directory (fresh)               the request checked, as on desktop
+//     plugin: picker -> bounded copy          request directory (fresh)
+//       into <directory>/<name>               staged as <directory>/<suggestedName>
+//     the copy checked: a regular file,       plugin: export picker -> the
+//       directly in <directory>, no link        provider's copy of the staged file
+//     read with the desktop's bounded read    answer: ok { the reported name }
+//     answer: ok { name, mimeType, bytes }
+//                    the request directory removed, whatever happened
+//
+// The plugin is an interface here, so the conformance harness answers it
+// with fakes on the plain Dart VM; `mosaic_platform_effects.dart` adapts the
+// real `MethodChannel`. Paths cross the channel, never bytes: the bounded
+// read and the save's checks stay in this file, shared with the desktop.
+
+/// The name of the directory, under the app's temporary directory, that holds
+/// each request's private directory.
+const String mosaicPhoneFilesDirectoryName = 'mosaic-files';
+
+/// How long a request directory must have gone unchanged before a later
+/// process may delete it as a leftover of one that was killed.
+const Duration mosaicPhoneLeftoverAge = Duration(hours: 1);
+
+/// The platform's path separator: `/` on both phones. The phone path joins
+/// with it, as `Directory.createTemp` does, so the harness runs it on every
+/// desktop too.
+final String _mosaicSeparator = Platform.pathSeparator;
+
+/// A failure the plugin reported, by its code: `busy`, `no_window`,
+/// `activity_gone`, `too_large`, `stalled` or `unreadable`. The app is told a
+/// fixed message for the code, never the platform's own text, which can carry
+/// a provider's path.
+final class MosaicPhoneDocumentsException implements Exception {
+  const MosaicPhoneDocumentsException(this.code);
+
+  final String code;
+
+  @override
+  String toString() => 'MosaicPhoneDocumentsException($code)';
+}
+
+/// The phone build's document plugin. Each method answers null for a cancel
+/// and throws a [MosaicPhoneDocumentsException] for a failure it can name;
+/// anything else it throws is the generic failure.
+abstract interface class MosaicPhoneDocuments {
+  /// The app's temporary directory: `cacheDir` on Android, the sandbox's
+  /// `tmp/` on iOS. Request directories are made below it.
+  Future<String> temporaryDirectory();
+
+  /// Show the open picker for [mimeTypes] (any document when empty) and copy
+  /// the chosen document, at most [limit] bytes, into a new file directly in
+  /// [directory]. Returns that file's path.
+  Future<String?> copyForOpening(
+    String directory,
+    List<String> mimeTypes,
+    int limit,
+  );
+
+  /// Show the export picker for the file at [stagedPath], typed [mimeType].
+  /// Returns the name the picker or provider reports for the saved document.
+  Future<String?> export(String stagedPath, String mimeType);
+}
+
+/// The fixed message for a plugin failure. [saving] picks the save's wording;
+/// an unknown code, or anything that is not a [MosaicPhoneDocumentsException]
+/// (a missing plugin, an answer of the wrong shape), is the generic one.
+String mosaicPhoneFailureMessage(Object error, {required bool saving}) {
+  final code = error is MosaicPhoneDocumentsException ? error.code : null;
+  return switch (code) {
+    'busy' => 'another file operation is in progress',
+    'no_window' => 'there is no window to show the file picker in',
+    'activity_gone' => 'the file picker closed with the app',
+    'too_large' when saving =>
+      'the file is larger than $mosaicMaxSaveBytes bytes',
+    'too_large' => 'the selected file is larger than $mosaicMaxOpenBytes bytes',
+    'stalled' when saving => 'the file stopped saving',
+    'stalled' => 'the selected file stopped arriving',
+    _ when saving => "couldn't save the file",
+    _ => "couldn't read the selected file",
+  };
+}
+
+/// The characters that reorder text (UI89 §3.8): ARABIC LETTER MARK,
+/// LEFT-TO-RIGHT and RIGHT-TO-LEFT MARK, the embeddings and overrides, and
+/// the isolates.
+bool _mosaicIsBidiControl(int unit) =>
+    unit == 0x061C ||
+    unit == 0x200E ||
+    unit == 0x200F ||
+    (unit >= 0x202A && unit <= 0x202E) ||
+    (unit >= 0x2066 && unit <= 0x2069);
+
+/// A name a picker or provider reported, as the app may be told it: the part
+/// after any `/` or `\`, when that is an ordinary name, else `document`
+/// (UI89 §3.8, with §7.11's byte clause).
+///
+///     reported                    told
+///     notes.json                  notes.json
+///     /storage/x/notes.json       notes.json
+///     ""  "."  ".."  "   "         document
+///     evil<U+202E>gnp.exe     document   (a bidi override disguises it)
+///     a\nb                        document   (a control character)
+///     300 x "é" (600 bytes)     document   (over 255 UTF-8 bytes)
+///
+/// Other format characters -- the zero-width joiners of Persian, Devanagari
+/// and emoji sequences, a soft hyphen -- are ordinary writing and pass, as on
+/// Android.
+String mosaicOrdinaryReportedName(String reported) {
+  final slash = reported.lastIndexOf('/');
+  final backslash = reported.lastIndexOf(r'\');
+  final name = reported.substring(max(slash, backslash) + 1);
+  if (name.trim().isEmpty || name == '.' || name == '..') return 'document';
+  if (name.length > 255 || utf8.encode(name).length > 255) return 'document';
+  final units = name.codeUnits;
+  for (var index = 0; index < units.length; index += 1) {
+    final unit = units[index];
+    // Paired surrogates are one ordinary character; a lone one is not.
+    if (unit >= 0xD800 && unit <= 0xDBFF) {
+      final next = index + 1 < units.length ? units[index + 1] : 0;
+      if (next < 0xDC00 || next > 0xDFFF) return 'document';
+      index += 1;
+      continue;
+    }
+    if (unit >= 0xDC00 && unit <= 0xDFFF) return 'document';
+    final control = unit < 0x20 || (unit >= 0x7F && unit <= 0x9F);
+    final separator = unit == 0x2028 || unit == 0x2029;
+    if (control || separator || _mosaicIsBidiControl(unit)) return 'document';
+  }
+  return name;
+}
+
+/// The MIME types the request accepts that the table knows, in order and
+/// without repeats: what the open picker filters on. Empty is any document.
+List<String> mosaicKnownMimeTypesFor(Object? payload) {
+  final accept = payload is Map ? payload['accept'] : null;
+  final known = <String>[];
+  if (accept is! List) return known;
+  for (final mime in accept) {
+    if (mime is! String || known.contains(mime)) continue;
+    if (_mosaicMimeExtensions.any((row) => row.$1 == mime)) known.add(mime);
+  }
+  return known;
+}
+
+/// The type a save asks the picker for (UI89 §3.8): the name's own type when
+/// the request accepts it, or accepts anything; else the first type it
+/// accepts.
+String _mosaicSaveMimeType(String name, List<String> mimeTypes) {
+  final own = _mosaicMimeTypeFor(name);
+  if (mimeTypes.isEmpty || mimeTypes.contains(own)) return own;
+  return mimeTypes.first;
+}
+
+/// Delete the request directories under [root] that have not changed for
+/// [mosaicPhoneLeftoverAge] (a process killed mid-request leaves its own
+/// behind). Nothing is followed through a link, and a link itself, whose age
+/// cannot be read without following it, is left alone. Never throws.
+///
+/// Only old entries go: another Flutter engine in this process (an iPad's
+/// second scene) has its own router, and may have a request in flight here.
+void mosaicSweepPhoneLeftovers(Directory root, DateTime now) {
+  final List<FileSystemEntity> entries;
+  try {
+    entries = root.listSync(followLinks: false);
+  } on Object {
+    return;
+  }
+  for (final entry in entries) {
+    try {
+      final type = FileSystemEntity.typeSync(entry.path, followLinks: false);
+      if (type == FileSystemEntityType.link) continue;
+      final changed = entry.statSync().modified;
+      if (now.difference(changed) <= mosaicPhoneLeftoverAge) continue;
+      // A recursive delete removes links inside, never what they point at.
+      entry.deleteSync(recursive: true);
+    } on Object {
+      // Gone already, or not ours to delete: the next sweep tries again.
+    }
+  }
+}
+
+/// A fresh, empty directory for one request, under
+/// `<temporary>/mosaic-files/`. [sweep] first removes old leftovers there.
+///
+/// The parent is the app's own temporary directory, which no other app can
+/// reach on either phone, so the request directory is private to the app.
+Future<Directory> _mosaicPhoneRequestDirectory(
+  MosaicPhoneDocuments documents, {
+  required bool sweep,
+}) async {
+  // Without a trailing separator (iOS's NSTemporaryDirectory() has one), so
+  // the request path is the plain form a plugin answers within.
+  var temporary = await documents.temporaryDirectory();
+  while (temporary.length > 1 &&
+      (temporary.endsWith('/') || temporary.endsWith(_mosaicSeparator))) {
+    temporary = temporary.substring(0, temporary.length - 1);
+  }
+  final root = Directory(
+    '$temporary$_mosaicSeparator$mosaicPhoneFilesDirectoryName',
+  );
+  final type = FileSystemEntity.typeSync(root.path, followLinks: false);
+  if (type == FileSystemEntityType.notFound) {
+    try {
+      root.createSync();
+    } on FileSystemException {
+      // Made by another engine between the check and the create.
+    }
+  }
+  if (FileSystemEntity.typeSync(root.path, followLinks: false) !=
+      FileSystemEntityType.directory) {
+    throw StateError('the file request directory is not a directory');
+  }
+  if (sweep) mosaicSweepPhoneLeftovers(root, DateTime.now());
+  return root.createTempSync('request-');
+}
+
+/// Whether [path], as the plugin answered it, is a regular file -- not a
+/// link -- directly inside [directory]. The plugin is not trusted to have
+/// written where it was told.
+bool mosaicIsCopyInside(String path, String directory) {
+  final name = _mosaicBaseName(path);
+  if (name.isEmpty || name == '.' || name == '..') return false;
+  if (path != '$directory$_mosaicSeparator$name') return false;
+  return FileSystemEntity.typeSync(path, followLinks: false) ==
+      FileSystemEntityType.file;
+}
+
+/// [outcome] with its name made ordinary, and its type read again from that
+/// name. The copy's name is the one the plugin chose, from a provider's
+/// display name, so it is checked as a reported save name is.
+Map<String, Object?> _mosaicWithOrdinaryName(Map<String, Object?> outcome) {
+  if (!outcome.containsKey('ok')) return outcome; // failed or cancelled
+  final opened = outcome['ok'];
+  // Never an unchecked name: an answer of any other shape fails closed.
+  if (opened is! Map<String, Object?>) return _mosaicUnreadable();
+  final name = mosaicOrdinaryReportedName(opened['name'] as String? ?? '');
+  return _mosaicOk(<String, Object?>{
+    ...opened,
+    'name': name,
+    'mimeType': _mosaicMimeTypeFor(name),
+  });
+}
+
+void _mosaicRemoveQuietly(Directory? directory) {
+  try {
+    directory?.deleteSync(recursive: true);
+  } on Object {
+    // Left for a later sweep.
+  }
+}
+
+/// `files.open` on a phone: the outcome map, never an exception.
+///
+/// [sweep] removes old leftovers before the request directory is made; the
+/// router asks for it on its first request only.
+Future<Map<String, Object?>> mosaicRunPhoneFilesOpen(
+  Object? payload,
+  MosaicPhoneDocuments documents, {
+  bool sweep = false,
+}) async {
+  Directory? request;
+  try {
+    request = await _mosaicPhoneRequestDirectory(documents, sweep: sweep);
+    final String? copied;
+    try {
+      copied = await documents.copyForOpening(
+        request.path,
+        mosaicKnownMimeTypesFor(payload),
+        mosaicMaxOpenBytes,
+      );
+    } on Object catch (error) {
+      return mosaicFailed(mosaicPhoneFailureMessage(error, saving: false));
+    }
+    if (copied == null) return _mosaicCancelled();
+    if (!mosaicIsCopyInside(copied, request.path)) return _mosaicUnreadable();
+    // The desktop's bounded read: at most 50 MiB, whatever the plugin copied.
+    final outcome = await _mosaicReadInBackground(copied);
+    return _mosaicWithOrdinaryName(outcome);
+  } on Object {
+    return _mosaicUnreadable();
+  } finally {
+    _mosaicRemoveQuietly(request);
+  }
+}
+
+/// `files.save` on a phone: the outcome map, never an exception.
+///
+/// The request is checked exactly as on desktop before anything is shown. The
+/// bytes are staged under the suggested name, created exclusively in the
+/// request's own directory, and the export picker hands that file to the
+/// person, who chooses where it goes; the picker (iOS) or provider (Android)
+/// confirms any replace. The answer's name is the one it reports, made
+/// ordinary.
+Future<Map<String, Object?>> mosaicRunPhoneFilesSave(
+  Object? payload,
+  MosaicPhoneDocuments documents, {
+  bool sweep = false,
+}) async {
+  final checked = _mosaicCheckSaveRequest(payload);
+  if (checked case _MosaicSaveRefused(:final outcome)) return outcome;
+  final (:name, :bytes, :extensions) = (checked as _MosaicSaveChecked).request;
+  Directory? request;
+  try {
+    request = await _mosaicPhoneRequestDirectory(documents, sweep: sweep);
+    final staged = '${request.path}$_mosaicSeparator$name';
+    if (!await _mosaicStageInBackground(staged, bytes)) {
+      return mosaicFailed("couldn't save the file");
+    }
+    final String? reported;
+    try {
+      reported = await documents.export(
+        staged,
+        _mosaicSaveMimeType(name, mosaicKnownMimeTypesFor(payload)),
+      );
+    } on Object catch (error) {
+      return mosaicFailed(mosaicPhoneFailureMessage(error, saving: true));
+    }
+    if (reported == null) return _mosaicCancelled();
+    return _mosaicOk(<String, Object?>{
+      'name': mosaicOrdinaryReportedName(reported),
+    });
+  } on Object {
+    return mosaicFailed("couldn't save the file");
+  } finally {
+    _mosaicRemoveQuietly(request);
+  }
+}
+
+/// Write [bytes] to a new file at [staged], in a short-lived isolate. The
+/// create is exclusive, so nothing already at that name is written through.
+/// False when it could not be written.
+Future<bool> _mosaicStageInBackground(String staged, Uint8List bytes) =>
+    Isolate.run(() {
+      RandomAccessFile? handle;
+      try {
+        final file = File(staged)..createSync(exclusive: true);
+        handle = file.openSync(mode: FileMode.writeOnly);
+        handle.writeFromSync(bytes);
+        handle.flushSync();
+        return true;
+      } on Object {
+        return false;
+      } finally {
+        try {
+          handle?.closeSync();
+        } on Object {
+          // The write already failed or succeeded; closing changes neither.
+        }
+      }
+    });
+
 // ── Routing and installation ──────────────────────────────────────────────
 
 /// Route one effect (UI87 §7.2). True when this library takes it, false when
@@ -1361,6 +1759,7 @@ final class MosaicPlatformRouter {
     this._appHandler,
     this._appKinds,
     this._dialogs,
+    this._phoneDocuments,
     this._hasDialogs,
     this._runOnUi,
   );
@@ -1369,6 +1768,10 @@ final class MosaicPlatformRouter {
   final MosaicEffectHandler? _appHandler;
   final Set<String>? _appKinds;
   final MosaicFileDialogs _dialogs;
+
+  /// A phone build's document plugin (UI89 §7.11). When it is given, the
+  /// standard kinds go through it rather than through [_dialogs].
+  final MosaicPhoneDocuments? _phoneDocuments;
   final bool _hasDialogs;
   final void Function(void Function() work) _runOnUi;
 
@@ -1376,6 +1779,10 @@ final class MosaicPlatformRouter {
   /// dialog is open is failed, not queued behind it. A plain bool: the
   /// isolate is single-threaded.
   bool _busy = false;
+
+  /// Whether this router has swept old request directories on a phone: once,
+  /// before its first request.
+  bool _swept = false;
 
   void handle(int id, String kind, Object? payload, String delivery) {
     switch (mosaicRoutesToPlatform(kind, _appKinds)) {
@@ -1444,9 +1851,18 @@ final class MosaicPlatformRouter {
   Future<void> _answer(int id, String kind, Object? request) async {
     Map<String, Object?> outcome;
     try {
-      outcome = kind == 'files.open'
-          ? await mosaicRunFilesOpen(request, _dialogs)
-          : await mosaicRunFilesSave(request, _dialogs);
+      final phone = _phoneDocuments;
+      if (phone != null) {
+        final sweep = !_swept;
+        _swept = true;
+        outcome = kind == 'files.open'
+            ? await mosaicRunPhoneFilesOpen(request, phone, sweep: sweep)
+            : await mosaicRunPhoneFilesSave(request, phone, sweep: sweep);
+      } else {
+        outcome = kind == 'files.open'
+            ? await mosaicRunFilesOpen(request, _dialogs)
+            : await mosaicRunFilesSave(request, _dialogs);
+      }
     } on Object {
       // A dialog that threw (no display, a sandbox without the file-access
       // entitlement, a file with no local path) -- not its text, which can
@@ -1471,7 +1887,10 @@ final class MosaicPlatformRouter {
 /// Install the platform library on [host], wrapping whatever handler the app
 /// installed. [appKinds] is the app's `[host_effects]` `kinds`, or null when
 /// it declared none (the original meaning: it receives every non-standard
-/// kind). [dialogs], [hasDialogs] and [runOnUi] are replaceable for tests;
+/// kind). [phoneDocuments] is a phone build's document plugin (UI89 §7.11):
+/// given, it answers the standard kinds instead of [dialogs], and the
+/// platform has pickers whatever [hasDialogs] says. [dialogs], [hasDialogs] and [runOnUi]
+/// are replaceable for tests;
 /// [runOnUi] runs the dialog work after the current settle, and a throw from
 /// it counts as the work refused.
 ///
@@ -1483,6 +1902,7 @@ void installMosaicPlatformRouter(
   MosaicPlatformEffectHost host, {
   required Iterable<String>? appKinds,
   required MosaicFileDialogs dialogs,
+  MosaicPhoneDocuments? phoneDocuments,
   bool? hasDialogs,
   void Function(void Function() work) runOnUi = scheduleMicrotask,
 }) {
@@ -1493,7 +1913,8 @@ void installMosaicPlatformRouter(
     current,
     appKinds?.toSet(),
     dialogs,
-    hasDialogs ?? mosaicPlatformHasFileDialogs,
+    phoneDocuments,
+    (hasDialogs ?? mosaicPlatformHasFileDialogs) || phoneDocuments != null,
     runOnUi,
   );
   final MosaicEffectHandler handler = router.handle;

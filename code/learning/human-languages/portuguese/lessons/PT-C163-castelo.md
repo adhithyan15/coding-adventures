@@ -13,7 +13,8 @@ gloss: "a castle"
 concept_tag: PT-COISAS163-CASTELO
 prerequisites: [PT-C163-obras, PT-C163-predio]
 sounds: []
-roots: []
+roots: [castellum-latin]
+etymology_hook: "castelo ← Latin castellum 'fort', from castrum 'camp' — English castle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C163-predio]
 <!-- hl-knowledge: introduces=[PT-LEX-C163-COISAS163-04]; assesses=[] -->
 
 **o castelo** — "a castle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**castelo** ← Latin *castellum*, "fort" (EtymDB 2.1), from *castrum*, "camp" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

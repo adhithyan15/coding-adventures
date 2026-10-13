@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 19,
   "title": "Review --- The Three Forms Side by Side",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:175ea881f20b8efa",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b53555854180eb8a",
   "lessons": [
     {
       "id": "ES-C06-ar-presente",
@@ -14,22 +14,13 @@
       "romanization": "hablo · hablas · habla",
       "gloss": "review — the three forms you already own, put side by side for the first time",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:492908c359178db6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the table you have earned"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:94059cb53dad590c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -58,17 +49,19 @@
               "text": "Three chapters, one form each. Now — and only now — they are worth seeing together:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
                 "who",
-                "ending",
-                "hablar, which gives:",
+                "ending, on hablar",
                 "meaning"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: I. ending, on hablar: -o: hablo. meaning: I speak.",
+                "who: tú. ending, on hablar: -as: hablas. meaning: you speak (a friend).",
+                "who: él, ella, usted. ending, on hablar: -a: habla. meaning: he/she speaks, you speak (polite)."
+              ]
             },
             {
               "kind": "speech",
@@ -144,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-1",
               "prompt": "I speak.",
               "assesses": [
@@ -162,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-2",
               "prompt": "She speaks.",
               "assesses": [
@@ -180,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-3",
               "prompt": "You speak, to a friend.",
               "assesses": [

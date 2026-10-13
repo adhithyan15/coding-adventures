@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-como-se-dice-ask",
               "prompt": "Ask how something is said.",
               "assesses": [
@@ -127,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-como-se-dice-full",
               "prompt": "Ask how something is said in Spanish, politely.",
               "assesses": [
@@ -147,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-como-se-dice-why",
               "prompt": "Why is it se dice rather than a form aimed at the person you are asking?",
               "assesses": [

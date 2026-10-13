@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS187-JUSQUA
 prerequisites: [FR-C187-tard, FR-C187-soudain]
 sounds: []
 roots: []
+etymology_hook: "jusqu'à — Old French josque, from Latin usque 'right up to', + à"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C187-soudain]
 <!-- hl-knowledge: introduces=[FR-LEX-C187-TEMPS187-04]; assesses=[] -->
 
 **jusqu'à** — "until".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jusqu'à** — Old French *josque*, from Latin *de usque*, "right up to" (Lewis & Short for *usque*), and *à*, "to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

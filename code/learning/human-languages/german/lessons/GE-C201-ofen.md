@@ -13,7 +13,8 @@ gloss: "an oven"
 concept_tag: GE-THING201-OFEN
 prerequisites: [GE-C201-topf, GE-C201-pfanne]
 sounds: []
-roots: []
+roots: [germanic-uhnaz]
+etymology_hook: "Ofen ← Proto-Germanic *uhnaz 'oven' — the same word as English oven"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C201-pfanne]
 <!-- hl-knowledge: introduces=[GE-LEX-C201-THING201-04]; assesses=[] -->
 
 **der Ofen** — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ofen** ← Proto-Germanic *\*uhnaz*, "oven" — inherited, the same word as English *oven*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

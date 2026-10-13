@@ -14,7 +14,8 @@ romanization: "vilaṅku"
 concept_tag: TA-PORUL274-VILANKU
 prerequisites: [TA-C274-katai, TA-C274-katavul]
 sounds: []
-roots: []
+roots: [dravidian-vilanku-athwart]
+etymology_hook: "விலங்கு — usually explained as native vilaṅku 'to lie across' (DEDR 5423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C274-katavul]
 <!-- hl-knowledge: introduces=[TA-LEX-C274-PORUL274-05]; assesses=[] -->
 
 **விலங்கு** — *vilaṅku* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விலங்கு** (*vilaṅku*) is usually explained as native *vilaṅku*, "to lie across" (DEDR 5423): an animal's body lies crosswise, unlike a person's.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

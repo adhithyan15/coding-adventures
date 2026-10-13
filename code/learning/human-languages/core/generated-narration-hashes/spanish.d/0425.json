@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 425,
-  "sourceHash": "fnv1a64:0c3dd3bbef39b05c",
+  "sourceHash": "fnv1a64:cd0cb32a480f3255",
   "lessonIds": [
     "ES-C425-abecedario",
     "ES-C425-dos-nombres",
@@ -11,11 +11,11 @@
     "ES-C425-repaso-letras",
     "ES-C425-sintesis-deletreo"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 0,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "spanish/narration/ch425.txt",
   "json": "spanish/narration/ch425.json",
-  "textHash": "fnv1a64:ba5c1288918586df",
-  "jsonHash": "fnv1a64:4af7a27ffe5f2089",
+  "textHash": "fnv1a64:51b7c6edbf6cccdb",
+  "jsonHash": "fnv1a64:519ef6400442f3d6",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a pig"
 concept_tag: PT-ANIMAIS1-PORCO
 prerequisites: [PT-C60-cavalo, PT-C60-vaca]
 sounds: []
-roots: []
+roots: [porcus-latin]
+etymology_hook: "porco ← Latin porcus 'pig' — English pork shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C60-vaca]
 <!-- hl-knowledge: introduces=[PT-LEX-C60-ANIMAIS1-05]; assesses=[] -->
 
 **o porco** — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**porco** ← Latin *porcus*, "pig" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

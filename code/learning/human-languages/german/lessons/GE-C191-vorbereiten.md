@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VORBEREITEN
 prerequisites: [GE-C190-verschieben, GE-C190-verwenden]
 sounds: []
 roots: []
+etymology_hook: "vorbereiten — 'before' + the verb of bereit 'ready': to make ready beforehand"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C190-verwenden]
 <!-- hl-knowledge: introduces=[GE-LEX-C191-VERB191-01]; assesses=[] -->
 
 **vorbereiten** — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorbereiten** is the word for "before" + a verb built on *bereit*, "ready", which EtymDB 2.1 lists beside English *ready*: to make ready beforehand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

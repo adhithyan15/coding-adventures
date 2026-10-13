@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN121-GURKE
 prerequisites: [GE-C120-pilz, GE-C121-bohnen]
 sounds: []
 roots: []
+etymology_hook: "Gurke ← a West Slavic word, Polish ogórek, which goes back to Greek — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C121-bohnen]
 <!-- hl-knowledge: introduces=[GE-LEX-C121-ESSEN121-02]; assesses=[] -->
 
 **die Gurke** — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gurke** came in from a West Slavic word, like Polish *ogórek*, which goes back to Medieval Greek — borrowed. EtymDB 2.1 has the German word but not its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

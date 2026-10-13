@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C139-kaglo-type",
-              "prompt": "Type the Marwadi for 'a crow'.",
+              "prompt": "Say the Marwadi for 'a crow'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C139-kabutar-type",
-              "prompt": "Type the Marwadi for 'a pigeon'.",
+              "prompt": "Say the Marwadi for 'a pigeon'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C139-toto-type",
-              "prompt": "Type the Marwadi for 'a parrot'.",
+              "prompt": "Say the Marwadi for 'a parrot'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C139-koyal-type",
-              "prompt": "Type the Marwadi for 'a koel'.",
+              "prompt": "Say the Marwadi for 'a koel'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C139-chil-type",
-              "prompt": "Type the Marwadi for 'a kite (the bird)'.",
+              "prompt": "Say the Marwadi for 'a kite (the bird)'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R139-first-pass-jewellery-and-food-type",
-              "prompt": "Type the Marwadi for 'a koel'.",
+              "prompt": "Say the Marwadi for 'a koel'.",
               "assesses": [
                 "MW-LEX-C139-THINGS139-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R139-second-pass-vegetables-spices-and-animals-type",
-              "prompt": "Type the Marwadi for 'a watermelon'.",
+              "prompt": "Say the Marwadi for 'a watermelon'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-01"
               ],

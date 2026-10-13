@@ -11,7 +11,8 @@ romanization: "adaṉāl"
 concept_tag: TA-JOIN-THEREFORE
 prerequisites: [TA-W33-read-een]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அதனால் — native: atu 'that' (DEDR 1) + -āl 'by': 'by that'"
 duration:
   max_seconds: 225
 requires:
@@ -56,6 +57,11 @@ you reach for depends on which half you want to lead with.
 
 The word is **அது** — "that one", from chapter forty — carrying an ending that means *by*.
 *By that.* It can only point backwards, which is why it never opens a conversation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதனால்** (*adaṉāl*) is native: *atu*, "that" (DEDR 1), in its joining form *ataṉ-*, with *-āl*, "by": "by that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

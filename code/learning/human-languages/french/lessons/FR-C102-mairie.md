@@ -13,7 +13,8 @@ gloss: "the town hall"
 concept_tag: FR-VILLE54-MAIRIE
 prerequisites: [FR-C102-bibliotheque, FR-C102-boulangerie]
 sounds: []
-roots: []
+roots: [maior-latin]
+etymology_hook: "mairie — the word for 'mayor' + -ie; mayor ← Latin maior 'greater' — English mayor and major"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C102-boulangerie]
 <!-- hl-knowledge: introduces=[FR-LEX-C102-VILLE54-05]; assesses=[] -->
 
 **la mairie** — "the town hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mairie** — built from the word for "mayor", with *-ie*: the mayor's house. The mayor word ← Latin *maior*, "greater" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-LIEU216-AILLEURS
 prerequisites: [FR-C216-autour, FR-C216-partout]
 sounds: []
 roots: []
+etymology_hook: "ailleurs ← Latin aliorsum 'toward another place'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C216-partout]
 <!-- hl-knowledge: introduces=[FR-LEX-C216-LIEU216-03]; assesses=[] -->
 
 **ailleurs** — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ailleurs** ← Old French *aillors* (EtymDB 2.1) ← Latin *aliorsum*, "toward another place" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

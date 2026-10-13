@@ -11,7 +11,8 @@ romanization: "… eṉṟu niṉaikkiṟēṉ"
 concept_tag: TA-PRAGMATICS-OPINION
 prerequisites: [TA-W32-read-sol]
 sounds: []
-roots: []
+roots: [dravidian-ninai-think-remember, proto-dravidian-an-say]
+etymology_hook: "… என்று நினைக்கிறேன் — native: eṉṟu, from eṉ 'to say' (DEDR 868), + niṉai 'to think' (DEDR 3683)"
 duration:
   max_seconds: 235
 requires:
@@ -59,6 +60,11 @@ its own. என்று closes it. Then the verb, built the way பேசுக
 Swap the front half for anything you can say:
 
 > **இது சிறிய கடை என்று நினைக்கிறேன்.**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**… என்று நினைக்கிறேன்** (*… eṉṟu niṉaikkiṟēṉ*) is native: *eṉṟu*, "having said", from *eṉ*, "to say" (DEDR 868), and *niṉai*, "to think" (DEDR 3683). "I think that …" is "saying '…', I think".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

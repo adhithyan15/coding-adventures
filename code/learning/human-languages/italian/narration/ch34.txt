@@ -1,15 +1,13 @@
 Italian, chapter 34: Mine and Yours.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. All 5 can be done entirely by ear.
 
 
 Lesson 1 of 5.
 mio, tuo, suo — my, your, his and hers.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
 Warm-up.
 [pause 2 seconds]
-A new chapter, opening the second column this book has left completely empty.
+A new chapter, opening the second category this book has left completely empty.
 [your turn — recall: say qui / lì — R1, one lesson back, before it decays]
 [pause 8 seconds for the answer]
 [your turn — recall: say questo — R2, the first real retrieval, five to fifteen lessons back]
@@ -172,6 +170,9 @@ il signor Rossi — Mr Rossi (not il signore Rossi) la signora Rossi — Mrs Ros
 That is the same shortening you met on the first page, where buono becomes buon in buongiorno. Italian drops a final vowel before another word far more readily than English does.
 Signorina is going out of use for the reason Miss is, and signora is the safe choice for any adult woman.
 
+The word, taken apart.
+signore from Latin senior, "older" — inherited. (EtymDB 2.1).
+
 Grammar lens: speaking to somebody, by name or by title.
 Put the person you are speaking to at the front or the end of what you say, with a comma. Italian calls this the vocativo, and it needs no other machinery:
 Marco, buongiorno., Buongiorno, Marco. Signora, come sta?, Come sta, signora?
@@ -216,6 +217,9 @@ Look at what changed and what did not. Io and tu become me and te; everything el
 These are called the stressed pronouns, and stress is the honest name for them: they are the ones you can shout, the ones a preposition can lean on, and the ones that stand alone in an answer:
 — Chi prende il caffè? — Io. (subject: the subject form) — Per chi è? — Per me. (after a preposition: the stressed form).
 The one to watch is a, the preposition this book has used all along in a Roma and a domani. Put a person after it and you get a me, a te.
+
+The word, taken apart.
+per from Latin per, "through" — inherited. (EtymDB 2.1).
 
 Grammar lens: a me piace, and where the weight falls.
 A me piace il caffè. — I like coffee.

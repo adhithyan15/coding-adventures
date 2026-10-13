@@ -17145,6 +17145,110 @@ metadata-command hunk overlap; recheck before delivery. Read-only audits
 confirmed C#/F# can form a later shared .NET Arc2D tranche after this CI
 prerequisite, and found no eligible unowned gap.
 
+## Post-#17148 inventory and bounded Arc2D .NET selection
+
+PR #17148 passed all 38 final-head checks (31 successes, seven expected
+skips), including a same-head retry of the flaky Windows Forme web-quality
+sample and its downstream CI gate. GitHub reported CLEAN/MERGEABLE and guarded
+squash auto-merge completed as `435df54f862f154b216e1204e299ffc67a713af6`;
+there was no manual merge. Both geometry and Bezier flattening neutral
+validators are now unconditional CI contracts.
+
+The collision-gated schema-3 report on fetched `origin/main` at that commit
+has 15 established lanes, 1,500 implementation identities, 4,782 occupied
+slots, 1,542 all-reported identities, 178 high-consensus identities with 250
+missing slots, 1,018 singletons (819 Rust), zero canonical collisions and
+zero unknown language buckets. Five OCaml roots remain emerging and outside
+the established denominator. The new Rust-only
+`chief-of-staff-process-hardening` root is host-security/native-runtime work;
+its separate pending authority review is selection-blocked, not a portable
+port target.
+
+Read-only reviews found a missing NET00 neutral conformance prerequisite for
+the existing Java/Kotlin/Dart URL-parser owner. They also confirmed arithmetic
+09 subtraction carry needs neutral adjudication before its three absent-lane
+ports, and that Haskell CT01 is ready but narrower than the shared geometry
+repair. The existing 11-lane Arc2D center-form owner is now a completion
+umbrella. Its first selected child is the C#/F# .NET slice: dynamically consume
+the seven center-form cases, replace sampled bounds with analytic extrema,
+enforce finite one-turn cubic limits, and run real native/downstream tests,
+coverage, build-file, parity, diff and security validation. Remaining
+Arc2D lanes will be split after this child. OCaml native build-tool promotion
+still depends on its separately tracked execution-authority and CI gates.
+
+Before the C#/F# PR, `origin/main` advanced to
+`89c47895e1303bf1baaae2da7290f3ae1be1a879` through unrelated Bengali,
+Chief broker-root, and language-ladder merges. The Arc2D branch rebased
+without conflict. The refreshed collision-gated inventory now has 1,501
+implementation identities, 4,783 slots, 1,543 all-reported identities,
+1,019 singletons (820 Rust), and unchanged high-consensus counts; collisions
+and unknown language buckets remain zero. The new Rust-only
+`chief-of-staff-broker-roots` package owns capability-gated filesystem and
+native beneath-resolution authority, so it has a separately blocked review
+item rather than a cross-language port.
+
+## Post-#17168 recovery and TypeScript center-form selection
+
+The fresh-context audit verified #17168 merged at
+`e32e3584bf5e01e1570a9277afdb84f703557155`, with all 33 final-head checks
+acceptable (eight successes, 25 expected skips), and proved reachability from
+fetched main `fdd41452baa24b2a543d38d4d9318e883be7ff95`. No parity
+implementation PR is open. The collision-gated schema-3 inventory remains
+1,506 established implementation identities, 4,788 occupied slots, 1,548
+all-reported identities, 825 Rust singletons, and zero collisions or unknown
+buckets. The initial recovery report ran before checkout transition completed;
+the corrected fresh report identifies five additional Rust broker roots. Five OCaml roots remain emerging.
+
+The next serial child is `geometry-arc2d-typescript-center-form-conformance`:
+replace sampled bounds with analytic rotated extrema, enforce finite positive
+center forms and one-turn sweeps before allocation, and consume the seven
+neutral center records in native tests. Validate TypeScript compilation,
+coverage, same-lane dependencies and the repository's actual affected graph.
+This closes another existing lane under the Arc2D umbrella; the remaining
+eight center lanes, Go endpoint convenience, and portable build-tool owners
+remain separate. The primary checkout stays untouched, and the protected
+parity checkout is reused to preserve restart continuity.
+
+The TypeScript regression suite fails seven checks against unchanged source
+and passes after repair (32 total native tests, 100% line and 95.23% branch
+coverage). Same-lane trig, point2d and bezier2d builds and 63/46/15 tests pass.
+The Arc2D BUILD now compiles TypeScript before its coverage gate. Neutral
+validation passes 23 records and 11 validator tests; inventory tests pass ten
+cases. Repository-plan validation, exact-head security review and live CI are
+still delivery gates, not implied by the native results.
+
+## Pending-#17283 classification and next-item audits
+
+The fresh collision report on fetched main
+`d7a56ee6c2c0177af15947935321f2183fa93810` confirms the corrected counts
+above (1,024 singletons, 14,336 literal missing singleton slots). Five new
+Rust roots now have six explicit owners: protocol and injected callbacks are
+portable conformance contracts; launcher bookkeeping has a separate key-free
+extraction contract; agent broker, concrete launcher and Linux e2e harness
+have selection-blocked credential/native authority or integration reviews.
+These classifications assert no runtime or platform conformance.
+
+The bounded build-tool audit found Haskell's exact `_build` omission already
+fixed by #16891, while six generated exclusions, absolute-component language
+inference and specification-tree discovery still need the existing full
+registry owner. A newly registered canonical-membership/platform-selection
+child owns variant-only BUILD decoys; it is now a Haskell adapter prerequisite.
+Haskell registry has broad discovery leverage and smaller implementation
+surface than the ready 20-case TypeScript graph/diff adoption. Remaining
+Arc2D lanes are independent mathematical alternatives under the existing
+umbrella. Audit evidence is preserved in the recovery directory. No next
+implementation is selected while #17283 remains open.
+
+The Arc2D audit now splits the remaining eight center lanes into explicit
+pending children. Python has a 144-test native dependency baseline and is the
+smallest fallback; Perl has a confirmed five-segment full-turn bug. Rust has a
+real Windows GDI consumer but greater validation cost. Haskell's already
+analytic bounds should be retained and its build-front prerequisite respected.
+A separate blocked classification umbrella records missing Perl/Swift center
+tangent APIs rather than enlarging bounds/limits work. The inventory, fixture,
+source and native baseline evidence is preserved; no next implementation has
+been selected and no baseline is called conformance.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
@@ -17180,3 +17284,85 @@ The parity program is complete when:
 - the reporter and conformance checks run in CI;
 - adding a new package cannot silently create an unplanned singleton;
 - the generated matrix contains no eligible unowned gap.
+
+The bounded Haskell validation plan confirms its existing Cabal project enables
+the build-tool and graph/directed-graph/SHA-256 closure tests. Run the optimized
+full suite separately from focused HPC coverage so instrumentation does not
+invalidate the SHA-256 allocation-budget test. Coverage is still unmeasured.
+The complete registry fixture includes specification-tree decoys; materialize
+all records safely and prove those decoys stay outside package discovery.
+
+The OCaml readiness refresh confirms five emerging package roots and complete
+ownership of the remaining promotion gates. Keep the established denominator at
+15 lanes. The existing documentation-repair owner covers stale OCAML06,
+lane-README, and bootstrap-roadmap status; its old OCAML07/08 labels were
+corrected (representative CI and pure graph/diff core respectively). Its explicit
+selection block and the live workflow overlap with open PR #15723 remain in
+place. No new OCaml implementation owner or ready promotion leaf was found.
+
+The tangent follow-up split the existing blocked completion umbrella into
+`geometry-arc2d-center-tangent-neutral-contract` and independent Perl/Swift
+native tangent children. The shared contract pins raw normalized-parameter
+derivatives, sign/rotation/zero-sweep vectors, and correct ellipse-gradient
+orthogonality wording. Each lane waits for its own center-form repair.
+
+A separate collision-checked
+`geometry-arc2d-swift-windows-test-front-failure-propagation` owner records the
+Arc2D-specific `where swift && swift test || echo` false-success path; the Swift
+center child now depends on trustworthy front failure propagation. Existing
+Swift build-tool and Vigenere front owners cover different files. Four new
+pending owners leave the complete 1,321-owner dependency graph acyclic and retain
+exactly one active implementation PR. No second implementation was selected.
+
+The 15-lane tangent matrix confirms 13 existing raw derivative APIs and the two
+already-owned missing Perl/Swift APIs. A new blocked completion umbrella and ten
+bounded adoption children now own future derivative-fixture consumption for all
+13 existing lanes, separately from SVG and the seven bounds/cubic records.
+The neutral prerequisite also records derivative-specific fixture output bounds,
+controlled huge-integer rejection, and corrected ellipse-gradient wording.
+
+This discovery changes the candidate ranking: the ready shared tangent neutral
+contract reaches 14 pending descendants, Haskell registry discovery reaches four,
+and Python center-form repair reaches three. Recompute practical readiness and
+open-PR overlap after actual #17283 merge; the shared tangent contract is now the
+leading bounded prerequisite to compare with Haskell registry adoption. No next
+implementation is selected while CI remains pending. The complete local graph
+has 1,332 owners and 2,379 edges, is collision-free/acyclic, and has one active PR.
+
+The final consumer audit registered a separate pending JVM neutral-fixture task
+input owner for eight Java/Kotlin geometry projects; fixture-only incremental
+execution needs reproduction before repair. Neutral compatibility tests must
+force Gradle reruns meanwhile. This additional prerequisite leaves tangent's
+immediate qualified follow-ups at C#/F# and Go, plus TypeScript after #17283;
+JVM/Dart also waits for reliable task input tracking. The current graph contains
+1,333 owners / 2,382 edges with one active PR.
+
+PR #17283 reached all 33 terminal acceptable checks and CLEAN/MERGEABLE. The
+auto-only enable request was rejected by GitHub with `Pull request is in clean
+status`; auto-merge is enabled for the repository but absent on this PR. Under
+the user's no-manual-merge rule this is an external merge blocker, not permission
+to issue a direct merge, fabricate a check, or change the reviewed implementation.
+Await an actual external merge before selecting another implementation; preserve
+all read-only audits and local bookkeeping for that post-merge refresh.
+
+## Post-#17283 tangent contract selection
+
+#17283 merged externally at `ed4871fc5f5ae1a65cdeb845f3467a0a51ca50e2`
+from reviewed head `cb2e0c0b45358002986709b0da39d55da8a8966e`. The merge is
+contained in fetched main `b163f87617be59e490f39a812e436ec5769671b0`;
+all 33 final checks were acceptable, including both required gates. This
+supersedes the saved external-merge blocker. No manual merge occurred.
+
+The collision-checked inventory remains 1,506 implementation identities,
+4,788 occupied slots, 1,548 reported identities, 825 Rust singletons, zero
+collisions and zero unknown buckets across 15 established lanes. Five OCaml
+roots remain emerging. Parallel post-merge audits found no unowned gaps or
+selected-path overlap across eleven open PRs. The reconciled graph has 1,333
+owners and 2,382 dependency edges.
+
+Select `geometry-arc2d-center-tangent-neutral-contract` in a fresh main-based
+worktree. Its merged prerequisites and bounded four-vector corpus make it a
+small foundation for 14 pending descendants. Pin raw d/dt, signed sweep,
+rotation, zero sweep, finite output, strict absolute tolerance and closed
+transport. Native adoption, Perl/Swift API completion, Gradle input tracking,
+Haskell registry, Ruby digest and Python center-form work remain separate.

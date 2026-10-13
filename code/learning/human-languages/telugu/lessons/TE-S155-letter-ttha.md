@@ -61,11 +61,15 @@ whether the word or the printing is at fault.
 <!-- hl-writing-stage: observe-trace -->
 
 Follow the filmstrip slowly. Movement 1 sweeps around the broad circular body.
-Movement 2 curls upward through the separate top flourish. Finish by placing
-the inner dot as movement 3. Then write ట beside it and look at the two.
+Without lifting, movement 2 climbs a short way up the flourish's left arm, and
+movement 3 curls upward through the top flourish. Lift once, and finish by
+placing the inner dot as movement 4. The strip gives the short climb a panel of
+its own, so the three movements are numbered as four. Then write ట beside it
+and look at the two.
 
 This is one attested school-style order. Telugu handwriting varies, so keep
-the three movements distinct and let the round shape grow from them.
+the body and flourish as one unbroken run, make the single lift before the
+dot, and let the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-155, TE-SCRIPT-RECOG-152] -->
@@ -75,7 +79,7 @@ the three movements distinct and let the round shape grow from them.
 
 > జ్యేష్ఠం
 
-- [YOU TRACE: ఠ once, following all three numbered movements]
+- [YOU TRACE: ఠ once, following all four numbered movements on the strip]
 - [YOU COPY: ఠ twice without tracing, saying *ṭha* as you finish each one]
 - [YOU SAY: which of ట and ఠ has the breath after it]
 

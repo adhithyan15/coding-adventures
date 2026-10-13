@@ -14,6 +14,7 @@ concept_tag: FR-REPAS72-AIL
 prerequisites: [FR-C120-cerise, FR-C120-melon]
 sounds: []
 roots: []
+etymology_hook: "ail ← Latin allium 'garlic' — the botanists' Allium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C120-melon]
 <!-- hl-knowledge: introduces=[FR-LEX-C120-REPAS72-04]; assesses=[] -->
 
 **l'ail** — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ail** ← Latin *allium*, "garlic" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

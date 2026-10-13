@@ -13,7 +13,8 @@ gloss: "to insist"
 concept_tag: PT-VERB-INSISTIR
 prerequisites: [PT-C145-flutuar, PT-C145-perseguir]
 sounds: []
-roots: []
+roots: [sistere-latin]
+etymology_hook: "insistir ← Latin insistere 'to stand upon' — English insist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C145-perseguir]
 <!-- hl-knowledge: introduces=[PT-LEX-C145-VERBOS145-03]; assesses=[] -->
 
 **insistir** — "to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insistir** ← Latin *insistere*, "to stand upon" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

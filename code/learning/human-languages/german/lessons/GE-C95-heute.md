@@ -13,7 +13,8 @@ gloss: "today"
 concept_tag: GE-WO-HEUTE
 prerequisites: [GE-C94-immer, GE-C94-sofort]
 sounds: []
-roots: []
+roots: [dagaz]
+etymology_hook: "heute ← Old High German hiutu, from 'on this day' — Tag is hidden in its ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C94-sofort]
 <!-- hl-knowledge: introduces=[GE-LEX-C95-WO-01]; assesses=[] -->
 
 **heute** — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**heute** ← Middle High German *hiute* ← Old High German *hiutu*, "on this day", which ends in the old form of *Tag* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

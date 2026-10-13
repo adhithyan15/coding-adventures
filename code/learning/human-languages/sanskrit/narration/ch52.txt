@@ -15,7 +15,7 @@ One syllable, and until this lesson the track had no way to put two things in on
 च (ca) does not stand between the two things. It stands after the second one.
 अन्नं पानीयं च — annaṁ pānīyaṁ ca — food and water.
 English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Say the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair.
-च can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one.
+च (ca) can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one.
 
 What you've built.
 Two things in one sentence, for the first time.
@@ -45,7 +45,7 @@ Say "food and water", and then say where च (ca) stood in it. Then say mātula�
 
 You'll want to know: वा.
 वा (vā) — "or".
-Everything the last lesson said about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence.
+Everything the last lesson said about च (ca) is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence.
 पानीयं क्षीरं वा — pānīyaṁ kṣīraṁ vā — water or milk.
 So the two words share one slot, and swapping them swaps the meaning of the whole phrase without moving anything else:
 पानीयं क्षीरं च (ca) — water and milk पानीयं क्षीरं वा (vā) — water or milk.
@@ -70,7 +70,7 @@ Which of च (ca) and वा (vā) means "or"? Say "water or milk".
 Lesson 3 of 5.
 किन्तु (kintu) — but.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -86,6 +86,7 @@ Three joining words, two different habits. Say the rule to yourself once: च (c
 What you've built.
 Three joins: add, offer, contradict.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [your turn — say: bālaḥ gacchati kintu guruḥ na gacchati]

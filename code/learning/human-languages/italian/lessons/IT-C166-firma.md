@@ -13,7 +13,8 @@ gloss: "a signature"
 concept_tag: IT-COSE166-FIRMA
 prerequisites: [IT-C165-pericolo, IT-C165-sicurezza]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "firma — from the verb 'to sign' ← Latin firmare 'to make firm' — English firm (a company)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C165-sicurezza]
 <!-- hl-knowledge: introduces=[IT-LEX-C166-COSE166-01]; assesses=[] -->
 
 **la firma** — "a signature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**firma** is the noun of the verb for "to sign", which ← Latin *firmare*, "to make firm, to confirm". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

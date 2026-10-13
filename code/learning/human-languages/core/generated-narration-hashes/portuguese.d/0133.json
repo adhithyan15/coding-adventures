@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 133,
-  "sourceHash": "fnv1a64:b67e7b8e3d60bc09",
+  "sourceHash": "fnv1a64:68b06f262ecdcb5b",
   "lessonIds": [
     "PT-C133-descer",
     "PT-C133-alugar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch133.txt",
   "json": "portuguese/narration/ch133.json",
-  "textHash": "fnv1a64:9d182849b276be94",
-  "jsonHash": "fnv1a64:c468f2346a576ddc",
+  "textHash": "fnv1a64:54d2824987e0e1ec",
+  "jsonHash": "fnv1a64:12dc9491e9d6ddf4",
   "findings": []
 }

@@ -87,4 +87,4 @@ comparison simply makes the borrowed piece visible.
 [PAUSE 3s] What is *essere*’s participle? (**Stato**, borrowed from *stare*.)
 What can *sono stato* mean? (“I have **been**” or “I have **stayed**.”) Which
 language keeps the two verbs fully separate? (**Spanish**.) Which fuses them
-most? (**French**.) Next: the two-stem verb **andare**, “to go.”
+most? (**French**.) Next: the two-stem verb “to go.”

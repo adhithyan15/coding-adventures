@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 118,
-  "sourceHash": "fnv1a64:3502621cbb4cd208",
+  "sourceHash": "fnv1a64:8af77712cd2e16bc",
   "lessonIds": [
     "FR-C118-bijou",
     "FR-C118-bague",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch118.txt",
   "json": "french/narration/ch118.json",
-  "textHash": "fnv1a64:dc54c62d1fdad1b0",
-  "jsonHash": "fnv1a64:f32c98a4db8d098f",
+  "textHash": "fnv1a64:0b5e96c1e14b750f",
+  "jsonHash": "fnv1a64:bce1a4b5c9439cab",
   "findings": []
 }

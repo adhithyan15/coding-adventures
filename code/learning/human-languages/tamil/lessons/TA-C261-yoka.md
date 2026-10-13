@@ -14,7 +14,8 @@ romanization: "yōkā"
 concept_tag: TA-NALAM261-YOKA
 prerequisites: [TA-C261-carkkarai-noy, TA-C261-utarpayirci]
 sounds: []
-roots: []
+roots: [sanskrit-yoga]
+etymology_hook: "யோகா ← Sanskrit yoga 'yoking, joining' (CDIAL 10526), in its Hindi and English form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C261-utarpayirci]
 <!-- hl-knowledge: introduces=[TA-LEX-C261-NALAM261-03]; assesses=[] -->
 
 **யோகா** — *yōkā* — "yoga".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**யோகா** (*yōkā*) is Sanskrit *yoga*, "yoking, joining" (CDIAL 10526), in the form with final *-ā* used in Hindi and English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

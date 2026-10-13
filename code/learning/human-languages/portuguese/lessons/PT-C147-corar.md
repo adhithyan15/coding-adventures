@@ -13,7 +13,8 @@ gloss: "to blush"
 concept_tag: PT-VERB-CORAR
 prerequisites: [PT-C146-admirar, PT-C147-substituir]
 sounds: []
-roots: []
+roots: [color-latin]
+etymology_hook: "corar ← Latin colorare 'to colour': the -l- fell out — English colour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C147-substituir]
 <!-- hl-knowledge: introduces=[PT-LEX-C147-VERBOS147-02]; assesses=[] -->
 
 **corar** — "to blush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corar** ← Latin *colorare*, "to colour" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

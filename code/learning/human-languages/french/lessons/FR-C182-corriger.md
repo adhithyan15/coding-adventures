@@ -13,7 +13,8 @@ gloss: "to correct"
 concept_tag: FR-VERB-CORRIGER
 prerequisites: [FR-C181-gaspiller, FR-C181-depasser]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "corriger ← Latin corrigere 'to set straight' — English correct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C181-depasser]
 <!-- hl-knowledge: introduces=[FR-LEX-C182-VERBES182-01]; assesses=[] -->
 
 **corriger** — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corriger** ← Latin *corrigere*, "to set straight" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b31a3e0dbbbc6842",
+  "sourceHash": "fnv1a64:2747ebaad5b2b74e",
   "lessons": [
     {
       "id": "TA-C17-nanpakal-nalliravu",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8d5bf3f917f1352",
+      "sourceHash": "fnv1a64:5dfbfb78134a3a7b",
       "notice": null,
       "blocks": [
         {
@@ -169,6 +169,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All three parts are native Dravidian: naṭu, \"middle\" (DEDR 3584; Malayalam naṭu, Kannada naḍu), pakal, \"daytime\" (DEDR 3805; Malayalam pakal), and iravu, \"night\" (DEDR 2552; Malayalam iravu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -208,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -229,7 +240,7 @@
     {
       "id": "TA-S121-vowel-sign-u",
       "sequence": 631,
-      "title": "◌ு — one character, met inside words you already say",
+      "title": "◌ு (u) — one character, met inside words you already say",
       "headword": "ு",
       "romanization": "u",
       "gloss": "the single character ு — recognised inside words you already say",
@@ -252,7 +263,7 @@
           "Script you'll notice: ◌ு",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ு and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ு and Guided Practice."
       },
       "blocks": [
         {
@@ -297,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ு somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ு (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -324,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ு and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ு (u) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

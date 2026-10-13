@@ -13,7 +13,8 @@ gloss: "salty"
 concept_tag: FR-ADJ46-SALE
 prerequisites: [FR-C93-leger, FR-C93-sucre]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salé — 'salted', from the verb made from sel 'salt', Latin sal — English salt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C93-sucre]
 <!-- hl-knowledge: introduces=[FR-LEX-C94-ADJ46-01]; assesses=[] -->
 
 **salé** — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salé** is the past participle of the verb for "to salt", made from *sel*, "salt", ← Latin *sal*: salted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

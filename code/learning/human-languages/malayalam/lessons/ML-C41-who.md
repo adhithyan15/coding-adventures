@@ -33,30 +33,32 @@ reviews_of: [ML-C41-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ആര്
 <!-- hl-knowledge: introduces=[ML-LEX-C41-DEIXIS-05]; assesses=[] -->
 
 **ആര്** — *ārŭ* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **എവിടെ** *eviṭe*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+*ārŭ* opens with a long **ā-**. Do not hear it as the short **a-** of far that
+**അത്** *atŭ* and **അവിടെ** *aviṭe* share: it has nothing to do with distance.
+Tamil, next door, says *yār*; Malayalam's word is the same one with its first
+*y-* worn away.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ആര്" three times, picturing something different each time]
+- [YOU SAY: "ആര്" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *neñcŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 3s] What is *ārŭ*? (who? — asking about a person.) What sound does it start with, and does
-that sound mean near, far, or a question? (**e-** — ask.)
+[PAUSE 3s] What is *ārŭ*? (who? — asking about a person.) Does its long ā- mean far, like the
+short a- of *atŭ*? (**No** — it is the same word as Tamil's *yār*, its y- worn away; it asks
+about a person.)

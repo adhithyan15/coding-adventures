@@ -13,6 +13,9 @@ You'll want to know: களைப்பு.
 களைப்பு (kaḷaippu) — "tiredness".
 எனக்குக் களைப்பாக இருக்கிறது — "I feel tired", literally "to me it is tired-ly". The person sits in எனக்கு, "to me".
 
+The word, taken apart.
+களைப்பு (kaḷaippu) is the noun of kaḷai, "to be weary". It looks native, but DEDR has no entry for this verb (its kaḷai means "to weed"), so the origin is uncertain.
+
 What you've built.
 A first word for how the body feels.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for sleep, then the Tamil for tiredness.
 You'll want to know: சளி.
 சளி (caḷi) — "a cold", the kind with a runny nose.
 எனக்குச் சளி (caḷi) பிடித்திருக்கிறது — "I have caught a cold", literally "a cold has caught me".
+
+The word, taken apart.
+சளி (caḷi) is native Dravidian. DEDR 2409 lists Malayalam caḷi, "mucus".
 
 What you've built.
 An illness that catches you.
@@ -73,6 +79,9 @@ You'll want to know: இருமல்.
 இருமல் (irumal) — "a cough".
 இருமல் (irumal) இருக்கிறது — "there is a cough", the plain way to tell a doctor.
 
+The word, taken apart.
+இருமல் (irumal) is native Dravidian. DEDR 489 lists Malayalam irumal, "a cough". The entry also lists the verb irumu, "to cough".
+
 What you've built.
 A second complaint.
 
@@ -103,6 +112,9 @@ You'll want to know: சோர்வு.
 சோர்வு (cōrvu) — "weariness", the drained feeling after an illness.
 களைப்பு (kaḷaippu) is the tiredness of a long day; சோர்வு (cōrvu) lasts longer. சோர்வாக இருக்கிறது — "I feel worn out".
 
+The word, taken apart.
+சோர்வு (cōrvu) is native Dravidian (DEDR 2884). It is the noun of cōr, "to grow slack, to droop".
+
 What you've built.
 Two kinds of tired.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a cough, then the Tamil for weariness.
 You'll want to know: ஓய்வு.
 ஓய்வு (ōyvu) — "rest".
 ஓய்வு (ōyvu) எடுங்கள் — "please take some rest", what you say to someone who is unwell.
+
+The word, taken apart.
+ஓய்வு (ōyvu) is native Dravidian (DEDR 1057). It is the noun of ōy, "to cease, to grow tired, to rest".
 
 What you've built.
 Tired, a cold, a cough, weary, and rest.

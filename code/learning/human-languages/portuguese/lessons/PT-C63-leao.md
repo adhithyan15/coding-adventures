@@ -13,7 +13,8 @@ gloss: "a lion"
 concept_tag: PT-ANIMAIS4-LEAO
 prerequisites: [PT-C62-ovelha, PT-C62-cabra]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "leão ← Latin leo, leonis 'lion', from Greek leon — English lion shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C62-cabra]
 <!-- hl-knowledge: introduces=[PT-LEX-C63-ANIMAIS4-01]; assesses=[] -->
 
 **o leão** — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leão** ← Latin *leo, leonis*, "lion" (EtymDB 2.1) — inherited. Latin took it from Greek *leōn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

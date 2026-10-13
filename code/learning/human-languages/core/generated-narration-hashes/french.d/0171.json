@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 171,
-  "sourceHash": "fnv1a64:23b81239483c4571",
+  "sourceHash": "fnv1a64:4b06e8930d31a604",
   "lessonIds": [
     "FR-C171-volcan",
     "FR-C171-plaine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch171.txt",
   "json": "french/narration/ch171.json",
-  "textHash": "fnv1a64:f69b49f76f5d6b23",
-  "jsonHash": "fnv1a64:350827446c15438d",
+  "textHash": "fnv1a64:f7161d34a129dca3",
+  "jsonHash": "fnv1a64:289ebc8c449814a0",
   "findings": []
 }

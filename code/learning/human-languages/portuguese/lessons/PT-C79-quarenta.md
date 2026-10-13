@@ -13,7 +13,8 @@ gloss: "forty"
 concept_tag: PT-NUMEROS-QUARENTA
 prerequisites: [PT-C78-meias, PT-C78-cinto]
 sounds: []
-roots: []
+roots: [quadraginta-latin]
+etymology_hook: "quarenta ← Latin quadraginta 'forty' — English quarantine, forty days, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C78-cinto]
 <!-- hl-knowledge: introduces=[PT-LEX-C79-NUMEROS-01]; assesses=[] -->
 
 **quarenta** — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quarenta** ← Latin *quadraginta*, "forty" — inherited. EtymDB 2.1 traces it only to Old Portuguese *quareenta*; it derives Spanish *cuarenta* from *quadraginta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

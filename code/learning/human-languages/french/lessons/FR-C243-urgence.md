@@ -14,6 +14,7 @@ concept_tag: FR-SANTE243-URGENCE
 prerequisites: [FR-C243-pansement, FR-C243-urgences]
 sounds: []
 roots: []
+etymology_hook: "urgence — from Latin urgens 'pressing', from urgere 'to press' — English urgency"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C243-urgences]
 <!-- hl-knowledge: introduces=[FR-LEX-C243-SANTE243-03]; assesses=[] -->
 
 **l'urgence** — "an emergency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urgence** — built from the word for "urgent", ← Latin *urgens*, "pressing", from *urgere*, "to press" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

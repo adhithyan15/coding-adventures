@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a4d396535d73c14",
+  "sourceHash": "fnv1a64:26430a814b82994f",
   "lessons": [
     {
       "id": "PT-C03-eu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26f2b21b5fc97efd",
+      "sourceHash": "fnv1a64:6aff7f4fab0ecbac",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The verb ending already names the speaker, so Portuguese usually omits the pronoun: chamo-me (\"I call myself\") needs no eu — the -o of chamo is \"I.\" You add eu for emphasis or contrast:"
+              "text": "The verb ending already names the speaker, so Portuguese usually omits the pronoun: next lesson's \"I call myself\" needs no eu, because its verb ends in an -o that already means \"I.\" You add eu for emphasis or contrast:"
             },
             {
               "kind": "speech",
@@ -141,7 +141,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is eu from? (Ego — ego, egoist.) Why does Portuguese usually drop it? (The verb ending already says \"I.\") When do you keep it? (Emphasis / contrast.) Next: introduce yourself — me chamo."
+              "text": "What Latin word is eu from? (Ego — ego, egoist.) Why does Portuguese usually drop it? (The verb ending already says \"I.\") When do you keep it? (Emphasis / contrast.) Next: introduce yourself — \"I call myself.\""
             }
           ]
         }
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7d0d2b77da79854",
+      "sourceHash": "fnv1a64:68940feabb4ecd1a",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chamo alone = \"I call [someone]\"; me chamo = \"I call myself\" — reflexive. The pronoun shifts with the person: me chamo (I) becomes se chama (he/she/você). And eu is dropped — the -o ending already says \"I.\""
+              "text": "chamo alone = \"I call [someone]\"; me chamo = \"I call myself\" — reflexive. The pronoun shifts with the person, as the next lesson's question shows. And eu is dropped — the -o ending already says \"I.\""
             }
           ]
         },
@@ -293,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does me chamo literally mean, and its Latin root? (\"I call myself\"; clāmāre — claim/clamor.) How is Portuguese ch pronounced, vs Italian ch? (Portuguese sh; Italian hard k.) What's the noun-route alternative? (O meu nome é …, nome from nōmen.) Next: ask it back — Como se chama?"
+              "text": "What does me chamo literally mean, and its Latin root? (\"I call myself\"; clāmāre — claim/clamor.) How is Portuguese ch pronounced, vs Italian ch? (Portuguese sh; Italian hard k.) What's the noun-route alternative? (O meu nome é …, nome from nōmen.) Next: ask it back — \"what's your name?\""
             }
           ]
         }
@@ -312,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7efa9629b173496",
+      "sourceHash": "fnv1a64:119d694385436eae",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does Como se chama? literally ask? (\"How do you call yourself?\") Which everyday pronoun does the polite form use? (Você.) What \"how\" word is it built on? (Como from quōmodo.) Next: the warm reply — prazer."
+              "text": "What does Como se chama? literally ask? (\"How do you call yourself?\") Which everyday pronoun does the polite form use? (Você.) What \"how\" word is it built on? (Como from quōmodo.) Next: the warm reply — \"a pleasure.\""
             }
           ]
         }
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bc6dea69ededfdc",
+      "sourceHash": "fnv1a64:7fdcfeb6aeffa8e9",
       "notice": null,
       "blocks": [
         {
@@ -610,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. eu, me chamo, como se chama, prazer assemble into a real first meeting. This slots between your greetings (Ch. 1–2) and farewells (Ch. 4), so Portuguese now runs a whole conversation."
+              "text": "No new words. eu, me chamo, como se chama, prazer assemble into a real first meeting. This slots between your greetings (Ch. 1–2) and farewells (Ch. 4), so only the goodbye is still to come."
             }
           ]
         },
@@ -692,11 +692,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chain it all — greet, name, ask, how-are-you, goodbye: \"Olá! Me chamo … Como se chama? … Tudo bem? … Até logo!\"",
+              "instruction": "chain it all — greet, name, ask, pleasure, how-are-you: \"Olá! Me chamo … Como se chama? … Prazer! … Tudo bem?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye: \"Olá! Me chamo … Como se chama? … Tudo bem? … Até logo!\"]"
+              "source": "[YOU SAY: chain it all — greet, name, ask, pleasure, how-are-you: \"Olá! Me chamo … Como se chama? … Prazer! … Tudo bem?\"]"
             },
             {
               "kind": "repeat",
@@ -722,7 +722,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does Portuguese usually drop eu? (The verb ending says who.) What does me chamo literally mean, and its root? (\"I call myself\"; clāmāre.) What does prazer mean, and its Italian twin? (\"A pleasure\"; piacere.) Portuguese now runs greet becomes introduce becomes how-are-you becomes goodbye, end to end — the loop is closed."
+              "text": "Why does Portuguese usually drop eu? (The verb ending says who.) What does me chamo literally mean, and its root? (\"I call myself\"; clāmāre.) What does prazer mean, and its Italian twin? (\"A pleasure\"; piacere.) Portuguese now runs greet becomes introduce becomes how-are-you, end to end; the goodbyes come next."
             }
           ]
         }

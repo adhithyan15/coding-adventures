@@ -13,7 +13,8 @@ gloss: "wrong"
 concept_tag: PT-QUALIDADES124-ERRADO
 prerequisites: [PT-C124-serio, PT-C124-certo]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "errado ← Latin erratus 'gone astray', from errare 'to wander' — English error"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C124-certo]
 <!-- hl-knowledge: introduces=[PT-LEX-C124-QUALIDADES124-05]; assesses=[] -->
 
 **errado** — "wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**errado** ← Latin *erratus*, "gone astray" (EtymDB 2.1), from *errare*, "to wander" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

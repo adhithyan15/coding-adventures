@@ -47,7 +47,10 @@ it("removes support gently from a known phrase to a no-model two-sentence purpos
 
   expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
   expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
-    150, 120, 150, 150, 180, 180,
+    // The no-model checkpoint is also chapter 2's payoff, so after the writing
+    // attempt it recalls every atom the chapter introduces; that recall is
+    // what takes it from 180 s to 290 s. The writing steps themselves are unchanged.
+    150, 120, 150, 150, 180, 290,
   ]);
   for (let index = 1; index < lessons.length; index += 1) {
     expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);

@@ -13,7 +13,8 @@ gloss: "a lung"
 concept_tag: PT-SAUDE148-PULMAO
 prerequisites: [PT-C148-saude, PT-C148-cerebro]
 sounds: []
-roots: []
+roots: [pulmo-latin]
+etymology_hook: "pulmão ← Latin pulmo, pulmonis 'lung' — English pulmonary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C148-cerebro]
 <!-- hl-knowledge: introduces=[PT-LEX-C148-SAUDE148-03]; assesses=[] -->
 
 **o pulmão** — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulmão** ← Latin *pulmo, pulmonis*, "lung" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

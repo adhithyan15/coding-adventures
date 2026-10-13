@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 22,
-  "sourceHash": "fnv1a64:4d0e2ae2a2f2ce71",
+  "sourceHash": "fnv1a64:3b47141a37b013ce",
   "lessonIds": [
     "PT-C22-responder",
     "PT-C22-encontrar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "portuguese/narration/ch22.txt",
   "json": "portuguese/narration/ch22.json",
-  "textHash": "fnv1a64:a762992643ca150a",
-  "jsonHash": "fnv1a64:2659069e59de49b6",
+  "textHash": "fnv1a64:f7cde5da7dcff1b0",
+  "jsonHash": "fnv1a64:89e391336203d635",
   "findings": []
 }

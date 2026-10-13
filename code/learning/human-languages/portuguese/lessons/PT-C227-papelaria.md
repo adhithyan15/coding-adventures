@@ -13,7 +13,8 @@ gloss: "a stationer's"
 concept_tag: PT-COISAS227-PAPELARIA
 prerequisites: [PT-C226-tenis, PT-C226-vitoria]
 sounds: []
-roots: []
+roots: [papyrus-latin]
+etymology_hook: "papelaria — built from papel 'paper' + -aria 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C226-vitoria]
 <!-- hl-knowledge: introduces=[PT-LEX-C227-COISAS227-01]; assesses=[] -->
 
 **a papelaria** — "a stationer's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**papelaria** is built from *papel*, "paper", and *-aria*, "shop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

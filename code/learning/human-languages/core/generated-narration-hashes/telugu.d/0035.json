@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 35,
-  "sourceHash": "fnv1a64:1e423b14ffc05451",
+  "sourceHash": "fnv1a64:c8a718fa9d1fbd74",
   "lessonIds": [
     "TE-C35-kutumbam",
     "TE-C35-snehitudu"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "telugu/narration/ch35.txt",
   "json": "telugu/narration/ch35.json",
-  "textHash": "fnv1a64:dd1f691f72d6dafe",
-  "jsonHash": "fnv1a64:fb184306aae8803f",
+  "textHash": "fnv1a64:ea2f6f73f6bd2bc8",
+  "jsonHash": "fnv1a64:b74977ea8b1f1fde",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "maṭṭumallāmal"
 concept_tag: TA-KARANAM237-MATTUMALLAMAL
 prerequisites: [TA-C237-kurippaka, TA-C237-atarkup-patilaka]
 sounds: []
-roots: []
+roots: [dravidian-mattam-measure, dravidian-al-not]
+etymology_hook: "மட்டுமல்லாமல் — native: maṭṭum 'only' (DEDR 4660) + allāmal 'not being', from al- (DEDR 234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C237-atarkup-patilaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C237-KARANAM237-03]; assesses=[] -->
 
 **மட்டுமல்லாமல்** — *maṭṭumallāmal* — "not only (… but also)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மட்டுமல்லாமல்** (*maṭṭumallāmal*) is native: *maṭṭum*, "only" (DEDR 4660), and *allāmal*, "without being", from *al-*, "not to be" (DEDR 234): "not only".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

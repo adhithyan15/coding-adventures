@@ -14,7 +14,8 @@ romanization: "teṟku"
 concept_tag: TA-IDAM235-TERKU
 prerequisites: [TA-C235-ticai, TA-C235-vatakku]
 sounds: []
-roots: []
+roots: [dravidian-ten-south]
+etymology_hook: "தெற்கு — native Dravidian (DEDR 3449); Malayalam tekku 'south'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C235-vatakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C235-IDAM235-03]; assesses=[] -->
 
 **தெற்கு** — *teṟku* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தெற்கு** (*teṟku*) is native Dravidian. DEDR 3449 lists Malayalam *tekku*, "south".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS196-TAMBOR
 prerequisites: [PT-C196-guitarra, PT-C196-violino]
 sounds: []
 roots: []
+etymology_hook: "tambor — Old Portuguese atambor, probably from Arabic; the exact source is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C196-violino]
 <!-- hl-knowledge: introduces=[PT-LEX-C196-COISAS196-05]; assesses=[] -->
 
 **o tambor** — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tambor** — Old Portuguese said *atambor* (EtymDB 2.1). It is probably from Arabic, though which Arabic word is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

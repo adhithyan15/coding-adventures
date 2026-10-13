@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C39-niwa-type",
-              "prompt": "Type the Japanese for 'a garden'.",
+              "prompt": "Say the Japanese for 'a garden'.",
               "assesses": [
                 "JA-LEX-C39-HOME39-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C39-ofuro-type",
-              "prompt": "Type the Japanese for 'a bath'.",
+              "prompt": "Say the Japanese for 'a bath'.",
               "assesses": [
                 "JA-LEX-C39-HOME39-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C39-tatami-type",
-              "prompt": "Type the Japanese for 'a tatami mat'.",
+              "prompt": "Say the Japanese for 'a tatami mat'.",
               "assesses": [
                 "JA-LEX-C39-HOME39-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C39-tana-type",
-              "prompt": "Type the Japanese for 'a shelf'.",
+              "prompt": "Say the Japanese for 'a shelf'.",
               "assesses": [
                 "JA-LEX-C39-HOME39-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C39-hako-type",
-              "prompt": "Type the Japanese for 'a box'.",
+              "prompt": "Say the Japanese for 'a box'.",
               "assesses": [
                 "JA-LEX-C39-HOME39-05"
               ],

@@ -13,7 +13,8 @@ gloss: "far from"
 concept_tag: FR-LIEU188-LOIN-DE
 prerequisites: [FR-C187-depuis, FR-C188-pres-de]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "loin de — loin 'far' + de"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C188-pres-de]
 <!-- hl-knowledge: introduces=[FR-LEX-C188-LIEU188-02]; assesses=[] -->
 
 **loin de** — "far from".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loin de** — *loin*, "far", and *de*, "from".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

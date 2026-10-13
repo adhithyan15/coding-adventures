@@ -53,15 +53,15 @@ tell is the little accented **-dì** at the end of each.
 **dì** is Latin **diēs**, "day" — the same *-di* you'd hear in French *lundi*.
 Before it sits a **planet-god**:
 
-| Italian | ← Latin | planet | Spanish twin | French twin |
-|---|---|---|---|---|
-| **lunedì** | *lūnae diēs* | Moon | *lunes* | *lundi* |
-| **martedì** | *Martis diēs* | Mars | *martes* | *mardi* |
-| **mercoledì** | *Mercuriī diēs* | Mercury | *miércoles* | *mercredi* |
-| **giovedì** | *Jovis diēs* | Jupiter (*Giove*) | *jueves* | *jeudi* |
-| **venerdì** | *Veneris diēs* | Venus (*Venere*) | *viernes* | *vendredi* |
+| Italian ← Latin | planet | Spanish / French twins |
+|---|---|---|
+| **lunedì** ← *lūnae diēs* | Moon | *lunes* / *lundi* |
+| **martedì** ← *Martis diēs* | Mars | *martes* / *mardi* |
+| **mercoledì** ← *Mercuriī diēs* | Mercury | *miércoles* / *mercredi* |
+| **giovedì** ← *Jovis diēs* | Jupiter (*Giove*) | *jueves* / *jeudi* |
+| **venerdì** ← *Veneris diēs* | Venus (*Venere*) | *viernes* / *vendredi* |
 
-Line up the three sisters — *lunedì / lunes / lundi* — and you're looking at one
+Line up the three sisters — *lunedì / lunes / lundi* — and you have one
 Roman word, *lūnae diēs*, worn three ways. Italian and French keep the day-word
 at the **end** (*lune-dì*, *lun-di*); Spanish clipped it off entirely (*lunes*).
 And *giovedì* wears **Giove**, the Italian name of Jupiter — the same king-god
@@ -82,4 +82,4 @@ English honours as Thor in *Thursday*.
 [PAUSE 3s] What is the accented *-dì*, and from what Latin word? ("Day," ← *diēs*.)
 Which planet is *giovedì*? (Jupiter — *Giove*.) How do Italian/French treat the
 day-word versus Spanish? (IT/FR keep it at the end, *-dì/-di*; Spanish dropped it,
-*lunes*.) Next: the **weekend** — *sabato* and *domenica*.
+*lunes*.) Next: the **weekend** — Saturday and Sunday.

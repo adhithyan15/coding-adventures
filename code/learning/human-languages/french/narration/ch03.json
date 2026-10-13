@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:818af4511fcbe5a9",
+  "sourceHash": "fnv1a64:6addd505070973c9",
   "lessons": [
     {
       "id": "FR-C03-merci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:180dd18af6c48976",
+      "sourceHash": "fnv1a64:8639db364b3ce7ce",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "What everyday English word is merci a cousin of? (Mercy.) And its \"trade\" cousins? (Merchant, commerce, market, mercenary.) How does its metaphor differ from Spanish gracias? (merci = reward/mercy; gracias = grace.) Next: the reply — de rien."
+              "text": "What everyday English word is merci a cousin of? (Mercy.) And its \"trade\" cousins? (Merchant, commerce, market, mercenary.) How does its metaphor differ from Spanish gracias? (merci = reward/mercy; gracias = grace.) Next: the reply to a thank-you."
             }
           ]
         }
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4bbaada85d55c9ab",
+      "sourceHash": "fnv1a64:af817f05778d4737",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -779,7 +779,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf66bf5b130a7c33",
+      "sourceHash": "fnv1a64:e87be14bf91a4cbb",
       "notice": null,
       "blocks": [
         {
@@ -844,7 +844,7 @@
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "(Très) bien, merci means (very) well, thank you.",
+                "Bien, merci means well, thank you.",
                 "Ça va means fine / okay (\"it goes\").",
                 "Comme ci, comme ça means so-so.",
                 "Pas mal means not bad."
@@ -935,7 +935,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87ec839a34489de9",
+      "sourceHash": "fnv1a64:246dec51026062dd",
       "notice": null,
       "blocks": [
         {
@@ -966,7 +966,7 @@
             },
             {
               "kind": "speech",
-              "text": "— Bonjour. Comment allez-vous? — Très bien, merci. Et vous? — Comme ci, comme ça. — [later, after a small favour] — Merci! — De rien."
+              "text": "— Bonjour. Comment allez-vous? — Bien, merci. Et vous? — Comme ci, comme ça. — [later, after a small favour] — Merci! — De rien."
             },
             {
               "kind": "speech",
@@ -1071,7 +1071,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb carries French \"how are you?\", and how does its metaphor differ from Spanish's? (aller, \"to go\" — how does it go? — vs estar, \"to stand.\") What does de rien literally say, and its Spanish twin? (\"Of nothing\"; de nada.) Next chapter: farewells — au revoir, à bientôt, bonne journée."
+              "text": "Which verb carries French \"how are you?\", and how does its metaphor differ from Spanish's? (aller, \"to go\" — how does it go? — vs estar, \"to stand.\") What does de rien literally say, and its Spanish twin? (\"Of nothing\"; de nada.) Next chapter: farewells."
             }
           ]
         }

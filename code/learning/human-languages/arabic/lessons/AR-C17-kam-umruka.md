@@ -6,6 +6,7 @@ sequence: 610
 chapter: 17
 type: phrase
 headword: كم عمرك؟
+romanization: "kam ʿumruka"
 gloss: how old are you? — literally "how much [is] your lifetime?"; age as a NOUN you possess, not a verb you conjugate
 concept_tag: AR-AGE
 prerequisites: [AR-C16-al-saa]
@@ -55,8 +56,8 @@ expressed as a possessed **noun**: "**your** ʿumr," "**my** ʿumr."
 
 > **كم عمرك؟** — "How old are you?" (to a man) — literally "**how much [is]
   your** *ʿumr*." (*kam ʿumruka?*)
-> **عمري عشرون سنة.** — "I am twenty years old." — literally "**my** *ʿumr*
-  [is] twenty years." (*ʿumrī ʿishrūna sana*.)
+
+The answer is *ʿumrī*, "my *ʿumr*," then the years; it arrives with the numbers.
 
 Notice there's **no verb "to be" at all** in the present tense here — Arabic
 simply juxtaposes two nouns ("my age" / "twenty years"), exactly the way it
@@ -72,7 +73,7 @@ noun-quantity, stated without any verb at all.
 [PAUSE 1s]
 - [YOU SAY: "ʿumr" — age, lifetime, life span]
 - [YOU SAY: "kam ʿumruka?" — how old are you? (to a man)]
-- [YOU SAY: "ʿumrī ʿishrūna sana" — my age is twenty years, no verb at all]
+- [YOU SAY: "ʿumrī" — my age]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->

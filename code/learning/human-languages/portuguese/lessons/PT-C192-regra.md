@@ -13,7 +13,8 @@ gloss: "a rule"
 concept_tag: PT-COISAS192-REGRA
 prerequisites: [PT-C191-sogro, PT-C192-mentira]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "regra ← Latin regula 'ruler, rule', from regere — English rule and regular"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C192-mentira]
 <!-- hl-knowledge: introduces=[PT-LEX-C192-COISAS192-02]; assesses=[] -->
 
 **a regra** — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regra** ← Latin *regula*, "ruler, rule" (EtymDB 2.1), from *regere*, "to guide" — inherited. *regula* lost a vowel and its *-l-* became *-r-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

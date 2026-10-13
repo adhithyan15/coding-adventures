@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "How the Body Feels",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8912291aba6bd290",
+  "sourceHash": "fnv1a64:0aa39af3fc028fa6",
   "lessons": [
     {
       "id": "TA-C61-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80ca3d35ac5f08ae",
+      "sourceHash": "fnv1a64:8554d8f785a4b0bd",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பசி (pasi) is native Dravidian. DEDR 3825 lists Malayalam pai and Kannada pasi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfa43aeaf1d881fc",
+      "sourceHash": "fnv1a64:eac85598c2da5a0b",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாகம் (tākam) is a loan from Sanskrit dāha, \"burning, fever\" (CDIAL 6321). The burning in the throat became Tamil's word for thirst."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90327a583b901e3b",
+      "sourceHash": "fnv1a64:249d1c224706a7e9",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +362,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூக்கம் (tūkkam) is native Dravidian. DEDR 3376 lists Malayalam tūṅṅuka, \"to hang, be drowsy\". It comes from tūṅku, \"to hang, to droop, to sleep\": sleep is the head drooping."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +383,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e3801714fe03a19",
+      "sourceHash": "fnv1a64:3518299cf115d0ff",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +612,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28dca55bf04abe9a",
+      "sourceHash": "fnv1a64:1e00a0aebe2a1e25",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +653,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலி (vali) is native Dravidian. DEDR 5281 lists Malayalam valayuka, \"to be distressed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +674,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +732,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

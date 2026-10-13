@@ -13,7 +13,8 @@ gloss: "silver"
 concept_tag: IT-COSE201-ARGENTO
 prerequisites: [IT-C201-ferro, IT-C201-oro]
 sounds: []
-roots: []
+roots: [argentum-latin]
+etymology_hook: "argento ← Latin argentum 'silver' — chemists write Ag; Argentina is named after it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C201-oro]
 <!-- hl-knowledge: introduces=[IT-LEX-C201-COSE201-05]; assesses=[] -->
 
 **l'argento** — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**argento** ← Latin *argentum*, "silver" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

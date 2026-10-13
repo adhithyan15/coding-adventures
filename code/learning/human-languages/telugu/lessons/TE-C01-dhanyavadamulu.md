@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TE-C01-namaskaram]
 ---
 
-# ధన్యవాదములు (dhanyavādamulu) — "thank you," utterances of "worthy"
+# Dhanyavādamulu — "thank you," utterances of "worthy"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -39,15 +39,14 @@ plural that turns "a thanks" into "thanks."
 ## The letters in this word
 <!-- hl-knowledge: introduces=[TE-LEX-C01-DHANYAVADAMULU-01]; assesses=[] -->
 
-*(Skim if you read Telugu.)*
+*(Skim if you read Telugu.)* Three of its letters today:
 
 - **ధ** = "dha" — an **aspirated** *d* (a puff of breath after it).
-- **న్య** = "nya" — **న** (na) vowel-stripped and stacked with **య** (ya).
-- **వా** = "vā" · **ద** = "da" · **ము** = "mu" · **లు** = "lu."
+- **వ** = "va."
+- **ద** = "da" — a plain *d*, with no puff. Set it beside **ధ** and compare.
 
-Left to right: **ధ · న్య · వా · ద · ము · లు** = *dha-nya-vā-da-mu-lu* →
-
-> **ధన్యవాదములు** = **dhanyavādamulu**
+The rest — a stacked *nya*, a long *ā*, and the ending *-mulu* — arrives over
+this chapter, and the whole written word appears near its end.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-DHANYAVADAMULU-02]; assesses=[] -->
@@ -63,7 +62,7 @@ the same one inside Hindi *dhanyavād* and Kannada *dhanyavāda*.
 
 | Language | "Thanks" | Note |
 |---|---|---|
-| **Telugu** | *dhanyavādamulu* (ధన్యవాదములు) | **Sanskrit** stem + Telugu plural |
+| **Telugu** | *dhanyavādamulu* | **Sanskrit** stem + Telugu plural |
 | Kannada | *dhanyavāda* (ಧನ್ಯವಾದ) | Sanskrit — same stem |
 | Hindi | *dhanyavād* (धन्यवाद) | Sanskrit — same stem |
 | Tamil | *naṉṟi* (நன்றி) | **native** ("goodness") |
@@ -84,9 +83,9 @@ the same way. Bank the idea: in Telugu, grammar is mostly **suffixes**.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-New: ధ *dha* (aspirated *d*), the conjunct న్య (*na*
-stacked with *ya*), then వా·ద·ము·లు. Read
-ధ·న్య·వా·ద·ము·లు → *dhanyavādamulu*.
+New: ధ *dha*, an aspirated *d* with a puff of breath, beside plain ద *da*.
+Say the six beats: *dha-nya-vā-da-mu-lu*. In *nya* the *n* has no vowel of its
+own; it glides straight into *ya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-DHANYAVADAMULU-01, TE-ETYMON-C01-DHANYAVADAMULU-02, TE-GRAMMAR-C01-DHANYAVADAMULU-03] -->
@@ -99,7 +98,8 @@ stacked with *ya*), then వా·ద·ము·లు. Read
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-DHANYAVADAMULU-01, TE-ETYMON-C01-DHANYAVADAMULU-02, TE-GRAMMAR-C01-DHANYAVADAMULU-03] -->
 
-[PAUSE 3s] Read **ధన్యవాదములు**. What is Sanskrit in it, and what is Telugu?
+[PAUSE 3s] Which carries the puff of breath, **ధ** or **ద**? (**ధ**, *dha*.)
+What is Sanskrit in *dhanyavādamulu*, and what is Telugu?
 (*dhanya-vāda* is Sanskrit; the plural *-mulu* is Telugu.) What does
 "agglutinative" mean for how Telugu builds words? (It glues endings onto a
 stem.)

@@ -13,7 +13,8 @@ gloss: "an appointment"
 concept_tag: IT-READ139-LAPPUNTAMENTO
 prerequisites: [IT-C139-laffitto, IT-C139-la-ricevuta]
 sounds: []
-roots: []
+roots: [punctum-latin]
+etymology_hook: "appuntamento — from appuntare 'to fix to a point', built on punto ← Latin punctum"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [IT-C139-la-ricevuta]
 
 The message says **Appuntamento: lunedì, ore 10.** Your appointment is on Monday
 at ten: be there before ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**appuntamento** — built from *appuntare*, "to fix to a point", with *-mento*. *appuntare* is built on *punto*, "a point" ← Latin *punctum*. (EtymDB 2.1 records *punto*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

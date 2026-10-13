@@ -79,7 +79,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C14-ichi-recall",
               "prompt": "Which part of ichido is the number, and what number is it?",
               "assesses": [
@@ -228,7 +229,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -261,6 +262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-go-recall",
               "prompt": "Which kanji have you been able to write since chapter five, and what number is it?",
               "assesses": [
@@ -364,7 +366,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -378,7 +380,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "に; then hide it and write it again from the meaning",
+              "instruction": "に (ni); then hide it and write it again from the meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -406,6 +408,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-ni-recall",
               "prompt": "Write one, two and five in hiragana, in that order.",
               "assesses": [
@@ -519,7 +522,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -561,6 +564,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-san-recall",
               "prompt": "How many beats does san have, and what is the second one?",
               "assesses": [
@@ -706,7 +710,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -739,6 +743,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C14-yon-recall",
               "prompt": "Of shi and yon, which one is the reading Japanese borrowed with the sign, and which is the native word?",
               "assesses": [
@@ -865,6 +870,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R14-one-to-five-run",
               "prompt": "Write one to five in hiragana, in order.",
               "assesses": [
@@ -888,6 +894,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R14-one-to-five-owned",
               "prompt": "Two of these five were already yours before the chapter began. Which two, and where had you met each?",
               "assesses": [

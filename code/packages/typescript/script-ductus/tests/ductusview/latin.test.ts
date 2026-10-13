@@ -38,6 +38,17 @@ const EXPECTED: Record<string, { frames: number; lifts: number; summary: string 
   "ó": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
   "ú": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
   "ü": { frames: 4, lifts: 2, summary: "3 strokes · 2 pen lifts · 4 movements" },
+  v: { frames: 1, lifts: 0, summary: "one unbroken stroke · 1 movement" },
+  m: { frames: 3, lifts: 0, summary: "one unbroken stroke · 3 movements" },
+  R: { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "è": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ê": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ë": { frames: 4, lifts: 2, summary: "3 strokes · 2 pen lifts · 4 movements" },
+  "ï": { frames: 3, lifts: 2, summary: "3 strokes · 2 pen lifts · 3 movements" },
+  "ä": { frames: 4, lifts: 2, summary: "3 strokes · 2 pen lifts · 4 movements" },
+  "ö": { frames: 3, lifts: 2, summary: "3 strokes · 2 pen lifts · 3 movements" },
+  "ē": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ç": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
 };
 
 describe("Latin filmstrips", () => {
@@ -74,8 +85,8 @@ describe("Latin filmstrips", () => {
     expect(ductusFor("ñ", "latin")).toBeUndefined();
   });
 
-  it("draws the accented vowels and ü from their precomposed glyphs only", () => {
-    for (const glyph of ["á", "é", "í", "ó", "ú", "ü"]) {
+  it("draws the marked letters from their precomposed glyphs only", () => {
+    for (const glyph of ["á", "é", "í", "ó", "ú", "ü", "è", "ê", "ë", "ï", "ä", "ö", "ē", "ç"]) {
       expect(ductusFor(glyph, "latin"), glyph).toBeDefined();
       expect(ductusFor(glyph.normalize("NFD"), "latin"), glyph).toBeUndefined();
     }

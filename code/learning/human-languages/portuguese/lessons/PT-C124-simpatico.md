@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES124-SIMPATICO
 prerequisites: [PT-C123-aborrecido, PT-C123-divertido]
 sounds: []
 roots: []
+etymology_hook: "simpático ← French sympathique, from Greek sympatheia 'fellow feeling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C123-divertido]
 <!-- hl-knowledge: introduces=[PT-LEX-C124-QUALIDADES124-01]; assesses=[] -->
 
 **simpático** — "nice, friendly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simpático** ← French *sympathique*, "likeable" (EtymDB 2.1) — borrowed. Behind it is Greek *sympatheia*, "fellow feeling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

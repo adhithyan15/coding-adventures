@@ -13,7 +13,8 @@ gloss: "a thorn"
 concept_tag: PT-COISAS250-ESPINHO
 prerequisites: [PT-C250-ramo, PT-C250-tronco]
 sounds: []
-roots: []
+roots: [spina-latin]
+etymology_hook: "espinho ← Latin spinus 'thorn bush', from spina 'thorn' — English spine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C250-tronco]
 <!-- hl-knowledge: introduces=[PT-LEX-C250-COISAS250-05]; assesses=[] -->
 
 **o espinho** — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espinho** ← Latin *spinus*, "thorn bush" (EtymDB 2.1), from *spina*, "thorn" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

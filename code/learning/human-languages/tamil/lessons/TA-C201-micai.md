@@ -14,7 +14,8 @@ romanization: "mīcai"
 concept_tag: TA-NALAM201-MICAI
 prerequisites: [TA-C201-nerri, TA-C201-tati]
 sounds: []
-roots: []
+roots: [dravidian-miicai-moustache]
+etymology_hook: "மீசை — native Dravidian (DEDR 4879); Malayalam mīśa, Kannada mīse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C201-tati]
 <!-- hl-knowledge: introduces=[TA-LEX-C201-NALAM201-03]; assesses=[] -->
 
 **மீசை** — *mīcai* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மீசை** (*mīcai*) is native Dravidian. DEDR 4879 lists Malayalam *mīśa* and Kannada *mīse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

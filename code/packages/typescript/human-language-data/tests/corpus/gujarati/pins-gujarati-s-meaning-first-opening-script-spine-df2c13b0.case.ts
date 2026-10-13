@@ -36,8 +36,18 @@ it("pins Gujarati's meaning-first opening script spine", () => {
 
   const meaningFirst = opening[0]!;
   expect(meaningFirst.realization.romanization).toBe("namaste");
-  expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking"]);
-  expect(meaningFirst.body).not.toMatch(/\p{Script=Gujarati}/u);
+  // Meaning first still holds: the greeting is heard, said and explained with
+  // no Gujarati on the page. The one exception is the lesson's detachable
+  // first writing microstep, which shows a single sign of the (romanized)
+  // headword for a finger trace and asks for no reading.
+  expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking", "writing"]);
+  const firstTrace = meaningFirst.blocks.filter((block) => block.type === "writing");
+  expect(firstTrace.map((block) => block.writingStage)).toEqual(["observe-trace"]);
+  expect([...firstTrace[0]!.markdown.matchAll(/\p{Script=Gujarati}/gu)].map((match) => match[0])).toEqual(["ન"]);
+  expect(meaningFirst.realization.headword).toContain("ન");
+  for (const block of meaningFirst.blocks.filter((block) => block.type !== "writing")) {
+    expect(`${block.title}\n${block.markdown}`).not.toMatch(/\p{Script=Gujarati}/u);
+  }
 
   const courtesy = ordered.slice(12, 27);
   expect(courtesy.map((lesson) => lesson.realization.lessonId)).toEqual([

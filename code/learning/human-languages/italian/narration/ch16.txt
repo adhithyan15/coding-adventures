@@ -83,7 +83,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is essere’s participle? (Stato, borrowed from stare.) What can sono stato mean? (“I have been” or “I have stayed.”) Which language keeps the two verbs fully separate? (Spanish.) Which fuses them most? (French.) Next: the two-stem verb andare, “to go.”
+What is essere’s participle? (Stato, borrowed from stare.) What can sono stato mean? (“I have been” or “I have stayed.”) Which language keeps the two verbs fully separate? (Spanish.) Which fuses them most? (French.) Next: the two-stem verb “to go.”
 
 
 Lesson 3 of 4.
@@ -140,6 +140,9 @@ sei stato, you have been / stayed.
 è stato, he has been / stayed.
 siamo stati, we have been / stayed.
 The plural stati is the first clue: with essere, the participle describes the subject and therefore agrees with it.
+
+The phrase, taken apart.
+sono is a form of essere from Vulgar Latin essere, from Latin esse, "to be". Where andare came from is not recorded in EtymDB 2.1.
 
 Grammar Lens: motion, change, and agreement.
 Many verbs of motion or change of state take essere: andare (go), venire (come), arrivare (arrive), partire (leave), nascere (be born), morire (die), diventare (become), plus essere and stare.

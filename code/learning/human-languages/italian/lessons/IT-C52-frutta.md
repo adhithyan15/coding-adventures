@@ -13,7 +13,8 @@ gloss: "fruit"
 concept_tag: IT-FRUTTA-FRUTTA
 prerequisites: [IT-C51-sale, IT-C51-pollo]
 sounds: []
-roots: []
+roots: [fructus-latin]
+etymology_hook: "frutta ← Latin fructus 'produce' — English fruit is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C51-pollo]
 <!-- hl-knowledge: introduces=[IT-LEX-C52-FRUTTA-01]; assesses=[] -->
 
 **la frutta** — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frutta** ← Late Latin *fructa*, from Latin *fructus*, "produce, enjoyment" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

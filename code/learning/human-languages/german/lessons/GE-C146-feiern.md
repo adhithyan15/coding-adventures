@@ -13,7 +13,8 @@ gloss: "to celebrate"
 concept_tag: GE-VERB-FEIERN
 prerequisites: [GE-C146-erklaeren, GE-C146-fehlen]
 sounds: []
-roots: []
+roots: [feriae-latin]
+etymology_hook: "feiern ← Old High German fīrōn, from Latin fēriae 'holidays' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C146-fehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C146-VERB146-03]; assesses=[] -->
 
 **feiern** — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feiern** ← Middle High German *vīren* ← Old High German *fīrōn*, from Latin *fēriae*, "holidays" (EtymDB 2.1) — borrowed. English *fair*, a market day, shares the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

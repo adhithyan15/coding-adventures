@@ -13,7 +13,8 @@ gloss: "to pour, to water"
 concept_tag: GE-VERB-GIESSEN
 prerequisites: [GE-C181-fotografieren, GE-C181-fruehstuecken]
 sounds: []
-roots: []
+roots: [germanic-geutana]
+etymology_hook: "gießen ← Old High German giozan ← Proto-Germanic *geutaną 'to pour' — English ingot shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C181-fruehstuecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C181-VERB181-03]; assesses=[] -->
 
 **gießen** — "to pour, to water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gießen** ← Middle High German *giezen* ← Old High German *giozan*, "to pour" (EtymDB 2.1), from Proto-Germanic *\*geutaną* — inherited. English *ingot*, poured metal, shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tāṭi"
 concept_tag: TA-NALAM201-TATI
 prerequisites: [TA-C200-urincu, TA-C201-nerri]
 sounds: []
-roots: []
+roots: [tamil-taadi-beard]
+etymology_hook: "தாடி — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C201-nerri]
 <!-- hl-knowledge: introduces=[TA-LEX-C201-NALAM201-02]; assesses=[] -->
 
 **தாடி** — *tāṭi* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **தாடி** (*tāṭi*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

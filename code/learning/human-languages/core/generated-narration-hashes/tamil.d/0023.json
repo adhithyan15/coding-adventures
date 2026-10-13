@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 23,
-  "sourceHash": "fnv1a64:f0896304118d2c99",
+  "sourceHash": "fnv1a64:03daa276154f22ae",
   "lessonIds": [
     "TA-C23-naal",
     "TA-C23-day-family-register",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch23.txt",
   "json": "tamil/narration/ch23.json",
-  "textHash": "fnv1a64:64c0e75d1fe16f94",
-  "jsonHash": "fnv1a64:56d42b475d45aaf0",
+  "textHash": "fnv1a64:faac0024687eaa15",
+  "jsonHash": "fnv1a64:b11a92021fccad32",
   "findings": []
 }

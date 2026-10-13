@@ -14,6 +14,7 @@ concept_tag: IT-COSE229-FANGO
 prerequisites: [IT-C229-pianura, IT-C229-sasso]
 sounds: []
 roots: []
+etymology_hook: "fango — usually traced to Gothic fani 'mud' — English fen is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C229-sasso]
 <!-- hl-knowledge: introduces=[IT-LEX-C229-COSE229-03]; assesses=[] -->
 
 **il fango** — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fango** is usually traced to Gothic *fani*, "mud" — borrowed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

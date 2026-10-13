@@ -15,16 +15,21 @@
       "gloss": "repair only the mistaken mark in an already-taught fictional date field",
       "script": "gurmukhi",
       "modality": "pen",
-      "derivedModality": "voice",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:55cdbe9fdd35c68e",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {

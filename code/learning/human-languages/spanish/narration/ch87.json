@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-sintesis-decirlo-una-vez-book",
               "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-sintesis-decirlo-una-vez-meal",
               "prompt": "Answer yes to Haces la comida, without repeating the noun.",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-sintesis-decirlo-una-vez-people",
               "prompt": "Somebody says Te quiero. Say the answering half.",
               "assesses": [
@@ -193,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-sintesis-decirlo-una-vez-point",
               "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
               "assesses": [

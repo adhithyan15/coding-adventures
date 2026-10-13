@@ -9,14 +9,16 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block"
+      "writing-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:0553a98ab906248c",
+    "sourceHash": "fnv1a64:1344e8c57f6319a8",
     "detachableSegments": [
       "Writing — timed assessment production"
     ],

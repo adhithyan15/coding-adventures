@@ -79,7 +79,7 @@ agree by confirming *that* is how things are.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->
 
-[PAUSE 3s] Read **അതെ**. What everyday word is it built from, and so what does
+[PAUSE 3s] [YOU READ: **അതെ**] What everyday word is it built from, and so what does
 "yes" literally assert? (*atŭ*, "that" — so "yes" = "that [is so]".) Where does
 the "e" vowel sign sit, and where is it read? (Written before the consonant,
 read after.)

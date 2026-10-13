@@ -14,6 +14,7 @@ concept_tag: IT-COSE202-RACCHETTA
 prerequisites: [IT-C201-oro, IT-C201-argento]
 sounds: []
 roots: []
+etymology_hook: "racchetta ← French raquette, traced to Arabic raha 'palm of the hand' — English racket"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C201-argento]
 <!-- hl-knowledge: introduces=[IT-LEX-C202-COSE202-01]; assesses=[] -->
 
 **la racchetta** — "a racket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**racchetta** ← French *raquette*, "a racket" — borrowed; EtymDB 2.1 traces the French word to Arabic *raha*, "the palm of the hand". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

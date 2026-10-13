@@ -16,15 +16,15 @@ prerequisites: [HI-W06-two-sentence-card]
 sounds: [devanagari-conjunct, devanagari-matra, devanagari-top-bar]
 roots: [sanskrit-namas, hindi-word-spacing]
 duration:
-  max_seconds: 180
+  max_seconds: 290
 requires:
-  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01]
+  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01, HI-CONCEPT-C02-NAAM-01, HI-CONCEPT-C02-MERAA-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-PRACTICE-01, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W03-PREPOSED-I-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02, HI-CONCEPT-W04-WRITE-MERA-NAAM-01, HI-CONCEPT-W05-VIRAMA-NAMASTE-01, HI-CONCEPT-W05-CONJUNCTS-01, HI-CONCEPT-W05-CONJUNCTS-02]
 introduces:
   knowledge: []
 practises:
-  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01]
-skills: [writing]
-modes: [presentational]
+  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01, HI-CONCEPT-C02-NAAM-01, HI-CONCEPT-C02-MERAA-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-PRACTICE-01, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W03-PREPOSED-I-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02, HI-CONCEPT-W04-WRITE-MERA-NAAM-01, HI-CONCEPT-W05-VIRAMA-NAMASTE-01, HI-CONCEPT-W05-CONJUNCTS-01, HI-CONCEPT-W05-CONJUNCTS-02]
+skills: [writing, speaking]
+modes: [presentational, interpersonal]
 strands: [meaning-output, language-focus]
 register: neutral
 variety: standard-hindi
@@ -43,7 +43,7 @@ Close the preceding lesson. Wait ten seconds. Keep only this purpose cue:
 There is no Devanagari model and no romanized answer.
 
 ## Writing — independent delayed checkpoint
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01, HI-CONCEPT-W04-WRITE-MERA-NAAM-01] -->
 <!-- hl-writing-stage: connected-composition -->
 
 Write two sentences from the purpose cue. Do not reopen the model until the
@@ -55,6 +55,23 @@ attempt is complete. Then compare in four separate passes:
 4. one **।** after each sentence.
 
 Choose the first differing pass, repair only that dimension, and stop.
+
+## Guided Practice — the introduction, said back
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-NAAM-01, HI-CONCEPT-C02-MERAA-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-PRACTICE-01] -->
+
+- Give your name, ask theirs, say you're pleased.
+  (*Merā nām … hai. Āpkā nām kyā hai? Āpse milkar khushī huī.*)
+- English cousins of *nām*, *merā*, *hai*, *kyā*? (**Name**, **my**, **is**, **what**.)
+- Why *merā*, not *merī*? (*Nām* is masculine.) Where does *hai* go? (**Last.**)
+- Which "you" for a stranger? (***Āp***.) And *khushī*'s origin? (**Persian.**)
+
+## Script — the pieces you wrote
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W03-PREPOSED-I-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02, HI-CONCEPT-W05-VIRAMA-NAMASTE-01, HI-CONCEPT-W05-CONJUNCTS-01, HI-CONCEPT-W05-CONJUNCTS-02] -->
+
+- *Mātrā* means? What does one do? ("**A measure**"; it **replaces** the inherent vowel.)
+- Where do **ा**, **े** and **ि** sit? (**Right**, **above** — **ि** before, said after.)
+- Which of र and स has no spine? (**र** — conjuncts give it a hook or stroke.)
+- What does **्** do? (**Stops** the vowel: the *halant*.) What does स lose in **स्त**? (**Its spine.**)
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->

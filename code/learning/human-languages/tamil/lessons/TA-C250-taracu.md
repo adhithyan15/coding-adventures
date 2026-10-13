@@ -14,7 +14,8 @@ romanization: "tarācu"
 concept_tag: TA-PORUL250-TARACU
 prerequisites: [TA-C250-uncal, TA-C250-alamaram]
 sounds: []
-roots: []
+roots: [persian-tarazu]
+etymology_hook: "தராசு ← Persian tarāzū 'balance, scales', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C250-alamaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C250-PORUL250-04]; assesses=[] -->
 
 **தராசு** — *tarācu* — "a pair of scales, a balance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தராசு** (*tarācu*) is a loan from Persian *tarāzū*, "balance, scales", which reached Tamil through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

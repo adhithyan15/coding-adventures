@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI105-PANTALONI
 prerequisites: [IT-C105-giacca, IT-C105-camicia]
 sounds: []
 roots: []
+etymology_hook: "pantaloni ← French pantalon, from Pantalone, a stage character — English pants"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C105-camicia]
 <!-- hl-knowledge: introduces=[IT-LEX-C105-VESTITI105-04]; assesses=[] -->
 
 **i pantaloni** — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pantaloni** ← French *pantalon* — borrowed; the French word came from *Pantalone*, a stage character. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

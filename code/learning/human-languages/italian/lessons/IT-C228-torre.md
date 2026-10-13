@@ -13,7 +13,8 @@ gloss: "a tower"
 concept_tag: IT-COSE228-TORRE
 prerequisites: [IT-C228-grattacielo, IT-C228-castello]
 sounds: []
-roots: []
+roots: [turris-latin]
+etymology_hook: "torre ← Latin turris 'a tower' — English tower and turret are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C228-castello]
 <!-- hl-knowledge: introduces=[IT-LEX-C228-COSE228-03]; assesses=[] -->
 
 **la torre** — "a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**torre** ← Latin *turris*, "a tower" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

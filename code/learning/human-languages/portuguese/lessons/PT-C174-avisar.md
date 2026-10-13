@@ -14,6 +14,7 @@ concept_tag: PT-VERB-AVISAR
 prerequisites: [PT-C174-aumentar, PT-C174-diminuir]
 sounds: []
 roots: []
+etymology_hook: "avisar ← French aviser 'to perceive, to advise' — English advise is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C174-diminuir]
 <!-- hl-knowledge: introduces=[PT-LEX-C174-VERBOS174-04]; assesses=[] -->
 
 **avisar** — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avisar** ← French *aviser*, "to perceive, to advise" — borrowed. EtymDB 2.1 links it to Medieval Latin *advisare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

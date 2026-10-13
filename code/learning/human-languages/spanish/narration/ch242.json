@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comisteis-er",
               "prompt": "You all ate.",
               "assesses": [
@@ -182,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comisteis-strong",
               "prompt": "You all had. (tener)",
               "assesses": [
@@ -200,6 +202,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comisteis-done",
               "prompt": "Is any part of the preterite still owed to you?",
               "assesses": [

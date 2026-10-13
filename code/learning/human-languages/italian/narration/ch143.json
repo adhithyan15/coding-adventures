@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 143,
   "title": "To phone, To discuss, To quarrel, To apologise, To forgive",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d72fc560576938ad",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:84feb93c04e26e42",
   "lessons": [
     {
       "id": "IT-C143-telefonare",
@@ -14,20 +14,13 @@
       "romanization": "telefonare",
       "gloss": "to phone",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40a4057d3f6aec25",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:23e80d51a6d46415",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for to show, then the Italian for to look at."
+              "text": "Before the new one: say the Italian for \"to show\", then the Italian for \"to look at\"."
             }
           ]
         },
@@ -59,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "telefonare — built from telefono, \"telephone\", with the verb ending -are. EtymDB 2.1 has no row for it; the parts are plain to see."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -69,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,16 +113,16 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for to show, then the Italian for to look at, then say telefonare again",
+              "instruction": "say the Italian for \"to show\", then the Italian for \"to look at\", then say telefonare again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for to show, then the Italian for to look at, then say *telefonare* again]"
+              "source": "[YOU RECALL: say the Italian for \"to show\", then the Italian for \"to look at\", then say *telefonare* again]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,7 +153,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:140bc8b43b0edd3d",
+      "sourceHash": "fnv1a64:6e40d2d68989eebe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discutere from Latin discutere, \"to strike apart, to shake to pieces\" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for discutere."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -199,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -248,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c3d08b820f668a0",
+      "sourceHash": "fnv1a64:10827f41073487ae",
       "notice": null,
       "blocks": [
         {
@@ -312,6 +327,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "litigare from Latin litigare, \"to quarrel, to go to law\" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -322,7 +348,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -371,7 +397,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -402,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d76e02646d184db",
+      "sourceHash": "fnv1a64:5269c9b25770b86a",
       "notice": null,
       "blocks": [
         {
@@ -435,6 +461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scusarsi from Latin excusare, \"to excuse\", with -si, \"oneself\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -445,7 +482,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -494,7 +531,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -525,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a1323dfd60325f5",
+      "sourceHash": "fnv1a64:1e90c96bcf0fe8b6",
       "notice": null,
       "blocks": [
         {
@@ -558,6 +595,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perdonare from Late Latin perdonare, \"to give completely\", from per-, \"thoroughly\", and donare, \"to give\" — inherited. EtymDB 2.1 has no row for perdonare; it derives Spanish perdonar from perdonare."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -568,7 +616,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -617,7 +665,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,7 +13,8 @@ gloss: "a gate"
 concept_tag: FR-CHOSES200-PORTAIL
 prerequisites: [FR-C199-siege, FR-C199-volant]
 sounds: []
-roots: []
+roots: [porta-latin]
+etymology_hook: "portail — from the word for 'door', Latin porta 'gate' — English portal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C199-volant]
 <!-- hl-knowledge: introduces=[FR-LEX-C200-CHOSES200-01]; assesses=[] -->
 
 **le portail** — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portail** — built from the word for "door", ← Latin *porta*, "a gate" (EtymDB 2.1), with *-ail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

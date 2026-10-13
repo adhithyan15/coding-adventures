@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 53,
-  "sourceHash": "fnv1a64:379cfd442fa6ae63",
+  "sourceHash": "fnv1a64:c8f3b7de81b4d1e7",
   "lessonIds": [
     "IT-C53-patata",
     "IT-C53-pomodoro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch53.txt",
   "json": "italian/narration/ch53.json",
-  "textHash": "fnv1a64:ae13f972001796a1",
-  "jsonHash": "fnv1a64:1ccb9e7efe2c6281",
+  "textHash": "fnv1a64:692e3a5ed744574b",
+  "jsonHash": "fnv1a64:b2fd624b0fdddbce",
   "findings": []
 }

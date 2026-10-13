@@ -13,7 +13,8 @@ gloss: "a son-in-law"
 concept_tag: PT-COISAS221-GENRO
 prerequisites: [PT-C220-farmaceutico, PT-C220-talhante]
 sounds: []
-roots: []
+roots: [gener-latin]
+etymology_hook: "genro ← Latin gener 'son-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C220-talhante]
 <!-- hl-knowledge: introduces=[PT-LEX-C221-COISAS221-01]; assesses=[] -->
 
 **o genro** — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**genro** ← Latin *gener*, "son-in-law" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

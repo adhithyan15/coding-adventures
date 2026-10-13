@@ -13,7 +13,8 @@ gloss: "now"
 concept_tag: PT-QUANDO2-AGORA
 prerequisites: [PT-C70-sempre, PT-C71-nunca]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "agora ← Latin hac hora 'at this hour' — English hour shares hora"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C71-nunca]
 <!-- hl-knowledge: introduces=[PT-LEX-C71-QUANDO2-02]; assesses=[] -->
 
 **agora** — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agora** ← Latin *hac hora*, "at this hour" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

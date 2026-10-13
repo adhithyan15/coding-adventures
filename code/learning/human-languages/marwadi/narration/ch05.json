@@ -94,6 +94,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-mharo-meaning",
               "prompt": "You hear mhāro with no text. What small English word does it supply before a masculine noun?",
               "assesses": [
@@ -125,19 +126,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:34dd587cb77a00dc",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -195,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W05-virama-function",
               "prompt": "What does ् (virāma) do under म?",
               "assesses": [
@@ -228,19 +234,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:e29ab1884293ad8b",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -298,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-o-matra-read",
               "prompt": "Add the visible o sign to र and read the result.",
               "assesses": [
@@ -421,6 +433,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-mharo-delayed",
               "prompt": "After hiding the model, write mhāro and give its meaning.",
               "assesses": [
@@ -548,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-naam-meaning",
               "prompt": "You hear nām. What does it mean?",
               "assesses": [
@@ -578,19 +592,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2c1604708e09f3fb",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -648,6 +667,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-na-choice",
               "prompt": "Write the sign that begins nām, name.",
               "assesses": [
@@ -724,7 +744,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "न + ा + म becomes नाम — nām — name."
+              "text": "न (na) + ा + म becomes नाम — nām — name."
             },
             {
               "kind": "speech",
@@ -774,6 +794,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-naam-delayed",
               "prompt": "After hiding the model, write nām and give its meaning.",
               "assesses": [
@@ -888,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-hai-meaning",
               "prompt": "What job does heard hai do at the end of the name statement?",
               "assesses": [
@@ -920,19 +942,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:826fa97327f79d2a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -990,6 +1017,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-ai-matra-read",
               "prompt": "Add the new sign to ह and read the result.",
               "assesses": [
@@ -1116,6 +1144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-answer-dictation",
               "prompt": "From the heard cue mhāro nām rām hai alone, write the complete Marwadi statement.",
               "assesses": [

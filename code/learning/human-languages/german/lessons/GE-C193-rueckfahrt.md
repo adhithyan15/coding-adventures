@@ -13,7 +13,8 @@ gloss: "a return journey"
 concept_tag: GE-THING193-RUECKFAHRT
 prerequisites: [GE-C192-gleis, GE-C193-fahrplan]
 sounds: []
-roots: []
+roots: [germanic-fardiz]
+etymology_hook: "Rückfahrt — 'back' + Fahrt 'journey': the journey back"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C193-fahrplan]
 <!-- hl-knowledge: introduces=[GE-LEX-C193-THING193-02]; assesses=[] -->
 
 **die Rückfahrt** — "a return journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rückfahrt** is the word for "back" (as in *Rücken*) + the word for "a journey", Old High German *vart* ← Proto-Germanic *\*fardiz* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a daughter; a girl"
 concept_tag: FR-SENTIR8-FILLE
 prerequisites: [FR-C56-triste, FR-C56-content]
 sounds: []
-roots: []
+roots: [filius]
+etymology_hook: "fille ← Latin filia 'daughter' — English filial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C56-content]
 <!-- hl-knowledge: introduces=[FR-LEX-C56-SENTIR8-03]; assesses=[] -->
 
 **la fille** — "a daughter; a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fille** ← Latin *filia*, "daughter" — inherited. (EtymDB 2.1 traces Italian *figlia* to the same word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -42,7 +42,7 @@ variety: standard
 
 **ऐवज** — *aivaj* — "valuables".
 
-Say it: *aivaj*. Look at its shape as you say it: the next lesson takes one
+Say it: *aivaj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ऐ**, and writes it on its own.
 
 ## Guided Practice

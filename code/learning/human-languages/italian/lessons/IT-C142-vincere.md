@@ -13,7 +13,8 @@ gloss: "to win"
 concept_tag: IT-VERB-VINCERE
 prerequisites: [IT-C141-ripetere, IT-C141-spiegare]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "vincere ← Latin vincere 'to conquer' — English victory and invincible share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C141-spiegare]
 <!-- hl-knowledge: introduces=[IT-LEX-C142-VERBI142-01]; assesses=[] -->
 
 **vincere** — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vincere** ← Latin *vincere*, "to conquer" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

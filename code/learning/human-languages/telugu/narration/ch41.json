@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e844046fb11d5130",
+  "sourceHash": "fnv1a64:a59e6b92901fad35",
   "lessons": [
     {
       "id": "TE-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23dfba755a248dbc",
+      "sourceHash": "fnv1a64:ee95651a9a4a9a86",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is అది adi, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f0438aef0ee39bc",
+      "sourceHash": "fnv1a64:d62c7334e232821e",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఇది idi, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఇది idi, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:966ab8e80296424d",
+      "sourceHash": "fnv1a64:ec62db53eda4a445",
       "notice": null,
       "blocks": [
         {
@@ -258,7 +258,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is అక్కడ akkaḍa, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:183cd5ca68c234a1",
+      "sourceHash": "fnv1a64:922c749410807c51",
       "notice": null,
       "blocks": [
         {
@@ -360,7 +360,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఇక్కడ ikkaḍa, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఇక్కడ ikkaḍa, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cae1c71dc2d54ed1",
+      "sourceHash": "fnv1a64:7f8d74524f900561",
       "notice": null,
       "blocks": [
         {
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -458,11 +458,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఎక్కడ ekkaḍa, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson, and it opens with the same e-. That is the pattern: the near words you know open with i- (ఇది idi, ఇక్కడ ikkaḍa), the far ones with a- (అది adi, అక్కడ akkaḍa), and the asking words with e-. The last lesson of this chapter lays it out."
             }
           ]
         },
@@ -480,11 +480,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎవరు (evaru)\" three times, picturing something different each time",
+              "instruction": "\"ఎవరు (evaru)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎవరు\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ఎవరు\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8341f7b77428d29",
+      "sourceHash": "fnv1a64:c1ab7f398f0f411d",
       "notice": null,
       "blocks": [
         {
@@ -545,7 +545,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -560,11 +560,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఎవరు evaru, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఎవరు evaru, which you have just met: both open with e-, the asking sound. Its other partners, ఇక్కడ ikkaḍa and అక్కడ akkaḍa, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -582,11 +582,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, picturing something different each time",
+              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎక్కడ\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ఎక్కడ\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",

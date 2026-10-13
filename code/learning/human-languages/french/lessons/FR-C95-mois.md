@@ -13,7 +13,8 @@ gloss: "a month"
 concept_tag: FR-ADJ47-MOIS
 prerequisites: [FR-C95-mouille, FR-C95-semaine]
 sounds: []
-roots: []
+roots: [mensis-latin]
+etymology_hook: "mois ← Latin mensis 'month' — English menstrual shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C95-semaine]
 <!-- hl-knowledge: introduces=[FR-LEX-C95-ADJ47-03]; assesses=[] -->
 
 **le mois** — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mois** ← Old French *mois* (EtymDB 2.1) ← Latin *mensis*, "month" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

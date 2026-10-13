@@ -13,7 +13,8 @@ gloss: "a cough"
 concept_tag: PT-SAUDE1-TOSSE
 prerequisites: [PT-C34-dor, PT-C34-febre]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tosse ← Latin tussis 'cough' — English pertussis, whooping cough, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C34-febre]
 <!-- hl-knowledge: introduces=[PT-LEX-C34-SAUDE1-03]; assesses=[] -->
 
 **a tosse** — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tosse** ← Latin *tussis*, "cough" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

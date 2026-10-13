@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN122-KEKS
 prerequisites: [GE-C122-mehl, GE-C122-schokolade]
 sounds: []
 roots: []
+etymology_hook: "Keks ← English cakes — borrowed as a singular word for a biscuit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C122-schokolade]
 <!-- hl-knowledge: introduces=[GE-LEX-C122-ESSEN122-04]; assesses=[] -->
 
 **der Keks** — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Keks** ← English *cakes* (EtymDB 2.1) — borrowed, and the English plural became a German singular.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

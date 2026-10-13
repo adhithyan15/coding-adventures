@@ -14,7 +14,8 @@ romanization: "cēlai"
 concept_tag: TA-THINGS121-CELAI
 prerequisites: [TA-C121-katikaram, TA-C121-pavatai, TA-C22-paccai-manjal, TA-C11-nirangal]
 sounds: []
-roots: []
+roots: [dravidian-ciilai-cloth]
+etymology_hook: "சேலை — usually a form of native cīlai 'cloth' (DEDR 2629): Malayalam cīla, Kannada sīre"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C121-pavatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **சேலை** — *cēlai* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சேலை** (*cēlai*) is usually taken as a form of *cīlai*, "cloth, woman's garment", which is native: DEDR 2629 lists Malayalam *cīla* and Kannada *sīre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

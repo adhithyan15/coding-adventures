@@ -13,7 +13,8 @@ gloss: "elsewhere"
 concept_tag: IT-LUOGO154-ALTROVE
 prerequisites: [IT-C154-dappertutto, IT-C154-da-nessuna-parte]
 sounds: []
-roots: []
+roots: [ubi]
+etymology_hook: "altrove — 'other where', from a Latin phrase ending in ubi 'where'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C154-da-nessuna-parte]
 <!-- hl-knowledge: introduces=[IT-LEX-C154-LUOGO154-04]; assesses=[] -->
 
 **altrove** — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**altrove** is "other where", from a Latin phrase ending in *ubi*, "where". EtymDB 2.1 gives it as *aliter ubi*; other accounts give *alter ubi*, "the other where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "valadu"
 concept_tag: TA-ADJECTIVE-VALADU
 prerequisites: [TA-C66-outside, TA-C64-harvest, TA-C65-close]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "வலது — native: the strong side, from val 'strong' (DEDR 5276), which lists valatu 'right side'"
 duration:
   max_seconds: 230
 requires:

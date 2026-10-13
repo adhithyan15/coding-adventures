@@ -14,6 +14,7 @@ concept_tag: GE-THING231-HOBBY
 prerequisites: [GE-C230-gewicht, GE-C230-gewohnheit]
 sounds: []
 roots: []
+etymology_hook: "Hobby ← English hobby — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C230-gewohnheit]
 <!-- hl-knowledge: introduces=[GE-LEX-C231-THING231-01]; assesses=[] -->
 
 **das Hobby** — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hobby** ← English *hobby* (EtymDB 2.1), short for *hobby-horse* — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

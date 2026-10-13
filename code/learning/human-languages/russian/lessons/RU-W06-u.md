@@ -42,7 +42,9 @@ takes the eleven letters that block the most words you cannot yet read.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-U-01]; assesses=[] -->
 
-> у
+> у   У
+
+The capital, **У**, is the same shape drawn to full height, sitting on the line.
 
 It looks like a Latin **y**. It is not one. It says **oo**, the vowel of English
 *boot*.

@@ -13,7 +13,8 @@ gloss: "a twin"
 concept_tag: FR-CHOSES250-JUMEAU
 prerequisites: [FR-C250-adulte, FR-C250-personne-agee]
 sounds: []
-roots: []
+roots: [geminus-latin]
+etymology_hook: "jumeau ← Latin gemellus 'twin-born', from geminus — English Gemini"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C250-personne-agee]
 <!-- hl-knowledge: introduces=[FR-LEX-C250-CHOSES250-05]; assesses=[] -->
 
 **le jumeau** — "a twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jumeau** ← Old French *jumel* (EtymDB 2.1) ← Latin *gemellus*, "twin-born", a little form of *geminus*, "a twin" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

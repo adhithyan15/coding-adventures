@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 206,
-  "sourceHash": "fnv1a64:1a933f3b4b3f8afe",
+  "sourceHash": "fnv1a64:f2ff65c01ad4286d",
   "lessonIds": [
     "PT-C206-roubar",
     "PT-C206-descobrir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch206.txt",
   "json": "portuguese/narration/ch206.json",
-  "textHash": "fnv1a64:8d4c77f3074f1d02",
-  "jsonHash": "fnv1a64:dc452e5575cd760e",
+  "textHash": "fnv1a64:0df6b0b27377452d",
+  "jsonHash": "fnv1a64:2a646c7b49244ee8",
   "findings": []
 }

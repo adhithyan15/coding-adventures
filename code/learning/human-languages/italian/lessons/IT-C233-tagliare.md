@@ -13,7 +13,8 @@ gloss: "to cut"
 concept_tag: IT-VERB-TAGLIARE
 prerequisites: [IT-C232-dizionario, IT-C233-ordinare]
 sounds: []
-roots: []
+roots: [taliare-latin]
+etymology_hook: "tagliare ← Late Latin taliare 'to cut' — English tailor is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C233-ordinare]
 <!-- hl-knowledge: introduces=[IT-LEX-C233-VERBI233-02]; assesses=[] -->
 
 **tagliare** — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tagliare** ← Late Latin *taliare*, "to cut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "damp"
 concept_tag: GE-QUAL213-FEUCHT
 prerequisites: [GE-C213-erkaeltet, GE-C213-fantastisch]
 sounds: []
-roots: []
+roots: [germanic-funhtijaz]
+etymology_hook: "feucht ← Old High German fūht ← Proto-Germanic *funhtijaz 'damp' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C213-fantastisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C213-QUAL213-05]; assesses=[] -->
 
 **feucht** — "damp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feucht** ← Old High German *fūht* ← Proto-Germanic *\*funhtijaz*, "humid, damp" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

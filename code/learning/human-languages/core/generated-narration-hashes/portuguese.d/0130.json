@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 130,
-  "sourceHash": "fnv1a64:04deaaec68994751",
+  "sourceHash": "fnv1a64:359e294e7c5108da",
   "lessonIds": [
     "PT-C130-sessenta",
     "PT-C130-setenta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch130.txt",
   "json": "portuguese/narration/ch130.json",
-  "textHash": "fnv1a64:c745412373063618",
-  "jsonHash": "fnv1a64:77ad776f7fed51d6",
+  "textHash": "fnv1a64:a0ea7f9d297df664",
+  "jsonHash": "fnv1a64:b4e5d6ff606e7bb3",
   "findings": []
 }

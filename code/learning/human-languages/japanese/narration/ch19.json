@@ -9,7 +9,7 @@
     {
       "id": "JA-C19-words",
       "sequence": 1580,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — six words, nothing said first",
+      "title": "(reading) (te, mimi, kuchi, hana, kao, me) — six words, nothing said first",
       "headword": "(reading)",
       "romanization": "te, mimi, kuchi, hana, kao, me",
       "gloss": "six words read cold — every sign in them is one you can already write",
@@ -18,7 +18,8 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:245106cef633a0ed",
       "notice": {
@@ -26,7 +27,9 @@
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
@@ -153,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-words-eye",
               "prompt": "Which of the six is one sign long and means eye?",
               "assesses": [
@@ -202,7 +206,7 @@
     {
       "id": "JA-C19-greetings",
       "sequence": 1590,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the doorway words, on the page",
+      "title": "(reading) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the doorway words, on the page",
       "headword": "(reading)",
       "romanization": "hai, iie, konnichiwa, arigatō, sayōnara, sumimasen",
       "gloss": "six greetings on the page — the doorway words, met without a voice",
@@ -361,6 +365,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-greetings-thanks",
               "prompt": "Which line thanks somebody?",
               "assesses": [
@@ -412,7 +417,7 @@
     {
       "id": "JA-C19-kyoushitsu",
       "sequence": 1600,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the cues you have only ever heard",
+      "title": "(reading) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) — the cues you have only ever heard",
       "headword": "(reading)",
       "romanization": "wakarimashita, wakarimasen, mō ichido, onegaishimasu",
       "gloss": "the classroom cues, read rather than heard — the longest Japanese the book has put on one page",
@@ -567,6 +572,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-kyoushitsu-not",
               "prompt": "Which line says you did NOT understand?",
               "assesses": [

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 18,
-  "sourceHash": "fnv1a64:d02a339e1d7178c4",
+  "sourceHash": "fnv1a64:5f5f9e093aceed09",
   "lessonIds": [
     "TE-C18-ganta",
     "TE-S121-letter-lla",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch18.txt",
   "json": "telugu/narration/ch18.json",
-  "textHash": "fnv1a64:dd4e047fdc1d0260",
-  "jsonHash": "fnv1a64:e679408d19ca5bbb",
+  "textHash": "fnv1a64:578612733a1f1e79",
+  "jsonHash": "fnv1a64:38c426b96b07cb9a",
   "findings": []
 }

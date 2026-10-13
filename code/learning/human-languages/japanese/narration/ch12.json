@@ -110,6 +110,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-foundation-01-card",
               "prompt": "Write i, shi, the polite thank-you, and the seven-word body map; label each spoken unit a mora.",
               "assesses": [
@@ -242,6 +243,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-atama-write",
               "prompt": "Write the Japanese word for head.",
               "assesses": [
@@ -373,6 +375,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-kami-write",
               "prompt": "Write the Japanese word for hair.",
               "assesses": [
@@ -455,6 +458,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-foundation-02-card",
               "prompt": "Record the retrieval string: e, five, mouth, please say it, hair, eye.",
               "assesses": [
@@ -612,6 +616,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-ha-tooth-write",
               "prompt": "Write the Japanese word for tooth.",
               "assesses": [
@@ -742,6 +747,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-kata-write",
               "prompt": "Write the Japanese word for shoulder.",
               "assesses": [
@@ -815,6 +821,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-mixed-scripts-card",
               "prompt": "Write the retrieval string: hiragana ko, long katakana kō, here, shoulder, head.",
               "assesses": [
@@ -946,6 +953,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-onaka-write",
               "prompt": "Write the Japanese word for the belly or stomach area.",
               "assesses": [
@@ -1077,6 +1085,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-senaka-write",
               "prompt": "Write the Japanese word for back.",
               "assesses": [
@@ -1163,6 +1172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-doorway-card",
               "prompt": "Write the final retrieval string: chi, goodbye, hand-sign te, back, tooth.",
               "assesses": [
@@ -1298,6 +1308,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-koshi-write",
               "prompt": "Write the Japanese word for waist or lower back.",
               "assesses": [
@@ -1393,6 +1404,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-farewell-card",
               "prompt": "Write the greeting, farewell, voiced da, and waist word.",
               "assesses": [
@@ -1419,7 +1431,7 @@
     {
       "id": "JA-R12-repair-01",
       "sequence": 930,
-      "title": "Retrieval 6 — greet, repair, point",
+      "title": "Retrieval 6",
       "headword": "こんにちは・よくわかりません・て・おなか",
       "romanization": "konnichiwa, yoku wakarimasen, te, onaka",
       "gloss": "distant greeting and repair retrieval",
@@ -1474,6 +1486,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-repair-01-card",
               "prompt": "Write the greeting, I do not understand well, hand, and belly.",
               "assesses": [
@@ -1564,6 +1577,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-repair-02-card",
               "prompt": "Write a, do, again, ear, and back in Japanese.",
               "assesses": [
@@ -1654,6 +1668,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-repair-03-card",
               "prompt": "Write ri, mo, once, and mouth in Japanese.",
               "assesses": [
@@ -1743,6 +1758,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-repair-04-card",
               "prompt": "Write ka, please, the repetition request, leg, and waist.",
               "assesses": [
@@ -1816,6 +1832,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-writing-01-card",
               "prompt": "Write voiced da, se, ne, and nose.",
               "assesses": [
@@ -1892,6 +1909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-writing-02-card",
               "prompt": "Write to, a little, and face in Japanese.",
               "assesses": [
@@ -1985,6 +2003,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R12-body-01-card",
               "prompt": "Write u and eye in Japanese.",
               "assesses": [
@@ -2026,7 +2045,8 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
@@ -2135,6 +2155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C12-body-map-two-dictation",
               "prompt": "Write head, hair, tooth, shoulder, belly, back, and waist in Japanese.",
               "assesses": [

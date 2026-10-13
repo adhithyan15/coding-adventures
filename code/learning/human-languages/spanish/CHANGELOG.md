@@ -1,5 +1,155 @@
 # Changelog
 
+## Fixed — nosotros no longer teaches that -mos is a worn-down nos
+
+ES-C45-nosotros (and its chapter title, "the Word Inside -mos") taught that the
+*-mos* of *hablamos* is Latin *nōs* "worn down and glued to the verb". It is
+not: *-mos* is the verb's own "we" ending, Latin *-mus* (*amāmus*), a different
+word from the pronoun that happens to name the same person. The lesson now
+teaches the true and more useful point: *hablamos* already says "we", so
+*nosotros* is extra — and *nosotros* is still *nos* + *otros*, "we others". Its
+claim that no other language in the family built the word this way is gone too:
+Catalan has *nosaltres* and Occitan *nosautres*. Its two scored questions,
+the chapter's payoff summary, and ES-C45-nos's closing line ("the verb ending
+that has been carrying it all along") are rewritten to match.
+
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Twenty-four were already being practised and not declared. Fifty got one short spoken recall each, in a later review, practice or warm-up, naming only words already taught.
+
+- **Declared (the twin was on the page):** ES-C40-repaso-palabras-con-historia already tells the history of *la hora*, *veinte*, *sábado/domingo*, *azul* and *amarillo* (`ES-ETYMON-HORA-02`, `-VEINTE-07`, `-WEEKEND-02`, `-AZUL-04`, `-AMARILLO-04`). ES-C40-repaso-un-sabado-de-octubre retells the March-start year (`-MONTHS-02`). ES-C61-repaso-juntores and ES-C67-repaso-uno-otro-ninguno already explain *ni* = *nec* and *otro* = *alter*. ES-C62-repaso-gerundio explains the gerund as Latin's leftover. ES-C268-repaso-llegar-y-quedarse drills *¿dónde está?* and *un billete*. ES-C270-por-ejemplo and ES-C270-aunque restate *en mi opinión* and *sin embargo*. Each `ES-SEMANTIC-*` twin of those had never been declared. Further: *qu-* in ES-C07-que, ES-C48-cuando and ES-C53-que-relativo; *tripalium* in ES-C06-practice; *Hispania* in ES-C57-es-inicial; the whole-infinitive future in ES-C10-mi-tu-su and ES-C17-futuro; *imperāre* in ES-C40-comprar; *manus* in ES-C37-levantarse; *ad heri* in ES-C270-aunque; *caput* in ES-C286-boca; *hōra* in ES-C312-reloj.
+- **Recalls:** the Latin endings *-ōsus*/*-entia*/*-ārius* in ES-C09-repaso-ocho, *-tātem* in ES-C56-repaso-amigos, and *mente* in ES-C57-es-inicial. *casa*/*liber* in ES-C44-repaso-articulos, *thou*/*thee* in ES-C42-repaso-objeto, *nōs* in ES-C47-repaso-dobles, *fact*/*dictum* in ES-C49-repaso-perfecto, and *participium* in ES-C17-comer-futuro. The seasons, *medianoche* and *pluere* go in the two ch40 reviews, *albus* in ES-C40-sintesis-describir, and *caput*/*testa* in ES-C37-repaso-sentado-de-pie-andando. *computāre* goes in ES-C39-repaso-cambios, and the scene-then-events story in ES-C65-repaso-dos-pasados. *comparāre* (not *compare*) goes in ES-C52-se-habla, *explicar* = unfold in ES-C53-repaso-que, the four-move explanation in ES-C54-repaso-hay, relative *que* ← *qui* in ES-C53-lo-que, *sí* ← *sīc* in ES-C55-sintesis-condicion, and *-ra* = "I had loved" in ES-C56-repaso-condiciones. *depende* goes in ES-C57-repaso-reportar, *per hoc* in ES-C60-mal, *malus* in ES-C60-apocope, *tan + poco* in ES-C60-repaso-grado, *aut* in ES-C61-repaso-juntores, *hoc die* in ES-C65-repaso-parejas, and *secundus* in ES-C67-primer-libro. The experience chapter (*espero*, *esperar* = hope and wait, *más feliz que*, *durante*) goes in ES-C271-practice, *por ejemplo* and *aunque* in ES-C273-practice, and *éxito* ← *exitus* in ES-C11-querer's existing false-friend line.
+- Three practising lessons now name the introducing lesson as a prerequisite so the validator can see the atom: ES-C39-repaso-cambios (ES-C38-contar), ES-C52-se-habla (ES-C40-comprar) and ES-C57-repaso-reportar (ES-C56-depende). Forward references stay at 1,173. Two first drafts leaked *difícil* and *llave* and were reworded. The drivable counts are unchanged.
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **ES-C07-repaso-comer**: `who | -ar ending: form | -er ending: form` ("**-es**: **comes**"). The person column stays, so `info-dump` still sees the table. "Read the middle two columns down" is now "Set the two endings in each row side by side".
+- **ES-C10-futuro-simple**: `who | ending | speak · eat · live` ("I will | -é | hablaré · comeré · viviré"). The ending column spells out what the prose says: the endings are the same for all three families. "using the table" is now "on the same ending as *hablaré*".
+- **ES-C12-yo-go**: the gloss sits beside its infinitive ("**tener** (to have)"). **ES-C17-practice**: the learned stem sits beside its verb ("hacer: har-"). **ES-C21-sabado-domingo**: `Spanish ← Latin`.
+- **Left as grids, on purpose:** chapter 46's eighteen-form -ar/-er/-ir grid and ES-C17-practice's six-row future/conditional frame. The eye needs both, and `info-dump` counts them as full paradigm grids.
+- **ES-C424-punto**: the spacing table used to read aloud as "correct: Mi familia. wrong: Mi familia." Its cells now say the difference in words ("no space before the point, one space after it", "a point after the title"), next to the printed example. The warm-up no longer points at "the last sentence you read". It names the small dot that ends a written sentence.
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **ES-C267-no-verbo** → ES-C06-hablo-espanol: "You met it already as an answer: *¿Hablas español?* — *No.*" That lesson first put *no* before the verb.
+- **ES-C267-no-nada** → ES-C267-no-verbo and ES-C16-ver: the double negative extends the no-before-the-verb rule, and its example is *No veo nada*.
+- **ES-C267-pregunta-si-no** → ES-C267-no-verbo: its practice negates three sentences before turning them into questions.
+- **ES-C267-verdad-no** → ES-C267-pregunta-si-no: "a second kind of yes-or-no question".
+- **ES-C267-negar-preguntar** → ES-C267-no-nada, ES-C267-verdad-no and ES-C58-tampoco: the chapter's synthesis, whose dialogue says "every word there is one you already had". *Poco* is introduced with *tampoco*, and *pero* and *entender* are already in that closure.
+- **ES-C412-gimnasio** → ES-C37-abrir: *el gimnasio está abierto*. That lesson introduces *abierto*, and its closure holds *está*.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **Three tables** are now three labelled columns, with every value kept:
+  - ES-C06-ar-presente: "**-o**: **hablo**".
+  - ES-C56-repaso-amigos: "feminine nouns, ~2,000".
+  - ES-C21-lunes-viernes: the planet-god joins the Latin.
+- **Reviews that pointed at their own summary are said for the ear**:
+  - "Before the table:" is now "Before the summary:".
+  - "Read down the last column" is now "Take the four examples in turn".
+  - "all three rows of the table" now names the three examples.
+  - "the whole first column" is now "every person, with *lo*".
+  - "Read the middle column down" now says the eight commands.
+  This covers ES-C42, C44, C46, C47 (both), C48, C50 (both), C51, C53 and C54. Ten more lessons get the same treatment for a passing "see the", "look at" or "column".
+- **Written-accent observations are deferred** as `[YOU LOOK: …]`, and the fact is still said aloud: ES-C57-pregunto-donde, ES-C63-hablabamos, ES-C65-vi-di and ES-C424-punto. ES-C422-pagina-web's writing warm-up is now `[YOU WRITE: …]`. ES-C62-veo-a-maria's glosses are quoted.
+- Hands-free prefixes: 30 chapters rise from 0 (19, 23, 26, 41, 81, 86, 89, 96, 101, 102, 114, 116, 119, 131, 132, 138, 179, 189, 194, 215, 239, 241, 243, 255, 422, 424, 456, 462, 466, 468).
+- Chapter 46 (ES-C07-repaso-tres-familias) stays at 0. Its eighteen-form grid is the lesson.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+Twelve lessons that open a chapter had a pointing phrase that was never about the page, or a point a listener can hear as well as see. Each now has a `voice` core:
+- Glosses, quoted: **ES-C446-mirar**, whose headword means *to look at* ("to look", "to look at", "look at me", "I can see the sea from here", "To look at?").
+- Figures of speech, reworded: **ES-C310-llave** ("Think of your collarbone", "Think of the start of a line of music"), **ES-C384-enviar** ("to eye them too hard"), **ES-C442-administracion** ("when you meet the word on a form"), **ES-C458-plazo** ("until you know the middle step"), **ES-C48-dos-miradas** ("in how you view it"), **ES-C54-ha-mas-y** ("Now think about *hay* again").
+- Said for the ear: **ES-C09-sintesis-describir** ("Listen for the ending"), **ES-C425-abecedario** ("Listen to the name: **a-be-ce-de**"), **ES-C443-doler** ("Take *me duele la cabeza* and find the subject"), **ES-C470-paraguas** ("Hear it before you are told anything: **para** plus **aguas**"), **ES-C59-aquel** ("Listen to the middle of that word").
+- Hands-free prefixes, each 0 before: chapter 60 → 1 of 1, 111 → 1 of 1, 192 → 1 of 1, 223 → 1 of 1, 310 → 5 of 5, 384 → 1 of 4, 425 → 7 of 7, 442 → 7 of 7, 443 → 7 of 7, 446 → 1 of 7, 458 → 5 of 5, 470 → 6 of 6.
+- Most of the 31 Spanish chapters still at 0 open on a review built around a table ("Read down the last column", "all three rows of the table") and are honestly `sight`.
+
+## Added — lesson one begins writing with a finger trace
+
+ES-C01-hola gains a detachable "Writing — trace the silent h" block
+(`observe-trace`): with **hola** in view, the learner traces only its silent
+**h** with one finger, then says *OH-la*. It assesses ES-SOUND-H-SILENT, which
+the lesson introduces. The block is kept to two sentences because the lesson
+was already the longest of the six (estimate 259 s → 274 s, under the 300 s
+maximum). The next lesson,
+ES-W00-hola-observe, traces the whole word. The lesson declares the `writing`
+skill. Writing practice starts at lesson one instead of lesson two, and the
+gentle-ramp `writing-ramp` finding (1 opening lesson) is cleared. The block
+says "in view" rather than "visible", because *visible* is also a Spanish word
+that the track teaches much later, and the continuity check would count it as
+a forward use. The lesson's core stays `voice`.
+
+## Fixed — chapters 210 and 266 take their last lesson as payoff
+
+The last two Spanish chapters below the 0.5 `chapter-payoff-not-representative`
+floor had the same shape. The payoff was a synthesis or review that introduces
+nothing, and the chapter's own atoms come from a lesson placed after it. Both
+payoffs scored 0. A checkpoint after the last lesson would only repeat it, and
+moving the late lesson earlier would break its prerequisites. So the payoff
+moves to the chapter's last lesson. That lesson gains a short recall of what
+the old payoff proved, and the can-do now also names what the chapter ends on.
+No lesson moves, and the curriculum graph is unchanged.
+
+- **Chapter 210** (0/2 → **2/2**). The payoff is now **ES-C56-depende** (2287),
+  which introduces *depende* and the unstated condition. A new "Guided
+  Practice — an open condition and a closed one" has the learner say
+  *depende*, then *Si tuviera tiempo, comería en casa* (the unreal condition
+  from chapter 208, reviewed in 209). It then asks which of the two already gives the
+  answer. So the payoff still asks for speech about a world that does not
+  exist. The can-do and summary become "I can speak about a world that does
+  not exist, and say it depends when the condition is still open." The lesson
+  now requires and practises ES-GRAMMAR-SI-UNREAL-CONDITION. Computed 267 s;
+  max_seconds 240 → 270. ES-C56-sintesis-condiciones stays as the chapter's
+  synthesis.
+- **Chapter 266** (0/1 → **1/1**). The payoff is now **ES-C67-tercera-lectura**
+  (2569), the third connected reading. A new "Guided Practice — the front of
+  the sentence" points out that four of the paragraph's sentences open on a
+  *when*, then asks what that front position carries (emphasis) and which loss
+  it helps replace (Latin's endings). That is the thread ES-C67-repaso-a1
+  names. The lesson now requires and practises ES-GRAMMAR-CIRCUMSTANTIAL-MOVES
+  and ES-GRAMMAR-WORD-ORDER-EMPHASIS. The can-do and summary add ", and read a
+  paragraph of Spanish straight through." Computed 283 s against the declared
+  290. The review stays as the chapter's review.
+- Each `payoff.note` says why the earlier lesson could not be the payoff.
+  Regenerated book chapters 210 and 266, narration, the two lessons' modality
+  owners (modality unchanged) and hash shards. Spanish now has no chapter-gate
+  debt.
+
+## Fixed — twenty-five chapter payoffs cover their chapters
+
+Twenty-seven Spanish chapters fell below the 0.5 payoff-representativeness
+floor; this fixes twenty-five. In twenty-four of them the teaching was already
+there and only the ledger was short. Each payoff lesson's own `hl-knowledge`
+markers and `hl-activity` records already assessed the atoms that the
+chapter's `payoff.assesses` left out. Most are single-lesson chapters whose
+ledger named only the headline atom: *dijo*, *también*, *este*, *muy*,
+*quién*, *conmigo* and the rest list their grammar and etymon atoms now too.
+`chapters.d` for chapters 28, 51, 58, 212, 219-221, 223, 226-228, 232-234,
+236, 242, 244, 247, 251, 252, 255, 262, 263 and 273 now names every chapter
+atom the payoff lesson's markers assess. The added atoms come only from those
+markers. Most chapters reach 3/3; chapter 273 goes from 3/8 to 8/8. Chapters
+252, 255 and 262 reach 2/4, because their other atoms are not assessed by the
+payoff lesson.
+
+Chapter 143 needed teaching, not paperwork. **ES-C26-pan** is the chapter's
+last lesson but recalled only bread. A new "Guided Practice — the whole
+table" section brings back *el agua fría* (feminine, with *el* before a
+stressed *a*), *aqua* kept nearly whole, and *el vino* from *vīnum*, cousin
+of *wine*. It ends with *agua, vino y pan*. The ledger goes from 3/8 to
+**8/8**. Computed duration is 232 s against the declared 240.
+
+Chapters 210 and 266 stay below the floor. In both, the atoms come from a
+lesson placed after the payoff (*depende*; the first connected reading), and
+moving the payoff would change what the chapter's can-do promises.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

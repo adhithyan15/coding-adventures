@@ -13,7 +13,8 @@ gloss: "strange"
 concept_tag: FR-QUAL219-ETRANGE
 prerequisites: [FR-C219-ennuyeux-ennuyeuse, FR-C219-amusant-amusante]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "étrange ← Latin extraneus 'from outside' — English strange"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C219-amusant-amusante]
 <!-- hl-knowledge: introduces=[FR-LEX-C219-QUAL219-03]; assesses=[] -->
 
 **étrange** — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étrange** ← Old French *estrange* ← Latin *extraneus*, "from outside, foreign" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

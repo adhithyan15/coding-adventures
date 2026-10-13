@@ -39,8 +39,7 @@ and the question is built from a Chapter-2 word plus a single new sound.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**സുഖം** (*sukhaṁ*, "well-being") + **ആണ്** (*āṇŭ*, "is," from Chapter 2) + the
-question-marker **ഓ** (*ō*) → **സുഖമാണോ** (*sukhamāṇō*), "is [it] well?"
+**സുഖം** (*sukhaṁ*, "well-being") + **ആണ്** (*āṇŭ*, "is," from Chapter 2) + the question-marker **ഓ** (*ō*) → **സുഖമാണോ** (*sukhamāṇō*), "is [it] well?"
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[ML-PHRASE-C03-ARE-YOU-WELL-01]; assesses=[] -->

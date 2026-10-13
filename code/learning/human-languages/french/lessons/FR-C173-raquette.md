@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES173-RAQUETTE
 prerequisites: [FR-C172-cuir, FR-C173-ballon]
 sounds: []
 roots: []
+etymology_hook: "raquette ← Arabic raha 'the palm of the hand', through Medieval Latin — English racket"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C173-ballon]
 <!-- hl-knowledge: introduces=[FR-LEX-C173-CHOSES173-02]; assesses=[] -->
 
 **la raquette** — "a racket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raquette** ← Medieval Latin *rasceta*, from Arabic *raha*, "the palm of the hand" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

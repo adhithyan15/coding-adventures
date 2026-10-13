@@ -13,7 +13,8 @@ gloss: "the environment"
 concept_tag: IT-COSE169-AMBIENTE
 prerequisites: [IT-C168-seme, IT-C168-radice]
 sounds: []
-roots: []
+roots: [ambire-latin]
+etymology_hook: "ambiente ← Latin ambiens 'surrounding', a learned word — English ambient is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C168-radice]
 <!-- hl-knowledge: introduces=[IT-LEX-C169-COSE169-01]; assesses=[] -->
 
 **l'ambiente** — "the environment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ambiente** ← Latin *ambiens*, "going around, surrounding", from *ambire* — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

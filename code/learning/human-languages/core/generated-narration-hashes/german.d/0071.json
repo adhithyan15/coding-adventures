@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 71,
-  "sourceHash": "fnv1a64:25c8a05e6fa12f5c",
+  "sourceHash": "fnv1a64:2be6dc402db63447",
   "lessonIds": [
     "GE-C71-kuchen",
     "GE-C71-suppe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch71.txt",
   "json": "german/narration/ch71.json",
-  "textHash": "fnv1a64:88e351b3acba37a9",
-  "jsonHash": "fnv1a64:1fb47343ca9a491f",
+  "textHash": "fnv1a64:49cdbb6bcfd35295",
+  "jsonHash": "fnv1a64:9b7ab91a5dc6f014",
   "findings": []
 }

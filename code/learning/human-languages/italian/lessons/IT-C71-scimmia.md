@@ -13,7 +13,8 @@ gloss: "a monkey"
 concept_tag: IT-ANIMALI4-SCIMMIA
 prerequisites: [IT-C70-capra, IT-C71-leone]
 sounds: []
-roots: []
+roots: [simia-latin]
+etymology_hook: "scimmia ← Latin simia 'an ape' — English simian shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-leone]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-02]; assesses=[] -->
 
 **la scimmia** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scimmia** ← Latin *simia*, "an ape" — inherited. EtymDB 2.1 has no row for *scimmia*; it derives Neapolitan *scigna* from *simia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

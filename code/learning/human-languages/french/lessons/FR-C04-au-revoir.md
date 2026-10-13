@@ -8,7 +8,7 @@ type: word
 headword: au revoir
 gloss: goodbye (literally "until the seeing-again")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [FR-C03-practice, FR-C01-soir]
 sounds: [r-uvular, vowel-oi, liaison]
 roots: [videre-latin]
 etymology_hook: "au revoir = 'à le revoir' — 'until the re-seeing' (voir ← vidēre 'to see' → vision, video)"
@@ -84,4 +84,4 @@ Spanish *adiós* instead commends you *to God*. Same moment, two different pictu
 [PAUSE 3s] What does *au revoir* literally mean? ("Until the seeing-again.") What
 Latin verb is *voir* from, and two English cousins? (*vidēre* — vision, video,
 revise.) Which other language builds its goodbye the same "see again" way?
-(German *auf Wiedersehen*.) Next: **à plus tard**.
+(German *auf Wiedersehen*.) Next: "see you later."

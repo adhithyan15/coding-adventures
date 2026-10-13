@@ -14,7 +14,8 @@ romanization: "nōyāḷi"
 concept_tag: TA-NALAM232-NOYALI
 prerequisites: [TA-C232-kayam, TA-C232-mattirai]
 sounds: []
-roots: []
+roots: [dravidian-noo-pain]
+etymology_hook: "நோயாளி — native Dravidian (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C232-mattirai]
 <!-- hl-knowledge: introduces=[TA-LEX-C232-NALAM232-04]; assesses=[] -->
 
 **நோயாளி** — *nōyāḷi* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நோயாளி** (*nōyāḷi*) is native Dravidian (DEDR 3793). It is *nōy*, "disease", with *āḷi*, "person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

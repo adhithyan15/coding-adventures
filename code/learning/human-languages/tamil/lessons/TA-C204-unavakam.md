@@ -14,7 +14,8 @@ romanization: "uṇavakam"
 concept_tag: TA-IDAM204-UNAVAKAM
 prerequisites: [TA-C204-patikkattu, TA-C204-maruntukkatai]
 sounds: []
-roots: []
+roots: [dravidian-un-eat, dravidian-akam-inside]
+etymology_hook: "உணவகம் — a coinage: native uṇavu 'food' (DEDR 600) + akam 'house' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C204-maruntukkatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C204-IDAM204-03]; assesses=[] -->
 
 **உணவகம்** — *uṇavakam* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உணவகம்** (*uṇavakam*) is a modern coinage from native parts: *uṇavu*, "food" (DEDR 600), and *akam*, "house" (DEDR 7): "the food house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

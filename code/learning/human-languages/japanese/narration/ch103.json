@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C103-otama-type",
-              "prompt": "Type the Japanese for 'a ladle'.",
+              "prompt": "Say the Japanese for 'a ladle'.",
               "assesses": [
                 "JA-LEX-C103-THINGS103-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C103-suidou-type",
-              "prompt": "Type the Japanese for 'the water supply'.",
+              "prompt": "Say the Japanese for 'the water supply'.",
               "assesses": [
                 "JA-LEX-C103-THINGS103-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C103-yakan-type",
-              "prompt": "Type the Japanese for 'a kettle'.",
+              "prompt": "Say the Japanese for 'a kettle'.",
               "assesses": [
                 "JA-LEX-C103-THINGS103-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C103-obon-type",
-              "prompt": "Type the Japanese for 'a tray'.",
+              "prompt": "Say the Japanese for 'a tray'.",
               "assesses": [
                 "JA-LEX-C103-THINGS103-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C103-kan-type",
-              "prompt": "Type the Japanese for 'a can, a tin'.",
+              "prompt": "Say the Japanese for 'a can, a tin'.",
               "assesses": [
                 "JA-LEX-C103-THINGS103-05"
               ],

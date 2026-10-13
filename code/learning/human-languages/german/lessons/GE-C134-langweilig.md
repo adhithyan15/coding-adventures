@@ -13,7 +13,8 @@ gloss: "boring"
 concept_tag: GE-EIGEN134-LANGWEILIG
 prerequisites: [GE-C133-beruehmt, GE-C133-interessant]
 sounds: []
-roots: []
+roots: [germanic-langaz, germanic-hwilo]
+etymology_hook: "langweilig — 'long' + 'while' + -ig: when a while feels long"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C133-interessant]
 <!-- hl-knowledge: introduces=[GE-LEX-C134-EIGEN134-01]; assesses=[] -->
 
 **langweilig** — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**langweilig** is built from the word for "long" + the word for "a while", Old High German *wīla*, English *while* (EtymDB 2.1), + *-ig*: when time feels long.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a kidney"
 concept_tag: PT-SAUDE148-RIM
 prerequisites: [PT-C148-pulmao, PT-C148-figado]
 sounds: []
-roots: []
+roots: [ren-latin]
+etymology_hook: "rim ← Latin ren, renis 'kidney' — English renal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C148-figado]
 <!-- hl-knowledge: introduces=[PT-LEX-C148-SAUDE148-05]; assesses=[] -->
 
 **o rim** — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rim** ← Latin *ren, renis*, "kidney" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -100,6 +100,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-one",
               "prompt": "Say there is a house.",
               "assesses": [
@@ -119,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-many",
               "prompt": "Say there are books.",
               "assesses": [
@@ -139,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-hay-unique",
               "prompt": "What does hay agree with?",
               "assesses": [

@@ -42,7 +42,7 @@ variety: standard
 
 **કણ** — *kaṇ* — "a grain".
 
-Say it: *kaṇ*. Look at its shape as you say it: the lessons that follow take pieces of it, **ક** and **ણ**, and write each one on its own.
+Say it: *kaṇ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ક** and **ણ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-KAN] -->

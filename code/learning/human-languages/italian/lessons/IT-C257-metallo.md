@@ -13,7 +13,8 @@ gloss: "metal"
 concept_tag: IT-COSE257-METALLO
 prerequisites: [IT-C256-arcobaleno, IT-C256-clima]
 sounds: []
-roots: []
+roots: [metallum-latin]
+etymology_hook: "metallo ← Latin metallum, Greek metallon 'a mine' — English metal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C256-clima]
 <!-- hl-knowledge: introduces=[IT-LEX-C257-COSE257-01]; assesses=[] -->
 
 **il metallo** — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metallo** ← Latin *metallum*, "a mine, a metal", from Greek *metallon* — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

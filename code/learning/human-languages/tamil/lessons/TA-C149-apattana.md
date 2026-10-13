@@ -14,7 +14,8 @@ romanization: "āpattāṉa"
 concept_tag: TA-QUAL149-APATTANA
 prerequisites: [TA-C148-nanainta, TA-C149-pirapalamana]
 sounds: []
-roots: []
+roots: [sanskrit-apad]
+etymology_hook: "ஆபத்தான ← Sanskrit āpad 'misfortune' (CDIAL 1196)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C149-pirapalamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C149-QUAL149-02]; assesses=[] -->
 
 **ஆபத்தான** — *āpattāṉa* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆபத்தான** (*āpattāṉa*) is a loan from Sanskrit *āpad*, "misfortune" (CDIAL 1196). *Āpattu*, "danger", takes *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

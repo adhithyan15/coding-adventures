@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かゆい (kayui) mean? ("Itchy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'itchy'.
+Say the Japanese for 'itchy'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くさい (kusai) mean? ("Smelly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'smelly'.
+Say the Japanese for 'smelly'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むしあつい (mushiatsui) mean? ("Humid".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'humid'.
+Say the Japanese for 'humid'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おかしい (okashii) mean? ("Funny; strange".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'funny'.
+Say the Japanese for 'funny'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おもしろい (omoshiroi) mean? ("Interesting".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'interesting'.
+Say the Japanese for 'interesting'.

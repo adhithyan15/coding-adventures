@@ -13,7 +13,8 @@ gloss: "a rug, a carpet"
 concept_tag: PT-CASA93-TAPETE
 prerequisites: [PT-C92-autocarro, PT-C92-comboio]
 sounds: []
-roots: []
+roots: [tapete-latin]
+etymology_hook: "tapete ← Latin tapete 'carpet', from Greek tapes — English tapestry shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C92-comboio]
 <!-- hl-knowledge: introduces=[PT-LEX-C93-CASA93-01]; assesses=[] -->
 
 **o tapete** — "a rug, a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tapete** ← Latin *tapete*, "carpet, rug", from Greek *tapēs* (Lewis & Short). EtymDB 2.1 traces it only to Old Portuguese *tapete*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

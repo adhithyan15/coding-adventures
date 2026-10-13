@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 86,
-  "sourceHash": "fnv1a64:bb72bb881ed3566c",
+  "sourceHash": "fnv1a64:6df7eb7e31e91dd8",
   "lessonIds": [
     "PT-C86-supermercado",
     "PT-C86-bomba-de-gasolina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch86.txt",
   "json": "portuguese/narration/ch86.json",
-  "textHash": "fnv1a64:bd7b3ad046a185b9",
-  "jsonHash": "fnv1a64:576d1b7a31174b9c",
+  "textHash": "fnv1a64:79535022fd0b19d6",
+  "jsonHash": "fnv1a64:6b190d287a1366a7",
   "findings": []
 }

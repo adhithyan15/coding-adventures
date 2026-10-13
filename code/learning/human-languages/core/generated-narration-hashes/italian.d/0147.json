@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 147,
-  "sourceHash": "fnv1a64:030931c41b8da29d",
+  "sourceHash": "fnv1a64:88b676a11527edd1",
   "lessonIds": [
     "IT-C147-ridurre",
     "IT-C147-rifiutare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch147.txt",
   "json": "italian/narration/ch147.json",
-  "textHash": "fnv1a64:2038b06f752333c1",
-  "jsonHash": "fnv1a64:3965dc600857075d",
+  "textHash": "fnv1a64:f0842da9257007c0",
+  "jsonHash": "fnv1a64:f0f36c5d9eed1b75",
   "findings": []
 }

@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C29-palavras-milk",
               "prompt": "Which word is milk?",
               "assesses": [
@@ -373,6 +374,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C29-linhas-thanks",
               "prompt": "Which line changes spelling depending on who says it?",
               "assesses": [
@@ -598,6 +600,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C29-primeira-leitura-joiner",
               "prompt": "How many different joining words are in the passage?",
               "assesses": [

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はくさい (hakusai) mean? ("Chinese cabbage".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'Chinese cabbage'.
+Say the Japanese for 'Chinese cabbage'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にんにく (ninniku) mean? ("Garlic".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'garlic'.
+Say the Japanese for 'garlic'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あんこ (anko) mean? ("Sweet bean paste".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sweet bean paste'.
+Say the Japanese for 'sweet bean paste'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はちみつ (hachimitsu) mean? ("Honey".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'honey'.
+Say the Japanese for 'honey'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あみ (ami) mean? ("A net".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a net'.
+Say the Japanese for 'a net'.

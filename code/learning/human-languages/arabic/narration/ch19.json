@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Numbers One to Five",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9f7109d240ad6877",
+  "sourceHash": "fnv1a64:3adbe5e6f6e6e12b",
   "lessons": [
     {
       "id": "AR-C19-wahid-khamsa",
       "sequence": 630,
       "title": "واحد، اثنان، ثلاثة، أربعة، خمسة — one through five",
       "headword": "واحد اثنان ثلاثة أربعة خمسة",
-      "romanization": "",
+      "romanization": "wāḥid ithnān thalātha arbaʿa khamsa",
       "gloss": "one through five — the Arabic WORDS for numbers, genuinely different from \"Arabic numerals\" (the written digit shapes 0-9), which actually trace back to India",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eb7a9cdc220901c",
+      "sourceHash": "fnv1a64:00cf1cee74a73022",
       "notice": null,
       "blocks": [
         {

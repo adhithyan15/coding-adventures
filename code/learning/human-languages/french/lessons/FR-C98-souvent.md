@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS50-SOUVENT
 prerequisites: [FR-C97-hui, FR-C98-hier]
 sounds: []
 roots: []
+etymology_hook: "souvent ← Latin subinde 'soon after, time and time over'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C98-hier]
 <!-- hl-knowledge: introduces=[FR-LEX-C98-TEMPS50-02]; assesses=[] -->
 
 **souvent** — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**souvent** ← Old French *suvent* (EtymDB 2.1) ← Latin *subinde*, "soon after, time after time" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

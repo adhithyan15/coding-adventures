@@ -13,7 +13,8 @@ gloss: "a boss"
 concept_tag: PT-ESCOLA112-CHEFE
 prerequisites: [PT-C111-carteiro, PT-C112-cliente]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "chefe ← French chef 'head', from Latin caput 'head' — English chef and chief"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C112-cliente]
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-02]; assesses=[] -->
 
 **o chefe** — "a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chefe** ← French *chef*, "head" (EtymDB 2.1) — borrowed. Behind it is Latin *caput*, "head".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

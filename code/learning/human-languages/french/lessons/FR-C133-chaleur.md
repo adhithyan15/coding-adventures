@@ -13,7 +13,8 @@ gloss: "heat"
 concept_tag: FR-QUALITES85-CHALEUR
 prerequisites: [FR-C133-sympathique, FR-C133-mechant, FR-C09-en-saison]
 sounds: []
-roots: []
+roots: [calor-latin]
+etymology_hook: "chaleur ← Latin calor 'heat' — English calorie shares it"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C133-mechant]
 <!-- hl-knowledge: introduces=[FR-LEX-C133-QUALITES85-03]; assesses=[] -->
 
 **la chaleur** — "heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chaleur** ← Old French *chalor* ← Latin *calor*, "heat" (EtymDB 2.1) — inherited: *ca-* became *cha-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

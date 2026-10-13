@@ -28,14 +28,14 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "danke" — DAHN-kuh, stress the front]
 [pause 8 seconds for the answer]
-[your turn — say: "danke" then "denken" — thanks, and the thinking inside it]
+[your turn — say: "danke" — thanks, with the thinking inside it]
 [pause 8 seconds for the answer]
 [your turn — say: English "thank" then "think" — one root, two coats]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What everyday verb is danke built from? (Denken, "to think.") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)
+What everyday idea is danke built from? (Thinking — "to think.") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)
 
 
 Lesson 2 of 18.
@@ -95,7 +95,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "vielen Dank" — many thanks]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "danke", "Dank", "denken"]
+[your turn — say: the family — "danke", "Dank" — thanks as a thought]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -159,7 +159,7 @@ That -t is the ending you already met on heißt: third person, one person, one t
 
 Sounds you'll need.
 h-silent-lengthening — in gehen the h is not breathed. It is a silent letter whose whole job is to stretch the vowel before it: GAY-en, not ge-HEN. So geht is simply gayt.
-This is worth banking now, because German uses the trick everywhere — sehr, Ihnen, Jahr all hide a lengthening h.
+This is worth banking now, because German uses the trick everywhere — several words in the next few lessons hide a lengthening h.
 
 The word, taken apart.
 gehen and English go descend from the same Germanic verb — no Latin detour, no false friend, a straight cognate. When you say geht, you are saying goes.
@@ -211,12 +211,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "it" then "es"; "that" then "das" — the same t/s swap, twice]
 [pause 8 seconds for the answer]
-[your turn — say: "es geht" — "it goes"]
+[your turn — say: "es" — "it," for a thing or a state]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is es? ("It.") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.) Say "it goes." (Es geht.)
+What is es? ("It.") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.)
 
 
 Lesson 7 of 18.
@@ -245,7 +245,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "mir" (meer) — "to me"]
 [pause 8 seconds for the answer]
-[your turn — say: "es geht mir" — "it goes to me"]
+[your turn — say: "to me" then "mir" — the to-whom form]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -304,6 +304,9 @@ es means it.
 dir means to you.
 Said vee gayt es deer — remember German w says v, and ie is a long ee.
 Every piece has been earned: wie from asking someone's name, geht from gehen, es and dir from the last two lessons. This is what the book has been building toward — a real question assembled from parts, not memorised whole.
+
+The phrase, taken apart.
+geht is a form of gehen from Old High German gān from Proto-Germanic gāną, "to go" — the same verb as English go. (EtymDB 2.1).
 
 You'll want to know: Wie geht's?
 In speech, geht es crushes together into geht's:
@@ -372,6 +375,9 @@ Wie geht es Ihnen? — "How are you?", to a stranger or an elder.
 Listener: friend, family. Question: Wie geht es dir?
 Listener: stranger, elder. Question: Wie geht es Ihnen?
 Three of the four words never move. Only the last one changes.
+
+The word, taken apart.
+Ihnen is the "to them" form of sie, "they": German's polite "you" is the inherited word for "they", capitalised.
 
 Grammar Lens: politeness lives in the pronoun.
 This is a rule worth generalising: German carries politeness in the pronoun, not in the sentence. English reaches for extra words to be polite — "I was wondering whether you might…" — and stacks them in front. German usually leaves the sentence exactly as it is and changes who you are calling the person.
@@ -510,6 +516,9 @@ Nothing has been added. That is the whole trick.
 Es geht mir gut says it goes well. Take the gut away and German does not become vague — it becomes pointed. The listener was waiting for a gut or a schlecht, and you gave neither. The absence is the meaning.
 English does this too, with tone rather than deletion: "It's… going."
 
+The phrase, taken apart.
+geht from Old High German gān from Proto-Germanic gāną, "to go", the same verb as English go; es from Old High German iz, "it", English it's twin. (EtymDB 2.1).
+
 Grammar Lens: the answer ladder.
 You now hold the whole range, top to bottom, with no word left unexplained:
 [a table of 5 rows, read aloud]
@@ -544,6 +553,9 @@ Someone asks how you are; you answer. A conversation only starts when you ask ba
 You'll want to know: und.
 und — "and."
 It is English and with the vowel darkened, and it has barely changed in a thousand years — one of the oldest words either language still uses daily.
+
+The word, taken apart.
+und from Old High German unti from Proto-Germanic andi — inherited, the same word as English and. (EtymDB 2.1).
 
 Sounds you'll need.
 d-t-final — say oont, not oond. German hardens a d at the end of a word into a t. It is the same rule that makes Tag come out as tock rather than tahg: whatever the spelling, a final consonant goes voiceless. So und rhymes with English hunt, not with shunned.
@@ -600,6 +612,8 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Run the casual exchange without looking. Which answer is the so-so one? (Es geht.) Which word answers danke? (Bitte.) Why dir and not du? (The question means "how goes it to you" — the to-whom form.)
+[pause 2 seconds]
+Which English word is hiding in sehr? (Sore — as in sorely missed.) And bitte is the asking-form of which word, cousin of English bid? (Bitten, to ask.)
 
 
 Lesson 18 of 18.
@@ -635,3 +649,5 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which greeting opens the formal exchange? (Guten Tag.) Which dative pronoun appears twice? (Ihnen.) What changes from the casual version? (Dir becomes Ihnen — nothing else.) Where does German keep its politeness? (In the pronoun.)
+[pause 2 seconds]
+Taken literally, who is Ihnen aimed at? (Them — to them: the polite you speaks of you as though you were a group.)

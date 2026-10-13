@@ -149,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C67-vajle-r1",
               "prompt": "Ask what time it is, answer with one o'clock, then answer with four o'clock.",
               "assesses": [
@@ -331,6 +332,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C67-vajta-r1",
               "prompt": "Say it is two o'clock, then say you come at two o'clock, then say you come in the morning.",
               "assesses": [
@@ -497,6 +499,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R67-clock-recall-run",
               "prompt": "Ask the time, answer one o'clock, then say you come at ten o'clock.",
               "assesses": [

@@ -4,7 +4,7 @@
   "chapter": 172,
   "title": "Review --- All Four Stem Changes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d20366cd3790c27e",
+  "sourceHash": "fnv1a64:a63ced8569be5d8d",
   "lessons": [
     {
       "id": "ES-C39-repaso-cambios",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63eb6a2f220e367b",
+      "sourceHash": "fnv1a64:c961729f289da4e9",
       "notice": null,
       "blocks": [
         {
@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-count",
               "prompt": "How many stem-change patterns does Spanish have in total?",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-only",
               "prompt": "Which pattern belongs to exactly one verb, and which verb?",
               "assesses": [
@@ -174,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-ei",
               "prompt": "Which change does conseguir make?",
               "assesses": [
@@ -207,7 +210,21 @@
             },
             {
               "kind": "speech",
-              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
+              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And contar, which breaks o becomes ue: why does one verb both count and tell? (Latin computāre, to reckon up — the same road as English account.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
             }
           ]
         }

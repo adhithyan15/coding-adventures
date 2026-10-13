@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 48,
   "title": "Nescio, Male, Malus, Sed, Aut",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6d91fd9228f97082",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:dbd66533e7e45a96",
   "lessons": [
     {
       "id": "LA-C48-nescio",
@@ -14,20 +14,13 @@
       "romanization": "nesciō, nescīre",
       "gloss": "I do not know — and the rule the whole chapter turns on: nōn stands in front of the verb",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8db7ea2d768de71",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ea2123c330d76bcb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -111,7 +104,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the shape. It is nē- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
+              "text": "Take it apart. It is ne- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
             },
             {
               "kind": "speech",
@@ -166,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "nōn possum — I cannot. (The next chapter's verb, negated with this rule.)"
+              "text": "nōn audiō — I do not hear."
             },
             {
               "kind": "speech",
@@ -218,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Latin negate an ordinary verb? (nōn immediately before it.) Say \"I do not understand.\" (Nōn intellegō.) And what two words are inside nesciō? (Nē- and sciō.)"
+              "text": "How does Latin negate an ordinary verb? (nōn immediately before it.) Say \"I do not understand.\" (Nōn intellegō.) And what two words are inside nesciō? (Ne- and sciō.)"
             }
           ]
         }
@@ -682,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12b14d02232fa639",
+      "sourceHash": "fnv1a64:e43acac705e46803",
       "notice": null,
       "blocks": [
         {
@@ -767,7 +760,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met it once already without being told. The propediem tē vidēbō lesson quoted Cicero's own letter: \"Sed, ut spērō, propediem tē vidēbō\" — \"But, as I hope, I shall see you before long.\" That was a real sentence by a real Roman, and this is the word that opened it."
+              "text": "You have met its sentence already. The propediem tē vidēbō lesson quoted Cicero's own letter, trimmed to \"…ut spērō, propediem tē vidēbō\". In the letter the line opens with this word: \"Sed, ut spērō, propediem tē vidēbō\" — \"But, as I hope, I shall see you before long.\" A real sentence by a real Roman, and now you have its first word too."
             },
             {
               "kind": "speech",
@@ -846,7 +839,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a47617ffc328f91",
+      "sourceHash": "fnv1a64:b6d1dfd2d32ebac1",
       "notice": null,
       "blocks": [
         {
@@ -939,7 +932,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally the imperative of volō — \"choose, if you like\" — which is the next chapter's verb."
+              "text": "Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally an old command form of the verb \"to want\" — \"choose, if you like\" — and that verb is the next chapter's."
             },
             {
               "kind": "speech",
@@ -991,7 +984,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (The imperative of volō — choose if you like.)"
+              "text": "Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (An old command form of \"to want\" — choose if you like.)"
             }
           ]
         }

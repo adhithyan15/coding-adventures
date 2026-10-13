@@ -14,6 +14,7 @@ concept_tag: PT-VERB-FOTOGRAFAR
 prerequisites: [PT-C230-matematica, PT-C231-construir]
 sounds: []
 roots: []
+etymology_hook: "fotografar — built from fotografia + -ar: to take a photograph"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C231-construir]
 <!-- hl-knowledge: introduces=[PT-LEX-C231-VERBOS231-02]; assesses=[] -->
 
 **fotografar** — "to photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotografar** is built from *fotografia*, "photograph", and *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

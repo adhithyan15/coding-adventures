@@ -57,8 +57,8 @@ Same ending, different stem. **The stem is what you will meet again**, because
 everything Malayalam later does to this verb happens to the front of it and
 leaves the ending behind.
 
-Say **കുടി** — *kuṭi* — on its own and look at it. Two letters, and they are the
-whole of what makes this verb *drinking* rather than *taking*. **The next lesson
+Say **കുടി** — *kuṭi* — on its own: two syllables, written as two letters, and
+they are the whole of what makes this verb *drinking* rather than *taking*. **The next lesson
 is about those two letters**, because one small change to them produces a word
 you have known since the family chapter.
 

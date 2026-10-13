@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 169,
-  "sourceHash": "fnv1a64:78924d83ba1d385e",
+  "sourceHash": "fnv1a64:120e758de3e08c11",
   "lessonIds": [
     "GE-C169-bekannt",
     "GE-C169-fremd",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch169.txt",
   "json": "german/narration/ch169.json",
-  "textHash": "fnv1a64:c2b8d59828fa7791",
-  "jsonHash": "fnv1a64:1a4f74958458abd9",
+  "textHash": "fnv1a64:b60ae969570f70f9",
+  "jsonHash": "fnv1a64:f62371909dbacb33",
   "findings": []
 }

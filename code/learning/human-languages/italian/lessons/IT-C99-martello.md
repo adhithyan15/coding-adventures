@@ -13,7 +13,8 @@ gloss: "a hammer"
 concept_tag: IT-ATTREZZI99-MARTELLO
 prerequisites: [IT-C99-corda, IT-C99-chiodo]
 sounds: []
-roots: []
+roots: [martulus-latin]
+etymology_hook: "martello ← Late Latin martellus, from Latin martulus 'hammer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C99-chiodo]
 <!-- hl-knowledge: introduces=[IT-LEX-C99-ATTREZZI99-04]; assesses=[] -->
 
 **il martello** — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**martello** ← Late Latin *martellus*, from Latin *martulus*, "hammer" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

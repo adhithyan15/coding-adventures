@@ -13,7 +13,8 @@ gloss: "important"
 concept_tag: PT-QUALIDADES123-IMPORTANTE
 prerequisites: [PT-C122-ultimo, PT-C123-famoso]
 sounds: []
-roots: []
+roots: [importare-latin]
+etymology_hook: "importante ← Latin importans 'bringing in, carrying weight' — English important"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C123-famoso]
 <!-- hl-knowledge: introduces=[PT-LEX-C123-QUALIDADES123-02]; assesses=[] -->
 
 **importante** — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**importante** ← Latin *importans*, "bringing in" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

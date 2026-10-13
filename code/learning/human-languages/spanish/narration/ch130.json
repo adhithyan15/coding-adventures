@@ -132,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-sintesis-subjuntivo-assert",
               "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-sintesis-subjuntivo-wish",
               "prompt": "Now you only wish it were so. Which form follows ojala?",
               "assesses": [
@@ -170,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-sintesis-subjuntivo-ojala",
               "prompt": "What did ojala originally mean, and in which language?",
               "assesses": [

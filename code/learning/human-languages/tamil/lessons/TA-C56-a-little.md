@@ -11,7 +11,8 @@ romanization: "siṟitu"
 concept_tag: TA-REPLY-A-LITTLE
 prerequisites: [TA-C55-bone, TA-C54-mat, TA-C55-neck]
 sounds: []
-roots: []
+roots: [dravidian-ciru-small]
+etymology_hook: "சிறிது — native Dravidian (DEDR 1594)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C55-bone]
 You already have *siṟiya*, "small". சிறிது is the same root turned into an amount: not a small thing but a small quantity of something. Held a dish and asked how much, you say *siṟitu* and you get a little.
 
 Tamil has a *koñcam* as well, which is the one you will hear across a table, and which Telugu shares as *koñcem*. சிறிது is the more formal of the two, and the one you would write down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிறிது** (*siṟitu*) is native Dravidian (DEDR 1594). It is the noun of *siṟiya*, "small": "that which is small".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

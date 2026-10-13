@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जीमणो (jīmaṇo) mean? ("Right (the side)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'right (the side)'.
+Say the Marwadi for 'right (the side)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चौक (chauk) mean? ("A town square".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a town square'.
+Say the Marwadi for 'a town square'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चौराहो (chaurāho) mean? ("A crossroads".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a crossroads'.
+Say the Marwadi for 'a crossroads'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोड़ (moṛ) mean? ("A turn, a bend".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a turn, a bend'.
+Say the Marwadi for 'a turn, a bend'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गेलो (gelo) mean? ("A path, the way".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a path, the way'.
+Say the Marwadi for 'a path, the way'.

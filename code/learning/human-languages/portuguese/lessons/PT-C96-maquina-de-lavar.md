@@ -13,7 +13,8 @@ gloss: "a washing machine"
 concept_tag: PT-CASA96-MAQUINA-DE-LAVAR
 prerequisites: [PT-C96-lixo, PT-C96-vassoura]
 sounds: []
-roots: []
+roots: [machina-latin]
+etymology_hook: "máquina de lavar: máquina ← Latin machina 'device'; lavar ← Latin lavare 'to wash'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C96-vassoura]
 <!-- hl-knowledge: introduces=[PT-LEX-C96-CASA96-03]; assesses=[] -->
 
 **a máquina de lavar** — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**máquina de lavar** is "machine for washing": *máquina* ← Latin *machina*, "device", from Greek (EtymDB 2.1), and *lavar* ← Latin *lavare*, "to wash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

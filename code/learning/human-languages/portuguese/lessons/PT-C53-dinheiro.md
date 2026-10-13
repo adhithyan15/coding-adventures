@@ -13,7 +13,8 @@ gloss: "money"
 concept_tag: PT-COISAS2-DINHEIRO
 prerequisites: [PT-C53-telefone, PT-C53-guarda-chuva]
 sounds: []
-roots: []
+roots: [denarius-latin]
+etymology_hook: "dinheiro ← Latin denarius 'a silver coin' — Spanish dinero and the Arabic dinar share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C53-guarda-chuva]
 <!-- hl-knowledge: introduces=[PT-LEX-C53-COISAS2-03]; assesses=[] -->
 
 **o dinheiro** — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dinheiro** ← Latin *denarius*, "a Roman silver coin" (EtymDB 2.1) — inherited. Old Portuguese *dĩeiro* lost the *-n-* and kept it as a nasal vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

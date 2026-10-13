@@ -13,7 +13,8 @@ gloss: "to need"
 concept_tag: GE-VERB-BRAUCHEN
 prerequisites: [GE-C67-verlieren, GE-C67-glauben]
 sounds: []
-roots: []
+roots: [germanic-brukana]
+etymology_hook: "brauchen ← Old High German brūhhan ← Proto-Germanic *brūkaną 'to use' — kin to English brook"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C67-glauben]
 <!-- hl-knowledge: introduces=[GE-LEX-C67-VERBEN4-03]; assesses=[] -->
 
 **brauchen** — "to need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brauchen** ← Old High German *brūhhan* ← Proto-Germanic *\*brūkaną*, "to use, to enjoy" — inherited. (EtymDB 2.1) English *brook*, "to put up with", is the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to enjoy, to make the most of"
 concept_tag: FR-VERB-PROFITER
 prerequisites: [FR-C208-diminuer, FR-C208-prevenir]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "profiter — from the word for 'profit', Latin profectus 'progress, gain' — English profit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C208-prevenir]
 <!-- hl-knowledge: introduces=[FR-LEX-C209-VERBES209-01]; assesses=[] -->
 
 **profiter** — "to enjoy, to make the most of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profiter** — formed from the word for "profit", ← Latin *profectus*, "progress, gain" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

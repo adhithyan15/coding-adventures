@@ -13,7 +13,8 @@ gloss: "a meeting"
 concept_tag: IT-LAV172-RIUNIONE
 prerequisites: [IT-C172-collega, IT-C172-stipendio]
 sounds: []
-roots: []
+roots: [unire-latin]
+etymology_hook: "riunione — from riunire 'to bring together again', ri- + unire ← Latin unire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C172-stipendio]
 <!-- hl-knowledge: introduces=[IT-LEX-C172-LAV172-05]; assesses=[] -->
 
 **la riunione** — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riunione** — built from *riunire*, "to bring together again": *ri-* plus *unire*, "to unite" ← Latin *unire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

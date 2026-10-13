@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 42,
-  "sourceHash": "fnv1a64:194fb0b4a70ada67",
+  "sourceHash": "fnv1a64:3c56f59f1d5c9090",
   "lessonIds": [
     "FR-C38-consonne-finale",
     "FR-C38-pluriel-s",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "french/narration/ch42.txt",
   "json": "french/narration/ch42.json",
-  "textHash": "fnv1a64:0aeedd87343b8e85",
-  "jsonHash": "fnv1a64:155eea05157174a0",
+  "textHash": "fnv1a64:30bdcd39ef17cc1e",
+  "jsonHash": "fnv1a64:917b62a2d1f8cf08",
   "findings": []
 }

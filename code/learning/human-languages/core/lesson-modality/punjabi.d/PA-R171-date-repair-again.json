@@ -5,16 +5,16 @@
     "chapter": 171,
     "sequence": 9140,
     "modality": "pen",
-    "derived": "voice",
+    "derived": "sight",
     "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:55cdbe9fdd35c68e",
     "authored": "pen",
     "authoredReason": "The learner must inspect and repair printed Gurmukhi date-form marks; this task is not drivable.",

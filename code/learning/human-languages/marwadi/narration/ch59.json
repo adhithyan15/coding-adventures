@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C59-seb-type",
-              "prompt": "Type the Marwadi for 'an apple'.",
+              "prompt": "Say the Marwadi for 'an apple'.",
               "assesses": [
                 "MW-LEX-C59-VERBS59-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C59-kelo-type",
-              "prompt": "Type the Marwadi for 'a banana'.",
+              "prompt": "Say the Marwadi for 'a banana'.",
               "assesses": [
                 "MW-LEX-C59-VERBS59-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C59-alu-type",
-              "prompt": "Type the Marwadi for 'a potato'.",
+              "prompt": "Say the Marwadi for 'a potato'.",
               "assesses": [
                 "MW-LEX-C59-VERBS59-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C59-tamatar-type",
-              "prompt": "Type the Marwadi for 'a tomato'.",
+              "prompt": "Say the Marwadi for 'a tomato'.",
               "assesses": [
                 "MW-LEX-C59-VERBS59-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C59-gajar-type",
-              "prompt": "Type the Marwadi for 'a carrot'.",
+              "prompt": "Say the Marwadi for 'a carrot'.",
               "assesses": [
                 "MW-LEX-C59-VERBS59-05"
               ],

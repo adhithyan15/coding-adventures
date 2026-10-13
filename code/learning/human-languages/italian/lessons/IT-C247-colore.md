@@ -13,7 +13,8 @@ gloss: "a colour"
 concept_tag: IT-COSE247-COLORE
 prerequisites: [IT-C247-bottone, IT-C247-taglia]
 sounds: []
-roots: []
+roots: [color-latin]
+etymology_hook: "colore ← Latin color, colorem — English colour is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C247-taglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C247-COSE247-03]; assesses=[] -->
 
 **il colore** — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colore** ← Latin *color*, "colour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

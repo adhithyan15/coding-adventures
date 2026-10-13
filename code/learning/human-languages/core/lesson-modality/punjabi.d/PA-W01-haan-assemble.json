@@ -9,11 +9,13 @@
     "drivable": false,
     "reasons": [
       "reading-type",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "reading-type"
+      "reading-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:af162bf222dea615",

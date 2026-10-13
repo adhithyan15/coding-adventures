@@ -13,7 +13,8 @@ gloss: "a bear"
 concept_tag: FR-ANIMAUX38-OURS
 prerequisites: [FR-C85-souris, FR-C85-loup]
 sounds: []
-roots: []
+roots: [ursus-latin]
+etymology_hook: "ours ← Latin ursus 'bear' — English ursine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C85-loup]
 <!-- hl-knowledge: introduces=[FR-LEX-C86-ANIMAUX38-01]; assesses=[] -->
 
 **l'ours** — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ours** ← Old French *urs* ← Latin *ursus*, "bear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

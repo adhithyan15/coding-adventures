@@ -163,10 +163,8 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "flex-wrap"),
     (Backend::Qt, "justify-content"),
     //
-    // These per-edge border halves are not lowered here. Solid style is now
-    // accounted for by the native edge emitted for a positive width.
-    (Backend::Qt, "border-bottom-color"),
-    (Backend::Qt, "border-bottom-width"),
+    // Solid per-edge border style is accounted for by the native edge emitted
+    // for a positive width; the matching width and colour are now lowered.
     //
     // typography inherited onto a non-text container has nowhere to go.
     (Backend::Qt, "color"),
@@ -197,7 +195,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Flutter, "flex-wrap"),
     (Backend::Flutter, "justify-content"),
     (Backend::Flutter, "min-height"),
-    (Backend::Flutter, "text-align"),
     // `width` left this list in #16884: every Engram occurrence is a fixed
     // leaf width and now lowers through a SizedBox. Percentage widths remain
     // unsupported and reported in products that author them.

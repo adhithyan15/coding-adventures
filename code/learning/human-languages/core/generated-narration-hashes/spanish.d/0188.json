@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 188,
-  "sourceHash": "fnv1a64:1fb199dd0346515a",
+  "sourceHash": "fnv1a64:2adab37fcddebd70",
   "lessonIds": [
     "ES-C53-lo-que"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch188.txt",
   "json": "spanish/narration/ch188.json",
-  "textHash": "fnv1a64:e96b70599b1320e8",
-  "jsonHash": "fnv1a64:b781ded40c93f30d",
+  "textHash": "fnv1a64:552b464f357c1863",
+  "jsonHash": "fnv1a64:183633fa9fadeca9",
   "findings": []
 }

@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-FUTURE-AANGE-04, PA-PHRASE-RABB-RAKHA-04, PA-LEX-SIR, PA-LEX-NA, PA-FORM-ECHO-REDUPLICATION, PA-LEX-MIHARBANI, PA-LEX-MAAF, PA-GRAM-NU-DATIVE, PA-LEX-SHUBH-RAAT]
+  knowledge: [PA-GRAMMAR-FUTURE-AANGE-04, PA-PHRASE-RABB-RAKHA-04, PA-LEX-SIR, PA-LEX-NA, PA-FORM-ECHO-REDUPLICATION, PA-LEX-MIHARBANI, PA-LEX-MAAF, PA-GRAM-NU-DATIVE, PA-LEX-SHUBH-RAAT, PA-ETYMON-RAAT-RATRI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, language-focus]
@@ -57,7 +57,7 @@ the same dative ending the book uses elsewhere: the welcome is grammatically
 *addressed* to the arrivals rather than describing them.
 
 ## Guided Practice: leaving, and the registers
-<!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-FUTURE-AANGE-04, PA-PHRASE-RABB-RAKHA-04, PA-LEX-SHUBH-RAAT, PA-LEX-NA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-FUTURE-AANGE-04, PA-PHRASE-RABB-RAKHA-04, PA-LEX-SHUBH-RAAT, PA-LEX-NA, PA-ETYMON-RAAT-RATRI] -->
 
 [PAUSE 1s]
 - [YOU SAY: we will meet — and say what the **-ਾਂਗੇ** ending is doing]

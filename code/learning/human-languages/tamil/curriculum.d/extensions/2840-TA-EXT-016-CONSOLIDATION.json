@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-016-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can retrieve the Chapter 10 weekdays and write ந, ன, ற and the ā sign from sound.",
+  "prerequisites": []
+}

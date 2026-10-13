@@ -11,7 +11,8 @@ romanization: "vāruṅkaḷ"
 concept_tag: TA-WELCOME-COME
 prerequisites: [TA-C98-invitation, TA-C98-gift]
 sounds: []
-roots: []
+roots: [dravidian-vaa-come]
+etymology_hook: "வாருங்கள் — native Dravidian (DEDR 5270); Malayalam varuka"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C98-gift]
 **வாருங்கள்** (*vāruṅkaḷ*) — "please come", "come in".
 
 It is the verb **வா**, "come", with the respectful **-ங்கள்**. At the door, it is the welcome.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாருங்கள்** (*vāruṅkaḷ*) is native Dravidian. DEDR 5270 lists Malayalam *varuka*. It is *vā*, "come", with the polite ending *-uṅkaḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

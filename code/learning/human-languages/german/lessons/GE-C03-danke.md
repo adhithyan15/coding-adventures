@@ -8,7 +8,7 @@ type: word
 headword: danke
 gloss: thank you — which is really "I think of you"
 concept_tag: COURTESY-THANKS
-prerequisites: []
+prerequisites: [GE-C02-practice]
 sounds: [vowel-a-german]
 roots: [denken-german]
 etymology_hook: "danke comes from denken, to think: to thank was to keep someone in mind, and English thank and think share it"
@@ -79,12 +79,12 @@ Three different pictures of gratitude, worth holding side by side:
 
 [PAUSE 1s]
 - [YOU SAY: "danke" — *DAHN-kuh*, stress the front]
-- [YOU SAY: "danke" then "denken" — thanks, and the thinking inside it]
+- [YOU SAY: "danke" — thanks, with the thinking inside it]
 - [YOU SAY: English "thank" then "think" — one root, two coats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DANKE-01, GE-ETYMON-DANKE-DENKEN-02] -->
 
-[PAUSE 3s] What everyday verb is *danke* built from? (*Denken*, "to think.")
+[PAUSE 3s] What everyday idea is *danke* built from? (Thinking — "to think.")
 What two English words share that same split? (*Thank* and *think*.) Where does
 the stress fall? (On the front: *DAHN-kuh*.)

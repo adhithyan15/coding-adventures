@@ -53,7 +53,7 @@ apart again.
 
 [PAUSE 1s]
 - [YOU SAY: "é, i, u"]
-- [YOU SAY: the pairs — "parler parlé, finir fini, vendre vendu"]
+- [YOU SAY: the participles — "parlé, fini, vendu"]
 - [YOU SAY: the Latin — "-ātum, -ītum, -ūtum"; and English "finite, acute, statute"]
 
 ## Guided Practice: the sound trap and the fossil

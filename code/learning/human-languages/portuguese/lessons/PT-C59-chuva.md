@@ -13,7 +13,8 @@ gloss: "rain"
 concept_tag: PT-TEMPO-CHUVA
 prerequisites: [PT-C58-estrela, PT-C58-nuvem]
 sounds: []
-roots: []
+roots: [pluvia-latin]
+etymology_hook: "chuva ← Latin pluvia 'rain': pl- became ch- — English pluvial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C58-nuvem]
 <!-- hl-knowledge: introduces=[PT-LEX-C59-TEMPO-01]; assesses=[] -->
 
 **a chuva** — "rain". Inside **o guarda-chuva**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chuva** ← Latin *pluvia*, "rain" (EtymDB 2.1) — inherited. Latin *pl-* became *ch-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

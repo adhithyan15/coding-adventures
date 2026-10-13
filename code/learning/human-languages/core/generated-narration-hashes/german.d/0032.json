@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 32,
-  "sourceHash": "fnv1a64:c212262523f63c8c",
+  "sourceHash": "fnv1a64:5d55573be48fb0a1",
   "lessonIds": [
     "GE-C19-bitte-requests"
   ],
@@ -10,6 +10,6 @@
   "text": "german/narration/ch32.txt",
   "json": "german/narration/ch32.json",
   "textHash": "fnv1a64:5fa2c352c3f3e28d",
-  "jsonHash": "fnv1a64:17bbded4791426af",
+  "jsonHash": "fnv1a64:6951bdeaa88cb12c",
   "findings": []
 }

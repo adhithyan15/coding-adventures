@@ -14,7 +14,8 @@ romanization: "nilam"
 concept_tag: TA-IDAM264-NILAM
 prerequisites: [TA-C264-itaiyil, TA-C264-vali]
 sounds: []
-roots: []
+roots: [dravidian-nilam-ground]
+etymology_hook: "நிலம் — native Dravidian (DEDR 3676); Malayalam nilam 'ground', Kannada nela"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C264-vali]
 <!-- hl-knowledge: introduces=[TA-LEX-C264-IDAM264-04]; assesses=[] -->
 
 **நிலம்** — *nilam* — "land, the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிலம்** (*nilam*) is native Dravidian. DEDR 3676 lists Malayalam *nilam*, "ground" and Kannada *nela*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 174,
-  "sourceHash": "fnv1a64:5f41ecd49317d0d5",
+  "sourceHash": "fnv1a64:5f93a820ea760a25",
   "lessonIds": [
     "ES-C40-esperar",
     "ES-C40-contestar",
@@ -12,6 +12,6 @@
   "text": "spanish/narration/ch174.txt",
   "json": "spanish/narration/ch174.json",
   "textHash": "fnv1a64:a4e8ea282d91ffae",
-  "jsonHash": "fnv1a64:f7544afccf788d23",
+  "jsonHash": "fnv1a64:197d3c65ae2b9099",
   "findings": []
 }

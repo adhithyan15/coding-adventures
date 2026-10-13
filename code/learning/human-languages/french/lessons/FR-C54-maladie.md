@@ -13,7 +13,8 @@ gloss: "an illness"
 concept_tag: FR-SANTE6-MALADIE
 prerequisites: [FR-C53-medecin, FR-C54-hopital]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "maladie — the adjective for 'sick' + -ie; it goes back to Latin male habitus 'in poor condition'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C54-hopital]
 <!-- hl-knowledge: introduces=[FR-LEX-C54-SANTE6-02]; assesses=[] -->
 
 **la maladie** — "an illness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maladie** — built in Old French from the adjective for "sick", with the ending *-ie*. That adjective goes back to Latin *male habitus*, "in poor condition". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

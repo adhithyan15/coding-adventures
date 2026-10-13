@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 132,
-  "sourceHash": "fnv1a64:ee9601e3868a9e55",
+  "sourceHash": "fnv1a64:164e1e350fb47a8c",
   "lessonIds": [
     "PT-C132-lavar-se",
     "PT-C132-levantar-se",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch132.txt",
   "json": "portuguese/narration/ch132.json",
-  "textHash": "fnv1a64:e3c1227bb910de51",
-  "jsonHash": "fnv1a64:bee4381a90c4bf59",
+  "textHash": "fnv1a64:3185cb3c141e14f7",
+  "jsonHash": "fnv1a64:c448e4df68a4ea3b",
   "findings": []
 }

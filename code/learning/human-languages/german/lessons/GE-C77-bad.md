@@ -13,7 +13,8 @@ gloss: "a bath; a bathroom"
 concept_tag: GE-HAUS2-BAD
 prerequisites: [GE-C77-garten, GE-C77-lampe]
 sounds: []
-roots: []
+roots: [germanic-batha]
+etymology_hook: "Bad ← Old High German bad ← Proto-Germanic *baþą — the same word as English bath"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C77-lampe]
 <!-- hl-knowledge: introduces=[GE-LEX-C77-HAUS2-03]; assesses=[] -->
 
 **das Bad** — "a bath; a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bad** ← Old High German *bad* ← Proto-Germanic *\*baþą* — inherited, the same word as English *bath*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

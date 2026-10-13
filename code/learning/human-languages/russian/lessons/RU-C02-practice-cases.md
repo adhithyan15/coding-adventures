@@ -45,9 +45,9 @@ Cover the right column, then give the acted-on form:
 
 | doing the action | action lands here | meaning |
 |---|---|---|
-| **я** | **меня** | I / me |
-| **ты** | **тебя** | you / you, informal |
-| **вы** | **вас** | you / you, formal or plural |
+| *ya* | *menyá* | I / me |
+| *ty* | *tebyá* | you / you, informal |
+| *vy* | *vas* | you / you, formal or plural |
 
 Russian has six cases, but none of that system is due yet. Learn these three
 pairs because the naming exchange needs them.
@@ -55,19 +55,19 @@ pairs because the naming exchange needs them.
 ## How to answer — each shape in the frame
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MENYA-ZOVUT, RU-LEX-KAK-VAS-ZOVUT] -->
 
-- **Меня** зовут… — people call **me**…
-- Как **тебя** зовут? — how do people call **you**, one friend?
-- Как **вас** зовут? — how do people call **you**, formally?
+- *Menyá zovút…* — people call **me**…
+- *Kak tebyá zovút?* — how do people call **you**, one friend?
+- *Kak vas zovút?* — how do people call **you**, formally?
 
-The verb stays **зовут**; the person changes shape.
+The verb stays *zovút*; the person changes shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DRILL-PERSON-SHAPES-01, RU-LEX-YA, RU-LEX-TY-VY] -->
 
 [PAUSE 1s]
-- [YOU SAY: *я → меня*]
-- [YOU SAY: *ты → тебя*]
-- [YOU SAY: *вы → вас*]
+- [YOU SAY: *ya → menyá*]
+- [YOU SAY: *ty → tebyá*]
+- [YOU SAY: *vy → vas*]
 - [YOU SAY: one verb, three object forms]
 
 ## Wrap-up Recall

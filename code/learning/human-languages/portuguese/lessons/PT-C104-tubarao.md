@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA104-TUBARAO
 prerequisites: [PT-C104-blusa, PT-C104-fato]
 sounds: []
 roots: []
+etymology_hook: "tubarão — origin uncertain; Spanish tiburón is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C104-fato]
 <!-- hl-knowledge: introduces=[PT-LEX-C104-ROUPA104-03]; assesses=[] -->
 
 **o tubarão** — "a shark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tubarão** — its origin is uncertain. Spanish *tiburón* is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

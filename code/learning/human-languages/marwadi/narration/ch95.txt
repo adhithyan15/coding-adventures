@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बसंत (basant) mean? ("Spring".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'spring'.
+Say the Marwadi for 'spring'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तड़कै (taṛkai) mean? ("At daybreak".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'at daybreak'.
+Say the Marwadi for 'at daybreak'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बगत (bagat) mean? ("Time".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'time'.
+Say the Marwadi for 'time'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रोज (roj) mean? ("Every day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'every day'.
+Say the Marwadi for 'every day'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आजकाल (ājkāl) mean? ("Nowadays".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'nowadays'.
+Say the Marwadi for 'nowadays'.

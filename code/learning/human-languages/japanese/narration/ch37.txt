@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うち (uchi) mean? ("Home".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'home'.
+Say the Japanese for 'home'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まど (mado) mean? ("A window".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a window'.
+Say the Japanese for 'a window'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いす (isu) mean? ("A chair".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chair'.
+Say the Japanese for 'a chair'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つくえ (tsukue) mean? ("A desk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a desk'.
+Say the Japanese for 'a desk'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やね (yane) mean? ("A roof".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a roof'.
+Say the Japanese for 'a roof'.
 
 
 Lesson 6 of 7.
@@ -189,7 +189,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A nail? (tsume.) An elbow? (hiji.) A knee? (hiza.) The throat? (nodo.) The chest? (mune.) A bone? (hone.) The chin? (ago.) A cheek? (hoo.) An eyebrow? (mayu.) Skin? (hada.) Sweat? (ase.) Tears? (namida.) A voice? (koe.) A fever? (netsu.) Painful? (itai.) Medicine? (kusuri.) Sleepy? (nemui.) Sad? (kanashii.) Fun? (tanoshii.) Scary? (kowai.) Pain? (itami.) A grandfather? (ojiisan.) An uncle? (ojisan.) A son? (musuko.) A daughter? (musume.) A friend? (tomodachi.) An adult? (otona.) A man? (otoko.) A woman? (onna.) A teacher? (sensei.) Next door; a neighbour? (tonari.) A companion? (nakama.) To go? (iku.) To buy? (kau.) To drink? (nomu.) To read? (yomu.) To write? (kaku.) To speak? (hanasu.) To wait? (matsu.) To meet? (au.) To use? (tsukau.) To sing? (utau.) To say? (iu.) To think? (omou.) To hold? (motsu.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a desk'.
+Say the Japanese for 'a desk'.
 
 
 Lesson 7 of 7.
@@ -224,4 +224,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 To stand? (tatsu.) To cry? (naku.) To live? (sumu.) To rest? (yasumu.) To enjoy? (tanoshimu.) To push? (osu.) To pull? (hiku.) To look for? (sagasu.) To lend? (kasu.) To give back? (kaesu.) To take out? (dasu.) To drop? (otosu.) To fix? (naosu.) To move? (ugoku.) Rice; a meal? (gohan.) A fish? (sakana.) Meat? (niku.) An egg? (tamago.) Vegetables? (yasai.) Fruit? (kudamono.) An apple? (ringo.) A mandarin orange? (mikan.) A strawberry? (ichigo.) A peach? (momo.) A pear? (nashi.) A watermelon? (suika.) A white radish? (daikon.) A carrot? (ninjin.) Tofu? (toufu.) Salt? (shio.) Sugar? (satou.) Udon noodles? (udon.) Sushi? (sushi.) Breakfast? (asagohan.) Sweets? (okashi.) Seaweed? (nori.) A Japanese plum? (ume.) A chestnut? (kuri.) Beans? (mame.) Uncooked rice? (kome.) Home? (uchi.) A window? (mado.) A chair? (isu.) A desk? (tsukue.) A roof? (yane.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to stand'.
+Say the Japanese for 'to stand'.

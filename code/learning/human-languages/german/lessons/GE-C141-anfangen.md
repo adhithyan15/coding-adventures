@@ -13,7 +13,8 @@ gloss: "to start"
 concept_tag: GE-VERB-ANFANGEN
 prerequisites: [GE-C141-packen, GE-C141-reparieren]
 sounds: []
-roots: []
+roots: [germanic-fanhana]
+etymology_hook: "anfangen ← Middle High German anvāhen 'to take hold': an- + an old verb 'to seize'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C141-reparieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C141-VERB141-05]; assesses=[] -->
 
 **anfangen** — "to start".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anfangen** ← Middle High German *anvāhen*, "to take hold": *an-* + *vāhen*, "to seize, to catch" (EtymDB 2.1). To start is to take hold of a task.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

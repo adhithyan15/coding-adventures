@@ -13,7 +13,8 @@ gloss: "up there"
 concept_tag: PT-LUGAR151-LA-EM-CIMA
 prerequisites: [PT-C151-ao-fundo, PT-C151-noutro-lado]
 sounds: []
-roots: []
+roots: [cyma-latin]
+etymology_hook: "lá em cima — 'there on top': lá ← Latin illac 'that way'; cima ← Latin cyma"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C151-noutro-lado]
 <!-- hl-knowledge: introduces=[PT-LEX-C151-LUGAR151-05]; assesses=[] -->
 
 **lá em cima** — "up there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lá em cima** is "there on top": *lá* ← Latin *illac*, "that way" (EtymDB 2.1), and *cima*, "top" ← Latin *cyma*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

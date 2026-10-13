@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:1a9d362263c8ea05",
+  "sourceHash": "fnv1a64:1b6a51068dbc28fd",
   "lessonIds": [
     "GE-C12-elf",
     "GE-C12-zwoelf",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch18.txt",
   "json": "german/narration/ch18.json",
-  "textHash": "fnv1a64:471f09434cf899bd",
-  "jsonHash": "fnv1a64:02dadff40d3c5c8c",
+  "textHash": "fnv1a64:d7b59f98c2b7ccc8",
+  "jsonHash": "fnv1a64:ef3102a39d56548d",
   "findings": []
 }

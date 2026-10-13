@@ -13,7 +13,8 @@ gloss: "nice, kind"
 concept_tag: GE-EIGEN132-NETT
 prerequisites: [GE-C132-faul, GE-C132-wach]
 sounds: []
-roots: []
+roots: [nitidus-latin]
+etymology_hook: "nett ← Middle Dutch net 'neat' ← Old French net ← Latin nitidus 'shining' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C132-wach]
 <!-- hl-knowledge: introduces=[GE-LEX-C132-EIGEN132-04]; assesses=[] -->
 
 **nett** — "nice, kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nett** ← Middle Dutch *net* ← Old French *net*, "neat, clean" ← Latin *nitidus*, "shining" (EtymDB 2.1) — borrowed. English *neat* is the same French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

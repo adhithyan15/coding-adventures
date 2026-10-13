@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ごみ (gomi) mean? ("Rubbish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'rubbish'.
+Say the Japanese for 'rubbish'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ぼう (bou) mean? ("A stick, a pole".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a stick, a pole'.
+Say the Japanese for 'a stick, a pole'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いた (ita) mean? ("A board".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a board'.
+Say the Japanese for 'a board'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はさみ (hasami) mean? ("Scissors".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'scissors'.
+Say the Japanese for 'scissors'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ざっし (zasshi) mean? ("A magazine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a magazine'.
+Say the Japanese for 'a magazine'.

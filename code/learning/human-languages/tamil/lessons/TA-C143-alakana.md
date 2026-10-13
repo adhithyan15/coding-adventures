@@ -14,7 +14,8 @@ romanization: "aḻakāṉa"
 concept_tag: TA-THINGS143-ALAKANA
 prerequisites: [TA-C143-kattaiviral, TA-C143-ketta]
 sounds: []
-roots: []
+roots: [dravidian-azhaku-beauty]
+etymology_hook: "அழகான — native Dravidian (DEDR 274); Malayalam aḻaku 'beauty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C143-ketta]
 <!-- hl-knowledge: introduces=[TA-LEX-C143-THINGS143-03]; assesses=[] -->
 
 **அழகான** — *aḻakāṉa* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழகான** (*aḻakāṉa*) is native Dravidian. DEDR 274 lists Malayalam *aḻaku*, "beauty". It is *aḻaku*, "beauty", with *-āṉa*, the ending that makes describing words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

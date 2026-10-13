@@ -13,7 +13,8 @@ gloss: "to brake"
 concept_tag: IT-VERB-FRENARE
 prerequisites: [IT-C149-festeggiare, IT-C149-fissare]
 sounds: []
-roots: []
+roots: [frenum-latin]
+etymology_hook: "frenare — from freno 'a brake' ← Latin frenum 'a bridle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C149-fissare]
 <!-- hl-knowledge: introduces=[IT-LEX-C149-VERBI149-03]; assesses=[] -->
 
 **frenare** — "to brake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frenare** — built from *freno*, "a brake, a bridle", which ← Latin *frenum*, "a bridle". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

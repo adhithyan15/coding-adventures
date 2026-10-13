@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちか (chika) mean? ("Underground".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'underground'.
+Say the Japanese for 'underground'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こうえん (kouen) mean? ("A park".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a park'.
+Say the Japanese for 'a park'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くに (kuni) mean? ("A country".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a country'.
+Say the Japanese for 'a country'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふく (fuku) mean? ("Clothes".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'clothes'.
+Say the Japanese for 'clothes'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くつ (kutsu) mean? ("Shoes".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'shoes'.
+Say the Japanese for 'shoes'.

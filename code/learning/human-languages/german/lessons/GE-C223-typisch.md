@@ -13,7 +13,8 @@ gloss: "typical"
 concept_tag: GE-QUAL223-TYPISCH
 prerequisites: [GE-C222-tot, GE-C223-treu]
 sounds: []
-roots: []
+roots: [typus-latin]
+etymology_hook: "typisch — Typ 'type' ← Latin typus ← Greek týpos 'blow, impression' + -isch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C223-treu]
 <!-- hl-knowledge: introduces=[GE-LEX-C223-QUAL223-02]; assesses=[] -->
 
 **typisch** — "typical".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**typisch** is the word for "type" ← Latin *typus* ← Greek *týpos*, "a blow, an impression" (EtymDB 2.1), + *-isch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

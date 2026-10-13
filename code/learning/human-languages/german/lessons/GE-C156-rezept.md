@@ -13,7 +13,8 @@ gloss: "a prescription, a recipe"
 concept_tag: GE-THING156-REZEPT
 prerequisites: [GE-C155-stau, GE-C155-unfall]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "Rezept ← Latin receptum 'received' — prescriptions began with recipe, 'take!'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C155-unfall]
 <!-- hl-knowledge: introduces=[GE-LEX-C156-THING156-01]; assesses=[] -->
 
 **das Rezept** — "a prescription, a recipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rezept** ← Latin *receptum*, "(what is) received" (EtymDB 2.1), from *recipere*, "to take" — borrowed. Doctors' prescriptions began *recipe*, "take!".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

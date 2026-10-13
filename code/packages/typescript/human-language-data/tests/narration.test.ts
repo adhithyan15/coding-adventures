@@ -20,6 +20,7 @@ import {
   parseNarrationCue,
   renderChapterNarrationText,
   renderLessonNarrationText,
+  STOP_GUARD,
   splitNarrationCues,
   type NarrationSegment,
 } from "../src/narration.js";
@@ -441,6 +442,40 @@ describe("romanization travels with the script", () => {
     );
   });
 
+  it("reads one pronunciation per headword, the first pair's", () => {
+    // Arabic ch2 teaches ي as the letter yāʾ and as the suffix -ī "my"; pairing
+    // both read "ي (yāʾ) (-ī)" aloud.
+    const pairs = [
+      { headword: "ي", romanization: "-ī" },
+      { headword: "ي", romanization: "yāʾ" },
+    ];
+    expect(pairRomanization("a suffix ي glued on", pairs)).toBe("a suffix ي (-ī) glued on");
+    // A hand-written reading of the first pair suppresses the second as well.
+    expect(pairRomanization("ي -ī, met before", pairs)).toBe("ي -ī, met before");
+    // An author-written reading right after the word is left alone.
+    expect(pairRomanization("Next: ي (yāʾ), the letter", pairs)).toBe("Next: ي (yāʾ), the letter");
+    // "Already read here?" is a whole-word question: "i" inside "(ai)" and
+    // "kuṭumb" inside "kuṭumba" are not readings of their own.
+    expect(
+      pairRomanization("write: இ, then ◌ை", [
+        { headword: "◌ை", romanization: "ai" },
+        { headword: "இ", romanization: "i" },
+      ]),
+    ).toBe("write: இ (i), then ◌ை (ai)");
+    expect(pairRomanization("कुटुंब is from kuṭumba", [{ headword: "कुटुंब", romanization: "kuṭumb" }])).toBe(
+      "कुटुंब (kuṭumb) is from kuṭumba",
+    );
+    // …while a compound's inserted reading still covers its parts.
+    expect(
+      pairRomanization("say مع السلامة now", [
+        { headword: "مع السلامة", romanization: "maʿa s-salāma" },
+        { headword: "مع", romanization: "maʿa" },
+      ]),
+    ).toBe("say مع السلامة (maʿa s-salāma) now");
+    // A gloss in brackets is not a reading: the pronunciation is still added.
+    expect(pairRomanization('say ي ("my") now', pairs)).toBe('say ي (-ī) ("my") now');
+  });
+
   it("uses the whole chapter's glossary, not only the lesson's own headword", () => {
     const chapter = narrateChapter(
       "persian",
@@ -548,7 +583,7 @@ describe("the spoken notice on a sight or pen lesson", () => {
     expect(narration.notice?.needs).toContain("your eyes for one table that cannot be read aloud");
     expect(narration.notice?.waitUntilStopped).toEqual(["The ten, in three families"]);
     expect(narration.notice?.text).toContain(
-      "leave the section called The ten, in three families until you have stopped",
+      "but leave this section until you have stopped: The ten, in three families.",
     );
     // The rest of the lesson still exports.
     expect(renderLessonNarrationText(narration)).toContain("Say it aloud.");
@@ -634,13 +669,45 @@ describe("the spoken notice on a sight or pen lesson", () => {
     );
     expect(narration.notice?.waitUntilStopped).toEqual(["Warm-up", "Script — the letter h"]);
     expect(narration.notice?.text).toContain(
-      "leave the sections called Warm-up and Script — the letter h until you have stopped, " +
-        "and I will say so again when we reach them.",
+      "I will say so again when we reach them, but leave these sections until you have stopped: " +
+        "Warm-up and Script — the letter h.",
     );
     const single = narrateLesson(
       lesson({ body: "## Warm-up\n\nSay it.\n\n## Script — the letter h\n\nA tall stem." }),
     );
-    expect(single.notice?.text).toContain("when we reach it.");
+    expect(single.notice?.text).toContain("when we reach it, but leave this section");
+  });
+
+  it("tells a lesson whose core is voice that it can be done in the car, and names the part to leave", () => {
+    const narration = narrateLesson(
+      lesson({
+        body:
+          "## Warm-up\n\nSay it.\n\n" +
+          "## Writing: trace the h\n\nTake a pen. Copy the letter once.\n\n" +
+          "## Wrap-up Recall\n\nSay it again.",
+      }),
+    );
+    expect(narration.modality).toBe("pen");
+    expect(narration.coreModality).toBe("voice");
+    expect(narration.notice?.waitUntilStopped).toEqual(["Writing: trace the h"]);
+    expect(narration.notice?.text).toBe(
+      "Before we start: you can do this one in the car, but part of it needs your hands. " +
+        "You can listen to everything else now. I will say so again when we reach it, " +
+        "but leave this section until you have stopped: Writing: trace the h.",
+    );
+    expect(narration.notice?.text).not.toContain("not a driving lesson");
+
+    // ...and keeps the notice's promise: when the set-aside section arrives, the
+    // script says to leave it BEFORE any of it — its title included, because a
+    // title can itself ask for the hand ("Writing: trace the h") — and says it only
+    // there, not at the sections a driver can do.
+    const text = renderLessonNarrationText(narration);
+    const lines = text.split("\n");
+    const guard = lines.indexOf(STOP_GUARD);
+    expect(guard).toBeGreaterThan(lines.indexOf("Say it."));
+    expect(lines[guard + 1]).toBe("Writing: trace the h.");
+    expect(lines.indexOf("Take a pen. Copy the letter once.")).toBe(guard + 2);
+    expect(text.split(STOP_GUARD)).toHaveLength(2);
   });
 
   it("gives a drivable lesson no notice at all", () => {
@@ -762,6 +829,77 @@ describe("chapters", () => {
     expect(text).not.toContain("first 1 of them");
   });
 
+  // A lesson that is voice apart from a detachable `## Writing: …` section: full
+  // modality `pen`, core `voice`. The prefix counts it; the header says so honestly.
+  const withWriting = (id: string, sequence: number) =>
+    lesson({
+      id,
+      sequence,
+      body:
+        "## Warm-up\n\nSay it.\n\n" +
+        "## Writing: trace the h\n\nTake a pen. Copy the letter once.\n\n" +
+        "## Wrap-up Recall\n\nSay it again.",
+    });
+  const plain = (id: string, sequence: number) =>
+    lesson({ id, sequence, body: "## Warm-up\n\nSay it." });
+  const header = (lessons: ReturnType<typeof lesson>[]) =>
+    renderChapterNarrationText(narrateChapter("spanish", 1, lessons)).split("\n")[1];
+  const part = "a part that needs your eyes or your hands";
+
+  it("counts a lesson whose core is voice, and says its hands-on part waits", () => {
+    const lessons = [withWriting("ES-C01-w", 10), plain("ES-C01-p", 20), chapterLessons[2]!];
+    const chapter = narrateChapter("spanish", 1, lessons);
+    expect(chapter.lessons[0]?.modality).toBe("pen");
+    expect(chapter.lessons[0]?.coreModality).toBe("voice");
+    expect(chapter.drivablePrefix).toBe(2);
+    expect(chapter.prefixWithPartsSetAside).toBe(1);
+    expect(header(lessons)).toBe(
+      "3 lessons. You can do the first 2 of them in the car; after that you will want to " +
+        `have stopped. One of the two has ${part}; that part waits until you have stopped.`,
+    );
+    expect(header(lessons)).not.toContain("already needs your eyes");
+  });
+
+  it("words the set-aside sentence for every row of its table, and drops \"entirely\"", () => {
+    // d = 1, k = 1, n = 1
+    expect(header([withWriting("ES-C01-a", 10)])).toBe(
+      `1 lesson. It can be done by ear. It has ${part}; that part waits until you have stopped.`,
+    );
+    // d = 1, k = 1, n > 1
+    expect(header([withWriting("ES-C01-a", 10), chapterLessons[2]!])).toBe(
+      "2 lessons. You can do the first one in the car; after that you will want to have " +
+        `stopped. That lesson has ${part}; that part waits until you have stopped.`,
+    );
+    // d = 1, k > 2
+    expect(
+      header([withWriting("ES-C01-a", 10), plain("ES-C01-b", 20), plain("ES-C01-c", 30)]),
+    ).toBe(
+      `3 lessons. All 3 can be done by ear. Of those 3, one has ${part}; ` +
+        "that part waits until you have stopped.",
+    );
+    // d = k
+    expect(header([withWriting("ES-C01-a", 10), withWriting("ES-C01-b", 20)])).toBe(
+      `2 lessons. Both can be done by ear. Each of those has ${part}; ` +
+        "those parts wait until you have stopped.",
+    );
+    // 1 < d < k
+    expect(
+      header([
+        withWriting("ES-C01-a", 10),
+        withWriting("ES-C01-b", 20),
+        plain("ES-C01-b2", 25),
+        chapterLessons[2]!,
+      ]),
+    ).toBe(
+      "4 lessons. You can do the first 3 of them in the car; after that you will want to " +
+        `have stopped. Of those 3, 2 have ${part}; those parts wait until you have stopped.`,
+    );
+    // d = 0 keeps "entirely" and adds nothing.
+    expect(header([plain("ES-C01-a", 10), plain("ES-C01-b", 20)])).toBe(
+      "2 lessons. Both can be done entirely by ear.",
+    );
+  });
+
   it("groups a corpus into chapters, sorted by track then chapter number", () => {
     const chapters = narrationChapters(
       [
@@ -792,9 +930,15 @@ describe("the whole corpus", () => {
   // The narration export exists to be read by a machine that cannot ask questions, so
   // "it did not throw" is not enough — these pin that nothing vanished on the way out.
   const { lessons } = loadEverything();
+  // Narrate the corpus ONCE, here at collection time beside the load, and share it.
+  // Each test below used to narrate all of it again: four full passes, each about
+  // as long as the load itself, so the first test to run paid a whole narration
+  // inside its 30-second budget and timed out on a slower runner as the corpus
+  // grew. One pass, read four ways, asserts exactly what four passes did.
+  const corpusChapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
 
   it("narrates every lesson in the corpus", () => {
-    const chapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
+    const chapters = corpusChapters;
     const narrated = chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
     expect(narrated).toBe(lessons.length);
     // 378, not the 375 this was authored against: HL-C39 and HL-C40 each added a
@@ -809,7 +953,7 @@ describe("the whole corpus", () => {
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
-    const text = narrationChapters(lessons, { maxLinearisableTableColumns: 3 })
+    const text = corpusChapters
       .map((chapter) => renderChapterNarrationText(chapter))
       .join("\n");
     // A speech engine handed any of these either pronounces them or stumbles.
@@ -819,7 +963,7 @@ describe("the whole corpus", () => {
   });
 
   it("never emits a sight lesson without telling the learner first", () => {
-    for (const chapter of narrationChapters(lessons, { maxLinearisableTableColumns: 3 })) {
+    for (const chapter of corpusChapters) {
       for (const narration of chapter.lessons) {
         if (narration.modality === "voice") continue;
         expect(narration.notice).not.toBeNull();
@@ -829,7 +973,7 @@ describe("the whole corpus", () => {
 
   it("never drops a table it refused — every refusal is spoken", () => {
     let refusals = 0;
-    for (const chapter of narrationChapters(lessons, { maxLinearisableTableColumns: 3 })) {
+    for (const chapter of corpusChapters) {
       for (const narration of chapter.lessons) {
         for (const block of narration.blocks) {
           for (const segment of block.segments) {
@@ -855,6 +999,6 @@ describe("the whole corpus", () => {
     // became two spoken lines. It was refused by the narrator AND overflowed the
     // cousinweb box by 2.78pt, which the LaTeX warning baseline caught; the same
     // ten forms now read as a list, so there is no table left to refuse.
-    expect(refusals).toBe(44); // -1 -- German's teens table is gone: `| | German | English | build |` was four columns because the first carried the numeral 13..20 under NO header, the exact shape chapter-policy calls unspeakable and the same shape as the French chapter-14 entry below. The chapter is now sixteen one-word-per-lesson steps across two chapters, and the recap it keeps is a three-column digit/joined table the narrator reads instead of refusing // -2 -- German chapter 10's two four-column day-name tables are gone: the days are now fifteen one-word-per-lesson steps across two chapters, and the two recaps they keep are two-column German/English lists the narrator can speak // -2 -- German chapter 6's two five-number wide reveal tables are gone: the chapter is now sixteen one-word-per-lesson steps, and the two recap tables it keeps are three-column runs the narrator can speak. Same shape and same cause as the French chapter 6 entry below. // French chapters 2 and 14 landed on separate branches and met in this merge, so this figure is RE-MEASURED rather than kept at 50 because both sides happened to write 50 for different reasons. // -1 -- French chapter 14's wide reveal table is gone: `| | French | ← Latin | literally |` was four columns because the first carried the numeral 11..16 under NO header, the exact shape chapter-policy calls unspeakable. The split into chapters 14 and 15 gives each teen its own lesson, and the one table that remains -- digit-in-front against ten-behind -- is three LABELLED columns the narrator reads instead of refusing // -1 -- French chapter 14's wide reveal table is gone: `| | French | ← Latin | literally |` was four columns because the first carried the numeral 11..16 under NO header, the exact shape chapter-policy calls unspeakable. The split into chapters 14 and 15 gives each teen its own lesson, and the one table that remains -- digit-in-front against ten-behind -- is three LABELLED columns the narrator reads instead of refusing // -1 -- French chapter 2's reflexive-set table is gone. It was FOUR columns (French / means / root / English cousin) with me, te and se down the first, so the narrator refused it -- and the hand-written chapter had never printed it at all, writing the same three pronouns as one sentence of prose. Generating the chapter would have put a paradigm on the page that the reader had never been shown and that HL10 forbids until every cell in it is taught. The lesson now carries the .tex's prose, and gains the sui/suicide strand the table had no column for // -2 -- French chapter 7's two wide day-name tables are gone: the chapter is now nine one-word-per-lesson steps, and the recap it keeps is a two-column French/English list the narrator can speak // -2 -- French chapter 6's two five-number wide reveal tables are gone: the chapter is now twelve one-word-per-lesson steps with no table for the narrator to refuse // #12529: -2 -- both Tamil five-number wide reveal tables became voice-first two-column quantity/sound tables // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2 // -2 -- Kannada chapter 7's two five-number wide reveal tables are gone: the chapter is now ten one-word-per-lesson steps with no table for the narrator to refuse // -1 -- Kannada chapter 1's recap table lost its unlabelled romanization column: `| Read | | Meaning | Native or borrowed |` was four columns wide because the second carried the romanization under no header, the exact shape chapter-policy calls unspeakable. The romanization now sits in the `Read` cell beside its Kannada, so the table is three LABELLED columns and the narrator reads it instead of refusing it. The chapter was hand-written until this PR, so the refusal was invisible to this count until it generated.
+    expect(refusals).toBe(2); // -23 -- the same fold, applied past the chapter openers: twenty-three more four-or-five-column tables (Italian and Portuguese chapters 6/7/8/12 second lessons, Italian 5, Latin 2, Telugu 1/7 (two), Malayalam 1, Tamil 7, French 1, Russian and Arabic script tables, Spanish 34/49/70/124/138) became three LABELLED columns with every value kept: a numeral beside its word, a Latin source beside its descendant, a gloss beside its infinitive, a romanization in the Read cell, a stem beside its verb, sister-language cognates sharing one cell. The narrator reads them now; the limit stayed at three. The two left are paradigm grids the eye needs and info-dump flags as full grids (Spanish chapter 46's eighteen-form -ar/-er/-ir grid and chapter 124's six-row future/conditional frame), so folding them would hide the grid from that gate // -19 -- nineteen chapter-opening lessons (Arabic 8, French 5, Hindi 10, Italian 6/7/9/12, Latin 2/5, Malayalam 10, Portuguese 6/7/9/12, Sanskrit 6, Spanish 19/26/138, Telugu 7) each had one four-or-five-column etymology, weekday, month or number table whose extra column was derivable from, or foldable into, another: an unlabelled numeral beside its word, a "planet-god" beside "day of Mars", an ending beside the form it ends ("-e: je parle"), a Latin source beside its Italian descendant. Each is now three LABELLED columns carrying every value it carried before, so the narrator reads it and the chapter can be started in the car; the limit stayed at three // -1 -- German's teens table is gone: `| | German | English | build |` was four columns because the first carried the numeral 13..20 under NO header, the exact shape chapter-policy calls unspeakable and the same shape as the French chapter-14 entry below. The chapter is now sixteen one-word-per-lesson steps across two chapters, and the recap it keeps is a three-column digit/joined table the narrator reads instead of refusing // -2 -- German chapter 10's two four-column day-name tables are gone: the days are now fifteen one-word-per-lesson steps across two chapters, and the two recaps they keep are two-column German/English lists the narrator can speak // -2 -- German chapter 6's two five-number wide reveal tables are gone: the chapter is now sixteen one-word-per-lesson steps, and the two recap tables it keeps are three-column runs the narrator can speak. Same shape and same cause as the French chapter 6 entry below. // French chapters 2 and 14 landed on separate branches and met in this merge, so this figure is RE-MEASURED rather than kept at 50 because both sides happened to write 50 for different reasons. // -1 -- French chapter 14's wide reveal table is gone: `| | French | ← Latin | literally |` was four columns because the first carried the numeral 11..16 under NO header, the exact shape chapter-policy calls unspeakable. The split into chapters 14 and 15 gives each teen its own lesson, and the one table that remains -- digit-in-front against ten-behind -- is three LABELLED columns the narrator reads instead of refusing // -1 -- French chapter 14's wide reveal table is gone: `| | French | ← Latin | literally |` was four columns because the first carried the numeral 11..16 under NO header, the exact shape chapter-policy calls unspeakable. The split into chapters 14 and 15 gives each teen its own lesson, and the one table that remains -- digit-in-front against ten-behind -- is three LABELLED columns the narrator reads instead of refusing // -1 -- French chapter 2's reflexive-set table is gone. It was FOUR columns (French / means / root / English cousin) with me, te and se down the first, so the narrator refused it -- and the hand-written chapter had never printed it at all, writing the same three pronouns as one sentence of prose. Generating the chapter would have put a paradigm on the page that the reader had never been shown and that HL10 forbids until every cell in it is taught. The lesson now carries the .tex's prose, and gains the sui/suicide strand the table had no column for // -2 -- French chapter 7's two wide day-name tables are gone: the chapter is now nine one-word-per-lesson steps, and the recap it keeps is a two-column French/English list the narrator can speak // -2 -- French chapter 6's two five-number wide reveal tables are gone: the chapter is now twelve one-word-per-lesson steps with no table for the narrator to refuse // #12529: -2 -- both Tamil five-number wide reveal tables became voice-first two-column quantity/sound tables // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2 // -2 -- Kannada chapter 7's two five-number wide reveal tables are gone: the chapter is now ten one-word-per-lesson steps with no table for the narrator to refuse // -1 -- Kannada chapter 1's recap table lost its unlabelled romanization column: `| Read | | Meaning | Native or borrowed |` was four columns wide because the second carried the romanization under no header, the exact shape chapter-policy calls unspeakable. The romanization now sits in the `Read` cell beside its Kannada, so the table is three LABELLED columns and the narrator reads it instead of refusing it. The chapter was hand-written until this PR, so the refusal was invisible to this count until it generated.
   });
 });

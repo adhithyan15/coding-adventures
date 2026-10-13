@@ -11,7 +11,8 @@ romanization: "caritāṉ"
 concept_tag: TA-NOTATALL-RIGHT
 prerequisites: [TA-C96-isthatso, TA-C96-adada]
 sounds: []
-roots: []
+roots: [sari, dravidian-taan-self]
+etymology_hook: "சரிதான் — sari 'correct' (origin uncertain) + native tāṉ 'just, indeed' (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C96-adada]
 **சரிதான்** (*caritāṉ*) — "that's right", "quite so".
 
 **சரி** with **-தான்**, "that and no other".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சரிதான்** (*caritāṉ*) is *sari*, "correct", with *tāṉ*, "just, indeed", from the native word for "oneself" (DEDR 3196). The origin of *sari* is uncertain, as its own lesson said.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

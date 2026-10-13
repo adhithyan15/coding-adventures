@@ -14,6 +14,7 @@ concept_tag: IT-LAVORO112-AUTISTA
 prerequisites: [IT-C111-contadino, IT-C112-fornaio]
 sounds: []
 roots: []
+etymology_hook: "autista — auto 'car' + -ista, the ending English has as -ist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C112-fornaio]
 <!-- hl-knowledge: introduces=[IT-LEX-C112-LAVORO112-02]; assesses=[] -->
 
 **l'autista** — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autista** — built from *auto*, "car", with *-ista*, "one who works with it"; the ending goes back to Greek *-istes*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a coast"
 concept_tag: IT-COSE221-COSTA
 prerequisites: [IT-C221-macelleria, IT-C221-foresta]
 sounds: []
-roots: []
+roots: [costa-latin]
+etymology_hook: "costa ← Latin costa 'a rib, a side' — English coast is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C221-foresta]
 <!-- hl-knowledge: introduces=[IT-LEX-C221-COSE221-04]; assesses=[] -->
 
 **la costa** — "a coast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**costa** ← Latin *costa*, "a rib, a side" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

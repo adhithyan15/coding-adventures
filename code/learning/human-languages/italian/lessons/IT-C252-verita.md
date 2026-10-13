@@ -13,7 +13,8 @@ gloss: "the truth"
 concept_tag: IT-COSE252-VERITA
 prerequisites: [IT-C252-differenza, IT-C252-esempio]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "verità ← Latin veritas, from verus 'true' — English verity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C252-esempio]
 <!-- hl-knowledge: introduces=[IT-LEX-C252-COSE252-03]; assesses=[] -->
 
 **la verità** — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verità** ← Latin *veritas*, "truth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

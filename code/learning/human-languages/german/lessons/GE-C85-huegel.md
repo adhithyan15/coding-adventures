@@ -13,7 +13,8 @@ gloss: "a hill"
 concept_tag: GE-NATUR4-HUEGEL
 prerequisites: [GE-C84-feuer, GE-C85-eis]
 sounds: []
-roots: []
+roots: [germanic-hauhaz]
+etymology_hook: "Hügel — a little 'hill' from central German dialects, related to the word for 'high'; compare Old Norse haugr"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C85-eis]
 <!-- hl-knowledge: introduces=[GE-LEX-C85-NATUR4-02]; assesses=[] -->
 
 **der Hügel** — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hügel** spread into standard German from central German dialects. It is a diminutive of Middle High German *houc*, "hill", related to the word for "high"; compare Old Norse *haugr*, "mound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the east"
 concept_tag: GE-RICHTUNG108-OSTEN
 prerequisites: [GE-C108-norden, GE-C108-sueden]
 sounds: []
-roots: []
+roots: [germanic-austra]
+etymology_hook: "Osten ← Old High German ōstan; Ost ← Proto-Germanic *austrą — the same word as English east"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C108-sueden]
 <!-- hl-knowledge: introduces=[GE-LEX-C108-RICHTUNG108-03]; assesses=[] -->
 
 **der Osten** — "the east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Osten** is built on *Ost* ← Old High German *ōst* ← Proto-Germanic *\*austrą*, "east" — inherited, the same word as English *east*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

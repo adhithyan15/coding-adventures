@@ -32,9 +32,9 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Look at the last sentence you read. It ended in a mark. Say what
-that mark is called in Spanish before reading on — and notice that this book
-has printed it on every page without once naming it.
+[PAUSE 2s] Think of the small dot that ends a written sentence — the mark that
+has closed every sentence of this book without once being named. Say what it is
+called in Spanish before going on.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ORTH-C424-01]; assesses=[] -->
@@ -59,13 +59,13 @@ thing being finished — a sentence, a block, or a text. *Seguido* means
 
 Two mechanical habits that a written paper is marked on:
 
-| | correct | wrong |
+| habit | correct | wrong |
 |---|---|---|
-| spacing | `Hola. Adiós.` | `Hola .Adiós.` |
-| after a title | `Mi familia` | `Mi familia.` |
+| spacing | no space before the point, one space after it: `Hola. Adiós.` | a space before the point, and none after it: `Hola .Adiós.` |
+| after a title | no point: `Mi familia` | a point after the title: `Mi familia.` |
 
-No space before the point, one space after it. And a **title or a heading takes
-no point at all** — which is why every heading in this book ends bare.
+A **title or a heading takes no point at all** — which is why every heading in
+this book ends bare.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-01] -->

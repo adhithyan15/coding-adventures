@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "The Room You Are In",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cf7a94f795312de1",
+  "sourceHash": "fnv1a64:a5674721c58f6e0f",
   "lessons": [
     {
       "id": "TA-C70-table",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:678561f54c654224",
+      "sourceHash": "fnv1a64:41115c46130eaf42",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேசை (mēsai) is a loan from Portuguese mesa, \"table\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56fd2d2c066888cd",
+      "sourceHash": "fnv1a64:5f785f532b98ad9b",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டில் (kaṭṭil) is native Dravidian. DEDR 1145 lists Malayalam kaṭṭil and Telugu kaṭli, \"litter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -306,20 +328,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f55c34f80ceb30a9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: மேசை — two front-hanging signs in one word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: மேசை — two front-hanging signs in one word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: மேசை — two front-hanging signs in one word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -453,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a51fddf80201706",
+      "sourceHash": "fnv1a64:e5afa829a7da25e8",
       "notice": null,
       "blocks": [
         {
@@ -507,6 +532,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுவர் (suvar) is native Dravidian. DEDR 1975 lists Malayalam cuvar and Kannada kēr."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -517,7 +553,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -593,7 +629,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -624,7 +660,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abb4e7142a053695",
+      "sourceHash": "fnv1a64:3c965ada18830e54",
       "notice": null,
       "blocks": [
         {
@@ -669,6 +705,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரை (tarai) is usually traced to Sanskrit dharā, \"the earth\" (CDIAL 6748). DEDR has no native entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -679,7 +726,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -746,7 +793,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -777,7 +824,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64c426c7f602af2b",
+      "sourceHash": "fnv1a64:77488ebd56295873",
       "notice": null,
       "blocks": [
         {
@@ -822,6 +869,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூரை (kūrai) is native Dravidian. DEDR 1904 lists Malayalam kūra, \"hut, thatch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -832,7 +890,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -899,7 +957,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

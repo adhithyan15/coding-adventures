@@ -1,5 +1,61 @@
 # Changelog
 
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 73 → 29: thirty-two reworded or moved, twelve cleared by decomposition equations in nine lessons.
+
+- **Teasers and glosses said in English.** LA-C03-quaeso calls its source "Latin's everyday verb for 'to seek, to ask'"; LA-C08-manus names "the word for 'house'"; LA-C12-medius-dies-nox traces English *noon* to "the ninth hour", and LA-C13-hora picks that up as the ninth **hōra**; LA-C14-annos-natus speaks of "have" + years; LA-C37-habeo, LA-C40-dormio and LA-C55-secundus describe the verbs "to seize" and "to follow" and Latin's other sleep-word without printing them; LA-C48-aut calls *vel* an old command form of "to want"; LA-C42-accipio's flags speak of the plain hold-verb.
+- **A modern phrase moved to the lesson that teaches its word.** LA-C19-ut-vales, LA-C19-practice and LA-C23-nihil-est mention the modern spoken-Latin "how are you?" without printing it; LA-C26-quomodo now shows *quōmodo tē habēs?* itself, and its warm-up no longer says the learner met *quōmodo* before. The new pointers name the thing ("a later lesson"), never a chapter number.
+- **A preview withdrawn.** LA-C37-scio no longer gives *nesciō*: it says the negative fuses onto the front and that a later chapter builds it; its practice asks for *scīmus, sciunt* instead, and its recall for *sciunt*. LA-C48-nescio's rule list says *nōn audiō* in place of the next chapter's *nōn possum*.
+- **Examples rebuilt from owned words.** LA-C50-ibi says **Canis hīc est. Fēlēs ibi est.**; LA-C47-piscis pairs *pater*/**father** and *piscis*/**fish**, and says the learner met Grimm's Law in the family chapter (it is named there), not "without being told the name"; LA-C15-weather-verbs gives *plēnus → lleno*; LA-C58-phrases reads **Magister meus bonus est.**
+- **Quotations trimmed, not invented.** LA-C14-annos-natus cites Cicero's *annōs septuāgintā nātus* for Ennius and gives Cato's sixty-five in English; LA-C19-valeo-family drops Plautus's longer reply; LA-C24-propediem-te-videbo quotes *…ut spērō, propediem tē vidēbō*; LA-C23-nihil-est and LA-C26-quomodo give *The Braggart Soldier* and the *Moral Letters* in English.
+- **Name lines match the name lesson.** LA-C58-prima-lectio and LA-C59-dies-meus open on *Mihi nōmen est Mārcus*, the dative of possession that LA-C52-meus says a Roman preferred for a name, instead of *Nōmen meum est Marcus*.
+- **Decompositions written as one equation each.** *septem/octō/novem/decem + -ber* (LA-C02-numbers-6-10, replacing the month table), *prīma + vēra → primavera* (LA-C09-anni-tempora), *vidē- + -bō → vidēbō* (LA-C24), *dē + māne → dē māne* (LA-C25-cras-te-videbo), *salūtā- + -tiō → salūtātiō* (LA-C32-bonum-mane), *trāns + dare → trādere* (LA-C37-do), *in- + amīcus → inimīcus* (LA-C39-amo), *ob + tenēre → obtinēre* (LA-C42-accipio) and *merc- + -ēs → mercēs* (LA-C164-merx). LA-C190-merces now carries the warning that its *mercēs* and the plural of *merx* look alike.
+- **English that collided with a headword.** LA-C01-salve says "or many", LA-C22-tu-vos "*du* against *Sie*", and LA-C01-practice puts Catullus at his brother's tomb. LA-C33-practice no longer nests italics inside bold, which had let an activity's JSON read as emphasised text.
+- **A quantity corrected.** LA-C48-nescio's prefix is short *ne-*, as in LA-C23-nihil-est, not *nē-*.
+- **Chapter summaries follow.** Chapters 9 and 12 no longer print *prīma vēra* and *nōna hōra*.
+- **Review follow-ups.** LA-C48-sed no longer says the C24 quote opened with *Sed* as printed there (C24 trims it); it says the full letter does. LA-C25's equation ends in French *demain*. LA-C02 notes that the origin of *-ber* is uncertain. LA-C40-dormio credits **soporific** to *sopor*, *somnus*'s cousin, not to *somnus*. LA-C59-dies-meus writes adverbial *hīc*. LA-C47-piscis's hook drops *pēs/foot*.
+
+The 29 left are phrases taught whole whose words a much later lesson teaches alone: *grātiās (tibi) agō*, *quid tibi nōmen est? / mihi nōmen est*, *medius diēs, media nox*, *nihil est*, *ante/post merīdiem* with *salvē (post merīdiem)*, and *diēs Lūnae*.
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **LA-C02-numbers-6-10**: the numeral is in the Roman-numeral cell ("**VI** (6)"), as in LA-C02-numbers-1-5. The lesson can now be done by ear.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **LA-C02-numbers-1-5**: the numeral table carries its digit in the numeral cell ("**I** (1)"), and "you see the erosion happen" is now "the erosion shows itself".
+- **LA-C05-dies-lunae-veneris**: the planet-god is folded into "literally" ("day of the **Moon** (Luna)").
+- Both tables are now three labelled columns, so the narrator reads them.
+- Hands-free prefixes: chapter 2 0 → 1 of 2, chapter 5 0 → 2 of 2.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **LA-C48-nescio**: "Look at the shape. It is **nē-** welded onto **sciō**" is now "Take it apart. …". The fusion is as clear by ear as on the page.
+- Chapter 48 is now fully drivable: hands-free prefix 0 → 6 of 6.
+
+## Added — salvē prints a stroke-order filmstrip
+
+LA-W01-salve-delayed-copy (salvē) now prints the track's first strip (0 -> 1
+Latin lessons). v follows the Grundschrift-App; ē is drawn BY ANALOGY with the
+cited acute and tilde, not from a source of its own, and its record in
+`data/scripts/latin.json` says so: the e, then the macron last, left to right.
+LA-W01-salve-guided-copy (`salvē / salvēte`) stays undrawn, because a slash is
+not a list separator; the other Latin writing lessons are no-model stages.
+
+## Fixed — a question-word prompt carries one question mark
+
+LA-R119's recall run printed "Why?? (**quārē**.)" and "Why?? (**quamobrem**.)":
+the gloss's own question mark plus the prompt's. They now read "Asking why?"
+and "Asking why, another way?", which prints one mark and tells the two
+synonyms apart.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

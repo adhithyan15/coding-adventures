@@ -101,7 +101,7 @@ Before the new one: say the Hindi for loudly, then the Hindi for one minute.
 
 You'll want to know: रुकिए.
 रुकिए (rukie) — "please wait", "please stop".
-It is रुकना, "to stop", with the respectful ending of बोलिए. रुकिए (rukie), एक मिनट (ek minaṭ) — "wait, one minute".
+रुक (ruk, the stem of the verb "to stop") + -ie, the respectful ending of बोलिए becomes रुकिए (rukie). रुकिए (rukie), एक मिनट (ek minaṭ) — "wait, one minute".
 
 What you've built.
 Wait, one minute, again, louder.

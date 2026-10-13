@@ -4,29 +4,34 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2cc4d9e5a27781bd",
+  "sourceHash": "fnv1a64:cbe4bd6d629ba5dd",
   "lessons": [
     {
       "id": "MR-A1F04-first-three-select",
       "sequence": 1060,
       "title": "Choose the first three answers",
       "headword": "नाव · शहर · भाषा",
-      "romanization": "",
+      "romanization": "nāv · śahar · bhāṣā",
       "gloss": "choose which known profile detail belongs in each of the first three form rows",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:7a984694c269ae58",
+      "sourceHash": "fnv1a64:8eeb01e11f7d30c1",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided practice — one profile, three choices"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided practice — one profile, three choices."
       },
       "blocks": [
         {
@@ -63,6 +68,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F04-first-three-select-check",
               "prompt": "Match the labels to Profile A's details: नाव; शहर; भाषा.",
               "assesses": [
@@ -88,7 +94,7 @@
       "sequence": 1061,
       "title": "Choose the last three answers",
       "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
-      "romanization": "",
+      "romanization": "āvaḍte pey · āvaḍtī kṛtī · mitrāce nāv",
       "gloss": "choose the requested favorite and friend details without copying Marathi answers",
       "script": "devanagari",
       "modality": "pen",
@@ -96,7 +102,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:83051b1d26a5f1b0",
+      "sourceHash": "fnv1a64:d50dd7dde8d009d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -140,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F05-last-three-select-check",
               "prompt": "Match the last three labels to Profile A's details.",
               "assesses": [
@@ -168,7 +175,7 @@
       "sequence": 1062,
       "title": "Enter the first three values",
       "headword": "नाव: ___ · शहर: ___ · भाषा: ___",
-      "romanization": "",
+      "romanization": "nāv: ___ · śahar: ___ · bhāṣā: ___",
       "gloss": "complete three visible form rows from a support-language profile card",
       "script": "devanagari",
       "modality": "pen",
@@ -177,14 +184,16 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d6b81c12a5f13047",
+      "sourceHash": "fnv1a64:928bb9bed8971823",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -229,6 +238,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F06-first-three-supported-check",
               "prompt": "Using Profile A, complete the first three blank rows without a Marathi answer bank.",
               "assesses": [
@@ -254,7 +264,7 @@
       "sequence": 1063,
       "title": "Repair one value, not the whole form",
       "headword": "अरुण · पुणे · मराठी",
-      "romanization": "",
+      "romanization": "Aruṇ · Puṇe · marāṭhī",
       "gloss": "repair only the orthography of the first three selected values",
       "script": "devanagari",
       "modality": "pen",
@@ -263,14 +273,16 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:fe14f71be58ef2f8",
+      "sourceHash": "fnv1a64:b06cfe80acd9238c",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -307,6 +319,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F07-first-three-spelling-check",
               "prompt": "Write only the first value that needs repair; if none failed, write Profile A's city value once.",
               "assesses": [
@@ -334,7 +347,7 @@
       "sequence": 1064,
       "title": "Enter the last three values",
       "headword": "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___",
-      "romanization": "",
+      "romanization": "āvaḍte pey: ___ · āvaḍtī kṛtī: ___ · mitrāce nāv: ___",
       "gloss": "complete the last three visible rows from a support-language profile card",
       "script": "devanagari",
       "modality": "pen",
@@ -343,14 +356,16 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:07fdadb41d6b197c",
+      "sourceHash": "fnv1a64:4de49aebe980ade5",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -387,6 +402,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F08-last-three-supported-check",
               "prompt": "Using Profile A, complete the last three blank rows without a Marathi answer bank.",
               "assesses": [
@@ -415,7 +431,7 @@
       "sequence": 1065,
       "title": "Repair endings before values",
       "headword": "-ते · -ती · -चे",
-      "romanization": "",
+      "romanization": "-te · -tī · -ce",
       "gloss": "repair form-label agreement separately from value spelling",
       "script": "devanagari",
       "modality": "pen",
@@ -424,14 +440,16 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e7f8afbb61de7d5a",
+      "sourceHash": "fnv1a64:91d498494702144e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -468,6 +486,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F09-last-three-agreement-check",
               "prompt": "Supply only the three missing endings: आवड__ पेय; आवड__ कृती; मित्रा__ नाव.",
               "assesses": [
@@ -509,8 +528,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -547,6 +568,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F10-first-three-delayed-check",
               "prompt": "After the delay, complete Profile A's first three rows without an answer model.",
               "assesses": [
@@ -587,8 +609,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -625,6 +649,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F11-last-three-delayed-check",
               "prompt": "After the delay, complete Profile A's last three rows without an answer model.",
               "assesses": [
@@ -668,8 +693,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -706,6 +733,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F12-six-field-supported-check",
               "prompt": "With Profile A visible but no Marathi answer bank, complete all six blank rows.",
               "assesses": [
@@ -752,8 +780,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall — checkpoint"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall — checkpoint."
       },
       "blocks": [
         {
@@ -790,6 +820,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F13-six-field-independent-check",
               "prompt": "Without a Marathi value model, complete Profile B's six-field form.",
               "assesses": [

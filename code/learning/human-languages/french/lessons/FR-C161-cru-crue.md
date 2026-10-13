@@ -13,7 +13,8 @@ gloss: "raw"
 concept_tag: FR-QUAL161-CRU-CRUE
 prerequisites: [FR-C161-frais-fraiche, FR-C161-epice-epicee]
 sounds: []
-roots: []
+roots: [crudus-latin]
+etymology_hook: "cru ← Latin crudus 'raw, bloody' — English crude"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C161-epice-epicee]
 <!-- hl-knowledge: introduces=[FR-LEX-C161-QUAL161-05]; assesses=[] -->
 
 **cru / crue** — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cru** ← Latin *crudus*, "raw, bloody" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

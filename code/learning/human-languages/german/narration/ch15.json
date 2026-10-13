@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Seasons Go Native",
   "drivablePrefix": 11,
-  "sourceHash": "fnv1a64:a2a5b605f5d8553c",
+  "sourceHash": "fnv1a64:e84e6e1e67a35a71",
   "lessons": [
     {
       "id": "GE-C09-jahr",
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7008121241a249d4",
+      "sourceHash": "fnv1a64:ae80200890905535",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +199,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Zeit from Old High German zīt from Proto-Germanic tīdiz, \"time, period\" — inherited, the same word as English tide, with German z where English kept t. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -217,7 +228,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -266,7 +277,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -434,14 +445,14 @@
       "title": "früh — \"early\"",
       "headword": "früh",
       "romanization": "früh",
-      "gloss": "early — the word the first season is built out of, and a cousin of English early",
+      "gloss": "early — the word the first season is built out of, though not a cousin of English early",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1dea2373aa9c433",
+      "sourceHash": "fnv1a64:7d95df08ef70debf",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +489,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "früh from Old High German fruoji from Proto-Germanic frōwijaz, \"early\" — inherited. Dutch vroeg is the same word. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -496,7 +518,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -554,7 +576,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -585,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:051db97e7834b88e",
+      "sourceHash": "fnv1a64:4475629b3c8a9027",
       "notice": null,
       "blocks": [
         {
@@ -626,6 +648,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Frühling is früh, \"early\" from Old High German fruoji (EtymDB 2.1), with the ending -ling: \"the early one\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -644,7 +677,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -702,7 +735,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -733,7 +766,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80e35b402efe69ff",
+      "sourceHash": "fnv1a64:f921c8510ce30116",
       "notice": null,
       "blocks": [
         {
@@ -774,6 +807,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sommer from Old High German sumar from Proto-Germanic sumaraz — inherited, the same word as English summer. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -792,7 +836,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -841,7 +885,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -872,7 +916,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b19baa04bca6d96c",
+      "sourceHash": "fnv1a64:aa26b8a521648fc3",
       "notice": null,
       "blocks": [
         {
@@ -909,6 +953,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Herbst from Old High German herbist from Proto-Germanic harbistaz — inherited, the same word as English harvest. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -927,7 +982,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -976,7 +1031,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1156,7 +1211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:906f09f5253936c8",
+      "sourceHash": "fnv1a64:b1cb69da9e4895fc",
       "notice": null,
       "blocks": [
         {
@@ -1193,6 +1248,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Winter from Middle High German winter from Old High German wintar — inherited, from Proto-Germanic wintruz. EtymDB 2.1 traces English winter to the same wintruz."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1211,7 +1277,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1269,7 +1335,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1300,7 +1366,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ae053c03ff7ab6f",
+      "sourceHash": "fnv1a64:431c00ac942a8ee5",
       "notice": null,
       "blocks": [
         {
@@ -1341,6 +1407,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lenz from Old High German lenzo from Proto-Germanic langatīnaz, \"spring\", built from \"long\" and \"day\" — inherited, a cousin of English Lent. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1355,7 +1432,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1413,7 +1490,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

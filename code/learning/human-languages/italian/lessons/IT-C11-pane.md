@@ -69,4 +69,4 @@ as the French *pain*: a **companion** is one you **share bread** with.
 [PAUSE 3s] Give "bread" with its article. (**il pane**.) What Latin word, and how
 much did Italian change it? (*pānis* — barely: *pānis → pane*.) What does
 *companatico* mean, and how does it use the bread-root? ("What you eat **with**
-bread" — *com-* "with" + *pānis*.) Next: **l'acqua** and **il vino**.
+bread" — *com-* "with" + *pānis*.) Next: water and wine.

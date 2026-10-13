@@ -13,7 +13,8 @@ gloss: "the fire brigade"
 concept_tag: GE-THING207-FEUERWEHR
 prerequisites: [GE-C206-notfall, GE-C207-krankenwagen]
 sounds: []
-roots: []
+roots: [germanic-for, germanic-warinis]
+etymology_hook: "Feuerwehr — Feuer 'fire' + Wehr 'defence': the defence against fire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C207-krankenwagen]
 <!-- hl-knowledge: introduces=[GE-LEX-C207-THING207-02]; assesses=[] -->
 
 **die Feuerwehr** — "the fire brigade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Feuerwehr** is *Feuer*, "fire", + the word for "defence", Old High German *werī* ← Proto-Germanic *\*warīniz* (EtymDB 2.1): the defence against fire. English *weir* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

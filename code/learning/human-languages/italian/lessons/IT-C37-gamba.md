@@ -14,6 +14,7 @@ concept_tag: IT-CORPO1-GAMBA
 prerequisites: [IT-C35-abbastanza, IT-C37-braccio]
 sounds: []
 roots: []
+etymology_hook: "gamba ← Late Latin gamba 'leg', from Greek kampe 'a bend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C37-braccio]
 <!-- hl-knowledge: introduces=[IT-LEX-C37-CORPO1-02]; assesses=[] -->
 
 **la gamba** — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gamba** ← Late Latin *gamba*, "leg" — inherited; Latin took it from Greek *kampe*, "a bend". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

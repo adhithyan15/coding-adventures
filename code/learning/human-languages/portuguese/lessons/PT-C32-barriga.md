@@ -14,6 +14,7 @@ concept_tag: PT-CORPO3-BARRIGA
 prerequisites: [PT-C32-costas, PT-C32-cabelo]
 sounds: []
 roots: []
+etymology_hook: "barriga — probably from Old Portuguese barrica 'cask': a belly shaped like a barrel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C32-cabelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C32-CORPO3-03]; assesses=[] -->
 
 **a barriga** — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barriga** is probably built from Old Portuguese *barrica*, "cask" (EtymDB 2.1): a belly shaped like a little barrel. That link is the usual account, not a certain one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

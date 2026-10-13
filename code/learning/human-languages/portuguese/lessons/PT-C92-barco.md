@@ -13,7 +13,8 @@ gloss: "a boat"
 concept_tag: PT-VIAGEM92-BARCO
 prerequisites: [PT-C92-mota, PT-C92-navio]
 sounds: []
-roots: []
+roots: [barca-latin]
+etymology_hook: "barco — from the barge word, which ← Late Latin barca — English barque and embark share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C92-navio]
 <!-- hl-knowledge: introduces=[PT-LEX-C92-VIAGEM92-03]; assesses=[] -->
 
 **o barco** — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barco** is a masculine of the word for a barge (EtymDB 2.1), which ← Late Latin *barca* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

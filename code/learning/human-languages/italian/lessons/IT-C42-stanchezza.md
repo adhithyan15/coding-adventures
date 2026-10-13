@@ -14,6 +14,7 @@ concept_tag: IT-STARE-STANCHEZZA
 prerequisites: [IT-C41-fame, IT-C42-sete]
 sounds: []
 roots: []
+etymology_hook: "stanchezza — 'tired' + -ezza '-ness'; the origin of the 'tired' word is not recorded"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C42-sete]
 <!-- hl-knowledge: introduces=[IT-LEX-C42-STARE-02]; assesses=[] -->
 
 **la stanchezza** — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stanchezza** — built from the word for "tired" with *-ezza*, "-ness"; where that word came from is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

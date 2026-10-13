@@ -11,7 +11,8 @@ romanization: "idu"
 concept_tag: TA-DEIXIS-THIS
 prerequisites: [TA-C38-udambu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "இது — native: the near base i- (DEDR 410); Malayalam itu, Kannada idu"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **அது** *adu*, which you will meet in a moment. The two of them
+Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இது** (*idu*) is native Dravidian: the near base *i-* (DEDR 410). Malayalam has *itu* and Kannada *idu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-01, TA-LEX-UDAMBU-01, TA-ETYMON-UDAMBU-02] -->

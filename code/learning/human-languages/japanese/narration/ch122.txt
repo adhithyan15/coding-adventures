@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふかい (fukai) mean? ("Deep".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'deep'.
+Say the Japanese for 'deep'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たいせつ (taisetsu) mean? ("Precious".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'precious'.
+Say the Japanese for 'precious'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひつよう (hitsuyou) mean? ("Necessary".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'necessary'.
+Say the Japanese for 'necessary'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かんたん (kantan) mean? ("Simple".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'simple'.
+Say the Japanese for 'simple'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふくざつ (fukuzatsu) mean? ("Complicated".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'complicated'.
+Say the Japanese for 'complicated'.

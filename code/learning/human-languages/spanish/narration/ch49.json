@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 49,
   "title": "Going, and the Future You Can Already Say",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5c7e48b341b9b9aa",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:87da801766142609",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -143,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-singular-forms",
               "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-formal-question",
               "prompt": "Complete the formal question: ¿Dónde ___ usted?",
               "assesses": [
@@ -317,6 +319,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-a-futuro-voy-hablar",
               "prompt": "Say 'I am going to speak' in Spanish.",
               "assesses": [
@@ -337,6 +340,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-a-futuro-vas-comer",
               "prompt": "Say 'You are going to eat' to one friend in Spanish.",
               "assesses": [
@@ -384,24 +388,13 @@
       "romanization": "hablaré",
       "gloss": "I will speak",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21a6f33e14a65343",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "What you've built"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called What you've built until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:6012f9c58b1b5cf5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -487,17 +480,19 @@
               "text": "The singular endings ride on the full infinitive, and they are the same for all three verb families — -ar, -er and -ir alike. This is the most regular tense in the language:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
-                "",
-                "speak",
-                "eat",
-                "live"
+                "who",
+                "ending",
+                "speak, eat, live"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, speak, eat, live. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: I will. ending: -é. speak, eat, live: hablaré, comeré, viviré.",
+                "who: you will. ending: -ás. speak, eat, live: hablarás, comerás, vivirás.",
+                "who: he/she will. ending: -á. speak, eat, live: hablará, comerá, vivirá."
+              ]
             },
             {
               "kind": "speech",
@@ -537,11 +532,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I will eat\" and \"I will live,\" using the table",
+              "instruction": "\"I will eat\" and \"I will live,\" on the same ending as hablaré",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I will eat\" and \"I will live,\" using the table]"
+              "source": "[YOU SAY: \"I will eat\" and \"I will live,\" on the same ending as *hablaré*]"
             }
           ]
         },
@@ -577,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af755379bf248b1b",
+      "sourceHash": "fnv1a64:aaa2908bfb95401b",
       "notice": null,
       "blocks": [
         {
@@ -699,6 +694,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-mi-tu-su-my-coffee",
               "prompt": "Say 'my coffee' in Spanish.",
               "assesses": [
@@ -719,6 +715,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-mi-tu-su-formal-your-coffee",
               "prompt": "Addressing usted, say 'your coffee' in Spanish.",
               "assesses": [
@@ -883,6 +880,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-ir-forms",
               "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
               "assesses": [
@@ -903,6 +901,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-formal-going",
               "prompt": "Ask formal you 'Where are you going?' in Spanish.",
               "assesses": [
@@ -925,6 +924,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-near-future",
               "prompt": "Say 'I am going to speak' in Spanish.",
               "assesses": [
@@ -945,6 +945,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-possessive",
               "prompt": "Addressing usted, say 'your coffee' in Spanish.",
               "assesses": [

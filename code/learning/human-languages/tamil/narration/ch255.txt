@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to enter, then the Tamil for to exit.
 You'll want to know: சுவாசி.
 சுவாசி — cuvāci — "to breathe".
 
+The word, taken apart.
+சுவாசி (cuvāci) is a verb made from Sanskrit śvāsa, "breath, breathing" (CDIAL 12769).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to exit, then the Tamil for to breathe.
 
 You'll want to know: குணமாகு.
 குணமாகு — kuṇamāku — "to recover, to get well".
+
+The word, taken apart.
+குணமாகு (kuṇamāku) is kuṇam, "good quality, health", from Sanskrit guṇa, "quality" (CDIAL 4190), and native āku, "to become" (DEDR 333): "become well".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for to breathe, then the Tamil for to recover.
 You'll want to know: வீங்கு.
 வீங்கு — vīṅku — "to swell".
 
+The word, taken apart.
+வீங்கு (vīṅku) is native Dravidian. DEDR 5448 lists Malayalam vīṅṅuka, "to swell" and Kannada bīgu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for to recover, then the Tamil for to swell.
 You'll want to know: எழுப்பு.
 எழுப்பு — eḻuppu — "to wake (someone) up".
 
+The word, taken apart.
+எழுப்பு (eḻuppu) is native Dravidian. DEDR 851 lists Malayalam eḻuka, "to rise". It is the causative of eḻu, "to rise": "make rise".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for to swell, then the Tamil for to wake.
 
 You'll want to know: பல் துலக்கு.
 பல் துலக்கு — pal tulakku — "to brush one's teeth".
+
+The word, taken apart.
+பல் துலக்கு (pal tulakku) is native: pal, "tooth" (DEDR 3986), and tulakku, "to polish, to make shine" (DEDR 3360).
 
 What you've built.
 One more word for this chapter.

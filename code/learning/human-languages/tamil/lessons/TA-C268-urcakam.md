@@ -14,7 +14,8 @@ romanization: "uṟcākam"
 concept_tag: TA-GUNAM268-URCAKAM
 prerequisites: [TA-C267-nericalana, TA-C267-elitana]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "உற்சாகம் ← Sanskrit utsāha 'power, joy' (CDIAL 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C267-elitana]
 <!-- hl-knowledge: introduces=[TA-LEX-C268-GUNAM268-01]; assesses=[] -->
 
 **உற்சாகம்** — *uṟcākam* — "enthusiasm, excitement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உற்சாகம்** (*uṟcākam*) is a loan from Sanskrit *utsāha*, "power, joy" (CDIAL 1882).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

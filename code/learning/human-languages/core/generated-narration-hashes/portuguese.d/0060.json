@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 60,
-  "sourceHash": "fnv1a64:32899ca3df3eb14a",
+  "sourceHash": "fnv1a64:eb117cdb943e44d6",
   "lessonIds": [
     "PT-C60-cao",
     "PT-C60-gato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch60.txt",
   "json": "portuguese/narration/ch60.json",
-  "textHash": "fnv1a64:750ac1ca7e27adb8",
-  "jsonHash": "fnv1a64:fea87e26ce19dd4a",
+  "textHash": "fnv1a64:94412bc4493189f3",
+  "jsonHash": "fnv1a64:cd3bc5ac245b6380",
   "findings": []
 }

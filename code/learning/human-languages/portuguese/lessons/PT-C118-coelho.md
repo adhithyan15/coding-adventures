@@ -13,7 +13,8 @@ gloss: "a rabbit"
 concept_tag: PT-ANIMAIS118-COELHO
 prerequisites: [PT-C117-bosque, PT-C117-burro]
 sounds: []
-roots: []
+roots: [cuniculus-latin]
+etymology_hook: "coelho ← Latin cuniculus 'rabbit', through Vulgar Latin *cuniclus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C117-burro]
 <!-- hl-knowledge: introduces=[PT-LEX-C118-ANIMAIS118-01]; assesses=[] -->
 
 **o coelho** — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coelho** ← Latin *cuniculus*, "rabbit" (EtymDB 2.1) — inherited. The *-n-* fell out between vowels.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

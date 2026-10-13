@@ -14,7 +14,8 @@ romanization: "meṉmaiyāṉa"
 concept_tag: TA-QUAL145-MENMAIYANA
 prerequisites: [TA-C144-kanamana, TA-C144-lecana]
 sounds: []
-roots: []
+roots: [dravidian-mel-soft]
+etymology_hook: "மென்மையான — native Dravidian (DEDR 5078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C144-lecana]
 <!-- hl-knowledge: introduces=[TA-LEX-C145-QUAL145-01]; assesses=[] -->
 
 **மென்மையான** — *meṉmaiyāṉa* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மென்மையான** (*meṉmaiyāṉa*) is native Dravidian (DEDR 5078). It is *meṉmai*, "softness", from *mel*, "soft", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

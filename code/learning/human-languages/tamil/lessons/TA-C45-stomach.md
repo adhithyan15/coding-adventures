@@ -11,7 +11,8 @@ romanization: "vayiṟu"
 concept_tag: TA-NOUN-STOMACH
 prerequisites: [TA-C45-tooth]
 sounds: []
-roots: []
+roots: [dravidian-vayiru-belly]
+etymology_hook: "வயிறு — native Dravidian (DEDR 5259); Malayalam vayaṟu, Kannada basaṟ"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C45-tooth]
 The ற in the middle is the hard *ṟ* this book met at *aṟai*, 'a room' — not the soft *r* of *peyar*. Malayalam says വയറ്, the same word; Telugu and Kannada went elsewhere entirely for this one.
 
 Where an English speaker says they are hungry, Tamil is happy to talk about the *vayiṟu* and leave the person out of it: the belly is what is empty, and you merely own it. That is the same habit behind *uṅgaḷ uḍambu eppaḍi irukku*, where the health question hangs on the body rather than on you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வயிறு** (*vayiṟu*) is native Dravidian. DEDR 5259 lists Malayalam *vayaṟu* and Kannada *basaṟ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

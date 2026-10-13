@@ -116,3 +116,55 @@ AST callers, and reject forged comma kinds, keyword or unpacking arguments,
 four or more arguments, and unsupported expressions. `print(1.0, -0.0, 2.5)`
 must yield `1.0 -0.0 2.5\n`. A later `print(2.0, 3.0, 1.0 / 0.0)` must retain
 only the earlier completed line.
+
+## Bounded follow-up: arithmetic token validation for direct AST callers
+
+Before lowering a caller-supplied arithmetic AST, require unary `+`/`-` and
+binary `+`/`-`/`*`/`/` tokens to have the canonical lexer token kind, no
+conflicting effective-type override, and the exact supported spelling.
+Arithmetic `paren_expr` nodes must contain actual opening and closing
+parenthesis tokens around the grammar's existing `paren_body` wrapper,
+which must contain exactly one `expression` node. Matching
+text alone does not validate an operator or delimiter. Reject a node in
+place of a token and invalid spellings even if the other fields look valid.
+
+Preserve source arithmetic and precedence, source-order evaluation, float
+and output bounds, zero/one/two/three-argument print, and prior-output errors.
+Apply these checks in standalone expressions and every print argument.
+The existing source and direct-AST item/depth/text budgets run before
+lowering. Typed grammar AST still lowers directly to InterpreterIR and Rust
+vm-core; host Python remains a separate conformance oracle. Do not extend
+expression syntax or claim general validation of every possible forged AST.
+Tests must first expose previously accepted forged operators/delimiters,
+then cover token kind, effective type, spelling, token/node substitution,
+all argument positions, and unchanged source/runtime behavior.
+
+## Bounded follow-up: float literal validation for direct AST callers
+
+Require a float atom token to have the canonical grammar-lexer representation:
+`TokenType::Name` with the exact named type `FLOAT`. Validate its complete raw
+ASCII spelling against the three FLOAT forms declared in
+`code/grammars/python/python3.12.tokens` before removing underscores or
+converting to f64. Decimal digit groups permit a single underscore only
+between digits. Accepted forms are digit-group exponent, dot digit-group
+with optional exponent, and digit-group dot digit-group with optional exponent.
+An exponent contains e/E, an optional sign, and a nonempty digit group.
+
+Reject forged enum kinds, missing or conflicting named types, integer-only
+spellings, misplaced underscores, embedded signs/whitespace, Unicode digits,
+NaN/infinity names, suffixes and trailing bytes. This preserves the existing
+versioned lexer subset: trailing-dot floats such as `1.` are not newly added.
+Use a bounded linear byte scan with no host runtime or new regex dependency.
+Existing AST text/item/depth and module-name guards still run first.
+
+Keep source parsing, arithmetic, signed zero, float overflow/underflow,
+display limits, zero through three positional print arguments and prior-output
+errors unchanged. In particular a syntactically valid `1e9999` still lowers
+to IEEE infinity and fails only if displayed; do not reject valid literals
+merely because f64 conversion overflows. Conversion uses raw spelling rather
+than optional cooked metadata. This is no general forged-AST validation claim.
+
+Tests must expose the prior acceptance of forged FLOAT tokens before the fix,
+cover malformed raw spellings in standalone expressions and every print
+argument position, and preserve real parser-produced token forms. Compare
+native Rust VM output and errors to host Python solely as an external oracle.

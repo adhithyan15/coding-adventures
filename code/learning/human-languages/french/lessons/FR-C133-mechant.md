@@ -13,7 +13,8 @@ gloss: "nasty, mean"
 concept_tag: FR-QUALITES85-MECHANT
 prerequisites: [FR-C132-drole, FR-C133-sympathique]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "méchant — Old French mescheoir 'to fall out badly', from Latin cadere 'to fall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C133-sympathique]
 <!-- hl-knowledge: introduces=[FR-LEX-C133-QUALITES85-02]; assesses=[] -->
 
 **méchant** — "nasty, mean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**méchant** is the present participle of Old French *mescheoir*, "to turn out badly": *mes-*, "badly", and *cheoir*, "to fall", ← Latin *cadere* (Lewis & Short). Ill-fated, then wicked.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

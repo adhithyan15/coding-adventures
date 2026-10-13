@@ -14,6 +14,7 @@ concept_tag: GE-THING242-VERTRAUEN
 prerequisites: [GE-C241-verhalten, GE-C242-verkehr]
 sounds: []
 roots: []
+etymology_hook: "Vertrauen — ver- + trauen 'to trust', a cousin of English true and trust"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C242-verkehr]
 <!-- hl-knowledge: introduces=[GE-LEX-C242-THING242-02]; assesses=[] -->
 
 **das Vertrauen** — "trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vertrauen** is *ver-* + the verb "to trust", Old High German *trūwēn* (EtymDB 2.1), a cousin of English *true* and *trust*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

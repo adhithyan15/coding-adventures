@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family, and the Oldest Words We Have",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1762903b18d7a391",
+  "sourceHash": "fnv1a64:640f737319a9b649",
   "lessons": [
     {
       "id": "FR-C10-pere",
@@ -748,7 +748,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7f0eb40eccdfbf3c",
+      "sourceHash": "fnv1a64:faa8e3edb4dd7856",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -759,7 +759,7 @@
           "Script: œ, one letter and not two",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: œ, one letter and not two and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: œ, one letter and not two and Guided Practice."
       },
       "blocks": [
         {
@@ -813,7 +813,7 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: œ, and the four words that need it",
+          "title": "Writing: œ, and the everyday words that need it",
           "segments": [
             {
               "kind": "speech",
@@ -829,15 +829,7 @@
             },
             {
               "kind": "speech",
-              "text": "l'œuf — the egg."
-            },
-            {
-              "kind": "speech",
-              "text": "l'œil — the eye."
-            },
-            {
-              "kind": "speech",
-              "text": "l'œuf and l'œil both come back later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language — and because four words is a short enough list to simply keep."
+              "text": "The words for \"egg\" and \"eye\" need it too, and both come later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language."
             }
           ]
         },
@@ -873,11 +865,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the short list — \"sœur, cœur, œuf, œil\"",
+              "instruction": "the two words — \"sœur, cœur\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the short list — \"sœur, cœur, œuf, œil\"]"
+              "source": "[YOU SAY: the two words — \"sœur, cœur\"]"
             },
             {
               "kind": "prompt",
@@ -903,7 +895,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many letters is œ? (One.) What does French call it? (e dans l'o — \"e in the o\".) How many letters in sœur? (Four — s-œ-u-r.) Name two other words that use it. (cœur, œuf, œil — any two.) Next: putting the family together."
+              "text": "How many letters is œ? (One.) What does French call it? (e dans l'o — \"e in the o\".) How many letters in sœur? (Four — s-œ-u-r.) Name another word that uses it. (cœur, the heart.) Next: putting the family together."
             }
           ]
         }
@@ -922,7 +914,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5956ab4d016d59",
+      "sourceHash": "fnv1a64:7c3cc981198fd5ff",
       "notice": null,
       "blocks": [
         {
@@ -1091,7 +1083,7 @@
             },
             {
               "kind": "speech",
-              "text": "a letter — œ, one character, waiting in cœur, œuf and œil."
+              "text": "a letter — œ, one character, waiting in cœur."
             },
             {
               "kind": "speech",
@@ -1112,7 +1104,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all four family words with their articles. (le père, la mère, le frère, la sœur.) Which two are feminine? (la mère, la sœur.) State Grimm's law in the form you need. (p becomes f, t becomes th.) Use it: what English word is frāter? (brother.) How many letters is œ, and name a word besides sœur that has it. (One; cœur, œuf or œil.) Which English word for physical stuff traces back to mère? (matter.)"
+              "text": "Give all four family words with their articles. (le père, la mère, le frère, la sœur.) Which two are feminine? (la mère, la sœur.) State Grimm's law in the form you need. (p becomes f, t becomes th.) Use it: what English word is frāter? (brother.) How many letters is œ, and name a word besides sœur that has it. (One; cœur.) Which English word for physical stuff traces back to mère? (matter.)"
             }
           ]
         }

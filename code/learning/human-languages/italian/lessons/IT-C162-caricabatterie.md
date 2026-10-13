@@ -13,7 +13,8 @@ gloss: "a charger"
 concept_tag: IT-COSE162-CARICABATTERIE
 prerequisites: [IT-C162-tastiera, IT-C162-batteria]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "caricabatterie — carica 'charges' + batterie 'batteries'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C162-batteria]
 <!-- hl-knowledge: introduces=[IT-LEX-C162-COSE162-05]; assesses=[] -->
 
 **il caricabatterie** — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caricabatterie** is "charges batteries": *carica*, "it loads, it charges", plus *batterie*, "batteries". *caricare* ← Late Latin *carricare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

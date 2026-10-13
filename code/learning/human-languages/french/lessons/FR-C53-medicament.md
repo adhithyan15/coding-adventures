@@ -13,7 +13,8 @@ gloss: "a medicine"
 concept_tag: FR-SANTE5-MEDICAMENT
 prerequisites: [FR-C53-fievre, FR-C53-toux]
 sounds: []
-roots: []
+roots: [medicus-latin]
+etymology_hook: "médicament ← Latin medicamentum 'a remedy' — English medicament and medicine are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C53-toux]
 <!-- hl-knowledge: introduces=[FR-LEX-C53-SANTE5-04]; assesses=[] -->
 
 **le médicament** — "a medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**médicament** ← Latin *medicamentum*, "a remedy", from *medicari*, "to heal" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

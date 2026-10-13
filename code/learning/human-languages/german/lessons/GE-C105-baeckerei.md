@@ -13,7 +13,8 @@ gloss: "a bakery"
 concept_tag: GE-ORT105-BAECKEREI
 prerequisites: [GE-C104-post, GE-C105-restaurant]
 sounds: []
-roots: []
+roots: [germanic-bakana]
+etymology_hook: "Bäckerei — the word for 'baker' + -ei, the ending for a trade's workshop"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C105-restaurant]
 <!-- hl-knowledge: introduces=[GE-LEX-C105-ORT105-02]; assesses=[] -->
 
 **die Bäckerei** — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bäckerei** is the word for "baker" + *-ei*, the ending that names a trade's workplace (EtymDB 2.1). The baker is the one who bakes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

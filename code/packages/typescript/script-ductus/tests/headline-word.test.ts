@@ -56,7 +56,10 @@ describe("taking a letter's headline off", () => {
     const signs = devanagari.filter((letter) => /^\p{M}$/u.test(letter.glyph) && letter.glyph !== "\u093E");
     expect(letters).toHaveLength(44);
     expect(aa).toHaveLength(1);
-    expect(signs).toHaveLength(8);
+    // ु ू े ं ़ ् ृ ँ, and ी ो ः: the last three leave the piece of headline
+    // Noto prints on them undrawn (it is the word's headline), so none of the
+    // eleven ends in a headline stroke to take off.
+    expect(signs).toHaveLength(11);
     // ā's last stroke is the piece of headline Noto prints on the sign.
     const split = splitHeadline(aa[0])!;
     expect(split.body).toEqual(aa[0].strokes.slice(0, 1));

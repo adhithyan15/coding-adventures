@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after partial Perl 5.004_67
+Status date: 2026-10-11 — re-audited for PREP01 octal integer stringization
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -412,24 +412,133 @@ explicitly partial pairs and 664 pending. Neither complete syntax nor an
 exhaustive public-release inventory is claimed. The next selection rotates
 to LANG79's bounded three-positional-float Python `print` stage.
 
+PR #17163 delivered that bounded Python three-positional-float `print` stage
+and merged as `31b89d56ea0e5266aa945905c8210880570d0f76` after exact-head
+CI, CodeQL, and books checks passed. Direct Python AST lowering and Rust
+`vm-core` execution retain the existing bounds; host Python is only the
+conformance oracle. The next selection rotates to PREP01's bounded C
+identifier-prefix token paste stage.
+
+PR #17170 delivered that bounded C identifier-prefix token paste stage and
+merged as `f05c5681a1bac49e046be6ec586bb0ec1adffd38` after exact-head CI,
+CodeQL, and books checks passed. The full CI rerun regenerated its expired
+build-plan artifact; Windows then passed. The next selection rotates to
+LANG82's distinct, own-archive-backed partial Perl 5.004_68 pair.
+
+PR #17229 delivered that distinct, explicitly partial, own-archive-backed
+Perl 5.004_68 token/grammar pair and merged as
+`e0b0af862f3da1be5526c90869d4ce53bfa924db` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 113 explicitly
+partial pairs and 663 pending; neither complete syntax nor an exhaustive
+public-release inventory is claimed. The next selection rotates to LANG78's
+bounded three-argument numeric JavaScript `console.log` stage.
+
+PR #17232 delivered that bounded three-argument numeric `console.log` stage
+and merged as `eeea57e7e1f4603d1fc8dd170656fd33b41d02ae` after exact-head
+CI, CodeQL, and books checks passed. Its audit recorded a separate source
+lexer division/regex ambiguity in LANG78; that repair remains open. The next
+selection rotates to LANG82's distinct, own-archive-backed partial Perl
+5.004_69 pair, whose new hint-controlled constant hooks remain unsupported.
+
+PR #17236 delivered that distinct, explicitly partial Perl 5.004_69 pair
+and merged as `f46666f5f17d231b8132618e0b3ffb84d1f068ac` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 114
+explicitly partial pairs and 662 pending; full syntax and inventory
+exhaustiveness remain unproven. The next selection rotates to PREP01's
+bounded C identifier-suffix paste stage.
+
+PR #17240 delivered bounded C identifier-suffix paste and merged as
+`42980027e21278b079799978b5933ea51c8c9f9e` after every exact-head CI,
+CodeQL, books workflow, and required gate passed. Raw-only arguments retain
+their spelling without pre-expansion; generic budgets and provenance remain
+guarded. General paste and full C `#if` remain open. The next selection rotates
+to LANG80's bounded parenthesized three-integer `puts` stage.
+
+PR #17247 delivered LANG80's bounded parenthesized three-integer `puts`
+stage and merged as `b35803fc8569e36d901a6929feb940c7024ab9b4` after all
+exact-head CI, CodeQL, books workflows, and required gates passed. Direct
+typed Ruby AST-to-IIR lowering and Rust `vm-core` execution preserve the
+integer and resource bounds; Ruby is only a conformance oracle. The next
+selection rotates to LANG82's distinct, own-archive-backed partial Perl
+5.004_70 pair.
+
+PR #17250 delivered the distinct, explicitly partial Perl 5.004_70 pair
+and merged as `6e9257f5a74f8c872a07bc38d3eca7cd6060ccf2` after every
+exact-head CI, CodeQL, books workflow and required gate passed. The inventory
+has 776 unique rows, 115 explicitly partial pairs, 661 pending and none
+complete; full syntax and exhaustive release coverage remain unproven.
+The next selection rotates to LANG79's bounded arithmetic-token validation
+for caller-supplied Python ASTs: unary/binary operator kinds and grouping
+delimiters currently accept spelling without the full token shape.
+
+PR #17256 delivered LANG79's arithmetic AST token validation and merged as
+`7265ad37e79eea8d4d809e5fbab77caeea5fe0d3` after every exact-head CI,
+CodeQL, books workflow and required gate passed. Caller-supplied operators and
+grouping tokens now require canonical kinds and spelling. The next selection
+rotates to a restricted division-only source entry for LANG78's numeric subset;
+general JavaScript regex-versus-division disambiguation remains open.
+
+PR #17259 delivered LANG78's restricted division-only frontend and merged as
+`233f5fcc3a567fb42782810758ec8747c1869aed` after all four exact-head workflows
+and required gates passed. Repeated division now reaches Rust vm-core;
+construction-spine bounds and pre-parse rejection of unsupported exponent
+tokens prevent two reproduced stack aborts. General JavaScript lexical-goal
+selection remains open. The next selection rotates to PREP01's bounded
+unsuffixed hexadecimal integer stringization.
+
+PR #17264 delivered PREP01's bounded unsuffixed hexadecimal integer
+stringization and merged as `1582fa24b4dad8c34dacc73dbe4a9e785d1c56d5`
+after every exact-head CI, CodeQL, books workflow and required gate passed.
+Exact source spelling, generic bounds and provenance are retained. The fresh
+selection rotates to a distinct own-archive-backed partial Perl 5.004_71 pair.
+
+PR #17266 delivered the distinct own-source partial Perl 5.004_71 pair and
+merged as `a28aa4dbc8eb616df45dbf4572484d247158e6ac` after every exact-head
+CI, CodeQL, books workflow and required gate passed. The refreshed inventory
+has 776 unique rows, 116 partial pairs and 660 pending, with none complete.
+The fresh selection rotates to LANG80's arithmetic operator/grouping token
+validation at the public AST boundary. Full Perl syntax and inventory
+exhaustiveness remain open.
+
+PR #17269 delivered LANG80 arithmetic/grouping AST token validation and
+merged as `fcefc380b65a0e7e8dbc88905c38b374fa88ecb5` after exact-head workflows
+and required gates passed. The Windows qpdf HTTP 504 setup failure recovered
+with a failed-job retry while its build-plan artifact remained available.
+Canonical operator/grouping tokens, native IIR execution and existing bounds
+are preserved. The refreshed selection rotates to a distinct own-source
+partial Perl 5.004_72 pair, including its source-backed CR whitespace change.
+
+PR #17275 delivered the distinct own-source partial Perl 5.004_72 pair and
+merged as `87875d7dc74fdce6077daaf8189d9111dd72a502` after every exact-head
+workflow and required gate passed. Its source-backed CR whitespace and
+250-digit bound are retained; earlier pairs and LANG81 execution are unchanged.
+The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
+with none complete. The next selection rotates to PREP01 unsuffixed octal
+integer stringization, preserving raw spelling and generic bounds.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
-The refreshed queue is:
+The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
+Alternate bounded work across the streams below; the list is not a requirement
+to finish one language before advancing another. At most two independent
+implementation PRs may be active. Include documentation, lesson shards,
+generated files and transitive dependencies in each DAG ownership audit.
 
-1. **LANG79 Python (selected):** accept exactly three positional float
-   expressions in `print` through Python AST to IIR and Rust `vm-core`.
-   Preserve existing bounds and use host Python only as a conformance oracle.
-2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
-   complete; broader native frontend semantics remain open, with Node only
-   as a conformance oracle.
-3. **LANG82 continued:** the separate, explicitly partial Perl 5.004_67
-   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
-   do not imply complete syntax or an exhaustive release inventory.
-4. **PREP01 C:** bounded raw-token stringize is complete. Full C `#if`,
-   broader stringize, and token paste remain open.
-5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
-   broader native frontend semantics remain open, with host Ruby only as a
-   conformance oracle.
+1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
+   consumers. Audit their existing composition and select a demonstrated gap
+   in preprocessing, provenance, bounds or IIR identity against hand-expanded
+   Nib/Oct. The already published octal-stringize PR #17281 is existing work;
+   further C-specific stages and full C preprocessing are long-term work,
+   not the default next PREP01 selection.
+2. **LANG79 Python:** arithmetic AST token validation is complete; broader
+   native frontend semantics remain open. Host Python is oracle only.
+3. **LANG78 JavaScript:** restricted numeric division is complete; general
+   lexical-goal selection and broader native semantics remain open, Node oracle only.
+4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
+   Continue distinct own-release source-backed pairs; full syntax remains open.
+5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;
+   broader native semantics remain open. Perl 5.004_01-t1 stays pending
+   without its own pinned source; no exhaustive release coverage is claimed.
 
 The following run records the first VM-067 selection.
 

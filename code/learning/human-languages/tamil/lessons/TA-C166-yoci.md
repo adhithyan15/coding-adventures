@@ -14,7 +14,8 @@ romanization: "yōci"
 concept_tag: TA-VERB-YOCI
 prerequisites: [TA-C166-poruttukkol, TA-C166-camatanam-cey]
 sounds: []
-roots: []
+roots: [sanskrit-yojana-joining]
+etymology_hook: "யோசி — from yōcaṉai 'thought', a loan from Sanskrit yojanā 'a joining, an arranging'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C166-camatanam-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C166-ACT166-05]; assesses=[] -->
 
 **யோசி** — *yōci* — "to consider, to think something over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**யோசி** (*yōci*) is a verb made from *yōcaṉai*, "thought, consideration", a loan from Sanskrit *yojanā*, "a joining, an arranging".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

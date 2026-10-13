@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an expense, then the Tamil for a salary.
 You'll want to know: நேர்காணல்.
 நேர்காணல் — nērkāṇal — "an interview".
 
+The word, taken apart.
+நேர்காணல் (nērkāṇal) is native: nēr, "face to face, direct" (DEDR 3772), and kāṇal, "seeing", from kāṇ (DEDR 1443): "seeing face to face".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a salary, then the Tamil for an interview.
 
 You'll want to know: நிறுவனம்.
 நிறுவனம் — niṟuvaṉam — "a company, an organisation".
+
+The word, taken apart.
+நிறுவனம் (niṟuvaṉam) is native Dravidian (DEDR 3675). It comes from niṟuvu, "to set up, to establish": a company is something set up.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for an interview, then the Tamil for a company
 You'll want to know: தொழிற்சாலை.
 தொழிற்சாலை — toḻiṟcālai — "a factory".
 
+The word, taken apart.
+தொழிற்சாலை (toḻiṟcālai) is native toḻil, "work, trade" (DEDR 3524), and cālai, "hall", from Sanskrit śālā (CDIAL 12414): "the hall of work".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a company, then the Tamil for a factory.
 You'll want to know: பாடம்.
 பாடம் — pāṭam — "a lesson; a school subject".
 
+The word, taken apart.
+பாடம் (pāṭam) is a loan from Sanskrit pāṭha, "text, study" (CDIAL 8035).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a factory, then the Tamil for a lesson; a 
 
 You'll want to know: வீட்டுப்பாடம்.
 வீட்டுப்பாடம் — vīṭṭuppāṭam — "homework".
+
+The word, taken apart.
+வீட்டுப்பாடம் (vīṭṭuppāṭam) is native vīṭu, "house" (DEDR 5393), and pāṭam, "lesson", from Sanskrit pāṭha (CDIAL 8035).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kiḷi"
 concept_tag: TA-THINGS131-KILI
 prerequisites: [TA-C130-tavalai, TA-C130-amai]
 sounds: []
-roots: []
+roots: [dravidian-kili-parrot]
+etymology_hook: "கிளி — native Dravidian (DEDR 1584); Malayalam kiḷi, Kannada giḷi, Telugu ciluka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C130-amai]
 <!-- hl-knowledge: introduces=[TA-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **கிளி** — *kiḷi* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிளி** (*kiḷi*) is native Dravidian. DEDR 1584 lists Malayalam *kiḷi*, Kannada *giḷi* and Telugu *ciluka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

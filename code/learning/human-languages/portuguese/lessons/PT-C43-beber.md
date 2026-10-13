@@ -13,7 +13,8 @@ gloss: "to drink"
 concept_tag: PT-VERB-BEBER
 prerequisites: [PT-C42-abrir, PT-C43-fechar]
 sounds: []
-roots: []
+roots: [bibere-latin]
+etymology_hook: "beber ← Latin bibere 'to drink' — English imbibe shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C43-fechar]
 <!-- hl-knowledge: introduces=[PT-LEX-C43-VERBOS4-02]; assesses=[] -->
 
 **beber** — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beber** ← Latin *bibere*, "to drink" — inherited. EtymDB 2.1 traces it only to Old Portuguese *beber*; it derives Romanian *bea* and Old Provençal *beure* from *bibere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

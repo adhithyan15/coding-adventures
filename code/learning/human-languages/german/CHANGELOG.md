@@ -1,5 +1,71 @@
 # Changelog
 
+## Added — every German word lesson says where its word comes from
+
+HL24 §9 asks every lesson that introduces a word to say where it comes from, from a cited source, or to say plainly that the origin is uncertain. All 1,077 German word lessons that lacked an `etymology_hook`, visible etymology, or both now have both (human-language-data: German word lessons without a hook 988 → 0, without visible etymology 1071 → 0).
+
+- **Source.** EtymDB 2.1 (Fourrier & Sagot 2020, "Methodological Aspects of Developing and Managing an Etymological Lexical Resource: Introducing EtymDB-2.0", LREC 2020), licensed CC BY-SA 4.0. Each headword was looked up, its inherited, borrowed, derived or compound links were followed back through Middle and Old High German to Proto-Germanic or the donor language, and every link was checked by hand before it was written. No dataset file is in the repository; each statement is a sentence of our own. "(EtymDB 2.1)" sits beside the facts a row actually holds. Where EtymDB has no row for the German word, the lesson traces it through the rows for its sister words ("EtymDB 2.1 traces English *ring*, Old English *hring*, to Proto-Germanic *\*hringaz*"), 98 blocks in all. 35 blocks carry no tag: transparent builds from words already taught (*Nachmittag*, *sowieso*), and a few well-established accounts no row supports.
+- **The visible statement.** A `## The word, taken apart` block (`## The phrase, taken apart` for phrases, `## The letter, taken apart` for *ß*) follows the block that introduces the word, for example "**Fenster** ← Old High German *fenstar* ← Latin *fenestra*, "window" (EtymDB 2.1) — borrowed, one of the building words German took from Roman builders." Reconstructions are starred. English cognates are named as the same Proto-Germanic word, with the High German consonant shift spelled out where it shows (*Wasser*/*water*, *Apfel*/*apple*, *Zahn*/*tooth*), never as German from English.
+- **What the 1,077 say.** 355 inherited, 202 borrowed (Latin, from early loans like *Fenster*, *Wein*, *Käse*, *Pfeffer* and *Straße* to learned ones; French, Italian, English, Dutch, Greek, Arabic, Turkish, Nahuatl and Slavic; Germanic words standard German took from Low German, such as *hoffen*, *Hafen*, *Strand* and *packen*, are labelled "borrowed from Low German" throughout), 502 built from parts (*Kühlschrank*, *Bäckerei*, *verkaufen*, the *-ung*, *-heit* and *-lich* words), 12 genuinely uncertain, each stated with the usual account hedged (*Nudeln*, *Sahne*, *Tasche*, *Regal*, *Kerze*, *stolz*, *klettern*, *Dose*, *Topf*, *Strafe*, *locker*, *schlank*), and 6 that already told their story and gained only a hook. Parts are named in German only when an earlier lesson teaches them; otherwise they are described in English ("the word for 'house'").
+- **Rows rejected.** Over 90 EtymDB rows or labels were rejected rather than repeated: homographs (*Salat* ← Arabic *ṣalāt* "prayer", *Reis* "twig", *Hafen* ← Old High German *hafan* "pot", *wichtig* ← *Wicht* "creature", *und* ← *\*unþī* "wave", *Lauch* ← *loh* "hole"), Latin and French loans labelled inherited (*Fenster*, *Wein*, *Uhr*, *Käse*, *Tisch*, *Arzt*, *sicher*, *kurz*), and junk parents (*Computer* ← "asteroid belt", *Temperatur* ← "trackpad").
+- **Two older lines corrected.** GE-C09-frueh's gloss no longer calls *früh* a cousin of English *early* (it is not), and GE-C10-geschwister-wort no longer calls English *siblings* Latin-derived (it is an Old English word revived).
+- **`roots:`** 775 lessons gained an etymon slug: 227 additions reuse an existing slug, so cousins join across tracks (`fenestra-latin`, `gardaz-germanic` with Spanish *jardín*, `northa-germanic`, `hospitale-latin`, `wardon-germanic`), and 403 new slugs follow the track's `germanic-<lemma>` and `<lemma>-latin` shapes. `check:root-slug-splits` reports no new split.
+- **Durations.** The blocks are short, but the opening chapters were already full. 61 lessons had `duration.max_seconds` raised to their computed length, all under 300 s: 20 were pushed over by the new block (largest: GE-C16-wir-sind 155 → 173, GE-C05-ich-lerne-deutsch 180 → 198), and 41 were already computed above their declared budget (largest: GE-C03-wie-geht-es 180 → 290, GE-C03-wie-geht-register 180 → 287, GE-W01-eszett 240 → 289). GE-C34-den would have reached 299 s, so it lost the two-sentence recap at the end of its Grammar Lens instead.
+  - Pushed over by the new block: GE-C02-heissen-endungen 150 → 156; GE-C02-wie-heissen-sie 240 → 252; GE-C04-bis-bald 150 → 156; GE-C05-in 150 → 160; GE-C05-ich-lerne-deutsch 180 → 198; GE-C07-donner 155 → 157; GE-C08-es-ist-uhr 165 → 166; GE-C08-mittag 150 → 156; GE-C09-winter 160 → 176; GE-C09-lenz 170 → 180; GE-C10-geschwister-wort 175 → 186; GE-C11-wein 165 → 170; GE-C12-sechzehn 155 → 156; GE-C12-zwanzig 170 → 172; GE-C13-blank 145 → 151; GE-C13-blau 150 → 151; GE-C14-er-hat 145 → 158; GE-C15-gelernt 145 → 153; GE-C15-wir-haben-gesagt 150 → 151; GE-C16-wir-sind 155 → 173.
+  - Already over before this change: GE-C01-die-plural 150 → 258; GE-C03-wie-geht-es 180 → 290; GE-C03-wie-geht-register 180 → 287; GE-C03-es-geht 180 → 226; GE-C03-und 180 → 248; GE-C04-auf-wiedersehen 180 → 243; GE-C04-bis 150 → 198; GE-W01-eszett 240 → 289; GE-C05-was 180 → 232; GE-C06-ein-eine 210 → 248; GE-C07-mittwoch 170 → 262; GE-C07-sonnabend 160 → 172; GE-C08-stunde 165 → 218; GE-C08-mitternacht 165 → 180; GE-C10-eltern 175 → 203; GE-C13-weiss 160 → 202; GE-C13-rot 150 → 193; GE-C14-du-hast 145 → 187; GE-C14-einen 160 → 201; GE-C15-gesagt 150 → 188; GE-C15-gemacht 145 → 175; GE-C15-ich-habe-gesagt 150 → 183; GE-C15-du-hast-gesagt 150 → 166; GE-C15-er-hat-gemacht 155 → 188; GE-C15-sagte 150 → 182; GE-C15-machte 150 → 176; GE-C15-hatte 160 → 189; GE-C16-sein 165 → 232; GE-C16-du-bist 150 → 181; GE-C16-ihr-seid 155 → 188; GE-C16-sie-sind 165 → 209; GE-C16-muede 165 → 175; GE-C14-jahr 160 → 203; GE-C14-wie-alt-bist-du 160 → 250; GE-C16-ich-war 155 → 197; GE-C16-du-warst 145 → 173; GE-C16-er-war 155 → 176; GE-C32-keine 230 → 265; GE-C32-keinen 240 → 290; GE-C34-den 250 → 288; GE-C34-es-gibt 240 → 265.
+
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 29 → 1.
+
+- **Parts lessons no longer assemble the next lesson's phrase.** GE-C03-es and GE-C03-mir stop saying *es geht (mir)*; GE-C04-bald and GE-C04-spaet drop *bis bald* / *bis später*; GE-C04-morgen-tomorrow contrasts *Morgen* with plain *morgen*.
+- **Examples rebuilt from owned words.** GE-W01-eszett and GE-R07 use *heiße* instead of *weiß* and *Fuß*; GE-W02-umlauts brightens *Nacht → Nächte* and *gut → Güte* instead of *Mutter* and *Hund*, keeping *Buch*, *groß* and *Mann* only as glossed examples in its grammar table; GE-W03-capitalization copies *Guten Abend, gute Nacht, bis morgen* and contrasts *gut* with *das Gute* (no German lesson teaches *Mann*, *essen* or *Küche*); GE-C16-partizip-attributiv uses *die eingeschlafene Mutter*; the practice dialogues in GE-C14 and GE-C16 lose *aber* (chapter 35); GE-C02-freut-mich keeps *angenehm* and drops *sehr erfreut*.
+- **Previews withdrawn.** GE-C03-gehen no longer lists *sehr, Ihnen, Jahr*; GE-C05-wo practises only *wo* and *wie*; GE-C17-hand and GE-C31-arm stop reciting *Finger, Fuß, Herz* ahead of their lessons; GE-C03-danke and GE-C03-vielen-dank keep the thank/think story without asking for *denken*.
+- **A decomposition written as one equation.** GE-C24-verstehen's practice says "ver- + stehen → verstehen".
+- **Left as it is (1).** GE-C02-ich-heisse teaches *mein Name ist…* whole; GE-C36-mein unpacks it ("You have said it since the second chapter as a single block").
+
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Eleven were already practised and not declared. Twelve got one short spoken question each.
+
+- **Declared:** GE-C06-zahlen-1-5's table already gives the *zwei*/*vier*/*fünf* cognate stories, and GE-C06-zahlen-6-10's gives *sechs*/*sieben*/*neun* (GE-ETYMON-ZWEI…NEUN). GE-C06-grimm has "*machen* is *make*" (GE-ETYMON-MACHEN-MAKE-02). GE-C18-nein-more's table has "**nein** (*ni*-ein)" (GE-ETYMON-NEIN-04). GE-C19-bitte-requests has "bitten, bitte, bid, bead" (GE-ETYMON-BITTE-BITTEN-02). GE-R20's "*un-guilting*" covers GE-ETYMON-ENTSCHULDIGUNG-03, and GE-C21-das-wetter-more's "Just like *Wetter*/'weather'" covers GE-ETYMON-WETTER-03.
+- **Recalls:** *Abend*/*eve* and *Nacht*/*night* in GE-C01-practice. *bitte*/*bitten* and *sehr*/*sore* in GE-C03-practice. *Ihnen* as "to them" in GE-C03-formal-practice. *wieder* and *withdraw* in GE-C04-auf-wiedersehen. *tschüss* and *adieu* in GE-C04-bis. The umlaut's ghost *e* in GE-C06-zahlen-1-5. *ja*/*yea* in GE-C18-ja-more. The *n-* of no and *bitte* as asking in GE-R20 (which now names GE-C18-nein-more as a prerequisite). *regnet*/*rain* and *gelb*/*yellow* in GE-R31 (which now names GE-C23-gruen-gelb-more).
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **GE-C02-ich** → GE-C01-guten-tag and GE-C01-nacht: its `reviews_of`, and the soft *ch* it sets against "the throat-scrape of *Nacht*".
+- **GE-C03-danke** → GE-C02-practice: "You can introduce yourself in German", and its `reviews_of`.
+
+## Added — the umlaut lesson prints a stroke-order filmstrip
+
+GE-W02-umlauts (ä ö ü) now prints a strip (3 -> 4 German lessons). ü was
+already cited; ä and ö are drawn BY ANALOGY with it, not from a source of their
+own, and their records in `data/scripts/latin.json` say so: the a or o as the
+Grundschrift-App writes it, then the left dot, then the right dot. R (from the
+Grundschrift-App) is now cited too, but its lessons still print no strip.
+
+## Fixed — chapter 30's payoff moves to its closing practice and covers the chapter
+
+Chapter 30 (Head and Hand) had its payoff on GE-C17-hand, which assessed 4 of
+the 12 atoms the chapter introduces (0.33, below the 0.5
+`chapter-payoff-not-representative` floor) and named GE-ETYMON-HAND-MANUS-05,
+which GE-C17-hand-more teaches after it. Its note also said the chapter had no
+terminal practice lesson, which stopped being true when
+GE-R17-wie-geht-es-wirklich (sequence 685) joined it.
+
+- The payoff moves to GE-R17-wie-geht-es-wirklich, the chapter's last lesson,
+  and now assesses all twelve atoms (1.00).
+- GE-R17 gains "Guided Practice — head and hand, from memory": *Kopf* as the
+  old cup (*cuppa*), inherited *Haupt* beside *caput* and *head* with Grimm's
+  *k → h*, French *tête* as the same vessel metaphor, *die Hand* / *die Hände*
+  with final devoicing, and *Hand* against *manus* — each grounded in
+  GE-C17-kopf, -kopf-more, -kopf-haupt, -kopf-haupt-more, -hand and
+  -hand-more. GE-C17-hand-more joins its prerequisites.
+- The "Why it's said this way" prose on *es geht* and *dir → Ihnen* was
+  tightened to make room: `max_seconds` 240 → 290, computed 286.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

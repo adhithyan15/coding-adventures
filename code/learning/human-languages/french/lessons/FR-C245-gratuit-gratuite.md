@@ -13,7 +13,8 @@ gloss: "free of charge"
 concept_tag: FR-QUAL245-GRATUIT-GRATUITE
 prerequisites: [FR-C245-faux-fausse, FR-C245-pret-prete]
 sounds: []
-roots: []
+roots: [gratia]
+etymology_hook: "gratuit ← Latin gratuitus 'freely given', from gratia — English gratuitous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C245-pret-prete]
 <!-- hl-knowledge: introduces=[FR-LEX-C245-QUAL245-05]; assesses=[] -->
 
 **gratuit / gratuite** — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gratuit** ← Latin *gratuitus*, "freely given", from *gratia*, "favour" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

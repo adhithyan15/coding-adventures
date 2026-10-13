@@ -8,7 +8,7 @@ type: word
 headword: adeus
 gloss: goodbye (literally "to God")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [PT-C02-practice]
 sounds: [nasal-eu, final-s-sh]
 roots: [ad-deum-latin]
 etymology_hook: "adeus ← a Deus 'to God' — the exact twin of Spanish adiós, French adieu, Italian addio"
@@ -82,4 +82,4 @@ safekeeping until next time.
 [PAUSE 3s] What does *adeus* literally mean, and from what? ("To God," ← *ad
 Deum*.) Name two sister-language goodbyes with the same "to God" origin.
 (*adiós*, *adieu*, *addio*.) What English goodbye hides "God be with ye"?
-(*Goodbye*.) Next: the softer "see you" goodbyes — starting with **até logo**.
+(*Goodbye*.) Next: the softer "see you" goodbyes — starting with "see you later."

@@ -13,7 +13,8 @@ gloss: "kind"
 concept_tag: PT-QUALIDADES124-GENTIL
 prerequisites: [PT-C123-divertido, PT-C124-simpatico]
 sounds: []
-roots: []
+roots: [gens]
+etymology_hook: "gentil ← Latin gentilis 'of the same clan', from gens — English gentle and genteel share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C124-simpatico]
 <!-- hl-knowledge: introduces=[PT-LEX-C124-QUALIDADES124-02]; assesses=[] -->
 
 **gentil** — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gentil** ← Latin *gentilis*, "of the same clan", from *gens*, "clan" (Lewis & Short). EtymDB 2.1 traces it only to Old Portuguese *gentil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

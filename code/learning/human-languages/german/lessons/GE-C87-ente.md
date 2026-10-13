@@ -13,7 +13,8 @@ gloss: "a duck"
 concept_tag: GE-TIERE2-ENTE
 prerequisites: [GE-C86-fuchs, GE-C86-schlange]
 sounds: []
-roots: []
+roots: [germanic-anadz]
+etymology_hook: "Ente ← Old High German anut ← Proto-Germanic *anadz 'duck' — Dutch eend is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C86-schlange]
 <!-- hl-knowledge: introduces=[GE-LEX-C87-TIERE2-01]; assesses=[] -->
 
 **die Ente** — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ente** ← Old High German *anut* ← Proto-Germanic *\*anadz*, "duck" — inherited; Dutch *eend* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

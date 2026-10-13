@@ -11,7 +11,8 @@ romanization: "nalla"
 concept_tag: TA-ADJ-GOOD
 prerequisites: [TA-C41-small, TA-C40-there]
 sounds: []
-roots: []
+roots: [nal-good-dravidian]
+etymology_hook: "நல்ல — native Dravidian (DEDR 3610); Malayalam nal, Kannada nal 'goodness'"
 duration:
   max_seconds: 210
 requires:
@@ -33,7 +34,7 @@ reviews_of: [TA-C41-small]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: நல்ல
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-03]; assesses=[] -->
@@ -47,6 +48,11 @@ You met **சிறிய** *siṟiya* a moment ago. Put them side by side and n
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நல்ல** (*nalla*) is native Dravidian. DEDR 3610 lists Malayalam *nal* and Kannada *nal*, "goodness". It is the same *nal* that is inside *naṉṟi*, "thank you".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03, TA-LEX-C40-DEIXIS-04] -->

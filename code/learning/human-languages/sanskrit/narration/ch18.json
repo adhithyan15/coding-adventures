@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Asking --- Every Question Begins with K",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:11e1232a02f09d61",
+  "sourceHash": "fnv1a64:94663e180261c622",
   "lessons": [
     {
       "id": "SA-C18-when",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:421e48ea68a70d88",
+      "sourceHash": "fnv1a64:bf72e25d2ced3e5c",
       "notice": null,
       "blocks": [
         {
@@ -643,6 +643,46 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — why and how many",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"why?\", and its two pieces (kimartham; kim, \"what\", + artham, \"for the purpose of\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"why?\", and its two pieces (*kimartham*; *kim*, \"what\", + *artham*, \"for the purpose of\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"how many houses?\" (kati gṛhāṇi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"how many houses?\" (*kati gṛhāṇi*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin cousin of kati, and two English words it gave (quot; quota, quotient)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin cousin of *kati*, and two English words it gave (*quot*; **quota**, **quotient**)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

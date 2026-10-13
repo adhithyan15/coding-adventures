@@ -13,7 +13,8 @@ gloss: "cold"
 concept_tag: IT-AGG2-FREDDO
 prerequisites: [IT-C73-corto, IT-C73-caldo]
 sounds: []
-roots: []
+roots: [frigidus-latin]
+etymology_hook: "freddo ← Latin frigidus 'cold' — English frigid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-caldo]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-05]; assesses=[] -->
 
 **freddo** — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**freddo** ← Latin *frigidus*, "cold" — inherited. EtymDB 2.1 has no row for *freddo*; it derives Friulian *frêt* from *frigidus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

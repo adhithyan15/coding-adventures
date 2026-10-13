@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अचार (achār) mean? ("Pickle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'pickle'.
+Say the Marwadi for 'pickle'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लापसी (lāpsī) mean? ("A sweet wheat dish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sweet wheat dish'.
+Say the Marwadi for 'a sweet wheat dish'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does घेवर (ghevar) mean? ("A honeycomb sweet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a honeycomb sweet'.
+Say the Marwadi for 'a honeycomb sweet'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मक्की (makkī) mean? ("Maize".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'maize'.
+Say the Marwadi for 'maize'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गेहूं (gehū̃) mean? ("Wheat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'wheat'.
+Say the Marwadi for 'wheat'.

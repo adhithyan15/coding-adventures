@@ -11,7 +11,8 @@ romanization: "maṉṉittuviṭuṅkaḷ"
 concept_tag: TA-HOST-FORGIVE
 prerequisites: [TA-C99-present, TA-C99-welcomeformal]
 sounds: []
-roots: []
+roots: [tamil-manni-pardon, dravidian-vidu-let-go]
+etymology_hook: "மன்னித்துவிடுங்கள் — maṉṉi 'pardon', origin uncertain, + native viṭu 'let go' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C99-welcomeformal]
 **மன்னித்துவிடுங்கள்** (*maṉṉittuviṭuṅkaḷ*) — "please forgive me".
 
 It is fuller and more earnest than **மன்னிக்கவும்**: for a real mistake, not a bumped elbow.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மன்னித்துவிடுங்கள்** (*maṉṉittuviṭuṅkaḷ*) is *maṉṉi*, "to pardon", with *viṭu*, "to let go" (DEDR 5393), and the polite ending. The origin of *maṉṉi* is uncertain: DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

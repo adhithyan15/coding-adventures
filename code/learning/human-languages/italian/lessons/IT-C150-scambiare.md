@@ -13,7 +13,8 @@ gloss: "to exchange"
 concept_tag: IT-VERB-SCAMBIARE
 prerequisites: [IT-C150-salvarsi, IT-C150-sbagliare]
 sounds: []
-roots: []
+roots: [excambiare-latin]
+etymology_hook: "scambiare ← Vulgar Latin excambiare 'to exchange' — English exchange is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C150-sbagliare]
 <!-- hl-knowledge: introduces=[IT-LEX-C150-VERBI150-03]; assesses=[] -->
 
 **scambiare** — "to exchange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scambiare** ← Vulgar Latin *excambiare*, "to exchange" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

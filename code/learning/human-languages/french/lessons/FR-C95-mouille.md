@@ -13,7 +13,8 @@ gloss: "wet"
 concept_tag: FR-ADJ47-MOUILLE
 prerequisites: [FR-C94-carre, FR-C94-sec]
 sounds: []
-roots: []
+roots: [molliare-latin]
+etymology_hook: "mouillé — 'wetted', from Vulgar Latin *molliare 'to soften', from mollis 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C94-sec]
 <!-- hl-knowledge: introduces=[FR-LEX-C95-ADJ47-01]; assesses=[] -->
 
 **mouillé** — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mouillé** is the past participle of the verb for "to wet", from Vulgar Latin *\*molliare*, "to soften", built on Latin *mollis*, "soft" (Lewis & Short): bread was softened by soaking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

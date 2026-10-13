@@ -13,7 +13,8 @@ gloss: "to destroy"
 concept_tag: PT-VERB-DESTRUIR
 prerequisites: [PT-C236-desperdicar, PT-C236-ultrapassar]
 sounds: []
-roots: []
+roots: [struere-latin]
+etymology_hook: "destruir ← Latin destruere 'to pull down' — English destroy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C236-ultrapassar]
 <!-- hl-knowledge: introduces=[PT-LEX-C237-VERBOS237-01]; assesses=[] -->
 
 **destruir** — "to destroy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**destruir** ← Latin *destruere*, "to pull down" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

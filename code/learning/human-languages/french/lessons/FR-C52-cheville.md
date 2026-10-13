@@ -13,7 +13,8 @@ gloss: "an ankle"
 concept_tag: FR-CORPS4-CHEVILLE
 prerequisites: [FR-C52-poitrine, FR-C52-estomac]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "cheville ← Vulgar Latin *cavicula, from Latin clavicula 'little key, peg' — English clavicle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C52-estomac]
 <!-- hl-knowledge: introduces=[FR-LEX-C52-CORPS4-03]; assesses=[] -->
 
 **la cheville** — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cheville** ← Vulgar Latin *\*cavicula*, from Latin *clavicula*, "a little key, a peg" — inherited (EtymDB 2.1): the ankle bone was seen as the peg of the leg.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

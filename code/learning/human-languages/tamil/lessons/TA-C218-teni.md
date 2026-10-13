@@ -14,7 +14,8 @@ romanization: "tēṉī"
 concept_tag: TA-PORUL218-TENI
 prerequisites: [TA-C218-mutalai, TA-C218-pattampucci]
 sounds: []
-roots: []
+roots: [dravidian-tiim-sweet]
+etymology_hook: "தேனீ — native: tēṉ 'honey' (DEDR 3268) + ī 'fly, bee' (DEDR 533): 'the honey fly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C218-pattampucci]
 <!-- hl-knowledge: introduces=[TA-LEX-C218-PORUL218-05]; assesses=[] -->
 
 **தேனீ** — *tēṉī* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேனீ** (*tēṉī*) is native: *tēṉ*, "honey" (DEDR 3268), and *ī*, "fly, bee" (DEDR 533), which lists *tēṉ-ī*, "honey bee", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

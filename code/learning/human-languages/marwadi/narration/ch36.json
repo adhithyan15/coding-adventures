@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-count-at-distance-mixed",
               "prompt": "Write a hundred as a word, then nine as a figure.",
               "assesses": [
@@ -216,6 +217,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-shopping-numbered-offer",
               "prompt": "The cloth seller says bis. Write your offer of ten.",
               "assesses": [
@@ -334,6 +336,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-food-numbered-tea",
               "prompt": "Write tea, then the price five.",
               "assesses": [
@@ -453,6 +456,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-transport-numbered-fare",
               "prompt": "The driver says bis. Write the figure he named, then your offer of ten.",
               "assesses": [
@@ -557,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-letters-close-recall",
               "prompt": "Write the standing e, then the digit for seven.",
               "assesses": [
@@ -674,6 +679,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C36-numbered-exchange-payoff",
               "prompt": "Complete all four scored checks, then write the two numbered turns.",
               "assesses": [
@@ -784,6 +790,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R36-script-close-recall",
               "prompt": "Write the seller's one-word answer of twenty, then your offer of ten.",
               "assesses": [

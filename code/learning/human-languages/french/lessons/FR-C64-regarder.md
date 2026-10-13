@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REGARDER
 prerequisites: [FR-C63-chercher, FR-C63-perdre]
 sounds: []
 roots: []
+etymology_hook: "regarder — re- + the verb 'to keep, to watch', from Frankish *wardon — English regard and guard"
 duration:
   max_seconds: 200
 requires:
@@ -30,7 +31,7 @@ variety: standard-contemporary
 reviews_of: [FR-C63-perdre]
 ---
 
-# regarder — to look at, to watch
+# regarder — "to look at, to watch"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C63-VERBES15-04, FR-LEX-C63-VERBES15-05] -->
@@ -41,6 +42,11 @@ reviews_of: [FR-C63-perdre]
 <!-- hl-knowledge: introduces=[FR-LEX-C64-VERBES16-01]; assesses=[] -->
 
 **regarder** — "to look at, to watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regarder** — built from *re-* and the French verb for "to keep, to watch over", which ← Frankish *\*wardon*, "to watch". EtymDB 2.1 traces Italian *guardare* to the same Frankish verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

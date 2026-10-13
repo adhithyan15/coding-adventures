@@ -13,7 +13,8 @@ gloss: "short, low"
 concept_tag: PT-ADJ4-BAIXO
 prerequisites: [PT-C67-barato, PT-C67-alto]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "baixo ← Late Latin bassus 'low' — English bass, the low voice, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C67-alto]
 <!-- hl-knowledge: introduces=[PT-LEX-C67-ADJ4-03]; assesses=[] -->
 
 **baixo** — "short, low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baixo** ← Late Latin *bassus*, "low" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

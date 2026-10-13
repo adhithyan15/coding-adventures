@@ -13,7 +13,8 @@ gloss: "a map"
 concept_tag: PT-COISAS3-MAPA
 prerequisites: [PT-C54-mala, PT-C54-bilhete]
 sounds: []
-roots: []
+roots: [mappa-latin]
+etymology_hook: "mapa ← Latin mappa 'napkin, cloth', from mappa mundi 'cloth of the world'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C54-bilhete]
 <!-- hl-knowledge: introduces=[PT-LEX-C54-COISAS3-05]; assesses=[] -->
 
 **o mapa** — "a map". Masculine, despite the -a.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mapa** ← Latin *mappa*, "napkin, cloth" (EtymDB 2.1) — a learned borrowing from Latin. A map was a *mappa mundi*, a "cloth of the world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Italian for a salary, then the Italian for a meeting
 You'll want to know: la geografia.
 la geografia — "geography".
 
+The word, taken apart.
+geografia from Latin geographia, from Greek geographia, "a description of the earth" — a learned borrowing. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a meeting, then the Italian for geograph
 
 You'll want to know: la matematica.
 la matematica — "mathematics".
+
+The word, taken apart.
+matematica from Latin mathematica, "mathematics", from Greek mathema, "learning" — a learned borrowing. EtymDB 2.1 has no row for matematica; it derives Spanish and Portuguese matemática from mathematica.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for geography, then the Italian for mathemat
 You'll want to know: la scienza.
 la scienza — "science".
 
+The word, taken apart.
+scienza from Latin scientia, "knowledge" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for mathematics, then the Italian for scienc
 You'll want to know: l'arte.
 l'arte — "art".
 
+The word, taken apart.
+arte from Latin artem, "skill, art" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for science, then the Italian for art.
 
 You'll want to know: la partita.
 la partita — "a match (game)".
+
+The word, taken apart.
+partita is the past participle of partire in its old sense "to divide, to share out", used as a noun: a share, a game. partire from Latin partire. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

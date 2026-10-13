@@ -14,7 +14,8 @@ romanization: "pōṭu"
 concept_tag: TA-VERB-POTU
 prerequisites: [TA-C155-tallu, TA-C155-ilu]
 sounds: []
-roots: []
+roots: [dravidian-poodu-put]
+etymology_hook: "போடு — native Dravidian (DEDR 4581); Malayalam pōṭuka 'to strike, to put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C155-ilu]
 <!-- hl-knowledge: introduces=[TA-LEX-C155-ACT155-03]; assesses=[] -->
 
 **போடு** — *pōṭu* — "to put, to drop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போடு** (*pōṭu*) is native Dravidian. DEDR 4581 lists Malayalam *pōṭuka*, "to strike, to put".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

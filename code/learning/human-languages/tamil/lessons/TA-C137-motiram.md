@@ -14,7 +14,8 @@ romanization: "mōtiram"
 concept_tag: TA-THINGS137-MOTIRAM
 prerequisites: [TA-C136-pommai, TA-C136-panappai]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "மோதிரம் ← Sanskrit mudrā 'seal, signet-ring' (CDIAL 10203)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C136-panappai]
 <!-- hl-knowledge: introduces=[TA-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **மோதிரம்** — *mōtiram* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மோதிரம்** (*mōtiram*) is a loan from Sanskrit *mudrā*, "seal, signet-ring" (CDIAL 10203). CDIAL adds that the Sanskrit word itself probably came from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

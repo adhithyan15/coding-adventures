@@ -13,7 +13,8 @@ gloss: "accommodation"
 concept_tag: GE-THING193-UNTERKUNFT
 prerequisites: [GE-C193-fahrplan, GE-C193-rueckfahrt]
 sounds: []
-roots: []
+roots: [kwemana-germanic]
+etymology_hook: "Unterkunft — 'under' + kunft 'a coming': coming under a roof"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C193-rueckfahrt]
 <!-- hl-knowledge: introduces=[GE-LEX-C193-THING193-03]; assesses=[] -->
 
 **die Unterkunft** — "accommodation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Unterkunft** is the word for "under" + an old noun for "a coming", built on *kommen* (EtymDB 2.1): a place you come under, a shelter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "But, and Or",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5fab46354ba7379c",
+  "sourceHash": "fnv1a64:fd454f2ce42cca9c",
   "lessons": [
     {
       "id": "TA-C76-but",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1374778e4626779",
+      "sourceHash": "fnv1a64:95ed061397dc0a25",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆனால் (āṉāl) is native: a form of ā, \"to become, to be\" (DEDR 333), meaning \"if it is so\". \"But\" grew out of \"be that as it may\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,7 +204,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -222,16 +233,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1f0f0c6e9a11127d",
+      "sourceHash": "fnv1a64:57ba1fafe4ea9f0e",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -300,6 +315,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அல்லது (alladu) is native: \"if it is not that\". It is built on al-, the native verb of not-being (DEDR 234), which lists allatu, \"or else\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -310,7 +336,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +403,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,20 +433,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2c72722a9cd993af",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ஆனால் — the same long sound, written two ways",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஆனால் — the same long sound, written two ways and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ஆனால் — the same long sound, written two ways and Guided Practice."
       },
       "blocks": [
         {
@@ -568,7 +596,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08c44769fb837c5e",
+      "sourceHash": "fnv1a64:e9048cf5fe152908",
       "notice": null,
       "blocks": [
         {
@@ -634,6 +662,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பால் வேண்டுமா, அல்லது தேநீர் வேண்டுமா? (pāl vēṇḍumā, alladu tēnīr vēṇḍumā?) is built from words met before, all native except one: pāl, \"milk\", vēṇḍum, \"is wanted\" (DEDR 5528), and alladu, \"or\" (DEDR 234). The one loan is tēnīr: tē, the travelling word for tea, on native nīr, \"water\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -644,7 +683,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -729,7 +768,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 92,
-  "sourceHash": "fnv1a64:9fac988a366cdc63",
+  "sourceHash": "fnv1a64:64f6413f2a5d698d",
   "lessonIds": [
     "GE-C92-sauber",
     "GE-C92-schmutzig",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch92.txt",
   "json": "german/narration/ch92.json",
-  "textHash": "fnv1a64:d981383ef7de165c",
-  "jsonHash": "fnv1a64:8b1fb8421855752e",
+  "textHash": "fnv1a64:db275303481e3e56",
+  "jsonHash": "fnv1a64:3361bd1e2cf02699",
   "findings": []
 }

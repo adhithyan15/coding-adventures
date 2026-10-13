@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four, Five, and the Article Hiding in Eins",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:60d6cebfa91d7703",
+  "sourceHash": "fnv1a64:85deb08de0e096eb",
   "lessons": [
     {
       "id": "GE-C06-vier",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8800ca9276920bd6",
+      "sourceHash": "fnv1a64:6b7d9c54b48e2f9a",
       "notice": null,
       "blocks": [
         {
@@ -438,6 +438,16 @@
             {
               "kind": "speech",
               "text": "Count to five. (Eins, zwei, drei, vier, fünf.) Now backwards. (Fünf, vier, drei, zwei, eins.) Which of the five is borrowed from Latin? (None of them.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the two dots on fünf: what letter are they a flattened ghost of? (An e — which is why fünf can be typed fuenf.)"
             }
           ]
         }
@@ -456,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32b488b6ef828619",
+      "sourceHash": "fnv1a64:e441f4e70e499ce1",
       "notice": null,
       "blocks": [
         {
@@ -515,6 +525,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ein from Old High German ein from Proto-Germanic ainaz, \"one\" — inherited, the same word as English one, and English a, an wore down from it too. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the counting -s drops",
           "segments": [
@@ -533,7 +554,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -573,7 +594,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

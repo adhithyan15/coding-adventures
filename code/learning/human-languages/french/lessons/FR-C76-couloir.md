@@ -13,7 +13,8 @@ gloss: "a corridor"
 concept_tag: FR-MAISON28-COULOIR
 prerequisites: [FR-C76-placard, FR-C76-plafond]
 sounds: []
-roots: []
+roots: [colare-latin]
+etymology_hook: "couloir — from the verb 'to flow' + -oir; the verb ← Latin colare 'to strain' — English colander"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C76-plafond]
 <!-- hl-knowledge: introduces=[FR-LEX-C76-MAISON28-03]; assesses=[] -->
 
 **le couloir** — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couloir** — built from the verb for "to flow", with *-oir*, "a place for": a passage things flow along. The verb ← Latin *colare*, "to strain, to filter" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

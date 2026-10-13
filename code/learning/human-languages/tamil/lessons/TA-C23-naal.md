@@ -9,7 +9,7 @@ headword: நாள்
 gloss: "day" — Tamil's everyday, native Dravidian word, already met inside "tomorrow"; unlike Kannada's dina, Telugu's rōju, and Malayalam's divasam, Tamil's plain day-word is NOT a loanword at all — நாள் just is the everyday word, no Sanskrit or Persian substitute doing that job
 romanization: "nāḷ"
 concept_tag: TIME-DAY
-prerequisites: [TA-C04-naalai, TA-C17-transparent-middle-synonyms]
+prerequisites: [TA-C04-naalai, TA-C17-transparent-middle-synonyms, TA-C22-paccai-manjal]
 sounds: [tamil-retroflex-lla, tamil-vowel-sign-aa]
 roots: [proto-dravidian-naal-day, sanskrit-dina]
 etymology_hook: "நாள் (nāḷ, 'day') is native Dravidian, from Proto-Dravidian *nāḷ, already met inside நாளை (nāḷai, 'tomorrow,' Chapter 4) — and it is genuinely Tamil's plain, everyday, unmarked word for counting a day (as in மூன்று நாள், mūnṟu nāḷ, 'three days'); this makes Tamil the odd one out among this arc's Dravidian languages so far — Kannada's ದಿನ/dina and Malayalam's ദിവസം/divasam are both Sanskrit tatsama words doing the everyday job, and Telugu's రోజు/rōju is a Persian loanword doing it — Tamil is the only one where a NATIVE word holds that plain, everyday spot, uncontested; Tamil ALSO has தினம் (tiṉam), the exact same Sanskrit tatsama as Kannada's dina/Malayalam's dinam (← Sanskrit दिन/dina ← PIE *dyew-, 'to shine'), but here it functions mainly in formal/adverbial and compound use — சுதந்திர தினம் (sutantira tiṉam, 'Independence Day') and தினசரி (tiṉacari, 'daily') — not as the plain everyday noun"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [TA-ETYMON-NAAL-01]
 practises:
-  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAL-01]
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAL-01, TA-ETYMON-NAAY-POONAI-02, TA-ETYMON-PACCAI-MANJAL-02, TA-ETYMON-PACCAI-MANJAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,9 @@ reviews_of: [TA-C04-naalai, TA-C17-transparent-middle-synonyms, TA-C17-nanpakal-
 # நாள் (nāḷ) — "day," the one this arc's Dravidian languages didn't lose
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NAAY-POONAI-02, TA-ETYMON-PACCAI-MANJAL-02, TA-ETYMON-PACCAI-MANJAL-03] -->
+
+[PAUSE 2s] Two from the animal and colour lessons first. Is everyday *mañcaḷ*, yellow, borrowed from Sanskrit? (**No** — it is its own native root; the rare *pacuppu* is the one that shares *paccai*'s root.) Do Kannada and Telugu name the cat with Tamil's *pūnai*? (**No** — *bekku* and *pilli* come from separate roots.)
 
 [PAUSE 2s] You've now seen three Dravidian languages reach for a
 loanword — Sanskrit, twice, and Persian once — to name their everyday

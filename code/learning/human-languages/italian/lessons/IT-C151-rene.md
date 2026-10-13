@@ -13,7 +13,8 @@ gloss: "a kidney"
 concept_tag: IT-SAL151-RENE
 prerequisites: [IT-C151-polmone, IT-C151-fegato]
 sounds: []
-roots: []
+roots: [ren-latin]
+etymology_hook: "rene ← Latin ren, renem 'kidney' — English renal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C151-fegato]
 <!-- hl-knowledge: introduces=[IT-LEX-C151-SAL151-04]; assesses=[] -->
 
 **il rene** — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rene** ← Latin *ren*, "kidney" (accusative *renem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

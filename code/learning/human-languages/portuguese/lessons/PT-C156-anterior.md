@@ -13,7 +13,8 @@ gloss: "previous"
 concept_tag: PT-QUAL156-ANTERIOR
 prerequisites: [PT-C155-generoso-generosa, PT-C155-preguicoso-preguicosa]
 sounds: []
-roots: []
+roots: [ante-latin]
+etymology_hook: "anterior ← Latin anterior 'earlier', from ante 'before'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C155-preguicoso-preguicosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C156-QUAL156-01]; assesses=[] -->
 
 **anterior** — "previous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anterior** ← Latin *anterior*, "earlier, former" (EtymDB 2.1), from *ante*, "before" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

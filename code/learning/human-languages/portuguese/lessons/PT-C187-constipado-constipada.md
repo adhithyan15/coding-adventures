@@ -13,7 +13,8 @@ gloss: "with a cold"
 concept_tag: PT-QUAL187-CONSTIPADO-CONSTIPADA
 prerequisites: [PT-C187-falador-faladora, PT-C187-preocupado-preocupada]
 sounds: []
-roots: []
+roots: [stipare-latin]
+etymology_hook: "constipado — 'blocked up': from Latin constipare 'to crowd together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C187-preocupado-preocupada]
 <!-- hl-knowledge: introduces=[PT-LEX-C187-QUAL187-04]; assesses=[] -->
 
 **constipado / constipada** — "with a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**constipado** is the participle of a verb ← Latin *constipare*, "to crowd together" (Lewis & Short): blocked up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

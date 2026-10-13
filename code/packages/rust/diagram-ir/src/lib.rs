@@ -37,6 +37,29 @@ pub enum DiagramShape {
     SmallCircle,
     FramedCircle,
     ForkJoin,
+    LightningBolt,
+    CurlyBraceLeft,
+    CurlyBraceRight,
+    CurlyBraces,
+    Document,
+    Delay,
+    HorizontalCylinder,
+    LinedCylinder,
+    Display,
+    DividedRect,
+    WindowPane,
+    FilledCircle,
+    LoopLimit,
+    ManualInput,
+    MultiDocument,
+    MultiProcess,
+    StoredData,
+    Summary,
+    TaggedDocument,
+    TaggedProcess,
+    PaperTape,
+    LinedDocument,
+    DataStore,
     Cloud,
     Bang,
     Stadium,
@@ -1925,17 +1948,30 @@ pub struct SwimlaneNode {
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick }
+pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneEdgeAnimation { Slow, Fast }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneLineHops { Arc, Gap }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneEdgeCurve {
+    Linear, Basis, BumpX, BumpY, Cardinal, CatmullRom, MonotoneX, MonotoneY, Natural,
+    Rounded, Step, StepBefore, StepAfter,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
-    pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
-    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+    pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
+    pub classes: Vec<String>, pub style: DiagramStyle,
+    pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,
+    pub curve: Option<SwimlaneEdgeCurve>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
+    pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
@@ -1946,15 +1982,19 @@ pub struct LayoutedSwimlaneNode {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
-    pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
-    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+    pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
+    pub classes: Vec<String>, pub style: DiagramStyle,
+    pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,
+    pub curve: Option<SwimlaneEdgeCurve>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
-    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
+    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
+    pub automatic_lane_ordering: bool,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

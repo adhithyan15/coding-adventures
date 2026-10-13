@@ -13,7 +13,8 @@ gloss: "ice cream"
 concept_tag: PT-COMIDA108-GELADO
 prerequisites: [PT-C107-refeicao, PT-C108-iogurte]
 sounds: []
-roots: []
+roots: [gelu-latin]
+etymology_hook: "gelado ← Latin gelatus 'frozen', from gelare 'to freeze' — English jelly shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C108-iogurte]
 <!-- hl-knowledge: introduces=[PT-LEX-C108-COMIDA108-02]; assesses=[] -->
 
 **o gelado** — "ice cream". In Brazil, **o sorvete**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelado** ← Latin *gelatus*, "frozen" (EtymDB 2.1), from *gelare*, "to freeze" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

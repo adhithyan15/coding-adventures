@@ -14,6 +14,7 @@ concept_tag: PT-COISAS225-RECICLAGEM
 prerequisites: [PT-C225-ambiente, PT-C225-poluicao]
 sounds: []
 roots: []
+etymology_hook: "reciclagem — from the verb to recycle: re- + the cycle word (from Greek kyklos 'circle')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C225-poluicao]
 <!-- hl-knowledge: introduces=[PT-LEX-C225-COISAS225-03]; assesses=[] -->
 
 **a reciclagem** — "recycling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reciclagem** is built from the verb "to recycle" and *-agem* (EtymDB 2.1): *re-* and the word for a cycle, from Greek *kyklos*, "circle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

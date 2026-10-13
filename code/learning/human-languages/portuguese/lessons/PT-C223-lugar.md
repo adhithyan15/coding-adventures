@@ -13,7 +13,8 @@ gloss: "a seat, a place"
 concept_tag: PT-COISAS223-LUGAR
 prerequisites: [PT-C223-saida, PT-C223-bagagem]
 sounds: []
-roots: []
+roots: [locus-latin]
+etymology_hook: "lugar ← Latin localis 'of a place', from locus 'place' — English local"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C223-bagagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C223-COISAS223-03]; assesses=[] -->
 
 **o lugar** — "a seat, a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lugar** ← Latin *localis*, "of a place" (EtymDB 2.1), from *locus*, "place" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

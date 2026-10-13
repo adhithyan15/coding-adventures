@@ -19,6 +19,9 @@ Now it stands on its own, the way போ and வா and சாப்பிடு
 சொல் (sol) also means a word. The same three letters name the thing and the act, and no Tamil speaker finds that odd: a word is what saying produces.
 You will need this verb for the next lesson, because Tamil has a particular way of handing somebody else's words to it.
 
+The word, taken apart.
+சொல் (sol) is native Dravidian. DEDR 2855 lists Malayalam colluka and Kannada sol.
+
 What you've built.
 A verb you have been saying since chapter eight, now yours to use.
 
@@ -82,12 +85,13 @@ Where does என்று (eṉṟu) stand — before the quoted words or after
 Lesson 3 of 4.
 சொல் (sol) — a sign on both sides of one letter.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: சொல் — two letters, and a sign that surrounds one and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: சொல் — two letters, and a sign that surrounds one and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Before the page: say the verb to say, then close a quotation with என்று (eṉṟu).
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: சொல் — two letters, and a sign that surrounds one.
 [a table of 2 rows, read aloud]
 piece: சொ, so, ச with the ொ sign.
@@ -97,6 +101,7 @@ The ொ sign is the one you first met inside சொல்லுங்கள் i
 Compare it with ோ in போ, which does the same thing for the long ō. Tamil has a small family of signs that wrap around, and both of them are in words you already say.
 The word ends the way ஆனால் did, on a ல் carrying a புள்ளி.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: சொ — then ல்]
@@ -129,6 +134,9 @@ idu nalla vīḍu eṉṟu niṉaikkiṟēṉ.
 The opinion comes first and stands whole — இது நல்ல வீடு, a sentence you could say on its own. என்று (eṉṟu) closes it. Then the verb, built the way பேசுகிறேன் was in chapter five: நினை, the middle piece for now, and -ஏன் for I.
 Swap the front half for anything you can say:
 இது சிறிய கடை என்று (eṉṟu) நினைக்கிறேன்.
+
+The phrase, taken apart.
+… என்று நினைக்கிறேன் (… eṉṟu niṉaikkiṟēṉ) is native: eṉṟu, "having said", from eṉ, "to say" (DEDR 868), and niṉai, "to think" (DEDR 3683). "I think that …" is "saying '…', I think".
 
 What you've built.
 An opinion, which is the first thing here that is yours rather than a fact.

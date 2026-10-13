@@ -14,7 +14,8 @@ romanization: "vāyppu"
 concept_tag: TA-CAN117-VAYPPU
 prerequisites: [TA-C117-vallamai, TA-C117-urimai]
 sounds: []
-roots: []
+roots: [dravidian-vaay-succeed]
+etymology_hook: "வாய்ப்பு — native Dravidian (DEDR 5351); Malayalam vāykka 'to fit, to be what may be'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C117-urimai]
 <!-- hl-knowledge: introduces=[TA-LEX-C117-CAN117-03]; assesses=[] -->
 
 **வாய்ப்பு** — *vāyppu* — "a chance, an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாய்ப்பு** (*vāyppu*) is native Dravidian. DEDR 5351 lists Malayalam *vāykka*, "to fit, to be what may be". It is the noun of a native verb "to succeed, to come about".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

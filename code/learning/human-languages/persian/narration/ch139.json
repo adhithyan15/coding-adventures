@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1e926609345a52ea",
+  "sourceHash": "fnv1a64:26153c112c645c52",
   "lessons": [
     {
       "id": "FA-C139-jadval-e-zamani",
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3977a718aac7ef88",
+      "sourceHash": "fnv1a64:b8f0396ac101203a",
       "notice": null,
       "blocks": [
         {
@@ -737,7 +737,7 @@
             },
             {
               "kind": "speech",
-              "text": "Still? (هنوز, hanuz.) A word that opens a yes-or-no question? (آیا, âyâ.) At all? (اصلا, aslan.) Surely... not?? (مگر, magar.) When? (چه وقت, che vaqt.) Recently? (به تازگی, be-tâzegi.) Already? (قبلا, qablan.) Last year? (پارسال, pârsâl.) Once? (یک بار, yek bâr.) To spend? (سپری کردن, separi kardan.)"
+              "text": "Still? (هنوز, hanuz.) A word that opens a yes-or-no question? (آیا, âyâ.) At all? (اصلا, aslan.) Surely... not, in a question? (مگر, magar.) When? (چه وقت, che vaqt.) Recently? (به تازگی, be-tâzegi.) Already? (قبلا, qablan.) Last year? (پارسال, pârsâl.) Once? (یک بار, yek bâr.) To spend? (سپری کردن, separi kardan.)"
             }
           ]
         }

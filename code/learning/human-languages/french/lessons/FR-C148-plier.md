@@ -13,7 +13,8 @@ gloss: "to fold"
 concept_tag: FR-VERB-PLIER
 prerequisites: [FR-C148-participer, FR-C148-promener]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "plier ← Latin plicare 'to fold' — English ply and pliant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C148-promener]
 <!-- hl-knowledge: introduces=[FR-LEX-C148-VERBES148-04]; assesses=[] -->
 
 **plier** — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plier** ← Latin *plicare*, "to fold" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

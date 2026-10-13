@@ -14,6 +14,7 @@ concept_tag: GE-THING226-BEDEUTUNG
 prerequisites: [GE-C225-ausstellung, GE-C226-aussprache]
 sounds: []
 roots: []
+etymology_hook: "Bedeutung — bedeuten 'to mean' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C226-aussprache]
 <!-- hl-knowledge: introduces=[GE-LEX-C226-THING226-02]; assesses=[] -->
 
 **die Bedeutung** — "a meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bedeutung** is *bedeuten*, "to mean", + *-ung* (EtymDB 2.1). *bedeuten* shares its root with *Deutsch*, "of the people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

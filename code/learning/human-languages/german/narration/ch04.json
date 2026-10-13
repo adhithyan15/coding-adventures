@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5d8c4e77a7032a8b",
+  "sourceHash": "fnv1a64:2f96aea8f874f9be",
   "lessons": [
     {
       "id": "GE-C04-sehen",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed99bef4a016cc5d",
+      "sourceHash": "fnv1a64:bc73071dc8d2584c",
       "notice": null,
       "blocks": [
         {
@@ -518,6 +518,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "auf Wiedersehen is built from auf, wieder and sehen. auf from Old High German ūf, the same word as English up; sehen from Old High German sehan from Proto-Germanic sehwaną, the same verb as English see. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -547,7 +558,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -587,7 +598,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -600,6 +611,16 @@
             {
               "kind": "speech",
               "text": "What does auf Wiedersehen literally say? (\"On the seeing-again.\") What are its three pieces? (Auf, wieder, sehen.) Why the capital W? (The welded word is a noun, and German capitalises nouns.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which English with- is wieder's real cousin? (The with- of withdraw — back, again — not wither.)"
             }
           ]
         }
@@ -814,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e58207488a35f80d",
+      "sourceHash": "fnv1a64:e36d0a7bf954dcc4",
       "notice": null,
       "blocks": [
         {
@@ -851,6 +872,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bis from Middle High German biz (EtymDB 2.1) — inherited, most likely two small words meaning \"by\" and \"to\" run together."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: bis plus a time word",
           "segments": [
@@ -888,7 +920,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -928,7 +960,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -941,6 +973,16 @@
             {
               "kind": "speech",
               "text": "What does bis mean? (\"Until, up to.\") What has to follow it to make a goodbye? (A word for time.) Which Spanish and French words do the same job? (Hasta and à.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the casual goodbye you already have, tschüss: which French word is it, worn down? (Adieu — à Dieu, the same à.)"
             }
           ]
         }
@@ -959,7 +1001,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3d58ef36fcdf63e",
+      "sourceHash": "fnv1a64:fc482c588e5283b6",
       "notice": null,
       "blocks": [
         {
@@ -1041,15 +1083,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"bald\" and English \"bold\" — one word, two senses]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bis bald\" — until soon",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bis bald\" — until soon]"
             }
           ]
         },
@@ -1085,7 +1118,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:79f03dcbb2f00e61",
+      "sourceHash": "fnv1a64:c41c0cf458ecf69a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1137,6 +1170,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bis bald is bis + bald. bald from Old High German baldo, \"boldly, quickly\" (EtymDB 2.1) — the same word as English bold; \"soon\" grew out of \"quickly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1176,7 +1220,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1207,7 +1251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ead201a253f3c55b",
+      "sourceHash": "fnv1a64:4e1eb8c7949e7f2f",
       "notice": null,
       "blocks": [
         {
@@ -1317,15 +1361,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"spät\" then \"später\" — late, then later]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bis später\" — until later",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bis später\" — until later]"
             }
           ]
         },
@@ -1361,7 +1396,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:020033f1360ea25b",
+      "sourceHash": "fnv1a64:93d4e8754c56ca0a",
       "notice": null,
       "blocks": [
         {
@@ -1415,6 +1450,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bis später is bis + the comparative of spät, \"late\". spät from Old High German spāti from Proto-Germanic spēdiz — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1454,7 +1500,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1485,7 +1531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f22f86bd0574b55",
+      "sourceHash": "fnv1a64:287d6d466c122025",
       "notice": null,
       "blocks": [
         {
@@ -1545,7 +1591,7 @@
             },
             {
               "kind": "speech",
-              "text": "Guten Morgen! is \"good morning.\" Bis morgen is \"until tomorrow.\" The capital is the only thing telling them apart on the page — and once you know that, German's noun-capitalisation stops being decoration and starts being punctuation you can read."
+              "text": "Guten Morgen! is \"good morning.\" Plain morgen, small m, is \"tomorrow.\" The capital is the only thing telling them apart on the page — and once you know that, German's noun-capitalisation stops being decoration and starts being punctuation you can read."
             }
           ]
         },
@@ -1602,11 +1648,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bis morgen\" — until tomorrow, small m",
+              "instruction": "\"morgen\" — tomorrow, small m",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bis morgen\" — until tomorrow, small m]"
+              "source": "[YOU SAY: \"morgen\" — tomorrow, small m]"
             },
             {
               "kind": "prompt",
@@ -1651,7 +1697,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46aae6f768dc3a59",
+      "sourceHash": "fnv1a64:7c171c8a614df24d",
       "notice": null,
       "blocks": [
         {
@@ -1692,6 +1738,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bis morgen is bis + morgen, \"tomorrow\", which is the word for \"morning\" from Old High German morgan from Proto-Germanic murganaz. English morrow is the same word. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the bis… family, complete",
           "segments": [
@@ -1721,7 +1778,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1761,7 +1818,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1793,7 +1850,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:1662f44eb763b92a",
+      "sourceHash": "fnv1a64:eaf018862cd6e8f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1841,6 +1898,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The letter, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ß is a letter, not a word: in the old German hand a long s joined to a following s or z fused into one shape, which is why it is called Es-zett, \"s-z\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: ß after long, ss after short",
           "segments": [
@@ -1855,11 +1923,10 @@
                 "ss — short vowel"
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
                 "ß — long vowel: Straße (long a). ss — short vowel: Fluss (short u).",
-                "ß — long vowel: Fuß (long u). ss — short vowel: muss (short u).",
-                "ß — long vowel: weiß (diphthong ei). ss — short vowel: Kuss (short u).",
+                "ß — long vowel: heiße (diphthong ei). ss — short vowel: muss (short u).",
                 "ß — long vowel: groß (long o). ss — short vowel: Schloss (short o)."
               ]
             },
@@ -1870,13 +1937,13 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "writing",
           "title": "Writing — drawing the eszett",
           "segments": [
             {
               "kind": "speech",
-              "text": "Draw it as a tall loop joined to a descending tail — the long-s curve, then the s/z finish. Copy weiß once with the model in view, then Straße."
+              "text": "Draw it as a tall loop joined to a descending tail — the long-s curve, then the s/z finish. Copy heiße once with the model in view, then Straße."
             },
             {
               "kind": "speech",
@@ -1885,7 +1952,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -1904,7 +1971,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [
@@ -1936,7 +2003,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:01352a08cf69b219",
+      "sourceHash": "fnv1a64:4cb25f0421d2d589",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1986,9 +2053,9 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "Plain: a becomes ä. Umlauted: Mann becomes Männer. How: ah becomes the e of bed.",
-                "Plain: o becomes ö. Umlauted: schon becomes schön. How: oh becomes a rounded eh.",
-                "Plain: u becomes ü. Umlauted: Mutter becomes Mütter. How: oo becomes ee with rounded lips."
+                "Plain: a becomes ä. Umlauted: Nacht becomes Nächte (\"nights\"). How: ah becomes the e of bed.",
+                "Plain: o becomes ö. Umlauted: schon (\"already\") becomes schön. How: oh becomes a rounded eh.",
+                "Plain: u becomes ü. Umlauted: gut becomes Güte (\"goodness\"). How: oo becomes ee with rounded lips."
               ]
             },
             {
@@ -2045,15 +2112,15 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Base: Mann (man). Umlauted: Männer. What changed: plural.",
+                "Base: Nacht (night). Umlauted: Nächte. What changed: plural.",
                 "Base: Buch (book). Umlauted: Bücher. What changed: plural.",
                 "Base: groß (big). Umlauted: größer. What changed: comparative.",
-                "Base: Hund (dog). Umlauted: Hündchen. What changed: diminutive."
+                "Base: Mann (man). Umlauted: Männchen. What changed: diminutive."
               ]
             },
             {
               "kind": "speech",
-              "text": "When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller."
+              "text": "Only Nacht is a word you own yet; the other three are here for their dots, with their meanings beside them. When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller."
             }
           ]
         },
@@ -2064,7 +2131,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Mütter."
+              "text": "Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Nächte."
             },
             {
               "kind": "speech",
@@ -2086,20 +2153,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mann\" then \"Männer\" — hear the vowel brighten for the plural",
+              "instruction": "\"Nacht\" then \"Nächte\" — hear the vowel brighten for the plural",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mann\" then \"Männer\" — hear the vowel brighten for the plural]"
+              "source": "[YOU SAY: \"Nacht\" then \"Nächte\" — hear the vowel brighten for the plural]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mutter\" then \"Mütter\" — ee with rounded lips",
+              "instruction": "\"gut\" then \"Güte\" — ee with rounded lips",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mutter\" then \"Mütter\" — *ee* with rounded lips]"
+              "source": "[YOU SAY: \"gut\" then \"Güte\" — *ee* with rounded lips]"
             },
             {
               "kind": "prompt",
@@ -2145,7 +2212,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d7b70840731fbc9d",
+      "sourceHash": "fnv1a64:abaff07194346f8f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2187,11 +2254,11 @@
             },
             {
               "kind": "speech",
-              "text": "Der Hund frisst das Essen in der Küche. — \"The dog eats the food in the kitchen.\""
+              "text": "Guten Abend, gute Nacht, bis morgen! — \"Good evening, good night, see you tomorrow!\""
             },
             {
               "kind": "speech",
-              "text": "Three nouns, three capitals, two of them mid-sentence. Also capitalised: the polite Sie, and any word used as a noun (das Gute, \"the good\")."
+              "text": "Two nouns, two capitals, both mid-sentence. Guten is capitalised only because it opens the sentence; gute stays small; and morgen here means \"tomorrow\", which is no noun, so it stays small too. Also capitalised: the polite Sie, and any word used as a noun (das Gute, \"the good\")."
             },
             {
               "kind": "speech",
@@ -2250,7 +2317,7 @@
             },
             {
               "kind": "speech",
-              "text": "Copy Der Hund frisst das Essen once, then write Guten Morgen and bis morgen one under the other and check every capital."
+              "text": "Copy Guten Abend, gute Nacht once, then write Guten Morgen and bis morgen one under the other and check every capital."
             }
           ]
         },
@@ -2268,20 +2335,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Der Hund frisst das Essen\" — every noun capitalised",
+              "instruction": "\"Guten Abend, gute Nacht\" — every noun capitalised",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Der Hund frisst das Essen\" — every noun capitalised]"
+              "source": "[YOU SAY: \"Guten Abend, gute Nacht\" — every noun capitalised]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"essen\" then \"das Essen\" — the capital flips it from doing to thing",
+              "instruction": "\"gut\" then \"das Gute\" — the capital flips it from describing to thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"essen\" then \"das Essen\" — the capital flips it from doing to thing]"
+              "source": "[YOU SAY: \"gut\" then \"das Gute\" — the capital flips it from describing to thing]"
             },
             {
               "kind": "prompt",
@@ -2307,7 +2374,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: essen versus das Essen.) Which language used to do this and stopped? (English, in the 1700s.)"
+              "text": "Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: gut versus das Gute.) Which language used to do this and stopped? (English, in the 1700s.)"
             }
           ]
         }

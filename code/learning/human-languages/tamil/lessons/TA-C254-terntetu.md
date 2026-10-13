@@ -14,7 +14,8 @@ romanization: "tērnteṭu"
 concept_tag: TA-VERB-TERNTETU
 prerequisites: [TA-C254-katan-vanku, TA-C254-celuttu]
 sounds: []
-roots: []
+roots: [dravidian-teri-be-clear, dravidian-ezhu-rise]
+etymology_hook: "தேர்ந்தெடு — native: tērntu 'having chosen' (DEDR 3419) + eṭu 'to take up' (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C254-celuttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C254-ACT254-03]; assesses=[] -->
 
 **தேர்ந்தெடு** — *tērnteṭu* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேர்ந்தெடு** (*tērnteṭu*) is native: *tērntu*, "having examined, having chosen", from *tēr* (DEDR 3419), and *eṭu*, "to take up" (DEDR 851): "examine and take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

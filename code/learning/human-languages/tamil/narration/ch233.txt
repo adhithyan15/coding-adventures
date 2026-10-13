@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a patient, then the Tamil for a nurse.
 You'll want to know: ஆண்டுதோறும்.
 ஆண்டுதோறும் — āṇṭutōṟum — "every year, yearly".
 
+The word, taken apart.
+ஆண்டுதோறும் (āṇṭutōṟum) is native Dravidian (DEDR 5153). It is āṇṭu, "year", with -tōṟum, "each, every".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a nurse, then the Tamil for every year.
 
 You'll want to know: விடியல்.
 விடியல் — viṭiyal — "dawn, daybreak".
+
+The word, taken apart.
+விடியல் (viṭiyal) is native Dravidian. DEDR 5475 lists Telugu viḍi, "clearness". The entry lists viṭiyal, "break of day", under viṭi, "to dawn".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for every year, then the Tamil for dawn.
 You'll want to know: நாளை மறுநாள்.
 நாளை மறுநாள் — nāḷai maṟunāḷ — "the day after tomorrow".
 
+The word, taken apart.
+நாளை மறுநாள் (nāḷai maṟunāḷ) is native: nāḷai, "tomorrow" (DEDR 3656), and maṟunāḷ, "the next day" (DEDR 4766): "the day after tomorrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for dawn, then the Tamil for the day after tom
 You'll want to know: நேற்று முன்தினம்.
 நேற்று முன்தினம் — nēṟṟu muṉtiṉam — "the day before yesterday".
 
+The word, taken apart.
+நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, "yesterday", and muṉtiṉam, "the day before", from native muṉ, "before" (DEDR 5020), and tiṉam, "day", from Sanskrit dina (CDIAL 6328). DEDR 3758 gives the older Tamil forms nerunal and nerunaṟṟu, "yesterday"; modern nēṟṟu is most likely the shortened form.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for the day after tomorrow, then the Tamil for
 
 You'll want to know: விநாடி.
 விநாடி — vināṭi — "a second (of time)".
+
+The word, taken apart.
+விநாடி (vināṭi) is a well-established loan from Sanskrit vināḍī, "a sixtieth of a nāḍī", the old 24-minute unit, used now for a second.
 
 What you've built.
 One more word for this chapter.

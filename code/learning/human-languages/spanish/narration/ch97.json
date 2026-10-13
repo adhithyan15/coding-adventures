@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-sintesis-dar-y-decir-book",
               "prompt": "Answer yes to Tienes el libro, without the noun.",
               "assesses": [
@@ -141,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-sintesis-dar-y-decir-person",
               "prompt": "Say I tell her today.",
               "assesses": [
@@ -160,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-sintesis-dar-y-decir-plural",
               "prompt": "Say I speak to them.",
               "assesses": [
@@ -180,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-sintesis-dar-y-decir-what",
               "prompt": "Two pronouns in the same slot, both two letters, both from one Latin word. What is the only thing that tells them apart?",
               "assesses": [

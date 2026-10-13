@@ -11,7 +11,8 @@ romanization: "vilai"
 concept_tag: TA-NOUN-PRICE
 prerequisites: [TA-C68-shop, TA-C66-inside, TA-C67-veshti]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "விலை — native Dravidian (DEDR 5421); Malayalam vila, Kannada bele"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ how much?"
 
 Notice what is not there: no verb, and no word for "is". Tamil names the thing, then asks
 about it, and stops.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விலை** (*vilai*) is native Dravidian. DEDR 5421 lists Malayalam *vila* and Kannada *bele*. It belongs with the native verb "to sell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

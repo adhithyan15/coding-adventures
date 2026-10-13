@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say where something is, on any of the three sides.",
     "assesses": [
-      "ES-GRAMMAR-PLACE-THREE-DISTANCES"
+      "ES-GRAMMAR-PLACE-THREE-DISTANCES",
+      "ES-LEX-AHI",
+      "ES-LEX-ALLI"
     ]
   }
 }

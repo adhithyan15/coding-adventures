@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 227,
-  "sourceHash": "fnv1a64:7ca993d382512a33",
+  "sourceHash": "fnv1a64:91b5b2c97b8bbea8",
   "lessonIds": [
     "PT-C227-papelaria",
     "PT-C227-livraria",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch227.txt",
   "json": "portuguese/narration/ch227.json",
-  "textHash": "fnv1a64:ed6006da64576e3c",
-  "jsonHash": "fnv1a64:9e8d32108a978ff5",
+  "textHash": "fnv1a64:82093536614a1ee8",
+  "jsonHash": "fnv1a64:524d7f6e79da7e7f",
   "findings": []
 }

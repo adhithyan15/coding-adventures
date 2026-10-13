@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9468044463289c1c",
+  "sourceHash": "fnv1a64:7d712b4fe8858c11",
   "lessons": [
     {
       "id": "TA-C04-po",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa9645867ddf55d5",
+      "sourceHash": "fnv1a64:21650d02c1174a69",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8705570e1770b8d",
+      "sourceHash": "fnv1a64:32f6271840008c43",
       "notice": null,
       "blocks": [
         {
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ac3e72f620d5447",
+      "sourceHash": "fnv1a64:0c912bb0daf87879",
       "notice": null,
       "blocks": [
         {
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45a1c48f51627ef5",
+      "sourceHash": "fnv1a64:eb20c43228024fa2",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
           "Script you'll notice: The vowel you get for free",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The script is the shape of its writing surface, Script you'll notice: The vowel you get for free and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: The script is the shape of its writing surface, Script you'll notice: The vowel you get for free and Guided Practice."
       },
       "blocks": [
         {
@@ -617,6 +617,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TA-W01-curves-va-ka-writing-surface",
               "prompt": "What writing surface is usually linked to Tamil's rounded shapes?",
               "assesses": [
@@ -650,7 +651,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71a3211fb731462b",
+      "sourceHash": "fnv1a64:c3398eeac853a167",
       "notice": null,
       "blocks": [
         {

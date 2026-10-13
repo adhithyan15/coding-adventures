@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सावण (sāvaṇ) mean? ("Savan (July-August)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Savan (July-August)'.
+Say the Marwadi for 'Savan (July-August)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भादवो (bhādvo) mean? ("Bhadvo (August-September)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Bhadvo (August-September)'.
+Say the Marwadi for 'Bhadvo (August-September)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आसोज (āsoj) mean? ("Asoj (September-October)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Asoj (September-October)'.
+Say the Marwadi for 'Asoj (September-October)'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काती (kātī) mean? ("Kati (October-November)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Kati (October-November)'.
+Say the Marwadi for 'Kati (October-November)'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मिगसर (migsar) mean? ("Migsar (November-December)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Migsar (November-December)'.
+Say the Marwadi for 'Migsar (November-December)'.

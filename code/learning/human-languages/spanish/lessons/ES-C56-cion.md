@@ -53,7 +53,7 @@ Not "often." Not "sometimes." As a rule:
 > *nación* → nation · *información* → information · *educación* → education
 > *conversación* → conversation · *nación* → nation · *atención* → attention
 
-Read those without the English column and you can still read them.
+Drop the English half of each pair and the Spanish still makes sense on its own.
 
 **And every single one is feminine**, without exception — *la nación*, *la
 información*. One ending, one gender, no decision to make. That alone is worth

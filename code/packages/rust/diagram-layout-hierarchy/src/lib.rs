@@ -7,7 +7,7 @@ use diagram_ir::{
     LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
-    RailroadDiagram, RailroadElementKind, RailroadExpression,
+    RailroadDiagram, RailroadElementKind, RailroadExpression, SwimlaneEdgeKind,
 };
 
 pub const VERSION: &str = "0.4.0";
@@ -123,13 +123,6 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let node_width = 132.0;
     let node_height = 54.0;
     let node_gap = 42.0;
-    let max_nodes = diagram
-        .lanes
-        .iter()
-        .map(|lane| lane.node_ids.len())
-        .max()
-        .unwrap_or(1)
-        .max(1);
     let lane_cross = 150.0;
     let lane_along = if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
@@ -137,11 +130,19 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
                     .map(|node| swimlane_node_width(&node.shape, &node.label))
             }).collect::<Vec<_>>();
-            lane_header + widths.iter().sum::<f64>()
-                + node_gap * widths.len().saturating_sub(1) as f64 + 40.0
+            let gap_units = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
+            ).sum::<usize>();
+            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 40.0
         }).fold(0.0, f64::max)
     } else {
-        lane_header + max_nodes as f64 * (node_height + node_gap) + 28.0
+        diagram.lanes.iter().map(|lane| {
+            let gap_units = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
+            ).sum::<usize>();
+            lane_header + lane.node_ids.len().max(1) as f64 * node_height
+                + (gap_units + 1) as f64 * node_gap + 28.0
+        }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
         (
@@ -154,9 +155,14 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             title_height + lane_along.max(420.0),
         )
     };
+    let ordered_lanes = if diagram.automatic_lane_ordering {
+        optimize_swimlane_lane_order(diagram)
+    } else {
+        diagram.lanes.iter().collect()
+    };
     let mut lanes = Vec::new();
     let mut nodes = Vec::new();
-    for (lane_index, lane) in diagram.lanes.iter().enumerate() {
+    for (lane_index, lane) in ordered_lanes.into_iter().enumerate() {
         let (x, y, lane_width, lane_height) = if horizontal_flow {
             (
                 12.0,
@@ -188,14 +194,17 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             member_ids.reverse();
         }
         let mut horizontal_cursor = x + lane_header + 20.0;
+        let mut vertical_cursor = y + lane_header + 20.0;
         for (node_index, node_id) in member_ids.iter().enumerate() {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
             };
             let (resolved_node_width, resolved_node_height) = match node.shape {
-                DiagramShape::SmallCircle | DiagramShape::FramedCircle => (14.0, 14.0),
+                DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => (14.0, 14.0),
+                DiagramShape::Summary => (60.0, 60.0),
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
+                DiagramShape::LightningBolt => (35.0, 70.0),
                 _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label), node_height),
                 _ => (node_width, node_height),
             };
@@ -207,8 +216,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             } else {
                 (
                     x + (lane_cross - resolved_node_width) / 2.0,
-                    y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap)
-                        + (node_height - resolved_node_height) / 2.0,
+                    vertical_cursor + (node_height - resolved_node_height) / 2.0,
                 )
             };
             nodes.push(LayoutedSwimlaneNode {
@@ -222,7 +230,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 width: resolved_node_width,
                 height: resolved_node_height,
             });
-            horizontal_cursor += resolved_node_width + node_gap;
+            let gap_units = member_ids.get(node_index + 1).map(|next_id|
+                swimlane_link_gap_units(diagram, node_id, next_id)
+            ).unwrap_or(1);
+            horizontal_cursor += resolved_node_width + node_gap * gap_units as f64;
+            vertical_cursor += node_height + node_gap * gap_units as f64;
         }
     }
     let bounds = nodes
@@ -244,12 +256,19 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 from_center, *from_width, *from_height, to_center, *to_width, *to_height,
             );
             Some(LayoutedSwimlaneEdge {
+                id: edge.id.clone(),
                 from,
                 to,
                 label: edge.label.clone(),
                 kind: edge.kind,
                 start_marker: edge.start_marker,
                 end_marker: edge.end_marker,
+                min_length: edge.min_length,
+                classes: edge.classes.clone(),
+                style: edge.style.clone(),
+                animate: edge.animate,
+                animation: edge.animation,
+                curve: edge.curve,
             })
         })
         .collect();
@@ -265,7 +284,123 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         edges,
         links: diagram.links.clone(),
         callbacks: diagram.callbacks.clone(),
+        line_hops: diagram.line_hops,
+        automatic_lane_ordering: diagram.automatic_lane_ordering,
     }
+}
+
+#[derive(Clone)]
+struct WeightedSwimlaneEdge { a: String, b: String, weight: usize }
+
+fn optimize_swimlane_lane_order(diagram: &SwimlaneDiagram) -> Vec<&diagram_ir::SwimlaneLane> {
+    let source_order = diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>();
+    if source_order.len() < 2 {
+        return diagram.lanes.iter().collect();
+    }
+    let source_index = source_order.iter().enumerate()
+        .map(|(index, lane)| (*lane, index)).collect::<HashMap<_, _>>();
+    let node_lanes = diagram.lanes.iter().flat_map(|lane|
+        lane.node_ids.iter().map(move |node| (node.as_str(), lane.id.as_str()))
+    ).collect::<HashMap<_, _>>();
+    let mut counts = BTreeMap::<(usize, usize), usize>::new();
+    for edge in &diagram.edges {
+        if edge.kind == SwimlaneEdgeKind::Invisible {
+            continue;
+        }
+        let (Some(from_lane), Some(to_lane)) = (
+            node_lanes.get(edge.from.as_str()), node_lanes.get(edge.to.as_str()),
+        ) else { continue };
+        if from_lane == to_lane {
+            continue;
+        }
+        let (Some(&from_index), Some(&to_index)) = (
+            source_index.get(from_lane), source_index.get(to_lane),
+        ) else { continue };
+        let pair = if from_index <= to_index {
+            (from_index, to_index)
+        } else {
+            (to_index, from_index)
+        };
+        *counts.entry(pair).or_default() += 1;
+    }
+    let weights = counts.into_iter().map(|((a, b), weight)| WeightedSwimlaneEdge {
+        a: source_order[a].to_string(), b: source_order[b].to_string(), weight,
+    }).collect::<Vec<_>>();
+    if weights.is_empty() {
+        return diagram.lanes.iter().collect();
+    }
+    let source = source_order.iter().map(|lane| (*lane).to_string()).collect::<Vec<_>>();
+    let source_positions = source.iter().enumerate()
+        .map(|(index, lane)| (lane.as_str(), index)).collect::<HashMap<_, _>>();
+    let mut best = greedy_swimlane_order(source.clone(), &weights, &source_positions);
+    for restart in 0..8 {
+        let mut candidate = source.clone();
+        deterministic_swimlane_shuffle(&mut candidate, swimlane_restart_seed(&source, &weights, restart));
+        let candidate = greedy_swimlane_order(candidate, &weights, &source_positions);
+        if candidate.1 < best.1 || (candidate.1 == best.1 && candidate.2 < best.2) {
+            best = candidate;
+        }
+    }
+    best.0.iter().filter_map(|lane_id|
+        diagram.lanes.iter().find(|lane| lane.id == *lane_id)
+    ).collect()
+}
+
+fn swimlane_arrangement_cost(order: &[String], weights: &[WeightedSwimlaneEdge]) -> usize {
+    let positions = order.iter().enumerate().map(|(index, lane)| (lane.as_str(), index))
+        .collect::<HashMap<_, _>>();
+    weights.iter().map(|edge| edge.weight * positions[edge.a.as_str()].abs_diff(positions[edge.b.as_str()])).sum()
+}
+
+fn greedy_swimlane_order(
+    mut order: Vec<String>, weights: &[WeightedSwimlaneEdge], source: &HashMap<&str, usize>,
+) -> (Vec<String>, usize, usize) {
+    let mut cost = swimlane_arrangement_cost(&order, weights);
+    for _ in 0..order.len().max(1) {
+        let mut changed = false;
+        for index in 0..order.len().saturating_sub(1) {
+            order.swap(index, index + 1);
+            let next_cost = swimlane_arrangement_cost(&order, weights);
+            if next_cost < cost {
+                cost = next_cost;
+                changed = true;
+            } else {
+                order.swap(index, index + 1);
+            }
+        }
+        if !changed { break; }
+    }
+    let distance = order.iter().enumerate().map(|(index, lane)| index.abs_diff(source[lane.as_str()])).sum();
+    (order, cost, distance)
+}
+
+fn swimlane_restart_seed(source: &[String], weights: &[WeightedSwimlaneEdge], restart: usize) -> u32 {
+    let mut sorted_weights = weights.to_vec();
+    sorted_weights.sort_by(|left, right| left.a.cmp(&right.a).then_with(|| left.b.cmp(&right.b)));
+    let signature = sorted_weights.iter().map(|edge| format!("{}:{}:{}", edge.a, edge.b, edge.weight))
+        .collect::<Vec<_>>().join("|");
+    let input = format!("{}#{}#{restart}", source.join("|"), signature);
+    input.encode_utf16().fold(2_166_136_261_u32, |hash, unit|
+        (hash ^ u32::from(unit)).wrapping_mul(16_777_619)
+    )
+}
+
+fn deterministic_swimlane_shuffle(order: &mut [String], seed: u32) {
+    let mut state = seed;
+    for index in (1..order.len()).rev() {
+        state = state.wrapping_add(0x6d2b79f5);
+        let mut value = state;
+        value = (value ^ (value >> 15)).wrapping_mul(value | 1);
+        value ^= value.wrapping_add((value ^ (value >> 7)).wrapping_mul(value | 61));
+        let random = (value ^ (value >> 14)) as f64 / 4_294_967_296.0;
+        order.swap(index, (random * (index + 1) as f64).floor() as usize);
+    }
+}
+
+fn swimlane_link_gap_units(diagram: &SwimlaneDiagram, first: &str, second: &str) -> usize {
+    diagram.edges.iter().filter(|edge|
+        (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
+    ).map(|edge| edge.min_length).max().unwrap_or(1).max(1)
 }
 
 fn swimlane_edge_endpoints(
@@ -288,8 +423,10 @@ fn swimlane_edge_endpoints(
 
 fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
     match shape {
-        DiagramShape::SmallCircle | DiagramShape::FramedCircle => 14.0,
+        DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
+        DiagramShape::Summary => 60.0,
         DiagramShape::ForkJoin => 10.0,
+        DiagramShape::LightningBolt => 35.0,
         _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
     }
 }
@@ -664,11 +801,15 @@ mod tests {
                 SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![SwimlaneEdge {
-                from: "choose".into(), to: "ship".into(), label: None,
+                id: None, from: "choose".into(), to: "ship".into(), label: None,
                 kind: SwimlaneEdgeKind::Directed,
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
+                min_length: 1,
+                classes: Vec::new(), style: Default::default(),
+                animate: false, animation: None,
+                curve: None,
             }],
-            links: Vec::new(), callbacks: Vec::new(),
+            links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -691,7 +832,7 @@ mod tests {
             nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
-            edges: vec![], links: Vec::new(), callbacks: Vec::new(),
+            edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -705,7 +846,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -729,8 +870,54 @@ mod tests {
                     shape: DiagramShape::FramedCircle, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "fork".into(), label: "Fork".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::ForkJoin, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "bolt".into(), label: "Bolt".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LightningBolt, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-left".into(), label: "Left comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceLeft, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-right".into(), label: "Right comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceRight, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "braces".into(), label: "Both comments".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraces, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "document".into(), label: "Document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Document, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "delay".into(), label: "Delay".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Delay, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "horizontal-cylinder".into(), label: "Storage".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::HorizontalCylinder, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "lined-cylinder".into(), label: "Disk".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LinedCylinder, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "display".into(), label: "Display".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Display, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "divided".into(), label: "Divided".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::DividedRect, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "window-pane".into(), label: "Internal".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::WindowPane, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "junction".into(), label: "Junction".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::FilledCircle, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "loop-limit".into(), label: "Loop limit".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LoopLimit, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "manual-input".into(), label: "Manual input".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::ManualInput, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "multi-document".into(), label: "Documents".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::MultiDocument, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "multi-process".into(), label: "Processes".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::MultiProcess, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "stored-data".into(), label: "Stored data".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::StoredData, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "summary".into(), label: "Summary".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Summary, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "tagged-document".into(), label: "Tagged document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TaggedDocument, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "tagged-process".into(), label: "Tagged process".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TaggedProcess, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "paper-tape".into(), label: "Paper tape".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::PaperTape, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "lined-document".into(), label: "Lined document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LinedDocument, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "data-store".into(), label: "Data store".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::DataStore, classes: Vec::new(), style: Default::default() },
             ],
-            edges: vec![], links: Vec::new(), callbacks: Vec::new(),
+            edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
@@ -747,6 +934,50 @@ mod tests {
         assert_eq!((layout.nodes[9].width, layout.nodes[9].height), (14.0, 14.0));
         assert_eq!(layout.nodes[10].shape, DiagramShape::ForkJoin);
         assert_eq!((layout.nodes[10].width, layout.nodes[10].height), (10.0, 70.0));
+        assert_eq!(layout.nodes[11].shape, DiagramShape::LightningBolt);
+        assert_eq!((layout.nodes[11].width, layout.nodes[11].height), (35.0, 70.0));
+        assert_eq!(layout.nodes[12].shape, DiagramShape::CurlyBraceLeft);
+        assert_eq!(layout.nodes[13].shape, DiagramShape::CurlyBraceRight);
+        assert_eq!(layout.nodes[14].shape, DiagramShape::CurlyBraces);
+        assert!(layout.nodes[12..=14].iter().all(|node| node.width == 132.0 && node.height == 54.0));
+        assert_eq!(layout.nodes[15].shape, DiagramShape::Document);
+        assert_eq!((layout.nodes[15].width, layout.nodes[15].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[16].shape, DiagramShape::Delay);
+        assert_eq!((layout.nodes[16].width, layout.nodes[16].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[17].shape, DiagramShape::HorizontalCylinder);
+        assert_eq!((layout.nodes[17].width, layout.nodes[17].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[18].shape, DiagramShape::LinedCylinder);
+        assert_eq!((layout.nodes[18].width, layout.nodes[18].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[19].shape, DiagramShape::Display);
+        assert_eq!((layout.nodes[19].width, layout.nodes[19].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[20].shape, DiagramShape::DividedRect);
+        assert_eq!((layout.nodes[20].width, layout.nodes[20].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[21].shape, DiagramShape::WindowPane);
+        assert_eq!((layout.nodes[21].width, layout.nodes[21].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[22].shape, DiagramShape::FilledCircle);
+        assert_eq!((layout.nodes[22].width, layout.nodes[22].height), (14.0, 14.0));
+        assert_eq!(layout.nodes[23].shape, DiagramShape::LoopLimit);
+        assert_eq!((layout.nodes[23].width, layout.nodes[23].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[24].shape, DiagramShape::ManualInput);
+        assert_eq!((layout.nodes[24].width, layout.nodes[24].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[25].shape, DiagramShape::MultiDocument);
+        assert_eq!((layout.nodes[25].width, layout.nodes[25].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[26].shape, DiagramShape::MultiProcess);
+        assert_eq!((layout.nodes[26].width, layout.nodes[26].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[27].shape, DiagramShape::StoredData);
+        assert_eq!((layout.nodes[27].width, layout.nodes[27].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[28].shape, DiagramShape::Summary);
+        assert_eq!((layout.nodes[28].width, layout.nodes[28].height), (60.0, 60.0));
+        assert_eq!(layout.nodes[29].shape, DiagramShape::TaggedDocument);
+        assert_eq!((layout.nodes[29].width, layout.nodes[29].height), (136.0, 54.0));
+        assert_eq!(layout.nodes[30].shape, DiagramShape::TaggedProcess);
+        assert_eq!((layout.nodes[30].width, layout.nodes[30].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[31].shape, DiagramShape::PaperTape);
+        assert_eq!((layout.nodes[31].width, layout.nodes[31].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[32].shape, DiagramShape::LinedDocument);
+        assert_eq!((layout.nodes[32].width, layout.nodes[32].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[33].shape, DiagramShape::DataStore);
+        assert_eq!((layout.nodes[33].width, layout.nodes[33].height), (132.0, 54.0));
     }
 
     #[test]

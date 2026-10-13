@@ -1,16 +1,16 @@
 {
   "language": "hindi",
   "chapter": 88,
-  "sourceHash": "fnv1a64:85f626de0c68e176",
+  "sourceHash": "fnv1a64:d9d2aec86aa3c52b",
   "lessonIds": [
     "HI-C80-aasaan-mushkil",
     "HI-C80-sundar-badsurat"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "hindi/narration/ch88.txt",
   "json": "hindi/narration/ch88.json",
-  "textHash": "fnv1a64:2db8445ac8704d84",
-  "jsonHash": "fnv1a64:bf4a3c10caea7937",
+  "textHash": "fnv1a64:e827c756d620f46b",
+  "jsonHash": "fnv1a64:8bb4e97ae78c8f99",
   "findings": []
 }

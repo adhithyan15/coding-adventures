@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 137,
-  "sourceHash": "fnv1a64:5d9e85971517a365",
+  "sourceHash": "fnv1a64:cf48c5ea6282d3aa",
   "lessonIds": [
     "GE-C137-wochenende",
     "GE-C137-datum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch137.txt",
   "json": "german/narration/ch137.json",
-  "textHash": "fnv1a64:cfd46510e932081b",
-  "jsonHash": "fnv1a64:28a2881e8d1d5059",
+  "textHash": "fnv1a64:a76bdc77232f0d60",
+  "jsonHash": "fnv1a64:18a0492e8af2d8ad",
   "findings": []
 }

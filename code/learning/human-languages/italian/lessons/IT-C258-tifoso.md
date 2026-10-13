@@ -14,6 +14,7 @@ concept_tag: IT-COSE258-TIFOSO
 prerequisites: [IT-C257-filo, IT-C257-strumento]
 sounds: []
 roots: []
+etymology_hook: "tifoso — from tifo 'typhus': a fan is in a fever"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C257-strumento]
 <!-- hl-knowledge: introduces=[IT-LEX-C258-COSE258-01]; assesses=[] -->
 
 **il tifoso** — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tifoso** — built from *tifo*, "typhus", with *-oso*: a fan is in a fever. *tifo* goes back to Greek *typhos*, "smoke, stupor". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

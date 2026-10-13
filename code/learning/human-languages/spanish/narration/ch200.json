@@ -153,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablamos-dos-say",
               "prompt": "Say: we spoke Spanish.",
               "assesses": [
@@ -171,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablamos-dos-which",
               "prompt": "How does a listener know which tense hablamos is?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablamos-dos-pair",
               "prompt": "Give the we form and the they form, both past, for trabajar.",
               "assesses": [

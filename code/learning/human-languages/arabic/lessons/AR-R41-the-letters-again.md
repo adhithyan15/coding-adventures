@@ -79,10 +79,10 @@ everyday text leaves them out — and here is what that costs.
 | shape | makes | example |
 |---|---|---|
 | **مَـ** *ma-* | a **place** | *maktab*, an office |
-| **مِـ** *mi-* | a **tool** | **ملعقة** *milʿaqa*, a spoon |
+| **مِـ** *mi-* | a **tool** | *milʿaqa*, a spoon |
 
-A place and a tool are separated by **one mark that nobody prints**. **ملعقة** is
-the licking-tool, from the root **ل-ع-ق**, and the only thing marking it as a tool
+A place and a tool are separated by **one mark that nobody prints**. *milʿaqa* is
+the licking-tool, from the root *l-ʿ-q*, and the only thing marking it as a tool
 rather than a licking-place is a vowel you have to know.
 
 This is the honest reason the repair kit exists. When the vowels are missing and

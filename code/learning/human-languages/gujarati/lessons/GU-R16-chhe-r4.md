@@ -43,7 +43,7 @@ reviews_of: [GU-C02-chhe]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-NAAM-01] -->
 <!-- hl-activity: {"id":"GU-R16-chhe-r4-listening","kind":"text","assesses":["GU-CONCEPT-C02-CHHE-01","GU-CONCEPT-C02-NAAM-01"],"prompt":"Hear nām — chhe. Which item is the copula is, and where does it sit?","answer":"chhe; it sits at the end","accepted":[],"feedback":{"correct":"You retrieved Gujarati chhe and its sentence-final position.","incorrect":"Hear nām — chhe once more, then answer without looking."},"response_seconds":25} -->
 
-[YOU SAY: *nām — chhe*] Identify *is*, then read **નામ … છે**. Position 99 is
+[YOU SAY: *nām — chhe*] Say which word is *is*. [YOU READ: **નામ … છે**.] Position 99 is
 61 lessons after *chhe* appeared at position 38, so the copula's R4 window
 closes here.
 

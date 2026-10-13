@@ -14,6 +14,7 @@ concept_tag: PT-COISAS198-LATA
 prerequisites: [PT-C198-litro, PT-C198-pacote]
 sounds: []
 roots: []
+etymology_hook: "lata — origin uncertain, perhaps a Germanic word for a thin strip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C198-pacote]
 <!-- hl-knowledge: introduces=[PT-LEX-C198-COISAS198-05]; assesses=[] -->
 
 **a lata** — "a tin, a can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lata** — its origin is uncertain. EtymDB 2.1 traces it through Italian *latta* to a Germanic word for a lath, but the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

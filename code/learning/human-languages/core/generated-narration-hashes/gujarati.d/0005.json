@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 5,
-  "sourceHash": "fnv1a64:6595e4fc8787d562",
+  "sourceHash": "fnv1a64:0c0e86fd66a8e587",
   "lessonIds": [
     "GU-C05-chappal",
     "GU-C05-bagalo",
@@ -11,11 +11,11 @@
     "GU-W05-ba",
     "GU-R05-second-four-r1"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "gujarati/narration/ch05.txt",
   "json": "gujarati/narration/ch05.json",
-  "textHash": "fnv1a64:eaa8cd3c100fb8a5",
-  "jsonHash": "fnv1a64:2a57323a9e38d55a",
+  "textHash": "fnv1a64:dcc2aec5becceab0",
+  "jsonHash": "fnv1a64:13b75fb7b8cd07d9",
   "findings": []
 }

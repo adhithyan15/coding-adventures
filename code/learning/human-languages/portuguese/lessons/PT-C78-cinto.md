@@ -13,7 +13,8 @@ gloss: "a belt"
 concept_tag: PT-ROUPA2-CINTO
 prerequisites: [PT-C78-saia, PT-C78-meias]
 sounds: []
-roots: []
+roots: [cingere-latin]
+etymology_hook: "cinto ← Latin cinctus 'girdle', from cingere 'to gird' — English cincture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C78-meias]
 <!-- hl-knowledge: introduces=[PT-LEX-C78-ROUPA2-05]; assesses=[] -->
 
 **o cinto** — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinto** ← Latin *cinctus*, "girdle, belt" (EtymDB 2.1), from *cingere*, "to gird" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

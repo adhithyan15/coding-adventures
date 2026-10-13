@@ -11,7 +11,8 @@ romanization: "solluṅgaḷ"
 concept_tag: TA-COURTESY-SOLLUNGAL
 prerequisites: [TA-C08-tayavuseytu]
 sounds: [retroflex-lateral-lla, velar-nasal-nga]
-roots: [tamil-respectful-imperative]
+roots: [tamil-respectful-imperative, dravidian-col-say]
+etymology_hook: "solluṅgaḷ — native col 'to say' (DEDR 2855), as in Malayalam colluka and Kannada sollu, + respectful -uṅgaḷ"
 duration:
   max_seconds: 150
 requires:
@@ -45,6 +46,11 @@ meaning.
 
 Say it in three easy pulses: *sol · luṅ · gaḷ*. Then say it smoothly once:
 *solluṅgaḷ*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Solluṅgaḷ* is native Dravidian: the verb *sol*, "to say" (DEDR 2855), with the respectful ending. Malayalam *colluka* and Kannada *sollu* are the same verb.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SOLLUNGAL-01] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-TELEFONARE
 prerequisites: [IT-C142-mostrare, IT-C142-guardare]
 sounds: []
 roots: []
+etymology_hook: "telefonare — telefono 'telephone' + the verb ending -are"
 duration:
   max_seconds: 200
 requires:
@@ -35,12 +36,17 @@ reviews_of: [IT-C142-guardare]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C142-VERBI142-04, IT-LEX-C142-VERBI142-05] -->
 
-[PAUSE 2s] Before the new one: say the Italian for to show, then the Italian for to look at.
+[PAUSE 2s] Before the new one: say the Italian for "to show", then the Italian for "to look at".
 
 ## You'll want to know: telefonare
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-01]; assesses=[] -->
 
 **telefonare** — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefonare** — built from *telefono*, "telephone", with the verb ending *-are*. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -54,7 +60,7 @@ One more word for this chapter.
 - [YOU SAY: *telefonare*]
 - [YOU SAY: *telefonare*, once more]
 - [YOU SAY: say *telefonare*]
-- [YOU RECALL: say the Italian for to show, then the Italian for to look at, then say *telefonare* again]
+- [YOU RECALL: say the Italian for "to show", then the Italian for "to look at", then say *telefonare* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C143-VERBI143-01, IT-LEX-C142-VERBI142-04, IT-LEX-C142-VERBI142-05] -->

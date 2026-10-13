@@ -45,8 +45,12 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 Both of the words you said a moment ago carry it:
 
-- **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
+- *namaskāram* — hello / greetings ("a making of a bow")
+- *dhanyavādamulu* — thank you ("utterances of 'worthy'"), in its tail
+  **ములు** *-mulu*: **ము** is మ with the *u* sign hooked on, and **లు** is ల
+  *la* with the same sign.
+
+Their whole written forms come near this chapter's end.
 
 **This is the character the book uses more than any other.** It sits in the
 second syllable of the very first word you were taught, and it will be in front
@@ -58,9 +62,12 @@ of you on nearly every page from here on.
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
 around the upper-left arch. Movements 2 and 3 turn right around the two lower
-bowls. Movement 4 rises around the central shoulder. Lift for movement 5, the
-separate flourish above. Movement 6 turns around the lower-right bowl, and
-movement 7 rises around the outer-right shoulder.
+bowls. Movement 4 rises around the central shoulder. Keep the pen down:
+movement 5 climbs a short way up the flourish's left arm, and movement 6 sweeps
+up into the flourish above. Lift once. Movement 7 turns around the lower-right
+bowl, and without lifting, movement 8 rises around the outer-right shoulder.
+The strip gives the short climb a panel of its own, so the seven movements are
+numbered as eight.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the seven clear
@@ -70,16 +77,16 @@ movements instead of rushing their joins.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these two words, and find మ in each]
+- [YOU LOOK: at the three shapes you met in the greeting, and find మ among them]
 
-> నమస్కారం  ·  ధన్యవాదములు
+> న  ·  మ  ·  ర
 
 - [YOU TRACE: మ three times, saying *ma* as you finish each one]
-- [YOU LOOK: at the greeting again and say which syllable మ carries]
+- [YOU SAY: which syllable of *namaskāram* మ carries (the second, *ma*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
 
 [PAUSE 3s] Which character is this — మ? What sound does it carry? (***ma***.)
-Name the two words in this chapter that contain it. (**నమస్కారం** and
-**ధన్యవాదములు** — once each.)
+Name the two words in this chapter that contain it. (*namaskāram* and
+*dhanyavādamulu* — once each.)

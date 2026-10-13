@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-SEL-05, FR-ETYMON-SEL-06, FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01]
+  knowledge: [FR-LEX-SEL-05, FR-ETYMON-SEL-06, FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01, FR-ETYMON-BEURRE-04, FR-ETYMON-SUCRE-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [FR-C30-beurre, FR-C30-fromage]
 # le sel — salt, a real cousin and a fake legend
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BEURRE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BEURRE-03, FR-ETYMON-BEURRE-04] -->
 
 [PAUSE 2s] *Beurre* was one word borrowed twice. This one is different again
 — a genuine family relative of its English counterpart, plus a famous story
@@ -48,7 +48,7 @@ about it that isn't actually true.
 > **Du sel, s'il vous plaît.** — "Some salt, please."
 
 ## The word, taken apart: a real cousin, and a fake story
-<!-- hl-knowledge: introduces=[FR-ETYMON-SEL-06]; assesses=[] -->
+<!-- hl-knowledge: introduces=[FR-ETYMON-SEL-06]; assesses=[FR-ETYMON-SUCRE-08] -->
 
 **sel** ← Latin **sal**, stem **sal-** — **inherited**, like *lait*, not
 borrowed like *café* or *sucre*. English **salt** is a genuine **cousin**:

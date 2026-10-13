@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9073b327b7439869",
+  "sourceHash": "fnv1a64:1d2fe0ba4a363b3d",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:beed412f4ea0c750",
+      "sourceHash": "fnv1a64:a86bd500b8baf8cd",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேலே (mēlē) is native Dravidian. DEDR 5086 lists Malayalam mē, \"over\". The entry lists mēl, \"that which is over or above\", and -ē turns it into \"up there\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: you have met this ending before",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2cfff07b0e85d19",
+      "sourceHash": "fnv1a64:6691cceb0175aee2",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கீழே (kīḻē) is native Dravidian. DEDR 1619 lists Malayalam kīḻ, \"place below\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -214,7 +236,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -272,7 +294,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:70f24065644a3152",
       "notice": {
@@ -311,14 +334,16 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: two letters, one sign, used twice",
           "Script you'll notice: the hook goes in front, the sound comes after",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: two letters, one sign, used twice, Script you'll notice: the hook goes in front, the sound comes after and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: two letters, one sign, used twice, Script you'll notice: the hook goes in front, the sound comes after, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -454,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9d9b89f75c79fde",
+      "sourceHash": "fnv1a64:6e7fae70d22008d8",
       "notice": null,
       "blocks": [
         {
@@ -504,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உள்ளே (uḷḷē) is native Dravidian. DEDR 698 lists Malayalam uḷḷu, \"inside\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: the doubled ள",
           "segments": [
@@ -518,7 +554,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -576,7 +612,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -607,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a80f0ad0e8724c0",
+      "sourceHash": "fnv1a64:27808e462f5be822",
       "notice": null,
       "blocks": [
         {
@@ -644,6 +680,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெளியே (veḷiyē) is native Dravidian. DEDR 5498 lists Malayalam veḷi, \"outside\". The entry glosses veḷi \"outside, open space\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: what the ending does to a word ending in a vowel",
           "segments": [
@@ -658,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -716,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -747,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bbb2453e4598326",
+      "sourceHash": "fnv1a64:6736379653e6ad94",
       "notice": null,
       "blocks": [
         {
@@ -891,7 +938,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3243aa96a6ed43c9",
+      "sourceHash": "fnv1a64:eca2ee4f349950f9",
       "notice": null,
       "blocks": [
         {
@@ -928,6 +975,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடது (iḍadu) is native Dravidian. DEDR 449 lists Malayalam iṭam and Kannada eḍa. The entry gives iṭam, \"left side\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: the ட you have to place",
           "segments": [
@@ -942,7 +1000,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -982,7 +1040,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

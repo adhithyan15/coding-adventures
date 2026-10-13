@@ -13,7 +13,8 @@ gloss: "to listen"
 concept_tag: PT-VERB-ESCUTAR
 prerequisites: [PT-C129-muitas-vezes, PT-C129-as-vezes]
 sounds: []
-roots: []
+roots: [auscultare-latin]
+etymology_hook: "escutar ← Latin auscultare 'to listen' — English auscultation, a doctor's listening"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C129-as-vezes]
 <!-- hl-knowledge: introduces=[PT-LEX-C129-TEMPO129-04]; assesses=[] -->
 
 **escutar** — "to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escutar** ← Latin *auscultare*, "to listen" — inherited. EtymDB 2.1 has no ancestor row for *escutar*; it derives Spanish *escuchar* from *auscultare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

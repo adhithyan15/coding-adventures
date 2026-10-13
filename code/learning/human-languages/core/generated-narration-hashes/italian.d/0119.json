@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 119,
-  "sourceHash": "fnv1a64:4e58f2a615a4b327",
+  "sourceHash": "fnv1a64:35ed65a75b9ce6fb",
   "lessonIds": [
     "IT-C119-onda",
     "IT-C119-deserto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch119.txt",
   "json": "italian/narration/ch119.json",
-  "textHash": "fnv1a64:91c7eb4e2d50324f",
-  "jsonHash": "fnv1a64:31474752474cac91",
+  "textHash": "fnv1a64:512d86d4ce8f373b",
+  "jsonHash": "fnv1a64:fddf446858649ace",
   "findings": []
 }

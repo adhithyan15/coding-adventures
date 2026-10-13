@@ -13,7 +13,8 @@ gloss: "a toilet"
 concept_tag: PT-COISAS229-SANITA
 prerequisites: [PT-C228-metade, PT-C229-lavatorio]
 sounds: []
-roots: []
+roots: [sanus-latin]
+etymology_hook: "sanita — cut down from the sanitary word, from Latin sanitas 'health'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C229-lavatorio]
 <!-- hl-knowledge: introduces=[PT-LEX-C229-COISAS229-02]; assesses=[] -->
 
 **a sanita** — "a toilet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sanita** is cut down from the word for "sanitary", which goes back to Latin *sanitas*, "health" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

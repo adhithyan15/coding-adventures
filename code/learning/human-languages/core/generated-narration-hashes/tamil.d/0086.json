@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 86,
-  "sourceHash": "fnv1a64:6ef03117dbe6957a",
+  "sourceHash": "fnv1a64:e824ce3991a574df",
   "lessonIds": [
     "TA-C86-ai",
     "TA-C86-ennai-unnai",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch86.txt",
   "json": "tamil/narration/ch86.json",
-  "textHash": "fnv1a64:b34295b79752c4b9",
-  "jsonHash": "fnv1a64:c704cb6cffc7692b",
+  "textHash": "fnv1a64:6fe380ba7da6daab",
+  "jsonHash": "fnv1a64:67cef8fe43344845",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "kirāmam"
 concept_tag: TA-NOUN-VILLAGE
 prerequisites: [TA-C53-path, TA-C51-cloud, TA-C52-seed]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "கிராமம் ← Sanskrit grāma 'village' (CDIAL 4368), with a vowel let in to break up the gr-"
 duration:
   max_seconds: 210
 requires:

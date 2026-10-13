@@ -13,7 +13,8 @@ gloss: "an idea"
 concept_tag: GE-SCHULE128-IDEE
 prerequisites: [GE-C127-radiergummi, GE-C128-hausaufgabe]
 sounds: []
-roots: []
+roots: [idea-latin]
+etymology_hook: "Idee ← French idée ← Latin idea ← Greek idéa 'form, pattern' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C128-hausaufgabe]
 <!-- hl-knowledge: introduces=[GE-LEX-C128-SCHULE128-02]; assesses=[] -->
 
 **die Idee** — "an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Idee** ← French *idée* ← Latin *idea* ← Greek *idéa*, "form, pattern" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

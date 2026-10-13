@@ -74,7 +74,7 @@ Roman greeting is a wish for the other person's health, coming and going.
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01, LA-DIALOGUE-WELLBEING-01] -->
 <!-- hl-activity: {"id":"LA-C19-practice-answer-line","kind":"text","assesses":["LA-DIALOGUE-WELLBEING-01"],"prompt":"Someone has just asked you ut vales? Type the one-word Latin answer.","answer":"valeo","accepted":["valeō"],"feedback":{"correct":"Right: valeo — I fare well. Same verb as vale.","incorrect":"Answer valeo, I fare well — the same valere behind vale."},"response_seconds":8} -->
 
-[PAUSE 3s] Run the exchange once more without looking. Then: which single
-verb supplies *valēs*, *valeō*, and *valē*? (**Valēre**.) Which of the two
-Roman "how are you?" questions is *not* attested? (Neither — both *quid
-agis?* and *ut valēs?* are real; the modern one was *quōmodo tē habēs?*)
+[PAUSE 3s] Run the exchange once more without looking. Then: which single verb
+supplies *valēs*, *valeō*, and *valē*? (**Valēre**.) Which of the two Roman "how
+are you?" questions is *not* attested? (Neither — both *quid agis?* and *ut
+valēs?* are real; only the spoken-Latin courses' question is modern.)

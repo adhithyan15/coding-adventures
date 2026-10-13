@@ -13,7 +13,7 @@ sounds: [w-as-v, ie-long-ee, d-t-final]
 roots: [pie-h1es]
 etymology_hook: "sind is Latin sunt with the same three sounds in the same order, both from *h₁es-, and the d is spoken as t"
 duration:
-  max_seconds: 155
+  max_seconds: 173
 requires:
   knowledge: [GE-SOUND-FINAL-DEVOICING-D-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-LEX-SEIN-01]
 introduces:
@@ -49,6 +49,11 @@ reviews_of: [GE-C03-und, GE-C16-er-ist]
 
 Its Latin twin is *sunt*, "they are" — same **s**, same **n**, same closing
 stop, the same root wearing a different vowel.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sind** ← Old High German *sint* — inherited, from the same root as English *is* and Latin *sunt*, "they are". EtymDB 2.1 traces English *is* to Proto-Germanic *\*isti*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-FINAL-DEVOICING-D-01, GE-GRAMMAR-SEIN-WIR-SIND-01] -->

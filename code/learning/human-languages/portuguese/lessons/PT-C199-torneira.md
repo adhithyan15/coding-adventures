@@ -13,7 +13,8 @@ gloss: "a tap"
 concept_tag: PT-COISAS199-TORNEIRA
 prerequisites: [PT-C199-ementa, PT-C199-aquecimento]
 sounds: []
-roots: []
+roots: [tornare-latin]
+etymology_hook: "torneira — built on the turning word (← Latin tornare) + -eira: the thing you turn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C199-aquecimento]
 <!-- hl-knowledge: introduces=[PT-LEX-C199-COISAS199-05]; assesses=[] -->
 
 **a torneira** — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**torneira** is built on the word for a turn (← Latin *tornare*, "to turn on a lathe") and *-eira*: the thing you turn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

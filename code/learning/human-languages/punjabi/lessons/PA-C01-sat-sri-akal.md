@@ -23,7 +23,7 @@ introduces_senses: []
 introduces_culture_claims: [PA-CULTURE-SAT-SRI-AKAL-SIKH-GREETING-01]
 practises:
   knowledge: [PA-LEX-SAT-SRI-AKAL-01]
-skills: [listening, speaking]
+skills: [listening, speaking, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: respectful
@@ -57,6 +57,18 @@ being-and-truth family remembered by English **sooth** and **soothsayer**.
 This is specifically a Sikh greeting, often said with folded hands. Do not treat
 it as a generic label for every Punjabi speaker. The next lesson gives a broader
 pan-Indian greeting.
+
+## Writing — let your finger meet one shape
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Here is the first printed shape of the greeting's written form: **ਸ**. Follow
+that shape once with your finger while you say *sat srī akāl*.
+
+Do not write it yet, and do not try to read it. This first pass only lets your
+eye, ear, and hand meet the same greeting together. Later script lessons teach
+how each Gurmukhi shape is made; tracing a typeface here does not claim a
+handwriting stroke order.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->

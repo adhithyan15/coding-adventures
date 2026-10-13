@@ -13,7 +13,8 @@ gloss: "a visit"
 concept_tag: GE-THING226-BESUCH
 prerequisites: [GE-C226-begruessung, GE-C226-beschreibung]
 sounds: []
-roots: []
+roots: [germanic-sokijana]
+etymology_hook: "Besuch — the noun of besuchen 'to visit': a seeking out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C226-beschreibung]
 <!-- hl-knowledge: introduces=[GE-LEX-C226-THING226-05]; assesses=[] -->
 
 **der Besuch** — "a visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Besuch** is the noun of *besuchen*, "to visit", which is *be-* + *suchen*, "to seek" (EtymDB 2.1): a seeking out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

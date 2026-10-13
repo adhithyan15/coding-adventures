@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C129-kawaii-type",
-              "prompt": "Type the Japanese for 'cute'.",
+              "prompt": "Say the Japanese for 'cute'.",
               "assesses": [
                 "JA-LEX-C129-QUAL129-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C129-shitsukoi-type",
-              "prompt": "Type the Japanese for 'persistent'.",
+              "prompt": "Say the Japanese for 'persistent'.",
               "assesses": [
                 "JA-LEX-C129-QUAL129-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C129-yakamashii-type",
-              "prompt": "Type the Japanese for 'noisy'.",
+              "prompt": "Say the Japanese for 'noisy'.",
               "assesses": [
                 "JA-LEX-C129-QUAL129-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C129-atsukamashii-type",
-              "prompt": "Type the Japanese for 'shameless'.",
+              "prompt": "Say the Japanese for 'shameless'.",
               "assesses": [
                 "JA-LEX-C129-QUAL129-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C129-tanomoshii-type",
-              "prompt": "Type the Japanese for 'reliable'.",
+              "prompt": "Say the Japanese for 'reliable'.",
               "assesses": [
                 "JA-LEX-C129-QUAL129-05"
               ],

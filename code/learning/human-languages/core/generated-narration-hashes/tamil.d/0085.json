@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 85,
-  "sourceHash": "fnv1a64:2e0824ad7b105a1a",
+  "sourceHash": "fnv1a64:22ece0a9df5bca54",
   "lessonIds": [
     "TA-C85-avan-aval",
     "TA-C85-avargal",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch85.txt",
   "json": "tamil/narration/ch85.json",
-  "textHash": "fnv1a64:ef06fd2e819b6ffc",
-  "jsonHash": "fnv1a64:c3f1b4f52f24c1dd",
+  "textHash": "fnv1a64:35b29316fa327207",
+  "jsonHash": "fnv1a64:9f4bcad278469305",
   "findings": []
 }

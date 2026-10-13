@@ -13,7 +13,8 @@ gloss: "a difference"
 concept_tag: IT-COSE252-DIFFERENZA
 prerequisites: [IT-C251-nuora, IT-C251-fidanzato]
 sounds: []
-roots: []
+roots: [differre-latin]
+etymology_hook: "differenza ← Latin differentia, from differre 'to differ' — English difference"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C251-fidanzato]
 <!-- hl-knowledge: introduces=[IT-LEX-C252-COSE252-01]; assesses=[] -->
 
 **la differenza** — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**differenza** ← Latin *differentia*, "difference" — a learned borrowing. EtymDB 2.1 has no row for *differenza*; it derives Portuguese *diferença* and Old French *difference* from *differentia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

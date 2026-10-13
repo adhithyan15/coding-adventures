@@ -1,5 +1,67 @@
 # Changelog
 
+## Added — every word lesson says where its word comes from
+
+HL24 §9 asks every lesson that introduces a word to say where it comes from, from a cited source, or to say plainly that the origin is uncertain. All 1,153 Portuguese lessons that lacked an `etymology_hook`, visible etymology, or both now have both (human-language-data: Portuguese word lessons without a hook 1142 → 0, without visible etymology 1141 → 0).
+
+- **Sources.** EtymDB 2.1 (Fourrier & Sagot 2020, "Methodological Aspects of Developing and Managing an Etymological Lexical Resource: Introducing EtymDB-2.0", LREC 2020), licensed CC BY-SA 4.0. Where EtymDB has no row for a certain textbook Latin form, it is cited from Lewis & Short, *A Latin Dictionary* (Perseus Digital Library `lexica`, CC BY-SA 4.0). Each statement is a sentence of our own; no dataset file is in the repository. A tag names only the source that supports the fact and sits beside the etymon it supports: "**braço** ← Latin *bracchium*, "arm" (EtymDB 2.1) — inherited." Where EtymDB has no ancestor row for the word, the line says so and traces it through the rows for its sister words: "EtymDB 2.1 traces it only to Old Portuguese *febre*; it derives Italian *febbre* and Catalan *febre* from *febris*." Well-established facts that neither source holds (a Portuguese sound change, an English cousin, a word built from visible parts) carry no tag.
+- **The visible statement.** A `## The word, taken apart` block (`## The phrase, taken apart` for phrase lessons) follows the block that introduces the word. Twelve chapter 1–4 lessons that already told the story in their body gained only the hook. Eleven lessons whose hook was not etymology (*Tudo bem?*, *tenho falado*, *ser*, *há três anos*, *ter que*, both *esperar* lessons, *encontrar-se*, *sexto*, *nono*, *décimo*) gained a block, and their hooks were rewritten to state the origin in 120 characters or fewer.
+- **What the 1,153 say.** 463 inherited from Latin; 219 learned or semi-learned borrowings from Latin or from Greek through Latin, marked as learned wherever the regular Portuguese changes are missing (*remédio* and *voto* keep the *-d-* and *-t-*, *feliz* the *-l-*, *honesto* the *-n-*, *procurar* the *-c-*, *piscina* the *-sc-*; *refeição* and *eleição* are semi-learned, with the popular *-ct-* > *-iç-*; and *décimo*, *exemplo*, *plano*, *férias*, *tradição* sit beside inherited twins); 138 borrowed, with the donor named — French and Old French 66, Italian 16, Arabic and Andalusian Arabic 13, Spanish 8, English 8, Catalan and Old Catalan 5, Provençal 4, Gothic, Frankish and other Germanic 9, and one each from Malay, Turkish, Taíno, a Bantu language, a West African language and a German coinage, with three where the donor is one of two neighbours (*vulcão* came through Italian *vulcano* or Spanish *volcán*); 271 built from visible parts or from an earlier word (*guarda-chuva*, *pequeno-almoço*, *-mente* adverbs, *-dor* and *-eiro* nouns). 62 say the origin is uncertain or disputed: 30 give the usual account with a hedge (*barriga* "probably" from *barrica*, *pato* "probably" from Andalusian Arabic *baṭṭ*, *até* "usually traced" to Arabic *ḥattā*, as the chapter 4 lessons now also say), six name the competing accounts (*garfo*, *trovão*, *apenas*, *matar*, *pescoço*, *tambor*), and 26 (*frango*, *faca*, *morango*, *fato*, *borboleta*, *coruja*, *tirar*, *bacalhau* and others) say plainly that the origin is uncertain, each a genuinely open question rather than a gap in the search.
+- **Regular sound changes are shown where they teach.** Latin *pl-*, *cl-*, *fl-* → *ch-* (*chorar*, *chamar*, *chave*, *chão*, *cheio*, *chuva*, *chama*); lost *-l-* and *-n-* between vowels (*dor*, *saúde*, *céu*, *mau*, *areia*, *lã*, *cão*, *rã*); *-ct-* → *-it-* (*peito*, *estreito*, *oitenta*, *suspeitar*).
+- **No forward references.** Where an origin runs through a Portuguese word a later lesson teaches, the block describes it in English ("built from the verb 'to cross'") instead of naming it.
+- **Rows rejected.** 233 EtymDB rows or labels were rejected rather than repeated. 144 labelled a loan or a learned word "inherited" (French *jardim*, *loja*, *comboio*, *gravata*; Arabic *laranja*, *aldeia*, *xarope*; learned *estômago*, *museu*, *teatro*, *último*, *voto*, *traduzir*); 13 linked a homograph (*colher* "spoon" to *colligere* "to gather", *canto* "corner" to *cantus* "song", *quintal* to Arabic *qinṭār*, *metro* to French *mètre*, *molho* "sauce" to the *molho* "bundle"); the rest were wrong parents (*rio* ← *reus*, *peito* ← *pactum*, *quilo* ← *chylus*, *tijolo* through a Spanish "yew") or derivation rows listing unrelated words.
+- **`roots:`** 940 lessons gained a Latin etymon slug: 576 reuse a slug another lesson already uses, so cousins join (`pluvia-latin`, `plicare-latin` for *chegar*, *prego*, *empregado*, *complicado* and *explicar*), and 289 slugs are new. `livre` joins Spanish *libre* on `liber-free-latin`, not *libro*'s `liber-latin`; *aparecer* and *parecer* use `apparere-latin`, never the `parere` of "to give birth". `check:root-slug-splits` reports no new split.
+- **Durations.** The blocks add a median of 11 narrated seconds. Nine lessons have `max_seconds` raised to their computed length, all under 300 s: PT-C02-tudo-bem 234 → 258, PT-C15-tenho-falado 262 → 279, PT-C16-ser 149 → 170, PT-C21-esperar-hope 125 → 134, PT-C28-nono 250 → 263, the three chapter 4 *até* lessons whose Arabic origin is now hedged (PT-C04-ate-logo 189 → 197, PT-C04-ate-amanha 160 → 161, PT-C04-ate-breve 141 → 143), and PT-C02-practice 204 → 213, which gained only a hook and was already computed above its budget.
+
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 102 → 34: sixty-five reworded or rebuilt, two cleared by mending a headword, one by a decomposition equation.
+
+- **Teasers said in English.** Chapter 1's openers name "good morning," "good afternoon" and "good night" instead of printing the greetings a few lessons early; PT-C01-bom teaches *bom* before a masculine noun and *boa* before a feminine one, and leaves *bom dia* against *boa tarde* to PT-C01-tarde, which already explains it. PT-C01-bom-dia's practice line for the day's arc moves to PT-C01-noite, where all three greetings are known. Every "Next: **…**" pointer in chapters 2–13 (*como*, *tudo*, *prazer*, *me chamo*, *até logo*, *até breve*, *morar*, *trabalhar*, *Falo português*, *sábado/domingo*, *estações*, *irmão/irmã*, *água/vinho*, *vermelho*) now names the next thing in English.
+- **Verbs named before their chapter.** PT-C02-como and PT-C02-como-vai-esta describe *Como vai?* and *Como está?* by "the verb 'to go'" and "'to be / to stand'"; PT-C14-ter says *habēre*'s descendant was demoted without naming *haver*; PT-C14-idade says "a 'to be' verb is wrong here"; PT-C16-ser and PT-C16-ser-roots speak of "the other verb for 'to be'" and "the verb 'to go'"; PT-C03-eu and PT-C03-me-chamo point at the next lesson instead of quoting it.
+- **Examples rebuilt from owned words.** PT-C06-numeros-1-5 counts *um dia, uma noite* and *dois dias, duas noites*; PT-C06-numeros-6-10's *-ct- → -it-* set is *oito, noite, feito*; PT-C16-ser-vs-estar says *A água está fria*; PT-C19-escrever's propped-up *e-* list ends on *espaço*; PT-C20-tomar-pegar says *Tomo água*, PT-C20-perguntar *peço água*, PT-C20-gostar *Gosto de pão* (so PT-C23-cafe's *Gosto de café* is the first); PT-C22-encontrar and PT-C22-encontrar-meet find *o pão*. PT-C03-practice closes its chained meeting on *Prazer!* and says the goodbyes come next, instead of borrowing chapter 4's *Até logo!*.
+- **A table read by its endings.** PT-C15-tenho-falado sets out *-ar → -ado*, *-er → -ido*, *-ir → -ido* with an example participle each; the bold *-ir* ending had read as the verb *ir*.
+- **A headword the splitter could not read.** PT-C07-dias-1's headword `sexta(-feira)` is now `sexta, -feira`, so the lesson is credited with the *sexta* it teaches.
+- **A decomposition written as one equation.** PT-C34-dor builds *dor* + *de* + *cabeça* → *dor de cabeça* from words already taught.
+- **Chapter summary and roadmap follow.** Chapter 6's summary hears the *-it-* of *oito, noite and feito*; the roadmap's chapter 2, 6, 14, 16, 19 and 20 notes match the lessons.
+- **An etymology corrected.** PT-C02-como-vai-esta said *vai* comes from *īre*. It comes from *vādere* (as PT-C18-ir says); the infinitive is the part from *īre*.
+- **Another etymology corrected.** PT-C20-gostar no longer says Latin said *gustāre de*: Latin *gustāre* took a plain object, and Portuguese added the *de* of *gostar de*. The roadmap follows. PT-C02-como-vai-esta lists *vādere* among its roots.
+- **A pointer and ten durations.** PT-C01-practice says introductions come in two chapters, not the next. Ten lessons whose prose grew declare 1–8 seconds more (`max_seconds`), the longest now 263s.
+
+The 34 left are phrases taught whole whose words a much later lesson teaches alone — *Como se chama?* (and *Como se diz…?*), *até logo / até amanhã / até breve*, *de nada*, *a pasta de dentes*, *ao lado* / *noutro lado*, *o fim de semana*, *a partir de agora*, *deitar fora*, and the *ser vs. estar* headword — plus two that are not Portuguese borrowing at all: the verb *chama* against PT-C195's *a chama*, "a flame", and the English gloss "pasta" of *a massa*.
+
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **PT-ETYMON-ESCREVER-03** → PT-C21-esperar. Its taken-apart block already explains the prop-up *e-* "in the same way that **escrever** grew from Latin *scrībere*" (R2). This was already practised and not declared.
+- **PT-ETYMON-JOGAR-BRINCAR-TOCAR-03** → PT-C26-boca's warm-up. After "three ways to play" it now asks which one plays with Latin *iocus* (a joke) and which one strikes (*tocar*, English *touch*) (R2).
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **PT-C06-numeros-6-10**, **PT-C07-dias-2**: the Latin source sits beside its Portuguese word.
+- **PT-C08-meio-dia-meia-noite**: `Portuguese = its parts | ← Latin | literally`. "And look at **noite**" is now "And now take **noite**".
+- **PT-C12-numeros-16-20**: the numeral is in the word cell, as in PT-C12-numeros-11-15.
+- All four lessons can now be done by ear.
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **PT-C02-tudo** → PT-C02-como and PT-C01-bom: its `reviews_of`, and the answer *Tudo bom*.
+- **PT-C03-eu** → PT-C02-tudo-bem: "*Eu* estou bem, e você?" reuses the *e você?* that lesson teaches.
+- **PT-C04-adeus** → PT-C02-practice: "You can greet, ask *tudo bem?*, and reply", and its `reviews_of`.
+- **PT-C06-numeros-1-5** → PT-C05-practice, its `reviews_of`. That closure also holds the *bom* its nasal-*um* note cites.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **Four etymology tables** (PT-C06-numeros-1-5, PT-C07-dias-1, PT-C09-meses, PT-C12-numeros-11-15) are now three labelled columns: the Latin source beside the Portuguese word, the ordinal beside its cardinal, and the numeral in the word cell. Every value is kept, and the narrator reads them.
+- Hands-free prefixes, each 0 before: chapter 6 → 1 of 2, 7 → 1 of 2, 9 → 2 of 2, 12 → 1 of 2.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

@@ -13,7 +13,8 @@ gloss: "to invite"
 concept_tag: IT-VERB-INVITARE
 prerequisites: [IT-C174-salutare, IT-C174-ringraziare]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "invitare ← Latin invitare 'to invite' — English invite is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C174-ringraziare]
 <!-- hl-knowledge: introduces=[IT-LEX-C174-VERBI174-05]; assesses=[] -->
 
 **invitare** — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invitare** ← Latin *invitare*, "to invite" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

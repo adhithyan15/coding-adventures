@@ -13,7 +13,8 @@ gloss: "departure"
 concept_tag: FR-CHOSES231-DEPART
 prerequisites: [FR-C231-retour, FR-C231-arrivee]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "départ — from Old French departir 'to divide, to go away' — English depart"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C231-arrivee]
 <!-- hl-knowledge: introduces=[FR-LEX-C231-CHOSES231-03]; assesses=[] -->
 
 **le départ** — "departure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**départ** — formed from Old French *departir*, "to divide, to go away", from *de-* and Old French *partir*, "to share out", ← Latin *partire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

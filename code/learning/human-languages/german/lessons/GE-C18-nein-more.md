@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-ETYMON-NEGATION-05, GE-LEX-NEIN-02]
+  knowledge: [GE-ETYMON-NEGATION-05, GE-LEX-NEIN-02, GE-ETYMON-NEIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [GE-C18-nein]
 [PAUSE 2s] Before going on: say **nein** again, and what it means.
 
 ## Why it's said this way: One "no" runs across the whole chain
-<!-- hl-knowledge: introduces=[GE-ETYMON-NEGATION-05]; assesses=[] -->
+<!-- hl-knowledge: introduces=[GE-ETYMON-NEGATION-05]; assesses=[GE-ETYMON-NEIN-04] -->
 
 That **n‑** at the front is not a coincidence. A single ancient sound — linguists
 write it **PIE \*ne** — is the negator behind an astonishing sweep of languages

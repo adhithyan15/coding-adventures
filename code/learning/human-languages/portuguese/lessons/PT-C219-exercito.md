@@ -13,7 +13,8 @@ gloss: "an army"
 concept_tag: PT-COISAS219-EXERCITO
 prerequisites: [PT-C219-guerra, PT-C219-paz]
 sounds: []
-roots: []
+roots: [exercere-latin]
+etymology_hook: "exército ← Latin exercitus 'army', from exercere 'to train' — English exercise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C219-paz]
 <!-- hl-knowledge: introduces=[PT-LEX-C219-COISAS219-03]; assesses=[] -->
 
 **o exército** — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exército** ← Latin *exercitus*, "a trained body, an army" (EtymDB 2.1), from *exercere*, "to train" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

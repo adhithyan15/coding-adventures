@@ -3,7 +3,8 @@
   "spine_node": "SPINE-TIME-OF-DAY",
   "before": [],
   "inline": [
-    "TA-EXT-016-LANGUAGE-SPECIFIC"
+    "TA-EXT-016-LANGUAGE-SPECIFIC",
+    "TA-EXT-016-CONSOLIDATION"
   ],
   "after": []
 }

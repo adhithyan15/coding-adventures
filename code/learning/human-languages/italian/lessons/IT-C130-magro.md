@@ -13,7 +13,8 @@ gloss: "thin"
 concept_tag: IT-QUALITA130-MAGRO
 prerequisites: [IT-C130-leggero, IT-C130-pesante]
 sounds: []
-roots: []
+roots: [macer-latin]
+etymology_hook: "magro ← Latin macer 'lean, thin' — English meagre is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C130-pesante]
 <!-- hl-knowledge: introduces=[IT-LEX-C130-QUALITA130-05]; assesses=[] -->
 
 **magro** — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magro** ← Latin *macer*, "lean, thin" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

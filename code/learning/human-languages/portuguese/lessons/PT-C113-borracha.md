@@ -14,6 +14,7 @@ concept_tag: PT-ESCOLA113-BORRACHA
 prerequisites: [PT-C113-palavra, PT-C113-quadro]
 sounds: []
 roots: []
+etymology_hook: "borracha — first a leather wine flask, then rubber; its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C113-quadro]
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-03]; assesses=[] -->
 
 **a borracha** — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**borracha** first meant a leather flask for wine, and the name passed to rubber. Its origin is uncertain; Spanish *borracha*, "wineskin", is the same word (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

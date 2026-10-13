@@ -1,5 +1,97 @@
 # Changelog
 
+## Added — every word lesson says where its word comes from
+
+The 1,045 generated word lessons (FR-C49-bras through FR-C257-anniversaire, in sequence order) now carry both an `etymology_hook` and a visible `## The word, taken apart` block (`## The phrase, taken apart` for multi-word headwords), placed after the block that introduces the word. Seven earlier hand-written lessons that the measure missed gained the half they lacked: FR-C07-dimanche, FR-C08-il-est, FR-C14-avoir-etre-langues and FR-C15-areal a short taken-apart block, and FR-C21-le-temps-more, FR-C22-chien-chat-more and FR-C23-vert-jaune-more a hook. Every French word lesson now says where its word comes from (human-language-data: French word lessons without a hook 1048 → 0, without visible etymology 1049 → 0).
+
+- **Sources.** EtymDB 2.1 (Fourrier & Sagot 2020, LREC; CC BY-SA 4.0), cross-checked row by row, and Lewis & Short, *A Latin Dictionary* (Perseus Digital Library `lexica`, CC BY-SA 4.0), for textbook Latin forms EtymDB lacks. Both were read locally and nothing is vendored; every line is our own sentence. A tag sits beside the fact its source holds: "(EtymDB 2.1)", "(Lewis & Short)", "(EtymDB 2.1 records the Latin word.)", or "EtymDB 2.1 traces Italian *gamba* to the same Late Latin word" where the French word has no row and a sister word does. 767 blocks cite EtymDB and 201 cite Lewis & Short (41 cite both); 86 take the word apart into words already taught (*soixante-dix*, *salle de sport*, *dentiste*); 36 state a well-known modern origin with no tag (*poubelle* after Eugène Poubelle, *bébé* from English, *courriel* from Quebec).
+- **Answers.** Of the 1,045: 388 inherited, 194 learned or semi-learned borrowings, 107 borrowed from another language (Frankish, Italian, Old Provençal and Occitan, English, Arabic, Spanish, Middle Dutch, Old Norse, Breton, Gaulish, Nahuatl, Quechua, Turkish, Hindi), 259 built in French from parts, 71 compounds and phrases, 8 named after a person or a thing (*renard*, *pantalon*, *poubelle*, *cravate*, *gaz*), and 18 that say the origin is uncertain and give the usual account (*cochon*, *lapin*, *encore*, *brûler*, *se fâcher*).
+- **French sound change decides inherited against learned.** Inherited words show the changes (*mer* < *mare*, *chambre* < *camera*, *toit* < *tectum*, *coude* < *cubitus*); words without them are learned (*carte* beside the worn-down word for "charter", *hôpital* beside *hôtel*, *salaire*, *piscine*). Doublets are named only when both are taught (*hôtel* and *hôpital*, *sûr* and *sécurité*); otherwise they are described in English.
+- **Rows checked, not copied.** 57 EtymDB rows were rejected: homographs (*coude* ← *code*, *rue* ← *ruta*, *sable* the marten, *fil* ← *filius*, *lèvre* ← *lepus*), wrong parents (*genou* ← *vous*, *femme* ← *fama*, *usine* ← *user*) and junk derivations (*se dépêcher* ← *quod erat demonstrandum*). 30 loans or Latinisms labelled inherited are given as borrowed, learned or semi-learned (*utiliser*, *dessiner*, *riz*, *caisse*, *musée*, *salaire*, *école*, *église*). 266 words had no usable row of their own and were traced through sister words or Lewis & Short.
+- **No forward references.** Every French word a block or hook names was checked by script against the sequence of the lesson that teaches it; a part not yet taught is described in English ("the French word for 'fist'").
+- **Roots.** 671 lessons gained or extended `roots:`, reusing the corpus's existing spelling of each etymon (`habere-latin`, `vita`, `cochlearium-latin`, `latin-respondere`); 40 slugs are new `<lemma>-latin`. `check:root-slug-splits` reports no new split.
+- **Review corrections.** *chanteur* comes from Latin *cantator*, not *cantor* (which gave the word for a precentor); *clair* shows stressed *a* > *e*, with *ai* a later Latinising spelling; a *cochlear* was a spoon for picking snails from their shells; *école*, *église*, *leçon* and *papillon* are semi-learned and *impôt* learned, while *jus* and *tenter* are inherited; *courage* is Old French *cuer* + *-age*; *coude* lost its *b* after the *i* fell (*\*cobdo*); Old French *eschele* for *échelle*; *lait* from *lac*, *lactis*; *donc* from attested Late Latin *dunc*; reconstructions such as *\*gurga* and *\*riparia* starred; and twenty-one EtymDB tags moved next to the etymon so they no longer cover a sound change, a date or a story.
+- **Durations.** The generated lessons compute at 73–117 s against their declared 200. Four hand-written lessons declare more time (`max_seconds`): FR-C07-dimanche 200 → 245, FR-C08-il-est 200 → 215, FR-C14-avoir-etre-langues 200 → 250, FR-C15-areal 210 → 275. Three of the four were already over their declared figure before this change.
+
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 156 → 52: eighty-nine reworded or rebuilt, five left to the lesson that teaches the word, eight cleared by mending a headword, two by a decomposition equation.
+
+- **Teasers said in English.** Chapter 1's openers name "good day," "good evening" and the night greeting instead of printing them a few lessons early; FR-C01-bien leaves *bon* to the next lesson and drops *très bien*; FR-C01-le-la drills the articles alone. Every "Next: **…**" pointer in chapters 1–5 (*bonjour*, *bonsoir*, *je m'appelle*, *tu / vous*, *de rien*, the four goodbyes, *habiter*, *travailler*, *Je parle français*) now names the next thing in English, and FR-C04-practice says the next chapter is the first verbs, which it is (it promised numbers or *s'il vous plaît*).
+- **Examples rebuilt from owned words.** FR-C02-je shows the elision as a bare *j'*, not *j'ai*; FR-C03-practice, FR-C03-comme-ci-comme-ca and FR-C04-practice answer *Bien, merci*; FR-C04-a-demain hears *-ain* as the nasal of *bien*; FR-C05-practice asks *Tu habites à Lyon ?* and answers *Oui, je parle français*; FR-C08-midi says "twelve hours" in English; FR-C24-aimer drops *beaucoup*; FR-C28-sucre contradicts *Vous ne voulez pas le sucre ?*; FR-C30-beurre says *Désolé, je n'ai pas le beurre*; FR-C16-bascule takes out *le vin*; FR-C36-parce-que says *parce qu'il est midi*; FR-C38-consonne-finale and FR-R38 hear silent finals in *salut, deux, trois, nuit*; FR-C38-feminin-e pairs *petit* with *vert*; FR-C38-pluriel-x's invariable plural is *le nez, les nez*.
+- **Spelling, not words.** The letter pairs that are also words are spelled out as letters — *o-u* in FR-C01-jour, FR-C12-douze and FR-C13-rouge, *a-u* in FR-C09-automne and FR-W03-trema — so the sound notes stop naming *ou* "or" and *au* "to the".
+- **The writing lessons.** FR-W01-accents no longer says the learner has read *très*; its grave-accent words are *première* and *Genève*, its only look-alike pair is *a / à*, and the circumflex table loses *être*. FR-W03-trema shows *maïs* blending to *meh* without the dots instead of naming *mais*. FR-C10-oe lists *sœur* and *cœur* and names the egg and the eye in English.
+- **The months through English.** FR-C06-sept, -huit and -neuf drill and recall *September*, *October* and *November*; the French month names stay in the taken-apart blocks and in FR-C06-mois-romains.
+- **Verbs named before their chapter.** FR-C14-jai-vingt-ans, FR-C14-practice and FR-C14-ont say "to be" and "they are" in English; the *ils ont / ils sont* drill is left to FR-C16-sont, which already teaches it. FR-C15-participe-ir-re and FR-C15-practice-compose show the participles *fini* and *vendu* without their infinitives; FR-C15-parler-parle-parlez says "want to"; FR-C16-pas-tout-mouvement and FR-C16-practice-etre-past list *j'ai marché, j'ai couru* and say "to run". FR-C15-passe-simple's English café is an English pub.
+- ***Parce que* left to its lesson.** FR-C32-pourquoi taught *parce que* four chapters before FR-C36-parce-que, which opens "Nothing you own can answer it." It now says the answer has a lesson of its own.
+- **A headword the splitter could not read.** FR-C08-il-est's headword `il est … heures` is now `il est, … heures`, so the lesson that teaches *il est* as one piece is credited with it.
+- **Two decompositions written as equations.** FR-C27-se-lever builds *de* + *bout* → *debout*; FR-C32-pourquoi builds *pour* + *quoi* → *pourquoi*.
+- **Macrons.** FR-C04-a-demain's practice line writes *dē māne*, as its taken-apart block does.
+- **Chapter summaries follow.** Chapter 12's summary has œ in *sœur* and *cœur*; chapter 17's says "never 'to be'"; chapter 20's says motion verbs like running take *avoir*.
+- **Durations.** Ten lessons whose prose grew declare more time (`max_seconds`): FR-C01-salut 180 → 198, FR-C04-a-plus-tard 232 → 249, FR-C05-habiter 191 → 193, FR-C05-parler 248 → 267, FR-C06-neuf 185 → 191, FR-C08-midi 205 → 213, FR-C13-rouge 200 → 214, FR-C14-jai-vingt-ans 210 → 212, FR-C14-practice 230 → 249, FR-C15-parler-parle-parlez 200 → 206. Most were already over their declared figure before this change.
+
+The 52 left are phrases taught whole whose words a much later lesson teaches alone — *de rien*, *à plus tard*, *au revoir*, *et vous ? / et toi ?*, *et quart / et demie*, *au printemps*, *du pain, de l'eau*, *j'ai vingt ans*, *passé simple*, *les lettres que j'ai écrites*, *j'ai mal au ventre*, *C'est combien ? / combien de*, *est-ce que*, *la pomme de terre*, *remplir un formulaire*, *offrir un cadeau* — the *être / ser · estar* comparison headword that credits *être* after the chapter that conjugates it, two uses of *au* after the grammar lesson FR-C35-au-aux, and two that are not French borrowing at all: the war-god Mars against *mars*, "March", and the English gloss "to vote" against *le vote*.
+
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **Already practised, now declared:** FR-ETYMON-SEL-06 in FR-C30-oeuf and FR-C31-nez ("exactly like *sel* and *salt*"). FR-ETYMON-OEUF-08 in FR-C31-nez ("*sel*/*salt* and *œuf*/*egg*"). FR-ETYMON-SUCRE-08 in FR-C30-sel ("not borrowed like *café* or *sucre*"). FR-ETYMON-BEURRE-04 in FR-C30-sel's warm-up ("*Beurre* was one word borrowed twice").
+- **New spoken recalls:** FR-ETYMON-LEVER-05 and FR-ETYMON-FERMER-11 open FR-C28-cafe's warm-up: *levis*, "light", and a Roman door made **firm**, both in R1. FR-ETYMON-PERSONNE-09 goes in FR-C30-fromage's warm-up: the theatre **mask**, and *ne … personne* = nobody (R1).
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **FR-C01-nuit**: the *-ct-* sound-change table is `Latin | Spanish / French | English`, with the two descendants side by side in one cell ("noche / nuit"). The lesson's core can now be done by ear, and "once you see the rules" is now "once you know the rules".
+
+## Fixed — FR-C03-aller reviews the lesson it builds on
+
+`reviews_of` named FR-C03-merci, which comes after *aller* in the course path
+and which the lesson never mentions. *Aller* answers the "how are you"
+question FR-C02-comment taught, so that is the lesson it now reviews.
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **FR-C02-je** → FR-C01-bonjour, the lesson its `reviews_of` says it resurfaces.
+- **FR-C03-aller** → FR-C02-comment: its recall asks what *Comment ça va?* literally asks. Its `reviews_of`, FR-C03-merci, comes after it in curriculum.json, so it cannot be named.
+- **FR-C03-merci** → FR-C02-practice: "You can introduce yourself in French", and its `reviews_of`.
+- **FR-C04-au-revoir** → FR-C03-practice and FR-C01-soir: "You can open a French conversation", its `reviews_of`, and the *-voir* sound note that cites *soir*.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **FR-C02-je**: "You'll see the same squeeze" is now "You'll meet the same squeeze".
+- **FR-C05-parler**: the -er table folds each ending into its form ("**-e**: **je parle**"). It keeps its person column, so it is three labelled columns and is read aloud.
+- **FR-C64-regarder**: the title's gloss is quoted, "to look at, to watch".
+- Hands-free prefixes: chapter 2 0 → 9 of 9, chapter 5 0 → 5 of 5, chapter 64 0 → 1 of 5.
+
+## Added — lesson one begins writing with a finger trace
+
+FR-C01-salut gains a detachable "Writing — trace the silent t" block
+(`observe-trace`): with **salut** visible, the learner traces only its
+final **t** once, then says *sa-LU*, stopping on the **u**. This is the silent
+final consonant the lesson's sounds section already teaches, now noticed by
+hand. The next lesson, FR-W01-salut-observe, traces the whole word. The lesson
+declares the `writing` skill. Writing practice starts at lesson one instead of
+lesson two, and the gentle-ramp `writing-ramp` finding (1 opening lesson) is
+cleared. The lesson's core stays `voice`, because a hands-free run defers the
+Writing block.
+
+## Added — accent, cedilla and tréma lessons print stroke-order filmstrips
+
+FR-W01-accents (é è ê), FR-W02-cedille (ç) and FR-W03-trema (ï ë ü) now print
+a strip (3 -> 6 French lessons). é and ü were already cited; è, ê, ç, ï and ë
+are drawn BY ANALOGY with them, not from a source of their own, and their
+records in `data/scripts/latin.json` say so: the letter as the
+Grundschrift-App writes it, then the mark last (the grave down to the right,
+the circumflex up and down in one stroke, the cedilla down from the c's foot
+and round, the two dots left first). FR-C10-oe (œ) stays undrawn: œ is a
+ligature, not a letter plus a mark, so the analogy does not cover it.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

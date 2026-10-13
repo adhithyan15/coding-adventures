@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 197,
-  "sourceHash": "fnv1a64:1cb58f99eb908d6b",
+  "sourceHash": "fnv1a64:13c68090cf40cddc",
   "lessonIds": [
     "IT-C197-consiglio",
     "IT-C197-promessa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch197.txt",
   "json": "italian/narration/ch197.json",
-  "textHash": "fnv1a64:024691da7b42aa8d",
-  "jsonHash": "fnv1a64:e952e364aec03212",
+  "textHash": "fnv1a64:4349d8bd54b43eda",
+  "jsonHash": "fnv1a64:80fdfb72ddef7ec5",
   "findings": []
 }

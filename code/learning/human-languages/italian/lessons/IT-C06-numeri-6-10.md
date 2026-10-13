@@ -49,13 +49,13 @@ Latin double consonants that show it.
 ## The numbers, taken apart
 <!-- hl-knowledge: introduces=[IT-ETYMON-NUMERI-6-10-03]; assesses=[] -->
 
-| Italian | ← Latin | Spanish twin | English cousins |
-|---|---|---|---|
-| **sei** (6) | *sex* | *seis* | **sextet, sextant** |
-| **sette** (7) | *septem* | *siete* | **settembre** (the *7th* month!), septet |
-| **otto** (8) | *octō* | *ocho* | **ottobre** (8th), **octave, octopus** |
-| **nove** (9) | *novem* | *nueve* | **novembre** (9th), novena |
-| **dieci** (10) | *decem* | *diez* | **dicembre** (10th), **decimal, decade** |
+| Italian ← Latin | Spanish twin | English cousins |
+|---|---|---|
+| **sei** (6) ← *sex* | *seis* | **sextet, sextant** |
+| **sette** (7) ← *septem* | *siete* | **settembre** (the *7th* month!), septet |
+| **otto** (8) ← *octō* | *ocho* | **ottobre** (8th), **octave, octopus** |
+| **nove** (9) ← *novem* | *nueve* | **novembre** (9th), novena |
+| **dieci** (10) ← *decem* | *diez* | **dicembre** (10th), **decimal, decade** |
 
 Watch the doubled consonants do historical work: Latin *septem* had a *-pt-* that
 Italian smoothed to *-tt-* → **sette**; Latin *octō* had a *-ct-* that likewise

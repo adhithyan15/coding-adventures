@@ -9,7 +9,7 @@ headword: પાછા
 romanization: "pāchhā"
 gloss: again, back
 concept_tag: GU-WORD-PACHHA
-prerequisites: []
+prerequisites: [GU-C01-aavjo]
 sounds: [long-aa, chh]
 roots: [pashcha-behind]
 duration:

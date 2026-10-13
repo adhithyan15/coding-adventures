@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 62,
-  "sourceHash": "fnv1a64:d7b30687c963824b",
+  "sourceHash": "fnv1a64:11d0d4d39f9de439",
   "lessonIds": [
     "PT-C62-cobra",
     "PT-C62-galinha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch62.txt",
   "json": "portuguese/narration/ch62.json",
-  "textHash": "fnv1a64:f1c59861091e8ad6",
-  "jsonHash": "fnv1a64:545c12187b3b26a4",
+  "textHash": "fnv1a64:31c49d3c72f60816",
+  "jsonHash": "fnv1a64:f4646305269a8bef",
   "findings": []
 }

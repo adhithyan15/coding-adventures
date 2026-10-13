@@ -13,7 +13,8 @@ gloss: "a volcano"
 concept_tag: PT-NATUREZA117-VULCAO
 prerequisites: [PT-C116-rocha, PT-C116-onda]
 sounds: []
-roots: []
+roots: [vulcanus-latin]
+etymology_hook: "vulcão ← Italian vulcano or Spanish volcán, from Latin Vulcanus, the god of fire — English volcano"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C116-onda]
 <!-- hl-knowledge: introduces=[PT-LEX-C117-NATUREZA117-01]; assesses=[] -->
 
 **o vulcão** — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vulcão** — borrowed through Italian *vulcano* or Spanish *volcán*. Behind them is Latin *Vulcanus*, the god of fire (EtymDB 2.1): a fire-breathing mountain was named after the god.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

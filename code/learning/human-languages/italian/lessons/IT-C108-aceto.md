@@ -13,7 +13,8 @@ gloss: "vinegar"
 concept_tag: IT-CIBO108-ACETO
 prerequisites: [IT-C108-panino, IT-C108-salsa]
 sounds: []
-roots: []
+roots: [acetum-latin]
+etymology_hook: "aceto ← Latin acetum 'vinegar', from acere 'to be sour' — English acetic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C108-salsa]
 <!-- hl-knowledge: introduces=[IT-LEX-C108-CIBO108-05]; assesses=[] -->
 
 **l'aceto** — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aceto** ← Latin *acetum*, "vinegar", from *acere*, "to be sour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

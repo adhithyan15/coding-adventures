@@ -14,7 +14,8 @@ romanization: "koṇṭu vā"
 concept_tag: TA-VERB-KONTU-VA
 prerequisites: [TA-C194-pori, TA-C194-picai]
 sounds: []
-roots: []
+roots: [dravidian-kol-take, dravidian-vaa-come]
+etymology_hook: "கொண்டு வா — native: koṇṭu, from koḷ 'to take' (DEDR 2151) + vā 'come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C194-picai]
 <!-- hl-knowledge: introduces=[TA-LEX-C195-ACT195-01]; assesses=[] -->
 
 **கொண்டு வா** — *koṇṭu vā* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொண்டு வா** (*koṇṭu vā*) is native: *koṇṭu*, "having taken", from *koḷ*, "to take" (DEDR 2151), and *vā*, "come" (DEDR 5270): "take and come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

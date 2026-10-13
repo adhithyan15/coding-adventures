@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: [GE-SENSE-BITTE-PLEASE-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04]
+  knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04, GE-ETYMON-BITTE-BITTEN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,7 +50,7 @@ become a complete, polite small request. The comma marks the little pause you
 will naturally hear before **bitte**.
 
 ## The word, taken apart: a request inside please
-<!-- hl-knowledge: introduces=[GE-ETYMON-BITTE-04]; assesses=[] -->
+<!-- hl-knowledge: introduces=[GE-ETYMON-BITTE-04]; assesses=[GE-ETYMON-BITTE-BITTEN-02] -->
 
 **Bitte** is the request form of **bitten**, “to ask, request, pray.” Its English
 cousins are **bid**—as in “I bid you welcome”—and **bead**, whose oldest meaning
@@ -59,7 +59,7 @@ was a prayer. A prayer bead was first the object used to count those requests.
 So when you add **bitte**, the word itself is already doing the asking.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04, GE-ETYMON-BITTE-BITTEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: “Wasser.” — water]

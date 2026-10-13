@@ -13,7 +13,8 @@ gloss: "an architect"
 concept_tag: PT-COISAS220-ARQUITETO
 prerequisites: [PT-C219-tradicao, PT-C220-jornalista]
 sounds: []
-roots: []
+roots: [architectus-latin]
+etymology_hook: "arquiteto ← Latin architectus, from Greek arkhitekton 'chief builder'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C220-jornalista]
 <!-- hl-knowledge: introduces=[PT-LEX-C220-COISAS220-02]; assesses=[] -->
 
 **o arquiteto** — "an architect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arquiteto** ← Latin *architectus*, "master builder" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *architektōn*, "chief builder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

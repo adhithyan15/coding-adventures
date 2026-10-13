@@ -13,7 +13,8 @@ gloss: "the right"
 concept_tag: FR-LIEU62-DROITE
 prerequisites: [FR-C109-ouest, FR-C109-boite-aux-lettres]
 sounds: []
-roots: []
+roots: [directus-latin]
+etymology_hook: "droite ← Latin directus 'straight' — -ct- became -it; English direct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C109-boite-aux-lettres]
 <!-- hl-knowledge: introduces=[FR-LEX-C110-LIEU62-01]; assesses=[] -->
 
 **la droite** — "the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**droite** is the feminine of the word for "right, straight", ← Latin *directus*, "straight" (Lewis & Short) — inherited: *-ct-* became *-it*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

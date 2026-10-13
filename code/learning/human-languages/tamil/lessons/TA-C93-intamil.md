@@ -11,7 +11,8 @@ romanization: "tamiḻil"
 concept_tag: TA-ASK-IN-TAMIL
 prerequisites: [TA-C92-wait, TA-C93-meaning]
 sounds: []
-roots: []
+roots: [tamizh]
+etymology_hook: "தமிழில் — native tamiḻ (DEDR 3080) + the locative -il 'in'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C93-meaning]
 **தமிழில்** (*tamiḻil*) — "in Tamil".
 
 **-இல்** is "in", added to the name of the language. **ஆங்கிலத்தில்** would be "in English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தமிழில்** (*tamiḻil*) is *tamiḻ*, native (DEDR 3080), with the locative *-il*, "in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

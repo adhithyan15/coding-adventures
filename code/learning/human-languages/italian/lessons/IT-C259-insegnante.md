@@ -13,7 +13,8 @@ gloss: "a teacher"
 concept_tag: IT-LAV259-INSEGNANTE
 prerequisites: [IT-C259-universita, IT-C259-voto]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "insegnante — 'teaching', from insegnare ← Medieval Latin insignare 'to mark'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C259-voto]
 <!-- hl-knowledge: introduces=[IT-LEX-C259-LAV259-03]; assesses=[] -->
 
 **l'insegnante** — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insegnante** is the present participle of *insegnare*, "to teach", used as a noun: one who teaches. *insegnare* ← Medieval Latin *insignare*, "to mark". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

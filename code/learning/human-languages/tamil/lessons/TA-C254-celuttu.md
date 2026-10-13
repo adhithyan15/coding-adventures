@@ -14,7 +14,8 @@ romanization: "celuttu"
 concept_tag: TA-VERB-CELUTTU
 prerequisites: [TA-C253-canrital, TA-C254-katan-vanku]
 sounds: []
-roots: []
+roots: [dravidian-cel-go]
+etymology_hook: "செலுத்து — native Dravidian (DEDR 2781); Malayalam celuttuka 'to pay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C254-katan-vanku]
 <!-- hl-knowledge: introduces=[TA-LEX-C254-ACT254-02]; assesses=[] -->
 
 **செலுத்து** — *celuttu* — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செலுத்து** (*celuttu*) is native Dravidian. DEDR 2781 lists Malayalam *celuttuka*, "to pay". It is the causative of *cel*, "to go": "make the money go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

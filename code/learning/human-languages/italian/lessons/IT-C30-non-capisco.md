@@ -13,7 +13,7 @@ sounds: [hard-c, s-voiceless]
 roots: []
 etymology_hook: "capire was taught with capisco given first in its paradigm, and non arrived one lesson ago; this phrase invents nothing"
 duration:
-  max_seconds: 250
+  max_seconds: 295
 requires:
   knowledge: [IT-GRAMMAR-NON-02, IT-ETYMON-NON-03, IT-LEX-NO-02, IT-ETYMON-NO-03, IT-LEX-CAFFE-02, IT-ETYMON-CAFFE-03, IT-NOTICE-CAFFE-04, IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04, IT-SOUND-ABITARE-02, IT-ETYMON-ABITARE-03, IT-GRAMMAR-ABITARE-04]
 introduces:
@@ -70,6 +70,11 @@ A slower and gentler version, for when you have caught some of it:
 > **Non capisco bene.** — I don't quite understand.
 
 *Bene* is the wellbeing chapter's, doing new work.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capisco** ← *capire* ← Latin *capere*, "to seize". (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-NON-CAPISCO-02] -->

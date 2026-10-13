@@ -54,7 +54,7 @@ a *chaqueta* is any short tailored jacket.
 | Spain | **la chaqueta** |
 | much of Latin America | **el saco**, **la campera**, **la chamarra** |
 
-Take the regional column seriously here. In Mexico and much of Central
+Take the regional split seriously here. In Mexico and much of Central
 America *chaqueta* carries a vulgar second sense, and the neutral word is
 *saco* or *chamarra*.
 
@@ -73,7 +73,7 @@ mail jerkin. Both are live; neither is proved.
 
 You already know Spanish will name a garment after its wearer — *los
 vaqueros* are the cowherd's trousers. If the Jacques account is right, *la
-chaqueta* is the same habit, which is why it sat in the wrong column of the
+chaqueta* is the same habit, which is why it sat as the odd one out in the
 *jersey* chapter's table:
 
 | garment | named after |

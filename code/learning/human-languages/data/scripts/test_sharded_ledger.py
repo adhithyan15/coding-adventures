@@ -202,6 +202,27 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         self.assertEqual(inventory["letters"], [{"glyph": "あ"}])
         self.assertEqual(inventory["marks"], [{"mark": "゛"}])
 
+    def test_script_inventory_digits_section_is_optional(self):
+        directory = self.script_tree()
+        # No digits/ directory: no digits key, as before the section existed.
+        self.assertNotIn("digits", load_script_inventory(self.root, "japanese"))
+        write_json(directory / "digits" / "0010-U-6F0.json", {"glyph": "۰"})
+        write_json(directory / "digits" / "0020-U-6F1.json", {"glyph": "۱"})
+        inventory = load_script_inventory(self.root, "japanese")
+        self.assertEqual(inventory["digits"], [{"glyph": "۰"}, {"glyph": "۱"}])
+
+    def test_script_inventory_digit_glyph_cannot_also_be_a_letter(self):
+        directory = self.script_tree()
+        write_json(directory / "digits" / "0010-U-3042.json", {"glyph": "あ"})
+        with self.assertRaisesRegex(ValueError, "owned by both"):
+            load_script_inventory(self.root, "japanese")
+
+    def test_script_inventory_refuses_a_symlinked_digits_directory(self):
+        directory = self.script_tree()
+        os.symlink(self.outside, directory / "digits")
+        with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
+            load_script_inventory(self.root, "japanese")
+
     def test_mixed_script_loader_prefers_shards_and_falls_back_to_monolith(self):
         directory = self.script_tree()
         write_json(

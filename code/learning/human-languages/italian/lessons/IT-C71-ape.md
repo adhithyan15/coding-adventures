@@ -13,7 +13,8 @@ gloss: "a bee"
 concept_tag: IT-ANIMALI4-APE
 prerequisites: [IT-C71-leone, IT-C71-scimmia]
 sounds: []
-roots: []
+roots: [apis-latin]
+etymology_hook: "ape ← Latin apis 'bee' — English apiary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-scimmia]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-03]; assesses=[] -->
 
 **l'ape** — "a bee". It makes **il miele**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ape** ← Latin *apis*, "bee" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

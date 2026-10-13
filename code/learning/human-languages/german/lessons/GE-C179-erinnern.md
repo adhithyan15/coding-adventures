@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ERINNERN
 prerequisites: [GE-C178-umsteigen, GE-C179-empfangen]
 sounds: []
 roots: []
+etymology_hook: "erinnern — er- + the word for 'inner': to make something present inside you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C179-empfangen]
 <!-- hl-knowledge: introduces=[GE-LEX-C179-VERB179-02]; assesses=[] -->
 
 **erinnern** — "to remind (sich erinnern: to remember)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erinnern** is *er-* + the word for "inner, inside" + a verb ending: to bring something inside the mind. EtymDB 2.1 has the word but not its parts; the build is plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "easy"
 concept_tag: FR-ANIMAUX41-FACILE
 prerequisites: [FR-C89-vieux, FR-C89-rapide]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "facile ← Latin facilis 'easy to do', from facere 'to do' — English facile and facility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C89-rapide]
 <!-- hl-knowledge: introduces=[FR-LEX-C89-ANIMAUX41-05]; assesses=[] -->
 
 **facile** — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facile** ← Latin *facilis*, "easy to do", from *facere*, "to do, to make" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -19,9 +19,24 @@ second `#else` or `#elif` after `#else`.
 `compile_preprocessed_file` uses that token stream with declared include roots
 before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
-closed because that API has no include roots. Full C `#if` expressions and
-token paste remain pending. Function-like macros can stringize one raw
-identifier or plain-decimal argument token; broader C stringizing is pending.
+closed because that API has no include roots. Full C `#if` expressions remain
+pending. Function-like macros can stringize one raw identifier, plain-decimal
+integer or unsuffixed hexadecimal/octal integer argument token and paste one raw
+identifier with a literal identifier prefix
+or suffix. The pasted name is rescanned; separate plain parameter occurrences
+still pre-expand, and keyword-forming concatenations fail explicitly.
+Broader C stringizing and token paste remain pending.
+
+Stringization preserves spelling, not numeric value: `S(0X00aF)` with
+`#define S(x) #x` becomes `"0X00aF"`. A direct `S(H)` preserves `H`; an outer
+macro forwarding an expanded hex replacement can stringize that replacement.
+Unsuffixed octal also preserves its zeroes: `S(00047)` becomes `"00047"`.
+Suffixes, decimal digit spellings with a leading zero and 8/9, floats and
+multi-token arguments remain refused. Octal condition evaluation remains
+outside the decimal `#if` subset.
+Named C `INT_LIT` tokens are recognized explicitly, including the declared
+plain-decimal subset; the generic engine still precharges quote bytes and
+retains expansion provenance.
 
 ## API
 

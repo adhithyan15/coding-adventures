@@ -13,7 +13,8 @@ gloss: "fast"
 concept_tag: GE-ADJ1-SCHNELL
 prerequisites: [GE-C89-klein, GE-C89-kurz]
 sounds: []
-roots: []
+roots: [germanic-snellaz]
+etymology_hook: "schnell ← Old High German snel 'nimble, brave' ← Proto-Germanic *snellaz 'quick, bold'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C89-kurz]
 <!-- hl-knowledge: introduces=[GE-LEX-C89-ADJ1-03]; assesses=[] -->
 
 **schnell** — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schnell** ← Old High German *snel*, "nimble, brave, quick" ← Proto-Germanic *\*snellaz* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

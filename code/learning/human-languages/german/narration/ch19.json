@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "The Pattern That Never Breaks",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:c096febcd57fc975",
+  "sourceHash": "fnv1a64:3fdf43b2267a1941",
   "lessons": [
     {
       "id": "GE-C12-ziffer-plus-zehn",
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eba55efa7861085c",
+      "sourceHash": "fnv1a64:aaab2a03565ae787",
       "notice": null,
       "blocks": [
         {
@@ -221,6 +221,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dreizehn from Old High German drīzehan from Proto-Germanic þritehun, \"three-ten\" — the same compound as English thirteen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -239,7 +250,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +299,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -319,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c651e59c927876",
+      "sourceHash": "fnv1a64:fcda2f19a518dfe4",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vierzehn from Old High German fiorzehan from Proto-Germanic fedurtehun, \"four-ten\" — the same compound as English fourteen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -419,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -450,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be31e7f6bde591bf",
+      "sourceHash": "fnv1a64:e2c79b9ee9be31a4",
       "notice": null,
       "blocks": [
         {
@@ -487,6 +509,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fünfzehn is fünf + zehn, both inherited; EtymDB 2.1 lists it beside English fifteen, Old English fīftīene."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -505,7 +538,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -563,7 +596,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -744,7 +777,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:044eda5e02b58fcd",
+      "sourceHash": "fnv1a64:4cb8319d5226f50c",
       "notice": null,
       "blocks": [
         {
@@ -781,6 +814,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sechzehn from Old High German sehszehan from Proto-Germanic sehstehun, \"six-ten\" — the same compound as English sixteen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -799,7 +843,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -857,7 +901,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -888,7 +932,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82800b0effdb8759",
+      "sourceHash": "fnv1a64:85caca818f3188d1",
       "notice": null,
       "blocks": [
         {
@@ -925,6 +969,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "siebzehn from Old High German sibunzehan from Proto-Germanic sebuntehun, \"seven-ten\" — the same compound as English seventeen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -947,7 +1002,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1005,7 +1060,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1036,7 +1091,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4531ea62a331bb82",
+      "sourceHash": "fnv1a64:a2b47dd98105c39b",
       "notice": null,
       "blocks": [
         {
@@ -1069,6 +1124,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "achtzehn from Old High German ahtozehan from Proto-Germanic ahtōutehun, \"eight\" + \"ten\" — the same compound as English eighteen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1087,7 +1153,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1145,7 +1211,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1176,7 +1242,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b093285dd8b00f2",
+      "sourceHash": "fnv1a64:a372839d4b64ddb2",
       "notice": null,
       "blocks": [
         {
@@ -1213,6 +1279,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "neunzehn from Old High German niunzehan from Proto-Germanic newuntehun, \"nine-ten\" — the same compound as English nineteen. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1231,7 +1308,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1280,7 +1357,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1311,7 +1388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5df4a0639e2a3b4d",
+      "sourceHash": "fnv1a64:f24448a704354be8",
       "notice": null,
       "blocks": [
         {
@@ -1348,6 +1425,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zwanzig is inherited: \"two\" plus an old Germanic word for \"tens\", the same build as English twenty. EtymDB 2.1 lists zwanzig beside twenty and Dutch twintig."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1370,7 +1458,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1428,7 +1516,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

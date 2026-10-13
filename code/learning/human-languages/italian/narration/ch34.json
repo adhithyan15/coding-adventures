@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 34,
   "title": "Mine and Yours",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a36c748ad398e79",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2cb7eeaa7fa0b45e",
   "lessons": [
     {
       "id": "IT-C34-mio-tuo-suo",
@@ -14,20 +14,13 @@
       "romanization": "mio, tuo, suo",
       "gloss": "my, your, his/her — a whole column this book has never had, and a mi that was never one of them",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de3abf594a16bd67",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:953ca0a6f65922f3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "A new chapter, opening the second column this book has left completely empty."
+              "text": "A new chapter, opening the second category this book has left completely empty."
             },
             {
               "kind": "prompt",
@@ -636,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba71822a9f85d1db",
+      "sourceHash": "fnv1a64:6a2da2f43e6ebd49",
       "notice": null,
       "blocks": [
         {
@@ -729,6 +722,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "signore from Latin senior, \"older\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar lens: speaking to somebody, by name or by title",
           "segments": [
@@ -751,7 +755,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -800,7 +804,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -831,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:105e8231fb4466c5",
+      "sourceHash": "fnv1a64:8d807d35c7b06add",
       "notice": null,
       "blocks": [
         {
@@ -920,6 +924,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "per from Latin per, \"through\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar lens: a me piace, and where the weight falls",
           "segments": [
@@ -942,7 +957,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -982,7 +997,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

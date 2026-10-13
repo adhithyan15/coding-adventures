@@ -13,7 +13,8 @@ gloss: "to disappear"
 concept_tag: PT-VERB-DESAPARECER
 prerequisites: [PT-C208-esquiar, PT-C208-escorregar]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "desaparecer — des- 'un-' + aparecer 'to appear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C208-escorregar]
 <!-- hl-knowledge: introduces=[PT-LEX-C209-VERBOS209-01]; assesses=[] -->
 
 **desaparecer** — "to disappear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desaparecer** is built from *des-*, "un-", and *aparecer*, "to appear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

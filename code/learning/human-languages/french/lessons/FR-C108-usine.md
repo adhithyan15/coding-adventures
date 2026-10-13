@@ -13,7 +13,8 @@ gloss: "a factory"
 concept_tag: FR-VILLE60-USINE
 prerequisites: [FR-C107-epicerie, FR-C108-bureau]
 sounds: []
-roots: []
+roots: [officina-latin]
+etymology_hook: "usine ← dialect wisine, from Latin officina 'a workshop' — English office is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C108-bureau]
 <!-- hl-knowledge: introduces=[FR-LEX-C108-VILLE60-02]; assesses=[] -->
 
 **l'usine** — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**usine** ← northern dialect *wisine*, from Latin *officina*, "a workshop" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "friendship"
 concept_tag: IT-SAL186-AMICIZIA
 prerequisites: [IT-C186-calma, IT-C186-amore]
 sounds: []
-roots: []
+roots: [amicus-latin]
+etymology_hook: "amicizia ← Latin amicitia 'friendship', a learned word — from amicus 'friend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C186-amore]
 <!-- hl-knowledge: introduces=[IT-LEX-C186-SAL186-04]; assesses=[] -->
 
 **l'amicizia** — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amicizia** ← Latin *amicitia*, "friendship" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -36,7 +36,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you ask "is it...?", politely? (ですか, desu ka.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'is it...? (polite question)'.
+Say the Japanese for 'is it...? (polite question)'.
 
 
 Lesson 2 of 6.
@@ -69,7 +69,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you answer "no, that is not right"? (ちがいます, chigaimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'no, that is not right'.
+Say the Japanese for 'no, that is not right'.
 
 
 Lesson 3 of 6.
@@ -104,7 +104,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "is not", plainly? (じゃない, ja nai.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'is not (plain)'.
+Say the Japanese for 'is not (plain)'.
 
 
 Lesson 4 of 6.
@@ -140,7 +140,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "nothing", with a negative verb? (なにも, nani mo.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nothing (with a negative verb)'.
+Say the Japanese for 'nothing (with a negative verb)'.
 
 
 Lesson 5 of 6.
@@ -174,7 +174,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "nobody", with a negative verb? (だれも, dare mo.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nobody (with a negative verb)'.
+Say the Japanese for 'nobody (with a negative verb)'.
 
 
 Lesson 6 of 6.
@@ -211,4 +211,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Is it...? (ですか, desu ka.) No, that is not right? (ちがいます, chigaimasu.) Is not, plainly? (じゃない, ja nai.) Nothing? (なにも, nani mo.) Nobody? (だれも, dare mo.) Nowhere? (どこにも, doko ni mo.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nowhere (with a negative verb)'.
+Say the Japanese for 'nowhere (with a negative verb)'.

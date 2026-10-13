@@ -14,7 +14,8 @@ romanization: "campaḷam"
 concept_tag: TA-VELAI222-CAMPALAM
 prerequisites: [TA-C222-nanayam, TA-C222-celavu]
 sounds: []
-roots: []
+roots: [sanskrit-shambala]
+etymology_hook: "சம்பளம் — usually traced to Sanskrit śambala 'provisions for a journey' (CDIAL 12315)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C222-celavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C222-VELAI222-05]; assesses=[] -->
 
 **சம்பளம்** — *campaḷam* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சம்பளம்** (*campaḷam*) is usually traced to Sanskrit *śambala*, "provisions for a journey" (CDIAL 12315): what one is given to live on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

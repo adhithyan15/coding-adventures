@@ -13,7 +13,8 @@ gloss: "to compare"
 concept_tag: PT-VERB-COMPARAR
 prerequisites: [PT-C204-calcular, PT-C204-bater]
 sounds: []
-roots: []
+roots: [latin-comparare]
+etymology_hook: "comparar ← Latin comparare 'to pair, to match' — English compare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C204-bater]
 <!-- hl-knowledge: introduces=[PT-LEX-C204-VERBOS204-05]; assesses=[] -->
 
 **comparar** — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comparar** ← Latin *comparare*, "to pair, to match" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

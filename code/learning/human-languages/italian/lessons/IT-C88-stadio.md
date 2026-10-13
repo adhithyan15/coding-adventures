@@ -13,7 +13,8 @@ gloss: "a stadium"
 concept_tag: IT-LUOGHI88-STADIO
 prerequisites: [IT-C88-distributore, IT-C88-piscina]
 sounds: []
-roots: []
+roots: [stadium-latin]
+etymology_hook: "stadio ← Latin stadium, from Greek stadion, a racecourse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C88-piscina]
 <!-- hl-knowledge: introduces=[IT-LEX-C88-LUOGHI88-05]; assesses=[] -->
 
 **lo stadio** — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stadio** ← Latin *stadium* — inherited; Latin took it from Greek *stadion*, a racecourse. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

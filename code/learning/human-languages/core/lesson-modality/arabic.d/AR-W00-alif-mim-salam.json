@@ -10,14 +10,16 @@
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:ed8bff66af9c1bce",
+    "sourceHash": "fnv1a64:ad3aa5c456a26ab2",
     "detachableSegments": [
       "Script — observe two new shapes",
       "Writing — guided copy, then delayed copy"

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES193-CASSEROLE
 prerequisites: [FR-C193-tiroir, FR-C193-fauteuil]
 sounds: []
 roots: []
+etymology_hook: "casserole — from Old Provençal cassa 'a pan', with a little-thing ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C193-fauteuil]
 <!-- hl-knowledge: introduces=[FR-LEX-C193-CHOSES193-04]; assesses=[] -->
 
 **la casserole** — "a saucepan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casserole** — built from an older word for "a pan", from Old Provençal *cassa*, with a little-thing ending. *cassa* goes back to Medieval Latin *cattia*, "a ladle, a pan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

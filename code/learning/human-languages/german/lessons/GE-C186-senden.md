@@ -13,7 +13,8 @@ gloss: "to send, to broadcast"
 concept_tag: GE-VERB-SENDEN
 prerequisites: [GE-C186-schuetzen, GE-C186-segeln]
 sounds: []
-roots: []
+roots: [germanic-sandijana]
+etymology_hook: "senden ← Old High German senten — the same verb as English send"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C186-segeln]
 <!-- hl-knowledge: introduces=[GE-LEX-C186-VERB186-04]; assesses=[] -->
 
 **senden** — "to send, to broadcast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**senden** ← Middle High German *senden* ← Old High German *senten* — inherited, the same verb as English *send* and Gothic *sandjan*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

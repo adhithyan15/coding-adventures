@@ -14,7 +14,8 @@ romanization: "iyantiram"
 concept_tag: TA-PORUL276-IYANTIRAM
 prerequisites: [TA-C276-iruttu, TA-C276-nilal]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "இயந்திரம் ← Sanskrit yantra 'implement, contrivance' (CDIAL 10412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C276-nilal]
 <!-- hl-knowledge: introduces=[TA-LEX-C276-PORUL276-03]; assesses=[] -->
 
 **இயந்திரம்** — *iyantiram* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இயந்திரம்** (*iyantiram*) is a loan from Sanskrit *yantra*, "any implement or contrivance" (CDIAL 10412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "viḷamparam"
 concept_tag: TA-PATI160-VILAMPARAM
 prerequisites: [TA-C160-arivippu, TA-C160-vatakai]
 sounds: []
-roots: []
+roots: [dravidian-vil-say]
+etymology_hook: "விளம்பரம் — native Dravidian (DEDR 5433); Malayalam viḷamparam 'proclamation'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [TA-C160-vatakai]
 
 The advert says **வீடு வாடகைக்கு விடப்படும்** — *vīṭu vāṭakaikku viṭappaṭum* —
 "House to let." A house is available to rent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளம்பரம்** (*viḷamparam*) is native Dravidian. DEDR 5433 lists Malayalam *viḷamparam*, "proclamation". It comes from *viḷampu*, "to proclaim, to make known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

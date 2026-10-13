@@ -12,6 +12,7 @@ concept_tag: TA-VERB-VAZH
 prerequisites: [TA-C05-pesu]
 sounds: [zh-retroflex, long-aa]
 roots: [vaazh-live-dravidian]
+etymology_hook: "வாழ் — native Dravidian (DEDR 5372); Malayalam vāḻuka, Kannada bāḻ"
 reviews_of: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren]
 duration:
   max_seconds: 240

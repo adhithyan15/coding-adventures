@@ -13,7 +13,8 @@ gloss: "to admire"
 concept_tag: FR-VERB-ADMIRER
 prerequisites: [FR-C151-ralentir, FR-C151-respirer]
 sounds: []
-roots: []
+roots: [mirari]
+etymology_hook: "admirer ← Latin admirari 'to wonder at' — English admire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C151-respirer]
 <!-- hl-knowledge: introduces=[FR-LEX-C152-VERBES152-01]; assesses=[] -->
 
 **admirer** — "to admire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**admirer** ← Latin *admirari*, "to wonder at" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

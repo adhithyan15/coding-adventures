@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES122-BARULHENTO
 prerequisites: [PT-C122-fechado, PT-C122-calmo]
 sounds: []
 roots: []
+etymology_hook: "barulhento — built from the noise word + -ento 'full of'; the noise word's origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C122-calmo]
 <!-- hl-knowledge: introduces=[PT-LEX-C122-QUALIDADES122-04]; assesses=[] -->
 
 **barulhento** — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barulhento** is built from the word for noise and *-ento*, "full of". The noise word's origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

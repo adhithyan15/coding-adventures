@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Sixty, Seventy, Eighty, Ninety, To begin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04deaaec68994751",
+  "sourceHash": "fnv1a64:359e294e7c5108da",
   "lessons": [
     {
       "id": "PT-C130-sessenta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b7a0e12e5979f33",
+      "sourceHash": "fnv1a64:39a23e97b94bb7cb",
       "notice": null,
       "blocks": [
         {
@@ -71,6 +71,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sessenta from Latin sexaginta, \"sixty\" (EtymDB 2.1) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -81,7 +92,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +141,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaaacf32a8b5a7d0",
+      "sourceHash": "fnv1a64:24c651ff70a43aee",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "setenta from Latin septuaginta, \"seventy\" (EtymDB 2.1) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:317d4dc3c4047c53",
+      "sourceHash": "fnv1a64:5e66e228e5d676dd",
       "notice": null,
       "blocks": [
         {
@@ -332,6 +354,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "oitenta from Latin octoginta, \"eighty\" — inherited. EtymDB 2.1 traces it only to Old Portuguese oytenta; it derives Spanish ochenta from octoginta."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -342,7 +375,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -391,7 +424,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -422,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:396830bcec32105a",
+      "sourceHash": "fnv1a64:94cff09a34911191",
       "notice": null,
       "blocks": [
         {
@@ -455,6 +488,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "noventa from Latin nonaginta, \"ninety\" (Lewis & Short) — inherited. It was reshaped after the word for nine; EtymDB 2.1 traces it only to Old Portuguese noveenta."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -465,7 +509,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,7 +558,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -545,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b7faf634d0c884a",
+      "sourceHash": "fnv1a64:6c3a7825e5b1d27d",
       "notice": null,
       "blocks": [
         {
@@ -578,6 +622,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "começar from Vulgar Latin cominitiare (EtymDB 2.1), from Latin initium, \"beginning\" — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -588,7 +643,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +692,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

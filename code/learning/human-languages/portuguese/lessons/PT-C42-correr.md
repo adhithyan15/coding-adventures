@@ -13,7 +13,8 @@ gloss: "to run"
 concept_tag: PT-VERB-CORRER
 prerequisites: [PT-C41-dormir, PT-C41-sentar]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "correr ← Latin currere 'to run' — English current and courier share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C41-sentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C42-VERBOS3-01]; assesses=[] -->
 
 **correr** — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correr** ← Latin *currere*, "to run" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

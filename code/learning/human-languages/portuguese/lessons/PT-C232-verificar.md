@@ -13,7 +13,8 @@ gloss: "to check"
 concept_tag: PT-VERB-VERIFICAR
 prerequisites: [PT-C231-traduzir, PT-C232-pesar]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "verificar ← Medieval Latin verificare 'to make true', from verus — English verify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C232-pesar]
 <!-- hl-knowledge: introduces=[PT-LEX-C232-VERBOS232-02]; assesses=[] -->
 
 **verificar** — "to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verificar** ← Medieval Latin *verificare*, "to make true" (EtymDB 2.1), from Latin *verus*, "true" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

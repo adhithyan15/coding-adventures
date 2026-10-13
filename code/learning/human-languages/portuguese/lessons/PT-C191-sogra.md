@@ -13,7 +13,8 @@ gloss: "a mother-in-law"
 concept_tag: PT-COISAS191-SOGRA
 prerequisites: [PT-C191-idoso, PT-C191-gemeo-a-gemea]
 sounds: []
-roots: []
+roots: [socer-latin]
+etymology_hook: "sogra ← Latin socrus 'mother-in-law', through Vulgar Latin *socra"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C191-gemeo-a-gemea]
 <!-- hl-knowledge: introduces=[PT-LEX-C191-COISAS191-04]; assesses=[] -->
 
 **a sogra** — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sogra** ← Latin *socrus*, "mother-in-law" (EtymDB 2.1), through Vulgar Latin *\*socra* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

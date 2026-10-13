@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX40-TIGRE
 prerequisites: [FR-C88-lapin, FR-C88-grenouille]
 sounds: []
 roots: []
+etymology_hook: "tigre ← Latin tigris, from Greek tigris — English tiger"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C88-grenouille]
 <!-- hl-knowledge: introduces=[FR-LEX-C88-ANIMAUX40-05]; assesses=[] -->
 
 **le tigre** — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tigre** ← Latin *tigris*, from Greek *tigris* (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

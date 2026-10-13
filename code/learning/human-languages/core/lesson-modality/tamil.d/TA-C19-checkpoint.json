@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-C19-checkpoint",
+    "language": "tamil",
+    "chapter": 19,
+    "sequence": 695,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b67ad3d95081b4f9",
+    "detachableSegments": [
+      "Script — ◌ி, ச and ◌ே",
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

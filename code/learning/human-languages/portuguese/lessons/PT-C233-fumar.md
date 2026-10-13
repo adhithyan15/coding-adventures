@@ -13,7 +13,8 @@ gloss: "to smoke"
 concept_tag: PT-VERB-FUMAR
 prerequisites: [PT-C233-zangar-se, PT-C233-preocupar-se]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fumar ← Latin fumare 'to smoke', from fumus — English fume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C233-preocupar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C233-VERBOS233-04]; assesses=[] -->
 
 **fumar** — "to smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumar** ← Latin *fumare*, "to smoke" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

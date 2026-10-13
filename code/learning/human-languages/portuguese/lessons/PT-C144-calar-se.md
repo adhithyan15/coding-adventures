@@ -13,7 +13,8 @@ gloss: "to fall silent"
 concept_tag: PT-VERB-CALAR-SE
 prerequisites: [PT-C143-devolver, PT-C143-reconhecer]
 sounds: []
-roots: []
+roots: [chalare-latin]
+etymology_hook: "calar-se — calar is usually traced to Late Latin chalare 'to let down', from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C143-reconhecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C144-VERBOS144-01]; assesses=[] -->
 
 **calar-se** — "to fall silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calar** is usually traced to Late Latin *chalare*, "to let down, to slacken", from Greek *chalan* (Lewis & Short gives the Latin): you let your voice drop. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

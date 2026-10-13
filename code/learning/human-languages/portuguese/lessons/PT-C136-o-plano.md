@@ -13,7 +13,8 @@ gloss: "a plan"
 concept_tag: PT-FUT136-O-PLANO
 prerequisites: [PT-C136-o-futuro, PT-C136-daqui-a]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "plano ← Latin planus 'flat' — learned; chão is the inherited form of the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C136-daqui-a]
 <!-- hl-knowledge: introduces=[PT-LEX-C136-FUT136-03]; assesses=[] -->
 
 **o plano** — "a plan". **Quais são os teus planos para o fim de semana?** — "What are your plans for the weekend?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plano** ← Latin *planus*, "flat, level" (EtymDB 2.1) — a learned borrowing from Latin. *chão* is the inherited form of the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

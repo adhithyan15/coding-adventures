@@ -13,7 +13,8 @@ gloss: "a region"
 concept_tag: PT-LUGAR213-REGIAO
 prerequisites: [PT-C213-interior, PT-C213-fronteira]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "região ← Latin regio 'direction, district' — English region"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C213-fronteira]
 <!-- hl-knowledge: introduces=[PT-LEX-C213-LUGAR213-05]; assesses=[] -->
 
 **a região** — "a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**região** ← Latin *regio, regionis*, "direction, district" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

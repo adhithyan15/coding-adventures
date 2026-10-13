@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-ZAEHLEN-1-5-01, GE-LEX-SECHS-01, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-LEX-ZAEHLEN-6-10-01, GE-SOUND-CHS-AS-KS-01, GE-SOUND-S-BUZZES-01]
+  knowledge: [GE-LEX-ZAEHLEN-1-5-01, GE-LEX-SECHS-01, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-LEX-ZAEHLEN-6-10-01, GE-SOUND-CHS-AS-KS-01, GE-SOUND-S-BUZZES-01, GE-ETYMON-SECHS-SIX-02, GE-ETYMON-SIEBEN-SEVEN-02, GE-ETYMON-NEUN-NINE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-output, fluency]
@@ -40,7 +40,7 @@ reviews_of: [GE-C06-sechs, GE-C06-sieben, GE-C06-acht, GE-C06-neun, GE-C06-zehn,
 one run, then join the two runs together.
 
 ## You'll want to know: the second run
-<!-- hl-knowledge: introduces=[GE-LEX-ZAEHLEN-6-10-01]; assesses=[GE-LEX-SECHS-01, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01] -->
+<!-- hl-knowledge: introduces=[GE-LEX-ZAEHLEN-6-10-01]; assesses=[GE-LEX-SECHS-01, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-ETYMON-SECHS-SIX-02, GE-ETYMON-SIEBEN-SEVEN-02, GE-ETYMON-NEUN-NINE-02] -->
 
 > **sechs, sieben, acht, neun, zehn**
 

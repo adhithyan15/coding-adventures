@@ -13,7 +13,8 @@ gloss: "a researcher"
 concept_tag: IT-COSE195-RICERCATORE
 prerequisites: [IT-C195-commercialista, IT-C195-scienziato]
 sounds: []
-roots: []
+roots: [circare-latin]
+etymology_hook: "ricercatore — one who ricerca 'researches': ri- + cercare ← Late Latin circare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C195-scienziato]
 <!-- hl-knowledge: introduces=[IT-LEX-C195-COSE195-04]; assesses=[] -->
 
 **il ricercatore** — "a researcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricercatore** — built from *ricercare*, "to search again, to research", with *-tore*, "one who". *ricercare* is *ri-* plus *cercare*, "to look for" ← Late Latin *circare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b38f8b8c1f42e1db",
+  "sourceHash": "fnv1a64:b43c9e398da31ceb",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df5be48f62802b81",
+      "sourceHash": "fnv1a64:40361f91a2987fb1",
       "notice": null,
       "blocks": [
         {
@@ -54,12 +54,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is அது adu, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இது (idu) is native Dravidian: the near base i- (DEDR 410). Malayalam has itu and Kannada idu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:770113572a4eab5e",
+      "sourceHash": "fnv1a64:a23d71833877d01c",
       "notice": null,
       "blocks": [
         {
@@ -165,12 +176,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is இது idu, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is இது idu, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அது (adu) is native Dravidian: the far base a- (DEDR 1). Malayalam has atu and Kannada adu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -232,7 +254,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80a86c3507baaef9",
+      "sourceHash": "fnv1a64:08d70dddaf827dbf",
       "notice": null,
       "blocks": [
         {
@@ -267,12 +289,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is அங்கே aṅgē, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இங்கே (iṅgē) is native Dravidian: the near base i- with a place ending. DEDR 410 lists it under the same base as \"this\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -352,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0870ea745683d909",
+      "sourceHash": "fnv1a64:336be1f7da1f23ff",
       "notice": null,
       "blocks": [
         {
@@ -387,12 +420,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is இங்கே iṅgē, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is இங்கே iṅgē, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அங்கே (aṅgē) is native Dravidian: the far base a- with a place ending. DEDR 1 lists it under the same base as \"that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -423,7 +467,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -454,7 +498,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c2cb4c3358617a1",
+      "sourceHash": "fnv1a64:1446401816d1f9cb",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +514,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -485,16 +529,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is எங்கே eṅgē, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "yār opens with yā-, not with the i- of near or the a- of far that the four words before it share. It is the one word in this chapter outside that pattern, so learn it as itself: the asking word for people."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "யார் (yār) is native Dravidian, on the question base yā- (DEDR 5151). Malayalam has yār and ār, and Kannada yār."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -507,11 +562,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"யார் (yār)\" three times, picturing something different each time",
+              "instruction": "\"யார் (yār)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"யார்\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"யார்\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -543,7 +598,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -555,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is yār? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)"
+              "text": "What is yār? (who? — asking about a person.) What sound does it start with: the i- of near, the a- of far, or neither? (Neither — yā-; it asks about a person.)"
             }
           ]
         }
@@ -574,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e94bb507ba93c0d",
+      "sourceHash": "fnv1a64:e44db80c632b6148",
       "notice": null,
       "blocks": [
         {
@@ -590,7 +645,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -605,16 +660,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is யார் yār, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partners are இங்கே iṅgē and அங்கே aṅgē, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எங்கே (eṅgē) is native Dravidian: the question base e- with a place ending (DEDR 5151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -627,11 +693,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"எங்கே (eṅgē)\" three times, picturing something different each time",
+              "instruction": "\"எங்கே (eṅgē)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"எங்கே\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"எங்கே\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -645,7 +711,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -676,7 +742,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3016ecfc5a56a23",
+      "sourceHash": "fnv1a64:d38b9698420bb595",
       "notice": null,
       "blocks": [
         {
@@ -703,7 +769,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You did not learn six words. You learned three beginnings and reused them."
+              "text": "Five of these six words are three beginnings, reused; only the person question stands apart."
             },
             {
               "kind": "table",
@@ -721,7 +787,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tamil shows the system at its cleanest: இது (idu), அது (adu), எது differ in one letter."
+              "text": "Tamil shows the system at its cleanest: இங்கே (iṅgē), அங்கே (aṅgē), எங்கே (eṅgē) differ in one letter."
             },
             {
               "kind": "speech",

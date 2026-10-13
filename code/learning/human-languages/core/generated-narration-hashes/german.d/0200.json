@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 200,
-  "sourceHash": "fnv1a64:f74da5bfc1458912",
+  "sourceHash": "fnv1a64:0f9521311f50e931",
   "lessonIds": [
     "GE-C200-speisekarte",
     "GE-C200-bestellung",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch200.txt",
   "json": "german/narration/ch200.json",
-  "textHash": "fnv1a64:66b0d8285fd2eff7",
-  "jsonHash": "fnv1a64:2ce3ec51fec6d81a",
+  "textHash": "fnv1a64:97d37475179fe7c0",
+  "jsonHash": "fnv1a64:936f2f649b9ebab6",
   "findings": []
 }

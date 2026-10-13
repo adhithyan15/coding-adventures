@@ -11,7 +11,8 @@ romanization: "kuṭai"
 concept_tag: TA-NOUN-UMBRELLA
 prerequisites: [TA-C60-rope, TA-C58-hen, TA-C59-oil]
 sounds: []
-roots: []
+roots: [dravidian-kudai-umbrella]
+etymology_hook: "குடை — native Dravidian (DEDR 1663); Malayalam kuṭa, Kannada koḍe, Telugu goḍugu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C60-rope]
 Against மழை and against the சூரியன் equally, and in Tamil country the second job is the larger one. It is carried in a month with no rain in it without anybody thinking that odd.
 
 Kannada ಕೊಡೆ (*koḍe*) is the same word. It ends on the ை you already put on கூடை and on விதை.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடை** (*kuṭai*) is native Dravidian. DEDR 1663 lists Malayalam *kuṭa*, Kannada *koḍe* and Telugu *goḍugu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

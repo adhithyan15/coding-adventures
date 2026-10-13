@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おおい (ooi) mean? ("Many, a lot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'many, a lot'.
+Say the Japanese for 'many, a lot'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すくない (sukunai) mean? ("Few, little".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'few, little'.
+Say the Japanese for 'few, little'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さわやか (sawayaka) mean? ("Refreshing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'refreshing'.
+Say the Japanese for 'refreshing'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おだやか (odayaka) mean? ("Calm".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'calm'.
+Say the Japanese for 'calm'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すなお (sunao) mean? ("Honest, straightforward".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'honest, straightforward'.
+Say the Japanese for 'honest, straightforward'.

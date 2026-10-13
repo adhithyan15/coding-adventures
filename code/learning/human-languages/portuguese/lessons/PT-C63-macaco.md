@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS4-MACACO
 prerequisites: [PT-C62-cabra, PT-C63-leao]
 sounds: []
 roots: []
+etymology_hook: "macaco — probably borrowed from a Bantu language of central Africa; English macaque came from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C63-leao]
 <!-- hl-knowledge: introduces=[PT-LEX-C63-ANIMAIS4-02]; assesses=[] -->
 
 **o macaco** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macaco** — borrowed, probably from a Bantu language of central Africa. English *macaque* came from the Portuguese word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

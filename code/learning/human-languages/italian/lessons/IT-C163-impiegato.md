@@ -13,7 +13,8 @@ gloss: "an office worker"
 concept_tag: IT-COSE163-IMPIEGATO
 prerequisites: [IT-C163-idraulico, IT-C163-operaio]
 sounds: []
-roots: []
+roots: [implicare-latin]
+etymology_hook: "impiegato — 'employed', from Latin implicare 'to involve' — English employ is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C163-operaio]
 <!-- hl-knowledge: introduces=[IT-LEX-C163-COSE163-05]; assesses=[] -->
 
 **l'impiegato** — "an office worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impiegato** is the past participle of *impiegare*, "to employ", which ← Latin *implicare*, "to enfold, to involve". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

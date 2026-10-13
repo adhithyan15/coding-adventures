@@ -11,7 +11,8 @@ romanization: "aṉpaḷippu"
 concept_tag: TA-HOST-PRESENT
 prerequisites: [TA-C98-eat, TA-C99-drink]
 sounds: []
-roots: []
+roots: [dravidian-anbu-love, dravidian-ali-bestow]
+etymology_hook: "அன்பளிப்பு — native: aṉpu 'affection' (DEDR 330) + aḷippu 'giving', from aḷi 'to bestow' (DEDR 301)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C99-drink]
 
 **அன்பு** is "love"; **அளிப்பு** is "a giving". **பரிசு** can be a prize; **அன்பளிப்பு** is always
 from the heart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அன்பளிப்பு** (*aṉpaḷippu*) is native: *aṉpu*, "affection" (DEDR 330), and *aḷippu*, "giving", from *aḷi*, "to show favour, to bestow" (DEDR 301). A gift given out of love.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

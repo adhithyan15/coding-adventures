@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 229,
-  "sourceHash": "fnv1a64:fac539e563934c6c",
+  "sourceHash": "fnv1a64:d22d49e11b311c40",
   "lessonIds": [
     "IT-C229-pianura",
     "IT-C229-sasso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch229.txt",
   "json": "italian/narration/ch229.json",
-  "textHash": "fnv1a64:dd444eadfc91c704",
-  "jsonHash": "fnv1a64:0c2ff433de43b26e",
+  "textHash": "fnv1a64:93f6ebb70cdf7ba8",
+  "jsonHash": "fnv1a64:09bbc4a9400be649",
   "findings": []
 }

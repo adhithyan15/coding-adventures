@@ -14,6 +14,7 @@ concept_tag: IT-ANIMALI121-TARTARUGA
 prerequisites: [IT-C120-farfalla, IT-C120-rana]
 sounds: []
 roots: []
+etymology_hook: "tartaruga ← Late Latin tartarucha 'a tortoise' — French tortue is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C120-rana]
 <!-- hl-knowledge: introduces=[IT-LEX-C121-ANIMALI121-01]; assesses=[] -->
 
 **la tartaruga** — "a tortoise, a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tartaruga** ← Late Latin *tartarucha*, "a tortoise" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

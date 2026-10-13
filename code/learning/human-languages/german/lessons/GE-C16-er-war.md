@@ -13,7 +13,7 @@ sounds: [r-final, vowel-a-long]
 roots: [pie-wes]
 etymology_hook: "er war is identical to ich war: in the German simple past the I-form and the he-form are one word, which the present tense never allows"
 duration:
-  max_seconds: 155
+  max_seconds: 176
 requires:
   knowledge: [GE-GRAMMAR-SEIN-ICH-WAR-01, GE-GRAMMAR-SEIN-DU-WARST-01, GE-GRAMMAR-SEIN-ER-IST-01]
 introduces:
@@ -52,6 +52,11 @@ This is a habit of the German simple past, not a quirk of this verb: the
 I-form and the he-form are always identical there. *Ich sagte* and *er sagte*.
 *Ich hatte* and *er hatte*. The present tense never does this; the past always
 does.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**war** goes back to Old High German *wesan*, "to be" ← Proto-Germanic *\*wesaną*; EtymDB 2.1 traces English *was* to the same verb.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-ER-WAR-01] -->

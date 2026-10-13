@@ -9,14 +9,16 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block"
+      "writing-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b3e1542dfe445283",
+    "sourceHash": "fnv1a64:f18ba0a76f797507",
     "detachableSegments": [
       "Writing — one bounded copy"
     ],

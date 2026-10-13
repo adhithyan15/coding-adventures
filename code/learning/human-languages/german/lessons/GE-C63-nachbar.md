@@ -14,6 +14,7 @@ concept_tag: GE-LEUTE-NACHBAR
 prerequisites: [GE-C62-onkel, GE-C62-tante]
 sounds: []
 roots: []
+etymology_hook: "Nachbar ← Middle High German nāchbūre, 'the dweller nearby' — the same build as English neighbour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C62-tante]
 <!-- hl-knowledge: introduces=[GE-LEX-C63-LEUTE-01]; assesses=[] -->
 
 **der Nachbar** — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachbar** ← Middle High German *nāchbūre* (EtymDB 2.1), "the one who dwells near": the word for "near" + an old word for "dweller". English *neighbour* is built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

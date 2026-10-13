@@ -14,7 +14,8 @@ romanization: "āṭṭō"
 concept_tag: TA-IDAM174-ATTO
 prerequisites: [TA-C174-mitivanti, TA-C174-kar]
 sounds: []
-roots: []
+roots: [english-auto]
+etymology_hook: "ஆட்டோ ← English auto, short for auto-rickshaw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C174-kar]
 <!-- hl-knowledge: introduces=[TA-LEX-C174-IDAM174-04]; assesses=[] -->
 
 **ஆட்டோ** — *āṭṭō* — "an auto-rickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆட்டோ** (*āṭṭō*) is a loan from English *auto*, short for *auto-rickshaw*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

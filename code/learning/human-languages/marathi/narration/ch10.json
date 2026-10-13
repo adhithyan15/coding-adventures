@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 10,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7cc95ee2f0bfb43b",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:00f79a750272efa3",
   "lessons": [
     {
       "id": "MR-C03-kasa",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3102882eb92ca54e",
+      "sourceHash": "fnv1a64:223e696ce521ae2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -290,7 +290,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -339,7 +339,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Pair मी with the copula आहे: मी आहे (mī āhe, \"I am\"). To answer that you are well, reach back to Chapter 4's बरं (baraṁ, \"fine\") in its gendered form: मी बरा आहे (mī barā āhe, a man) / मी बरी आहे (mī barī āhe, a woman) — \"I am fine.\""
+              "text": "Pair मी with the copula आहे: मी आहे (mī āhe, \"I am\"). To answer that you are well, reach back to Chapter 4's बरं (baraṁ, \"fine\"): the next lesson gives it the gendered form that sits between मी and आहे."
             }
           ]
         },
@@ -366,11 +366,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I am fine\" for yourself (mī barā/barī āhe)",
+              "instruction": "\"baraṁ\" — fine — then \"mī āhe\" once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I am fine\" for yourself (*mī barā/barī āhe*)]"
+              "source": "[YOU SAY: \"baraṁ\" — fine — then \"mī āhe\" once more]"
             }
           ]
         },

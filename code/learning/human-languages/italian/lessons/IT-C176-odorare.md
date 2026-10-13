@@ -13,7 +13,8 @@ gloss: "to smell"
 concept_tag: IT-VERB-ODORARE
 prerequisites: [IT-C176-ascoltare, IT-C176-toccare]
 sounds: []
-roots: []
+roots: [odor-latin]
+etymology_hook: "odorare ← Latin odorare, from odor 'a smell' — English odour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C176-toccare]
 <!-- hl-knowledge: introduces=[IT-LEX-C176-VERBI176-03]; assesses=[] -->
 
 **odorare** — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**odorare** ← Latin *odorare*, "to smell, to give a smell" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

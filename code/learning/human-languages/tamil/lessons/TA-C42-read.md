@@ -11,7 +11,8 @@ romanization: "paṭi"
 concept_tag: TA-VERB-READ
 prerequisites: [TA-C42-sit]
 sounds: []
-roots: []
+roots: [tamil-padi-read-study]
+etymology_hook: "படி — native say Tamil dictionaries; others trace it to Sanskrit paṭh 'to recite'. Still an open question"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C42-sit]
 **படி** (*paṭi*) — "read".
 
 Also 'to study'. The same word covers reading a page and studying a subject, so a student *paṭikkiṟār* whether they are holding a book or not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **படி** (*paṭi*) is the open question met in an earlier lesson: Tamil's own dictionaries list it as native, while others connect it to Sanskrit *paṭh*, "to recite". Tamil has no aspirated consonants, so a borrowed *paṭh* would arrive as *paṭi* either way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

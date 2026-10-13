@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does どうして (doushite) mean? ("Why".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'why'.
+Say the Japanese for 'why'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does りゆう (riyuu) mean? ("A reason".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a reason'.
+Say the Japanese for 'a reason'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ため (tame) mean? ("For the sake of; because of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'for the sake of'.
+Say the Japanese for 'for the sake of'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does せい (sei) mean? ("The fault, the cause".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the fault, the cause'.
+Say the Japanese for 'the fault, the cause'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆえ (yue) mean? ("A reason (formal)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a reason (formal)'.
+Say the Japanese for 'a reason (formal)'.

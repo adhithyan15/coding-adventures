@@ -13,7 +13,8 @@ gloss: "to brake"
 concept_tag: PT-VERB-TRAVAR
 prerequisites: [PT-C237-exagerar, PT-C237-celebrar]
 sounds: []
-roots: []
+roots: [trabs-latin]
+etymology_hook: "travar — from the beam word (← Latin trabs): to bar the way"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C237-celebrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C237-VERBOS237-04]; assesses=[] -->
 
 **travar** — "to brake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**travar** is built from the word for a beam, from Latin *trabs*, "beam" (Lewis & Short): to bar the way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

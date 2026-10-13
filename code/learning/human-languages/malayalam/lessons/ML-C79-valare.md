@@ -53,8 +53,8 @@ quality words already work: **it stands in front, and nothing changes shape.**
 | **വലിയ** *valiya* | big |
 | **വളരെ വലിയ** *vaḷare valiya* | very big |
 
-Look at the second column of that table and then at the first. *nalla* is
-*nalla* in both rows. English does the same thing — *good* survives *very good*
+Put *vaḷare nalla* beside *nalla*. *nalla* is
+*nalla* in both. English does the same thing — *good* survives *very good*
 intact — so there is nothing new to learn here beyond the word itself.
 
 Now put a thing on the end of it and you have a three-word chain, each piece

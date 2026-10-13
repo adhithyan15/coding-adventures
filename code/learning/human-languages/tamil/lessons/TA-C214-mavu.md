@@ -14,7 +14,8 @@ romanization: "māvu"
 concept_tag: TA-PORUL214-MAVU
 prerequisites: [TA-C214-palaccaru, TA-C214-ilanir]
 sounds: []
-roots: []
+roots: [dravidian-maa-flour]
+etymology_hook: "மாவு — native Dravidian (DEDR 4784); Malayalam māvu 'flour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C214-ilanir]
 <!-- hl-knowledge: introduces=[TA-LEX-C214-PORUL214-04]; assesses=[] -->
 
 **மாவு** — *māvu* — "flour; batter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாவு** (*māvu*) is native Dravidian. DEDR 4784 lists Malayalam *māvu*, "flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

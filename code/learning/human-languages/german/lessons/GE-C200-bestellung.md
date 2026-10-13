@@ -13,7 +13,8 @@ gloss: "an order"
 concept_tag: GE-THING200-BESTELLUNG
 prerequisites: [GE-C199-torte, GE-C200-speisekarte]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "Bestellung — bestellen 'to order' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C200-speisekarte]
 <!-- hl-knowledge: introduces=[GE-LEX-C200-THING200-02]; assesses=[] -->
 
 **die Bestellung** — "an order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bestellung** is *bestellen*, "to order", + *-ung*. *bestellen* is *be-* + the verb "to put, to place", Proto-Germanic *\*stallijaną*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

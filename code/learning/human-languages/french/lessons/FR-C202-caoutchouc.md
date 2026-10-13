@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES202-CAOUTCHOUC
 prerequisites: [FR-C201-fumee, FR-C201-flamme]
 sounds: []
 roots: []
+etymology_hook: "caoutchouc ← Spanish caucho, from Quechua kawchu"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C201-flamme]
 <!-- hl-knowledge: introduces=[FR-LEX-C202-CHOSES202-01]; assesses=[] -->
 
 **le caoutchouc** — "natural rubber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caoutchouc** ← Spanish *caucho* ← Quechua *kawchu* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

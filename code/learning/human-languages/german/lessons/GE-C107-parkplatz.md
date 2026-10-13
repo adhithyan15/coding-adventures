@@ -13,7 +13,8 @@ gloss: "a car park"
 concept_tag: GE-ORT107-PARKPLATZ
 prerequisites: [GE-C107-kreuzung, GE-C107-ampel]
 sounds: []
-roots: []
+roots: [platea-latin]
+etymology_hook: "Parkplatz — park, from English to park, + Platz 'place': a place to park"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C107-ampel]
 <!-- hl-knowledge: introduces=[GE-LEX-C107-ORT107-05]; assesses=[] -->
 
 **der Parkplatz** — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Parkplatz** is *park-*, from English "to park", + *Platz*, "place" (EtymDB 2.1 links *Parkplatz* to *Platz*). *Platz* ← Latin *platēa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

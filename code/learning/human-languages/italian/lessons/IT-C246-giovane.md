@@ -13,7 +13,8 @@ gloss: "young"
 concept_tag: IT-QUAL246-GIOVANE
 prerequisites: [IT-C245-sconosciuto, IT-C246-antico]
 sounds: []
-roots: []
+roots: [iuvenis-latin]
+etymology_hook: "giovane ← Latin iuvenis, iuvenem 'young' — English juvenile shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C246-antico]
 <!-- hl-knowledge: introduces=[IT-LEX-C246-QUAL246-02]; assesses=[] -->
 
 **giovane** — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giovane** ← Latin *iuvenis*, "young" (*iuvenem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

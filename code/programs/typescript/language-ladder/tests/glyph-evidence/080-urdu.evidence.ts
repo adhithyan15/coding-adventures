@@ -119,4 +119,21 @@ export default [
       expect(hamza.compositionSource?.variation).toMatch(/بھائی.*carrier-plus-mark/i);
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 235,
+    name: "cites only Urdu ۰ ۱ ۲ ۳, the digits Urdu writes in the Persian shapes",
+    verify: ({ SCRIPTS }) => {
+      const digits = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!.digits ?? [];
+      expect(digits.map((digit) => digit.glyph)).toEqual([..."۰۱۲۳۴۵۶۷۸۹"]);
+      expect(
+        digits.filter((digit) => digit.strokeOrderSource !== undefined).map((digit) => digit.glyph),
+      ).toEqual(["۰", "۱", "۲", "۳"]);
+      for (const digit of digits.slice(0, 4)) {
+        expect(digit.penLifts, digit.glyph).toBe(0);
+        expect(digit.strokeOrderSource?.variation, digit.glyph).toMatch(/These writers wrote Persian\./);
+      }
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

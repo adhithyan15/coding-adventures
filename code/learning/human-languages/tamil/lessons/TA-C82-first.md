@@ -11,10 +11,10 @@ gloss: "first — the one word in the set you already had, hidden inside the wor
 concept_tag: TA-ORDINAL-FIRST
 prerequisites: [TA-C81-which-tamil, TA-C80-one-and-other, TA-C76-choice, TA-C66-down, TA-C62-first-of-all]
 sounds: []
-roots: [proto-dravidian-mutal]
-etymology_hook: "mutalil, taught earlier as a discourse word, is mutal plus the locative -il; the word for first was already in the learner's mouth"
+roots: [proto-dravidian-mutal, dravidian-mutal-beginning]
+etymology_hook: "முதல் — native mutal 'beginning, first' (DEDR 4950)"
 duration:
-  max_seconds: 230
+  max_seconds: 237
 requires:
   knowledge: [TA-PRAGMATICS-C81-REG-02, TA-GRAMMAR-C80-OTHER-02, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C66-WHICHWAY-02, TA-LEX-C62-JOIN-05]
 introduces:
@@ -47,7 +47,7 @@ the four growing distances this book measures.
 
 **முதல்** (*mutal*) — "**first**".
 
-You already know this word. Look at **முதலில்** (*mutalil*), "first of all",
+You already know this word. Think of **முதலில்** (*mutalil*), "first of all",
 which this book already taught as a way of putting one thing before another:
 
 > **முதல்** + **இல்** → **முதலில்**
@@ -58,6 +58,11 @@ carrying the meaning, without ever being named.
 
 **முதல் நாள்** (*mutal nāḷ*), the first day. **முதல் பாதை** (*mutal pātai*), the
 first road.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதல்** (*mutal*) is native Dravidian: *mutal*, "beginning, first" (DEDR 4950).
 
 ## Across the family: the word four languages built on
 <!-- hl-knowledge: introduces=[TA-ETYMON-C82-ORDINAL-02]; assesses=[TA-LEX-C82-ORDINAL-01] -->

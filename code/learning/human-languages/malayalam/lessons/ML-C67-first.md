@@ -56,7 +56,7 @@ pustakaṁ*), the first book.
 ## Grammar Lens: one ending, and no exceptions to it
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C67-ORDINAL-02]; assesses=[ML-LEX-C67-ORDINAL-01] -->
 
-Look at the word against the number it comes from:
+Put the word beside the number it comes from:
 
 | cardinal | ordinal |
 |---|---|

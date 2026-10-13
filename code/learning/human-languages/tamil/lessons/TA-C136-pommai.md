@@ -14,7 +14,8 @@ romanization: "pommai"
 concept_tag: TA-THINGS136-POMMAI
 prerequisites: [TA-C136-pantu, TA-C136-pattam]
 sounds: []
-roots: []
+roots: [dravidian-bommai-doll]
+etymology_hook: "பொம்மை — native Dravidian (DEDR 4530); Malayalam bomma, Kannada bombe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C136-pattam]
 <!-- hl-knowledge: introduces=[TA-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **பொம்மை** — *pommai* — "a doll, a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொம்மை** (*pommai*) is native Dravidian. DEDR 4530 lists Malayalam *bomma* and Kannada *bombe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuḷi"
 concept_tag: TA-VERB-KULI
 prerequisites: [TA-C153-tirumpu, TA-C153-cer]
 sounds: []
-roots: []
+roots: [dravidian-kuli-bathe]
+etymology_hook: "குளி — native Dravidian (DEDR 1832); Malayalam kuḷikka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C153-cer]
 <!-- hl-knowledge: introduces=[TA-LEX-C153-ACT153-05]; assesses=[] -->
 
 **குளி** — *kuḷi* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குளி** (*kuḷi*) is native Dravidian. DEDR 1832 lists Malayalam *kuḷikka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

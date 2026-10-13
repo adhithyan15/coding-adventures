@@ -13,7 +13,8 @@ gloss: "a mouse, a rat"
 concept_tag: PT-ANIMAIS2-RATO
 prerequisites: [PT-C60-porco, PT-C61-passaro]
 sounds: []
-roots: []
+roots: [rattus-latin]
+etymology_hook: "rato ← Vulgar Latin *rattus 'rat', a word of uncertain origin — English rat is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C61-passaro]
 <!-- hl-knowledge: introduces=[PT-LEX-C61-ANIMAIS2-02]; assesses=[] -->
 
 **o rato** — "a mouse, a rat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rato** ← Vulgar Latin *\*rattus*, "rat" (EtymDB 2.1) — inherited. Where that word came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

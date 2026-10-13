@@ -13,7 +13,8 @@ gloss: "the return"
 concept_tag: FR-CHOSES231-RETOUR
 prerequisites: [FR-C230-marteau, FR-C230-echelle]
 sounds: []
-roots: []
+roots: [tornus-latin]
+etymology_hook: "retour — from re- + tourner 'to turn' — English return"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C230-echelle]
 <!-- hl-knowledge: introduces=[FR-LEX-C231-CHOSES231-01]; assesses=[] -->
 
 **le retour** — "the return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**retour** — formed from the verb for "to return", *re-* with *tourner*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

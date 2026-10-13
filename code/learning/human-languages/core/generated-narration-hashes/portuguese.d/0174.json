@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 174,
-  "sourceHash": "fnv1a64:b967d86792405281",
+  "sourceHash": "fnv1a64:b205e68e7cb8e6cf",
   "lessonIds": [
     "PT-C174-atravessar",
     "PT-C174-aumentar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch174.txt",
   "json": "portuguese/narration/ch174.json",
-  "textHash": "fnv1a64:22d6121356d6c974",
-  "jsonHash": "fnv1a64:a10c40ff3ac3e1de",
+  "textHash": "fnv1a64:d0de6d96215b3555",
+  "jsonHash": "fnv1a64:f7cf61c698c6ff11",
   "findings": []
 }

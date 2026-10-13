@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO93-BICICLETTA
 prerequisites: [IT-C92-viaggio, IT-C93-vacanze]
 sounds: []
 roots: []
+etymology_hook: "bicicletta ← French bicyclette: Latin bi- 'two' + Greek kyklos 'wheel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C93-vacanze]
 <!-- hl-knowledge: introduces=[IT-LEX-C93-VIAGGIO93-02]; assesses=[] -->
 
 **la bicicletta** — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bicicletta** ← French *bicyclette* — borrowed; built from Latin *bi-*, "two", and Greek *kyklos*, "wheel". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 33,
-  "sourceHash": "fnv1a64:cd27825902c28142",
+  "sourceHash": "fnv1a64:ed75e26b2d9ceea5",
   "lessonIds": [
     "LA-C33-vesper",
     "LA-C33-vesper-afterlives",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "latin/narration/ch33.txt",
   "json": "latin/narration/ch33.json",
-  "textHash": "fnv1a64:c02311d016598d8e",
-  "jsonHash": "fnv1a64:0632e5637083d162",
+  "textHash": "fnv1a64:77e6fdd169a12c5a",
+  "jsonHash": "fnv1a64:ffd76099c920568f",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a drawing"
 concept_tag: FR-LOISIRS81-DESSIN
 prerequisites: [FR-C128-film, FR-C128-chanson]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "dessin — formed from dessiner 'to draw' — English design is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C128-chanson]
 <!-- hl-knowledge: introduces=[FR-LEX-C129-LOISIRS81-01]; assesses=[] -->
 
 **le dessin** — "a drawing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dessin** — formed from *dessiner*, "to draw": a drawing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

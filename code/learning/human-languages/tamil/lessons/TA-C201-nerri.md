@@ -14,7 +14,8 @@ romanization: "neṟṟi"
 concept_tag: TA-NALAM201-NERRI
 prerequisites: [TA-C200-cekari, TA-C200-urincu]
 sounds: []
-roots: []
+roots: [dravidian-nerri-forehead]
+etymology_hook: "நெற்றி — native Dravidian (DEDR 3759); Malayalam neṟṟi, Kannada netti, Telugu netti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C200-urincu]
 <!-- hl-knowledge: introduces=[TA-LEX-C201-NALAM201-01]; assesses=[] -->
 
 **நெற்றி** — *neṟṟi* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நெற்றி** (*neṟṟi*) is native Dravidian. DEDR 3759 lists Malayalam *neṟṟi*, Kannada *netti* and Telugu *netti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

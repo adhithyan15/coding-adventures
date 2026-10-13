@@ -11,7 +11,8 @@ romanization: "rayil"
 concept_tag: TA-NOUN-TRAIN
 prerequisites: [TA-W25-read-vandi, TA-C67-sari, TA-C68-money]
 sounds: []
-roots: []
+roots: [english-rail]
+etymology_hook: "ரயில் ← English rail, as in railway"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ Tamil letters.
 There is a clue in the very first letter. Tamil words do not normally **begin** with ர, so a
 word that starts that way has almost always come in from somewhere else. You now have a small
 test you can run on a word before anyone tells you where it is from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரயில்** (*rayil*) is a loan from English *rail*, as in *railway*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

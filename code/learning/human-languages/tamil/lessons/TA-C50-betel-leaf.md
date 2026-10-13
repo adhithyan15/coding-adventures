@@ -11,7 +11,8 @@ romanization: "veṟṟilai"
 concept_tag: TA-WELCOME-BETEL-LEAF
 prerequisites: [TA-C50-flower, TA-C48-later, TA-C49-good-wish]
 sounds: []
-roots: []
+roots: [dravidian-ilai-leaf]
+etymology_hook: "வெற்றிலை — native Dravidian (DEDR 5515); Malayalam veṟṟ-ila"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C50-flower]
 The end of the word is plain once you have the pieces: *-ilai* is *ilai*, 'a leaf'.
 
 Betel leaf and areca nut, handed over together, are how a Tamil household says the visit mattered and the guest is owed something — at a wedding, at a farewell, at anything that counts. The leaf costs almost nothing and means a great deal, which is the usual arrangement for the things a culture puts at its centre.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெற்றிலை** (*veṟṟilai*) is native Dravidian. DEDR 5515 lists Malayalam *veṟṟ-ila*. The second half is the native word for "leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

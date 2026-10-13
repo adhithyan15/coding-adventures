@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES229-CLIMAT
 prerequisites: [FR-C229-eclair, FR-C229-tonnerre]
 sounds: []
 roots: []
+etymology_hook: "climat ← Latin clima, from Greek klima 'a slope, a latitude' — English climate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C229-tonnerre]
 <!-- hl-knowledge: introduces=[FR-LEX-C229-CHOSES229-03]; assesses=[] -->
 
 **le climat** — "the climate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**climat** ← Latin *clima*, from Greek *klima*, "a slope, a zone of latitude" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

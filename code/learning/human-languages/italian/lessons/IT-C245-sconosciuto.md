@@ -13,7 +13,8 @@ gloss: "unknown"
 concept_tag: IT-QUAL245-SCONOSCIUTO
 prerequisites: [IT-C245-profondo, IT-C245-grasso]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "sconosciuto — s- 'un-' + conosciuto 'known', from Latin cognoscere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C245-grasso]
 <!-- hl-knowledge: introduces=[IT-LEX-C245-QUAL245-05]; assesses=[] -->
 
 **sconosciuto** — "unknown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sconosciuto** is *s-*, "un-", plus *conosciuto*, "known", from *conoscere*, "to know", which goes back to Latin *cognoscere*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

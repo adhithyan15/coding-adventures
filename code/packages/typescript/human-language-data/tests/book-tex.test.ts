@@ -31,6 +31,24 @@ const tracks = [
 ].sort();
 
 describe("the generated book.tex", () => {
+  it("keeps A1 assessment-paper links usable across generated books", () => {
+    for (const [track, chapter, paper, label] of [
+      ["bengali", "ch40-reading-words-lines-and-a-passage.tex", "mock-1.md", "A1 mock 1 learner paper"],
+      ["sanskrit", "ch65-the-last-letter-read.tex", "mock-1.md", "A1 mock 1 learner paper"],
+      ["malayalam", "ch108-marks.tex", "mock-1.md", "A1 mock 1 learner paper"],
+      ["kannada", "ch77-marks-on-the-page.tex", "writing-paper-1.md", "A1 writing-only learner paper"],
+      ["gujarati", "ch143-to-run-away-to-go-around-to-stop-to-believe-to-change.tex", "writing-paper-1.md", "A1 writing-only learner paper"],
+      ["urdu", "ch142-to-get-off-to-fill-to-hide-to-be-saved-to-grow.tex", "writing-paper-1.md", "A1 writing-only learner paper"],
+    ]) {
+      const path = `${track}/book/chapters/${chapter}`;
+      const tex = OUTPUTS.get(path);
+      expect(tex, path).toBeDefined();
+      expect(tex, path).toContain(
+        `\\href{https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/${track}/mocks/a1/${paper}}{${label}}`,
+      );
+    }
+  });
+
   it("never inverts nested bold-italic runs in generated chapters", () => {
     const inverted = [...OUTPUTS]
       .filter(([path]) => path.includes("/book/chapters/"))

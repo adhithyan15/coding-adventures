@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 42,
-  "sourceHash": "fnv1a64:880347127d2829a7",
+  "sourceHash": "fnv1a64:b4a4b8a0d34b1f58",
   "lessonIds": [
     "LA-C42-fero",
     "LA-C42-accipio",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch42.txt",
   "json": "latin/narration/ch42.json",
-  "textHash": "fnv1a64:d683fa407a37fa30",
-  "jsonHash": "fnv1a64:7e6cfd14665b73de",
+  "textHash": "fnv1a64:da1cc5eb014aa011",
+  "jsonHash": "fnv1a64:23c404dbdf571b07",
   "findings": []
 }

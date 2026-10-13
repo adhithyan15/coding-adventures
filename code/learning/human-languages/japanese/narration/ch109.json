@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C109-kamo-type",
-              "prompt": "Type the Japanese for 'a wild duck'.",
+              "prompt": "Say the Japanese for 'a wild duck'.",
               "assesses": [
                 "JA-LEX-C109-THINGS109-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C109-washi-type",
-              "prompt": "Type the Japanese for 'an eagle'.",
+              "prompt": "Say the Japanese for 'an eagle'.",
               "assesses": [
                 "JA-LEX-C109-THINGS109-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C109-taka-type",
-              "prompt": "Type the Japanese for 'a hawk'.",
+              "prompt": "Say the Japanese for 'a hawk'.",
               "assesses": [
                 "JA-LEX-C109-THINGS109-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C109-fukurou-type",
-              "prompt": "Type the Japanese for 'an owl'.",
+              "prompt": "Say the Japanese for 'an owl'.",
               "assesses": [
                 "JA-LEX-C109-THINGS109-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C109-kaiko-type",
-              "prompt": "Type the Japanese for 'a silkworm'.",
+              "prompt": "Say the Japanese for 'a silkworm'.",
               "assesses": [
                 "JA-LEX-C109-THINGS109-05"
               ],

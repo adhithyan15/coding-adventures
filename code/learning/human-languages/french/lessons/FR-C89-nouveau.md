@@ -13,7 +13,8 @@ gloss: "new"
 concept_tag: FR-ANIMAUX41-NOUVEAU
 prerequisites: [FR-C88-tigre, FR-C89-tortue]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "nouveau ← Latin novellus, from novus 'new' — English novel and novice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C89-tortue]
 <!-- hl-knowledge: introduces=[FR-LEX-C89-ANIMAUX41-02]; assesses=[] -->
 
 **nouveau** — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nouveau** ← Old French *novel* ← Latin *novellus*, "new, young", from *novus*, "new" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to fly, to steal"
 concept_tag: FR-VERB-VOLER
 prerequisites: [FR-C238-risquer, FR-C238-resoudre]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "voler ← Latin volare 'to fly'; 'to steal' came from falconry — English volley"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C238-resoudre]
 <!-- hl-knowledge: introduces=[FR-LEX-C238-VERBES238-05]; assesses=[] -->
 
 **voler** — "to fly, to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voler** ← Latin *volare*, "to fly" (Lewis & Short) — inherited. "To steal" grew out of falconry: a hawk flew at its prey.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

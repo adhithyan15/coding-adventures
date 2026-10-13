@@ -13,7 +13,8 @@ gloss: "the wind"
 concept_tag: FR-NATURE36-VENT
 prerequisites: [FR-C83-pluie, FR-C83-neige]
 sounds: []
-roots: []
+roots: [ventus-latin]
+etymology_hook: "vent ← Latin ventus 'wind' — English vent and ventilate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C83-neige]
 <!-- hl-knowledge: introduces=[FR-LEX-C84-NATURE36-01]; assesses=[] -->
 
 **le vent** — "the wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vent** ← Latin *ventus*, "wind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

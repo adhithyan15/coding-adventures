@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REMARQUER
 prerequisites: [FR-C152-reculer, FR-C152-baisser]
 sounds: []
 roots: []
+etymology_hook: "remarquer — re- + the verb 'to mark', from Germanic — English remark"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C152-baisser]
 <!-- hl-knowledge: introduces=[FR-LEX-C153-VERBES153-01]; assesses=[] -->
 
 **remarquer** — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remarquer** — built from *re-* and the verb for "to mark", whose noun came from a Germanic word for "a sign".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

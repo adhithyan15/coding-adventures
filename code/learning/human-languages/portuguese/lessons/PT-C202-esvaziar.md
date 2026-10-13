@@ -13,7 +13,8 @@ gloss: "to empty"
 concept_tag: PT-VERB-ESVAZIAR
 prerequisites: [PT-C202-arrefecer, PT-C202-encher]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "esvaziar — built from vazio 'empty' (← Latin vacivus) + es- and -ar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C202-encher]
 <!-- hl-knowledge: introduces=[PT-LEX-C202-VERBOS202-04]; assesses=[] -->
 
 **esvaziar** — "to empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esvaziar** is built from *vazio*, "empty", with *es-* and *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

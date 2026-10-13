@@ -1,11 +1,9 @@
 Sanskrit, chapter 6: Numbers One to Five.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 8.
 एक, द्व, त्रि, चतुर्, पञ्च (pañca) — one to five.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: the five until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -14,8 +12,13 @@ This chapter does something the other Indic chapters can't do alone. Sanskrit pr
 How many numbers does a Sanskrit verb count in? (Three: singular, dual for exactly two, and plural.)
 
 You'll want to know: the five.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, stem, masculine, neuter. Come back and look at it when you have stopped.
-Two notes first. A third, about the last column, follows in the next lesson.
+[a table of 5 rows, read aloud]
+stem: éka- (1). masculine: एकः ékaḥ. neuter: एकम् ékam.
+stem: dvá- (2). masculine: dváu. neuter: dvé.
+stem: tri- (3). masculine: त्रयः tráyaḥ. neuter: trī́ṇi.
+stem: catúr- (4). masculine: चत्वारः catvā́raḥ. neuter: चत्वारि catvā́ri.
+stem: पञ्च (pañca) páñca (5). masculine: —. neuter: —.
+Two notes first. A third, about the neuter forms, follows in the next lesson.
 Sanskrit has a dual — a separate number for exactly two things — which is why "two" is dváu rather than a plural.
 Pañca barely inflects in the nominative and accusative. It is also the one you already half-know.
 
@@ -94,7 +97,7 @@ Were the Latin and Sanskrit number forms borrowed from one another?
 Lesson 4 of 8.
 ञ (ña) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ञ and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -102,6 +105,7 @@ Before the new one, the ones you have already met: य, ◌ृ, अ. Say what ea
 [pause 2 seconds]
 One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ञ.
 ञ — ña.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ñ, it is ña.
@@ -123,6 +127,7 @@ Pen lifts: 3. The pen comes up 3 times and no more.
 verified four-stroke teaching form fitted to the bundled printed outline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ञ (ña)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at this, and find ञ (ña) in it]
@@ -195,6 +200,8 @@ What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskr
 Lesson 7 of 8.
 (पञ्च, continued) ((pañca, continued)) — The word, taken apart — the qualified punch story.
 
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape inside pañca.
+
 Warm-up.
 [pause 2 seconds]
 Before going on: say पञ्च (pañca) again, and what it means.
@@ -208,6 +215,42 @@ Guided Practice.
 [your turn — say: punch — common account, not certain]
 [pause 8 seconds for the answer]
 [your turn — say: the rival: puncheon, a cask]
+[pause 8 seconds for the answer]
+
+Guided Practice — the chapter's five, and what they carry.
+[pause 1 second after each]
+[your turn — say: one to five (eka, dva, tri, catur, pañca)]
+[pause 8 seconds for the answer]
+[your turn — say: why "two" is dváu, not a plural (a dual, for exactly two)]
+[pause 8 seconds for the answer]
+[your turn — say: the two forms of "three", and which one Hindi, Marathi and the rest mostly inherit (tráyaḥ, masculine; trī́ṇi, the neuter)]
+[pause 8 seconds for the answer]
+[your turn — say: the two directions these five point (back to the forms behind the modern Indic numbers; across to the English ones, as cousins)]
+[pause 8 seconds for the answer]
+
+Guided Practice — cousins and sound laws.
+[pause 1 second after each]
+[your turn — say: "three" in Sanskrit, Latin and English, and whether one borrowed it (tri, trēs, three; no — inherited cousins)]
+[pause 8 seconds for the answer]
+[your turn — say: why éka and one are relatives but not one whole word (same root, different suffixes)]
+[pause 8 seconds for the answer]
+[your turn — say: what rounded kʷ became in Latin, Sanskrit and English (qu-, c-, hw-: quattuor, catvāri, what)]
+[pause 8 seconds for the answer]
+[your turn — say: where the f- of five comes from, and why four has one too (PIE p, by Grimm's law; analogy with five)]
+[pause 8 seconds for the answer]
+
+Guided Practice — Punjab and pentagon.
+[pause 1 second after each]
+[your turn — say: what Punjab means, and whether Persian panj is a loan from Sanskrit (panj-āb, "five waters"; no — an Iranian cousin)]
+[pause 8 seconds for the answer]
+[your turn — say: the Greek five, and two English words built on it (pente; pentagon, pentathlon)]
+[pause 8 seconds for the answer]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the shape inside pañca.
+अ, ञ (ña).
+[once you have stopped driving — point: ña, then a]
+[your turn — say: the sound ञ carries, and the number it sits inside (ña; pañca)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

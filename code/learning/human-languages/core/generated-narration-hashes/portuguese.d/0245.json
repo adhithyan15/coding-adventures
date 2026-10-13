@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 245,
-  "sourceHash": "fnv1a64:eb5f8f8e0f1d9db9",
+  "sourceHash": "fnv1a64:df7cb9db385859f3",
   "lessonIds": [
     "PT-C245-dialeto",
     "PT-C245-noticia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch245.txt",
   "json": "portuguese/narration/ch245.json",
-  "textHash": "fnv1a64:9c471e408211b7e1",
-  "jsonHash": "fnv1a64:c077e31318b6dbfd",
+  "textHash": "fnv1a64:a9b6509683ce62b4",
+  "jsonHash": "fnv1a64:8946d6516b99b569",
   "findings": []
 }

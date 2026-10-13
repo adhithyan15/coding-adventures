@@ -33,25 +33,26 @@ reviews_of: [TE-C41-who]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-04, TE-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ఎక్కడ
 <!-- hl-knowledge: introduces=[TE-LEX-C41-DEIXIS-06]; assesses=[] -->
 
 **ఎక్కడ** — *ekkaḍa* — where? — asking about a place.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no place: it asks your listener to
+point one out.
 
-Its partner is **ఎవరు** *evaru*, which you will meet just now. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is **ఎవరు** *evaru*, which you have just met: both open with
+**e-**, the asking sound. Its other partners, **ఇక్కడ** *ikkaḍa* and **అక్కడ**
+*akkaḍa*, differ from it only at the front. That is the whole system, and the
+last lesson of this chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ఎక్కడ" three times, picturing something different each time]
+- [YOU SAY: "ఎక్కడ" three times, asking about a different place each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

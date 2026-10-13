@@ -14,7 +14,8 @@ romanization: "miṉcāram"
 concept_tag: TA-PORUL213-MINCARAM
 prerequisites: [TA-C212-acinkamana, TA-C213-alamari]
 sounds: []
-roots: []
+roots: [dravidian-min-flash, sanskrit-sara]
+etymology_hook: "மின்சாரம் — a coinage: native miṉ 'lightning' (DEDR 4876) + cāram ← Sanskrit sāra 'essence' (CDIAL 13355)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C213-alamari]
 <!-- hl-knowledge: introduces=[TA-LEX-C213-PORUL213-02]; assesses=[] -->
 
 **மின்சாரம்** — *miṉcāram* — "electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மின்சாரம்** (*miṉcāram*) is a modern coinage: native *miṉ*, "lightning" (DEDR 4876), and *cāram*, "essence, strength", from Sanskrit *sāra* (CDIAL 13355).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

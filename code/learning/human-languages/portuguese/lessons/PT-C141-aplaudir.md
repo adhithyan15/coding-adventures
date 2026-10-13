@@ -13,7 +13,8 @@ gloss: "to applaud"
 concept_tag: PT-VERB-APLAUDIR
 prerequisites: [PT-C141-anunciar, PT-C141-aparecer]
 sounds: []
-roots: []
+roots: [plaudere-latin]
+etymology_hook: "aplaudir ← Latin applaudere 'to clap at' — English applaud and plausible"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C141-aparecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C141-VERBOS141-05]; assesses=[] -->
 
 **aplaudir** — "to applaud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aplaudir** ← Latin *applaudere*, "to clap at" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

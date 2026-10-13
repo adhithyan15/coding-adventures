@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 14,
   "title": "Having and Telling Your Age",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2af0c2ddce50d60c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:760f89b387e4ace5",
   "lessons": [
     {
       "id": "IT-C14-avere",
@@ -14,20 +14,13 @@
       "romanization": "avere",
       "gloss": "to have — and Italy's only silent letter, which exists purely to prevent confusion",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70c82cbe6302708b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:10493997e6fe75f5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -67,8 +60,17 @@
               ]
             },
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at which forms carry an h.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at which forms carry an **h**.]"
+            },
+            {
               "kind": "speech",
-              "text": "Look at which forms carry an h: ho, hai, ha, hanno. And which don't: abbiamo, avete."
+              "text": "They are ho, hai, ha, hanno; abbiamo and avete carry none."
             }
           ]
         },
@@ -203,7 +205,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecc207d26bf16723",
+      "sourceHash": "fnv1a64:78a04729e6c6c529",
       "notice": null,
       "blocks": [
         {
@@ -219,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "Italian states age with avere, not essere. And the silent h from last lesson stops being trivia here — it becomes the difference between two real sentences."
+              "text": "Italian states age with avere, \"to have,\" not with a be-verb. And the silent h from last lesson stops being trivia here — it becomes the difference between two real sentences."
             }
           ]
         },
@@ -234,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "Essere is wrong here. Sono venti anni does not mean \"I am twenty.\""
+              "text": "A be-verb is wrong here. Italian does not say \"I am twenty\"; it says \"I have twenty.\""
             }
           ]
         },
@@ -343,7 +345,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb does Italian use for age? (Avere, never essere.) What does ho venti anni literally say? (\"I have twenty years.\") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.)"
+              "text": "Which verb does Italian use for age? (Avere, never a be-verb.) What does ho venti anni literally say? (\"I have twenty years.\") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.)"
             }
           ]
         }

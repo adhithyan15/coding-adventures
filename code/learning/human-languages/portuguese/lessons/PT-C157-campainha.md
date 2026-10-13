@@ -13,7 +13,8 @@ gloss: "a doorbell"
 concept_tag: PT-COISAS157-CAMPAINHA
 prerequisites: [PT-C157-varanda, PT-C157-fechadura]
 sounds: []
-roots: []
+roots: [campana-latin]
+etymology_hook: "campainha — a small form of the bell word, from Late Latin campana, bronze from Campania"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C157-fechadura]
 <!-- hl-knowledge: introduces=[PT-LEX-C157-COISAS157-05]; assesses=[] -->
 
 **a campainha** — "a doorbell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campainha** is a small form of an old word for a bell (EtymDB 2.1), which goes back to Late Latin *campana*, bronze from Campania.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

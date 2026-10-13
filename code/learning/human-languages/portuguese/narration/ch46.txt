@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for an orange, then the Portuguese for a 
 You'll want to know: a batata.
 a batata — "a potato".
 
+The word, taken apart.
+batata from Taíno batata, "sweet potato" (EtymDB 2.1) — borrowed, most likely through Spanish.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a grape, then the Portuguese for a po
 
 You'll want to know: o tomate.
 o tomate — "a tomato".
+
+The word, taken apart.
+tomate from Spanish tomate, "tomato" (EtymDB 2.1) — borrowed. Spanish took it from Nahuatl tomatl.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a potato, then the Portuguese for a t
 You'll want to know: a cebola.
 a cebola — "an onion".
 
+The word, taken apart.
+cebola from Late Latin cepulla, "little onion", from Latin cepa, "onion" — inherited. EtymDB 2.1 has no ancestor row for cebola; it derives Spanish cebolla from cepulla.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a tomato, then the Portuguese for an 
 You'll want to know: a cenoura.
 a cenoura — "a carrot".
 
+The word, taken apart.
+cenoura from Andalusian Arabic safunnāriya, "carrot" (EtymDB 2.1) — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for an onion, then the Portuguese for a c
 
 You'll want to know: o feijão.
 o feijão — "beans".
+
+The word, taken apart.
+feijão from Latin phaseolus, "bean" (EtymDB 2.1) — inherited. Latin took it from Greek phasēlos; the Latin -l- fell out on the way.
 
 What you've built.
 One more word for this chapter.

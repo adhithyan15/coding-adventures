@@ -14,6 +14,7 @@ concept_tag: IT-COSE159-BALCONE
 prerequisites: [IT-C159-soggiorno, IT-C159-corridoio]
 sounds: []
 roots: []
+etymology_hook: "balcone ← Lombardic balko 'a beam' — borrowed from Germanic; English balcony is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C159-corridoio]
 <!-- hl-knowledge: introduces=[IT-LEX-C159-COSE159-04]; assesses=[] -->
 
 **il balcone** — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balcone** ← Lombardic *balko*, "a beam, a scaffold" — borrowed from the Germanic language of the Lombards. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

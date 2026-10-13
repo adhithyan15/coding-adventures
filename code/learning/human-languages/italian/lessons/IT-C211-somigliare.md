@@ -13,7 +13,8 @@ gloss: "to look like"
 concept_tag: IT-VERB-SOMIGLIARE
 prerequisites: [IT-C211-soffrire, IT-C211-sognare]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "somigliare ← Vulgar Latin similiare, from similis 'like' — English similar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C211-sognare]
 <!-- hl-knowledge: introduces=[IT-LEX-C211-VERBI211-05]; assesses=[] -->
 
 **somigliare** — "to look like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**somigliare** ← Vulgar Latin *similiare*, "to be like" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

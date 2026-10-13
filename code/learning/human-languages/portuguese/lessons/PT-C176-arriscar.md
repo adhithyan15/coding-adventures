@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ARRISCAR
 prerequisites: [PT-C176-reduzir, PT-C176-recusar]
 sounds: []
 roots: []
+etymology_hook: "arriscar — built on the risk word, whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C176-recusar]
 <!-- hl-knowledge: introduces=[PT-LEX-C176-VERBOS176-03]; assesses=[] -->
 
 **arriscar** — "to risk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arriscar** is built on the word for a risk, whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

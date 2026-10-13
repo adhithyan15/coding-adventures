@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: modern-standard-arabic
-reviews_of: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr, AR-C01-al, AR-W09-khayr-bikhayr]
+reviews_of: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr, AR-C01-al]
 ---
 
 # بخير (bi-khayr) — "well"
@@ -37,15 +37,16 @@ reviews_of: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr, AR-C01-al, AR-W09-khayr
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The answer to *kayfa ḥāluka?* — and you have **already written this
-word by hand**. Nothing here is new; it is two old pieces stuck together.
+[PAUSE 2s] The answer to *kayfa ḥāluka?* — and nothing here is new; it is two
+old pieces stuck together. Before this chapter ends you will **write it by hand**.
 
 ## You'll want to know — The letters in this word
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-BI-KHAYR-01]; assesses=[] -->
 
 *(Skim if you read Arabic.)* **ب** (*bāʾ*), **خ** (*khāʾ*), **ي** (*yāʾ*), **ر**
-(*rāʾ*) — every one of them from the writing set, where you assembled **خير**
-and then **بخير** letter by letter. Right to left: **ب · خ · ي · ر**.
+(*rāʾ*) — every one of them a letter you have already written. The chapter's
+last writing lesson joins them into **خير** and then **بخير**, letter by letter.
+Right to left: **ب · خ · ي · ر**.
 
 ## You'll want to know — The two pieces
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-BI-KHAYR-02]; assesses=[] -->
@@ -64,7 +65,7 @@ the next word.
 ## You'll want to know — What you actually say
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- — **كيف حالك؟** *kayfa ḥāluka?* ("How is your state?")
+- — *kayfa ḥāluka?* ("How is your state?")
 - — **بخير، شكراً.** *bi-khayr, shukran.* ("Well, thank you.")
 
 Literally: "*In goodness, thanks.*" Not "I am fine" — Arabic doesn't need the
@@ -73,8 +74,7 @@ Literally: "*In goodness, thanks.*" Not "I am fine" — Arabic doesn't need the
 ## You'll want to know — The bi- you have heard before
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-That same **بـ** opens the most-spoken phrase in the language: **بسم الله**
-(*bismillāh*, "**in** the name of God") — *bi-* + *ism* (the very word from
+That same **بـ** opens the most-spoken phrase in the language: *bismillāh* ("**in** the name of God") — *bi-* + *ism* (the very word from
 Chapter 2!) + *allāh*. One tiny letter, doing the same job.
 
 ## Guided Practice

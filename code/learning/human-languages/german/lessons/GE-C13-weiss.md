@@ -13,7 +13,7 @@ sounds: [w-is-v, diphthong-ei, ss-eszett-long]
 roots: [germanic-hwitaz]
 etymology_hook: "weiß is English white in different spelling clothes: German writes the vowel ei where English writes i, and closes it with an ß that English never had"
 duration:
-  max_seconds: 160
+  max_seconds: 202
 requires:
   knowledge: [GE-LEX-SCHWARZ-01, GE-LEX-ESZETT-01, GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02]
 introduces:
@@ -46,6 +46,11 @@ needs the letter you were shown back in the writing chapter.
 
 Three letters and every one of them is a trap for an English eye. It is
 pronounced, near enough, like English **vice**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**weiß** ← Old High German *wīz* ← Proto-Germanic *\*hwītaz* — inherited, the same word as English *white*, with German *ß* where English kept *t*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-WEISS-01]; assesses=[GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02, GE-LEX-ESZETT-01] -->

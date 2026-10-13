@@ -136,11 +136,11 @@ it("pins French modality", () => expectLanguageModality("french"));
 // with its Romance sisters and the areal change that retired it. Twelve lessons
 // now own one thing each; nine atoms, well under the ceiling.
 //
-// `finir` and `vendre` appear as EXAMPLES of the -ir and -re participle classes
-// and are deliberately not taught as vocabulary -- neither verb exists anywhere
-// in this corpus, and smuggling two headwords in to illustrate a pattern would
-// have been exactly the cramming the atom ceiling exists to prevent. The lesson
-// says so in as many words.
+// FR-C15-participe-ir-re shows the participles `fini` and `vendu` as EXAMPLES of
+// the -ir and -re classes, without their infinitives: `finir` gets its own
+// lesson later (FR-C37-finir) and `vendre` is not taught. Smuggling two
+// headwords in to illustrate a pattern would have been exactly the cramming the
+// atom ceiling exists to prevent. The lesson says so in as many words.
 // 24 -> 25 culture claims: the areal change. French, German and Italian each
 // swapped a simple past for a compound one, and they did it as NEIGHBOURS --
 // one change spreading by contact across a connected block -- while Spanish and
@@ -223,6 +223,9 @@ it("pins French's writing runway, now complete at every level", () => {
   // the set: `missing-stage-prerequisite` rejects a connected composition that
   // sits before the timed paper, or a timed paper before a controlled one.
   expect(french.validEvidence.map((entry) => entry.stage)).toEqual([
+    // Lesson one (FR-C01-salut) now opens the runway with a one-shape finger
+    // trace of the silent final t, ahead of FR-W01-salut-observe.
+    "observe-trace",
     "observe-trace",
     "guided-copy",
     "delayed-copy",

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C115-jamin-type",
-              "prompt": "Type the Marwadi for 'land'.",
+              "prompt": "Say the Marwadi for 'land'.",
               "assesses": [
                 "MW-LEX-C115-CAN115-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C115-jaydad-type",
-              "prompt": "Type the Marwadi for 'property'.",
+              "prompt": "Say the Marwadi for 'property'.",
               "assesses": [
                 "MW-LEX-C115-CAN115-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C115-puji-type",
-              "prompt": "Type the Marwadi for 'capital, savings'.",
+              "prompt": "Say the Marwadi for 'capital, savings'.",
               "assesses": [
                 "MW-LEX-C115-CAN115-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C115-kamai-type",
-              "prompt": "Type the Marwadi for 'earnings'.",
+              "prompt": "Say the Marwadi for 'earnings'.",
               "assesses": [
                 "MW-LEX-C115-CAN115-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C115-naukri-type",
-              "prompt": "Type the Marwadi for 'a job'.",
+              "prompt": "Say the Marwadi for 'a job'.",
               "assesses": [
                 "MW-LEX-C115-CAN115-05"
               ],

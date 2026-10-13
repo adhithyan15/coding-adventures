@@ -14,7 +14,8 @@ romanization: "vaṇaṅku"
 concept_tag: TA-VERB-VANANKU
 prerequisites: [TA-C165-alankari, TA-C165-natanamatu]
 sounds: []
-roots: []
+roots: [vaṇaṅku]
+etymology_hook: "வணங்கு — native Dravidian (DEDR 5236); Malayalam vaṇaṅṅuka 'to bow, salute'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C165-natanamatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C165-ACT165-05]; assesses=[] -->
 
 **வணங்கு** — *vaṇaṅku* — "to worship, to bow to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வணங்கு** (*vaṇaṅku*) is native Dravidian. DEDR 5236 lists Malayalam *vaṇaṅṅuka*, "to bow, salute". It is the verb behind *vaṇakkam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

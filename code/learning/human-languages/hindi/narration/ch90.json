@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:64e58696b294e200",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8118fec7a072286e",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -14,20 +14,13 @@
       "romanization": "lambā",
       "gloss": "tall, long — one word for both, because Hindi measures the same distance whether it stands up or lies down",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1d25c62cb414834",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:d1c59d982f2ade32",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last chapter gave you four adjectives and not one of them changed its ending. Say आसान and remember why it stayed put. This chapter gives you three that do the opposite, and you can see it coming from the spelling."
+              "text": "The last chapter gave you four adjectives and not one of them changed its ending. Say आसान and remember why it stayed put. This chapter gives you three that do the opposite, and you can hear it coming from the ending."
             }
           ]
         },
@@ -122,7 +115,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the whole reason the easy-and-difficult lesson and this one belong next to each other. That one gave you four adjectives that never move, and every one of them ended in a consonant. These three all end in -आ, and every one of them moves. Nothing has to be memorised — look at the last letter."
+              "text": "This is the whole reason the easy-and-difficult lesson and this one belong next to each other. That one gave you four adjectives that never move, and every one of them ended in a consonant. These three all end in -आ, and every one of them moves. Nothing has to be memorised — listen for the last sound."
             }
           ]
         },
@@ -158,11 +151,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"लंबा (lambā) रास्ता\" — a long road, the same word doing the other job",
+              "instruction": "\"लंबा (lambā) दिन\" — a long day, the same word doing the other job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"लंबा रास्ता\" — a long road, the same word doing the other job]"
+              "source": "[YOU SAY: \"लंबा दिन\" — a long day, the same word doing the other job]"
             },
             {
               "kind": "prompt",

@@ -11,6 +11,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [PT-C01-ola]
 sounds: [final-o-is-u]
 roots: [obligatus]
+etymology_hook: "obrigado ← Latin obligatus 'bound, obliged' — the same word as English obligated"
 reviews_of: [PT-C01-bom-dia]
 duration:
   max_seconds: 128

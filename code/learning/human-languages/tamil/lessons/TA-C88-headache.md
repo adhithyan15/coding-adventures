@@ -11,7 +11,8 @@ romanization: "talaivali"
 concept_tag: TA-DOCTOR-HEADACHE
 prerequisites: [TA-C88-hospital, TA-C88-vomiting]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-vali-pain]
+etymology_hook: "தலைவலி — native: talai 'head' (DEDR 3103) + vali 'pain' (DEDR 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C88-vomiting]
 
 It is **தலை**, "head", and **வலி**, "pain", written as one word. **எனக்குத் தலைவலி** — "I have a
 headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தலைவலி** (*talaivali*) is native: *talai*, "head" (DEDR 3103), and *vali*, "pain" (DEDR 5281).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

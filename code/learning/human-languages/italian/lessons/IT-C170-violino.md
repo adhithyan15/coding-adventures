@@ -14,6 +14,7 @@ concept_tag: IT-COSE170-VIOLINO
 prerequisites: [IT-C170-chitarra, IT-C170-pianoforte]
 sounds: []
 roots: []
+etymology_hook: "violino — a little viola, the instrument (not the colour), from Old Provençal viola"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C170-pianoforte]
 <!-- hl-knowledge: introduces=[IT-LEX-C170-COSE170-03]; assesses=[] -->
 
 **il violino** — "a violin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**violino** — built from *viola*, the stringed instrument, with *-ino*, "little". EtymDB 2.1 derives that *viola* — a different word from the colour — from Old Provençal *viola*, from Medieval Latin *vitula*, "a stringed instrument".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

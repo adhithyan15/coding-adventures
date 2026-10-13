@@ -13,7 +13,8 @@ gloss: "to divorce"
 concept_tag: FR-VERB-DIVORCER
 prerequisites: [FR-C207-vieillir, FR-C207-epouser]
 sounds: []
-roots: []
+roots: [divortium-latin]
+etymology_hook: "divorcer — from the noun 'divorce', the noun behind divorcé"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C207-epouser]
 <!-- hl-knowledge: introduces=[FR-LEX-C207-VERBES207-05]; assesses=[] -->
 
 **divorcer** — "to divorce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorcer** — formed from the noun for "a divorce", the noun behind *divorcé*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

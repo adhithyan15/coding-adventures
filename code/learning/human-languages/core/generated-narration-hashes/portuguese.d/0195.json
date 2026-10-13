@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 195,
-  "sourceHash": "fnv1a64:23f696ef7975c3ba",
+  "sourceHash": "fnv1a64:a58bcd7466d91363",
   "lessonIds": [
     "PT-C195-lama",
     "PT-C195-po",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch195.txt",
   "json": "portuguese/narration/ch195.json",
-  "textHash": "fnv1a64:de73fde769e3dfc6",
-  "jsonHash": "fnv1a64:b11a9a3869306f35",
+  "textHash": "fnv1a64:54854534e5bf7ce4",
+  "jsonHash": "fnv1a64:5212dab36453934d",
   "findings": []
 }

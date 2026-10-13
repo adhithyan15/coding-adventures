@@ -13,7 +13,8 @@ gloss: "a wish"
 concept_tag: IT-TEMPOLIBERO117-DESIDERIO
 prerequisites: [IT-C117-concerto, IT-C117-festa]
 sounds: []
-roots: []
+roots: [desiderium-latin]
+etymology_hook: "desiderio ← Latin desiderium 'a longing' — English desire shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C117-festa]
 <!-- hl-knowledge: introduces=[IT-LEX-C117-TEMPOLIBERO117-05]; assesses=[] -->
 
 **il desiderio** — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desiderio** ← Latin *desiderium*, "a longing" — a learned borrowing. EtymDB 2.1 has no row for *desiderio*; it derives Old Italian *desidero* from *desiderium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

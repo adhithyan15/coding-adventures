@@ -22,3 +22,15 @@ path/to/source.py` from the Rust workspace.
 also caps tree items, depth, and text bytes before lowering. `run_source`
 returns `PythonRunError` on failure; its `output` field contains any successful
 earlier `print` calls, and `pyvm` writes those bytes before the error message.
+
+Direct AST arithmetic also requires canonical unary/binary operator tokens
+and grouping delimiters, including token kind, effective type and spelling.
+Forged syntax tokens fail before execution; supported source expressions and
+the existing resource bounds retain their behavior.
+
+Direct AST float atoms also require the canonical named `FLOAT` token kind and
+the complete ASCII spelling declared by the Python 3.12 lexer, checked before
+underscore removal or f64 conversion. Forged integer spellings, malformed
+underscores, nonnumeric names and conflicting enum kinds fail explicitly.
+Valid exponent overflow/underflow and raw-versus-cooked metadata behavior,
+source syntax and all existing runtime/resource bounds remain unchanged.

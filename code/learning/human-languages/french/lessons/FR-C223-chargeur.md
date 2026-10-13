@@ -13,7 +13,8 @@ gloss: "a charger"
 concept_tag: FR-CHOSES223-CHARGEUR
 prerequisites: [FR-C222-juge, FR-C223-batterie]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "chargeur — from the verb 'to load', from Latin carrus 'wagon' — English charger"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C223-batterie]
 <!-- hl-knowledge: introduces=[FR-LEX-C223-CHOSES223-02]; assesses=[] -->
 
 **le chargeur** — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chargeur** — built from the verb for "to load", ← Late Latin *carricare* (EtymDB 2.1), from *carrus*, "a wagon", with *-eur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

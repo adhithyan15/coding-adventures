@@ -1,26 +1,29 @@
 Italian, chapter 6: Numbers One to Ten.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+2 lessons. Both can be done entirely by ear.
 
 
 Lesson 1 of 2.
 uno, due, tre, quattro, cinque — counting to five.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
-Of all the Romance sisters, Italian kept the numbers closest to Latin — it stayed in Italy, next to Rome, and wore the words down the least. Beside each you'll see the Spanish and French cousins for contrast.
+Of all the Romance sisters, Italian kept the numbers closest to Latin — it stayed in Italy, next to Rome, and wore the words down the least. Beside each come its Spanish and French cousins, for contrast.
 
 Sounds you'll need.
 double-tt — quattro: hold the double t audibly, KWAT-tro (Italian really doubles its consonants).
 c-before-i — cinque = CHEEN-kweh: c before i/e is a "ch" sound, but the -que stays a hard kw.
 
 The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, Spanish / French, English cousins. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Italian from Latin: uno (1) from ūnus. Spanish / French: uno / un. English cousins: unit, union, unique (and a/an, one).
+Italian from Latin: due (2) from duo. Spanish / French: dos / deux. English cousins: duo, dual, duet, double.
+Italian from Latin: tre (3) from trēs. Spanish / French: tres / trois. English cousins: trio, triple, triangle.
+Italian from Latin: quattro (4) from quattuor. Spanish / French: cuatro / quatre. English cousins: quart, quarter, quatrain.
+Italian from Latin: cinque (5) from quīnque. Spanish / French: cinco / cinq. English cousins: quintet, quintessence.
 Notice cinque — Italian kept Latin quīnque almost whole (-que and all), while Spanish softened it to cinco and French clipped it to cinq. And quattro is why a musical foursome is a quartet and four singers make a quattro-anything. Italian is the sister who changed her Latin the least.
 
 Grammar Lens: uno becomes un / uno / una.
-uno is also "a/an," and it flexes by gender and the following sound: un (before most masc. nouns), uno (before tricky masc. clusters like s+consonant or z-), una (fem.). un caffè "a/one coffee," una birra "a/one beer." The others (due, tre…) don't change.
+uno is also "a/an," and it flexes by gender and the following sound: un (before most masc. nouns), uno (before tricky masc. clusters like s+consonant or z-), una (fem.). un giorno "a/one day," una sera "an/one evening." The others (due, tre…) don't change.
 
 Guided Practice.
 [pause 1 second]
@@ -28,7 +31,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: each with its English cousin — "due/duo, tre/trio, quattro/quart, cinque/quintet"]
 [pause 8 seconds for the answer]
-[your turn — say: "un caffè, una birra" — uno becomes un/una before a noun]
+[your turn — say: "un giorno, una sera" — uno becomes un/una before a noun]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -39,8 +42,6 @@ Give 1–5 in Italian. (Uno, due, tre, quattro, cinque.) Which Italian number ke
 Lesson 2 of 2.
 sei, sette, otto, nove, dieci — and the calendar's secret.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 The rest of the count hides a calendar fact: settembre–dicembre are Latin for 7, 8, 9, 10. Italian even keeps the old Latin double consonants that show it.
@@ -50,7 +51,12 @@ double-tt — sette = SET-teh, otto = OT-toh: lean on the doubled t, a giveaway 
 c-before-i — dieci = DYE-chee (the c before i becomes "ch").
 
 The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, Spanish twin, English cousins. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Italian from Latin: sei (6) from sex. Spanish twin: seis. English cousins: sextet, sextant.
+Italian from Latin: sette (7) from septem. Spanish twin: siete. English cousins: settembre (the 7th month!), septet.
+Italian from Latin: otto (8) from octō. Spanish twin: ocho. English cousins: ottobre (8th), octave, octopus.
+Italian from Latin: nove (9) from novem. Spanish twin: nueve. English cousins: novembre (9th), novena.
+Italian from Latin: dieci (10) from decem. Spanish twin: diez. English cousins: dicembre (10th), decimal, decade.
 Watch the doubled consonants do historical work: Latin septem had a -pt- that Italian smoothed to -tt- becomes sette; Latin octō had a -ct- that likewise became -tt- becomes otto. Italian didn't drop those clusters (as French did in huit) — it assimilated them into twins. So otto and ottobre still show the 8 side by side.
 
 Grammar Lens: why the months are "off by two".

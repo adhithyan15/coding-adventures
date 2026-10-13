@@ -14,7 +14,8 @@ romanization: "aruvi"
 concept_tag: TA-THINGS140-ARUVI
 prerequisites: [TA-C140-matulai, TA-C140-urukay, TA-C20-vaanilai, TA-C20-vaanilai, TA-C14-kaalangal, TA-C14-kaalangal]
 sounds: []
-roots: []
+roots: [dravidian-aruvi-stream]
+etymology_hook: "அருவி — native Dravidian (DEDR 225)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C140-urukay]
 <!-- hl-knowledge: introduces=[TA-LEX-C140-THINGS140-04]; assesses=[] -->
 
 **அருவி** — *aruvi* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அருவி** (*aruvi*) is native Dravidian (DEDR 225). The entry glosses *aruvi* "river's mouth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

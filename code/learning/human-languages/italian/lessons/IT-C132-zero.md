@@ -14,6 +14,7 @@ concept_tag: IT-NUMERI132-ZERO
 prerequisites: [IT-C131-spesso, IT-C131-qualche-volta]
 sounds: []
 roots: []
+etymology_hook: "zero ← Medieval Latin zephirum, from Arabic sifr 'empty' — English cipher is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C131-qualche-volta]
 <!-- hl-knowledge: introduces=[IT-LEX-C132-NUMERI132-01]; assesses=[] -->
 
 **zero** — "zero".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zero** ← Medieval Latin *zephirum*, from Arabic *sifr*, "empty" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

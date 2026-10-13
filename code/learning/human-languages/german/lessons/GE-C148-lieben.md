@@ -13,7 +13,8 @@ gloss: "to love"
 concept_tag: GE-VERB-LIEBEN
 prerequisites: [GE-C148-kosten, GE-C148-leihen]
 sounds: []
-roots: []
+roots: [germanic-leubaz]
+etymology_hook: "lieben — the verb of 'dear, beloved' ← Proto-Germanic *leubaz; English love and lief share the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C148-leihen]
 <!-- hl-knowledge: introduces=[GE-LEX-C148-VERB148-03]; assesses=[] -->
 
 **lieben** — "to love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lieben** is the verb of the word for "dear", Old High German *liob* ← Proto-Germanic *\*leubaz* — inherited. (EtymDB 2.1) English *lief* is the same word, and *love* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

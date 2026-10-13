@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C138-balad-type",
-              "prompt": "Type the Marwadi for 'an ox'.",
+              "prompt": "Say the Marwadi for 'an ox'.",
               "assesses": [
                 "MW-LEX-C138-THINGS138-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C138-bachhro-type",
-              "prompt": "Type the Marwadi for 'a calf'.",
+              "prompt": "Say the Marwadi for 'a calf'.",
               "assesses": [
                 "MW-LEX-C138-THINGS138-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C138-hiran-type",
-              "prompt": "Type the Marwadi for 'a deer'.",
+              "prompt": "Say the Marwadi for 'a deer'.",
               "assesses": [
                 "MW-LEX-C138-THINGS138-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C138-lukri-type",
-              "prompt": "Type the Marwadi for 'a fox'.",
+              "prompt": "Say the Marwadi for 'a fox'.",
               "assesses": [
                 "MW-LEX-C138-THINGS138-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C138-siyal-type",
-              "prompt": "Type the Marwadi for 'a jackal'.",
+              "prompt": "Say the Marwadi for 'a jackal'.",
               "assesses": [
                 "MW-LEX-C138-THINGS138-05"
               ],

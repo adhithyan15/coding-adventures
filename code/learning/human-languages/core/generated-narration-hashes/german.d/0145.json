@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 145,
-  "sourceHash": "fnv1a64:b8dd5dfe9299fb48",
+  "sourceHash": "fnv1a64:00924aa390a056d4",
   "lessonIds": [
     "GE-C145-benutzen",
     "GE-C145-einkaufen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch145.txt",
   "json": "german/narration/ch145.json",
-  "textHash": "fnv1a64:86d708be03614539",
-  "jsonHash": "fnv1a64:533548754daf3c5a",
+  "textHash": "fnv1a64:369239fa76488643",
+  "jsonHash": "fnv1a64:b0645b08f3642f9d",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a corner"
 concept_tag: GE-ORT107-ECKE
 prerequisites: [GE-C106-fabrik, GE-C107-buero]
 sounds: []
-roots: []
+roots: [germanic-agjo]
+etymology_hook: "Ecke ← Old High German ecka ← Proto-Germanic *agjō 'edge' — the same word as English edge"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C107-buero]
 <!-- hl-knowledge: introduces=[GE-LEX-C107-ORT107-02]; assesses=[] -->
 
 **die Ecke** — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ecke** ← Old High German *ecka* ← Proto-Germanic *\*agjō*, "edge" — inherited, the same word as English *edge*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

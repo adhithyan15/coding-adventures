@@ -13,7 +13,8 @@ gloss: "TV, television"
 concept_tag: IT-COSE249-TELEVISIONE
 prerequisites: [IT-C249-notizia, IT-C249-telegiornale]
 sounds: []
-roots: []
+roots: [visio-latin]
+etymology_hook: "televisione — Greek tele 'far' + visione 'sight', from Latin visio"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C249-telegiornale]
 <!-- hl-knowledge: introduces=[IT-LEX-C249-COSE249-04]; assesses=[] -->
 
 **la televisione** — "TV, television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**televisione** is *tele-*, "far", from Greek *tele*, plus *visione*, "sight", from Latin *visio*. EtymDB 2.1 records *visio* but has no row for the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

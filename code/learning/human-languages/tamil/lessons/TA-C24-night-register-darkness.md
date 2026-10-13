@@ -11,6 +11,7 @@ romanization: "iravu / rāttiri / iruḷ"
 prerequisites: [TA-C24-iravu]
 sounds: [tamil-retroflex-lla]
 roots: [proto-dravidian-cira-darkness, proto-dravidian-cirvl, sanskrit-ratri]
+etymology_hook: "இருள் 'darkness' and iravu 'night' share one native entry, DEDR 2552; Kannada iruḷ, Telugu irulu"
 duration:
   max_seconds: 240
 requires:
@@ -18,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02]
 practises:
-  knowledge: [TA-LEX-IRAVU-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02]
+  knowledge: [TA-LEX-IRAVU-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02, TA-ETYMON-IRAVU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,7 +31,7 @@ reviews_of: [TA-C24-iravu, TA-C23-day-family-register]
 # Night words — a register hypothesis and a semantic boundary
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IRAVU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IRAVU-01, TA-ETYMON-IRAVU-02] -->
 
 [PAUSE 2s] *Iravu* is native and *rāttiri* borrowed. That alone does not tell
 you which one conversational Tamil prefers.
@@ -51,8 +52,8 @@ region, and setting—not a purity assumption about native versus borrowed words
 
 **இருள்** (*iruḷ*) means **darkness**, from Proto-Dravidian ***cirVḷ*** and
 cognate with Kannada, Telugu, and Malayalam forms. It is not *iravu* "night as a
-time period" and comes from a different reconstructed root despite the similar
-sound.
+time period", but the two are not strangers: DEDR 2552 files *iruḷ* and
+*iravu* in one entry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IRAVU-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02] -->
@@ -67,4 +68,4 @@ sound.
 
 [PAUSE 3s] Is the *rāttiri* register claim settled? (**No** — limited sourcing,
 worth checking against native usage.) Is **இருள்** interchangeable with **இரவு**?
-(**No** — darkness versus a time period, from different roots.)
+(**No** — darkness versus a time period, though DEDR files them in one entry.)

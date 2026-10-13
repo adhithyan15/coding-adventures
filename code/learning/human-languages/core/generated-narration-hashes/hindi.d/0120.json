@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 120,
-  "sourceHash": "fnv1a64:add56ff3646b3034",
+  "sourceHash": "fnv1a64:d247d020cea44ec2",
   "lessonIds": [
     "HI-C120-hastakshar",
     "HI-C120-pahchan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch120.txt",
   "json": "hindi/narration/ch120.json",
-  "textHash": "fnv1a64:d4ff81a4807cb94f",
-  "jsonHash": "fnv1a64:c34e15206f091e54",
+  "textHash": "fnv1a64:bfc566e66f807991",
+  "jsonHash": "fnv1a64:1974353a413197a4",
   "findings": []
 }

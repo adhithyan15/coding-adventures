@@ -13,7 +13,8 @@ gloss: "a pen"
 concept_tag: IT-COSE1-PENNA
 prerequisites: [IT-C60-usare, IT-C61-bottiglia]
 sounds: []
-roots: []
+roots: [penna-latin]
+etymology_hook: "penna ← Latin penna 'feather' — a pen was a quill; English pen is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-bottiglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-02]; assesses=[] -->
 
 **la penna** — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**penna** ← Latin *penna*, "a feather, a wing" (Lewis & Short) — inherited: pens were cut from quills. EtymDB 2.1 has no row for *penna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

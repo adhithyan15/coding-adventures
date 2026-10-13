@@ -1,11 +1,9 @@
 Italian, chapter 27: Sesto al Decimo.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. All 5 can be done entirely by ear.
 
 
 Lesson 1 of 5.
 sesto — the sixth, and a letter that disappeared.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -30,7 +28,7 @@ sesto (masculine), sesta (feminine) — sixth. il sesto piano — the sixth floo
 
 The word, taken apart: the letter that went.
 Latin had sex and sextus, both with an x — which is a ks sound written with one letter. Italian does not keep x in inherited words. The cluster came apart and simplified, and both words lost it: sex became sei, and sextus became sesto.
-You can see the same disappearance in every Italian word that had one. It is why Italian spelling looks so much plainer than Latin's, and why a Latin word with an x is usually recognisable in Italian with an s or a doubled consonant in its place.
+The same disappearance shows in every Italian word that had one. It is why Italian spelling looks so much plainer than Latin's, and why a Latin word with an x is usually recognisable in Italian with an s or a doubled consonant in its place.
 English kept the x because it borrowed from books rather than inheriting from speech: sextet, sextant.
 
 Guided Practice.
@@ -71,6 +69,9 @@ Recalls first, then the seventh.
 You'll want to know: The word.
 settimo (masculine), settima (feminine) — seventh. il settimo piano — the seventh floor. la settima volta — the seventh time.
 The double tt stays and you must hold it — SET-ti-mo, with the stress right at the front. A single t would make a different word's shape.
+
+The word, taken apart.
+settimo from Latin septimus, "seventh" (Lewis & Short) — inherited; EtymDB 2.1 has no row for settimo.
 
 You'll want to know: al settimo cielo.
 essere al settimo cielo — to be in seventh heaven, delighted.
@@ -194,7 +195,7 @@ Recalls first, then the tenth, which closes the memorized ten.
 [pause 8 seconds for the answer]
 [your turn — recall: say essere — R3, a second word from the same distance]
 [pause 8 seconds for the answer]
-[your turn — recall: say non c'è male — R4, recognition at distance, eighty lessons back or more]
+[your turn — recall: say the Italian for not bad — R4, recognition at distance, eighty lessons back or more]
 [pause 8 seconds for the answer]
 [your turn — recall: say the second chapter's own recombining — R4, a second word from the same distance]
 [pause 8 seconds for the answer]

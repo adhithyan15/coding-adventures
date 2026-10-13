@@ -12,9 +12,9 @@ concept_tag: TA-PROXIMAL-PERSON
 prerequisites: [TA-C37-nanban]
 sounds: [tamil-standing-vowel-i, pulli-virama]
 roots: [dravidian-i-proximal-deictic]
-etymology_hook: "இவர் is the இ- 'near' base plus the respectful -அர்; அ- points away and எ- asks which"
+etymology_hook: "இவர் — native: the near base i- + respectful -ar (DEDR 410); Malayalam and Kannada say ivar too"
 duration:
-  max_seconds: 245
+  max_seconds: 299
 requires:
   knowledge: [TA-LEX-NANBAN-01, TA-ETYMON-NANBAN-02, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-CURVES-VA-KA-01, TA-LEX-UUR-01]
 introduces:
@@ -76,8 +76,8 @@ front:
 | **அ-** | points **away** — that one, there |
 | **எ-** | **asks** — which one |
 
-So **இவர்** is "this person," **அவர்** (*avar*) "that person," **எவர்** (*evar*)
-"which person." You have been using one front already: **என்ன** (*eṉṉa*),
+So **இவர்** is "this person"; the other two fronts give "that" and "which
+person." You have been using one front already: **என்ன** (*eṉṉa*),
 "what," is the **எ-** of asking.
 
 Two honest notes. **எ-** is the **question**, not a third distance. And Old

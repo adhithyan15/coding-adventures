@@ -13,7 +13,8 @@ gloss: "a letterbox, a postbox"
 concept_tag: FR-LIEU61-BOITE-AUX-LETTRES
 prerequisites: [FR-C109-sud, FR-C109-ouest]
 sounds: []
-roots: []
+roots: [littera-latin]
+etymology_hook: "boîte aux lettres — 'box for the letters'; letters ← Latin littera"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C109-ouest]
 <!-- hl-knowledge: introduces=[FR-LEX-C109-LIEU61-05]; assesses=[] -->
 
 **la boîte aux lettres** — "a letterbox, a postbox".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boîte aux lettres** — "box for the letters": *boîte*, "box", with *aux*, "to the", and the word for "letters", ← Latin *littera*, "a letter of the alphabet" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a library"
 concept_tag: GE-STADT3-BIBLIOTHEK
 prerequisites: [GE-C97-dorf, GE-C97-polizei]
 sounds: []
-roots: []
+roots: [bibliotheca-latin]
+etymology_hook: "Bibliothek ← Latin bibliothēca ← Greek bibliothḗkē 'book-store' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C97-polizei]
 <!-- hl-knowledge: introduces=[GE-LEX-C98-STADT3-01]; assesses=[] -->
 
 **die Bibliothek** — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bibliothek** ← Latin *bibliothēca* ← Greek *bibliothḗkē*, built from *biblíon*, "book", and *thḗkē*, "store" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

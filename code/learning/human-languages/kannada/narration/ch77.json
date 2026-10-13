@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Marks on the Page, Your First Question, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:412b3cd2ee4633f2",
+  "sourceHash": "fnv1a64:3fea95baa84be9b8",
   "lessons": [
     {
       "id": "KA-S152-full-stop-and-comma",
@@ -34,7 +34,7 @@
           "Script you'll notice: the full stop and the comma",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: the full stop and the comma and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: the full stop and the comma and Guided Practice."
       },
       "blocks": [
         {
@@ -204,7 +204,7 @@
         "waitUntilStopped": [
           "Script you'll notice: the question mark"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script you'll notice: the question mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script you'll notice: the question mark."
       },
       "blocks": [
         {
@@ -370,7 +370,7 @@
           "Script you'll notice: the colon, the brackets, the quotes and the dash",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the colon, the brackets, the quotes and the dash and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: the colon, the brackets, the quotes and the dash and Guided Practice."
       },
       "blocks": [
         {
@@ -536,7 +536,7 @@
           "Script: the whole set, sorted by what it asks of you",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the whole set, sorted by what it asks of you and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the whole set, sorted by what it asks of you and Guided Practice."
       },
       "blocks": [
         {
@@ -663,16 +663,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:49db0b3475d639dc",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — assemble one familiar question",
+          "Guided Practice — repair one difference"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing — assemble one familiar question and Guided Practice — repair one difference."
       },
       "blocks": [
         {
@@ -704,6 +709,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "KA-W77-gotta-controlled-question-check",
               "prompt": "With no word bank, romanization, or copyable answer, write the Kannada question meaning: Do you know?",
               "assesses": [
@@ -762,25 +768,29 @@
     {
       "id": "KA-W77-a1-timed-production",
       "sequence": 2737,
-      "title": "Your first complete Kannada A1 writing paper",
-      "headword": "(timed A1 writing)",
+      "title": "A short Kannada A1 writing checkpoint",
+      "headword": "(short timed A1 writing checkpoint)",
       "romanization": "",
-      "gloss": "a complete 20-minute Kannada A1 form and named-reader message under assessment conditions",
+      "gloss": "a three-minute independent form attempt before the separate full A1 writing paper",
       "script": "kannada",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b06777b979047771",
+      "sourceHash": "fnv1a64:401f1c55c88ef5ee",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -796,11 +806,11 @@
             },
             {
               "kind": "speech",
-              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable Kannada answer."
+              "text": "This is a short independent attempt, not a model. You will write the answers, and this page will not show you any copyable Kannada answer."
             },
             {
               "kind": "speech",
-              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Kannada script. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set a three-minute timer. Write in Kannada script. Short, legible answers are enough."
             }
           ]
         },
@@ -811,11 +821,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Task 1 — practical form: 7 minutes, 40 points."
+              "text": "One practical form — three minutes."
             },
             {
               "kind": "speech",
-              "text": "Complete all six fields in Kannada script for a neighbourhood language exchange. Short answers are enough."
+              "text": "Complete all six fields in Kannada script for a neighbourhood language exchange. Write one short answer in every field. Start the timer when you begin the first field; leave any unfinished field as evidence when it rings."
             },
             {
               "kind": "speech",
@@ -835,7 +845,7 @@
             },
             {
               "kind": "speech",
-              "text": "One place-question word."
+              "text": "One short question asking where a new member lives."
             },
             {
               "kind": "speech",
@@ -843,23 +853,7 @@
             },
             {
               "kind": "speech",
-              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
-            },
-            {
-              "kind": "speech",
-              "text": "Task 2 — message: 13 minutes, 60 points."
-            },
-            {
-              "kind": "speech",
-              "text": "Reader: Mira. Purpose: help Mira recognise you and arrange a first conversation tomorrow."
-            },
-            {
-              "kind": "speech",
-              "text": "Write 20–30 words in Kannada script. Greet Mira, give your name, say that you speak Kannada, mention the drink you would ask for, ask where Mira is, ask one familiar yes-or-no question, and close politely. The instructions give content, not sentences: choose and connect the Kannada yourself."
-            },
-            {
-              "kind": "speech",
-              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+              "text": "When the three-minute timer rings, stop. Record the number of completed fields. An honest short attempt is more useful than a perfect untimed one."
             }
           ]
         },
@@ -870,33 +864,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+              "text": "Spend at most one minute looking at this first attempt. Note one field you completed clearly and one field to practise next; do not rewrite the timed answer. Keep the page as evidence."
             },
             {
               "kind": "speech",
-              "text": "Task fulfilment and relevant content — six fields are attempted; the named reader, conversation purpose, and requested message points are present."
-            },
-            {
-              "kind": "speech",
-              "text": "Comprehensibility and organisation — Mira can follow the message and see how its ideas connect."
-            },
-            {
-              "kind": "speech",
-              "text": "Kannada vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
-            },
-            {
-              "kind": "speech",
-              "text": "Kannada orthographic control — vowel-sign placement, consonant clusters, word spacing, and punctuation remain readable."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Kannada attempt calmly inside the real limit."
+              "text": "This checkpoint is not the complete A1 writing paper. On another day, close this lesson and open the separate A1 writing-only learner paper for the authentic form and named-reader message under one 20-minute assessment clock. That paper and its later rubric review are a separate assessment session, not work inside this under-five-minute lesson. It is writing practice only; it does not establish full A1 exam readiness."
             }
           ]
         }

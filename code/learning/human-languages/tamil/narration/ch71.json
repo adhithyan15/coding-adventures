@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 71,
   "title": "Through the Day",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cea3f3f14cef036c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:45b8eddc16b8c68b",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -14,20 +14,13 @@
       "romanization": "eḻu",
       "gloss": "to get up, to rise",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:622cbcc87f2913e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:5b201b32cf9e51c3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -61,12 +54,23 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
+              "text": "Be careful with it, because you have met these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". The Dravidian etymological dictionary does not connect them: it files them as two separate entries. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழு (eḻu) is native Dravidian. DEDR 851 lists Malayalam eḻuka and Kannada eḻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,16 +121,25 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vaṇḍi, then read மேசை",
+              "instruction": "say vaṇḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vaṇḍi*, then read **மேசை**]"
+              "source": "[YOU RECALL: say *vaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேசை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேசை**]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c89c764d6d513c96",
+      "sourceHash": "fnv1a64:8f8b2a4cf0704042",
       "notice": null,
       "blocks": [
         {
@@ -202,6 +215,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூங்கு (tūṅgu) is native Dravidian. DEDR 3376 lists Malayalam tūṅṅuka and Kannada tūgu. The verb first meant \"to hang, to droop\": sleep is the head drooping."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -212,7 +236,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -279,7 +303,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,7 +346,7 @@
           "Script you'll notice: ஓ — the letter behind a sign you already read",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice."
       },
       "blocks": [
         {
@@ -450,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2cea5a98f93d929",
+      "sourceHash": "fnv1a64:91e62ed229425b92",
       "notice": null,
       "blocks": [
         {
@@ -495,6 +519,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓடு (ōḍu) is native Dravidian. DEDR 1041 lists Malayalam ōṭuka, Kannada ōḍu and Telugu ōḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -505,7 +540,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -545,7 +580,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tūṅgu, then name the letter ஓ, then say ōḍu",
+              "instruction": "say tūṅgu, then name the letter ஓ (ō), then say ōḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -572,7 +607,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -612,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df63ae9899e29864",
+      "sourceHash": "fnv1a64:bad165f491d08d51",
       "notice": null,
       "blocks": [
         {
@@ -653,6 +688,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கழுவு (kaḻuvu) is native Dravidian. DEDR 1369 lists Malayalam kaḻukuka and Telugu kaḍugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -663,7 +709,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -703,7 +749,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "name the letter ஓ, then say ōḍu, then say kaḻuvu",
+              "instruction": "name the letter ஓ (ō), then say ōḍu, then say kaḻuvu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -730,7 +776,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -761,7 +807,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17aaab0701fa95f7",
+      "sourceHash": "fnv1a64:eba2b654ffe15765",
       "notice": null,
       "blocks": [
         {
@@ -806,6 +852,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விளையாடு (viḷaiyāḍu) is native Dravidian. DEDR 5438 lists Malayalam viḷay-āṭuka. The second half is āṭu, \"to move, to dance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -816,7 +873,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -883,7 +940,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

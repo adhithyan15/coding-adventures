@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING]
 practises:
-  knowledge: [ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING]
+  knowledge: [ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING, ES-ETYMON-AD-HERI, ES-LEX-SIN-EMBARGO, ES-SEMANTIC-CONCESSION-STRONG]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -46,7 +46,7 @@ reviews_of: [ES-C270-sin-embargo]
   [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-AUNQUE]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-AUNQUE]; assesses=[ES-ETYMON-AD-HERI] -->
 
 **aunque** — "although, even though."
 
@@ -59,7 +59,7 @@ You have watched this fusion happen twice already: *ayer* out of *ad heri*, and
 by saying two words often enough that they become one.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[ES-SEMANTIC-CONCESSION-LEADING]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-CONCESSION-LEADING]; assesses=[ES-LEX-SIN-EMBARGO, ES-SEMANTIC-CONCESSION-STRONG] -->
 
 *Sin embargo* concedes after: *Es difícil. Sin embargo, me gusta.*
 *Aunque* concedes first: *Aunque es difícil, me gusta.*
@@ -80,7 +80,7 @@ objection, and grant one before you turn it.
 - [YOU SAY: all four moves in order — claim, example, however, although]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING, ES-SEMANTIC-CONCESSION-STRONG] -->
 
 [PAUSE 3s] What two words is *aunque* built from? (*Aun* and *que*.) Which Latin word is
 *aun*? (*Adhuc*, "still.") Which of *aunque* and *sin embargo* concedes first?

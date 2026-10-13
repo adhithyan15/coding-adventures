@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 182,
-  "sourceHash": "fnv1a64:ecb6451e029d4fd2",
+  "sourceHash": "fnv1a64:af2c44f36e9d916e",
   "lessonIds": [
     "GE-C182-kaempfen",
     "GE-C182-klettern",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch182.txt",
   "json": "german/narration/ch182.json",
-  "textHash": "fnv1a64:33ad50652203cd4d",
-  "jsonHash": "fnv1a64:8221cf217421f18e",
+  "textHash": "fnv1a64:543f8458d5431bed",
+  "jsonHash": "fnv1a64:9989d2fe0607ac21",
   "findings": []
 }

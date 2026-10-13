@@ -13,7 +13,8 @@ gloss: "a guest"
 concept_tag: FR-FAMILLE10-INVITE
 prerequisites: [FR-C57-cousine, FR-C58-voisin]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "invité — 'invited', from the verb ← Latin invitare 'to invite' — English invite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C58-voisin]
 <!-- hl-knowledge: introduces=[FR-LEX-C58-FAMILLE10-02]; assesses=[] -->
 
 **l'invité** — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invité** is the past participle of the French verb for "to invite", used as a noun: one who is invited. The verb ← Latin *invitare* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

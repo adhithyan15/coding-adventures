@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 127,
-  "sourceHash": "fnv1a64:f19fa70bec9d90ed",
+  "sourceHash": "fnv1a64:72f7c0237d0194b7",
   "lessonIds": [
     "PT-C127-estreito",
     "PT-C127-zangado",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch127.txt",
   "json": "portuguese/narration/ch127.json",
-  "textHash": "fnv1a64:9e5e363057786d46",
-  "jsonHash": "fnv1a64:20047793e195edc5",
+  "textHash": "fnv1a64:069d7a14775c3303",
+  "jsonHash": "fnv1a64:9528fd041cd777be",
   "findings": []
 }

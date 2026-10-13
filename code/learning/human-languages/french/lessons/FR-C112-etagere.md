@@ -13,7 +13,8 @@ gloss: "a shelf"
 concept_tag: FR-MAISON64-ETAGERE
 prerequisites: [FR-C112-baignoire, FR-C112-armoire]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "étagère — from the word for 'a level, a storey', from Latin stare 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C112-armoire]
 <!-- hl-knowledge: introduces=[FR-LEX-C112-MAISON64-04]; assesses=[] -->
 
 **l'étagère** — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étagère** — built from the word for "a level, a storey", with *-ère* (EtymDB 2.1). That word goes back to Latin *stare*, "to stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

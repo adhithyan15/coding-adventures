@@ -11,7 +11,8 @@ romanization: "naṭukkam"
 concept_tag: TA-FEEL-SHIVER
 prerequisites: [TA-C89-nervousness, TA-C89-calm]
 sounds: []
-roots: []
+roots: [dravidian-natunku-shake]
+etymology_hook: "நடுக்கம் — native Dravidian (DEDR 3585)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C89-calm]
 **நடுக்கம்** (*naṭukkam*) — "shivering, trembling", from cold, fever or fear.
 
 **குளிரில் நடுக்கம்** — "shivering in the cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடுக்கம்** (*naṭukkam*) is native Dravidian (DEDR 3585). It is the noun of *naṭuṅku*, "to shake, to tremble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

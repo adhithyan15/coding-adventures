@@ -36,25 +36,26 @@ reviews_of: [SA-C14-who]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-04, SA-LEX-C14-DEIXIS-05] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: कुत्र
 <!-- hl-knowledge: introduces=[SA-LEX-C14-DEIXIS-06]; assesses=[] -->
 
 **कुत्र** — *kutra* — where? — asking about a place.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no place: it asks your listener to
+point one out.
 
-Its partner is **कः** *kaḥ*, which you will meet just now. The two of them
-differ by one sound at the front — **k-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is **कः** *kaḥ*, which you have just met: both open with
+**k-**, the asking sound. Its other partners, **अत्र** *atra* and **तत्र**
+*tatra*, differ from it only at the front. That is the whole system, and the
+last lesson of this chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "कुत्र" three times, picturing something different each time]
+- [YOU SAY: "कुत्र" three times, asking about a different place each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

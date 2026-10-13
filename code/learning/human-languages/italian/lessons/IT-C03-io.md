@@ -8,7 +8,7 @@ type: word
 headword: io
 gloss: I (first-person subject pronoun)
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [IT-C02-practice]
 sounds: [io-glide]
 roots: [ego-latin]
 etymology_hook: "io ← Latin ego 'I' → English ego, egoist; Italian usually drops it (pro-drop)"
@@ -83,4 +83,4 @@ and let the pronoun go.
 [PAUSE 3s] What Latin word is *io* from, and what English words share it? (*Ego*
 — ego, egoist.) Why does Italian usually drop *io*? (The verb ending already
 says who.) When do you keep it? (For emphasis/contrast.) Next: use it to
-introduce yourself — **mi chiamo**.
+introduce yourself — the "I am called" phrase.

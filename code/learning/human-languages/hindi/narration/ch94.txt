@@ -3,7 +3,7 @@ Hindi, chapter 94: The Pronouns, And The Article Hindi Does Not Have.
 
 
 Lesson 1 of 8.
-हम — the word that was already inside hamārā.
+हम (ham) — the word that was already inside hamārā.
 
 Warm-up.
 [pause 2 seconds]
@@ -11,7 +11,7 @@ Say hamārā. You learned it as "our" and were told what it was built on. Say th
 
 You'll want to know: हम.
 हम (ham) — "we."
-The possessive chapter said hamārā was built on हम, and there the matter rested. Here is the word itself.
+The possessive chapter said hamārā was built on हम (ham), and there the matter rested. Here is the word itself.
 
 Grammar Lens: where Hindi says "we" and English says "I".
 हम (ham) does a second job that has no English equivalent. In much ordinary speech it stands in for मैं, "I," when the speaker is being modest or speaking as part of a household:
@@ -52,7 +52,7 @@ Grammar Lens: the plural that is also a courtesy.
 The same habit you met with आप appears here. Hindi shows respect by using a plural form for one person:
 [a table of 2 rows, read aloud]
 form: वह. about: one person, familiar or neutral.
-form: वे. about: several people — or one person spoken of with respect.
+form: वे (ve). about: several people — or one person spoken of with respect.
 So ve ā rahe haiṅ can be "they are coming" or "he is coming," said of someone senior. This is the third time the pattern has appeared: āp for a respected listener, the -iye command for a respected listener, and now ve for a respected third person.
 In everyday speech many speakers say वो for both vah and ve. Recognise it; in writing, use the forms above.
 
@@ -60,7 +60,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "वे" — ve, they]
 [pause 8 seconds for the answer]
-[your turn — say: वह and वे together, and hear that only the vowel moves]
+[your turn — say: वह and वे (ve) together, and hear that only the vowel moves]
 [pause 8 seconds for the answer]
 [your turn — say: the two things ve can mean]
 [pause 8 seconds for the answer]
@@ -69,7 +69,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is वे the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)
+What is वे (ve) the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)
 
 
 Lesson 3 of 8.
@@ -118,7 +118,7 @@ Say hamẽ and tumhẽ. Two corners of the set are filled. Say the respectful on
 
 You'll want to know: āpko and use.
 आपको (āpko) — "to you," respectfully. use — "to him, to her."
-These two are built differently from the last pair. Instead of the nasal ending they take को (ko), the postposition meaning to:
+These two are built differently from the last pair. Instead of the nasal ending they take a postposition, ko, meaning to:
 आप + को becomes आपको.
 Use is the worn-down version of the same thing: us + ko, squeezed together by centuries of use, exactly as maiṅ + ko became mujhe.
 
@@ -146,7 +146,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What postposition is inside āpko? (को, to.) Which two of the five wore down until their parts stopped showing? (Mujhe and use.)
+What postposition is inside āpko? (ko, to.) Which two of the five wore down until their parts stopped showing? (Mujhe and use.)
 
 
 Lesson 5 of 8.
@@ -207,7 +207,7 @@ subject: तुम. oblique: तुम्हें.
 subject: आप. oblique: आपको.
 subject: वह. oblique: use.
 subject: वे (ve). oblique: unhẽ.
-Two of the obliques are visibly को attached — āpko plainly, use after wear. Three take the nasal ending. The set is small and none of it is arbitrary once you know that a postposition is hiding in each one.
+Two of the obliques visibly carry ko, to: āpko plainly (आप + को becomes आपको), use after wear. Three take the nasal ending. The set is small and none of it is arbitrary once you know that a postposition is hiding in each one.
 
 Grammar Lens: the fourth appearance of one decision.
 [a table of 4 rows, read aloud]
@@ -221,7 +221,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: the six subject pronouns]
 [pause 8 seconds for the answer]
-[your turn — say: the obliques that take को, and the ones that take the nasal]
+[your turn — say: the obliques that take ko, and the ones that take the nasal]
 [pause 8 seconds for the answer]
 [your turn — say: the tum row across all four systems]
 [pause 8 seconds for the answer]
@@ -230,7 +230,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which postposition is hiding inside every oblique pronoun? (को.) How many systems does the level decision now settle? (Four.) What translates English the? (Nothing.)
+Which postposition shows plainly in āpko? (ko, to.) How many systems does the level decision now settle? (Four.) What translates English the? (Nothing.)
 
 
 Lesson 7 of 8.

@@ -13,7 +13,8 @@ gloss: "a conversation"
 concept_tag: GE-THING230-GESPRAECH
 prerequisites: [GE-C230-gegenteil, GE-C230-geschichte]
 sounds: []
-roots: []
+roots: [germanic-sprekijo]
+etymology_hook: "Gespräch ← Old High German gisprāhhi: ge- + the root of Sprache 'speech'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C230-geschichte]
 <!-- hl-knowledge: introduces=[GE-LEX-C230-THING230-03]; assesses=[] -->
 
 **das Gespräch** — "a conversation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gespräch** ← Middle High German *gespræche* ← Old High German *gisprāhhi* (EtymDB 2.1): *ge-*, "together", + the root of *Sprache*. A conversation is speech together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

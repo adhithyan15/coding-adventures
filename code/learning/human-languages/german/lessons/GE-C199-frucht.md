@@ -13,7 +13,8 @@ gloss: "a fruit"
 concept_tag: GE-THING199-FRUCHT
 prerequisites: [GE-C198-pflanze, GE-C199-gras]
 sounds: []
-roots: []
+roots: [fructus-latin]
+etymology_hook: "Frucht ← Old High German fruht, from Latin frūctus 'produce, enjoyment' — borrowed, like English fruit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C199-gras]
 <!-- hl-knowledge: introduces=[GE-LEX-C199-THING199-02]; assesses=[] -->
 
 **die Frucht** — "a fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Frucht** ← Middle High German *vruht* ← Old High German *fruht* (EtymDB 2.1), from Latin *frūctus*, "produce, enjoyment" — borrowed, like English *fruit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "muyaṟci cey"
 concept_tag: TA-VERB-MUYARCI-CEY
 prerequisites: [TA-C195-ottu2, TA-C195-payanpatuttu]
 sounds: []
-roots: []
+roots: [dravidian-muyal-strive, sey-do-dravidian]
+etymology_hook: "முயற்சி செய் — native: muyaṟci 'effort', from muyal 'to strive' (DEDR 4967) + sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C195-payanpatuttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C195-ACT195-05]; assesses=[] -->
 
 **முயற்சி செய்** — *muyaṟci cey* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முயற்சி செய்** (*muyaṟci cey*) is native: *muyaṟci*, "effort", from *muyal*, "to strive, to persevere" (DEDR 4967), and *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

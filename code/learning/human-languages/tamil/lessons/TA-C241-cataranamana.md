@@ -14,7 +14,8 @@ romanization: "cātāraṇamāṉa"
 concept_tag: TA-GUNAM241-CATARANAMANA
 prerequisites: [TA-C240-kurmaiyana, TA-C240-arumaiyana]
 sounds: []
-roots: []
+roots: [sanskrit-sadharana]
+etymology_hook: "சாதாரணமான — cātāraṇam ← Sanskrit sādhāraṇa 'common, general', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C240-arumaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C241-GUNAM241-01]; assesses=[] -->
 
 **சாதாரணமான** — *cātāraṇamāṉa* — "ordinary, normal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாதாரணமான** (*cātāraṇamāṉa*) is *cātāraṇam*, a well-established loan from Sanskrit *sādhāraṇa*, "common, general", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

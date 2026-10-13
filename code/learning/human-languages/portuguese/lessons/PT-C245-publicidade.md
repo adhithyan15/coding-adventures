@@ -13,7 +13,8 @@ gloss: "advertising"
 concept_tag: PT-COISAS245-PUBLICIDADE
 prerequisites: [PT-C245-dialeto, PT-C245-noticia]
 sounds: []
-roots: []
+roots: [publicus-latin]
+etymology_hook: "publicidade ← Medieval Latin publicitas, from publicus 'of the people' — English publicity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C245-noticia]
 <!-- hl-knowledge: introduces=[PT-LEX-C245-COISAS245-03]; assesses=[] -->
 
 **a publicidade** — "advertising".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**publicidade** ← Medieval Latin *publicitas*, "publicity" (EtymDB 2.1), from Latin *publicus*, "of the people" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

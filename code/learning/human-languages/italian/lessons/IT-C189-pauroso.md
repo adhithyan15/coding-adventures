@@ -13,7 +13,8 @@ gloss: "fearful"
 concept_tag: IT-QUAL189-PAUROSO
 prerequisites: [IT-C189-timido, IT-C189-coraggioso]
 sounds: []
-roots: []
+roots: [pavor-latin]
+etymology_hook: "pauroso — paura 'fear' + -oso 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C189-coraggioso]
 <!-- hl-knowledge: introduces=[IT-LEX-C189-QUAL189-04]; assesses=[] -->
 
 **pauroso** — "fearful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pauroso** — built from *paura*, "fear", with *-oso*, "full of". *paura* goes back to Latin *pavor*, "fear". EtymDB 2.1 has no row for *pauroso*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

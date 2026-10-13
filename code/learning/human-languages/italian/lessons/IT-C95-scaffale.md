@@ -14,6 +14,7 @@ concept_tag: IT-CASA95-SCAFFALE
 prerequisites: [IT-C95-doccia, IT-C95-vasca]
 sounds: []
 roots: []
+etymology_hook: "scaffale ← skafa 'shelf', a Germanic word of the Lombards"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-vasca]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-03]; assesses=[] -->
 
 **lo scaffale** — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scaffale** ← *skafa*, "shelf", a word from the Germanic language of the Lombards — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

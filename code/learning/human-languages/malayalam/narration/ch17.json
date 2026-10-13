@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0982fac426c22cce",
+  "sourceHash": "fnv1a64:043ed1888e8ce6c6",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf0aaf35fd5405ff",
+      "sourceHash": "fnv1a64:bc47174cd1455f44",
       "notice": null,
       "blocks": [
         {
@@ -223,6 +223,21 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — noon, by the sun's height",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say noon. (ucca — most likely \"the peak\", as in Tamil ucci, not a madhya, \"middle\", word.)"
+            },
+            {
+              "kind": "speech",
+              "text": "So is ucca native, free of Sanskrit? (Not necessarily — likely a different Sanskrit root, ucca, \"high\": the metaphor differs, perhaps not the source.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

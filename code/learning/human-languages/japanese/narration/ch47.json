@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C47-kani-type",
-              "prompt": "Type the Japanese for 'a crab'.",
+              "prompt": "Say the Japanese for 'a crab'.",
               "assesses": [
                 "JA-LEX-C47-ANIMALS47-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C47-tako-type",
-              "prompt": "Type the Japanese for 'an octopus'.",
+              "prompt": "Say the Japanese for 'an octopus'.",
               "assesses": [
                 "JA-LEX-C47-ANIMALS47-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C47-ika-type",
-              "prompt": "Type the Japanese for 'a squid'.",
+              "prompt": "Say the Japanese for 'a squid'.",
               "assesses": [
                 "JA-LEX-C47-ANIMALS47-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C47-kame-type",
-              "prompt": "Type the Japanese for 'a turtle'.",
+              "prompt": "Say the Japanese for 'a turtle'.",
               "assesses": [
                 "JA-LEX-C47-ANIMALS47-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C47-ookami-type",
-              "prompt": "Type the Japanese for 'a wolf'.",
+              "prompt": "Say the Japanese for 'a wolf'.",
               "assesses": [
                 "JA-LEX-C47-ANIMALS47-05"
               ],

@@ -6,6 +6,7 @@ sequence: 500
 chapter: 9
 type: word
 headword: أسود أبيض
+romanization: "aswad abyad"
 gloss: black and white — color adjectives that change shape with gender, more than "sorry" did
 concept_tag: AR-COLOUR-BLACK-WHITE
 prerequisites: [AR-C08-al-jumua-as-sabt]
@@ -36,7 +37,7 @@ reviews_of: [AR-C08-al-jumua-as-sabt, AR-C07-asif]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You've already met a gendered adjective — **آسف/آسفة** ("sorry"),
+[PAUSE 2s] You've already met a gendered adjective — *āsif/āsifa* ("sorry"),
 which just added a feminine ending. Color words go further: they reshape the
 **whole word**, front and back, for gender.
 

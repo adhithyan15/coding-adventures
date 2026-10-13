@@ -59,7 +59,7 @@ Romance children as the word for health itself: Spanish *salud*, Italian
 <!-- hl-knowledge: introduces=[LA-GRAMMAR-SALVE-03]; assesses=[] -->
 
 *salvē* vs. *salvēte*: Latin changes the **ending** to mark one listener (*-e*)
-versus many (*-ēte*). This is the feature that defines Latin — meaning carried in
+or many (*-ēte*). This is the feature that defines Latin — meaning carried in
 endings, not in word order or extra words. English lost almost all of it; its
 Romance grandchildren kept some. You will meet it in every chapter.
 

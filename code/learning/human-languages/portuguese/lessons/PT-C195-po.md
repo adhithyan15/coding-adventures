@@ -13,7 +13,8 @@ gloss: "dust, powder"
 concept_tag: PT-COISAS195-PO
 prerequisites: [PT-C194-vedacao, PT-C195-lama]
 sounds: []
-roots: []
+roots: [pulvis-latin]
+etymology_hook: "pó ← Latin pulvis 'dust', through Vulgar Latin *pulus — English pulverise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C195-lama]
 <!-- hl-knowledge: introduces=[PT-LEX-C195-COISAS195-02]; assesses=[] -->
 
 **o pó** — "dust, powder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pó** ← Latin *pulvis*, "dust" (EtymDB 2.1), through Vulgar Latin *\*pulus* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

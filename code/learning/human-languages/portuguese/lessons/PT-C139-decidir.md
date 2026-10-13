@@ -13,7 +13,8 @@ gloss: "to decide"
 concept_tag: PT-VERB-DECIDIR
 prerequisites: [PT-C138-sorrir, PT-C138-gritar]
 sounds: []
-roots: []
+roots: [caedere-latin]
+etymology_hook: "decidir ← Latin decidere 'to cut off', from caedere 'to cut' — English decide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C138-gritar]
 <!-- hl-knowledge: introduces=[PT-LEX-C139-VERBOS139-01]; assesses=[] -->
 
 **decidir** — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**decidir** ← Latin *decidere*, "to cut off" (EtymDB 2.1), from *caedere*, "to cut" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

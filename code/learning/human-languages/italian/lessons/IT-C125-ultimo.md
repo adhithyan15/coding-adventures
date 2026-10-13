@@ -13,7 +13,8 @@ gloss: "last"
 concept_tag: IT-QUALITA125-ULTIMO
 prerequisites: [IT-C124-tranquillo, IT-C125-rumoroso]
 sounds: []
-roots: []
+roots: [ultimus-latin]
+etymology_hook: "ultimo ← Latin ultimus 'last', a learned word — English ultimate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C125-rumoroso]
 <!-- hl-knowledge: introduces=[IT-LEX-C125-QUALITA125-02]; assesses=[] -->
 
 **ultimo** — "last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ultimo** ← Latin *ultimus*, "last" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

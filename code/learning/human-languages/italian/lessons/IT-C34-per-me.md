@@ -13,7 +13,7 @@ sounds: [open-e, r-tap]
 roots: []
 etymology_hook: "Italian keeps two sets of pronouns and no preposition in this book has ever had one after it; per, from the joining chapter, is what gives them somewhere to stand"
 duration:
-  max_seconds: 250
+  max_seconds: 295
 requires:
   knowledge: [IT-LEX-SIGNORE-SIGNORA-02, IT-GRAMMAR-SIGNORE-SIGNORA-03, IT-LEX-QUI-LI-02, IT-ETYMON-QUI-LI-03, IT-GRAMMAR-CE-02, IT-NOTICE-CE-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05]
 introduces:
@@ -65,6 +65,11 @@ the ones that stand alone in an answer:
 
 The one to watch is **a**, the preposition this book has used all along in
 *a Roma* and *a domani*. Put a person after it and you get **a me**, **a te**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**per** ← Latin *per*, "through" — inherited. (EtymDB 2.1)
 
 ## Grammar lens: a me piace, and where the weight falls
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-PER-ME-03]; assesses=[] -->

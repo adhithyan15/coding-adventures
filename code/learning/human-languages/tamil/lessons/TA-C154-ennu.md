@@ -14,7 +14,8 @@ romanization: "eṇṇu"
 concept_tag: TA-VERB-ENNU
 prerequisites: [TA-C154-alai2, TA-C154-valar, TA-C07-numbers-1-5-family, TA-C07-numbers-6-10, TA-C20-pathinondru-irupathu, TA-C20-pathinondru-irupathu]
 sounds: []
-roots: []
+roots: [dravidian-en-number]
+etymology_hook: "எண்ணு — native Dravidian (DEDR 793); Malayalam eṇṇuka 'to count'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C154-valar]
 <!-- hl-knowledge: introduces=[TA-LEX-C154-ACT154-04]; assesses=[] -->
 
 **எண்ணு** — *eṇṇu* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எண்ணு** (*eṇṇu*) is native Dravidian. DEDR 793 lists Malayalam *eṇṇuka*, "to count".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

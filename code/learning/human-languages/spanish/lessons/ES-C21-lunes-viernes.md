@@ -50,13 +50,13 @@ genitive forms — end in *‑s* in Latin already. **Lunes** has no such *‑s* 
 inherit (*lūnae* doesn't end in one), so it likely picked up the ending by
 **analogy** with its four siblings:
 
-| Spanish | ← Latin | planet-god | English echo |
-|---|---|---|---|
-| **lunes** | *lūnae diēs* | the **Moon** (*luna*) | *Mon*day = Moon-day |
-| **martes** | *Martis diēs* | **Mars** | *Tues*day (Tiw, the Germanic war-god = Mars) |
-| **miércoles** | *Mercuriī diēs* | **Mercury** | *Wednes*day (Woden = Mercury) |
-| **jueves** | *Jovis diēs* | **Jupiter** (*Jove*) | *Thurs*day (**Thor** = Jupiter) |
-| **viernes** | *Veneris diēs* | **Venus** | *Fri*day (Frigg/Freya = Venus) |
+| Spanish | ← Latin, and its planet-god | English echo |
+|---|---|---|
+| **lunes** | *lūnae diēs*: the **Moon** (*luna*) | *Mon*day = Moon-day |
+| **martes** | *Martis diēs*: **Mars** | *Tues*day (Tiw, the Germanic war-god = Mars) |
+| **miércoles** | *Mercuriī diēs*: **Mercury** | *Wednes*day (Woden = Mercury) |
+| **jueves** | *Jovis diēs*: **Jupiter** (*Jove*) | *Thurs*day (**Thor** = Jupiter) |
+| **viernes** | *Veneris diēs*: **Venus** | *Fri*day (Frigg/Freya = Venus) |
 
 Compare **French**, which keeps *diēs* as its own visible syllable on every
 day — **lundi**, **mardi**, **jeudi** — while Spanish dropped it from four of

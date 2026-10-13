@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-173-TIMED-WRITING-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can independently retrieve a timed named-reader message and a separate one-line repair without a model, preserving both first attempts.",
+  "prerequisites": [
+    "PA-EXT-157-A1-SHORT-WRITING-CLOCKS"
+  ]
+}

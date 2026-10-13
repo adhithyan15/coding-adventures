@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दिन (din) mean? ("A day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a day'.
+Say the Marwadi for 'a day'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रात (rāt) mean? ("Night".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'night'.
+Say the Marwadi for 'night'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सवेरो (savero) mean? ("Morning".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'morning'.
+Say the Marwadi for 'morning'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does महीनो (mahīno) mean? ("A month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a month'.
+Say the Marwadi for 'a month'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बरस (baras) mean? ("A year".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a year'.
+Say the Marwadi for 'a year'.

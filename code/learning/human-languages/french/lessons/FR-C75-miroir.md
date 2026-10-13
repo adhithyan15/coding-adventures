@@ -13,7 +13,8 @@ gloss: "a mirror"
 concept_tag: FR-MAISON27-MIROIR
 prerequisites: [FR-C75-sol, FR-C75-escalier]
 sounds: []
-roots: []
+roots: [mirari]
+etymology_hook: "miroir — Old French mirer 'to look at' + -oir; from Latin mirari 'to wonder at' — English mirror"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C75-escalier]
 <!-- hl-knowledge: introduces=[FR-LEX-C75-MAISON27-03]; assesses=[] -->
 
 **le miroir** — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**miroir** — built in Old French from the verb *mirer*, "to look at", ← Latin *mirari*, "to wonder at". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

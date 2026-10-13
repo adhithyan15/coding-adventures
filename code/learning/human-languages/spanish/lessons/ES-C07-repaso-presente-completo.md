@@ -53,7 +53,7 @@ Most Spanish courses open with this table. This one has spent thirty-two
 chapters refusing to show it, because a table you cannot yet fill is a picture
 of work still to do, and a table you can fill is a picture of ground you hold.
 
-Read it now and there should be no surprises in it. That is the point.
+Run through it now and there should be no surprises in it. That is the point.
 
 **And it is not one verb.** Every regular *-ar* verb in Spanish — thousands of
 them — runs on these six endings, so this table is the present tense of a large
@@ -68,7 +68,7 @@ part of the language.
 
 [PAUSE 1s]
 
-- [YOU SAY: all six in order, top to bottom]
+- [YOU SAY: all six in order, from *yo* to *ellos*]
 - [YOU SAY: them out of order, as prompted: *they* · *we* · *I* · *a friend*]
 
 [REPEAT x2] Until the whole set runs without a gap in it.
@@ -77,5 +77,5 @@ part of the language.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-COMPLETE, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
 
 [PAUSE 3s] Give all six endings. (**-o, -as, -a, -amos, -áis, -an**.) How many
-regular *-ar* verbs does this fit? (**All of them**.) And why did the table wait
+regular *-ar* verbs does this fit? (**All of them**.) And why did the full set wait
 until now? (Because every box in it had to be yours first.)

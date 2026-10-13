@@ -805,6 +805,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C388-repaso-cuatro-hedges-norelation",
               "prompt": "Which of the four has no relation at all to its English lookalike?",
               "assesses": [
@@ -824,6 +825,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C388-repaso-cuatro-hedges-cousin",
               "prompt": "Why is push only a cousin of empujar?",
               "assesses": [
@@ -844,6 +846,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C388-repaso-cuatro-hedges-moved",
               "prompt": "Cry and gritar are the same word. Which language moved the meaning?",
               "assesses": [

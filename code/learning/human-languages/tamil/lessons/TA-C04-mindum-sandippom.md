@@ -12,6 +12,7 @@ concept_tag: FAREWELL-LATER
 prerequisites: [TA-C04-poy-varugiren]
 sounds: [retroflex-nd]
 roots: [mindum-again-dravidian, sandhi-sanskrit]
+etymology_hook: "மீண்டும் — native, from mīḷ 'to return' (DEDR 4883); sandi ← Sanskrit saṁdhi 'a joining' (CDIAL 12913)"
 reviews_of: [TA-C04-naalai]
 duration:
   max_seconds: 240

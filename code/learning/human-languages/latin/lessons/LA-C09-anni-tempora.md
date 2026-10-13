@@ -59,17 +59,22 @@ French *automne*, and English *autumn* itself — no detours.
 But **vēr** and **hiems**, the plain nouns for spring and winter, mostly
 **didn't** make it into everyday Romance vocabulary. Instead, Spanish and
 French built brand-new words out of **adjective phrases** describing those
-seasons:
+seasons.
 
-- Not *vēr* alone, but a Vulgar Latin phrase/reanalysis, **prīma vēra**
-  (roughly "**first spring**") → Spanish *primavera*, French (originally)
-  *primevère* — later displaced there by *printemps* ("first-time," from
-  *prīmum tempus*, the very same "adjective + tempus" recipe as winter's
-  word below; *primevère* narrowed to just mean "**primrose**" today) —
-  and Italian *primavera*, still the everyday word there.
-- Not *hiems* alone, but **hībernum (tempus)**, "**the wintry [time]**" →
-  Spanish *invierno*, French *hiver* — the same root as English
-  **hibernate**.
+Spring was not *vēr* alone, but a Vulgar Latin phrase/reanalysis, roughly
+"**first spring**":
+
+**prīma** ("first") + **vēra** (*vēr*, reshaped) → **primavera**
+
+That gives Spanish *primavera*, Italian *primavera* (still the everyday word
+there), and French (originally) *primevère* — later displaced there by
+*printemps* ("first time," the same "first" put with *tempus*: the very same
+"adjective + tempus" recipe as winter's word below). *Primevère* narrowed to
+just mean "**primrose**" today.
+
+Winter was not *hiems* alone, but **hībernum (tempus)**, "**the wintry
+[time]**" → Spanish *invierno*, French *hiver* — the same root as English
+**hibernate**.
 
 **Aestās** ("summer/heat") did survive directly into French *été* — but
 Spanish took yet another path: it built **vērānum (tempus)** ("of spring")
@@ -92,7 +97,7 @@ simply moved).
 - [YOU SAY: "vēr, aestās, autumnus, hiems" — the four seasons]
 - [YOU SAY: the one that survived plainly — "autumnus → otoño, automne,
   autumn"]
-- [YOU SAY: the two built from phrases — "prīma vēra → primavera," "hībernum
+- [YOU SAY: the two built from phrases — "first spring" → primavera, "hībernum
   → invierno, hiver"]
 
 ## Wrap-up Recall
@@ -101,6 +106,6 @@ simply moved).
 [PAUSE 3s] What are Latin's four season-nouns? (**Vēr, aestās, autumnus,
 hiems**.) Which one survived plainly into Spanish, French, and English?
 (**Autumnus** → *otoño, automne, autumn*.) What did Spanish and French build
-instead of the plain words *vēr* and *hiems*? (**Adjective phrases** — *prīma
-vēra* "first spring" → *primavera/primevère*; *hībernum* "wintry" →
+instead of the plain words *vēr* and *hiems*? (**Adjective phrases** — "first
+spring" → *primavera/primevère*; *hībernum* "wintry" →
 *invierno/hiver*.)

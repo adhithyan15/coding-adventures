@@ -36,7 +36,7 @@ reviews_of: [SA-C15-new]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: पुरातन
 <!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-05]; assesses=[] -->

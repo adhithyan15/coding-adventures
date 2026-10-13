@@ -13,7 +13,8 @@ gloss: "to jump"
 concept_tag: GE-VERB-SPRINGEN
 prerequisites: [GE-C149-schreien, GE-C150-sparen]
 sounds: []
-roots: []
+roots: [germanic-springana]
+etymology_hook: "springen ← Old High German springan ← Proto-Germanic *springaną — the same verb as English spring"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C150-sparen]
 <!-- hl-knowledge: introduces=[GE-LEX-C150-VERB150-02]; assesses=[] -->
 
 **springen** — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**springen** ← Old High German *springan* ← Proto-Germanic *\*springaną* — inherited, the same verb as English *spring*, "to leap". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

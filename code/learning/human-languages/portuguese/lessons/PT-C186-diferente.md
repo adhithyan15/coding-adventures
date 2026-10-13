@@ -13,7 +13,8 @@ gloss: "different"
 concept_tag: PT-QUAL186-DIFERENTE
 prerequisites: [PT-C185-medroso-medrosa, PT-C185-curioso-curiosa]
 sounds: []
-roots: []
+roots: [differre-latin]
+etymology_hook: "diferente ← Latin differens 'differing' — English different"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C185-curioso-curiosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C186-QUAL186-01]; assesses=[] -->
 
 **diferente** — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diferente** ← Latin *differens, differentis*, "differing" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to cook"
 concept_tag: PT-VERB-COZINHAR
 prerequisites: [PT-C40-chorar, PT-C40-lavar]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "cozinhar ← Latin coquinare 'to cook' — English kitchen and cuisine share its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C40-lavar]
 <!-- hl-knowledge: introduces=[PT-LEX-C41-VERBOS2-01]; assesses=[] -->
 
 **cozinhar** — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cozinhar** ← Latin *coquinare*, "to cook" (EtymDB 2.1), through Vulgar Latin *\*cocinare* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 126,
-  "sourceHash": "fnv1a64:6cc20f2deb8a301d",
+  "sourceHash": "fnv1a64:a0d085510807fda8",
   "lessonIds": [
     "GE-C126-brieftraeger",
     "GE-C126-kellner",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch126.txt",
   "json": "german/narration/ch126.json",
-  "textHash": "fnv1a64:b23eb8929c63da5e",
-  "jsonHash": "fnv1a64:f54bf5413c5d1327",
+  "textHash": "fnv1a64:a9b896a70dff6d4e",
+  "jsonHash": "fnv1a64:ad5170a8a7edf04f",
   "findings": []
 }

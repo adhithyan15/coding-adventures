@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रैवणो (raivṇo) mean? ("To stay, to live".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to stay, to live'.
+Say the Marwadi for 'to stay, to live'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बांचणो (bā̃chṇo) mean? ("To read".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to read'.
+Say the Marwadi for 'to read'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जाणणो (jāṇṇo) mean? ("To know".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to know'.
+Say the Marwadi for 'to know'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भरणो (bharṇo) mean? ("To fill".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to fill'.
+Say the Marwadi for 'to fill'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खींचणो (khī̃chṇo) mean? ("To pull".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to pull'.
+Say the Marwadi for 'to pull'.

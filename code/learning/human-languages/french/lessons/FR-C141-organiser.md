@@ -14,6 +14,7 @@ concept_tag: FR-VERB-ORGANISER
 prerequisites: [FR-C141-le-projet, FR-C141-prevoir]
 sounds: []
 roots: []
+etymology_hook: "organiser ← Medieval Latin organizare, from Greek organon 'a tool' — English organise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C141-prevoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C141-FUT141-05]; assesses=[] -->
 
 **organiser** — "to organise". A regular **-er** verb, so the future follows **parler**: **J'organiserai tout.** — "I will organise everything."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**organiser** ← Medieval Latin *organizare*, from *organum*, "an instrument", from Greek *organon*, "a tool" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

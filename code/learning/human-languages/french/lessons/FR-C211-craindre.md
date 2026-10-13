@@ -13,7 +13,8 @@ gloss: "to fear"
 concept_tag: FR-VERB-CRAINDRE
 prerequisites: [FR-C210-reconnaitre, FR-C211-taire]
 sounds: []
-roots: []
+roots: [tremere-latin]
+etymology_hook: "craindre — usually traced to Latin tremere 'to tremble' — English tremor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C211-taire]
 <!-- hl-knowledge: introduces=[FR-LEX-C211-VERBES211-02]; assesses=[] -->
 
 **craindre** — "to fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**craindre** — usually traced to Latin *tremere*, "to tremble" (Lewis & Short), whose *t-* became *c-*, perhaps under a Gaulish word — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

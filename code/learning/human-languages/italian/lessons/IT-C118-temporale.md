@@ -13,7 +13,8 @@ gloss: "a storm"
 concept_tag: IT-NATURA118-TEMPORALE
 prerequisites: [IT-C117-desiderio, IT-C118-nebbia]
 sounds: []
-roots: []
+roots: [tempus-latin]
+etymology_hook: "temporale ← Latin temporalis 'of the season', from tempus 'time' — English temporal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C118-nebbia]
 <!-- hl-knowledge: introduces=[IT-LEX-C118-NATURA118-02]; assesses=[] -->
 
 **il temporale** — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temporale** ← Latin *temporalis*, "of time, of the season", from *tempus*, "time" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

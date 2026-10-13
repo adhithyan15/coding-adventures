@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बकरी (bakrī) mean? ("A goat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a goat'.
+Say the Marwadi for 'a goat'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भेड़ (bheṛ) mean? ("A sheep".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sheep'.
+Say the Marwadi for 'a sheep'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चिड़ी (chiṛī) mean? ("A sparrow, a small bird".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sparrow, a small bird'.
+Say the Marwadi for 'a sparrow, a small bird'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नाहर (nāhar) mean? ("A lion, a tiger".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lion, a tiger'.
+Say the Marwadi for 'a lion, a tiger'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हाथी (hāthī) mean? ("An elephant".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an elephant'.
+Say the Marwadi for 'an elephant'.

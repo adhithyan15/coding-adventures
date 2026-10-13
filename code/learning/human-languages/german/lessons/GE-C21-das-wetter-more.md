@@ -10,7 +10,8 @@ gloss: "es regnet"
 concept_tag: GE-C21-DAS-WETTER-MORE
 prerequisites: [GE-C21-das-wetter]
 sounds: []
-roots: []
+roots: [germanic-regen-rain]
+etymology_hook: "es regnet — regnen ← Proto-Germanic *regnōną 'to rain', the same root as English rain"
 duration:
   max_seconds: 150
 requires:
@@ -21,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-REGNET-05, GE-ETYMON-REGNET-06, GE-LEX-WETTER-02]
+  knowledge: [GE-LEX-REGNET-05, GE-ETYMON-REGNET-06, GE-LEX-WETTER-02, GE-ETYMON-WETTER-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,7 +38,7 @@ reviews_of: [GE-C21-das-wetter]
 [PAUSE 2s] Before going on: say **das Wetter, es regnet** again, and what it means.
 
 ## The word, taken apart: es regnet
-<!-- hl-knowledge: introduces=[GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]; assesses=[] -->
+<!-- hl-knowledge: introduces=[GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]; assesses=[GE-ETYMON-WETTER-03] -->
 
 > **Es regnet.** — "It's raining." — from **regnen** ← Proto-Germanic
   ***regnōną*** — the **same root** as English **rain**. Just like *Wetter*/

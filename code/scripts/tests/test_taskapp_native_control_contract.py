@@ -86,10 +86,10 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
         "xaml": 38,
-        "swiftui": 83,
-        "compose": 50,
-        "qt": 144,
-        "flutter": 144,
+        "swiftui": 63,
+        "compose": 40,
+        "qt": 83,
+        "flutter": 69,
     }
 
 
@@ -122,6 +122,88 @@ def test_qt_elevation_is_no_longer_baselined() -> None:
     assert any("unbaselined style drop 'elevation'" in error for error in errors)
 
 
+@pytest.mark.parametrize("primitive", ["overflow", "text-overflow", "white-space"])
+def test_qt_draggable_ellipsis_trio_is_no_longer_baselined(primitive: str) -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", primitive))
+
+    errors = validate_style_degradations("qt", report, "report.json")
+
+    assert any(f"unbaselined style drop '{primitive}'" in error for error in errors)
+
+
+def test_flutter_border_radius_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "border-radius"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'border-radius'" in error for error in errors)
+
+
+def test_flutter_text_align_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "text-align"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'text-align'" in error for error in errors)
+
+
+def test_flutter_drag_body_gap_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "gap"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'gap'" in error for error in errors)
+
+
+def test_flutter_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "box-shadow"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_compose_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("compose")
+    report["styleDegradations"].append(_style_entry("compose", "box-shadow"))
+
+    errors = validate_style_degradations("compose", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_swiftui_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "box-shadow"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_swiftui_elevation_is_no_longer_baselined() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "elevation"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any("unbaselined style drop 'elevation'" in error for error in errors)
+
+
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
 def test_style_drop_ratchet_accepts_baseline_and_reductions(backend: str) -> None:
     report = _report(backend)
@@ -150,13 +232,13 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     [
         ("qt", "align", 1, "unbaselined style drop 'align'"),
         ("qt", "height", 1, "unbaselined style drop 'height'"),
-        ("qt", "width", 19, "style drop 'width' increased from at most 18 to 19"),
+        ("qt", "width", 4, "style drop 'width' increased from at most 3 to 4"),
         ("flutter", "align", 1, "unbaselined style drop 'align'"),
         (
             "flutter",
             "width",
-            24,
-            "style drop 'width' increased from at most 23 to 24",
+            1,
+            "unbaselined style drop 'width'",
         ),
     ],
 )

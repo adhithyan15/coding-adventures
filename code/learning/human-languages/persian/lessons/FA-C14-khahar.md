@@ -37,9 +37,8 @@ reviews_of: [FA-C13-baran, FA-C07-khandan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARAN, FA-ETYMON-BARAN] -->
 
-[PAUSE 2s] Say **باران**, and whether it has an English cousin. The sky
-words are done; the family the earlier tranche built — **مادر، پدر،
-برادر، دختر** — is missing exactly one member.
+[PAUSE 2s] Say *bârân*, and whether it has an English cousin. The sky
+words are done; the family the earlier tranche built — *mâdar, pedar, barâdar, dokhtar* — is missing exactly one member.
 
 ## You'll want to know first — one word, a familiar silent letter
 <!-- hl-knowledge: introduces=[FA-LEX-KHAHAR]; assesses=[] -->
@@ -47,17 +46,17 @@ words are done; the family the earlier tranche built — **مادر، پدر،
 > **خواهر** — *khâhar* — **sister**
 
 Five letters, all already yours: **خ و ا ه ر**. The **و** here is silent,
-exactly the pattern **خواندن** taught: written after **خ** and before **ا**,
+exactly the pattern *khândan* taught: written after **خ** and before **ا**,
 never pronounced. Say it **kh-â-har**.
 
 ## The word, taken apart — brother's missing counterpart
 <!-- hl-knowledge: introduces=[FA-ETYMON-KHAHAR]; assesses=[] -->
 
 **خواهر** continues Middle Persian **xwāhar**, from Indo-European
-\**swésōr*, "sister" — as secure a cognate as **برادر**'s own \**bʰréh₂tēr*.
+\**swésōr*, "sister" — as secure a cognate as *barâdar*'s own \**bʰréh₂tēr*.
 English kept it as **sister** (through Old Norse, replacing the native
 Old English form), Latin as **soror** (→ **sorority**), and Sanskrit as
-**svasṛ**. **مادر، پدر، برادر، دختر، خواهر** now give the track all five
+**svasṛ**. *mâdar, pedar, barâdar, dokhtar, khâhar* now give the track all five
 of Indo-European's plainest kinship words.
 
 ## Guided Practice
@@ -66,11 +65,11 @@ of Indo-European's plainest kinship words.
 - [YOU SAY: **khâhar** — sister]
 - [YOU CONNECT: **khâhar** ← \**swésōr* → English **sister**, Latin
   **soror**, Sanskrit **svasṛ**]
-- [YOU READ: the silent **و** in **خواهر**, the same pattern **خواندن**
+- [YOU READ: the silent **و** in **خواهر**, the same pattern *khândan*
   taught]
-- [YOU NAME: all five family words this track now holds — **مادر، پدر،
-  برادر، دختر، خواهر**]
-- [YOU RETRIEVE: **کتاب** — book, from a few lessons back]
+- [YOU NAME: all five family words this track now holds — *mâdar, pedar, barâdar, dokhtar,
+  khâhar*]
+- [YOU RETRIEVE: *ketâb* — book, from a few lessons back]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHAHAR, FA-ETYMON-KHAHAR] -->
@@ -78,6 +77,6 @@ of Indo-European's plainest kinship words.
 
 [PAUSE 3s] What does **خواهر** mean? (**Sister.**) Which letter in it is
 silent, and which earlier word taught the same pattern? (**و**;
-**خواندن**.) Which English word is its direct cousin? (**Sister.**)
+*khândan*.) Which English word is its direct cousin? (**Sister.**)
 
 Source: [Wiktionary: خواهر](https://en.wiktionary.org/wiki/%D8%AE%D9%88%D8%A7%D9%87%D8%B1).

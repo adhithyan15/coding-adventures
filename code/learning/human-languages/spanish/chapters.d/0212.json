@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say what someone said, and say it in the plural without inventing a syllable.",
     "assesses": [
-      "ES-GRAMMAR-DECIR-PRETERITE"
+      "ES-GRAMMAR-DECIR-PRETERITE",
+      "ES-GRAMMAR-J-STEM-PRETERITE-PLURAL",
+      "ES-ETYMON-DIJO-DIXIT"
     ]
   }
 }

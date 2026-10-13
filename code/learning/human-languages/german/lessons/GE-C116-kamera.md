@@ -13,7 +13,8 @@ gloss: "a camera"
 concept_tag: GE-DINGE116-KAMERA
 prerequisites: [GE-C116-wecker, GE-C116-handy]
 sounds: []
-roots: []
+roots: [latin-camera]
+etymology_hook: "Kamera ← New Latin camera obscura 'dark chamber' ← Latin camera 'vault, chamber'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C116-handy]
 <!-- hl-knowledge: introduces=[GE-LEX-C116-DINGE116-03]; assesses=[] -->
 
 **die Kamera** — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kamera** ← New Latin *camera obscura*, "dark chamber" ← Latin *camera*, "vaulted room" ← Greek *kamára* (EtymDB 2.1) — borrowed: the first cameras were dark rooms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

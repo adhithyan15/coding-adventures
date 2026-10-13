@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 29,
   "title": "Agreeing, Differing, and Saying Why",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:088224fe996718b6",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ffd3f0803f6651e5",
   "lessons": [
     {
       "id": "BN-C18-kintu",
@@ -14,20 +14,13 @@
       "romanization": "kintu",
       "gloss": "but — the first word in this book that can put two ideas against each other instead of side by side",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92ab184b660bc103",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:9c93a2423d908c09",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -80,8 +73,17 @@
               "text": "কিন্তু (kintu) is Sanskrit kim-tu, and both halves are recoverable. Kim is \"what\" — the same ancient word standing behind কি, which chapter three taught. Tu is an old particle meaning \"however\". So but in Bengali is literally what-however, a shrug frozen into a conjunction."
             },
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the middle of the written word.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the middle of the written word.]"
+            },
+            {
               "kind": "speech",
-              "text": "Look at the middle of the written word: ন্ত is ন and ত fused by the mark chapter two taught for deleting the inherent vowel. Two letters, one shape, and no new letter to learn."
+              "text": "ন্ত is ন and ত fused by the mark chapter two taught for deleting the inherent vowel. Two letters, one shape, and no new letter to learn."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:11b5cb2d6b08a81b",
+  "sourceHash": "fnv1a64:5862ee80bd697791",
   "lessonIds": [
     "GE-C16-sein",
     "GE-C16-ich-bin",
@@ -17,7 +17,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:1b14afad25d5ce92",
-  "jsonHash": "fnv1a64:30429de6612f64ea",
+  "textHash": "fnv1a64:c73cb67a1ba359e7",
+  "jsonHash": "fnv1a64:88f14fea323851db",
   "findings": []
 }

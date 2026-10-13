@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C124-kagsi-type",
-              "prompt": "Type the Marwadi for 'a comb'.",
+              "prompt": "Say the Marwadi for 'a comb'.",
               "assesses": [
                 "MW-LEX-C124-THINGS124-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C124-saban-type",
-              "prompt": "Type the Marwadi for 'soap'.",
+              "prompt": "Say the Marwadi for 'soap'.",
               "assesses": [
                 "MW-LEX-C124-THINGS124-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C124-tauliyo-type",
-              "prompt": "Type the Marwadi for 'a towel'.",
+              "prompt": "Say the Marwadi for 'a towel'.",
               "assesses": [
                 "MW-LEX-C124-THINGS124-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C124-sui-type",
-              "prompt": "Type the Marwadi for 'a needle'.",
+              "prompt": "Say the Marwadi for 'a needle'.",
               "assesses": [
                 "MW-LEX-C124-THINGS124-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C124-doro-type",
-              "prompt": "Type the Marwadi for 'thread'.",
+              "prompt": "Say the Marwadi for 'thread'.",
               "assesses": [
                 "MW-LEX-C124-THINGS124-05"
               ],

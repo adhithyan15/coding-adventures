@@ -14,7 +14,8 @@ romanization: "nērmaiyāṉa"
 concept_tag: TA-GUNAM268-NERMAIYANA
 prerequisites: [TA-C268-punnakai, TA-C268-kanivana]
 sounds: []
-roots: []
+roots: [dravidian-neer-straight]
+etymology_hook: "நேர்மையான — native: nērmai 'straightness, honesty' (DEDR 3772) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C268-kanivana]
 <!-- hl-knowledge: introduces=[TA-LEX-C268-GUNAM268-05]; assesses=[] -->
 
 **நேர்மையான** — *nērmaiyāṉa* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேர்மையான** (*nērmaiyāṉa*) is native: *nērmai*, "straightness, honesty" (DEDR 3772, which lists Malayalam nēr), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

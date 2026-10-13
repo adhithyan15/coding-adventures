@@ -28,9 +28,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -78,6 +79,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-bha-check",
               "prompt": "Which new Gurmukhi base letter did you trace for bha?",
               "assesses": [
@@ -118,9 +120,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -168,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-sha-check",
               "prompt": "Type the new Gurmukhi letter for sha.",
               "assesses": [
@@ -210,7 +214,7 @@
         "waitUntilStopped": [
           "Script — one tiny step"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — one tiny step."
       },
       "blocks": [
         {
@@ -258,6 +262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W03-language-label-check",
               "prompt": "A form shows ਭਾਸ਼ਾ (bhāshā). What information belongs on that line?",
               "assesses": [
@@ -279,7 +284,7 @@
     {
       "id": "PA-W03-pa",
       "sequence": 1010,
-      "title": "ਪ — first piece of ਪੰਜਾਬੀ (panjābī)",
+      "title": "ਪ (pa) — first piece of ਪੰਜਾਬੀ (panjābī)",
       "headword": "ਪ",
       "romanization": "pa",
       "gloss": "trace pa before writing Punjabi",
@@ -288,19 +293,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1980117d770a1f24",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Warm-up",
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -348,6 +357,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-pa-check",
               "prompt": "Type the Gurmukhi base letter pa.",
               "assesses": [
@@ -378,19 +388,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c632664a18d7af46",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — one tiny step"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — one tiny step."
       },
       "blocks": [
         {
@@ -438,6 +451,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W03-tippi-check",
               "prompt": "Which mark sits above ਪ (pa) in ਪੰ?",
               "assesses": [
@@ -468,19 +482,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:775562cdbec15cea",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Warm-up",
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -528,6 +546,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-ja-check",
               "prompt": "Type the new Gurmukhi base letter ja.",
               "assesses": [
@@ -549,7 +568,7 @@
     {
       "id": "PA-W03-ba",
       "sequence": 1040,
-      "title": "ਬ — the last new base in ਪੰਜਾਬੀ (panjābī)",
+      "title": "ਬ (ba) — the last new base in ਪੰਜਾਬੀ (panjābī)",
       "headword": "ਬ",
       "romanization": "ba",
       "gloss": "trace ba before writing Punjabi",
@@ -558,19 +577,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9a14cf9704e73c95",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Warm-up",
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -618,6 +641,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-ba-check",
               "prompt": "Type the new Gurmukhi base letter ba.",
               "assesses": [
@@ -658,9 +682,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -708,6 +733,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-punjabi-check",
               "prompt": "With the model visible, copy the Punjabi value.",
               "assesses": [
@@ -738,19 +764,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a60b322034a780ad",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — one tiny step"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — one tiny step."
       },
       "blocks": [
         {
@@ -798,8 +827,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W03-sihari-check",
-              "prompt": "Type the short-i mark used in ਹਿ.",
+              "prompt": "Say the short-i mark used in ਹਿ.",
               "assesses": [
                 "PA-SCRIPT-SIHARI-01"
               ],
@@ -828,19 +858,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f66383661eb449bd",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Warm-up",
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -888,6 +922,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-da-check",
               "prompt": "Type the new dental da letter.",
               "assesses": [
@@ -928,9 +963,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one tiny step"
+          "Script — one tiny step",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one tiny step and Wrap-up recall."
       },
       "blocks": [
         {
@@ -978,6 +1014,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W03-hindi-check",
               "prompt": "With the model visible, copy the Hindi value.",
               "assesses": [

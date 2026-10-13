@@ -997,18 +997,77 @@ asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
 hourglass/collate, triangle/extract, flipped-triangle/manual-file, text-block,
 notched-rectangle/card, lined/shaded-process, compact start/stop control, and
 fork/join shape attributes, and aliases for the classic shapes represented
-by the shared IR.
+by the shared IR. Lightning-bolt communication links recognize the `bolt`,
+`com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
+Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
+(`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
+Wave-edged document nodes recognize both `doc` and `document` aliases.
+Delay nodes recognize `delay` and `half-rounded-rectangle` aliases.
+Horizontal-cylinder direct-access storage recognizes `h-cyl`, `das`, and
+`horizontal-cylinder` aliases.
+Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
+`lined-cylinder` aliases.
+Display nodes recognize `curv-trap`, `curved-trapezoid`, and `display` aliases.
+Divided processes recognize `div-rect`, `div-proc`, `divided-rectangle`, and
+`divided-process` aliases.
+Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
+aliases.
+Junctions recognize `f-circ`, `junction`, and `filled-circle` aliases and lower
+as compact filled circles.
+Loop limits recognize `notch-pent`, `loop-limit`, and `notched-pentagon`
+aliases.
+Manual inputs recognize `sl-rect`, `manual-input`, and `sloped-rectangle`
+aliases.
+Multi-documents recognize `docs`, `documents`, `st-doc`, and
+`stacked-document` aliases.
+Multi-processes recognize `st-rect`, `procs`, `processes`, and
+`stacked-rectangle` aliases.
+Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
+aliases.
+Summaries recognize `cross-circ`, `summary`, and `crossed-circle` aliases.
+Tagged documents recognize `tag-doc` and `tagged-document` aliases.
+Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
+`tagged-process` aliases.
+Paper tape recognizes `flag` and `paper-tape` aliases.
+Lined documents recognize `lin-doc` and `lined-document` aliases.
+Data stores recognize `datastore` and `data-store` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
-directed/undirected/dotted/thick chained links, point/circle/cross endpoint
-markers and bidirectional arrows, multiline edge continuations,
+directed/undirected/dotted/thick chained links, including open dotted and thick
+forms, point/circle/cross endpoint
+markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
+invisible layout links,
+minimum link lengths with deterministic rank spacing,
 parallel branch and join
-endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata with named and numeric entity decoding. Direct node
+endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
+thick, and dotted links, titles, and accessibility metadata with named and numeric entity
+decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
-actions, and legacy callback aliases survive as scene metadata. The family lowers through
+actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
+survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
+edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
+with a deterministic static dash pattern for non-animated paint backends.
+Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
+to portable cubic paths with tangent-aware endpoint markers.
+The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic orthogonal paths in
+the diagram's authored direction.
+The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizontal or vertical
+midpoint tangents and preserve their authored mode in scene metadata.
+The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
+IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
+The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic and layout IR; their
+two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
+The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
+commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
+Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
+Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
+Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
+weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
+undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
+The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
@@ -1016,6 +1075,6 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, configuration-driven lane
-ordering and line hops, and exact upstream routing or typography remain
+and link catalog beyond the documented marker forms, the remaining lane layering configuration,
+line hops on non-straight routes, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

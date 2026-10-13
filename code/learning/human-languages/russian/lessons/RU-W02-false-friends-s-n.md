@@ -64,15 +64,18 @@ So **н** is drawn exactly like a capital *H* — two posts and a rung — but i
 an **n**. (Russian's letter for the *H*-sound doesn't exist; the "h" of foreign
 words is usually spelled with **г** or **х**.)
 
+The capital of **с** is **С**, the same crescent drawn to full height, and it
+still says *s*.
+
 ## Script — the four false friends, together
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-S-01, RU-SCRIPT-N-01] -->
 
-| letter | looks like | actually says | from |
-|---|---|---|---|
-| **в** | Latin B | **v** | Greek beta |
-| **р** | Latin P | **r** | Greek rho |
-| **с** | Latin C | **s** | Greek sigma |
-| **н** | Latin H | **n** | — |
+| letter | looks like | actually says, and from |
+|---|---|---|
+| **в** | Latin B | **v**, from Greek beta |
+| **р** | Latin P | **r**, from Greek rho |
+| **с** | Latin C | **s**, from Greek sigma |
+| **н** | Latin H | **n** |
 
 Learn these four and the rest of Cyrillic stops ambushing you — most other
 letters either look foreign (so you can't be fooled) or behave.

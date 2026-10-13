@@ -13,7 +13,8 @@ gloss: "timber, wood"
 concept_tag: IT-COSE201-LEGNO
 prerequisites: [IT-C200-sentiero, IT-C201-elettricita]
 sounds: []
-roots: []
+roots: [lignum-latin]
+etymology_hook: "legno ← Latin lignum 'wood' — English lignite shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C201-elettricita]
 <!-- hl-knowledge: introduces=[IT-LEX-C201-COSE201-02]; assesses=[] -->
 
 **il legno** — "timber, wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**legno** ← Latin *lignum*, "wood" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

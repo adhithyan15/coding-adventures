@@ -11,7 +11,8 @@ romanization: "āsiriyar"
 concept_tag: TA-ROLE-TEACHER
 prerequisites: [TA-C45-stomach, TA-C44-fruit, TA-C45-eye]
 sounds: []
-roots: []
+roots: [sanskrit-acarya]
+etymology_hook: "ஆசிரியர் ← Sanskrit ācārya 'teacher' (CDIAL 1072), with the respectful -ar"
 duration:
   max_seconds: 210
 requires:

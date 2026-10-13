@@ -6,6 +6,7 @@ sequence: 660
 chapter: 22
 type: word
 headword: أخضر, أصفر
+romanization: "akhḍar, aṣfar"
 gloss: green and yellow — akhdar's root also gives "vegetables" (echoing English's own "greens"), and asfar shares its root with sifr, "zero" — the very word behind English "zero" and "cipher"
 concept_tag: AR-COLOUR-GREEN-YELLOW
 prerequisites: [AR-C21-kalb-qitt]

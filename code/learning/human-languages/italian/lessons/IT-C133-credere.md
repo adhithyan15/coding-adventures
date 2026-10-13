@@ -13,7 +13,8 @@ gloss: "to believe"
 concept_tag: IT-VERB-CREDERE
 prerequisites: [IT-C133-visitare, IT-C133-mettere]
 sounds: []
-roots: []
+roots: [credere-latin]
+etymology_hook: "credere ← Latin credere 'to believe' — English credit and creed share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C133-mettere]
 <!-- hl-knowledge: introduces=[IT-LEX-C133-VERBI133-04]; assesses=[] -->
 
 **credere** — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**credere** ← Latin *credere*, "to believe, to trust" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-BRULER
 prerequisites: [FR-C235-coiffer, FR-C236-suffire]
 sounds: []
 roots: []
+etymology_hook: "brûler — origin uncertain: Latin ustulare 'to scorch' mixed with a Germanic 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C236-suffire]
 <!-- hl-knowledge: introduces=[FR-LEX-C236-VERBES236-02]; assesses=[] -->
 
 **brûler** — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brûler** — its origin is uncertain. The usual account mixes Latin *ustulare*, "to scorch", with a Germanic verb for "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

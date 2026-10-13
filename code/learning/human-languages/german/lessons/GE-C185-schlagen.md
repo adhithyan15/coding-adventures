@@ -13,7 +13,8 @@ gloss: "to hit, to beat"
 concept_tag: GE-VERB-SCHLAGEN
 prerequisites: [GE-C185-rudern, GE-C185-schieben]
 sounds: []
-roots: []
+roots: [germanic-slahana]
+etymology_hook: "schlagen ← Old High German slahan ← Proto-Germanic *slahaną 'to strike' — English slay shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C185-schieben]
 <!-- hl-knowledge: introduces=[GE-LEX-C185-VERB185-04]; assesses=[] -->
 
 **schlagen** — "to hit, to beat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schlagen** goes back to Old High German *slahan* ← Proto-Germanic *\*slahaną*, "to strike, to fight" — inherited. EtymDB 2.1 has the Proto-Germanic verb; English *slay* and *slaughter* share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

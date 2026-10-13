@@ -13,7 +13,8 @@ gloss: "light"
 concept_tag: PT-QUALIDADES127-LEVE
 prerequisites: [PT-C127-amargo, PT-C127-salgado]
 sounds: []
-roots: []
+roots: [levis-latin]
+etymology_hook: "leve ← Latin levis 'light' — English levity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C127-salgado]
 <!-- hl-knowledge: introduces=[PT-LEX-C127-QUALIDADES127-05]; assesses=[] -->
 
 **leve** — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leve** ← Latin *levis*, "light" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

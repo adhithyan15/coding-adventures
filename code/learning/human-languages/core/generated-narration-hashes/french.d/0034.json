@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 34,
-  "sourceHash": "fnv1a64:77f41485b39e87b4",
+  "sourceHash": "fnv1a64:028dd83a0db81180",
   "lessonIds": [
     "FR-C30-fromage",
     "FR-C30-beurre",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "french/narration/ch34.txt",
   "json": "french/narration/ch34.json",
-  "textHash": "fnv1a64:79e1c55854780593",
-  "jsonHash": "fnv1a64:9e224f513cdb962f",
+  "textHash": "fnv1a64:0a2296670b9f28d1",
+  "jsonHash": "fnv1a64:c623973873c2f0f3",
   "findings": []
 }

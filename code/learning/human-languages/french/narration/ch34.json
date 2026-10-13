@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Cheese, Butter, Salt, Egg",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77f41485b39e87b4",
+  "sourceHash": "fnv1a64:028dd83a0db81180",
   "lessons": [
     {
       "id": "FR-C30-fromage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17090798ca97d646",
+      "sourceHash": "fnv1a64:f49c36b3e3e8c90c",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can name la personne and l'enfant now. The café chapter asked politely for a drink; this chapter asks for what goes with it — starting with a word every other Romance language names completely differently."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did personne first name in Latin, and what does it become beside ne? (A theatre mask; ne … personne is nobody.)"
             }
           ]
         },
@@ -150,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ebe51b60a81e13f",
+      "sourceHash": "fnv1a64:1ddba6672c2d0777",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +213,7 @@
         {
           "index": 3,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: désolé, when there's none left",
+          "title": "Why it's said this way: désolé, when you can't help",
           "segments": [
             {
               "kind": "speech",
@@ -211,11 +221,11 @@
             },
             {
               "kind": "speech",
-              "text": "Désolé, il n'y a plus de beurre. — \"Sorry, there's no more butter.\""
+              "text": "Désolé, je n'ai pas le beurre. — \"Sorry, I don't have the butter.\""
             },
             {
               "kind": "speech",
-              "text": "Désolé — real regret, for running out. If you'd only bumped the butter dish, pardon would do instead; to get someone's attention before asking for it at all, excusez-moi."
+              "text": "Désolé — real regret, for letting someone down. If you'd only bumped the butter dish, pardon would do instead; to get someone's attention before asking for it at all, excusez-moi."
             }
           ]
         },
@@ -260,11 +270,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"désolé, il n'y a plus de beurre\"",
+              "instruction": "\"désolé, je n'ai pas le beurre\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"désolé, il n'y a plus de beurre\"]"
+              "source": "[YOU SAY: \"désolé, je n'ai pas le beurre\"]"
             }
           ]
         },
@@ -300,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e32a7a123248ee69",
+      "sourceHash": "fnv1a64:d9740b37ded1ecd0",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98cadc791d54261e",
+      "sourceHash": "fnv1a64:c6266c682f887857",
       "notice": null,
       "blocks": [
         {

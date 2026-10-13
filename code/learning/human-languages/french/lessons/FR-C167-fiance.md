@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES167-FIANCE
 prerequisites: [FR-C167-gendre, FR-C167-belle-fille]
 sounds: []
 roots: []
+etymology_hook: "fiancé — 'promised', from Old French fiance 'a promise', from Latin fides 'faith'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C167-belle-fille]
 <!-- hl-knowledge: introduces=[FR-LEX-C167-CHOSES167-04]; assesses=[] -->
 
 **le fiancé** — "a fiancé".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiancé** is the past participle of the verb for "to betroth", built on Old French *fiance*, "a promise", from Vulgar Latin *\*fidare*, "to trust", from Latin *fides*, "faith" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

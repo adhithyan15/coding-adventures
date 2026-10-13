@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN6-NUDELN
 prerequisites: [GE-C74-schinken, GE-C74-salat]
 sounds: []
 roots: []
+etymology_hook: "Nudeln, plural of Nudel — a German word whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C74-salat]
 <!-- hl-knowledge: introduces=[GE-LEX-C74-ESSEN6-05]; assesses=[] -->
 
 **die Nudeln** — "noodles, pasta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nudeln** is the plural of *Nudel*. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

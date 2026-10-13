@@ -13,7 +13,8 @@ gloss: "a frying pan"
 concept_tag: IT-CASA98-PADELLA
 prerequisites: [IT-C98-divano, IT-C98-pentola]
 sounds: []
-roots: []
+roots: [patella-latin]
+etymology_hook: "padella ← Latin patella 'small dish' — the patella, the kneecap"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C98-pentola]
 <!-- hl-knowledge: introduces=[IT-LEX-C98-CASA98-04]; assesses=[] -->
 
 **la padella** — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**padella** ← Latin *patella*, "a pan, a small dish" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

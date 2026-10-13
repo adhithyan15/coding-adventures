@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "KA-C76-words-door",
               "prompt": "Which word is the door?",
               "assesses": [
@@ -369,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "KA-C76-lines-verb",
               "prompt": "Which lines need ಇದೆ, and which do not?",
               "assesses": [
@@ -584,6 +586,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "KA-C76-modala-oduvike-absent",
               "prompt": "What is not here?",
               "assesses": [

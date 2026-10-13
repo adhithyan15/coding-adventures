@@ -13,7 +13,8 @@ gloss: "a roof"
 concept_tag: GE-HAUS1-DACH
 prerequisites: [GE-C76-tisch, GE-C76-wand]
 sounds: []
-roots: []
+roots: [germanic-thaka]
+etymology_hook: "Dach ← Old High German dah ← Proto-Germanic *þaką 'thatch, roof' — the same word as English thatch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C76-wand]
 <!-- hl-knowledge: introduces=[GE-LEX-C76-HAUS1-05]; assesses=[] -->
 
 **das Dach** — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dach** ← Old High German *dah* ← Proto-Germanic *\*þaką*, "thatch, roof" — inherited, the same word as English *thatch*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

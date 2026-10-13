@@ -14,6 +14,7 @@ concept_tag: GE-VERB-HOFFEN
 prerequisites: [GE-C136-wollen, GE-C136-wunsch]
 sounds: []
 roots: []
+etymology_hook: "hoffen ← Middle High German hoffen, borrowed from Low German — a cousin of English hope"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C136-wunsch]
 <!-- hl-knowledge: introduces=[GE-LEX-C136-WUNSCH136-03]; assesses=[] -->
 
 **hoffen** — "to hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hoffen** ← Middle High German *hoffen*, borrowed from Low German; EtymDB 2.1 lists it beside English *hope* and Dutch *hopen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

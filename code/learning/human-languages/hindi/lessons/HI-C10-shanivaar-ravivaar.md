@@ -17,13 +17,13 @@ sounds: [devanagari-long-aa, sha-vs-sa]
 roots: [vara-sanskrit, navagraha]
 etymology_hook: "शनिवार śanivār (Saturn) and रविवार ravivār (Sun) complete Hindi's planet-week — UNLIKE Spanish/French, no religion ever swapped these two out"
 duration:
-  max_seconds: 180
+  max_seconds: 230
 requires:
   knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]
 introduces:
   knowledge: [HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]
 practises:
-  knowledge: [HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]
+  knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,6 +67,15 @@ seven days, standing untouched by any later religious relabeling.
   śukravār, śanivār, ravivār"]
 - [YOU SAY: the contrast — Spanish/French renamed their weekend; Hindi never
   did]
+
+## Guided Practice — the first five, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02] -->
+
+- What is every weekday built from? (A **deity's name** + **वार** *vār*, "day.")
+- Whose days are *somavār* and *śukravār*? (The **Moon**'s; **Venus**'s.)
+- Did India copy its planet-week from Rome? (**No** — the two are cousins,
+  both traced to **Babylonian** astronomy, most likely through **Hellenistic
+  Greece**.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02] -->

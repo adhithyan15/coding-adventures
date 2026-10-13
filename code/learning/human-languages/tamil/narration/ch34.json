@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 34,
   "title": "Four Verbs Between People",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:56d8a698540deca8",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8a6c745af5da3341",
   "lessons": [
     {
       "id": "TA-C34-edu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d6ea6f315808c33",
+      "sourceHash": "fnv1a64:b57fa117e4824eb8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "எடுக்கிறேன் (eḍukkiṟēṉ), \"I take.\" The kk is held, so எடு is strong; past எடுத்தேன் (eḍuttēṉ). Two sentences you can already build in full:"
+              "text": "எடுக்கிறேன் (eḍukkiṟēṉ), \"I take.\" The kk is held, so எடு (eḍu) is strong; past எடுத்தேன் (eḍuttēṉ). Two sentences you can already build in full:"
             },
             {
               "kind": "speech",
@@ -106,7 +106,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is inherited is eḍu itself. Malayalam has എടുക്കുക (eṭukkuka), the same verb; Kannada and Telugu say ಎತ್ತು / ఎత్తు (ettu), \"to lift,\" from the same old root with a doubled t where Tamil keeps its retroflex."
+              "text": "What is inherited is eḍu itself. Malayalam has എടുക്കുക (eṭukkuka), the same verb; the etymological dictionary files them together. Kannada and Telugu ಎತ್ತು / ఎత్తు (ettu), \"to lift,\" look close but are filed under a separate root: perhaps a cousin, not a proven one."
             }
           ]
         },
@@ -151,11 +151,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins lifting — \"eṭukkuka … ettu … ettu\"",
+              "instruction": "the true cousin, then the look-alike — \"eṭukkuka … ettu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins lifting — \"eṭukkuka … ettu … ettu\"]"
+              "source": "[YOU SAY: the true cousin, then the look-alike — \"eṭukkuka … ettu\"]"
             }
           ]
         },
@@ -200,7 +200,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -379,21 +379,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:20e9fcd487bbd15c",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: the ே sign",
           "Script you'll notice: build the word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ே sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: the ே sign, Script you'll notice: build the word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -575,7 +578,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -606,7 +609,7 @@
             },
             {
               "kind": "speech",
-              "text": "உதவுகிறேன் (udavugiṟēṉ), \"I help.\" The single softened -giṟ- puts உதவு in the weak camp with pō and eḻudu, and the noun is one step away: உதவி (udavi), \"help.\""
+              "text": "உதவுகிறேன் (udavugiṟēṉ), \"I help.\" The single softened -giṟ- puts உதவு (udavu) in the weak camp with pō and eḻudu, and the noun is one step away: உதவி (udavi), \"help.\""
             },
             {
               "kind": "speech",
@@ -636,7 +639,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil turns verbs into nouns with a small ending, and you have collected three without being told to: புரி becomes புரிதல் (puridal), understanding; கேள் becomes கேள்வி (kēḷvi), a question; உதவு (udavu) becomes உதவி (udavi), help."
+              "text": "Tamil turns verbs into nouns with a small ending, and you have collected three without being told to: புரி becomes புரிதல் (puridal), understanding; கேள் (kēḷ) becomes கேள்வி (kēḷvi), a question; உதவு (udavu) becomes உதவி (udavi), help."
             },
             {
               "kind": "speech",

@@ -13,7 +13,8 @@ gloss: "a shop assistant"
 concept_tag: IT-LAVORO111-COMMESSO
 prerequisites: [IT-C111-cuoco, IT-C111-poliziotto]
 sounds: []
-roots: []
+roots: [committere]
+etymology_hook: "commesso ← Latin commissus 'entrusted': the person a shop is entrusted to"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C111-poliziotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C111-LAVORO111-04]; assesses=[] -->
 
 **il commesso** — "a shop assistant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commesso** ← Latin *commissus*, "entrusted", a form of *committere*, "to entrust" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

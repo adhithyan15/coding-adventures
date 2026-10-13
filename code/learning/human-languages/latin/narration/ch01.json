@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:636f2cdcf8774035",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:55b03b4a1b2d5753",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -19,12 +19,14 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5c761263c9e7dfc4",
+      "sourceHash": "fnv1a64:f661bc2efb5b35ee",
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — follow one greeting you can see"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — follow one greeting you can see."
       },
       "blocks": [
         {
@@ -73,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salvē vs. salvēte: Latin changes the ending to mark one listener (-e) versus many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter."
+              "text": "salvē vs. salvēte: Latin changes the ending to mark one listener (-e) or many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter."
             }
           ]
         },
@@ -163,16 +165,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6239e406e5cd4c36",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -236,8 +242,10 @@
           "a pen and something to write on",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — delayed copy"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — delayed copy."
       },
       "blocks": [
         {
@@ -267,6 +275,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "LA-W01-salve-delayed-copy-check",
               "prompt": "Cover the model and write the one-person Latin greeting meaning be well. Then uncover it and check every letter and the macron.",
               "assesses": [
@@ -310,16 +319,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7821bbef4f280a42",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — dictation and transcription",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing — dictation and transcription and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -345,6 +359,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "LA-W01-salve-dictation-check",
               "prompt": "From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.",
               "assesses": [
@@ -910,7 +925,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c79e3844fce2766",
+      "sourceHash": "fnv1a64:75562322f3bb7e46",
       "notice": null,
       "blocks": [
         {
@@ -1074,11 +1089,12 @@
             },
             {
               "kind": "speech",
-              "text": "Catullus wrote avē atque valē at his brother's grave. Translate it, and say what each verb literally wishes. (\"Hail and farewell\"; avē \"fare well\" on meeting, valē \"be strong\" on parting.)"
+              "text": "Catullus wrote avē atque valē at his brother's tomb. Translate it, and say what each verb literally wishes. (\"Hail and farewell\"; avē \"fare well\" on meeting, valē \"be strong\" on parting.)"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C01-practice-vale-root",
               "prompt": "Which Latin root links vale to English valid and value?",
               "assesses": [

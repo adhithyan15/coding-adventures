@@ -13,7 +13,8 @@ gloss: "a hundred"
 concept_tag: FR-HABITS57-CENT
 prerequisites: [FR-C105-quarante, FR-C105-cinquante]
 sounds: []
-roots: []
+roots: [centum-latin]
+etymology_hook: "cent ← Latin centum 'a hundred' — English century and percent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C105-cinquante]
 <!-- hl-knowledge: introduces=[FR-LEX-C105-HABITS57-05]; assesses=[] -->
 
 **cent** — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cent** ← Latin *centum*, "a hundred" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

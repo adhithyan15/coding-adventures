@@ -13,7 +13,8 @@ gloss: "nervous"
 concept_tag: GE-QUAL169-NERVOES
 prerequisites: [GE-C169-bekannt, GE-C169-fremd]
 sounds: []
-roots: []
+roots: [nervus-latin]
+etymology_hook: "nervös ← Latin nervōsus 'sinewy', from nervus 'sinew' — borrowed through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C169-fremd]
 <!-- hl-knowledge: introduces=[GE-LEX-C169-QUAL169-03]; assesses=[] -->
 
 **nervös** — "nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nervös** ← Latin *nervōsus*, "sinewy, vigorous", from *nervus*, "sinew, nerve" (EtymDB 2.1) — borrowed through French, like English *nervous*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

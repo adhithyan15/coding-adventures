@@ -14,7 +14,8 @@ romanization: "vināṭi"
 concept_tag: TA-NERAM233-VINATI
 prerequisites: [TA-C233-nalai-marunal, TA-C233-nerru-muntinam]
 sounds: []
-roots: []
+roots: [sanskrit-vinadi]
+etymology_hook: "விநாடி ← Sanskrit vināḍī 'a sixtieth of a nāḍī', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C233-nerru-muntinam]
 <!-- hl-knowledge: introduces=[TA-LEX-C233-NERAM233-05]; assesses=[] -->
 
 **விநாடி** — *vināṭi* — "a second (of time)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விநாடி** (*vināṭi*) is a well-established loan from Sanskrit *vināḍī*, "a sixtieth of a *nāḍī*", the old 24-minute unit, used now for a second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

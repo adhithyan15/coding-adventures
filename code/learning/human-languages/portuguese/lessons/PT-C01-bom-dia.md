@@ -11,6 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [PT-C01-bom, PT-C01-dia]
 sounds: []
 roots: [bonus, dies]
+etymology_hook: "bom dia = bom (← Latin bonus 'good') + dia (← Latin dies 'day'): 'good day'"
 reviews_of: [PT-C01-bom, PT-C01-dia]
 duration:
   max_seconds: 120
@@ -49,7 +50,8 @@ variety: standard-contemporary
 <!-- hl-knowledge: introduces=[PT-PRAGMATIC-BOM-DIA-03]; assesses=[] -->
 
 *bom dia* is the polite, all-purpose morning hello — safe with anyone. After
-midday it gives way to *boa tarde*, and after dark to *boa noite*. (Spanish
+midday it gives way to the afternoon greeting, and after dark to the evening
+one, both built next. (Spanish
 pluralises the blessing — *buenos días* — where Portuguese keeps it singular,
 *bom dia*.)
 
@@ -58,7 +60,7 @@ pluralises the blessing — *buenos días* — where Portuguese keeps it singula
 
 [PAUSE 1s]
 - [YOU SAY: "bom dia" (nasal *bõ* + *dia*)]
-- [YOU SAY: the day's arc — bom dia → boa tarde → boa noite]
+- [YOU SAY: "bom dia," then Spanish "buenos días" — one blessing, then many]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-BOM-DIA-02, PT-PRAGMATIC-BOM-DIA-03] -->

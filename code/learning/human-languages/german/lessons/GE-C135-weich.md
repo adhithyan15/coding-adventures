@@ -13,7 +13,8 @@ gloss: "soft"
 concept_tag: GE-EIGEN135-WEICH
 prerequisites: [GE-C135-trocken, GE-C135-kuehl]
 sounds: []
-roots: []
+roots: [germanic-waikwaz]
+etymology_hook: "weich ← Middle High German weich — the same Germanic word as English weak"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C135-kuehl]
 <!-- hl-knowledge: introduces=[GE-LEX-C135-EIGEN135-05]; assesses=[] -->
 
 **weich** — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**weich** ← Middle High German *weich* — inherited; EtymDB 2.1 lists it beside English *weak*, Old English *wāc*, "pliant". Soft is what bends.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

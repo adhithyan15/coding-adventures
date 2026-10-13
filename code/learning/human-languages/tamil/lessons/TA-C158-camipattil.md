@@ -14,7 +14,8 @@ romanization: "camīpattil"
 concept_tag: TA-KALAM158-CAMIPATTIL
 prerequisites: [TA-C157-eri2, TA-C157-anai]
 sounds: []
-roots: []
+roots: [sanskrit-samipa]
+etymology_hook: "சமீபத்தில் ← Sanskrit samīpa 'near' (CDIAL 13226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C157-anai]
 <!-- hl-knowledge: introduces=[TA-LEX-C158-KALAM158-01]; assesses=[] -->
 
 **சமீபத்தில்** — *camīpattil* — "recently". Tamil's past for "I" ends in **-ஏன்** after a past stem: **நான் சமீபத்தில் ஒரு புத்தகம் படித்தேன்** — *nāṉ camīpattil oru puttakam paṭittēṉ* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சமீபத்தில்** (*camīpattil*) is a loan from Sanskrit *samīpa*, "near" (CDIAL 13226). *Camīpam*, "nearness", takes the locative *-il*: "in the near (past)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

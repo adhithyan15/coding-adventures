@@ -11,7 +11,8 @@ romanization: "siṟiya"
 concept_tag: TA-ADJ-SMALL
 prerequisites: [TA-C41-big, TA-C39-evvalavu, TA-C40-here]
 sounds: []
-roots: []
+roots: [dravidian-ciru-small]
+etymology_hook: "சிறிய — native Dravidian (DEDR 1594); Malayalam ciṟṟu, Kannada kiṟu, Telugu ciṟu"
 duration:
   max_seconds: 210
 requires:
@@ -33,7 +34,7 @@ reviews_of: [TA-C41-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: சிறிய
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-02]; assesses=[] -->
@@ -47,6 +48,11 @@ You met **பெரிய** *periya* a moment ago. Put them side by side and not
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிறிய** (*siṟiya*) is native Dravidian. DEDR 1594 lists Malayalam *ciṟṟu*, Kannada *kiṟu* and Telugu *ciṟu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-C40-DEIXIS-03] -->

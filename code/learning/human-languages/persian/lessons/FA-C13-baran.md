@@ -37,7 +37,7 @@ reviews_of: [FA-C13-setare, FA-C04-hal-e-shoma-chetor-ast, FA-C04-khubam, FA-C04
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SETARE, FA-ETYMON-SETARE] -->
 
-[PAUSE 2s] Say **ستاره** (*setâre*), and its root's three attested cousins. Not every
+[PAUSE 2s] Say *setâre*, and its root's three attested cousins. Not every
 sky word gets to keep company like that.
 
 ## You'll want to know first — one word
@@ -57,7 +57,7 @@ Its cousins stayed close to home: Avestan **vāra**, "rain," and Sanskrit
 **vār**, "water," share the identical root. English **rain** is not part of
 this family at all — its own origin is disputed and confined to the
 Germanic languages, with no secure Indo-European cousin beyond them — so, as
-with **رفتن** and **گفتن** far earlier, the honest answer here is that no
+with *raftan* and *goftan* far earlier, the honest answer here is that no
 English cousin is claimed.
 
 ## Grammar Lens: what small talk about the sky follows
@@ -65,8 +65,8 @@ English cousin is claimed.
 
 Weather small talk in Persian commonly follows the wellbeing exchange, the
 same slot English fills right after "how are you?" Rebuild the question:
-**حال شما چطور است؟**, careful **ast**, not a contraction, then its reply,
-**خوبم، ممنون** — a shape a sky word can now attach to.
+*hâl-e shomâ chetor ast?*, careful **ast**, not a contraction, then its reply,
+*khubam, mamnun* — a shape a sky word can now attach to.
 
 ## Guided Practice — every sky word, then the exchange it follows
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARAN, FA-ETYMON-BARAN, FA-LEX-ASEMAN, FA-ETYMON-ASEMAN, FA-LEX-KHORSHID, FA-ETYMON-KHORSHID, FA-LEX-MAH, FA-ETYMON-MAH, FA-LEX-SETARE] -->
@@ -75,7 +75,7 @@ same slot English fills right after "how are you?" Rebuild the question:
 - [YOU CONNECT: **bârân** ← \**weh₁r-* → Sanskrit **vār**, Avestan **vāra**
   — no English cousin]
 - [YOU RUN: **âsemân, khorshid, mâh, setâre, bârân** — all five sky words]
-- [YOU REBUILD: **حال شما چطور است؟** and its reply **خوبم، ممنون**]
+- [YOU REBUILD: *hâl-e shomâ chetor ast?* and its reply *khubam, mamnun*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARAN, FA-ETYMON-BARAN] -->

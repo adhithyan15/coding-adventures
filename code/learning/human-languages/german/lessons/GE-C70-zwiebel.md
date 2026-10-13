@@ -13,7 +13,8 @@ gloss: "an onion"
 concept_tag: GE-ESSEN2-ZWIEBEL
 prerequisites: [GE-C70-kartoffel, GE-C70-tomate]
 sounds: []
-roots: []
+roots: [cepa-latin]
+etymology_hook: "Zwiebel ← Old High German zwibollo ← Late Latin cēpulla 'little onion' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C70-tomate]
 <!-- hl-knowledge: introduces=[GE-LEX-C70-ESSEN2-04]; assesses=[] -->
 
 **die Zwiebel** — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zwiebel** ← Old High German *zwibollo* ← Late Latin *cēpulla*, "little onion", from *cēpa*, "onion" (EtymDB 2.1) — borrowed, its front reshaped to sound German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

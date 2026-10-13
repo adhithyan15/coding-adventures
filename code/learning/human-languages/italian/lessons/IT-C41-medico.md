@@ -13,7 +13,8 @@ gloss: "a doctor"
 concept_tag: IT-SALUTE-MEDICO
 prerequisites: [IT-C40-tosse, IT-C41-medicina]
 sounds: []
-roots: []
+roots: [medicus-latin]
+etymology_hook: "medico ← Latin medicus 'doctor' — English medic is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C41-medicina]
 <!-- hl-knowledge: introduces=[IT-LEX-C41-SALUTE-02]; assesses=[] -->
 
 **il medico** — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medico** ← Latin *medicus*, "doctor" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

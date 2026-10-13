@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 42,
-  "sourceHash": "fnv1a64:1cba750c70b9d001",
+  "sourceHash": "fnv1a64:ae72ba959c02b90d",
   "lessonIds": [
     "PT-C42-correr",
     "PT-C42-ouvir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch42.txt",
   "json": "portuguese/narration/ch42.json",
-  "textHash": "fnv1a64:520af76f52a1a559",
-  "jsonHash": "fnv1a64:77c7396838dcd052",
+  "textHash": "fnv1a64:a51e2078eab4d7d9",
+  "jsonHash": "fnv1a64:660de9ed15dc89a5",
   "findings": []
 }

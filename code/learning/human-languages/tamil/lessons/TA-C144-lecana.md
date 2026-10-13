@@ -14,7 +14,8 @@ romanization: "lēcāṉa"
 concept_tag: TA-QUAL144-LECANA
 prerequisites: [TA-C144-kulirnta, TA-C144-kanamana]
 sounds: []
-roots: []
+roots: [tamil-lesu-light]
+etymology_hook: "லேசான — origin uncertain; DEDR has no entry for lēcu, and its initial l- suggests a loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C144-kanamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **லேசான** — *lēcāṉa* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **லேசான** (*lēcāṉa*) is uncertain. DEDR has no entry for *lēcu*, "light, slight", and its initial *l-* is not native to old Tamil, which points to a loan from a neighbouring language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

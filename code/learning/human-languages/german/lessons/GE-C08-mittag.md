@@ -10,10 +10,10 @@ gloss: noon — Mitte plus Tag, a compound you can read before you are told it
 concept_tag: GE-TIME-NOON
 prerequisites: [GE-C08-mitte]
 sounds: [i-short, long-a]
-roots: [germanic-medja]
+roots: [germanic-medja, dagaz]
 etymology_hook: "Mittag is mid + day, and English midday is the same compound built from the same two inherited words — neither language borrowed the idea from the other"
 duration:
-  max_seconds: 150
+  max_seconds: 156
 requires:
   knowledge: [GE-LEX-MITTE-01, GE-LEX-TAG-02, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -54,6 +54,11 @@ pieces and used them.
 
 To say it is noon: *Es ist Mittag.* No number and no *Uhr*, because noon is not
 an hour you count to.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mittag** is *Mitte* + *Tag*, "mid-day"; EtymDB 2.1 lists it as the same word as English *midday*, Old English *middæġ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MITTAG-01, GE-LEX-TAG-02] -->

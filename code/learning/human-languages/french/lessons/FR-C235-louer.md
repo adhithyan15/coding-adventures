@@ -13,7 +13,8 @@ gloss: "to rent"
 concept_tag: FR-VERB-LOUER
 prerequisites: [FR-C234-verifier, FR-C235-demenager]
 sounds: []
-roots: []
+roots: [locare-latin]
+etymology_hook: "louer ← Latin locare 'to hire out' — a twin louer 'to praise' is from laudare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C235-demenager]
 <!-- hl-knowledge: introduces=[FR-LEX-C235-VERBES235-02]; assesses=[] -->
 
 **louer** — "to rent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**louer** ← Latin *locare*, "to place, to hire out" — inherited. (EtymDB 2.1) A second *louer*, "to praise", comes from Latin *laudare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

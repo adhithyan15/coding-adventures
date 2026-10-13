@@ -14,7 +14,8 @@ romanization: "etirpār"
 concept_tag: TA-VERB-ETIRPAR
 prerequisites: [TA-C159-tittam, TA-C159-mutivu-cey]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite, dravidian-paar-see]
+etymology_hook: "எதிர்பார் — native: etir 'in front' (DEDR 795; Malayalam etir) + pār 'to look' (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C159-mutivu-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C159-ETIR159-05]; assesses=[] -->
 
 **எதிர்பார்** — *etirpār* — "to expect, to look forward to". **உங்களை நாளை எதிர்பார்க்கிறேன்** — *uṅkaḷai nāḷai etirpārkkiṟēṉ* — "I am expecting you tomorrow."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எதிர்பார்** (*etirpār*) is native: *etir*, "in front, opposite" (DEDR 795; Malayalam *etir*), and *pār*, "to look" (DEDR 4091): "look ahead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -3,13 +3,13 @@
   "language": "marathi",
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:286ee3a9d72147ca",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:648f0bbff28c9f57",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
       "sequence": 20,
-      "title": "धन्यवाद (dhanyavad) (dhanyavād) — \"thank you\"",
+      "title": "Dhanyavad — \"thank you\"",
       "headword": "धन्यवाद",
       "romanization": "dhanyavad",
       "gloss": "thank you (dhanyavād)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c2e3f6ad09c8836",
+      "sourceHash": "fnv1a64:6ae418e2e976f17a",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the spelling in the heading as a sign you are not yet asked to decode. Listen first: dhan-ya-vād. Say it once for \"thank you.\" The next two tiny chapters will give you one missing sign at a time; only then will you read and write the whole word."
+              "text": "Listen first: dhan-ya-vād. Say it once for \"thank you.\" The whole spelling waits: the next two tiny chapters will give you one missing sign at a time, and only then will you read and write the whole word. For now, notice one sign of it: द, the da of its last beat. The next word you hear begins with it."
             }
           ]
         },
@@ -119,20 +119,13 @@
       "romanization": "duḥkh",
       "gloss": "sorrow, grief",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92d21d4583d61261",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f9b51b0d35b47747",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -162,7 +155,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: duḥkh. Look at its shape as you say it: the lessons that follow take pieces of it, ः, ु and ख, and write each one on its own."
+              "text": "Say it: duḥkh."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ः (ḥ), ु and ख, and write each one on its own."
             }
           ]
         },
@@ -224,20 +230,13 @@
       "romanization": "ābhāḷ",
       "gloss": "the sky",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdb8f0f933e3520b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:042e572213c3550f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -267,7 +266,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ābhāḷ. Look at its shape as you say it: the lessons that follow take pieces of it, आ, भ (bha) and ळ, and write each one on its own."
+              "text": "Say it: ābhāḷ."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, आ (ā), भ (bha) and ळ, and write each one on its own."
             }
           ]
         },
@@ -329,20 +341,13 @@
       "romanization": "sant",
       "gloss": "a saint",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d22ec2738e53cd44",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:2ef89e75ab8efc80",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -372,7 +377,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: sant. Look at its shape as you say it: the lessons that follow take pieces of it, ं (ṃ) and त, and write each one on its own."
+              "text": "Say it: sant."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ं (ṃ) and त (ta), and write each one on its own."
             }
           ]
         },
@@ -434,20 +452,13 @@
       "romanization": "bet",
       "gloss": "a plan",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e41c328c2eabb46",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b78349e61e914522",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -477,7 +488,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: bet. Look at its shape as you say it: the lessons that follow take pieces of it, ब and े, and write each one on its own."
+              "text": "Say it: bet."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ब and े (e), and write each one on its own."
             }
           ]
         },
@@ -554,9 +578,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -624,6 +649,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-visarga-model",
               "prompt": "Copy the visible two-dot breath sign once.",
               "assesses": [
@@ -657,7 +683,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb61592c9578187a",
+      "sourceHash": "fnv1a64:58a427c810a9b056",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -665,9 +691,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -692,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is independent ā, used when the vowel begins a syllable. Curve around the joined left body; lift for the middle shoulder; descend the inner stem; descend the trailing stem; finish with the headline from left to right."
+              "text": "This is independent ā, used when the vowel begins a syllable. Curve around the joined left body; lift for the middle shoulder, and without lifting climb the inner stem and descend it; lift for the trailing stem; lift once more and finish with the headline from left to right."
             }
           ]
         },
@@ -703,7 +730,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep आ visible. Finger-trace the five runs once. Copy it once, looking back after every run. Say ā only when the pen stops."
+              "text": "Keep आ visible. Finger-trace the four runs once. Copy it once, looking back after every run. Say ā only when the pen stops."
             }
           ]
         },
@@ -729,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-aa-independent-guided",
               "prompt": "Copy the visible independent long-aa sign once, finishing with the headline.",
               "assesses": [
@@ -770,9 +798,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -834,6 +863,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-bha-guided",
               "prompt": "Copy the visible breathy-b consonant once.",
               "assesses": [
@@ -875,9 +905,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -913,7 +944,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy े once beside the visible model. Then cover the previous three models and write, from their names, visarga, independent ā, and bha. Uncover and repair only one differing part."
+              "text": "Copy े (e) once beside the visible model. Then cover the previous three models and write, from their names, visarga, independent ā, and bha. Uncover and repair only one differing part."
             }
           ]
         },
@@ -939,6 +970,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-e-matra-r1",
               "prompt": "Copy the e mark, then retrieve the three preceding signs by name.",
               "assesses": [
@@ -983,9 +1015,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1047,6 +1080,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-anusvara-guided",
               "prompt": "Copy the visible one-dot nasal sign once.",
               "assesses": [
@@ -1090,9 +1124,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1154,6 +1189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W02-ta-delayed",
               "prompt": "After a five-second delay, write dental ta from memory.",
               "assesses": [

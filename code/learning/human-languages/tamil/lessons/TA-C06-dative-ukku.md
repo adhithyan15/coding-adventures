@@ -12,7 +12,7 @@ concept_tag: TA-CASE-DATIVE
 prerequisites: [TA-C05-practice, TA-C03-naan, TA-C02-peyar]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
-etymology_hook: "Dravidian marks case by ADDING a suffix that means one thing and stays visible at the seam — the opposite of Latin, where a fused ending like -īs carries case AND number AND declension at once, and doesn't even settle which case (dative or ablative); -ukku is the shared Dravidian dative, cousin of Telugu -ku, Kannada -ge, Malayalam -ikku"
+etymology_hook: "-உக்கு — the native Dravidian dative: Malayalam -kku, Kannada -ge and -kke, Telugu -ku"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +58,11 @@ constantly:
 
 The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns don't
 — they just take the ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-உக்கு** (*-ukku*) is the native Dravidian dative, and the sister languages keep their own forms of it: Malayalam *-kku*, Kannada *-ge* and *-kke*, Telugu *-ku*. It is an ending, not a word, so the etymological dictionary gives it no entry of its own; the match across the family is the evidence.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-UKKU-01] -->

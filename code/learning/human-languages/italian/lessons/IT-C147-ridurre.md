@@ -13,7 +13,8 @@ gloss: "to reduce"
 concept_tag: IT-VERB-RIDURRE
 prerequisites: [IT-C146-nuocere, IT-C146-offrire]
 sounds: []
-roots: []
+roots: [reducere-latin]
+etymology_hook: "ridurre ← Latin reducere 'to lead back' — English reduce is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C146-offrire]
 <!-- hl-knowledge: introduces=[IT-LEX-C147-VERBI147-01]; assesses=[] -->
 
 **ridurre** — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ridurre** ← Latin *reducere*, "to lead back" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

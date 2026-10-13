@@ -74,7 +74,8 @@ the others.
 - [YOU SAY: "shādā kāpoṛ" — white cloth]
 - [YOU SAY: the flap, again — "poṛā … kāpoṛ"]
 - [YOU SAY: the family sharing this root — "kāpoṛ … kapṛā … kapaḍā"]
-- [YOU RECALL: say *maf korben*, then read **স্বাগতম**]
+- [YOU RECALL: say *maf korben*]
+- [YOU READ: **স্বাগতম**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-KAPOR-01, BN-SOUND-C08-PORA-02] -->

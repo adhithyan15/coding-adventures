@@ -11,7 +11,8 @@ romanization: "pēraṉ"
 concept_tag: TA-NEXTGEN-GRANDSON
 prerequisites: [TA-C102-daughterinlaw, TA-C102-soninlaw]
 sounds: []
-roots: []
+roots: [peyar-dravidian]
+etymology_hook: "பேரன் — native Dravidian (DEDR 4410)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C102-soninlaw]
 **பேரன்** (*pēraṉ*) — "a grandson".
 
 **-அன்** marks a man, as in **மருமகன்**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பேரன்** (*pēraṉ*) is native Dravidian (DEDR 4410). The entry glosses *pēraṉ* "grandson (as bearing the grandfather's name)": the grandson carries the name, *peyar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

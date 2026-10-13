@@ -14,7 +14,8 @@ romanization: "maṇamakaṉ"
 concept_tag: TA-PORUL217-MANAMAKAN
 prerequisites: [TA-C216-varaipatam, TA-C217-manamakal]
 sounds: []
-roots: []
+roots: [dravidian-manam-union, proto-dravidian-makan-son]
+etymology_hook: "மணமகன் — native: maṇam 'marriage' (DEDR 4667) + makaṉ 'man' (DEDR 4616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C217-manamakal]
 <!-- hl-knowledge: introduces=[TA-LEX-C217-PORUL217-02]; assesses=[] -->
 
 **மணமகன்** — *maṇamakaṉ* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மணமகன்** (*maṇamakaṉ*) is native: *maṇam*, "marriage" (DEDR 4667), and *makaṉ*, "son, man" (DEDR 4616).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

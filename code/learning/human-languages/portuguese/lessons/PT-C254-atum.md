@@ -14,6 +14,7 @@ concept_tag: PT-COISAS254-ATUM
 prerequisites: [PT-C254-marisco, PT-C254-camarao]
 sounds: []
 roots: []
+etymology_hook: "atum ← Arabic at-tūn, from Greek thynnos — English tuna and tunny are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C254-camarao]
 <!-- hl-knowledge: introduces=[PT-LEX-C254-COISAS254-03]; assesses=[] -->
 
 **o atum** — "tuna".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atum** ← Arabic *at-tūn* — borrowed; Arabic took it from Greek *thynnos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

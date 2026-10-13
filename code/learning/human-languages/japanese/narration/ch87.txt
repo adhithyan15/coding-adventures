@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つむ (tsumu) mean? ("To pile up".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to pile up'.
+Say the Japanese for 'to pile up'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たのむ (tanomu) mean? ("To ask for".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to ask for'.
+Say the Japanese for 'to ask for'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すすむ (susumu) mean? ("To go forward".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to go forward'.
+Say the Japanese for 'to go forward'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほす (hosu) mean? ("To hang out to dry".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to hang out to dry'.
+Say the Japanese for 'to hang out to dry'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さす (sasu) mean? ("To point; to hold up (an umbrella)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to point'.
+Say the Japanese for 'to point'.

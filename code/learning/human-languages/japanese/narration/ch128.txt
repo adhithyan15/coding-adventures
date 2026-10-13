@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かしこい (kashikoi) mean? ("Clever".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'clever'.
+Say the Japanese for 'clever'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おろか (oroka) mean? ("Foolish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'foolish'.
+Say the Japanese for 'foolish'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いさましい (isamashii) mean? ("Brave".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'brave'.
+Say the Japanese for 'brave'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こまかい (komakai) mean? ("Fine, small and detailed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'fine, small and detailed'.
+Say the Japanese for 'fine, small and detailed'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みにくい (minikui) mean? ("Ugly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'ugly'.
+Say the Japanese for 'ugly'.

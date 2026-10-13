@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI104-CAPPOTTO
 prerequisites: [IT-C103-stivali, IT-C104-gonna]
 sounds: []
 roots: []
+etymology_hook: "cappotto — built from an older word for a hooded cloak ← Late Latin cappa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C104-gonna]
 <!-- hl-knowledge: introduces=[IT-LEX-C104-VESTITI104-02]; assesses=[] -->
 
 **il cappotto** — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cappotto** — built from an older word for a hooded cloak, which ← Late Latin *cappa*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

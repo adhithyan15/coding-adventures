@@ -14,7 +14,8 @@ romanization: "paḷḷattākku"
 concept_tag: TA-IDAM264-PALLATTAKKU
 prerequisites: [TA-C264-vali, TA-C264-nilam]
 sounds: []
-roots: []
+roots: [dravidian-pallam-low]
+etymology_hook: "பள்ளத்தாக்கு — native, built on paḷḷam 'low land, valley' (DEDR 4016)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C264-nilam]
 <!-- hl-knowledge: introduces=[TA-LEX-C264-IDAM264-05]; assesses=[] -->
 
 **பள்ளத்தாக்கு** — *paḷḷattākku* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பள்ளத்தாக்கு** (*paḷḷattākku*) is native, built on *paḷḷam*, "low land, valley" (DEDR 4016, which lists Malayalam paḷḷam and Telugu pallamu).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

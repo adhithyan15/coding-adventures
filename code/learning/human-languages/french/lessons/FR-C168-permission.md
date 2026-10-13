@@ -13,7 +13,8 @@ gloss: "permission"
 concept_tag: FR-CHOSES168-PERMISSION
 prerequisites: [FR-C167-fiancee, FR-C168-regle]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "permission ← Latin permissio 'leave', from permittere 'to let through'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C168-regle]
 <!-- hl-knowledge: introduces=[FR-LEX-C168-CHOSES168-02]; assesses=[] -->
 
 **la permission** — "permission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permission** ← Latin *permissio*, "a letting go, leave", from *permittere* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

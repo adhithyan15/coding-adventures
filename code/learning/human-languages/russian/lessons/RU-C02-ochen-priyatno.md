@@ -43,14 +43,14 @@ chapter.
 ## The two words
 <!-- hl-knowledge: introduces=[RU-LEX-OCHEN-PRIYATNO]; assesses=[RU-LEX-MENYA-ZOVUT] -->
 
-> **Очень приятно.** — *Óchen priyátno.* — "Pleased to meet you."
+> *Óchen priyátno.* — "Pleased to meet you."
 
 Literally: **"very pleasant."**
 
 **очень** — *ochen* — very. **приятно** — *priyatno* — pleasant, agreeable.
 
 There is no "to meet you" and no "I am." Russian states the **quality of the
-moment** and leaves the rest understood — the same economy as *меня зовут*, which
+moment** and leaves the rest understood — the same economy as *menyá zovút*, which
 left out "my" and "name."
 
 Both **ч** (*ch*) and **я** are letters the writing track hasn't reached.
@@ -62,12 +62,12 @@ You'll draw them later.
 <!-- hl-knowledge: introduces=[RU-ETYMON-PRIYATNO-FRIEND]; assesses=[RU-LEX-OCHEN-PRIYATNO] -->
 
 *Приятно* comes from Slavic ***prijati***, "to favour, to be well-disposed
-toward" — which gives Russian **приятель** (*priyátel'*), a friend.
+toward" — which gives Russian *priyátel'*, a friend.
 
 That root goes back to PIE \**preyH-*, "to love, to please." And it went into
 Germanic too:
 
-- Russian **приятно**, pleasant, and **приятель**, a friend.
+- Russian **приятно**, pleasant, and *priyátel'*, a friend.
 - English **friend** — literally "one who is loving," an old participle of a
   verb meaning *to love*.
 - German *Freund*.
@@ -86,16 +86,16 @@ Saying *очень приятно* is, at the root, calling the meeting **friend
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Очень приятно"]
-- [YOU SAY: the whole exchange — "Как вас зовут?" · "Меня зовут…" · "Очень приятно"]
-- [YOU SAY: the family — "**прия**тно … **прия**тель … **friend**"]
+- [YOU SAY: "Óchen priyátno"]
+- [YOU SAY: the whole exchange — "Kak vas zovút?" · "Menyá zovút…" · "Óchen priyátno"]
+- [YOU SAY: the family — "**прия**тно … *priyátel'* … **friend**"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND] -->
 
-[PAUSE 3s] Say "pleased to meet you." (*Очень приятно*.) What does it literally
+[PAUSE 3s] Say "pleased to meet you." (*Óchen priyátno*.) What does it literally
 mean? ("**Very pleasant**" — no "I am," no "to meet you.") What is *приятно*
-related to? (Slavic *prijati* "to favour" → **приятель** "friend" — and, from the
+related to? (Slavic *prijati* "to favour" → *priyátel'* "friend" — and, from the
 same PIE root \**preyH-*, English **friend** and German *Freund*.) And *free*?
 (Most likely the **same family** — originally "belonging to the beloved
 household," i.e. not a slave.) Next: putting the chapter together.

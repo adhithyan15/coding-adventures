@@ -13,7 +13,8 @@ gloss: "to compare"
 concept_tag: GE-VERB-VERGLEICHEN
 prerequisites: [GE-C189-verbieten, GE-C189-verbinden]
 sounds: []
-roots: []
+roots: [germanic-galikaz]
+etymology_hook: "vergleichen — ver- + gleich 'equal, alike': to set side by side to see if they are alike"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C189-verbinden]
 <!-- hl-knowledge: introduces=[GE-LEX-C190-VERB190-01]; assesses=[] -->
 
 **vergleichen** — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vergleichen** is *ver-* + *gleich*, "alike", + *-en* (EtymDB 2.1): to set things side by side to see how alike they are.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

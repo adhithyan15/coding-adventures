@@ -14,7 +14,8 @@ romanization: "cataraṅkam"
 concept_tag: TA-PORUL249-CATARANKAM
 prerequisites: [TA-C249-kalpantu, TA-C249-kiriket]
 sounds: []
-roots: []
+roots: [sanskrit-caturanga]
+etymology_hook: "சதுரங்கம் ← Sanskrit caturaṅga 'four-limbed', a name for chess (CDIAL 4596)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C249-kiriket]
 <!-- hl-knowledge: introduces=[TA-LEX-C249-PORUL249-04]; assesses=[] -->
 
 **சதுரங்கம்** — *cataraṅkam* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சதுரங்கம்** (*cataraṅkam*) is a loan from Sanskrit *caturaṅga*, "having four parts", a name for chess after the four arms of an army (CDIAL 4596).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

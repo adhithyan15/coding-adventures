@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can agree with what somebody just said, in two words.",
     "assesses": [
-      "ES-LEX-TAMBIEN"
+      "ES-LEX-TAMBIEN",
+      "ES-LEX-TAN",
+      "ES-ETYMON-TAMBIEN-TAN-BIEN"
     ]
   }
 }

@@ -13,7 +13,8 @@ gloss: "a hundred"
 concept_tag: GE-ZAHLEN-HUNDERT
 prerequisites: [GE-C101-vierzig, GE-C101-fuenfzig]
 sounds: []
-roots: []
+roots: [germanic-hundarada]
+etymology_hook: "hundert ← Old High German hundert ← Proto-Germanic *hundaradą, 'hundred-count' — English hundred"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C101-fuenfzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C101-ZAHLEN-04]; assesses=[] -->
 
 **hundert** — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hundert** ← Old High German *hundert* ← Proto-Germanic *\*hundaradą*, built from *\*hundą*, "hundred", and *\*radą*, "count" (EtymDB 2.1). English *hundred* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

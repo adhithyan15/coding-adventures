@@ -13,7 +13,8 @@ gloss: "a slipper"
 concept_tag: PT-COISAS255-CHINELO
 prerequisites: [PT-C255-oceano, PT-C255-selva]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "chinelo — probably from a northern Italian form of pianella 'slipper', from Latin planus 'flat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C255-selva]
 <!-- hl-knowledge: introduces=[PT-LEX-C255-COISAS255-05]; assesses=[] -->
 
 **o chinelo** — "a slipper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chinelo** — borrowed, probably from a northern Italian form of *pianella*, "slipper"; behind it is Latin *planus*, "flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

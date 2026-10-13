@@ -14,6 +14,7 @@ concept_tag: IT-CITTA2-TRENO
 prerequisites: [IT-C82-stazione, IT-C82-autobus]
 sounds: []
 roots: []
+etymology_hook: "treno ← French train — borrowed; English train is the same French word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C82-autobus]
 <!-- hl-knowledge: introduces=[IT-LEX-C82-CITTA2-03]; assesses=[] -->
 
 **il treno** — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**treno** ← French *train* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

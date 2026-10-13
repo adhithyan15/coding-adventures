@@ -13,7 +13,8 @@ gloss: "to draw"
 concept_tag: FR-VERB-DESSINER
 prerequisites: [FR-C65-recevoir, FR-C65-sentir]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "dessiner ← Italian disegnare 'to draw', from Latin designare 'to mark out' — English design"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C65-sentir]
 <!-- hl-knowledge: introduces=[FR-LEX-C66-VERBES18-01]; assesses=[] -->
 
 **dessiner** — "to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dessiner** ← Middle French *desseigner*, from Italian *disegnare*, "to draw", ← Latin *designare*, "to mark out" — borrowed from Italian. (EtymDB 2.1 records the Middle French and Latin forms.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

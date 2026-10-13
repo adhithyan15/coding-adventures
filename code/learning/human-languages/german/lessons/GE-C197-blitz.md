@@ -14,6 +14,7 @@ concept_tag: GE-THING197-BLITZ
 prerequisites: [GE-C197-hitze, GE-C197-kaelte]
 sounds: []
 roots: []
+etymology_hook: "Blitz ← Middle High German blitze 'lightning', from a verb 'to flash' — English borrowed blitz"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C197-kaelte]
 <!-- hl-knowledge: introduces=[GE-LEX-C197-THING197-05]; assesses=[] -->
 
 **der Blitz** — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Blitz** ← Middle High German *blitze*, "lightning", from Old High German *blecchazzen*, "to flash" (EtymDB 2.1) — inherited. English borrowed *blitz* from German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

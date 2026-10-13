@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:28af1eb4fb9d164d",
+  "sourceHash": "fnv1a64:f6a80bfacbad04f8",
   "lessons": [
     {
       "id": "FR-C06-un",
@@ -924,7 +924,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11ff1c01390245ad",
+      "sourceHash": "fnv1a64:6064c205f2d9a667",
       "notice": null,
       "blocks": [
         {
@@ -1014,11 +1014,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sept\" then \"septembre\" — the seven inside the month",
+              "instruction": "\"sept\" then English \"September\" — the seven inside the month",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sept\" then \"septembre\" — the seven inside the month]"
+              "source": "[YOU SAY: \"sept\" then English \"September\" — the seven inside the month]"
             }
           ]
         },
@@ -1035,7 +1035,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say seven? (sept, set.) Which written letter is silent? (The p.) Which month carries the same Latin septem? (Septembre — which is the ninth month, for a reason we come to.) Next: the number eight."
+              "text": "How do you say seven? (sept, set.) Which written letter is silent? (The p.) Which month carries the same Latin septem? (September, in French as in English — the ninth month, for a reason we come to.) Next: the number eight."
             }
           ]
         }
@@ -1054,7 +1054,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d0fd6dc0ec6fbd3",
+      "sourceHash": "fnv1a64:bed8ab90648d9623",
       "notice": null,
       "blocks": [
         {
@@ -1144,11 +1144,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the road — \"octō, oit, huit\" — then \"octobre\", where the oct- held",
+              "instruction": "the road — \"octō, oit, huit\" — then the month, where the oct- held (English \"October\" kept it too)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the road — \"octō, oit, huit\" — then \"octobre\", where the *oct-* held]"
+              "source": "[YOU SAY: the road — \"octō, oit, huit\" — then the month, where the *oct-* held (English \"October\" kept it too)]"
             }
           ]
         },
@@ -1165,7 +1165,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say eight? (huit, weet.) What does French do with a written h? (Never pronounces it.) Which Latin word is huit worn down from, and where can you still see it? (octō — kept intact in octobre.) Next: the number nine."
+              "text": "How do you say eight? (huit, weet.) What does French do with a written h? (Never pronounces it.) Which Latin word is huit worn down from, and where can you still see it? (octō — kept intact in the month: French's, and English October.) Next: the number nine."
             }
           ]
         }
@@ -1184,7 +1184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50688b5509aa4739",
+      "sourceHash": "fnv1a64:057656becd5f79c0",
       "notice": null,
       "blocks": [
         {
@@ -1302,7 +1302,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say nine? (neuf, nuhf.) What happens to the f before a vowel? (It becomes a v — neuf ans.) Which month keeps the same Latin novem? (Novembre.) Next: the number ten, and the count is complete."
+              "text": "How do you say nine? (neuf, nuhf.) What happens to the f before a vowel? (It becomes a v — neuf ans.) Which month keeps the same Latin novem? (November, in French as in English.) Next: the number ten, and the count is complete."
             }
           ]
         }

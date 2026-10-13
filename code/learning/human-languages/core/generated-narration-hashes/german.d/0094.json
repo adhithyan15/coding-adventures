@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 94,
-  "sourceHash": "fnv1a64:fc7268a777e8a109",
+  "sourceHash": "fnv1a64:f3e1049a06545072",
   "lessonIds": [
     "GE-C94-grau",
     "GE-C94-lila",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch94.txt",
   "json": "german/narration/ch94.json",
-  "textHash": "fnv1a64:1c357170ed06337c",
-  "jsonHash": "fnv1a64:fdce24e1ba3d08cd",
+  "textHash": "fnv1a64:2fb95ead9ebcaebc",
+  "jsonHash": "fnv1a64:c346779b7ec40aef",
   "findings": []
 }

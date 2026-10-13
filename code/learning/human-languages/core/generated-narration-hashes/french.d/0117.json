@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 117,
-  "sourceHash": "fnv1a64:17cd6fb039459f13",
+  "sourceHash": "fnv1a64:d29f31df3988edc6",
   "lessonIds": [
     "FR-C117-bottes",
     "FR-C117-casquette",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch117.txt",
   "json": "french/narration/ch117.json",
-  "textHash": "fnv1a64:de777cfc67a625ce",
-  "jsonHash": "fnv1a64:cbd63537ff7885fe",
+  "textHash": "fnv1a64:3dc2af152daaff13",
+  "jsonHash": "fnv1a64:3ad47e32cf3e9e39",
   "findings": []
 }

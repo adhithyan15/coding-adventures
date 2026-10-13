@@ -13,7 +13,8 @@ gloss: "a pharmacy"
 concept_tag: PT-CIDADE3-FARMACIA
 prerequisites: [PT-C75-restaurante, PT-C75-hotel]
 sounds: []
-roots: []
+roots: [pharmacia-latin]
+etymology_hook: "farmácia ← Medieval Latin pharmacia, from Greek pharmakon 'drug' — English pharmacy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C75-hotel]
 <!-- hl-knowledge: introduces=[PT-LEX-C75-CIDADE3-05]; assesses=[] -->
 
 **a farmácia** — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farmácia** ← Medieval Latin *pharmacia* (EtymDB 2.1) — a learned borrowing from Medieval Latin. Latin took it from Greek *pharmakeia*, "use of drugs".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

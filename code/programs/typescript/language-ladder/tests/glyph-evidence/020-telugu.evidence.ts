@@ -24,13 +24,13 @@ export default [
       expect(iv[0]!.strokeOrderSource?.url).toBe(
         "https://write-telugu-alphabets.en.aptoide.com/app",
       );
-      expect(iv[1]!.strokeOrder).toHaveLength(2);
-      expect(iv[1]!.penLifts).toBe(1);
+      expect(iv[1]!.strokeOrder).toHaveLength(3);
+      expect(iv[1]!.penLifts).toBe(0);
       expect(iv[1]!.strokeOrderSource?.url).toBe(
         "https://www.youtube.com/watch?v=vXdrj1pP6q0",
       );
-      expect(iv[2]!.strokeOrder).toHaveLength(3);
-      expect(iv[2]!.penLifts).toBe(2);
+      expect(iv[2]!.strokeOrder).toHaveLength(4);
+      expect(iv[2]!.penLifts).toBe(0);
       expect(iv[2]!.strokeOrderSource?.url).toBe(
         "https://www.youtube.com/watch?v=MKvmq1hFVIE",
       );
@@ -43,7 +43,7 @@ export default [
         "https://write-telugu-alphabets.en.aptoide.com/app",
       );
       expect(iv[7]!.strokeOrder).toHaveLength(4);
-      expect(iv[7]!.penLifts).toBe(2);
+      expect(iv[7]!.penLifts).toBe(1);
       expect(iv[7]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_10_ae\.png.*movements 1–4.*version 2\.6/i);
       expect(iv[8]!.strokeOrder).toHaveLength(3);
       expect(iv[8]!.penLifts).toBe(0);

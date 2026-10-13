@@ -13,7 +13,8 @@ gloss: "the north"
 concept_tag: GE-RICHTUNG108-NORDEN
 prerequisites: [GE-C107-ampel, GE-C107-parkplatz, GE-C22-hund-katze-more, GE-C23-gruen-gelb-more]
 sounds: []
-roots: []
+roots: [northa-germanic]
+etymology_hook: "Norden ← Old High German nordan — the same Germanic word as English north"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C107-parkplatz]
 <!-- hl-knowledge: introduces=[GE-LEX-C108-RICHTUNG108-01]; assesses=[] -->
 
 **der Norden** — "the north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Norden** ← Old High German *nordan*, "from the north" — inherited. EtymDB 2.1 traces English *north* to Proto-Germanic *\*nurþrą*: the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

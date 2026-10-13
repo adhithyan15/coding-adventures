@@ -13,7 +13,8 @@ gloss: "a nail (finger or toe)"
 concept_tag: IT-CORPO3-UNGHIA
 prerequisites: [IT-C39-sangue, IT-C39-pelle]
 sounds: []
-roots: []
+roots: [ungula-latin]
+etymology_hook: "unghia ← Latin ungula 'hoof, claw' — the hoof that names ungulate animals"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C39-pelle]
 <!-- hl-knowledge: introduces=[IT-LEX-C39-CORPO3-05]; assesses=[] -->
 
 **l'unghia** — "a nail (finger or toe)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unghia** ← Vulgar Latin *ungla*, from Latin *ungula*, "hoof, claw" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

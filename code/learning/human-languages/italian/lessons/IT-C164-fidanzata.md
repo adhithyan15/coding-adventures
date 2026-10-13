@@ -13,7 +13,8 @@ gloss: "a girlfriend, a fiancée"
 concept_tag: IT-COSE164-FIDANZATA
 prerequisites: [IT-C163-operaio, IT-C163-impiegato]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "fidanzata — 'the pledged one', from fidanza 'trust', Latin fidere — French fiancée is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C163-impiegato]
 <!-- hl-knowledge: introduces=[IT-LEX-C164-COSE164-01]; assesses=[] -->
 
 **la fidanzata** — "a girlfriend, a fiancée".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fidanzata** is "the one pledged": from *fidanzare*, "to betroth", built on *fidanza*, "trust", which goes back to Latin *fidere*, "to trust". EtymDB 2.1 lists French *fiancée* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to express"
 concept_tag: FR-VERB-EXPRIMER
 prerequisites: [FR-C214-entretenir, FR-C214-exister]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "exprimer ← Latin exprimere 'to press out' — English express"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C214-exister]
 <!-- hl-knowledge: introduces=[FR-LEX-C214-VERBES214-04]; assesses=[] -->
 
 **exprimer** — "to express".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exprimer** ← Latin *exprimere*, "to press out" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

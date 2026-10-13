@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03]
+  knowledge: [PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03, PT-ETYMON-ESCREVER-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,7 +55,7 @@ for directly after the verb:
 English needs “for”; Portuguese does not add a preposition here.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[PT-ETYMON-ESPERAR-03]; assesses=[] -->
+<!-- hl-knowledge: introduces=[PT-ETYMON-ESPERAR-03]; assesses=[PT-ETYMON-ESCREVER-03] -->
 
 **Esperar** comes from Latin ***spērāre***, “to hope.” Its front **e-** props up
 an older *sp-* beginning, in the same way that **escrever** grew from Latin

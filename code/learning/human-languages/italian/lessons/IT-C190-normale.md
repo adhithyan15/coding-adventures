@@ -13,7 +13,8 @@ gloss: "normal"
 concept_tag: IT-QUAL190-NORMALE
 prerequisites: [IT-C190-inutile, IT-C190-strano]
 sounds: []
-roots: []
+roots: [normalis-latin]
+etymology_hook: "normale ← Latin normalis 'made by the square', from norma — English normal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C190-strano]
 <!-- hl-knowledge: introduces=[IT-LEX-C190-QUAL190-04]; assesses=[] -->
 
 **normale** — "normal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**normale** ← Latin *normalis*, "made by the carpenter's square" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *normale*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "tayir"
 concept_tag: TA-NOUN-CURD
 prerequisites: [TA-C58-bird, TA-C57-wind, TA-C58-cow]
 sounds: []
-roots: []
+roots: [dravidian-tayir-curd]
+etymology_hook: "தயிர் — in DEDR 3088 with Malayalam tayir; the entry asks whether it is Sanskrit takra 'buttermilk'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C58-bird]
 Set பால், soured overnight in a covered pot. It is what a Tamil meal finishes on, turned through the last of the சாதம், and it is the thing a hot afternoon is survived with.
 
 The sisters do not agree here at all: Kannada ಮೊಸರು (*mosaru*), Telugu పెరుగు (*perugu*), Tamil தயிர். Three households, three words, one pot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தயிர்** (*tayir*) is listed in DEDR 3088 with Malayalam *tayir*. The entry asks, with a question mark, whether it comes from Sanskrit *takra*, "buttermilk", so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

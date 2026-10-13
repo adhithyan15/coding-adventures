@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 128,
-  "sourceHash": "fnv1a64:f2095700eac8f5e4",
+  "sourceHash": "fnv1a64:a5cd70322b2c4ab3",
   "lessonIds": [
     "IT-C128-pericoloso",
     "IT-C128-bagnato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch128.txt",
   "json": "italian/narration/ch128.json",
-  "textHash": "fnv1a64:1644836b55441773",
-  "jsonHash": "fnv1a64:42674702fb860712",
+  "textHash": "fnv1a64:fc0bddcefd27725c",
+  "jsonHash": "fnv1a64:426ecb5147bf7633",
   "findings": []
 }

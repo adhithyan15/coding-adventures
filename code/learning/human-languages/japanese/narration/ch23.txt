@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くすり (kusuri) mean? ("Medicine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'medicine'.
+Say the Japanese for 'medicine'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ねむい (nemui) mean? ("Sleepy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sleepy'.
+Say the Japanese for 'sleepy'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かなしい (kanashii) mean? ("Sad".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sad'.
+Say the Japanese for 'sad'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たのしい (tanoshii) mean? ("Fun, enjoyable".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'fun, enjoyable'.
+Say the Japanese for 'fun, enjoyable'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こわい (kowai) mean? ("Scary".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'scary'.
+Say the Japanese for 'scary'.

@@ -11,7 +11,7 @@ concept_tag: PT-TIME-AGO
 prerequisites: [PT-C18-ter-haver, PT-C06-numeros-1-5]
 sounds: [open-a]
 roots: [habere-latin]
-etymology_hook: "the fixed há that marks existence also looks back across elapsed time"
+etymology_hook: "há, a form of haver ← Latin habere 'to have' — English habit shares it"
 duration:
   max_seconds: 135
 requires:
@@ -50,6 +50,11 @@ tell you how far back to look.
 
 Say the frame slowly: **há … três … anos**. Then say it as one small unit:
 **há três anos**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**há** is a form of *haver* ← Latin *habere*, "to have, to hold" — inherited. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-HAVER-02, PT-GRAMMAR-HA-TIME-04] -->

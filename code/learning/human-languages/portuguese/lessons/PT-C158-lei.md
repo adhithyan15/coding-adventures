@@ -13,7 +13,8 @@ gloss: "a law"
 concept_tag: PT-COISAS158-LEI
 prerequisites: [PT-C158-sociedade, PT-C158-governo]
 sounds: []
-roots: []
+roots: [lex-latin]
+etymology_hook: "lei ← Latin lex, legis 'law': the -g- fell out — English legal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C158-governo]
 <!-- hl-knowledge: introduces=[PT-LEX-C158-COISAS158-04]; assesses=[] -->
 
 **a lei** — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lei** ← Latin *lex, legis*, "law" (EtymDB 2.1) — inherited. The *-g-* of the form *legem* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

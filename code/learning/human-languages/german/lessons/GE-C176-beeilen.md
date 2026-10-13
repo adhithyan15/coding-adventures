@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BEEILEN
 prerequisites: [GE-C175-bauen, GE-C176-bedeuten]
 sounds: []
 roots: []
+etymology_hook: "beeilen — be- + eilen 'to hurry' ← Old High German īlen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C176-bedeuten]
 <!-- hl-knowledge: introduces=[GE-LEX-C176-VERB176-02]; assesses=[] -->
 
 **beeilen** — "to hurry (sich beeilen)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beeilen** is *be-* + the verb "to hurry", Middle High German *īlen* ← Old High German *īlen* (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

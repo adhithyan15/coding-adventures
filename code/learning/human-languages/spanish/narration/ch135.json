@@ -132,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-repaso-mandatos-grid",
               "prompt": "Give all four command forms of comer: tu do it, tu don't, usted do it, usted don't.",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-repaso-mandatos-cost",
               "prompt": "What was the only genuinely new material in this whole rung?",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-repaso-mandatos-odd",
               "prompt": "Why is the informal positive command the one box that keeps old irregular forms?",
               "assesses": [

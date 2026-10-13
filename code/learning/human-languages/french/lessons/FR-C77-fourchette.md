@@ -13,7 +13,8 @@ gloss: "a fork"
 concept_tag: FR-TABLE29-FOURCHETTE
 prerequisites: [FR-C77-cuillere, FR-C77-couteau]
 sounds: []
-roots: []
+roots: [furca-latin]
+etymology_hook: "fourchette — the word for 'pitchfork' + -ette; it goes back to Latin furca — English fork"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C77-couteau]
 <!-- hl-knowledge: introduces=[FR-LEX-C77-TABLE29-03]; assesses=[] -->
 
 **la fourchette** — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fourchette** — built from the French word for "pitchfork", with *-ette*, "little". The pitchfork word ← Old French *furche* (EtymDB 2.1) ← Latin *furca*, "a two-pronged fork" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -43,6 +43,45 @@ This boundary is grounded in the tagged Perl 1
 
 Current pairs:
 
+- `perl5.004_71.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_71.tar.gz),
+  SHA-256 `de9c6382cdb133b1fc2cf7fca9ad5cfbd5c382525c76fdb233be3b8869cbddcf`.
+  Its `perly.y`, `keywords.h`, `perlvars.h`, and complete numeric scanner
+  match 5.004_70 byte-for-byte. Other changes affect a builtin-shadowing
+  warning, constant-hook overload-stack naming, and regex compiler/executor
+  pointers. Those contexts remain outside standalone plain-decimal arithmetic
+  `print`, which retains its 250-digit limit and unsupported-input probes.
+  The 776-row inventory now has 116 explicitly partial pairs and 660 pending,
+  with none complete; exhaustive public-release coverage remains unproven.
+- `perl5.004_70.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_70.tar.gz),
+  SHA-256 `427fe9a0d1659cfcc3bbaac9a510abd6f640223c513e11dbdc359cabb9179e3e`.
+  Its `perly.y`, `keywords.h`, and complete numeric scanner match 5.004_69
+  byte-for-byte. Other tokenizer changes concern keyword overrides and warnings,
+  reserved `our`, constant-hook helper internals, and the removed regex `t`
+  modifier. Those contexts remain outside the standalone plain-decimal
+  arithmetic/`print` subset, which retains the 250-digit limit. Parser probes
+  reject hook-setting, subroutine/global override, and regex contexts. The
+  776-row inventory now has 115 explicitly partial pairs and 661 pending,
+  with none complete; exhaustive public-release coverage remains unproven.
+- `perl5.004_69.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_69.tar.gz),
+  SHA-256 `4ea95f1a46502ac8db0d4631ea77abb55327447356d02a5e82c3f3ac9c0f4828`.
+  Its `perly.y` and `keywords.h` match 5.004_68 byte-for-byte. The numeric
+  scanner adds hints-controlled constant-overload hooks; those semantics and
+  the contexts installing them remain unsupported. Only standalone plain
+  decimal arithmetic/`print` is represented, retaining the 250-digit limit.
+  Parser probes also reject pragmas, `BEGIN`, and hint mutation. This brings
+  the 776-row inventory to 114 partial pairs and 662 pending, with none complete.
+- `perl5.004_68.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_68.tar.gz),
+  SHA-256 `582b8818c3c890982fdb0b40bf9dd0cb55f5be17f649a3e11fc2f64c6e733273`.
+  Its `perly.y` and `keywords.h` match 5.004_67 byte-for-byte. Tokenizer
+  changes concern user-subroutine prototypes and string-buffer allocations;
+  the complete numeric scanner and file tail are unchanged. Only the bounded
+  plain-decimal arithmetic/`print` subset is represented, with its 250-digit
+  limit and existing rejection probes. This brings the 776-row inventory to
+  113 explicitly partial pairs and 663 pending; none is marked complete.
 - `perl1.000.*` is an explicitly **partial** arithmetic and `print` subset
   derived from the original [`perl-1.0` source tag]. It validates as a pair
   and parses representative accepted programs while rejecting unsupported

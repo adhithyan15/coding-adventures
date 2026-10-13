@@ -14,6 +14,7 @@ concept_tag: FR-VILLE54-BOULANGERIE
 prerequisites: [FR-C102-theatre, FR-C102-bibliotheque]
 sounds: []
 roots: []
+etymology_hook: "boulangerie — the word for 'baker' + -erie; baker probably from Middle Dutch bolle 'round loaf'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C102-bibliotheque]
 <!-- hl-knowledge: introduces=[FR-LEX-C102-VILLE54-04]; assesses=[] -->
 
 **la boulangerie** — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boulangerie** — built from the word for "baker", with *-erie*, "a place for". The baker word came from Picard *boulenc*, probably from Middle Dutch *bolle*, "a round loaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

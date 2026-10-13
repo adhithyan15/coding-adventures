@@ -13,7 +13,8 @@ gloss: "fear"
 concept_tag: GE-GEFUEHLE2-ANGST
 prerequisites: [GE-C60-traurig, GE-C60-gluecklich]
 sounds: []
-roots: []
+roots: [germanic-angustiz]
+etymology_hook: "Angst ← Old High German angust ← Proto-Germanic *angustiz, from a word for 'narrow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C60-gluecklich]
 <!-- hl-knowledge: introduces=[GE-LEX-C61-GEFUEHLE2-01]; assesses=[] -->
 
 **die Angst** — "fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Angst** ← Old High German *angust* ← Proto-Germanic *\*angustiz*, from *\*anguz*, "narrow" — inherited: fear as a tightness in the chest. (EtymDB 2.1) English later borrowed *angst* from German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

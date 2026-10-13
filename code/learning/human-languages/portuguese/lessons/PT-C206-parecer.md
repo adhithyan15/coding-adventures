@@ -13,7 +13,8 @@ gloss: "to seem"
 concept_tag: PT-VERB-PARECER
 prerequisites: [PT-C206-roubar, PT-C206-descobrir]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "parecer ← Vulgar Latin *parescere, from parere 'to appear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C206-descobrir]
 <!-- hl-knowledge: introduces=[PT-LEX-C206-VERBOS206-03]; assesses=[] -->
 
 **parecer** — "to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parecer** ← Vulgar Latin *\*parescere* (EtymDB 2.1), from Latin *parere*, "to appear" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

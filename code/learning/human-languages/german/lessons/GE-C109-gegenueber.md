@@ -13,7 +13,8 @@ gloss: "opposite"
 concept_tag: GE-RICHTUNG109-GEGENUEBER
 prerequisites: [GE-C109-vorne, GE-C109-hinten]
 sounds: []
-roots: []
+roots: [germanic-ubiri]
+etymology_hook: "gegenüber — the word for 'against, toward' + the word for 'over': over against you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C109-hinten]
 <!-- hl-knowledge: introduces=[GE-LEX-C109-RICHTUNG109-05]; assesses=[] -->
 
 **gegenüber** — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gegenüber** is the word for "toward, against", Old High German *gagan*, + the word for "over", Old High German *ubiri* (EtymDB 2.1): "over against" you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

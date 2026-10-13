@@ -13,7 +13,8 @@ gloss: "fearful"
 concept_tag: FR-QUAL190-PEUREUX-PEUREUSE
 prerequisites: [FR-C190-timide, FR-C190-courageux-courageuse]
 sounds: []
-roots: []
+roots: [pavor-latin]
+etymology_hook: "peureux — peur 'fear' + -eux 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C190-courageux-courageuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C190-QUAL190-05]; assesses=[] -->
 
 **peureux / peureuse** — "fearful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peureux** — *peur*, "fear", with *-eux*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

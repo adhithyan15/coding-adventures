@@ -13,7 +13,8 @@ gloss: "a take-off, a departure (by air)"
 concept_tag: GE-THING192-ABFLUG
 prerequisites: [GE-C192-abfahrt, GE-C192-ankunft]
 sounds: []
-roots: []
+roots: [germanic-fleugana]
+etymology_hook: "Abflug — ab- 'off' + Flug 'flight', from fliegen 'to fly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C192-ankunft]
 <!-- hl-knowledge: introduces=[GE-LEX-C192-THING192-03]; assesses=[] -->
 
 **der Abflug** — "a take-off, a departure (by air)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Abflug** is *ab-*, "off", + the word for "flight", Old High German *flug* ← Proto-Germanic *\*flugiz*, from *fliegen* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

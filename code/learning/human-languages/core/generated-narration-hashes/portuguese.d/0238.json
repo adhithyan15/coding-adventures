@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 238,
-  "sourceHash": "fnv1a64:9e41cc378ba98109",
+  "sourceHash": "fnv1a64:1ab1e8a78d58e1a8",
   "lessonIds": [
     "PT-C238-levantar",
     "PT-C238-surpreender",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch238.txt",
   "json": "portuguese/narration/ch238.json",
-  "textHash": "fnv1a64:c8e3bb848a29c90e",
-  "jsonHash": "fnv1a64:95632b2d2f02f211",
+  "textHash": "fnv1a64:912a9b1fabf364ad",
+  "jsonHash": "fnv1a64:a0386c38de23034f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "taccar"
 concept_tag: TA-VELAI193-TACCAR
 prerequisites: [TA-C193-patakar, TA-C193-payirciyalar]
 sounds: []
-roots: []
+roots: [sanskrit-takshan]
+etymology_hook: "தச்சர் ← Sanskrit takṣan 'carpenter' (CDIAL 5621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C193-payirciyalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C193-VELAI193-05]; assesses=[] -->
 
 **தச்சர்** — *taccar* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தச்சர்** (*taccar*) is a loan from Sanskrit *takṣan*, "carpenter" (CDIAL 5621). Tamil wrote *kṣ* as *cc*, and *-ar* is respectful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

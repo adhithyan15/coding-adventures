@@ -13,7 +13,8 @@ gloss: "a department store"
 concept_tag: GE-THING210-KAUFHAUS
 prerequisites: [GE-C210-geschaeft, GE-C210-metzgerei]
 sounds: []
-roots: []
+roots: [caupo-latin, germanic-husa]
+etymology_hook: "Kaufhaus — kaufen 'to buy' + Haus 'house': a house for buying"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C210-metzgerei]
 <!-- hl-knowledge: introduces=[GE-LEX-C210-THING210-05]; assesses=[] -->
 
 **das Kaufhaus** — "a department store".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kaufhaus** is the stem of *kaufen*, "to buy", + *Haus*, "house" (EtymDB 2.1): a house for buying.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

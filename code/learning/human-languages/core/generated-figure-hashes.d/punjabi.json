@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "PA-C39-par-write",
+      "sourceHash": "fnv1a64:3b0836e39eef9314",
+      "svgHash": "fnv1a64:efe59fb79cd4c810",
+      "svg": "punjabi/book/figures/PA-C39-par-write-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "PA-S02-sassa-tatta-sihari",
       "sourceHash": "fnv1a64:97261c20e1ea214e",
       "svgHash": "fnv1a64:b1865f546ad9b403",
@@ -91,6 +98,20 @@
       "sourceHash": "fnv1a64:646a3767ced1a599",
       "svgHash": "fnv1a64:6e073c61f7732d10",
       "svg": "punjabi/book/figures/PA-W02-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W02-aman",
+      "sourceHash": "fnv1a64:f728fa3edcc73202",
+      "svgHash": "fnv1a64:d3b03c85d532e625",
+      "svg": "punjabi/book/figures/PA-W02-aman-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W02-manan",
+      "sourceHash": "fnv1a64:66f3418d459c8515",
+      "svgHash": "fnv1a64:8bb63fcd1c2533b3",
+      "svg": "punjabi/book/figures/PA-W02-manan-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

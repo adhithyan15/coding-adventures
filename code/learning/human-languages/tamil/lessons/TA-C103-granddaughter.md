@@ -11,7 +11,8 @@ romanization: "pētti"
 concept_tag: TA-NEXTGEN-GRANDDAUGHTER
 prerequisites: [TA-C102-soninlaw, TA-C103-grandson]
 sounds: []
-roots: []
+roots: [peyar-dravidian]
+etymology_hook: "பேத்தி — feminine of pēraṉ 'grandson', filed with peyar 'name' in DEDR 4410"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C103-grandson]
 **பேத்தி** (*pētti*) — "a granddaughter".
 
 It pairs with **பேரன்** the way **பாட்டி** pairs with **தாத்தா**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பேத்தி** (*pētti*) is the feminine of *pēraṉ*, "grandson", which DEDR 4410 files with *peyar*, "name": the grandchild carries the grandparent's name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

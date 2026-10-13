@@ -14,7 +14,8 @@ romanization: "kaṭamai"
 concept_tag: TA-KARANAM208-KATAMAI
 prerequisites: [TA-C207-valakkamaka, TA-C208-arivu]
 sounds: []
-roots: []
+roots: [dravidian-kadan-debt]
+etymology_hook: "கடமை — native Dravidian (DEDR 1113); Malayalam kaṭama 'debt, obligation'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C208-arivu]
 <!-- hl-knowledge: introduces=[TA-LEX-C208-KARANAM208-02]; assesses=[] -->
 
 **கடமை** — *kaṭamai* — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடமை** (*kaṭamai*) is native Dravidian. DEDR 1113 lists Malayalam *kaṭama*, "debt, obligation".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

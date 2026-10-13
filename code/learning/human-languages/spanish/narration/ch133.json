@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-no-hables-say",
               "prompt": "Tell somebody not to speak.",
               "assesses": [
@@ -144,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-no-hables-eat",
               "prompt": "Tell somebody not to eat.",
               "assesses": [
@@ -163,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-no-hables-why",
               "prompt": "Why does a negative command take the subjunctive?",
               "assesses": [

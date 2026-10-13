@@ -13,7 +13,8 @@ gloss: "an entrance; a starter"
 concept_tag: PT-COISAS193-ENTRADA
 prerequisites: [PT-C193-etiqueta, PT-C193-guia]
 sounds: []
-roots: []
+roots: [intrare-latin]
+etymology_hook: "entrada — built from entrar 'to go in' (← Latin intrare) + -ada"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C193-guia]
 <!-- hl-knowledge: introduces=[PT-LEX-C193-COISAS193-05]; assesses=[] -->
 
 **a entrada** — "an entrance; a starter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrada** is built from *entrar*, "to go in" (EtymDB 2.1), and *-ada*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

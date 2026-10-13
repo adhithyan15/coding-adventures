@@ -13,7 +13,8 @@ gloss: "pleased, glad"
 concept_tag: PT-QUALIDADES128-CONTENTE
 prerequisites: [PT-C128-pesado, PT-C128-magro]
 sounds: []
-roots: []
+roots: [continere-latin]
+etymology_hook: "contente ← Latin contentus 'satisfied', from continere 'to hold together' — English content"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C128-magro]
 <!-- hl-knowledge: introduces=[PT-LEX-C128-QUALIDADES128-03]; assesses=[] -->
 
 **contente** — "pleased, glad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contente** ← Latin *contentus*, "held in, satisfied", from *continere*, "to hold together" (Lewis & Short). EtymDB 2.1 traces it only to Old Portuguese *contente*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

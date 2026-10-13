@@ -9,10 +9,12 @@
   "payoff": {
     "lesson": "HI-C13-haath",
     "kind": "production",
-    "summary": "Say हाथ, then हस्त, then the shape of the change between them: the -st- cluster simplifies and the vowel lengthens.",
+    "summary": "Say सिर and the śiras it wore down from, then हाथ, then हस्त, and the shape of the change between them: the -st- cluster simplifies and the vowel lengthens.",
     "assesses": [
+      "HI-CONCEPT-C13-SIR-01",
       "HI-CONCEPT-C13-HAATH-01",
       "HI-CONCEPT-C13-HAATH-02"
-    ]
+    ],
+    "note": "HI-C13-haath now recalls सिर and its Sanskrit source as well as its own word and sound change: 3 of the chapter's 5 atoms. The two one-character recognition segments (HI-S08-letter-sa, HI-S117-letter-ca, sequence 605-606) come after the payoff in reading order, so it cannot honestly assess them."
   }
 }

@@ -14,6 +14,7 @@ concept_tag: PT-REFEICOES-LIMAO
 prerequisites: [PT-C47-almoco, PT-C47-jantar]
 sounds: []
 roots: []
+etymology_hook: "limão ← Arabic laymūn, from Persian — English lemon comes from the same Arabic word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C47-jantar]
 <!-- hl-knowledge: introduces=[PT-LEX-C47-REFEICOES-05]; assesses=[] -->
 
 **o limão** — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**limão** ← Arabic *laymūn*, "lemon" (EtymDB 2.1) — borrowed. Arabic took it from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

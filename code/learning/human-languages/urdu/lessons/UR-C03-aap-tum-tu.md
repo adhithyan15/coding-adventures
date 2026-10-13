@@ -32,7 +32,7 @@ variety: contemporary-standard-urdu
 reviews_of: [UR-C02-mera-naam]
 ---
 
-# آپ / تم / تو — three relationships inside “you”
+# Āp / tum / tū — three relationships inside “you”
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->
@@ -47,10 +47,12 @@ To ask the other person's name, begin with the respectful form.
 |---|---|---|
 | **آپ** | *āp* | respectful: a new adult, elder, or anyone you wish to honor |
 | **تم** | *tum* | familiar: friends and peers |
-| **تو** | *tū* | intimate, or downward; unsafe as a beginner default |
+| (next lesson) | *tū* | intimate, or downward; unsafe as a beginner default |
 
 **آپ** begins with **آ**, an alif carrying the long *ā* mark, then **پ** *p*.
-**تم** and **تو** share **ت** *t*. In **تو**, **و** carries long *ū*.
+**تم** is **ت** *t* plus the **م** that ends *salām*. The third form, *tū*,
+shares that **ت**; its written form, with one new shape for the long *ū*,
+waits for the next lesson.
 
 ## Grammar Lens: choose the relationship first
 <!-- hl-knowledge: introduces=[UR-PRAGMATICS-YOU-REGISTER]; assesses=[] -->

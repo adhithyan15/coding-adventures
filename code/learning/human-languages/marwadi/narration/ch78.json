@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C78-din-type",
-              "prompt": "Type the Marwadi for 'a day'.",
+              "prompt": "Say the Marwadi for 'a day'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C78-rat-type",
-              "prompt": "Type the Marwadi for 'night'.",
+              "prompt": "Say the Marwadi for 'night'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C78-savero-type",
-              "prompt": "Type the Marwadi for 'morning'.",
+              "prompt": "Say the Marwadi for 'morning'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C78-mahino-type",
-              "prompt": "Type the Marwadi for 'a month'.",
+              "prompt": "Say the Marwadi for 'a month'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C78-baras-type",
-              "prompt": "Type the Marwadi for 'a year'.",
+              "prompt": "Say the Marwadi for 'a year'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-05"
               ],

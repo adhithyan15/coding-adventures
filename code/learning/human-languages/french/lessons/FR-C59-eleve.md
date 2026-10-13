@@ -13,7 +13,8 @@ gloss: "a pupil"
 concept_tag: FR-FAMILLE11-ELEVE
 prerequisites: [FR-C59-neveu, FR-C59-niece]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "élève — from the verb 'to raise, to bring up', built on Latin levare 'to lift' — English elevate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C59-niece]
 <!-- hl-knowledge: introduces=[FR-LEX-C59-FAMILLE11-03]; assesses=[] -->
 
 **l'élève** — "a pupil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**élève** — formed from the verb for "to raise, to bring up" (EtymDB 2.1), on the model of Italian *allievo*, "pupil". The verb is built on Latin *levare*, "to lift". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

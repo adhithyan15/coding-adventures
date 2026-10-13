@@ -13,7 +13,8 @@ gloss: "to protect"
 concept_tag: PT-VERB-PROTEGER
 prerequisites: [PT-C140-permitir, PT-C140-proibir]
 sounds: []
-roots: []
+roots: [tegere-latin]
+etymology_hook: "proteger ← Latin protegere 'to cover in front' — English protect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C140-proibir]
 <!-- hl-knowledge: introduces=[PT-LEX-C140-VERBOS140-05]; assesses=[] -->
 
 **proteger** — "to protect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proteger** ← Latin *protegere*, "to cover in front" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

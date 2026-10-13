@@ -13,7 +13,8 @@ gloss: "a chain; a necklace"
 concept_tag: GE-DINGE117-KETTE
 prerequisites: [GE-C117-geldboerse, GE-C117-ring]
 sounds: []
-roots: []
+roots: [catena-latin]
+etymology_hook: "Kette ← Middle High German keten, from Latin catēna 'chain' — borrowed; English chain shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C117-ring]
 <!-- hl-knowledge: introduces=[GE-LEX-C117-DINGE117-03]; assesses=[] -->
 
 **die Kette** — "a chain; a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kette** ← Middle High German *keten* (EtymDB 2.1), from Latin *catēna*, "chain" — borrowed. English *chain* comes from the same Latin word through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

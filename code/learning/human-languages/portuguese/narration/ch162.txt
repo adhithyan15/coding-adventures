@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for an example, then the Portuguese for t
 You'll want to know: a dívida.
 a dívida — "a debt".
 
+The word, taken apart.
+dívida from Latin debita, "things owed", from debere, "to owe" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese divida.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for the truth, then the Portuguese for a 
 
 You'll want to know: o imposto.
 o imposto — "a tax".
+
+The word, taken apart.
+imposto from Latin impositum, "laid upon" (EtymDB 2.1), through Vulgar Latin impostum, from imponere, "to lay upon" — inherited.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a debt, then the Portuguese for a tax
 You'll want to know: o formulário.
 o formulário — "a form".
 
+The word, taken apart.
+formulário is built from the word for a formula and -ário. That word from Latin formula, "a small form", from forma (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a tax, then the Portuguese for a form
 You'll want to know: o envelope.
 o envelope — "an envelope".
 
+The word, taken apart.
+envelope from French enveloppe (EtymDB 2.1) — borrowed. The French word comes from envelopper, "to wrap up".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a form, then the Portuguese for an en
 
 You'll want to know: a encomenda.
 a encomenda — "a parcel; an order".
+
+The word, taken apart.
+encomenda is built from the verb "to order" (EtymDB 2.1), which goes back to Latin commendare, "to entrust".
 
 What you've built.
 One more word for this chapter.

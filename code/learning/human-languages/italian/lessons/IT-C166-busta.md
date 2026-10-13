@@ -14,6 +14,7 @@ concept_tag: IT-COSE166-BUSTA
 prerequisites: [IT-C165-sicurezza, IT-C166-firma]
 sounds: []
 roots: []
+etymology_hook: "busta ← Old French boiste 'a box' — borrowed; French boîte is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C166-firma]
 <!-- hl-knowledge: introduces=[IT-LEX-C166-COSE166-02]; assesses=[] -->
 
 **la busta** — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**busta** ← Old French *boiste*, "a box" — borrowed; behind it is Vulgar Latin *buxita*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

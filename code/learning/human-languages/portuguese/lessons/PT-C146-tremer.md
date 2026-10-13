@@ -13,7 +13,8 @@ gloss: "to tremble, to shake"
 concept_tag: PT-VERB-TREMER
 prerequisites: [PT-C145-amarrar, PT-C146-tossir]
 sounds: []
-roots: []
+roots: [tremere-latin]
+etymology_hook: "tremer ← Latin tremere 'to tremble' — English tremor and tremble share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C146-tossir]
 <!-- hl-knowledge: introduces=[PT-LEX-C146-VERBOS146-02]; assesses=[] -->
 
 **tremer** — "to tremble, to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tremer** ← Latin *tremere*, "to tremble" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

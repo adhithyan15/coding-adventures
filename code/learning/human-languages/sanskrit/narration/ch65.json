@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "The Last Letter You Read",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:50b63e98aa8947ff",
+  "sourceHash": "fnv1a64:947f2929b5ba56c1",
   "lessons": [
     {
       "id": "SA-W65-letter-nga",
@@ -19,20 +19,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4adf61b0e5d9678e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script you'll notice: ङ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ङ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ङ and Guided Practice."
       },
       "blocks": [
         {
@@ -171,18 +174,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3f64314d92bdddd1",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
       },
       "blocks": [
         {
@@ -285,18 +291,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1f1ae83f3b38d362",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
       },
       "blocks": [
         {
@@ -391,16 +400,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a6d564cf1796bc9c",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -462,16 +475,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b6d1e11eae4fc4ef",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -591,6 +608,227 @@
             {
               "kind": "speech",
               "text": "The runway began with one traced न. What can you now produce without a model? (A complete two-sentence Devanagari text from meaning alone.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W65-kutra-controlled-question",
+      "sequence": 3018,
+      "title": "Your first question from meaning",
+      "headword": "(controlled location question)",
+      "romanization": "",
+      "gloss": "assemble one familiar Sanskrit location question from meaning, with no visible answer",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:22fd24300a3641b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Writing: assemble one familiar question",
+          "Guided Practice: repair one difference"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing: assemble one familiar question and Guided Practice: repair one difference."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall book, where?, and is without writing any of them yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing: assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Where is the book? There is no word bank, romanization, or copyable sentence. Choose the three familiar pieces, put them in a clear Sanskrit order, and add the question mark. This composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "SA-W65-kutra-controlled-question-check",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Sanskrit question meaning: Where is the book?",
+              "assesses": [
+                "SA-LEX-C35-HOUSE-04",
+                "SA-LEX-C14-DEIXIS-06",
+                "SA-LEX-ASTI"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "पुस्तकम् कुत्र अस्ति?",
+                "पुस्तकम् कुत्र अस्ति"
+              ],
+              "feedback": {
+                "correct": "You selected three familiar pieces and wrote one complete Sanskrit location question.",
+                "incorrect": "Finish the attempt first. Then check the thing, place question, copula, word boundaries, and question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the thing, place question, copula, word boundaries, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected and ordered three known pieces from meaning, with no visible Sanskrit answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line proves this rung, not the later timed A1 writing task."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W65-a1-timed-production",
+      "sequence": 3019,
+      "title": "A short A1 writing checkpoint",
+      "headword": "(short timed A1 writing checkpoint)",
+      "romanization": "",
+      "gloss": "a three-minute independent form attempt before the separate full A1 paper",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:132390f359dffeaf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is a short independent attempt, not a model. You will write the answers, and this page will not show you any copyable Sanskrit answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Keep a blank page ready and set a three-minute timer. Write in Devanagari. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed assessment production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One practical form — three minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Complete all six fields in Devanagari for a new neighbourhood activity group. Short answers are enough. Start the timer when you begin the first field; leave any unfinished field as evidence when it rings."
+            },
+            {
+              "kind": "speech",
+              "text": "Your name."
+            },
+            {
+              "kind": "speech",
+              "text": "Where you live or stay."
+            },
+            {
+              "kind": "speech",
+              "text": "A language you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One everyday action or kind of work you do."
+            },
+            {
+              "kind": "speech",
+              "text": "One drink or food you like."
+            },
+            {
+              "kind": "speech",
+              "text": "One person in your family."
+            },
+            {
+              "kind": "speech",
+              "text": "When the three-minute timer rings, stop. Record the number of completed fields. An honest short attempt is more useful than a perfect untimed one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spend at most one minute looking at this first attempt. Note one field you completed clearly and one field to practise next; do not rewrite the timed answer. Keep the page as evidence."
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint is not the complete A1 writing paper. On another day, close this lesson and open the separate A1 mock 1 learner paper for the authentic form and named-reader message under one 20-minute assessment clock. That paper and its later rubric review are a separate assessment session, not work inside this four-minute lesson. The second mock is a separate repeat, not a model to copy."
             }
           ]
         }

@@ -1,0 +1,18 @@
+{
+  "glyph": "۰",
+  "sound": "0",
+  "role": "digit",
+  "components": [
+    "۰  0 — Persian digit"
+  ],
+  "strokeOrder": [
+    "draw the small dot"
+  ],
+  "strokeOrderNote": "One pen-down movement; 670 of 676 POH-Db samples (99%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 676 aligned samples of ۰ from 30 native writers; one stroke in 670 (99%); no settled start (the most common zone holds 120, 18%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 676 samples of ۰, 670 (99%) are one stroke. It is a small mark, a median 0.31 of the height of the tallest digit in its line, so a dot, not a ring. It has no settled start or direction: the most common start zone holds only 120 (18%), and 356 (53%) turn anticlockwise against 320 (47%) clockwise. The path draws a small anticlockwise ring, the majority by a few points; either direction is a dot. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+  }
+}

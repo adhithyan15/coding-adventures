@@ -13,7 +13,8 @@ gloss: "to bring along"
 concept_tag: GE-VERB-MITBRINGEN
 prerequisites: [GE-C148-leihen, GE-C148-lieben]
 sounds: []
-roots: []
+roots: [germanic-bringana]
+etymology_hook: "mitbringen — mit 'with' + bringen 'to bring': to bring along"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C148-lieben]
 <!-- hl-knowledge: introduces=[GE-LEX-C148-VERB148-04]; assesses=[] -->
 
 **mitbringen** — "to bring along".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mitbringen** is *mit*, "with", + *bringen*, "to bring" ← Proto-Germanic *\*bringaną*, English *bring* (EtymDB 2.1): to bring along.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

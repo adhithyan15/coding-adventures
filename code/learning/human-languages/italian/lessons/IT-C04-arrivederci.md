@@ -8,7 +8,7 @@ type: word
 headword: arrivederci
 gloss: goodbye (literally "until we see each other again")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [IT-C02-practice]
 sounds: [r-tap, soft-c]
 roots: [re-videre-latin]
 etymology_hook: "arrivederci = a + ri(re-) + vedere 'see' + ci 'us' — 'to our seeing-again', twin of au revoir / auf Wiedersehen"
@@ -89,4 +89,4 @@ exact twin of Spanish *adiós*; but for everyday partings it's *arrivederci*.)
 [PAUSE 3s] What does *arrivederci* literally promise? ("Until we see each other
 again.") What French and German goodbyes share that exact idea? (*au revoir*,
 *auf Wiedersehen*.) Which heavier Italian goodbye means "to God," like Spanish
-*adiós*? (*addio*.) Next: "see you tomorrow" — **a domani**.
+*adiós*? (*addio*.) Next: "see you tomorrow."

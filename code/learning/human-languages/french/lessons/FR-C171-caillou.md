@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES171-CAILLOU
 prerequisites: [FR-C171-cascade, FR-C171-rocher]
 sounds: []
 roots: []
+etymology_hook: "caillou ← Norman French caillou, from a Gaulish word for 'stone'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C171-rocher]
 <!-- hl-knowledge: introduces=[FR-LEX-C171-CHOSES171-05]; assesses=[] -->
 
 **le caillou** — "a pebble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caillou** ← Norman French *caillou* (EtymDB 2.1), from a Gaulish word for "stone" — borrowed from the dialects.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -173,7 +173,7 @@
           "Script you'll notice: ध",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ध and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ध and Guided Practice."
       },
       "blocks": [
         {
@@ -373,21 +373,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f50dd4187d3a28de",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: थ",
           "Script: the seat थ fills",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: थ, Script: the seat थ fills and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: थ, Script: the seat थ fills and Guided Practice."
       },
       "blocks": [
         {
@@ -483,7 +485,7 @@
             },
             {
               "kind": "speech",
-              "text": "You had three of the four seats and one gap. थ is the gap, and the shape tells you so: like ध (dha), it carries a bowl and a right stem, so the eye that already finds ध (dha) will find this one."
+              "text": "You had three of the four seats and one gap. थ (tha) is the gap, and the shape tells you so: like ध (dha), it carries a bowl and a right stem, so the eye that already finds ध (dha) will find this one."
             }
           ]
         },
@@ -536,7 +538,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find थ in the ones that have it",
+              "instruction": "at these words, and find थ (tha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

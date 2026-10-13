@@ -13,7 +13,8 @@ gloss: "a prize"
 concept_tag: IT-COSE258-PREMIO
 prerequisites: [IT-C257-strumento, IT-C258-tifoso]
 sounds: []
-roots: []
+roots: [praemium-latin]
+etymology_hook: "premio ← Latin praemium 'a reward' — English premium is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C258-tifoso]
 <!-- hl-knowledge: introduces=[IT-LEX-C258-COSE258-02]; assesses=[] -->
 
 **il premio** — "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**premio** ← Latin *praemium*, "a reward" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

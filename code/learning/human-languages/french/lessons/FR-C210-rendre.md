@@ -13,7 +13,8 @@ gloss: "to give back"
 concept_tag: FR-VERB-RENDRE
 prerequisites: [FR-C210-realiser, FR-C210-offrir-un-cadeau]
 sounds: []
-roots: []
+roots: [dare-latin]
+etymology_hook: "rendre ← Latin reddere 'to give back' — English render and rent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C210-offrir-un-cadeau]
 <!-- hl-knowledge: introduces=[FR-LEX-C210-VERBES210-04]; assesses=[] -->
 
 **rendre** — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rendre** ← Vulgar Latin *\*rendere* ← Latin *reddere*, "to give back" (EtymDB 2.1) — inherited, its *-n-* taken from the Latin verb for "to take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

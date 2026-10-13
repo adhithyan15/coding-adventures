@@ -14,6 +14,7 @@ concept_tag: FR-VERB-TROUVER
 prerequisites: [FR-C66-gagner, FR-C66-cacher]
 sounds: []
 roots: []
+etymology_hook: "trouver ← probably Vulgar Latin *tropare 'to compose a poem' — English troubadour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C66-cacher]
 <!-- hl-knowledge: introduces=[FR-LEX-C67-VERBES19-01]; assesses=[] -->
 
 **trouver** — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trouver** ← Old French *trover*, probably from Vulgar Latin *\*tropare*, "to compose a poem", from Latin *tropus*, "a figure of speech", from Greek *tropos*, "a turn" — inherited (EtymDB 2.1). This is the usual account; it is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

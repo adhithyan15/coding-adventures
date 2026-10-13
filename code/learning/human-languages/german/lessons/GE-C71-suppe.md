@@ -13,7 +13,8 @@ gloss: "a soup"
 concept_tag: GE-ESSEN3-SUPPE
 prerequisites: [GE-C70-moehre, GE-C71-kuchen]
 sounds: []
-roots: []
+roots: [germanic-supo]
+etymology_hook: "Suppe ← French soupe and Low German suppe — a Germanic word for 'sop' that came back through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C71-kuchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C71-ESSEN3-02]; assesses=[] -->
 
 **die Suppe** — "a soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Suppe** came in from French *soupe* and Middle Low German *suppe*, *sope*; EtymDB 2.1 traces *sope* to Proto-Germanic *\*supô*, "sop". So German borrowed back a Germanic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

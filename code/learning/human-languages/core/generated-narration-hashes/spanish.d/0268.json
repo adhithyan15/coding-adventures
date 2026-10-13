@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 268,
-  "sourceHash": "fnv1a64:6253208f7d5413cd",
+  "sourceHash": "fnv1a64:7341a3b5ec7be88f",
   "lessonIds": [
     "ES-C268-donde-esta",
     "ES-C268-billete",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch268.txt",
   "json": "spanish/narration/ch268.json",
   "textHash": "fnv1a64:fff61732a4c43b96",
-  "jsonHash": "fnv1a64:4cedd599c1fcdb56",
+  "jsonHash": "fnv1a64:39d9d190f32c9797",
   "findings": []
 }

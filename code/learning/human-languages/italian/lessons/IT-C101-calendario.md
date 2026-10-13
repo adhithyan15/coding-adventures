@@ -13,7 +13,8 @@ gloss: "a calendar"
 concept_tag: IT-OGGETTI101-CALENDARIO
 prerequisites: [IT-C101-collana, IT-C101-candela]
 sounds: []
-roots: []
+roots: [calendarium-latin]
+etymology_hook: "calendario ← Latin calendarium 'account book' — English calendar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C101-candela]
 <!-- hl-knowledge: introduces=[IT-LEX-C101-OGGETTI101-03]; assesses=[] -->
 
 **il calendario** — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calendario** ← Latin *calendarium*, "account book" — borrowed; from *calendae*, the first day of the month. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C22-ase-type",
-              "prompt": "Type the Japanese for 'sweat'.",
+              "prompt": "Say the Japanese for 'sweat'.",
               "assesses": [
                 "JA-LEX-C22-BODY22-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C22-namida-type",
-              "prompt": "Type the Japanese for 'tears'.",
+              "prompt": "Say the Japanese for 'tears'.",
               "assesses": [
                 "JA-LEX-C22-BODY22-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C22-koe-type",
-              "prompt": "Type the Japanese for 'a voice'.",
+              "prompt": "Say the Japanese for 'a voice'.",
               "assesses": [
                 "JA-LEX-C22-BODY22-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C22-netsu-type",
-              "prompt": "Type the Japanese for 'a fever'.",
+              "prompt": "Say the Japanese for 'a fever'.",
               "assesses": [
                 "JA-LEX-C22-BODY22-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C22-itai-type",
-              "prompt": "Type the Japanese for 'painful, it hurts'.",
+              "prompt": "Say the Japanese for 'painful, it hurts'.",
               "assesses": [
                 "JA-LEX-C22-BODY22-05"
               ],

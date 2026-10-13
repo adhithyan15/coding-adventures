@@ -13,7 +13,8 @@ gloss: "flour"
 concept_tag: IT-CIBO107-FARINA
 prerequisites: [IT-C107-melone, IT-C107-aglio]
 sounds: []
-roots: []
+roots: [farina-latin]
+etymology_hook: "farina ← Latin farina 'flour', from far 'spelt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-aglio]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-05]; assesses=[] -->
 
 **la farina** — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farina** ← Latin *farina*, "flour, meal", from *far*, "spelt" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

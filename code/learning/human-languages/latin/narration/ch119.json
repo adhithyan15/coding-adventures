@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Open space, Milestone, Around, Next to, Opposite",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f6772e445c7394fe",
+  "sourceHash": "fnv1a64:9ab132261d6a98ce",
   "lessons": [
     {
       "id": "LA-C119-area",
@@ -649,7 +649,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7043719b6d2af4b4",
+      "sourceHash": "fnv1a64:765a9fc11744da6a",
       "notice": null,
       "blocks": [
         {
@@ -740,7 +740,7 @@
             },
             {
               "kind": "speech",
-              "text": "To be able? (queō, quīre.) To dare? (audeō, audēre.) To have to? (dēbeō, dēbēre.) To be used to? (soleō, solēre.) Power? (potestās, potestātis.) A chance? (facultās, facultātis.) A skill? (ars, artis.) It is necessary? (oportet.) It is allowed? (licet.) To not want? (nōlō, nōlle.) To prefer? (mālō, mālle.) To desire? (cupiō, cupere.) To wish for? (optō, optāre.) To miss? (dēsīderō, dēsīderāre.) A wish? (voluntās, voluntātis.) A desire? (cupiditās, cupiditātis.) Hope? (spēs, speī.) A longing? (dēsīderium, dēsīderiī.) Why?? (quārē.) Why?? (quamobrem.) For? (nam.) For? (enim.) For that reason? (ideō.) And so? (itaque.) A reason? (causa, causae.)"
+              "text": "To be able? (queō, quīre.) To dare? (audeō, audēre.) To have to? (dēbeō, dēbēre.) To be used to? (soleō, solēre.) Power? (potestās, potestātis.) A chance? (facultās, facultātis.) A skill? (ars, artis.) It is necessary? (oportet.) It is allowed? (licet.) To not want? (nōlō, nōlle.) To prefer? (mālō, mālle.) To desire? (cupiō, cupere.) To wish for? (optō, optāre.) To miss? (dēsīderō, dēsīderāre.) A wish? (voluntās, voluntātis.) A desire? (cupiditās, cupiditātis.) Hope? (spēs, speī.) A longing? (dēsīderium, dēsīderiī.) Asking why? (quārē.) Asking why, another way? (quamobrem.) For? (nam.) For? (enim.) For that reason? (ideō.) And so? (itaque.) A reason? (causa, causae.)"
             }
           ]
         }

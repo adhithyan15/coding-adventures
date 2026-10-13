@@ -1,11 +1,9 @@
 Malayalam, chapter 6: Case Endings and Dative Subjects.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 4.
 -ിക്ക് (-ikkŭ) — "to, for".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -25,7 +23,7 @@ Why it's said this way.
 pins down the case? Malayalam -ikkŭ: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
 carries number? Malayalam -ikkŭ: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
 carries declension class? Malayalam -ikkŭ: no. a Latin ending like -īs: yes — 1st/2nd only.
-can you see the seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump.
+is there a seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump.
 Malayalam stacks: each suffix means one thing and sits in a fixed order — so a long word can be read piece by piece. Latin fuses: -īs is case and plural and declension at once, indivisible, and it doesn't even settle which case. Malayalam's dative is never ambiguous.
 That's what "agglutinative" means, and why Malayalam words grow long without growing hard: they are built, not memorised.
 
@@ -48,7 +46,7 @@ What does -ിക്ക് mean? ("To" or "for.") Where does it go? (On the end 
 Lesson 2 of 4.
 ക (ka) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ക and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ക and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -56,6 +54,7 @@ Before the new one: ല — what does it do?
 [pause 2 seconds]
 One character this time. One only. It has been sitting in front of you on pages you have already read.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ക.
 ക — ka.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
@@ -69,6 +68,7 @@ Writing: ക — follow the numbered strip.
 Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ക (ka) yourself — slowly, and larger than it is printed.
 The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at these words, and find ക (ka) in the ones that have it]
@@ -82,9 +82,9 @@ Which character is this — ക? What sound does it carry? (ka.) Name one word y
 
 
 Lesson 3 of 4.
-ര — one character, met inside words you already say.
+ര (ra) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ര and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ര and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -92,6 +92,7 @@ Before the new one: ക (ka) — what does it do?
 [pause 2 seconds]
 One character this time. One only. It has been sitting in front of you on pages you have already read.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ര.
 ര — ra.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra.
@@ -105,6 +106,7 @@ Writing: ര — follow the numbered strip.
 Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ര (ra) yourself — slowly, and larger than it is printed.
 The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at these words, and find ര (ra) in the ones that have it]
@@ -120,7 +122,7 @@ Which character is this — ര? What sound does it carry? (ra.) Which of the tw
 Lesson 4 of 4.
 എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) — "I know Malayalam".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — ക and ര.
 
 Warm-up.
 [pause 2 seconds]
@@ -132,15 +134,14 @@ You'll want to know.
 piece: എനിക്ക് enikkŭ, "to me" — the dative from the last lesson.
 piece: മലയാളം malayāḷaṁ, Malayalam (Ch. 5).
 piece: അറിയാം aṟiyāṁ, "can be known" — aṟiy- "know" + -ām, the able-to ending.
-You are not the subject. Ñān is gone; the person has been moved into the dative, and the sentence is now about the language. Malayalam isn't saying you perform an act of knowing — it's saying the language is knowable to you.
+You are not the subject: ñān has moved into the dative, and the sentence is about the language, knowable to you.
 
 The word, taken apart.
-Malayalam separates what you do from what happens to you. Speaking is an action, so Ch. 5 used ñān. But knowing, liking, wanting, being hungry — these arrive at you. Malayalam marks that by putting the person in the dative.
-[a table of 3 rows, read aloud]
+Malayalam separates what you do from what happens to you. Speaking is an action, so Ch. 5 used ñān. Knowing, liking, wanting arrive — so the person goes in the dative.
+[a table of 2 rows, read aloud]
 English frames it as: I know Malayalam. Malayalam frames it as: Malayalam is known to me.
 English frames it as: I like it. Malayalam frames it as: it is pleasing to me.
-English frames it as: I am cold. Malayalam frames it as: cold is to me.
-English preserves one fossil of exactly this: "methinks" — me is a dative, "it seems to me." Malayalam made it the rule.
+English keeps one fossil of it: "methinks" — dative me, "it seems to me." Malayalam made it the rule.
 
 The word, taken apart.
 [a table of 4 rows, read aloud]
@@ -148,7 +149,7 @@ language: Malayalam. "I know [the language]": enikkŭ malayāḷaṁ aṟiyāṁ
 language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
 language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
 language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
-Look at the first column: Malayalam's enikkŭ and Tamil's enakku are nearly the same word — the two languages separated most recently of the four, and it shows. One construction, four languages, four visibly related suffixes: the Dravidian family showing its bones, as blanc/bianco/branco did for Romance.
+Malayalam's enikkŭ and Tamil's enakku are nearly the same word — the two separated most recently of the four. One construction, four related suffixes.
 
 Guided Practice.
 [pause 1 second]
@@ -156,11 +157,20 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the contrast — "ñān malayāḷaṁ saṁsārikkunnu" (I speak) … "enikkŭ malayāḷaṁ aṟiyāṁ" (known to me)]
 [pause 8 seconds for the answer]
-[your turn — say: the near-twins — "enikkŭ … enakku"]
-[pause 8 seconds for the answer]
 [your turn — say: the four cousins — "-ikkŭ, -ukku, -ku, -ge"]
 [pause 8 seconds for the answer]
 
+Guided Practice — the ending underneath.
+Say "to the name", then "for work". (pērinŭ, jōlikkŭ — two shapes, picked by the noun's ending.)
+How is -ikkŭ unlike Latin -īs? (One meaning, seam visible; Latin fuses case, number and class.)
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — ക and ര.
+എനിക്ക്, നമസ്കാരം, അറിയാം.
+[once you have stopped driving — point: each ക, ka — two words have it]
+[once you have stopped driving — point: the soft ര (ra), then the hard റ]
+(ക (ka): enikkŭ, namaskāraṁ. Soft ര (ra): namaskāraṁ. Hard റ: aṟiyāṁ.)
+
 Wrap-up Recall.
 [pause 3 seconds]
-What does എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) literally say? ("To-me Malayalam is-knowable.") What has English got that Malayalam hasn't? (A nominative "I" — ñān is replaced by the dative enikkŭ.) Why the dative? (Knowing happens to you.) Which Tamil word is enikkŭ almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)
+What does എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) literally say? ("To-me Malayalam is-knowable.") Where did ñān go, and why? (Into the dative, enikkŭ — knowing happens to you.) Tamil's near-twin of enikkŭ? (Enakku.) The English fossil of the idea? (Methinks.)

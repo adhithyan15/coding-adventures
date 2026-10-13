@@ -14,7 +14,8 @@ romanization: "niḻal"
 concept_tag: TA-PORUL276-NILAL
 prerequisites: [TA-C275-koti2, TA-C276-iruttu]
 sounds: []
-roots: []
+roots: [dravidian-nizhal-shade]
+etymology_hook: "நிழல் — native Dravidian (DEDR 3679); Malayalam niḻal 'shadow', Kannada neḻal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C276-iruttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C276-PORUL276-02]; assesses=[] -->
 
 **நிழல்** — *niḻal* — "shade, a shadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிழல்** (*niḻal*) is native Dravidian. DEDR 3679 lists Malayalam *niḻal*, "shadow" and Kannada *neḻal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

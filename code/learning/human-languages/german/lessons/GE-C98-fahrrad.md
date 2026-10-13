@@ -13,7 +13,8 @@ gloss: "a bicycle"
 concept_tag: GE-STADT3-FAHRRAD
 prerequisites: [GE-C97-polizei, GE-C98-bibliothek]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "Fahrrad — fahren 'to ride, to travel' + the word for 'wheel': a riding wheel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C98-bibliothek]
 <!-- hl-knowledge: introduces=[GE-LEX-C98-STADT3-02]; assesses=[] -->
 
 **das Fahrrad** — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fahrrad** is *fahren*, "to travel", + the word for "wheel", a cousin of Latin *rota*, "wheel" (EtymDB 2.1): a wheel you ride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

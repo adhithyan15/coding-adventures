@@ -13,7 +13,8 @@ gloss: "a fork"
 concept_tag: PT-MESA-GARFO
 prerequisites: [PT-C51-colher, PT-C51-faca]
 sounds: []
-roots: []
+roots: [graphium-latin]
+etymology_hook: "garfo — origin disputed: Latin graphium 'stylus' or Arabic gharfa 'a handful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-faca]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-05]; assesses=[] -->
 
 **o garfo** — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garfo** — its origin is disputed. EtymDB 2.1 derives it from Latin *graphium*, "stylus", from Greek; another account traces it to Arabic *gharfa*, "a handful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

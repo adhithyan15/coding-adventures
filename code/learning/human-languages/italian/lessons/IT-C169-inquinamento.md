@@ -13,7 +13,8 @@ gloss: "pollution"
 concept_tag: IT-COSE169-INQUINAMENTO
 prerequisites: [IT-C168-radice, IT-C169-ambiente]
 sounds: []
-roots: []
+roots: [inquinare-latin]
+etymology_hook: "inquinamento — inquinare 'to pollute' ← Latin inquinare 'to defile' + -mento"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C169-ambiente]
 <!-- hl-knowledge: introduces=[IT-LEX-C169-COSE169-02]; assesses=[] -->
 
 **l'inquinamento** — "pollution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inquinamento** — built from *inquinare*, "to pollute", with *-mento*. *inquinare* ← Latin *inquinare*, "to defile". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

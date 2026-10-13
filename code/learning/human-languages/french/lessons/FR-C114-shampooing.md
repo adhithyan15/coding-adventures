@@ -14,6 +14,7 @@ concept_tag: FR-MAISON66-SHAMPOOING
 prerequisites: [FR-C113-brosse-a-dents, FR-C114-dentifrice]
 sounds: []
 roots: []
+etymology_hook: "shampooing ← English shampooing, from Hindi champo 'press! knead!'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C114-dentifrice]
 <!-- hl-knowledge: introduces=[FR-LEX-C114-MAISON66-02]; assesses=[] -->
 
 **le shampooing** — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**shampooing** ← English *shampooing*, from Hindi *champo*, "press! knead!" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

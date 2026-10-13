@@ -13,7 +13,8 @@ gloss: "to count"
 concept_tag: GE-VERB-ZAEHLEN
 prerequisites: [GE-C68-tragen, GE-C68-schicken]
 sounds: []
-roots: []
+roots: [germanic-taljana]
+etymology_hook: "zählen ← Old High German zellen ← Proto-Germanic *taljaną — the same verb as English tell, 'to count'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C68-schicken]
 <!-- hl-knowledge: introduces=[GE-LEX-C68-VERBEN5-03]; assesses=[] -->
 
 **zählen** — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zählen** ← Old High German *zellen* ← Proto-Germanic *\*taljaną* — inherited, the same verb as English *tell* in its old sense "to count", as in a bank *teller*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a nephew"
 concept_tag: FR-FAMILLE11-NEVEU
 prerequisites: [FR-C58-petit-fils, FR-C58-petite-fille]
 sounds: []
-roots: []
+roots: [nepos-latin]
+etymology_hook: "neveu ← Latin nepos 'grandson, nephew' — English nephew and nepotism"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C58-petite-fille]
 <!-- hl-knowledge: introduces=[FR-LEX-C59-FAMILLE11-01]; assesses=[] -->
 
 **le neveu** — "a nephew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neveu** ← Latin *nepos*, *nepotis*, "grandson, nephew" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

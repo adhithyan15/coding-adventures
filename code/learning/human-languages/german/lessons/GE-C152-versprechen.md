@@ -13,7 +13,8 @@ gloss: "to promise"
 concept_tag: GE-VERB-VERSPRECHEN
 prerequisites: [GE-C152-verdienen, GE-C152-verkaufen]
 sounds: []
-roots: []
+roots: [germanic-sprekana]
+etymology_hook: "versprechen ← Old High German firsprehhan 'to vouch for': ver- + the verb 'to speak', English speak"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C152-verkaufen]
 <!-- hl-knowledge: introduces=[GE-LEX-C152-VERB152-04]; assesses=[] -->
 
 **versprechen** — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**versprechen** ← Middle High German *versprechen*, "to guarantee" ← Old High German *firsprehhan* (EtymDB 2.1): *ver-* + the verb "to speak", the same verb as English *speak*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

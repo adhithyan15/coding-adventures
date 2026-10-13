@@ -14,6 +14,7 @@ concept_tag: FR-NEG139-NIMPORTE-QUOI
 prerequisites: [FR-C139-non-plus, FR-C139-lequel]
 sounds: []
 roots: []
+etymology_hook: "n'importe quoi — 'it does not matter what'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C139-lequel]
 <!-- hl-knowledge: introduces=[FR-LEX-C139-NEG139-05]; assesses=[] -->
 
 **n'importe quoi** — "anything at all". **Je lis n'importe quoi.** — "I read anything at all." Said of what someone claims, it means "nonsense".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**n'importe quoi** — "it does not matter what": *n'*, "not", the verb for "to matter", ← Italian *importare*, and *quoi*, "what".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

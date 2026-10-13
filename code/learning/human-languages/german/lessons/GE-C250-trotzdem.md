@@ -14,6 +14,7 @@ concept_tag: GE-LINK250-TROTZDEM
 prerequisites: [GE-C250-ausserdem, GE-C250-deshalb]
 sounds: []
 roots: []
+etymology_hook: "trotzdem — Trotz 'defiance' + dem 'that': in defiance of that"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C250-deshalb]
 <!-- hl-knowledge: introduces=[GE-LEX-C250-LINK250-03]; assesses=[] -->
 
 **trotzdem** — "nevertheless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trotzdem** is the word for "defiance", Middle High German *traz* (EtymDB 2.1), + *dem*, a form of *der*: in defiance of that.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

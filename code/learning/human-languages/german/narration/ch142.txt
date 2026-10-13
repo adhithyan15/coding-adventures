@@ -12,6 +12,9 @@ Before the new one: say the German for to repair, then the German for to start.
 You'll want to know: die Zukunft.
 die Zukunft — "the future". German builds the future with werden and an infinitive at the very end: Ich werde Deutsch lernen. — "I will learn German."
 
+The word, taken apart.
+Zukunft from Middle High German zuokunft from Old High German zuochumft: zu-, "to", + a noun built on kommen, "to come" (EtymDB 2.1). The future is what is coming.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for to start, then the German for the future.
 
 You'll want to know: nächste Woche.
 nächste Woche — "next week". Put the time first and the verb stays second: Nächste Woche werde ich Deutsch lernen. Werde comes before ich, and lernen waits at the end.
+
+The word, taken apart.
+nächste Woche is "nearest" + Woche, "week". Woche from Old High German wohha from Proto-Germanic wikōn, "turn, succession" (EtymDB 2.1), the same word as English week.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for the future, then the German for next week
 You'll want to know: übermorgen.
 übermorgen — "the day after tomorrow". When a time word already points ahead, spoken German keeps the present tense: Übermorgen fahre ich. — "I am going the day after tomorrow."
 
+The word, taken apart.
+übermorgen is the word for "over, beyond" + morgen, "tomorrow": the day beyond tomorrow. EtymDB 2.1 lists it beside Dutch overmorgen.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for next week, then the German for the day af
 You'll want to know: nächstes Jahr.
 nächstes Jahr — "next year". Werden changes with the person: ich werde, du wirst, er wird. Nächstes Jahr wirst du Deutsch lernen.
 
+The word, taken apart.
+nächstes Jahr is "nearest" + Jahr, "year" from Old High German jār from Proto-Germanic jērą, English year. (EtymDB 2.1) nächst- is the superlative of the word for "near".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for the day after tomorrow, then the German f
 
 You'll want to know: vorhaben.
 vorhaben — "to plan, to intend". It splits like the other separable verbs: Was hast du vor? — "What are you planning?"
+
+The word, taken apart.
+vorhaben is the word for "before, in front" + haben, "to have": to have a plan in front of you. haben is the same verb as English have. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

@@ -121,12 +121,13 @@ Five chapters ago this book could not say a verb in the present, deny a nominal 
 Lesson 4 of 4.
 Why you have to ask for it back — why you have to ask for the sentence back — the marks Arabic leaves off are the ones that carry meaning, and one unwritten vowel separates a tool from a place.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: one bowl, four letters and Script: the letter with three jobs until you have stopped, and I will say so again when we reach them.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: one bowl, four letters and Script: the letter with three jobs.
 
 Warm-up.
 [pause 4 seconds]
 Name the three short-vowel marks and say whether ordinary text prints them. Then say what this chapter taught you to do when a word arrives without enough of it to go on.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script: one bowl, four letters.
 [a table of 4 rows, read aloud]
 letter: ب bāʾ. dots: one below.
@@ -135,6 +136,7 @@ letter: ت tāʾ. dots: two above.
 letter: ث thāʾ. dots: three above.
 One shallow boat-bowl, four letters. The dots are the letter, so a smudge or a bad line is not a small error — it is a different word. Two of the four build أنت: hamza-seated alif, then nūn, then tāʾ.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script: the letter with three jobs.
 ي yāʾ is the same bowl with two dots below — a tooth when joined — and it does three jobs at once:
 the consonant y.
@@ -147,8 +149,8 @@ Grammar Lens: one unwritten vowel, two different words.
 The ḥarakāt are three marks written around a consonant, not letters: fatḥa above for a, kasra below for i, ḍamma above for u. Arabic is an abjad, so everyday text leaves them out — and here is what that costs.
 [a table of 2 rows, read aloud]
 shape: مَـ ma-. makes: a place. example: maktab, an office.
-shape: مِـ mi-. makes: a tool. example: ملعقة milʿaqa, a spoon.
-A place and a tool are separated by one mark that nobody prints. ملعقة is the licking-tool, from the root ل-ع-ق, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know.
+shape: مِـ mi-. makes: a tool. example: milʿaqa, a spoon.
+A place and a tool are separated by one mark that nobody prints. milʿaqa is the licking-tool, from the root l-ʿ-q, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know.
 This is the honest reason the repair kit exists. When the vowels are missing and the context is thin, a reader guesses — and a listener asks.
 
 Wrap-up Recall.

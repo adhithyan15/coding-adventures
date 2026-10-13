@@ -13,7 +13,8 @@ gloss: "to download; to unload"
 concept_tag: PT-VERB-DESCARREGAR
 prerequisites: [PT-C208-desistir, PT-C208-trocar]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "descarregar ← Late Latin discarricare 'to unload', from carrus 'wagon'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C208-trocar]
 <!-- hl-knowledge: introduces=[PT-LEX-C208-VERBOS208-03]; assesses=[] -->
 
 **descarregar** — "to download; to unload".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descarregar** ← Late Latin *discarricare*, "to unload" (EtymDB 2.1), from *carrus*, "wagon" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

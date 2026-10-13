@@ -13,7 +13,8 @@ gloss: "the floor; the ground"
 concept_tag: GE-HAUS3-BODEN
 prerequisites: [GE-C77-bett, GE-C78-schrank]
 sounds: []
-roots: []
+roots: [germanic-butmaz]
+etymology_hook: "Boden ← Old High German bodam ← Proto-Germanic *butmaz — the same word as English bottom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C78-schrank]
 <!-- hl-knowledge: introduces=[GE-LEX-C78-HAUS3-02]; assesses=[] -->
 
 **der Boden** — "the floor; the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Boden** ← Old High German *bodam*, "floor, bottom" ← Proto-Germanic *\*butmaz* — inherited, the same word as English *bottom*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

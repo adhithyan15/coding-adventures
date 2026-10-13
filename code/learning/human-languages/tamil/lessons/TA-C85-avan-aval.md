@@ -11,7 +11,8 @@ romanization: avaṉ / avaḷ
 concept_tag: TA-THIRD-FAMILIAR
 prerequisites: [TA-C37-avar]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அவன் / அவள் — native: far base a- + -aṉ (he) or -aḷ (she) (DEDR 1); Malayalam avan, avaḷ"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,11 @@ with the same **-அர்** that makes நண்பர் out of நண்ப�
 So the ending you met on a word for *friend* is the same ending that turns a
 familiar *he* into a respectful *that person*. **One suffix, three words, and it
 does the same job in all of them.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவன் / அவள்** (*avaṉ / avaḷ*) is native: the far base *a-* (DEDR 1) with *-aṉ* for a man and *-aḷ* for a woman. DEDR 1 lists both, with Malayalam *avan* and *avaḷ*.
 
 ## Grammar Lens: choosing between them
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C85-AVAN-AVAL-01, TA-LEX-C37-AVAR-01] -->

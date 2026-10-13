@@ -13,7 +13,8 @@ gloss: "slowly"
 concept_tag: PT-QUANDO2-DEVAGAR
 prerequisites: [PT-C71-depois, PT-C71-cedo]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "devagar = de + an old word for leisure (← Latin vacare 'to be free') — 'at leisure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C71-cedo]
 <!-- hl-knowledge: introduces=[PT-LEX-C71-QUANDO2-05]; assesses=[] -->
 
 **devagar** — "slowly". Ask for it when someone speaks fast.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**devagar** is built from *de*, "at", and an old noun for leisure, from Latin *vacare*, "to be free, to be idle" (Lewis & Short): "at leisure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

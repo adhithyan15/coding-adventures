@@ -13,7 +13,8 @@ gloss: "to bathe"
 concept_tag: GE-VERB-BADEN
 prerequisites: [GE-C175-ausruhen, GE-C175-backen]
 sounds: []
-roots: []
+roots: [germanic-batha]
+etymology_hook: "baden ← Old High German badōn ← Proto-Germanic *baþōną — the same verb as English bathe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C175-backen]
 <!-- hl-knowledge: introduces=[GE-LEX-C175-VERB175-04]; assesses=[] -->
 
 **baden** — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baden** ← Old High German *badōn* ← Proto-Germanic *\*baþōną*, "to bathe" — inherited, the verb beside *Bad*, the same as English *bathe*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

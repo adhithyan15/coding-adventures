@@ -14,7 +14,8 @@ romanization: "muṭṭai"
 concept_tag: TA-THINGS122-MUTTAI
 prerequisites: [TA-C122-rasam, TA-C122-venney]
 sounds: []
-roots: []
+roots: [dravidian-muttai-egg]
+etymology_hook: "முட்டை — native Dravidian (DEDR 4939); Malayalam muṭṭa, Kannada moṭṭe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C122-venney]
 <!-- hl-knowledge: introduces=[TA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **முட்டை** — *muṭṭai* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முட்டை** (*muṭṭai*) is native Dravidian. DEDR 4939 lists Malayalam *muṭṭa* and Kannada *moṭṭe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

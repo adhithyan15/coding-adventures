@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 112,
-  "sourceHash": "fnv1a64:e7d29bd08cb88261",
+  "sourceHash": "fnv1a64:90cfaaf73f1c52ff",
   "lessonIds": [
     "PT-C112-cliente",
     "PT-C112-chefe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch112.txt",
   "json": "portuguese/narration/ch112.json",
-  "textHash": "fnv1a64:eda42c70a13f0d0d",
-  "jsonHash": "fnv1a64:4250e7c89138f94a",
+  "textHash": "fnv1a64:962147ea80a2452c",
+  "jsonHash": "fnv1a64:d395ebfaee710c68",
   "findings": []
 }

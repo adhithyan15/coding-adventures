@@ -14,7 +14,8 @@ romanization: "mūṅkil"
 concept_tag: TA-PORUL219-MUNKIL
 prerequisites: [TA-C218-pattampucci, TA-C218-teni]
 sounds: []
-roots: []
+roots: [dravidian-muunkil-bamboo]
+etymology_hook: "மூங்கில் — native Dravidian (DEDR 5028); Malayalam mūṅkil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C218-teni]
 <!-- hl-knowledge: introduces=[TA-LEX-C219-PORUL219-01]; assesses=[] -->
 
 **மூங்கில்** — *mūṅkil* — "bamboo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூங்கில்** (*mūṅkil*) is native Dravidian. DEDR 5028 lists Malayalam *mūṅkil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

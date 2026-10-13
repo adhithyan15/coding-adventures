@@ -11,7 +11,8 @@ romanization: "paṇam"
 concept_tag: TA-NOUN-MONEY
 prerequisites: [TA-W24-read-kadai, TA-C66-outside, TA-C67-sari]
 sounds: []
-roots: []
+roots: [sanskrit-pana]
+etymology_hook: "பணம் ← Sanskrit paṇa 'a coin' (CDIAL 7715)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Money, in the plain everyday sense — what is in your hand, not what is in a ba
 The ண in the middle is the curled-back one, the same ண you have been saying since வணக்கம் on
 the very first page. And it closes with **ம்**, the ending that finishes so many Tamil nouns:
 வணக்கம், தூக்கம், and now பணம்.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பணம்** (*paṇam*) is a loan from Sanskrit *paṇa*, "a coin" (CDIAL 7715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

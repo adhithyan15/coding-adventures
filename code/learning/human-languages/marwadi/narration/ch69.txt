@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तारो (tāro) mean? ("A star".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a star'.
+Say the Marwadi for 'a star'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सूरज (sūraj) mean? ("The sun".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the sun'.
+Say the Marwadi for 'the sun'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चांद (chā̃d) mean? ("The moon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the moon'.
+Say the Marwadi for 'the moon'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does समंदर (samandar) mean? ("The sea".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the sea'.
+Say the Marwadi for 'the sea'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आग (āg) mean? ("Fire".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'fire'.
+Say the Marwadi for 'fire'.

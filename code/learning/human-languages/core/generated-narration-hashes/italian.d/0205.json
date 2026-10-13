@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 205,
-  "sourceHash": "fnv1a64:458f03ba46006932",
+  "sourceHash": "fnv1a64:5cb37e2cfb6c70dd",
   "lessonIds": [
     "IT-C205-provare",
     "IT-C205-finire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch205.txt",
   "json": "italian/narration/ch205.json",
-  "textHash": "fnv1a64:43ac6831a5aca999",
-  "jsonHash": "fnv1a64:3d0d2247c9284a14",
+  "textHash": "fnv1a64:02695ac8832d9136",
+  "jsonHash": "fnv1a64:0f89437aca3926d4",
   "findings": []
 }

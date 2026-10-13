@@ -14,7 +14,8 @@ romanization: "aparātam"
 concept_tag: TA-VELAI280-APARATAM
 prerequisites: [TA-C280-aracu, TA-C280-viti]
 sounds: []
-roots: []
+roots: [sanskrit-aparadha]
+etymology_hook: "அபராதம் ← Sanskrit aparādha 'offence' (CDIAL 439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C280-viti]
 <!-- hl-knowledge: introduces=[TA-LEX-C280-VELAI280-03]; assesses=[] -->
 
 **அபராதம்** — *aparātam* — "a fine, a penalty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அபராதம்** (*aparātam*) is a loan from Sanskrit *aparādha*, "offence" (CDIAL 439).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

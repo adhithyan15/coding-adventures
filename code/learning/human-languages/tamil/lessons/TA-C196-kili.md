@@ -14,7 +14,8 @@ romanization: "kiḻi"
 concept_tag: TA-VERB-KILI
 prerequisites: [TA-C195-payanpatuttu, TA-C195-muyarci-cey]
 sounds: []
-roots: []
+roots: [dravidian-kizhi-tear]
+etymology_hook: "கிழி — native Dravidian (DEDR 1581); Malayalam kiḻi 'piece of cloth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C195-muyarci-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C196-ACT196-01]; assesses=[] -->
 
 **கிழி** — *kiḻi* — "to tear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிழி** (*kiḻi*) is native Dravidian. DEDR 1581 lists Malayalam *kiḻi*, "piece of cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

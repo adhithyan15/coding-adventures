@@ -13,7 +13,8 @@ gloss: "a defeat"
 concept_tag: FR-CHOSES203-DEFAITE
 prerequisites: [FR-C202-sachet, FR-C202-corde]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "défaite — 'undone', from the verb 'to undo' — English defeat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C202-corde]
 <!-- hl-knowledge: introduces=[FR-LEX-C203-CHOSES203-01]; assesses=[] -->
 
 **la défaite** — "a defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**défaite** is the past participle of the verb for "to undo", used as a noun: an undoing. Old French had *desfait*, "undone" (EtymDB 2.1); the verb is built on Latin *facere*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

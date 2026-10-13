@@ -11,7 +11,8 @@ romanization: "kayiṟu"
 concept_tag: TA-NOUN-ROPE
 prerequisites: [TA-C60-needle, TA-C58-goat, TA-C59-ghee]
 sounds: []
-roots: []
+roots: [dravidian-kayiru-rope]
+etymology_hook: "கயிறு — native Dravidian (DEDR 1254); Malayalam kayaṟu, Telugu cēru 'string'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C60-needle]
 Twisted up out of coconut fibre, which is what a coast with that many palms was going to make rope out of. Thin ones tie a bundle; thick ones draw water.
 
 The ற at the end is the hard one — the same ற standing in ஆறு and in பறவை. A பசு in a yard is at the end of a கயிறு, which is the commonest place to meet the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கயிறு** (*kayiṟu*) is native Dravidian. DEDR 1254 lists Malayalam *kayaṟu* and Telugu *cēru*, "string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

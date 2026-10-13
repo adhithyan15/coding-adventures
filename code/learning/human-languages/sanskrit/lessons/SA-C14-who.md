@@ -36,25 +36,27 @@ reviews_of: [SA-C14-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-03, SA-LEX-C14-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: कः
 <!-- hl-knowledge: introduces=[SA-LEX-C14-DEIXIS-05]; assesses=[] -->
 
 **कः** — *kaḥ* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **कुत्र** *kutra*, which you will meet in a moment. The two of them
-differ by one sound at the front — **k-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the question word for place, comes in the next lesson, and it
+opens with the same **k-**. Sanskrit asks with **k-**, where the far words you
+know, **तत्** *tat* and **तत्र** *tatra*, open with **t-**. It is the same old
+question sound that became the *qu-* of Latin *quis* and the *wh-* of English
+*who*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: "कः" three times, picturing something different each time]
+- [YOU SAY: "कः" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

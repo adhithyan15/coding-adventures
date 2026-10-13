@@ -1,16 +1,16 @@
 {
   "language": "latin",
   "chapter": 2,
-  "sourceHash": "fnv1a64:156dbd23aadaa96a",
+  "sourceHash": "fnv1a64:10220d3b7c1e9325",
   "lessonIds": [
     "LA-C02-numbers-1-5",
     "LA-C02-numbers-6-10"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "latin/narration/ch02.txt",
   "json": "latin/narration/ch02.json",
-  "textHash": "fnv1a64:e313bfd401c47777",
-  "jsonHash": "fnv1a64:6b5b79083c1da714",
+  "textHash": "fnv1a64:aafdd4a6049fab75",
+  "jsonHash": "fnv1a64:c9e5fca8c5f55675",
   "findings": []
 }

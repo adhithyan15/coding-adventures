@@ -13,7 +13,8 @@ gloss: "dark-coloured, dark"
 concept_tag: IT-QUAL158-SCURO
 prerequisites: [IT-C158-buio, IT-C158-chiaro]
 sounds: []
-roots: []
+roots: [obscurus-latin]
+etymology_hook: "scuro — shortened from oscuro, from Latin obscurus 'dark' — English obscure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C158-chiaro]
 <!-- hl-knowledge: introduces=[IT-LEX-C158-QUAL158-04]; assesses=[] -->
 
 **scuro** — "dark-coloured, dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scuro** is a shortened form of *oscuro*, "dark", from Latin *obscurus*, "dark, shadowy" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

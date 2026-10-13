@@ -13,7 +13,8 @@ gloss: "to obey"
 concept_tag: IT-VERB-OBBEDIRE
 prerequisites: [IT-C213-mescolare, IT-C213-nascondersi]
 sounds: []
-roots: []
+roots: [oboedire-latin]
+etymology_hook: "obbedire ← Latin oboedire 'to obey', a learned word; ubbidire is its twin — English obey"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C213-nascondersi]
 <!-- hl-knowledge: introduces=[IT-LEX-C213-VERBI213-03]; assesses=[] -->
 
 **obbedire** — "to obey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obbedire** ← Latin *oboedire*, "to listen to, to obey" — a learned borrowing. EtymDB 2.1 has no row for *obbedire*; it derives its everyday twin *ubbidire* from *oboedire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

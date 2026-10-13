@@ -13,7 +13,8 @@ gloss: "so, then"
 concept_tag: PT-PORQUE84-ENTAO
 prerequisites: [PT-C84-razao, PT-C84-motivo]
 sounds: []
-roots: []
+roots: [tunc-latin]
+etymology_hook: "então ← Latin in tunc 'at that moment'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C84-motivo]
 <!-- hl-knowledge: introduces=[PT-LEX-C84-PORQUE84-03]; assesses=[] -->
 
 **então** — "so, then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**então** ← Latin *in tunc*, "at that moment" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

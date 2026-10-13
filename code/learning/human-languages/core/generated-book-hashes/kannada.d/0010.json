@@ -1,11 +1,12 @@
 {
   "language": "kannada",
   "chapter": 10,
-  "sourceHash": "fnv1a64:221ada6d31fc6262",
+  "sourceHash": "fnv1a64:503e0d52446ab136",
   "lessonIds": [
     "KA-C10-vaara",
     "KA-S119-vowel-sign-oo",
-    "KA-S141-digit-two"
+    "KA-S141-digit-two",
+    "KA-C10-checkpoint"
   ],
   "tex": "kannada/book/chapters/ch10-days.tex"
 }

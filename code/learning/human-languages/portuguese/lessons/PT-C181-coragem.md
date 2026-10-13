@@ -13,7 +13,8 @@ gloss: "courage"
 concept_tag: PT-SAUDE181-CORAGEM
 prerequisites: [PT-C180-constipacao, PT-C181-confianca]
 sounds: []
-roots: []
+roots: [latin-cor-cordis]
+etymology_hook: "coragem ← Old Provençal coratge, from Latin cor 'heart' — English courage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C181-confianca]
 <!-- hl-knowledge: introduces=[PT-LEX-C181-SAUDE181-02]; assesses=[] -->
 
 **a coragem** — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coragem** ← Old Provençal *coratge*, "courage" (EtymDB 2.1) — borrowed. Behind it is Latin *cor*, "heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

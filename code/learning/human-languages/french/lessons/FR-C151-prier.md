@@ -13,7 +13,8 @@ gloss: "to pray"
 concept_tag: FR-VERB-PRIER
 prerequisites: [FR-C150-livrer, FR-C151-heberger]
 sounds: []
-roots: []
+roots: [precari-latin]
+etymology_hook: "prier ← Latin precari 'to pray, to beg' — English pray and precarious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C151-heberger]
 <!-- hl-knowledge: introduces=[FR-LEX-C151-VERBES151-02]; assesses=[] -->
 
 **prier** — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prier** ← Old French *preier* ← Latin *precari*, "to pray, to beg" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

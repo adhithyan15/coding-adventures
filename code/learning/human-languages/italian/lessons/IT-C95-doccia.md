@@ -13,7 +13,8 @@ gloss: "a shower"
 concept_tag: IT-CASA95-DOCCIA
 prerequisites: [IT-C94-frigorifero, IT-C94-forno]
 sounds: []
-roots: []
+roots: [ductus-latin]
+etymology_hook: "doccia goes back to Latin ductus 'a channel' — English duct shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-forno]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-01]; assesses=[] -->
 
 **la doccia** — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doccia** goes back to Latin *ductus*, "a channel", from *ducere*, "to lead" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

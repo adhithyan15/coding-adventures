@@ -13,7 +13,8 @@ gloss: "to pay"
 concept_tag: GE-VERB-BEZAHLEN
 prerequisites: [GE-C64-suchen, GE-C65-warten]
 sounds: []
-roots: []
+roots: [germanic-talo]
+etymology_hook: "bezahlen — be- + the verb 'to pay', built on the word for 'number' ← Proto-Germanic *talō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C65-warten]
 <!-- hl-knowledge: introduces=[GE-LEX-C65-VERBEN2-02]; assesses=[] -->
 
 **bezahlen** — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bezahlen** is *be-* + the verb "to pay", which is built on the word for "number", Old High German *zala* ← Proto-Germanic *\*talō* (EtymDB 2.1). English *tale* and *tell* share the root: paying was counting out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

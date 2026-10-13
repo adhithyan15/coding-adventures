@@ -13,7 +13,8 @@ gloss: "chocolate"
 concept_tag: GE-ESSEN122-SCHOKOLADE
 prerequisites: [GE-C122-knoblauch, GE-C122-mehl]
 sounds: []
-roots: []
+roots: [xocolatl-nahuatl]
+etymology_hook: "Schokolade ← French chocolat ← Spanish chocolate, from Nahuatl — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C122-mehl]
 <!-- hl-knowledge: introduces=[GE-LEX-C122-ESSEN122-03]; assesses=[] -->
 
 **die Schokolade** — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schokolade** ← French *chocolat* ← Spanish *chocolate*, from a Nahuatl word (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

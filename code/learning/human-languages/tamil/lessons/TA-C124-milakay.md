@@ -14,7 +14,8 @@ romanization: "milakāy"
 concept_tag: TA-THINGS124-MILAKAY
 prerequisites: [TA-C123-venkayam, TA-C124-takkali]
 sounds: []
-roots: []
+roots: [dravidian-milaku-pepper, dravidian-kaay-fruit]
+etymology_hook: "மிளகாய் — native miḷaku 'black pepper' (DEDR 4867) + kāy 'fruit': the chilli was named after pepper"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C124-takkali]
 <!-- hl-knowledge: introduces=[TA-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **மிளகாய்** — *milakāy* — "a chilli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மிளகாய்** (*milakāy*) is native: *miḷaku*, "black pepper" (DEDR 4867; Malayalam *miḷaku*), and *kāy*, "fruit". When the chilli arrived from the Americas, Tamil named it "the pepper fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

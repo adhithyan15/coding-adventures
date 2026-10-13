@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-ocho-read",
               "prompt": "Decode: la comunidad tiene una tradicion.",
               "assesses": [
@@ -176,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-ocho-mix",
               "prompt": "Decode: su estructura es voluntaria, evidentemente.",
               "assesses": [
@@ -195,6 +197,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-ocho-new",
               "prompt": "A word you have never seen: especialista. What is it?",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C115-futa-type",
-              "prompt": "Type the Japanese for 'a lid'.",
+              "prompt": "Say the Japanese for 'a lid'.",
               "assesses": [
                 "JA-LEX-C115-THINGS115-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C115-mato-type",
-              "prompt": "Type the Japanese for 'a target'.",
+              "prompt": "Say the Japanese for 'a target'.",
               "assesses": [
                 "JA-LEX-C115-THINGS115-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C115-hinata-type",
-              "prompt": "Type the Japanese for 'a sunny spot'.",
+              "prompt": "Say the Japanese for 'a sunny spot'.",
               "assesses": [
                 "JA-LEX-C115-THINGS115-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C115-namako-type",
-              "prompt": "Type the Japanese for 'a sea cucumber'.",
+              "prompt": "Say the Japanese for 'a sea cucumber'.",
               "assesses": [
                 "JA-LEX-C115-THINGS115-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C115-ayu-type",
-              "prompt": "Type the Japanese for 'a sweetfish'.",
+              "prompt": "Say the Japanese for 'a sweetfish'.",
               "assesses": [
                 "JA-LEX-C115-THINGS115-05"
               ],

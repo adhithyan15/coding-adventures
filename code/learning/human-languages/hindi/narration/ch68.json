@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 68,
   "title": "And, Or, But",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66591156236f5394",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:716ee5d01417ef13",
   "lessons": [
     {
       "id": "HI-C68-aur",
@@ -20,7 +20,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:eddf7f390b690521",
+      "sourceHash": "fnv1a64:5ccdb8a75b2d540b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -28,9 +28,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "The letters in this word — the debt is paid"
+          "The letters in this word — the debt is paid",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word — the debt is paid until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word — the debt is paid and Guided Practice."
       },
       "blocks": [
         {
@@ -133,15 +134,25 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bīj, then read फ़सल",
+              "instruction": "say bīj",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bīj*, then read **फ़सल**]"
+              "source": "[YOU RECALL: say *bīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फ़सल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फ़सल**]"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-aur-r1",
               "prompt": "Say that you like tea and milk.",
               "assesses": [
@@ -305,6 +316,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-ya-r1",
               "prompt": "Offer a guest a choice between tea and milk, then offer them both.",
               "assesses": [
@@ -360,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ce447b62e0978c1",
+      "sourceHash": "fnv1a64:b73c6b33d92a5847",
       "notice": null,
       "blocks": [
         {
@@ -403,7 +415,7 @@
             },
             {
               "kind": "speech",
-              "text": "लेकिन (lekin) is Arabic — لكن (lākin) — and it walked into Hindi through Persian, in the same company as शुक्रिया. Beside it Hindi keeps the inherited पर, from Sanskrit परम्, \"beyond.\" Two words for but, one Persianate and one Sanskritic, is exactly what this language looks like: it almost never replaced a word, it collected a second one."
+              "text": "लेकिन (lekin) is Arabic — لكن (lākin) — and it walked into Hindi through Persian, in the same company as शुक्रिया. Beside it Hindi keeps an inherited word for but, from Sanskrit परम्, \"beyond.\" Two words for but, one Persianate and one Sanskritic, is exactly what this language looks like: it almost never replaced a word, it collected a second one."
             }
           ]
         },
@@ -439,11 +451,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the other Hindi word for but, the inherited one — par",
+              "instruction": "the five pieces लेकिन (lekin) is written with, in the order you hear them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the other Hindi word for *but*, the inherited one — *par*]"
+              "source": "[YOU SAY: the five pieces **लेकिन** is written with, in the order you hear them]"
             },
             {
               "kind": "prompt",
@@ -457,6 +469,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-lekin-r1",
               "prompt": "Fill the same slot three ways with chay and dudh: add, offer, contradict.",
               "assesses": [
@@ -573,6 +586,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R68-three-joins-run",
               "prompt": "Run chay and dudh three ways: added, offered as a choice, and contradicted.",
               "assesses": [

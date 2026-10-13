@@ -13,7 +13,8 @@ gloss: "a party (political)"
 concept_tag: GE-THING209-PARTEI
 prerequisites: [GE-C209-buerger, GE-C209-wahl]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "Partei ← Middle High German partīe, from French partie 'a part' — borrowed, like English party"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C209-wahl]
 <!-- hl-knowledge: introduces=[GE-LEX-C209-THING209-03]; assesses=[] -->
 
 **die Partei** — "a party (political)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Partei** ← Middle High German *partīe*, from French *partie*, "a part, a side" (EtymDB 2.1) — borrowed, like English *party*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

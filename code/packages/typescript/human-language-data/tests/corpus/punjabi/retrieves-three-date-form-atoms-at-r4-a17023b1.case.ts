@@ -50,7 +50,7 @@ it("retrieves three already-taught Punjabi date-form atoms at R4 without scored 
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 577 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 577 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     atoms.map((atom) => `R4|${atom}`).sort(),
   );
@@ -58,5 +58,5 @@ it("retrieves three already-taught Punjabi date-form atoms at R4 without scored 
   expect([...currentPairs].filter((pair) => !previousPairs.has(pair)).sort()).toEqual([
     "R4|PA-FORM-DATE-CUE-MAP-01",
   ]);
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 575 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 575 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 });

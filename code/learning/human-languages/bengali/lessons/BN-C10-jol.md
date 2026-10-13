@@ -34,8 +34,9 @@ reviews_of: [BN-C10-cha, BN-C07-khaowa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C07-KHAOWA-02] -->
 
-[PAUSE 2s] Chapter 13 taught you **জল খাওয়া**, "to drink water" — literally
-"water-eat" — without ever teaching জল by itself. Here it is, on its own.
+[PAUSE 2s] Chapter 13 showed you that Bengali "eats" its drinks with
+**খাওয়া**. Here is the drink you need most: **জল**, and with it **জল খাওয়া**,
+"to drink water" — literally "water-eat."
 
 ## You'll want to know: জল
 <!-- hl-knowledge: introduces=[BN-LEX-C10-JOL-01]; assesses=[] -->
@@ -75,13 +76,14 @@ thing, one of disputed origin and one you can trace all the way home.
 - [YOU SAY: the offer — "jôl khān"]
 - [YOU SAY: the Bangladesh word, and its root — "pani … pā, potion, potable"]
 - [YOU SAY: tea, then water — "chā khān … jôl khān"]
-- [YOU RECALL: read **খাওয়া**, then say *dækhā*]
+- [YOU READ: **খাওয়া**]
+- [YOU RECALL: say *dækhā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->
 <!-- hl-activity: {"id":"BN-C10-jol-water","kind":"text","assesses":["BN-LEX-C10-JOL-01"],"prompt":"Type the Bengali word jôl, meaning 'water'.","answer":"জল","accepted":["jôl","jol"],"feedback":{"correct":"Right: জল is jôl, water.","incorrect":"The word is জল - jôl."},"response_seconds":8} -->
 
-[PAUSE 3s] What did Chapter 13 already say with জল, without teaching it as a
-word? (**জল খাওয়া**, "to drink water.") Is জল's root secure? (**No** —
+[PAUSE 3s] How do you say "drink water"? (**জল খাওয়া**, literally
+"water-eat.") Is জল's root secure? (**No** —
 genuinely disputed.) Which everyday synonym for water traces cleanly to
 "drinkable," from the root behind *potion*? (**পানি.**)

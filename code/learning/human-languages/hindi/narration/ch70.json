@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:00b8da21e0750fbb",
+  "sourceHash": "fnv1a64:b448257887444463",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C70-sakna-r1",
               "prompt": "Say that you can speak Hindi, then that you cannot come tomorrow.",
               "assesses": [
@@ -198,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc1c5c506c62c21",
+      "sourceHash": "fnv1a64:e4700f32c764a027",
       "notice": null,
       "blocks": [
         {
@@ -253,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. Its cousin चाहिए is how Hindi wants a THING rather than an action; this lesson leaves that separate construction for later."
+              "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. A cousin of it is how Hindi wants a THING rather than an action; that separate construction comes in a later chapter."
             }
           ]
         },
@@ -316,6 +317,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C70-chahna-r1",
               "prompt": "Say that you can speak Hindi and then that you want to speak Hindi, and name the difference.",
               "assesses": [
@@ -376,8 +378,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -465,6 +469,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-C70-infinitive-object-r1",
               "prompt": "Put a noun and then a verb in the same object slot: say that you look at the book, and that you want to speak.",
               "assesses": [
@@ -575,6 +580,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R70-can-want-run",
               "prompt": "Say three things: that you can come, that you want to come, and that you cannot come tomorrow.",
               "assesses": [

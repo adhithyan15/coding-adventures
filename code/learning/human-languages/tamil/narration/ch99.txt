@@ -1,11 +1,9 @@
 Tamil, chapter 99: Gifts, Welcomes, Apologies.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. All 5 can be done entirely by ear.
 
 
 Lesson 1 of 5.
 குடியுங்கள் (kuṭiyuṅkaḷ) — please drink.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -14,7 +12,10 @@ Before the new one: say the Tamil for please come in, then the Tamil for please 
 You'll want to know: குடியுங்கள்.
 குடியுங்கள் (kuṭiyuṅkaḷ) — "please drink".
 தண்ணீர் குடியுங்கள் (kuṭiyuṅkaḷ) — "please have some water".
-Look at தண்ணீர்: it is the thing being drunk, and it carries no -ஐ. A thing can do without the ending that a person must have.
+Notice தண்ணீர்: it is the thing being drunk, and it carries no -ஐ. A thing can do without the ending that a person must have.
+
+The word, taken apart.
+குடியுங்கள் (kuṭiyuṅkaḷ) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi. It is kuḍi, "drink", with the polite ending.
 
 What you've built.
 Food, and now drink.
@@ -46,6 +47,9 @@ You'll want to know: அன்பளிப்பு.
 அன்பளிப்பு (aṉpaḷippu) — "a present", literally "a giving of love".
 அன்பு is "love"; அளிப்பு is "a giving". பரிசு can be a prize; அன்பளிப்பு (aṉpaḷippu) is always from the heart.
 
+The word, taken apart.
+அன்பளிப்பு (aṉpaḷippu) is native: aṉpu, "affection" (DEDR 330), and aḷippu, "giving", from aḷi, "to show favour, to bestow" (DEDR 301). A gift given out of love.
+
 What you've built.
 A second word for gift, with love in it.
 
@@ -75,6 +79,9 @@ Before the new one: say the Tamil for please drink, then the Tamil for a present
 You'll want to know: நல்வரவு.
 நல்வரவு (nalvaravu) — "welcome", the formal word, literally "good arrival".
 You will see it on banners and doorways; வாருங்கள் is what you say aloud.
+
+The word, taken apart.
+நல்வரவு (nalvaravu) is native: nal, "good" (DEDR 3610), and varavu, "coming" (DEDR 5270): "a good coming".
 
 What you've built.
 The written welcome.
@@ -106,6 +113,9 @@ You'll want to know: மன்னித்துவிடுங்கள்.
 மன்னித்துவிடுங்கள் (maṉṉittuviṭuṅkaḷ) — "please forgive me".
 It is fuller and more earnest than மன்னிக்கவும்: for a real mistake, not a bumped elbow.
 
+The word, taken apart.
+மன்னித்துவிடுங்கள் (maṉṉittuviṭuṅkaḷ) is maṉṉi, "to pardon", with viṭu, "to let go" (DEDR 5393), and the polite ending. The origin of maṉṉi is uncertain: DEDR has no entry for it.
+
 What you've built.
 A fuller apology.
 
@@ -135,6 +145,9 @@ Before the new one: say the Tamil for a formal welcome, then the Tamil for pleas
 You'll want to know: கவலைப்படாதீர்கள்.
 கவலைப்படாதீர்கள் (kavalaippaṭātīrkaḷ) — "please don't worry".
 It is கவலை, "worry", with படு, "to suffer", and the respectful don't.
+
+The word, taken apart.
+கவலைப்படாதீர்கள் (kavalaippaṭātīrkaḷ) is native: kavalai, "worry" (DEDR 1328), and paṭu, "to experience, to undergo" (DEDR 3853), with the polite negative: "do not undergo worry".
 
 What you've built.
 Drink, a present, a welcome, forgiveness, and don't worry.

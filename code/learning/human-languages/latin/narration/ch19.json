@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "How Are You?",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:165cc5db5e3bb702",
+  "sourceHash": "fnv1a64:b262f7d0f9806138",
   "lessons": [
     {
       "id": "LA-C19-quid-agis",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6172d20f27b46741",
+      "sourceHash": "fnv1a64:d8ca211080f13acb",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "You may also meet modern quōmodo tē habēs? in spoken-Latin courses. It is grammatical, but it is not found in surviving classical texts. Keep that useful provenance distinction attached to the phrase."
+              "text": "You may also meet a modern \"how are you?\" question in spoken-Latin courses (a later lesson shows it). It is grammatical, but it is not found in surviving classical texts. Ut valēs? is the one Romans can be heard asking."
             }
           ]
         },
@@ -197,11 +197,11 @@
             {
               "kind": "prompt",
               "action": "CHOOSE",
-              "instruction": "Which is classically attested: ut valēs? or quōmodo tē habēs? (Ut valēs?)",
+              "instruction": "Which is classically attested: ut valēs? or the modern spoken-Latin question? (Ut valēs?)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CHOOSE: Which is classically attested: **ut valēs?** or **quōmodo tē habēs?** (**Ut valēs?**)]"
+              "source": "[YOU CHOOSE: Which is classically attested: **ut valēs?** or the modern spoken-Latin question? (**Ut valēs?**)]"
             }
           ]
         },
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask “How do you fare?” (Ut valēs?) Which familiar farewell shares its verb? (Valē.) Name the modern but unattested alternative. (Quōmodo tē habēs?)"
+              "text": "Ask “How do you fare?” (Ut valēs?) Which familiar farewell shares its verb? (Valē.) Where can you hear Romans ask it? (In Plautus and Terence.)"
             }
           ]
         }
@@ -237,7 +237,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1738d8b68a13a750",
+      "sourceHash": "fnv1a64:8ed051c3b0b2fde4",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The attested reply is valeō: \"I fare well\" or \"I am strong.\" Plautus's characters can intensify it as valeō rēctē (\"I am properly well\") or valeō et salvōs sum rēctē (\"I am well and safe\")."
+              "text": "The attested reply is valeō: \"I fare well\" or \"I am strong.\" Plautus's characters can intensify it as valeō rēctē (\"I am properly well\"), or go on to say they are safe and sound too."
             },
             {
               "kind": "speech",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7affb16c58bc8278",
+      "sourceHash": "fnv1a64:f428b5d2fb844b3e",
       "notice": null,
       "blocks": [
         {
@@ -464,13 +464,14 @@
             },
             {
               "kind": "speech",
-              "text": "Run the exchange once more without looking. Then: which single verb supplies valēs, valeō, and valē? (Valēre.) Which of the two Roman \"how are you?\" questions is not attested? (Neither — both quid agis? and ut valēs? are real; the modern one was quōmodo tē habēs?)"
+              "text": "Run the exchange once more without looking. Then: which single verb supplies valēs, valeō, and valē? (Valēre.) Which of the two Roman \"how are you?\" questions is not attested? (Neither — both quid agis? and ut valēs? are real; only the spoken-Latin courses' question is modern.)"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C19-practice-answer-line",
-              "prompt": "Someone has just asked you ut vales? Type the one-word Latin answer.",
+              "prompt": "Someone has just asked you ut vales? Say the one-word Latin answer.",
               "assesses": [
                 "LA-DIALOGUE-WELLBEING-01"
               ],

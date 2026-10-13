@@ -156,8 +156,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C140-senshuu-type",
-              "prompt": "Type the Japanese for 'last week'.",
+              "prompt": "Say the Japanese for 'last week'.",
               "assesses": [
                 "JA-LEX-C140-SENSHUU"
               ],
@@ -323,8 +324,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C140-sengetsu-type",
-              "prompt": "Type the Japanese for 'last month'.",
+              "prompt": "Say the Japanese for 'last month'.",
               "assesses": [
                 "JA-LEX-C140-SENGETSU"
               ],
@@ -493,8 +495,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C140-kyonen-type",
-              "prompt": "Type the Japanese for 'last year'.",
+              "prompt": "Say the Japanese for 'last year'.",
               "assesses": [
                 "JA-LEX-C140-KYONEN"
               ],
@@ -654,8 +657,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C140-sakki-type",
-              "prompt": "Type the Japanese for 'a moment ago'.",
+              "prompt": "Say the Japanese for 'a moment ago'.",
               "assesses": [
                 "JA-LEX-C140-SAKKI"
               ],
@@ -823,8 +827,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C140-owarimashita-type",
-              "prompt": "Type the Japanese for 'it is over (polite past)'.",
+              "prompt": "Say the Japanese for 'it is over (polite past)'.",
               "assesses": [
                 "JA-LEX-C140-OWARIMASHITA"
               ],

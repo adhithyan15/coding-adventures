@@ -13,7 +13,7 @@ sounds: [liaison-t, nasal-an]
 roots: []
 etymology_hook: "j'ai vingt ans — the verb is avoir and never être, and ans cannot be dropped; English says 'I am twenty' and French cannot"
 duration:
-  max_seconds: 210
+  max_seconds: 212
 requires:
   knowledge: [FR-VERB-AVOIR-JAI-01, FR-LEX-AN-09, FR-LEX-VINGT-05, FR-SOUND-LIAISON-10]
 introduces:
@@ -42,14 +42,14 @@ the same way at all.
 ## Grammar Lens: age is something you have
 <!-- hl-knowledge: introduces=[FR-GRAM-AVOIR-AGE-11]; assesses=[] -->
 
-English **is** its age: *I am twenty*. French **has** it:
+English **is** its age: you *are* twenty. French **has** it:
 
 > **J'ai vingt ans.** — literally, "I *have* twenty years."
 
 Two things follow, and both are absolute.
 
-**The verb is *avoir*, never *être*.** *Je suis vingt ans* is not a stylistic
-choice; it is simply wrong, and it is the single most common thing an English
+**The verb is *avoir*, never "to be."** Building it with French's "to be" is
+not a stylistic choice; it is simply wrong, and it is the single most common thing an English
 speaker gets wrong in their first month.
 
 **And *ans* cannot be dropped.** English says "I'm twenty" with no noun at all.
@@ -65,7 +65,7 @@ reviving a buried consonant when a vowel follows it.
 
 [PAUSE 1s]
 - [YOU SAY: "J'ai vingt ans" — with the liaison, *vin-t-a(n)*]
-- [YOU SAY: the rule — "avoir, never être"]
+- [YOU SAY: the rule — "avoir, never 'to be'"]
 - [YOU SAY: the buried t waking — "vingt" alone, then "vingt ans"]
 - [YOU SAY: your own age, with the numbers you have]
 
@@ -74,8 +74,8 @@ reviving a buried consonant when a vowel follows it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-AVOIR-AGE-11, FR-LEX-AN-09] -->
 
-[PAUSE 3s] How does French say "I am twenty"? (**J'ai vingt ans** — "I *have*
-twenty years".) Which verb, and which is wrong? (***avoir***; ***être*** is
+[PAUSE 3s] How does French say "I'm twenty"? (**J'ai vingt ans** — "I *have*
+twenty years".) Which verb, and which is wrong? (***avoir***; "to be" is
 wrong.) Can you drop *ans* the way English drops "years"? (**No.**) What happens
 to the **t** of *vingt* before *ans*? (It **wakes up** — *vin-t-a(n)*, a
 liaison.) Next: how to ask.

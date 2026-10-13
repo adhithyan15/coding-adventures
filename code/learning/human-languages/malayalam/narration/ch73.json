@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 73,
   "title": "Why, and Because",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:78319fe0d4701411",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:54e150e01feeb2a7",
   "lessons": [
     {
       "id": "ML-C73-enthukondu",
@@ -14,20 +14,13 @@
       "romanization": "entukoṇṭŭ",
       "gloss": "why — the word for what, with the ending that means \"by means of\"",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c44e3e1757663264",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b6ac05871eff14d4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -67,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the front of it. എന്ത് is sitting there, the word you already have. What follows is കൊണ്ട് (koṇṭŭ), an ending that means by means of — so the whole question asks, quite literally, \"by what?\""
+              "text": "Notice the front of it. എന്ത് is sitting there, the word you already have. What follows is കൊണ്ട് (koṇṭŭ), an ending that means by means of — so the whole question asks, quite literally, \"by what?\""
             },
             {
               "kind": "speech",
@@ -136,11 +129,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four question words in the table",
+              "instruction": "the four question words — what, who, where, why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four question words in the table]"
+              "source": "[YOU SAY: the four question words — what, who, where, why]"
             },
             {
               "kind": "prompt",
@@ -362,7 +355,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

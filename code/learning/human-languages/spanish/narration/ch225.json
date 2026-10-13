@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-side",
               "prompt": "A book is an arm's length away, right next to the person you are speaking to. Este or ese?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-noun",
               "prompt": "Which question do you ask first, before choosing a form?",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-article",
               "prompt": "What does the pointing word push out of the sentence?",
               "assesses": [

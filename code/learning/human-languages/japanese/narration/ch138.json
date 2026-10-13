@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C138-okimasu-type",
-              "prompt": "Type the Japanese for 'I get up (polite)'.",
+              "prompt": "Say the Japanese for 'I get up (polite)'.",
               "assesses": [
                 "JA-LEX-C138-OKIMASU"
               ],
@@ -308,8 +309,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C138-hatarakimasu-type",
-              "prompt": "Type the Japanese for 'I work (polite)'.",
+              "prompt": "Say the Japanese for 'I work (polite)'.",
               "assesses": [
                 "JA-LEX-C138-HATARAKIMASU"
               ],
@@ -473,8 +475,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C138-arukimasu-type",
-              "prompt": "Type the Japanese for 'I walk (polite)'.",
+              "prompt": "Say the Japanese for 'I walk (polite)'.",
               "assesses": [
                 "JA-LEX-C138-ARUKIMASU"
               ],
@@ -629,8 +632,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C138-kaerimasu-type",
-              "prompt": "Type the Japanese for 'I go home (polite)'.",
+              "prompt": "Say the Japanese for 'I go home (polite)'.",
               "assesses": [
                 "JA-LEX-C138-KAERIMASU"
               ],
@@ -797,8 +801,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C138-nemasu-type",
-              "prompt": "Type the Japanese for 'I go to bed (polite)'.",
+              "prompt": "Say the Japanese for 'I go to bed (polite)'.",
               "assesses": [
                 "JA-LEX-C138-NEMASU"
               ],

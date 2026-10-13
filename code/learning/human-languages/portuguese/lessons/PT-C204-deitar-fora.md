@@ -13,7 +13,8 @@ gloss: "to throw away"
 concept_tag: PT-VERB-DEITAR-FORA
 prerequisites: [PT-C203-aborrecer-se, PT-C204-queimar]
 sounds: []
-roots: []
+roots: [iacere-latin]
+etymology_hook: "deitar fora — 'throw outside': deitar ← Latin deiectare; fora ← Latin foras"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C204-queimar]
 <!-- hl-knowledge: introduces=[PT-LEX-C204-VERBOS204-02]; assesses=[] -->
 
 **deitar fora** — "to throw away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deitar fora** is "throw outside": *deitar* ← Latin *deiectare*, "to throw down" (EtymDB 2.1), and *fora* ← Latin *foras*, "out of doors" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

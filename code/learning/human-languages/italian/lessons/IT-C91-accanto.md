@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI91-ACCANTO
 prerequisites: [IT-C91-davanti, IT-C91-dietro]
 sounds: []
 roots: []
+etymology_hook: "accanto — built from a 'at' and an old word for 'side, corner'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C91-dietro]
 <!-- hl-knowledge: introduces=[IT-LEX-C91-LUOGHI91-04]; assesses=[] -->
 
 **accanto** — "next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accanto** — built from *a*, "at, to", and an old word for "side, corner". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

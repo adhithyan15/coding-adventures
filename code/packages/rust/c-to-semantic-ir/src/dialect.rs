@@ -1,10 +1,10 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
-//! Its condition evaluator remains bounded. A single raw-token `#` stringize
-//! subset is supported; `##` remains unsupported.
+//! Its condition evaluator remains bounded. Single raw-token `#` stringize
+//! and identifier-prefix/suffix `##` paste subsets are supported.
 
-use coding_adventures_c_lexer::try_tokenize_c;
+use coding_adventures_c_lexer::{is_c_keyword, try_tokenize_c};
 use coding_adventures_source_preprocessor::{
     macros::MacroTable, Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
 };
@@ -323,13 +323,33 @@ fn reject_unsupported_macro_operators(
     body: &[Token],
     params: Option<&[String]>,
 ) -> Result<(), PpError> {
-    for (index, token) in body.iter().enumerate() {
-        if token.value == "##" {
+    let paste_positions: Vec<_> = body
+        .iter()
+        .enumerate()
+        .filter_map(|(index, token)| (token.value == "##").then_some(index))
+        .collect();
+    if let Some(&index) = paste_positions.first() {
+        let allowed = params.is_some_and(|names| {
+            paste_positions.len() == 1
+                && index > 0
+                && index + 1 < body.len()
+                && !body.iter().any(|token| token.value == "#")
+                && body[index - 1].type_ == TokenType::Name
+                && identifier(&body[index - 1].value)
+                && body[index + 1].type_ == TokenType::Name
+                && identifier(&body[index + 1].value)
+                // One literal and one parameter, in either source order.
+                && (names.iter().any(|name| name == &body[index - 1].value)
+                    != names.iter().any(|name| name == &body[index + 1].value))
+        });
+        if !allowed {
             return Err(directive_error(
                 "define",
-                "token paste is not supported yet",
+                "only one parameter/literal-identifier paste is supported",
             ));
         }
+    }
+    for (index, token) in body.iter().enumerate() {
         if token.value == "#"
             && !params.is_some_and(|names| {
                 body.get(index + 1)
@@ -346,14 +366,53 @@ fn reject_unsupported_macro_operators(
 }
 
 impl Dialect for CDialect {
+    fn paste(&self, left: &Token, right: &Token) -> Option<Token> {
+        if left.type_ != TokenType::Name
+            || right.type_ != TokenType::Name
+            || left.effective_type_name() != "NAME"
+            || right.effective_type_name() != "NAME"
+            || !identifier(&left.value)
+            || !identifier(&right.value)
+        {
+            return None;
+        }
+        let spelling = format!("{}{}", left.value, right.value);
+        // Both operands are ASCII names, so their concatenation is a name
+        // unless the compiled C grammar classifies it as a keyword.
+        if is_c_keyword(&spelling) {
+            return None;
+        }
+        let mut result = right.clone();
+        result.value = spelling;
+        Some(result)
+    }
+
     fn stringize(&self, tokens: &[Token]) -> Option<Token> {
         let [raw] = tokens else { return None };
         let allowed = match raw.type_ {
-            TokenType::Name => identifier(&raw.value),
-            TokenType::Number => {
-                !raw.value.is_empty()
+            TokenType::Name if raw.effective_type_name() != "INT_LIT" => identifier(&raw.value),
+            TokenType::Name | TokenType::Number => {
+                let decimal = !raw.value.is_empty()
                     && (raw.value == "0" || !raw.value.starts_with('0'))
-                    && raw.value.bytes().all(|byte| byte.is_ascii_digit())
+                    && raw.value.bytes().all(|byte| byte.is_ascii_digit());
+                // Stringization preserves text, not a numeric value. ASCII hex
+                // digits need no escaping and may exceed machine integer width.
+                // The generic engine precharges spelling plus two quote bytes
+                // before invoking this hook. Suffixes remain outside the subset.
+                let hexadecimal = raw
+                    .value
+                    .strip_prefix("0x")
+                    .or_else(|| raw.value.strip_prefix("0X"))
+                    .is_some_and(|digits| {
+                        !digits.is_empty() && digits.bytes().all(|byte| byte.is_ascii_hexdigit())
+                    });
+                // Octal is also spelling-only here: zeroes are retained and
+                // no conversion can overflow. The condition evaluator keeps its
+                // separate decimal-only policy. Reject 8/9 and all suffixes.
+                let octal = raw.value.len() > 1
+                    && raw.value.starts_with('0')
+                    && raw.value.bytes().all(|byte| matches!(byte, b'0'..=b'7'));
+                decimal || hexadecimal || octal
             }
             _ => false,
         };
@@ -605,6 +664,179 @@ mod tests {
     }
 
     #[test]
+    fn octal_stringize_preserves_raw_spelling_without_numeric_conversion() {
+        for raw in [
+            "00",
+            "01",
+            "07",
+            "000000",
+            "01234567",
+            "077777777777777777777777777777777777",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let raw_token = tokens.iter().find(|token| token.value == raw).unwrap();
+            assert_eq!(raw_token.type_, TokenType::Name);
+            assert_eq!(raw_token.effective_type_name(), "INT_LIT");
+            // Generic Number callers have the same spelling policy as the
+            // compiled C lexer's named integer representation.
+            let mut number = raw_token.clone();
+            number.type_ = TokenType::Number;
+            number.type_name = None;
+            assert_eq!(
+                dialect.stringize(&[number]).unwrap().value,
+                format!("\"{raw}\"")
+            );
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            assert_eq!(result.tokens.len(), 1);
+            assert_eq!(result.tokens[0].value, format!("\"{raw}\""));
+            assert_eq!(result.tokens[0].effective_type_name(), "STR_LIT");
+            let locus = result.map.locus(0).unwrap();
+            assert_eq!((locus.position.line, locus.position.column), (2, 3));
+        }
+    }
+
+    #[test]
+    fn octal_stringize_raw_plain_forwarding_and_provenance() {
+        let source = "#define O 00721\n#define S(x) #x\n#define OUTER(x) S(x)\n#define BOTH(x) x #x\nS(O)\nBOTH(O)\nOUTER(O)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|t| t.value.as_str()).collect();
+        assert_eq!(values, ["\"O\"", "00721", "\"O\"", "\"00721\""]);
+        let locus = result.map.locus(3).unwrap();
+        assert_eq!((locus.position.line, locus.position.column), (1, 11));
+        let mut names = Vec::new();
+        let mut cursor = locus.expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["O", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn octal_stringize_exact_and_over_limit_spelling_and_text() {
+        let source = "#define S(x) #x\nS(000123)\n";
+        for (spelling, text, succeeds) in [(8, 8, true), (7, 8, false), (8, 7, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                token_spelling_bytes: spelling,
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                assert_eq!(result.unwrap().tokens[0].value, "\"000123\"");
+            } else {
+                let error = result.err().expect("octal quotes exceed tightened bound");
+                assert_eq!(error.position().unwrap().line, 2);
+            }
+        }
+        // Each spelling fits, but the synthesized-text charge is cumulative.
+        let source = "#define S(x) #x\nS(001)\nS(007)\n";
+        for (text, succeeds) in [(10, true), (9, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            assert_eq!(result.is_ok(), succeeds);
+            if !succeeds {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 3);
+            }
+        }
+    }
+
+    #[test]
+    fn octal_stringize_rejects_suffixes_malformed_and_other_token_shapes() {
+        for raw in [
+            "08", "09", "0128", "0079", "01u", "01UL", "01LL", "01.0", "01e2", "01p2", "0b10", "-01",
+            "+01", "01+2", "01,02", "\"01\"", "'a'",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let error = preprocess(tokens, file, &dialect, &mut fs, Bounds::default())
+                .err()
+                .expect(raw);
+            assert_eq!(error.position().unwrap().line, 2, "{raw}");
+        }
+        // A named non-integer token must not enter through the Name fallback.
+        let mut token = try_tokenize_c("012").unwrap().remove(0);
+        assert_eq!(token.type_, TokenType::Name);
+        assert_eq!(token.effective_type_name(), "INT_LIT");
+        token.type_name = Some("FLOAT_LIT".to_string());
+        assert!(CDialect::default().stringize(&[token]).is_none());
+    }
+
+    #[test]
+    fn octal_stringize_default_spelling_boundary_and_raw_only_depth() {
+        let limit = Bounds::default().token_spelling_bytes as usize;
+        for (digits, succeeds) in [(limit - 3, true), (limit - 2, false)] {
+            let raw = format!("0{}", "7".repeat(digits));
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let bounds = Bounds {
+                macro_depth: 0,
+                expansion_rounds: 1,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                let token = &result.unwrap().tokens[0];
+                assert_eq!(token.value.len(), limit);
+                assert_eq!(token.value, format!("\"{raw}\""));
+            } else {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 2);
+            }
+        }
+    }
+
+    #[test]
+    fn hexadecimal_stringize_preserves_raw_spelling_without_numeric_conversion() {
+        for raw in [
+            "0",
+            "7",
+            "123",
+            "0x0",
+            "0X0",
+            "0x00aF",
+            "0X000ABCdef",
+            "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            assert_eq!(result.tokens.len(), 1);
+            assert_eq!(result.tokens[0].value, format!("\"{raw}\""));
+            assert_eq!(result.tokens[0].effective_type_name(), "STR_LIT");
+            let locus = result.map.locus(0).unwrap();
+            assert_eq!((locus.position.line, locus.position.column), (2, 3));
+        }
+    }
+
+    #[test]
     fn stringize_preserves_forwarded_argument_provenance() {
         let source = "#define H WORD\n#define S(x) #x\n#define OUTER(x) S(x)\nOUTER(H)\n";
         let mut fs = MemoryFs::new();
@@ -620,6 +852,117 @@ mod tests {
             cursor = result.map.expansion_parent(id);
         }
         assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn hexadecimal_stringize_raw_plain_forwarding_and_provenance() {
+        let source = "#define H 0X00aF\n#define S(x) #x\n#define OUTER(x) S(x)\n#define BOTH(x) x #x\nS(H)\nBOTH(H)\nOUTER(H)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|t| t.value.as_str()).collect();
+        assert_eq!(values, ["\"H\"", "0X00aF", "\"H\"", "\"0X00aF\""]);
+        let locus = result.map.locus(3).unwrap();
+        assert_eq!((locus.position.line, locus.position.column), (1, 11));
+        let mut names = Vec::new();
+        let mut cursor = locus.expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn hexadecimal_stringize_exact_and_over_limit_spelling_and_text() {
+        let source = "#define S(x) #x\nS(0X00aF)\n";
+        for (spelling, text, succeeds) in [(8, 8, true), (7, 8, false), (8, 7, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                token_spelling_bytes: spelling,
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                assert_eq!(result.unwrap().tokens[0].value, "\"0X00aF\"");
+            } else {
+                let error = result.err().expect("hex quotes exceed tightened bound");
+                assert_eq!(error.position().unwrap().line, 2);
+            }
+        }
+        // Each spelling fits, but the synthesized-text charge is cumulative.
+        let source = "#define S(x) #x\nS(0xA)\nS(0XB)\n";
+        for (text, succeeds) in [(10, true), (9, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            assert_eq!(result.is_ok(), succeeds);
+            if !succeeds {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 3);
+            }
+        }
+    }
+
+    #[test]
+    fn hexadecimal_stringize_rejects_suffixes_malformed_and_other_token_shapes() {
+        for raw in [
+            "0x", "0X", "0xG", "0x1u", "0XAL", "0x1ULL", "0x1.0", "0x1p2", "0b10", "08", "09",
+            "1.0", "1e2", "-0x1", "0x1+2", "0x1,0x2", "\"0x1\"", "'a'",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let error = preprocess(tokens, file, &dialect, &mut fs, Bounds::default())
+                .err()
+                .expect(raw);
+            assert_eq!(error.position().unwrap().line, 2, "{raw}");
+        }
+        // A named non-integer token must not enter through the Name fallback.
+        let mut token = try_tokenize_c("0xA").unwrap().remove(0);
+        assert_eq!(token.type_, TokenType::Name);
+        assert_eq!(token.effective_type_name(), "INT_LIT");
+        token.type_name = Some("FLOAT_LIT".to_string());
+        assert!(CDialect::default().stringize(&[token]).is_none());
+    }
+
+    #[test]
+    fn hexadecimal_stringize_default_spelling_boundary_and_raw_only_depth() {
+        let limit = Bounds::default().token_spelling_bytes as usize;
+        for (digits, succeeds) in [(limit - 4, true), (limit - 3, false)] {
+            let raw = format!("0x{}", "A".repeat(digits));
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let bounds = Bounds {
+                macro_depth: 0,
+                expansion_rounds: 1,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                let token = &result.unwrap().tokens[0];
+                assert_eq!(token.value.len(), limit);
+                assert_eq!(token.value, format!("\"{raw}\""));
+            } else {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 2);
+            }
+        }
     }
 
     #[test]
@@ -642,8 +985,8 @@ mod tests {
             "#define S(x) #x\nS(a,b)\n",
             "#define S(x) #x\nS(\"hello\")\n",
             "#define S(x) #x\nS('a')\n",
-            "#define S(x) #x\nS(0x10)\n",
-            "#define S(x) #x\nS(012)\n",
+            "#define S(x) #x\nS(0x10u)\n",
+            "#define S(x) #x\nS(018)\n",
             "#define S(x) #x\nS(8u)\n",
             "#define S(x) #x\nS(WORD)\n",
         ] {
@@ -662,11 +1005,7 @@ mod tests {
             };
             assert_eq!(error.position().map(|position| position.line), Some(2), "{source}");
         }
-        for source in [
-            "#define S(x) # y\n",
-            "#define S(x) #\n",
-            "#define S #x\n",
-        ] {
+        for source in ["#define S(x) # y\n", "#define S(x) #\n", "#define S #x\n"] {
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", source);
             let dialect = CDialect::default();
@@ -683,6 +1022,162 @@ mod tests {
         let dialect = CDialect::default();
         let tokens = dialect.lex(source, file).unwrap();
         assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_raw_plain_rescan_and_self_name() {
+        let source = "#define NAME tail\n#define post expanded\n#define NAMEpost 7\n#define SUFFIX(x) x ## post\n#define BOTH(x) x ## post x\n#define SELF(x) x ## LF\nSUFFIX(NAME)\nBOTH(NAME)\nSELF(SE)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|t| t.value.as_str()).collect();
+        assert_eq!(values, ["7", "7", "tail", "SELF"]);
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_preserves_direct_and_forwarded_loci() {
+        let source =
+            "#define INNER(x) x ## post\n#define OUTER(x) INNER(x)\nINNER(NAME)\nOUTER(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        for (i, line, expected) in [(0, 3, vec!["INNER"]), (1, 4, vec!["INNER", "OUTER"])] {
+            assert_eq!(result.tokens[i].value, "NAMEpost");
+            let locus = result.map.locus(i).unwrap();
+            assert_eq!(locus.position.file, file);
+            assert_eq!(locus.position.line, line);
+            let mut names = Vec::new();
+            let mut cursor = locus.expansion;
+            while let Some(id) = cursor {
+                names.push(result.map.expansion_site(id).unwrap().0);
+                cursor = result.map.expansion_parent(id);
+            }
+            assert_eq!(names, expected);
+        }
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_rejects_arguments_and_definitions() {
+        for (source, line) in [
+            ("#define P(x) x ## post\nP()\n", 2),
+            ("#define P(x) x ## post\nP(a+b)\n", 2),
+            ("#define P(x) x ## post\nP(4)\n", 2),
+            ("#define P(x) x ## post\nP(\"a\")\n", 2),
+            ("#define P(x) x ## post\nP('a')\n", 2),
+            ("#define P(x) x ## post\nP(+)\n", 2),
+            ("#define P(x) x ## nt\nP(i)\n", 2),
+            ("#define P(x) x ## t\nP(int32_)\n", 2),
+            ("#define P(x) x ## 4\n", 1),
+            ("#define P(x) x ## +\n", 1),
+            ("#define P(x) left ## right\n", 1),
+            ("#define P(a,b) a ## b\n", 1),
+            ("#define P(x) x ## post ## other\n", 1),
+            ("#define P(x) x ## post #x\n", 1),
+            ("#define P x ## post\n", 1),
+            ("#define P(x) x ##\n", 1),
+            ("#define P(x) ## post\n", 1),
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let error = preprocess(tokens, file, &dialect, &mut fs, Bounds::default())
+                .err()
+                .expect("unsupported paste");
+            assert_eq!(error.position().unwrap().line, line, "{source}");
+        }
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_uses_raw_argument_then_rescans() {
+        let source = "#define NAME tail\n#define preNAME 7\n#define PREFIX(x) pre ## x\n#define BOTH(x) pre ## x x\nPREFIX(NAME)\nBOTH(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
+        assert_eq!(values, ["7", "7", "tail"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_preserves_argument_provenance() {
+        let source = "#define PREFIX(x) pre ## x\nPREFIX(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "preNAME");
+        assert_eq!(result.map.locus(0).unwrap().position.line, 2);
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["PREFIX"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_preserves_forwarded_argument_provenance() {
+        let source = "#define INNER(x) pre ## x\n#define OUTER(x) INNER(x)\nOUTER(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "preNAME");
+        assert_eq!(result.map.locus(0).unwrap().position.line, 3);
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["INNER", "OUTER"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_rejects_unhandled_shapes_and_tight_spelling() {
+        for source in [
+            "#define P(x) pre ## x\nP()\n",
+            "#define P(x) pre ## x\nP(a+b)\n",
+            "#define P(x) pre ## x\nP(4)\n",
+            "#define P(x) pre ## x\nP(\"a\")\n",
+            "#define P(x) i ## x\nP(nt)\n",
+            "#define P(x) int32_ ## x\nP(t)\n",
+            "#define P(x) pre ## x\nP(NAME)\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = if source.contains("P(NAME)") {
+                Bounds { token_spelling_bytes: 6, ..Bounds::default() }
+            } else {
+                Bounds::default()
+            };
+            assert!(preprocess(tokens, file, &dialect, &mut fs, bounds).is_err(), "{source}");
+        }
+        for source in [
+            "#define P(x) ## x\n",
+            "#define P(x) pre ##\n",
+            "#define P(x) pre ## x ## y\n",
+            "#define P(x) pre ## x #x\n",
+            "#define P(a,b) a ## b\n",
+            "#define P pre ## NAME\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(), "{source}");
+        }
     }
 
     #[test]

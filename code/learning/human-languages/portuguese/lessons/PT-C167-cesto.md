@@ -13,7 +13,8 @@ gloss: "a basket"
 concept_tag: PT-COISAS167-CESTO
 prerequisites: [PT-C166-destino, PT-C167-carrinho]
 sounds: []
-roots: []
+roots: [cista-latin]
+etymology_hook: "cesto — from the basket word, which ← Latin cista 'box', from Greek kiste — English chest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C167-carrinho]
 <!-- hl-knowledge: introduces=[PT-LEX-C167-COISAS167-02]; assesses=[] -->
 
 **o cesto** — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cesto** is a masculine of the word for a basket (EtymDB 2.1), which ← Latin *cista*, "box, chest", from Greek *kistē* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

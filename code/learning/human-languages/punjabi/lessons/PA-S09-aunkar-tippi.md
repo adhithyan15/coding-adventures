@@ -55,9 +55,9 @@ memory:
 
 Now put them where you have already heard them:
 
-> **ਪ** + **ਸ** + **ੰ** + **ਦ** → **ਪਸੰਦ** (*pasand*)
+> **ਪ** + **ੰ** + **ਜ** → **ਪੰਜ** (*panj*)
 >
-> **ਪਸੰਦ** — *pasand* — **pleasing**
+> **ਪੰਜ** — *panj* — **five**
 
 You are not being asked to write any of this. You are being asked to
 **recognise** it the next time it goes past.
@@ -77,8 +77,8 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-BINDI-01, PA-SCRIPT-RECOG-AIRA-01, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-VA-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-PA-01, PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH, PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at **ਪਸੰਦ** and point to each of today's pieces in turn]
-- [YOU SAY: *-u*, *(nasal)*, then the whole word — *pasand*]
+- [YOU LOOK: at **ਪੰਜ** and point to the one of today's pieces it holds]
+- [YOU SAY: *-u*, *(nasal)*, then the whole word — *panj*]
 - [YOU LOOK: back at the headword at the top of any earlier lesson in this
   chapter and find one shape you now know]
 
@@ -86,6 +86,6 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 [PAUSE 3s] Name today's pieces: *auṅkaṛ*, *ṭippī*. Which of them is a **mātrā** or a mark
-rather than a letter, and what does **ਪਸੰਦ** say? (*pasand*, “pleasing”.)
+rather than a letter, and what does **ਪੰਜ** say? (*panj*, “five”.)
 
 Source: [Unicode Gurmukhi chart](https://www.unicode.org/charts/PDF/U0A00.pdf).

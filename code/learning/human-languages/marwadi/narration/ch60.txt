@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खांड (khā̃ḍ) mean? ("Sugar".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sugar'.
+Say the Marwadi for 'sugar'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लूण (lūṇ) mean? ("Salt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'salt'.
+Say the Marwadi for 'salt'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मिरच (mirach) mean? ("A chilli".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a chilli'.
+Say the Marwadi for 'a chilli'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दही (dahī) mean? ("Yoghurt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'yoghurt'.
+Say the Marwadi for 'yoghurt'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तेल (tel) mean? ("Oil".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'oil'.
+Say the Marwadi for 'oil'.

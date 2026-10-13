@@ -13,7 +13,8 @@ gloss: "a memory"
 concept_tag: IT-COSE196-RICORDO
 prerequisites: [IT-C196-esperienza, IT-C196-pensiero]
 sounds: []
-roots: []
+roots: [recordari-latin]
+etymology_hook: "ricordo — the noun of ricordare 'to remember' ← Latin recordari — English record"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C196-pensiero]
 <!-- hl-knowledge: introduces=[IT-LEX-C196-COSE196-03]; assesses=[] -->
 
 **il ricordo** — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricordo** is the noun of *ricordare*, "to remember", which ← Vulgar Latin *recordare*, from Latin *recordari*, "to call to mind". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

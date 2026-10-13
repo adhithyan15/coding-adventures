@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES85-CINEMA
 prerequisites: [PT-C85-paragem, PT-C85-correios]
 sounds: []
 roots: []
+etymology_hook: "cinema ← French cinéma, from Greek kinema 'movement' — English cinema is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C85-correios]
 <!-- hl-knowledge: introduces=[PT-LEX-C85-LUGARES85-04]; assesses=[] -->
 
 **o cinema** — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinema** ← French *cinéma* (EtymDB 2.1) — borrowed. The French word is short for *cinématographe*, built on Greek *kinēma*, "movement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rain"
 concept_tag: FR-NATURE35-PLUIE
 prerequisites: [FR-C83-etoile, FR-C83-nuage]
 sounds: []
-roots: []
+roots: [pluere-latin]
+etymology_hook: "pluie ← Latin pluvia 'rain' — the same root as il pleut; English pluvial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C83-nuage]
 <!-- hl-knowledge: introduces=[FR-LEX-C83-NATURE35-04]; assesses=[] -->
 
 **la pluie** — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pluie** ← Vulgar Latin *\*ploia* ← Latin *pluvia*, "rain" (EtymDB 2.1) — inherited: the same root as *il pleut*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN121-MELONE
 prerequisites: [GE-C121-erdbeere, GE-C121-kirsche]
 sounds: []
 roots: []
+etymology_hook: "Melone ← Italian melone ← Latin mēlo ← Greek mēlopépōn 'apple-melon' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C121-kirsche]
 <!-- hl-knowledge: introduces=[GE-LEX-C121-ESSEN121-05]; assesses=[] -->
 
 **die Melone** — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Melone** ← Italian *melone* ← Latin *mēlo*, from Greek *mēlopépōn*, "apple-melon" — borrowed. EtymDB 2.1 has no row for the German word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

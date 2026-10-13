@@ -14,6 +14,7 @@ concept_tag: IT-QUAL158-BUIO
 prerequisites: [IT-C157-necessario, IT-C158-maturo]
 sounds: []
 roots: []
+etymology_hook: "buio — origin uncertain; EtymDB records the word but not its source"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C158-maturo]
 <!-- hl-knowledge: introduces=[IT-LEX-C158-QUAL158-02]; assesses=[] -->
 
 **buio** — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**buio** — its origin is uncertain. EtymDB 2.1 records the word but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

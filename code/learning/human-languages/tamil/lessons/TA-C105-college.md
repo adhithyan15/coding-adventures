@@ -11,7 +11,8 @@ romanization: "kallūri"
 concept_tag: TA-WORK-COLLEGE
 prerequisites: [TA-C105-signature, TA-C105-occupation]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "கல்லூரி — a modern coinage on native kal 'to learn' (DEDR 1297): 'the place of learning'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C105-occupation]
 **கல்லூரி** (*kallūri*) — "a college".
 
 It is built on **கல்**, "to learn": a college is a *learning-place*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கல்லூரி** (*kallūri*) is a modern coinage built on native *kal*, "to learn" (DEDR 1297): "the place of learning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

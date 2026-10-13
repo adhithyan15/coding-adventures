@@ -8,7 +8,7 @@
 // "you will need a pen" notice. Any writing task inside it therefore has to be
 // authored as a `[YOU WRITE: …]` cue, which the narration defers ("once you
 // have stopped driving — write: …"). A bare "Write 是." is read out as an
-// instruction to a driver. `drivable-writing-imperatives.ts` explains how the
+// instruction to a driver. `src/drivable-instructions.ts` explains how the
 // bare form is recognised and why the pattern is as narrow as it is.
 //
 // ---------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 // What counts as telling the listener to write
 // ---------------------------------------------------------------------------
 //
-// Two things, both from `drivable-writing-imperatives.ts`: a bare writing
+// Two things, both from `src/drivable-instructions.ts`: a bare writing
 // imperative in prose, and a `[YOU RECALL: …]` cue whose content asks for
 // writing ("[YOU RECALL: write **ば** — **R1**]"). The second is a cue, but
 // RECALL is a spoken action, so the narration reads it out with no deferral.
@@ -73,6 +73,14 @@
 // handling cards, or covering the page. Each demands exactly zero in drivable
 // lessons, with no ledger, because every case was fixed in the change that
 // added (or widened) the check.
+//
+// These checks now also DECIDE modality: they moved to
+// `src/drivable-instructions.ts`, and any step they find in a section the car
+// keeps makes that lesson's core `sight` (reason `eyes-or-hands-step`). This
+// file reads only the `drivable` lessons, those that are `voice` through and
+// through; `tests/drivable-instructions.test.ts` holds the same checks at zero
+// over every lesson whose CORE is drivable, which is the larger set the
+// narration announces as "you can do this one in the car".
 
 import { type Dirent, existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -96,7 +104,7 @@ import {
   spokenCueAsksToReadScript,
   withoutHtmlComments,
   writingRecallCues,
-} from "./drivable-writing-imperatives.js";
+} from "../src/drivable-instructions.js";
 
 const DEBT_DIRECTORY = join(dirname(fileURLToPath(import.meta.url)), "drivable-writing-debt");
 
@@ -1006,21 +1014,41 @@ describe("drivable lessons carry no spoken cue that asks to read script", () => 
     expect(problems, problems.join("\n")).toEqual([]);
   });
 
-  it("the reading check still fires on the real corpus, where reading is legitimate", () => {
+  it("the reading check still fires on the real corpus: every deferred READ, spoken again, is caught", () => {
     // Anti-vacuity, as for the writing check: a detector that matched nothing
-    // would also report zero above. The lessons that are NOT drivable keep
-    // their reading cues (their narration already opens with the
-    // hands-and-eyes notice), so the detector must keep finding them there.
-    let reading = 0;
+    // would also report zero above.
+    //
+    // This used to count the NON-drivable lessons that still carry a spoken
+    // reading cue, with a floor of 40 (66 measured when it was written). That
+    // number was debt, not a property of the detector: when the modality rule
+    // began to read lesson cores (`eyes-or-hands-step`, see
+    // src/drivable-instructions.ts), 31 core-drivable Bengali, Kannada,
+    // Malayalam, Hindi and Tamil recalls were split into RECALL + READ exactly
+    // as the drivable ones had been, and the count fell to 35 with the detector
+    // unchanged. A floor that falls every time the corpus gets better teaches
+    // whoever trips it to lower the number.
+    //
+    // So the demonstration is now synthetic, on real lessons, and grows instead
+    // of shrinking as debt is paid: take every drivable lesson that defers a
+    // reading step as `[YOU READ: **…**]` (the fix this check demands), put the
+    // step back inside a spoken cue as `[YOU RECALL: read **…**]` (the defect it
+    // exists to catch), and require the check to find it — in every one.
+    const misses: string[] = [];
+    let demonstrated = 0;
     for (const lesson of lessons) {
-      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
-      if (readingSpokenCues(lessonMarkdown(lesson)).length > 0) reading += 1;
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      const markdown = lessonMarkdown(lesson);
+      const at = markdown.indexOf("[YOU READ: **");
+      if (at === -1) continue;
+      const spoken = `${markdown.slice(0, at)}[YOU RECALL: read **${markdown.slice(at + "[YOU READ: **".length)}`;
+      demonstrated += 1;
+      if (readingSpokenCues(spoken).length === 0) misses.push(id);
     }
-    // A floor set well below the count measured when this was written
-    // (66 non-drivable lessons for recalls alone, 67 once every spoken verb was
-    // read), and high enough that a detector which lost most of its matches
-    // fails here rather than passing quietly.
-    expect(reading, "non-drivable lessons with a reading cue").toBeGreaterThan(40);
+    // Non-empty by construction while any drivable lesson keeps a READ cue,
+    // and every reading fix adds one; the real assertion is the next line.
+    expect(demonstrated, "drivable lessons with a deferred READ cue").toBeGreaterThan(0);
+    expect(misses, `the reading check missed a spoken read in: ${misses.join(", ")}`).toEqual([]);
   });
 });
 

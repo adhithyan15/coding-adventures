@@ -14,7 +14,8 @@ romanization: "akalamāṉa"
 concept_tag: TA-QUAL148-AKALAMANA
 prerequisites: [TA-C147-tairiyamana, TA-C148-alamana]
 sounds: []
-roots: []
+roots: [dravidian-akal-spread]
+etymology_hook: "அகலமான — native Dravidian (DEDR 8); Malayalam akaluka 'to become extended'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C148-alamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C148-QUAL148-02]; assesses=[] -->
 
 **அகலமான** — *akalamāṉa* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அகலமான** (*akalamāṉa*) is native Dravidian. DEDR 8 lists Malayalam *akaluka*, "to become extended". It is *akalam*, "width", from *akal*, "to spread, to widen", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

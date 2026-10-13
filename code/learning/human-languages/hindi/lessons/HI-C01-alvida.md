@@ -50,9 +50,11 @@ Arabic grammar you may have met from the other side.
 
 New: the **independent vowel अ** = "a" (used when a word *starts* with a
 vowel — consonants have their built-in *a*, but a standalone one needs its own
-letter), and **ल** = "la." Reusing **व द** and the **ि**/**ा** signs:
+letter), **ल** = "la," and **ा**, the *mātrā* for long **"ā"**. Reusing **व
+द** and the **ि** sign:
 
-- **अल** = "al" · **वि** = "vi" (with the **ि** sign) · **दा** = "dā."
+- **अल** = "al" · **वि** = "vi" (with the **ि** sign) · **दा** = "dā" (**द +
+  ा**).
 
 Left to right: **अ·ल·वि·दा** = *a-l-vi-dā* →
 
@@ -80,7 +82,7 @@ matters — and, like *shukriyā*, it quietly carries centuries of Persian in it
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-ALVIDA-01] -->
 
 New: the independent vowel अ (“a,” for a word that *starts* with a
-vowel) and ल la. अ·ल·वि·दा → *alvidā*.
+vowel), ल la, and the sign ा for long “ā.” अ·ल·वि·दा → *alvidā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-ALVIDA-01] -->

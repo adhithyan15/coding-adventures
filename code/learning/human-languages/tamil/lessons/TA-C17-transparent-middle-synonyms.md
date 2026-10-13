@@ -11,6 +11,7 @@ gloss: Tamil kept transparent middle-day and middle-night synonyms beside the ol
 prerequisites: [TA-C17-nanpakal-nalliravu]
 sounds: [tamil-gemination]
 roots: [tamil-naTu-middle, tamil-nal-middle-proto-dravidian]
+etymology_hook: "நடு 'middle' (DEDR 3584), pakal 'day' (DEDR 3805), iravu 'night' (DEDR 2552) — all native Dravidian"
 duration:
   max_seconds: 240
 requires:
@@ -18,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
 practises:
-  knowledge: [TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
+  knowledge: [TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NANPAKAL-NALLIRAVU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,7 +31,7 @@ reviews_of: [TA-C17-nanpakal-nalliravu]
 # நடுப்பகல் and நடு இரவு — the transparent twins
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-ETYMON-NANPAKAL-NALLIRAVU-02] -->
 
 [PAUSE 2s] *Naṇpakal* and *naḷḷiravu* preserve an older middle-root in fused
 forms. Tamil also kept versions whose pieces remain obvious today.
@@ -49,6 +50,11 @@ Both use **நடு** (*naṭu*, "middle"), the everyday word still heard in *n
 Latin daughter languages often inherit one fate for an old compound: eroded or
 transparent. Tamil kept **both fates inside one language**—old fused forms and
 fresh transparent synonyms side by side.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All three parts are native Dravidian: *naṭu*, "middle" (DEDR 3584; Malayalam *naṭu*, Kannada *naḍu*), *pakal*, "daytime" (DEDR 3805; Malayalam *pakal*), and *iravu*, "night" (DEDR 2552; Malayalam *iravu*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01] -->

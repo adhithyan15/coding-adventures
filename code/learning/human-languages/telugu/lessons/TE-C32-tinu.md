@@ -77,7 +77,7 @@ Tamil ever did; it did not borrow the floor.
 [PAUSE 1s]
 - [YOU SAY: "tinu" — eat — then "tiṇṭānu … tinnānu"]
 - [YOU SAY: the root the whole family kept — "tinu … tinnu … tinnuka"]
-- [YOU SAY: the native noun and the borrowed one — "tiṇḍi … bhōjanaṁ"]
+- [YOU SAY: the native noun — "tiṇḍi" — blunt and everyday]
 - [YOU SAY: the four verbs so far — "uṇṭānu … veḷtānu … vastānu … tiṇṭānu"]
 
 ## Wrap-up Recall
@@ -85,8 +85,8 @@ Tamil ever did; it did not borrow the floor.
 
 [PAUSE 3s] Did Telugu keep the inherited eat-root? (**Yes** — *tinu*, plain and
 everyday, where Tamil demoted *tiṉ* and built *sāppiḍu*.) Which word for food is
-native, and which is borrowed? (**తిండి** *tiṇḍi* is native and blunt;
-**భోజనం** *bhōjanaṁ* is Sanskrit and polite.) What is the pattern? (**Native
+native, and where does the polite one come from? (**తిండి** *tiṇḍi* is native
+and blunt; the polite one is borrowed from Sanskrit.) What is the pattern? (**Native
 verbs at the core, Sanskrit vocabulary layered on top** — as with *avunu*
 against *namaskāram*.) Next: a verb, and the polite ending that fits every verb
 in this chapter.

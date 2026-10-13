@@ -13,7 +13,8 @@ gloss: "an animal"
 concept_tag: GE-THING198-TIER
 prerequisites: [GE-C197-kaelte, GE-C197-blitz]
 sounds: []
-roots: []
+roots: [germanic-deuza]
+etymology_hook: "Tier ← Old High German tior ← Proto-Germanic *deuzą 'animal' — the same word as English deer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C197-blitz]
 <!-- hl-knowledge: introduces=[GE-LEX-C198-THING198-01]; assesses=[] -->
 
 **das Tier** — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tier** ← Old High German *tior* ← Proto-Germanic *\*deuzą*, "animal" — inherited, the same word as English *deer*, which narrowed to one kind of animal. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

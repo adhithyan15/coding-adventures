@@ -54,7 +54,8 @@ question family: *ēnu* (what), *yāru* (who), *elli* (where), *yāke* (why).
 [PAUSE 1s]
 - [YOU SAY: "ēnu"]
 - [YOU SAY: the question family — ēnu, yāru, elli]
-- [YOU RECALL: read **ಧನ್ಯವಾದ**, then say *haudu*, then say *illa*]
+- [YOU READ: **ಧನ್ಯವಾದ**]
+- [YOU RECALL: say *haudu*, then say *illa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02] -->

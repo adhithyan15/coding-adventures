@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 244,
-  "sourceHash": "fnv1a64:743ffa2d3d627a86",
+  "sourceHash": "fnv1a64:f5acceb9b892185b",
   "lessonIds": [
     "PT-C244-alfandega",
     "PT-C244-reserva",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch244.txt",
   "json": "portuguese/narration/ch244.json",
-  "textHash": "fnv1a64:d8e2cfdcb5d22951",
-  "jsonHash": "fnv1a64:1e38dd55301f0901",
+  "textHash": "fnv1a64:aac857e07b138b7a",
+  "jsonHash": "fnv1a64:6ba41c2ea7f349bb",
   "findings": []
 }

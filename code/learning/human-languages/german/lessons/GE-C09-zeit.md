@@ -51,6 +51,11 @@ guess: **tide**.
 had to borrow *time*'s job out to a different root. German never had that
 problem and kept *Zeit* for the whole idea.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zeit** ← Old High German *zīt* ← Proto-Germanic *\*tīdiz*, "time, period" — inherited, the same word as English *tide*, with German *z* where English kept *t*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-EI-AS-EYE-01, GE-LEX-ZEIT-01] -->
 

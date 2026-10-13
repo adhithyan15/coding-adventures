@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C79-ghanto-type",
-              "prompt": "Type the Marwadi for 'an hour'.",
+              "prompt": "Say the Marwadi for 'an hour'.",
               "assesses": [
                 "MW-LEX-C79-TIME79-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C79-minat-type",
-              "prompt": "Type the Marwadi for 'a minute'.",
+              "prompt": "Say the Marwadi for 'a minute'.",
               "assesses": [
                 "MW-LEX-C79-TIME79-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C79-aj-type",
-              "prompt": "Type the Marwadi for 'today'.",
+              "prompt": "Say the Marwadi for 'today'.",
               "assesses": [
                 "MW-LEX-C79-TIME79-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C79-kal-type",
-              "prompt": "Type the Marwadi for 'yesterday'.",
+              "prompt": "Say the Marwadi for 'yesterday'.",
               "assesses": [
                 "MW-LEX-C79-TIME79-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C79-abar-type",
-              "prompt": "Type the Marwadi for 'now'.",
+              "prompt": "Say the Marwadi for 'now'.",
               "assesses": [
                 "MW-LEX-C79-TIME79-05"
               ],

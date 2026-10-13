@@ -13,7 +13,8 @@ gloss: "eighty"
 concept_tag: IT-NUMERI132-OTTANTA
 prerequisites: [IT-C132-sessanta, IT-C132-settanta]
 sounds: []
-roots: []
+roots: [octoginta-latin]
+etymology_hook: "ottanta ← Vulgar Latin octaginta, Latin octoginta 'eighty' — Latin ct became Italian tt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C132-settanta]
 <!-- hl-knowledge: introduces=[IT-LEX-C132-NUMERI132-04]; assesses=[] -->
 
 **ottanta** — "eighty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ottanta** ← Vulgar Latin *octaginta*, for Latin *octoginta*, "eighty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

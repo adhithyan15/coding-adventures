@@ -1,11 +1,9 @@
 French, chapter 5: The First Verbs.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. All 5 can be done entirely by ear.
 
 
 Lesson 1 of 5.
 parler — "to speak," and the great regular French verb.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -er present tense (and its silent trap) until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -22,7 +20,13 @@ palaver — a long talk; parley — to talk terms; even parliament — a talking
 
 Grammar Lens: the -er present tense (and its silent trap).
 Drop -er, add the ending for the person:
-There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, ending, parler, which gives:, sounds like. Come back and look at it when you have stopped.
+[a table of 6 rows, read aloud]
+person: je. ending, on parler: -e: je parle. sounds like: parl.
+person: tu. ending, on parler: -es: tu parles. sounds like: parl.
+person: il / elle. ending, on parler: -e: il parle. sounds like: parl.
+person: nous. ending, on parler: -ons: nous parlons. sounds like: par-LON.
+person: vous. ending, on parler: -ez: vous parlez. sounds like: par-LAY.
+person: ils / elles. ending, on parler: -ent: ils parlent. sounds like: parl.
 Here is the great French surprise: -e, -es, and -ent are all SILENT — je parle, tu parles, ils parlent all sound identical, just parl. Only nous (-ons) and vous (-ez) are audible.
 
 Grammar Lens: why French keeps its pronouns.
@@ -39,7 +43,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is parler from, and its English cousins? (parabolāre from parabola — parable, parole.) Which three present-tense endings are silent? (-e, -es, -ent — je/tu/ils all sound parl.) Why does French keep je/tu when Spanish drops yo/tú? (The endings are silent, so the pronoun carries the person.) Next: habiter, "to live."
+What Latin word is parler from, and its English cousins? (parabolāre from parabola — parable, parole.) Which three present-tense endings are silent? (-e, -es, -ent — je/tu/ils all sound parl.) Why does French keep je/tu when Spanish drops yo/tú? (The endings are silent, so the pronoun carries the person.) Next: the verb "to live."
 
 
 Lesson 2 of 5.
@@ -47,7 +51,7 @@ habiter — "to live," and it's about having a place.
 
 Warm-up.
 [pause 2 seconds]
-A second -er verb — snap it into the exact template you just learned. habiter ("to live, to dwell") lets you say where you live, the answer to a où ("where") question.
+A second -er verb — snap it into the exact template you just learned. habiter ("to live, to dwell") lets you say where you live, the answer to a "where?" question.
 
 Sounds you'll need.
 silent-final — the h is silent (French h never sounds): habiter = a-bee-TAY. Same -er = ay ending as parler.
@@ -63,7 +67,7 @@ Drop -er, add the endings — identical to parler, silent trap and all:
 [a table of 2 rows, read aloud]
 j'habite, tu habites, il habite, (all a-BEET).
 nous habitons, vous habitez, (a-bee-TON, a-bee-TAY).
-Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can answer où questions:
+Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can say where you live:
 J'habite à Paris. — "I live in Paris."
 
 Guided Practice.
@@ -77,7 +81,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb is habiter from, and what does it literally involve? (habitāre, "keep having a place" — from habēre, "to have.") English cousins? (Habitat, inhabit, habitation.) Say "I live in Paris." (J'habite à Paris.) Next: travailler, "to work."
+What Latin verb is habiter from, and what does it literally involve? (habitāre, "keep having a place" — from habēre, "to have.") English cousins? (Habitat, inhabit, habitation.) Say "I live in Paris." (J'habite à Paris.) Next: the verb "to work."
 
 
 Lesson 3 of 5.
@@ -117,7 +121,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did travailler originally mean, and from what device? ("To torture," from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — Je parle français.
+What did travailler originally mean, and from what device? ("To torture," from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — "I speak French."
 
 
 Lesson 4 of 5.
@@ -174,7 +178,7 @@ travailler: je travaille, tu travailles, il travaille — all tra-vye.
 Every singular form (and the ils form) sounds the same — the -e/-es/-ent are silent. That's why je, tu, il stay put: they carry the person your ear can't hear.
 
 Guided Practice: say something real.
-— Tu parles français? — Oui, je parle un peu. (Do you speak French? — Yes, I speak a little.) — Où habites-tu? — J'habite à Lyon. Et je travaille à Paris. — Merci! — De rien.
+— Tu parles français? — Oui, je parle français. (Do you speak French? — Yes, I speak French.) — Tu habites à Lyon? — Oui, j'habite à Lyon. Je travaille à Paris. — Merci! — De rien.
 
 What you've built this chapter.
 the regular -er present tense — drop -er, add -e/-es/-e/-ons/-ez/-ent; the singular + ils endings are silent, so the pronoun is mandatory (the big contrast with Spanish/Italian pro-drop).
@@ -190,8 +194,8 @@ Guided Practice.
 [your turn — say: chain it — "Bonjour! Je parle français. Tu parles français? … Au revoir!"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Tu parles français? — Oui, je parle un peu."
+"Tu parles français? — Oui, je parle français."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which -er endings are silent, and what follows from that? (-e, -es, -ent — so French keeps its subject pronouns.) Give "I" forms of the three verbs. (Je parle, j'habite, je travaille.) Say "I live in Paris and I work in Lyon." (J'habite à Paris et je travaille à Lyon.) French now moves in real sentences.
+Which -er endings are silent, and what follows from that? (-e, -es, -ent — so French keeps its subject pronouns.) Give "I" forms of the three verbs. (Je parle, j'habite, je travaille.) Say "I live in Paris. I work in Lyon." (J'habite à Paris. Je travaille à Lyon.) French now moves in real sentences.

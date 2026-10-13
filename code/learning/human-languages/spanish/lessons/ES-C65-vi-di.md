@@ -43,8 +43,8 @@ stress lands at the end.
 
 > *ver* → ***vi***, ***viste***, ***vio***
 
-[PAUSE 2s] Look at *vi* and *vio*: **no accent**, where *comí* and *comió* both
-had one.
+[PAUSE 2s] [YOU LOOK: at *vi* and *vio*.] **No accent**, where *comí* and *comió*
+both had one.
 
 [PAUSE 2s] And the reason is not an exception. A written accent exists to say
 *the beat is here, not where you would expect*. A word of **one syllable** has

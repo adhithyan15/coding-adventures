@@ -582,7 +582,7 @@
           "Script you'll notice: ഥ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ഥ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ഥ and Guided Practice."
       },
       "blocks": [
         {
@@ -650,7 +650,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഥ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഥ (tha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -672,7 +672,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ഥ in the ones that have it",
+              "instruction": "at these words, and find ഥ (tha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

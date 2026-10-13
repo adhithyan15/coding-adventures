@@ -14,7 +14,8 @@ romanization: "takaval"
 concept_tag: TA-KARANAM208-TAKAVAL
 prerequisites: [TA-C208-katamai, TA-C208-cutantiram]
 sounds: []
-roots: []
+roots: [tamil-takaval-information]
+etymology_hook: "தகவல் — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C208-cutantiram]
 <!-- hl-knowledge: introduces=[TA-LEX-C208-KARANAM208-04]; assesses=[] -->
 
 **தகவல்** — *takaval* — "information".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **தகவல்** (*takaval*) is uncertain. DEDR has no entry for it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

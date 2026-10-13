@@ -13,7 +13,8 @@ gloss: "a pavement; a walk"
 concept_tag: PT-LUGARES90-PASSEIO
 prerequisites: [PT-C89-entre, PT-C89-bairro]
 sounds: []
-roots: []
+roots: [passus]
+etymology_hook: "passeio — from the verb to stroll, built on the step word ← Latin passus 'pace'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C89-bairro]
 <!-- hl-knowledge: introduces=[PT-LEX-C90-LUGARES90-01]; assesses=[] -->
 
 **o passeio** — "a pavement; a walk". In Brazil, **a calçada**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passeio** is built from the verb "to stroll" (EtymDB 2.1), which is built on the word for a step ← Latin *passus*, "step, pace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

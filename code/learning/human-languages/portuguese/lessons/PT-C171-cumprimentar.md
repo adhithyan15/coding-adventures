@@ -13,7 +13,8 @@ gloss: "to greet"
 concept_tag: PT-VERB-CUMPRIMENTAR
 prerequisites: [PT-C170-contrato, PT-C171-beijar]
 sounds: []
-roots: []
+roots: [complere-latin]
+etymology_hook: "cumprimentar — from the greeting word, built on the verb to fulfil (← Latin complere)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C171-beijar]
 <!-- hl-knowledge: introduces=[PT-LEX-C171-VERBOS171-02]; assesses=[] -->
 
 **cumprimentar** — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cumprimentar** is built from the word for a greeting (EtymDB 2.1), which comes from the verb "to fulfil" ← Latin *complere*, "to fill up, to complete" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

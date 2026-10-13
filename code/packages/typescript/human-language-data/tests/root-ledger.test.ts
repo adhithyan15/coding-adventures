@@ -9,6 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { buildRootLedger, renderRootLedger } from "../src/root-ledger.js";
+import { measureEtymologyCoverage, type EtymologyGap } from "../src/etymology-coverage.js";
 import { loadChapterPolicy, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 
@@ -179,9 +180,136 @@ describe("renderRootLedger", () => {
   });
 });
 
+/**
+ * Etymology coverage per track (HL24 §9): AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * Two counts per track, over the lessons that introduce a word (a `-LEX-`
+ * atom, or `type: word` / `phrase`): those with no `etymology_hook`, and
+ * those whose body shows the reader no origin statement. See
+ * src/etymology-coverage.ts for both rules and their measured misses.
+ *
+ * Pinned EXACTLY, like FORWARD_REFERENCE_CEILINGS in continuity.test.ts and
+ * for the same reason: a ceiling leaves slack under it once debt is paid, and
+ * the next lesson could spend that slack unnoticed. So:
+ *
+ *   - a count that RISES fails and names the newest offending lessons. The
+ *     fix is in the lesson -- say where the word comes from, from a cited
+ *     source, or say plainly that the origin is unknown or disputed. Never
+ *     invent one, and never raise the pin.
+ *   - a count that FALLS fails too, asking for the pin to be lowered in the
+ *     same change, so the cleared debt cannot be re-spent.
+ *
+ * The rule is for every NEW word, so a new word lesson must carry both a hook
+ * and visible etymology to leave these numbers where they are.
+ *
+ * Measured when the gate was added: 25,682 word-introducing lessons; 22,744
+ * without a hook, 22,378 without visible etymology, 21,697 with neither.
+ * Spanish, the pilot, is the only track where most words have both. Chinese
+ * has a hook on every word lesson -- its hooks take the character apart --
+ * and 62 lessons whose body never does.
+ */
+const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; withoutVisible: number }>> = {
+  arabic: { withoutHook: 1187, withoutVisible: 1195 },
+  bengali: { withoutHook: 1136, withoutVisible: 1144 },
+  chinese: { withoutHook: 0, withoutVisible: 62 },
+  // french: 1048 / 1049 -> 0 / 0. All 1,045 generated word lessons (FR-C49-bras through
+  // FR-C257-anniversaire) gained a taken-apart block and a matching hook, and seven earlier
+  // hand-written lessons the measure missed gained the half they lacked. Sources: EtymDB 2.1
+  // (Fourrier & Sagot 2020), CC BY-SA 4.0, cross-checked row by row, with Lewis & Short for
+  // textbook Latin forms EtymDB lacks; 18 say the origin is uncertain and give the usual account.
+  french: { withoutHook: 0, withoutVisible: 0 },
+  // german: 988 / 1071 -> 0 / 0. Every German word lesson now carries an etymology_hook
+  // and a learner-visible "taken apart" block, sourced from EtymDB 2.1 (Fourrier &
+  // Sagot 2020), CC BY-SA 4.0, where a row supports the line; well-established origins
+  // with no supporting row carry no source tag, and 12 genuinely uncertain origins say so.
+  german: { withoutHook: 0, withoutVisible: 0 },
+  gujarati: { withoutHook: 529, withoutVisible: 543 },
+  hindi: { withoutHook: 1126, withoutVisible: 967 },
+  // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
+  // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
+  // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --
+  // a well-established origin stated without a source tag (4), or an explicit "not recorded in
+  // EtymDB 2.1" (12 lessons, all genuinely uncertain). The remaining 745 (IT-C111-infermiera
+  // through IT-C259-storia) followed the same way: from the same two sources, with sister-word
+  // tracing where EtymDB has no row; 14 say the origin is uncertain and why.
+  italian: { withoutHook: 0, withoutVisible: 0 },
+  japanese: { withoutHook: 601, withoutVisible: 688 },
+  kannada: { withoutHook: 1330, withoutVisible: 1281 },
+  latin: { withoutHook: 1095, withoutVisible: 1105 },
+  malayalam: { withoutHook: 1367, withoutVisible: 1275 },
+  marathi: { withoutHook: 1163, withoutVisible: 1116 },
+  marwadi: { withoutHook: 552, withoutVisible: 716 },
+  persian: { withoutHook: 1300, withoutVisible: 1311 },
+  // portuguese: 1142 / 1141 -> 0 / 0. Every word lesson now states its word's origin in a
+  // "taken apart" block and a matching etymology_hook: EtymDB 2.1 (Fourrier & Sagot 2020),
+  // CC BY-SA 4.0, with Lewis & Short for certain Latin forms EtymDB lacks. 62 say the
+  // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
+  portuguese: { withoutHook: 0, withoutVisible: 0 },
+  punjabi: { withoutHook: 549, withoutVisible: 524 },
+  russian: { withoutHook: 1135, withoutVisible: 1148 },
+  sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
+  spanish: { withoutHook: 486, withoutVisible: 209 },
+  // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
+  // but four have a "taken apart" block: native words cite the Dravidian Etymological
+  // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read
+  // from the moli-mandala/data (Jambu) files; no source text is copied. The four left
+  // without a block (TA-C06-dative-subject, TA-C37-ivar, TA-C37-ivar-en-nanbar,
+  // TA-C39-evvalavu) already estimate at 294-299 s, so any visible block would cross the
+  // 300-second limit; their hooks carry the etymology.
+  tamil: { withoutHook: 0, withoutVisible: 4 },
+  telugu: { withoutHook: 1376, withoutVisible: 1318 },
+  urdu: { withoutHook: 1123, withoutVisible: 1137 },
+};
+
+/**
+ * How many offending lessons a rise names. A track's whole gap list runs to
+ * a thousand ids, which buries the one that moved; new lessons are usually
+ * appended, so the latest in reading order come first.
+ */
+const NEWEST_GAPS_SHOWN = 40;
+
 describe("the committed corpus", () => {
   const { lessons } = loadEverything();
   const minReuse = loadChapterPolicy().rootLedgerMinReuse ?? 3;
+  // Measured once, here, where the corpus is already loaded: one linear pass,
+  // well under a second, rather than a second whole-corpus load in its own file.
+  const etymology = measureEtymologyCoverage(lessons);
+
+  it("pins etymology coverage for every track, and no track that is gone", () => {
+    expect(Object.keys(ETYMOLOGY_GAP_PINS).sort()).toEqual(
+      etymology.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pin] of Object.entries(ETYMOLOGY_GAP_PINS)) {
+    const kinds = [
+      { key: "withoutHook", label: "word lessons without an etymology_hook", missing: (gap: EtymologyGap) => gap.missingHook },
+      { key: "withoutVisible", label: "word lessons without visible etymology", missing: (gap: EtymologyGap) => gap.missingVisible },
+    ] as const;
+    for (const kind of kinds) {
+      const pinned = pin[kind.key];
+      it(`holds ${language}'s ${kind.label} at exactly ${pinned} (a pin that may only be lowered)`, () => {
+        const found = etymology.gaps.filter((gap) => gap.language === language && kind.missing(gap));
+        // Two directions, two fixes, as in continuity.test.ts. A rise is a
+        // lesson that arrived without its etymology: name it. A fall is
+        // progress the table has not recorded: lower the pin.
+        const newest = [...found]
+          .sort((a, b) => b.position - a.position)
+          .slice(0, NEWEST_GAPS_SHOWN)
+          .map((gap) => gap.lessonId)
+          .join(", ");
+        const message =
+          found.length > pinned
+            ? `${language} has ${found.length} ${kind.label}, above its pin of ${pinned}. ` +
+              `Every new word says where it comes from (HL24 §9) -- from a cited source, or ` +
+              `"unknown"/"disputed" stated plainly; never invented. Fix the lessons, not the pin. ` +
+              `Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
+            : `${language} has ${found.length} ${kind.label}, below its pin of ${pinned}. ` +
+              `Lower ETYMOLOGY_GAP_PINS.${language}.${kind.key} to ${found.length} in this change.`;
+        expect(found.length, message).toBe(pinned);
+      });
+    }
+  }
 
   it("uses the policy's configured minimum rather than a constant", () => {
     expect(minReuse).toBe(3);

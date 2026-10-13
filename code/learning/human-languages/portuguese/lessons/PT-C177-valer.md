@@ -13,7 +13,8 @@ gloss: "to be worth"
 concept_tag: PT-VERB-VALER
 prerequisites: [PT-C176-resolver, PT-C176-voar]
 sounds: []
-roots: []
+roots: [valere-latin]
+etymology_hook: "valer ← Latin valere 'to be strong, to be worth' — English value"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C176-voar]
 <!-- hl-knowledge: introduces=[PT-LEX-C177-VERBOS177-01]; assesses=[] -->
 
 **valer** — "to be worth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valer** ← Latin *valere*, "to be strong, to be worth" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1508,8 +1508,20 @@
       "components": [
         "ಞ  ña — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "arch over the left hump",
+        "without lifting, arch over the middle and down the right",
+        "without lifting, sweep clockwise round the bottom",
+        "without lifting, come over the top and down the tail",
+        "lift, then arch over the right hook"
+      ],
+      "strokeOrderNote": "Two pen-down runs. The first draws the body in four movements: over the left hump into the notch, over the middle hump and down the right side, clockwise round the loop, then over its top, through the crossing and down the tail. After one lift, the second arches over the separate hook at the top right.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Chimple (Sutara Learning Foundation, Bangalore), LIDO tracing lesson LIDO_kn2_0304, chimple/chimple-zips at commit 5b137ab1 (October 2026): the hidden, ordered tracing paths for ಞ, trace image file-p3fr4091.svg",
+        "url": "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0304.zip",
+        "variation": "Chimple draws ಞ as two paths. The first starts at the lower tip of the left hump, arches over it into the notch, arches over the middle hump and down the right side, sweeps clockwise round the bottom loop and comes over its top, through the crossing and down the tail (start lower left, end at the foot of the tail). The second starts where the right hook leaves the middle hump and arches over it to its tip (start upper middle, end lower right of the hook). The lesson bundle LIDO_kn2_0304.zip has sha256 5152886c21070d1d...; its data.json pairs this trace image with the question ಞ. Chimple's chimple-zips repository has no licence, so only facts are cited (stroke count, order, start, direction and end); no path or artwork is copied. The lesson player (chimple/lido-player, MIT) walks a trace image's paths in document order, and other Chimple trace images keep one path per pen-down run, so two paths here mean two strokes and one lift. Chimple's recorded ಞ trace (chimple/bahama at commit 62608a6, assets/courses/kn/kn/res/paths, MPL-2.0) agrees: two strokes, the body first with its loop drawn clockwise, then the hook from left to right. The two repositories come from one organisation, so they are one source, not two. This is designer-authored and recorded teaching material, not a native-writer statistic, so confidence is medium. The path is fitted to the bundled Noto Sans Kannada outline rather than to Chimple's drawing; the turn at the notch retraces a short stretch of ink."
+      }
     },
     {
       "glyph": "ಞಾ",

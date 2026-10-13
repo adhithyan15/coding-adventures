@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE22-DEJEUNER
 prerequisites: [FR-C69-miel, FR-C69-huile]
 sounds: []
 roots: []
+etymology_hook: "déjeuner ← Vulgar Latin *disieiunare 'to break the fast' — English dinner shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C69-huile]
 <!-- hl-knowledge: introduces=[FR-LEX-C70-CUISINE22-01]; assesses=[] -->
 
 **le déjeuner** — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**déjeuner** ← Vulgar Latin *\*disieiunare*, "to break the fast" — inherited. (EtymDB 2.1 records the Latin verb.) The French word for "dinner" comes from the same verb by another path.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a dream"
 concept_tag: IT-SAL152-SOGNO
 prerequisites: [IT-C152-riposo, IT-C152-sonno]
 sounds: []
-roots: []
+roots: [somnium-latin]
+etymology_hook: "sogno ← Latin somnium 'a dream', from somnus 'sleep'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C152-sonno]
 <!-- hl-knowledge: introduces=[IT-LEX-C152-SAL152-05]; assesses=[] -->
 
 **il sogno** — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sogno** ← Latin *somnium*, "a dream" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 187,
-  "sourceHash": "fnv1a64:f49c5f29b05e1731",
+  "sourceHash": "fnv1a64:040904848b11cb68",
   "lessonIds": [
     "FR-C187-alors",
     "FR-C187-tard",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch187.txt",
   "json": "french/narration/ch187.json",
-  "textHash": "fnv1a64:efb98e925dfb1e92",
-  "jsonHash": "fnv1a64:be917cf7f9818123",
+  "textHash": "fnv1a64:37bb90e8ab3d07c8",
+  "jsonHash": "fnv1a64:b4511dc639432af3",
   "findings": []
 }

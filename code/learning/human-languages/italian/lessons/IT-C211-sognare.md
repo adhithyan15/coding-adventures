@@ -13,7 +13,8 @@ gloss: "to dream"
 concept_tag: IT-VERB-SOGNARE
 prerequisites: [IT-C211-servire, IT-C211-soffrire]
 sounds: []
-roots: []
+roots: [somnium-latin]
+etymology_hook: "sognare ← Latin somniare 'to dream', from somnium — Spanish soñar is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C211-soffrire]
 <!-- hl-knowledge: introduces=[IT-LEX-C211-VERBI211-04]; assesses=[] -->
 
 **sognare** — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sognare** ← Latin *somniare*, "to dream" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

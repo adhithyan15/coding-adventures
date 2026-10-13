@@ -13,7 +13,8 @@ gloss: "a squirrel"
 concept_tag: PT-ANIMAIS119-ESQUILO
 prerequisites: [PT-C118-ra, PT-C118-tartaruga]
 sounds: []
-roots: []
+roots: [sciurus-latin]
+etymology_hook: "esquilo — goes back to Latin sciurus, from Greek skiouros 'shadow-tail' — English squirrel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C118-tartaruga]
 <!-- hl-knowledge: introduces=[PT-LEX-C119-ANIMAIS119-01]; assesses=[] -->
 
 **o esquilo** — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esquilo** goes back to Latin *sciurus*, "squirrel", from Greek *skiouros*, "shadow-tail" (Lewis & Short). The route into Portuguese is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

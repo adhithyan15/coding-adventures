@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Che",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:86c222a1b29a6a3d",
+  "sourceHash": "fnv1a64:00d0c2bd73259143",
   "lessons": [
     {
       "id": "IT-C31-che",
@@ -207,7 +207,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3400c21d9f3b9cd",
+      "sourceHash": "fnv1a64:f4f790d101d54bd4",
       "notice": null,
       "blocks": [
         {
@@ -301,6 +301,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "penso is a form of pensare from Latin pensare, \"to weigh, to ponder\"; che from Latin quid or quod — EtymDB 2.1 records both."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -340,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -733,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:109dc2176fc84deb",
+      "sourceHash": "fnv1a64:5320cfbd3251375d",
       "notice": null,
       "blocks": [
         {
@@ -835,6 +846,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Che buono! is built from che from Latin quid or quod, and buono from Latin bonus, \"good\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar lens: an adjective after essere",
           "segments": [
@@ -861,7 +883,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -910,7 +932,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

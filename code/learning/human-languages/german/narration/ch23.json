@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Wrapped Participle",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:c368e85704e64621",
+  "sourceHash": "fnv1a64:57431d104ad133bb",
   "lessons": [
     {
       "id": "GE-C15-sagen",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d2d9922f953af1f",
+      "sourceHash": "fnv1a64:58758746d65fbc43",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +228,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gesagt is ge- + the stem of sagen + -t. sagen from Old High German sagēn from Proto-Germanic sagjaną, the same verb as English say. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -242,7 +253,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -291,7 +302,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -446,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34071fccfd174f84",
+      "sourceHash": "fnv1a64:295bee8741c446a0",
       "notice": null,
       "blocks": [
         {
@@ -487,6 +498,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gemacht is ge- + the stem of machen + -t. machen is the same verb as English make, which EtymDB 2.1 traces to Proto-Germanic makōną."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -501,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -550,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -581,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f55ab10343c2d756",
+      "sourceHash": "fnv1a64:f23407131a79a3f2",
       "notice": null,
       "blocks": [
         {
@@ -618,6 +640,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelernt is ge- + the stem of lernen + -t. lernen from Middle High German lernen from Old High German lernēn (EtymDB 2.1), a cousin of English learn."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -632,7 +665,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -681,7 +714,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

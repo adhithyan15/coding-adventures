@@ -14,6 +14,7 @@ concept_tag: GE-GEFUEHLE2-FREUDE
 prerequisites: [GE-C60-gluecklich, GE-C61-angst]
 sounds: []
 roots: []
+etymology_hook: "Freude ← Old High German frouwida, a noun built on the old adjective for 'glad'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C61-angst]
 <!-- hl-knowledge: introduces=[GE-LEX-C61-GEFUEHLE2-02]; assesses=[] -->
 
 **die Freude** — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Freude** ← Old High German *frouwida* (EtymDB 2.1), a noun built on the old adjective for "glad", Old High German *frō* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

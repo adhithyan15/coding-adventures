@@ -14,7 +14,8 @@ romanization: "aḻi"
 concept_tag: TA-VERB-ALI
 prerequisites: [TA-C256-pinparru, TA-C256-tavaravitu]
 sounds: []
-roots: []
+roots: [dravidian-azhi-perish]
+etymology_hook: "அழி — native Dravidian (DEDR 277); Malayalam aḻiyuka 'to be destroyed', Kannada aḻi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C256-tavaravitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C256-ACT256-04]; assesses=[] -->
 
 **அழி** — *aḻi* — "to erase, to delete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழி** (*aḻi*) is native Dravidian. DEDR 277 lists Malayalam *aḻiyuka*, "to be destroyed" and Kannada *aḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
