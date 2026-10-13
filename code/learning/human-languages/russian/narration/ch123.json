@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Space, Bottle, Mirror, Stairs, Pink",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42c10db8d17da0b3",
+  "sourceHash": "fnv1a64:57a944e0b149a095",
   "lessons": [
     {
       "id": "RU-C123-space",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7672664f3f4f3b06",
+      "sourceHash": "fnv1a64:0a131a8d5400cd67",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "лестница (léstnitsa) from Old Church Slavonic lěstvica, built on lěstva, \"a ladder\", from the root of лезть, \"to climb\" (Vasmer)."
+              "text": "лестница (léstnitsa) from Old Russian lěstvica, the same word as in Old Church Slavonic, built on lěstva, \"a ladder\", from the root of лезть, \"to climb\" (Vasmer)."
             }
           ]
         },

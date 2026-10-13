@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Problem, Sentence, Page, Music, Sport",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aefcd2277f6bd3f3",
+  "sourceHash": "fnv1a64:5d380516fb66cba4",
   "lessons": [
     {
       "id": "RU-C112-problem",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4dee2c56ba48394",
+      "sourceHash": "fnv1a64:bc9dc235aab3a1d6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "музыка (múzyka) — Old Russian said мусикия; the form музыка (múzyka) came through Ukrainian and Polish muzyka from Latin mūsica, Greek mousikḗ, \"the art of the Muses\" (Vasmer)."
+              "text": "музыка (múzyka) — Old Russian said мусикия; the form музыка (múzyka), first stressed on -зы-, came through Ukrainian and Polish muzyka from Latin mūsica, Greek mousikḗ, \"the art of the Muses\"; the stress on му- used today may have come through Austrian German (Vasmer)."
             }
           ]
         },

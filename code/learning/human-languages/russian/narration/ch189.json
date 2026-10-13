@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Someone else's, Native, Local, Foreign, Russian",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:86e71ebde8fcc20c",
+  "sourceHash": "fnv1a64:382bff2b5d7a73af",
   "lessons": [
     {
       "id": "RU-C189-chuzhoy",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a0d15e1747ec696",
+      "sourceHash": "fnv1a64:874e6ffb393a09c2",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "русский (rússkiy) comes from Русь, the old name of the land and its people (Vasmer). Vasmer traces Русь to Old Norse Róþsmenn, \"rowers, seafarers\", the name of the Scandinavian newcomers; Trubachev's note cites critics of that account, so it is still debated."
+              "text": "русский (rússkiy) comes from Русь, the old name of the land and its people (Vasmer). Vasmer traces Русь to Old Norse Róþsmenn, \"rowers, seafarers\", the name of the Scandinavian newcomers, which reached the Slavs through the Finns, who still call Sweden Ruotsi; Trubachev's note cites critics of that account, so it is still debated."
             }
           ]
         },

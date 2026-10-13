@@ -47,7 +47,7 @@ reviews_of: [RU-C119-lips]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**грудь** ← Proto-Slavic *\*grǫdĭ* — inherited. Vasmer compares Latin *grandis*, "great", and Greek *brénthos*, "pride"; Vaillant, in a note, links it instead with *гряда*, "a beam, a bed", so the origin is open.
+**грудь** ← Proto-Slavic *\*grǫdĭ* — inherited. Vasmer compares Latin *grandis*, "great", and Greek *brénthos*, "pride"; Trubachev, in a note, reports that Vaillant links it instead with *гряда*, "a beam, a bed", so the origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

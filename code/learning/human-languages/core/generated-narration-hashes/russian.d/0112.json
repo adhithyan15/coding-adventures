@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 112,
-  "sourceHash": "fnv1a64:aefcd2277f6bd3f3",
+  "sourceHash": "fnv1a64:5d380516fb66cba4",
   "lessonIds": [
     "RU-C112-problem",
     "RU-C112-sentence",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch112.txt",
   "json": "russian/narration/ch112.json",
-  "textHash": "fnv1a64:6d8ce294bd0098b9",
-  "jsonHash": "fnv1a64:634b1a2c772a9e8f",
+  "textHash": "fnv1a64:159056d05503ef45",
+  "jsonHash": "fnv1a64:c48fce265b8d3d01",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Mountain, Forest, River, Lake, Sea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3c121beaedb4b044",
+  "sourceHash": "fnv1a64:4e76b87cff88eb09",
   "lessons": [
     {
       "id": "RU-C56-mountain",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:530b9cb98878b29e",
+      "sourceHash": "fnv1a64:1ed63e84606047f4",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "лес (les) from Proto-Slavic lěsŭ — inherited. Its deeper origin is not certain: Vasmer relates it to Old English læs, \"pasture\", and English dialect leasow, while a note by Moszyński finds a link with Lithuanian laĩškas, \"leaf\", more likely."
+              "text": "лес (les) from Proto-Slavic lěsŭ — inherited. Its deeper origin is not certain: Vasmer relates it to Old English læs, \"pasture\", and English dialect leasow, and finds a link with Lithuanian laĩškas, \"leaf\", doubtful, while Trubachev, in a note, thinks it the most likely."
             }
           ]
         },

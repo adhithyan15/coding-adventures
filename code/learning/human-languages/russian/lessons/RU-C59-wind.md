@@ -15,7 +15,7 @@ concept_tag: RU-WEATHER-WIND
 prerequisites: [RU-C59-rain, RU-C59-snow]
 sounds: []
 roots: [pie-h2weh1]
-etymology_hook: "ветер ← Proto-Slavic *větrŭ, from веять 'to blow'; Sanskrit vāta 'wind' and English wind are kin"
+etymology_hook: "ветер ← Proto-Slavic *větrŭ, from веять 'to blow'; Sanskrit vāta 'wind' is kin, and probably English wind"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C59-snow]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ветер** ← Proto-Slavic *\*větrŭ* — inherited, from the root of *веять*, "to blow" (Vasmer). Vasmer lists Lithuanian *vėjas*, "wind", and Sanskrit *vāta-*, "wind"; English *wind* comes from the same PIE root *\*h₂weh₁-*, "to blow".
+**ветер** ← Proto-Slavic *\*větrŭ* — inherited, from the root of *веять*, "to blow" (Vasmer). Vasmer lists Lithuanian *vėjas*, "wind", and Sanskrit *vāta-*, "wind"; English *wind* is probably a cousin, from the same PIE root *\*h₂weh₁-*, "to blow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

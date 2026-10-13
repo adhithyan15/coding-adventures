@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "Frankfurter, Prawn, Borscht, Cabbage soup, Pancake",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:672519c92ef80572",
+  "sourceHash": "fnv1a64:bb76b1cf7318b926",
   "lessons": [
     {
       "id": "RU-C163-sosiska",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c24609dcd21905c7",
+      "sourceHash": "fnv1a64:974f9fc42e752bb3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "щи (shchi) from Old Russian шти, \"a soup\". Its origin is not settled: Jakobson, in a note to Vasmer, linked it with щавель, \"sorrel\", a soup green."
+              "text": "щи (shchi) from Old Russian шти, \"a soup\". Its origin is not settled: Vasmer thinks it perhaps goes back to Old Russian sŭto, \"food\", and finds a link with щавель, \"sorrel\", a soup green, less likely, though Jakobson, in Trubachev's note, accepted it."
             }
           ]
         },

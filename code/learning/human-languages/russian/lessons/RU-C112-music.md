@@ -47,7 +47,7 @@ reviews_of: [RU-C112-page]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**музыка** — Old Russian said *мусикия*; the form *музыка* came through Ukrainian and Polish *muzyka* from Latin *mūsica*, Greek *mousikḗ*, "the art of the Muses" (Vasmer).
+**музыка** — Old Russian said *мусикия*; the form *музыка*, first stressed on *-зы-*, came through Ukrainian and Polish *muzyka* from Latin *mūsica*, Greek *mousikḗ*, "the art of the Muses"; the stress on *му-* used today may have come through Austrian German (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

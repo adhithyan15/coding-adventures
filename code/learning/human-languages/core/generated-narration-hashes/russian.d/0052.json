@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 52,
-  "sourceHash": "fnv1a64:7f5e24b5cfa55423",
+  "sourceHash": "fnv1a64:e3da72706a5d50d5",
   "lessonIds": [
     "RU-C52-book",
     "RU-C52-pen",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch52.txt",
   "json": "russian/narration/ch52.json",
   "textHash": "fnv1a64:604565a078643a28",
-  "jsonHash": "fnv1a64:7fd957ec005426be",
+  "jsonHash": "fnv1a64:b0dfdc3df7db66a2",
   "findings": []
 }

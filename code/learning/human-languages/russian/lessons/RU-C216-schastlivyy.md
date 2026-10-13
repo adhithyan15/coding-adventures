@@ -14,8 +14,8 @@ romanization: "schastlívyy"
 concept_tag: RU-KACH216-SCHASTLIVYY
 prerequisites: [RU-C216-spokoynyy, RU-C216-nervnyy]
 sounds: []
-roots: [slavic-chestu]
-etymology_hook: "счастливый is from счастье 'luck', 'a good share': with- + часть 'a share'"
+roots: [slavic-chesti]
+etymology_hook: "счастливый is from счастье 'luck', usually *sŭ- 'good' + часть 'a share': 'a good lot'"
 duration:
   max_seconds: 200
 requires:

@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Rain, Snow, Wind, Weather, World",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4532a0fd312e09d3",
+  "sourceHash": "fnv1a64:bc31ad4c2bcc7419",
   "lessons": [
     {
       "id": "RU-C59-rain",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96fa5cefc8be58cb",
+      "sourceHash": "fnv1a64:1330cb9221556924",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ветер (véter) from Proto-Slavic větrŭ — inherited, from the root of веять, \"to blow\" (Vasmer). Vasmer lists Lithuanian vėjas, \"wind\", and Sanskrit vāta-, \"wind\"; English wind comes from the same PIE root h₂weh₁-, \"to blow\"."
+              "text": "ветер (véter) from Proto-Slavic větrŭ — inherited, from the root of веять, \"to blow\" (Vasmer). Vasmer lists Lithuanian vėjas, \"wind\", and Sanskrit vāta-, \"wind\"; English wind is probably a cousin, from the same PIE root h₂weh₁-, \"to blow\"."
             }
           ]
         },

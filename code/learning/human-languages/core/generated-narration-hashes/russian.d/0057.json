@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 57,
-  "sourceHash": "fnv1a64:d0fa4461d880a8ce",
+  "sourceHash": "fnv1a64:552510df06d10218",
   "lessonIds": [
     "RU-C57-stone",
     "RU-C57-sand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch57.txt",
   "json": "russian/narration/ch57.json",
-  "textHash": "fnv1a64:64187d87df64e26e",
-  "jsonHash": "fnv1a64:8d2dc3ed98036ca2",
+  "textHash": "fnv1a64:9b1bd200b7de6a89",
+  "jsonHash": "fnv1a64:ff252abd81f685e4",
   "findings": []
 }

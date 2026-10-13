@@ -15,7 +15,7 @@ concept_tag: RU-TEMP-SLOW
 prerequisites: [RU-C66-warm, RU-C66-fast]
 sounds: []
 roots: [slavic-muditi]
-etymology_hook: "медленный ← Old Russian mĭdĭlĭnŭ, related to мешкать 'to dawdle' and медлить 'to delay'"
+etymology_hook: "медленный ← Old Russian mĭdĭlĭnŭ, related to медлить 'to delay' and the old verb *muditi 'to linger'"
 duration:
   max_seconds: 200
 requires:

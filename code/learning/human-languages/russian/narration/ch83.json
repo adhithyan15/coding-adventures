@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Midday, Midnight, Early, Late, In the morning",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:54570a6d5310f447",
+  "sourceHash": "fnv1a64:55d5eec084822a74",
   "lessons": [
     {
       "id": "RU-C83-midday",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ace887a870c8e156",
+      "sourceHash": "fnv1a64:fd789c9fff7f8e0e",
       "notice": null,
       "blocks": [
         {

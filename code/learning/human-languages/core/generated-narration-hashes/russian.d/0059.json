@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 59,
-  "sourceHash": "fnv1a64:4532a0fd312e09d3",
+  "sourceHash": "fnv1a64:bc31ad4c2bcc7419",
   "lessonIds": [
     "RU-C59-rain",
     "RU-C59-snow",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch59.txt",
   "json": "russian/narration/ch59.json",
-  "textHash": "fnv1a64:c8dc968f4c3c439b",
-  "jsonHash": "fnv1a64:c5433b0e76c43fff",
+  "textHash": "fnv1a64:c10c331c1faa3f69",
+  "jsonHash": "fnv1a64:7079ca06b94cbd8d",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Straight on, Nearby, Airport, Stop, Square",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97f32fc7511db537",
+  "sourceHash": "fnv1a64:04b2a0fb43a7339a",
   "lessons": [
     {
       "id": "RU-C87-straight-on",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd38aff324f5b21e",
+      "sourceHash": "fnv1a64:1c0cbc442f829824",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "площадь (plóshchad) — Old Russian and Church Slavonic площадь (plóshchad), from ploskědĭ, built on плоский, \"flat\" (Vasmer): a square is a flat open place. The -щ- is the Church Slavonic sound."
+              "text": "площадь (plóshchad) — Old Russian and Church Slavonic площадь (plóshchad), from ploskědĭ, built on плоский, \"flat\" (Vasmer): a square is a flat open place. The -щ- grew from -sk- before ě, a change shared by all Slavic, so it is no sign of Church Slavonic."
             }
           ]
         },

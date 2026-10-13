@@ -63,7 +63,7 @@ a numeral one.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**третий** ← Proto-Slavic *\*tretĭjĭ* — inherited, a cousin of Lithuanian *trẽčias*, Latin *tertius* and English *third* (Vasmer). **второй** is perhaps from *\*vŭtorŭ*, related to Sanskrit *vítaras*, "further"; others link it with Lithuanian *añtras*, "second, other" (Vasmer).
+**третий** ← Proto-Slavic *\*tretĭjĭ* — inherited, a cousin of Lithuanian *trẽčias*, Latin *tertius* and English *third* (Vasmer). **второй** is perhaps from *\*vĭtorŭ*, related to Sanskrit *vítaras*, "further"; others reconstruct *\*vŭtorŭ* and link it with Lithuanian *añtras*, "second, other" (Vasmer).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-VTOROY-01, RU-LEX-TRETIY-01, RU-MORPH-ORDINAL-ADJ-01, RU-LEX-CHETYRE-01, RU-LEX-DESYAT-01] -->

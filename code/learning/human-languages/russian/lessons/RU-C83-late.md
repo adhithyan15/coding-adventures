@@ -14,7 +14,7 @@ romanization: "pózdno"
 concept_tag: RU-TIME83-LATE
 prerequisites: [RU-C83-midnight, RU-C83-early]
 sounds: []
-roots: [post-latin]
+roots: [pie-pos]
 etymology_hook: "поздно ← Proto-Slavic *pozdŭ 'late', from PIE *pos 'after'; Latin post 'after' is a cousin"
 duration:
   max_seconds: 200

@@ -15,7 +15,7 @@ concept_tag: RU-WEEK1-SATURDAY
 prerequisites: [RU-C70-thursday, RU-C70-friday]
 sounds: []
 roots: [hebrew-shabbat]
-etymology_hook: "суббота ← Byzantine Greek sambaton, from Hebrew shabbat 'the day of rest'"
+etymology_hook: "суббота ← Greek *sambaton or Balkan Latin *sambata, both from Hebrew shabbat 'the day of rest'"
 duration:
   max_seconds: 200
 requires:

@@ -4,7 +4,7 @@
   "chapter": 208,
   "title": "To feel, To notice, To hear, To sniff, To touch",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3da6ad3c12b2beaa",
+  "sourceHash": "fnv1a64:1962cc9b0fc9adfb",
   "lessons": [
     {
       "id": "RU-C208-chuvstvovat",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80fc995f3cff14a5",
+      "sourceHash": "fnv1a64:39f2e6db5511dd3b",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "трогать (trógat) — Ukrainian трогати means \"to pull\". It has been compared with Latvian treksne, \"a push\", and Old Norse þreka, \"to press\"; a link with Latin trahō, \"I drag\", Vasmer finds doubtful, so the origin is open."
+              "text": "трогать (trógat) — Ukrainian трогати means \"to pull\". It has been compared with Latvian treksne, \"a push\", and Old Norse þreka, \"to press\"; Goryaev proposed a link with Latin trahō, \"I drag\", and one with Latin tergeō, \"I wipe\", Vasmer finds doubtful, so the origin is open."
             }
           ]
         },

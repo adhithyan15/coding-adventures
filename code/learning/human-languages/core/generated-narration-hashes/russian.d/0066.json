@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 66,
-  "sourceHash": "fnv1a64:bac99cf511b70993",
+  "sourceHash": "fnv1a64:e0c4b2458c086a33",
   "lessonIds": [
     "RU-C66-hot",
     "RU-C66-cold",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch66.txt",
   "json": "russian/narration/ch66.json",
   "textHash": "fnv1a64:8e22660667eb82db",
-  "jsonHash": "fnv1a64:16acec466caa2db4",
+  "jsonHash": "fnv1a64:ef17e96e638f59f9",
   "findings": []
 }

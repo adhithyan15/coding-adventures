@@ -47,7 +47,7 @@ reviews_of: [RU-C76-fifty]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**девяносто** is found only in East Slavic, from 1398 on; other Slavic languages say "nine tens". Vasmer thinks it probably comes from an old *\*devęno-desętŭ*, "the ninth ten", like Latin *nōnāgintā*, "ninety".
+**девяносто** is found only in East Slavic, from 1398 on; other Slavic languages say "nine tens". Vasmer thinks it probably continues an old Indo-European "ninth ten", like Latin *nōnāgintā*, "ninety".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

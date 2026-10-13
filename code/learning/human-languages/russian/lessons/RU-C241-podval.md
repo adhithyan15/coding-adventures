@@ -14,8 +14,8 @@ romanization: "podvál"
 concept_tag: RU-MESTO241-PODVAL
 prerequisites: [RU-C240-srazu, RU-C240-obychno]
 sounds: []
-roots: [slavic-valiti]
-etymology_hook: "подвал is под 'under' + вал, from валить 'to pile, to roll': a space dug under"
+roots: [vallum-latin]
+etymology_hook: "подвал is под 'under' + вал 'a rampart', probably through Polish from German Wall, Latin vallum"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C240-obychno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**подвал** is *под*, "under", with *вал*, "a rampart, an earth bank", from *валить*, "to topple, to pile up": a room under the house.
+**подвал** is *под*, "under", with *вал*, "a rampart, an earth bank", which Vasmer thinks came through Polish from German *Wall*, Latin *vallum*: a room under the house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

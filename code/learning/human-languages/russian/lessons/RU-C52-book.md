@@ -47,7 +47,7 @@ reviews_of: [RU-C51-fork]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**книга** ← Proto-Slavic *\*kŭniga*. Vasmer, following Räsänen, takes it as a loan through early Turkic, Danube Bulgar *küiniv*, ultimately from Chinese *k'üen*, "a scroll"; Hungarian *könyv*, "book", has the same source. He finds the older Assyrian account less likely.
+**книга** ← Proto-Slavic *\*kŭniga*. Vasmer, following Räsänen, takes it as a loan through early Turkic, Danube Bulgar *\*küiniv*, ultimately from Chinese *k'üen*, "a scroll"; Hungarian *könyv*, "book", has the same source. He finds the older Assyrian account less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

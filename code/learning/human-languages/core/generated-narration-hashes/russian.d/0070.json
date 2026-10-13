@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 70,
-  "sourceHash": "fnv1a64:d1a7aaa366feb942",
+  "sourceHash": "fnv1a64:a77f0c0e4139b088",
   "lessonIds": [
     "RU-C70-monday",
     "RU-C70-wednesday",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch70.txt",
   "json": "russian/narration/ch70.json",
-  "textHash": "fnv1a64:87b211465f7c6e5d",
-  "jsonHash": "fnv1a64:605cd58dbcc99972",
+  "textHash": "fnv1a64:03e4d3ffd94c9520",
+  "jsonHash": "fnv1a64:de5a6208a0dbcd3a",
   "findings": []
 }

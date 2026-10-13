@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Stone, Sand, Shore, Island, Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0fa4461d880a8ce",
+  "sourceHash": "fnv1a64:552510df06d10218",
   "lessons": [
     {
       "id": "RU-C57-stone",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3adc48c47e8e8fa6",
+      "sourceHash": "fnv1a64:25d5b32a768a9fd5",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "берег (béreg) from Proto-Slavic bergŭ — inherited. Vasmer doubts a loan from Germanic but relates it to Old High German berg, \"mountain\", Avestan barəzah-, \"height\", and Sanskrit bṛhant-, \"high\": a bank is the raised edge."
+              "text": "берег (béreg) from Proto-Slavic bergŭ. Vasmer relates it to Old High German berg, \"mountain\", Avestan barəzah-, \"height\", and Sanskrit bṛhant-, \"high\": a bank is the raised edge. Inherited, that root should have given Slavic з, not г, so Berneker and others take the word from Germanic, and Kiparsky from another Indo-European language; Vasmer, judging by its tone and meaning, doubts a loan."
             }
           ]
         },

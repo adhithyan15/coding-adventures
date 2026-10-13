@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Brimmed hat, Belt, Pocket, Button, Earrings",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:35697ce5a7478774",
+  "sourceHash": "fnv1a64:955bbd7dab250610",
   "lessons": [
     {
       "id": "RU-C193-shlyapa",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53fd6cb1be377795",
+      "sourceHash": "fnv1a64:9266634c5b3cfc8d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "серьги (sérgi) is the plural of серьга, \"an earring\". One view reshapes Old Russian усерязь, \"an earring\", but Vasmer finds the г hard to explain; Räsänen, in Trubachev's note, derives it from Chagatai and other Turkic isirga, \"ear pendants\"."
+              "text": "серьги (sérgi) is the plural of серьга, \"an earring\". One view reshapes Old Russian усерязь, \"an earring\", but Vasmer finds the г hard to explain and prefers a loan from an Old Chuvash word for \"a ring\"; Räsänen, in Trubachev's note, derives it from Chagatai and other Turkic isirga, \"ear pendants\"."
             }
           ]
         },

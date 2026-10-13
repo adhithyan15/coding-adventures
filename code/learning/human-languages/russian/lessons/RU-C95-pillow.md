@@ -14,7 +14,7 @@ romanization: "podúshka"
 concept_tag: RU-THINGS95-PILLOW
 prerequisites: [RU-C95-shelf, RU-C95-curtain]
 sounds: []
-roots: [slavic-dukhu]
+roots: [slavic-dykh]
 etymology_hook: "подушка: usually from дух 'breath', 'a puffed-up thing'; others read под ухо 'under the ear'"
 duration:
   max_seconds: 200

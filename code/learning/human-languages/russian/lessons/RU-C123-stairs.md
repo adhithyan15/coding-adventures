@@ -15,7 +15,7 @@ concept_tag: RU-THINGS123-STAIRS
 prerequisites: [RU-C123-bottle, RU-C123-mirror]
 sounds: []
 roots: [slavic-lezti]
-etymology_hook: "лестница ← Old Church Slavonic lěstvica, from лезть 'to climb'"
+etymology_hook: "лестница ← Old Russian lěstvica, from *lěstva 'a ladder', from the root of лезть 'to climb'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C123-mirror]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**лестница** ← Old Church Slavonic *lěstvica*, built on *\*lěstva*, "a ladder", from the root of *лезть*, "to climb" (Vasmer).
+**лестница** ← Old Russian *lěstvica*, the same word as in Old Church Slavonic, built on *\*lěstva*, "a ladder", from the root of *лезть*, "to climb" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

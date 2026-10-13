@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 109,
-  "sourceHash": "fnv1a64:bf6fc1693877845d",
+  "sourceHash": "fnv1a64:84ae97c61e325e5e",
   "lessonIds": [
     "RU-C109-lawyer",
     "RU-C109-engineer",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch109.txt",
   "json": "russian/narration/ch109.json",
   "textHash": "fnv1a64:bd7095e411eb657c",
-  "jsonHash": "fnv1a64:46c771816c7c7663",
+  "jsonHash": "fnv1a64:793f47e4cd2349b3",
   "findings": []
 }

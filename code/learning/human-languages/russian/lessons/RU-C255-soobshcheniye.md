@@ -47,7 +47,7 @@ reviews_of: [RU-C255-nomer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**сообщение** comes from *сообщить*, "to share, to report", from *общий*, "common", Proto-Slavic *\*obĭtjĭ*, "what is around" (Vasmer): to make something common.
+**сообщение** comes from *сообщить*, "to share, to report", from *общий*, "common", Proto-Slavic *\*obĭtjĭ*, "what is around" (Vasmer): to make something common. *общий* itself is the Church Slavonic form, with *щ*; the native Old Russian form was *обчий* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

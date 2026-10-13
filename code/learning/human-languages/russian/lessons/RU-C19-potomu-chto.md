@@ -56,7 +56,7 @@ Set the two words side by side and the shape gives itself away:
 
 Russian answers *why* by taking the same word, swapping the question-stem for the
 pointing-stem, and adding **что** to hang the reason on. **почему** asks; **по
-тому** points at the reason; **что** carries the sentence that names it. Both stems are inherited from Proto-Slavic: *\*tŭ*, "that", the stem of *то*, and *\*kŭ-*, the stem of *кто*, "who".
+тому** points at the reason; **что** carries the sentence that names it. Both stems are inherited from Proto-Slavic: *\*tŭ*, "that", the stem of *то*, and *\*čĭ-*, the stem of *что*, "what".
 
 ## Grammar lens — where the halves go, and where the comma goes
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-POTOMU-CHTO-CLAUSE-01]; assesses=[RU-LEX-POTOMU-CHTO-01, RU-GRAMMAR-CHTO-COMPLEMENTISER-01] -->

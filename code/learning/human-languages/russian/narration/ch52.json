@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Book, Pen, Paper, Notebook, Pencil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7f5e24b5cfa55423",
+  "sourceHash": "fnv1a64:e3da72706a5d50d5",
   "lessons": [
     {
       "id": "RU-C52-book",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07acaa5bcd5ca479",
+      "sourceHash": "fnv1a64:0cc8127fc7c17159",
       "notice": null,
       "blocks": [
         {

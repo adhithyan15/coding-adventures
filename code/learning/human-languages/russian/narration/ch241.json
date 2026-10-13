@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "Basement, Balcony, Yard, Opposite, Between",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a747d2be2a01800",
+  "sourceHash": "fnv1a64:e351ae0ab5411f0c",
   "lessons": [
     {
       "id": "RU-C241-podval",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84443ca0676fb4c8",
+      "sourceHash": "fnv1a64:aa1a7cae9be9cf21",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "подвал (podvál) is под, \"under\", with вал, \"a rampart, an earth bank\", from валить, \"to topple, to pile up\": a room under the house."
+              "text": "подвал (podvál) is под, \"under\", with вал, \"a rampart, an earth bank\", which Vasmer thinks came through Polish from German Wall, Latin vallum: a room under the house."
             }
           ]
         },

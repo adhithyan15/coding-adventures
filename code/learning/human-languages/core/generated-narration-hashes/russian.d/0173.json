@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 173,
-  "sourceHash": "fnv1a64:e372a278272bd043",
+  "sourceHash": "fnv1a64:baf7de94a55b695d",
   "lessonIds": [
     "RU-C173-shit",
     "RU-C173-rezat",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch173.txt",
   "json": "russian/narration/ch173.json",
   "textHash": "fnv1a64:cf0de39e8eb85409",
-  "jsonHash": "fnv1a64:946b2b1d767b63e1",
+  "jsonHash": "fnv1a64:78672ac159e2a96d",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "Burn, Allergy, Dentist, Sticking plaster, Bandage",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd7f0859b022bc1a",
+  "sourceHash": "fnv1a64:b2313606a6fcc870",
   "lessons": [
     {
       "id": "RU-C210-ozhog",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2020a4edab71f85f",
+      "sourceHash": "fnv1a64:85e8cdf43abab804",
       "notice": null,
       "blocks": [
         {

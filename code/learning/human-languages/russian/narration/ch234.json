@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "To sweep, To plant, To water, To grow, To feed",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c266f8932c8c0a92",
+  "sourceHash": "fnv1a64:ede8b3acdb3fdd1d",
   "lessons": [
     {
       "id": "RU-C234-podmetat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efd23c333d8e3943",
+      "sourceHash": "fnv1a64:5a2fd39facefbf9e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "подметать (podmetát) is под-, \"under\", with мести, метать, \"to sweep\": to sweep up."
+              "text": "подметать (podmetát) is под-, \"under\", with -метать, the ongoing partner of мести, \"to sweep\": to sweep up. Vasmer relates мести to метать, \"to throw\"."
             }
           ]
         },

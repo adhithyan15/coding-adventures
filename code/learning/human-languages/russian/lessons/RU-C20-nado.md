@@ -50,7 +50,7 @@ reviews_of: [RU-C20-moch, RU-C16-tozhe, RU-C04-dumat]
 - **надо** — *náda* — **it is necessary, one must**
 
 Stress the first syllable; the **о** at the end is unstressed and says *a*, so
-the word comes out *NÁ-da*. It is worn down from Old Russian *nadobě*, a form of *надоба*, "need", built on *доба*, "fitness" (Vasmer).
+the word comes out *NÁ-da*. It is worn down from Old Russian *nadobě*, a form of *надоба*, "need", built on *доба*, "a time, a season" (Vasmer).
 
 Like **хотеть** and **мочь**, it is followed by a bare infinitive:
 

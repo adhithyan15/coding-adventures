@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 160,
-  "sourceHash": "fnv1a64:72f9365205b9ec85",
+  "sourceHash": "fnv1a64:ccd995d0db4b6cc0",
   "lessonIds": [
     "RU-C160-bokal",
     "RU-C160-paket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch160.txt",
   "json": "russian/narration/ch160.json",
-  "textHash": "fnv1a64:c40bd1b4f1eb588b",
-  "jsonHash": "fnv1a64:4169265e4910d46e",
+  "textHash": "fnv1a64:b4106009b595bdb8",
+  "jsonHash": "fnv1a64:9700b9f6fbeca416",
   "findings": []
 }

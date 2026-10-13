@@ -47,7 +47,7 @@ reviews_of: [RU-C70-thursday]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**пятница** is built on *пять*, "five": the fifth day of a week that begins on Monday (Vasmer); Old Russian said *pjatokŭ*.
+**пятница** is built on *пять*, "five": the fifth day of a week that begins on Monday (Vasmer); Old Russian said *pjatŭkŭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ romanization: "zhárit"
 concept_tag: RU-VERB-ZHARIT
 prerequisites: [RU-C173-rezat, RU-C173-varit]
 sounds: []
-roots: [slavic-gor]
+roots: [slavic-goreti]
 etymology_hook: "жарить is from жар 'heat'; Greek thermos 'warm' is a cousin of жар"
 duration:
   max_seconds: 200

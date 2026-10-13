@@ -14,7 +14,7 @@ romanization: "pozhárnyy"
 concept_tag: RU-THINGS109-FIREFIGHTER
 prerequisites: [RU-C109-lawyer, RU-C109-engineer]
 sounds: []
-roots: [slavic-gor]
+roots: [slavic-goreti]
 etymology_hook: "пожарный is from пожар 'a fire', по- + жар 'heat'; Greek thermos 'warm' is a cousin of жар"
 duration:
   max_seconds: 200

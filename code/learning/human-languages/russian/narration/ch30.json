@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Hair, Finger, Neck, Shoulder, Knee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce751c7eb4b4c0c0",
+  "sourceHash": "fnv1a64:307000e4a04f9fb5",
   "lessons": [
     {
       "id": "RU-C30-hair",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aaeade34ac613a5",
+      "sourceHash": "fnv1a64:93b87fedcadef7df",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "палец (pálets) from Proto-Slavic palĭcĭ — inherited; older Russian texts use it for \"thumb\" (Vasmer). It is usually tied to Latin pollex, \"thumb\", though Vasmer notes doubts about that link."
+              "text": "палец (pálets) from Proto-Slavic palĭcĭ — inherited; older Russian texts use it for \"thumb\" (Sokolova, in Trubachev's note to Vasmer). It is usually tied to Latin pollex, \"thumb\", though Vasmer notes doubts about that link."
             }
           ]
         },

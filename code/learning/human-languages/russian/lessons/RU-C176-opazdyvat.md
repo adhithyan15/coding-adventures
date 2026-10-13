@@ -14,7 +14,7 @@ romanization: "opázdyvat"
 concept_tag: RU-VERB-OPAZDYVAT
 prerequisites: [RU-C175-zazhigat, RU-C176-vozvrashchatsya]
 sounds: []
-roots: [post-latin]
+roots: [pie-pos]
 etymology_hook: "опаздывать is о- + -паздывать, from поздно 'late'"
 duration:
   max_seconds: 200

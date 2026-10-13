@@ -47,7 +47,7 @@ reviews_of: [RU-C87-stop]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**площадь** — Old Russian and Church Slavonic *площадь*, from *\*ploskědĭ*, built on *плоский*, "flat" (Vasmer): a square is a flat open place. The *-щ-* is the Church Slavonic sound.
+**площадь** — Old Russian and Church Slavonic *площадь*, from *\*ploskědĭ*, built on *плоский*, "flat" (Vasmer): a square is a flat open place. The *-щ-* grew from *-sk-* before *ě*, a change shared by all Slavic, so it is no sign of Church Slavonic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

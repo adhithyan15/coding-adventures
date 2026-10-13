@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "Wine glass, Bag, Box, Drawer, Light bulb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:72f9365205b9ec85",
+  "sourceHash": "fnv1a64:ccd995d0db4b6cc0",
   "lessons": [
     {
       "id": "RU-C160-bokal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:869cf72556fe488c",
+      "sourceHash": "fnv1a64:12a2fd71cc40005a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "коробка (koróbka) is короб, \"a box of bark\", with -ка. Vasmer thinks короб is perhaps related to Latin corbis, \"a basket\", and Lithuanian karbas, \"a basket\"."
+              "text": "коробка (koróbka) is короб, \"a box of bark\", with -ка. Vasmer thinks короб is perhaps related to Latin corbis, \"a basket\", and Lithuanian karbas, \"a basket\"; Miklosich, Berneker and others take it instead as a loan through Old High German korb from Latin corbis."
             }
           ]
         },

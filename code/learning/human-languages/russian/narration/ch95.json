@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Bathtub, Shelf, Curtain, Pillow, Blanket",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2af6c0289e8e747e",
+  "sourceHash": "fnv1a64:ec3a67fbae4401c6",
   "lessons": [
     {
       "id": "RU-C95-bathtub",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9812cf934462a99a",
+      "sourceHash": "fnv1a64:8f70bfdae348ad6b",
       "notice": null,
       "blocks": [
         {

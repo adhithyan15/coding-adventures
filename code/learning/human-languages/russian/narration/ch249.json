@@ -4,7 +4,7 @@
   "chapter": 249,
   "title": "Sour cream, Cottage cheese, Pork, Lamb, Ham",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:63febc6d50c2c234",
+  "sourceHash": "fnv1a64:4c449b8ba5cde746",
   "lessons": [
     {
       "id": "RU-C249-smetana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e73b1d3f9fb6bd6f",
+      "sourceHash": "fnv1a64:fab9ba807366c11d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "сметана (smetána) from Proto-Slavic sŭmetana — inherited, from сметать, \"to sweep off, to skim\" (Vasmer): sour cream is the layer skimmed off the milk."
+              "text": "сметана (smetána) from Proto-Slavic sŭmetana — inherited, usually derived from sŭmětati, \"to throw off, to take off\", a relative of метать, \"to throw\" (Vasmer): sour cream is the layer taken off the milk. Others reconstruct sŭmętana and link it with an old verb \"to stir\"."
             }
           ]
         },

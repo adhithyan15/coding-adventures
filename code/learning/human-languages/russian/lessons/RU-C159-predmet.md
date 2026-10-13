@@ -14,7 +14,7 @@ romanization: "predmét"
 concept_tag: RU-VESHCH159-PREDMET
 prerequisites: [RU-C158-znakomyy, RU-C159-veshch]
 sounds: []
-roots: [iacere-latin]
+roots: [slavic-metati]
 etymology_hook: "предмет is пред- 'before' + мет 'thrown': a copy of Latin obiectum, through Polish przedmiot"
 duration:
   max_seconds: 200

@@ -47,7 +47,7 @@ reviews_of: [RU-C208-nyukhat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**трогать** — Ukrainian *трогати* means "to pull". It has been compared with Latvian *treksne*, "a push", and Old Norse *þreka*, "to press"; a link with Latin *trahō*, "I drag", Vasmer finds doubtful, so the origin is open.
+**трогать** — Ukrainian *трогати* means "to pull". It has been compared with Latvian *treksne*, "a push", and Old Norse *þreka*, "to press"; Goryaev proposed a link with Latin *trahō*, "I drag", and one with Latin *tergeō*, "I wipe", Vasmer finds doubtful, so the origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

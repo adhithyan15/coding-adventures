@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Potatoes, Tomato, Onion, Cucumber, Carrot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7584ba5d4b67a201",
+  "sourceHash": "fnv1a64:16f1bd9e7b295ffe",
   "lessons": [
     {
       "id": "RU-C45-potatoes",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b93d52b6cab19865",
+      "sourceHash": "fnv1a64:e5281223d83768d3",
       "notice": null,
       "blocks": [
         {

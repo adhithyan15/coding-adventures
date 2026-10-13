@@ -47,7 +47,7 @@ reviews_of: [RU-C30-hair]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**палец** ← Proto-Slavic *\*palĭcĭ* — inherited; older Russian texts use it for "thumb" (Vasmer). It is usually tied to Latin *pollex*, "thumb", though Vasmer notes doubts about that link.
+**палец** ← Proto-Slavic *\*palĭcĭ* — inherited; older Russian texts use it for "thumb" (Sokolova, in Trubachev's note to Vasmer). It is usually tied to Latin *pollex*, "thumb", though Vasmer notes doubts about that link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 210,
-  "sourceHash": "fnv1a64:cd7f0859b022bc1a",
+  "sourceHash": "fnv1a64:b2313606a6fcc870",
   "lessonIds": [
     "RU-C210-ozhog",
     "RU-C210-allergiya",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch210.txt",
   "json": "russian/narration/ch210.json",
   "textHash": "fnv1a64:5a0708b4468c6ed9",
-  "jsonHash": "fnv1a64:27f8c2590927415d",
+  "jsonHash": "fnv1a64:4af9757d3b8e27d7",
   "findings": []
 }

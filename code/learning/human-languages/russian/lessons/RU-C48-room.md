@@ -15,7 +15,7 @@ concept_tag: RU-HOME1-ROOM
 prerequisites: [RU-C47-glass, RU-C48-house]
 sounds: []
 roots: [caminata-latin]
-etymology_hook: "комната ← Latin caminata 'a heated room', probably through Old High German chemināta"
+etymology_hook: "комната ← Latin caminata 'a heated room', through Old High German or through Polish"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C48-house]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**комната** ← Latin *(camera) camīnāta*, "a room with a stove", from *camīnus*, "furnace". Vasmer takes the initial stress as a sign it came through Old High German *chemināta*; Jakobson derived it from Czech.
+**комната** ← Latin *(camera) camīnāta*, "a room with a stove", from *camīnus*, "furnace". Vasmer takes the initial stress as a sign it came through Old High German *chemināta*, but the older stress fell on *-на-*, which points to Polish, as Kiparsky argued; Jakobson, in Trubachev's note, derived it from Czech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

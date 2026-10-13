@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Yellow, Beautiful, Good, Bad, New",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:15c2a38d116216de",
+  "sourceHash": "fnv1a64:f949905de6685521",
   "lessons": [
     {
       "id": "RU-C64-yellow",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb3cc36727a8fc95",
+      "sourceHash": "fnv1a64:66c10e643b10807d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "хороший (khoróshiy) — recorded from the 1200s. Vasmer thinks it most likely a short form of хоробрый, \"brave\"; a link with хоронить, \"to guard\", he finds less likely, and one with the sun god Khors, which Abaev later supported, he rejects."
+              "text": "хороший (khoróshiy) — recorded from the 1200s. Vasmer thinks it most likely a short form of хоробрый, \"brave\"; a link with хоронить, \"to guard\", he finds less likely, one with the sun god Khors he rejects, and a loan from Ossetian xorz, \"good\", which Abaev later supported, he doubts."
             }
           ]
         },

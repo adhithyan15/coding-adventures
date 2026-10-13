@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 234,
-  "sourceHash": "fnv1a64:c266f8932c8c0a92",
+  "sourceHash": "fnv1a64:ede8b3acdb3fdd1d",
   "lessonIds": [
     "RU-C234-podmetat",
     "RU-C234-sazhat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch234.txt",
   "json": "russian/narration/ch234.json",
-  "textHash": "fnv1a64:df4b8b8f0e76949b",
-  "jsonHash": "fnv1a64:87d577b4c4624ac5",
+  "textHash": "fnv1a64:4278b951098aea01",
+  "jsonHash": "fnv1a64:e883a5fef1cc6b52",
   "findings": []
 }

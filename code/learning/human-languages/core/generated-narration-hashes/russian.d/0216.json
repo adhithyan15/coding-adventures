@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 216,
-  "sourceHash": "fnv1a64:7fd012cdd9ac678e",
+  "sourceHash": "fnv1a64:6aee610fe8ca7199",
   "lessonIds": [
     "RU-C216-spokoynyy",
     "RU-C216-nervnyy",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch216.txt",
   "json": "russian/narration/ch216.json",
   "textHash": "fnv1a64:78267e4f00e0f987",
-  "jsonHash": "fnv1a64:0b7ef7048bf50694",
+  "jsonHash": "fnv1a64:d969e8671b48f9fe",
   "findings": []
 }

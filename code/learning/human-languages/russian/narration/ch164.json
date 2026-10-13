@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "Beer, Wine, Climate, Air, Earth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2f428de20ab32638",
+  "sourceHash": "fnv1a64:41400ec9b375c96a",
   "lessons": [
     {
       "id": "RU-C164-pivo",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3b7c011f1d5faaf",
+      "sourceHash": "fnv1a64:d0b546e028e06746",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "воздух (vózdukh) — taken from Church Slavonic, says Vasmer: воз-, \"up\", with дух, \"breath, spirit\". It copies Greek aḗr, \"air\"."
+              "text": "воздух (vózdukh) — taken from Church Slavonic, says Vasmer: воз-, \"up\", with дух, \"breath, spirit\". It renders Greek aḗr, \"air\"."
             }
           ]
         },

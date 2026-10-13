@@ -14,7 +14,7 @@ romanization: "stomatólog"
 concept_tag: RU-ZDOROV210-STOMATOLOG
 prerequisites: [RU-C210-ozhog, RU-C210-allergiya]
 sounds: []
-roots: [stomakhos-greek]
+roots: [stoma-greek]
 etymology_hook: "стоматолог ← Greek stoma 'mouth' + -logos 'one who studies'"
 duration:
   max_seconds: 200

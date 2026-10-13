@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "To come back, To be late, To hurry, To rest, To get tired",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:53da293e5c1bc47f",
+  "sourceHash": "fnv1a64:d4fc9a91c63fb469",
   "lessons": [
     {
       "id": "RU-C176-vozvrashchatsya",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fef975cb8efa7ccb",
+      "sourceHash": "fnv1a64:e8fc7d79936be073",
       "notice": null,
       "blocks": [
         {

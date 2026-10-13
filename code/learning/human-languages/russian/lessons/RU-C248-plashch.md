@@ -47,7 +47,7 @@ reviews_of: [RU-C248-odezhda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**плащ** ← Old Church Slavonic *plaštŭ*, "a cloak". It is usually linked with *плат*, "a cloth", which Vasmer says is not free of difficulties; others link it with *плоский*, "flat".
+**плащ** ← Old Church Slavonic *plaštĭ*, "a cloak". It is usually linked with *плат*, "a cloth", which Vasmer says is not free of difficulties; others link it with *плоский*, "flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

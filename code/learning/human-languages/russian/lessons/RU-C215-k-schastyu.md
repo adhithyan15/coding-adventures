@@ -14,8 +14,8 @@ romanization: "k schástyu"
 concept_tag: RU-PRICH215-K-SCHASTYU
 prerequisites: [RU-C215-mozhet-byt, RU-C215-k-sozhaleniyu]
 sounds: []
-roots: [slavic-chestu]
-etymology_hook: "к счастью is 'to (my) luck': счастье is with- + часть 'a share', 'a good share'"
+roots: [slavic-chesti]
+etymology_hook: "к счастью is 'to (my) luck': счастье is *sŭ- 'good' + часть 'a share', 'a good lot'"
 duration:
   max_seconds: 200
 requires:

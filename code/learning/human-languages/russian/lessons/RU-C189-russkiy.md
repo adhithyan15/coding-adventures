@@ -47,7 +47,7 @@ reviews_of: [RU-C189-inostrannyy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**русский** comes from *Русь*, the old name of the land and its people (Vasmer). Vasmer traces *Русь* to Old Norse *Róþsmenn*, "rowers, seafarers", the name of the Scandinavian newcomers; Trubachev's note cites critics of that account, so it is still debated.
+**русский** comes from *Русь*, the old name of the land and its people (Vasmer). Vasmer traces *Русь* to Old Norse *Róþsmenn*, "rowers, seafarers", the name of the Scandinavian newcomers, which reached the Slavs through the Finns, who still call Sweden *Ruotsi*; Trubachev's note cites critics of that account, so it is still debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

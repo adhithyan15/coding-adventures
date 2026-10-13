@@ -15,7 +15,7 @@ concept_tag: RU-VESHCH251-GUS
 prerequisites: [RU-C251-byk, RU-C251-petukh]
 sounds: []
 roots: [slavic-gosi]
-etymology_hook: "гусь has г- where an Indo-European cousin would give з-; Vasmer reports several explanations"
+etymology_hook: "гусь has г- where an Indo-European cousin would give з-; Vasmer thinks Germanic gans reshaped it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C251-petukh]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**гусь** ← Proto-Slavic *\*gǫsĭ*. If it were inherited from the Indo-European word for "goose", Slavic would have *з-*, as Lithuanian *žąsìs*, Latin *ānser* and German *Gans* lead one to expect; so its *г-* is explained in several ways, among them a Germanic loan (Vasmer).
+**гусь** ← Proto-Slavic *\*gǫsĭ*. If it were inherited from the Indo-European word for "goose", Slavic would have *з-*, as Lithuanian *žąsìs*, Latin *ānser* and German *Gans* lead one to expect; Vasmer thinks it likeliest that a native *\*zǫsĭ* was reshaped after Germanic *gans*; others take the whole word from Germanic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

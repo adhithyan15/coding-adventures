@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Always, Sometimes, Never, Now, Later",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ae3f40f908a2f848",
+  "sourceHash": "fnv1a64:5b9fcf46e3966120",
   "lessons": [
     {
       "id": "RU-C74-always",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efa77c81a25801da",
+      "sourceHash": "fnv1a64:3598851f3f19cd43",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "всегда (vsegdá) is весь, \"all\", with -гда, the time ending of когда, \"when\", and тогда, \"then\". Vasmer lists Lithuanian visadà, \"always\", for the other old form всегды."
+              "text": "всегда (vsegdá) is весь, \"all\", with -гда, the time ending of когда, \"when\", and тогда, \"then\". Lithuanian visadà, \"always\", matches the forms without г in other Slavic languages, such as Czech vezdy; Vasmer ties -гда itself to Lithuanian kadà, \"when\"."
             }
           ]
         },

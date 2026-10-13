@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Forty, Fifty, Ninety, a Thousand, a Country",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6e4292e8c6a0c301",
+  "sourceHash": "fnv1a64:d0a7d25c313ec596",
   "lessons": [
     {
       "id": "RU-C76-forty",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec26c24a53d10735",
+      "sourceHash": "fnv1a64:09f9eceaa85aaa0f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "девяносто (devyanósto) is found only in East Slavic, from 1398 on; other Slavic languages say \"nine tens\". Vasmer thinks it probably comes from an old devęno-desętŭ, \"the ninth ten\", like Latin nōnāgintā, \"ninety\"."
+              "text": "девяносто (devyanósto) is found only in East Slavic, from 1398 on; other Slavic languages say \"nine tens\". Vasmer thinks it probably continues an old Indo-European \"ninth ten\", like Latin nōnāgintā, \"ninety\"."
             }
           ]
         },

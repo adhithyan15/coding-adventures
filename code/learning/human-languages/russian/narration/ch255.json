@@ -4,7 +4,7 @@
   "chapter": 255,
   "title": "Surname, Age, Number, Message, Conversation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5c77ee44015c40ce",
+  "sourceHash": "fnv1a64:8df8f2831b3e8ebe",
   "lessons": [
     {
       "id": "RU-C255-familiya",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48dc34161c05a2ed",
+      "sourceHash": "fnv1a64:d9a1aeea4c854d45",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "сообщение (soobshchéniye) comes from сообщить, \"to share, to report\", from общий, \"common\", Proto-Slavic obĭtjĭ, \"what is around\" (Vasmer): to make something common."
+              "text": "сообщение (soobshchéniye) comes from сообщить, \"to share, to report\", from общий, \"common\", Proto-Slavic obĭtjĭ, \"what is around\" (Vasmer): to make something common. общий itself is the Church Slavonic form, with щ; the native Old Russian form was обчий (Vasmer)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 45,
-  "sourceHash": "fnv1a64:7584ba5d4b67a201",
+  "sourceHash": "fnv1a64:16f1bd9e7b295ffe",
   "lessonIds": [
     "RU-C45-potatoes",
     "RU-C45-tomato",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch45.txt",
   "json": "russian/narration/ch45.json",
   "textHash": "fnv1a64:4b6deab16e3e387b",
-  "jsonHash": "fnv1a64:2f184c5108df0f27",
+  "jsonHash": "fnv1a64:2fd23b9a8c24ec7b",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [RU-C56-mountain]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**лес** ← Proto-Slavic *\*lěsŭ* — inherited. Its deeper origin is not certain: Vasmer relates it to Old English *læs*, "pasture", and English dialect *leasow*, while a note by Moszyński finds a link with Lithuanian *laĩškas*, "leaf", more likely.
+**лес** ← Proto-Slavic *\*lěsŭ* — inherited. Its deeper origin is not certain: Vasmer relates it to Old English *læs*, "pasture", and English dialect *leasow*, and finds a link with Lithuanian *laĩškas*, "leaf", doubtful, while Trubachev, in a note, thinks it the most likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

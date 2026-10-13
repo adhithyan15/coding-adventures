@@ -15,7 +15,7 @@ concept_tag: RU-VEG-CARROT
 prerequisites: [RU-C45-onion, RU-C45-cucumber]
 sounds: []
 roots: [slavic-murky]
-etymology_hook: "морковь ← Proto-Slavic *mŭrky; Old High German moraha 'carrot' is a cousin, not the source (Vasmer)"
+etymology_hook: "морковь ← Proto-Slavic *mŭrky; Old High German moraha 'carrot' is a cousin, and a loan cannot be proved"
 duration:
   max_seconds: 200
 requires:

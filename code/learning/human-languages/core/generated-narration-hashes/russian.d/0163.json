@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 163,
-  "sourceHash": "fnv1a64:672519c92ef80572",
+  "sourceHash": "fnv1a64:bb76b1cf7318b926",
   "lessonIds": [
     "RU-C163-sosiska",
     "RU-C163-krevetka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch163.txt",
   "json": "russian/narration/ch163.json",
-  "textHash": "fnv1a64:fd2352d9e926459f",
-  "jsonHash": "fnv1a64:f5245e32cbfbdee2",
+  "textHash": "fnv1a64:0501c61d4f153670",
+  "jsonHash": "fnv1a64:bef26694ae5bfd19",
   "findings": []
 }

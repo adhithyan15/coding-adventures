@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Bull, Cockerel, Goose, Pigeon, Sparrow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aeba204d4a3a692e",
+  "sourceHash": "fnv1a64:58b18ea0fae324bc",
   "lessons": [
     {
       "id": "RU-C251-byk",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:327eca93a1607d06",
+      "sourceHash": "fnv1a64:533a7e193a2bb0ea",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "гусь (gus) from Proto-Slavic gǫsĭ. If it were inherited from the Indo-European word for \"goose\", Slavic would have з-, as Lithuanian žąsìs, Latin ānser and German Gans lead one to expect; so its г- is explained in several ways, among them a Germanic loan (Vasmer)."
+              "text": "гусь (gus) from Proto-Slavic gǫsĭ. If it were inherited from the Indo-European word for \"goose\", Slavic would have з-, as Lithuanian žąsìs, Latin ānser and German Gans lead one to expect; Vasmer thinks it likeliest that a native zǫsĭ was reshaped after Germanic gans; others take the whole word from Germanic."
             }
           ]
         },

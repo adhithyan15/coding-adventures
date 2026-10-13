@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Hot, Cold, Warm, Fast, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bac99cf511b70993",
+  "sourceHash": "fnv1a64:e0c4b2458c086a33",
   "lessons": [
     {
       "id": "RU-C66-hot",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2401381add301b8c",
+      "sourceHash": "fnv1a64:b25feeee64709fa7",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Lawyer, Engineer, Firefighter, Postman, Waiter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bf6fc1693877845d",
+  "sourceHash": "fnv1a64:84ae97c61e325e5e",
   "lessons": [
     {
       "id": "RU-C109-lawyer",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf875f39cba2c86b",
+      "sourceHash": "fnv1a64:979a5a8a7423c5a9",
       "notice": null,
       "blocks": [
         {

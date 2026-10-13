@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 193,
-  "sourceHash": "fnv1a64:35697ce5a7478774",
+  "sourceHash": "fnv1a64:955bbd7dab250610",
   "lessonIds": [
     "RU-C193-shlyapa",
     "RU-C193-remen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch193.txt",
   "json": "russian/narration/ch193.json",
-  "textHash": "fnv1a64:4b3eeb30277f6327",
-  "jsonHash": "fnv1a64:69ee7c4c9790a6c1",
+  "textHash": "fnv1a64:36f9f6e781eea99c",
+  "jsonHash": "fnv1a64:7b2fc8e6500ed6ab",
   "findings": []
 }

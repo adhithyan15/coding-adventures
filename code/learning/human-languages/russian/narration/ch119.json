@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Ankle, Wrist, Cheek, Lips, Chest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7de6d35d3af41f6e",
+  "sourceHash": "fnv1a64:465591508ef952fd",
   "lessons": [
     {
       "id": "RU-C119-ankle",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6400965c9b2921b5",
+      "sourceHash": "fnv1a64:9431e4db07269721",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "грудь (grud) from Proto-Slavic grǫdĭ — inherited. Vasmer compares Latin grandis, \"great\", and Greek brénthos, \"pride\"; Vaillant, in a note, links it instead with гряда, \"a beam, a bed\", so the origin is open."
+              "text": "грудь (grud) from Proto-Slavic grǫdĭ — inherited. Vasmer compares Latin grandis, \"great\", and Greek brénthos, \"pride\"; Trubachev, in a note, reports that Vaillant links it instead with гряда, \"a beam, a bed\", so the origin is open."
             }
           ]
         },

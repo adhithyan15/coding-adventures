@@ -47,7 +47,7 @@ reviews_of: [RU-C160-paket]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**коробка** is *короб*, "a box of bark", with *-ка*. Vasmer thinks *короб* is perhaps related to Latin *corbis*, "a basket", and Lithuanian *karbas*, "a basket".
+**коробка** is *короб*, "a box of bark", with *-ка*. Vasmer thinks *короб* is perhaps related to Latin *corbis*, "a basket", and Lithuanian *karbas*, "a basket"; Miklosich, Berneker and others take it instead as a loan through Old High German *korb* from Latin *corbis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 159,
-  "sourceHash": "fnv1a64:800ab617774ac439",
+  "sourceHash": "fnv1a64:b3a5763beee7dabb",
   "lessonIds": [
     "RU-C159-veshch",
     "RU-C159-predmet",
@@ -14,6 +14,6 @@
   "text": "russian/narration/ch159.txt",
   "json": "russian/narration/ch159.json",
   "textHash": "fnv1a64:ffbc5fb70ba3aa0c",
-  "jsonHash": "fnv1a64:98c6d2fb79d4d207",
+  "jsonHash": "fnv1a64:44a237cff82df1d0",
   "findings": []
 }

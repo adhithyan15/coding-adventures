@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 87,
-  "sourceHash": "fnv1a64:97f32fc7511db537",
+  "sourceHash": "fnv1a64:04b2a0fb43a7339a",
   "lessonIds": [
     "RU-C87-straight-on",
     "RU-C87-nearby",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch87.txt",
   "json": "russian/narration/ch87.json",
-  "textHash": "fnv1a64:a64e6b3b08dfdb1b",
-  "jsonHash": "fnv1a64:81d1480669c010bc",
+  "textHash": "fnv1a64:45790a8948f0637c",
+  "jsonHash": "fnv1a64:7311a86370a3a63f",
   "findings": []
 }

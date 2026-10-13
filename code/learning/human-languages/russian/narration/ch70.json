@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Monday to Saturday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1a7aaa366feb942",
+  "sourceHash": "fnv1a64:a77f0c0e4139b088",
   "lessons": [
     {
       "id": "RU-C70-monday",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9441115a4a21c67",
+      "sourceHash": "fnv1a64:4d7608a528dd26d7",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "пятница (pyátnitsa) is built on пять, \"five\": the fifth day of a week that begins on Monday (Vasmer); Old Russian said pjatokŭ."
+              "text": "пятница (pyátnitsa) is built on пять, \"five\": the fifth day of a week that begins on Monday (Vasmer); Old Russian said pjatŭkŭ."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eb6ada2e1441b17",
+      "sourceHash": "fnv1a64:ac4bfaf322afeab7",
       "notice": null,
       "blocks": [
         {
