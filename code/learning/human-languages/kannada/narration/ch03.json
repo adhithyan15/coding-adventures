@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6f29ca82bcc87faf",
+  "sourceHash": "fnv1a64:4a6cd0d0aa022d0e",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:668ef1f1d02933d9",
+      "sourceHash": "fnv1a64:b20bd3f20d5afaeb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -68,6 +68,10 @@
             {
               "kind": "speech",
               "text": "ಹೇಗೆ (hēge, \"how\") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaṭi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5151 lists hēge itself, \"in what manner, how\", among the Kannada question words."
             }
           ]
         },
@@ -330,7 +334,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:600d47baedc9c1b6",
+      "sourceHash": "fnv1a64:293a8803f39dfe3e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -378,6 +382,10 @@
             {
               "kind": "speech",
               "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, \"you,\" respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, \"how are you\") — the verb last, as always. The verb is ಇರು (iru, \"to be / exist / stay\") — the same native Dravidian iru that Tamil uses for \"how are you,\" and (in Chapter 5) the verb for \"I live.\""
+            },
+            {
+              "kind": "speech",
+              "text": "All three pieces are native Dravidian: nīvu (DEDR 3688), hēge (DEDR 5151) and iru, \"to be\" (DEDR 480)."
             }
           ]
         },
@@ -464,7 +472,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05382add3d1c5c19",
+      "sourceHash": "fnv1a64:1daf22340b78a6b9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -513,6 +521,10 @@
             {
               "kind": "speech",
               "text": "ನಾನು (nānu, \"I\") from Proto-Dravidian yāṉ / nāṉ — native, and (unlike Hindi's maiṁ, cousin of English me) not related to the European \"I/me\" family. Its possessive is the ನನ್ನ (nanna, \"my\") you already met: nānu \"I,\" nanna \"my.\" Kannada borrows Sanskrit words freely for higher vocabulary, but its bedrock pronouns stayed Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5160 lists Kannada nān and ān with Tamil yāṉ, nāṉ and Telugu nēnu."
             }
           ]
         },
@@ -608,7 +620,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:331e444143faa591",
+      "sourceHash": "fnv1a64:d2ece9095fc328ad",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -656,6 +668,10 @@
             {
               "kind": "speech",
               "text": "ಚೆನ್ನಾಗಿ (cennāgi, \"well, nicely\") is native Dravidian, from ಚೆನ್ನು (cennu, \"good, beautiful, fine\") + the adverb-maker -āgi (\"in a … way\"). So it literally means \"in a beautiful way\" — Kannada answers \"how are you?\" by saying, in effect, \"beautifully.\" The root cennu is pure Kannada, with no Sanskrit or European cousin."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 2423 lists Kannada cennu, \"beauty, grace\", with Tulu canna, \"handsome\"."
             }
           ]
         },
@@ -936,7 +952,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:62a8386e61c2148a",
+      "sourceHash": "fnv1a64:9e40b1ba730ed146",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -972,7 +988,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಪರವಾ (paravā, \"harm, concern\") + ಗಿಲ್ಲ (gilla, a fused form of āgi + ಇಲ್ಲ illa, \"is not\") becomes ಪರವಾಗಿಲ್ಲ (paravāgilla)."
+              "text": "ಪರವಾ (paravā, \"care, concern\", Persian parvā through Hindustani) + ಗಿಲ್ಲ (gilla, a fused form of āgi + ಇಲ್ಲ illa, \"is not\") becomes ಪರವಾಗಿಲ್ಲ (paravāgilla)."
             }
           ]
         },
@@ -983,7 +999,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಪರವಾಗಿಲ್ಲ means \"it does not matter / there is no harm\" — paravā (\"harm, concern\") + ಇಲ್ಲ (illa, \"is-not\"). It serves as \"it's okay / no worries / never mind / you're welcome.\" The key atom, ಇಲ್ಲ (illa), you met in Chapter 1 — Kannada's word for negation and non-existence, the mirror of iru (\"to be\"). Where iru says \"it is,\" illa says \"it is not.\" This illa is shared, almost unchanged, across Kannada, Tamil, and Malayalam — one of the deep bonds of the Dravidian south. (Telugu alone breaks away, to lēdu — so Telugu's \"no problem\" is paravālēdu, Kannada's is paravāgilla, each on its own \"not.\")"
+              "text": "ಪರವಾಗಿಲ್ಲ means \"it does not matter / there is no harm\" — paravā (\"care, concern\") + ಇಲ್ಲ (illa, \"is-not\"). It serves as \"it's okay / no worries / never mind / you're welcome.\" The key atom, ಇಲ್ಲ (illa), you met in Chapter 1 — Kannada's word for negation and non-existence, the mirror of iru (\"to be\"). Where iru says \"it is,\" illa says \"it is not.\" This illa is shared, almost unchanged, across Kannada, Tamil, and Malayalam — one of the deep bonds of the Dravidian south. (Telugu's lēdu looks different, but DEDR 2559 files it with them — Telugu's \"no problem\" is paravālēdu, Kannada's is paravāgilla.)"
             }
           ]
         },

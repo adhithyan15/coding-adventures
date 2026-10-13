@@ -14,7 +14,8 @@ romanization: "oresu"
 concept_tag: KA-VERB-ORESU
 prerequisites: [KA-C149-enisu, KA-C150-tole]
 sounds: []
-roots: []
+roots: [kannada-oresu-wipe]
+etymology_hook: "oresu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C150-tole]
 <!-- hl-knowledge: introduces=[KA-LEX-C150-ACT150-02]; assesses=[] -->
 
 **ಒರೆಸು** — *oresu* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಒರೆಸು** (*oresu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

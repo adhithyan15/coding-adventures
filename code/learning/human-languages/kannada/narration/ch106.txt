@@ -12,6 +12,9 @@ Before the new one: say the Kannada for love, then the Kannada for appreciation.
 You'll want to know: ವಿದಾಯ.
 ವಿದಾಯ (vidāya) — "farewell", a formal parting word for speeches and letters.
 
+The word, taken apart.
+ವಿದಾಯ (vidāya) came through Hindustani vidā, "farewell, leave-taking", from Arabic wadāʿ, "farewell".
+
 What you've built.
 The formal goodbye.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for appreciation, then the Kannada for farew
 
 You'll want to know: ಇವತ್ತು.
 ಇವತ್ತು (ivattu) — "today". ನಾಳೆ (nāḷe) is "tomorrow".
+
+The word, taken apart.
+ಇವತ್ತು (ivattu) is native Dravidian, usually explained as the near-pointing base i-, "this" (DEDR 410), with hottu, "time, sun" (DEDR 4559): "this day".
 
 What you've built.
 The day before tomorrow.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for farewell, then the Kannada for today.
 You'll want to know: ನಂತರ.
 ನಂತರ (nantara) — "later, afterwards". ಆಮೇಲೆ (āmēle) says the same in everyday speech.
 
+The word, taken apart.
+ನಂತರ (nantara) comes from Sanskrit anantara, "having no interval", reshaped to Kannada sounds: a tadbhava (CDIAL 287). Kannada dropped the first a-; "with no gap after" became "then, afterwards".
+
 What you've built.
 A second word for later.
 
@@ -98,6 +107,9 @@ Before the new one: say the Kannada for today, then the Kannada for later.
 
 You'll want to know: ಫೋನ್ ಮಾಡಿ.
 ಫೋನ್ ಮಾಡಿ (phōn māḍi) — "please phone (me)", literally "please do a phone". ಮಾಡಿ is the polite form of ಮಾಡು, "do".
+
+The word, taken apart.
+ಫೋನ್ ಮಾಡಿ (phōn māḍi) is phōn, from English phone, and māḍi, the polite form of māḍu, "to do" (DEDR 4797), native.
 
 What you've built.
 A way to stay in touch after goodbye.
@@ -128,6 +140,9 @@ Before the new one: say the Kannada for later, then the Kannada for please phone
 You'll want to know: ಸಿಗುತ್ತೇನೆ.
 ಸಿಗುತ್ತೇನೆ (siguttēne) — "I'll see you", literally "I will be met". It is the same verb as ಸಿಗೋಣ (sigōṇa), "let's meet".
 ನಾಳೆ ಸಿಗುತ್ತೇನೆ (nāḷe siguttēne) — "I'll see you tomorrow".
+
+The word, taken apart.
+ಸಿಗುತ್ತೇನೆ (siguttēne) is native Dravidian: sigu, "to be caught, be got, be found" (DEDR 2498, with Tamil cikku), in the "I" form: "I will be found".
 
 What you've built.
 The last word of the tranche: a promise to meet.

@@ -12,6 +12,9 @@ Tamil and Malayalam each built their own solar calendar. Kannada takes a differe
 You'll want to know: The twelve months.
 ಚೈತ್ರ, ವೈಶಾಖ, ಜ್ಯೇಷ್ಠ, ಆಷಾಢ, ಶ್ರಾವಣ, ಭಾದ್ರಪದ, ಆಶ್ವಯುಜ, ಕಾರ್ತೀಕ, ಮಾರ್ಗಶಿರ, ಪುಷ್ಯ, ಮಾಘ, ಫಾಲ್ಗುಣ (Caitra, Vaiśākha, Jyēṣṭha, Āṣāḍha, Śrāvaṇa, Bhādrapada, Āśvayuja, Kārtīka, Mārgaśira, Puṣya, Māgha, Phālguṇa).
 
+The word, taken apart.
+All twelve names are Sanskrit, most kept whole and a few lightly reshaped (kārtīka for Sanskrit kārttika, phālguṇa for phālguna). Most are named for a lunar asterism: caitra is the month whose full moon is in the asterism Sanskrit calls citrā (CDIAL 4915, 4812). CDIAL also lists vaiśākha (12149), jyaiṣṭha (5293), āṣāḍha (1473), bhādrapada (9447), Sanskrit kārttika (3070), mārgaśiras (10076), puṣya (8307), māgha (9993) and phālguna (9075).
+
 Why it's said this way: this is Hindi's calendar too, not a Dravidian one.
 This is the same pan-Indian Sanskritic lunisolar calendar you already met as Hindi's Vikram Samvat — the same twelve month names, tied to the same six-ṛtu seasonal cycle. Karnataka's own New Year, Ugadi, falls on Chaitra Śukla Pratipada — the first day of the bright fortnight of Chaitra — exactly the reasoning behind Hindu New Year celebrations across much of India. Unlike Tamil's or Malayalam's genuinely home-grown solar calendars, Kannada didn't build its own separate system here — it shares this one with Hindi, Telugu, and much of the rest of the subcontinent.
 
@@ -43,6 +46,9 @@ You'll want to know: ಉತ್ತರ.
 Say it: uttara.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ಉ (u), and writes it on its own.
+
+The word, taken apart.
+ಉತ್ತರ (uttara) is Sanskrit uttara, "upper, northern; answer", taken over whole as a learned loan, a tatsama (CDIAL 1767).
 
 Guided Practice.
 [pause 1 second]

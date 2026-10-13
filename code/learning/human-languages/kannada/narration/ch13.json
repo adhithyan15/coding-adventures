@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:686edde4c9f0bea6",
+  "sourceHash": "fnv1a64:c7de755591b9de15",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c110c960fbb7fbf3",
+      "sourceHash": "fnv1a64:18e6bf8f3c31d2c9",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲೆ (tale) is native Dravidian, one word with Tamil talai and Telugu tala (DEDR 3103). ಕೈ (kai) is native too, one word with Tamil kai (DEDR 2023), where the entry spells the Kannada word kay, kayi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -104,7 +115,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

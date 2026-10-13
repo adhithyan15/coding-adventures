@@ -14,7 +14,8 @@ romanization: "jigi"
 concept_tag: KA-VERB-JIGI
 prerequisites: [KA-C148-kali, KA-C148-kalisu2]
 sounds: []
-roots: []
+roots: [dravidian-cangu-jump]
+etymology_hook: "jigi: native Dravidian (DEDR 2285)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C148-kalisu2]
 <!-- hl-knowledge: introduces=[KA-LEX-C148-ACT148-05]; assesses=[] -->
 
 **ಜಿಗಿ** — *jigi* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿಗಿ** (*jigi*) is native Dravidian (DEDR 2285). DEDR lists *cigi*, *jigi*, "to jump", beside *caṅgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

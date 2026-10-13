@@ -14,7 +14,8 @@ romanization: "beḷḷiya"
 concept_tag: KA-QUAL146-BELLIYA
 prerequisites: [KA-C146-dhairyavanta, KA-C146-cinnada]
 sounds: []
-roots: []
+roots: [dravidian-vel-white]
+etymology_hook: "beḷḷiya: native Dravidian, 'of silver'; DEDR 5496 lists beḷḷi 'silver' under beḷ 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C146-cinnada]
 <!-- hl-knowledge: introduces=[KA-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **ಬೆಳ್ಳಿಯ** — *beḷḷiya* — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಳ್ಳಿಯ** (*beḷḷiya*) is native Dravidian, of the root for "white, bright", and DEDR 5496 lists *beḷḷi*, "silver", itself; the entry also has Tamil *veḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

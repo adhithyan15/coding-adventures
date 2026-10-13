@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 281,
-  "sourceHash": "fnv1a64:918687081ce99090",
+  "sourceHash": "fnv1a64:e2964fc53e2bf678",
   "lessonIds": [
     "KA-C281-mayavagu",
     "KA-C281-pyak-madu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch281.txt",
   "json": "kannada/narration/ch281.json",
-  "textHash": "fnv1a64:588d69dbcbceabba",
-  "jsonHash": "fnv1a64:578c57065eb5a07f",
+  "textHash": "fnv1a64:24f064bf3a934936",
+  "jsonHash": "fnv1a64:c023e5d2c52dbb86",
   "findings": []
 }

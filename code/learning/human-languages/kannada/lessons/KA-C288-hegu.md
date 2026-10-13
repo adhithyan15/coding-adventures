@@ -14,7 +14,8 @@ romanization: "hēgū"
 concept_tag: KA-KARANA288-HEGU
 prerequisites: [KA-C288-horatu, KA-C288-illade]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "hēgū: native hēge 'how' (DEDR 5151) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C288-illade]
 <!-- hl-knowledge: introduces=[KA-LEX-C288-KARANA288-05]; assesses=[] -->
 
 **ಹೇಗೂ** — *hēgū* — "anyway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೇಗೂ** (*hēgū*) is native Dravidian: *hēge*, "how", which DEDR 5151 lists among the question words, with *-ū*, "even": "however it is".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 261,
-  "sourceHash": "fnv1a64:f64b152233c6fb82",
+  "sourceHash": "fnv1a64:226cacf288b1e73c",
   "lessonIds": [
     "KA-C261-sakuprani",
     "KA-C261-karu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch261.txt",
   "json": "kannada/narration/ch261.json",
-  "textHash": "fnv1a64:e2a71baf1b1ae15b",
-  "jsonHash": "fnv1a64:b0e61c0f27a7083e",
+  "textHash": "fnv1a64:8335fa201e2613c1",
+  "jsonHash": "fnv1a64:ac084723a54265dc",
   "findings": []
 }

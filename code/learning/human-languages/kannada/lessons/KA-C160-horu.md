@@ -14,7 +14,8 @@ romanization: "horu"
 concept_tag: KA-VERB-HORU
 prerequisites: [KA-C159-agi, KA-C160-baggu]
 sounds: []
-roots: []
+roots: [dravidian-poru-bear]
+etymology_hook: "horu: native Dravidian, one word with Tamil poṟu (DEDR 4565)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C160-baggu]
 <!-- hl-knowledge: introduces=[KA-LEX-C160-KRIYE160-02]; assesses=[] -->
 
 **ಹೊರು** — *horu* — "to carry (a load)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊರು** (*horu*) is native Dravidian, one word with Tamil *poṟu* (DEDR 4565). DEDR gives the older Kannada *poṟ*, "to bear on the head, carry": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

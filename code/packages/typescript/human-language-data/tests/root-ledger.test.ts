@@ -234,7 +234,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // tracing where EtymDB has no row; 14 say the origin is uncertain and why.
   italian: { withoutHook: 0, withoutVisible: 0 },
   japanese: { withoutHook: 601, withoutVisible: 688 },
-  kannada: { withoutHook: 1330, withoutVisible: 1281 },
+  // kannada: 1330 / 1281 -> 0 / 0. All 1,345 gap lessons (KA-C01 through KA-C307) now say
+  // where their word comes from in a taken-apart block or an origin sentence, with a matching
+  // hook. Native words cite DEDR (Burrow & Emeneau 1984), checked against the full article
+  // text with every "?", "Cf. Skt." and "< IA" kept; Sanskrit tatsamas and tadbhavas cite
+  // CDIAL (Turner); English and Perso-Arabic loans name the donor. About 63 say the origin is
+  // uncertain after a search of both sources by form and by gloss, giving the usual account
+  // as a hedge where there is one.
+  kannada: { withoutHook: 0, withoutVisible: 0 },
   latin: { withoutHook: 1095, withoutVisible: 1105 },
   // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
   // and says where its word comes from, almost always in a "taken apart" block. Native words

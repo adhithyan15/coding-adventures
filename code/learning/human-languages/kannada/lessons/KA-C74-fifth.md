@@ -11,7 +11,8 @@ romanization: "aidaneya"
 concept_tag: KA-ORDINAL-FIFTH
 prerequisites: [KA-C74-fourth, KA-C73-a-flower, KA-C70-i-think, KA-C58-thats-all, KA-C07-aidu]
 sounds: []
-roots: [dravidian-mutal-beginning]
+roots: [dravidian-mutal-beginning, proto-dravidian-numbers]
+etymology_hook: "aidaneya: native aidu 'five' (DEDR 2826) + the ordinal ending -aneya"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ reviews_of: [KA-C74-fourth, KA-C74-first, KA-C74-second, KA-C74-third, KA-C73-a-
 **-ಅನೆಯ**, and the set is complete.
 
 **ಐದನೆಯ ದಿನ** (*aidaneya dina*), the fifth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಐದನೆಯ** (*aidaneya*) is built from *aidu*, "five", native Dravidian (DEDR 2826, with Tamil *aintu*), and the ordinal ending *-aneya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C74-ORDINAL-01, KA-LEX-C74-ORDINAL-03, KA-LEX-C74-ORDINAL-04, KA-LEX-C74-ORDINAL-06, KA-LEX-C74-ORDINAL-07, KA-ETYMON-C74-ORDINAL-05] -->

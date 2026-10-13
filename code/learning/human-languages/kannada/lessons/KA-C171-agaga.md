@@ -14,7 +14,8 @@ romanization: "āgāga"
 concept_tag: KA-KALA171-AGAGA
 prerequisites: [KA-C170-paustika, KA-C171-yavagalu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "āgāga: native āga 'then' (DEDR 1), said twice"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C171-yavagalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C171-KALA171-02]; assesses=[] -->
 
 **ಆಗಾಗ** — *āgāga* — "now and then, from time to time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಗಾಗ** (*āgāga*) is native Dravidian: *āga*, "at that time, then" (DEDR 1), said twice: "then and then".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jāḍi"
 concept_tag: KA-VASTU265-JADI
 prerequisites: [KA-C265-dabbi, KA-C265-bindige]
 sounds: []
-roots: []
+roots: [kannada-jadi-jar]
+etymology_hook: "jāḍi: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C265-bindige]
 <!-- hl-knowledge: introduces=[KA-LEX-C265-VASTU265-03]; assesses=[] -->
 
 **ಜಾಡಿ** — *jāḍi* — "a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಜಾಡಿ** (*jāḍi*) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "jar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

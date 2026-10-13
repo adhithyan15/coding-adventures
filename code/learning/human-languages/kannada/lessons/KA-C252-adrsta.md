@@ -14,7 +14,8 @@ romanization: "adṛṣṭa"
 concept_tag: KA-KARANA252-ADRSTA
 prerequisites: [KA-C251-ilijaru, KA-C251-hittilu]
 sounds: []
-roots: []
+roots: [sanskrit-adrshta]
+etymology_hook: "adṛṣṭa ← Sanskrit adṛṣṭa 'unseen', a tatsama (CDIAL 238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C251-hittilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C252-KARANA252-01]; assesses=[] -->
 
 **ಅದೃಷ್ಟ** — *adṛṣṭa* — "luck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದೃಷ್ಟ** (*adṛṣṭa*) is Sanskrit *adṛṣṭa*, "unseen", taken over whole as a learned loan, a tatsama (CDIAL 238). The unseen force behind events became luck.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

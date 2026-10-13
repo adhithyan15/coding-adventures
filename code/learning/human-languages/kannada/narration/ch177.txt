@@ -12,6 +12,9 @@ Before the new one: say the Kannada for in case, then the Kannada for instead.
 You'll want to know: ನಿಖರವಾಗಿ.
 ನಿಖರವಾಗಿ — nikharavāgi — "exactly, precisely".
 
+The word, taken apart.
+ನಿಖರವಾಗಿ (nikharavāgi) is nikhara, "exact, precise", with the adverb ending -āgi. The origin of nikhara is uncertain. It may be a northern word: CDIAL 7095 has Hindi nikharnā, "to become clear".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for instead, then the Kannada for exactly.
 
 You'll want to know: ಸಹಜವಾಗಿ.
 ಸಹಜವಾಗಿ — sahajavāgi — "naturally, of course".
+
+The word, taken apart.
+ಸಹಜವಾಗಿ (sahajavāgi) is sahaja, "natural", from Sanskrit sahaja, "born together, innate" (CDIAL 13302), with the adverb ending -āgi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for exactly, then the Kannada for naturally.
 You'll want to know: ಫಲಿತಾಂಶ.
 ಫಲಿತಾಂಶ — phalitāṃśa — "a result".
 
+The word, taken apart.
+ಫಲಿತಾಂಶ (phalitāṃśa) is Sanskrit phalita, "bearing fruit, resulting" (CDIAL 9060a), and aṃśa, "share, part" (CDIAL 2): "the part that came of it".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for naturally, then the Kannada for a result
 You'll want to know: ಪರಿಣಾಮ.
 ಪರಿಣಾಮ — pariṇāma — "an effect, a consequence".
 
+The word, taken apart.
+ಪರಿಣಾಮ (pariṇāma) is Sanskrit pariṇāma, "transformation, ripening, result", taken over whole. CDIAL 7822 lists the verb behind it, "ripens, brings to an end".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a result, then the Kannada for an effect
 
 You'll want to know: ವ್ಯತ್ಯಾಸ.
 ವ್ಯತ್ಯಾಸ — vyatyāsa — "a difference".
+
+The word, taken apart.
+ವ್ಯತ್ಯಾಸ (vyatyāsa) is Sanskrit vyatyāsa, "inversion, contrariety", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

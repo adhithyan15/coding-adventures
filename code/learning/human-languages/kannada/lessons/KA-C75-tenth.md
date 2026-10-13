@@ -11,7 +11,8 @@ romanization: "hattaneya"
 concept_tag: KA-ORDINAL-TENTH
 prerequisites: [KA-C75-ninth, KA-C74-fifth, KA-C71-which, KA-C59-fire, KA-C07-hattu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "hattaneya: native hattu 'ten' (DEDR 3918) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -49,6 +50,11 @@ Kannada softened the p to h. The ordinal keeps whatever the cardinal became — 
 ending has no opinion about the history of the word it lands on.
 
 **ಹತ್ತನೆಯ ದಿನ** (*hattaneya dina*), the tenth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹತ್ತನೆಯ** (*hattaneya*) is built from *hattu*, "ten", native Dravidian (DEDR 3918, with Tamil *pattu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-04] -->

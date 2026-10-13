@@ -14,7 +14,8 @@ romanization: "bidiru"
 concept_tag: KA-VASTU302-BIDIRU
 prerequisites: [KA-C302-unne, KA-C302-siment]
 sounds: []
-roots: []
+roots: [dravidian-vetir-bamboo]
+etymology_hook: "bidiru: native Dravidian, one word with Tamil vetir and Telugu veduru (DEDR 5485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C302-siment]
 <!-- hl-knowledge: introduces=[KA-LEX-C302-VASTU302-05]; assesses=[] -->
 
 **ಬಿದಿರು** — *bidiru* — "bamboo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿದಿರು** (*bidiru*) is native Dravidian, one word with Tamil *vetir* and Telugu *veduru* (DEDR 5485). DEDR lists *bidir(u)*, "bamboo".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

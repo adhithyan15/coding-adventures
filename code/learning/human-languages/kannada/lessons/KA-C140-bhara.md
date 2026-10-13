@@ -14,7 +14,8 @@ romanization: "bhāra"
 concept_tag: KA-THINGS140-BHARA
 prerequisites: [KA-C140-udda, KA-C140-gidda]
 sounds: []
-roots: []
+roots: [sanskrit-bhara]
+etymology_hook: "bhāra ← Sanskrit bhāra 'burden, weight', a tatsama (CDIAL 9459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C140-gidda]
 <!-- hl-knowledge: introduces=[KA-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **ಭಾರ** — *bhāra* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಾರ** (*bhāra*) is Sanskrit *bhāra*, "burden, weight", taken over whole as a learned loan, a tatsama (CDIAL 9459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "rakta"
 concept_tag: KA-BODY2-BLOOD
 prerequisites: [KA-C99-breath, KA-C99-skin]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "rakta ← Sanskrit rakta 'coloured, red; blood', a tatsama (CDIAL 10539)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C99-skin]
 <!-- hl-knowledge: introduces=[KA-LEX-C99-BODY2-03]; assesses=[] -->
 
 **ರಕ್ತ** (*rakta*) — "blood". The **ಕ್ತ** is *k* and *t* stacked into one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಕ್ತ** (*rakta*) is Sanskrit *rakta*, "coloured, red; blood", taken over whole as a learned loan, a tatsama (CDIAL 10539). Blood was named for its colour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

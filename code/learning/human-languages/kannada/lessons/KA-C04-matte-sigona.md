@@ -12,6 +12,7 @@ concept_tag: FAREWELL-LATER
 prerequisites: [KA-C04-naale-sigona]
 sounds: [double-tt]
 roots: [matte-again-dravidian, sigu-meet-dravidian]
+etymology_hook: "matte 'again' (DEDR 4766) and sigu 'to be found' (DEDR 2498) are both native Dravidian"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,8 @@ meet") — "**we'll meet again**." Both words are native Dravidian: *matte*
 ("again") and *sigu* ("to meet"). Where Tamil's "we'll meet again" (*mīṇḍum
 sandippōm*) reaches for the Sanskrit loan *sandi* to say "meet," Kannada keeps the
 native *sigu* — the same phrase, from home-grown stock.
+
+DEDR 4766 lists *matte* with Tamil *maṟṟu*, "other, again"; DEDR 2498 lists *sigu* with Tamil *cikku*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-MATTE-SIGONA-01, KA-ETYMON-C04-MATTE-SIGONA-02] -->

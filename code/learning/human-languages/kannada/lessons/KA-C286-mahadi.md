@@ -14,7 +14,8 @@ romanization: "mahaḍi"
 concept_tag: KA-STHALA286-MAHADI
 prerequisites: [KA-C285-madhyantara, KA-C286-kattada]
 sounds: []
-roots: []
+roots: [kannada-mahadi-storey]
+etymology_hook: "mahaḍi: origin uncertain; compare māḍi 'upper storey' (DEDR 4796)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C286-kattada]
 <!-- hl-knowledge: introduces=[KA-LEX-C286-STHALA286-02]; assesses=[] -->
 
 **ಮಹಡಿ** — *mahaḍi* — "a floor, a storey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಮಹಡಿ** (*mahaḍi*) comes from is uncertain. It looks like *māḍi*, "an upstairs house", which DEDR 4796 lists, but DEDR does not give *mahaḍi*. DEDR 4796 compares Sanskrit *mālikā* and *meṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

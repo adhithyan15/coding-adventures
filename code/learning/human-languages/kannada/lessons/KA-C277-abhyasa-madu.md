@@ -14,7 +14,8 @@ romanization: "abhyāsa māḍu"
 concept_tag: KA-VERB-ABHYASA-MADU
 prerequisites: [KA-C277-uhisu, KA-C277-anisu]
 sounds: []
-roots: []
+roots: [sanskrit-abhyasa, maadu-do-dravidian]
+etymology_hook: "abhyāsa māḍu: Sanskrit abhyāsa 'repetition, practice' + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C277-anisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C277-KRIYE277-03]; assesses=[] -->
 
 **ಅಭ್ಯಾಸ ಮಾಡು** — *abhyāsa māḍu* — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಭ್ಯಾಸ ಮಾಡು** (*abhyāsa māḍu*) is Sanskrit *abhyāsa*, "repetition, practice", with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

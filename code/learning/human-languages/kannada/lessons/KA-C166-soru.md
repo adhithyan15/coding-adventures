@@ -14,7 +14,8 @@ romanization: "sōru"
 concept_tag: KA-VERB-SORU
 prerequisites: [KA-C166-cimukisu, KA-C166-tottikku]
 sounds: []
-roots: []
+roots: [dravidian-coor-leak]
+etymology_hook: "sōru: native Dravidian, one word with Tamil cōr (DEDR 2883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-tottikku]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-04]; assesses=[] -->
 
 **ಸೋರು** — *sōru* — "to leak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೋರು** (*sōru*) is native Dravidian, one word with Tamil *cōr* (DEDR 2883). DEDR lists *sōr*, "to drip, trickle, ooze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "ēḷaneya"
 concept_tag: KA-ORDINAL-SEVENTH
 prerequisites: [KA-C75-sixth, KA-C74-third, KA-C71-say-again, KA-C59-mist, KA-C07-eelu]
 sounds: [retroflex-la]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ēḷaneya: native ēḷu 'seven' (DEDR 910) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -49,6 +50,11 @@ Malayalam and which northern languages lost. Adding the ending does not soften
 it: **ಏಳನೆಯ**, with the tongue still curled back for the **ḷ**.
 
 **ಏಳನೆಯ ದಿನ** (*ēḷaneya dina*), the seventh day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏಳನೆಯ** (*ēḷaneya*) is built from *ēḷu*, "seven", native Dravidian (DEDR 910, with Tamil *ēḻu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-02, KA-LEX-C75-ORDINAL-01] -->

@@ -14,7 +14,8 @@ romanization: "ṭārc"
 concept_tag: KA-VASTU227-TARC
 prerequisites: [KA-C227-eni, KA-C227-antu]
 sounds: []
-roots: []
+roots: [english-torch]
+etymology_hook: "ṭārc ← English torch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C227-antu]
 <!-- hl-knowledge: introduces=[KA-LEX-C227-VASTU227-04]; assesses=[] -->
 
 **ಟಾರ್ಚ್** — *ṭārc* — "a torch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟಾರ್ಚ್** (*ṭārc*) is a loan from English *torch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

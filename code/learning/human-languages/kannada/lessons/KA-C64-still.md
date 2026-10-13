@@ -11,7 +11,8 @@ romanization: "innū"
 concept_tag: KA-WORD-STILL
 prerequisites: [KA-C64-also, KA-C62-rope]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "innū: native innu 'still, yet' on the near-pointing base i- (DEDR 410) + -ū 'even'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C64-also]
 ಇನ್ನೂ is the word for a thing that has not stopped or has not started. With ಇಲ್ಲ behind it you get *not yet*, which is the single most useful thing in this chapter.
 
 It stacks with the measuring words from the replies chapter. ಇನ್ನೂ ಸ್ವಲ್ಪ is a little more still; ಇನ್ನೂ ಹೆಚ್ಚು is more than that again. One word in front and your five replies have doubled.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇನ್ನೂ** (*innū*) is native Dravidian: *innu*, "still, yet, more", which DEDR 410 lists on the near-pointing base *i-*, with the ending *-ū*, "even".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

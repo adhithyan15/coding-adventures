@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 289,
-  "sourceHash": "fnv1a64:9c286a0d78e5805b",
+  "sourceHash": "fnv1a64:4c75280124ec0e40",
   "lessonIds": [
     "KA-C289-hegadaru",
     "KA-C289-andare",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch289.txt",
   "json": "kannada/narration/ch289.json",
-  "textHash": "fnv1a64:4fdb5a25a5c25e91",
-  "jsonHash": "fnv1a64:9bb3651a43e8be58",
+  "textHash": "fnv1a64:4568ab7bc09f25e3",
+  "jsonHash": "fnv1a64:f503c304629c65f2",
   "findings": []
 }

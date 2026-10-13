@@ -11,7 +11,8 @@ romanization: "sūji"
 concept_tag: KA-NOUN-NEEDLE
 prerequisites: [KA-C62-thread, KA-C60-goat]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūji ← Sanskrit sūcī 'needle', reshaped as a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C62-thread]
 ಸೂಜಿ is what the ನೂಲು is put through. It is a borrowing from the north, and it arrived early enough that nothing about it feels foreign now.
 
 It is also the hand of a clock. A ಗಂಟೆ has two ಸೂಜಿ on its face, and Kannada saw the resemblance before anybody thought to give the hands a separate name.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂಜಿ** (*sūji*) comes from Sanskrit *sūcī*, "needle", reshaped to Kannada sounds: a tadbhava (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

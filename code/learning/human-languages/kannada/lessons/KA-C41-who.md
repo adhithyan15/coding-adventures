@@ -11,7 +11,8 @@ romanization: "yāru"
 concept_tag: KA-DEIXIS-WHO
 prerequisites: [KA-C41-there, KA-C38-hrudaya]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yāru: native Dravidian, on the question base yā- (DEDR 5151); Tamil yār"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ name the person.
 *yāru* opens with **yā-**, not with the **i-** of near or the **a-** of far
 that the four words before it share. It is the one word in this chapter outside
 that pattern, so learn it as itself: the asking word for people.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾರು** (*yāru*) is native Dravidian, built on the question base *yā-*. DEDR 5151 lists Kannada *yār* with Tamil *yār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02] -->

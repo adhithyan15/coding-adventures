@@ -14,7 +14,8 @@ romanization: "asūye"
 concept_tag: KA-AROGYA169-ASUYE
 prerequisites: [KA-C168-angai, KA-C169-talme]
 sounds: []
-roots: []
+roots: [sanskrit-asuya]
+etymology_hook: "asūye ← Sanskrit asūyā 'envy, displeasure', with Kannada's -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C169-talme]
 <!-- hl-knowledge: introduces=[KA-LEX-C169-AROGYA169-02]; assesses=[] -->
 
 **ಅಸೂಯೆ** — *asūye* — "jealousy, envy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಸೂಯೆ** (*asūye*) is Sanskrit *asūyā*, "envy, displeasure", with Kannada's *-e* for the Sanskrit *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

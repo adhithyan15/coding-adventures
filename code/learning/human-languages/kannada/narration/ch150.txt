@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to call, then the Kannada for to count.
 You'll want to know: ತೊಳೆ.
 ತೊಳೆ — toḷe — "to wash".
 
+The word, taken apart.
+ತೊಳೆ (toḷe) is native Dravidian, one word with Tamil tuḷai (DEDR 3530). DEDR lists toḷe, toḷi, "to wash".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to count, then the Kannada for to wash.
 
 You'll want to know: ಒರೆಸು.
 ಒರೆಸು — oresu — "to wipe".
+
+The word, taken apart.
+The origin of ಒರೆಸು (oresu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to wash, then the Kannada for to wipe.
 You'll want to know: ಗುಡಿಸು.
 ಗುಡಿಸು — guḍisu — "to sweep".
 
+The word, taken apart.
+ಗುಡಿಸು (guḍisu) is native Dravidian, one word with Tamil kūṭṭu (DEDR 1887). DEDR lists guḍisu itself, "to sweep".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to wipe, then the Kannada for to sweep.
 You'll want to know: ಕಟ್ಟು.
 ಕಟ್ಟು — kaṭṭu — "to tie, to build".
 
+The word, taken apart.
+ಕಟ್ಟು (kaṭṭu) is native Dravidian, one word with Tamil kaṭṭu and Telugu kaṭṭu (DEDR 1147). DEDR lists kaṭṭu itself, "to bind, tie, build". DEDR 1147 compares Sanskrit ghaṭṭa, "landing-place", only with the Kannada and Telugu gaṭṭu, "embankment".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to sweep, then the Kannada for to tie.
 
 You'll want to know: ಹೊಲಿ.
 ಹೊಲಿ — holi — "to sew".
+
+The word, taken apart.
+ಹೊಲಿ (holi) is native Dravidian, one word with Tamil pollam (DEDR 4554). DEDR lists pol and holi, "to sew": the p- has become h-.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an illness, then the Kannada for a patie
 You'll want to know: ಮನಸ್ಸು.
 ಮನಸ್ಸು — manassu — "the mind".
 
+The word, taken apart.
+ಮನಸ್ಸು (manassu) is Sanskrit manas, "mind", taken over whole as a learned loan, a tatsama, with Kannada's added -u (CDIAL 9822). The final -s is doubled before Kannada's -u.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a patient, then the Kannada for the mind
 
 You'll want to know: ನಿರಾಸೆ.
 ನಿರಾಸೆ — nirāse — "disappointment".
+
+The word, taken apart.
+ನಿರಾಸೆ (nirāse) comes from Sanskrit nirāśa, "hopeless", reshaped to Kannada sounds: a tadbhava (CDIAL 7278). The ś became s, and the word ends in Kannada's -e: "hopelessness".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for the mind, then the Kannada for disappoin
 You'll want to know: ತಮಾಷೆ.
 ತಮಾಷೆ — tamāṣe — "fun, a joke".
 
+The word, taken apart.
+ತಮಾಷೆ (tamāṣe) is a loan from Arabic tamāšā, "a spectacle, a show", which came through Persian and Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for disappointment, then the Kannada for fun
 You'll want to know: ಯೋಗ.
 ಯೋಗ — yōga — "yoga".
 
+The word, taken apart.
+ಯೋಗ (yōga) is Sanskrit yoga, "yoking, work", taken over whole as a learned loan, a tatsama (CDIAL 10526). The yoking became the discipline that yokes body and mind.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for fun, then the Kannada for yoga.
 
 You'll want to know: ಧ್ಯಾನ.
 ಧ್ಯಾನ — dhyāna — "meditation".
+
+The word, taken apart.
+ಧ್ಯಾನ (dhyāna) is Sanskrit dhyāna, "meditation", taken over whole as a learned loan, a tatsama (CDIAL 6889).
 
 What you've built.
 One more word for this chapter.

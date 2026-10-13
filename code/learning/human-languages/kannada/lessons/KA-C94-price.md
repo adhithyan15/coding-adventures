@@ -11,7 +11,8 @@ romanization: "bele"
 concept_tag: KA-TABLE-PRICE
 prerequisites: [KA-C94-glass, KA-C94-plate]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "bele: native Dravidian, one word with Tamil vilai and Telugu vela (DEDR 5421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C94-plate]
 
 **ಇದರ ಬೆಲೆ ಎಷ್ಟು?** (*idara bele eṣṭu?*) — "what is the price of this?", with
 **ಎಷ್ಟು**, "how much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಲೆ** (*bele*) is native Dravidian, one word with Tamil *vilai* and Telugu *vela* (DEDR 5421). DEDR lists *bele*, "price", under *bil*, "to sell": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

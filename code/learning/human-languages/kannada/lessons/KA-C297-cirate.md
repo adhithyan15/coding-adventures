@@ -14,7 +14,8 @@ romanization: "cirate"
 concept_tag: KA-VASTU297-CIRATE
 prerequisites: [KA-C297-gubbacci, KA-C297-mosale]
 sounds: []
-roots: []
+roots: [dravidian-cirutai-leopard]
+etymology_hook: "cirate: native Dravidian, one word with Tamil ciṟuttai (DEDR 2590)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C297-mosale]
 <!-- hl-knowledge: introduces=[KA-LEX-C297-VASTU297-04]; assesses=[] -->
 
 **ಚಿರತೆ** — *cirate* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿರತೆ** (*cirate*) is native Dravidian, one word with Tamil *ciṟuttai* (DEDR 2590). DEDR lists *ciṟate*, "the hunting leopard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

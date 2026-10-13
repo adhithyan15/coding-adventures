@@ -51,6 +51,11 @@ Once you know the rule it runs backwards for you. Meet a Kannada word starting
 Every letter in ಹತ್ತು is one you have learned: **ಹ**, **ತ**, the virama **್**,
 and **ು**.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹತ್ತು** (*hattu*) is native Dravidian, one word with Tamil *pattu* (DEDR 3918). The entry gives the older Kannada form *pattu*, with the *p-* that modern Kannada turns into *h-*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C07-NUMBERS-6-10-02, KA-SCRIPT-RECOG-05, KA-SCRIPT-RECOG-03, KA-LEX-C07-ERADU-01, KA-LEX-C07-MUURU-01] -->
 

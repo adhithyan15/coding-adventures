@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 156,
-  "sourceHash": "fnv1a64:a796fcd3ffc6d6c6",
+  "sourceHash": "fnv1a64:0de8b7fa8627660f",
   "lessonIds": [
     "KA-C156-mundina",
     "KA-C156-innu-munde",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch156.txt",
   "json": "kannada/narration/ch156.json",
-  "textHash": "fnv1a64:75224957e628e526",
-  "jsonHash": "fnv1a64:cc70a2a2e4d7d9ed",
+  "textHash": "fnv1a64:f0a5201f1872644e",
+  "jsonHash": "fnv1a64:be27bf2818085d06",
   "findings": []
 }

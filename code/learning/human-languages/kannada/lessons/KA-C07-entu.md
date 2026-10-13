@@ -12,7 +12,7 @@ concept_tag: KA-NUMBER-EIGHT
 prerequisites: [KA-C07-eelu]
 sounds: [anusvara, retroflex-ta]
 roots: [proto-dravidian-numbers]
-etymology_hook: "Eight and nine are the loose cells of the Dravidian number set: Telugu leaves the family entirely with enimidi and tommidi"
+etymology_hook: "eṇṭu: native Dravidian, one word with Tamil eṭṭu and Telugu enimidi (DEDR 784)"
 reviews_of: [KA-C07-eelu]
 duration:
   max_seconds: 180
@@ -42,8 +42,8 @@ variety: standard-colloquial
 **ಎಂಟು** (*eṇṭu*) — "**eight**."
 
 Kannada *eṇṭu* and Tamil *eṭṭu* are still relatives — near enough to guess at.
-But **Telugu** walks away here: its "eight" is *enimidi*, and its "nine" will be
-*tommidi*. Neither is recognisable from the other two.
+But **Telugu** drifts furthest here: its "eight" is *enimidi*, and its "nine" will be
+*tommidi*. Neither is easy to recognise from the other two.
 
 So eight and nine are the loose cells. Everywhere else in this chapter, knowing
 one Dravidian language hands you the next; at eight and nine it stops doing that,
@@ -51,6 +51,11 @@ and you have to learn each language on its own terms.
 
 Here the anusvara **ಂ** borrows an *ṇ* from the retroflex **ಟ** after it — the
 same borrowing you saw in *ondu*, taking a different sound.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಂಟು** (*eṇṭu*) is native Dravidian, one word with Tamil *eṭṭu* and Telugu *enimidi* (DEDR 784): the Telugu word has drifted far, but it is filed in the same entry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C07-NUMBERS-6-10-03, KA-SCRIPT-RECOG-02] -->
@@ -64,5 +69,5 @@ same borrowing you saw in *ondu*, taking a different sound.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 3s] Which two numbers should you trust least as family cousins?
-(**Eight and nine** — Telugu leaves with *enimidi* and *tommidi*.) What nasal is
+(**Eight and nine** — Telugu drifts furthest, to *enimidi* and *tommidi*.) What nasal is
 the ಂ carrying in ಎಂಟು? (An **ṇ**, taken from the ಟ.)

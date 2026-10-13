@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 91,
-  "sourceHash": "fnv1a64:2404c495d92d87d8",
+  "sourceHash": "fnv1a64:736ede0be6a64981",
   "lessonIds": [
     "KA-C91-address",
     "KA-C91-birthday",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch91.txt",
   "json": "kannada/narration/ch91.json",
-  "textHash": "fnv1a64:59d3779f7417819e",
-  "jsonHash": "fnv1a64:7af9395e01094959",
+  "textHash": "fnv1a64:200740b402c9653f",
+  "jsonHash": "fnv1a64:232ee24fcedeba4b",
   "findings": []
 }

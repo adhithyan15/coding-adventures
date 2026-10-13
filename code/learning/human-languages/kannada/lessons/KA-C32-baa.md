@@ -15,7 +15,7 @@ roots: [baa-come-dravidian, proto-dravidian-v-to-b]
 etymology_hook: "ಬಾ is native Dravidian *vā 'come', with Kannada's own habit of turning word-initial *v- into b- (Tamil வா vā, வாய் vāy answer Kannada ಬಾ bā, ಬಾಯಿ bāyi) — a second Kannada-only initial-consonant law sitting right beside p→h; and the command form ಬಾ is not the stem, which is ಬರು-, the ಬರುತ್ತೇನೆ that Chapter 4's farewell ಹೋಗಿ ಬರುತ್ತೇನೆ has been carrying all along"
 reviews_of: [KA-C32-hoogu, KA-C04-hoogi-baruttene, KA-C04-hoogu]
 duration:
-  max_seconds: 250
+  max_seconds: 294
 requires:
   knowledge: [KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02]
 introduces:
@@ -50,6 +50,11 @@ But you cannot thread beads onto *bā*. Underneath, the verb's working stem is
 **ಬರು-** (*baru-*), and everything attaches to that:
 
 > *baru-* + *-utt-* + *-ēne* → **ಬರುತ್ತೇನೆ** (*baruttēne*), "I come."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾ** (*bā / baru*) is native Dravidian, one word with Tamil *varu*, *vā* and Malayalam *varuka* (DEDR 5270). DEDR gives Kannada *bar*, *bā*: the old *v-* has become *b-*.
 
 ## Grammar Lens: two shapes, one verb
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C32-BAA-02]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suttāḍu"
 concept_tag: KA-VERB-SUTTADU
 prerequisites: [KA-C272-huri, KA-C273-haru]
 sounds: []
-roots: []
+roots: [dravidian-suttu-surround, dravidian-aadu-move]
+etymology_hook: "suttāḍu: native suttu 'to go round' (DEDR 2715) + āḍu 'to move about' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C273-haru]
 <!-- hl-knowledge: introduces=[KA-LEX-C273-KRIYE273-02]; assesses=[] -->
 
 **ಸುತ್ತಾಡು** — *suttāḍu* — "to wander around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುತ್ತಾಡು** (*suttāḍu*) is native Dravidian: *suttu*, "to go round", one word with Tamil *cuṟṟu* (DEDR 2715), and *āḍu*, "to move about", one word with Tamil *āṭu* (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

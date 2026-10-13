@@ -11,7 +11,8 @@ romanization: "taṭṭe"
 concept_tag: KA-TABLE-PLATE
 prerequisites: [KA-C94-spoon, KA-C94-glass]
 sounds: []
-roots: []
+roots: [dravidian-tattu-flat]
+etymology_hook: "taṭṭe: native Dravidian, one word with Tamil taṭṭu (DEDR 3035)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C94-glass]
 
 **ತಟ್ಟೆ** (*taṭṭe*) — "a plate". The doubled **ಟ್ಟ** is stacked, as you saw in
 **ದಯವಿಟ್ಟು**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಟ್ಟೆ** (*taṭṭe*) is native Dravidian, one word with Tamil *taṭṭu* (DEDR 3035). DEDR lists *taṭṭe* itself, "flatness; a flat basket", and notes Marathi *tāṭ*, "a dining plate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

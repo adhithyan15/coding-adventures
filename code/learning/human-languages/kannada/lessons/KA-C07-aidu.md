@@ -51,6 +51,11 @@ and you will be right more often than not.
 
 **ಐ** is an independent vowel: the shape *ai* takes when it opens a word.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಐದು** (*aidu*) is native Dravidian, one word with Tamil *aintu* and Telugu *ayidu* (DEDR 2826). The entry spells the Kannada word *ay(i)du*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-AIDU-01, KA-SCRIPT-RECOG-06] -->
 

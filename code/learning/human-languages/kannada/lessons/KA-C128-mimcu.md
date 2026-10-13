@@ -14,7 +14,8 @@ romanization: "miṁcu"
 concept_tag: KA-THINGS128-MIMCU
 prerequisites: [KA-C127-kallu, KA-C127-gudugu]
 sounds: []
-roots: []
+roots: [dravidian-min-shine]
+etymology_hook: "miṁcu: native Dravidian; DEDR 4876 lists miñcu 'to shine, flash'; Tamil miṉ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C127-gudugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **ಮಿಂಚು** — *miṁcu* — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಿಂಚು** (*miṁcu*) is native Dravidian, from the root for "to glitter", and DEDR 4876 lists *miñcu*, "to shine, flash", itself; the entry also has Tamil *miṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

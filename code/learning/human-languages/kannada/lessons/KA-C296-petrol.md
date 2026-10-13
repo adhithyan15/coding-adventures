@@ -14,7 +14,8 @@ romanization: "peṭrōl"
 concept_tag: KA-VASTU296-PETROL
 prerequisites: [KA-C296-skutar, KA-C296-metro]
 sounds: []
-roots: []
+roots: [english-petrol]
+etymology_hook: "peṭrōl ← English petrol"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C296-metro]
 <!-- hl-knowledge: introduces=[KA-LEX-C296-VASTU296-03]; assesses=[] -->
 
 **ಪೆಟ್ರೋಲ್** — *peṭrōl* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೆಟ್ರೋಲ್** (*peṭrōl*) is a loan from English *petrol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

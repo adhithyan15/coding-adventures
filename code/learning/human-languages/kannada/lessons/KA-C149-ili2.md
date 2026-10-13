@@ -14,7 +14,8 @@ romanization: "iḷi"
 concept_tag: KA-VERB-ILI2
 prerequisites: [KA-C148-kalisu2, KA-C148-jigi]
 sounds: []
-roots: []
+roots: [dravidian-izhi-descend]
+etymology_hook: "iḷi: native Dravidian, one word with Tamil iḻi and Telugu ḍigu (DEDR 502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C148-jigi]
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-01]; assesses=[] -->
 
 **ಇಳಿ** — *iḷi* — "to get down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಳಿ** (*iḷi*) is native Dravidian, one word with Tamil *iḻi*, Telugu *ḍigu* and Malayalam *iḻika* (DEDR 502). DEDR gives the older Kannada *iḻi*, "to come down, descend": the *ḻ* has become *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

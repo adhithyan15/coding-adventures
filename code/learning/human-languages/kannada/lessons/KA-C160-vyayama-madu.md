@@ -14,7 +14,8 @@ romanization: "vyāyāma māḍu"
 concept_tag: KA-VERB-VYAYAMA-MADU
 prerequisites: [KA-C160-baggu, KA-C160-horu]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama, maadu-do-dravidian]
+etymology_hook: "vyāyāma māḍu: Sanskrit vyāyāma 'exertion' (CDIAL 12209) + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C160-horu]
 <!-- hl-knowledge: introduces=[KA-LEX-C160-KRIYE160-03]; assesses=[] -->
 
 **ವ್ಯಾಯಾಮ ಮಾಡು** — *vyāyāma māḍu* — "to exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವ್ಯಾಯಾಮ ಮಾಡು** (*vyāyāma māḍu*) is *vyāyāma*, "exercise", from Sanskrit *vyāyāma*, "exertion" (CDIAL 12209), with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

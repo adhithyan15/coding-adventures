@@ -14,7 +14,8 @@ romanization: "tamāṣe"
 concept_tag: KA-AROGYA209-TAMASE
 prerequisites: [KA-C209-manassu, KA-C209-nirase]
 sounds: []
-roots: []
+roots: [arabic-tamasha]
+etymology_hook: "tamāṣe ← Arabic tamāšā 'a spectacle, a show', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C209-nirase]
 <!-- hl-knowledge: introduces=[KA-LEX-C209-AROGYA209-03]; assesses=[] -->
 
 **ತಮಾಷೆ** — *tamāṣe* — "fun, a joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಮಾಷೆ** (*tamāṣe*) is a loan from Arabic *tamāšā*, "a spectacle, a show", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paip"
 concept_tag: KA-VASTU267-PAIP
 prerequisites: [KA-C267-gobbara, KA-C267-kunda]
 sounds: []
-roots: []
+roots: [english-pipe]
+etymology_hook: "paip ← English pipe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C267-kunda]
 <!-- hl-knowledge: introduces=[KA-LEX-C267-VASTU267-03]; assesses=[] -->
 
 **ಪೈಪ್** — *paip* — "a pipe, a hose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೈಪ್** (*paip*) is a loan from English *pipe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

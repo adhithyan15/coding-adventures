@@ -14,7 +14,8 @@ romanization: "skēlu"
 concept_tag: KA-KELASA307-SKELU
 prerequisites: [KA-C307-sayi, KA-C307-simesunna]
 sounds: []
-roots: []
+roots: [english-scale]
+etymology_hook: "skēlu ← English scale"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C307-simesunna]
 <!-- hl-knowledge: introduces=[KA-LEX-C307-KELASA307-05]; assesses=[] -->
 
 **ಸ್ಕೇಲು** — *skēlu* — "a ruler (for drawing lines)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಕೇಲು** (*skēlu*) is a loan from English *scale*. Kannada adds a final *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

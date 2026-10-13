@@ -14,7 +14,8 @@ romanization: "lēkhaka"
 concept_tag: KA-KELASA196-LEKHAKA
 prerequisites: [KA-C195-terige, KA-C195-bil]
 sounds: []
-roots: []
+roots: [sanskrit-lekhaka]
+etymology_hook: "lēkhaka ← Sanskrit lekhaka 'scribe', a tatsama (CDIAL 11102)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C195-bil]
 <!-- hl-knowledge: introduces=[KA-LEX-C196-KELASA196-01]; assesses=[] -->
 
 **ಲೇಖಕ** — *lēkhaka* — "a writer, an author".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲೇಖಕ** (*lēkhaka*) is Sanskrit *lekhaka*, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

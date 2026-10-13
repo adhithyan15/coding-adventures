@@ -14,7 +14,8 @@ gloss: "knowledge"
 concept_tag: KA-ANCHOR-JNAANA
 prerequisites: [KA-S132-sign-visarga]
 sounds: []
-roots: []
+roots: [sanskrit-jnana]
+etymology_hook: "jñāna ← Sanskrit jñāna 'knowledge', a tatsama (CDIAL 5281)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *jñāna*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಞ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜ್ಞಾನ** (*jñāna*) is Sanskrit *jñāna*, "knowledge", taken over whole as a learned loan, a tatsama (CDIAL 5281).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-JNAANA] -->

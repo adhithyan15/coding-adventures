@@ -14,6 +14,9 @@ You'll want to know: ಇನ್ನೊಂದು.
 Two pieces, both of them yours already: ಇನ್ನೂ (innū, "still, yet") and ಒಂದು (ondu, "one"). Push them together and the long vowel shortens: ಇನ್ನೊಂದು (innondu).
 ಇನ್ನೊಂದು ಚಹಾ (innondu cahā) — "another tea." That is what you say when the cup is empty and the answer is yes.
 
+The word, taken apart.
+ಇನ್ನೊಂದು (innondu) is native Dravidian: innu, "more, yet" (DEDR 410), and ondu, "one" (DEDR 990). It is "one more".
+
 Grammar Lens: one, and one more.
 Pair it with plain ಒಂದು and you have the Kannada way of saying "one … the other":
 ಒಂದು ಇಲ್ಲಿ, ಇನ್ನೊಂದು ಅಲ್ಲಿ (ondu illi, innondu alli) — "one here, the other there."
@@ -59,6 +62,9 @@ You'll want to know: ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ.
 This is the single most useful sentence a beginner owns, and until now this book had no way to build it. Everything else you can survive without; you cannot survive without asking somebody to repeat themselves.
 Put ದಯವಿಟ್ಟು in front and it is as polite as it gets: ದಯವಿಟ್ಟು ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ (innondu sala hēḷi). Said with a slight rise it is warm rather than demanding, and nobody in Karnataka will mind hearing it — a stranger trying the language is worth the second go.
 
+The phrase, taken apart.
+ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ (innondu sala hēḷi) is innondu, "one more" (DEDR 410, 990), sala, "time, turn", native (DEDR 2781), and hēḷi, the polite form of hēḷu, "to say" (DEDR 4430).
+
 What you've built.
 The repair sentence. With it, every other sentence in this book gets a second chance.
 
@@ -96,6 +102,9 @@ You'll want to know: ಯಾವಾಗ.
 The question set is nearly complete: who, where, what, why, and now when. This is the last one an everyday exchange keeps reaching for.
 ಯಾವಾಗ ಬರುತ್ತೀರಾ? (yāvāga baruttīrā?) — "when will you come?" Notice the question ending on the end of it, doing the same job it did on ಗೊತ್ತಾ.
 The answers are already yours: ಈಗ (īga, "now"), ನಾಳೆ, ನಾಡಿದ್ದು (nāḍiddu, "the day after tomorrow"). Ask ಯಾವಾಗ (yāvāga) and you can understand what comes back.
+
+The word, taken apart.
+ಯಾವಾಗ (yāvāga) is native Dravidian: yāva, "which" (DEDR 5151), and āga, "time, then" (DEDR 1). It is "at which time".
 
 What you've built.
 Five question words. Who, where, what, why, when — and a reason and an opinion to answer them with.
@@ -179,6 +188,9 @@ You'll want to know: ಯಾವ.
 ಯಾವ (yāva) — "which?"
 It goes in front of a noun, exactly where an adjective goes: ಯಾವ ಪುಸ್ತಕ? (yāva pustaka?) — "which book?"
 Put it with the word for "or" and you can finally put a real choice to somebody: ಚಹಾ ಅಥವಾ ಕಾಫಿ? ಯಾವ (yāva) ಪುಸ್ತಕ? — offer the two, then ask which. Until this word there was no way to ask anybody to pick.
+
+The word, taken apart.
+ಯಾವ (yāva) is native Dravidian, built on the question base yā-. DEDR 5151 lists yāva itself, "what, which".
 
 Grammar Lens: the ya- family, and what each member asks.
 Look at what the last three lessons share. ಯಾರು, ಯಾಕೆ, ಯಾವಾಗ (yāvāga), ಯಾವ (yāva) — a whole family beginning ಯಾ-, and each one asks about a different thing: a person, a reason, a time, a choice.

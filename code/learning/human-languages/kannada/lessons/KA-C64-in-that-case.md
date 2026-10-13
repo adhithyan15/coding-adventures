@@ -11,7 +11,8 @@ romanization: "hāgādare"
 concept_tag: KA-WORD-IN-THAT-CASE
 prerequisites: [KA-C64-soon, KA-C62-umbrella]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, tamil-aaku-become]
+etymology_hook: "hāgādare: native hāge 'that way' (DEDR 1) + ādare 'if it becomes', from āgu (DEDR 333)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C64-soon]
 ಹಾಗಾದರೆ is built out of ಹಾಗೆ, the *that way* word from the earlier replies chapter, with an *if it becomes* wrapped around it. If it is that way — in that case.
 
 It is the word that lets you answer a fact with a decision. Somebody says the shop is shut; you say ಹಾಗಾದರೆ ಆಮೇಲೆ, and with two of this chapter's five words you have made a plan without a single naming-word in it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಗಾದರೆ** (*hāgādare*) is native Dravidian: *hāge*, "in that way" (DEDR 1), and *ādare*, "if it becomes", from *āgu*, "to become" (DEDR 333). "If it is that way" means "in that case". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

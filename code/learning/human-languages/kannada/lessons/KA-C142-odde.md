@@ -14,7 +14,8 @@ romanization: "odde"
 concept_tag: KA-QUAL142-ODDE
 prerequisites: [KA-C142-agala, KA-C142-kiridu]
 sounds: []
-roots: []
+roots: [dravidian-odde-wet]
+etymology_hook: "odde: native Dravidian, one word with Tamil ōtam (DEDR 1047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C142-kiridu]
 <!-- hl-knowledge: introduces=[KA-LEX-C142-QUAL142-05]; assesses=[] -->
 
 **ಒದ್ದೆ** — *odde* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒದ್ದೆ** (*odde*) is native Dravidian, one word with Tamil *ōtam* (DEDR 1047). DEDR lists *odde* itself, "wetness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

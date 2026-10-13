@@ -14,7 +14,8 @@ romanization: "ottaḍa"
 concept_tag: KA-AROGYA282-OTTADA
 prerequisites: [KA-C282-apaghata, KA-C282-ambyulens]
 sounds: []
-roots: []
+roots: [dravidian-ottu-press]
+etymology_hook: "ottaḍa: native Dravidian, one word with Telugu ottu and Malayalam ottanam (DEDR 1021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C282-ambyulens]
 <!-- hl-knowledge: introduces=[KA-LEX-C282-AROGYA282-03]; assesses=[] -->
 
 **ಒತ್ತಡ** — *ottaḍa* — "stress, pressure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒತ್ತಡ** (*ottaḍa*) is native Dravidian, one word with Telugu *ottu* and Malayalam *ottanam* (DEDR 1021). DEDR lists *ottaḍa*, "pressure", beside *ottu*, "to press".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

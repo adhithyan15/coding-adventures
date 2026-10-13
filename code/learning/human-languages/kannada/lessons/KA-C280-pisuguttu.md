@@ -14,7 +14,8 @@ romanization: "pisuguṭṭu"
 concept_tag: KA-VERB-PISUGUTTU
 prerequisites: [KA-C279-bageharisu, KA-C279-age]
 sounds: []
-roots: []
+roots: [kannada-pisu-whisper]
+etymology_hook: "pisuguṭṭu: pisu, a whispering sound, + -guṭṭu, which makes verbs of sounds (DEDR 1852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C279-age]
 <!-- hl-knowledge: introduces=[KA-LEX-C280-KRIYE280-01]; assesses=[] -->
 
 **ಪಿಸುಗುಟ್ಟು** — *pisuguṭṭu* — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಿಸುಗುಟ್ಟು** (*pisuguṭṭu*) is *pisu*, a sound that imitates whispering, with *-guṭṭu*, which makes verbs out of sounds, as in *guṟuguṭṭu*, "to snore" (DEDR 1852).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

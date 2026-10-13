@@ -14,7 +14,8 @@ romanization: "attige"
 concept_tag: KA-VASTU226-ATTIGE
 prerequisites: [KA-C226-sose, KA-C226-aliya]
 sounds: []
-roots: []
+roots: [dravidian-attai-aunt]
+etymology_hook: "attige: native Dravidian; DEDR 142 lists attige 'elder brother's wife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C226-aliya]
 <!-- hl-knowledge: introduces=[KA-LEX-C226-VASTU226-05]; assesses=[] -->
 
 **ಅತ್ತಿಗೆ** — *attige* — "sister-in-law (elder brother's wife)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅತ್ತಿಗೆ** (*attige*) is native Dravidian, of the family of *atte*, "mother-in-law", and DEDR 142 lists *attige*, "elder brother's wife", itself; the entry also has Tamil *attai*, Telugu *atta* and Malayalam *atta*. DEDR 142 compares Sanskrit *attā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

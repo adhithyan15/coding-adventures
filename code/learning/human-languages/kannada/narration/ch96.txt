@@ -12,6 +12,9 @@ Before the new one: say the Kannada for maybe, then the Kannada for certainly.
 You'll want to know: ಊಟ ಆಯ್ತಾ.
 ಊಟ ಆಯ್ತಾ? (ūṭa āytā?) — "have you eaten?", literally "has the meal happened?". In the south this is a greeting as much as a question.
 
+The word, taken apart.
+ಊಟ ಆಯ್ತಾ (ūṭa āytā) is native Dravidian: ūṭa, "a meal", from uṇ, "to eat a meal", (DEDR 600, with Tamil uṇ), and āytā, "has it become?", from āgu, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 The warmest everyday hello.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for certainly, then the Kannada for have you
 You'll want to know: ಏನು ಸಮಾಚಾರ.
 ಏನು ಸಮಾಚಾರ? (ēnu samācāra?) — "what's new?", literally "what news?". ಸಮಾಚಾರ (samācāra) is "news".
 
+The word, taken apart.
+ಏನು ಸಮಾಚಾರ (ēnu samācāra) is ēnu, "what" (DEDR 5151), native, and samācāra, "news", from Sanskrit samācāra, "conduct, usage", which also came to mean news.
+
 What you've built.
 A friendly question after hello.
 
@@ -69,6 +75,9 @@ Before the new one: say the Kannada for have you eaten, then the Kannada for wha
 
 You'll want to know: ತುಂಬಾ ದಿನ ಆಯ್ತು.
 ತುಂಬಾ ದಿನ ಆಯ್ತು (tumbā dina āytu) — "it's been a long time", literally "many days have happened": ತುಂಬಾ, "very, many"; ದಿನ, "day".
+
+The word, taken apart.
+ತುಂಬಾ ದಿನ ಆಯ್ತು (tumbā dina āytu) is tumbā, "very" (DEDR 3331), dina, "day", from Sanskrit dina (CDIAL 6328), and āytu, "it has become", from native āgu, "to become" (DEDR 333): "it has become very many days". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 What you say to a friend you have not seen.
@@ -127,6 +136,9 @@ Before the new one: say the Kannada for long time, then the Kannada for hello.
 
 You'll want to know: ಕ್ಷೇಮವೇ.
 ಕ್ಷೇಮವೇ? (kṣēmavē?) — "are you well?", a formal, warm question. ಕ್ಷೇಮ (kṣēma) is "welfare"; ‑ಏ makes it a question.
+
+The word, taken apart.
+ಕ್ಷೇಮವೇ (kṣēmavē) is kṣēma, "well-being", from Sanskrit kṣema, "ease, happiness" (CDIAL 3745), with -ē, the ending that asks.
 
 What you've built.
 The formal cousin of hēgiddīrā.

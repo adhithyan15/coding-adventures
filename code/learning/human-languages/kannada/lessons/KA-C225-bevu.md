@@ -14,7 +14,8 @@ romanization: "bēvu"
 concept_tag: KA-VASTU225-BEVU
 prerequisites: [KA-C224-prakrti, KA-C224-prani]
 sounds: []
-roots: []
+roots: [dravidian-veempu-neem]
+etymology_hook: "bēvu: native Dravidian, one word with Tamil vēmpu and Telugu vēmu (DEDR 5531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C224-prani]
 <!-- hl-knowledge: introduces=[KA-LEX-C225-VASTU225-01]; assesses=[] -->
 
 **ಬೇವು** — *bēvu* — "neem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇವು** (*bēvu*) is native Dravidian, one word with Tamil *vēmpu* and Telugu *vēmu* (DEDR 5531). DEDR lists *bēvu*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

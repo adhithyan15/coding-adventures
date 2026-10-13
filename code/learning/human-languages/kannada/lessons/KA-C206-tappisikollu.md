@@ -14,7 +14,8 @@ romanization: "tappisikoḷḷu"
 concept_tag: KA-VERB-TAPPISIKOLLU
 prerequisites: [KA-C206-tevalu, KA-C206-himbalisu]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip, dravidian-kol-take]
+etymology_hook: "tappisikoḷḷu: native tappisu 'to make miss' (DEDR 3071) + koḷḷu 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C206-himbalisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C206-KRIYE206-04]; assesses=[] -->
 
 **ತಪ್ಪಿಸಿಕೊಳ್ಳು** — *tappisikoḷḷu* — "to escape, to dodge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಪ್ಪಿಸಿಕೊಳ್ಳು** (*tappisikoḷḷu*) is native Dravidian: *tappisu*, "to make slip, avoid", from *tappu*, "to slip, miss" (DEDR 3071), with *koḷḷu*, "to take" (DEDR 2151): "to slip oneself away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

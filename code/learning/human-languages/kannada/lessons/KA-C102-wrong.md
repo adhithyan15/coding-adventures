@@ -11,7 +11,8 @@ romanization: "tappu"
 concept_tag: KA-RESP-WRONG
 prerequisites: [KA-C101-urgent, KA-C102-other]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip]
+etymology_hook: "tappu: native Dravidian, one word with Tamil tappu (DEDR 3071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C102-other]
 
 **ತಪ್ಪು ಆಯ್ತು** (*tappu āytu*) — "I made a mistake", literally "a mistake happened".
 It is the honest partner of **ಸರಿ** (*sari*), "right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಪ್ಪು** (*tappu*) is native Dravidian, one word with Tamil *tappu* (DEDR 3071). DEDR lists *tappu* itself, "to slip, err; a mistake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cellu"
 concept_tag: KA-VERB-CELLU
 prerequisites: [KA-C271-samsthe, KA-C271-ilakhe]
 sounds: []
-roots: []
+roots: [dravidian-callu-sprinkle]
+etymology_hook: "cellu: native Dravidian, one word with Tamil callu and Telugu callu (DEDR 2384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C271-ilakhe]
 <!-- hl-knowledge: introduces=[KA-LEX-C272-KRIYE272-01]; assesses=[] -->
 
 **ಚೆಲ್ಲು** — *cellu* — "to spill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೆಲ್ಲು** (*cellu*) is native Dravidian, one word with Tamil *callu* and Telugu *callu* (DEDR 2384). DEDR lists *callu*, *cellu*, "to scatter, pour out, spill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

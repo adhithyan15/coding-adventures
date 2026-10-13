@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 159,
-  "sourceHash": "fnv1a64:a0a45432e3d853d0",
+  "sourceHash": "fnv1a64:9fc9bbcb782fb0b0",
   "lessonIds": [
     "KA-C159-suli",
     "KA-C159-are",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch159.txt",
   "json": "kannada/narration/ch159.json",
-  "textHash": "fnv1a64:6fe2bd883bea5847",
-  "jsonHash": "fnv1a64:6c24720beaeec184",
+  "textHash": "fnv1a64:aaafacb95111e13e",
+  "jsonHash": "fnv1a64:15bff9879252bffb",
   "findings": []
 }

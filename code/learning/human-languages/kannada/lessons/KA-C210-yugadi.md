@@ -14,7 +14,8 @@ romanization: "yugādi"
 concept_tag: KA-KALA210-YUGADI
 prerequisites: [KA-C210-taksana, KA-C210-biduvu]
 sounds: []
-roots: []
+roots: [sanskrit-yuga, sanskrit-adi]
+etymology_hook: "yugādi ← Sanskrit yuga 'an age' (CDIAL 10482) + ādi 'beginning' (CDIAL 1152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C210-biduvu]
 <!-- hl-knowledge: introduces=[KA-LEX-C210-KALA210-05]; assesses=[] -->
 
 **ಯುಗಾದಿ** — *yugādi* — "Ugadi, the Kannada New Year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯುಗಾದಿ** (*yugādi*) is Sanskrit *yuga*, "a yoke; an age of the world" (CDIAL 10482), and *ādi*, "beginning" (CDIAL 1152): "the beginning of an age", the new year.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

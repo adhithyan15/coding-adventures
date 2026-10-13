@@ -15,6 +15,9 @@ You'll want to know: ಹಸಿವು.
 That is the whole design. Hunger happens to you in Kannada rather than being something you have, and the sentence is built to say so.
 It begins like ಹಸು and has nothing to do with cows. Two words can share an opening and share no history at all.
 
+The word, taken apart.
+ಹಸಿವು (hasivu) is native Dravidian, one word with Tamil paci (DEDR 3825). DEDR gives the older Kannada pasi, pasivu.
+
 What you've built.
 The first of five words for how a body is.
 
@@ -45,6 +48,7 @@ You'll want to know: ನಿದ್ದೆ.
 ನಿದ್ದೆ (nidde) — "sleep".
 ನಿದ್ದೆ (nidde) is a Sanskrit word worn smooth by everyday use — the original had a hard cluster in the middle that Kannada softened into the doubled sound you hear now.
 It takes the same frame ಹಸಿವು (hasivu) took: ನನಗೆ ನಿದ್ದೆ (nidde). Learn one of these sentences and you have the shape for the rest of the chapter, which is why they are grouped.
+CDIAL 7200 lists Sanskrit nidrā, "sleep", and Prakrit ṇiddā.
 
 What you've built.
 Two.
@@ -75,6 +79,7 @@ You'll want to know: ಜ್ವರ.
 ಜ್ವರ (jvara) — "a fever".
 ಜ್ವರ (jvara) came in from Sanskrit whole, cluster and all, and Kannada did not smooth this one — which tells you it arrived through books and doctors rather than through kitchens.
 It is the word you hand a ವೈದ್ಯ first. ನನಗೆ ಜ್ವರ (jvara), with the same three pieces as the last two lessons, and you have said the most useful sentence in the chapter.
+CDIAL 5303 lists Sanskrit jvara, "fever".
 
 What you've built.
 Three.
@@ -107,6 +112,9 @@ You'll want to know: ನೋವು.
 ನೋವು (nōvu) is inherited, and it is the most useful word here because it attaches to everything you already have. ತಲೆ ನೋವು (nōvu), ಹೊಟ್ಟೆ ನೋವು (nōvu), ಹಲ್ಲು ನೋವು (nōvu), ಬೆನ್ನು ನೋವು (nōvu) — the body part goes in front and the whole thing is one compound.
 Every part of the body this book has taught you can be put in that slot. That is a sentence for every body part this book has given you, out of one new word, which is the best trade in the chapter.
 
+The word, taken apart.
+ನೋವು (nōvu) is native Dravidian, one word with Tamil nō (DEDR 3793). DEDR lists nōvu itself, "affliction", under nō, "to suffer, ache".
+
 What you've built.
 Four.
 
@@ -136,6 +144,7 @@ You'll want to know: ಆರೋಗ್ಯ.
 ಆರೋಗ್ಯ (ārōgya) — "health".
 ಆರೋಗ್ಯ (ārōgya) is Sanskrit, and it is built the negative way round: a piece meaning being unwell, with a not fixed on the front of it. Health is named by what is missing rather than by what is there.
 It gives you a better answer than you had. ನೀವು ಹೇಗಿದ್ದೀರಾ? has been answered with ಚೆನ್ನಾಗಿ since the how-are-you chapter, which says you are doing well. ಆರೋಗ್ಯ (ārōgya) says the body itself is sound, and it is the word a ವೈದ್ಯ wants.
+CDIAL 1330 lists Sanskrit ārogya, "health".
 
 What you've built.
 Five: ಹಸಿವು (hasivu), ನಿದ್ದೆ (nidde), ಜ್ವರ (jvara), ನೋವು (nōvu), ಆರೋಗ್ಯ (ārōgya). Enough to say how you are and to ask it back.

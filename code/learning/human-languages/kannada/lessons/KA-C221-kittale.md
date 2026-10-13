@@ -14,7 +14,8 @@ romanization: "kittaḷe"
 concept_tag: KA-VASTU221-KITTALE
 prerequisites: [KA-C220-kasa, KA-C221-sebu]
 sounds: []
-roots: []
+roots: [dravidian-kiccili-orange]
+etymology_hook: "kittaḷe: native Dravidian, one word with Tamil kiccili and Telugu kiccili (DEDR 1512)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C221-sebu]
 <!-- hl-knowledge: introduces=[KA-LEX-C221-VASTU221-02]; assesses=[] -->
 
 **ಕಿತ್ತಳೆ** — *kittaḷe* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಿತ್ತಳೆ** (*kittaḷe*) is native Dravidian, one word with Tamil *kiccili*, Telugu *kiccili* and Malayalam *kiccili* (DEDR 1512). DEDR lists *kittaḷe*, "an orange".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

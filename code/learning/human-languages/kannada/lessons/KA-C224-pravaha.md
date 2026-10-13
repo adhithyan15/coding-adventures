@@ -14,7 +14,8 @@ romanization: "pravāha"
 concept_tag: KA-VASTU224-PRAVAHA
 prerequisites: [KA-C224-hoge, KA-C224-dhulu]
 sounds: []
-roots: []
+roots: [sanskrit-pravaha]
+etymology_hook: "pravāha ← Sanskrit pravāha 'stream, current', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C224-dhulu]
 <!-- hl-knowledge: introduces=[KA-LEX-C224-VASTU224-03]; assesses=[] -->
 
 **ಪ್ರವಾಹ** — *pravāha* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರವಾಹ** (*pravāha*) is Sanskrit *pravāha*, "stream, current", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

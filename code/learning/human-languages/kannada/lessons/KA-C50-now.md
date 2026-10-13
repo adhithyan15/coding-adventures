@@ -11,7 +11,8 @@ romanization: "īga"
 concept_tag: KA-WORD-NOW
 prerequisites: [KA-C49-just-so, KA-C48-teacher]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "īga: native Dravidian, the near-pointing base i- 'this'; DEDR 410 lists īga 'now'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C49-just-so]
 ಈಗ is 'now', and it stands on the same ಇ- of nearness the chapter before ended on. ಆಗ (*āga*) is its partner: 'then, at that time', carrying the ಅ- of distance.
 
 So Kannada names this moment and that moment by the same means it names this thing and that thing. Time is handled as one more place to point at.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಈಗ** (*īga*) is native Dravidian, built on the near-pointing base *i-*, "this": this time. DEDR 410 lists *īga* itself, "at this time, now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

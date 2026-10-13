@@ -14,7 +14,8 @@ romanization: "mṛdu"
 concept_tag: KA-QUAL141-MRDU
 prerequisites: [KA-C140-bhara, KA-C141-hagura]
 sounds: []
-roots: []
+roots: [sanskrit-mrdu]
+etymology_hook: "mṛdu ← Sanskrit mṛdu 'soft, tender', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C141-hagura]
 <!-- hl-knowledge: introduces=[KA-LEX-C141-QUAL141-02]; assesses=[] -->
 
 **ಮೃದು** — *mṛdu* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೃದು** (*mṛdu*) is Sanskrit *mṛdu*, "soft, tender", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

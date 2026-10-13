@@ -14,7 +14,8 @@ romanization: "hiḍike"
 concept_tag: KA-VASTU303-HIDIKE
 prerequisites: [KA-C303-atta, KA-C303-cilaka]
 sounds: []
-roots: []
+roots: [dravidian-pidi-seize]
+etymology_hook: "hiḍike: native Dravidian, from hiḍi 'to grasp'; DEDR 4148 lists piḍi 'handle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C303-cilaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C303-VASTU303-04]; assesses=[] -->
 
 **ಹಿಡಿಕೆ** — *hiḍike* — "a handle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಡಿಕೆ** (*hiḍike*) is native Dravidian, from *hiḍi*, "to grasp", and DEDR 4148 lists *piḍi*, "a hold, a handle, a hilt", with the older *p-*; the entry also has Tamil *piṭi*, Telugu *piḍi* and Malayalam *piṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ebbisu"
 concept_tag: KA-VERB-EBBISU
 prerequisites: [KA-C235-ese, KA-C236-biccu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "ebbisu: native Dravidian; DEDR 851 lists ebbisu 'to rouse, awaken'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C236-biccu]
 <!-- hl-knowledge: introduces=[KA-LEX-C236-KRIYE236-02]; assesses=[] -->
 
 **ಎಬ್ಬಿಸು** — *ebbisu* — "to wake (someone) up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಬ್ಬಿಸು** (*ebbisu*) is native Dravidian, of the root for "to rise, awake", and DEDR 851 lists *ebbisu*, "to rouse, awaken", itself; the entry also has Tamil *eḻu* and Malayalam *eḻuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

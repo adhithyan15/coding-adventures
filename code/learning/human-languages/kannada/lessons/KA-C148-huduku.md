@@ -14,7 +14,8 @@ romanization: "huḍuku"
 concept_tag: KA-VERB-HUDUKU
 prerequisites: [KA-C147-ode, KA-C148-kalisu]
 sounds: []
-roots: []
+roots: [dravidian-puduku-grope]
+etymology_hook: "huḍuku: native Dravidian, one word with Telugu puḍuku (DEDR 4251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C148-kalisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C148-ACT148-02]; assesses=[] -->
 
 **ಹುಡುಕು** — *huḍuku* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಡುಕು** (*huḍuku*) is native Dravidian, one word with Telugu *puḍuku* (DEDR 4251). DEDR lists *puḍuku* and *huḍuku*, "to grope, seek": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

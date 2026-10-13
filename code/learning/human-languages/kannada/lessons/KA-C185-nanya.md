@@ -14,7 +14,8 @@ romanization: "nāṇya"
 concept_tag: KA-VASTU185-NANYA
 prerequisites: [KA-C184-elaniru, KA-C185-notu]
 sounds: []
-roots: []
+roots: [sanskrit-nanaka]
+etymology_hook: "nāṇya ← Sanskrit nāṇaka 'coin, anything stamped', reshaped as a tadbhava (CDIAL 7050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C185-notu]
 <!-- hl-knowledge: introduces=[KA-LEX-C185-VASTU185-02]; assesses=[] -->
 
 **ನಾಣ್ಯ** — *nāṇya* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಣ್ಯ** (*nāṇya*) comes from Sanskrit *nāṇaka*, "coin, anything stamped", reshaped to Kannada sounds: a tadbhava (CDIAL 7050). Kannada reshaped the ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

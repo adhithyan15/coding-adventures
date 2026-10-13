@@ -14,7 +14,8 @@ romanization: "ghaṭane"
 concept_tag: KA-KARANA253-GHATANE
 prerequisites: [KA-C252-ottige, KA-C253-udaharane]
 sounds: []
-roots: []
+roots: [sanskrit-ghatana]
+etymology_hook: "ghaṭane ← Sanskrit ghaṭanā 'a happening, union', with Kannada's -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C253-udaharane]
 <!-- hl-knowledge: introduces=[KA-LEX-C253-KARANA253-02]; assesses=[] -->
 
 **ಘಟನೆ** — *ghaṭane* — "an event, an incident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಘಟನೆ** (*ghaṭane*) is Sanskrit *ghaṭanā*, "a coming together, a happening", with Kannada's *-e* for the Sanskrit *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

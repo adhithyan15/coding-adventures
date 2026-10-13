@@ -14,7 +14,8 @@ romanization: "sāyu"
 concept_tag: KA-VERB-SAYU
 prerequisites: [KA-C200-gunavagu, KA-C200-turisu]
 sounds: []
-roots: []
+roots: [dravidian-caa-die]
+etymology_hook: "sāyu: native Dravidian, one word with Tamil cā (DEDR 2426)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C200-turisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C200-KRIYE200-03]; assesses=[] -->
 
 **ಸಾಯು** — *sāyu* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಯು** (*sāyu*) is native Dravidian, one word with Tamil *cā* (DEDR 2426). DEDR lists *sāy*, "to die", and *sāvu*, "death". DEDR 2426 compares Sanskrit *śava*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

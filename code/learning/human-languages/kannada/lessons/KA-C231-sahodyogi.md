@@ -14,7 +14,8 @@ romanization: "sahōdyōgi"
 concept_tag: KA-KELASA231-SAHODYOGI
 prerequisites: [KA-C230-guddali, KA-C230-kudugolu]
 sounds: []
-roots: []
+roots: [sanskrit-saha, sanskrit-udyoga]
+etymology_hook: "sahōdyōgi: Sanskrit saha 'with' + udyogin 'one who works' (udyoga, CDIAL 2055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C230-kudugolu]
 <!-- hl-knowledge: introduces=[KA-LEX-C231-KELASA231-01]; assesses=[] -->
 
 **ಸಹೋದ್ಯೋಗಿ** — *sahōdyōgi* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಹೋದ್ಯೋಗಿ** (*sahōdyōgi*) is Sanskrit *saha*, "with", and *udyogin*, "one who works", from *udyoga*, "exertion, work" (CDIAL 2055): "one who works with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

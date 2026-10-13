@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a century, then the Kannada for a moment
 You'll want to know: ಅಡುಗೆಮನೆ.
 ಅಡುಗೆಮನೆ — aḍugemane — "a kitchen".
 
+The word, taken apart.
+ಅಡುಗೆಮನೆ (aḍugemane) is native Dravidian: aḍuge, "cooking" (DEDR 76), and mane, "house, room" (DEDR 4776): "the cooking room". DEDR 76 compares Sanskrit aṭṭa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a moment, then the Kannada for a kitchen
 
 You'll want to know: ಸ್ನಾನದ ಮನೆ.
 ಸ್ನಾನದ ಮನೆ — snānada mane — "a bathroom".
+
+The word, taken apart.
+ಸ್ನಾನದ ಮನೆ (snānada mane) is snānada, "of bathing", from Sanskrit snāna (CDIAL 13789), and mane, "house, room", native Dravidian (DEDR 4776).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a kitchen, then the Kannada for a bathro
 You'll want to know: ಶೌಚಾಲಯ.
 ಶೌಚಾಲಯ — śaucālaya — "a toilet".
 
+The word, taken apart.
+ಶೌಚಾಲಯ (śaucālaya) is Sanskrit śauca, "cleanness" (CDIAL 12649), and ālaya, "house, receptacle" (CDIAL 1366): "the place for cleansing".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a bathroom, then the Kannada for a toile
 You'll want to know: ಕೋಣೆ.
 ಕೋಣೆ — kōṇe — "a room".
 
+The word, taken apart.
+ಕೋಣೆ (kōṇe) is native Dravidian (DEDR 2211). DEDR lists Kannada kōṇe, "an inner apartment, a kitchen".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a toilet, then the Kannada for a room.
 
 You'll want to know: ಅಂಗಳ.
 ಅಂಗಳ — aṅgaḷa — "a courtyard, a front yard".
+
+The word, taken apart.
+ಅಂಗಳ (aṅgaḷa) is generally taken as a tadbhava of Sanskrit aṅgaṇa, "courtyard" (CDIAL 118), with ḷ for ṇ. DEDR 33 lists a Kannada aṅgaḷa too, but that one means "palate": a different word.
 
 What you've built.
 One more word for this chapter.

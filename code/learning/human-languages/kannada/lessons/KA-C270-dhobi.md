@@ -14,7 +14,8 @@ romanization: "dhōbi"
 concept_tag: KA-KELASA270-DHOBI
 prerequisites: [KA-C270-vakya, KA-C270-ksaurika]
 sounds: []
-roots: []
+roots: [hindustani-dhobi]
+etymology_hook: "dhōbi ← Hindustani dhobī, from the verb for 'washes' (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C270-ksaurika]
 <!-- hl-knowledge: introduces=[KA-LEX-C270-KELASA270-05]; assesses=[] -->
 
 **ಧೋಬಿ** — *dhōbi* — "a washerman, a laundryman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಧೋಬಿ** (*dhōbi*) is Hindustani *dhobī*, "washerman", which CDIAL 6886 traces to a reconstructed *\*dhauvati*, "washes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

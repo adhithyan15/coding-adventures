@@ -11,7 +11,8 @@ romanization: "āhvāna"
 concept_tag: KA-COUR-INVITE
 prerequisites: [KA-C87-thesame, KA-C88-congratulations]
 sounds: []
-roots: []
+roots: [sanskrit-ahvana]
+etymology_hook: "āhvāna ← Sanskrit āhvāna 'a calling, summons', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C88-congratulations]
 
 **ನಿಮಗೆ ಆಹ್ವಾನ** (*nimage āhvāna*) — "an invitation for you", with **ನಿಮಗೆ**,
 "to you".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಹ್ವಾನ** (*āhvāna*) is Sanskrit *āhvāna*, "a calling, a summons", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

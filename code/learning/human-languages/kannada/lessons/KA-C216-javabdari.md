@@ -14,7 +14,8 @@ romanization: "javābdāri"
 concept_tag: KA-KARANA216-JAVABDARI
 prerequisites: [KA-C216-svatantrya, KA-C216-nyaya]
 sounds: []
-roots: []
+roots: [persian-javabdari]
+etymology_hook: "javābdāri ← Persian javābdārī 'answerability', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C216-nyaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C216-KARANA216-04]; assesses=[] -->
 
 **ಜವಾಬ್ದಾರಿ** — *javābdāri* — "responsibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜವಾಬ್ದಾರಿ** (*javābdāri*) is a loan from Persian *javābdārī*, "answerability": *javāb*, "answer", from Arabic, and *-dār*, "holding". It came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

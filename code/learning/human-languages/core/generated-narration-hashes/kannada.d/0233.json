@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 233,
-  "sourceHash": "fnv1a64:f4202014163010fc",
+  "sourceHash": "fnv1a64:e8b8c274f307d263",
   "lessonIds": [
     "KA-C233-dinasi",
     "KA-C233-labha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch233.txt",
   "json": "kannada/narration/ch233.json",
-  "textHash": "fnv1a64:147ecceffd0f52dd",
-  "jsonHash": "fnv1a64:3f33e4a3e24849db",
+  "textHash": "fnv1a64:3e6bd2cbfa7f7a83",
+  "jsonHash": "fnv1a64:1c8d12a0684f83e0",
   "findings": []
 }

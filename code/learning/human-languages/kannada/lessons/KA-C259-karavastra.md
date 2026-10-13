@@ -14,7 +14,8 @@ romanization: "karavastra"
 concept_tag: KA-VASTU259-KARAVASTRA
 prerequisites: [KA-C259-svetar, KA-C259-salu2]
 sounds: []
-roots: []
+roots: [sanskrit-kara-hand, sanskrit-vastra]
+etymology_hook: "karavastra ← Sanskrit kara 'hand' (CDIAL 2779) + vastra 'cloth' (CDIAL 11450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C259-salu2]
 <!-- hl-knowledge: introduces=[KA-LEX-C259-VASTU259-04]; assesses=[] -->
 
 **ಕರವಸ್ತ್ರ** — *karavastra* — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರವಸ್ತ್ರ** (*karavastra*) is built from Sanskrit *kara*, "hand" (CDIAL 2779), and *vastra*, "cloth, dress" (CDIAL 11450): "hand cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

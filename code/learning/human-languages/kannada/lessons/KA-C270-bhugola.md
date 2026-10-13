@@ -14,7 +14,8 @@ romanization: "bhūgōḷa"
 concept_tag: KA-KELASA270-BHUGOLA
 prerequisites: [KA-C269-mahiti, KA-C269-anka]
 sounds: []
-roots: []
+roots: [sanskrit-bhu-earth, sanskrit-gola-ball]
+etymology_hook: "bhūgōḷa ← Sanskrit bhū 'earth' (CDIAL 9546) + gōla 'ball' (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C269-anka]
 <!-- hl-knowledge: introduces=[KA-LEX-C270-KELASA270-01]; assesses=[] -->
 
 **ಭೂಗೋಳ** — *bhūgōḷa* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭೂಗೋಳ** (*bhūgōḷa*) is Sanskrit *bhū*, "world, ground" (CDIAL 9546), and *gōla*, "ball" (CDIAL 4321), with the *l* written *ḷ*: "the earth's ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for without, then the Kannada for anyway.
 You'll want to know: ಹೇಗಾದರೂ.
 ಹೇಗಾದರೂ — hēgādarū — "somehow, one way or another".
 
+The word, taken apart.
+ಹೇಗಾದರೂ (hēgādarū) is native Dravidian: hēge, "how" (DEDR 5151), and ādarū, "even if it becomes", from āgu, "to become" (DEDR 333): "however it may turn out". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for anyway, then the Kannada for somehow.
 
 You'll want to know: ಅಂದರೆ.
 ಅಂದರೆ — andare — "that is to say, meaning".
+
+The word, taken apart.
+ಅಂದರೆ (andare) is native Dravidian: the "if" form of an, "to say" (DEDR 868). "If one says" came to mean "that is to say".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for somehow, then the Kannada for that is to
 You'll want to know: ನೆಪ.
 ನೆಪ — nepa — "an excuse, a pretext".
 
+The word, taken apart.
+Where ನೆಪ (nepa) comes from is uncertain: neither DEDR nor CDIAL records it for Kannada, under its form or under "excuse".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for that is to say, then the Kannada for an 
 You'll want to know: ಆಧಾರ.
 ಆಧಾರ — ādhāra — "a basis, grounds; support".
 
+The word, taken apart.
+ಆಧಾರ (ādhāra) is Sanskrit ādhāra, "support, substratum", taken over whole as a learned loan, a tatsama (CDIAL 1165).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an excuse, then the Kannada for a basis.
 
 You'll want to know: ಸಾಕ್ಷಿ.
 ಸಾಕ್ಷಿ — sākṣi — "evidence; a witness".
+
+The word, taken apart.
+ಸಾಕ್ಷಿ (sākṣi) is Sanskrit sākṣi, "witness", taken over whole as a learned loan, a tatsama (CDIAL 13321).
 
 What you've built.
 One more word for this chapter.

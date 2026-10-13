@@ -14,7 +14,8 @@ romanization: "uguru"
 concept_tag: KA-THINGS136-UGURU
 prerequisites: [KA-C135-manikattu, KA-C136-hebberalu]
 sounds: []
-roots: []
+roots: [dravidian-ukir-nail]
+etymology_hook: "uguru: native Dravidian, one word with Tamil ukir (DEDR 561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C136-hebberalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **ಉಗುರು** — *uguru* — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಗುರು** (*uguru*) is native Dravidian, one word with Tamil *ukir* (DEDR 561). DEDR gives Kannada *ugur*, "nail, claw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

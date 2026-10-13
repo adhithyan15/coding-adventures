@@ -11,7 +11,8 @@ romanization: "hattira"
 concept_tag: KA-FIND-NEAR
 prerequisites: [KA-C100-bus, KA-C100-station]
 sounds: []
-roots: []
+roots: [kannada-hattira-near]
+etymology_hook: "hattira: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C100-station]
 **ಹತ್ತಿರ** (*hattira*) — "near".
 
 **ಹತ್ತಿರ ಇದೆಯಾ?** (*hattira ideyā?*) — "is it near?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಹತ್ತಿರ** (*hattira*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

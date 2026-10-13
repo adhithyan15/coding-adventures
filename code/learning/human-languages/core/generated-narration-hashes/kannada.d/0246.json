@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 246,
-  "sourceHash": "fnv1a64:11176c37c56636aa",
+  "sourceHash": "fnv1a64:99595e234e2694f0",
   "lessonIds": [
     "KA-C246-uluku",
     "KA-C246-ajirna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch246.txt",
   "json": "kannada/narration/ch246.json",
-  "textHash": "fnv1a64:b8f7fd794bb0664e",
-  "jsonHash": "fnv1a64:97e77bdc6eb13ea6",
+  "textHash": "fnv1a64:271e0122589f44f2",
+  "jsonHash": "fnv1a64:04126a04de77fb80",
   "findings": []
 }

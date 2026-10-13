@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 153,
-  "sourceHash": "fnv1a64:ecf5496b39b7159e",
+  "sourceHash": "fnv1a64:97b18a6ec2ae0260",
   "lessonIds": [
     "KA-C153-tere",
     "KA-C153-tumbu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch153.txt",
   "json": "kannada/narration/ch153.json",
-  "textHash": "fnv1a64:ba0abc50caed9823",
-  "jsonHash": "fnv1a64:73b12433eeba405d",
+  "textHash": "fnv1a64:2826d383e8f7c450",
+  "jsonHash": "fnv1a64:27b152328410bdc6",
   "findings": []
 }

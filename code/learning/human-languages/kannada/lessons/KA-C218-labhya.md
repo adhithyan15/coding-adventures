@@ -14,7 +14,8 @@ romanization: "labhya"
 concept_tag: KA-GUNA218-LABHYA
 prerequisites: [KA-C217-dappa, KA-C218-siddha]
 sounds: []
-roots: []
+roots: [sanskrit-labhya]
+etymology_hook: "labhya ← Sanskrit labhya 'obtainable'; CDIAL 10950 lists labhyate 'is taken'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C218-siddha]
 <!-- hl-knowledge: introduces=[KA-LEX-C218-GUNA218-02]; assesses=[] -->
 
 **ಲಭ್ಯ** — *labhya* — "available".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲಭ್ಯ** (*labhya*) is Sanskrit *labhya*, "to be obtained", taken over whole: a tatsama. CDIAL 10950 lists the verb form *labhyate*, "is taken".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

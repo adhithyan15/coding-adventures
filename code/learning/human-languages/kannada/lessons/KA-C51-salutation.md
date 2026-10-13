@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SALUTATION
 prerequisites: [KA-C51-blessing, KA-C49-just-so]
 sounds: []
 roots: []
+etymology_hook: "vandane ← Sanskrit vandana 'praising, salutation' (CDIAL 11271)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [KA-C51-blessing]
 Set it beside ನಮಸ್ಕಾರ, the first word this book taught. That one stands on *nam-*, which also means to bow. Sanskrit kept two separate roots for bending toward another person and Kannada kept them both: one became the everyday hello, the other stayed the formal thanks-and-farewell.
 
 Five courtesies: gratitude, a good turn, respect, a blessing, a salutation.
+
+CDIAL 11271 lists Sanskrit *vandana*, "praising".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

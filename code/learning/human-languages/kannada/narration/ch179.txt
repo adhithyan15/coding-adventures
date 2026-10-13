@@ -12,6 +12,9 @@ Before the new one: say the Kannada for in case, then the Kannada for by the way
 You'll want to know: ತಾಜಾ.
 ತಾಜಾ — tājā — "fresh".
 
+The word, taken apart.
+ತಾಜಾ (tājā) is a loan from Persian tāza, "fresh", which came through Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for by the way, then the Kannada for fresh.
 
 You'll want to know: ಹಳಸಿದ.
 ಹಳಸಿದ — haḷasida — "stale, spoiled (food)".
+
+The word, taken apart.
+ಹಳಸಿದ (haḷasida) is native Dravidian, from haḷasu, "to go stale", which DEDR 3999 lists as older Kannada paḻasu, "to become old, decay, be spoiled"; the entry also has Tamil paḻa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for fresh, then the Kannada for stale.
 You'll want to know: ಹಸಿ.
 ಹಸಿ — hasi — "raw, uncooked".
 
+The word, taken apart.
+ಹಸಿ (hasi) is native Dravidian, of the root for "green", and DEDR 3821 lists older Kannada pasi, "greenness, unripeness, rawness", itself; the entry also has Tamil paca.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for stale, then the Kannada for raw.
 You'll want to know: ಸಪ್ಪೆ.
 ಸಪ್ಪೆ — sappe — "bland, tasteless".
 
+The word, taken apart.
+ಸಪ್ಪೆ (sappe) is native Dravidian, one word with Tamil cappai and Telugu cappa (DEDR 2337). DEDR lists cappe, sappe, "flatness, insipidness". DEDR 2337 compares Sanskrit capaṭa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for raw, then the Kannada for bland.
 
 You'll want to know: ದುಬಾರಿ.
 ದುಬಾರಿ — dubāri — "expensive".
+
+The word, taken apart.
+The origin of ದುಬಾರಿ (dubāri) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.

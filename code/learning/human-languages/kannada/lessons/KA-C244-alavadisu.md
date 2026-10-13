@@ -14,7 +14,8 @@ romanization: "aḷavaḍisu"
 concept_tag: KA-VERB-ALAVADISU
 prerequisites: [KA-C244-nekku, KA-C244-hiru]
 sounds: []
-roots: []
+roots: [dravidian-alavu-ability]
+etymology_hook: "aḷavaḍisu: origin uncertain; often linked to aḷavu 'ability, fitness' (DEDR 291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C244-hiru]
 <!-- hl-knowledge: introduces=[KA-LEX-C244-KRIYE244-05]; assesses=[] -->
 
 **ಅಳವಡಿಸು** — *aḷavaḍisu* — "to install, to fit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಅಳವಡಿಸು** (*aḷavaḍisu*) is uncertain. It is often linked to *aḷavu*, "ability, possibility", which DEDR 291 lists, but DEDR does not list *aḷavaḍisu* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

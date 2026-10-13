@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 251,
-  "sourceHash": "fnv1a64:5f9d92e6ae1a278e",
+  "sourceHash": "fnv1a64:f6a05fba4de5fba3",
   "lessonIds": [
     "KA-C251-gadi",
     "KA-C251-kaluve",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch251.txt",
   "json": "kannada/narration/ch251.json",
-  "textHash": "fnv1a64:ccfeae9ac3d06e55",
-  "jsonHash": "fnv1a64:5bfd6a389d22f1fc",
+  "textHash": "fnv1a64:19e911d3ce6926da",
+  "jsonHash": "fnv1a64:8c0b5983a86dda8c",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 274,
-  "sourceHash": "fnv1a64:aaf9473e49902b18",
+  "sourceHash": "fnv1a64:a1712b9362d6b8d9",
   "lessonIds": [
     "KA-C274-kuni",
     "KA-C274-ottu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch274.txt",
   "json": "kannada/narration/ch274.json",
-  "textHash": "fnv1a64:538f69d4cd716ef6",
-  "jsonHash": "fnv1a64:7d04404239f809af",
+  "textHash": "fnv1a64:3cf8cb32718d83e4",
+  "jsonHash": "fnv1a64:38b46a4a88cc4b87",
   "findings": []
 }

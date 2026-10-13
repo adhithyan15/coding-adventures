@@ -11,7 +11,8 @@ romanization: "dāri"
 concept_tag: KA-NOUN-PATH
 prerequisites: [KA-C55-village, KA-C53-cloud]
 sounds: []
-roots: []
+roots: [dravidian-daari-path]
+etymology_hook: "dāri: native Dravidian, one word with Telugu dāri (DEDR 3170)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ This is the word that turns the other four into directions. ಕೆರೆಗೆ �
 Kannada keeps a second word for the same thing, ಹಾದಿ (*hādi*), and speakers use the two close to interchangeably, though ಹಾದಿ leans a little toward the worn track and ದಾರಿ a little toward the route you choose.
 
 Put ದಾರಿ with the polite word you already have and you have the sentence a stranger needs most: ದಯವಿಟ್ಟು ದಾರಿ ಹೇಳಿ — please tell me the way. Notice that nothing in it names you. Kannada lets the asking be the request.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಾರಿ** (*dāri*) is native Dravidian, one word with Telugu *dāri* (DEDR 3170). DEDR notes that Tamil *tārai*, "path", is a loan from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

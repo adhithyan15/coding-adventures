@@ -14,7 +14,8 @@ romanization: "sabhe"
 concept_tag: KA-KELASA231-SABHE
 prerequisites: [KA-C230-kudugolu, KA-C231-sahodyogi]
 sounds: []
-roots: []
+roots: [sanskrit-sabha]
+etymology_hook: "sabhe ← Sanskrit sabhā 'assembly, hall; council', a tatsama (CDIAL 13167)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C231-sahodyogi]
 <!-- hl-knowledge: introduces=[KA-LEX-C231-KELASA231-02]; assesses=[] -->
 
 **ಸಭೆ** — *sabhe* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಭೆ** (*sabhe*) is Sanskrit *sabhā*, "assembly, hall; council", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 13167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

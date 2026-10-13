@@ -14,7 +14,8 @@ romanization: "krīḍe"
 concept_tag: KA-VASTU191-KRIDE
 prerequisites: [KA-C190-kodali, KA-C191-citra]
 sounds: []
-roots: []
+roots: [sanskrit-krida]
+etymology_hook: "krīḍe ← Sanskrit krīḍā 'play, sport', with Kannada's -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C191-citra]
 <!-- hl-knowledge: introduces=[KA-LEX-C191-VASTU191-02]; assesses=[] -->
 
 **ಕ್ರೀಡೆ** — *krīḍe* — "sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ರೀಡೆ** (*krīḍe*) is Sanskrit *krīḍā*, "play, sport", with Kannada's *-e* for the Sanskrit *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

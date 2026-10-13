@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 154,
-  "sourceHash": "fnv1a64:be2973ac61826770",
+  "sourceHash": "fnv1a64:3784f91761f61160",
   "lessonIds": [
     "KA-C154-yaru",
     "KA-C154-endigu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch154.txt",
   "json": "kannada/narration/ch154.json",
-  "textHash": "fnv1a64:c632bc8786ac94c6",
-  "jsonHash": "fnv1a64:a845715a8aa624ec",
+  "textHash": "fnv1a64:69e13e3969f1b915",
+  "jsonHash": "fnv1a64:561326f4a2d19821",
   "findings": []
 }

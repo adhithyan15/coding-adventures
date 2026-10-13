@@ -14,7 +14,8 @@ romanization: "tayārisu"
 concept_tag: KA-VERB-TAYARISU
 prerequisites: [KA-C278-hintirugu, KA-C278-tade]
 sounds: []
-roots: []
+roots: [persian-taiyar]
+etymology_hook: "tayārisu: Hindustani taiyār 'ready', a Persian word, + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C278-tade]
 <!-- hl-knowledge: introduces=[KA-LEX-C278-KRIYE278-05]; assesses=[] -->
 
 **ತಯಾರಿಸು** — *tayārisu* — "to prepare, to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಯಾರಿಸು** (*tayārisu*) is Hindustani *taiyār*, "ready", a Persian word, made into a Kannada verb with *-isu*: "to make ready".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

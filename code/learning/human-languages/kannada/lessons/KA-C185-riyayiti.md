@@ -14,7 +14,8 @@ romanization: "riyāyiti"
 concept_tag: KA-VASTU185-RIYAYITI
 prerequisites: [KA-C185-notu, KA-C185-nanya]
 sounds: []
-roots: []
+roots: [arabic-riayat]
+etymology_hook: "riyāyiti ← Arabic riʿāyat 'consideration, concession', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C185-nanya]
 <!-- hl-knowledge: introduces=[KA-LEX-C185-VASTU185-03]; assesses=[] -->
 
 **ರಿಯಾಯಿತಿ** — *riyāyiti* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಿಯಾಯಿತಿ** (*riyāyiti*) is a loan from Arabic *riʿāyat*, "consideration, concession", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

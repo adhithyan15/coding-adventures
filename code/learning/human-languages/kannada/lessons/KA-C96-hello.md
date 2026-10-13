@@ -11,7 +11,8 @@ romanization: "halō"
 concept_tag: KA-GREET-HELLO
 prerequisites: [KA-C96-whatsnew, KA-C96-longtime]
 sounds: []
-roots: []
+roots: [english-hello]
+etymology_hook: "halō ← English hello"
 duration:
   max_seconds: 200
 requires:

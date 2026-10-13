@@ -14,7 +14,8 @@ romanization: "dēha"
 concept_tag: KA-AROGYA208-DEHA
 prerequisites: [KA-C207-perisu, KA-C207-sangrahisu]
 sounds: []
-roots: []
+roots: [sanskrit-deha]
+etymology_hook: "dēha ← Sanskrit deha 'body', a tatsama (CDIAL 6557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C207-sangrahisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C208-AROGYA208-01]; assesses=[] -->
 
 **ದೇಹ** — *dēha* — "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೇಹ** (*dēha*) is Sanskrit *deha*, "body", taken over whole as a learned loan, a tatsama (CDIAL 6557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

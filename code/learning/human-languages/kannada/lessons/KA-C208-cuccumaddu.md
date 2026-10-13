@@ -14,7 +14,8 @@ romanization: "cuccumaddu"
 concept_tag: KA-AROGYA208-CUCCUMADDU
 prerequisites: [KA-C207-sangrahisu, KA-C208-deha]
 sounds: []
-roots: []
+roots: [dravidian-cuccu-insert, dravidian-marundu-medicine]
+etymology_hook: "cuccumaddu: native cuccu 'to pierce, insert' (DEDR 2778) + maddu 'medicine' (DEDR 4719)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C208-deha]
 <!-- hl-knowledge: introduces=[KA-LEX-C208-AROGYA208-02]; assesses=[] -->
 
 **ಚುಚ್ಚುಮದ್ದು** — *cuccumaddu* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚುಚ್ಚುಮದ್ದು** (*cuccumaddu*) is native Dravidian: *cuccu*, "to insert, put in as on a spit" (DEDR 2778), and *maddu*, "medicine" (DEDR 4719, with Tamil *maruntu*): "medicine pushed in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhūkampa"
 concept_tag: KA-STHALA287-BHUKAMPA
 prerequisites: [KA-C287-dada, KA-C287-bara]
 sounds: []
-roots: []
+roots: [sanskrit-bhukampa]
+etymology_hook: "bhūkampa ← Sanskrit bhūkampa 'earthquake', a tatsama (CDIAL 9547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C287-bara]
 <!-- hl-knowledge: introduces=[KA-LEX-C287-STHALA287-03]; assesses=[] -->
 
 **ಭೂಕಂಪ** — *bhūkampa* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭೂಕಂಪ** (*bhūkampa*) is Sanskrit *bhūkampa*, "earthquake", taken over whole as a learned loan, a tatsama (CDIAL 9547). *Bhū*, "earth", and *kampa*, "trembling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

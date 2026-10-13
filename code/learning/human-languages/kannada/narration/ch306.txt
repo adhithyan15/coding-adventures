@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an actor, then the Kannada for a journal
 You'll want to know: ಮೋಚಿ.
 ಮೋಚಿ — mōci — "a cobbler".
 
+The word, taken apart.
+ಮೋಚಿ (mōci) is the northern word mocī, "cobbler", found in Hindi and Marathi; CDIAL 10349 traces it to mōcika, "tanner and cobbler", and takes that from an Iranian word for "shoe".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a journalist, then the Kannada for a cob
 
 You'll want to know: ಕುಂಬಾರ.
 ಕುಂಬಾರ — kumbāra — "a potter".
+
+The word, taken apart.
+ಕುಂಬಾರ (kumbāra) is a tadbhava of Sanskrit kumbhakāra, "potter" (CDIAL 3310), through Prakrit kuṁbhāra: "pot maker".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a cobbler, then the Kannada for a potter
 You'll want to know: ಮೇಸ್ತ್ರಿ.
 ಮೇಸ್ತ್ರಿ — mēstri — "a mason, a site foreman".
 
+The word, taken apart.
+ಮೇಸ್ತ್ರಿ (mēstri) is usually traced to Portuguese mestre, "master"; DEDR and CDIAL do not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a potter, then the Kannada for a mason.
 You'll want to know: ಪ್ಲಂಬರ್.
 ಪ್ಲಂಬರ್ — plambar — "a plumber".
 
+The word, taken apart.
+ಪ್ಲಂಬರ್ (plambar) is a loan from English plumber.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a mason, then the Kannada for a plumber.
 
 You'll want to know: ತೋಟಗಾರ.
 ತೋಟಗಾರ — tōṭagāra — "a gardener".
+
+The word, taken apart.
+ತೋಟಗಾರ (tōṭagāra) is native Dravidian, DEDR 3549 lists tōṭagāṟa, "gardener", itself, beside tōṭa, "garden"; the entry also has Tamil tōṇṭu and Malayalam tōṇṭuka.
 
 What you've built.
 One more word for this chapter.

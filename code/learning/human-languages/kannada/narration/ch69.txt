@@ -51,6 +51,9 @@ You'll want to know: ಗೊತ್ತಾ.
 ಗೊತ್ತಾ (gottā) — "do you know?"
 It is ಗೊತ್ತು with its ending swapped for a long -ಆ (-ā), and that ending is the whole question. Nothing else moved: no word order changed, nothing was added in front.
 
+The word, taken apart.
+ಗೊತ್ತಾ (gottā) is native Dravidian: gottu, "known" (DEDR 1847, the same root as Tamil kuṟi, "a mark"), with -ā, the ending that makes a question.
+
 Grammar Lens: one ending turns any statement into a question.
 Put -ಆ on the end of a statement and the statement becomes a yes-or-no question. That is the entire machinery.
 You have been saying it since the third chapter without being told, inside ನೀವು ಹೇಗಿದ್ದೀರಾ (nīvu hēgiddīrā) — the -ā on the end is this one.
@@ -94,6 +97,9 @@ Two things you already have, pushed together. ಅಲ್ಲ ("is not") takes the 
 ಇದು ಒಳ್ಳೆಯ ಪುಸ್ತಕ, ಅಲ್ವಾ? (idu oḷḷeya pustaka, alvā?) — "this is a good book, isn't it?"
 Register, plainly: ಅಲ್ವಾ (alvā) is spoken Kannada. Written Kannada says ಅಲ್ಲವೇ. This book teaches the everyday spoken variety throughout, so ಅಲ್ವಾ (alvā) is what you get here.
 
+The word, taken apart.
+ಅಲ್ವಾ (alvā) is native Dravidian: alla, "is not" (DEDR 234), worn down to al-, with -ā, the ending that makes a question.
+
 Grammar Lens: asking for agreement, not information.
 Somebody who says ಅಲ್ವಾ (alvā) usually knows the answer already; they are inviting you to agree, and they expect ಹೌದು.
 That makes it the cheapest politeness move in the language. A flat statement can land as a correction; the same statement with ಅಲ್ವಾ (alvā) on the end hands the other person a share of it.
@@ -134,6 +140,9 @@ You'll want to know: ಯಾಕೆ.
 The question words came in a set: ಯಾರು (yāru, "who"), ಎಲ್ಲಿ (elli, "where"), ಏನು (ēnu, "what"). ಯಾಕೆ (yāke) is the one the set was missing, and it is the one a short conversation runs out of first.
 ಯಾಕೆ (yāke)? on its own is a whole turn. Somebody says they are not coming; you say ಯಾಕೆ (yāke), and you have asked the only question that matters.
 You will also meet ಏಕೆ (ēke) for the same word. It is the careful, written form; ಯಾಕೆ (yāke) is what gets said. Keep the two side by side — the word for "because" is built on the written one, and it is not far off.
+
+The word, taken apart.
+ಯಾಕೆ (yāke) is native Dravidian, built on the question base yā-. DEDR 5151 lists yāke itself, "why".
 
 What you've built.
 Four question words now, and the one that opens a reason. Asking why is half of a conversation; the other half is the answer, and that is next.

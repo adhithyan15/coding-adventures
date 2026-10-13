@@ -14,7 +14,8 @@ romanization: "mundina"
 concept_tag: KA-MUNDE156-MUNDINA
 prerequisites: [KA-C155-omme, KA-C155-kale]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "mundina: native mundu 'the front' (DEDR 5020) + -ina 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C155-kale]
 <!-- hl-knowledge: introduces=[KA-LEX-C156-MUNDE156-01]; assesses=[] -->
 
 **ಮುಂದಿನ** — *mundina* — "next, coming". The future for "I" ends in **-ಉತ್ತೇನೆ** (*-uttēne*): **ಮುಂದಿನ ವಾರ ನಾನು ಬೆಂಗಳೂರಿಗೆ ಹೋಗುತ್ತೇನೆ** — *mundina vāra nānu beṅgaḷūrige hōguttēne* — "Next week I will go to Bengaluru."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂದಿನ** (*mundina*) is native Dravidian: *mundu*, "the front", which DEDR 5020 lists with Tamil *muṉ*, with *-ina*, "of": "of the front", the one coming next.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [KA-C04-hoogi-baruttene]
 sounds: [long-aa, retroflex-l]
 roots: [naale-tomorrow-dravidian, sigu-meet-dravidian]
+etymology_hook: "nāḷe is native, from nāḷ 'day' (DEDR 3656); sigu 'to be got, be found' is native too (DEDR 2498)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,8 @@ the very same *nāḷ* behind Tamil's *nāḷai*. **ಸಿಗೋಣ** (*sigōṇ
 from **ಸಿಗು** (*sigu*, "to meet, to be found") — so the phrase is "**tomorrow,
 let's meet**." The *-ōṇa* ending is Kannada's warm "let's ___":
 *hōgōṇa* ("let's go"), *tinnōṇa* ("let's eat").
+
+DEDR 3656 lists *nāḷe* itself with Tamil *nāḷai*; DEDR 2498 lists *sigu*, "to be caught, be got", with Tamil *cikku*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-NAALE-SIGONA-01, KA-ETYMON-C04-NAALE-SIGONA-02] -->

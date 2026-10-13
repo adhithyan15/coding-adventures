@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to drive, then the Kannada for to slip.
 You'll want to know: ಕುಣಿ.
 ಕುಣಿ — kuṇi — "to dance".
 
+The word, taken apart.
+ಕುಣಿ (kuṇi) is native Dravidian, one word with Tamil kuṉi, Telugu guniyu and Malayalam kunikka (DEDR 1863). DEDR lists kuṇi, "to hop, dance".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to slip, then the Kannada for to dance.
 
 You'll want to know: ಒತ್ತು.
 ಒತ್ತು — ottu — "to press".
+
+The word, taken apart.
+ಒತ್ತು (ottu) is native Dravidian, one word with Tamil oṟṟu and Telugu ottu (DEDR 1021). DEDR lists ottu, "to press together, press, squeeze".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to dance, then the Kannada for to press.
 You'll want to know: ಜಮಾ ಮಾಡು.
 ಜಮಾ ಮಾಡು — jamā māḍu — "to deposit (money)".
 
+The word, taken apart.
+ಜಮಾ ಮಾಡು (jamā māḍu) is Hindustani jamā, "a sum, a deposit", from Arabic jamʿ, "collecting", with native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to press, then the Kannada for to deposi
 You'll want to know: ಹಿಂಪಡೆ.
 ಹಿಂಪಡೆ — himpaḍe — "to withdraw (money)".
 
+The word, taken apart.
+ಹಿಂಪಡೆ (himpaḍe) is native Dravidian: him, "behind, back", which DEDR 4205 lists with older Kannada pin, and paḍe, "to get, obtain" (DEDR 3853): "to get back".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to deposit, then the Kannada for to with
 
 You'll want to know: ಸಹಿ ಮಾಡು.
 ಸಹಿ ಮಾಡು — sahi māḍu — "to sign".
+
+The word, taken apart.
+ಸಹಿ ಮಾಡು (sahi māḍu) is Hindustani sahī, "a signature", from Arabic ṣaḥīḥ, "correct, sound", with native māḍu, "to do" (DEDR 4797). A signature marks a paper as correct.
 
 What you've built.
 One more word for this chapter.

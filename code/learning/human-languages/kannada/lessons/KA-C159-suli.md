@@ -14,7 +14,8 @@ romanization: "suli"
 concept_tag: KA-VERB-SULI
 prerequisites: [KA-C158-pavatisu, KA-C158-snana-madu]
 sounds: []
-roots: []
+roots: [dravidian-culi-peel]
+etymology_hook: "suli: native Dravidian, one word with Tamil coli- (DEDR 2856)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C158-snana-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C159-KRIYE159-01]; assesses=[] -->
 
 **ಸುಲಿ** — *suli* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಲಿ** (*suli*) is native Dravidian, one word with Tamil *coli-* (DEDR 2856). DEDR lists *suli* itself, "to strip off, peel". Its note compares an Indo-Aryan verb, Prakrit *chollaï*, "to skin" (CDIAL 5073), and leaves the direction of borrowing open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

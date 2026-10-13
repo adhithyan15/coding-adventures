@@ -14,7 +14,8 @@ romanization: "rēgisu"
 concept_tag: KA-VERB-REGISU
 prerequisites: [KA-C275-holisu, KA-C276-bai]
 sounds: []
-roots: []
+roots: [dravidian-eru-rise]
+etymology_hook: "rēgisu: native Dravidian, 'make rise', from rēgu 'to be roused' (DEDR 916)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C276-bai]
 <!-- hl-knowledge: introduces=[KA-LEX-C276-KRIYE276-02]; assesses=[] -->
 
 **ರೇಗಿಸು** — *rēgisu* — "to tease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರೇಗಿಸು** (*rēgisu*) is native Dravidian, from *rēgu*, "to rise, be roused, be angry", which DEDR 916 lists under *ēṟu*, "to rise": to tease is "to make someone rise"; the entry also has Tamil *ēṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

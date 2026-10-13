@@ -14,7 +14,8 @@ romanization: "prakaṭisu"
 concept_tag: KA-VERB-PRAKATISU
 prerequisites: [KA-C203-bisu, KA-C203-karagu]
 sounds: []
-roots: []
+roots: [sanskrit-prakata]
+etymology_hook: "prakaṭisu: Sanskrit prakaṭa 'manifest' (CDIAL 8428) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C203-karagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C204-KRIYE204-01]; assesses=[] -->
 
 **ಪ್ರಕಟಿಸು** — *prakaṭisu* — "to publish, to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಕಟಿಸು** (*prakaṭisu*) is Sanskrit *prakaṭa*, "manifest, visible" (CDIAL 8428), made into a Kannada verb with *-isu*: "to make manifest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

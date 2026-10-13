@@ -11,7 +11,8 @@ romanization: "upakāra"
 concept_tag: KA-NOUN-FAVOUR
 prerequisites: [KA-C51-gratitude, KA-C49-enough]
 sounds: []
-roots: []
+roots: [sanskrit-upakara]
+etymology_hook: "upakāra ← Sanskrit upakāra 'help, use', a tatsama (CDIAL 2141)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C51-gratitude]
 *upa*, 'near, toward', and *kāra*, 'a doing' — a doing-toward-someone. Its mirror image exists and is just as plain: ಅಪಕಾರ (*apakāra*), a harm done.
 
 And the *kāra* here rests on *kṛ*, 'to do', which is the same *kṛ* inside the *kṛta* of the word before. Sanskrit builds like this constantly, from a small stock of roots and a small stock of prefixes, and the compounds explain themselves the moment the seams are visible.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಪಕಾರ** (*upakāra*) is Sanskrit *upakāra*, "help, use", taken over whole as a learned loan, a tatsama (CDIAL 2141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

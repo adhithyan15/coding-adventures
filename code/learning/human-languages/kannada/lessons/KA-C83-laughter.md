@@ -11,7 +11,8 @@ romanization: "nagu"
 concept_tag: KA-FEEL-LAUGH
 prerequisites: [KA-C83-fear, KA-C83-anger]
 sounds: []
-roots: []
+roots: [dravidian-naku-laugh]
+etymology_hook: "nagu: native Dravidian, one word with Tamil naku (DEDR 3569)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C83-anger]
 **ನಗು** (*nagu*) — "laughter, a smile", and also the verb "to laugh".
 
 After sadness, worry, fear and anger, the chapter ends on this one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಗು** (*nagu*) is native Dravidian, one word with Tamil *naku* (DEDR 3569).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

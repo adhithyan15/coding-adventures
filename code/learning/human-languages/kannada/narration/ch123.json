@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Vegetables, Banana, Mango, Coconut, Onion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:85bda101fac1c4e6",
+  "sourceHash": "fnv1a64:ab702ff19c3c7ab8",
   "lessons": [
     {
       "id": "KA-C123-tarakari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20e793623c3a6c7a",
+      "sourceHash": "fnv1a64:02e9d11c0ca0c8bf",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತರಕಾರಿ (tarakāri) came from Hindustani tarkārī, \"vegetables, a cooked vegetable dish\", a Persian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fdaacb31c1c7ecb",
+      "sourceHash": "fnv1a64:1ad833c52be06a49",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಳೆಹಣ್ಣು (bāḷehaṇṇu) is native Dravidian: bāḷe, \"plantain\" (DEDR 5373, with Tamil vāḻai), and haṇṇu, \"fruit\" (DEDR 4004, older Kannada paṇṇu). DEDR 5373 compares Sanskrit vārabuṣā. DEDR 4004 compares Sanskrit phala."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46abd6ec029240fa",
+      "sourceHash": "fnv1a64:bbea203d29db5bb4",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾವಿನಹಣ್ಣು (māvinahaṇṇu) is native Dravidian: māvina, \"of the mango tree\", from māvu, \"mango tree\" (DEDR 4782, with Tamil mā), and haṇṇu, \"fruit\" (DEDR 4004). DEDR 4782 compares Sanskrit mākanda. DEDR 4004 compares Sanskrit phala."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba1d3a82e1bb69a8",
+      "sourceHash": "fnv1a64:57da1c3f011204b6",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೆಂಗು (teṅgu) is native Dravidian, one word with Tamil teṅku and Telugu teṅkāya (DEDR 3408). DEDR lists teṅgu itself, \"coconut palm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b1ae42dcad58e47",
+      "sourceHash": "fnv1a64:12f0b6f6d2183468",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈರುಳ್ಳಿ (īruḷḷi) ends in uḷḷi, \"bulb, onion\", native Dravidian (DEDR 705, with Tamil uḷḷi). DEDR does not explain the first part, īr-. DEDR 705 compares Sanskrit ūlī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

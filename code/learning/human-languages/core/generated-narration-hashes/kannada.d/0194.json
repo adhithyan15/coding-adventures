@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 194,
-  "sourceHash": "fnv1a64:da0766c89e516f12",
+  "sourceHash": "fnv1a64:ab16625e15b7b9ec",
   "lessonIds": [
     "KA-C194-sambala",
     "KA-C194-grahaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch194.txt",
   "json": "kannada/narration/ch194.json",
-  "textHash": "fnv1a64:b48aebdb594d0d1e",
-  "jsonHash": "fnv1a64:1bdaa2a9900a2d50",
+  "textHash": "fnv1a64:e9395a7dce9bda9c",
+  "jsonHash": "fnv1a64:3222dc968737c1e5",
   "findings": []
 }

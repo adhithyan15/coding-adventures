@@ -14,7 +14,8 @@ romanization: "hintirugisu"
 concept_tag: KA-VERB-HINTIRUGISU
 prerequisites: [KA-C277-daunlod-madu, KA-C278-sala-kodu]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-tiri-turn]
+etymology_hook: "hintirugisu: native hin 'behind' (DEDR 4205) + tirugisu 'make turn' (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C278-sala-kodu]
 <!-- hl-knowledge: introduces=[KA-LEX-C278-KRIYE278-02]; assesses=[] -->
 
 **ಹಿಂತಿರುಗಿಸು** — *hintirugisu* — "to give back, to return (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂತಿರುಗಿಸು** (*hintirugisu*) is native Dravidian: *hin*, "behind, back", which DEDR 4205 lists as *him*, "behind", and *tirugisu*, "to make turn", from *tirugu*, "to turn, go back" (DEDR 3246): "to turn back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

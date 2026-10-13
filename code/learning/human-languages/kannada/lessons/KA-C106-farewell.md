@@ -11,7 +11,8 @@ romanization: "vidāya"
 concept_tag: KA-SOON-FAREWELL
 prerequisites: [KA-C105-love, KA-C105-appreciation]
 sounds: []
-roots: []
+roots: [arabic-wida]
+etymology_hook: "vidāya ← Hindustani vidā 'farewell', from Arabic wadāʿ"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C105-appreciation]
 <!-- hl-knowledge: introduces=[KA-LEX-C106-SOON-01]; assesses=[] -->
 
 **ವಿದಾಯ** (*vidāya*) — "farewell", a formal parting word for speeches and letters.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿದಾಯ** (*vidāya*) came through Hindustani *vidā*, "farewell, leave-taking", from Arabic *wadāʿ*, "farewell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

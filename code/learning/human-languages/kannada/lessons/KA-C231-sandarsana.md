@@ -14,7 +14,8 @@ romanization: "sandarśana"
 concept_tag: KA-KELASA231-SANDARSANA
 prerequisites: [KA-C231-sahodyogi, KA-C231-sabhe]
 sounds: []
-roots: []
+roots: [sanskrit-sandarshana]
+etymology_hook: "sandarśana ← Sanskrit sandarśana 'view; seeing, showing', a tatsama (CDIAL 12899)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C231-sabhe]
 <!-- hl-knowledge: introduces=[KA-LEX-C231-KELASA231-03]; assesses=[] -->
 
 **ಸಂದರ್ಶನ** — *sandarśana* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂದರ್ಶನ** (*sandarśana*) is Sanskrit *sandarśana*, "view; seeing, showing", taken over whole as a learned loan, a tatsama (CDIAL 12899). A seeing face to face became an interview.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

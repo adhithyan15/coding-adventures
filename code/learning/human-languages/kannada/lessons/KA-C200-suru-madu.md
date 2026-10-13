@@ -14,7 +14,8 @@ romanization: "śuru māḍu"
 concept_tag: KA-VERB-SURU-MADU
 prerequisites: [KA-C200-sayu, KA-C200-mugisu]
 sounds: []
-roots: []
+roots: [arabic-shuru, maadu-do-dravidian]
+etymology_hook: "śuru māḍu: śuru ← Arabic šurūʿ 'beginning', through Hindustani + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C200-mugisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C200-KRIYE200-05]; assesses=[] -->
 
 **ಶುರು ಮಾಡು** — *śuru māḍu* — "to start".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶುರು ಮಾಡು** (*śuru māḍu*) is *śuru*, "beginning", from Arabic *šurūʿ*, "a beginning", which came through Persian and Hindustani, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

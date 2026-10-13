@@ -14,7 +14,8 @@ romanization: "ukku"
 concept_tag: KA-VASTU265-UKKU
 prerequisites: [KA-C265-jadi, KA-C265-pottana]
 sounds: []
-roots: []
+roots: [dravidian-uruku-melt]
+etymology_hook: "ukku: native Dravidian, one word with Tamil urukku and Telugu ukku (DEDR 661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C265-pottana]
 <!-- hl-knowledge: introduces=[KA-LEX-C265-VASTU265-05]; assesses=[] -->
 
 **ಉಕ್ಕು** — *ukku* — "steel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಕ್ಕು** (*ukku*) is native Dravidian, one word with Tamil *urukku* and Telugu *ukku* (DEDR 661). DEDR lists *urku*, *ukku*, "steel", under the root for "to melt": steel is "what is melted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

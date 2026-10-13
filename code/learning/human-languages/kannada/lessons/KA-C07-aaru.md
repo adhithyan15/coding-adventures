@@ -48,6 +48,11 @@ the letter **ರ** a few lessons back.
 So the two words are the same word, and the only difference is a consonant
 Kannada stopped distinguishing.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆರು** (*āru*) is native Dravidian, one word with Tamil *āṟu* and Telugu *āṟu* (DEDR 2485). The entry gives the older Kannada spelling *āṟu*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NUMBERS-6-10-01, KA-SCRIPT-RECOG-07] -->
 

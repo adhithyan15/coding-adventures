@@ -14,7 +14,8 @@ romanization: "baḷe"
 concept_tag: KA-THINGS121-BALE
 prerequisites: [KA-C121-topi, KA-C121-ungura]
 sounds: []
-roots: []
+roots: [dravidian-valai-ring]
+etymology_hook: "baḷe: native Dravidian, one word with Tamil vaḷai and Telugu balayu (DEDR 5313)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C121-ungura]
 <!-- hl-knowledge: introduces=[KA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **ಬಳೆ** — *baḷe* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಳೆ** (*baḷe*) is native Dravidian, one word with Tamil *vaḷai* and Telugu *balayu* (DEDR 5313). DEDR lists *baḷe*, "ring, armlet, bracelet", under the root for "to go round". DEDR 5313 compares Sanskrit *val*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

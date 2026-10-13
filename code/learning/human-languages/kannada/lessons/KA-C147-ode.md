@@ -14,7 +14,8 @@ romanization: "oḍe"
 concept_tag: KA-VERB-ODE
 prerequisites: [KA-C147-malagu, KA-C147-kattarisu]
 sounds: []
-roots: []
+roots: [dravidian-odi-break]
+etymology_hook: "oḍe: native Dravidian, one word with Tamil oṭi and Telugu oḍapi (DEDR 946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C147-kattarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C147-ACT147-05]; assesses=[] -->
 
 **ಒಡೆ** — *oḍe* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಡೆ** (*oḍe*) is native Dravidian, one word with Tamil *oṭi* and Telugu *oḍapi* (DEDR 946). DEDR lists Kannada *oḍi*, "to be broken, burst".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "usiru"
 concept_tag: KA-BODY2-BREATH
 prerequisites: [KA-C98-alarm, KA-C98-peace]
 sounds: []
-roots: []
+roots: [dravidian-uy-live]
+etymology_hook: "usiru: native Dravidian, one word with Tamil uy (DEDR 645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C98-peace]
 
 **ಉಸಿರು ತೆಗೆದುಕೊಳ್ಳಿ** (*usiru tegedukoḷḷi*) — "take a breath", with **ತೆಗೆದುಕೊ**,
 "take", as in **ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಸಿರು** (*usiru*) is native Dravidian, one word with Tamil *uy* (DEDR 645). DEDR lists Kannada *usir*, *usuru*, "breath, life", with Telugu *usuru*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

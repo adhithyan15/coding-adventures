@@ -11,7 +11,8 @@ romanization: "polīs"
 concept_tag: KA-JOBS-POLICE
 prerequisites: [KA-C104-business, KA-C104-worker]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "polīs ← English police"
 duration:
   max_seconds: 200
 requires:

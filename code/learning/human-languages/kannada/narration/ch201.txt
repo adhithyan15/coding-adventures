@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to finish, then the Kannada for to start
 You'll want to know: ಮುಂದೂಡು.
 ಮುಂದೂಡು — mundūḍu — "to postpone".
 
+The word, taken apart.
+ಮುಂದೂಡು (mundūḍu) is native Dravidian: mundu, "ahead, in front" (DEDR 5020), and dūḍu, "to push, shove" (DEDR 3380): "to push ahead".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to start, then the Kannada for to postpo
 
 You'll want to know: ವಿವರಿಸು.
 ವಿವರಿಸು — vivarisu — "to explain".
+
+The word, taken apart.
+ವಿವರಿಸು (vivarisu) is Sanskrit vivaraṇa, "an opening out, an explanation", made into a Kannada verb with -isu. CDIAL 11915 lists the root noun vivara, "hole, opening".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to postpone, then the Kannada for to exp
 You'll want to know: ಪಾಸಾಗು.
 ಪಾಸಾಗು — pāsāgu — "to pass (an exam)".
 
+The word, taken apart.
+ಪಾಸಾಗು (pāsāgu) is English pass with native āgu, "to become" (DEDR 333): "to become passed". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to explain, then the Kannada for to pass
 You'll want to know: ನೆನಪಿಡು.
 ನೆನಪಿಡು — nenapiḍu — "to remember, to keep in mind".
 
+The word, taken apart.
+ನೆನಪಿಡು (nenapiḍu) is native Dravidian: nenapu, "remembrance" (DEDR 3683), and iḍu, "to put, keep" (DEDR 442): "to keep in memory".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to pass, then the Kannada for to remembe
 
 You'll want to know: ಮುದ್ರಿಸು.
 ಮುದ್ರಿಸು — mudrisu — "to print".
+
+The word, taken apart.
+ಮುದ್ರಿಸು (mudrisu) is Sanskrit mudrā, "seal, stamp" (CDIAL 10203), made into a Kannada verb with -isu: to print is to stamp. CDIAL thinks mudrā probably came into Sanskrit from Iranian.
 
 What you've built.
 One more word for this chapter.

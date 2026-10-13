@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a biscuit, then the Kannada for bread.
 You'll want to know: ಗುಂಡಿ.
 ಗುಂಡಿ — guṇḍi — "a button".
 
+The word, taken apart.
+Where ಗುಂಡಿ (guṇḍi) comes from is uncertain. It looks like the northern word for "button", Hindi ghuṇḍī, which CDIAL 4483 traces to a reconstructed ghuṇṭa, "knot, button", but no source records the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for bread, then the Kannada for a button.
 
 You'll want to know: ಸ್ವೆಟರ್.
 ಸ್ವೆಟರ್ — sveṭar — "a sweater".
+
+The word, taken apart.
+ಸ್ವೆಟರ್ (sveṭar) is a loan from English sweater.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a button, then the Kannada for a sweater
 You'll want to know: ಶಾಲು.
 ಶಾಲು — śālu — "a shawl".
 
+The word, taken apart.
+ಶಾಲು (śālu) is Persian shāl, "shawl", which came into Kannada through Hindustani, with a final -u added.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a sweater, then the Kannada for a shawl.
 You'll want to know: ಕರವಸ್ತ್ರ.
 ಕರವಸ್ತ್ರ — karavastra — "a handkerchief".
 
+The word, taken apart.
+ಕರವಸ್ತ್ರ (karavastra) is built from Sanskrit kara, "hand" (CDIAL 2779), and vastra, "cloth, dress" (CDIAL 11450): "hand cloth".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a shawl, then the Kannada for a handkerc
 
 You'll want to know: ಸರ.
 ಸರ — sara — "a necklace, a chain".
+
+The word, taken apart.
+Where ಸರ (sara) comes from is uncertain. It looks like the first part of sarapaṇi, "a neck chain", which DEDR 2358 lists for Kannada, Tamil and Telugu, but DEDR does not split that word.
 
 What you've built.
 One more word for this chapter.

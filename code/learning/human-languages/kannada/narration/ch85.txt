@@ -13,6 +13,9 @@ You'll want to know: ನಿಧಾನವಾಗಿ.
 ನಿಧಾನವಾಗಿ (nidhānavāgi) — "slowly". The ending ‑ಆಗಿ (-āgi) turns a word into a manner, "in a slow way", like ಚೆನ್ನಾಗಿ (cennāgi), "well".
 ನಿಧಾನವಾಗಿ ಮಾತಾಡಿ (nidhānavāgi mātāḍi) — "please speak slowly".
 
+The word, taken apart.
+ನಿಧಾನವಾಗಿ (nidhānavāgi) is nidhāna, "steadiness, slowness", with the adverb ending -āgi, "in a … way". Nidhāna is Sanskrit, where it meant "a place for depositing, a store" (CDIAL 7205); in Kannada it has come to mean steadiness and slowness.
+
 What you've built.
 The most useful request a learner can make.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for a tablet, then the Kannada for slowly.
 You'll want to know: ಮತ್ತೊಮ್ಮೆ.
 ಮತ್ತೊಮ್ಮೆ (mattomme) — "once more, one more time".
 ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ (mattomme hēḷi) — "please say it once more", with ಹೇಳಿ, "please tell", which you already know.
+
+The word, taken apart.
+ಮತ್ತೊಮ್ಮೆ (mattomme) is native Dravidian: matte, "again" (DEDR 4766), and omme, "once", which DEDR 990 lists on the root for "one".
 
 What you've built.
 The request that comes after slowly.
@@ -73,6 +79,9 @@ You'll want to know: ಜೋರಾಗಿ.
 ಜೋರಾಗಿ (jōrāgi) — "loudly". It has the same ‑ಆಗಿ ending as ನಿಧಾನವಾಗಿ (nidhānavāgi).
 ಸ್ವಲ್ಪ ಜೋರಾಗಿ (svalpa jōrāgi) — "a little louder", with ಸ್ವಲ್ಪ, "a little".
 
+The word, taken apart.
+ಜೋರಾಗಿ (jōrāgi) is jōr, "force, loudness", with the adverb ending -āgi, "in a … way". Jōr is a loan from Persian zōr, "strength, force", which came through Hindustani.
+
 What you've built.
 A second way of saying how.
 
@@ -103,6 +112,9 @@ You'll want to know: ಅರ್ಥ.
 ಅರ್ಥ (artha) — "meaning". You have seen it inside ಅರ್ಥಮಾಡಿಕೊ, "to understand", which is "to make the meaning one's own".
 ಇದರ ಅರ್ಥ ಏನು? (idara artha ēnu?) — "what is the meaning of this?"
 
+The word, taken apart.
+ಅರ್ಥ (artha) is Sanskrit artha, "aim, cause, thing", taken over whole as a learned loan, a tatsama (CDIAL 638). In Kannada the "aim" of a word is its meaning.
+
 What you've built.
 The piece hidden inside the verb to understand.
 
@@ -132,6 +144,9 @@ Before the new one: say the Kannada for loudly, then the Kannada for meaning.
 You'll want to know: ಬರೆದು ಕೊಡಿ.
 ಬರೆದು ಕೊಡಿ (baredu koḍi) — "please write it down (for me)", literally "having written, give". Both verbs are ones you know: ಬರೆ, "write", and ಕೊಡು, "give".
 When a word will not stay in the ear, ask for it on paper.
+
+The word, taken apart.
+ಬರೆದು ಕೊಡಿ (baredu koḍi) is native Dravidian: baredu, "having written", from bare, "to write" (DEDR 5263), and koḍi, the polite form of koḍu, "to give" (DEDR 2053). You ask someone to "write and give". DEDR 5263 compares, with a query, Prakrit rajju.
 
 What you've built.
 Two known verbs make one request.

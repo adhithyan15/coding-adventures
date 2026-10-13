@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 245,
-  "sourceHash": "fnv1a64:377f837e1db39e67",
+  "sourceHash": "fnv1a64:ddb4ed31a672fcea",
   "lessonIds": [
     "KA-C245-bhedi",
     "KA-C245-alarji",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch245.txt",
   "json": "kannada/narration/ch245.json",
-  "textHash": "fnv1a64:ee429032560240de",
-  "jsonHash": "fnv1a64:b170909ceb3de7ca",
+  "textHash": "fnv1a64:44143920de6aeeb6",
+  "jsonHash": "fnv1a64:8469904df1081ae9",
   "findings": []
 }

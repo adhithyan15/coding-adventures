@@ -14,7 +14,8 @@ romanization: "śrīmanta"
 concept_tag: KA-QUAL143-SRIMANTA
 prerequisites: [KA-C143-ona, KA-C143-bada]
 sounds: []
-roots: []
+roots: [sanskrit-shrimat]
+etymology_hook: "śrīmanta ← Sanskrit śrīmat 'rich, fortunate', from śrī 'wealth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C143-bada]
 <!-- hl-knowledge: introduces=[KA-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **ಶ್ರೀಮಂತ** — *śrīmanta* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶ್ರೀಮಂತ** (*śrīmanta*) is Sanskrit *śrīmat*, "rich, fortunate", from *śrī*, "wealth, prosperity", in the form *śrīmant-* that Sanskrit uses before an ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

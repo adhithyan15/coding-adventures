@@ -12,6 +12,9 @@ Before the new one: say the Kannada for please phone, then the Kannada for I'll 
 You'll want to know: ಬಲ.
 ಬಲ — bala — "right (not left)".
 
+The word, taken apart.
+ಬಲ (bala) is native Dravidian, of the root bal, "to grow strong", and DEDR 5276 lists bala, "right", and bala key, "right hand", under it: the right hand is the strong one; the entry also has Tamil val.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for I'll see you, then the Kannada for right
 
 You'll want to know: ಎಡ.
 ಎಡ — eḍa — "left (not right)".
+
+The word, taken apart.
+ಎಡ (eḍa) is native Dravidian, one word with Tamil iṭam and Telugu eḍama (DEDR 449). DEDR lists eḍa itself, "left, left side".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for right, then the Kannada for left.
 You'll want to know: ನೇರ.
 ನೇರ — nēra — "straight".
 
+The word, taken apart.
+ನೇರ (nēra) is native Dravidian, one word with Tamil nēr (DEDR 3772). DEDR lists nēra itself, "straightness".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for left, then the Kannada for straight.
 You'll want to know: ದೂರ.
 ದೂರ — dūra — "far; distance".
 
+The word, taken apart.
+ದೂರ (dūra) is Sanskrit dūra, "distant; distance", taken over whole as a learned loan, a tatsama (CDIAL 6495).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for straight, then the Kannada for far; dist
 
 You'll want to know: ಮೇಲೆ.
 ಮೇಲೆ — mēle — "above, on top".
+
+The word, taken apart.
+ಮೇಲೆ (mēle) is native Dravidian, one word with Tamil mēl (DEDR 5086). DEDR lists mēle itself, "that which is above, the top".
 
 What you've built.
 One more word for this chapter.

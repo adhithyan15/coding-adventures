@@ -14,7 +14,8 @@ romanization: "kaḍalatīra"
 concept_tag: KA-LOC110-KADALATIRA
 prerequisites: [KA-C109-byanku, KA-C110-sante]
 sounds: []
-roots: []
+roots: [dravidian-katal-sea, sanskrit-tira]
+etymology_hook: "kaḍalatīra: native kaḍal 'sea' (DEDR 1118) + tīra 'shore' ← Sanskrit (CDIAL 5842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C110-sante]
 <!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-02]; assesses=[] -->
 
 **ಕಡಲತೀರ** — *kaḍalatīra* — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಡಲತೀರ** (*kaḍalatīra*) is *kaḍal*, "sea", native Dravidian (DEDR 1118, with Tamil *kaṭal*), and *tīra*, "shore", from Sanskrit *tīra* (CDIAL 5842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāla paḍe"
 concept_tag: KA-VERB-SALA-PADE
 prerequisites: [KA-C241-dvesisu, KA-C241-kanduhidi]
 sounds: []
-roots: []
+roots: [dravidian-caal-debt, dravidian-padu-suffer]
+etymology_hook: "sāla paḍe: native sāla 'debt' (DEDR 2472) + paḍe 'to obtain' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C241-kanduhidi]
 <!-- hl-knowledge: introduces=[KA-LEX-C241-KRIYE241-05]; assesses=[] -->
 
 **ಸಾಲ ಪಡೆ** — *sāla paḍe* — "to borrow (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಲ ಪಡೆ** (*sāla paḍe*) is native Dravidian: *sāla*, "debt", which DEDR 2472 lists, and *paḍe*, "to get, obtain" (DEDR 3853): "to get a debt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

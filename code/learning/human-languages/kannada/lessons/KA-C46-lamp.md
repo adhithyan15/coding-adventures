@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-LAMP
 prerequisites: [KA-C46-cloth, KA-C44-look]
 sounds: []
 roots: []
+etymology_hook: "dīpa ← Sanskrit dīpa 'lamp', taken over whole (CDIAL 6348)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *dīpa*, from a root meaning to blaze, to shine. Kannada took it whole 
 Put it beside *āvali*, 'a row', and you have *Dīpāvali* — a row of lamps — a festival whose name explains itself the moment the seam is visible.
 
 Kannada has a word of its own as well, ಹಣತೆ (*haṇate*), and it means something narrower: the small clay saucer with a wick lying in it. The borrowed word covers every lamp; the native one names a particular thing you can hold in one hand.
+
+CDIAL 6348 lists Sanskrit *dīpa*, "lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

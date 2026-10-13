@@ -14,7 +14,8 @@ romanization: "siḍi"
 concept_tag: KA-VERB-SIDI
 prerequisites: [KA-C167-sudharisu, KA-C167-bembalisu]
 sounds: []
-roots: []
+roots: [dravidian-citai-scatter]
+etymology_hook: "siḍi: native Dravidian (DEDR 2758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C167-bembalisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C167-KRIYE167-04]; assesses=[] -->
 
 **ಸಿಡಿ** — *siḍi* — "to burst, to explode".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಡಿ** (*siḍi*) is native Dravidian (DEDR 2758). DEDR lists *siḍi*, "to be scattered, burst forth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

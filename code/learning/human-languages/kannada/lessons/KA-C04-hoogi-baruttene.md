@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [KA-C04-hoogu, KA-C03-naanu]
 sounds: [hoogi-participle]
 roots: [hoogu-go-dravidian, baa-come-dravidian]
+etymology_hook: "hōgi baruttēne: 'having gone, I come': native hōgu 'go' (DEDR 4572) and baru 'come' (DEDR 5270)"
 duration:
   max_seconds: 270
 requires:
@@ -50,6 +51,8 @@ go and come back." A Kannada speaker never signs off with a bare "I'm leaving" �
 it sounds final. It is the same "go-and-come-back" farewell across the Dravidian
 south (Tamil *pōy varugiṟēṉ*, Telugu *veḷḷi vastānu*, Malayalam *pōyi varāṁ*). The
 warm reply is **ಹೋಗಿ ಬನ್ನಿ** (*hōgi banni*, "go and come [back]").
+
+Both verbs are native Dravidian: *hōgu* (DEDR 4572) and *baru*, "come" (DEDR 5270), the same pair as Tamil *pō* and *varu*.
 
 ## Grammar Lens: the "having …d" participle
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C04-HOOGI-BARUTTENE-02]; assesses=[] -->

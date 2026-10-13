@@ -14,7 +14,8 @@ romanization: "suddi"
 concept_tag: KA-KELASA269-SUDDI
 prerequisites: [KA-C269-varadi, KA-C269-samasye]
 sounds: []
-roots: []
+roots: [sanskrit-shuddhi]
+etymology_hook: "suddi ← Sanskrit śuddhi 'cleansing, purity; information, news', reshaped as a tadbhava (CDIAL 12523)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C269-samasye]
 <!-- hl-knowledge: introduces=[KA-LEX-C269-KELASA269-03]; assesses=[] -->
 
 **ಸುದ್ದಿ** — *suddi* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುದ್ದಿ** (*suddi*) comes from Sanskrit *śuddhi*, "cleansing, purity; information, news", reshaped to Kannada sounds: a tadbhava (CDIAL 12523). *Ś* became *s* and *ddh* became *dd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

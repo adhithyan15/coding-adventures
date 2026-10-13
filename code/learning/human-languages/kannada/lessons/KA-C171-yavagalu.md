@@ -14,7 +14,8 @@ romanization: "yāvāgalū"
 concept_tag: KA-KALA171-YAVAGALU
 prerequisites: [KA-C170-bokke, KA-C170-paustika]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-a-distal-deictic]
+etymology_hook: "yāvāgalū: native yāvāga 'when' (DEDR 5151, 1) + -lū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C170-paustika]
 <!-- hl-knowledge: introduces=[KA-LEX-C171-KALA171-01]; assesses=[] -->
 
 **ಯಾವಾಗಲೂ** — *yāvāgalū* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾವಾಗಲೂ** (*yāvāgalū*) is native Dravidian: *yāvāga*, "when", from *yāva*, "which" (DEDR 5151), and *āga*, "time" (DEDR 1), with *-lū*, "even": "at every which time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

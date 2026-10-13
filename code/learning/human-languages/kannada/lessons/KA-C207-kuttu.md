@@ -14,7 +14,8 @@ romanization: "kuṭṭu"
 concept_tag: KA-VERB-KUTTU
 prerequisites: [KA-C207-musu, KA-C207-netuhaku]
 sounds: []
-roots: []
+roots: [dravidian-kuttu-beat]
+etymology_hook: "kuṭṭu: native Dravidian, one word with Tamil kuṭṭu and Malayalam kuṭṭuka (DEDR 1671)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C207-netuhaku]
 <!-- hl-knowledge: introduces=[KA-LEX-C207-KRIYE207-03]; assesses=[] -->
 
 **ಕುಟ್ಟು** — *kuṭṭu* — "to pound (in a mortar)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಟ್ಟು** (*kuṭṭu*) is native Dravidian, one word with Tamil *kuṭṭu* and Malayalam *kuṭṭuka* (DEDR 1671). DEDR lists *kuṭṭu* itself, "to beat, pound, bruise". DEDR 1671 compares Sanskrit *kuṭṭayati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

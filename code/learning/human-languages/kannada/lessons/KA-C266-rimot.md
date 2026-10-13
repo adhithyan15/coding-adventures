@@ -14,7 +14,8 @@ romanization: "rimōṭ"
 concept_tag: KA-VASTU266-RIMOT
 prerequisites: [KA-C265-ukku, KA-C266-balb]
 sounds: []
-roots: []
+roots: [english-remote]
+etymology_hook: "rimōṭ ← English remote"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C266-balb]
 <!-- hl-knowledge: introduces=[KA-LEX-C266-VASTU266-02]; assesses=[] -->
 
 **ರಿಮೋಟ್** — *rimōṭ* — "a remote control".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಿಮೋಟ್** (*rimōṭ*) is a loan from English *remote*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ciṭṭe"
 concept_tag: KA-THINGS132-CITTE
 prerequisites: [KA-C131-gube, KA-C132-navilu]
 sounds: []
-roots: []
+roots: [kannada-citte-butterfly]
+etymology_hook: "ciṭṭe: origin uncertain; DEDR has no entry for the butterfly"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C132-navilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **ಚಿಟ್ಟೆ** — *ciṭṭe* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಚಿಟ್ಟೆ** (*ciṭṭe*) is uncertain. DEDR has no entry for it in this sense, CDIAL does not record it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

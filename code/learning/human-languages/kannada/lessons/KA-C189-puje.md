@@ -14,7 +14,8 @@ romanization: "pūje"
 concept_tag: KA-VASTU189-PUJE
 prerequisites: [KA-C189-gumpu, KA-C189-jatre]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūje ← Sanskrit pūjā 'honour, worship', a tatsama (CDIAL 8317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C189-jatre]
 <!-- hl-knowledge: introduces=[KA-LEX-C189-VASTU189-03]; assesses=[] -->
 
 **ಪೂಜೆ** — *pūje* — "worship, a puja".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೂಜೆ** (*pūje*) is Sanskrit *pūjā*, "honour, worship", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 8317).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

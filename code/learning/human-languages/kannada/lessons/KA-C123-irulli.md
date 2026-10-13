@@ -14,7 +14,8 @@ romanization: "īruḷḷi"
 concept_tag: KA-THINGS123-IRULLI
 prerequisites: [KA-C123-mavinahannu, KA-C123-tengu]
 sounds: []
-roots: []
+roots: [dravidian-ulli-onion]
+etymology_hook: "īruḷḷi: native uḷḷi 'onion' (DEDR 705) with a first part īr-; the full compound is not explained in DEDR"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C123-tengu]
 <!-- hl-knowledge: introduces=[KA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **ಈರುಳ್ಳಿ** — *īruḷḷi* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಈರುಳ್ಳಿ** (*īruḷḷi*) ends in *uḷḷi*, "bulb, onion", native Dravidian (DEDR 705, with Tamil *uḷḷi*). DEDR does not explain the first part, *īr-*. DEDR 705 compares Sanskrit *ūlī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

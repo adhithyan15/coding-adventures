@@ -14,7 +14,8 @@ romanization: "sōmāri"
 concept_tag: KA-QUAL145-SOMARI
 prerequisites: [KA-C145-huli2, KA-C145-sihi]
 sounds: []
-roots: []
+roots: [dravidian-coompu-idle]
+etymology_hook: "sōmāri: origin uncertain; DEDR 2882 lists Tamil cōmāṟi 'sluggard' but no Kannada form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C145-sihi]
 <!-- hl-knowledge: introduces=[KA-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **ಸೋಮಾರಿ** — *sōmāri* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸೋಮಾರಿ** (*sōmāri*) is uncertain. DEDR has no Kannada form for it, though DEDR 2882 lists Tamil *cōmāṟi*, "sluggard", which looks like the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

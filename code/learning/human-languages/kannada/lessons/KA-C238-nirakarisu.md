@@ -14,7 +14,8 @@ romanization: "nirākarisu"
 concept_tag: KA-VERB-NIRAKARISU
 prerequisites: [KA-C238-kaleduhogu, KA-C238-oppu]
 sounds: []
-roots: []
+roots: [sanskrit-nirakarana]
+etymology_hook: "nirākarisu: Sanskrit nirākaraṇa 'rejection' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C238-oppu]
 <!-- hl-knowledge: introduces=[KA-LEX-C238-KRIYE238-04]; assesses=[] -->
 
 **ನಿರಾಕರಿಸು** — *nirākarisu* — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರಾಕರಿಸು** (*nirākarisu*) is Sanskrit *nirākaraṇa*, "putting away, rejection", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

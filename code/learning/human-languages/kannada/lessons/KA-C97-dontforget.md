@@ -11,7 +11,8 @@ romanization: "mareyabēḍi"
 concept_tag: KA-COUR-DONT-FORGET
 prerequisites: [KA-C97-introduction, KA-C97-grateful]
 sounds: []
-roots: []
+roots: [dravidian-mara-forget, dravidian-vendu-want]
+etymology_hook: "mareyabēḍi: native mare 'to forget' (DEDR 4760) + bēḍi 'do not' (DEDR 5528)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C97-grateful]
 
 **ಮರೆಯಬೇಡಿ** (*mareyabēḍi*) — "please don't forget", from **ಮರೆ** (*mare*), "to
 forget", with the polite **‑ಬೇಡಿ** of **ಚಿಂತೆ ಮಾಡಬೇಡಿ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮರೆಯಬೇಡಿ** (*mareyabēḍi*) is native Dravidian: *mare*, "to forget", (DEDR 4760, with Telugu *maṟacu*), and *bēḍi*, the polite "do not", from *bēḍa*, "not wanted" (DEDR 5528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

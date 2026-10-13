@@ -14,7 +14,8 @@ romanization: "allāḍisu"
 concept_tag: KA-VERB-ALLADISU
 prerequisites: [KA-C243-kudisu, KA-C243-nibhayisu]
 sounds: []
-roots: []
+roots: [dravidian-alai-shake]
+etymology_hook: "allāḍisu: native Dravidian, causative of allāḍu 'to shake', one word with Tamil alai (DEDR 240)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-nibhayisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-05]; assesses=[] -->
 
 **ಅಲ್ಲಾಡಿಸು** — *allāḍisu* — "to shake (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲ್ಲಾಡಿಸು** (*allāḍisu*) is native Dravidian: it is the causative of *allāḍu*, "to shake, swing", which DEDR 240 lists under Kannada, and it is one word with Tamil *alai*, "to wave, shake" (DEDR 240). DEDR 240 compares, with a query, Sanskrit *alaka*, "a lock of hair, a curl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

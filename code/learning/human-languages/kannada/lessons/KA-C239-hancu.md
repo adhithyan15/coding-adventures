@@ -14,7 +14,8 @@ romanization: "hañcu"
 concept_tag: KA-VERB-HANCU
 prerequisites: [KA-C239-acarisu, KA-C239-alankarisu]
 sounds: []
-roots: []
+roots: [dravidian-pancu-share]
+etymology_hook: "hañcu: native Dravidian, one word with Telugu pancu (DEDR 3936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C239-alankarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C239-KRIYE239-03]; assesses=[] -->
 
 **ಹಂಚು** — *hañcu* — "to share out, to distribute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಂಚು** (*hañcu*) is native Dravidian, one word with Telugu *pancu* (DEDR 3936). DEDR gives the older Kannada *pañcu*, "to divide, distribute, share": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

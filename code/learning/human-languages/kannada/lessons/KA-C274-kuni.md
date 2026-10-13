@@ -14,7 +14,8 @@ romanization: "kuṇi"
 concept_tag: KA-VERB-KUNI
 prerequisites: [KA-C273-odisu, KA-C273-jaru]
 sounds: []
-roots: []
+roots: [dravidian-kuni-dance]
+etymology_hook: "kuṇi: native Dravidian, one word with Tamil kuṉi and Telugu guniyu (DEDR 1863)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C273-jaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C274-KRIYE274-01]; assesses=[] -->
 
 **ಕುಣಿ** — *kuṇi* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಣಿ** (*kuṇi*) is native Dravidian, one word with Tamil *kuṉi*, Telugu *guniyu* and Malayalam *kunikka* (DEDR 1863). DEDR lists *kuṇi*, "to hop, dance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

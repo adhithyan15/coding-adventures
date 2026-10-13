@@ -11,7 +11,8 @@ romanization: "lōṭa"
 concept_tag: KA-TABLE-GLASS
 prerequisites: [KA-C94-snack, KA-C94-spoon]
 sounds: []
-roots: []
+roots: [hindustani-lota]
+etymology_hook: "lōṭa ← Hindustani lōṭā 'a small round vessel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C94-spoon]
 **ಲೋಟ** (*lōṭa*) — "a tumbler, a drinking glass".
 
 **ಒಂದು ಲೋಟ ನೀರು** (*ondu lōṭa nīru*) — "a glass of water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲೋಟ** (*lōṭa*) came from Hindustani *lōṭā*, "a small round metal pot". Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

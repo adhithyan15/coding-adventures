@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 259,
-  "sourceHash": "fnv1a64:dd46c0e8d3acf63d",
+  "sourceHash": "fnv1a64:74068fddfa00ddee",
   "lessonIds": [
     "KA-C259-gundi",
     "KA-C259-svetar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch259.txt",
   "json": "kannada/narration/ch259.json",
-  "textHash": "fnv1a64:e2259dd89e1e974b",
-  "jsonHash": "fnv1a64:0224f763b60b04e0",
+  "textHash": "fnv1a64:6bb460ca80003427",
+  "jsonHash": "fnv1a64:aa3005cdf0bbb6d6",
   "findings": []
 }

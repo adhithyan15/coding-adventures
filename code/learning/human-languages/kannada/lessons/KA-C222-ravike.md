@@ -14,7 +14,8 @@ romanization: "ravike"
 concept_tag: KA-VASTU222-RAVIKE
 prerequisites: [KA-C222-pyant, KA-C222-langa]
 sounds: []
-roots: []
+roots: [dravidian-ravike-bodice]
+etymology_hook: "ravike: native Dravidian, one word with Tamil ravikkai (DEDR 5163)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C222-langa]
 <!-- hl-knowledge: introduces=[KA-LEX-C222-VASTU222-03]; assesses=[] -->
 
 **ರವಿಕೆ** — *ravike* — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರವಿಕೆ** (*ravike*) is native Dravidian, one word with Tamil *ravikkai* (DEDR 5163). DEDR lists Kannada *ṟavike*, "bodice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

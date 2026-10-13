@@ -14,7 +14,8 @@ romanization: "helmeṭ"
 concept_tag: KA-VASTU296-HELMET
 prerequisites: [KA-C296-metro, KA-C296-petrol]
 sounds: []
-roots: []
+roots: [english-helmet]
+etymology_hook: "helmeṭ ← English helmet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C296-petrol]
 <!-- hl-knowledge: introduces=[KA-LEX-C296-VASTU296-04]; assesses=[] -->
 
 **ಹೆಲ್ಮೆಟ್** — *helmeṭ* — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಲ್ಮೆಟ್** (*helmeṭ*) is a loan from English *helmet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

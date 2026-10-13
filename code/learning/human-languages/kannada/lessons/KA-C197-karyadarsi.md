@@ -14,7 +14,8 @@ romanization: "kāryadarśi"
 concept_tag: KA-KELASA197-KARYADARSI
 prerequisites: [KA-C197-kandaktar, KA-C197-mukhyopadhyaya]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-darshin]
+etymology_hook: "kāryadarśi: Sanskrit kārya 'business, affairs' + darśin 'one who sees to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C197-mukhyopadhyaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C197-KELASA197-05]; assesses=[] -->
 
 **ಕಾರ್ಯದರ್ಶಿ** — *kāryadarśi* — "a secretary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾರ್ಯದರ್ಶಿ** (*kāryadarśi*) is Sanskrit *kārya*, "business, affairs", and *darśin*, "one who sees, overseer": "the one who sees to the business".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

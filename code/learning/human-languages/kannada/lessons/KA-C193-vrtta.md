@@ -14,7 +14,8 @@ romanization: "vṛtta"
 concept_tag: KA-VASTU193-VRTTA
 prerequisites: [KA-C193-rattu, KA-C193-akara]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "vṛtta ← Sanskrit vṛtta 'turned; rounded', a tatsama (CDIAL 12069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C193-akara]
 <!-- hl-knowledge: introduces=[KA-LEX-C193-VASTU193-03]; assesses=[] -->
 
 **ವೃತ್ತ** — *vṛtta* — "a circle; a traffic circle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೃತ್ತ** (*vṛtta*) is Sanskrit *vṛtta*, "turned; rounded", taken over whole as a learned loan, a tatsama (CDIAL 12069). What is turned round is a circle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 206,
-  "sourceHash": "fnv1a64:d5830bee7e599394",
+  "sourceHash": "fnv1a64:5fcc9e2734c9aad4",
   "lessonIds": [
     "KA-C206-edavu",
     "KA-C206-tevalu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch206.txt",
   "json": "kannada/narration/ch206.json",
-  "textHash": "fnv1a64:ab1e5a0bfc675848",
-  "jsonHash": "fnv1a64:46590286132af7fd",
+  "textHash": "fnv1a64:72018facd73c2056",
+  "jsonHash": "fnv1a64:eaf1815a281a832a",
   "findings": []
 }

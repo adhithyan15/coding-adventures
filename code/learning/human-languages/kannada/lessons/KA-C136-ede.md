@@ -14,7 +14,8 @@ romanization: "ede"
 concept_tag: KA-THINGS136-EDE
 prerequisites: [KA-C136-hebberalu, KA-C136-uguru]
 sounds: []
-roots: []
+roots: [dravidian-ede-chest]
+etymology_hook: "ede: native Dravidian, one word with Telugu eda (DEDR 827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C136-uguru]
 <!-- hl-knowledge: introduces=[KA-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **ಎದೆ** — *ede* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎದೆ** (*ede*) is native Dravidian, one word with Telugu *eda* (DEDR 827). DEDR lists *ede* itself, "chest, breast, courage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "āyāsa"
 concept_tag: KA-UNWELL-TIRED
 prerequisites: [KA-C63-fever, KA-C63-pain]
 sounds: []
-roots: []
+roots: [sanskrit-ayasa]
+etymology_hook: "āyāsa ← Sanskrit āyāsa 'exertion, fatigue', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C63-pain]
 **ನನಗೆ ಆಯಾಸ ಆಗಿದೆ** (*nanage āyāsa āgide*) — "I am tired", literally "to me
 tiredness has happened". The person sits in **ನನಗೆ**, "to me", the same way
 **ನನಗೆ ಹಸಿವು** says "I am hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಯಾಸ** (*āyāsa*) is Sanskrit *āyāsa*, "exertion, fatigue", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

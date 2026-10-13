@@ -14,7 +14,8 @@ romanization: "jōḍisu"
 concept_tag: KA-VERB-JODISU
 prerequisites: [KA-C203-karagu, KA-C204-prakatisu]
 sounds: []
-roots: []
+roots: [hindustani-jor]
+etymology_hook: "jōḍisu: jōḍi 'pair, set' + the verb ending -isu; jōḍi came through Hindustani jōṛ 'joining'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C204-prakatisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C204-KRIYE204-02]; assesses=[] -->
 
 **ಜೋಡಿಸು** — *jōḍisu* — "to arrange, to assemble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೋಡಿಸು** (*jōḍisu*) is *jōḍi*, "a pair, a set", made into a verb with *-isu*. *Jōḍi* came through Hindustani *jōṛ*, "a joining"; its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "heccu"
 concept_tag: KA-WORD-MORE
 prerequisites: [KA-C58-a-little, KA-C56-basket]
 sounds: []
-roots: []
+roots: [dravidian-peru-great]
+etymology_hook: "heccu: native Dravidian, of per 'great'; DEDR 4411 lists peccu, heccu 'to increase'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and the opening *h* puts it in the same layer as ಹಣ್ಣು and 
 ಹೆಚ್ಚು is both "more" and "much". It answers a question about quantity all by itself, and it goes in front of whatever it is measuring: ಹೆಚ್ಚು ಹಣ್ಣು, more fruit. It is also the word for a comparison, so ಹೆಚ್ಚು is how a Kannada speaker says one thing outweighs another without needing a separate word for "than".
 
 Held against ಸ್ವಲ್ಪ it gives you a scale you can answer with. ಸ್ವಲ್ಪ when a little will do; ಹೆಚ್ಚು when it will not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಚ್ಚು** (*heccu*) is native Dravidian, of the root *per*, "great", and DEDR 4411 lists *peccu*, *heccu*, "to become great, increase", under it; the entry also has Tamil *peru* and Malayalam *peru*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

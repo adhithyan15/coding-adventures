@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 129,
-  "sourceHash": "fnv1a64:a5ab77497ca2eaa6",
+  "sourceHash": "fnv1a64:479e47cc7eb81de4",
   "lessonIds": [
     "KA-C129-surya",
     "KA-C129-kudure",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch129.txt",
   "json": "kannada/narration/ch129.json",
-  "textHash": "fnv1a64:2d5688efa88e7fe1",
-  "jsonHash": "fnv1a64:456012e1cb8b4c61",
+  "textHash": "fnv1a64:41210060311e96bb",
+  "jsonHash": "fnv1a64:74cf495dad1f48ac",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "And, Or, But",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c436bb0f3066d2f",
+  "sourceHash": "fnv1a64:ae7a5e844d933151",
   "lessons": [
     {
       "id": "KA-C67-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:865707f0bd06b6fd",
+      "sourceHash": "fnv1a64:af33782a13ed7918",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮತ್ತು (mattu) is native Dravidian, of the root maṟu, \"other, next\", and DEDR 4766 lists mattu, \"and, besides\", itself; the entry also has Tamil maṟu, Telugu maṟi and Malayalam maṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -150,7 +161,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -378,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae108c28b38bd129",
+      "sourceHash": "fnv1a64:c4145d7697c68839",
       "notice": null,
       "blocks": [
         {
@@ -418,6 +429,10 @@
             {
               "kind": "speech",
               "text": "ಅಥವಾ (athavā) is a Sanskrit word taken over whole — atha (\"then\") plus vā (\"or\") — and it is at home in speech as well as on the page. Quick speech will also just name the two options with a rise between them, or slip ಇಲ್ಲ in the gap; ಅಥವಾ (athavā) is the one that makes the choice unmistakable."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 231 lists Sanskrit athavā, \"or\"."
             }
           ]
         },
@@ -531,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2a3c98b78cc249e",
+      "sourceHash": "fnv1a64:f3c293e7156c29a0",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +591,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆದರೆ (ādare) is native Dravidian: the \"if\" form of āgu, \"to become\" (DEDR 333). \"If it is so\" turned into \"but\". DEDR 333 compares Sanskrit ām."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: a verb doing a conjunction's job",
           "segments": [
@@ -590,7 +616,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -601,7 +627,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -668,7 +694,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -699,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f40ecf2b4dc707d",
+      "sourceHash": "fnv1a64:0ca8deb1bb006c32",
       "notice": null,
       "blocks": [
         {
@@ -740,6 +766,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾನೂ (nānū) is native Dravidian: nānu, \"I\" (DEDR 5160), with the ending -ū, \"too, even\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same ending on two nouns means both",
           "segments": [
@@ -758,7 +795,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -769,7 +806,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -845,7 +882,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

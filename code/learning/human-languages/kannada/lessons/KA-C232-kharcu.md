@@ -14,7 +14,8 @@ romanization: "kharcu"
 concept_tag: KA-KELASA232-KHARCU
 prerequisites: [KA-C231-gumasta, KA-C231-adhikari]
 sounds: []
-roots: []
+roots: [persian-kharj]
+etymology_hook: "kharcu ← Persian xarj 'expense', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C231-adhikari]
 <!-- hl-knowledge: introduces=[KA-LEX-C232-KELASA232-01]; assesses=[] -->
 
 **ಖರ್ಚು** — *kharcu* — "an expense, spending".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖರ್ಚು** (*kharcu*) is a loan from Persian *xarj*, "expense, spending", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

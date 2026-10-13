@@ -14,7 +14,8 @@ romanization: "illiyavarege"
 concept_tag: KA-KALA211-ILLIYAVAREGE
 prerequisites: [KA-C210-yugadi, KA-C211-niyamitavagi]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-varai-limit]
+etymology_hook: "illiyavarege: native illi 'here' (DEDR 410) + varege 'up to' (DEDR 5261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C211-niyamitavagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C211-KALA211-02]; assesses=[] -->
 
 **ಇಲ್ಲಿಯವರೆಗೆ** — *illiyavarege* — "so far, until now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲ್ಲಿಯವರೆಗೆ** (*illiyavarege*) is native Dravidian: *illi*, "here" (DEDR 410), and *varege*, "up to", which DEDR 5261 lists as Kannada *vare*, "limit; up to, till": "up to here".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

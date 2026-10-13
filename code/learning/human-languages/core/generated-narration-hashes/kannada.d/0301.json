@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 301,
-  "sourceHash": "fnv1a64:f85e081c6c738e48",
+  "sourceHash": "fnv1a64:911661ddb9e44a96",
   "lessonIds": [
     "KA-C301-gaju",
     "KA-C301-plastik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch301.txt",
   "json": "kannada/narration/ch301.json",
-  "textHash": "fnv1a64:4710d8289dece940",
-  "jsonHash": "fnv1a64:f7ef3d13676b13ee",
+  "textHash": "fnv1a64:f2c56fa40a93cd5d",
+  "jsonHash": "fnv1a64:f78da0312bbd6c5e",
   "findings": []
 }

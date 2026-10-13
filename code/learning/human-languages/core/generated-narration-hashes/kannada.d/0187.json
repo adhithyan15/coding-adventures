@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 187,
-  "sourceHash": "fnv1a64:484d16080478fbaf",
+  "sourceHash": "fnv1a64:5c56477c91c94c1b",
   "lessonIds": [
     "KA-C187-sankhye",
     "KA-C187-kamanabillu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch187.txt",
   "json": "kannada/narration/ch187.json",
-  "textHash": "fnv1a64:06ea42546aa2e101",
-  "jsonHash": "fnv1a64:53663834ebe1acf2",
+  "textHash": "fnv1a64:fe9d16bacd6b3f9a",
+  "jsonHash": "fnv1a64:e27cc79fa444ce2d",
   "findings": []
 }

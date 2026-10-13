@@ -11,7 +11,8 @@ romanization: "nagara"
 concept_tag: KA-HOME-CITY
 prerequisites: [KA-C103-house, KA-C103-street]
 sounds: []
-roots: []
+roots: [sanskrit-nagara]
+etymology_hook: "nagara ← Sanskrit nagara 'town', a tatsama (CDIAL 6924)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C103-street]
 <!-- hl-knowledge: introduces=[KA-LEX-C103-HOME-03]; assesses=[] -->
 
 **ನಗರ** (*nagara*) — "city". **ಊರು** is any town, and home; **ನಗರ** is the big city.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಗರ** (*nagara*) is Sanskrit *nagara*, "town", taken over whole as a learned loan, a tatsama (CDIAL 6924).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

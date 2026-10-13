@@ -14,7 +14,8 @@ romanization: "kaḍḍāya"
 concept_tag: KA-GUNA180-KADDAYA
 prerequisites: [KA-C180-khasagi, KA-C180-sthaliya]
 sounds: []
-roots: []
+roots: [dravidian-kattayam-force]
+etymology_hook: "kaḍḍāya: native Dravidian, one word with Tamil kaṭṭāyam and Telugu kaḍḍāyamu (DEDR 1157)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C180-sthaliya]
 <!-- hl-knowledge: introduces=[KA-LEX-C180-GUNA180-05]; assesses=[] -->
 
 **ಕಡ್ಡಾಯ** — *kaḍḍāya* — "compulsory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಡ್ಡಾಯ** (*kaḍḍāya*) is native Dravidian, one word with Tamil *kaṭṭāyam* and Telugu *kaḍḍāyamu* (DEDR 1157). DEDR lists *kaḍḍāya* itself, "force, compulsion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

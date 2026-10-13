@@ -11,7 +11,8 @@ romanization: "gottilla"
 concept_tag: KA-PHRASE-DONTKNOW
 prerequisites: [KA-C68-neither, KA-C32-gottu, KA-C06-dative-subject, KA-C46-salt, KA-C46-lamp, KA-C46-cloth, KA-C46-fruit, KA-C66-crop]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark, il]
+etymology_hook: "gottilla: native gottu 'known' (DEDR 1847) + illa 'is not' (DEDR 2559)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ The full sentence keeps the dative you learned for knowing: **ನನಗೆ ಗ�
 you in Kannada, and so does not knowing.
 
 On its own, ಗೊತ್ತಿಲ್ಲ is a complete and perfectly polite answer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೊತ್ತಿಲ್ಲ** (*gottilla*) is native Dravidian: *gottu*, "known" (DEDR 1847, the same root as Tamil *kuṟi*, "a mark"), and *illa*, "is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 110,
-  "sourceHash": "fnv1a64:dee7b45cbfdeeee3",
+  "sourceHash": "fnv1a64:e0793e1d8e4e4ecc",
   "lessonIds": [
     "KA-C110-sante",
     "KA-C110-kadalatira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch110.txt",
   "json": "kannada/narration/ch110.json",
-  "textHash": "fnv1a64:4eedd8fd10ed52be",
-  "jsonHash": "fnv1a64:5a68af68423d5bfc",
+  "textHash": "fnv1a64:f15f0a3616ad7cb8",
+  "jsonHash": "fnv1a64:eaa46b65d2a15b31",
   "findings": []
 }

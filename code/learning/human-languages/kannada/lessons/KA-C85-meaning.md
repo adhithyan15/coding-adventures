@@ -11,7 +11,8 @@ romanization: "artha"
 concept_tag: KA-REP-MEANING
 prerequisites: [KA-C85-oncemore, KA-C85-loudly]
 sounds: []
-roots: []
+roots: [sanskrit-artha-meaning]
+etymology_hook: "artha ← Sanskrit artha 'aim, cause, thing', a tatsama (CDIAL 638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C85-loudly]
 "to understand", which is "to make the meaning one's own".
 
 **ಇದರ ಅರ್ಥ ಏನು?** (*idara artha ēnu?*) — "what is the meaning of this?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರ್ಥ** (*artha*) is Sanskrit *artha*, "aim, cause, thing", taken over whole as a learned loan, a tatsama (CDIAL 638). In Kannada the "aim" of a word is its meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

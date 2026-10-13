@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to stack, then the Kannada for to collec
 You'll want to know: ದೇಹ.
 ದೇಹ — dēha — "the body".
 
+The word, taken apart.
+ದೇಹ (dēha) is Sanskrit deha, "body", taken over whole as a learned loan, a tatsama (CDIAL 6557).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to collect, then the Kannada for the bod
 
 You'll want to know: ಚುಚ್ಚುಮದ್ದು.
 ಚುಚ್ಚುಮದ್ದು — cuccumaddu — "an injection".
+
+The word, taken apart.
+ಚುಚ್ಚುಮದ್ದು (cuccumaddu) is native Dravidian: cuccu, "to insert, put in as on a spit" (DEDR 2778), and maddu, "medicine" (DEDR 4719, with Tamil maruntu): "medicine pushed in".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for the body, then the Kannada for an inject
 You'll want to know: ಮುಲಾಮು.
 ಮುಲಾಮು — mulāmu — "an ointment".
 
+The word, taken apart.
+The origin of ಮುಲಾಮು (mulāmu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an injection, then the Kannada for an oi
 You'll want to know: ಕಾಯಿಲೆ.
 ಕಾಯಿಲೆ — kāyile — "an illness, a disease".
 
+The word, taken apart.
+The origin of ಕಾಯಿಲೆ (kāyile) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an ointment, then the Kannada for an ill
 
 You'll want to know: ರೋಗಿ.
 ರೋಗಿ — rōgi — "a patient".
+
+The word, taken apart.
+ರೋಗಿ (rōgi) is Sanskrit rogin, "one who is ill", from roga, "illness". Kannada drops the final -n.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "hittilu"
 concept_tag: KA-STHALA251-HITTILU
 prerequisites: [KA-C251-suranga, KA-C251-ilijaru]
 sounds: []
-roots: []
+roots: [tamil-pin-after]
+etymology_hook: "hittilu: native, built on hit- 'behind', older pin (DEDR 4205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C251-ilijaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-05]; assesses=[] -->
 
 **ಹಿತ್ತಿಲು** — *hittilu* — "a backyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿತ್ತಿಲು** (*hittilu*) is native Dravidian, built on the root for "behind", which DEDR 4205 lists as older Kannada *pin*, *pindu*: the yard behind the house. DEDR lists *hittilu* itself, with older *pittil*, "a backyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

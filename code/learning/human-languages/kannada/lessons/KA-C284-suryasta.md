@@ -14,7 +14,8 @@ romanization: "sūryāsta"
 concept_tag: KA-KALA284-SURYASTA
 prerequisites: [KA-C283-garbhini, KA-C284-hunnime]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-asta]
+etymology_hook: "sūryāsta ← Sanskrit sūrya 'sun' (CDIAL 13574) + asta 'home, setting' (CDIAL 973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C284-hunnime]
 <!-- hl-knowledge: introduces=[KA-LEX-C284-KALA284-02]; assesses=[] -->
 
 **ಸೂರ್ಯಾಸ್ತ** — *sūryāsta* — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂರ್ಯಾಸ್ತ** (*sūryāsta*) is Sanskrit *sūrya*, "sun" (CDIAL 13574), and *asta*, "home" (CDIAL 973): in Sanskrit the setting sun "goes home".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

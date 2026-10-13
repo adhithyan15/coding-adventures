@@ -11,7 +11,8 @@ romanization: "nillu"
 concept_tag: KA-VERB-STAND
 prerequisites: [KA-C43-sit]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nillu: native Dravidian, one word with Tamil nil and Telugu nilucu (DEDR 3675)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C43-sit]
 **ನಿಲ್ಲು** (*nillu*) — "stand".
 
 The pair to sitting, and the bare stem again — Kannada asks for nothing extra to make a command.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಲ್ಲು** (*nillu*) is native Dravidian, one word with Tamil *nil*, Telugu *nilucu* and Malayalam *nilkka* (DEDR 3675).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

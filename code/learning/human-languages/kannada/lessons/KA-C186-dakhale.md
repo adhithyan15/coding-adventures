@@ -14,7 +14,8 @@ romanization: "dākhale"
 concept_tag: KA-VASTU186-DAKHALE
 prerequisites: [KA-C186-pensil, KA-C186-kadata]
 sounds: []
-roots: []
+roots: [arabic-dakhila]
+etymology_hook: "dākhale ← Arabic dāxila 'entry', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C186-kadata]
 <!-- hl-knowledge: introduces=[KA-LEX-C186-VASTU186-05]; assesses=[] -->
 
 **ದಾಖಲೆ** — *dākhale* — "a document, a record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಾಖಲೆ** (*dākhale*) is a loan from Arabic *dāxila*, "an entry, something entered", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

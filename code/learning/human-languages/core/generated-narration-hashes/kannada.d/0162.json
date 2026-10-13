@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 162,
-  "sourceHash": "fnv1a64:a0386bf96aa40ee4",
+  "sourceHash": "fnv1a64:dd897e3d6fc06c3b",
   "lessonIds": [
     "KA-C162-tiddu",
     "KA-C162-nakalu-madu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch162.txt",
   "json": "kannada/narration/ch162.json",
-  "textHash": "fnv1a64:d75c9c312ee1b2fb",
-  "jsonHash": "fnv1a64:413f39d1e99d432c",
+  "textHash": "fnv1a64:82d1f242535e0e98",
+  "jsonHash": "fnv1a64:cddd597d146238a9",
   "findings": []
 }

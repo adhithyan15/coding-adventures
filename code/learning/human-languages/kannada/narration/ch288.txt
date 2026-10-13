@@ -12,6 +12,9 @@ Before the new one: say the Kannada for the world, then the Kannada for a wall.
 You'll want to know: ಅಲ್ಲದೆ.
 ಅಲ್ಲದೆ — allade — "moreover, besides".
 
+The word, taken apart.
+ಅಲ್ಲದೆ (allade) is native Dravidian, from alla, "is not", which DEDR 234 lists: "not being (only that)" came to mean "besides"; the entry also has Tamil al- and Malayalam alla.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a wall, then the Kannada for moreover.
 
 You'll want to know: ಇದ್ದಕ್ಕಿದ್ದಂತೆ.
 ಇದ್ದಕ್ಕಿದ್ದಂತೆ — iddakkiddante — "suddenly".
+
+The word, taken apart.
+ಇದ್ದಕ್ಕಿದ್ದಂತೆ (iddakkiddante) is native Dravidian, built twice on iddu, "having been", the past form of iru, "to be", which DEDR 480 lists, with -ante, "as, like".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for moreover, then the Kannada for suddenly.
 You'll want to know: ಹೊರತು.
 ಹೊರತು — horatu — "except".
 
+The word, taken apart.
+ಹೊರತು (horatu) is native Dravidian, one word with Tamil puṟam, Telugu peṟa and Malayalam puṟam (DEDR 4333). DEDR lists older hoṟatu, "that is outside, excepted; except, without".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for suddenly, then the Kannada for except.
 You'll want to know: ಇಲ್ಲದೆ.
 ಇಲ್ಲದೆ — illade — "without".
 
+The word, taken apart.
+ಇಲ್ಲದೆ (illade) is native Dravidian, from illa, "is not", and DEDR 2559 lists illade, "not being", itself; the entry also has Tamil il, Telugu lē- and Malayalam illa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for except, then the Kannada for without.
 
 You'll want to know: ಹೇಗೂ.
 ಹೇಗೂ — hēgū — "anyway".
+
+The word, taken apart.
+ಹೇಗೂ (hēgū) is native Dravidian: hēge, "how", which DEDR 5151 lists among the question words, with -ū, "even": "however it is".
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a knot, then the Kannada for a chain.
 You'll want to know: ಗೆರೆ.
 ಗೆರೆ — gere — "a line".
 
+The word, taken apart.
+ಗೆರೆ (gere) is native Dravidian, one word with Malayalam cira (DEDR 1564). DEDR lists gere, "a scratch, as with the fingers", under kere, "to scratch".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a chain, then the Kannada for a line.
 
 You'll want to know: ಹುಂಡಿ.
 ಹುಂಡಿ — huṇḍi — "a money box, a collection box".
+
+The word, taken apart.
+Where ಹುಂಡಿ (huṇḍi) comes from is uncertain. It may be the same word as Hindi huṇḍī, "a bill of exchange", from Sanskrit huṇḍikā (CDIAL 14138), which CDIAL compares with Persian hunduwī, but no source records the sense "collection box".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a line, then the Kannada for a money box
 You'll want to know: ಸೂಟ್ಕೇಸ್.
 ಸೂಟ್ಕೇಸ್ — sūṭkēs — "a suitcase".
 
+The word, taken apart.
+ಸೂಟ್ಕೇಸ್ (sūṭkēs) is a loan from English suitcase.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a money box, then the Kannada for a suit
 You'll want to know: ಗುದ್ದಲಿ.
 ಗುದ್ದಲಿ — guddali — "a hoe, a pickaxe".
 
+The word, taken apart.
+ಗುದ್ದಲಿ (guddali) is native Dravidian, one word with Tamil kuntāli and Telugu guddali (DEDR 1722). DEDR lists guddali itself, "a pickaxe, hoe". DEDR 1722 compares Sanskrit kuddāla.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a suitcase, then the Kannada for a hoe.
 
 You'll want to know: ಕುಡುಗೋಲು.
 ಕುಡುಗೋಲು — kuḍugōlu — "a sickle".
+
+The word, taken apart.
+ಕುಡುಗೋಲು (kuḍugōlu) is native Dravidian, usually explained as "the crooked stick": kuḍu, "crooked, bent" (DEDR 2054), and kōlu, "stick" (DEDR 2237).
 
 What you've built.
 One more word for this chapter.

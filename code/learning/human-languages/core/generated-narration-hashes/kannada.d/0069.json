@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 69,
-  "sourceHash": "fnv1a64:8c4e40b0c3cdb8b5",
+  "sourceHash": "fnv1a64:1d62dc29de67e442",
   "lessonIds": [
     "KA-S136-vowel-sign-uu",
     "KA-C69-is-it",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch69.txt",
   "json": "kannada/narration/ch69.json",
-  "textHash": "fnv1a64:05764650eab50549",
-  "jsonHash": "fnv1a64:138db7bc8b697802",
+  "textHash": "fnv1a64:e6968220670d2a05",
+  "jsonHash": "fnv1a64:264043823a79066a",
   "findings": []
 }

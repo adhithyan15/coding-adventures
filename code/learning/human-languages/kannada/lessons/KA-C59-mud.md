@@ -11,7 +11,8 @@ romanization: "kesaru"
 concept_tag: KA-NOUN-MUD
 prerequisites: [KA-C59-sand, KA-C57-shoulder]
 sounds: []
-roots: []
+roots: [dravidian-ceru-mud]
+etymology_hook: "kesaru: native Dravidian, one word with Tamil cēṟu (DEDR 2020)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and unavoidable. From June onward the ಮಳೆಗಾಲ turns every 
 It is also the mud a rice field wants. Paddy is planted into standing water and soft ground, so ಕೆಸರು is not a complaint in a farmer's mouth the way it is in a city one — the ರೈತ needs it, and a dry season without it is the bad outcome.
 
 Then, as everywhere, it goes figurative. To throw ಕೆಸರು at somebody is to smear their name, and Kannada arrived at that picture on its own, from a place where mud is genuinely at hand for half the year.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಸರು** (*kesaru*) is native Dravidian, one word with Tamil *cēṟu* (DEDR 2020). DEDR gives Kannada *kesaṟ*, "wet soil, mud". DEDR 2020 compares Sanskrit *kedāra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

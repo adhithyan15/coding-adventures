@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a mosquito, then the Kannada for a spide
 You'll want to know: ಕಪ್ಪೆ.
 ಕಪ್ಪೆ — kappe — "a frog".
 
+The word, taken apart.
+ಕಪ್ಪೆ (kappe) is native Dravidian, one word with Telugu kappa (DEDR 1224).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a spider, then the Kannada for a frog.
 
 You'll want to know: ಬಾತುಕೋಳಿ.
 ಬಾತುಕೋಳಿ — bātukōḷi — "a duck".
+
+The word, taken apart.
+ಬಾತುಕೋಳಿ (bātukōḷi) is bātu, "duck", a loan through Hindustani baṭ, and kōḷi, "fowl", native Dravidian (DEDR 2248, with Tamil kōḻi). A duck is "a duck-fowl".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a frog, then the Kannada for a duck.
 You'll want to know: ಹಂದಿ.
 ಹಂದಿ — handi — "a pig".
 
+The word, taken apart.
+ಹಂದಿ (handi) is native Dravidian, one word with Tamil paṉṟi and Telugu pandi (DEDR 4039). DEDR gives the older Kannada pandi: the p- has become h-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a duck, then the Kannada for a pig.
 You'll want to know: ಕತ್ತೆ.
 ಕತ್ತೆ — katte — "a donkey".
 
+The word, taken apart.
+ಕತ್ತೆ (katte) is native Dravidian, one word with Tamil kaḻutai (DEDR 1364). DEDR gives Kannada kaḻte and katte. DEDR 1364 compares Sanskrit gardabha.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a pig, then the Kannada for a donkey.
 
 You'll want to know: ಒಂಟೆ.
 ಒಂಟೆ — oṇṭe — "a camel".
+
+The word, taken apart.
+ಒಂಟೆ (oṇṭe) is usually traced to Sanskrit uṣṭra, "camel", through Prakrit uṭṭa (CDIAL 2387): a tadbhava, a loan reshaped by speech.
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "kēḷu"
 concept_tag: KA-VERB-LISTEN
 prerequisites: [KA-C44-look, KA-C42-good]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask]
+etymology_hook: "kēḷu: native Dravidian, one word with Tamil kēḷ and Malayalam kēḷkka (DEDR 2017)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C44-look]
 **ಕೇಳು** (*kēḷu*) — "listen".
 
 And 'to ask'. Kannada uses the same stem for taking in words and for requesting them, which is less strange than it sounds — both are aimed at what someone else knows.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೇಳು** (*kēḷu*) is native Dravidian, one word with Tamil *kēḷ* and Malayalam *kēḷkka* (DEDR 2017).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

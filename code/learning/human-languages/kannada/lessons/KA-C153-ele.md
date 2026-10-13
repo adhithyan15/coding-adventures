@@ -14,7 +14,8 @@ romanization: "eḷe"
 concept_tag: KA-VERB-ELE
 prerequisites: [KA-C153-tumbu, KA-C153-tallu]
 sounds: []
-roots: []
+roots: [dravidian-izhu-pull]
+etymology_hook: "eḷe: native Dravidian, one word with Tamil iḻu (DEDR 504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C153-tallu]
 <!-- hl-knowledge: introduces=[KA-LEX-C153-ACT153-04]; assesses=[] -->
 
 **ಎಳೆ** — *eḷe* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಳೆ** (*eḷe*) is native Dravidian, one word with Tamil *iḻu* (DEDR 504). DEDR lists the older Kannada *eḻe*, "to pull, drag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

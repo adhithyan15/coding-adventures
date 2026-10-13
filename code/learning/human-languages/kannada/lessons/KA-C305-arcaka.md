@@ -14,7 +14,8 @@ romanization: "arcaka"
 concept_tag: KA-KELASA305-ARCAKA
 prerequisites: [KA-C304-visaya, KA-C304-ganita]
 sounds: []
-roots: []
+roots: [sanskrit-arcaka]
+etymology_hook: "arcaka ← Sanskrit arcaka 'worshipper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C304-ganita]
 <!-- hl-knowledge: introduces=[KA-LEX-C305-KELASA305-01]; assesses=[] -->
 
 **ಅರ್ಚಕ** — *arcaka* — "a temple priest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರ್ಚಕ** (*arcaka*) is Sanskrit *arcaka*, "worshipper", from the verb for "to praise, worship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for is that so, then the Kannada for the sam
 You'll want to know: ಅಭಿನಂದನೆಗಳು.
 ಅಭಿನಂದನೆಗಳು (abhinandanegaḷu) — "congratulations". The ending ‑ಗಳು (-gaḷu) is the plural: many good wishes.
 
+The word, taken apart.
+ಅಭಿನಂದನೆಗಳು (abhinandanegaḷu) is Sanskrit abhinandana, "rejoicing, praise, welcome", with Kannada's plural -gaḷu: "congratulations" is said in the plural, as in English.
+
 What you've built.
 Good news deserves a word of its own.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for the same, then the Kannada for congratul
 You'll want to know: ಆಹ್ವಾನ.
 ಆಹ್ವಾನ (āhvāna) — "an invitation".
 ನಿಮಗೆ ಆಹ್ವಾನ (nimage āhvāna) — "an invitation for you", with ನಿಮಗೆ, "to you".
+
+The word, taken apart.
+ಆಹ್ವಾನ (āhvāna) is Sanskrit āhvāna, "a calling, a summons", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 How a celebration begins.
@@ -72,6 +78,9 @@ You'll want to know: ಉಡುಗೊರೆ.
 ಉಡುಗೊರೆ (uḍugore) — "a gift, a present".
 ನಿಮಗೆ ಒಂದು ಉಡುಗೊರೆ (nimage ondu uḍugore) — "a gift for you".
 
+The word, taken apart.
+The origin of ಉಡುಗೊರೆ (uḍugore) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 What you bring to the celebration.
 
@@ -100,6 +109,9 @@ Before the new one: say the Kannada for an invitation, then the Kannada for a gi
 
 You'll want to know: ಒಳಗೆ ಬನ್ನಿ.
 ಒಳಗೆ ಬನ್ನಿ (oḷage banni) — "please come in". ಒಳಗೆ is "inside", and ಬನ್ನಿ is the polite form of ಬಾ, "come".
+
+The word, taken apart.
+ಒಳಗೆ ಬನ್ನಿ (oḷage banni) is native Dravidian: oḷage, "inside", which DEDR 698 lists itself (Tamil uḷ), and banni, the polite command of baru, "to come" (DEDR 5270).
 
 What you've built.
 The first thing said at the door.
@@ -130,6 +142,9 @@ Before the new one: say the Kannada for a gift, then the Kannada for come in.
 You'll want to know: ಸ್ವಾಗತ.
 ಸ್ವಾಗತ (svāgata) — "welcome".
 ನಿಮಗೆ ಸ್ವಾಗತ (nimage svāgata) — "welcome to you", the formal greeting on a signboard or at a door.
+
+The word, taken apart.
+ಸ್ವಾಗತ (svāgata) is Sanskrit svāgata, "welcome", taken over whole as a learned loan, a tatsama (CDIAL 13920). The Sanskrit word is su-, "well", and āgata, "come": "well come".
 
 What you've built.
 The formal greeting for a guest.

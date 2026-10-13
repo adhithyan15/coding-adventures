@@ -11,7 +11,8 @@ romanization: "nijavāgalū"
 concept_tag: KA-RESP-REALLY
 prerequisites: [KA-C86-didnthear, KA-C86-didntunderstand]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijavāgalū: Sanskrit nija (CDIAL 7181) + native āgu 'become' (DEDR 333) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C86-didntunderstand]
 **ನಿಜವಾಗಲೂ?** (*nijavāgalū?*) — "really?", built on **ನಿಜ** (*nija*), "true".
 
 Said with rising voice it is surprise; said flat, it is "truly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಜವಾಗಲೂ** (*nijavāgalū*) is *nija*, "true", from Sanskrit *nija*, "innate, one's own" (CDIAL 7181), with forms of the native *āgu*, "to become" (DEDR 333), and *-ū*, "even": "even truly?" DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

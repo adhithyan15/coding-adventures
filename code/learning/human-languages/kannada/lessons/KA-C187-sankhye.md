@@ -14,7 +14,8 @@ romanization: "saṅkhye"
 concept_tag: KA-VASTU187-SANKHYE
 prerequisites: [KA-C186-kadata, KA-C186-dakhale]
 sounds: []
-roots: []
+roots: [sanskrit-sankhya]
+etymology_hook: "saṅkhye ← Sanskrit saṅkhyā 'number, counting', a tatsama (CDIAL 12841)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C186-dakhale]
 <!-- hl-knowledge: introduces=[KA-LEX-C187-VASTU187-01]; assesses=[] -->
 
 **ಸಂಖ್ಯೆ** — *saṅkhye* — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಖ್ಯೆ** (*saṅkhye*) is Sanskrit *saṅkhyā*, "number, counting", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 12841).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

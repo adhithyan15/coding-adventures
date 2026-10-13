@@ -14,7 +14,8 @@ romanization: "rūpāyi"
 concept_tag: KA-THINGS138-RUPAYI
 prerequisites: [KA-C137-tivi, KA-C137-kampyutar, KA-S149-digit-zero, KA-S141-digit-two, KA-S143-digit-four, KA-S144-digit-five, KA-S145-digit-six, KA-S146-digit-seven, KA-S147-digit-eight, KA-S148-digit-nine]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rūpāyi ← Hindustani rupayā, from Sanskrit rūpya 'stamped; silver' (CDIAL 10805)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C137-kampyutar]
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **ರೂಪಾಯಿ** — *rūpāyi* — "a rupee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರೂಪಾಯಿ** (*rūpāyi*) came from Hindustani *rupayā*, which goes back to Sanskrit *rūpya*, "bearing a stamp; silver" (CDIAL 10805): the coin was stamped silver.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

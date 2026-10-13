@@ -14,7 +14,8 @@ romanization: "dakṣiṇa"
 concept_tag: KA-STHALA249-DAKSINA
 prerequisites: [KA-C249-purva, KA-C249-pascima]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dakṣiṇa ← Sanskrit dakṣiṇa 'right (hand), southern', a tatsama (CDIAL 6119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C249-pascima]
 <!-- hl-knowledge: introduces=[KA-LEX-C249-STHALA249-03]; assesses=[] -->
 
 **ದಕ್ಷಿಣ** — *dakṣiṇa* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಕ್ಷಿಣ** (*dakṣiṇa*) is Sanskrit *dakṣiṇa*, "right (hand), southern", taken over whole as a learned loan, a tatsama (CDIAL 6119). Facing the sunrise, the south is on the right hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

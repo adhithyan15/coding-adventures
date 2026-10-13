@@ -14,7 +14,8 @@ romanization: "vargāyisu"
 concept_tag: KA-VERB-VARGAYISU
 prerequisites: [KA-C162-eccarisu, KA-C162-bhagavahisu]
 sounds: []
-roots: []
+roots: [kannada-varga-transfer]
+etymology_hook: "vargāyisu: origin uncertain; usually linked to Sanskrit varga 'division, class'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C162-bhagavahisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C162-KRIYE162-05]; assesses=[] -->
 
 **ವರ್ಗಾಯಿಸು** — *vargāyisu* — "to transfer (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ವರ್ಗಾಯಿಸು** (*vargāyisu*) is uncertain. It is usually linked to Sanskrit *varga*, "a class, a group" (CDIAL 11331), but no source settles how it came to mean "to transfer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

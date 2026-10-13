@@ -14,7 +14,8 @@ romanization: "sthaḷīya"
 concept_tag: KA-GUNA180-STHALIYA
 prerequisites: [KA-C180-sarkari, KA-C180-khasagi]
 sounds: []
-roots: []
+roots: [sanskrit-sthala]
+etymology_hook: "sthaḷīya: Sanskrit sthala 'ground, place' (CDIAL 13744) + -īya 'belonging to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C180-khasagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C180-GUNA180-04]; assesses=[] -->
 
 **ಸ್ಥಳೀಯ** — *sthaḷīya* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಥಳೀಯ** (*sthaḷīya*) is Sanskrit *sthala*, "ground, place" (CDIAL 13744), with *-īya*, "belonging to": "of the place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

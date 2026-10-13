@@ -14,7 +14,8 @@ romanization: "nālige"
 concept_tag: KA-THINGS134-NALIGE
 prerequisites: [KA-C134-kuri, KA-C134-mukha]
 sounds: []
-roots: []
+roots: [dravidian-naa-tongue]
+etymology_hook: "nālige: native Dravidian, one word with Tamil nā and Telugu nālika (DEDR 3633)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C134-mukha]
 <!-- hl-knowledge: introduces=[KA-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **ನಾಲಿಗೆ** — *nālige* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಲಿಗೆ** (*nālige*) is native Dravidian, one word with Tamil *nā* and Telugu *nālika* (DEDR 3633). DEDR lists *nālige* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

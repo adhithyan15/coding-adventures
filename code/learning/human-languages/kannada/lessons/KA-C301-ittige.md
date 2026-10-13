@@ -14,7 +14,8 @@ romanization: "iṭṭige"
 concept_tag: KA-VASTU301-ITTIGE
 prerequisites: [KA-C301-gaju, KA-C301-plastik]
 sounds: []
-roots: []
+roots: [sanskrit-ishtaka]
+etymology_hook: "iṭṭige: tadbhava of Sanskrit iṣṭakā 'brick' (CDIAL 1600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C301-plastik]
 <!-- hl-knowledge: introduces=[KA-LEX-C301-VASTU301-03]; assesses=[] -->
 
 **ಇಟ್ಟಿಗೆ** — *iṭṭige* — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಟ್ಟಿಗೆ** (*iṭṭige*) is a tadbhava of Sanskrit *iṣṭakā*, "brick" (CDIAL 1600), through Prakrit *iṭṭagā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āne"
 concept_tag: KA-THINGS129-ANE
 prerequisites: [KA-C129-surya, KA-C129-kudure]
 sounds: []
-roots: []
+roots: [dravidian-yanai-elephant]
+etymology_hook: "āne: native Dravidian, one word with Tamil yāṉai (DEDR 5161)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C129-kudure]
 <!-- hl-knowledge: introduces=[KA-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **ಆನೆ** — *āne* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆನೆ** (*āne*) is native Dravidian, one word with Tamil *yāṉai* (DEDR 5161). DEDR also gives the older Kannada *yāne*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

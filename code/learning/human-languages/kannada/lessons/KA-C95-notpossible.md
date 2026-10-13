@@ -11,7 +11,8 @@ romanization: "sādhyavilla"
 concept_tag: KA-RESP-NOT-POSSIBLE
 prerequisites: [KA-C94-plate, KA-C94-price]
 sounds: []
-roots: []
+roots: [sanskrit-sadhya, il]
+etymology_hook: "sādhyavilla: Sanskrit sādhya 'possible, to be done' + native illa 'is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C94-price]
 
 **ಸಾಧ್ಯವಿಲ್ಲ** (*sādhyavilla*) — "it's not possible", from **ಸಾಧ್ಯ** (*sādhya*),
 "possible", with **‑ಇಲ್ಲ**, "not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಧ್ಯವಿಲ್ಲ** (*sādhyavilla*) is *sādhya*, "possible", from Sanskrit *sādhya*, "to be accomplished", with native *illa*, "is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

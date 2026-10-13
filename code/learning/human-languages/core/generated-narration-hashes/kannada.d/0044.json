@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 44,
-  "sourceHash": "fnv1a64:77f8195bbda6dd9a",
+  "sourceHash": "fnv1a64:921fe96c1280784e",
   "lessonIds": [
     "KA-C44-look",
     "KA-C44-listen",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch44.txt",
   "json": "kannada/narration/ch44.json",
-  "textHash": "fnv1a64:df1ae1c31139f0bc",
-  "jsonHash": "fnv1a64:e0a09171c170d376",
+  "textHash": "fnv1a64:880fe93fb4a612f8",
+  "jsonHash": "fnv1a64:ad45f8833f38019e",
   "findings": []
 }

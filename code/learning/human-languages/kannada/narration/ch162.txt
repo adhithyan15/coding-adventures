@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to reserve, then the Kannada for to canc
 You'll want to know: ತಿದ್ದು.
 ತಿದ್ದು — tiddu — "to correct".
 
+The word, taken apart.
+ತಿದ್ದು (tiddu) is native Dravidian, one word with Telugu diddu (DEDR 3251). DEDR lists tirdu, tiddu, "to make straight, correct".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to cancel, then the Kannada for to corre
 
 You'll want to know: ನಕಲು ಮಾಡು.
 ನಕಲು ಮಾಡು — nakalu māḍu — "to copy".
+
+The word, taken apart.
+ನಕಲು ಮಾಡು (nakalu māḍu) is nakalu, "a copy", from Arabic naql, "a copy, a transfer", which came through Hindustani, and native māḍu, "to do" (DEDR 4797).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to correct, then the Kannada for to copy
 You'll want to know: ಎಚ್ಚರಿಸು.
 ಎಚ್ಚರಿಸು — eccarisu — "to warn".
 
+The word, taken apart.
+ಎಚ್ಚರಿಸು (eccarisu) is native Dravidian, of the root for "to rise, awake", and DEDR 851 lists eccaṟisu, "to awaken, warn", itself; the entry also has Telugu eccarincu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to copy, then the Kannada for to warn.
 You'll want to know: ಭಾಗವಹಿಸು.
 ಭಾಗವಹಿಸು — bhāgavahisu — "to take part".
 
+The word, taken apart.
+ಭಾಗವಹಿಸು (bhāgavahisu) is bhāga, "a portion, a share", from Sanskrit bhāga (CDIAL 9430), and vahisu, "to bear", from the Sanskrit verb vah, "to carry": "to carry a share".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to warn, then the Kannada for to take pa
 
 You'll want to know: ವರ್ಗಾಯಿಸು.
 ವರ್ಗಾಯಿಸು — vargāyisu — "to transfer (money)".
+
+The word, taken apart.
+The origin of ವರ್ಗಾಯಿಸು (vargāyisu) is uncertain. It is usually linked to Sanskrit varga, "a class, a group" (CDIAL 11331), but no source settles how it came to mean "to transfer".
 
 What you've built.
 One more word for this chapter.

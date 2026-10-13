@@ -14,7 +14,8 @@ romanization: "drākṣi"
 concept_tag: KA-THINGS126-DRAKSI
 prerequisites: [KA-C125-ragi, KA-C126-nimbe]
 sounds: []
-roots: []
+roots: [sanskrit-draksha]
+etymology_hook: "drākṣi ← Sanskrit drākṣā 'vine, grape', reshaped as a tadbhava (CDIAL 6628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C126-nimbe]
 <!-- hl-knowledge: introduces=[KA-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **ದ್ರಾಕ್ಷಿ** — *drākṣi* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದ್ರಾಕ್ಷಿ** (*drākṣi*) comes from Sanskrit *drākṣā*, "vine, grape", reshaped to Kannada sounds: a tadbhava (CDIAL 6628). The final *-ā* became Kannada *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

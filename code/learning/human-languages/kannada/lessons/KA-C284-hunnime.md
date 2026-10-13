@@ -14,7 +14,8 @@ romanization: "huṇṇime"
 concept_tag: KA-KALA284-HUNNIME
 prerequisites: [KA-C283-aparesan, KA-C283-garbhini]
 sounds: []
-roots: []
+roots: [sanskrit-purnima]
+etymology_hook: "huṇṇime: tadbhava of Sanskrit pūrṇimā 'full-moon day' (CDIAL 8340)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C283-garbhini]
 <!-- hl-knowledge: introduces=[KA-LEX-C284-KALA284-01]; assesses=[] -->
 
 **ಹುಣ್ಣಿಮೆ** — *huṇṇime* — "full moon (day)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಣ್ಣಿಮೆ** (*huṇṇime*) is a tadbhava of Sanskrit *pūrṇimā*, "full-moon day" (CDIAL 8340), through Prakrit *puṇṇimasī*; the *p-* became *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

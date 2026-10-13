@@ -14,7 +14,8 @@ romanization: "maṇikaṭṭu"
 concept_tag: KA-THINGS135-MANIKATTU
 prerequisites: [KA-C135-monakalu, KA-C135-monakai]
 sounds: []
-roots: []
+roots: [dravidian-manikattu-wrist]
+etymology_hook: "maṇikaṭṭu: native Dravidian, one word with Tamil maṇikkaṭṭu and Telugu maṇikaṭṭu (DEDR 4673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C135-monakai]
 <!-- hl-knowledge: introduces=[KA-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **ಮಣಿಕಟ್ಟು** — *maṇikaṭṭu* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಣಿಕಟ್ಟು** (*maṇikaṭṭu*) is native Dravidian, one word with Tamil *maṇikkaṭṭu* and Telugu *maṇikaṭṭu* (DEDR 4673). DEDR lists *maṇikaṭṭu* itself, "wrist". DEDR 4673 notes that Sanskrit *maṇibandha*, "wrist", translates it: *bandha* renders *kaṭṭu*, "binding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

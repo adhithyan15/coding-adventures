@@ -11,7 +11,8 @@ romanization: "gāya"
 concept_tag: KA-WX-WOUND
 prerequisites: [KA-C93-sultry, KA-C93-ease]
 sounds: []
-roots: []
+roots: [sanskrit-ghata]
+etymology_hook: "gāya ← Sanskrit ghāta 'killing; blow, bruise', reshaped as a tadbhava (CDIAL 4460)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C93-ease]
 **ಗಾಯ** (*gāya*) — "a wound, an injury".
 
 **ಗಾಯ ಆಗಿದೆ** (*gāya āgide*) — "(I) got hurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಯ** (*gāya*) comes from Sanskrit *ghāta*, "killing; blow, bruise", reshaped to Kannada sounds: a tadbhava (CDIAL 4460). Prakrit *ghāya* shows the middle step.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

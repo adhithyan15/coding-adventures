@@ -14,7 +14,8 @@ romanization: "baḍagi"
 concept_tag: KA-KELASA196-BADAGI
 prerequisites: [KA-C196-atagara, KA-C196-preksaka]
 sounds: []
-roots: []
+roots: [sanskrit-vardhaki]
+etymology_hook: "baḍagi ← Sanskrit vardhaki 'carpenter', reshaped as a tadbhava (CDIAL 11375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C196-preksaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C196-KELASA196-05]; assesses=[] -->
 
 **ಬಡಗಿ** — *baḍagi* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಡಗಿ** (*baḍagi*) comes from Sanskrit *vardhaki*, "carpenter", reshaped to Kannada sounds: a tadbhava (CDIAL 11375). Prakrit *vaḍḍhaï* shows the step between.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

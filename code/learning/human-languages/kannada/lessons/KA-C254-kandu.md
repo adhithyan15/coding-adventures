@@ -14,7 +14,8 @@ romanization: "kandu"
 concept_tag: KA-GUNA254-KANDU
 prerequisites: [KA-C254-asvastha, KA-C254-cupada]
 sounds: []
-roots: []
+roots: [dravidian-kanru-scorch]
+etymology_hook: "kandu: probably native kandu 'scorched colour, dark hue' (DEDR 1410)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C254-cupada]
 <!-- hl-knowledge: introduces=[KA-LEX-C254-GUNA254-04]; assesses=[] -->
 
 **ಕಂದು** — *kandu* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂದು** (*kandu*) is probably the native *kandu*, "discoloration by scorching, dark hue", which DEDR 1410 lists under *kandu*, "to be scorched", one word with Tamil *kaṉṟu*, "to be scorched".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

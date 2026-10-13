@@ -14,7 +14,8 @@ romanization: "hīru"
 concept_tag: KA-VERB-HIRU
 prerequisites: [KA-C244-kuggu, KA-C244-nekku]
 sounds: []
-roots: []
+roots: [dravidian-piir-suck]
+etymology_hook: "hīru: native Dravidian, one word with Telugu pīrcu (DEDR 4223)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C244-nekku]
 <!-- hl-knowledge: introduces=[KA-LEX-C244-KRIYE244-04]; assesses=[] -->
 
 **ಹೀರು** — *hīru* — "to suck, to sip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೀರು** (*hīru*) is native Dravidian, one word with Telugu *pīrcu* (DEDR 4223). DEDR gives the older Kannada *pīr*, "to suck": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nētuhāku"
 concept_tag: KA-VERB-NETUHAKU
 prerequisites: [KA-C206-aturapadu, KA-C207-musu]
 sounds: []
-roots: []
+roots: [dravidian-nel-hang]
+etymology_hook: "nētuhāku: native nētu 'hanging', from nēl 'to hang' (DEDR 2912), + hāku 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C207-musu]
 <!-- hl-knowledge: introduces=[KA-LEX-C207-KRIYE207-02]; assesses=[] -->
 
 **ನೇತುಹಾಕು** — *nētuhāku* — "to hang up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೇತುಹಾಕು** (*nētuhāku*) is *nētu*, "hanging", from the native *nēl*, "to be suspended, hang" (DEDR 2912), with *hāku*, "to put", whose history neither DEDR nor CDIAL gives: "to put hanging".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

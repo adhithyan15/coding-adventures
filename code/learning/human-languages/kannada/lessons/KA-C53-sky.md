@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SKY
 prerequisites: [KA-C52-garland, KA-C51-gratitude]
 sounds: []
 roots: []
+etymology_hook: "ākāśa ← Sanskrit ākāśa 'sky', taken over whole (CDIAL 1008)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *ākāśa*, built on a piece meaning "to shine, to be visible". The sky
 Kannada holds an inherited word for the same overhead space, ಬಾನು (*bānu*), which owes Sanskrit nothing. The two divide the work: ಆಕಾಶ does the ordinary shift and turns up in weather talk, while ಬಾನು keeps to songs and poetry. A borrowed word taking the daily job and leaving the old one the ceremony is an arrangement you have watched before, at the ಬಾಗಿಲು.
 
 *ākāśa* travelled as well. Traders carried it east, and Malay and Indonesian still say *angkasa* for the sky.
+
+CDIAL 1008 lists Sanskrit *ākāśa*, "sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

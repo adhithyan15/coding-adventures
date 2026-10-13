@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 123,
-  "sourceHash": "fnv1a64:85bda101fac1c4e6",
+  "sourceHash": "fnv1a64:ab702ff19c3c7ab8",
   "lessonIds": [
     "KA-C123-tarakari",
     "KA-C123-balehannu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch123.txt",
   "json": "kannada/narration/ch123.json",
-  "textHash": "fnv1a64:84b6273cee6db5e1",
-  "jsonHash": "fnv1a64:4b748ea7b3c5ba08",
+  "textHash": "fnv1a64:44913ebb1a5e512b",
+  "jsonHash": "fnv1a64:96993da30d89f271",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "menasu"
 concept_tag: KA-THINGS126-MENASU
 prerequisites: [KA-C126-draksi, KA-C126-halasu]
 sounds: []
-roots: []
+roots: [dravidian-milaku-pepper]
+etymology_hook: "menasu: native Dravidian, one word with Tamil miḷaku and Malayalam miḷaku (DEDR 4867)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C126-halasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **ಮೆಣಸು** — *menasu* — "pepper, chilli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೆಣಸು** (*menasu*) is native Dravidian, one word with Tamil *miḷaku* and Malayalam *miḷaku* (DEDR 4867). DEDR lists Kannada *meṇasu*, "pepper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
