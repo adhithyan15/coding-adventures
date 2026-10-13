@@ -53,6 +53,9 @@ The directory itself is the discovery mechanism. It has no `README.md`,
 `_meta.md`, manifest, generated aggregate, or hand-maintained index. Adding a
 new provenance source creates one new file and changes no existing document.
 Refining an existing source edits only that source's owner file.
+The directory must itself be a real directory rather than a symbolic link, and
+the lowercase basenames `readme`, `index`, and `manifest` are reserved so an
+apparently valid owner filename cannot recreate the forbidden shared index.
 
 Every owner file:
 

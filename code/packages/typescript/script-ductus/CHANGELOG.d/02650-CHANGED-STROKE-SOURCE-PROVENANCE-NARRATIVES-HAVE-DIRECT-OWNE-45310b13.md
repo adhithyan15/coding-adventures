@@ -8,8 +8,9 @@
   and security boundary in the README. The directory listing is discovery, so
   a future source adds one file without editing a manifest, index, or aggregate.
 - Added a filesystem-level regression gate for strict filenames, regular files,
-  one level-1 heading, absence of an index, a stable shared README, and two
-  independently discoverable parallel owner additions.
+  a real non-symlinked owner root, reserved index/manifest names, one CommonMark
+  level-1 heading, a stable shared README, and two independently discoverable
+  parallel owner additions.
 - Made the existing uppercase pin-name rejection fixture portable to
   case-insensitive filesystems by removing its lowercase twin before writing
   the deliberately invalid spelling.

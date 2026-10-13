@@ -12,6 +12,7 @@
 import {
   cpSync,
   lstatSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -29,13 +30,25 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ownerDirectory = resolve(packageRoot, "docs/stroke-sources");
 const packageReadme = resolve(packageRoot, "README.md");
 const strictOwnerName = /^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
+const reservedOwnerNames = new Set(["index.md", "manifest.md", "readme.md"]);
 
-const discoverOwners = (directory: string): string[] =>
-  readdirSync(directory)
+const discoverOwners = (directory: string): string[] => {
+  const rootStat = lstatSync(directory);
+  if (rootStat.isSymbolicLink()) {
+    throw new Error("provenance owner directory must not be a symbolic link");
+  }
+  if (!rootStat.isDirectory()) {
+    throw new Error("provenance owner root must be a directory");
+  }
+
+  return readdirSync(directory)
     .map((name) => {
-      expect(name, "provenance owner names are lowercase ASCII slugs").toMatch(
-        strictOwnerName,
-      );
+      if (!strictOwnerName.test(name)) {
+        throw new Error(`${name}: provenance owner names are lowercase ASCII slugs`);
+      }
+      if (reservedOwnerNames.has(name)) {
+        throw new Error(`${name}: provenance owners must not create a shared index`);
+      }
       const stat = lstatSync(resolve(directory, name));
       expect(stat.isSymbolicLink(), `${name} must not be a symbolic link`).toBe(
         false,
@@ -43,15 +56,16 @@ const discoverOwners = (directory: string): string[] =>
       expect(stat.isFile(), `${name} must be a regular file`).toBe(true);
       const source = readFileSync(resolve(directory, name), "utf8");
       expect(source, `${name} starts with one level-1 heading`).toMatch(
-        /^# [^#\n]+\n/,
+        /^ {0,3}#[\t ]+[^#\n]+(?:\n|$)/,
       );
       expect(
-        source.match(/^# /gm),
+        source.match(/^ {0,3}#[\t ]+[^#\n]+$/gm),
         `${name} has exactly one level-1 heading`,
       ).toHaveLength(1);
       return name;
     })
     .sort();
+};
 
 describe("stroke-source provenance ownership", () => {
   it("keeps the migrated source narratives in regular direct-owner files", () => {
@@ -112,13 +126,19 @@ describe("stroke-source provenance ownership", () => {
     }
   });
 
-  it("rejects unsafe names and symbolic-link owners", () => {
+  it("rejects unsafe names, replacement indexes and symbolic links", () => {
     const root = mkdtempSync(resolve(tmpdir(), "ductus-provenance-invalid-"));
     try {
       writeFileSync(resolve(root, "Good.md"), "# Good\n");
       expect(() => discoverOwners(root)).toThrow(/lowercase ASCII slugs/);
 
       unlinkSync(resolve(root, "Good.md"));
+      for (const reserved of reservedOwnerNames) {
+        writeFileSync(resolve(root, reserved), "# Shared index\n");
+        expect(() => discoverOwners(root)).toThrow(/must not create a shared index/);
+        unlinkSync(resolve(root, reserved));
+      }
+
       const target = mkdtempSync(resolve(tmpdir(), "ductus-provenance-target-"));
       try {
         writeFileSync(resolve(target, "source.md"), "# Source\n");
@@ -129,6 +149,20 @@ describe("stroke-source provenance ownership", () => {
       }
     } finally {
       rmSync(root, { recursive: true, force: true });
+    }
+
+    const parent = mkdtempSync(resolve(tmpdir(), "ductus-provenance-root-link-"));
+    try {
+      const target = resolve(parent, "target");
+      mkdirSync(target);
+      writeFileSync(resolve(target, "source.md"), "# Source\n");
+      const linkedRoot = resolve(parent, "linked-root");
+      symlinkSync(target, linkedRoot);
+      expect(() => discoverOwners(linkedRoot)).toThrow(
+        /owner directory must not be a symbolic link/,
+      );
+    } finally {
+      rmSync(parent, { recursive: true, force: true });
     }
   });
 });
