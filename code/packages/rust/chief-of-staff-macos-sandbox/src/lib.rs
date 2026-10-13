@@ -66,6 +66,7 @@
 //!   file-read-data                      /dev/urandom, /dev/random
 //!   file-read-data, file-write-data     /dev/null
 //!   file-read-metadata                  any path (dyld stats its search path)
+//!   file-read-data                      the directory / itself (dyld opens it)
 //!   sysctl-read                         a fixed list of hw.* and kern.*
 //!                                       names libc and the runtime read
 //!   signal, process-info*               the agent itself only
@@ -245,7 +246,7 @@ pub fn under_system_read_root(path: &str) -> bool {
 /// runtime ask at start (the CPU count, page and cache sizes, the OS
 /// version), and nothing that names another process, the host or the
 /// user. A denied read fails with `EPERM`, which those callers tolerate.
-pub const READABLE_SYSCTLS: [&str; 30] = [
+pub const READABLE_SYSCTLS: [&str; 32] = [
     "hw.activecpu",
     "hw.availcpu",
     "hw.byteorder",
@@ -269,6 +270,10 @@ pub const READABLE_SYSCTLS: [&str; 30] = [
     "hw.physicalcpu_max",
     "hw.vectorunit",
     "kern.argmax",
+    // dyld reads these two while finding its shared cache (macOS 26), and
+    // halts the process if it is refused: the boot arguments (for its own
+    // flags) and whether Lockdown Mode is on.
+    "kern.bootargs",
     "kern.osproductversion",
     "kern.osrelease",
     "kern.ostype",
@@ -276,6 +281,7 @@ pub const READABLE_SYSCTLS: [&str; 30] = [
     "kern.osversion",
     "kern.usrstack64",
     "sysctl.proc_cputype",
+    "security.mac.lockdown_mode_state",
 ];
 
 /// Whole families of harmless hardware sysctls: the CPU feature flags
@@ -323,6 +329,10 @@ pub fn seatbelt_profile(agent: &str, grants: &[FileGrant]) -> Result<String, Con
     }
     profile.push_str(")\n");
     profile.push_str("(allow file-read-metadata)\n");
+    // dyld opens the root directory itself while finding its shared cache
+    // (macOS 26), and halts if it is refused. The literal only: the names of
+    // the entries in `/`, nothing beneath it.
+    profile.push_str("(allow file-read-data (literal \"/\"))\n");
     profile
         .push_str("(allow file-read-data (literal \"/dev/urandom\") (literal \"/dev/random\"))\n");
     profile.push_str("(allow file-read-data file-write-data (literal \"/dev/null\"))\n");
@@ -863,6 +873,9 @@ mod tests {
         assert!(!profile.contains("(allow sysctl-read)"));
         assert!(profile.contains("(sysctl-name \"hw.ncpu\")"));
         assert!(!profile.contains("kern.proc"));
+        // The root directory itself is readable, never anything beneath it.
+        assert!(profile.contains("(allow file-read-data (literal \"/\"))"));
+        assert!(!profile.contains("(subpath \"/\")"));
         assert!(!profile.contains("kern.hostname"));
         // A read grant is not writable, nor a write grant readable.
         assert!(!profile.contains("file-write-data (literal \"/Users/a/in.txt\")"));

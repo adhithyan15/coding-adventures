@@ -2089,9 +2089,14 @@ through S-I3 before two weeks are spent on Windows.
      file-read-data                /dev/urandom, /dev/random
      file-read-data, -write-data   /dev/null
      file-read-metadata            any path (dyld stats its search paths)
+     file-read-data                the directory / itself, not beneath it
+                                   (dyld opens it to find its cache)
      sysctl-read                   a fixed list of hw.* and kern.* names
                                    (CPU count, page and cache sizes, OS
-                                   version), and hw.optional.*
+                                   version; kern.bootargs and
+                                   security.mac.lockdown_mode_state,
+                                   without which dyld halts on macOS 26),
+                                   and hw.optional.*
      signal, process-info*         the agent itself only
      each Direct fs grant          file-read-data or file-write-data on
                                    its literal path
