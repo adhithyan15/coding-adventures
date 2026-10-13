@@ -25,9 +25,7 @@ use windows_sys::Win32::Security::Authorization::{
     GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, EXPLICIT_ACCESS_W, GRANT_ACCESS,
     NO_MULTIPLE_TRUSTEE, SE_FILE_OBJECT, TRUSTEE_IS_SID, TRUSTEE_IS_UNKNOWN, TRUSTEE_W,
 };
-use windows_sys::Win32::Security::Isolation::{
-    CreateAppContainerProfile, DeleteAppContainerProfile, DeriveAppContainerSidFromAppContainerName,
-};
+use windows_sys::Win32::Security::Isolation::DeriveAppContainerSidFromAppContainerName;
 use windows_sys::Win32::Security::{
     EqualSid, FreeSid, GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
     TokenAppContainerSid, TokenCapabilities, TokenIntegrityLevel, TokenIsAppContainer,
@@ -59,22 +57,19 @@ use windows_sys::Win32::System::Threading::{
     ProcessDynamicCodePolicy, ProcessExtensionPointDisablePolicy, ProcessFontDisablePolicy,
     ProcessImageLoadPolicy, ProcessSignaturePolicy, ProcessStrictHandleCheckPolicy,
     ProcessSystemCallDisablePolicy, QueryFullProcessImageNameW, ResumeThread,
-    UpdateProcThreadAttribute, WaitForSingleObject, CREATE_NO_WINDOW, CREATE_SUSPENDED,
-    CREATE_UNICODE_ENVIRONMENT, EXTENDED_STARTUPINFO_PRESENT, INFINITE,
-    LPPROC_THREAD_ATTRIBUTE_LIST, PROCESS_INFORMATION, PROCESS_MITIGATION_POLICY,
+    UpdateProcThreadAttribute, WaitForSingleObject, CREATE_SUSPENDED, CREATE_UNICODE_ENVIRONMENT,
+    DETACHED_PROCESS, EXTENDED_STARTUPINFO_PRESENT, INFINITE, LPPROC_THREAD_ATTRIBUTE_LIST,
+    PROCESS_INFORMATION, PROCESS_MITIGATION_POLICY,
     PROC_THREAD_ATTRIBUTE_ALL_APPLICATION_PACKAGES_POLICY,
     PROC_THREAD_ATTRIBUTE_CHILD_PROCESS_POLICY, PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
     PROC_THREAD_ATTRIBUTE_JOB_LIST, PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY,
     PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES, STARTF_USESTDHANDLES, STARTUPINFOEXW,
+    STARTUPINFOW,
 };
 use windows_sys::Win32::System::WindowsProgramming::{
     PROCESS_CREATION_ALL_APPLICATION_PACKAGES_OPT_OUT, PROCESS_CREATION_CHILD_PROCESS_RESTRICTED,
 };
 
-/// `HRESULT_FROM_WIN32(ERROR_ALREADY_EXISTS)`: the profile exists.
-const ALREADY_EXISTS: i32 = 0x8007_00B7_u32 as i32;
-/// `HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)`: there is no such profile.
-const NOT_FOUND: i32 = 0x8007_0002_u32 as i32;
 /// `SECURITY_MANDATORY_LOW_RID`: the integrity level of an AppContainer.
 const LOW_INTEGRITY: u32 = 0x1000;
 
@@ -181,16 +176,6 @@ impl WindowsConfinement {
         let stderr = null_device()?;
         let mut listed: Vec<HANDLE> = vec![raw(&child_stdin), raw(&child_stdout), raw(&stderr)];
         listed.extend(request.inherited.iter().map(raw));
-        for &handle in &listed {
-            // SAFETY: each is a handle this process owns, open for the
-            // duration (they are dropped after the creation below).
-            if unsafe { SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT) }
-                == 0
-            {
-                return Err(create_error("SetHandleInformation"));
-            }
-        }
-
         let mut capabilities = SECURITY_CAPABILITIES {
             AppContainerSid: self.sid.0,
             Capabilities: std::ptr::null_mut(),
@@ -242,6 +227,19 @@ impl WindowsConfinement {
         startup.StartupInfo.hStdOutput = raw(&child_stdout);
         startup.StartupInfo.hStdError = raw(&stderr);
         startup.lpAttributeList = attributes.as_ptr();
+        // Only now, immediately before the creation, are the listed handles
+        // made inheritable, so the window in which a std spawn on another
+        // thread (which inherits every inheritable handle) could take one
+        // is as short as it can be (D18S step 8, residuals).
+        for &handle in &listed {
+            // SAFETY: each is a handle this process owns, open until it is
+            // dropped right after the creation below.
+            if unsafe { SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT) }
+                == 0
+            {
+                return Err(create_error("SetHandleInformation"));
+            }
+        }
         // SAFETY: plain data, filled by CreateProcessW.
         let mut information: PROCESS_INFORMATION = unsafe { std::mem::zeroed() };
         // SAFETY: every pointer is to a NUL-terminated UTF-16 buffer or a
@@ -256,22 +254,31 @@ impl WindowsConfinement {
                 std::ptr::null(),
                 std::ptr::null(),
                 1,
+                // DETACHED_PROCESS: no console. A console needs a console
+                // host, which Windows starts as a child of the agent: in its
+                // job and under its token and policies, all of which forbid
+                // it. The standard handles still arrive.
                 EXTENDED_STARTUPINFO_PRESENT
                     | CREATE_SUSPENDED
                     | CREATE_UNICODE_ENVIRONMENT
-                    | CREATE_NO_WINDOW,
+                    | DETACHED_PROCESS,
                 block.as_ptr() as *const c_void,
                 self.system_directory.as_ptr(),
-                &startup.StartupInfo,
+                // The whole STARTUPINFOEXW: CreateProcessW reads the
+                // attribute list beyond the STARTUPINFOW at its head.
+                &startup as *const STARTUPINFOEXW as *const STARTUPINFOW,
                 &mut information,
             )
         };
+        // Read before anything below can overwrite it.
+        let failure = (created == 0).then(|| create_error("CreateProcessW"));
         // The child's ends and the passed-on handles are its now, or no
-        // one's: this process lets go of them either way.
+        // one's: this process lets go of them either way. On failure the
+        // caller's handles are gone too, so a retry needs new ones.
         drop(attributes);
         drop((child_stdin, child_stdout, stderr, request.inherited));
-        if created == 0 {
-            return Err(create_error("CreateProcessW"));
+        if let Some(error) = failure {
+            return Err(error);
         }
         // SAFETY: CreateProcessW succeeded, so both handles are open and
         // this process owns them; each is wrapped exactly once.
@@ -393,10 +400,21 @@ impl WindowsConfinement {
             }
         }
 
+        // The name the child's image was opened by, and the name the held
+        // file has now, must both still be the verified path. The held
+        // handle keeps the file from being changed, renamed or deleted; these
+        // two checks confirm the path still led to it at the creation.
         let image = image_name(process).map_err(|e| refuse(format!("image name: {e}")))?;
         if image != self.image {
             return Err(refuse(format!(
                 "the image is {image}, not the verified {}",
+                self.image
+            )));
+        }
+        let held = final_path(&self.held).map_err(|e| refuse(format!("final path: {e}")))?;
+        if held != self.image {
+            return Err(refuse(format!(
+                "the verified file is now {held}, not {}",
                 self.image
             )));
         }
@@ -462,21 +480,6 @@ impl ConfinedChild {
     }
 }
 
-/// Delete `agent_id`'s AppContainer profile, if it has one. For tests and
-/// uninstall: a profile is otherwise kept and reused for its agent.
-pub fn remove_profile(agent_id: &str) -> Result<(), ConfinementError> {
-    let name = wide(&container_name(agent_id));
-    // SAFETY: the name is a NUL-terminated UTF-16 string.
-    let result = unsafe { DeleteAppContainerProfile(name.as_ptr()) };
-    if result >= 0 || result == NOT_FOUND {
-        Ok(())
-    } else {
-        Err(ConfinementError::Container(format!(
-            "DeleteAppContainerProfile: {result:#x}"
-        )))
-    }
-}
-
 // ---------------------------------------------------------------------------
 // The pieces
 // ---------------------------------------------------------------------------
@@ -487,40 +490,25 @@ struct OwnedSid(PSID);
 
 impl Drop for OwnedSid {
     fn drop(&mut self) {
-        // SAFETY: the SID came from CreateAppContainerProfile or
+        // SAFETY: the SID came from
         // DeriveAppContainerSidFromAppContainerName, whose documented
         // release is FreeSid, and is freed once.
         unsafe { FreeSid(self.0) };
     }
 }
 
-/// The profile named `name`, made if it does not exist; its SID either way.
+/// The AppContainer SID for `name`, derived, with no profile registered.
+///
+/// A registered profile would give the agent a storage folder under
+/// `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
+/// and both kept across runs: persistent state S-I1 does not allow. The
+/// kernel needs only the SID, and the SID is a function of the name alone,
+/// so the agent's principal is the same on every launch without one.
 fn container_sid(name: &str) -> Result<OwnedSid, ConfinementError> {
     let name = wide(name);
     let mut sid: PSID = std::ptr::null_mut();
-    // SAFETY: every string is NUL-terminated UTF-16; no capabilities are
-    // passed; the SID is written to `sid`.
-    let created = unsafe {
-        CreateAppContainerProfile(
-            name.as_ptr(),
-            name.as_ptr(),
-            name.as_ptr(),
-            std::ptr::null(),
-            0,
-            &mut sid,
-        )
-    };
-    if created >= 0 && !sid.is_null() {
-        return Ok(OwnedSid(sid));
-    }
-    if created != ALREADY_EXISTS {
-        return Err(ConfinementError::Container(format!(
-            "CreateAppContainerProfile: {created:#x}"
-        )));
-    }
-    // The SID is a function of the name alone, so the existing profile's
-    // SID is this one (the name is the agent's digest: S-I5).
-    // SAFETY: as above.
+    // SAFETY: a NUL-terminated name; the SID is written to `sid` and freed
+    // with FreeSid by OwnedSid.
     let derived = unsafe { DeriveAppContainerSidFromAppContainerName(name.as_ptr(), &mut sid) };
     if derived < 0 || sid.is_null() {
         return Err(ConfinementError::Container(format!(

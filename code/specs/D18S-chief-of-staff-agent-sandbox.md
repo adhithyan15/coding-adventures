@@ -2317,7 +2317,7 @@ through S-I3 before two weeks are spent on Windows.
      WindowsConfinement::prepare_verified(plan, agent, agent_id)
        re-verifies the agent through its held handle
        the path is canonical and names that handle
-       the AppContainer profile for agent_id
+       the AppContainer SID for agent_id
        an ACE: that SID may read and execute the image
      spawn(argv, env, stdin, stdout)
        a job: kill-on-close, one process, UI limits
@@ -2334,7 +2334,10 @@ through S-I3 before two weeks are spent on Windows.
    ```
 
    Nothing of the agent runs before the checks pass: the process is
-   created suspended, so not even its loader has run. Any failed check
+   created suspended, so not even its loader has run. It is created
+   detached, with no console: a console needs a console host, which
+   Windows starts as a child of the agent, in its job and under its
+   policies, all of which forbid one. Any failed check
    terminates it through the job and refuses the launch (S-P3).
 
    **The attributes.** One `PROC_THREAD_ATTRIBUTE_LIST` carries them all:
@@ -2353,7 +2356,8 @@ through S-I3 before two weeks are spent on Windows.
      JOB_LIST                        the job, so the process is in it from
                                      its creation
      CHILD_PROCESS_POLICY            RESTRICTED: it can create no process
-     MITIGATION_POLICY               DEP, SEHOP, bottom-up and high-entropy
+     MITIGATION_POLICY               (DEP and SEHOP for a 32-bit agent),
+                                     bottom-up and high-entropy
                                      ASLR, terminate on heap corruption,
                                      strict handle checks, no extension
                                      points, no dynamic code, no remote or
@@ -2368,13 +2372,15 @@ through S-I3 before two weeks are spent on Windows.
    the child kills the agent and anything it could have started.
 
    **The principal (S-I5's Windows row).** Each agent gets its own
-   AppContainer profile, named `chief-of-staff.<32 hex digits>`, the first
-   16 bytes of SHA-256 over the attested `agent_id`. `CreateAppContainerProfile`
-   needs no administrator. When the profile exists already, its SID is
-   derived from the name (`DeriveAppContainerSidFromAppContainerName`). The
-   derivation is deterministic, so the existing profile is that agent's
-   own: two agents share one only through a SHA-256 collision. Profiles
-   are kept and reused per agent, never shared.
+   AppContainer SID, derived (`DeriveAppContainerSidFromAppContainerName`)
+   from the name `chief-of-staff.<32 hex digits>`: the first 16 bytes of
+   SHA-256 over the attested `agent_id`. The derivation is deterministic,
+   so an agent has the same principal on every launch, and two agents
+   share one only through a SHA-256 collision. No profile is registered:
+   `CreateAppContainerProfile` would give the agent a storage folder under
+   `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
+   and kept across runs, which is persistent state S-I1 does not allow.
+   The kernel needs only the SID.
 
    **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
    a path, never a handle. So:
@@ -2383,12 +2389,20 @@ through S-I3 before two weeks are spent on Windows.
      follow a reparse point at the last component and refuses one, and it
      refuses anything but a regular file. Its digest is checked through
      the held handle at open and before every launch.
+   - The share mode keeps out handles opened while it is held, not a
+     writable mapping someone made earlier. So, as the Unix owner and mode
+     rule does, the file must be owned by this user, Administrators, SYSTEM
+     or TrustedInstaller, and its access list may give no one else any
+     write-class right (write or append data, delete, change the list or
+     the owner, generic write or all). A file with no list is refused.
    - The path must be canonical: exactly the final path of the held handle
      (`GetFinalPathNameByHandleW`), case included.
    - After the suspended creation, the child's image name
-     (`QueryFullProcessImageNameW`) must equal the held handle's final
-     path. If a parent directory was renamed and another file put at the
-     path in between, the names differ and the launch is refused.
+     (`QueryFullProcessImageNameW`, the path the image was opened by) and
+     the held handle's final path must both still equal the verified path.
+     The held file cannot be renamed, and a directory above it cannot be
+     renamed while it is open without delete sharing; these checks confirm
+     that the path led to the held file at the creation.
 
    **Reading its own image.** An LPAC token cannot read a file merely
    because ALL APPLICATION PACKAGES may. The applier adds one ACE to the
@@ -2408,16 +2422,21 @@ through S-I3 before two weeks are spent on Windows.
    **Residuals, recorded.**
    - *A concurrent std spawn.* A handle on the list must be inheritable.
      std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
-     std child created by another supervisor thread in the window between
-     marking and closing could inherit one. The applier marks the handles
-     immediately before its `CreateProcessW` and unmarks them right after.
-     The residual ends when every agent spawn goes through this applier
-     (step 9).
+     std child created by another supervisor thread in the window could
+     inherit one: the agent's stdin (and read what is sent to it), its
+     stdout (and hold the supervisor's end-of-file back). The applier marks
+     the handles immediately before its `CreateProcessW` and closes its
+     copies right after. **Before 8b passes a broker's keys this way, every
+     Windows spawn in the supervisor takes one spawn lock** (std's and this
+     applier's), so the window holds no other spawn. It ends entirely when
+     every agent spawn goes through this applier (step 9).
+   - *One agent, two instances.* Two launches of one `agent_id` share a
+     SID, and processes of one AppContainer can open each other. Before 8b
+     a broker runs under a SID of its own (the agent's, plus a suffix).
+   - *Old image ACEs.* An agent's image keeps the ACE for its SID after
+     the agent is gone; reinstalling the agent reuses it.
    - *Grants.* No `Direct` grant exists until 8c; a plan with one is
      refused (`Unsupported`), never run without it.
-   - *Name reuse.* An AppContainer profile outlives its agent. A reinstall
-     of the same `agent_id` gets the same SID, and so whatever ACEs the
-     previous install left. Only image ACEs are left today.
 
    Sub-steps:
    1. **P2.8a:** `VerifiedExecutable` on Windows, and
@@ -2429,8 +2448,9 @@ through S-I3 before two weeks are spent on Windows.
       and policies themselves.
    2. **P2.8b:** the broker on Windows. Its key handles go on the handle
       list, and their values reach it in one environment variable. The
-      daemon accepts `[hosts.broker]` on Windows, and the broker end-to-end
-      tests run on `windows-2025`.
+      supervisor-wide spawn lock and the broker's own SID come first (see
+      the residuals). The daemon accepts `[hosts.broker]` on Windows, and
+      the broker end-to-end tests run on `windows-2025`.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
       SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

@@ -16,9 +16,11 @@
 //!   openprocess PID      reads another process's memory         denied
 //!   registry             opens HKCU\Software                    denied
 //!   dynamic-code         allocates executable memory            denied
-//!   user32               loads user32.dll (win32k)              denied
-//!   handle VALUE         uses a handle it was not given         fatal
+//!   win32k               its own system-call policy             disabled
+//!   write-handle VALUE   writes "stray" to a handle number      nothing
+//!                        it was not given                       arrives
 //!   inherited            writes to each handle it was given     ok
+//!   sleep                sleeps for a minute                    killed
 //!   token                its token: AppContainer, LPAC, level   1 1 0x1000
 //! ```
 
@@ -53,8 +55,12 @@ fn main() {
         "openprocess" => windows::open_process(operand),
         "registry" => windows::registry(),
         "dynamic-code" => windows::dynamic_code(),
-        "user32" => windows::user32(),
-        "handle" => windows::handle(operand),
+        "win32k" => windows::win32k(),
+        "write-handle" => windows::write_handle(operand),
+        "sleep" => {
+            std::thread::sleep(std::time::Duration::from_secs(60));
+            Ok(ok())
+        }
         "inherited" => windows::inherited(),
         "token" => windows::token(),
         _ => Err(std::io::Error::from(std::io::ErrorKind::InvalidInput)),
@@ -82,12 +88,12 @@ mod windows {
     use std::ffi::c_void;
     use std::io::{self, Write};
     use std::os::windows::io::{FromRawHandle, RawHandle};
-    use windows_sys::Win32::Foundation::{CloseHandle, GetHandleInformation, HANDLE};
+    use windows_sys::Win32::Foundation::{CloseHandle, HANDLE};
     use windows_sys::Win32::Security::{
         GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation, TokenIntegrityLevel,
-        TokenIsAppContainer, TokenIsLessPrivilegedAppContainer, TOKEN_MANDATORY_LABEL, TOKEN_QUERY,
+        TokenIsAppContainer, TokenIsLessPrivilegedAppContainer, TOKEN_MANDATORY_LABEL,
     };
-    use windows_sys::Win32::System::LibraryLoader::LoadLibraryW;
+    use windows_sys::Win32::Storage::FileSystem::WriteFile;
     use windows_sys::Win32::System::Memory::{
         VirtualAlloc, VirtualFree, MEM_COMMIT, MEM_RELEASE, MEM_RESERVE, PAGE_EXECUTE_READWRITE,
     };
@@ -95,8 +101,8 @@ mod windows {
         RegCloseKey, RegOpenKeyExW, HKEY, HKEY_CURRENT_USER, KEY_READ,
     };
     use windows_sys::Win32::System::Threading::{
-        GetCurrentProcess, OpenProcess, OpenProcessToken, PROCESS_QUERY_LIMITED_INFORMATION,
-        PROCESS_VM_READ,
+        GetCurrentProcess, GetProcessMitigationPolicy, OpenProcess, ProcessSystemCallDisablePolicy,
+        PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_VM_READ,
     };
 
     fn ok() -> String {
@@ -154,25 +160,53 @@ mod windows {
         Ok(ok())
     }
 
-    pub fn user32() -> io::Result<String> {
-        let name = wide("user32.dll");
-        // SAFETY: a terminated name; the module is left loaded.
-        let module = unsafe { LoadLibraryW(name.as_ptr()) };
-        if module == 0 {
+    /// Its own win32k system-call policy. That user32.dll loads is no
+    /// evidence either way (it may load under the lockdown and fail only
+    /// when used), so the policy itself is read back, from inside.
+    pub fn win32k() -> io::Result<String> {
+        let mut flags = 0u32;
+        // SAFETY: a 32-bit flags policy into a u32, for this process.
+        if unsafe {
+            GetProcessMitigationPolicy(
+                GetCurrentProcess(),
+                ProcessSystemCallDisablePolicy,
+                &mut flags as *mut _ as *mut c_void,
+                4,
+            )
+        } == 0
+        {
             return Err(io::Error::last_os_error());
         }
-        Ok(ok())
+        Ok(if flags & 1 != 0 {
+            "disabled"
+        } else {
+            "enabled"
+        }
+        .to_string())
     }
 
-    pub fn handle(value: &str) -> io::Result<String> {
+    /// Writes "stray" to a handle number it was not given. If the number
+    /// happens to name one of its own handles, the write goes there, not
+    /// into the test's pipe; under strict handle checks an invalid number
+    /// is fatal. Either way the test's pipe receives nothing.
+    pub fn write_handle(value: &str) -> io::Result<String> {
         let value: usize = value
             .parse()
             .map_err(|_| io::Error::from(io::ErrorKind::InvalidInput))?;
-        let mut flags = 0u32;
-        // SAFETY: GetHandleInformation only reads the handle table; under
-        // strict handle checks an invalid value ends the process, which is
-        // the outcome the test looks for.
-        if unsafe { GetHandleInformation(value as HANDLE, &mut flags) } == 0 {
+        let mut written = 0u32;
+        // SAFETY: WriteFile on an arbitrary handle number either writes to
+        // whatever object it names in this process or fails (or, under
+        // strict handle checks, raises): it cannot reach another process.
+        if unsafe {
+            WriteFile(
+                value as HANDLE,
+                b"stray\n".as_ptr(),
+                6,
+                &mut written,
+                std::ptr::null_mut(),
+            )
+        } == 0
+        {
             return Err(io::Error::last_os_error());
         }
         Ok(ok())
@@ -195,11 +229,10 @@ mod windows {
     }
 
     pub fn token() -> io::Result<String> {
-        let mut token: HANDLE = 0;
-        // SAFETY: this process's own token, queried and closed.
-        if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) } == 0 {
-            return Err(io::Error::last_os_error());
-        }
+        // GetCurrentProcessToken(): the pseudo-handle -4, which needs no
+        // access check (opening the process's own token by handle might be
+        // refused to an LPAC token). It is not closed.
+        let token: HANDLE = -4;
         let query_u32 = |class| {
             let mut value = 0u32;
             let mut written = 0u32;

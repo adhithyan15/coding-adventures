@@ -21,8 +21,10 @@ so this crate creates the process itself and returns a `ConfinedChild`.
 
 ## What the agent gets
 
-- **A principal of its own.** An AppContainer profile named
-  `chief-of-staff.<32 hex>`, from the SHA-256 of its attested `agent_id`.
+- **A principal of its own.** An AppContainer SID derived from the name
+  `chief-of-staff.<32 hex>`, the SHA-256 of its attested `agent_id`. No
+  profile is registered, so it has no storage folder or registry key to
+  keep state in.
   It has no capabilities: no network, no libraries, no devices. It is LPAC,
   so `ALL APPLICATION PACKAGES` grants it nothing.
 - **Its own image, readable.** One ACE lets its SID read and execute the
@@ -33,7 +35,9 @@ so this crate creates the process itself and returns a `ConfinedChild`.
 - **A job.** The job is killed on close and allows one active process. The
   process dies on an unhandled exception and has no UI. Dropping the
   `ConfinedChild` kills it.
-- **Mitigations.** DEP, SEHOP, ASLR, heap termination, strict handle
+- **No console.** It is created detached; the standard handles are pipes
+  and `NUL`.
+- **Mitigations.** ASLR (with DEP and SEHOP for a 32-bit agent), heap termination, strict handle
   checks, no win32k, no extension points, no dynamic code,
   Microsoft-signed DLLs only, no non-system fonts, and no remote or
   low-label images. The library search starts in system32.
@@ -50,8 +54,10 @@ from outside that:
 - the process is in its job;
 - every mitigation policy asked for is in force;
 - the image is the verified file. `VerifiedExecutable` holds the file open
-  sharing read only, so it cannot be changed, renamed or deleted. The
-  child's image name must equal the held handle's final path.
+  sharing read only, so it cannot be changed, renamed or deleted, and
+  refuses one that anyone else may write by its access list. The child's
+  image name and the held handle's final path must both still be the
+  verified path.
 
 Any failure ends the process through its job, and the launch is refused.
 
@@ -87,10 +93,12 @@ let status = child.wait()?;
   - files outside the container are denied, for read and for write;
   - the network, process creation, other processes' memory and the
     registry are denied;
-  - no executable memory can be allocated, and `user32.dll` cannot load;
-  - only listed handles are inherited;
+  - no executable memory can be allocated, and win32k is off;
+  - only listed handles are inherited: a write to a stray handle's number
+    never reaches its pipe;
+  - no storage folder exists for it;
   - passed handles arrive;
-  - kill and drop end the agent;
+  - kill and drop end a sleeping agent;
   - plans it cannot enforce are refused;
   - a non-canonical path is refused.
 

@@ -24,7 +24,7 @@
 //!   WindowsConfinement::prepare_verified(plan, agent, agent_id)
 //!     re-verifies the agent through its held handle
 //!     the path is exactly that handle's final path
-//!     the agent's own AppContainer profile and SID
+//!     the agent's own AppContainer SID (no profile)
 //!     one ACE on the image: that SID may read and run it
 //!   spawn(arguments, environment)
 //!     a job: kill on close, one process, no UI
@@ -50,6 +50,8 @@
 //! ```text
 //!   attribute                        value
 //!   -------------------------------  ----------------------------------------
+//!   (creation flags)                 suspended, detached: no console, whose
+//!                                    host would be a child of the agent
 //!   SECURITY_CAPABILITIES            the agent's AppContainer SID, with no
 //!                                    capabilities: no network, no libraries,
 //!                                    no devices
@@ -82,21 +84,28 @@
 //! holds the agent open **sharing read only**, so while it is held no one
 //! can write, rename or delete the file. Then:
 //!
+//! - the file is owned by this user, Administrators, SYSTEM or
+//!   TrustedInstaller, and no one else may write it by its access list (the
+//!   share mode does not keep out a writable mapping made earlier);
 //! - the path given must be exactly the handle's final path
 //!   (`GetFinalPathNameByHandleW`), case included;
 //! - after the suspended creation, the child's image name
-//!   (`QueryFullProcessImageNameW`) must equal it too.
+//!   (`QueryFullProcessImageNameW`, the path the image was opened by) and
+//!   the held handle's final path must both still be that path.
 //!
-//! Renaming a parent directory and putting another file at the path in
-//! between would make the second check differ, and refuse.
+//! The held file cannot be renamed, and a directory above it cannot be
+//! renamed while it is open without delete sharing; the last two checks
+//! confirm the path led to the held file at the creation.
 //!
 //! ## The principal
 //!
-//! Each agent gets its own profile, [`container_name`]: `chief-of-staff.`
-//! and 32 hex digits, the first 16 bytes of SHA-256 over the attested
-//! `agent_id`. A SID is derived from the name, deterministically, so an
-//! existing profile of that name is that agent's own. Two agents share one
-//! only through a SHA-256 collision.
+//! Each agent gets its own SID, derived from [`container_name`]:
+//! `chief-of-staff.` and 32 hex digits, the first 16 bytes of SHA-256 over
+//! the attested `agent_id`. The derivation is deterministic, so the agent
+//! has the same principal on every launch, and two agents share one only
+//! through a SHA-256 collision. No profile is registered: a profile would
+//! give the agent a storage folder and a registry key of its own, kept
+//! across runs, which is state S-I1 does not allow.
 //!
 //! An LPAC token reads nothing ALL APPLICATION PACKAGES may, its own image
 //! included. So `WindowsConfinement::prepare_verified` adds one ACE to the
@@ -119,7 +128,7 @@ use std::fmt;
 #[cfg(windows)]
 mod windows;
 #[cfg(windows)]
-pub use windows::{remove_profile, ConfinedChild, SpawnRequest, WindowsConfinement};
+pub use windows::{ConfinedChild, SpawnRequest, WindowsConfinement};
 
 /// The variable that carries the values of the handles passed on to the
 /// agent, in order, comma-separated (P2.8b: a broker's keys).
@@ -222,8 +231,8 @@ pub fn container_name(agent_id: &str) -> String {
 /// ```text
 ///   bits    policy                        effect
 ///   ------  ----------------------------  -----------------------------------
-///   0       DEP                           no execution from data pages
-///   2       SEHOP                         exception chains are validated
+///   0       DEP (32-bit only)             no execution from data pages
+///   2       SEHOP (32-bit only)           exception chains are validated
 ///   12-13   heap terminate                heap corruption ends the process
 ///   16-17   bottom-up ASLR                randomised bottom-up allocations
 ///   20-21   high-entropy ASLR             64-bit randomisation
@@ -237,8 +246,7 @@ pub fn container_name(agent_id: &str) -> String {
 ///   56-57   no low-label images           no image a low process wrote
 ///   60-61   system32 first                library search starts there
 /// ```
-pub const MITIGATIONS: u64 = MITIGATION_DEP
-    | MITIGATION_SEHOP
+pub const MITIGATIONS: u64 = THIRTY_TWO_BIT_ONLY
     | always_on(12)
     | always_on(16)
     | always_on(20)
@@ -251,6 +259,14 @@ pub const MITIGATIONS: u64 = MITIGATION_DEP
     | always_on(52)
     | always_on(56)
     | always_on(60);
+
+/// DEP and SEHOP, which mean something only to a 32-bit process: a 64-bit
+/// one always has DEP, and its exception handling has no chain to forge.
+const THIRTY_TWO_BIT_ONLY: u64 = if cfg!(target_pointer_width = "32") {
+    MITIGATION_DEP | MITIGATION_SEHOP
+} else {
+    0
+};
 
 /// `PROCESS_CREATION_MITIGATION_POLICY_DEP_ENABLE`.
 pub const MITIGATION_DEP: u64 = 0x01;

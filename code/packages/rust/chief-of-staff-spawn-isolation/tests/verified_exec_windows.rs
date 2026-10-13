@@ -101,3 +101,23 @@ fn the_handle_handed_out_is_the_file_that_was_hashed() {
     assert_eq!(held.path(), path.as_path());
     assert_eq!(held.digest(), digest(&path));
 }
+
+#[test]
+fn a_binary_someone_else_may_write_is_refused() {
+    let scratch = Scratch::new();
+    let path = scratch.copy_of_probe();
+    let pinned = digest(&path);
+    assert!(VerifiedExecutable::open(&path, pinned).is_ok());
+    // Everyone (S-1-1-0) may now write it: a writable mapping made by
+    // anyone could change the bytes after they were hashed.
+    let granted = std::process::Command::new("icacls")
+        .arg(&path)
+        .args(["/grant", "*S-1-1-0:(W)"])
+        .output()
+        .unwrap();
+    assert!(granted.status.success(), "{granted:?}");
+    assert_eq!(
+        VerifiedExecutable::open(&path, pinned).err(),
+        Some(VerifyError::Writable)
+    );
+}
