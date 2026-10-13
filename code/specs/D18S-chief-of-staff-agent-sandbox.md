@@ -1952,6 +1952,7 @@ through S-I3 before two weeks are spent on Windows.
           through a real, confined broker, and assert one ran. Off Linux
           they show the composition refusing instead, until P2.7b brings
           the broker to macOS.
+          (P2.7b: they now run through a broker on macOS as well.)
 
         **Status: done.** No channel key's bytes reach the daemon process
         on any platform (the launcher opens each key file only to pass its
@@ -2250,6 +2251,49 @@ through S-I3 before two weeks are spent on Windows.
       `MacosConfinement::apply_inheriting`, and the daemon accepts
       `[hosts.broker]` on macOS with the shim pinned in its config. The
       broker end-to-end test runs on `macos-latest`.
+
+      **How.**
+      - *Config.* `[hosts.broker]` gains `seatbelt_shim` and
+        `seatbelt_shim_sha256`. They come as a pair: one without the
+        other is refused when the config is read, on every platform.
+
+        ```toml
+        [hosts.broker]
+        executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
+        sha256 = "<64 hex>"
+        seatbelt_shim = "~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim"
+        seatbelt_shim_sha256 = "<64 hex>"
+        ```
+
+        On macOS the pair is required: `[hosts.broker]` without it stops
+        the daemon at startup (`BrokerShimMissing`), since there is no
+        confined launch without the shim. On Linux the shim is not
+        opened; the Linux applier needs none.
+      - *The program.* The launcher takes a `BrokerProgram`. On Linux it
+        holds the verified broker. On macOS it holds the verified broker
+        and the verified shim, and the daemon refuses a shim that is the
+        broker. Elsewhere no value of it can exist, so `launch` cannot be
+        reached and `[hosts.broker]` is still refused
+        (`BrokerUnsupported`).
+      - *The launch.* It takes the Linux steps in the same order. First
+        the secret directories are checked and the key slots computed.
+        Then `MacosConfinement::prepare_verified` runs, with a plan of no
+        capabilities for `OsFamily::Macos`: it re-verifies both binaries
+        and builds the profile. The key files are opened next, and
+        `apply_inheriting` places them at 3..3+n. The broker is spawned,
+        sent Bootstrap, and its Ready is checked. The profile grants
+        nothing beyond the base. The broker reads its own image and the
+        system libraries, holds its keys and its pipes, and can open no
+        other file by path. It has no network and cannot fork, and exec
+        is limited to its own image (the re-exec residual above).
+      - *Tests.* `chief-of-staff-broker-e2e` runs on `macos-latest`. It
+        uses a shim fixture binary, the macOS crate's own shim body
+        under another name, pinned by digest like the broker. The
+        weather reference agent and the level-one host's
+        production-composition test run their channels through a real
+        broker on macOS too, through the host's `test-broker` shim
+        fixture. The Linux-only assertions, `NoNewPrivs` and the seccomp
+        mode, stay Linux-only.
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
