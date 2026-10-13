@@ -2348,6 +2348,24 @@ fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_legacy_internal_shape_aliases_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final")
+        .expect("legacy internal ShapeIDs accepted by Mermaid 11.16.1 should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::Rect,
+        &DiagramShape::RoundedRect,
+        &DiagramShape::SmallCircle,
+        &DiagramShape::FramedCircle,
+        &DiagramShape::ForkJoin,
+        &DiagramShape::InvertedTrapezoid,
+        &DiagramShape::DoubleCircle,
+        &DiagramShape::Asymmetric,
+    ]);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
