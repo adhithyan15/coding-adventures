@@ -13,7 +13,8 @@ gloss: "fog, mist"
 concept_tag: LA-THINGS131-NEBULA
 prerequisites: [LA-C130-tonitrus, LA-C130-fulgur]
 sounds: []
-roots: []
+roots: [nebula-latin]
+etymology_hook: "nebula 'mist' — inherited, usually traced to PIE *nebhos 'cloud'; Greek nephelē is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C130-fulgur]
 <!-- hl-knowledge: introduces=[LA-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **nebula, nebulae** — "fog, mist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nebula** is inherited, usually traced to Proto-Indo-European *\*nebhos*, "cloud" (EtymDB 2.1); Greek *nephelē*, "cloud", is a close cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

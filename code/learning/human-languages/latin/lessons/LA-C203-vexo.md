@@ -13,7 +13,8 @@ gloss: "to annoy, to harass"
 concept_tag: LA-VERB-VEXO
 prerequisites: [LA-C203-quaero, LA-C203-consumo]
 sounds: []
-roots: []
+roots: [vexare-latin, vehere-latin]
+etymology_hook: "vexō 'to annoy' — usually taken as a frequentative of vehō 'to carry': to toss about"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C203-consumo]
 <!-- hl-knowledge: introduces=[LA-LEX-C203-ACT203-04]; assesses=[] -->
 
 **vexō, vexāre** — "to annoy, to harass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vexō** is usually taken as a frequentative of *vehō*, "to carry" (Lewis & Short): to keep carrying about, to toss, so to harass.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

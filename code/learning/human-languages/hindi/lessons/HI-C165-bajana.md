@@ -14,7 +14,8 @@ romanization: "bajānā"
 concept_tag: HI-VERB-BAJANA
 prerequisites: [HI-C165-chuna, HI-C165-samjhana]
 sounds: []
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "bajānā: the causing form of bajnā 'to sound', from Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C165-samjhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C165-ACT165-04]; assesses=[] -->
 
 **बजाना** — *bajānā* — "to play (an instrument), to ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बजाना** (*bajānā*) is the causing form of *bajnā*, "to sound", which CDIAL lists under Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

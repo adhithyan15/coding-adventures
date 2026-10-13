@@ -13,7 +13,8 @@ gloss: "it is allowed, one may"
 concept_tag: LA-CAN110-LICET
 prerequisites: [LA-C110-ars, LA-C110-oportet]
 sounds: []
-roots: []
+roots: [licet-latin]
+etymology_hook: "licet 'it is allowed' — kin to liceō 'to be for sale'; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C110-oportet]
 <!-- hl-knowledge: introduces=[LA-LEX-C110-CAN110-04]; assesses=[] -->
 
 **licet** — "it is allowed, one may".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**licet** is related to *liceō*, "to be for sale, to be valued" (Lewis & Short), but where the pair comes from is uncertain. English *licence* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an enemy (of the state)"
 concept_tag: LA-RES271-HOSTIS
 prerequisites: [LA-C271-civitas, LA-C271-patria]
 sounds: []
-roots: []
+roots: [hostis-latin]
+etymology_hook: "hostis 'enemy' — usually traced to PIE *ghostis 'stranger'; English guest is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C271-patria]
 <!-- hl-knowledge: introduces=[LA-LEX-C271-RES271-04]; assesses=[] -->
 
 **hostis, hostis** — "an enemy (of the state)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hostis** is inherited, usually traced to Proto-Indo-European *\*ghostis*, "a stranger, a guest" (EtymDB 2.1): the stranger became the enemy in Latin, the guest in Germanic. English *guest* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

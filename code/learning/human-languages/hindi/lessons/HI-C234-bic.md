@@ -14,7 +14,8 @@ romanization: "bīc"
 concept_tag: HI-LOC234-BIC
 prerequisites: [HI-C234-sidha, HI-C234-ulta]
 sounds: []
-roots: []
+roots: [indo-aryan-vicya]
+etymology_hook: "bīc ← *vīcya 'middle', a reconstructed form; a tadbhava (CDIAL 12042)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C234-ulta]
 <!-- hl-knowledge: introduces=[HI-LEX-C234-LOC234-04]; assesses=[] -->
 
 **बीच** — *bīc* — "the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीच** (*bīc*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vīcya*, "middle", a form CDIAL reconstructs from its descendants (CDIAL 12042). CDIAL compares Vedic *vīcyā*, "among".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

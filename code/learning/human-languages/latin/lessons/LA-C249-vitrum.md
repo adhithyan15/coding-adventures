@@ -13,7 +13,8 @@ gloss: "glass"
 concept_tag: LA-RES249-VITRUM
 prerequisites: [LA-C249-lignum, LA-C249-marmor]
 sounds: []
-roots: []
+roots: [vitrum-latin]
+etymology_hook: "vitrum 'glass' — perhaps from PIE *wed- 'water': the water-like stuff"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C249-marmor]
 <!-- hl-knowledge: introduces=[LA-LEX-C249-RES249-03]; assesses=[] -->
 
 **vitrum, vitrī** — "glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vitrum** is often traced to Proto-Italic *\*wedrom*, "glass", from Proto-Indo-European *\*wed-*, "water" (EtymDB 2.1): glass as the water-like stuff. The link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

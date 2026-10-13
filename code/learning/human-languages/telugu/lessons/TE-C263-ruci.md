@@ -14,7 +14,8 @@ romanization: "ruci"
 concept_tag: TE-VASTUVU263-RUCI
 prerequisites: [TE-C262-pesalu, TE-C263-verusanaga]
 sounds: []
-roots: []
+roots: [sanskrit-ruci]
+etymology_hook: "ruci ← Sanskrit ruci 'light, beauty', a tatsama (CDIAL 10762)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C263-verusanaga]
 <!-- hl-knowledge: introduces=[TE-LEX-C263-VASTUVU263-02]; assesses=[] -->
 
 **రుచి** — *ruci* — "taste, flavour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రుచి** (*ruci*) is Sanskrit *ruci*, "light, beauty", taken over whole as a learned loan, a tatsama (CDIAL 10762). Sanskrit already used it for "taste" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 63,
-  "sourceHash": "fnv1a64:245b8c4963cfe738",
+  "sourceHash": "fnv1a64:fd7ea38fe05d85cc",
   "lessonIds": [
     "TE-C63-hunger",
     "TE-C63-sleep",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch63.txt",
   "json": "telugu/narration/ch63.json",
-  "textHash": "fnv1a64:cfcfa324d0737685",
-  "jsonHash": "fnv1a64:e8848d6dc83bd7f4",
+  "textHash": "fnv1a64:84e7cb6d9a89fd90",
+  "jsonHash": "fnv1a64:c30e2b52ec0b5d33",
   "findings": []
 }

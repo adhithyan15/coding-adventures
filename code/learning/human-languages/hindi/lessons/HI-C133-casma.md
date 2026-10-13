@@ -14,7 +14,8 @@ romanization: "caśmā"
 concept_tag: HI-THINGS133-CASMA
 prerequisites: [HI-C132-pankha, HI-C132-ghari, HI-C16-mahine, HI-C16-mahine]
 sounds: []
-roots: []
+roots: [persian-chashma]
+etymology_hook: "caśmā: usually traced to Persian chashma 'spring', built on chashm 'eye'; 'spectacles' is the Indian sense"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C132-ghari]
 <!-- hl-knowledge: introduces=[HI-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **चश्मा** — *caśmā* — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चश्मा** (*caśmā*) is a loan, usually traced to Persian *chashma*, "spring, fountain", built on *chashm*, "eye". The sense "spectacles" grew up in India.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

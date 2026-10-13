@@ -14,7 +14,8 @@ romanization: "macchar"
 concept_tag: HI-THINGS149-MACCHAR
 prerequisites: [HI-C148-titli, HI-C148-makkhi]
 sounds: []
-roots: []
+roots: [sanskrit-matsara-mosquito]
+etymology_hook: "macchar ← Sanskrit matsara 'mosquito, fly', a tadbhava (CDIAL 9757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C148-makkhi]
 <!-- hl-knowledge: introduces=[HI-LEX-C149-THINGS149-01]; assesses=[] -->
 
 **मच्छर** — *macchar* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मच्छर** (*macchar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsara*, "mosquito, fly" (CDIAL 9757). The Sanskrit word is known only from the old word-lists; CDIAL suggests it was named for its humming.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a dolphin"
 concept_tag: LA-THINGS134-DELPHINUS
 prerequisites: [LA-C134-camelus, LA-C134-simia]
 sounds: []
-roots: []
+roots: [delphinus-latin]
+etymology_hook: "delphīnus 'dolphin' — borrowed from Greek delphis, delphinos 'dolphin'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C134-simia]
 <!-- hl-knowledge: introduces=[LA-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **delphīnus, delphīnī** — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**delphīnus** was borrowed from Greek *delphis*, *delphinos*, "dolphin" (Lewis & Short), which may be related to *delphys*, "womb" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "desh"
 concept_tag: HI-NOUN-COUNTRY
 prerequisites: [HI-C74-question-rise, HI-C74-na-tag, HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well, HI-C71-kyon, HI-C72-kab]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "desh ← Sanskrit deśa 'region, country', a tatsama; the inherited form is des (CDIAL 6547)"
 duration:
   max_seconds: 240
 requires:

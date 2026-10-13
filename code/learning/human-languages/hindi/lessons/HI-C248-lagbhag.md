@@ -14,7 +14,8 @@ romanization: "lagbhag"
 concept_tag: HI-THG248-LAGBHAG
 prerequisites: [HI-C247-ya, HI-C248-sirf]
 sounds: []
-roots: []
+roots: [sanskrit-lagna]
+etymology_hook: "lagbhag: lag 'near, with', from lagna 'touching' (CDIAL 10893), + a rhyming bhag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C248-sirf]
 <!-- hl-knowledge: introduces=[HI-LEX-C248-THG248-02]; assesses=[] -->
 
 **लगभग** — *lagbhag* — "about, nearly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लगभग** (*lagbhag*) is *lag*, "touching, near", which comes from Sanskrit *lagna*, "sticking to, touching" (CDIAL 10893), with a rhyming *bhag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

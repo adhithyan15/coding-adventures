@@ -14,8 +14,8 @@ romanization: "dasvā̃ / dasvī̃"
 concept_tag: HI-ORDINAL-TENTH
 prerequisites: [HI-C76-ninth, HI-C75-fifth, HI-C69-ki, HI-C69-go, HI-C22-gyarah-bees, HI-C32-shubh-sandhya]
 sounds: []
-roots: []
-etymology_hook: "das gives dasvan, and the same ending goes on to bisvan and sauvan without a break, so there is no second list to learn above ten"
+roots: [sanskrit-dasa]
+etymology_hook: "dasvāṁ ← Sanskrit daśama 'tenth', a tadbhava (CDIAL 6233)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +60,11 @@ chaṭhā, sātvā̃, āṭhvā̃, nauvā̃, dasvā̃* — and count what you ac
 And ten is not a boundary. **ग्यारहवाँ** is eleventh, **बीसवाँ** twentieth,
 **सौवाँ** hundredth. There is no second list above ten and no third above a
 hundred; the ending you learned at five reaches every number you will ever say.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दसवाँ** (*dasvāṁ*) comes from Sanskrit *daśama*, "tenth" (CDIAL 6233), the ordinal built on *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-05] -->

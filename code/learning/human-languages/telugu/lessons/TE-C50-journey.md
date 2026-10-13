@@ -11,7 +11,8 @@ romanization: "prayāṇaṁ"
 concept_tag: TE-NOUN-JOURNEY
 prerequisites: [TE-C50-day-after]
 sounds: []
-roots: []
+roots: [sanskrit-prayana]
+etymology_hook: "prayāṇaṁ ← Sanskrit prayāṇa 'setting out, journey' (CDIAL 8732), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C50-day-after]
 Sanskrit *pra-yāṇa*: the root *yā*, "to go", with *pra-*, "forth". A journey is a going-forth, and the word is transparent to anyone holding the pieces.
 
 The ending is the **-ం** you have now sorted three times: the tatsama neuter, as on దీపం, హృదయం and భోజనం. When a Telugu noun ends in **-ం** and names an abstraction, Sanskrit is usually behind it.
+
+CDIAL 8732 lists Sanskrit *prayāṇa*, "setting out, journey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

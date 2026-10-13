@@ -13,7 +13,8 @@ gloss: "a friend (a woman)"
 concept_tag: LA-THINGS138-AMICA
 prerequisites: [LA-C138-servus, LA-C138-domina]
 sounds: []
-roots: []
+roots: [amica-latin, amicus-latin, amare-latin]
+etymology_hook: "amīca 'friend (a woman)' — the feminine of amīcus, built on amō 'to love'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C138-domina]
 <!-- hl-knowledge: introduces=[LA-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **amīca, amīcae** — "a friend (a woman)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amīca** is the feminine of *amīcus*, "a friend" (Lewis & Short), which is built on *amō*, "to love".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

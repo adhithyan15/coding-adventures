@@ -12,6 +12,9 @@ Before the new one: say the Hindi for petrol, then the Hindi for a telephone.
 You'll want to know: पत्र.
 पत्र — patra — "a letter (formal)".
 
+The word, taken apart.
+पत्र (patra) is Sanskrit pattra, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733). A letter is a leaf of writing. CDIAL lists the inherited form as pattā, "leaf".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a telephone, then the Hindi for a letter.
 
 You'll want to know: लिफ़ाफ़ा.
 लिफ़ाफ़ा — lifāfā — "an envelope".
+
+The word, taken apart.
+लिफ़ाफ़ा (lifāfā) is a loan from Arabic lifāfa, "a wrapper", which reached Hindi through Persian. Its Arabic root is l-f-f (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a letter, then the Hindi for an envelope.
 You'll want to know: टिकट घर.
 टिकट घर — ṭikaṭ ghar — "a ticket office".
 
+The word, taken apart.
+टिकट घर (ṭikaṭ ghar) joins English ticket with ghar, "house", from ghara (CDIAL 4428).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for an envelope, then the Hindi for a ticket o
 You'll want to know: संदेसा.
 संदेसा — sandesā — "a message (everyday)".
 
+The word, taken apart.
+संदेसा (sandesā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁdeśa, "message, information" (CDIAL 12904). It is the inherited form of the word Hindi also has whole as sandeś.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a ticket office, then the Hindi for a mess
 
 You'll want to know: बातचीत.
 बातचीत — bātcīt — "a conversation".
+
+The word, taken apart.
+बातचीत (bātcīt) is a rhyming pair: bāt, "talk", from Sanskrit vārttā (CDIAL 11564), and cīt, which CDIAL lists in this very pair under citti, "thought" (CDIAL 4801).
 
 What you've built.
 One more word for this chapter.

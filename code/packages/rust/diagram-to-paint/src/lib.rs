@@ -1068,6 +1068,18 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + 1.0,
+                cy: node.y + 1.0,
+                rx: 1.0,
+                ry: 1.0,
+                fill: Some("#000000".into()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
             DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: node.x,
@@ -1208,6 +1220,14 @@ where
             DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
                 fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width), stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
@@ -1427,7 +1447,8 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
-            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Summary
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
+            | DiagramShape::Summary
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
@@ -1447,6 +1468,7 @@ where
                 DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
                 DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
                 DiagramShape::DividedRect => (node.x + 8.0, node.y + 16.0, node.width - 16.0, node.height - 22.0),
+                DiagramShape::TitledRect => (node.x + 8.0, node.y + 2.0, node.width - 16.0, node.height * 0.32 - 4.0),
                 DiagramShape::WindowPane => (node.x + 18.0, node.y + 16.0, node.width - 26.0, node.height - 22.0),
                 DiagramShape::ManualInput => (
                     node.x + 8.0,
@@ -2403,6 +2425,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::SmallCircle | DiagramShape::FilledCircle => {
             node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone()))
         }
+        DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: node.x + 1.0,
+            cy: node.y + 1.0,
+            rx: 1.0,
+            ry: 1.0,
+            fill: Some("#000000".into()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
         DiagramShape::FramedCircle => {
             let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
             PaintInstruction::Group(PaintGroup {
@@ -2549,6 +2583,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
             fill: Some(node.style.fill.clone()), fill_rule: None,
             stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
             stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
@@ -3336,6 +3378,25 @@ fn divided_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Pa
         PathCommand::LineTo { x: x + width, y },
         PathCommand::LineTo { x: x + width, y: y + height },
         PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x, y: divider_y },
+        PathCommand::LineTo { x: x + width, y: divider_y },
+    ]
+}
+
+fn titled_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = 6.0_f64.min(width / 4.0).min(height / 4.0);
+    let divider_y = y + height * 0.32;
+    vec![
+        PathCommand::MoveTo { x: x + radius, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::QuadTo { cx: x + width, cy: y, x: x + width, y: y + radius },
+        PathCommand::LineTo { x: x + width, y: y + height - radius },
+        PathCommand::QuadTo { cx: x + width, cy: y + height, x: x + width - radius, y: y + height },
+        PathCommand::LineTo { x: x + radius, y: y + height },
+        PathCommand::QuadTo { cx: x, cy: y + height, x, y: y + height - radius },
+        PathCommand::LineTo { x, y: y + radius },
+        PathCommand::QuadTo { cx: x, cy: y, x: x + radius, y },
         PathCommand::Close,
         PathCommand::MoveTo { x, y: divider_y },
         PathCommand::LineTo { x: x + width, y: divider_y },

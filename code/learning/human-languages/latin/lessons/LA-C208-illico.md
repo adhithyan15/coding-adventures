@@ -13,7 +13,8 @@ gloss: "on the spot"
 concept_tag: LA-TEMP208-ILLICO
 prerequisites: [LA-C208-denique, LA-C208-postremo]
 sounds: []
-roots: []
+roots: [illico-latin, locus-latin]
+etymology_hook: "illicō 'on the spot' — usually explained as in locō 'on the spot' run together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C208-postremo]
 <!-- hl-knowledge: introduces=[LA-LEX-C208-TEMP208-03]; assesses=[] -->
 
 **illicō** — "on the spot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**illicō** is usually explained as *in locō*, "on the spot", run together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

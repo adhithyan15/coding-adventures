@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 140,
-  "sourceHash": "fnv1a64:1e60b9df36b7093e",
+  "sourceHash": "fnv1a64:5af5314cfda14cd8",
   "lessonIds": [
     "LA-C140-pecten",
     "LA-C140-forfex",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch140.txt",
   "json": "latin/narration/ch140.json",
-  "textHash": "fnv1a64:d57a2847315f2bf9",
-  "jsonHash": "fnv1a64:ba5bbacd7ad29f7d",
+  "textHash": "fnv1a64:4659bee5047e06c8",
+  "jsonHash": "fnv1a64:2efd92a0b5969c9c",
   "findings": []
 }

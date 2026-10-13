@@ -13,7 +13,8 @@ gloss: "moreover; however"
 concept_tag: LA-CAUSA210-AUTEM
 prerequisites: [LA-C209-obviam, LA-C209-usque]
 sounds: []
-roots: []
+roots: [autem-latin, aut-latin]
+etymology_hook: "autem 'however' — kin to aut 'or'; formation uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C209-usque]
 <!-- hl-knowledge: introduces=[LA-LEX-C210-CAUSA210-01]; assesses=[] -->
 
 **autem** — "moreover; however".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autem** belongs with *aut*, "or" (Lewis & Short), but how the two were formed is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

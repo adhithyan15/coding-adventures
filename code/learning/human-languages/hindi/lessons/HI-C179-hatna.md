@@ -14,7 +14,8 @@ romanization: "haṭnā"
 concept_tag: HI-VERB-HATNA
 prerequisites: [HI-C179-sahna, HI-C179-hatana]
 sounds: []
-roots: []
+roots: [indo-aryan-hatt]
+etymology_hook: "haṭnā ← *haṭṭ 'move', a reconstructed form; a tadbhava (CDIAL 13943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C179-hatana]
 <!-- hl-knowledge: introduces=[HI-LEX-C179-ACT179-04]; assesses=[] -->
 
 **हटना** — *haṭnā* — "to move aside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हटना** (*haṭnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*haṭṭ*, "move", a form CDIAL reconstructs from its descendants (CDIAL 13943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

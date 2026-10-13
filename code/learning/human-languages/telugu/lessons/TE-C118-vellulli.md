@@ -14,7 +14,8 @@ romanization: "vellulli"
 concept_tag: TE-THINGS118-VELLULLI
 prerequisites: [TE-C118-vankaya, TE-C118-allam]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright, telugu-ulli-onion]
+etymology_hook: "vellulli: native vel- 'white' (DEDR 5496) + ulli 'onion' (DEDR 705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C118-allam]
 <!-- hl-knowledge: introduces=[TE-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **వెల్లుల్లి** — *vellulli* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెల్లుల్లి** (*vellulli*) is "white onion": native *vel-*, "white" (DEDR 5496), and *ulli*, "onion, garlic", one word with Tamil *uḷḷi* (DEDR 705).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rough, harsh"
 concept_tag: LA-QUAL240-ASPER
 prerequisites: [LA-C239-quasi, LA-C239-propter]
 sounds: []
-roots: []
+roots: [asper-latin]
+etymology_hook: "asper 'rough' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C239-propter]
 <!-- hl-knowledge: introduces=[LA-LEX-C240-QUAL240-01]; assesses=[] -->
 
 **asper, aspera, asperum** — "rough, harsh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asper** has no sure origin; Lewis & Short call it doubtful, and EtymDB 2.1 records a proposed root *\*h2esp-*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

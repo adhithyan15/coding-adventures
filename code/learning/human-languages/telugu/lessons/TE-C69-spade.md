@@ -11,7 +11,8 @@ romanization: "pāra"
 concept_tag: TE-NOUN-SPADE
 prerequisites: [TE-C69-saw]
 sounds: []
-roots: []
+roots: [dravidian-paarai-crowbar]
+etymology_hook: "pāra: native Dravidian, one word with Tamil pārai and Kannada pāre (DEDR 4093)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C69-saw]
 It is the tool of the రైతు out of season: clearing a channel, banking up the edge of a పొలం, cutting a way for water to run.
 
 The word is inherited and it stays narrow. It does not stretch into anything figurative at all, which by itself says how firmly it belongs to the ground.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పార** (*pāra*) is native Dravidian, one word with Tamil *pārai* and Kannada *pāre* (DEDR 4093). DEDR lists Telugu *pāra*, "spade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

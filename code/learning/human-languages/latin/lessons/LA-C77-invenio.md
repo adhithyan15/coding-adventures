@@ -13,7 +13,8 @@ gloss: "to find, to come upon"
 concept_tag: LA-VERB-INVENIO
 prerequisites: [LA-C77-cado, LA-C77-pono]
 sounds: []
-roots: []
+roots: [invenire-latin, venire-latin]
+etymology_hook: "inveniō 'to find' — in 'upon' + veniō 'to come': to come upon; English invent first meant 'find'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C77-pono]
 <!-- hl-knowledge: introduces=[LA-LEX-C77-VERBA3-05]; assesses=[] -->
 
 **inveniō, invenīre** — "to find, to come upon". English *invent*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inveniō** is built from *in*, "on, upon", and *veniō*, "to come": to come upon a thing (Lewis & Short). English *invent* first meant "to find".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

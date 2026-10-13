@@ -11,7 +11,8 @@ romanization: "vari"
 concept_tag: TE-NOUN-PADDY
 prerequisites: [TE-C66-field]
 sounds: []
-roots: []
+roots: [dravidian-vari-paddy]
+etymology_hook: "vari: native Dravidian, one word with Tamil vari 'paddy' (DEDR 5265)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Telugu counts rice three times over and this is the first of them: వరి in 
 The word is inherited and it names the plant. English has one word for the lot and has to borrow "paddy" from Malay to get the same distinction; Telugu had it from the start.
 
 A వరి పొలం under water with the seedlings just pushed in is the picture the coast is built on, and what is being pushed in is the మొక్క from earlier in this book.
+
+DEDR 5265 lists Telugu *vari*, "paddy", with Tamil *vari*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

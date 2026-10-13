@@ -13,7 +13,8 @@ gloss: "to advise, to urge"
 concept_tag: LA-VERB-SUADEO
 prerequisites: [LA-C201-celebro, LA-C201-persequor]
 sounds: []
-roots: []
+roots: [suadere-latin]
+etymology_hook: "suādeō 'to advise' — usually traced to PIE *sweh2d- 'sweet'; English sweet is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C201-persequor]
 <!-- hl-knowledge: introduces=[LA-LEX-C202-ACT202-01]; assesses=[] -->
 
 **suādeō, suādēre** — "to advise, to urge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suādeō** is inherited, usually traced to Proto-Indo-European *\*sweh2d-*, "sweet" (EtymDB 2.1): to advise was to make a thing sweet to someone. *suāvis*, "sweet", and English *sweet* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

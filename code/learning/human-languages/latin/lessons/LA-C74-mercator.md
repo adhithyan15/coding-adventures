@@ -13,7 +13,8 @@ gloss: "a merchant"
 concept_tag: LA-OPUS-MERCATOR
 prerequisites: [LA-C74-civis, LA-C74-coquus]
 sounds: []
-roots: []
+roots: [mercator-latin, merx-latin]
+etymology_hook: "mercātor 'merchant' — built on mercor 'to trade', from merx 'goods'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C74-coquus]
 <!-- hl-knowledge: introduces=[LA-LEX-C74-OPUS-03]; assesses=[] -->
 
 **mercātor, mercātōris** — "a merchant". English *merchant*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mercātor** is built on *mercor*, "to trade", from *merx*, "goods, wares" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

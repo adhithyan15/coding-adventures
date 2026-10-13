@@ -11,7 +11,8 @@ romanization: "oḷḷu"
 concept_tag: TE-FINE-BODY
 prerequisites: [TE-C93-ease, TE-C93-gladly]
 sounds: []
-roots: []
+roots: [dravidian-udal-body]
+etymology_hook: "oḷḷu: native Dravidian, one word with Tamil uṭal and Kannada oḍal (DEDR 586)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C93-gladly]
 **ఒళ్ళు** (*oḷḷu*) — "the body".
 
 **ఒళ్ళు నొప్పులు** — "body aches", with the plural of **నొప్పి**. What a fever leaves behind.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒళ్ళు** (*oḷḷu*) is native Dravidian, one word with Tamil *uṭal* and Kannada *oḍal* (DEDR 586). DEDR lists Telugu *oḍalu* and *oḷḷu*, "body".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

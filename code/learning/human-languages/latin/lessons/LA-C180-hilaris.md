@@ -13,7 +13,8 @@ gloss: "cheerful"
 concept_tag: LA-QUAL180-HILARIS
 prerequisites: [LA-C180-urbanus, LA-C180-rusticus]
 sounds: []
-roots: []
+roots: [hilaris-latin]
+etymology_hook: "hilaris 'cheerful' — borrowed from Greek hilaros 'cheerful'; English hilarious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C180-rusticus]
 <!-- hl-knowledge: introduces=[LA-LEX-C180-QUAL180-04]; assesses=[] -->
 
 **hilaris, hilare** — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hilaris** was borrowed from Greek *hilaros*, "cheerful" (Lewis & Short), from *hilaos*, "gracious, kindly" (EtymDB 2.1). English *hilarious* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

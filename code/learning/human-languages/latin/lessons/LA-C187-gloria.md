@@ -13,7 +13,8 @@ gloss: "glory"
 concept_tag: LA-RES187-GLORIA
 prerequisites: [LA-C187-victoria, LA-C187-libertas]
 sounds: []
-roots: []
+roots: [gloria-latin]
+etymology_hook: "glōria 'glory' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C187-libertas]
 <!-- hl-knowledge: introduces=[LA-LEX-C187-RES187-05]; assesses=[] -->
 
 **glōria, glōriae** — "glory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glōria** has no sure origin. Lewis & Short connect it with Greek *kleos*, "fame", and EtymDB 2.1 records a reconstructed older *\*gnōria*. Some tie that form to the root of *nōscō*, "to know"; neither account is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

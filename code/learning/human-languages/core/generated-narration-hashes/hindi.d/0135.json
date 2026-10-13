@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 135,
-  "sourceHash": "fnv1a64:16c5f081db8228d4",
+  "sourceHash": "fnv1a64:a7efe286ce37557a",
   "lessonIds": [
     "HI-C135-cappal",
     "HI-C135-juta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch135.txt",
   "json": "hindi/narration/ch135.json",
-  "textHash": "fnv1a64:a158077ed0bffd21",
-  "jsonHash": "fnv1a64:37e5a70a0c8528ee",
+  "textHash": "fnv1a64:a2cb673d618d89c3",
+  "jsonHash": "fnv1a64:3fbb3befb144c2f5",
   "findings": []
 }

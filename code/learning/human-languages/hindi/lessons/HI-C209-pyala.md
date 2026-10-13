@@ -14,7 +14,8 @@ romanization: "pyālā"
 concept_tag: HI-THG209-PYALA
 prerequisites: [HI-C208-not, HI-C209-chajja]
 sounds: []
-roots: []
+roots: [persian-piyala]
+etymology_hook: "pyālā: usually traced to Persian piyāla 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C209-chajja]
 <!-- hl-knowledge: introduces=[HI-LEX-C209-THG209-02]; assesses=[] -->
 
 **प्याला** — *pyālā* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्याला** (*pyālā*) is a loan, usually traced to Persian *piyāla*, "cup".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

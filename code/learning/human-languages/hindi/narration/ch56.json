@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "The Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce4621a037c70a8f",
+  "sourceHash": "fnv1a64:904a7c8db8c45e47",
   "lessons": [
     {
       "id": "HI-C56-road",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64850f50017676e5",
+      "sourceHash": "fnv1a64:9df1269e39831d76",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सड़क (saṛak) is inherited, but CDIAL gives two sources. It first lists the word under Sanskrit sṛti, \"road, path\" (CDIAL 13577), and in its addenda under śaṭati, \"goes\" (CDIAL 12269)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f79e41fdd32cb25",
+      "sourceHash": "fnv1a64:33342df7c4f91d0d",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:baf37e6631c7bafe",
+      "sourceHash": "fnv1a64:026615e4f0cb5e01",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed015b7556bfd797",
+      "sourceHash": "fnv1a64:92f3390b7839331b",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c796bdf9c3e8c855",
+      "sourceHash": "fnv1a64:b232bf62980fbe7e",
       "notice": null,
       "blocks": [
         {

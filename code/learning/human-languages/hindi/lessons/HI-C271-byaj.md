@@ -15,6 +15,7 @@ concept_tag: HI-THG271-BYAJ
 prerequisites: [HI-C271-karyalay, HI-C271-bima]
 sounds: []
 roots: []
+etymology_hook: "byāj: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C271-bima]
 <!-- hl-knowledge: introduces=[HI-LEX-C271-THG271-03]; assesses=[] -->
 
 **ब्याज** — *byāj* — "interest (on money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ब्याज** (*byāj*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

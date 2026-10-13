@@ -14,7 +14,8 @@ romanization: "havāī jahāz"
 concept_tag: HI-THG204-HAVAIJAHAZ
 prerequisites: [HI-C204-trak, HI-C204-riksa]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "havāī: havā 'air' (Arabic hawāʾ) + -ī; jahāz ← Arabic jahāz 'equipment', a ship in Persian (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C204-riksa]
 <!-- hl-knowledge: introduces=[HI-LEX-C204-THG204-03]; assesses=[] -->
 
 **हवाई जहाज़** — *havāī jahāz* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हवाई जहाज़** (*havāī jahāz*) is "air-ship": *havāī*, "of the air", from Arabic *hawāʾ*, and *jahāz*, "ship", from Arabic *jahāz*, "equipment", both through Persian (Lane, roots *h-w-y*, *j-h-z*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

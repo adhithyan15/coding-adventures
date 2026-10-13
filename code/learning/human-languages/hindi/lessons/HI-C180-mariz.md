@@ -14,7 +14,8 @@ romanization: "marīz"
 concept_tag: HI-THG180-MARIZ
 prerequisites: [HI-C179-guzarna, HI-C180-dava]
 sounds: []
-roots: []
+roots: [arabic-marid]
+etymology_hook: "marīz ← Arabic marīḍ 'sick', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C180-dava]
 <!-- hl-knowledge: introduces=[HI-LEX-C180-THG180-02]; assesses=[] -->
 
 **मरीज़** — *marīz* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मरीज़** (*marīz*) is a loan from Arabic *marīḍ*, "sick", which reached Hindi through Persian. Its Arabic root is *m-r-ḍ* (Lane). Hindi uses it for a patient.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

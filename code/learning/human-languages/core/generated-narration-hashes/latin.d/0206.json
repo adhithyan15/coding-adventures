@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 206,
-  "sourceHash": "fnv1a64:38b87167f2330094",
+  "sourceHash": "fnv1a64:c5d26a3dbb587f56",
   "lessonIds": [
     "LA-C206-anima",
     "LA-C206-memoria",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch206.txt",
   "json": "latin/narration/ch206.json",
-  "textHash": "fnv1a64:5e34cf1b47f9ebb8",
-  "jsonHash": "fnv1a64:fb8ad91c48b4cebf",
+  "textHash": "fnv1a64:a4c879fd3d5b52ce",
+  "jsonHash": "fnv1a64:de52a1e8e308a786",
   "findings": []
 }

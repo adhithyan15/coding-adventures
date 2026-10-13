@@ -14,7 +14,8 @@ romanization: "uttar"
 concept_tag: HI-LOC233-UTTAR
 prerequisites: [HI-C232-phusphusana, HI-C232-datna]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttar ← Sanskrit uttara 'upper; northern', a tatsama (CDIAL 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C232-datna]
 <!-- hl-knowledge: introduces=[HI-LEX-C233-LOC233-01]; assesses=[] -->
 
 **उत्तर** — *uttar* — "north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उत्तर** (*uttar*) is Sanskrit *uttara*, "upper; northern", taken over whole as a learned loan, a tatsama (CDIAL 1767). CDIAL lists the inherited form as *ūtar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

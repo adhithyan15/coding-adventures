@@ -14,7 +14,8 @@ romanization: "gaṭṭu"
 concept_tag: TE-VASTUVU309-GATTU
 prerequisites: [TE-C308-mudi, TE-C308-varusa]
 sounds: []
-roots: []
+roots: [telugu-gattu-bund]
+etymology_hook: "gaṭṭu: native Dravidian; DEDR 1147 lists gaṭṭu 'dam, embankment' under kaṭṭu 'to tie, build'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C308-varusa]
 <!-- hl-knowledge: introduces=[TE-LEX-C309-VASTUVU309-01]; assesses=[] -->
 
 **గట్టు** — *gaṭṭu* — "a bund, an embankment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గట్టు** (*gaṭṭu*) is native Dravidian. DEDR 1147 lists *gaṭṭu*, "dam, embankment", under *kaṭṭu*, "to tie, build", with Kannada *gaṭṭu*, and compares Sanskrit *ghaṭṭa*, "landing place" (CDIAL 4414).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

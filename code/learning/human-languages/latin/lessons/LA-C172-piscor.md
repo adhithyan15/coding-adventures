@@ -13,7 +13,8 @@ gloss: "to go fishing"
 concept_tag: LA-VERB-PISCOR
 prerequisites: [LA-C172-meto, LA-C172-venor]
 sounds: []
-roots: []
+roots: [piscari-latin, piscis-latin]
+etymology_hook: "piscor 'to go fishing' — the verb made from piscis 'fish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C172-venor]
 <!-- hl-knowledge: introduces=[LA-LEX-C172-ACT172-04]; assesses=[] -->
 
 **piscor, piscārī** — "to go fishing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piscor** is the verb made from *piscis*, "a fish" (Lewis & Short), which is usually traced to Proto-Indo-European *\*pisk-*, "fish" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

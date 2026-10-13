@@ -14,7 +14,8 @@ romanization: "phrijju"
 concept_tag: TE-VASTUVU307-PHRIJJU
 prerequisites: [TE-C306-patti, TE-C306-unni]
 sounds: []
-roots: []
+roots: [english-fridge]
+etymology_hook: "phrijju ← English fridge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C306-unni]
 <!-- hl-knowledge: introduces=[TE-LEX-C307-VASTUVU307-01]; assesses=[] -->
 
 **ఫ్రిజ్జు** — *phrijju* — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫ్రిజ్జు** (*phrijju*) is a loan from English *fridge*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

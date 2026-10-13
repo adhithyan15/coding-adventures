@@ -13,7 +13,8 @@ gloss: "an innkeeper"
 concept_tag: LA-RES272-CAUPO
 prerequisites: [LA-C271-bellum, LA-C272-lanius]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "caupō 'innkeeper' — origin uncertain; German kaufen 'to buy' probably comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C272-lanius]
 <!-- hl-knowledge: introduces=[LA-LEX-C272-RES272-02]; assesses=[] -->
 
 **caupō, caupōnis** — "an innkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caupō** has no sure origin; Greek *kapēlos*, "a retail dealer", is often compared (Lewis & Short). German *kaufen*, "to buy", was probably borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

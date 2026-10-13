@@ -14,7 +14,8 @@ romanization: "bīmā"
 concept_tag: TE-AROGYAM287-BIMA
 prerequisites: [TE-C287-pramadam, TE-C287-ambulensu]
 sounds: []
-roots: []
+roots: [persian-bima]
+etymology_hook: "bīmā ← Persian bīma 'insurance', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C287-ambulensu]
 <!-- hl-knowledge: introduces=[TE-LEX-C287-AROGYAM287-04]; assesses=[] -->
 
 **బీమా** — *bīmā* — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బీమా** (*bīmā*) is a loan from Persian *bīma*, "insurance", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

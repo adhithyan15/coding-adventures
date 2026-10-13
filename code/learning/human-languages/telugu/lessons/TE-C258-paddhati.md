@@ -14,7 +14,8 @@ romanization: "paddhati"
 concept_tag: TE-KARANAM258-PADDHATI
 prerequisites: [TE-C257-godava, TE-C257-samskrti]
 sounds: []
-roots: []
+roots: [sanskrit-paddhati]
+etymology_hook: "paddhati ← Sanskrit paddhati 'path, way', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C257-samskrti]
 <!-- hl-knowledge: introduces=[TE-LEX-C258-KARANAM258-01]; assesses=[] -->
 
 **పద్ధతి** — *paddhati* — "a method, a way of doing things".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పద్ధతి** (*paddhati*) is Sanskrit *paddhati*, "path, way, method", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

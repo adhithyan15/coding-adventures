@@ -14,7 +14,8 @@ romanization: "sītākōkacilaka"
 concept_tag: TE-THINGS125-SITAKOKACILAKA
 prerequisites: [TE-C125-gudlaguba, TE-C125-nemali]
 sounds: []
-roots: []
+roots: [dravidian-kili-parrot]
+etymology_hook: "sītākōkacilaka: ends in cilaka 'parrot' (DEDR 1584); the first parts are not traced"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C125-nemali]
 <!-- hl-knowledge: introduces=[TE-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **సీతాకోకచిలుక** — *sītākōkacilaka* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సీతాకోకచిలుక** (*sītākōkacilaka*) ends in *cilaka*, "parrot", which is native Dravidian (DEDR 1584). Where the first parts of the name come from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

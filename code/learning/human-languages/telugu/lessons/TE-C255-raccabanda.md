@@ -14,7 +14,8 @@ romanization: "raccabaṇḍa"
 concept_tag: TE-STHALAM255-RACCABANDA
 prerequisites: [TE-C255-vedika, TE-C255-nagaram]
 sounds: []
-roots: []
+roots: [telugu-racca-assembly, dravidian-bande-rock]
+etymology_hook: "raccabaṇḍa: racca, of uncertain origin, + native baṇḍa 'rock' (DEDR 3903)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C255-nagaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C255-STHALAM255-05]; assesses=[] -->
 
 **రచ్చబండ** — *raccabaṇḍa* — "the village meeting platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రచ్చబండ** (*raccabaṇḍa*) is *racca*, "village square", whose origin is uncertain, and native *baṇḍa*, "rock, slab" (DEDR 3903).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

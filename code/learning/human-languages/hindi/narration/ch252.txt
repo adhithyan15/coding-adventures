@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a litre, then the Hindi for a metre.
 You'll want to know: बोरी.
 बोरी — borī — "a sack".
 
+The word, taken apart.
+बोरी (borī) is a tadbhava, a word inherited and reshaped by sound change. It comes from bora, "sacking, sack", a form CDIAL reconstructs from its descendants (CDIAL 9320).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a metre, then the Hindi for a sack.
 
 You'll want to know: डाली.
 डाली — ḍālī — "a branch".
+
+The word, taken apart.
+डाली (ḍālī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ḍāla, "branch" (CDIAL 5546). CDIAL notes that the variety of forms points to a Munda source.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a sack, then the Hindi for a branch.
 You'll want to know: कली.
 कली — kalī — "a bud".
 
+The word, taken apart.
+कली (kalī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kali, "unblown bud" (CDIAL 2934).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a branch, then the Hindi for a bud.
 You'll want to know: काँटा.
 काँटा — kā̃ṭā — "a thorn, a fork".
 
+The word, taken apart.
+काँटा (kā̃ṭā) (kāṁṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṇṭaka, "thorn" (CDIAL 2668).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a bud, then the Hindi for a thorn.
 
 You'll want to know: कीचड़.
 कीचड़ — kīcaṛ — "mud".
+
+The word, taken apart.
+कीचड़ (kīcaṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kicca, "mud, dirt", a form CDIAL reconstructs from its descendants (CDIAL 3153). CDIAL compares Dravidian words.
 
 What you've built.
 One more word for this chapter.

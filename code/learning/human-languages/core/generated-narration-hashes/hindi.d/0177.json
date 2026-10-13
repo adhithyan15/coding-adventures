@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 177,
-  "sourceHash": "fnv1a64:76871a5b33eb308f",
+  "sourceHash": "fnv1a64:11cd2b9abfe3805b",
   "lessonIds": [
     "HI-C177-sughna",
     "HI-C177-manana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch177.txt",
   "json": "hindi/narration/ch177.json",
-  "textHash": "fnv1a64:16d980a80ca828dc",
-  "jsonHash": "fnv1a64:1d7bda4e0af79a91",
+  "textHash": "fnv1a64:bd95cc0775bb907c",
+  "jsonHash": "fnv1a64:0bebf814fb4e90a1",
   "findings": []
 }

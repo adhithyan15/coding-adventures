@@ -14,7 +14,8 @@ romanization: "sudhārnā"
 concept_tag: HI-VERB-SUDHARNA
 prerequisites: [HI-C174-sajana, HI-C174-sabhalna]
 sounds: []
-roots: []
+roots: [indo-aryan-shuddhakara]
+etymology_hook: "sudhārnā ← *śuddhakāra 'making clean', a reconstructed form; a tadbhava (CDIAL 12521)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C174-sabhalna]
 <!-- hl-knowledge: introduces=[HI-LEX-C174-ACT174-04]; assesses=[] -->
 
 **सुधारना** — *sudhārnā* — "to improve, to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुधारना** (*sudhārnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śuddhakāra*, "making clean", a form CDIAL reconstructs from its descendants (CDIAL 12521). It is built from *śuddha*, "pure", and *kāra*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

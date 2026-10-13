@@ -13,7 +13,8 @@ gloss: "to feed, to nourish"
 concept_tag: LA-VERB-ALO
 prerequisites: [LA-C259-permuto, LA-C260-exprimo]
 sounds: []
-roots: []
+roots: [alere-latin]
+etymology_hook: "alō 'to nourish' — inherited, usually traced to PIE *h2el- 'to grow'; altus is its old participle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C260-exprimo]
 <!-- hl-knowledge: introduces=[LA-LEX-C260-ACT260-02]; assesses=[] -->
 
 **alō, alere** — "to feed, to nourish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alō** is inherited, usually traced to Proto-Indo-European *\*h2el-*, "to grow, to nourish" (EtymDB 2.1). Its old participle is *altus*, "grown tall, high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

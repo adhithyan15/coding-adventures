@@ -11,7 +11,8 @@ romanization: "buṭṭa"
 concept_tag: TE-NOUN-BASKET
 prerequisites: [TE-C56-mat]
 sounds: []
-roots: []
+roots: [dravidian-puttil-basket]
+etymology_hook: "buṭṭa: native Dravidian, one word with Kannada buṭṭi (DEDR 4263)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C56-mat]
 Weaving words tend to be old, and they tend to stay put while the trade words move around them. A బుట్ట and a చాప come off the same hands and the same palm leaf, which is why the two words feel like family even though they are not.
 
 పూల బుట్ట is the flower basket — పువ్వు's పూల- shape doing its work again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బుట్ట** (*buṭṭa*) is native Dravidian, one word with Kannada *buṭṭi* (DEDR 4263). DEDR lists Telugu *buṭṭa* and *buṭṭi*, "basket", with Tamil *puṭṭil*, "basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gurtupeṭṭukō"
 concept_tag: TE-VERB-GURTUPETTUKO
 prerequisites: [TE-C160-vivarincu, TE-C160-anuvadincu]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark, dravidian-pettu-put]
+etymology_hook: "gurtupeṭṭukō: native gurtu 'mark' (DEDR 1847) + peṭṭu 'to put' (DEDR 4390) + reflexive kō (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C160-anuvadincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C160-KRIYA160-04]; assesses=[] -->
 
 **గుర్తుపెట్టుకో** — *gurtupeṭṭukō* — "to remember, to keep in mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుర్తుపెట్టుకో** (*gurtupeṭṭukō*) is native Dravidian: *gurtu*, "a mark, sign", one word with Kannada *gurtu* (DEDR 1847); *peṭṭu*, "to put" (DEDR 4390); and *-kō*, "for oneself" (DEDR 2151): "to put a mark for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

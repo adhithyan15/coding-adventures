@@ -14,7 +14,8 @@ romanization: "ṭyūṣanu"
 concept_tag: TE-PANI198-TYUSANU
 prerequisites: [TE-C197-pariskaram, TE-C197-abhiprayam]
 sounds: []
-roots: []
+roots: [english-tuition]
+etymology_hook: "ṭyūṣanu ← English tuition"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C197-abhiprayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C198-PANI198-01]; assesses=[] -->
 
 **ట్యూషను** — *ṭyūṣanu* — "tuition, coaching".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ట్యూషను** (*ṭyūṣanu*) is a loan from English *tuition*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [TE-C03-nenu, TE-C03-miiru-elaa-unnaaru]
 sounds: [long-aa]
 roots: [baaga-good]
+etymology_hook: "bāgā: from bāgu 'good, well-being', native Dravidian (DEDR 5332), with Tamil vāku"
 duration:
   max_seconds: 140
 requires:
@@ -46,7 +47,7 @@ time.
 <!-- hl-knowledge: introduces=[TE-ETYMON-C03-BAAGAA-02]; assesses=[] -->
 
 **బాగా** (*bāgā*, "well, nicely, very") comes from **బాగు** (*bāgu*, "goodness,
-well-being"). It is the everyday "well/good/very much": *bāgā undi* ("it's good"),
+well-being"), a Dravidian word (DEDR 5332). It is the everyday "well/good/very much": *bāgā undi* ("it's good"),
 *bāgā ceppāru* ("well said"). To answer "how are you," fuse it with the *uṇḍu*
 verb:
 

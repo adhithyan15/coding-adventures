@@ -13,7 +13,8 @@ gloss: "to allow"
 concept_tag: LA-VERB-PERMITTO
 prerequisites: [LA-C166-disputo, LA-C166-promitto]
 sounds: []
-roots: []
+roots: [permittere-latin, mittere-latin]
+etymology_hook: "permittō 'to allow' — per 'through' + mittō 'to let go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C166-promitto]
 <!-- hl-knowledge: introduces=[LA-LEX-C166-ACT166-05]; assesses=[] -->
 
 **permittō, permittere** — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permittō** is *per*, "through", with *mittō*, "to send, to let go" (EtymDB 2.1). Lewis & Short give *permittō* first as "to let go through", hence to allow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

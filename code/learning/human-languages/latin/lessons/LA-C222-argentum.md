@@ -13,7 +13,8 @@ gloss: "silver"
 concept_tag: LA-RES222-ARGENTUM
 prerequisites: [LA-C221-casus, LA-C222-aurum]
 sounds: []
-roots: []
+roots: [argentum-latin]
+etymology_hook: "argentum 'silver' — inherited, usually traced to PIE *h2rgntom, from *h2erg- 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C222-aurum]
 <!-- hl-knowledge: introduces=[LA-LEX-C222-RES222-02]; assesses=[] -->
 
 **argentum, argentī** — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**argentum** is inherited, usually traced to Proto-Indo-European *\*h2rgntom*, "silver", from *\*h2erg-*, "white, shining" (EtymDB 2.1); Greek *argēs*, "white, bright", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "badilī cēyu"
 concept_tag: TE-VERB-BADILI-CEYU
 prerequisites: [TE-C243-pencu, TE-C243-teliyajeyu]
 sounds: []
-roots: []
+roots: [arabic-badal, sey-do-dravidian]
+etymology_hook: "badilī cēyu: badilī, from Arabic badal 'exchange' through Hindustani, + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C243-teliyajeyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C243-KRIYA243-05]; assesses=[] -->
 
 **బదిలీ చేయు** — *badilī cēyu* — "to transfer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బదిలీ చేయు** (*badilī cēyu*) pairs *badilī*, "transfer", from Arabic *badal*, "exchange", through Persian and Hindustani, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

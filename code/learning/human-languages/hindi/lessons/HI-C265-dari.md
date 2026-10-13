@@ -14,7 +14,8 @@ romanization: "darī"
 concept_tag: HI-THG265-DARI
 prerequisites: [HI-C265-jhula, HI-C265-parda]
 sounds: []
-roots: []
+roots: [indo-aryan-darika]
+etymology_hook: "darī ← *darikā 'split cane, mat', a reconstructed form; a tadbhava (CDIAL 6194)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C265-parda]
 <!-- hl-knowledge: introduces=[HI-LEX-C265-THG265-04]; assesses=[] -->
 
 **दरी** — *darī* — "a cotton rug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरी** (*darī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*darikā*, "split cane, mat", a form CDIAL reconstructs from its descendants (CDIAL 6194). CDIAL glosses the Hindi word "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

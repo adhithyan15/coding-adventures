@@ -14,7 +14,8 @@ romanization: "evarū"
 concept_tag: TE-NISHEDHAM153-EVARU
 prerequisites: [TE-C151-chhaya, TE-C152-jhari]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "evarū: native evaru 'who' (DEDR 5151) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C152-jhari]
 <!-- hl-knowledge: introduces=[TE-LEX-C153-NISHEDHAM153-01]; assesses=[] -->
 
 **ఎవరూ** — *evarū* — "nobody (with a negative verb)". Telugu negates a past verb with **లేదు** (*lēdu*) joined onto it: **ఎవరూ రాలేదు** — *evarū rālēdu* — "Nobody came." To say something is not a thing, it uses **కాదు** (*kādu*): **ఇది నా ఇల్లు కాదు** — *idi nā illu kādu* — "This is not my house."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎవరూ** (*evarū*) is native Dravidian: *evaru*, "who" (DEDR 5151), with *-ū*, "even, any": with a negative verb, "nobody".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

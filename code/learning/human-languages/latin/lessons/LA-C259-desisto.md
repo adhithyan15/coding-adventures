@@ -13,7 +13,8 @@ gloss: "to give up"
 concept_tag: LA-VERB-DESISTO
 prerequisites: [LA-C259-commendo, LA-C259-spiro]
 sounds: []
-roots: []
+roots: [desistere-latin, sistere-latin]
+etymology_hook: "dēsistō 'to give up' — dē 'away' + sistō 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C259-spiro]
 <!-- hl-knowledge: introduces=[LA-LEX-C259-ACT259-04]; assesses=[] -->
 
 **dēsistō, dēsistere** — "to give up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēsistō** is *dē*, "away", with *sistō*, "to stand, to stop" (EtymDB 2.1): to stand off, to give up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

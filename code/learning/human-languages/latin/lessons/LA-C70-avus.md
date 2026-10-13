@@ -13,7 +13,8 @@ gloss: "a grandfather"
 concept_tag: LA-FAMILIA1-AVUS
 prerequisites: [LA-C70-filius, LA-C70-filia]
 sounds: []
-roots: []
+roots: [avus]
+etymology_hook: "avus 'grandfather' — inherited, usually traced to PIE *h2ewh2os; its kin avunculus gave English uncle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C70-filia]
 <!-- hl-knowledge: introduces=[LA-LEX-C70-FAMILIA1-03]; assesses=[] -->
 
 **avus, avī** — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avus** is inherited, usually traced to Proto-Indo-European *\*h2ewh2os*, "grandfather, elder male relative" (EtymDB 2.1). Its family includes *avunculus*, "mother's brother", the source of English *uncle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wagon, a cart"
 concept_tag: LA-THINGS125-PLAUSTRUM
 prerequisites: [LA-C125-signum, LA-C125-velum]
 sounds: []
-roots: []
+roots: [plaustrum-latin]
+etymology_hook: "plaustrum 'wagon' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C125-velum]
 <!-- hl-knowledge: introduces=[LA-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **plaustrum, plaustrī** — "a wagon, a cart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plaustrum** has no sure origin; the links with words for floating that Lewis & Short and EtymDB 2.1 record are doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

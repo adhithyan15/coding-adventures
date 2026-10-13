@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Vegetables, Banana, Mango, Coconut, Onion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d8b1abb8511c4e03",
+  "sourceHash": "fnv1a64:77e33cd7ecc7aab8",
   "lessons": [
     {
       "id": "TE-C117-kuragayalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c47b739968611c5f",
+      "sourceHash": "fnv1a64:5f78a99520728913",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూరగాయలు (kūragāyalu) is native Dravidian: kūra, \"curry-stuff\" (DEDR 1760), and kāya, \"unripe fruit\" (DEDR 1459), with the plural -lu. DEDR compares the Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613), with kāya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca74bdb03dc9b8bb",
+      "sourceHash": "fnv1a64:31826ce161fb70b1",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అరటిపండు (araṭipaṇḍu) is native Dravidian: araṭi, \"banana tree\" (DEDR 205), and paṇḍu, \"fruit\" (DEDR 4004). DEDR compares Sanskrit phala, \"fruit\", with paṇḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56766b311ae025ae",
+      "sourceHash": "fnv1a64:64e96ad040126665",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మామిడిపండు (māmiḍipaṇḍu) is native Dravidian: māmiḍi, \"mango\", which DEDR 4782 lists with Tamil mā and Kannada māvu; and paṇḍu, \"fruit\" (DEDR 4004). DEDR compares Sanskrit mākanda, \"mango tree\", with the first and phala, \"fruit\", with the second."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21182301ac70d34d",
+      "sourceHash": "fnv1a64:80f8aad303223acb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొబ్బరి (kobbari) is native Dravidian, one word with Tamil koppari, \"dried coconut kernel\", and Kannada kobbari (DEDR 2105). DEDR compares Sanskrit kūrpasa, \"the inner part of a coconut\", a word known only from lexicons, and the northern words in CDIAL 3936."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1077c204434ebde6",
+      "sourceHash": "fnv1a64:c13cc09585ec0d22",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ulli, \"onion\", the first part of ఉల్లిపాయ (ullipāya), is native Dravidian: DEDR 705 lists Telugu ulli, \"onion, garlic\", with Tamil and Kannada uḷḷi, and compares Sanskrit ūlī. The second part is kāya, \"unripe fruit, pod\" (DEDR 1459), which DEDR compares with the Indo-Aryan kacca, \"raw\" (CDIAL 2613)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

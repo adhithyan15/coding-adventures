@@ -14,7 +14,8 @@ romanization: "ākāraṁ"
 concept_tag: TE-KARANAM295-AKARAM
 prerequisites: [TE-C294-mottaniki, TE-C295-vijayam]
 sounds: []
-roots: []
+roots: [sanskrit-akara]
+etymology_hook: "ākāraṁ ← Sanskrit ākāra 'shape; appearance', a tatsama (CDIAL 1004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C295-vijayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C295-KARANAM295-02]; assesses=[] -->
 
 **ఆకారం** — *ākāraṁ* — "a shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆకారం** (*ākāraṁ*) is Sanskrit *ākāra*, "shape; appearance", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1004).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

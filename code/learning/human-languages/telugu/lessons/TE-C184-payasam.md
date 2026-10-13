@@ -14,7 +14,8 @@ romanization: "pāyasaṁ"
 concept_tag: TE-VASTUVU184-PAYASAM
 prerequisites: [TE-C184-venna, TE-C184-paccadi]
 sounds: []
-roots: []
+roots: [sanskrit-payasa]
+etymology_hook: "pāyasaṁ ← Sanskrit pāyasa 'made of milk; rice boiled in milk', a tatsama (CDIAL 8099)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C184-paccadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C184-VASTUVU184-03]; assesses=[] -->
 
 **పాయసం** — *pāyasaṁ* — "a sweet milk pudding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాయసం** (*pāyasaṁ*) is Sanskrit *pāyasa*, "made of milk; rice boiled in milk", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

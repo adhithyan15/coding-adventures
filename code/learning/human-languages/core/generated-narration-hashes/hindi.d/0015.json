@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 15,
-  "sourceHash": "fnv1a64:bfa6d2446e44da0c",
+  "sourceHash": "fnv1a64:3e8c7fbbedc1725d",
   "lessonIds": [
     "HI-C15-dhol",
     "HI-C15-paani-roti",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch15.txt",
   "json": "hindi/narration/ch15.json",
-  "textHash": "fnv1a64:cf82937a7b3f375b",
-  "jsonHash": "fnv1a64:394cb925b848b8d7",
+  "textHash": "fnv1a64:9a0a60b7d8cd1d86",
+  "jsonHash": "fnv1a64:0b3c078bd5321c10",
   "findings": []
 }

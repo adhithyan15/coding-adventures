@@ -14,7 +14,8 @@ romanization: "abhivṛddhi"
 concept_tag: TE-KARANAM258-ABHIVRDDHI
 prerequisites: [TE-C258-niyamam, TE-C258-prabhavam]
 sounds: []
-roots: []
+roots: [sanskrit-vrddhi]
+etymology_hook: "abhivṛddhi ← Sanskrit abhivṛddhi 'growth', built on vṛddhi 'increase' (CDIAL 12076)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C258-prabhavam]
 <!-- hl-knowledge: introduces=[TE-LEX-C258-KARANAM258-04]; assesses=[] -->
 
 **అభివృద్ధి** — *abhivṛddhi* — "development, progress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అభివృద్ధి** (*abhivṛddhi*) is Sanskrit *abhivṛddhi*, "growth, prosperity", built on *vṛddhi*, "increase, prosperity" (CDIAL 12076).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

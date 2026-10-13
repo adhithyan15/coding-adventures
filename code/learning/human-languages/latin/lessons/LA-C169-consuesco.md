@@ -13,7 +13,8 @@ gloss: "to get used to"
 concept_tag: LA-VERB-CONSUESCO
 prerequisites: [LA-C168-propono, LA-C169-interficio]
 sounds: []
-roots: []
+roots: [consuescere-latin, suescere-latin]
+etymology_hook: "cōnsuēscō 'to get used to' — con- + suēscō 'to become used to'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C169-interficio]
 <!-- hl-knowledge: introduces=[LA-LEX-C169-ACT169-02]; assesses=[] -->
 
 **cōnsuēscō, cōnsuēscere** — "to get used to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnsuēscō** is *con-*, "thoroughly", with *suēscō*, "to become used to" (EtymDB 2.1). *suēscō* is usually traced to the reflexive *\*swe-*, "one's own": to make something one's own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

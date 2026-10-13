@@ -11,7 +11,8 @@ romanization: "unnārā"
 concept_tag: TE-ASK-PRESENT
 prerequisites: [TE-C78-didntunderstand, TE-C39-paalu]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "unnārā: native uṇḍu 'to be' (DEDR 697), respectful -āru, + the question ending -ā"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C78-didntunderstand]
 ఉండు in its respectful **-ఆరు** form, with the new **-ఆ** on the end. Three pieces you already had.
 
 It is what you say at a door or into a telephone: **గురువు ఉన్నారా?** — "is the teacher there?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉన్నారా** (*unnārā*) is native Dravidian: a form of *uṇḍu*, "to be" (DEDR 697), with the respectful *-āru* and the question ending *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

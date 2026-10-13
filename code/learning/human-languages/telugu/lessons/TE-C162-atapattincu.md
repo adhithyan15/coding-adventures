@@ -14,7 +14,8 @@ romanization: "āṭapaṭṭiñcu"
 concept_tag: TE-VERB-ATAPATTINCU
 prerequisites: [TE-C162-muddupettu, TE-C162-kaugilincu]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move, dravidian-pattu-hold]
+etymology_hook: "āṭapaṭṭiñcu: native āṭa 'play' (DEDR 347) + paṭṭiñcu 'to make hold' (DEDR 4034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C162-kaugilincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C162-KRIYA162-03]; assesses=[] -->
 
 **ఆటపట్టించు** — *āṭapaṭṭiñcu* — "to tease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆటపట్టించు** (*āṭapaṭṭiñcu*) is native Dravidian: *āṭa*, "play, game", from *āḍu*, "to play" (DEDR 347), and *paṭṭiñcu*, "to make hold, apply", from *paṭṭu*, "to hold" (DEDR 4034).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

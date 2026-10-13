@@ -11,7 +11,8 @@ romanization: "atithi"
 concept_tag: TE-NOUN-GUEST
 prerequisites: [TE-C48-farmer]
 sounds: []
-roots: []
+roots: [sanskrit-atithi]
+etymology_hook: "atithi ← Sanskrit atithi 'guest', a tatsama; 'without a date' is a traditional reading"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C48-farmer]
 *a-tithi* — "one without a *tithi*", without a date on the calendar. The guest is defined by not being expected.
 
 The old formula అతిథి దేవో భవ, "let the guest be a god to you", is built on exactly that: you cannot prepare for a god who arrives unannounced, so you keep the house ready instead. What a Telugu house actually does when the అతిథి arrives has a chapter of its own, at the end of this book.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అతిథి** (*atithi*) is Sanskrit *atithi*, "guest", taken over whole as a learned loan, a tatsama. Its reading as *a-tithi*, "without a date", is a traditional explanation; where the Sanskrit word itself comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

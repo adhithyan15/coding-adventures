@@ -13,7 +13,8 @@ gloss: "a difference; a crisis"
 concept_tag: LA-RES221-DISCRIMEN
 prerequisites: [LA-C220-vidua, LA-C221-regula]
 sounds: []
-roots: []
+roots: [discrimen-latin, discernere-latin, cernere-latin]
+etymology_hook: "discrīmen 'difference' — from discernō 'to separate'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C221-regula]
 <!-- hl-knowledge: introduces=[LA-LEX-C221-RES221-02]; assesses=[] -->
 
 **discrīmen, discrīminis** — "a difference; a crisis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**discrīmen** is built on *crī-*, the root of *discernō*, "to separate, to distinguish" (Lewis & Short), also seen in *crīmen*, "a charge", with *-men*, an ending for a result: a dividing line, then a turning point.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

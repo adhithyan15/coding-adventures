@@ -14,7 +14,8 @@ romanization: "sinemā"
 concept_tag: HI-THG187-SINEMA
 prerequisites: [HI-C187-thana, HI-C187-dakiya]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinemā ← English cinema"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C187-dakiya]
 <!-- hl-knowledge: introduces=[HI-LEX-C187-THG187-04]; assesses=[] -->
 
 **सिनेमा** — *sinemā* — "the cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिनेमा** (*sinemā*) is a loan from English *cinema*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

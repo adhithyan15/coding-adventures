@@ -13,7 +13,8 @@ gloss: "to share, to divide"
 concept_tag: LA-VERB-PARTIOR
 prerequisites: [LA-C199-persuadeo, LA-C199-reprehendo]
 sounds: []
-roots: []
+roots: [partire-latin, pars-latin]
+etymology_hook: "partior 'to share' — built on pars, partis 'a part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C199-reprehendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C199-ACT199-04]; assesses=[] -->
 
 **partior, partīrī** — "to share, to divide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partior** is built on *pars*, *partis*, "a part": to make into parts. English *partition* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a whale"
 concept_tag: LA-THINGS135-BALAENA
 prerequisites: [LA-C134-simia, LA-C134-delphinus]
 sounds: []
-roots: []
+roots: [balaena-latin]
+etymology_hook: "balaena 'whale' — borrowed from Greek phalaina 'whale'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C134-delphinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **balaena, balaenae** — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balaena** was borrowed from Greek *phalaina*, "whale" (Lewis & Short), with b for the Greek ph.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bāgucēyu"
 concept_tag: TE-VERB-BAGUCEYU
 prerequisites: [TE-C159-pindu, TE-C159-nanabettu]
 sounds: []
-roots: []
+roots: [dravidian-baagu-good, sey-do-dravidian]
+etymology_hook: "bāgucēyu: native bāgu 'good' (DEDR 5332) + cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C159-nanabettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C159-KRIYA159-03]; assesses=[] -->
 
 **బాగుచేయు** — *bāgucēyu* — "to repair, to mend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాగుచేయు** (*bāgucēyu*) is native Dravidian: *bāgu*, "good, sound condition" (DEDR 5332), and *cēyu*, "to do" (DEDR 1957): "to make good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

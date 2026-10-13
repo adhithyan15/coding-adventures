@@ -14,7 +14,8 @@ romanization: "kam"
 concept_tag: HI-ADV-LITTLE
 prerequisites: [HI-C64-slowly, HI-C62-clay, HI-C63-fever]
 sounds: []
-roots: []
+roots: [persian-kam]
+etymology_hook: "kam: usually traced to Persian kam 'little, few'"
 duration:
   max_seconds: 210
 requires:

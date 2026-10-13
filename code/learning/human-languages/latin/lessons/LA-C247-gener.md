@@ -13,7 +13,8 @@ gloss: "a son-in-law"
 concept_tag: LA-RES247-GENER
 prerequisites: [LA-C247-socer, LA-C247-socrus]
 sounds: []
-roots: []
+roots: [gener-latin]
+etymology_hook: "gener 'son-in-law' — inherited, usually traced to PIE *gmros 'son-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C247-socrus]
 <!-- hl-knowledge: introduces=[LA-LEX-C247-RES247-04]; assesses=[] -->
 
 **gener, generī** — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gener** is inherited, usually traced to Proto-Indo-European *\*gmros*, "son-in-law" (EtymDB 2.1); Greek *gambros*, "son-in-law", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

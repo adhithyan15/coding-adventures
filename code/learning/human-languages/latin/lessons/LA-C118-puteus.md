@@ -13,7 +13,8 @@ gloss: "a well"
 concept_tag: LA-LOC118-PUTEUS
 prerequisites: [LA-C117-caupona, LA-C118-pavimentum]
 sounds: []
-roots: []
+roots: [puteus-latin]
+etymology_hook: "puteus 'well' — origin uncertain; perhaps from PIE *pewH- 'to hew'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C118-pavimentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C118-LOC118-02]; assesses=[] -->
 
 **puteus, puteī** — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puteus** has no sure origin. EtymDB 2.1 tentatively links it to a Proto-Indo-European root *\*pewH-*, "to strike, to hew", as a hole cut into the ground, but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

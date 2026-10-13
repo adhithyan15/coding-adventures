@@ -14,7 +14,8 @@ romanization: "dahī"
 concept_tag: HI-THINGS140-DAHI
 prerequisites: [HI-C140-tarbuz, HI-C140-nariyal]
 sounds: []
-roots: []
+roots: [sanskrit-dadhi]
+etymology_hook: "dahī ← Sanskrit dadhi 'thick sour milk', a tadbhava (CDIAL 6146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C140-nariyal]
 <!-- hl-knowledge: introduces=[HI-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **दही** — *dahī* — "yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दही** (*dahī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadhi*, "thick sour milk" (CDIAL 6146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

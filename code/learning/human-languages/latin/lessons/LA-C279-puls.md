@@ -13,7 +13,8 @@ gloss: "porridge"
 concept_tag: LA-RES279-PULS
 prerequisites: [LA-C279-brassica, LA-C279-porrum]
 sounds: []
-roots: []
+roots: [puls-latin]
+etymology_hook: "puls 'porridge' — linked with Greek poltos 'porridge'; English pulse, 'beans and lentils'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C279-porrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C279-RES279-05]; assesses=[] -->
 
 **puls, pultis** — "porridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puls** is usually linked with Greek *poltos*, "porridge" (Lewis & Short), and may have been borrowed from it; both go back to a root for meal, *\*pel-*, "flour, dust" (EtymDB 2.1). English *pulse*, "beans and lentils", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for to keep, then the Latin for to change.
 You'll want to know: numerō, numerāre.
 numerō, numerāre — "to count".
 
+The word, taken apart.
+numerō is built on numerus, "a number" (Lewis & Short), usually traced to Proto-Indo-European nem-, "to allot, to distribute" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to change, then the Latin for to count.
 
 You'll want to know: dēleō, dēlēre.
 dēleō, dēlēre — "to destroy, to wipe out".
+
+The word, taken apart.
+dēleō probably begins with dē-, "away, off", but the rest is uncertain; a link with linō, "to smear", is sometimes suggested (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to count, then the Latin for to destroy.
 You'll want to know: discēdō, discēdere.
 discēdō, discēdere — "to go away, to leave".
 
+The word, taken apart.
+discēdō is dis-, "apart", with cēdō, "to go, to withdraw" (EtymDB 2.1): to go off in different directions, to leave.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Latin for to destroy, then the Latin for to go away.
 
 You'll want to know: adveniō, advenīre.
 adveniō, advenīre — "to arrive".
+
+The word, taken apart.
+adveniō is ad, "to", with veniō, "to come" (EtymDB 2.1). veniō is usually traced to Proto-Indo-European gwem-, "to step, to come" (EtymDB 2.1). English advent comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Before the new one: say the Latin for to go away, then the Latin for to arrive.
 
 You'll want to know: habitō, habitāre.
 habitō, habitāre — "to live (somewhere)".
+
+The word, taken apart.
+habitō is a frequentative of habeō, "to have, to hold" (Lewis & Short): to keep holding a place, so to dwell.
 
 What you've built.
 One more word for this chapter.

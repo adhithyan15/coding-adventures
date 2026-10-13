@@ -14,7 +14,8 @@ romanization: "dikhnā"
 concept_tag: HI-VERB-DIKHNA
 prerequisites: [HI-C170-sunana, HI-C171-dikhana]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati]
+etymology_hook: "dikhnā: CDIAL lists it beside dīkhnā 'is seen', from *dṛkṣati 'sees', crossed with Prakrit dīsaï (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C171-dikhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C171-ACT171-02]; assesses=[] -->
 
 **दिखना** — *dikhnā* — "to be seen, to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिखना** (*dikhnā*) is listed by CDIAL beside *dīkhnā*, "is seen", under a reconstructed *\*dṛkṣati*, "sees", crossed with Prakrit *dīsaï*, "is seen" (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

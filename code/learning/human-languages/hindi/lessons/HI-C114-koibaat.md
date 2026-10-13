@@ -14,7 +14,8 @@ romanization: "koī bāt nahīṁ"
 concept_tag: HI-SORRY-NO-PROBLEM
 prerequisites: [HI-C113-hosakta, HI-C114-mafi]
 sounds: []
-roots: []
+roots: [sanskrit-kashcid, sanskrit-varta]
+etymology_hook: "koī ← kaścid 'someone' (CDIAL 2967); bāt ← Sanskrit vārttā 'tidings' (CDIAL 11564)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C114-mafi]
 **कोई बात नहीं** (*koī bāt nahīṁ*) — "no problem", "never mind", literally "no matter".
 
 It is the answer to **माफ़ कीजिए**, and to thanks for a small favour.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोई बात नहीं** (*koī bāt nahīṁ*) is "not any matter". *koī* comes from Sanskrit *kaścid*, "someone, anyone" (CDIAL 2967), and *bāt*, "matter, talk", from *vārttā*, "tidings, business" (CDIAL 11564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

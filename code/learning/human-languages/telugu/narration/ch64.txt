@@ -15,6 +15,9 @@ You'll want to know: కూడా.
 English can drop "also" almost anywhere in a sentence and let the stress carry the meaning. Telugu puts కూడా (kūḍā) straight after whatever it includes, and that placement does the work the stress would have done.
 It is a small word that softens a great deal. Adding కూడా (kūḍā) to an answer turns a flat అవును into agreement with the person who asked.
 
+The word, taken apart.
+కూడా (kūḍā) is native Dravidian, built on kūḍu, "to join, add together", which DEDR 1882 lists with Tamil kūṭu, "to come together", and Kannada kūḍu, "to join".
+
 What you've built.
 The first joining word.
 
@@ -47,6 +50,7 @@ You'll want to know: మాత్రమే.
 మాత్రమే (mātramē) is the other half of కూడా (kūḍā). Where కూడా (kūḍā) opens an answer out, మాత్రమే (mātramē) shuts it: పెరుగు మాత్రమే (mātramē) is "curd and nothing else". It stands in the same place, straight after the thing it is about.
 It is built on Sanskrit mātra, "a measure" — the same piece English carries in metre and in diameter. Saying మాత్రమే (mātramē) is saying "this much and no further".
 With a small quantity in front it does polite work. కొంచెం మాత్రమే (mātramē), "only a little", accepts what is offered without taking much of it.
+CDIAL 10023 lists Sanskrit mātrā, "measure".
 
 What you've built.
 Two, and they pull opposite ways.
@@ -81,6 +85,9 @@ You'll want to know: అయితే.
 It is put together out of the piece Telugu uses for "it happened" plus the little ending that means "if", so what it literally says is "if it is so". English "well then" and "in that case" both land in the same spot.
 At the head of an answer, on its own, అయితే (ayitē) is one of the most useful things a learner can carry. It buys a moment, and it shows the other person you were listening.
 
+The word, taken apart.
+అయితే (ayitē) is native Dravidian: the "if it is" form of agu, "to be, become" (DEDR 333), one word with Tamil āku and Kannada āgu.
+
 What you've built.
 Three.
 
@@ -114,6 +121,9 @@ You'll want to know: తరువాత.
 The word is inherited. Standing alone at the front of a sentence it means "later", and it is the gentle way to put something off: తరువాత (taruvāta), not now, and no reason offered.
 తరువాత (taruvāta) is also how a story gets kept moving. A listener who says it is asking you to go on.
 
+The word, taken apart.
+తరువాత (taruvāta) is native Dravidian. DEDR 3142 lists taruvāta, "afterwards, next", itself, with taruvāyi, "what follows", in an entry with Tamil taṟuvāy, "occasion".
+
 What you've built.
 Four, and this one is about order.
 
@@ -146,6 +156,9 @@ You'll want to know: ఇంకా.
 ఇంకా (iṅkā) says the thing is not finished. ఇంకా (iṅkā) ఉంది is "there is still some"; ఇంకా (iṅkā) రాలేదు is "she hasn't come yet".
 It is the natural answer to అంతే. Where అంతే closes a list off, ఇంకా (iṅkā) says there is more of it coming, and the two make a pair the way కూడా (kūḍā) and మాత్రమే (mātramē) do.
 Five small words, and not one of them names a thing. కూడా (kūḍā), మాత్రమే (mātramē), అయితే (ayitē), తరువాత (taruvāta), ఇంకా (iṅkā) are what turn a set of separate answers into a conversation.
+
+The word, taken apart.
+ఇంకా (iṅkā) is native Dravidian, on the near-pointing base i-. DEDR 410 lists iṅka, "hereafter, still, yet", itself.
 
 What you've built.
 Five: కూడా (kūḍā), మాత్రమే (mātramē), అయితే (ayitē), తరువాత (taruvāta), ఇంకా (iṅkā). Enough to add to an answer, limit it, order it, or keep it open.

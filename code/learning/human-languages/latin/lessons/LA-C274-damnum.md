@@ -13,7 +13,8 @@ gloss: "loss, damage"
 concept_tag: LA-RES274-DAMNUM
 prerequisites: [LA-C274-negotium, LA-C274-lucrum]
 sounds: []
-roots: []
+roots: [damnum-latin]
+etymology_hook: "damnum 'loss' — usually traced to PIE *dh2pnom 'expense'; Greek dapanē is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C274-lucrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C274-RES274-04]; assesses=[] -->
 
 **damnum, damnī** — "loss, damage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**damnum** is usually traced to Proto-Indo-European *\*dh2pnom*, "an outlay, an expense" (EtymDB 2.1), the source also of Greek *dapanē*, "expense"; Lewis & Short still preferred a link with *dare*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

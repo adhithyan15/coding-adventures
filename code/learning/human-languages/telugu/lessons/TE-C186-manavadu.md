@@ -14,7 +14,8 @@ romanization: "manavaḍu"
 concept_tag: TE-VASTUVU186-MANAVADU
 prerequisites: [TE-C185-tapala, TE-C185-pensilu]
 sounds: []
-roots: []
+roots: [dravidian-marumakan-nephew]
+etymology_hook: "manavaḍu: native Dravidian; DEDR 4715 lists manumāḍu 'grandson' with Kannada mommaga"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C185-pensilu]
 <!-- hl-knowledge: introduces=[TE-LEX-C186-VASTUVU186-01]; assesses=[] -->
 
 **మనవడు** — *manavaḍu* — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మనవడు** (*manavaḍu*) is native Dravidian. DEDR 4715 lists the older *manumāḍu*, "grandson", with Kannada *mommaga*, "grandson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

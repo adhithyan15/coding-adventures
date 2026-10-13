@@ -14,7 +14,8 @@ romanization: "kāṭnā"
 concept_tag: HI-VERB-KATNA
 prerequisites: [HI-C160-nahana, HI-C161-pakana]
 sounds: []
-roots: []
+roots: [sanskrit-kartati]
+etymology_hook: "kāṭnā ← Sanskrit kartati 'cuts', a tadbhava (CDIAL 2854)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C161-pakana]
 <!-- hl-knowledge: introduces=[HI-LEX-C161-ACT161-02]; assesses=[] -->
 
 **काटना** — *kāṭnā* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काटना** (*kāṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kartati*, "cuts" (CDIAL 2854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

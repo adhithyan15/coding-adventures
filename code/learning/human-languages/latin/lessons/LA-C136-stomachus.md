@@ -13,7 +13,8 @@ gloss: "the stomach"
 concept_tag: LA-THINGS136-STOMACHUS
 prerequisites: [LA-C136-cutis, LA-C136-os]
 sounds: []
-roots: []
+roots: [stomachus-latin]
+etymology_hook: "stomachus 'stomach' — borrowed from Greek stomakhos 'gullet', from stoma 'mouth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C136-os]
 <!-- hl-knowledge: introduces=[LA-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **stomachus, stomachī** — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stomachus** was borrowed from Greek *stomakhos*, "throat, gullet" (Lewis & Short), from *stoma*, "mouth" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

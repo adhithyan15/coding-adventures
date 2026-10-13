@@ -14,7 +14,8 @@ romanization: "meṇḍhak"
 concept_tag: HI-THINGS149-MENDHAK
 prerequisites: [HI-C149-macchar, HI-C149-cinti]
 sounds: []
-roots: []
+roots: [sanskrit-manduka]
+etymology_hook: "meṇḍhak: usually traced to Sanskrit maṇḍūka 'frog' (CDIAL 9746), which notes many irregular forms"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C149-cinti]
 <!-- hl-knowledge: introduces=[HI-LEX-C149-THINGS149-03]; assesses=[] -->
 
 **मेंढक** — *meṇḍhak* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेंढक** (*meṇḍhak*) is usually traced to Sanskrit *maṇḍūka*, "frog" (CDIAL 9746). CDIAL does not list the Hindi form, and notes that words for "frog" took many irregular shapes, partly through taboo.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

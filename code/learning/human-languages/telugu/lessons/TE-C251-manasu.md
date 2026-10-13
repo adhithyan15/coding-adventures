@@ -14,7 +14,8 @@ romanization: "manasu"
 concept_tag: TE-AROGYAM251-MANASU
 prerequisites: [TE-C250-toda, TE-C250-nadumu]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "manasu ← Sanskrit manas 'mind' (CDIAL 9822), with the ending -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C250-nadumu]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-01]; assesses=[] -->
 
 **మనసు** — *manasu* — "the mind, one's inner feelings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మనసు** (*manasu*) is Sanskrit *manas*, "mind" (CDIAL 9822), taken over with the Telugu ending *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: HI-VERB-MILNA
 prerequisites: [HI-C03-hun]
 sounds: [matra-e, anusvara]
 roots: [mil-meet]
+etymology_hook: "milnā ← Sanskrit milati 'meets, encounters' (CDIAL 10133)"
 duration:
   max_seconds: 240
 requires:

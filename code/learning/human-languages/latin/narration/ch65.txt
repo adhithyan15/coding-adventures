@@ -12,6 +12,9 @@ Before the new one: say the Latin for the heart, then the Latin for blood.
 You'll want to know: capillus, capillī.
 capillus, capillī — "a hair, the hair". A capillary is hair-thin.
 
+The word, taken apart.
+capillus is linked to caput, "head": it is often read as caput plus pilus, "a single hair", so head-hair (EtymDB 2.1), while Lewis & Short see a diminutive beside caput.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for blood, then the Latin for a hair.
 
 You'll want to know: venter, ventris.
 venter, ventris — "the belly". A ventriloquist speaks from the belly.
+
+The word, taken apart.
+venter may be inherited, from a Proto-Indo-European wendtri-, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a hair, then the Latin for the belly.
 You'll want to know: tergum, tergī.
 tergum, tergī — "the back".
 
+The word, taken apart.
+tergum, "the back", has no sure origin; no proposal is generally accepted. English tergiversation, "turning one's back, evasion", is built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for the belly, then the Latin for the back.
 You'll want to know: frōns, frontis.
 frōns, frontis — "the forehead, the front". English front and frontier.
 
+The word, taken apart.
+frōns, frontis, is often traced to Proto-Indo-European bhront-, "forehead" (EtymDB 2.1), but the link is not certain. It is a different word from frōns, frondis, "leafy branches".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for the back, then the Latin for the forehead.
 
 You'll want to know: barba, barbae.
 barba, barbae — "a beard". A barber trims it.
+
+The word, taken apart.
+barba is inherited, usually traced to Proto-Indo-European bhardheh2, "beard" (EtymDB 2.1); English beard is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

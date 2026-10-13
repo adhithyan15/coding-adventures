@@ -14,7 +14,8 @@ romanization: "sirā"
 concept_tag: TE-PANI313-SIRA
 prerequisites: [TE-C313-palaka, TE-C313-balapam]
 sounds: []
-roots: []
+roots: [telugu-sira-ink]
+etymology_hook: "sirā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'ink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-balapam]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-04]; assesses=[] -->
 
 **సిరా** — *sirā* — "ink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సిరా** (*sirā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "ink"; CDIAL 13421 *sirā*, "stream, vein", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

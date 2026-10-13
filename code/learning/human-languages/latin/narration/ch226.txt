@@ -12,6 +12,9 @@ Before the new one: say the Latin for a fold of a garment; a bay, then the Latin
 You'll want to know: grammatica, grammaticae.
 grammatica, grammaticae — "grammar".
 
+The word, taken apart.
+grammatica was borrowed from Greek grammatikē, "the art of letters" (EtymDB 2.1), from gramma, "a letter", and graphō, "to write".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a mattress, then the Latin for grammar.
 
 You'll want to know: philosophia, philosophiae.
 philosophia, philosophiae — "philosophy".
+
+The word, taken apart.
+philosophia was borrowed from Greek philosophia, "love of wisdom" (Lewis & Short), from philos, "loving", and sophia, "wisdom" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for grammar, then the Latin for philosophy.
 You'll want to know: studium, studiī.
 studium, studiī — "eagerness; study".
 
+The word, taken apart.
+studium is built on studeō, "to be eager, to apply oneself" (Lewis & Short). Where studeō comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for philosophy, then the Latin for eagerness; 
 You'll want to know: quaestiō, quaestiōnis.
 quaestiō, quaestiōnis — "a question, an inquiry".
 
+The word, taken apart.
+quaestiō is built on quaerō, "to seek, to ask" (Lewis & Short), with -tiō, an ending for an act: a seeking.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for eagerness; study, then the Latin for a que
 
 You'll want to know: respōnsum, respōnsī.
 respōnsum, respōnsī — "an answer".
+
+The word, taken apart.
+respōnsum is the past participle of respondeō, "to answer" (Lewis & Short), used as a noun. respondeō is re-, "back", with spondeō, "to pledge" (EtymDB 2.1): to pledge back.
 
 What you've built.
 One more word for this chapter.

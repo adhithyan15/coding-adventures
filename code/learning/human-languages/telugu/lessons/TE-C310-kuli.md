@@ -14,7 +14,8 @@ romanization: "kūli"
 concept_tag: TE-PANI310-KULI
 prerequisites: [TE-C310-jabita, TE-C310-sagam]
 sounds: []
-roots: []
+roots: [dravidian-kuli-wage]
+etymology_hook: "kūli: native Dravidian, one word with Tamil kūli and Kannada kūli (DEDR 1905)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C310-sagam]
 <!-- hl-knowledge: introduces=[TE-LEX-C310-PANI310-04]; assesses=[] -->
 
 **కూలి** — *kūli* — "daily wages; a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూలి** (*kūli*) is native Dravidian, one word with Tamil *kūli* and Kannada *kūli* (DEDR 1905). DEDR lists Telugu *kūli*, "wages; hired labourer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

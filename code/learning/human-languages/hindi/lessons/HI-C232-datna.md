@@ -14,7 +14,8 @@ romanization: "ḍā̃ṭnā"
 concept_tag: HI-VERB-DATNA
 prerequisites: [HI-C232-cikhna, HI-C232-phusphusana]
 sounds: []
-roots: []
+roots: [indo-aryan-drat]
+etymology_hook: "ḍāṁṭnā ← *draṭ 'press', a reconstructed form; a tadbhava (CDIAL 6618)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C232-phusphusana]
 <!-- hl-knowledge: introduces=[HI-LEX-C232-ACT232-05]; assesses=[] -->
 
 **डाँटना** — *ḍā̃ṭnā* — "to scold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाँटना** (*ḍāṁṭnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*draṭ*, "press", a form CDIAL reconstructs from its descendants (CDIAL 6618). CDIAL glosses the Hindi word "to threaten, check".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to create, to elect"
 concept_tag: LA-VERB-CREO
 prerequisites: [LA-C171-tolero, LA-C171-condo]
 sounds: []
-roots: []
+roots: [creare-latin]
+etymology_hook: "creō 'to create' — inherited, usually traced to PIE *ker- 'to grow'; partner of crēscō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C171-condo]
 <!-- hl-knowledge: introduces=[LA-LEX-C171-ACT171-04]; assesses=[] -->
 
 **creō, creāre** — "to create, to elect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**creō** is inherited from Proto-Italic *\*krēāō*, "to make grow", usually traced to Proto-Indo-European *\*ker-*, "to grow" (EtymDB 2.1); *crēscō*, "to grow", is its partner. English *create* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

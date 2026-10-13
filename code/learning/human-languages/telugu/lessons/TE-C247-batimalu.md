@@ -14,7 +14,8 @@ romanization: "batimālu"
 concept_tag: TE-VERB-BATIMALU
 prerequisites: [TE-C247-gusagusaladu, TE-C247-oppincu]
 sounds: []
-roots: []
+roots: [telugu-batimalu-plead]
+etymology_hook: "batimālu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to plead'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C247-oppincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C247-KRIYA247-05]; assesses=[] -->
 
 **బతిమాలు** — *batimālu* — "to plead, to beg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బతిమాలు** (*batimālu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to plead, beg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

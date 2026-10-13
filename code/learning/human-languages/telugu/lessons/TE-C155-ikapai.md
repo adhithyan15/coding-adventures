@@ -14,7 +14,8 @@ romanization: "ikapai"
 concept_tag: TE-BHAVISHYAT155-IKAPAI
 prerequisites: [TE-C154-gadupu, TE-C155-vacce]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-pai-top]
+etymology_hook: "ikapai: native ika 'hereafter' (DEDR 410) + pai 'on, upon' (DEDR 4451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C155-vacce]
 <!-- hl-knowledge: introduces=[TE-LEX-C155-BHAVISHYAT155-02]; assesses=[] -->
 
 **ఇకపై** — *ikapai* — "from now on". **ఇకపై నేను త్వరగా లేస్తాను** — *ikapai nēnu tvaragā lēstānu* — "From now on I will get up early."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇకపై** (*ikapai*) is native Dravidian: *ika*, "hereafter, henceforth", which DEDR 410 lists, and *pai*, "upon; in future" (DEDR 4451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

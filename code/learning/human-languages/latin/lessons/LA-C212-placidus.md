@@ -13,7 +13,8 @@ gloss: "peaceful, placid"
 concept_tag: LA-QUAL212-PLACIDUS
 prerequisites: [LA-C212-invidus, LA-C212-anxius]
 sounds: []
-roots: []
+roots: [placidus-latin, placere-latin]
+etymology_hook: "placidus 'peaceful' — built on placeō 'to please'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C212-anxius]
 <!-- hl-knowledge: introduces=[LA-LEX-C212-QUAL212-04]; assesses=[] -->
 
 **placidus, placida, placidum** — "peaceful, placid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**placidus** is built on *placeō*, "to please" (Lewis & Short), with *-idus*, the ending of state adjectives: pleasing, mild.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

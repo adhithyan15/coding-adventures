@@ -13,7 +13,8 @@ gloss: "all, every"
 concept_tag: LA-QUAL242-OMNIS
 prerequisites: [LA-C241-pluvius, LA-C242-pauci]
 sounds: []
-roots: []
+roots: [omnis-latin]
+etymology_hook: "omnis 'all' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C242-pauci]
 <!-- hl-knowledge: introduces=[LA-LEX-C242-QUAL242-02]; assesses=[] -->
 
 **omnis, omne** — "all, every".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**omnis** has no sure origin; Lewis & Short call it doubtful, and EtymDB 2.1 records a proposed Proto-Indo-European *\*h3ep-ni-*, "working". Neither account is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jahāz"
 concept_tag: HI-THG181-JAHAZ
 prerequisites: [HI-C181-mor, HI-C181-cauraha]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "jahāz ← Arabic jahāz 'equipment, gear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C181-cauraha]
 <!-- hl-knowledge: introduces=[HI-LEX-C181-THG181-05]; assesses=[] -->
 
 **जहाज़** — *jahāz* — "a ship, an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जहाज़** (*jahāz*) is a loan from Arabic *jahāz*, "equipment, gear", which reached Hindi through Persian. Its Arabic root is *j-h-z* (Lane). In Persian and Hindi it came to mean a ship.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

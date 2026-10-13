@@ -12,6 +12,7 @@ concept_tag: TE-VERB-VELLU
 prerequisites: [TE-C03-nenu, TE-C04-dappu]
 sounds: [retroflex-ll, cc]
 roots: [vellu-go-dravidian, vaccu-come-dravidian]
+etymology_hook: "veḷḷu: native Dravidian, filed under viṭu 'to leave' (DEDR 5393); vaccu 'to come' (DEDR 5270)"
 duration:
   max_seconds: 130
 requires:
@@ -45,7 +46,7 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[TE-ETYMON-C04-VELLU-02]; assesses=[] -->
 
 **వెళ్ళు** (*veḷḷu*, "to go") and *vaccu* ("to come") are native
-Dravidian verbs. As commands they are whole words: *veḷḷu!* ("go!"), *rā!*
+Dravidian verbs (DEDR 5393, 5270). As commands they are whole words: *veḷḷu!* ("go!"), *rā!*
 ("come!"). You need both, because Telugu — like every Dravidian language — does
 not say a plain "goodbye." It says "I go, and I **come back**."
 

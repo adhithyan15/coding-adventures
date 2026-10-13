@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 195,
-  "sourceHash": "fnv1a64:dacb78949da0ad13",
+  "sourceHash": "fnv1a64:60be6db09a78cba9",
   "lessonIds": [
     "LA-C195-libum",
     "LA-C195-acetum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch195.txt",
   "json": "latin/narration/ch195.json",
-  "textHash": "fnv1a64:05f549856fa05fa7",
-  "jsonHash": "fnv1a64:2489ca60376d4c55",
+  "textHash": "fnv1a64:f8d6a13d3be598fb",
+  "jsonHash": "fnv1a64:de92b9a162d81ee8",
   "findings": []
 }

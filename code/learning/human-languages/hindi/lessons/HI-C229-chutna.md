@@ -14,7 +14,8 @@ romanization: "chūṭnā"
 concept_tag: HI-VERB-CHUTNA
 prerequisites: [HI-C229-phailana, HI-C229-phailna]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chūṭnā ← *kṣuṭyate 'is released', a reconstructed form; a tadbhava (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C229-phailna]
 <!-- hl-knowledge: introduces=[HI-LEX-C229-ACT229-05]; assesses=[] -->
 
 **छूटना** — *chūṭnā* — "to be left behind, to be missed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छूटना** (*chūṭnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣuṭyate*, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

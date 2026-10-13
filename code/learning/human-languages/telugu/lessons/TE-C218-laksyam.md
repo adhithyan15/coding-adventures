@@ -14,7 +14,8 @@ romanization: "lakṣyaṁ"
 concept_tag: TE-KARANAM218-LAKSYAM
 prerequisites: [TE-C217-alavatu, TE-C218-phalitam]
 sounds: []
-roots: []
+roots: [sanskrit-lakshya]
+etymology_hook: "lakṣyaṁ ← Sanskrit lakṣya 'stake, prize; mark, sign; aim', a tatsama (CDIAL 10881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C218-phalitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C218-KARANAM218-02]; assesses=[] -->
 
 **లక్ష్యం** — *lakṣyaṁ* — "a goal, an aim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లక్ష్యం** (*lakṣyaṁ*) is Sanskrit *lakṣya*, "stake, prize; mark, sign; aim", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

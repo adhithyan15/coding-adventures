@@ -13,7 +13,8 @@ gloss: "to cook"
 concept_tag: LA-VERB-COQUO
 prerequisites: [LA-C75-fleo, LA-C76-lavo]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "coquō 'to cook' — inherited, from PIE *pekw- 'to cook'; Greek peptō 'to digest' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C76-lavo]
 <!-- hl-knowledge: introduces=[LA-LEX-C76-VERBA2-02]; assesses=[] -->
 
 **coquō, coquere** — "to cook". What a **coquus** does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coquō** is inherited from Proto-Italic *\*kwekwō*, "I cook", usually traced to Proto-Indo-European *\*pekw-*, "to cook, to ripen" (EtymDB 2.1); the first *p* changed to match the second sound. Greek *peptō*, "to cook, to digest", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

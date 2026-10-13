@@ -13,7 +13,8 @@ gloss: "vinegar"
 concept_tag: LA-RES195-ACETUM
 prerequisites: [LA-C194-historia, LA-C195-libum]
 sounds: []
-roots: []
+roots: [acetum-latin, acere-latin]
+etymology_hook: "acētum 'vinegar' — from aceō 'to be sour': soured wine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C195-libum]
 <!-- hl-knowledge: introduces=[LA-LEX-C195-RES195-02]; assesses=[] -->
 
 **acētum, acētī** — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acētum** is the participle of *aceō*, "to be sour" (Lewis & Short), with *vīnum*, "wine", understood: soured wine. *aceō* belongs with *ācer*, "sharp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

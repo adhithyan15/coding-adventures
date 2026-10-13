@@ -14,7 +14,8 @@ romanization: "zyādā"
 concept_tag: HI-ADV-MORE
 prerequisites: [HI-C64-little, HI-C62-wood, HI-C63-pain]
 sounds: []
-roots: []
+roots: [arabic-ziyada]
+etymology_hook: "zyādā ← Arabic ziyāda 'increase', through Persian (Lane, root z-y-d)"
 duration:
   max_seconds: 210
 requires:

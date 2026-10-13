@@ -13,7 +13,8 @@ gloss: "leisure"
 concept_tag: LA-RES274-OTIUM
 prerequisites: [LA-C273-nepos, LA-C273-neptis]
 sounds: []
-roots: []
+roots: [otium-latin]
+etymology_hook: "ōtium 'leisure' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C273-neptis]
 <!-- hl-knowledge: introduces=[LA-LEX-C274-RES274-01]; assesses=[] -->
 
 **ōtium, ōtiī** — "leisure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōtium** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

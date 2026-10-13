@@ -14,7 +14,8 @@ romanization: "bomma"
 concept_tag: TE-THINGS113-BOMMA
 prerequisites: [TE-C113-kovvotti, TE-C113-aggipette]
 sounds: []
-roots: []
+roots: [dravidian-bommai-doll]
+etymology_hook: "bomma: native Dravidian, one word with Tamil pommai and Kannada bombe (DEDR 4530)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C113-aggipette]
 <!-- hl-knowledge: introduces=[TE-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **బొమ్మ** — *bomma* — "a doll; a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బొమ్మ** (*bomma*) is native Dravidian, one word with Tamil *pommai* and Kannada *bombe* (DEDR 4530).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

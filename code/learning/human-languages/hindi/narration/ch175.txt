@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to improve, then the Hindi for to weigh.
 You'll want to know: नापना.
 नापना — nāpnā — "to measure".
 
+The word, taken apart.
+नापना (nāpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jñāpyate, "is made known" (CDIAL 5283). The sense moved from "making known" to "measuring".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to weigh, then the Hindi for to measure.
 
 You'll want to know: गिराना.
 गिराना — girānā — "to drop".
+
+The word, taken apart.
+गिराना (girānā) is the causing form of girnā, "to fall": to drop is to make something fall. CDIAL lists girnā under a reconstructed girati, "drips, falls" (CDIAL 4159).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to measure, then the Hindi for to drop.
 You'll want to know: जलाना.
 जलाना — jalānā — "to light, to burn".
 
+The word, taken apart.
+जलाना (jalānā) is the causing form of jalnā, "to burn": to light is to make something burn. CDIAL lists both under Sanskrit jvalati, "burns brightly" (CDIAL 5306).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to drop, then the Hindi for to light.
 You'll want to know: जलना.
 जलना — jalnā — "to burn (by itself)".
 
+The word, taken apart.
+जलना (jalnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jvalati, "burns brightly" (CDIAL 5306).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to light, then the Hindi for to burn.
 
 You'll want to know: बुझाना.
 बुझाना — bujhānā — "to put out (a fire or light)".
+
+The word, taken apart.
+बुझाना (bujhānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vijjhāpayati, "extinguishes", a form CDIAL reconstructs from its descendants (CDIAL 11703). It is the causing form of vijjhāyati, "is burnt out"; it is a different word from būjhnā, "to understand" (CDIAL 9279).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tayāru cēyu"
 concept_tag: TE-VERB-TAYARU-CEYU
 prerequisites: [TE-C278-pattuko, TE-C278-snanam-ceyu]
 sounds: []
-roots: []
+roots: [arabic-tayyar, sey-do-dravidian]
+etymology_hook: "tayāru cēyu: tayāru 'ready' ← Arabic tayyār through Persian and Hindustani + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C278-snanam-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C278-KRIYA278-03]; assesses=[] -->
 
 **తయారు చేయు** — *tayāru cēyu* — "to prepare, to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తయారు చేయు** (*tayāru cēyu*) pairs *tayāru*, "ready", a loan from Arabic *tayyār* through Persian and Hindustani, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

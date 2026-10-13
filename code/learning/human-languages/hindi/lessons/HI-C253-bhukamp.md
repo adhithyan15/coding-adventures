@@ -14,7 +14,8 @@ romanization: "bhūkamp"
 concept_tag: HI-THG253-BHUKAMP
 prerequisites: [HI-C252-kicar, HI-C253-indradhanus]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-kampate]
+etymology_hook: "bhūkamp: Sanskrit bhū 'earth' + kampa 'trembling', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C253-indradhanus]
 <!-- hl-knowledge: introduces=[HI-LEX-C253-THG253-02]; assesses=[] -->
 
 **भूकंप** — *bhūkamp* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूकंप** (*bhūkamp*) is a tatsama compound, taken over whole from Sanskrit: *bhū*, "earth", and *kampa*, "trembling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

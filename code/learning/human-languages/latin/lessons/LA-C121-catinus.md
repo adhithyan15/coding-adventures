@@ -13,7 +13,8 @@ gloss: "a bowl, a deep dish"
 concept_tag: LA-THINGS121-CATINUS
 prerequisites: [LA-C121-olla, LA-C121-patina]
 sounds: []
-roots: []
+roots: [catinus-latin]
+etymology_hook: "catīnus 'bowl' — origin uncertain; perhaps from Sicilian Greek katinon 'dish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C121-patina]
 <!-- hl-knowledge: introduces=[LA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **catīnus, catīnī** — "a bowl, a deep dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**catīnus** has no sure origin; Varro compared a Sicilian Greek *katinon*, "dish" (Lewis & Short), and it may be a loan from there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

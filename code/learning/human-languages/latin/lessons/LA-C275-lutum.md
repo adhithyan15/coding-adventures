@@ -13,7 +13,8 @@ gloss: "mud"
 concept_tag: LA-RES275-LUTUM
 prerequisites: [LA-C274-debitum, LA-C275-sericum]
 sounds: []
-roots: []
+roots: [lutum-latin]
+etymology_hook: "lutum 'mud' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C275-sericum]
 <!-- hl-knowledge: introduces=[LA-LEX-C275-RES275-02]; assesses=[] -->
 
 **lutum, lutī** — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lutum** is usually linked with *luō*, "to wash" (Lewis & Short), or with a root for dirt seen in *polluō*, "to soil"; the details are uncertain. It is a different word from *lūtum*, "a plant used for yellow dye".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

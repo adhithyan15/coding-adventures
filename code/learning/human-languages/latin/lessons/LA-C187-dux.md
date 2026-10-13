@@ -13,7 +13,8 @@ gloss: "a leader"
 concept_tag: LA-RES187-DUX
 prerequisites: [LA-C186-libra, LA-C187-pax]
 sounds: []
-roots: []
+roots: [dux-latin, ducere-latin]
+etymology_hook: "dux 'leader' — built on dūcō 'to lead'; English duke"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C187-pax]
 <!-- hl-knowledge: introduces=[LA-LEX-C187-RES187-02]; assesses=[] -->
 
 **dux, ducis** — "a leader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dux** is built on *dūcō*, "to lead" (Lewis & Short): the one who leads. English *duke* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

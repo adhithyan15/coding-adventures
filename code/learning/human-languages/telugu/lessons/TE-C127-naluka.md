@@ -14,7 +14,8 @@ romanization: "nāluka"
 concept_tag: TE-THINGS127-NALUKA
 prerequisites: [TE-C126-onte, TE-C126-mukham]
 sounds: []
-roots: []
+roots: [dravidian-naa-tongue]
+etymology_hook: "nāluka: native Dravidian, one word with Tamil nā and Kannada nālige (DEDR 3633)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C126-mukham]
 <!-- hl-knowledge: introduces=[TE-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **నాలుక** — *nāluka* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాలుక** (*nāluka*) is native Dravidian, one word with Tamil *nā* and Kannada *nālige* (DEDR 3633). DEDR lists Telugu *nālika* and *nāluka*, "tongue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

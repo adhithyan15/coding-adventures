@@ -14,7 +14,8 @@ romanization: "gōku"
 concept_tag: TE-VERB-GOKU
 prerequisites: [TE-C246-nirakarincu, TE-C247-gillu]
 sounds: []
-roots: []
+roots: [dravidian-koorai-scratch]
+etymology_hook: "gōku: native Dravidian; DEDR 2257 lists gōku 'to scratch' with Kannada gōṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C247-gillu]
 <!-- hl-knowledge: introduces=[TE-LEX-C247-KRIYA247-02]; assesses=[] -->
 
 **గోకు** — *gōku* — "to scratch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోకు** (*gōku*) is native Dravidian. DEDR 2257 lists a nasalised *gōku*, "to scratch with the nails", with Kannada *gōṟu*, "to scratch", and Tamil *kōṟai*, "a scratch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

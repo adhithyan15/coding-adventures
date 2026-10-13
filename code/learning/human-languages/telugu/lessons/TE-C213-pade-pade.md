@@ -14,7 +14,8 @@ romanization: "padē padē"
 concept_tag: TE-SAMAYAM213-PADE-PADE
 prerequisites: [TE-C212-sankranti, TE-C213-akasmattuga]
 sounds: []
-roots: []
+roots: [sanskrit-pada]
+etymology_hook: "padē padē: Sanskrit padē padē 'at every step', from pada 'footstep' (CDIAL 7747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C213-akasmattuga]
 <!-- hl-knowledge: introduces=[TE-LEX-C213-SAMAYAM213-02]; assesses=[] -->
 
 **పదే పదే** — *padē padē* — "again and again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పదే పదే** (*padē padē*) is Sanskrit *padē padē*, "at every step", the locative of *pada*, "footstep" (CDIAL 7747), said twice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

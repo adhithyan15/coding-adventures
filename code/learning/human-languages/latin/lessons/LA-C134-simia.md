@@ -13,7 +13,8 @@ gloss: "a monkey"
 concept_tag: LA-THINGS134-SIMIA
 prerequisites: [LA-C134-mulus, LA-C134-camelus]
 sounds: []
-roots: []
+roots: [simia-latin, simus-latin]
+etymology_hook: "sīmia 'monkey' — built on sīmus 'snub-nosed', from Greek simos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C134-camelus]
 <!-- hl-knowledge: introduces=[LA-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **sīmia, sīmiae** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sīmia** is built on *sīmus*, "snub-nosed" (EtymDB 2.1), a word Latin took from Greek *simos*, "snub-nosed": the monkey as the flat-nosed one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

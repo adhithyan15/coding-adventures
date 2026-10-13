@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a butterfly, then the Telugu for a crow.
 You'll want to know: బాతు.
 బాతు — bātu — "a duck".
 
+The word, taken apart.
+బాతు (bātu) is usually traced to the northern word for a duck, Hindustani baṭ, baṭak. Neither DEDR nor CDIAL records the Telugu word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a crow, then the Telugu for a duck.
 
 You'll want to know: పంది.
 పంది — pandi — "a pig".
+
+The word, taken apart.
+పంది (pandi) is native Dravidian, one word with Tamil paṉṟi and Kannada pandi (DEDR 4039).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a duck, then the Telugu for a pig.
 You'll want to know: గాడిద.
 గాడిద — gāḍida — "a donkey".
 
+The word, taken apart.
+గాడిద (gāḍida) is a Dravidian word, one with Tamil kaḻutai and Kannada kaḻte, "ass" (DEDR 1364). DEDR compares Sanskrit gardabha, "ass" (CDIAL 4054).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a pig, then the Telugu for a donkey.
 You'll want to know: ఒంటె.
 ఒంటె — oṇṭe — "a camel".
 
+The word, taken apart.
+ఒంటె (oṇṭe) comes from Sanskrit uṣṭra, "buffalo; camel", reshaped to Telugu sounds: a tadbhava (CDIAL 2387).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a donkey, then the Telugu for a camel.
 
 You'll want to know: ముఖం.
 ముఖం — mukhaṁ — "the face".
+
+The word, taken apart.
+ముఖం (mukhaṁ) is Sanskrit mukha, "mouth, face", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 10158).
 
 What you've built.
 One more word for this chapter.

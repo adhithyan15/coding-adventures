@@ -13,7 +13,8 @@ gloss: "unjust"
 concept_tag: LA-QUAL266-INIUSTUS
 prerequisites: [LA-C266-similis, LA-C266-iustus]
 sounds: []
-roots: []
+roots: [iniustus-latin, iustus-latin]
+etymology_hook: "iniūstus 'unjust' — in- 'not' + iūstus 'fair'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C266-iustus]
 <!-- hl-knowledge: introduces=[LA-LEX-C266-QUAL266-05]; assesses=[] -->
 
 **iniūstus, iniūsta, iniūstum** — "unjust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iniūstus** is *in-*, "not", with *iūstus*, "fair, righteous" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "wise, sensible"
 concept_tag: LA-QUAL149-PRUDENS
 prerequisites: [LA-C149-aureus, LA-C149-argenteus]
 sounds: []
-roots: []
+roots: [prudens-latin, providere-latin]
+etymology_hook: "prūdēns 'wise' — contracted from prōvidēns 'foreseeing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C149-argenteus]
 <!-- hl-knowledge: introduces=[LA-LEX-C149-QUAL149-05]; assesses=[] -->
 
 **prūdēns, prūdentis** — "wise, sensible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prūdēns** is contracted from *prōvidēns*, "foreseeing" (Lewis & Short), from *prōvideō*, "to see ahead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

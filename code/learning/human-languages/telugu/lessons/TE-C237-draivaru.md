@@ -14,7 +14,8 @@ romanization: "ḍraivaru"
 concept_tag: TE-PANI237-DRAIVARU
 prerequisites: [TE-C236-markulu, TE-C237-polisu]
 sounds: []
-roots: []
+roots: [english-driver]
+etymology_hook: "ḍraivaru ← English driver"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C237-polisu]
 <!-- hl-knowledge: introduces=[TE-LEX-C237-PANI237-02]; assesses=[] -->
 
 **డ్రైవరు** — *ḍraivaru* — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**డ్రైవరు** (*ḍraivaru*) is a loan from English *driver*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

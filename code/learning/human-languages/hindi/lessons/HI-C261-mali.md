@@ -14,7 +14,8 @@ romanization: "mālī"
 concept_tag: HI-THG261-MALI
 prerequisites: [HI-C260-ummidvar, HI-C261-naukarani]
 sounds: []
-roots: []
+roots: [sanskrit-malin]
+etymology_hook: "mālī ← Sanskrit mālin 'garlanded; gardener', a tadbhava (CDIAL 10094)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C261-naukarani]
 <!-- hl-knowledge: introduces=[HI-LEX-C261-THG261-02]; assesses=[] -->
 
 **माली** — *mālī* — "a gardener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माली** (*mālī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mālin*, "garlanded; gardener" (CDIAL 10094). It is built on *mālā*, "garland".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

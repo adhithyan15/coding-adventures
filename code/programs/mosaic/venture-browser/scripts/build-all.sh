@@ -297,9 +297,11 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
     VENTURE_BOOKMARKS_PATH="$flutter_bookmarks_path" \
     VENTURE_BROWSER_FLUTTER_LIBRARY="$output_root/flutter/$flutter_bridge_name" \
       flutter test test/venture_chrome_interaction_test.dart
-    if [[ ! -d "$flutter_platform" ]]; then
-      flutter create "--platforms=$flutter_platform" .
-    fi
+    # Always run it: `flutter create` only adds the runner files a project
+    # lacks. The generated project already has `macos/Runner/*.entitlements`
+    # (UI87 §7.7, #16588), so testing for the platform directory skipped it
+    # and left a runner with no Xcode project.
+    flutter create "--platforms=$flutter_platform" .
     flutter build "$flutter_platform"
   )
 elif [[ -z "$flutter_platform" ]]; then

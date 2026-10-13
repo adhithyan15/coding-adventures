@@ -14,7 +14,8 @@ romanization: "maḍama"
 concept_tag: TE-AROGYAM250-MADAMA
 prerequisites: [TE-C249-percu, TE-C250-araceyyi]
 sounds: []
-roots: []
+roots: [dravidian-mada-heel]
+etymology_hook: "maḍama: native Dravidian, one word with Malayalam maṭampu and Kannada maḍa (DEDR 4649)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C250-araceyyi]
 <!-- hl-knowledge: introduces=[TE-LEX-C250-AROGYAM250-02]; assesses=[] -->
 
 **మడమ** — *maḍama* — "the heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మడమ** (*maḍama*) is native Dravidian, one word with Malayalam *maṭampu* and Kannada *maḍa* (DEDR 4649). DEDR lists Telugu *maḍama*, "heel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

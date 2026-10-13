@@ -14,7 +14,8 @@ romanization: "bhujaṁ"
 concept_tag: TE-THINGS127-BHUJAM
 prerequisites: [TE-C127-naluka, TE-C127-mokalu]
 sounds: []
-roots: []
+roots: [sanskrit-bhuja]
+etymology_hook: "bhujaṁ ← Sanskrit bhuja 'arm', a tatsama (CDIAL 9525)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C127-mokalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **భుజం** — *bhujaṁ* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భుజం** (*bhujaṁ*) is Sanskrit *bhuja*, "arm", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9525). The sense "shoulder" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

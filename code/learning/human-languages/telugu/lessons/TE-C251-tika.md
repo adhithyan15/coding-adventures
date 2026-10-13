@@ -14,7 +14,8 @@ romanization: "ṭīkā"
 concept_tag: TE-AROGYAM251-TIKA
 prerequisites: [TE-C251-kandaram, TE-C251-injeksanu]
 sounds: []
-roots: []
+roots: [telugu-tika-vaccination]
+etymology_hook: "ṭīkā: probably a northern loan, like Hindi ṭīkā 'a mark' (CDIAL 5458)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-injeksanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-05]; assesses=[] -->
 
 **టీకా** — *ṭīkā* — "a vaccination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టీకా** (*ṭīkā*) is probably a northern loan, like Hindi *ṭīkā*, "a mark on the forehead", which CDIAL 5458 sets under a reconstructed \*ṭikka, "mark, spot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

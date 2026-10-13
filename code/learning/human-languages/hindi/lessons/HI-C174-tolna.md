@@ -14,7 +14,8 @@ romanization: "tolnā"
 concept_tag: HI-VERB-TOLNA
 prerequisites: [HI-C174-sabhalna, HI-C174-sudharna]
 sounds: []
-roots: []
+roots: [sanskrit-tolayati]
+etymology_hook: "tolnā ← Sanskrit tolayati 'lifts, weighs, considers', a tadbhava (CDIAL 5979)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C174-sudharna]
 <!-- hl-knowledge: introduces=[HI-LEX-C174-ACT174-05]; assesses=[] -->
 
 **तोलना** — *tolnā* — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोलना** (*tolnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tolayati*, "lifts, weighs, considers" (CDIAL 5979).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

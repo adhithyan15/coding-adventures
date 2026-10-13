@@ -14,7 +14,8 @@ romanization: "kāryakramaṁ"
 concept_tag: TE-VASTUVU268-KARYAKRAMAM
 prerequisites: [TE-C268-pradarsana, TE-C268-rediyo]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-krama]
+etymology_hook: "kāryakramaṁ: Sanskrit kārya 'business' + krama 'step, series' (CDIAL 3577)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C268-rediyo]
 <!-- hl-knowledge: introduces=[TE-LEX-C268-VASTUVU268-03]; assesses=[] -->
 
 **కార్యక్రమం** — *kāryakramaṁ* — "a programme, a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కార్యక్రమం** (*kāryakramaṁ*) is Sanskrit: *kārya*, "work, business", and *krama*, "step, series" (CDIAL 3577), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

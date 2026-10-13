@@ -14,7 +14,8 @@ romanization: "vidyālay"
 concept_tag: HI-NOUN-SCHOOL-FORMAL
 prerequisites: [HI-C81-skool]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-alaya]
+etymology_hook: "vidyālay ← Sanskrit vidyālaya: vidyā 'knowledge' + ālaya 'abode', a tatsama"
 duration:
   max_seconds: 240
 requires:

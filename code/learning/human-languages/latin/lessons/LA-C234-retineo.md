@@ -13,7 +13,8 @@ gloss: "to hold back, to keep"
 concept_tag: LA-VERB-RETINEO
 prerequisites: [LA-C234-evanesco, LA-C234-mando]
 sounds: []
-roots: []
+roots: [retinere-latin, tenere-latin]
+etymology_hook: "retineō 'to hold back' — re- 'back' + teneō 'to hold'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C234-mando]
 <!-- hl-knowledge: introduces=[LA-LEX-C234-ACT234-05]; assesses=[] -->
 
 **retineō, retinēre** — "to hold back, to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**retineō** is *re-*, "back", with *teneō*, "to hold" (Lewis & Short), its e weakened to i: to hold back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

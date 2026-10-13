@@ -14,7 +14,8 @@ romanization: "guccu"
 concept_tag: TE-VERB-GUCCU
 prerequisites: [TE-C165-gorugu, TE-C165-bigincu]
 sounds: []
-roots: []
+roots: [dravidian-kurru-prick]
+etymology_hook: "guccu: native Dravidian; DEDR 1861 lists g(r)uccu 'to prick, thread' with Tamil kuṟṟu 'to prick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C165-bigincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C165-KRIYA165-04]; assesses=[] -->
 
 **గుచ్చు** — *guccu* — "to prick, to string (flowers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుచ్చు** (*guccu*) is native Dravidian. DEDR 1861 lists *guccu*, "to pierce, prick, thread together (as beads)", with Tamil *kuṟṟu*, "to prick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ugnā"
 concept_tag: HI-VERB-UGNA
 prerequisites: [HI-C227-cirna, HI-C227-bona]
 sounds: []
-roots: []
+roots: [indo-aryan-udgati]
+etymology_hook: "ugnā ← *udgāti 'rises, comes forth', a reconstructed form; a tadbhava (CDIAL 1954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C227-bona]
 <!-- hl-knowledge: introduces=[HI-LEX-C228-ACT228-01]; assesses=[] -->
 
 **उगना** — *ugnā* — "to grow, to sprout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उगना** (*ugnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*udgāti*, "rises, comes forth", a form CDIAL reconstructs from its descendants (CDIAL 1954).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

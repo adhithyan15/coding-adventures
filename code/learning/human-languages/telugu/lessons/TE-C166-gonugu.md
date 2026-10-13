@@ -14,7 +14,8 @@ romanization: "goṇugu"
 concept_tag: TE-VERB-GONUGU
 prerequisites: [TE-C166-patincu, TE-C166-diddu]
 sounds: []
-roots: []
+roots: [dravidian-kunukunu-murmur]
+etymology_hook: "goṇugu: Dravidian; DEDR 1685 lists it, 'to mutter', with Tamil kuṇukuṇu and an areal sound-word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C166-diddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C166-KRIYA166-04]; assesses=[] -->
 
 **గొణుగు** — *goṇugu* — "to mutter, to grumble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొణుగు** (*goṇugu*) is Dravidian. DEDR 1685 lists nasalised forms of *goṇugu*, "to murmur, mutter, grumble", with Tamil *kuṇukuṇu*, "to murmur", and points to related sound-words across the region, such as Hindi *gungun*, "murmur" (CDIAL 4013).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

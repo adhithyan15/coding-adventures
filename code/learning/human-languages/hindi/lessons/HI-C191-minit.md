@@ -14,7 +14,8 @@ romanization: "miniṭ"
 concept_tag: HI-TIME191-MINIT
 prerequisites: [HI-C191-sadi, HI-C191-pal]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "miniṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C191-pal]
 <!-- hl-knowledge: introduces=[HI-LEX-C191-TIME191-05]; assesses=[] -->
 
 **मिनट** — *miniṭ* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिनट** (*miniṭ*) is a loan from English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

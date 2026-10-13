@@ -13,7 +13,8 @@ gloss: "generous"
 concept_tag: LA-QUAL213-LIBERALIS
 prerequisites: [LA-C213-probus, LA-C213-patiens]
 sounds: []
-roots: []
+roots: [liberalis-latin, liber-latin]
+etymology_hook: "līberālis 'generous' — built on līber 'free': fit for a free person"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C213-patiens]
 <!-- hl-knowledge: introduces=[LA-LEX-C213-QUAL213-04]; assesses=[] -->
 
 **līberālis, līberāle** — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**līberālis** is built on *līber*, "free" (Lewis & Short), with *-ālis*, "belonging to": fit for a free person, so generous.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

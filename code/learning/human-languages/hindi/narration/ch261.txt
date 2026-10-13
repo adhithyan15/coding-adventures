@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a list, then the Hindi for a candidate.
 You'll want to know: नौकरानी.
 नौकरानी — naukarānī — "a maid".
 
+The word, taken apart.
+नौकरानी (naukarānī) is naukar, "servant", usually traced to Persian naukar, with the ending -ānī that makes a feminine.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a candidate, then the Hindi for a maid.
 
 You'll want to know: माली.
 माली — mālī — "a gardener".
+
+The word, taken apart.
+माली (mālī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mālin, "garlanded; gardener" (CDIAL 10094). It is built on mālā, "garland".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a maid, then the Hindi for a gardener.
 You'll want to know: कुम्हार.
 कुम्हार — kumhār — "a potter".
 
+The word, taken apart.
+कुम्हार (kumhār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kumbhakāra, "potter" (CDIAL 3310). It is built from kumbha, "pot", and kāra, "maker".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a gardener, then the Hindi for a potter.
 You'll want to know: लोहार.
 लोहार — lohār — "a blacksmith".
 
+The word, taken apart.
+लोहार (lohār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lohakāra, "iron-worker" (CDIAL 11159). It is built from loha, "iron", and kāra, "maker".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a potter, then the Hindi for a blacksmith.
 
 You'll want to know: सुनार.
 सुनार — sunār — "a goldsmith".
+
+The word, taken apart.
+सुनार (sunār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from suvarṇakāra, "goldsmith" (CDIAL 13520). It is built from suvarṇa, "gold", and kāra, "maker".
 
 What you've built.
 One more word for this chapter.

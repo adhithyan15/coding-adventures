@@ -14,7 +14,8 @@ romanization: "dāvat"
 concept_tag: HI-NOUN-FEAST
 prerequisites: [HI-C57-present, HI-C55-moon, HI-C56-village]
 sounds: []
-roots: []
+roots: [arabic-dawa-call]
+etymology_hook: "dāvat ← Arabic daʿwa 'a call, an invitation', through Persian (Lane, root d-ʿ-w)"
 duration:
   max_seconds: 210
 requires:

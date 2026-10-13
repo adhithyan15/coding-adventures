@@ -13,7 +13,8 @@ gloss: "an ointment"
 concept_tag: LA-VALE205-UNGUENTUM
 prerequisites: [LA-C205-gravedo, LA-C205-medicamentum]
 sounds: []
-roots: []
+roots: [unguentum-latin, unguere-latin]
+etymology_hook: "unguentum 'ointment' — built on unguō 'to anoint', from PIE *h3engw-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C205-medicamentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C205-VALE205-05]; assesses=[] -->
 
 **unguentum, unguentī** — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unguentum** is built on *unguō*, "to smear, to anoint" (Lewis & Short), usually traced to Proto-Indo-European *\*h3engw-*, "to salve, to anoint" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

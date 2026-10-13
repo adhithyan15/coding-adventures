@@ -13,7 +13,8 @@ gloss: "sunset; a setting"
 concept_tag: LA-TEMP207-OCCASUS
 prerequisites: [LA-C207-saeculum, LA-C207-aetas]
 sounds: []
-roots: []
+roots: [occasus-latin, cadere-latin]
+etymology_hook: "occāsus 'sunset' — built on occidō 'to set', from ob + cadō 'to fall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C207-aetas]
 <!-- hl-knowledge: introduces=[LA-LEX-C207-TEMP207-03]; assesses=[] -->
 
 **occāsus, occāsūs** — "sunset; a setting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occāsus** is built on *occidō*, "to fall down, to set" (Lewis & Short), from *ob*, "towards", and *cadō*, "to fall": the sun's going down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 257,
-  "sourceHash": "fnv1a64:c81566635b344e2f",
+  "sourceHash": "fnv1a64:311bcb0a3e7abdec",
   "lessonIds": [
     "HI-C257-nabz",
     "HI-C257-irsya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch257.txt",
   "json": "hindi/narration/ch257.json",
-  "textHash": "fnv1a64:ee13fc887cf36e38",
-  "jsonHash": "fnv1a64:6cc27697d3d4358f",
+  "textHash": "fnv1a64:ad98f169a8fb06e1",
+  "jsonHash": "fnv1a64:a213ed105280191c",
   "findings": []
 }

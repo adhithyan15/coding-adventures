@@ -14,7 +14,8 @@ romanization: "bāṛh"
 concept_tag: HI-THG253-BARH
 prerequisites: [HI-C253-indradhanus, HI-C253-bhukamp]
 sounds: []
-roots: []
+roots: [sanskrit-vrddhi]
+etymology_hook: "bāṛh ← Sanskrit vṛddhi 'increase', a tadbhava (CDIAL 12076)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C253-bhukamp]
 <!-- hl-knowledge: introduces=[HI-LEX-C253-THG253-03]; assesses=[] -->
 
 **बाढ़** — *bāṛh* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाढ़** (*bāṛh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vṛddhi*, "increase" (CDIAL 12076). CDIAL glosses the Hindi word "increase"; a flood is the rising of the water.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

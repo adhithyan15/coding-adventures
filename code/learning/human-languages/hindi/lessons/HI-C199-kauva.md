@@ -14,7 +14,8 @@ romanization: "kauvā"
 concept_tag: HI-THG199-KAUVA
 prerequisites: [HI-C199-itihas, HI-C199-ganit]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kauvā ← Sanskrit kāka 'crow', a tadbhava (CDIAL 2993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C199-ganit]
 <!-- hl-knowledge: introduces=[HI-LEX-C199-THG199-03]; assesses=[] -->
 
 **कौवा** — *kauvā* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कौवा** (*kauvā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāka*, "crow" (CDIAL 2993). CDIAL notes that the word imitates the bird's call.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

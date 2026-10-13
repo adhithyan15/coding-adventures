@@ -14,7 +14,8 @@ romanization: "istrī cēyu"
 concept_tag: TE-VERB-ISTRI-CEYU
 prerequisites: [TE-C242-mugincu, TE-C242-modalupettu]
 sounds: []
-roots: []
+roots: [telugu-istri-iron, sey-do-dravidian]
+etymology_hook: "istrī cēyu: istrī 'iron', of uncertain origin, + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C242-modalupettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C242-KRIYA242-05]; assesses=[] -->
 
 **ఇస్త్రీ చేయు** — *istrī cēyu* — "to iron (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *istrī*, "an iron for clothes", the first word of **ఇస్త్రీ చేయు** (*istrī cēyu*), is uncertain; DEDR and CDIAL do not list it. It may come from Portuguese *estirar*, "to stretch". *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

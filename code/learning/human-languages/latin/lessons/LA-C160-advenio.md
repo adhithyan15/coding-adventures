@@ -13,7 +13,8 @@ gloss: "to arrive"
 concept_tag: LA-VERB-ADVENIO
 prerequisites: [LA-C160-deleo, LA-C160-discedo]
 sounds: []
-roots: []
+roots: [advenire-latin, venire-latin]
+etymology_hook: "adveniō 'to arrive' — ad 'to' + veniō 'to come'; English advent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C160-discedo]
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-04]; assesses=[] -->
 
 **adveniō, advenīre** — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adveniō** is *ad*, "to", with *veniō*, "to come" (EtymDB 2.1). *veniō* is usually traced to Proto-Indo-European *\*gwem-*, "to step, to come" (EtymDB 2.1). English *advent* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

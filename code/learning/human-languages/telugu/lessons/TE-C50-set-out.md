@@ -11,7 +11,8 @@ romanization: "bayaludēru"
 concept_tag: TE-VERB-SET-OUT
 prerequisites: [TE-C50-journey]
 sounds: []
-roots: []
+roots: [dravidian-bayalu-open]
+etymology_hook: "bayaludēru: native bayalu 'outside, open ground' (DEDR 3940, 5258) + a verb DEDR does not settle"
 duration:
   max_seconds: 210
 requires:
@@ -40,9 +41,14 @@ reviews_of: [TE-C50-journey]
 
 **బయలుదేరు** (*bayaludēru*) — "to set out, to start off".
 
-Native, and a picture rather than an abstraction. బయలు is open ground, the outside; దేరు is to rise, to come forth. To set out is to come out into the open.
+Native, and a picture rather than an abstraction. బయలు is open ground, the outside, and the verb దేరు follows it: to set out is to come out into the open.
 
 Set it beside ప్రయాణం (*prayāṇaṁ*) and you have two languages building the same idea from opposite ends: Sanskrit from the going, Telugu from the doorstep.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The first piece of **బయలుదేరు** (*bayaludēru*) is native Dravidian: *bayalu*, which DEDR 3940 lists as "outside, exterior" and DEDR 5258 as "open space, plain", with Tamil *vayal*, "open space". DEDR does not settle the second piece.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

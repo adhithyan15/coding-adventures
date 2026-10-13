@@ -14,7 +14,8 @@ romanization: "rājā"
 concept_tag: HI-THG196-RAJA
 prerequisites: [HI-C195-neta, HI-C196-mantri]
 sounds: []
-roots: []
+roots: [sanskrit-rajan]
+etymology_hook: "rājā ← Sanskrit rājan 'chieftain, king', a tatsama (CDIAL 10679)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C196-mantri]
 <!-- hl-knowledge: introduces=[HI-LEX-C196-THG196-02]; assesses=[] -->
 
 **राजा** — *rājā* — "a king".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राजा** (*rājā*) is Sanskrit *rājan*, "chieftain, king", taken over whole as a learned loan, a tatsama (CDIAL 10679). Hindi took its nominative, *rājā*; CDIAL lists the inherited forms as *rāy* and *rāo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

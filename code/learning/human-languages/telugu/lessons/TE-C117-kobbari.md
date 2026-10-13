@@ -14,7 +14,8 @@ romanization: "kobbari"
 concept_tag: TE-THINGS117-KOBBARI
 prerequisites: [TE-C117-aratipandu, TE-C117-mamidipandu]
 sounds: []
-roots: []
+roots: [dravidian-koppari-copra]
+etymology_hook: "kobbari: native Dravidian, one word with Tamil koppari 'dried coconut' (DEDR 2105)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C117-mamidipandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **కొబ్బరి** — *kobbari* — "coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొబ్బరి** (*kobbari*) is native Dravidian, one word with Tamil *koppari*, "dried coconut kernel", and Kannada *kobbari* (DEDR 2105). DEDR compares Sanskrit *kūrpasa*, "the inner part of a coconut", a word known only from lexicons, and the northern words in CDIAL 3936.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

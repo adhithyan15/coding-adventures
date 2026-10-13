@@ -14,7 +14,8 @@ romanization: "jīt"
 concept_tag: HI-THG224-JIT
 prerequisites: [HI-C223-ged, HI-C224-balla]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jīt ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C224-balla]
 <!-- hl-knowledge: introduces=[HI-LEX-C224-THG224-02]; assesses=[] -->
 
 **जीत** — *jīt* — "a win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीत** (*jīt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered" (CDIAL 5224). *jīt* is the noun of *jītnā*, "to win".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

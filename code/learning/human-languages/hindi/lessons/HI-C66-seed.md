@@ -14,7 +14,8 @@ romanization: "bīj"
 concept_tag: HI-NOUN-SEED
 prerequisites: [HI-C65-manners, HI-C64-now, HI-C65-kindness]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bīj ← Sanskrit bīja 'seed', a tatsama (CDIAL 9250)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C65-manners]
 Sanskrit बीज (*bīja*), 'seed', carried into Hindi with nothing changed but the final vowel, which the schwa rule you have just learnt takes off the end.
 
 It reaches well past the field. बीज is the seed of a plant, the germ of an idea, and the origin of anything at all — one of a small set of Hindi words that a farmer and a philosopher both use without either sounding odd.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीज** (*bīj*) is Sanskrit *bīja*, "seed", taken over whole as a learned loan, a tatsama (CDIAL 9250). CDIAL lists the inherited forms of the same word as *biyā* and *bīā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

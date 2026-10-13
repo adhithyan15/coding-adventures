@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "To shiver, To smile, To scream, To whisper, To scold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:60cb1b3b2fc2e9bd",
+  "sourceHash": "fnv1a64:703059d6eab69c1a",
   "lessons": [
     {
       "id": "HI-C232-kapna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f0916e3a88e6c3c",
+      "sourceHash": "fnv1a64:fb11519fe8e3b3c7",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काँपना (kā̃pnā) (kāṁpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kampate, \"trembles, shivers\" (CDIAL 2767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f7e81cca6a14b2c",
+      "sourceHash": "fnv1a64:cb3184b733745447",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुस्कुराना (muskurānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from muss, \"smile, sob\", a form CDIAL reconstructs from its descendants (CDIAL 10227). CDIAL notes an added -k-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01eb96e2203aaf0d",
+      "sourceHash": "fnv1a64:0dde7fead3d59faa",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of चीखना (cīkhnā) is uncertain. CDIAL lists a cīkhnā only in the sense \"to taste\" (CDIAL 4557), which is a different word. It may be imitative, like cĩghāṛnā, \"to screech\" (CDIAL 4787)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7feb50e243a2c40c",
+      "sourceHash": "fnv1a64:081ba7a0397575e4",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुसफुसाना (phusphusānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from phuss, \"hissing, whispering\", a form CDIAL reconstructs from its descendants (CDIAL 9099). CDIAL lists Hindi phusphus, \"hissing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38b3faeb7c52e5f8",
+      "sourceHash": "fnv1a64:7f09ff6046040a29",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डाँटना (ḍā̃ṭnā) (ḍāṁṭnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from draṭ, \"press\", a form CDIAL reconstructs from its descendants (CDIAL 6618). CDIAL glosses the Hindi word \"to threaten, check\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

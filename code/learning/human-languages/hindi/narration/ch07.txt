@@ -13,6 +13,9 @@ You'll want to know — The word.
 हाँ = yes, said hāṃ. It's the letter ह (h) with the ा sign for long ā, and — the key mark — the ँ on top: the chandrabindu, the "moon-dot." It does one thing: it nasalises the vowel. So hāṃ isn't "hah" but a humming hããⁿ, the sound sent up through the nose, the way French does in bon.
 (Don't confuse the moon-dot ँ with the plain dot ं anusvara you'll see in the next word — both nasalise, but the moon-dot rides a vowel that has nothing above it, like ा.)
 
+The word, taken apart.
+हाँ comes from Sanskrit ām, "yes", with an h- that CDIAL calls emphatic or taken from the verb "to be" (CDIAL 1235). The polite जी is from jīva, "long live!" (CDIAL 5240).
+
 You'll want to know — Saying it politely.
 A bare hāṃ is a normal, friendly yes. To an elder, a stranger, or anyone you'd show respect, Hindi adds the honorific जी (jī):
 जी हाँ — jī hāṃ — "yes" (polite).

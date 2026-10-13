@@ -14,7 +14,8 @@ romanization: "pōṭī"
 concept_tag: TE-VASTUVU189-POTI
 prerequisites: [TE-C188-bottu, TE-C188-gorintaku]
 sounds: []
-roots: []
+roots: [dravidian-potti-rivalry]
+etymology_hook: "pōṭī: native Dravidian, one word with Tamil pōṭi and Kannada pōṭi (DEDR 4583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C188-gorintaku]
 <!-- hl-knowledge: introduces=[TE-LEX-C189-VASTUVU189-01]; assesses=[] -->
 
 **పోటీ** — *pōṭī* — "a competition, a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోటీ** (*pōṭī*) is native Dravidian, one word with Tamil *pōṭi* and Kannada *pōṭi* (DEDR 4583). DEDR lists Telugu *pōṭi*, "competition, rivalry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

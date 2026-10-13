@@ -224,7 +224,15 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // with no supporting row carry no source tag, and 12 genuinely uncertain origins say so.
   german: { withoutHook: 0, withoutVisible: 0 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
-  hindi: { withoutHook: 1126, withoutVisible: 967 },
+  // hindi: 1126 / 967 -> 0 / 0. Every Hindi word lesson now has an etymology_hook and says
+  // where its word comes from: 962 new "taken apart" blocks, plus one origin sentence in 43
+  // lessons whose block or section had none. Inherited words and Sanskrit loans cite Turner's
+  // CDIAL (read from the moli-mandala files), keeping its "prob.", "?", Dravidian, Munda and
+  // Austroasiatic notes; Arabic loans name their root in Lane's Lexicon; Persian, English and
+  // Portuguese loans name the donor, Persian ones as "usually traced to". About 48 say the
+  // origin is uncertain or only partly known. 15 older blocks that contradicted CDIAL were
+  // corrected. 41 max_seconds rose to the computed length, all still under 300 s.
+  hindi: { withoutHook: 0, withoutVisible: 0 },
   // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
   // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
   // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --
@@ -242,7 +250,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // uncertain after a search of both sources by form and by gloss, giving the usual account
   // as a hedge where there is one.
   kannada: { withoutHook: 0, withoutVisible: 0 },
-  latin: { withoutHook: 1095, withoutVisible: 1105 },
+  // latin: 1095 / 1105 -> 0 / 0. All 1,090 generated word lessons (LA-C63-bracchium through
+  // LA-C280-vallum) gained a taken-apart block and a matching hook; the five Chapter 1
+  // greetings gained the hook they lacked, and fifteen hand-written lessons a short taken-apart
+  // block. Sources: EtymDB 2.1 (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row, and
+  // Lewis & Short, whose outdated comparisons are left out. PIE and Proto-Italic forms are
+  // starred and hedged; 183 say the origin is uncertain and give the usual account where
+  // one exists.
+  latin: { withoutHook: 0, withoutVisible: 0 },
   // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
   // and says where its word comes from, almost always in a "taken apart" block. Native words
   // cite the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only
@@ -271,7 +286,15 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // section, paid for by trimming redundant prose; only TA-C39-evvalavu needed a raise
   // (294 -> 298 s, still under 300).
   tamil: { withoutHook: 0, withoutVisible: 0 },
-  telugu: { withoutHook: 1376, withoutVisible: 1318 },
+  // telugu: 1376 / 1318 -> 0 / 0. Every Telugu word lesson now carries an etymology_hook and
+  // says where its word comes from, almost always in a "taken apart" block. Native words cite
+  // the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only cognates
+  // the full article lists and keeping its "Cf. Skt.", "?" and Indo-Aryan-appendix notes;
+  // Sanskrit loans cite Turner's CDIAL where it has the form, with its "<- Drav." notes; both
+  // read from the moli-mandala/data files, no source text copied. English, Persian, Arabic and
+  // Portuguese loans name the donor. 79 say the origin is uncertain, after a search of both
+  // sources by form and by gloss.
+  telugu: { withoutHook: 0, withoutVisible: 0 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
 };
 

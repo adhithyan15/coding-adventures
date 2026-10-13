@@ -14,7 +14,8 @@ romanization: "ukku"
 concept_tag: TE-VASTUVU306-UKKU
 prerequisites: [TE-C305-byatari, TE-C305-vidiyo]
 sounds: []
-roots: []
+roots: [dravidian-uruku-melt]
+etymology_hook: "ukku: native Dravidian; DEDR 661 lists ukku 'steel' with Malayalam urukku 'steel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C305-vidiyo]
 <!-- hl-knowledge: introduces=[TE-LEX-C306-VASTUVU306-01]; assesses=[] -->
 
 **ఉక్కు** — *ukku* — "steel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉక్కు** (*ukku*) is native Dravidian. DEDR 661 lists *ukku*, "steel", with Malayalam *urukku*, "fused metal, steel", under the word for "to melt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

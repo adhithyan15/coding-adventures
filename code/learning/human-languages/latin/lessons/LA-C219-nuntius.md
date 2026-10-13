@@ -13,7 +13,8 @@ gloss: "a messenger; news"
 concept_tag: LA-RES219-NUNTIUS
 prerequisites: [LA-C218-crimen, LA-C219-fama]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "nūntius 'messenger' — perhaps from novus 'new': the bringer of news; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C219-fama]
 <!-- hl-knowledge: introduces=[LA-LEX-C219-RES219-02]; assesses=[] -->
 
 **nūntius, nūntiī** — "a messenger; news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūntius** has no sure origin; it is often explained as *\*noventius*, "one who brings something new", from *novus*, "new" (Lewis & Short), but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

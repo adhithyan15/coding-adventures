@@ -11,7 +11,8 @@ romanization: "enduku"
 concept_tag: TE-QUESTION-WHY
 prerequisites: [TE-C74-or, TE-C34-adugu]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "enduku: native Dravidian, on the question base e- (DEDR 5151), which lists enduku itself"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C74-or]
 Another word off the **ఎ-** question row you already know: ఎక్కడ "where", ఎవరు "who", and now ఎందుకు "why". The row keeps its shape and you keep getting the words free.
 
 It goes where its answer goes, not at the front: **మీరు ఎందుకు వెళ్తారు?** — "why do you go?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎందుకు** (*enduku*) is native Dravidian, built on the question base *e-*. DEDR 5151 lists *enduku*, "why", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

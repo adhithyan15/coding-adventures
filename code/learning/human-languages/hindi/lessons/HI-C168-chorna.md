@@ -14,7 +14,8 @@ romanization: "choṛnā"
 concept_tag: HI-VERB-CHORNA
 prerequisites: [HI-C168-badalna, HI-C168-calana]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "choṛnā ← Sanskrit kṣoṭayati 'throws', a tadbhava (CDIAL 3747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C168-calana]
 <!-- hl-knowledge: introduces=[HI-LEX-C168-ACT168-05]; assesses=[] -->
 
 **छोड़ना** — *choṛnā* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोड़ना** (*choṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoṭayati*, "throws" (CDIAL 3747). The Sanskrit word is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

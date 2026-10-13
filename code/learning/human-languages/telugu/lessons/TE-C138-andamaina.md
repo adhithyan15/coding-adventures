@@ -14,7 +14,8 @@ romanization: "andamaina"
 concept_tag: TE-QUAL138-ANDAMAINA
 prerequisites: [TE-C137-muriki, TE-C138-vegam, TE-C42-adjective-system, TE-C42-old]
 sounds: []
-roots: []
+roots: [dravidian-cantam-beauty, tamil-aaku-become]
+etymology_hook: "andamaina: native andamu 'beauty' (DEDR 2328) + ayina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C138-vegam]
 <!-- hl-knowledge: introduces=[TE-LEX-C138-QUAL138-02]; assesses=[] -->
 
 **అందమైన** — *andamaina* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అందమైన** (*andamaina*) is native *andamu*, "beauty", one word with Tamil *antam* and Kannada *anda* (DEDR 2328), which queries whether it was influenced by Sanskrit *chanda*; and *ayina*, "which is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "iṇṭipani"
 concept_tag: TE-PANI194-INTIPANI
 prerequisites: [TE-C193-tribhujam, TE-C193-cakram]
 sounds: []
-roots: []
+roots: [dravidian-il-house, pani-work-dravidian]
+etymology_hook: "iṇṭipani: native iṇṭi 'of the house' (DEDR 494) + pani 'work' (DEDR 3884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C193-cakram]
 <!-- hl-knowledge: introduces=[TE-LEX-C194-PANI194-01]; assesses=[] -->
 
 **ఇంటిపని** — *iṇṭipani* — "housework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంటిపని** (*iṇṭipani*) is native Dravidian: *iṇṭi*, "of the house", the adjective form of *illu*, "house" (DEDR 494), and *pani*, "work" (DEDR 3884).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 293,
-  "sourceHash": "fnv1a64:5c46fe779036d7aa",
+  "sourceHash": "fnv1a64:1a04a80257a6bede",
   "lessonIds": [
     "TE-C293-jailu",
     "TE-C293-masidu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch293.txt",
   "json": "telugu/narration/ch293.json",
-  "textHash": "fnv1a64:5044837fe3bcee67",
-  "jsonHash": "fnv1a64:2b958e2e546c8069",
+  "textHash": "fnv1a64:b061bfacd1cb5c66",
+  "jsonHash": "fnv1a64:ea9d61c9efd8fbc5",
   "findings": []
 }

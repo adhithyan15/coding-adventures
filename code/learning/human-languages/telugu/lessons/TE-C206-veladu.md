@@ -14,7 +14,8 @@ romanization: "vēlāḍu"
 concept_tag: TE-VERB-VELADU
 prerequisites: [TE-C206-dorlu, TE-C206-jaru]
 sounds: []
-roots: []
+roots: [telugu-veladu-hang]
+etymology_hook: "vēlāḍu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to hang'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C206-jaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C206-KRIYA206-03]; assesses=[] -->
 
 **వేలాడు** — *vēlāḍu* — "to hang, to dangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **వేలాడు** (*vēlāḍu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to hang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jānā hai"
 concept_tag: HI-LATE-HAVE-TO-GO
 prerequisites: [HI-C122-aramse, HI-C122-ijazat]
 sounds: []
-roots: []
+roots: [sanskrit-yati]
+etymology_hook: "jānā ← Sanskrit yāti 'goes' (CDIAL 10452); hai 'is'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C122-ijazat]
 **जाना है** (*jānā hai*) — "have to go".
 
 **मुझे जाना है** — "I have to go", with the person in **मुझे**. **जाना** is "to go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाना है** (*jānā hai*) is "to go is", that is, "I must go". *jānā* comes from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

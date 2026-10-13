@@ -13,7 +13,8 @@ gloss: "to greet"
 concept_tag: LA-VERB-SALUTO
 prerequisites: [LA-C196-lucus, LA-C197-osculor]
 sounds: []
-roots: []
+roots: [salutare-latin, salus-latin]
+etymology_hook: "salūtō 'to greet' — built on salūs 'health': to wish health"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C197-osculor]
 <!-- hl-knowledge: introduces=[LA-LEX-C197-ACT197-02]; assesses=[] -->
 
 **salūtō, salūtāre** — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salūtō** is built on *salūs*, *salūtis*, "health, safety" (Lewis & Short): to wish someone health. *salūs* is usually traced to Proto-Indo-European *\*solh2-*, "whole" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

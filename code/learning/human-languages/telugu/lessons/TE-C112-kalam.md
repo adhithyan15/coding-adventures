@@ -14,7 +14,8 @@ romanization: "kalaṁ"
 concept_tag: TE-THINGS112-KALAM
 prerequisites: [TE-C111-gadiyaram, TE-C112-sanci]
 sounds: []
-roots: []
+roots: [arabic-qalam]
+etymology_hook: "kalaṁ ← Arabic qalam 'reed pen', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C112-sanci]
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **కలం** — *kalaṁ* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కలం** (*kalaṁ*) is a loan from Arabic *qalam*, "reed pen", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

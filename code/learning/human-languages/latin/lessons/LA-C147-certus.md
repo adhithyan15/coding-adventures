@@ -13,7 +13,8 @@ gloss: "sure, certain"
 concept_tag: LA-QUAL147-CERTUS
 prerequisites: [LA-C147-surdus, LA-C147-falsus]
 sounds: []
-roots: []
+roots: [certus-latin, cernere-latin]
+etymology_hook: "certus 'sure' — first a participle of cernō 'to sift, to decide': decided"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C147-falsus]
 <!-- hl-knowledge: introduces=[LA-LEX-C147-QUAL147-03]; assesses=[] -->
 
 **certus, certa, certum** — "sure, certain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**certus** was first a participle of *cernō*, "to sift, to decide" (Lewis & Short): decided, so sure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

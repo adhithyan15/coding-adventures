@@ -13,7 +13,8 @@ gloss: "here and there"
 concept_tag: LA-LOC264-PASSIM
 prerequisites: [LA-C264-nusquam, LA-C264-undique]
 sounds: []
-roots: []
+roots: [passim-latin, pandere-latin]
+etymology_hook: "passim 'here and there' — built on passus 'spread out', from pandō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C264-undique]
 <!-- hl-knowledge: introduces=[LA-LEX-C264-LOC264-03]; assesses=[] -->
 
 **passim** — "here and there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passim** is built on *passus*, "spread out", the participle of *pandō*, "to spread" (Lewis & Short), with *-im*, an adverb ending: scattered about.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

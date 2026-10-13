@@ -14,7 +14,8 @@ romanization: "jhagṛālū"
 concept_tag: HI-QUAL243-JHAGRALU
 prerequisites: [HI-C243-sidhasada, HI-C243-calak]
 sounds: []
-roots: []
+roots: [indo-aryan-jhagad]
+etymology_hook: "jhagṛālū: jhagṛā 'quarrel' (*jhagaḍ, CDIAL 5321) + -ālū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C243-calak]
 <!-- hl-knowledge: introduces=[HI-LEX-C243-QUAL243-05]; assesses=[] -->
 
 **झगड़ालू** — *jhagṛālū* — "quarrelsome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झगड़ालू** (*jhagṛālū*) is *jhagṛā*, "quarrel", with the ending *-ālū*, "given to". CDIAL lists *jhagṛā* under a reconstructed *\*jhagaḍ*, "quarrel" (CDIAL 5321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

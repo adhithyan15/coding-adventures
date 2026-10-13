@@ -14,7 +14,8 @@ romanization: "camakdār"
 concept_tag: HI-QUAL239-CAMAKDAR
 prerequisites: [HI-C238-cipcipa, HI-C238-khurdura]
 sounds: []
-roots: []
+roots: [indo-aryan-camakka, persian-dar-holder]
+etymology_hook: "camak 'shine' (CDIAL 4676) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C238-khurdura]
 <!-- hl-knowledge: introduces=[HI-LEX-C239-QUAL239-01]; assesses=[] -->
 
 **चमकदार** — *camakdār* — "shiny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चमकदार** (*camakdār*) is *camak*, "shine", from *camaknā*, "to glitter", which CDIAL lists under a reconstructed *\*camakka*, "sudden movement" (CDIAL 4676), with the Persian ending *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

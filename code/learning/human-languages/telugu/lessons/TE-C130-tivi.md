@@ -14,7 +14,8 @@ romanization: "ṭīvī"
 concept_tag: TE-THINGS130-TIVI
 prerequisites: [TE-C129-biruva, TE-C129-tebul]
 sounds: []
-roots: []
+roots: [english-tv]
+etymology_hook: "ṭīvī ← English TV, short for television"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C129-tebul]
 <!-- hl-knowledge: introduces=[TE-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **టీవీ** — *ṭīvī* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టీవీ** (*ṭīvī*) is a loan from English *TV*, short for *television*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

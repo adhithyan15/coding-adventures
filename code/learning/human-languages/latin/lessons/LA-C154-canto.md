@@ -13,7 +13,8 @@ gloss: "to sing"
 concept_tag: LA-VERB-CANTO
 prerequisites: [LA-C154-iungo, LA-C154-visito]
 sounds: []
-roots: []
+roots: [cantare-latin, canere-latin]
+etymology_hook: "cantō 'to sing' — a frequentative of canō 'to sing', which it came to replace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C154-visito]
 <!-- hl-knowledge: introduces=[LA-LEX-C154-ACT154-03]; assesses=[] -->
 
 **cantō, cantāre** — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantō** is a frequentative of *canō*, "to sing" (Lewis & Short), built on its stem *cant-*, and in everyday Latin it came to replace *canō*. *canō* is usually traced to Proto-Indo-European *\*keh2n-*, "to sing" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

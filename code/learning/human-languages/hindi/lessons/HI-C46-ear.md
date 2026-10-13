@@ -14,7 +14,8 @@ romanization: "kān"
 concept_tag: HI-NOUN-EAR
 prerequisites: [HI-C46-finger, HI-C44-family, HI-C45-lamp]
 sounds: []
-roots: []
+roots: [sanskrit-karna]
+etymology_hook: "kān ← Sanskrit karṇa 'ear', a tadbhava (CDIAL 2830)"
 duration:
   max_seconds: 210
 requires:

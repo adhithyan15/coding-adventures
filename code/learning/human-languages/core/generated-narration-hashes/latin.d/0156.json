@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 156,
-  "sourceHash": "fnv1a64:d781555db324bf8c",
+  "sourceHash": "fnv1a64:95c0412088e605a0",
   "lessonIds": [
     "LA-C156-frango",
     "LA-C156-iacio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch156.txt",
   "json": "latin/narration/ch156.json",
-  "textHash": "fnv1a64:718699eeb54b639b",
-  "jsonHash": "fnv1a64:93f1fce84670abcf",
+  "textHash": "fnv1a64:e27d46ecbc5313e7",
+  "jsonHash": "fnv1a64:d294d77b2d28bc98",
   "findings": []
 }

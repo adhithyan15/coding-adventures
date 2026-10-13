@@ -13,7 +13,8 @@ gloss: "hospitality; lodging"
 concept_tag: LA-RES227-HOSPITIUM
 prerequisites: [LA-C227-fatum, LA-C227-cubile]
 sounds: []
-roots: []
+roots: [hospitium-latin, hospes-latin]
+etymology_hook: "hospitium 'hospitality' — built on hospes 'guest, host'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C227-cubile]
 <!-- hl-knowledge: introduces=[LA-LEX-C227-RES227-03]; assesses=[] -->
 
 **hospitium, hospitiī** — "hospitality; lodging".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hospitium** is built on *hospes*, *hospitis*, "a guest, a host" (Lewis & Short), with *-ium*, an ending for a state or place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

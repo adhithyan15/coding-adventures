@@ -13,7 +13,8 @@ gloss: "why?, for what reason?"
 concept_tag: LA-WANT112-QUARE
 prerequisites: [LA-C112-spes, LA-C112-desiderium]
 sounds: []
-roots: []
+roots: [quare-latin, res-latin]
+etymology_hook: "quārē 'why' — fused from quā rē 'by what thing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C112-desiderium]
 <!-- hl-knowledge: introduces=[LA-LEX-C112-WANT112-04]; assesses=[] -->
 
 **quārē** — "why?, for what reason?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quārē** is fused from *quā rē*, "by what thing, for what reason" (Lewis & Short); *rē*, "by the thing", is a form of *rēs*, "thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

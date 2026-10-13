@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:88c6682831ec2538",
+  "sourceHash": "fnv1a64:cc8af6434dbd0659",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4a6ef08f79699ef",
+      "sourceHash": "fnv1a64:1d4e21fd35ea9b24",
       "notice": null,
       "blocks": [
         {
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ea926b436a9c9fd",
+      "sourceHash": "fnv1a64:1781b7f2cfed955a",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fee86ba0b99f99c",
+      "sourceHash": "fnv1a64:a342abb3a1b8ec02",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e92642afad0661",
+      "sourceHash": "fnv1a64:b05e0db0222e7a26",
       "notice": null,
       "blocks": [
         {
@@ -471,6 +471,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़ुशबू (khushbū) is a loan, usually traced to Persian khushbū, \"fragrance\". It is built from khush, \"pleasant\", the word inside ख़ुशी, \"happiness\", and bū, \"smell\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -481,7 +492,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -539,7 +550,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -570,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d86ed61a73aff614",
+      "sourceHash": "fnv1a64:2c01d395c6c13ad3",
       "notice": null,
       "blocks": [
         {

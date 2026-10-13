@@ -14,7 +14,8 @@ romanization: "hameśā"
 concept_tag: HI-FREQ192-HAMESA
 prerequisites: [HI-C192-roz, HI-C192-kabhi]
 sounds: []
-roots: []
+roots: [persian-hamesha]
+etymology_hook: "hameśā: usually traced to Persian hamēsha 'always'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C192-kabhi]
 <!-- hl-knowledge: introduces=[HI-LEX-C192-FREQ192-03]; assesses=[] -->
 
 **हमेशा** — *hameśā* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हमेशा** (*hameśā*) is a loan, usually traced to Persian *hamēsha*, "always".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

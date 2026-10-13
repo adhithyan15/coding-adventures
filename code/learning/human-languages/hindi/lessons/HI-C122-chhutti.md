@@ -14,7 +14,8 @@ romanization: "chuṭṭī"
 concept_tag: HI-LATE-HOLIDAY
 prerequisites: [HI-C121-phiraiega, HI-C121-chalie]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chuṭṭī ← *kṣuṭyate 'is released' (CDIAL 3707); CDIAL marks the Hindi form as taken from Punjabi"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C121-chalie]
 **छुट्टी** (*chuṭṭī*) — "a holiday", "a day off", "leave from work".
 
 **आज छुट्टी है** — "today is a holiday", with the **आज** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छुट्टी** (*chuṭṭī*) goes back to a reconstructed *\*kṣuṭyate*, "is released" (CDIAL 3707). CDIAL marks *chuṭṭī*, "leave", as taken over into Hindi from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

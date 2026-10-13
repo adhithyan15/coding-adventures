@@ -13,7 +13,8 @@ gloss: "to put on (clothes)"
 concept_tag: LA-VERB-INDUO
 prerequisites: [LA-C155-facio, LA-C155-gero]
 sounds: []
-roots: []
+roots: [induere-latin]
+etymology_hook: "induō 'to put on' — old indu- 'into' + a verb -uō 'to put on'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C155-gero]
 <!-- hl-knowledge: introduces=[LA-LEX-C155-ACT155-03]; assesses=[] -->
 
 **induō, induere** — "to put on (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**induō** is built from *indu-*, "into", an old form of in, and a verb *-uō*, "to put on" (EtymDB 2.1), found also in *exuō*, "to take off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

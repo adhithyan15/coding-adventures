@@ -14,7 +14,8 @@ romanization: "puṭṭu"
 concept_tag: TE-VERB-PUTTU
 prerequisites: [TE-C208-pukkilincu, TE-C208-canipovu]
 sounds: []
-roots: []
+roots: [dravidian-puttu-born]
+etymology_hook: "puṭṭu: native Dravidian, one word with Kannada puṭṭu (DEDR 4264)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C208-canipovu]
 <!-- hl-knowledge: introduces=[TE-LEX-C208-KRIYA208-04]; assesses=[] -->
 
 **పుట్టు** — *puṭṭu* — "to be born".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పుట్టు** (*puṭṭu*) is native Dravidian, one word with Kannada *puṭṭu* (DEDR 4264). DEDR lists Telugu *puṭṭu*, "to be born".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a hall of justice"
 concept_tag: LA-RES270-BASILICA
 prerequisites: [LA-C269-parcus, LA-C270-circus]
 sounds: []
-roots: []
+roots: [basilica-latin]
+etymology_hook: "basilica 'hall' — from Greek basilikē 'royal (hall)', from basileus 'king'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C270-circus]
 <!-- hl-knowledge: introduces=[LA-LEX-C270-RES270-02]; assesses=[] -->
 
 **basilica, basilicae** — "a hall of justice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**basilica** was borrowed from Greek *basilikē*, "royal", short for a royal hall (EtymDB 2.1), from *basileus*, "king".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

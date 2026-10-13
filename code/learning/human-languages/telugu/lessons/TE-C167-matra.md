@@ -14,7 +14,8 @@ romanization: "mātra"
 concept_tag: TE-AROGYAM167-MATRA
 prerequisites: [TE-C167-talanoppi, TE-C167-virecanalu]
 sounds: []
-roots: []
+roots: [sanskrit-matra]
+etymology_hook: "mātra ← Sanskrit mātrā 'measure; minute portion', a tatsama (CDIAL 10023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C167-virecanalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C167-AROGYAM167-03]; assesses=[] -->
 
 **మాత్ర** — *mātra* — "a tablet, a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మాత్ర** (*mātra*) is Sanskrit *mātrā*, "measure; minute portion", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 10023). The sense "pill" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "sober"
 concept_tag: LA-QUAL269-SOBRIUS
 prerequisites: [LA-C269-maestus, LA-C269-ebrius]
 sounds: []
-roots: []
+roots: [sobrius-latin, ebrius-latin]
+etymology_hook: "sōbrius 'sober' — usually explained as sē- 'without' + ēbrius 'drunk'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C269-ebrius]
 <!-- hl-knowledge: introduces=[LA-LEX-C269-QUAL269-03]; assesses=[] -->
 
 **sōbrius, sōbria, sōbrium** — "sober".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sōbrius** is usually explained as *sē-*, "without", with *ēbrius*, "drunk" (EtymDB 2.1): not drunk. English *sober* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

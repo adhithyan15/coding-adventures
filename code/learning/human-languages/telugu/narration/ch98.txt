@@ -13,6 +13,9 @@ You'll want to know: ఏమీ లేదు.
 ఏమీ లేదు (ēmī lēdu) — "nothing", "it's nothing".
 The answer to ఏమైంది?, "what happened?", when you would rather not say. It ends on the లేదు you have had since your first chapter.
 
+The word, taken apart.
+ఏమీ లేదు (ēmī lēdu) is native Dravidian: ēmī, "anything", from ēmi, "what" (DEDR 5151), and lēdu, "there is not" (DEDR 2559).
+
 What you've built.
 An answer that closes a question kindly.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for alone, then the Telugu for nothing.
 You'll want to know: ఇంకా లేదు.
 ఇంకా లేదు (iṅkā lēdu) — "not yet".
 Two words you own, ఇంకా, "still", and లేదు, "there isn't". Have you eaten? — ఇంకా లేదు (iṅkā lēdu).
+
+The word, taken apart.
+ఇంకా లేదు (iṅkā lēdu) is native Dravidian: iṅka, "still, yet" (DEDR 410), and lēdu, "there is not" (DEDR 2559).
 
 What you've built.
 An answer from two old words.
@@ -73,6 +79,9 @@ You'll want to know: సరిపోతుంది.
 సరిపోతుంది (saripōtundi) — "that will do", "it is enough", and of clothes, "it fits".
 It starts on సరి, "right, even", like సరే and సరిగ్గా.
 
+The word, taken apart.
+సరిపోతుంది (saripōtundi) is sari, "right, even", and pōtundi, "it goes", from native pō, "to go" (DEDR 4572). The origin of sari is uncertain: DEDR has no entry for it.
+
 What you've built.
 A third word on the same right-even root.
 
@@ -103,6 +112,9 @@ You'll want to know: నిజమే.
 నిజమే (nijamē) — "that's true", "quite right".
 It is నిజం with -ఏ, the ending that says exactly this. Where నిజంగా? asks, నిజమే (nijamē) agrees.
 
+The word, taken apart.
+నిజమే (nijamē) is nijaṁ, "truth", from Sanskrit nija, "one's own, innate" (CDIAL 7181), with the emphatic -ē.
+
 What you've built.
 Agreement, from the word for truth.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for that will do, then the Telugu for that's 
 You'll want to know: అదే.
 అదే (adē) — "that's the one", "the same one".
 It is అది, "that", with the same -ఏ. When someone finally names what you meant, అదే (adē)!
+
+The word, taken apart.
+అదే (adē) is native Dravidian: adi, "that", on the far-pointing base a- (DEDR 1), with the emphatic -ē.
 
 What you've built.
 Nothing, not yet, that will do, true, that's the one: five ways to close a question.

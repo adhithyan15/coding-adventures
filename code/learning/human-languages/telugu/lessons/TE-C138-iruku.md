@@ -14,7 +14,8 @@ romanization: "iruku"
 concept_tag: TE-QUAL138-IRUKU
 prerequisites: [TE-C138-lotu, TE-C138-vedalpu]
 sounds: []
-roots: []
+roots: [dravidian-iruku-tight]
+etymology_hook: "iruku: native Dravidian, one word with Tamil iṟuku and Kannada iṟuku (DEDR 524)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C138-vedalpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C138-QUAL138-05]; assesses=[] -->
 
 **ఇరుకు** — *iruku* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇరుకు** (*iruku*) is native Dravidian, one word with Tamil *iṟuku* and Kannada *iṟuku* (DEDR 524). DEDR lists Telugu *iṟuku*, "to be squeezed; a narrow place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

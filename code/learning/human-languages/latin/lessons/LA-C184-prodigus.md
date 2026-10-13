@@ -13,7 +13,8 @@ gloss: "wasteful"
 concept_tag: LA-QUAL184-PRODIGUS
 prerequisites: [LA-C183-medius, LA-C183-summus]
 sounds: []
-roots: []
+roots: [prodigus-latin, agere-latin]
+etymology_hook: "prōdigus 'wasteful' — built on prōdigō 'to drive forth, to squander'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C183-summus]
 <!-- hl-knowledge: introduces=[LA-LEX-C184-QUAL184-01]; assesses=[] -->
 
 **prōdigus, prōdiga, prōdigum** — "wasteful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōdigus** is built on *prōdigō*, "to drive forth, to squander" (Lewis & Short), from *prōd-*, "forth", and *agō*, "to drive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

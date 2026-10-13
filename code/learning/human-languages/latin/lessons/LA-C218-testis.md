@@ -13,7 +13,8 @@ gloss: "a witness"
 concept_tag: LA-RES218-TESTIS
 prerequisites: [LA-C217-currus, LA-C218-passus]
 sounds: []
-roots: []
+roots: [testis-latin, tres-latin, stare-latin]
+etymology_hook: "testis 'witness' — usually explained as *tri-stis 'the third who stands by'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C218-passus]
 <!-- hl-knowledge: introduces=[LA-LEX-C218-RES218-02]; assesses=[] -->
 
 **testis, testis** — "a witness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**testis** is usually explained as an old compound, *\*tri-stis*, "the third who stands by", from the root of *trēs*, "three", and *stō*, "to stand": a witness as the third party.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

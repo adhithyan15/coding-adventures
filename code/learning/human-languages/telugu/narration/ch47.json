@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "The Leg and the Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:28629dad21d7e699",
+  "sourceHash": "fnv1a64:acdbc478965d4106",
   "lessons": [
     {
       "id": "TE-C47-leg",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8110971c43e00c95",
+      "sourceHash": "fnv1a64:2eef6a12d163a291",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,10 @@
             {
               "kind": "speech",
               "text": "కాలు (kālu) covers the whole limb, foot and leg together. When precision is wanted, Sanskrit's పాదం names the foot alone."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 1479 lists Telugu kālu, \"leg, foot\", with Tamil kāl and Kannada kāl."
             }
           ]
         },
@@ -145,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55bc21a7049a7b4a",
+      "sourceHash": "fnv1a64:1d5d384eba28e075",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Proto-Dravidian pal. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that p- to h- law working again exactly where the last chapter said to watch for it. Telugu took a third road, the -l- coming out as -n- and doubling."
+              "text": "Proto-Dravidian pal. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that p- to h- law working again exactly where the last chapter said to watch for it. Telugu took a third road: DEDR 3986 lists palu, pallu, with the plural paṇḍlu, and explains pannu as built back from that plural."
             },
             {
               "kind": "speech",
@@ -267,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e375f7b991ee834",
+      "sourceHash": "fnv1a64:4e2dd5da08f0d99c",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +312,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEDR 2655 lists జుట్టు (juṭṭu) as Dravidian, one word with Tamil cuṭṭi, \"tuft of hair\", and Kannada juṭṭu. DEDR compares Sanskrit jūṭa, \"twisted hair\" (CDIAL 5258), and notes that some words in the entry may be loans from Indo-Aryan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +333,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -358,7 +373,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -389,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bccb4cbd2f2a1d0b",
+      "sourceHash": "fnv1a64:051dbf5edf91fdb6",
       "notice": null,
       "blocks": [
         {
@@ -425,6 +440,10 @@
             {
               "kind": "speech",
               "text": "It is still working inside compounds: బొటనవేలు, the thumb, is the stubby one of the set."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5409 lists Telugu vēlu and vrēlu, \"finger, toe\", with Tamil viral and Kannada beraḷ."
             }
           ]
         },
@@ -511,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0fe379232059a77",
+      "sourceHash": "fnv1a64:677c64b65b459050",
       "notice": null,
       "blocks": [
         {
@@ -552,6 +571,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of కడుపు (kaḍupu) is uncertain. Neither DEDR nor CDIAL records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -562,7 +592,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -602,7 +632,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,7 +11,8 @@ romanization: "neyyi"
 concept_tag: TE-NOUN-GHEE
 prerequisites: [TE-C61-curd]
 sounds: []
-roots: []
+roots: [dravidian-ney-ghee]
+etymology_hook: "neyyi: native Dravidian, one word with Tamil ney and Kannada ney (DEDR 3746)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C61-curd]
 The word is inherited and very old. Its root runs across the whole family for the same fat, which suits a food that has been made the same way for longer than any of these languages have been separate.
 
 A spoonful of నెయ్యి over rice is both a taste and a courtesy. It is what a house puts in front of an *atithi* first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నెయ్యి** (*neyyi*) is native Dravidian, one word with Tamil *ney* and Kannada *ney* (DEDR 3746).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tēne"
 concept_tag: TE-THINGS119-TENE
 prerequisites: [TE-C118-allam, TE-C118-vellulli]
 sounds: []
-roots: []
+roots: [dravidian-teen-honey]
+etymology_hook: "tēne: native Dravidian, one word with Tamil tēṉ 'honey' (DEDR 3268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C118-vellulli]
 <!-- hl-knowledge: introduces=[TE-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **తేనె** — *tēne* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తేనె** (*tēne*) is native Dravidian, one word with Tamil *tēṉ* and Kannada *tēnu*, "honey" (DEDR 3268). DEDR compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

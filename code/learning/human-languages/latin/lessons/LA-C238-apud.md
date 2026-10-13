@@ -13,7 +13,8 @@ gloss: "at the house of, among"
 concept_tag: LA-LOC238-APUD
 prerequisites: [LA-C238-ultra, LA-C238-citra]
 sounds: []
-roots: []
+roots: [apud-latin]
+etymology_hook: "apud 'at the house of' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C238-citra]
 <!-- hl-knowledge: introduces=[LA-LEX-C238-LOC238-03]; assesses=[] -->
 
 **apud** — "at the house of, among".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apud** has no sure origin; old inscriptions also write *aput* (Lewis & Short). A link with Greek *apo*, "from", is often suggested.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

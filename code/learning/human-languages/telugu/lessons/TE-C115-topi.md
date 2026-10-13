@@ -14,7 +14,8 @@ romanization: "ṭōpī"
 concept_tag: TE-THINGS115-TOPI
 prerequisites: [TE-C114-pance, TE-C114-ceppulu]
 sounds: []
-roots: []
+roots: [hindustani-topi]
+etymology_hook: "ṭōpī ← Hindustani ṭōpī 'cap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C114-ceppulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **టోపీ** — *ṭōpī* — "a cap, a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టోపీ** (*ṭōpī*) is a loan from Hindustani *ṭōpī*, "cap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

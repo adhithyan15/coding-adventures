@@ -14,7 +14,8 @@ romanization: "māfī"
 concept_tag: HI-SORRY-APOLOGY
 prerequisites: [HI-C113-vahi, HI-C113-hosakta]
 sounds: []
-roots: []
+roots: [arabic-afw]
+etymology_hook: "māfī: māf, usually traced through Persian to Arabic muʿāf 'excused', root ʿ-f-w 'to pardon' (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C113-hosakta]
 
 **माफ़ी चाहता हूँ** — "I beg your pardon" (a woman says **चाहती**). It shares its root with
 **माफ़ कीजिए**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माफ़ी** (*māfī*) is *māf* with *-ī*. *māf* is usually traced, through Persian, to Arabic *muʿāf*, "excused, let off", on the root *ʿ-f-w*, "to pardon" (Lane). The same *māf* is inside *māf kījie*, "forgive me".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

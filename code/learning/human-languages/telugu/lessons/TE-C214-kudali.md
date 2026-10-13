@@ -14,7 +14,8 @@ romanization: "kūḍali"
 concept_tag: TE-STHALAM214-KUDALI
 prerequisites: [TE-C214-bastandu, TE-C214-vimanasrayam]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūḍali: native Dravidian; DEDR 1882 lists kūḍali 'joining' under kūḍu 'to join'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C214-vimanasrayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C214-STHALAM214-03]; assesses=[] -->
 
 **కూడలి** — *kūḍali* — "a junction, a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూడలి** (*kūḍali*) is native Dravidian. DEDR 1882 lists *kūḍali*, "joining", under *kūḍu*, "to join, meet", one word with Tamil *kūṭu*, "to come together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

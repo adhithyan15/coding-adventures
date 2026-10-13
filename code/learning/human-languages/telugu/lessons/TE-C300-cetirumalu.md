@@ -14,7 +14,8 @@ romanization: "cētirumālu"
 concept_tag: TE-VASTUVU300-CETIRUMALU
 prerequisites: [TE-C300-cevipogulu, TE-C300-gundi]
 sounds: []
-roots: []
+roots: [sey-do-dravidian, persian-rumal]
+etymology_hook: "cētirumālu: native cēyi 'hand' + rumālu ← Persian rūmāl 'handkerchief'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C300-gundi]
 <!-- hl-knowledge: introduces=[TE-LEX-C300-VASTUVU300-05]; assesses=[] -->
 
 **చేతిరుమాలు** — *cētirumālu* — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేతిరుమాలు** (*cētirumālu*) is native *cēti*, "of the hand", and *rumālu*, a loan from Persian *rūmāl*, "handkerchief", through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

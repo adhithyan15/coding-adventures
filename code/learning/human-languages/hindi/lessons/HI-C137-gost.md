@@ -14,7 +14,8 @@ romanization: "gośt"
 concept_tag: HI-THINGS137-GOST
 prerequisites: [HI-C137-svetar, HI-C137-anda]
 sounds: []
-roots: []
+roots: [persian-gosht]
+etymology_hook: "gośt: usually traced to Persian gōsht 'meat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C137-anda]
 <!-- hl-knowledge: introduces=[HI-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **गोश्त** — *gośt* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोश्त** (*gośt*) is a loan, usually traced to Persian *gōsht*, "meat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

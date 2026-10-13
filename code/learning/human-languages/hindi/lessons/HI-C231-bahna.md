@@ -14,7 +14,8 @@ romanization: "bahnā"
 concept_tag: HI-VERB-BAHNA
 prerequisites: [HI-C230-tairana, HI-C230-dubna]
 sounds: []
-roots: []
+roots: [sanskrit-vahati]
+etymology_hook: "bahnā ← Sanskrit vahati 'carries, bears along', a tadbhava (CDIAL 11453)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C230-dubna]
 <!-- hl-knowledge: introduces=[HI-LEX-C231-ACT231-01]; assesses=[] -->
 
 **बहना** — *bahnā* — "to flow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहना** (*bahnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vahati*, "carries, bears along" (CDIAL 11453).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

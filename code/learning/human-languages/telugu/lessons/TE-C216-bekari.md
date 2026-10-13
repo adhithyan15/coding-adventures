@@ -14,7 +14,8 @@ romanization: "bēkarī"
 concept_tag: TE-STHALAM216-BEKARI
 prerequisites: [TE-C216-punadi, TE-C216-getu]
 sounds: []
-roots: []
+roots: [english-bakery]
+etymology_hook: "bēkarī ← English bakery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C216-getu]
 <!-- hl-knowledge: introduces=[TE-LEX-C216-STHALAM216-04]; assesses=[] -->
 
 **బేకరీ** — *bēkarī* — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బేకరీ** (*bēkarī*) is a loan from English *bakery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

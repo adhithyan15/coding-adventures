@@ -13,7 +13,8 @@ gloss: "why?, on account of what?"
 concept_tag: LA-WANT112-QUAMOBREM
 prerequisites: [LA-C112-desiderium, LA-C112-quare]
 sounds: []
-roots: []
+roots: [quamobrem-latin, res-latin]
+etymology_hook: "quamobrem 'why' — fused from quam ob rem 'on account of which thing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C112-quare]
 <!-- hl-knowledge: introduces=[LA-LEX-C112-WANT112-05]; assesses=[] -->
 
 **quamobrem** — "why?, on account of what?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quamobrem** is fused from *quam ob rem*, "on account of which thing" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

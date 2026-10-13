@@ -14,7 +14,8 @@ romanization: "bāl"
 concept_tag: HI-NOUN-HAIR
 prerequisites: [HI-C45-soap, HI-C44-son, HI-C45-fruit]
 sounds: []
-roots: []
+roots: [sanskrit-vala-hair]
+etymology_hook: "bāl ← Sanskrit vāla 'hair of the tail, hair', a tadbhava (CDIAL 11572)"
 duration:
   max_seconds: 210
 requires:

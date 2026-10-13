@@ -13,7 +13,8 @@ gloss: "a generation, a century"
 concept_tag: LA-TEMP207-SAECULUM
 prerequisites: [LA-C206-ingenium, LA-C206-consuetudo]
 sounds: []
-roots: []
+roots: [saeculum-latin]
+etymology_hook: "saeculum 'generation, century' — origin uncertain; English secular"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C206-consuetudo]
 <!-- hl-knowledge: introduces=[LA-LEX-C207-TEMP207-01]; assesses=[] -->
 
 **saeculum, saeculī** — "a generation, a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saeculum** has no sure origin; Lewis & Short call it doubtful. Welsh *hoedl*, "lifetime", is sometimes compared. English *secular* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "sad"
 concept_tag: LA-AFFECTUS-TRISTIS
 prerequisites: [LA-C69-timor, LA-C69-laetus]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "trīstis 'sad' — origin uncertain; a reconstructed PIE *treystis is proposed but not settled"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C69-laetus]
 <!-- hl-knowledge: introduces=[LA-LEX-C69-AFFECTUS-05]; assesses=[] -->
 
 **trīstis, trīste** — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trīstis** has no sure origin. Lewis & Short call it doubtful; EtymDB 2.1 records a reconstructed Proto-Indo-European *\*treystis*, "in a bad mood", but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

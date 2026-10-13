@@ -13,6 +13,9 @@ You'll want to know: జాగ్రత్త.
 జాగ్రత్త (jāgratta) — "care, caution".
 జాగ్రత్తగా వెళ్ళండి — "go carefully", what a host says at the door, where English says "take care". The -గా is the ending that makes a manner.
 
+The word, taken apart.
+జాగ్రత్త (jāgratta) comes from Sanskrit jāgrat, "waking, wakefulness" (CDIAL 5174), reshaped to Telugu sounds: a tadbhava. Caution is staying awake.
+
 What you've built.
 The kindest thing to say to someone leaving.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for an address, then the Telugu for care.
 You'll want to know: త్వరగా.
 త్వరగా (tvaragā) — "quickly", and at a parting, "soon".
 త్వరగా (tvaragā) రండి — "come back soon". The respectful raṇḍi you already have.
+
+The word, taken apart.
+త్వరగా (tvaragā) is Sanskrit tvarā, "haste", with the Telugu adverb ending -gā.
 
 What you've built.
 An invitation to return, built from pieces you own.
@@ -73,6 +79,9 @@ You'll want to know: ఇంటికి.
 ఇంటికి (iṇṭiki) — "home", as in "going home".
 It is ఇల్లు, "a house", with the -కి "to" ending on it, and the house word changes shape to take it. నేను ఇంటికి (iṇṭiki) వెళ్తాను — "I am going home".
 
+The word, taken apart.
+ఇంటికి (iṇṭiki) is native Dravidian: iṇṭi, the form illu, "house", takes before an ending, which DEDR 494 lists with Tamil il, "house", followed by -ki, "to".
+
 What you've built.
 A reason to leave that needs no apology.
 
@@ -103,6 +112,9 @@ You'll want to know: సెలవు.
 సెలవు (selavu) — "leave", both a holiday and permission to go.
 ఇవాళ సెలవు (selavu) — "today is a holiday". At a formal parting, సెలవు (selavu) alone asks leave to go, the way English once said "by your leave".
 
+The word, taken apart.
+సెలవు (selavu) is native Dravidian. DEDR 2781 lists selavu, "order, leave, permission, expense", under cellu, "to pass, be current", with Tamil cel, "to go, pass".
+
 What you've built.
 A holiday, and the most formal way out of a room.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for home, then the Telugu for leave.
 You'll want to know: పదండి.
 పదండి (padaṇḍi) — "let's go", said to the group you are leaving with.
 It carries the respectful -అండి like raṇḍi and āgaṇḍi, so it stays polite even when it hurries people along.
+
+The word, taken apart.
+పదండి (padaṇḍi) carries the polite ending -aṇḍi. The origin of the verb in front of it is uncertain: neither DEDR nor CDIAL records it.
 
 What you've built.
 Take care, come soon, I am going home, farewell, let's go: a whole exit.

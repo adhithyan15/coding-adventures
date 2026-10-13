@@ -14,7 +14,8 @@ romanization: "ādhunika"
 concept_tag: TE-GUNAM222-ADHUNIKA
 prerequisites: [TE-C221-padunaina, TE-C222-sarada]
 sounds: []
-roots: []
+roots: [sanskrit-adhunika]
+etymology_hook: "ādhunika ← Sanskrit ādhunika 'of now, modern', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C222-sarada]
 <!-- hl-knowledge: introduces=[TE-LEX-C222-GUNAM222-02]; assesses=[] -->
 
 **ఆధునిక** — *ādhunika* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆధునిక** (*ādhunika*) is Sanskrit *ādhunika*, "of the present time", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

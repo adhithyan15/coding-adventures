@@ -11,7 +11,8 @@ romanization: "grāmaṁ"
 concept_tag: TE-NOUN-VILLAGE
 prerequisites: [TE-C55-hill]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "grāmaṁ ← Sanskrit grāma 'troop, village' (CDIAL 4368), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *grāma* began as the word for a moving band of people, a travelling gr
 Telugu's own word is *ūru*, and it is the one used in speech: it is in half the place names on the map and it is what you say to a neighbour. గ్రామం is the official register — the word on a form, in a land record, on a signboard.
 
 So a Telugu speaker holds two villages, one for the revenue office and one for home.
+
+CDIAL 4368 lists Sanskrit *grāma*, "troop, village".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

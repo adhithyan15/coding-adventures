@@ -14,7 +14,8 @@ romanization: "paṇḍuga"
 concept_tag: TE-SAMAYAM289-PANDUGA
 prerequisites: [TE-C288-raktapotu, TE-C289-bhogi]
 sounds: []
-roots: []
+roots: [dravidian-pantikai-festival]
+etymology_hook: "paṇḍuga: native Dravidian, one word with Tamil paṇṭikai and Malayalam paṇṭika (DEDR 3899)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C289-bhogi]
 <!-- hl-knowledge: introduces=[TE-LEX-C289-SAMAYAM289-02]; assesses=[] -->
 
 **పండుగ** — *paṇḍuga* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పండుగ** (*paṇḍuga*) is native Dravidian, one word with Tamil *paṇṭikai* and Malayalam *paṇṭika* (DEDR 3899). DEDR lists Telugu *paṇḍuga*, "festival".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

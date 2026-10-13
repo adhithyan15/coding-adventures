@@ -11,7 +11,8 @@ romanization: "sukhaṁ"
 concept_tag: TE-FINE-EASE
 prerequisites: [TE-C93-wellbeing, TE-C93-comfortably]
 sounds: []
-roots: []
+roots: [sukha-sanskrit]
+etymology_hook: "sukhaṁ ← Sanskrit sukha 'easy; comfort, happiness', a tatsama (CDIAL 13451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C93-comfortably]
 
 **సుఖంగా ఉన్నారా?** — "are you comfortable?", a host's question. Its opposite is the
 **కష్టం** you already have: ease against difficulty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సుఖం** (*sukhaṁ*) is Sanskrit *sukha*, "easy; comfort, happiness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

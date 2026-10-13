@@ -14,7 +14,8 @@ romanization: "morugu"
 concept_tag: TE-VERB-MORUGU
 prerequisites: [TE-C244-gaddakattu, TE-C244-vadipovu]
 sounds: []
-roots: []
+roots: [dravidian-moru-bark]
+etymology_hook: "morugu: native Dravidian; DEDR 5013 lists moṟugu 'to bark' with Kannada moṟe 'to roar, bawl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C244-vadipovu]
 <!-- hl-knowledge: introduces=[TE-LEX-C244-KRIYA244-05]; assesses=[] -->
 
 **మొరుగు** — *morugu* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొరుగు** (*morugu*) is native Dravidian. DEDR 5013 lists *moṟugu*, "to bark as a dog", with Kannada *moṟe*, "to roar, bawl", and points to related sound-words across the region (CDIAL 10215).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

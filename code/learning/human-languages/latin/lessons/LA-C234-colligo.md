@@ -13,7 +13,8 @@ gloss: "to gather, to collect"
 concept_tag: LA-VERB-COLLIGO
 prerequisites: [LA-C233-pareo, LA-C234-demitto]
 sounds: []
-roots: []
+roots: [colligere-latin, legere-latin]
+etymology_hook: "colligō 'to collect' — con- 'together' + legō 'to gather'; English collect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C234-demitto]
 <!-- hl-knowledge: introduces=[LA-LEX-C234-ACT234-02]; assesses=[] -->
 
 **colligō, colligere** — "to gather, to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colligō** is *con-*, "together", with *legō*, "to gather, to pick" (EtymDB 2.1): to gather together. *legō* is usually traced to Proto-Indo-European *\*leg-*, "to gather" (EtymDB 2.1). English *collect* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "adē"
 concept_tag: TE-REPLY-THAT-ONE
 prerequisites: [TE-C98-enough, TE-C98-true]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "adē: native adi 'that' (DEDR 1) + the emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C98-true]
 **అదే** (*adē*) — "that's the one", "the same one".
 
 It is **అది**, "that", with the same **-ఏ**. When someone finally names what you meant, **అదే!**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అదే** (*adē*) is native Dravidian: *adi*, "that", on the far-pointing base *a-* (DEDR 1), with the emphatic *-ē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

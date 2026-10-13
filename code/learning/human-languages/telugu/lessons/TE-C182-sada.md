@@ -14,7 +14,8 @@ romanization: "sādā"
 concept_tag: TE-GUNAM182-SADA
 prerequisites: [TE-C182-mannikaina, TE-C182-nakili]
 sounds: []
-roots: []
+roots: [persian-sada]
+etymology_hook: "sādā ← Persian sāda 'plain, simple', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C182-nakili]
 <!-- hl-knowledge: introduces=[TE-LEX-C182-GUNAM182-04]; assesses=[] -->
 
 **సాదా** — *sādā* — "plain, simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాదా** (*sādā*) is a loan from Persian *sāda*, "plain, simple", which came through Hindustani. DEDR 2810 *sāda*, "fatigue", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

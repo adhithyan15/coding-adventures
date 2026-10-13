@@ -15,6 +15,7 @@ concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [kr-do]
+etymology_hook: "karnā ← Sanskrit karoti 'does', root kṛ 'to do, make' (CDIAL 2814)"
 duration:
   max_seconds: 240
 requires:

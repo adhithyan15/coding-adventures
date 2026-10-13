@@ -14,7 +14,8 @@ romanization: "banīnu"
 concept_tag: TE-VASTUVU263-BANINU
 prerequisites: [TE-C263-pyantu, TE-C263-nikkaru]
 sounds: []
-roots: []
+roots: [telugu-baninu-vest]
+etymology_hook: "banīnu: probably English banian 'vest'; DEDR and CDIAL do not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C263-nikkaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C263-VASTUVU263-05]; assesses=[] -->
 
 **బనీను** — *banīnu* — "a vest, an undershirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బనీను** (*banīnu*) is probably a loan from English *banian*, a British-Indian word for a vest; DEDR and CDIAL do not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

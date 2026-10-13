@@ -12,6 +12,9 @@ Before the new one: say the Latin for a barber, then the Latin for a shepherd.
 You'll want to know: piscātor, piscātōris.
 piscātor, piscātōris — "a fisherman".
 
+The word, taken apart.
+piscātor is built on piscor, "to fish", from piscis, "a fish" (EtymDB 2.1), with -tor, "one who does it". piscis is usually traced to Proto-Indo-European pisk-, "fish" (EtymDB 2.1); English fish is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a shepherd, then the Latin for a fisherman
 
 You'll want to know: servus, servī.
 servus, servī — "a slave, a servant".
+
+The word, taken apart.
+servus has no sure origin. Romans tied it to servō, "to keep, to save" (Lewis & Short), and an Etruscan source has also been suggested; neither is proven.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a fisherman, then the Latin for a slave.
 You'll want to know: domina, dominae.
 domina, dominae — "a mistress, the lady of the house".
 
+The word, taken apart.
+domina is the feminine of dominus, "master of the house" (Lewis & Short), built on domus, "house", which is usually traced to Proto-Indo-European dom-, "house" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a slave, then the Latin for a mistress.
 You'll want to know: amīca, amīcae.
 amīca, amīcae — "a friend (a woman)".
 
+The word, taken apart.
+amīca is the feminine of amīcus, "a friend" (Lewis & Short), which is built on amō, "to love".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a mistress, then the Latin for a friend.
 
 You'll want to know: armārium, armāriī.
 armārium, armāriī — "a cupboard".
+
+The word, taken apart.
+armārium is built on arma, "tools, gear" (Lewis & Short), with -ārium, an ending for a place to keep things.
 
 What you've built.
 One more word for this chapter.

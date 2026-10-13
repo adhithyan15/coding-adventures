@@ -14,7 +14,8 @@ romanization: "kavaru"
 concept_tag: TE-VASTUVU185-KAVARU
 prerequisites: [TE-C184-dosakaya, TE-C184-bendakaya]
 sounds: []
-roots: []
+roots: [english-cover]
+etymology_hook: "kavaru ← English cover"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C184-bendakaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C185-VASTUVU185-01]; assesses=[] -->
 
 **కవరు** — *kavaru* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కవరు** (*kavaru*) is a loan from English *cover*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for a ham, then the Latin for a birthday.
 You'll want to know: fluvius, fluviī.
 fluvius, fluviī — "a running stream, a river".
 
+The word, taken apart.
+fluvius is built on fluō, "to flow"; inscriptions also spell it flovios (Lewis & Short). fluō is usually traced to Proto-Indo-European bhlew-, "to swell, to flow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a birthday, then the Latin for a running s
 
 You'll want to know: palūs, palūdis.
 palūs, palūdis — "a marsh".
+
+The word, taken apart.
+palūs, palūdis, has no sure origin; Lewis & Short compare Greek pēlos, "mud". It is a different word from pālus, "a stake".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a running stream, then the Latin for a mar
 You'll want to know: prātum, prātī.
 prātum, prātī — "a meadow".
 
+The word, taken apart.
+prātum has no sure origin; no proposal is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a marsh, then the Latin for a meadow.
 You'll want to know: nemus, nemoris.
 nemus, nemoris — "a grove".
 
+The word, taken apart.
+nemus is usually traced to Proto-Indo-European nemos, "a sacred place, a clearing" (EtymDB 2.1), from nem-, "to allot"; Greek nemos, "a woodland pasture", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a meadow, then the Latin for a grove.
 
 You'll want to know: lūcus, lūcī.
 lūcus, lūcī — "a sacred grove".
+
+The word, taken apart.
+lūcus is inherited; Old Latin wrote loucos, usually traced to Proto-Indo-European lowkos, "a clearing", from the root for light (EtymDB 2.1). Lewis & Short explain lūcus as the shining, open place in a wood. English lea, "a meadow", is a cousin.
 
 What you've built.
 One more word for this chapter.

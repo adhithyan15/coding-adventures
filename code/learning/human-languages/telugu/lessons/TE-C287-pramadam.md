@@ -14,7 +14,8 @@ romanization: "pramādaṁ"
 concept_tag: TE-AROGYAM287-PRAMADAM
 prerequisites: [TE-C286-anuko, TE-C287-chati]
 sounds: []
-roots: []
+roots: [sanskrit-pramada]
+etymology_hook: "pramādaṁ ← Sanskrit pramāda 'negligence', a tatsama (CDIAL 8724)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C287-chati]
 <!-- hl-knowledge: introduces=[TE-LEX-C287-AROGYAM287-02]; assesses=[] -->
 
 **ప్రమాదం** — *pramādaṁ* — "an accident; danger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రమాదం** (*pramādaṁ*) is Sanskrit *pramāda*, "negligence", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8724). Telugu uses it for "accident; danger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

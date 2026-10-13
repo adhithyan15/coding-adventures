@@ -14,7 +14,8 @@ romanization: "tinnagā"
 concept_tag: TE-LOC100-TINNAGA
 prerequisites: [TE-C100-kudi, TE-C100-edama]
 sounds: []
-roots: []
+roots: [dravidian-tinna-straight]
+etymology_hook: "tinnagā: native tinna 'straight' (DEDR 3264), which lists tinnagā itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C100-edama]
 <!-- hl-knowledge: introduces=[TE-LEX-C100-LOC100-03]; assesses=[] -->
 
 **తిన్నగా** — *tinnagā* — "straight ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తిన్నగా** (*tinnagā*) is native Dravidian. DEDR 3264 lists *tinna*, "straight, direct", and the adverb built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

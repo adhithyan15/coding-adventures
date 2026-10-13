@@ -13,7 +13,8 @@ gloss: "a mother-in-law"
 concept_tag: LA-RES247-SOCRUS
 prerequisites: [LA-C247-geminus, LA-C247-socer]
 sounds: []
-roots: []
+roots: [socrus-latin, socer-latin]
+etymology_hook: "socrus 'mother-in-law' — from Proto-Italic *swekrus, partner of socer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C247-socer]
 <!-- hl-knowledge: introduces=[LA-LEX-C247-RES247-03]; assesses=[] -->
 
 **socrus, socrūs** — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**socrus** is usually traced to Proto-Italic *\*swekrus*, "mother-in-law" (EtymDB 2.1), the partner of *socer*, "father-in-law" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

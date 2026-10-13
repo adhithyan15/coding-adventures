@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to whisper, then the Hindi for to scold.
 You'll want to know: उत्तर.
 उत्तर — uttar — "north".
 
+The word, taken apart.
+उत्तर (uttar) is Sanskrit uttara, "upper; northern", taken over whole as a learned loan, a tatsama (CDIAL 1767). CDIAL lists the inherited form as ūtar.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to scold, then the Hindi for north.
 
 You'll want to know: दक्षिण.
 दक्षिण — dakṣiṇ — "south".
+
+The word, taken apart.
+दक्षिण (dakṣiṇ) is Sanskrit dakṣiṇa, "right (hand); southern", taken over whole as a learned loan, a tatsama (CDIAL 6119). CDIAL lists the inherited forms as dakkhin and dakhin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for north, then the Hindi for south.
 You'll want to know: पूर्व.
 पूर्व — pūrv — "east".
 
+The word, taken apart.
+पूर्व (pūrv) is Sanskrit pūrva, "fore, first, eastern", taken over whole as a learned loan, a tatsama (CDIAL 8343).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for south, then the Hindi for east.
 You'll want to know: पश्चिम.
 पश्चिम — paścim — "west".
 
+The word, taken apart.
+पश्चिम (paścim) is Sanskrit paścima, "hinder; western", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for east, then the Hindi for west.
 
 You'll want to know: दायाँ.
 दायाँ — dāyā̃ — "right (side)".
+
+The word, taken apart.
+दायाँ (dāyā̃) (dāyāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dākṣiṇa, "relating to the right; southern" (CDIAL 6251). CDIAL notes that its form was crossed with vāma, "left".
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "twice"
 concept_tag: LA-TEMP176-BIS
 prerequisites: [LA-C176-nonnumquam, LA-C176-semel]
 sounds: []
-roots: []
+roots: [bis-latin, duo-latin]
+etymology_hook: "bis 'twice' — from older duis, built on duo 'two'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C176-semel]
 <!-- hl-knowledge: introduces=[LA-LEX-C176-TEMP176-05]; assesses=[] -->
 
 **bis** — "twice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bis** comes from older *duis*, "two times" (Lewis & Short), built on *duo*, "two"; Latin turned an initial dw into b, as in *bellum*, "war", from older *duellum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

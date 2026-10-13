@@ -14,7 +14,8 @@ romanization: "iṭīvala"
 concept_tag: TE-GATAM154-ITIVALA
 prerequisites: [TE-C153-evaraina, TE-C153-emaina]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "iṭīvala: native, on the near-pointing base i- (DEDR 410), which lists īvala 'this side; recently'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C153-emaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C154-GATAM154-01]; assesses=[] -->
 
 **ఇటీవల** — *iṭīvala* — "recently". Telugu's past for "I" ends in **-ఆను** (*-ānu*): **నేను ఇటీవల ఒక పుస్తకం చదివాను** — *nēnu iṭīvala oka pustakaṁ cadivānu* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇటీవల** (*iṭīvala*) is native Dravidian, built on the near-pointing base *i-*. DEDR 410 lists *iṭu*, "to this place", and *īvala*, "this side; recently".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

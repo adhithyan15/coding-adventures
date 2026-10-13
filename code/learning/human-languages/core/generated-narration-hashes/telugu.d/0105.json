@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 105,
-  "sourceHash": "fnv1a64:0872c16fb25909bc",
+  "sourceHash": "fnv1a64:b244aad51c4d3c6f",
   "lessonIds": [
     "TE-C105-stesan",
     "TE-C105-bassu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch105.txt",
   "json": "telugu/narration/ch105.json",
-  "textHash": "fnv1a64:b8e8c65ce8025c86",
-  "jsonHash": "fnv1a64:2435bbc3a9841cc4",
+  "textHash": "fnv1a64:85ad386a7acbb1b1",
+  "jsonHash": "fnv1a64:ad76dd9e1f1a1923",
   "findings": []
 }

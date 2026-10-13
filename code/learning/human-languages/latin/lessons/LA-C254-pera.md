@@ -13,7 +13,8 @@ gloss: "a satchel"
 concept_tag: LA-RES254-PERA
 prerequisites: [LA-C253-dea, LA-C254-sarcina]
 sounds: []
-roots: []
+roots: [pera-latin]
+etymology_hook: "pēra 'satchel' — borrowed from Greek pēra 'bag'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C254-sarcina]
 <!-- hl-knowledge: introduces=[LA-LEX-C254-RES254-02]; assesses=[] -->
 
 **pēra, pērae** — "a satchel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pēra** was borrowed from Greek *pēra*, "a bag, a pouch" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

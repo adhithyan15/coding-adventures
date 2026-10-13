@@ -12,6 +12,9 @@ Before the new one: say the Latin for a tunic, then the Latin for a shoe.
 You'll want to know: queō, quīre.
 queō, quīre — "to be able, can".
 
+The word, taken apart.
+queō has no sure origin; Lewis & Short call it doubtful. It is the verb behind nequeō, "to be unable".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a shoe, then the Latin for to be able.
 
 You'll want to know: audeō, audēre.
 audeō, audēre — "to dare".
+
+The word, taken apart.
+audeō is usually traced to avidus, "eager, greedy" (EtymDB 2.1), from aveō, "to long for": to dare was first to be eager.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to be able, then the Latin for to dare.
 You'll want to know: dēbeō, dēbēre.
 dēbeō, dēbēre — "to have to, must; to owe".
 
+The word, taken apart.
+dēbeō is contracted from dē, "away from", and habeō, "to have" (Lewis & Short): to have what belongs to someone else, so to owe.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to dare, then the Latin for to have to.
 You'll want to know: soleō, solēre.
 soleō, solēre — "to be used to, usually do".
 
+The word, taken apart.
+soleō has no sure origin; Lewis & Short compare suēscō, "to become used to", but the link is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to have to, then the Latin for to be used 
 
 You'll want to know: potestās, potestātis.
 potestās, potestātis — "power, the ability to act".
+
+The word, taken apart.
+potestās is built on possum, "to be able" (Lewis & Short), through its stem pot-, with -tās, an ending for a quality.
 
 What you've built.
 One more word for this chapter.

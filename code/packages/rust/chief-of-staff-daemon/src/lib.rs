@@ -6,11 +6,11 @@
 mod agent_tools;
 
 use actor::{ActorError, ActorSystem};
-#[cfg(target_os = "linux")]
-use chief_of_staff_broker_launcher::VerifyError;
 use chief_of_staff_broker_launcher::{
-    BrokerKeyFiles, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
+    BrokerKeyFiles, BrokerProgram, KeyFileDeclaration, RelayConfig,
 };
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+use chief_of_staff_broker_launcher::{VerifiedExecutable, VerifyError};
 use chief_of_staff_broker_protocol::KeyKind;
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::{
@@ -22,7 +22,7 @@ use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, AxisPairingConfig, ChannelKeyAccess, ChiefConfig, ConfigError,
+    parse_config, AxisPairingConfig, ChannelKeyAccess, ChiefConfig, ConfigError, HostBrokerConfig,
     OnvifPairingConfig, ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
     SmartHomeToolGrantStatus, SynologyPairingConfig, ZoneMinderPairingConfig,
 };
@@ -341,11 +341,26 @@ pub enum ChiefDaemonError {
     Reconciliation(ReconcileConfigError),
     /// `[hosts.broker]` names an executable that is not the pinned binary,
     /// or that could not be verified (D18S S-K1).
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
     BrokerExecutable(VerifyError),
+    /// `[hosts.broker]` is configured on macOS without `seatbelt_shim`
+    /// and `seatbelt_shim_sha256` (D18S P2.7b): with no shim there is no
+    /// confined launch, so the broker is refused rather than run bare.
+    BrokerShimMissing,
+    /// `[hosts.broker] seatbelt_shim` is not the pinned binary or could not
+    /// be verified (`Some`), or is the broker itself (by inode or digest),
+    /// or the two paths fail the macOS applier's path rules (`None`)
+    /// (D18S P2.7b).
+    #[cfg(target_os = "macos")]
+    BrokerShim(Option<VerifyError>),
     /// `[hosts.broker]` is configured where no verified broker launch
     /// exists yet (S-P3): refused, rather than run unverified.
     BrokerUnsupported,
+    /// `[data_plane] channel_keys` is configured without `[hosts.broker]`
+    /// (D18S P2.6d-2c). Channel keys are held only by per-agent brokers;
+    /// the daemon serves no channel operation itself. Off Linux, where
+    /// `[hosts.broker]` is refused, `channel_keys` cannot be used yet.
+    ChannelKeysNeedBroker,
     /// A directory holding secrets (a channel key file's, the vault's
     /// storage or its KEK's) is open to group or others, is not owned by
     /// the daemon's user, or is reached through a link (D18S P2.6d-3).
@@ -503,10 +518,20 @@ impl Display for ChiefDaemonError {
             Self::Storage(_) => "chief daemon: durable storage failed",
             Self::Process(_) => "chief daemon: process supervision failed",
             Self::Reconciliation(_) => "chief daemon: reconciliation configuration failed",
-            #[cfg(target_os = "linux")]
+            #[cfg(any(target_os = "linux", target_os = "macos"))]
             Self::BrokerExecutable(_) => "chief daemon: broker executable failed verification",
+            Self::BrokerShimMissing => {
+                "chief daemon: [hosts.broker] needs seatbelt_shim and seatbelt_shim_sha256 on macOS"
+            }
+            #[cfg(target_os = "macos")]
+            Self::BrokerShim(_) => {
+                "chief daemon: the Seatbelt shim failed verification, is the broker, or a broker or shim path is unsafe"
+            }
             Self::BrokerUnsupported => {
                 "chief daemon: [hosts.broker] is not supported on this platform"
+            }
+            Self::ChannelKeysNeedBroker => {
+                "chief daemon: [data_plane] channel_keys requires [hosts.broker]"
             }
             Self::BrokerKeys => "chief daemon: channel keys cannot be given to brokers",
             Self::BrokerSecretDirectory => {
@@ -939,7 +964,6 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         &config,
         home,
         Arc::clone(&backend),
-        Arc::clone(&clock),
         smart_home_controller.clone(),
         Arc::clone(&unix_clock),
         AgentToolSource::Loaded(agent_tools),
@@ -1084,18 +1108,30 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
 /// wrong binary stops startup rather than every launch. The launcher checks
 /// it again, through the same descriptor it executes, before each launch.
 ///
-/// Without `[hosts.broker]` this returns `None`, and channel requests go to
-/// the in-daemon dispatcher as before. Off Linux, a configured broker is
+/// Without `[hosts.broker]` this returns `None` when no channel key is
+/// configured, and refuses (`ChannelKeysNeedBroker`) when one is: since
+/// P2.6d-2c the daemon serves no channel operation itself, so a key with no
+/// broker to hold it could only fail later, per request. On macOS the
+/// broker runs under the Seatbelt shim, which `[hosts.broker]` must pin as
+/// well (P2.7b). Elsewhere, off Linux and macOS, a configured broker is
 /// refused: there is no verified launch there yet, and running the broker
-/// unverified would be the one thing worse than not running it.
-fn compose_channel_brokers(
+/// unverified would be the one thing worse than not running it. Together
+/// these mean that there `channel_keys` cannot be configured at all yet
+/// (the owner's decision for 2c).
+///
+/// Public so that an end-to-end test composes the brokers exactly as the
+/// daemon does.
+pub fn compose_channel_brokers(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
 ) -> Result<Option<ChannelBrokers>, ChiefDaemonError> {
     let Some(broker) = config.host_broker() else {
-        return Ok(None);
+        if config.data_plane().channel_keys().is_empty() {
+            return Ok(None);
+        }
+        return Err(ChiefDaemonError::ChannelKeysNeedBroker);
     };
     let executable = broker
         .executable()
@@ -1106,7 +1142,7 @@ fn compose_channel_brokers(
     // refuse every broker stops the daemon here, with one clear error.
     keys.check_secret_directories()
         .map_err(|_| ChiefDaemonError::BrokerSecretDirectory)?;
-    let program = verify_broker_executable(&executable, broker.sha256())?;
+    let program = verify_broker_program(broker, &executable, home)?;
     let metadata: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
     Ok(Some(ChannelBrokers::new(
@@ -1119,21 +1155,53 @@ fn compose_channel_brokers(
     )))
 }
 
+/// Verify the broker, and on macOS the shim that confines it, against
+/// their pinned digests.
+///
+/// ```text
+///   Linux   broker                          the shim pair is not opened
+///   macOS   broker + seatbelt_shim          no pair: BrokerShimMissing
+///   other   refused (BrokerUnsupported)
+/// ```
 #[cfg(target_os = "linux")]
-fn verify_broker_executable(
-    path: &Path,
-    sha256: [u8; 32],
-) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
-    VerifiedExecutable::open(path, sha256)
-        .map(Arc::new)
+fn verify_broker_program(
+    broker: &HostBrokerConfig,
+    executable: &Path,
+    _home: &Path,
+) -> Result<Arc<BrokerProgram>, ChiefDaemonError> {
+    VerifiedExecutable::open(executable, broker.sha256())
+        .map(|broker| Arc::new(BrokerProgram::new(broker)))
         .map_err(ChiefDaemonError::BrokerExecutable)
 }
 
-#[cfg(not(target_os = "linux"))]
-fn verify_broker_executable(
-    _path: &Path,
-    _sha256: [u8; 32],
-) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
+#[cfg(target_os = "macos")]
+fn verify_broker_program(
+    broker: &HostBrokerConfig,
+    executable: &Path,
+    home: &Path,
+) -> Result<Arc<BrokerProgram>, ChiefDaemonError> {
+    let shim = broker
+        .seatbelt_shim()
+        .ok_or(ChiefDaemonError::BrokerShimMissing)?;
+    let shim_path = shim
+        .path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let program = VerifiedExecutable::open(executable, broker.sha256())
+        .map_err(ChiefDaemonError::BrokerExecutable)?;
+    let shim = VerifiedExecutable::open(&shim_path, shim.sha256())
+        .map_err(|error| ChiefDaemonError::BrokerShim(Some(error)))?;
+    BrokerProgram::new(program, shim)
+        .map(Arc::new)
+        .map_err(|_| ChiefDaemonError::BrokerShim(None))
+}
+
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+fn verify_broker_program(
+    _broker: &HostBrokerConfig,
+    _executable: &Path,
+    _home: &Path,
+) -> Result<Arc<BrokerProgram>, ChiefDaemonError> {
     Err(ChiefDaemonError::BrokerUnsupported)
 }
 
@@ -1195,16 +1263,16 @@ fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles,
 /// Compose the exact production host data plane from validated daemon authority.
 ///
 /// The returned dispatcher reloads durable pipeline authorization for every
-/// request. Non-empty data-plane declarations provision the file-backed channel
-/// keys and explicit Ollama providers used by [`run`]; absent or empty
-/// declarations retain the redacted unavailable service.
+/// request. Configured Ollama models and smart-home tool grants provision the
+/// model operations used by [`run`]; without them the redacted unavailable
+/// service answers. Channel keys play no part: they are the brokers'
+/// ([`compose_channel_brokers`], D18S P2.6d-2c).
 pub fn compose_host_data_plane(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
-    clock: Arc<dyn MonotonicClock>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
-    compose_host_data_plane_with_fetcher(config, home, backend, clock, NetFetch::production())
+    compose_host_data_plane_with_fetcher(config, home, backend, NetFetch::production())
 }
 
 /// [`compose_host_data_plane`] with the `net.fetch` resolver and transport
@@ -1220,7 +1288,6 @@ pub fn compose_host_data_plane_with_fetcher<R, T>(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
-    clock: Arc<dyn MonotonicClock>,
     fetch: NetFetch<R, T>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError>
 where
@@ -1247,7 +1314,6 @@ where
         config,
         home,
         backend,
-        clock,
         controller,
         Arc::new(SystemUnixTimeClock),
         AgentToolSource::FromConfig(fetcher),
@@ -1258,18 +1324,13 @@ fn compose_host_data_plane_with_controller(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
-    clock: Arc<dyn MonotonicClock>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
     agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
-    let metadata_source: Arc<dyn MessageMetadataSource> =
-        Arc::new(SystemMessageMetadataSource::new(clock));
     let service = compose_data_plane_service_with_controller(
         config,
         home,
-        Arc::clone(&backend),
-        metadata_source,
         controller,
         unix_clock,
         agent_tools,
@@ -1283,8 +1344,6 @@ fn compose_host_data_plane_with_controller(
 fn compose_data_plane_service(
     config: &ChiefConfig,
     home: &Path,
-    backend: Arc<dyn StorageBackend>,
-    metadata_source: Arc<dyn MessageMetadataSource>,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     let needs_controller = !config.data_plane().ollama_models().is_empty()
         || !config.data_plane().smart_home_tool_grants().is_empty();
@@ -1304,8 +1363,6 @@ fn compose_data_plane_service(
     compose_data_plane_service_with_controller(
         config,
         home,
-        backend,
-        metadata_source,
         controller,
         Arc::new(SystemUnixTimeClock),
         AgentToolSource::FromConfig(Arc::new(NetFetch::production())),
@@ -1315,31 +1372,20 @@ fn compose_data_plane_service(
 fn compose_data_plane_service_with_controller(
     config: &ChiefConfig,
     home: &Path,
-    backend: Arc<dyn StorageBackend>,
-    metadata_source: Arc<dyn MessageMetadataSource>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
     agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
-    if config.data_plane().channel_keys().is_empty()
-        && config.data_plane().ollama_models().is_empty()
+    // Channel keys are not the daemon's (P2.6d-2c): they go to the brokers
+    // (`compose_channel_brokers`), and play no part here.
+    if config.data_plane().ollama_models().is_empty()
         && config.data_plane().smart_home_tool_grants().is_empty()
     {
         return Ok(Arc::new(UnavailableHostDataPlaneService));
     }
-    let authorities =
-        provision_authorities(config.data_plane(), home).map_err(ChiefDaemonError::Authority)?;
-    let (channel_keys, models) = authorities.into_parts();
-    if config.data_plane().ollama_models().is_empty()
-        && config.data_plane().smart_home_tool_grants().is_empty()
-    {
-        return Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
-            backend,
-            Arc::new(channel_keys),
-            Arc::new(models),
-            metadata_source,
-        )));
-    }
+    let models = provision_authorities(config.data_plane())
+        .map_err(ChiefDaemonError::Authority)?
+        .into_models();
     let controller = controller.ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
     provision_smart_home_tool_grants(
         &controller,
@@ -1348,10 +1394,7 @@ fn compose_data_plane_service_with_controller(
     )?;
     if config.data_plane().ollama_models().is_empty() {
         return Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
-            backend,
-            Arc::new(channel_keys),
             Arc::new(models),
-            metadata_source,
         )));
     }
     let agent_tools = agent_tools.resolve(config, home)?;
@@ -1383,11 +1426,8 @@ fn compose_data_plane_service_with_controller(
     ];
     Ok(Arc::new(
         AuthorityBackedHostDataPlaneService::with_model_tools(
-            backend,
-            Arc::new(channel_keys),
             Arc::new(models),
             Arc::new(CompositeModelToolDispatcher::new(model_tools)),
-            metadata_source,
         ),
     ))
 }
@@ -4034,6 +4074,11 @@ hardware_key_timeout = 60
                 NEXT_DIR.fetch_add(1, Ordering::Relaxed)
             ));
             fs::create_dir(&path).unwrap();
+            // On macOS the temporary directory is reached through the
+            // `/var` symlink, and the Seatbelt applier refuses a
+            // non-canonical executable path (D18S P2.7b).
+            #[cfg(target_os = "macos")]
+            let path = fs::canonicalize(&path).unwrap();
             Self(path)
         }
     }
@@ -4226,38 +4271,59 @@ hardware_key_timeout = 60
     }
 
     #[test]
-    fn configured_authorities_fail_startup_without_disclosing_secret_paths() {
+    fn the_daemon_reads_no_channel_key_itself() {
+        // A channel key file that does not exist: the daemon's own data
+        // plane never looks for it (P2.6d-2c), so composing it succeeds and
+        // nothing mentions the path.
         let directory = TestDir::new();
         let config = parse_config(&format!(
             "{VALID_CONFIG}\n[data_plane]\nchannel_keys = [\n  {{ pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000002\", access = \"read\", private_key_path = \"~/missing-private-key.bin\" }},\n]\nollama_models = []\n"
         ))
         .unwrap();
-        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
-        let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
-        let metadata: Arc<dyn MessageMetadataSource> =
-            Arc::new(SystemMessageMetadataSource::new(clock));
-        let Err(error) = compose_data_plane_service(&config, &directory.0, backend, metadata)
-        else {
-            panic!("missing private authority unexpectedly composed");
-        };
-        assert!(matches!(error, ChiefDaemonError::Authority(_)));
-        assert_eq!(
-            error.to_string(),
-            "chief daemon: data-plane authority provisioning failed"
-        );
-        assert!(!error.to_string().contains("missing-private-key.bin"));
+        assert!(compose_data_plane_service(&config, &directory.0).is_ok());
     }
 
     const BROKER_CHANNEL_KEYS: &str = "[data_plane]\nchannel_keys = [\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000002\", access = \"read\", private_key_path = \"~/keys/inbox.x25519\" },\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000003\", access = \"write\", signing_seed_path = \"~/keys/outbox.seed\", channel_key_path = \"~/keys/outbox.cmk\" },\n]\nollama_models = []\n";
 
     /// A broker table for `executable`, pinned to `digest`.
     fn broker_config(executable: &Path, digest: [u8; 32]) -> ChiefConfig {
-        let hex: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        broker_config_with_shim(executable, digest, None)
+    }
+
+    fn hex(digest: [u8; 32]) -> String {
+        digest.iter().map(|byte| format!("{byte:02x}")).collect()
+    }
+
+    /// `[hosts.broker]`, with the Seatbelt shim pair when `shim` is given.
+    fn broker_config_with_shim(
+        executable: &Path,
+        digest: [u8; 32],
+        shim: Option<(&Path, [u8; 32])>,
+    ) -> ChiefConfig {
+        let shim = shim
+            .map(|(path, digest)| {
+                format!(
+                    "seatbelt_shim = \"{}\"\nseatbelt_shim_sha256 = \"{}\"\n",
+                    path.display(),
+                    hex(digest)
+                )
+            })
+            .unwrap_or_default();
         parse_config(&format!(
-            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{hex}\"\n",
-            executable.display()
+            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{}\"\n{shim}",
+            executable.display(),
+            hex(digest)
         ))
         .unwrap()
+    }
+
+    /// A pinned shim for the macOS tests: any file, since startup checks
+    /// only its digest, its identity and its path, never runs it.
+    #[cfg(target_os = "macos")]
+    fn a_shim(directory: &TestDir) -> (PathBuf, [u8; 32]) {
+        let shim = directory.0.join("shim");
+        fs::write(&shim, b"#!/bin/true\n").unwrap();
+        (shim, coding_adventures_sha256::sha256(b"#!/bin/true\n"))
     }
 
     fn broker_backend_and_clock() -> (Arc<dyn StorageBackend>, Arc<dyn MonotonicClock>) {
@@ -4268,15 +4334,32 @@ hardware_key_timeout = 60
     }
 
     #[test]
-    fn without_a_broker_table_channel_requests_stay_in_the_daemon() {
+    fn channel_keys_without_a_broker_table_stop_the_daemon() {
+        // On every platform (the owner's decision for P2.6d-2c): there is
+        // no in-daemon channel path to fall back to.
         let directory = TestDir::new();
         let config = parse_config(&format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}")).unwrap();
         let (backend, clock) = broker_backend_and_clock();
-        assert!(
-            compose_channel_brokers(&config, &directory.0, backend, clock)
-                .unwrap()
-                .is_none()
+        let error = compose_channel_brokers(&config, &directory.0, backend, clock)
+            .err()
+            .expect("refused");
+        assert!(matches!(error, ChiefDaemonError::ChannelKeysNeedBroker));
+        assert_eq!(
+            error.to_string(),
+            "chief daemon: [data_plane] channel_keys requires [hosts.broker]"
         );
+
+        // With no channel keys there is nothing to broker, and nothing to
+        // refuse.
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(compose_channel_brokers(
+            &parse_config(VALID_CONFIG).unwrap(),
+            &directory.0,
+            backend,
+            clock
+        )
+        .unwrap()
+        .is_none());
     }
 
     #[test]
@@ -4363,13 +4446,21 @@ hardware_key_timeout = 60
         );
     }
 
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
     #[test]
     fn the_broker_binary_is_verified_at_startup() {
         let directory = TestDir::new();
         let executable = directory.0.join("broker");
         fs::write(&executable, b"#!/bin/false\n").unwrap();
         let digest = coding_adventures_sha256::sha256(b"#!/bin/false\n");
+        #[cfg(target_os = "macos")]
+        let shim = a_shim(&directory);
+        #[cfg(target_os = "macos")]
+        let shim = Some((shim.0.as_path(), shim.1));
+        #[cfg(target_os = "linux")]
+        let shim = None;
+        let broker_config =
+            |executable: &Path, digest| broker_config_with_shim(executable, digest, shim);
         let (backend, clock) = broker_backend_and_clock();
         assert!(compose_channel_brokers(
             &broker_config(&executable, digest),
@@ -4425,7 +4516,99 @@ hardware_key_timeout = 60
         ));
     }
 
-    #[cfg(not(target_os = "linux"))]
+    /// Linux confines the broker without a shim, so the pair is never
+    /// opened: here it names nothing at all.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn linux_does_not_open_the_seatbelt_shim() {
+        let directory = TestDir::new();
+        let executable = directory.0.join("broker");
+        fs::write(&executable, b"#!/bin/false\n").unwrap();
+        let digest = coding_adventures_sha256::sha256(b"#!/bin/false\n");
+        let absent = directory.0.join("absent-shim");
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(compose_channel_brokers(
+            &broker_config_with_shim(&executable, digest, Some((&absent, [0; 32]))),
+            &directory.0,
+            backend,
+            clock,
+        )
+        .unwrap()
+        .is_some());
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn macos_requires_a_verified_shim_that_is_not_the_broker() {
+        let directory = TestDir::new();
+        let executable = directory.0.join("broker");
+        fs::write(&executable, b"#!/bin/false\n").unwrap();
+        let digest = coding_adventures_sha256::sha256(b"#!/bin/false\n");
+        let (shim, shim_digest) = a_shim(&directory);
+        let (backend, clock) = broker_backend_and_clock();
+        let compose = |config: ChiefConfig| {
+            compose_channel_brokers(
+                &config,
+                &directory.0,
+                Arc::clone(&backend),
+                Arc::clone(&clock),
+            )
+        };
+        // No shim: no confined launch, so no broker.
+        assert!(matches!(
+            compose(broker_config(&executable, digest)),
+            Err(ChiefDaemonError::BrokerShimMissing)
+        ));
+        let mut wrong = shim_digest;
+        wrong[0] ^= 1;
+        assert!(matches!(
+            compose(broker_config_with_shim(
+                &executable,
+                digest,
+                Some((&shim, wrong))
+            )),
+            Err(ChiefDaemonError::BrokerShim(Some(
+                VerifyError::DigestMismatch
+            )))
+        ));
+        assert!(matches!(
+            compose(broker_config_with_shim(
+                &executable,
+                digest,
+                Some((&directory.0.join("absent"), shim_digest))
+            )),
+            Err(ChiefDaemonError::BrokerShim(Some(VerifyError::Unreadable)))
+        ));
+        // The broker as its own shim would confine nothing: the same file,
+        // or a copy of it, which the digest gives away.
+        assert!(matches!(
+            compose(broker_config_with_shim(
+                &executable,
+                digest,
+                Some((&executable, digest))
+            )),
+            Err(ChiefDaemonError::BrokerShim(None))
+        ));
+        let copy = directory.0.join("broker-copy");
+        fs::copy(&executable, &copy).unwrap();
+        assert!(matches!(
+            compose(broker_config_with_shim(
+                &executable,
+                digest,
+                Some((&copy, digest))
+            )),
+            Err(ChiefDaemonError::BrokerShim(None))
+        ));
+        assert!(compose(broker_config_with_shim(
+            &executable,
+            digest,
+            Some((&shim, shim_digest))
+        ))
+        .unwrap()
+        .is_some());
+    }
+
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
     #[test]
     fn a_broker_table_is_refused_where_no_verified_launch_exists() {
         let directory = TestDir::new();
@@ -6303,12 +6486,7 @@ hardware_key_timeout = 60
         let directory = TestDir::new();
         write_trusted_key(&directory);
         let config = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
-        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
-        let monotonic: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
-        let metadata: Arc<dyn MessageMetadataSource> =
-            Arc::new(SystemMessageMetadataSource::new(monotonic));
-
-        compose_data_plane_service(&config, &directory.0, backend, metadata).unwrap();
+        compose_data_plane_service(&config, &directory.0).unwrap();
 
         let restored = SmartHomeControllerRuntime::restore(FsStorageBackend::new(
             directory.0.join(".chief-of-staff/state/"),

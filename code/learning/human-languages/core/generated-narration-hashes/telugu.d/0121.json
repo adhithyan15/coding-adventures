@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 121,
-  "sourceHash": "fnv1a64:c3865f4c7c138e9b",
+  "sourceHash": "fnv1a64:249d60bfbb836487",
   "lessonIds": [
     "TE-C121-urumu",
     "TE-C121-merupu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch121.txt",
   "json": "telugu/narration/ch121.json",
-  "textHash": "fnv1a64:bd3a37c4171069e6",
-  "jsonHash": "fnv1a64:f82da0d8d7933b2c",
+  "textHash": "fnv1a64:e913e35e2397d99d",
+  "jsonHash": "fnv1a64:b1287c232df8da9b",
   "findings": []
 }

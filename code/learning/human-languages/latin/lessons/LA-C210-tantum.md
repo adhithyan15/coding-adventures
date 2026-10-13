@@ -13,7 +13,8 @@ gloss: "only; so much"
 concept_tag: LA-CAUSA210-TANTUM
 prerequisites: [LA-C210-profecto, LA-C210-fere]
 sounds: []
-roots: []
+roots: [tantum-latin, tantus]
+etymology_hook: "tantum 'only' — the neuter of tantus 'so great'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C210-fere]
 <!-- hl-knowledge: introduces=[LA-LEX-C210-CAUSA210-05]; assesses=[] -->
 
 **tantum** — "only; so much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tantum** is the neuter of *tantus*, "so great", used as an adverb (Lewis & Short): so much, and only so much.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

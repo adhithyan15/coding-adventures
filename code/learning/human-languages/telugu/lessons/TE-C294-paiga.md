@@ -14,7 +14,8 @@ romanization: "paigā"
 concept_tag: TE-KARANAM294-PAIGA
 prerequisites: [TE-C293-ataka, TE-C294-salaha]
 sounds: []
-roots: []
+roots: [dravidian-pai-upper]
+etymology_hook: "paigā: native pai 'upon, above' (DEDR 4451) + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C294-salaha]
 <!-- hl-knowledge: introduces=[TE-LEX-C294-KARANAM294-02]; assesses=[] -->
 
 **పైగా** — *paigā* — "moreover, besides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పైగా** (*paigā*) is native Dravidian: *pai*, "upon, above, extra", one word with Kannada *pai* (DEDR 4451), with the adverb ending *-gā*: "over and above".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

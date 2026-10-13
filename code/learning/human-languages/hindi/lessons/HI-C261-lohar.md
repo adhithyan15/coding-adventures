@@ -14,7 +14,8 @@ romanization: "lohār"
 concept_tag: HI-THG261-LOHAR
 prerequisites: [HI-C261-mali, HI-C261-kumhar]
 sounds: []
-roots: []
+roots: [sanskrit-lohakara]
+etymology_hook: "lohār ← Sanskrit lohakāra 'iron-worker', a tadbhava (CDIAL 11159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C261-kumhar]
 <!-- hl-knowledge: introduces=[HI-LEX-C261-THG261-04]; assesses=[] -->
 
 **लोहार** — *lohār* — "a blacksmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लोहार** (*lohār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lohakāra*, "iron-worker" (CDIAL 11159). It is built from *loha*, "iron", and *kāra*, "maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

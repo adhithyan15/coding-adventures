@@ -14,7 +14,8 @@ romanization: "vahī"
 concept_tag: HI-NOTHING-THAT-ONE
 prerequisites: [HI-C113-abhinahin, HI-C113-kafi]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "vahī: vah 'that' (CDIAL 972) with the emphatic -hī, 'that and no other'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C113-kafi]
 **वही** (*vahī*) — "that very one", "the same".
 
 It is **वह**, "that", with **ही**, "exactly". When someone names what you meant: **हाँ, वही!**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वही** (*vahī*) is **वह**, "that", with the emphatic *-hī*: "that one and no other". CDIAL lists *vah* under Sanskrit *asau*, "that" (CDIAL 972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

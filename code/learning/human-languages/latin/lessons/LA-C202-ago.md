@@ -13,7 +13,8 @@ gloss: "to do, to drive"
 concept_tag: LA-VERB-AGO
 prerequisites: [LA-C202-tremo, LA-C202-excipio]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "agō 'to do, to drive' — inherited, usually traced to PIE *h2eg- 'to drive'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C202-excipio]
 <!-- hl-knowledge: introduces=[LA-LEX-C202-ACT202-04]; assesses=[] -->
 
 **agō, agere** — "to do, to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agō** is inherited, usually traced to Proto-Indo-European *\*h2eg-*, "to drive, to lead" (EtymDB 2.1); Greek *agō*, "to lead", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

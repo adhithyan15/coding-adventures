@@ -13,7 +13,8 @@ gloss: "a sword"
 concept_tag: LA-RES2-GLADIUS
 prerequisites: [LA-C85-pila, LA-C85-rota]
 sounds: []
-roots: []
+roots: [gladius-latin]
+etymology_hook: "gladius 'sword' — usually thought to be a Celtic loan; Old Irish claideb 'sword' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C85-rota]
 <!-- hl-knowledge: introduces=[LA-LEX-C85-RES2-03]; assesses=[] -->
 
 **gladius, gladiī** — "a sword". A *gladiator* carried one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gladius** is usually thought to be a loan from a Celtic language; Old Irish *claideb*, "sword", is often compared. Lewis & Short offer only an uncertain Latin link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

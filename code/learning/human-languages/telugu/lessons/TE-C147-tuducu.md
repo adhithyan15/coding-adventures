@@ -14,7 +14,8 @@ romanization: "tuḍucu"
 concept_tag: TE-VERB-TUDUCU
 prerequisites: [TE-C146-lekkapettu, TE-C146-kadugu]
 sounds: []
-roots: []
+roots: [dravidian-tudai-wipe]
+etymology_hook: "tuḍucu: native Dravidian, one word with Tamil tuṭai and Kannada toḍe (DEDR 3301)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C146-kadugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C147-ACT147-01]; assesses=[] -->
 
 **తుడుచు** — *tuḍucu* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తుడుచు** (*tuḍucu*) is native Dravidian, one word with Tamil *tuṭai* and Kannada *toḍe* (DEDR 3301). DEDR lists Telugu *tuḍucu*, "to wipe, sweep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

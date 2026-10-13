@@ -14,7 +14,8 @@ romanization: "beṭī"
 concept_tag: HI-NOUN-DAUGHTER
 prerequisites: [HI-C44-son, HI-C42-sit]
 sounds: []
-roots: []
+roots: [indo-aryan-bitta]
+etymology_hook: "beṭī: feminine of beṭā 'son'; CDIAL lists both under a reconstructed *beṭṭa, beside Prakrit biṭṭa 'boy' (CDIAL 9238)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C44-son]
 **बेटी** (*beṭī*) — "daughter".
 
 The same stem, with *-ī* in place of *-ā* — exactly the swap that turns बच्चा into बच्ची. A great deal of Hindi gender lives in that one final vowel, and this pair is the cleanest example you have met so far: nothing else in the word moves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेटी** (*beṭī*) is the feminine of **बेटा**, "son". CDIAL lists both under a reconstructed *\*beṭṭa*, in an entry headed *\*biḍḍa*, "defective", beside Prakrit *biṭṭa*, "boy" (CDIAL 9238). No Sanskrit source is agreed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

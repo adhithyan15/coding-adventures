@@ -14,7 +14,8 @@ romanization: "śabd"
 concept_tag: HI-THG198-SABD
 prerequisites: [HI-C197-abhyas, HI-C197-ank]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "śabd ← Sanskrit śabda 'sound, word', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C197-ank]
 <!-- hl-knowledge: introduces=[HI-LEX-C198-THG198-01]; assesses=[] -->
 
 **शब्द** — *śabd* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शब्द** (*śabd*) is Sanskrit *śabda*, "sound, word", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

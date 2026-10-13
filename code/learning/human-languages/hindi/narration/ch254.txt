@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a man, then the Hindi for a baby.
 You'll want to know: सहेली.
 सहेली — sahelī — "a female friend (of a girl)".
 
+The word, taken apart.
+सहेली (sahelī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sakhī, "woman's confidante" (CDIAL 13074). CDIAL notes an added -l-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a baby, then the Hindi for a female friend
 
 You'll want to know: साथी.
 साथी — sāthī — "a companion".
+
+The word, taken apart.
+साथी (sāthī) is a tadbhava, a word inherited and reshaped by sound change. It comes from sārthin, "having part in a company", a form CDIAL reconstructs from its descendants (CDIAL 13366). It is built on sārtha, "company".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a female friend, then the Hindi for a comp
 You'll want to know: संबंधी.
 संबंधी — sambandhī — "a relative".
 
+The word, taken apart.
+संबंधी (sambandhī) is Sanskrit sambandhin, "connected, related", taken over whole as a learned loan, a tatsama. Hindi took its nominative, sambandhī.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a companion, then the Hindi for a relative
 You'll want to know: सास.
 सास — sās — "a mother-in-law".
 
+The word, taken apart.
+सास (sās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvaśrū, "husband's or wife's mother" (CDIAL 12759).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a relative, then the Hindi for a mother-in
 
 You'll want to know: ससुर.
 ससुर — sasur — "a father-in-law".
+
+The word, taken apart.
+ससुर (sasur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvaśura, "father-in-law" (CDIAL 12753).
 
 What you've built.
 One more word for this chapter.

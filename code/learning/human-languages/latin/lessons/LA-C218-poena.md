@@ -13,7 +13,8 @@ gloss: "a punishment"
 concept_tag: LA-RES218-POENA
 prerequisites: [LA-C218-testis, LA-C218-reus]
 sounds: []
-roots: []
+roots: [poena-latin]
+etymology_hook: "poena 'punishment' — borrowed from Greek poinē 'a fine'; English pain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C218-reus]
 <!-- hl-knowledge: introduces=[LA-LEX-C218-RES218-04]; assesses=[] -->
 
 **poena, poenae** — "a punishment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poena** was borrowed from Greek *poinē*, "a fine, blood-money" (Lewis & Short), which is usually traced to Proto-Indo-European *\*kwoyneh2*, "penalty" (EtymDB 2.1). English *pain* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

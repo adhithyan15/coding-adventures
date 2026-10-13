@@ -11,7 +11,8 @@ romanization: "alāgā"
 concept_tag: TE-RESPOND-I-SEE
 prerequisites: [TE-C87-exactly, TE-C87-probably]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "alāgā: native alā 'in that way' on the far-pointing base a- (DEDR 1), + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C87-probably]
 
 It sits one vowel away from **అలాగే**, "alright then". *Alāgā* receives news;
 *alāgē* agrees to a plan. Say both and hear the difference in the last vowel.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అలాగా** (*alāgā*) is native Dravidian: *alā*, "in that way", built on the far-pointing base *a-* (DEDR 1), with *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

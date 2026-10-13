@@ -14,7 +14,8 @@ romanization: "nicoṛnā"
 concept_tag: HI-VERB-NICORNA
 prerequisites: [HI-C225-jharna, HI-C225-pochna]
 sounds: []
-roots: []
+roots: [indo-aryan-nishcotayati]
+etymology_hook: "nicoṛnā ← *niścoṭayati 'presses out', a reconstructed form; a tadbhava (CDIAL 7449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C225-pochna]
 <!-- hl-knowledge: introduces=[HI-LEX-C225-ACT225-04]; assesses=[] -->
 
 **निचोड़ना** — *nicoṛnā* — "to wring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निचोड़ना** (*nicoṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*niścoṭayati*, "presses out", a form CDIAL reconstructs from its descendants (CDIAL 7449).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a voice"
 concept_tag: LA-VALE174-VOX
 prerequisites: [LA-C174-lacrima, LA-C174-risus]
 sounds: []
-roots: []
+roots: [vox-latin]
+etymology_hook: "vōx 'voice' — inherited, usually traced to PIE *wōkws 'voice'; vocō 'to call' is its verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C174-risus]
 <!-- hl-knowledge: introduces=[LA-LEX-C174-VALE174-04]; assesses=[] -->
 
 **vōx, vōcis** — "a voice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vōx** is inherited, usually traced to Proto-Indo-European *\*wōkws*, "voice", from *\*wekw-*, "to speak" (EtymDB 2.1); *vocō*, "to call", is its verb (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

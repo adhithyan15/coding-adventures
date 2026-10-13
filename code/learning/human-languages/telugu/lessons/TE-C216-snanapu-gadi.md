@@ -14,7 +14,8 @@ romanization: "snānapu gadi"
 concept_tag: TE-STHALAM216-SNANAPU-GADI
 prerequisites: [TE-C215-thiyetaru, TE-C215-stediyam]
 sounds: []
-roots: []
+roots: [sanskrit-snana]
+etymology_hook: "snānapu gadi: Sanskrit snāna 'bathing' (CDIAL 13789) + gadi 'room', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C215-stediyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C216-STHALAM216-01]; assesses=[] -->
 
 **స్నానపు గది** — *snānapu gadi* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్నానపు గది** (*snānapu gadi*) is Sanskrit *snāna*, "bathing" (CDIAL 13789), in its joining form *snānapu*, and *gadi*, "room", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

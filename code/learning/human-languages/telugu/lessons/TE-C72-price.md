@@ -11,7 +11,8 @@ romanization: "dhara"
 concept_tag: TE-NOUN-PRICE
 prerequisites: [TE-C72-money]
 sounds: []
-roots: []
+roots: [sanskrit-dhara]
+etymology_hook: "dhara: usually traced to Sanskrit dhara 'holding, supporting' (CDIAL 6740)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C72-money]
 It is Sanskrit, from a sense of what holds a thing up, which is a fair picture of value. Telugu uses it for one thing's price and for prices in general: when people say the ధర has gone up, they mean everything has.
 
 Asking is direct and expected. Nobody in an అంగడి minds the question, and asking before you pick a thing up is politer than asking after.
+
+CDIAL 6740 lists Sanskrit *dhara*, "holding, supporting"; the sense "price" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

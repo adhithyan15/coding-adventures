@@ -13,7 +13,8 @@ gloss: "to warn, to remind"
 concept_tag: LA-VERB-MONEO
 prerequisites: [LA-C256-augeo, LA-C256-minuo]
 sounds: []
-roots: []
+roots: [monere-latin]
+etymology_hook: "moneō 'to warn' — usually traced to PIE *moneye- 'to make think'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C256-minuo]
 <!-- hl-knowledge: introduces=[LA-LEX-C256-ACT256-05]; assesses=[] -->
 
 **moneō, monēre** — "to warn, to remind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moneō** is inherited, usually traced to Proto-Indo-European *\*moneye-*, "to make think" (EtymDB 2.1), a causative of the root of *meminī*, "to remember" (Lewis & Short): to remind, to warn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

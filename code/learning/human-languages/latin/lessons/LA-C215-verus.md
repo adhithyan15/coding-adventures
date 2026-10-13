@@ -13,7 +13,8 @@ gloss: "true, real"
 concept_tag: LA-QUAL215-VERUS
 prerequisites: [LA-C215-hesternus, LA-C215-crastinus]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "vērus 'true' — inherited, usually traced to PIE *weh1ros 'true'; German wahr is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C215-crastinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C215-QUAL215-04]; assesses=[] -->
 
 **vērus, vēra, vērum** — "true, real".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vērus** is inherited, usually traced to Proto-Indo-European *\*weh1ros*, "true" (EtymDB 2.1); German *wahr*, "true", is a cousin. Lewis & Short still called it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

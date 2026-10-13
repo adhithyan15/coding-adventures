@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 137,
-  "sourceHash": "fnv1a64:68abca5d218ba846",
+  "sourceHash": "fnv1a64:0a24825070403d6a",
   "lessonIds": [
     "TE-C137-telika",
     "TE-C137-mettani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch137.txt",
   "json": "telugu/narration/ch137.json",
-  "textHash": "fnv1a64:61ef7a93ede3c63b",
-  "jsonHash": "fnv1a64:6f82fddd459ab9c0",
+  "textHash": "fnv1a64:bee4f297ba1a0640",
+  "jsonHash": "fnv1a64:22f6c291df64cc6d",
   "findings": []
 }

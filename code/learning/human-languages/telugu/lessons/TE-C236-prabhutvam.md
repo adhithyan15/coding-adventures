@@ -14,7 +14,8 @@ romanization: "prabhutvaṁ"
 concept_tag: TE-PANI236-PRABHUTVAM
 prerequisites: [TE-C236-vyaparam, TE-C236-kampeni]
 sounds: []
-roots: []
+roots: [sanskrit-prabhu]
+etymology_hook: "prabhutvaṁ ← Sanskrit prabhutva 'lordship', from prabhu 'lord' (CDIAL 8715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C236-kampeni]
 <!-- hl-knowledge: introduces=[TE-LEX-C236-PANI236-04]; assesses=[] -->
 
 **ప్రభుత్వం** — *prabhutvaṁ* — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రభుత్వం** (*prabhutvaṁ*) is Sanskrit *prabhutva*, "lordship, rule", from *prabhu*, "strong; lord" (CDIAL 8715), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

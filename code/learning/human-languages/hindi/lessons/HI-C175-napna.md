@@ -14,7 +14,8 @@ romanization: "nāpnā"
 concept_tag: HI-VERB-NAPNA
 prerequisites: [HI-C174-sudharna, HI-C174-tolna]
 sounds: []
-roots: []
+roots: [sanskrit-jnapyate]
+etymology_hook: "nāpnā ← Sanskrit jñāpyate 'is made known', a tadbhava (CDIAL 5283)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C174-tolna]
 <!-- hl-knowledge: introduces=[HI-LEX-C175-ACT175-01]; assesses=[] -->
 
 **नापना** — *nāpnā* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नापना** (*nāpnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jñāpyate*, "is made known" (CDIAL 5283). The sense moved from "making known" to "measuring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

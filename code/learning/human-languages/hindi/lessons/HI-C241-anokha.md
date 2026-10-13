@@ -14,7 +14,8 @@ romanization: "anokhā"
 concept_tag: HI-QUAL241-ANOKHA
 prerequisites: [HI-C241-muft, HI-C241-kimti]
 sounds: []
-roots: []
+roots: [sanskrit-anapeksha]
+etymology_hook: "anokhā ← Sanskrit anapekṣa 'careless, unconsidered', a tadbhava (CDIAL 289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C241-kimti]
 <!-- hl-knowledge: introduces=[HI-LEX-C241-QUAL241-05]; assesses=[] -->
 
 **अनोखा** — *anokhā* — "unusual, unique".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनोखा** (*anokhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *anapekṣa*, "careless, unconsidered" (CDIAL 289). Prakrit *ṇokkha* meant "unexpected, strange".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

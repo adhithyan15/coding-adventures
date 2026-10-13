@@ -14,7 +14,8 @@ romanization: "rasāyanaśāstraṁ"
 concept_tag: TE-PANI276-RASAYANASASTRAM
 prerequisites: [TE-C275-sangitam, TE-C275-natakam]
 sounds: []
-roots: []
+roots: [sanskrit-rasayana, sanskrit-shastra]
+etymology_hook: "rasāyanaśāstraṁ: Sanskrit rasāyana 'elixir' (CDIAL 10659) + śāstra 'treatise' (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C275-natakam]
 <!-- hl-knowledge: introduces=[TE-LEX-C276-PANI276-01]; assesses=[] -->
 
 **రసాయనశాస్త్రం** — *rasāyanaśāstraṁ* — "chemistry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రసాయనశాస్త్రం** (*rasāyanaśāstraṁ*) is Sanskrit: *rasāyana*, "elixir of life" (CDIAL 10659), and *śāstra*, "treatise" (CDIAL 12422), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

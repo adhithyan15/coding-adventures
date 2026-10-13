@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **`[hosts.broker]` on macOS** (D18S P2.7b; #13980).
+  - The broker runs confined by the Seatbelt shim, which the table must pin
+    as well (`seatbelt_shim`, `seatbelt_shim_sha256`).
+  - Startup stops with `BrokerShimMissing` if the pair is absent, and with
+    `BrokerShim` if the shim fails verification or is the broker itself.
+  - Linux never opens the shim.
+  - So `channel_keys` now works on macOS too. Elsewhere `[hosts.broker]`
+    is still refused (`BrokerUnsupported`).
+- **`channel_keys` requires `[hosts.broker]`, on every platform** (D18S
+  P2.6d-2c, the owner's decision; #13980). The daemon refuses to start
+  with `ChannelKeysNeedBroker` otherwise. Off Linux `[hosts.broker]` is
+  itself refused, so `channel_keys` cannot be configured there until the
+  macOS and Windows broker steps.
+  - The daemon reads no channel key file itself: its data plane provisions
+    only the model providers.
+  - `compose_channel_brokers` is public, so an end-to-end test composes the
+    brokers exactly as the daemon does.
+  - `compose_host_data_plane` and `compose_host_data_plane_with_fetcher`
+    no longer take a clock: nothing they build needs one now.
 - **Each broker runs confined, and secret directories must be owner-only**
   (D18S P2.6d-3). With `[hosts.broker]` set, every broker launch first
   checks that each `channel_keys` file's directory, the vault's storage

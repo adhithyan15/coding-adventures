@@ -13,7 +13,8 @@ gloss: "short, brief"
 concept_tag: LA-MAGNUS-BREVIS
 prerequisites: [LA-C93-parvus, LA-C93-longus]
 sounds: []
-roots: []
+roots: [brevis-latin]
+etymology_hook: "brevis 'short' — inherited, usually traced to PIE *mreghus 'short'; Greek brakhys is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C93-longus]
 <!-- hl-knowledge: introduces=[LA-LEX-C93-MAGNUS-04]; assesses=[] -->
 
 **brevis, breve** — "short, brief". English *brief*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brevis** is inherited, usually traced to Proto-Indo-European *\*mreghus*, "short" (EtymDB 2.1); Greek *brakhys*, "short", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

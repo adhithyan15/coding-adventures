@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, But, Or",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8d3d48551d2dc7c9",
+  "sourceHash": "fnv1a64:f0d454858041bb6b",
   "lessons": [
     {
       "id": "TE-C74-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b233dec003256f96",
+      "sourceHash": "fnv1a64:7271b1c2d298fd1b",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరియు (mariyu) is native Dravidian. DEDR 4766 lists Telugu maṟi, \"and, again, further\", with Tamil maṟu and Kannada maṟu, \"other, next\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +148,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd5ab4b0a9edd420",
+      "sourceHash": "fnv1a64:ae5b8f98126bc317",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కానీ (kānī) is native Dravidian, built on kā-, the stem of agu, \"to be\", that also gives kādu, \"it is not\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -286,7 +308,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -317,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b73166a4031a8b81",
+      "sourceHash": "fnv1a64:4e5a799dccc53a89",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +380,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లేదా (lēdā) is native Dravidian, built on lē-, \"be not\", the root of lēdu. DEDR 2559 lists lēka, \"without; or, else\", with Tamil il."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -368,7 +401,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,7 +468,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -466,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9b39d820a233f51",
+      "sourceHash": "fnv1a64:05979e9a9a44d7e0",
       "notice": null,
       "blocks": [
         {
@@ -507,6 +540,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకు (enduku) is native Dravidian, built on the question base e-. DEDR 5151 lists enduku, \"why\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -517,7 +561,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -584,7 +628,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -616,7 +660,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:42f0833f7fc14bec",
+      "sourceHash": "fnv1a64:71e4a4e67d659b72",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -667,6 +711,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకంటే (endukaṇṭē) is native Dravidian: enduku, \"why\" (DEDR 5151), and aṇṭē, \"if you say\", from anu, \"to say\" (DEDR 868)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the reason clause comes second",
           "segments": [
@@ -677,7 +732,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -688,7 +743,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -746,7 +801,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

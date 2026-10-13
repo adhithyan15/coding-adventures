@@ -13,7 +13,8 @@ gloss: "bald"
 concept_tag: LA-QUAL216-CALVUS
 prerequisites: [LA-C215-verus, LA-C215-incertus]
 sounds: []
-roots: []
+roots: [calvus-latin]
+etymology_hook: "calvus 'bald' — inherited, usually traced to PIE *klh2wos 'bald'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C215-incertus]
 <!-- hl-knowledge: introduces=[LA-LEX-C216-QUAL216-01]; assesses=[] -->
 
 **calvus, calva, calvum** — "bald".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calvus** is inherited, usually traced to Proto-Indo-European *\*klh2wos*, "bald" (EtymDB 2.1); German *kahl*, "bald", is often compared (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

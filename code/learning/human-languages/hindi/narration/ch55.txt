@@ -108,6 +108,9 @@ You'll want to know: बादल.
 बादल (bādal) is usually traced to a Sanskrit adjective for 'cloudy' built on वारि (vāri), 'water', though the route is less tidy than the three words before it and the sources do not all agree on the steps.
 That is worth marking. Three clean etymologies in a row can make the fourth look clean too, and this one is not — it is probable rather than settled, and the difference matters.
 
+The word, taken apart.
+बादल (bādal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, "rainy day, bad weather" (CDIAL 11567).
+
 What you've built.
 The fourth of five, and the first this chapter has had to hedge on.
 
@@ -139,6 +142,9 @@ You'll want to know: आसमान.
 आसमान (āsmān) — "the sky".
 A Persian word, āsmān, whose older Iranian form is a cousin of Sanskrit अश्मन् (aśman) — and aśman means 'stone'. The sky was imagined as a stone vault overhead.
 Sanskrit's own everyday word for sky, आकाश (ākāśa), is a different word from a different root, and Hindi has both. So the sky above a Hindi speaker can be a Persian stone dome or a Sanskrit open space, depending on which word is reached for.
+
+The word, taken apart.
+आसमान (āsmān) is a loan, usually traced to Persian āsmān, "sky".
 
 What you've built.
 The fifth of five. The sky is furnished.

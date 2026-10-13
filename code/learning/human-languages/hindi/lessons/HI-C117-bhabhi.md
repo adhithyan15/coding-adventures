@@ -14,7 +14,8 @@ romanization: "bhābhī"
 concept_tag: HI-AUNT-BHABHI
 prerequisites: [HI-C117-bua, HI-C117-mama]
 sounds: []
-roots: []
+roots: [indo-aryan-bhabbha]
+etymology_hook: "bhābhī ← *bhābbha-, a nursery word (CDIAL 9453a)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C117-mama]
 **भाभी** (*bhābhī*) — "sister-in-law", specifically your brother's wife.
 
 It shares its start with **भाई**, "brother": she is named through him.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाभी** (*bhābhī*) comes from a reconstructed *\*bhābbha-*, which CDIAL calls a nursery word; it lists Hindi *bhābhī*, "elder brother's wife" (CDIAL 9453a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

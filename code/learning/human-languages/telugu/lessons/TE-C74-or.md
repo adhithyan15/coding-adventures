@@ -11,7 +11,8 @@ romanization: "lēdā"
 concept_tag: TE-CONJ-OR
 prerequisites: [TE-C74-but, TE-C33-anuko]
 sounds: []
-roots: []
+roots: [il]
+etymology_hook: "lēdā: native Dravidian, from lē- 'be not' (DEDR 2559), which lists lēka 'or, else'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C74-but]
 You have met its first half already: **లే-** is the same root behind లేదు, "there isn't". లేదా is literally the *or-else* of that root — "failing that".
 
 **టీ లేదా పాలు?** — "tea or milk?" That is the whole of an offered choice, and you can now make one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లేదా** (*lēdā*) is native Dravidian, built on *lē-*, "be not", the root of *lēdu*. DEDR 2559 lists *lēka*, "without; or, else", with Tamil *il*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

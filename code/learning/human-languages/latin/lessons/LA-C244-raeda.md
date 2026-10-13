@@ -13,7 +13,8 @@ gloss: "a travelling carriage"
 concept_tag: LA-RES244-RAEDA
 prerequisites: [LA-C243-infelix, LA-C243-beatus]
 sounds: []
-roots: []
+roots: [raeda-latin]
+etymology_hook: "raeda 'carriage' — a Gaulish word, says Quintilian; its root is a cousin of English ride"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C243-beatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C244-RES244-01]; assesses=[] -->
 
 **raeda, raedae** — "a travelling carriage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raeda** was probably borrowed from Gaulish: Quintilian counts *raeda* among the Gallic words in Latin (Lewis & Short). Its Celtic root is the one for riding, a cousin of English *ride*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

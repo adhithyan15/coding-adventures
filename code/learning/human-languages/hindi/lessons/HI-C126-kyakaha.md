@@ -14,7 +14,8 @@ romanization: "kyā kahā?"
 concept_tag: HI-WHAT-WHAT-SAID
 prerequisites: [HI-C126-phirse, HI-C126-samajhnahin]
 sounds: []
-roots: []
+roots: [sanskrit-kathayati]
+etymology_hook: "kahā ← kahnā, from Sanskrit kathayati 'describes' (CDIAL 2703)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C126-samajhnahin]
 
 **कहा** is the past of **कहना**, "to say". Short, and fine among friends; with a stranger, add
 **जी**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्या कहा?** (*kyā kahā?*) is "what was said?". *kahnā*, "to say", comes from Sanskrit *kathayati*, "converses with, describes" (CDIAL 2703).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

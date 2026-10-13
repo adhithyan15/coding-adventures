@@ -13,7 +13,8 @@ gloss: "a lung"
 concept_tag: LA-VALE173-PULMO
 prerequisites: [LA-C173-valetudo, LA-C173-cerebrum]
 sounds: []
-roots: []
+roots: [pulmo-latin]
+etymology_hook: "pulmō 'lung' — usually traced to PIE *plewmō 'lung'; Greek pleumōn is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C173-cerebrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C173-VALE173-03]; assesses=[] -->
 
 **pulmō, pulmōnis** — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulmō** is usually traced to Proto-Indo-European *\*plewmō*, "lung" (EtymDB 2.1); Greek *pleumōn*, "lung", is a cousin (Lewis & Short), later reshaped as *pneumōn*, "lung", by a link with *pneō*, "to breathe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

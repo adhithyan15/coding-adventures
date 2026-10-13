@@ -14,7 +14,8 @@ romanization: "lōtu"
 concept_tag: TE-QUAL138-LOTU
 prerequisites: [TE-C138-vegam, TE-C138-andamaina]
 sounds: []
-roots: []
+roots: [telugu-lootu-deep]
+etymology_hook: "lōtu: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C138-andamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C138-QUAL138-03]; assesses=[] -->
 
 **లోతు** — *lōtu* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **లోతు** (*lōtu*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a ring"
 concept_tag: LA-RES2-ANULUS
 prerequisites: [LA-C85-gladius, LA-C85-corona]
 sounds: []
-roots: []
+roots: [anulus-latin, anus-latin]
+etymology_hook: "ānulus 'ring' — built on ānus 'a ring', usually traced to PIE *h1eh2no- 'ring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C85-corona]
 <!-- hl-knowledge: introduces=[LA-LEX-C85-RES2-05]; assesses=[] -->
 
 **ānulus, ānulī** — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ānulus** is built on *ānus*, "a ring" (Lewis & Short), with *-ulus*, a suffix. *ānus* is usually traced to Proto-Indo-European *\*h1eh2no-*, "ring" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

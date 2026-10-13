@@ -13,7 +13,8 @@ gloss: "a bath, a bathhouse"
 concept_tag: LA-LOC115-BALNEUM
 prerequisites: [LA-C115-illuc, LA-C115-theatrum]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "balneum 'bath' — from balineum, borrowed from Greek balaneion 'bath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C115-theatrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-04]; assesses=[] -->
 
 **balneum, balneī** — "a bath, a bathhouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balneum** is contracted from *balineum*, "a bath" (Lewis & Short), which was borrowed from Greek *balaneion*, "bath" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

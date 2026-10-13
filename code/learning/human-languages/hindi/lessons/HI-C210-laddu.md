@@ -14,7 +14,8 @@ romanization: "laḍḍū"
 concept_tag: HI-THG210-LADDU
 prerequisites: [HI-C210-khicri, HI-C210-halva]
 sounds: []
-roots: []
+roots: [sanskrit-laddu]
+etymology_hook: "laḍḍū ← Sanskrit laḍḍu 'a kind of sweetmeat', a tadbhava (CDIAL 10926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C210-halva]
 <!-- hl-knowledge: introduces=[HI-LEX-C210-THG210-04]; assesses=[] -->
 
 **लड्डू** — *laḍḍū* — "a laddu (a sweet)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लड्डू** (*laḍḍū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laḍḍu*, "a kind of sweetmeat" (CDIAL 10926). CDIAL thinks it the same as *\*laḍḍu*, "lump", and notes a suggested Munda link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

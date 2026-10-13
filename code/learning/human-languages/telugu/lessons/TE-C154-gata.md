@@ -14,7 +14,8 @@ romanization: "gata"
 concept_tag: TE-GATAM154-GATA
 prerequisites: [TE-C154-itivala, TE-C154-ippatike]
 sounds: []
-roots: []
+roots: [sanskrit-gata]
+etymology_hook: "gata ← Sanskrit gata 'gone', a tatsama (CDIAL 4008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C154-ippatike]
 <!-- hl-knowledge: introduces=[TE-LEX-C154-GATAM154-03]; assesses=[] -->
 
 **గత** — *gata* — "last, previous". **గత సంవత్సరం నేను హైదరాబాద్ వెళ్ళాను** — *gata saṁvatsaraṁ nēnu haidarābād veḷḷānu* — "Last year I went to Hyderabad."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గత** (*gata*) is Sanskrit *gata*, "gone", taken over whole as a learned loan, a tatsama (CDIAL 4008).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

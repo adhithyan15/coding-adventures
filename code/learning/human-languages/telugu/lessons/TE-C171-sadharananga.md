@@ -14,7 +14,8 @@ romanization: "sādhāraṇaṅgā"
 concept_tag: TE-SAMAYAM171-SADHARANANGA
 prerequisites: [TE-C171-suryastamayam, TE-C171-pratiroju]
 sounds: []
-roots: []
+roots: [sanskrit-sadharana]
+etymology_hook: "sādhāraṇaṅgā: Sanskrit sādhāraṇa 'common' + -ṁ + the adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C171-pratiroju]
 <!-- hl-knowledge: introduces=[TE-LEX-C171-SAMAYAM171-03]; assesses=[] -->
 
 **సాధారణంగా** — *sādhāraṇaṅgā* — "usually, generally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాధారణంగా** (*sādhāraṇaṅgā*) is Sanskrit *sādhāraṇa*, "common, general", with the Telugu ending *-ṁ* and the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

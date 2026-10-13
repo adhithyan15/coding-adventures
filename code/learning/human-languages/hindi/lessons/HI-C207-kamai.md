@@ -14,7 +14,8 @@ romanization: "kamāī"
 concept_tag: HI-THG207-KAMAI
 prerequisites: [HI-C207-sart, HI-C207-qarz]
 sounds: []
-roots: []
+roots: [indo-aryan-karmapayati]
+etymology_hook: "kamāī: from kamānā 'to earn', from a reconstructed *karmāpayati 'works, earns' (CDIAL 2897)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C207-qarz]
 <!-- hl-knowledge: introduces=[HI-LEX-C207-THG207-03]; assesses=[] -->
 
 **कमाई** — *kamāī* — "earnings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमाई** (*kamāī*) is the noun of *kamānā*, "to earn", which CDIAL lists under a reconstructed *\*karmāpayati*, "works, earns", built on Sanskrit *karman*, "work" (CDIAL 2897).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sirf"
 concept_tag: HI-THG248-SIRF
 prerequisites: [HI-C247-agar, HI-C247-ya]
 sounds: []
-roots: []
+roots: [arabic-sirf]
+etymology_hook: "sirf ← Arabic ṣirf 'pure, unmixed', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C247-ya]
 <!-- hl-knowledge: introduces=[HI-LEX-C248-THG248-01]; assesses=[] -->
 
 **सिर्फ़** — *sirf* — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिर्फ़** (*sirf*) is a loan from Arabic *ṣirf*, "pure, unmixed", which reached Hindi through Persian. Its Arabic root is *ṣ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

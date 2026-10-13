@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 267,
-  "sourceHash": "fnv1a64:d6a2c94e7b88f77a",
+  "sourceHash": "fnv1a64:542a7f43ed67f712",
   "lessonIds": [
     "LA-C267-pinguis",
     "LA-C267-callidus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch267.txt",
   "json": "latin/narration/ch267.json",
-  "textHash": "fnv1a64:cadec334270d47ac",
-  "jsonHash": "fnv1a64:7ad2e14003652554",
+  "textHash": "fnv1a64:e5ee7c871e53b46c",
+  "jsonHash": "fnv1a64:4930f113e2c9266b",
   "findings": []
 }

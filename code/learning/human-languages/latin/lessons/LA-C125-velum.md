@@ -13,7 +13,8 @@ gloss: "a sail; a curtain"
 concept_tag: LA-THINGS125-VELUM
 prerequisites: [LA-C125-statua, LA-C125-signum]
 sounds: []
-roots: []
+roots: [velum-latin]
+etymology_hook: "vēlum 'sail, curtain' — usually traced to PIE *weg- 'to weave'; vexillum 'banner' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C125-signum]
 <!-- hl-knowledge: introduces=[LA-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **vēlum, vēlī** — "a sail; a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vēlum** is usually traced to Proto-Indo-European *\*weg-*, "to weave" (EtymDB 2.1), through an older *\*wegslom*; *vexillum*, "a banner", is its diminutive.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

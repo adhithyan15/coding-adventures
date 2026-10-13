@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 20,
-  "sourceHash": "fnv1a64:aa95185aabcff891",
+  "sourceHash": "fnv1a64:62c45961f1cfcb82",
   "lessonIds": [
     "LA-C20-quid-tibi-nomen",
     "LA-C20-name-case-variation"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "latin/narration/ch20.txt",
   "json": "latin/narration/ch20.json",
-  "textHash": "fnv1a64:2c67fb263348a76c",
-  "jsonHash": "fnv1a64:b55149a4dd7c93de",
+  "textHash": "fnv1a64:08abd0962ee71903",
+  "jsonHash": "fnv1a64:458c50fec9fca48f",
   "findings": []
 }

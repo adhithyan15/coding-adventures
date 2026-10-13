@@ -14,7 +14,8 @@ romanization: "phir se"
 concept_tag: HI-WHAT-ONCE-MORE
 prerequisites: [HI-C125-mannahin, HI-C125-maza]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns' (CDIAL 9078); se inherited (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C125-maza]
 **फिर से** (*phir se*) — "once more", "from the start again".
 
 **फिर से बोलिए** — "please say it again", a softer cousin of **दोबारा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फिर से** (*phir se*) is *phir*, "again", with *se*. CDIAL lists *phir* under a reconstructed *\*phirati*, "turns" (CDIAL 9078).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

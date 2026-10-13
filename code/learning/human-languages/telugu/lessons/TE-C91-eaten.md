@@ -11,7 +11,8 @@ romanization: "bhōñcēśārā?"
 concept_tag: TE-GREET-HAVE-YOU-EATEN
 prerequisites: [TE-C91-whatsnew, TE-C91-whereto]
 sounds: []
-roots: []
+roots: [sanskrit-bhojana, ceyu-do-dravidian]
+etymology_hook: "bhōñcēśārā: Sanskrit bhojana 'eating' (CDIAL 9630) worn down + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C91-whereto]
 
 It is **భోజనం చేశారా?**, "have you done the meal?", worn short in speech. Asked around a
 mealtime it is a greeting and a kindness; **ఆ, అయింది** — "yes, done" — is enough of an answer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bhōñ-* is Sanskrit *bhojana*, "food" (CDIAL 9630), worn down; *cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

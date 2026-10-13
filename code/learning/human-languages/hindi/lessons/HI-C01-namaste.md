@@ -15,6 +15,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [devanagari-inherent-a, matra-e, halant-conjunct]
 roots: [nam]
+etymology_hook: "namaste: Sanskrit namas 'a bow, reverence' + te 'to you', on the root nam 'to bow'"
 duration:
   max_seconds: 240
 requires:

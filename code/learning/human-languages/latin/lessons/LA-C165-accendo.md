@@ -13,7 +13,8 @@ gloss: "to light, to kindle"
 concept_tag: LA-VERB-ACCENDO
 prerequisites: [LA-C164-venalis, LA-C164-merx]
 sounds: []
-roots: []
+roots: [accendere-latin, candere-latin]
+etymology_hook: "accendō 'to light' — ad 'to' + -cendō 'to set alight', kin to candeō 'to glow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C164-merx]
 <!-- hl-knowledge: introduces=[LA-LEX-C165-ACT165-01]; assesses=[] -->
 
 **accendō, accendere** — "to light, to kindle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accendō** is *ad*, "to", with a verb *-cendō*, "to set alight", related to *candeō*, "to glow white" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

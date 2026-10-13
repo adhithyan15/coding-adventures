@@ -13,7 +13,8 @@ gloss: "to deceive"
 concept_tag: LA-VERB-FALLO
 prerequisites: [LA-C170-suspicor, LA-C170-premo]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "fallō 'to deceive' — origin uncertain; Greek sphallō 'to trip up' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C170-premo]
 <!-- hl-knowledge: introduces=[LA-LEX-C171-ACT171-01]; assesses=[] -->
 
 **fallō, fallere** — "to deceive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fallō** has no sure origin; Greek *sphallō*, "to trip up" (Lewis & Short), is often compared, and EtymDB 2.1 records a proposed root *\*ghwel-*, "to deceive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

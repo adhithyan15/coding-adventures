@@ -14,7 +14,8 @@ romanization: "mīṭar"
 concept_tag: HI-THG251-MITAR
 prerequisites: [HI-C251-kilo, HI-C251-litar]
 sounds: []
-roots: []
+roots: [english-metre]
+etymology_hook: "mīṭar ← English metre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C251-litar]
 <!-- hl-knowledge: introduces=[HI-LEX-C251-THG251-05]; assesses=[] -->
 
 **मीटर** — *mīṭar* — "a metre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मीटर** (*mīṭar*) is a loan from English *metre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

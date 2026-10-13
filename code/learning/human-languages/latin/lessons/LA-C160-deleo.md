@@ -13,7 +13,8 @@ gloss: "to destroy, to wipe out"
 concept_tag: LA-VERB-DELEO
 prerequisites: [LA-C159-muto, LA-C160-numero]
 sounds: []
-roots: []
+roots: [delere-latin]
+etymology_hook: "dēleō 'to destroy' — probably dē- 'off' + an uncertain verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C160-numero]
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-02]; assesses=[] -->
 
 **dēleō, dēlēre** — "to destroy, to wipe out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēleō** probably begins with *dē-*, "away, off", but the rest is uncertain; a link with *linō*, "to smear", is sometimes suggested (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

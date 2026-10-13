@@ -14,7 +14,8 @@ romanization: "jaḍa"
 concept_tag: TE-VASTUVU192-JADA
 prerequisites: [TE-C192-kunce, TE-C192-haram]
 sounds: []
-roots: []
+roots: [sanskrit-jata]
+etymology_hook: "jaḍa: an Indo-Aryan loan (DEDR App. 35), beside Sanskrit jaṭā 'twisted hair' (CDIAL 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-haram]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-05]; assesses=[] -->
 
 **జడ** — *jaḍa* — "a braid, a plait (of hair)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జడ** (*jaḍa*) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 35), beside Sanskrit *jaṭā*, "hair twisted together" (CDIAL 5086), with Tamil *caṭai* and Kannada *jaḍe*, "plaited hair". CDIAL reports the view that *jaṭā* came from Dravidian, and the later view that it came from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

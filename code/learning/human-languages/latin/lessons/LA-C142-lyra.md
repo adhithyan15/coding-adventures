@@ -13,7 +13,8 @@ gloss: "a lyre"
 concept_tag: LA-THINGS142-LYRA
 prerequisites: [LA-C142-tintinnabulum, LA-C142-tibia]
 sounds: []
-roots: []
+roots: [lyra-latin]
+etymology_hook: "lyra 'lyre' — borrowed from Greek lyra 'lyre'; English lyric"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C142-tibia]
 <!-- hl-knowledge: introduces=[LA-LEX-C142-THINGS142-05]; assesses=[] -->
 
 **lyra, lyrae** — "a lyre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lyra** was borrowed from Greek *lyra*, "lyre" (Lewis & Short); where Greek got the word is unknown. English *lyric* comes from the Greek family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

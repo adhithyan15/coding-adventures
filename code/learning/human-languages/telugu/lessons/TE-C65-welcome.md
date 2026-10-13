@@ -11,7 +11,8 @@ romanization: "svāgataṁ"
 concept_tag: TE-NOUN-WELCOME
 prerequisites: [TE-C64-still]
 sounds: []
-roots: []
+roots: [sanskrit-svagata]
+etymology_hook: "svāgataṁ ← Sanskrit svāgata 'welcome' (CDIAL 13920): su 'well' + āgata 'come'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Keep this well apart from పరవాలేదు. పరవాలేదు is 
 It is Sanskrit, and it comes apart neatly: *su-* "well" and *āgata* "come" — "well come", which is what the English word is too, arrived by an entirely separate road.
 
 A house says it with the door open and a *gauravaṁ* behind it. The ముగ్గు at the step is the same sentence without any words in it.
+
+CDIAL 13920 lists Sanskrit *svāgata*, "welcome".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

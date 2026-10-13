@@ -11,7 +11,8 @@ romanization: "rōgaṁ"
 concept_tag: TE-NOUN-DISEASE
 prerequisites: [TE-C63-cough]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rōgaṁ ← Sanskrit roga 'disease' (CDIAL 10829), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C63-cough]
 It is Sanskrit, from a root about breaking — an illness is something breaking in you — and Telugu took the word whole, the way it took *hṛdayaṁ*.
 
 రోగి is the person who has one. A వైద్యుడు's whole working day is spent between those two words, and so is a good deal of ordinary conversation about relatives.
+
+CDIAL 10829 lists Sanskrit *roga*, "disease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

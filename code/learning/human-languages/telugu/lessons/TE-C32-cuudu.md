@@ -14,7 +14,7 @@ sounds: [telugu-ca, telugu-long-uu-sign]
 roots: [cuudu-see-telugu, proto-dravidian-kan-eye]
 etymology_hook: "no two Dravidian sisters agree on the everyday see-verb — చూడు, பார், ನೋಡು, കാണുക — but the family's oldest seeing-root survives in all four as the word for 'eye', Telugu కన్ను; and చూడండి shows that the polite -అండి of కూర్చోండి and క్షమించండి is a slot open to every verb"
 duration:
-  max_seconds: 255
+  max_seconds: 295
 requires:
   knowledge: [TE-LEX-C32-VELLU-01, TE-LEX-C32-RAA-01, TE-LEX-C32-TINU-01]
 introduces:
@@ -47,7 +47,8 @@ Threaded up: **చూస్తాను** (*cūstānu*), "I see, I will see," an
 
 Here the sisters scatter completely. Tamil says **பார்** (*pār*), Kannada
 **ನೋಡು** (*nōḍu*), Malayalam **കാണുക** (*kāṇuka*), Telugu **చూడు** (*cūḍu*).
-Four languages, four unrelated everyday verbs.
+Four languages, four different everyday verbs. Telugu's is Dravidian: DEDR 2735
+lists it as *cūcu*, "to see".
 
 And yet the family's oldest seeing-root is right there in all four, sitting in a
 noun you can point at, "eye" — Tamil **கண்** (*kaṇ*), Kannada **ಕಣ್ಣು**

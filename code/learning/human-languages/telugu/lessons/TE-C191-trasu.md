@@ -14,7 +14,8 @@ romanization: "trāsu"
 concept_tag: TE-VASTUVU191-TRASU
 prerequisites: [TE-C191-kattelu, TE-C191-vala]
 sounds: []
-roots: []
+roots: [persian-tarazu]
+etymology_hook: "trāsu: probably from Persian tarāzū 'balance, scales', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C191-vala]
 <!-- hl-knowledge: introduces=[TE-LEX-C191-VASTUVU191-05]; assesses=[] -->
 
 **త్రాసు** — *trāsu* — "a weighing scale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**త్రాసు** (*trāsu*) is probably a loan from Persian *tarāzū*, "balance, scales", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

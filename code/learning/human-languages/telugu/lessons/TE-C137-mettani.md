@@ -14,7 +14,8 @@ romanization: "mettani"
 concept_tag: TE-QUAL137-METTANI
 prerequisites: [TE-C136-baruvu, TE-C137-telika]
 sounds: []
-roots: []
+roots: [dravidian-metu-soft]
+etymology_hook: "mettani: native Dravidian, one word with Kannada mettage (DEDR 5070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C137-telika]
 <!-- hl-knowledge: introduces=[TE-LEX-C137-QUAL137-02]; assesses=[] -->
 
 **మెత్తని** — *mettani* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెత్తని** (*mettani*) is native Dravidian, one word with Kannada *mettage* (DEDR 5070). DEDR lists Telugu *metta* and *mettani*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

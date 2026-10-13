@@ -67,10 +67,16 @@ P2.6d-2b):
 [hosts.broker]
 executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
 sha256 = "<64 lowercase hex digits>"
+# macOS (D18S P2.7b): the Seatbelt shim that confines the broker.
+seatbelt_shim = "~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim"
+seatbelt_shim_sha256 = "<64 lowercase hex digits>"
 ```
 
-Both fields are required when the table is present. The digest, not the
-path, is what the daemon trusts, so a table without one is refused.
+`executable` and `sha256` are required when the table is present. The
+digest, not the path, is what the daemon trusts, so a table without one is
+refused. `seatbelt_shim` and `seatbelt_shim_sha256` come as a pair: either
+both or neither, on every platform. The daemon requires them on macOS and
+never opens them on Linux.
 
 ## Validation
 

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a spade, then the Hindi for a mattress.
 You'll want to know: रजाई.
 रजाई — rajāī — "a quilt".
 
+The word, taken apart.
+The origin of रजाई (rajāī) is uncertain. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a mattress, then the Hindi for a quilt.
 
 You'll want to know: मच्छरदानी.
 मच्छरदानी — maccharadānī — "a mosquito net".
+
+The word, taken apart.
+मच्छरदानी (maccharadānī) is macchar, "mosquito", from Sanskrit matsara (CDIAL 9757), with the Persian ending -dānī, "holder, container".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a quilt, then the Hindi for a mosquito net
 You'll want to know: नल.
 नल — nal — "a tap".
 
+The word, taken apart.
+नल (nal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naḍa, "a species of reed" (CDIAL 6936). CDIAL lists Hindi nalā, "hollow reed, windpipe". It notes possible Dravidian or Munda contact.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a mosquito net, then the Hindi for a tap.
 You'll want to know: नाली.
 नाली — nālī — "a drain".
 
+The word, taken apart.
+नाली (nālī) belongs with Hindi nāl, "hollow stalk, tube", and nārī, "tube, vein", which CDIAL lists under Sanskrit nāḍī, "tubular stalk, tube" (CDIAL 7047).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a tap, then the Hindi for a drain.
 
 You'll want to know: टंकी.
 टंकी — ṭaṅkī — "a tank".
+
+The word, taken apart.
+टंकी (ṭaṅkī) is a loan from English tank. The -ī makes a smaller one.
 
 What you've built.
 One more word for this chapter.

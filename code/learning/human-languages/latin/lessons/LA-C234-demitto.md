@@ -13,7 +13,8 @@ gloss: "to let down, to lower"
 concept_tag: LA-VERB-DEMITTO
 prerequisites: [LA-C233-misceo, LA-C233-pareo]
 sounds: []
-roots: []
+roots: [demittere-latin, mittere-latin]
+etymology_hook: "dēmittō 'to lower' — dē 'down' + mittō 'to let go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C233-pareo]
 <!-- hl-knowledge: introduces=[LA-LEX-C234-ACT234-01]; assesses=[] -->
 
 **dēmittō, dēmittere** — "to let down, to lower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēmittō** is *dē*, "down", with *mittō*, "to send, to let go" (EtymDB 2.1): to let down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

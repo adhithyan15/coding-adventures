@@ -14,7 +14,8 @@ romanization: "kadulu"
 concept_tag: TE-VERB-KADULU
 prerequisites: [TE-C201-avalincu, TE-C201-vanuku]
 sounds: []
-roots: []
+roots: [dravidian-kadalu-move]
+etymology_hook: "kadulu: native Dravidian; DEDR 1188 lists kadalu 'to move, stir'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C201-vanuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C201-KRIYA201-05]; assesses=[] -->
 
 **కదులు** — *kadulu* — "to move".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కదులు** (*kadulu*) is native Dravidian. DEDR 1188 gives it as *kadalu*, "to move, stir, shake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

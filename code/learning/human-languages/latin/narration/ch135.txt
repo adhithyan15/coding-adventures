@@ -12,6 +12,9 @@ Before the new one: say the Latin for a monkey, then the Latin for a dolphin.
 You'll want to know: balaena, balaenae.
 balaena, balaenae — "a whale".
 
+The word, taken apart.
+balaena was borrowed from Greek phalaina, "whale" (Lewis & Short), with b for the Greek ph.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a dolphin, then the Latin for a whale.
 
 You'll want to know: gallus, gallī.
 gallus, gallī — "a cockerel".
+
+The word, taken apart.
+gallus is often traced to Proto-Italic galso-, "the crier" (EtymDB 2.1), after the bird's call, but this is uncertain. It is a different word from Gallus, "a Gaul".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a whale, then the Latin for a cockerel.
 You'll want to know: labrum, labrī.
 labrum, labrī — "a lip".
 
+The word, taken apart.
+labrum is inherited, usually traced to Proto-Indo-European leb-, "lip, to hang loosely" (EtymDB 2.1); English lip is a cousin. It is a different word from labrum, "a basin", contracted from lavābrum, "a bath" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a cockerel, then the Latin for a lip.
 You'll want to know: mentum, mentī.
 mentum, mentī — "the chin".
 
+The word, taken apart.
+mentum is inherited, usually traced to Proto-Indo-European men-, "to project, to stick out" (EtymDB 2.1): the chin as the part that juts. minae, "overhanging points, threats", is often put in the same family (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a lip, then the Latin for the chin.
 
 You'll want to know: dorsum, dorsī.
 dorsum, dorsī — "the back".
+
+The word, taken apart.
+dorsum has no sure origin; no proposal is generally accepted. English dorsal and endorse, "to write on the back", come from it.
 
 What you've built.
 One more word for this chapter.

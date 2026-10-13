@@ -14,7 +14,8 @@ romanization: "ġalat"
 concept_tag: HI-RIGHT-WRONG
 prerequisites: [HI-C111-likhdijie, HI-C112-sahi]
 sounds: []
-roots: []
+roots: [arabic-ghalat]
+etymology_hook: "ġalat ← Arabic ghalaṭ 'an error', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C112-sahi]
 **ग़लत** (*ġalat*) — "wrong".
 
 The opposite of **सही**. **यह ग़लत है** — "this is wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग़लत** (*ġalat*) is a loan from Arabic *ghalaṭ*, "an error", which reached Hindi through Persian. Its Arabic root is *gh-l-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

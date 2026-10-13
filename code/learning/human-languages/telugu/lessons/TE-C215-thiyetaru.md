@@ -14,7 +14,8 @@ romanization: "thiyēṭaru"
 concept_tag: TE-STHALAM215-THIYETARU
 prerequisites: [TE-C215-banda, TE-C215-maidanam]
 sounds: []
-roots: []
+roots: [english-theatre]
+etymology_hook: "thiyēṭaru ← English theatre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C215-maidanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C215-STHALAM215-04]; assesses=[] -->
 
 **థియేటరు** — *thiyēṭaru* — "a theatre, a cinema hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**థియేటరు** (*thiyēṭaru*) is a loan from English *theatre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

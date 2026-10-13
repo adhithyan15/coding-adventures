@@ -14,7 +14,8 @@ romanization: "penaṁ"
 concept_tag: TE-VASTUVU270-PENAM
 prerequisites: [TE-C270-tapela, TE-C270-kundi]
 sounds: []
-roots: []
+roots: [telugu-penam-griddle]
+etymology_hook: "penaṁ: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'griddle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C270-kundi]
 <!-- hl-knowledge: introduces=[TE-LEX-C270-VASTUVU270-03]; assesses=[] -->
 
 **పెనం** — *penaṁ* — "a griddle (tava)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పెనం** (*penaṁ*) is uncertain. DEDR and CDIAL list no word of this shape meaning "griddle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

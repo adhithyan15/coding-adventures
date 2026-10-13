@@ -1636,6 +1636,25 @@ fn swimlane_internal_label_rect_reaches_label_only_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_anchor_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Routing\n  pin@{ shape: anchor }\nend",
+    ).expect("Mermaid 11.16.1 anchor should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Anchor);
+}
+
+#[test]
+fn swimlane_internal_rect_with_title_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph State\n  item@{ shape: rectWithTitle, label: \"Details\" }\nend",
+    ).expect("Mermaid 11.16.1 rectWithTitle should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TitledRect);
+    assert_eq!(diagram.nodes[0].label, "Details");
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 
@@ -2144,6 +2163,82 @@ fn swimlane_styled_inline_labels_lower_to_semantic_ir() {
     assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(),
         vec![SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Dotted]);
     assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![2, 2, 3]);
+}
+
+#[test]
+fn swimlane_labeled_bidirectional_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na<-- normal -->b<== thick ==>c<-. dotted .->d",
+    ).expect("labeled bidirectional Flowchart links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+        vec![Some("normal"), Some("thick"), Some("dotted")]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(),
+        vec![SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Dotted]);
+    assert!(diagram.edges.iter().all(|edge|
+        (edge.start_marker, edge.end_marker) == (EdgeMarker::Point, EdgeMarker::Point)));
+}
+
+#[test]
+fn swimlane_labeled_circle_and_cross_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g",
+    ).expect("labeled circle and cross Flowchart links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Directed,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    for (index, edge) in diagram.edges.iter().enumerate() {
+        let marker = if index % 2 == 0 { EdgeMarker::Circle } else { EdgeMarker::Cross };
+        assert_eq!((edge.start_marker, edge.end_marker), (marker, marker));
+        assert!(edge.label.is_some());
+    }
+}
+
+#[test]
+fn swimlane_labeled_mixed_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::EdgeMarker;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- circle to cross --x b\nb x== cross to circle ==o c\nc <-. point to cross .-x d\nd o-. circle to point .-> e\ne -- none to circle --o f\nf <== point to cross ==x g",
+    ).expect("labeled mixed endpoint markers should parse");
+
+    let markers = diagram.edges.iter().map(|edge| (edge.start_marker, edge.end_marker))
+        .collect::<Vec<_>>();
+    assert_eq!(markers, vec![
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+    ]);
+    assert!(diagram.edges.iter().all(|edge| edge.label.is_some()));
+}
+
+#[test]
+fn swimlane_labeled_open_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na -- solid open --- b\nb o-- circle open --- c\nc x== cross open === d\nd <== point open === e\ne -. dotted open .- f\nf o-. dotted circle open .- g",
+    ).expect("labeled links without end markers should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Directed,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.start_marker).collect::<Vec<_>>(),
+        vec![EdgeMarker::None, EdgeMarker::Circle, EdgeMarker::Cross,
+            EdgeMarker::Point, EdgeMarker::None, EdgeMarker::Circle]);
+    assert!(diagram.edges.iter().all(|edge| edge.end_marker == EdgeMarker::None));
 }
 
 #[test]

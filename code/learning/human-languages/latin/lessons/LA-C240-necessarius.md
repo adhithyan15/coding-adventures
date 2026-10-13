@@ -13,7 +13,8 @@ gloss: "necessary"
 concept_tag: LA-QUAL240-NECESSARIUS
 prerequisites: [LA-C240-profundus, LA-C240-ignotus]
 sounds: []
-roots: []
+roots: [necessarius-latin, necesse-latin]
+etymology_hook: "necessārius 'necessary' — built on necesse 'unavoidable'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C240-ignotus]
 <!-- hl-knowledge: introduces=[LA-LEX-C240-QUAL240-04]; assesses=[] -->
 
 **necessārius, necessāria, necessārium** — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**necessārius** is built on *necesse*, "unavoidable" (Lewis & Short), which is usually explained as *ne*, "not", with the root of *cēdō*, "to give way": not to be avoided.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: HI-THINGS134-PENSIL
 prerequisites: [HI-C133-bistar, HI-C134-botal, HI-C34-likhna, HI-C34-likhna, HI-C34-padhna, HI-C34-padhna, HI-C34-samajhna, HI-C34-sochna]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C134-botal]
 <!-- hl-knowledge: introduces=[HI-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **पेंसिल** — *pensil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेंसिल** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

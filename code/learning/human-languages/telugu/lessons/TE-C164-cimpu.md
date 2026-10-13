@@ -14,7 +14,8 @@ romanization: "cimpu"
 concept_tag: TE-VERB-CIMPU
 prerequisites: [TE-C164-vadakattu, TE-C164-muncu]
 sounds: []
-roots: []
+roots: [dravidian-ciir-tear]
+etymology_hook: "cimpu: native Dravidian; DEDR 2491 lists cimpu 'to tear' with Malayalam cīntuka 'to tear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C164-muncu]
 <!-- hl-knowledge: introduces=[TE-LEX-C164-KRIYA164-04]; assesses=[] -->
 
 **చింపు** — *cimpu* — "to tear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చింపు** (*cimpu*) is native Dravidian. DEDR 2491 lists *cimpu*, "to tear, rend", with Malayalam *cīntuka*, "to tear". DEDR compares Sanskrit *cīra*, "a strip of bark or cloth" (CDIAL 4843), which CDIAL reports as taken from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

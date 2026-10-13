@@ -14,7 +14,8 @@ romanization: "civaraku"
 concept_tag: TE-SAMAYAM212-CIVARAKU
 prerequisites: [TE-C212-tirika, TE-C212-ventane]
 sounds: []
-roots: []
+roots: [dravidian-civara-end]
+etymology_hook: "civaraku: native civara 'end' (DEDR 2544) + -ku 'to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C212-ventane]
 <!-- hl-knowledge: introduces=[TE-LEX-C212-SAMAYAM212-03]; assesses=[] -->
 
 **చివరకు** — *civaraku* — "finally, at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చివరకు** (*civaraku*) is native Dravidian: *civara*, "end, tip", which DEDR 2544 lists, with *-ku*, "to": "to the end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

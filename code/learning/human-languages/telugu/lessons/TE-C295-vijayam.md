@@ -14,7 +14,8 @@ romanization: "vijayaṁ"
 concept_tag: TE-KARANAM295-VIJAYAM
 prerequisites: [TE-C294-dadapu, TE-C294-mottaniki]
 sounds: []
-roots: []
+roots: [sanskrit-vijaya]
+etymology_hook: "vijayaṁ ← Sanskrit vijaya 'victory', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C294-mottaniki]
 <!-- hl-knowledge: introduces=[TE-LEX-C295-KARANAM295-01]; assesses=[] -->
 
 **విజయం** — *vijayaṁ* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విజయం** (*vijayaṁ*) is Sanskrit *vijaya*, "victory, success", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ām"
 concept_tag: HI-THINGS139-AM
 prerequisites: [HI-C139-matar, HI-C139-khira, HI-C35-pasand, HI-C35-pasand]
 sounds: []
-roots: []
+roots: [sanskrit-amra]
+etymology_hook: "ām ← Sanskrit āmra 'mango tree; its fruit', a tadbhava (CDIAL 1268)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C139-khira]
 <!-- hl-knowledge: introduces=[HI-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **आम** — *ām* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आम** (*ām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āmra*, "mango tree; its fruit" (CDIAL 1268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

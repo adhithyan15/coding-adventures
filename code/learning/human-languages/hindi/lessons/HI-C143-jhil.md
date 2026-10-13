@@ -14,7 +14,8 @@ romanization: "jhīl"
 concept_tag: HI-THINGS143-JHIL
 prerequisites: [HI-C142-pahar, HI-C142-nadi]
 sounds: []
-roots: []
+roots: [indo-aryan-jhilla]
+etymology_hook: "jhīl ← *jhilla 'swamp, lake', a reconstructed form; a tadbhava (CDIAL 5392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C142-nadi]
 <!-- hl-knowledge: introduces=[HI-LEX-C143-THINGS143-01]; assesses=[] -->
 
 **झील** — *jhīl* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झील** (*jhīl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhilla*, "swamp, lake", a form CDIAL reconstructs from its descendants (CDIAL 5392).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

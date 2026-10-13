@@ -12,6 +12,7 @@ concept_tag: RESPONSE-YES
 prerequisites: [TE-C01-namaskaram]
 sounds: [independent-vowel-a, u-vowel-sign]
 roots: [avunu]
+etymology_hook: "avunu: native Dravidian, from agu, avu 'to be, become' (DEDR 333); Tamil āku, Kannada āgu"
 duration:
   max_seconds: 210
 requires:
@@ -53,8 +54,9 @@ Left to right: **అ · వు · ను** = *a-vu-nu* →
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-AVUNU-02]; assesses=[] -->
 
 **అవును** (*avunu*) is the everyday **"yes / it is so,"** a native Telugu word.
-It comes from the verb of being — literally close to "it is" — which is why the
-next lesson's "no" (*kādu*, "is not") is its exact mirror.
+It comes from *avu*, the verb of being (DEDR 333) — literally "it is" — which is
+why the next lesson's "no" (*kādu*, "is not") is its exact mirror. DEDR compares
+Sanskrit *ām*, "yes".
 
 ## Grammar Lens: yes and no as "it is" / "it is not"
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C01-AVUNU-03]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vīsā"
 concept_tag: TE-VASTUVU264-VISA
 prerequisites: [TE-C263-baninu, TE-C264-cekku]
 sounds: []
-roots: []
+roots: [english-visa]
+etymology_hook: "vīsā ← English visa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C264-cekku]
 <!-- hl-knowledge: introduces=[TE-LEX-C264-VASTUVU264-02]; assesses=[] -->
 
 **వీసా** — *vīsā* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వీసా** (*vīsā*) is a loan from English *visa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

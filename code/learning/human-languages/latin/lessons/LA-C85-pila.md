@@ -13,7 +13,8 @@ gloss: "a ball"
 concept_tag: LA-RES2-PILA
 prerequisites: [LA-C84-tabula, LA-C84-speculum]
 sounds: []
-roots: []
+roots: [pila-latin]
+etymology_hook: "pila 'ball' — origin unknown; a different word from pīla 'pillar' and pīla 'mortar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C84-speculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C85-RES2-01]; assesses=[] -->
 
 **pila, pilae** — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pila**, "ball", has no sure origin; Lewis & Short call it doubtful. It is a different word from *pīla*, "a pillar", and from *pīla*, "a mortar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a vada, then the Telugu for coffee.
 You'll want to know: సముద్రం.
 సముద్రం — samudraṁ — "the sea".
 
+The word, taken apart.
+సముద్రం (samudraṁ) is Sanskrit samudra, "sea", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13236).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for coffee, then the Telugu for the sea.
 
 You'll want to know: సరస్సు.
 సరస్సు — sarassu — "a lake".
+
+The word, taken apart.
+సరస్సు (sarassu) is Sanskrit saras, "lake, pool", taken over whole as a learned loan, a tatsama, with Telugu's added -u (CDIAL 13254).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for the sea, then the Telugu for a lake.
 You'll want to know: అడవి.
 అడవి — aḍavi — "a forest".
 
+The word, taken apart.
+అడవి (aḍavi) comes from Sanskrit aṭavī, "forest", reshaped to Telugu sounds: a tadbhava (CDIAL 177).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a lake, then the Telugu for a forest.
 You'll want to know: ఆకు.
 ఆకు — āku — "a leaf".
 
+The word, taken apart.
+ఆకు (āku) is native Dravidian, one word with Kannada āku, "leaf" (DEDR 335).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a forest, then the Telugu for a leaf.
 
 You'll want to know: మట్టి.
 మట్టి — maṭṭi — "soil, earth".
+
+The word, taken apart.
+మట్టి (maṭṭi) is usually traced to Sanskrit mṛttikā, "earth, clay" (CDIAL 10286), reshaped as a tadbhava; CDIAL lists Hindi maṭṭī from it.
 
 What you've built.
 One more word for this chapter.

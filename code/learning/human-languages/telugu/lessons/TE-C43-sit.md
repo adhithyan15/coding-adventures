@@ -11,7 +11,8 @@ romanization: "kūrcō"
 concept_tag: TE-VERB-SIT
 prerequisites: [TE-C43-come]
 sounds: []
-roots: []
+roots: [dravidian-kuur-sit]
+etymology_hook: "kūrcō: native Dravidian, from kūrcuṇḍu 'to sit' (DEDR 1900), one word with Kannada kūr"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C43-come]
 **కూర్చో** (*kūrcō*) — "sit".
 
 A command you will hear on entering any home, usually before anything else is said.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూర్చో** (*kūrcō*) is native Dravidian, the command form of *kūrcuṇḍu*, "to sit", which DEDR 1900 lists with Kannada *kūr*, "to sit down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

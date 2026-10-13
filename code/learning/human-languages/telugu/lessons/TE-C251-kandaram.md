@@ -14,7 +14,8 @@ romanization: "kaṇḍaraṁ"
 concept_tag: TE-AROGYAM251-KANDARAM
 prerequisites: [TE-C251-manasu, TE-C251-ayasam]
 sounds: []
-roots: []
+roots: [sanskrit-kandara]
+etymology_hook: "kaṇḍaraṁ ← Sanskrit kaṇḍarā 'sinew', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-ayasam]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-03]; assesses=[] -->
 
 **కండరం** — *kaṇḍaraṁ* — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కండరం** (*kaṇḍaraṁ*) is Sanskrit *kaṇḍarā*, "sinew, tendon", taken over as a learned loan, a tatsama, with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

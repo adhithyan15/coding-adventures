@@ -13,7 +13,8 @@ gloss: "a cheek"
 concept_tag: LA-CORPUS4-GENA
 prerequisites: [LA-C66-pectus, LA-C66-crus]
 sounds: []
-roots: []
+roots: [gena-latin]
+etymology_hook: "gena 'cheek' — inherited, usually traced to PIE *genu- 'jaw'; Greek genys 'jaw' and English chin are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C66-crus]
 <!-- hl-knowledge: introduces=[LA-LEX-C66-CORPUS4-03]; assesses=[] -->
 
 **gena, genae** — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gena** is inherited, usually traced to Proto-Indo-European *\*genu-*, "jaw, cheek" (EtymDB 2.1). Greek *genys*, "jaw" (Lewis & Short), and English *chin* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 67,
-  "sourceHash": "fnv1a64:f5b5852ddad49c5a",
+  "sourceHash": "fnv1a64:de2d7b7485576fb9",
   "lessonIds": [
     "TE-C67-wall",
     "TE-C67-roof",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch67.txt",
   "json": "telugu/narration/ch67.json",
-  "textHash": "fnv1a64:67689006178c0793",
-  "jsonHash": "fnv1a64:58d1ae8f23acde52",
+  "textHash": "fnv1a64:12047be682f33f21",
+  "jsonHash": "fnv1a64:9e5910d97ccf44d1",
   "findings": []
 }

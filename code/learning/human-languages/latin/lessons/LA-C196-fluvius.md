@@ -13,7 +13,8 @@ gloss: "a running stream, a river"
 concept_tag: LA-RES196-FLUVIUS
 prerequisites: [LA-C195-perna, LA-C195-dies-natalis]
 sounds: []
-roots: []
+roots: [fluvius-latin, fluere-latin]
+etymology_hook: "fluvius 'river' — built on fluō 'to flow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C195-dies-natalis]
 <!-- hl-knowledge: introduces=[LA-LEX-C196-RES196-01]; assesses=[] -->
 
 **fluvius, fluviī** — "a running stream, a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fluvius** is built on *fluō*, "to flow"; inscriptions also spell it *flovios* (Lewis & Short). *fluō* is usually traced to Proto-Indo-European *\*bhlew-*, "to swell, to flow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

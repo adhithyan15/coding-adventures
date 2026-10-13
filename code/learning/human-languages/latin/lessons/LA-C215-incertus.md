@@ -13,7 +13,8 @@ gloss: "uncertain"
 concept_tag: LA-QUAL215-INCERTUS
 prerequisites: [LA-C215-crastinus, LA-C215-verus]
 sounds: []
-roots: []
+roots: [incertus-latin, certus-latin]
+etymology_hook: "incertus 'uncertain' — in- 'not' + certus 'sure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C215-verus]
 <!-- hl-knowledge: introduces=[LA-LEX-C215-QUAL215-05]; assesses=[] -->
 
 **incertus, incerta, incertum** — "uncertain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**incertus** is *in-*, "not", with *certus*, "sure" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

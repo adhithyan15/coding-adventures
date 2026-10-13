@@ -12,6 +12,9 @@ Before the new one: say the Latin for suddenly, then the Latin for until; while.
 You'll want to know: prius.
 prius — "earlier, sooner".
 
+The word, taken apart.
+prius is the neuter of prior, "former, earlier" (Lewis & Short), used as an adverb. prior is a comparative built on the root of prō, "before".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for until; while, then the Latin for earlier.
 
 You'll want to know: quotannīs.
 quotannīs — "every year".
+
+The word, taken apart.
+quotannīs is quot, "as many as", with annīs, "years" (EtymDB 2.1): in as many years as there are.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for earlier, then the Latin for every year.
 You'll want to know: nōnnumquam.
 nōnnumquam — "now and then".
 
+The word, taken apart.
+nōnnumquam is nōn, "not", with numquam, "never" (Lewis & Short): not never, so sometimes.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for every year, then the Latin for now and the
 You'll want to know: semel.
 semel — "once, a single time".
 
+The word, taken apart.
+semel is inherited, usually traced to Proto-Indo-European sm-meh1lom, "one time" (EtymDB 2.1), built on the root for "one"; simplex, "simple", and singulus, "single", share the root (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for now and then, then the Latin for once.
 
 You'll want to know: bis.
 bis — "twice".
+
+The word, taken apart.
+bis comes from older duis, "two times" (Lewis & Short), built on duo, "two"; Latin turned an initial dw into b, as in bellum, "war", from older duellum.
 
 What you've built.
 One more word for this chapter.

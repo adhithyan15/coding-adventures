@@ -13,7 +13,8 @@ gloss: "to clap, to applaud"
 concept_tag: LA-VERB-PLAUDO
 prerequisites: [LA-C255-impleo, LA-C255-metior]
 sounds: []
-roots: []
+roots: [plaudere-latin]
+etymology_hook: "plaudō 'to clap' — origin unknown, perhaps imitative; English applaud and explode"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C255-metior]
 <!-- hl-knowledge: introduces=[LA-LEX-C256-ACT256-01]; assesses=[] -->
 
 **plaudō, plaudere** — "to clap, to applaud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plaudō** has no sure origin; it may imitate the sound of clapping. A by-form *plōdō*, "to clap", is also found (Lewis & Short). English *applaud* and *explode*, first "to clap a player off the stage", come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

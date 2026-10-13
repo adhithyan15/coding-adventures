@@ -14,7 +14,8 @@ romanization: "javānī"
 concept_tag: HI-THG220-JAVANI
 prerequisites: [HI-C220-jhanda, HI-C220-bacpan]
 sounds: []
-roots: []
+roots: [persian-javani]
+etymology_hook: "javānī: usually traced to Persian javānī 'youth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C220-bacpan]
 <!-- hl-knowledge: introduces=[HI-LEX-C220-THG220-03]; assesses=[] -->
 
 **जवानी** — *javānī* — "youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवानी** (*javānī*) is a loan, usually traced to Persian *javānī*, "youth". It is built on *javān*, "young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

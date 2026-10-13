@@ -14,7 +14,8 @@ romanization: "phōṭō tīyu"
 concept_tag: TE-VERB-PHOTO-TIYU
 prerequisites: [TE-C204-giyu, TE-C205-rikardu-ceyu]
 sounds: []
-roots: []
+roots: [english-photo, dravidian-tegu-pull]
+etymology_hook: "phōṭō tīyu: English photo + native tīyu 'to take, draw' (DEDR 3407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C205-rikardu-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C205-KRIYA205-02]; assesses=[] -->
 
 **ఫోటో తీయు** — *phōṭō tīyu* — "to take a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫోటో తీయు** (*phōṭō tīyu*) pairs *phōṭō*, a loan from English *photo*, with native *tīyu*, "to take, draw", one word with Kannada *tegu*, "to pull, take" (DEDR 3407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

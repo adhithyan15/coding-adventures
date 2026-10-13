@@ -11,7 +11,8 @@ romanization: "telusā"
 concept_tag: TE-ASK-KNOW
 prerequisites: [TE-C78-isit, TE-C37-noru]
 sounds: []
-roots: []
+roots: [teliyu-become-clear-dravidian]
+etymology_hook: "telusā: telusu 'it is known', from teliyu (DEDR 3433), + the question ending -ā"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C78-isit]
 The first thing you will do with the new ending. You already have **తెలుసు**, "it is known"; add **-ఆ** and you are asking.
 
 **మీకు తెలుగు తెలుసా?** — "do you know Telugu?" The knower sits in the dative మీకు, the way it did when you first met తెలుసు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెలుసా** (*telusā*) is *telusu*, "it is known", with the question ending *-ā*. The verb is native Dravidian: DEDR 3433 lists *teliyu*, "to be known", with Tamil *teḷi*, "to become clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

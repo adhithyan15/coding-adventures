@@ -11,7 +11,8 @@ romanization: "elā aṇṭāru?"
 concept_tag: TE-ASK-HOW-SAY
 prerequisites: [TE-C94-introduction, TE-C95-intelugu]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-en-say]
+etymology_hook: "elā aṇṭāru: native elā 'how' (DEDR 5151) + anu 'to say' (DEDR 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C95-intelugu]
 
 **దీన్ని తెలుగులో ఎలా అంటారు?** — "how do you say this in Telugu?". **అను**, "to say", is the
 verb inside **అని** and **అనుకో**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are native Dravidian: *elā*, "how" (DEDR 5151), and *anu*, "to say" (DEDR 868).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

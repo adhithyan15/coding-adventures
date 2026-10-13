@@ -13,7 +13,8 @@ gloss: "lukewarm"
 concept_tag: LA-QUAL143-TEPIDUS
 prerequisites: [LA-C143-durus, LA-C143-mollis]
 sounds: []
-roots: []
+roots: [tepidus-latin, tepere-latin]
+etymology_hook: "tepidus 'lukewarm' — built on tepeō 'to be warm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C143-mollis]
 <!-- hl-knowledge: introduces=[LA-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **tepidus, tepida, tepidum** — "lukewarm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tepidus** is built on *tepeō*, "to be warm" (Lewis & Short), with *-idus*, the ending of state adjectives. *tepeō* is usually traced to Proto-Indo-European *\*tep-*, "warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

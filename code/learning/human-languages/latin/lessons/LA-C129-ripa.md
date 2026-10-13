@@ -13,7 +13,8 @@ gloss: "a river bank"
 concept_tag: LA-THINGS129-RIPA
 prerequisites: [LA-C129-semen, LA-C129-saxum]
 sounds: []
-roots: []
+roots: [ripa-latin]
+etymology_hook: "rīpa 'river bank' — probably from PIE *h1reypeh2 'steep slope'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C129-saxum]
 <!-- hl-knowledge: introduces=[LA-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **rīpa, rīpae** — "a river bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rīpa** is probably inherited, from a Proto-Indo-European *\*h1reypeh2*, "steep slope", from a root for tearing (EtymDB 2.1); Greek *ereipō*, "to tear down", is often compared. Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

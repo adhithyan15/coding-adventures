@@ -14,7 +14,8 @@ romanization: "vimānaṁ"
 concept_tag: TE-THINGS134-VIMANAM
 prerequisites: [TE-C134-karu, TE-C134-saikilu]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vimānaṁ ← Sanskrit vimāna 'car of the gods', a tatsama (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C134-saikilu]
 <!-- hl-knowledge: introduces=[TE-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **విమానం** — *vimānaṁ* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విమానం** (*vimānaṁ*) is Sanskrit *vimāna*, "car of the gods", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11823).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

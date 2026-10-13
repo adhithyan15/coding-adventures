@@ -14,7 +14,8 @@ romanization: "namalu"
 concept_tag: TE-VERB-NAMALU
 prerequisites: [TE-C200-prayatnincu, TE-C200-vaddincu]
 sounds: []
-roots: []
+roots: [dravidian-namalu-chew]
+etymology_hook: "namalu: native Dravidian, one word with Kannada namalu (DEDR 3595)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C200-vaddincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C200-KRIYA200-05]; assesses=[] -->
 
 **నమలు** — *namalu* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నమలు** (*namalu*) is native Dravidian, one word with Kannada *namalu* (DEDR 3595). DEDR lists Telugu *namalu*, "to chew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

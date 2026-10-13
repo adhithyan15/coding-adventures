@@ -13,7 +13,8 @@ gloss: "silver"
 concept_tag: LA-QUAL149-ARGENTEUS
 prerequisites: [LA-C149-canus, LA-C149-aureus]
 sounds: []
-roots: []
+roots: [argenteus-latin, argentum-latin]
+etymology_hook: "argenteus 'silver' — built on argentum 'silver', from PIE *h2erg- 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C149-aureus]
 <!-- hl-knowledge: introduces=[LA-LEX-C149-QUAL149-04]; assesses=[] -->
 
 **argenteus, argentea, argenteum** — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**argenteus** is built on *argentum*, "silver" (Lewis & Short), usually traced to Proto-Indo-European *\*h2rgntom*, "silver", from *\*h2erg-*, "white, shining" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

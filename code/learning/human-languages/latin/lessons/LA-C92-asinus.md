@@ -13,7 +13,8 @@ gloss: "a donkey"
 concept_tag: LA-ANIMALIA3-ASINUS
 prerequisites: [LA-C92-mus, LA-C92-gallina]
 sounds: []
-roots: []
+roots: [asinus-latin]
+etymology_hook: "asinus 'donkey' — probably a loan from an unknown eastern language; English ass comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C92-gallina]
 <!-- hl-knowledge: introduces=[LA-LEX-C92-ANIMALIA3-03]; assesses=[] -->
 
 **asinus, asinī** — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asinus** is probably a loan from an eastern language, as Lewis & Short already suspected; Greek *onos*, "donkey", may share the source, which is unknown. English *ass* comes from *asinus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

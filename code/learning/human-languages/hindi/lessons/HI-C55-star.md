@@ -14,7 +14,8 @@ romanization: "tārā"
 concept_tag: HI-NOUN-STAR
 prerequisites: [HI-C55-moon, HI-C53-forehead, HI-C54-fish]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tārā ← Sanskrit tārā 'star', inherited (CDIAL 5798)"
 duration:
   max_seconds: 210
 requires:

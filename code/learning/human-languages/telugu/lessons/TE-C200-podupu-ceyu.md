@@ -14,7 +14,8 @@ romanization: "podupu cēyu"
 concept_tag: TE-VERB-PODUPU-CEYU
 prerequisites: [TE-C199-madatapettu, TE-C199-sardu]
 sounds: []
-roots: []
+roots: [telugu-podupu-saving, sey-do-dravidian]
+etymology_hook: "podupu cēyu: podupu 'saving', of uncertain origin, + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C199-sardu]
 <!-- hl-knowledge: introduces=[TE-LEX-C200-KRIYA200-01]; assesses=[] -->
 
 **పొదుపు చేయు** — *podupu cēyu* — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *podupu*, "saving", the first word of **పొదుపు చేయు** (*podupu cēyu*), is uncertain: DEDR 4509 lists *podupu* only as "to imbed". *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

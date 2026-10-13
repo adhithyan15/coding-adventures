@@ -14,7 +14,8 @@ romanization: "tak"
 concept_tag: HI-POST-TAK
 prerequisites: [HI-C93-sintesis-sambandh, HI-C90-se, HI-C88-baje]
 sounds: []
-roots: []
+roots: [sanskrit-tavatka]
+etymology_hook: "tak ← Sanskrit tāvatka, built on tāvant 'so much' (CDIAL 5805)"
 duration:
   max_seconds: 210
 requires:
@@ -62,6 +63,8 @@ the middle of every phrase in the last chapter.
 **तक** also stretches across space, not only time: **घर तक** is *as far as the
 house*. One word covers both, because a stopping point is a stopping point
 whether you measure it in hours or in streets.
+
+**तक** comes from Sanskrit *tāvatka*, built on *tāvant*, "so much" (CDIAL 5805).
 
 ## Grammar Lens: it does not have to be a pair
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C94-SPAN-01, HI-LEX-C88-TIME-01] -->

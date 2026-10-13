@@ -14,7 +14,8 @@ romanization: "peṭrōlu"
 concept_tag: TE-VASTUVU301-PETROLU
 prerequisites: [TE-C301-ato, TE-C301-taksi]
 sounds: []
-roots: []
+roots: [english-petrol]
+etymology_hook: "peṭrōlu ← English petrol"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C301-taksi]
 <!-- hl-knowledge: introduces=[TE-LEX-C301-VASTUVU301-05]; assesses=[] -->
 
 **పెట్రోలు** — *peṭrōlu* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెట్రోలు** (*peṭrōlu*) is a loan from English *petrol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

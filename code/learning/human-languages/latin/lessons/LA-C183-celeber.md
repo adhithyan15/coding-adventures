@@ -13,7 +13,8 @@ gloss: "famous, crowded"
 concept_tag: LA-QUAL183-CELEBER
 prerequisites: [LA-C182-gravis, LA-C183-notus]
 sounds: []
-roots: []
+roots: [celeber-latin]
+etymology_hook: "celeber 'famous, crowded' — origin unknown; first 'crowded'; English celebrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C183-notus]
 <!-- hl-knowledge: introduces=[LA-LEX-C183-QUAL183-02]; assesses=[] -->
 
 **celeber, celebris, celebre** — "famous, crowded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**celeber** has no sure origin; it first meant "crowded, much visited", and Lewis & Short's comparison with a root for hearing is uncertain. English *celebrate* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

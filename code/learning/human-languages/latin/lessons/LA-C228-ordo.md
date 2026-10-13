@@ -13,7 +13,8 @@ gloss: "order, a row"
 concept_tag: LA-RES228-ORDO
 prerequisites: [LA-C228-iugum, LA-C228-vertex]
 sounds: []
-roots: []
+roots: [ordo-latin]
+etymology_hook: "ōrdō 'order, row' — probably from Proto-Italic *ordon- 'row'; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C228-vertex]
 <!-- hl-knowledge: introduces=[LA-LEX-C228-RES228-05]; assesses=[] -->
 
 **ōrdō, ōrdinis** — "order, a row".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōrdō** is probably inherited, from Proto-Italic *\*ordon-*, "a row, an order" (EtymDB 2.1), but its deeper origin is uncertain; it may first have been a weaving word, a row of threads.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

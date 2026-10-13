@@ -14,7 +14,8 @@ romanization: "adab"
 concept_tag: HI-NOUN-MANNERS
 prerequisites: [HI-C65-trust, HI-C63-pain, HI-C64-more]
 sounds: []
-roots: []
+roots: [arabic-adab]
+etymology_hook: "adab ← Arabic adab 'good manners; letters', through Persian (Lane, root ʾ-d-b)"
 duration:
   max_seconds: 210
 requires:

@@ -13,7 +13,8 @@ gloss: "a rampart"
 concept_tag: LA-RES280-VALLUM
 prerequisites: [LA-C280-moenia, LA-C280-fossa]
 sounds: []
-roots: []
+roots: [vallum-latin, vallus-latin]
+etymology_hook: "vallum 'rampart' — built on vallus 'stake': a palisade; English wall"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C280-fossa]
 <!-- hl-knowledge: introduces=[LA-LEX-C280-RES280-05]; assesses=[] -->
 
 **vallum, vallī** — "a rampart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vallum** is built on *vallus*, "a stake" (Lewis & Short): a line of stakes, a palisade. *vallus* is usually traced to Proto-Indo-European *\*welH-*, "to turn, to twist" (EtymDB 2.1). English *wall* was borrowed from it early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

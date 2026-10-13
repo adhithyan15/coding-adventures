@@ -13,7 +13,8 @@ gloss: "a tower"
 concept_tag: LA-RES280-TURRIS
 prerequisites: [LA-C279-porrum, LA-C279-puls]
 sounds: []
-roots: []
+roots: [turris-latin]
+etymology_hook: "turris 'tower' — borrowed from Greek tyrris; English tower"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C279-puls]
 <!-- hl-knowledge: introduces=[LA-LEX-C280-RES280-01]; assesses=[] -->
 
 **turris, turris** — "a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**turris** was borrowed from Greek *tyrris*, "a tower" (Lewis & Short), a word perhaps from Asia Minor. English *tower* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

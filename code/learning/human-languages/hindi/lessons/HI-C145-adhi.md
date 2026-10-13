@@ -14,7 +14,8 @@ romanization: "ā̃dhī"
 concept_tag: HI-THINGS145-ADHI
 prerequisites: [HI-C144-kinara, HI-C144-bijli]
 sounds: []
-roots: []
+roots: [sanskrit-andhika]
+etymology_hook: "āṁdhī ← Sanskrit andhikā 'night', a tadbhava (CDIAL 390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C144-bijli]
 <!-- hl-knowledge: introduces=[HI-LEX-C145-THINGS145-01]; assesses=[] -->
 
 **आँधी** — *ā̃dhī* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आँधी** (*āṁdhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *andhikā*, "night" (CDIAL 390). It is built on *andha*, "blind, dark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

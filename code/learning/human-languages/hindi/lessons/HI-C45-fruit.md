@@ -14,7 +14,8 @@ romanization: "phal"
 concept_tag: HI-NOUN-FRUIT
 prerequisites: [HI-S139-letter-pha, HI-C44-people, HI-C43-look]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phal ← Sanskrit phala 'fruit' (CDIAL 9051), which CDIAL compares with Dravidian words for ripe fruit"
 duration:
   max_seconds: 210
 requires:

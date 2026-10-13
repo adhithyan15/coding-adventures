@@ -14,7 +14,8 @@ romanization: "lakṛī"
 concept_tag: HI-NOUN-WOOD
 prerequisites: [HI-S140-nuqta, HI-C62-clay, HI-C60-peacock, HI-C61-stove]
 sounds: []
-roots: []
+roots: [sanskrit-lakuta]
+etymology_hook: "lakṛī ← Sanskrit lakuṭa 'club, stick', a tadbhava (CDIAL 10875)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C62-clay]
 Usually traced back to Sanskrit लगुड (*laguḍa*), 'a club, a staff', through a Prakrit form with a doubled consonant in the middle. A word for a stick you swing became the word for the stuff a stick is made of.
 
 लकड़ी is both, in fact: the material and one piece of it. A bundle of it under the arm is what feeds the चूल्हा, which is why this word and that one turn up in the same sentence more often than any other pair in this book.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लकड़ी** (*lakṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lakuṭa*, "club, stick" (CDIAL 10875). It came through a variant *\*lakkuṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

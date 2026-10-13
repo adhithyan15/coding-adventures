@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 100,
-  "sourceHash": "fnv1a64:9f212529fa7027ed",
+  "sourceHash": "fnv1a64:ac18fda8e92a856f",
   "lessonIds": [
     "TE-C100-kudi",
     "TE-C100-edama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch100.txt",
   "json": "telugu/narration/ch100.json",
-  "textHash": "fnv1a64:85082e0b549bc2a8",
-  "jsonHash": "fnv1a64:c7b9d7917f65d0db",
+  "textHash": "fnv1a64:145f1a01611e5cd7",
+  "jsonHash": "fnv1a64:69c1205f6bcd1d59",
   "findings": []
 }

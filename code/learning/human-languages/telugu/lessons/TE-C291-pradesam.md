@@ -14,7 +14,8 @@ romanization: "pradēśaṁ"
 concept_tag: TE-STHALAM291-PRADESAM
 prerequisites: [TE-C290-balyam, TE-C291-daksinam]
 sounds: []
-roots: []
+roots: [sanskrit-pradesha]
+etymology_hook: "pradēśaṁ ← Sanskrit pradēśa 'region, country', a tatsama (CDIAL 8668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C291-daksinam]
 <!-- hl-knowledge: introduces=[TE-LEX-C291-STHALAM291-02]; assesses=[] -->
 
 **ప్రదేశం** — *pradēśaṁ* — "a place, a spot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రదేశం** (*pradēśaṁ*) is Sanskrit *pradēśa*, "region, country", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "allaṁ"
 concept_tag: TE-THINGS118-ALLAM
 prerequisites: [TE-C118-bangaladumpa, TE-C118-vankaya]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "allaṁ: usually traced to Sanskrit ārdraka 'fresh ginger' (CDIAL 1341), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C118-vankaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **అల్లం** — *allaṁ* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అల్లం** (*allaṁ*) is usually traced to Sanskrit *ārdraka*, "fresh ginger" (CDIAL 1341), reshaped to Telugu sounds: a tadbhava. Pali already has *adda-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "viḍipōvu"
 concept_tag: TE-VERB-VIDIPOVU
 prerequisites: [TE-C166-diddu, TE-C166-gonugu]
 sounds: []
-roots: []
+roots: [dravidian-vidu-release, proto-dravidian-poo-go]
+etymology_hook: "viḍipōvu: native viḍu 'to separate' (DEDR 5393) + pōvu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C166-gonugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C166-KRIYA166-05]; assesses=[] -->
 
 **విడిపోవు** — *viḍipōvu* — "to separate, to part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విడిపోవు** (*viḍipōvu*) is native Dravidian: *viḍu*, "to be loosened, separate", one word with Tamil *viṭu*, "to leave" (DEDR 5393), and *pōvu*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ākukūra"
 concept_tag: TE-VASTUVU225-AKUKURA
 prerequisites: [TE-C224-parupu, TE-C224-pindi]
 sounds: []
-roots: []
+roots: [dravidian-aaku-leaf, dravidian-kuura-vegetable]
+etymology_hook: "ākukūra: native āku 'leaf' (DEDR 335) + kūra 'vegetable' (DEDR 1760)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C224-pindi]
 <!-- hl-knowledge: introduces=[TE-LEX-C225-VASTUVU225-01]; assesses=[] -->
 
 **ఆకుకూర** — *ākukūra* — "leafy greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆకుకూర** (*ākukūra*) is native Dravidian: *āku*, "leaf", one word with Kannada *āku* (DEDR 335), and *kūra*, "vegetable, curry-stuff" (DEDR 1760).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

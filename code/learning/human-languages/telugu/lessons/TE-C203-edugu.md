@@ -14,7 +14,8 @@ romanization: "edugu"
 concept_tag: TE-VERB-EDUGU
 prerequisites: [TE-C203-tittu, TE-C203-potladu]
 sounds: []
-roots: []
+roots: [dravidian-ee-increase]
+etymology_hook: "edugu: native Dravidian; DEDR 870 lists edugu 'to grow' with Tamil ē 'increase'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C203-potladu]
 <!-- hl-knowledge: introduces=[TE-LEX-C203-KRIYA203-03]; assesses=[] -->
 
 **ఎదుగు** — *edugu* — "to grow up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎదుగు** (*edugu*) is native Dravidian. DEDR 870 lists *edugu*, "to grow, increase in stature", with Tamil *ē*, "increase".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

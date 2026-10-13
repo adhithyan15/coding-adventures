@@ -13,7 +13,8 @@ gloss: "healthy, sound"
 concept_tag: LA-CORPUS4-SANUS
 prerequisites: [LA-C66-gena, LA-C66-unguis]
 sounds: []
-roots: []
+roots: [sanus-latin]
+etymology_hook: "sānus 'healthy' — origin uncertain; English sane comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C66-unguis]
 <!-- hl-knowledge: introduces=[LA-LEX-C66-CORPUS4-05]; assesses=[] -->
 
 **sānus, sāna, sānum** — "healthy, sound". English *sane*: sound in mind.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sānus** has no secure origin. Lewis & Short compare Greek *sōs*, "safe and sound", and EtymDB 2.1 records a proposed Proto-Indo-European *\*swan-*, "healthy", but neither link is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

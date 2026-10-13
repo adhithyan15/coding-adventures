@@ -14,7 +14,8 @@ romanization: "kampyūṭar"
 concept_tag: TE-THINGS130-KAMPYUTAR
 prerequisites: [TE-C129-tebul, TE-C130-tivi]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "kampyūṭar ← English computer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C130-tivi]
 <!-- hl-knowledge: introduces=[TE-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **కంప్యూటర్** — *kampyūṭar* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కంప్యూటర్** (*kampyūṭar*) is a loan from English *computer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

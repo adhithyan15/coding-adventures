@@ -14,7 +14,8 @@ romanization: "rabbaru"
 concept_tag: TE-VASTUVU191-RABBARU
 prerequisites: [TE-C190-uyyala, TE-C190-tivaci]
 sounds: []
-roots: []
+roots: [english-rubber]
+etymology_hook: "rabbaru ← English rubber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C190-tivaci]
 <!-- hl-knowledge: introduces=[TE-LEX-C191-VASTUVU191-01]; assesses=[] -->
 
 **రబ్బరు** — *rabbaru* — "rubber; an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రబ్బరు** (*rabbaru*) is a loan from English *rubber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

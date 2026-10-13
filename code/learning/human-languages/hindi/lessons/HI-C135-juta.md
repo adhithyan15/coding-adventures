@@ -14,7 +14,8 @@ romanization: "jūtā"
 concept_tag: HI-THINGS135-JUTA
 prerequisites: [HI-C134-anguthi, HI-C135-cappal]
 sounds: []
-roots: []
+roots: [sanskrit-yukta]
+etymology_hook: "jūtā ← Sanskrit yukta 'joined, yoked', a tadbhava (CDIAL 10479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C135-cappal]
 <!-- hl-knowledge: introduces=[HI-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **जूता** — *jūtā* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जूता** (*jūtā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yukta*, "joined, yoked" (CDIAL 10479). CDIAL lists *jūtā*, "shoe", here: the shoe as the thing fastened on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ Before the new one: say the Latin for a purse, then the Latin for a coin.
 You'll want to know: cōdex, cōdicis.
 cōdex, cōdicis — "a book (of bound pages)".
 
+The word, taken apart.
+cōdex is another form of caudex, "a tree trunk, a block of wood" (Lewis & Short): the first such books were wooden tablets fastened together. Where caudex comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Latin for a coin, then the Latin for a book.
 
 You'll want to know: ātrāmentum, ātrāmentī.
 ātrāmentum, ātrāmentī — "ink".
+
+The word, taken apart.
+ātrāmentum is built on āter, "black" (Lewis & Short), with -mentum, an ending for a thing: what blackens.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Latin for a book, then the Latin for ink.
 You'll want to know: calamus, calamī.
 calamus, calamī — "a reed pen".
 
+The word, taken apart.
+calamus was borrowed from Greek kalamos, "a reed, a reed pen" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Latin for ink, then the Latin for a reed pen.
 You'll want to know: cēra, cērae.
 cēra, cērae — "wax; a wax tablet".
 
+The word, taken apart.
+cēra is usually taken as a loan from Greek kēros, "wax" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Latin for a reed pen, then the Latin for wax; a wax 
 
 You'll want to know: pictūra, pictūrae.
 pictūra, pictūrae — "a picture, a painting".
+
+The word, taken apart.
+pictūra is built on pingō, "to paint" (Lewis & Short), through its participle pictus, "painted", with -ūra, an ending for a result. pingō is usually traced to Proto-Indo-European peyk-, "to mark, to colour" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

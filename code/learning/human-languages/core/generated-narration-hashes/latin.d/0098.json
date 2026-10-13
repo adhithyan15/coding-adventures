@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 98,
-  "sourceHash": "fnv1a64:e011070a7a68ac31",
+  "sourceHash": "fnv1a64:769dc923210018b1",
   "lessonIds": [
     "LA-C98-dives",
     "LA-C98-pauper",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch98.txt",
   "json": "latin/narration/ch98.json",
-  "textHash": "fnv1a64:900bcbfbd3e03fe0",
-  "jsonHash": "fnv1a64:6aa01b708de2df54",
+  "textHash": "fnv1a64:42b4a686737392eb",
+  "jsonHash": "fnv1a64:2568899533e42353",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 68,
-  "sourceHash": "fnv1a64:f2853405a1304604",
+  "sourceHash": "fnv1a64:7fd350acd495772d",
   "lessonIds": [
     "LA-C68-aeger",
     "LA-C68-fessus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch68.txt",
   "json": "latin/narration/ch68.json",
-  "textHash": "fnv1a64:4061f6a67020e88a",
-  "jsonHash": "fnv1a64:461590a9eb2ee2e5",
+  "textHash": "fnv1a64:7bf9e878fa1f65c4",
+  "jsonHash": "fnv1a64:b07f85901d5c1c78",
   "findings": []
 }

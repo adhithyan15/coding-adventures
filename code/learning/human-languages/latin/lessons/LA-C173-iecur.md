@@ -13,7 +13,8 @@ gloss: "the liver"
 concept_tag: LA-VALE173-IECUR
 prerequisites: [LA-C173-cerebrum, LA-C173-pulmo]
 sounds: []
-roots: []
+roots: [iecur-latin]
+etymology_hook: "iecur 'liver' — inherited, usually traced to PIE *Hyekwr 'liver'; Greek hēpar is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C173-pulmo]
 <!-- hl-knowledge: introduces=[LA-LEX-C173-VALE173-04]; assesses=[] -->
 
 **iecur, iecoris** — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iecur** is inherited, usually traced to Proto-Indo-European *\*Hyekwr*, "liver" (EtymDB 2.1); Greek *hēpar*, "liver", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

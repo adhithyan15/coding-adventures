@@ -13,7 +13,8 @@ gloss: "a man"
 concept_tag: LA-HOMINES1-VIR
 prerequisites: [LA-C72-vicinus, LA-C72-hospes]
 sounds: []
-roots: []
+roots: [vir-latin]
+etymology_hook: "vir 'man' — inherited, usually traced to PIE *wiHros; Old English wer, in werewolf, is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C72-hospes]
 <!-- hl-knowledge: introduces=[LA-LEX-C72-HOMINES1-04]; assesses=[] -->
 
 **vir, virī** — "a man". English *virile* and *virtue*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vir** is inherited, usually traced to Proto-Indo-European *\*wiHros*, "man" (EtymDB 2.1). Old English *wer*, "man", is a cousin and survives in English *werewolf*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

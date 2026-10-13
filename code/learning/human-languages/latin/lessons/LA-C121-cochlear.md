@@ -13,7 +13,8 @@ gloss: "a spoon"
 concept_tag: LA-THINGS121-COCHLEAR
 prerequisites: [LA-C120-stragulum, LA-C120-mappa]
 sounds: []
-roots: []
+roots: [cochlear-latin, cochlea-latin]
+etymology_hook: "cochlear 'spoon' — built on cochlea 'snail', from Greek kokhlias: first a spoon for snails"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C120-mappa]
 <!-- hl-knowledge: introduces=[LA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **cochlear, cochleāris** — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cochlear** is built on *cochlea*, "a snail" (EtymDB 2.1), a word Latin took from Greek *kokhlias*, "snail, spiral": the spoon was first for eating snails, its pointed end for picking them out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

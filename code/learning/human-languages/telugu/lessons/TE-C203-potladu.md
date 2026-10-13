@@ -14,7 +14,8 @@ romanization: "pōṭlāḍu"
 concept_tag: TE-VERB-POTLADU
 prerequisites: [TE-C202-sadhana-ceyu, TE-C203-tittu]
 sounds: []
-roots: []
+roots: [dravidian-putai-beat, dravidian-aadu-move]
+etymology_hook: "pōṭlāḍu: native pōṭu 'battle' (DEDR 4252) + āḍu 'to play, act' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C203-tittu]
 <!-- hl-knowledge: introduces=[TE-LEX-C203-KRIYA203-02]; assesses=[] -->
 
 **పోట్లాడు** — *pōṭlāḍu* — "to fight, to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోట్లాడు** (*pōṭlāḍu*) is native Dravidian: *pōṭu*, "battle", which DEDR 4252 lists with Kannada *poḍe*, "to strike", and *āḍu*, "to play, act" (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

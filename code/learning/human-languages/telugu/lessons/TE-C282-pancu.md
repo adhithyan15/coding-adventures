@@ -14,7 +14,8 @@ romanization: "pañcu"
 concept_tag: TE-VERB-PANCU
 prerequisites: [TE-C282-natu, TE-C282-alankarincu]
 sounds: []
-roots: []
+roots: [dravidian-pancu-share]
+etymology_hook: "pañcu: native Dravidian; DEDR 3936 lists pancu 'to distribute' with Kannada pañcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C282-alankarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C282-KRIYA282-04]; assesses=[] -->
 
 **పంచు** — *pañcu* — "to share out, to distribute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంచు** (*pañcu*) is native Dravidian. DEDR 3936 lists *pañcu*, "to distribute, divide", with Kannada *pañcu*, "to share". DEDR 3887 *pañcu*, "to send", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

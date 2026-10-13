@@ -14,7 +14,8 @@ romanization: "uḍikiñcu"
 concept_tag: TE-VERB-UDIKINCU
 prerequisites: [TE-C157-cellincu, TE-C157-veyincu]
 sounds: []
-roots: []
+roots: [dravidian-uduku-boil]
+etymology_hook: "uḍikiñcu: native Dravidian; DEDR 588 lists it, 'to boil, cook', under uḍuku 'to boil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C157-veyincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C157-KRIYA157-03]; assesses=[] -->
 
 **ఉడికించు** — *uḍikiñcu* — "to boil (food), to simmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉడికించు** (*uḍikiñcu*) is native Dravidian. DEDR 588 lists it, "to boil, cook", under *uḍuku*, "to boil, simmer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a finger"
 concept_tag: LA-CORPUS1-DIGITUS
 prerequisites: [LA-C57-post, LA-C63-bracchium]
 sounds: []
-roots: []
+roots: [digitus-latin]
+etymology_hook: "digitus 'finger' — origin uncertain; often tied to PIE *deik- 'to point out'; English digit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C63-bracchium]
 <!-- hl-knowledge: introduces=[LA-LEX-C63-CORPUS1-02]; assesses=[] -->
 
 **digitus, digitī** — "a finger". English *digit* keeps it: we first counted on our fingers.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**digitus** has no certain origin. It is often linked to Proto-Indo-European *\*deik-*, "to show, to point out" (EtymDB 2.1): the finger as the pointer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

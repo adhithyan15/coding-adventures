@@ -11,7 +11,8 @@ romanization: "bādha"
 concept_tag: TE-WELLBEING-SORROW
 prerequisites: [TE-C85-fear, TE-C85-anger]
 sounds: []
-roots: []
+roots: [sanskrit-badha]
+etymology_hook: "bādha ← Sanskrit bādhā 'distress', from bādh 'to press, harass' (CDIAL 9204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C85-anger]
 
 **నాకు బాధగా ఉంది** — "I feel sad". It also covers the ache behind worry, so it answers
 *మీరు ఎలా ఉన్నారు?* honestly on a bad day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాధ** (*bādha*) is Sanskrit *bādhā*, "distress, pain", from the verb *bādh*, "to press, harass" (CDIAL 9204), taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

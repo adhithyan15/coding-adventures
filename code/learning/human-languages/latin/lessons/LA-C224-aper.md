@@ -13,7 +13,8 @@ gloss: "a wild boar"
 concept_tag: LA-RES224-APER
 prerequisites: [LA-C223-seges, LA-C224-lacerta]
 sounds: []
-roots: []
+roots: [aper-latin]
+etymology_hook: "aper 'wild boar' — inherited, usually traced to PIE *h1epr-; German Eber is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C224-lacerta]
 <!-- hl-knowledge: introduces=[LA-LEX-C224-RES224-02]; assesses=[] -->
 
 **aper, aprī** — "a wild boar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aper** is inherited, usually traced to Proto-Indo-European *\*h1epr-*, "boar" (EtymDB 2.1); German *Eber*, "boar", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

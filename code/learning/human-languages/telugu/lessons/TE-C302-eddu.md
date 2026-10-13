@@ -14,7 +14,8 @@ romanization: "eddu"
 concept_tag: TE-VASTUVU302-EDDU
 prerequisites: [TE-C301-taksi, TE-C301-petrolu]
 sounds: []
-roots: []
+roots: [dravidian-erutu-ox]
+etymology_hook: "eddu: native Dravidian, one word with Tamil erutu and Kannada eddu (DEDR 815)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C301-petrolu]
 <!-- hl-knowledge: introduces=[TE-LEX-C302-VASTUVU302-01]; assesses=[] -->
 
 **ఎద్దు** — *eddu* — "an ox, a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎద్దు** (*eddu*) is native Dravidian, one word with Tamil *erutu* and Kannada *eddu* (DEDR 815). DEDR lists Telugu *eddu*, "ox, bull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "cālu"
 concept_tag: TE-WORD-ENOUGH
 prerequisites: [TE-C49-true]
 sounds: []
-roots: []
+roots: [dravidian-caal-suffice]
+etymology_hook: "cālu: native Dravidian, one word with Tamil cāl and Kannada sālu (DEDR 2470)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C49-true]
 చాలు is a verb — "it suffices" — used as a complete answer. Held over a glass being filled it stops the pouring; said of an argument it ends it.
 
 చాలా, the everyday word for "very" and "a lot", is the same root wearing a different ending. Sufficiency and abundance sit one letter apart, which is a fair account of how the two ideas are related anywhere.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చాలు** (*cālu*) is native Dravidian, one word with Tamil *cāl* and Kannada *sālu* (DEDR 2470). DEDR lists Telugu *cālu*, "to be enough", and *cāla*, "abundant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

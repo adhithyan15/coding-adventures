@@ -14,7 +14,8 @@ romanization: "chādar"
 concept_tag: HI-NOUN-SHEET
 prerequisites: [HI-C58-stairs, HI-C56-field, HI-C57-sweetness]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "chādar: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 210
 requires:

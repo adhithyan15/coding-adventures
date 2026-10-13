@@ -14,7 +14,8 @@ romanization: "ghaṭnā"
 concept_tag: HI-THG259-GHATNA
 prerequisites: [HI-C259-becaini, HI-C259-bhir]
 sounds: []
-roots: []
+roots: [sanskrit-ghatana]
+etymology_hook: "ghaṭnā ← Sanskrit ghaṭanā 'a joining, a coming about', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C259-bhir]
 <!-- hl-knowledge: introduces=[HI-LEX-C259-THG259-03]; assesses=[] -->
 
 **घटना** — *ghaṭnā* — "an event".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घटना** (*ghaṭnā*) is Sanskrit *ghaṭanā*, "a joining, a coming about", taken over whole as a learned loan, a tatsama. It is a different word from *ghaṭnā*, "to decrease" (CDIAL 4415).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

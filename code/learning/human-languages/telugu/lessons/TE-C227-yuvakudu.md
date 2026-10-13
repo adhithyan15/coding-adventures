@@ -14,7 +14,8 @@ romanization: "yuvakuḍu"
 concept_tag: TE-VASTUVU227-YUVAKUDU
 prerequisites: [TE-C226-pharam, TE-C226-kardu]
 sounds: []
-roots: []
+roots: [sanskrit-yuvan]
+etymology_hook: "yuvakuḍu: Sanskrit yuvaka 'young man', from yuvan 'young' (CDIAL 10508), + -uḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C226-kardu]
 <!-- hl-knowledge: introduces=[TE-LEX-C227-VASTUVU227-01]; assesses=[] -->
 
 **యువకుడు** — *yuvakuḍu* — "a young man, a youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యువకుడు** (*yuvakuḍu*) is Sanskrit *yuvaka*, "young man", from *yuvan*, "young" (CDIAL 10508), with the Telugu ending *-uḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

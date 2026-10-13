@@ -14,7 +14,8 @@ romanization: "guṇḍrani"
 concept_tag: TE-GUNAM221-GUNDRANI
 prerequisites: [TE-C221-vendi, TE-C221-leta]
 sounds: []
-roots: []
+roots: [dravidian-gundu-round]
+etymology_hook: "guṇḍrani: native Dravidian; DEDR 1695 lists guṇḍrani 'round' with Kannada guṇḍa 'roundness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C221-leta]
 <!-- hl-knowledge: introduces=[TE-LEX-C221-GUNAM221-04]; assesses=[] -->
 
 **గుండ్రని** — *guṇḍrani* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుండ్రని** (*guṇḍrani*) is native Dravidian. DEDR 1695 lists *guṇḍrani*, "round", under *guṇḍu*, "anything round", with Kannada *guṇḍa*, "roundness", and Tamil *kuṇṭu*, "ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a picture, a painting"
 concept_tag: LA-THINGS124-PICTURA
 prerequisites: [LA-C124-calamus, LA-C124-cera]
 sounds: []
-roots: []
+roots: [pictura-latin, pingere-latin]
+etymology_hook: "pictūra 'picture' — built on pingō 'to paint', from PIE *peyk- 'to mark'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C124-cera]
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **pictūra, pictūrae** — "a picture, a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pictūra** is built on *pingō*, "to paint" (Lewis & Short), through its participle *pictus*, "painted", with *-ūra*, an ending for a result. *pingō* is usually traced to Proto-Indo-European *\*peyk-*, "to mark, to colour" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

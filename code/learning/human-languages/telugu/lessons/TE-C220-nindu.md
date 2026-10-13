@@ -14,7 +14,8 @@ romanization: "niṇḍu"
 concept_tag: TE-GUNAM220-NINDU
 prerequisites: [TE-C219-prerana, TE-C220-ucitam]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "niṇḍu: native Dravidian; DEDR 3682 lists niṇḍu 'to be filled; full'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C220-ucitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C220-GUNAM220-02]; assesses=[] -->
 
 **నిండు** — *niṇḍu* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిండు** (*niṇḍu*) is native Dravidian. DEDR 3682 lists *niṇḍu*, "to be filled; full", with Tamil *niṟai*, "to become full", and notes that in Telugu this root has run together with another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

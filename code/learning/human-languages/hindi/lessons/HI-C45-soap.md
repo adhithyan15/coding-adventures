@@ -14,7 +14,8 @@ romanization: "sābun"
 concept_tag: HI-NOUN-SOAP
 prerequisites: [HI-C45-salt]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābun ← Arabic ṣābūn 'soap', through Persian (Lane, root ṣ-b-n); Latin sāpō lies further back"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "dhīmā"
 concept_tag: HI-QUAL156-DHIMA
 prerequisites: [HI-C155-ganda, HI-C155-tez]
 sounds: []
-roots: []
+roots: [indo-aryan-dhimma]
+etymology_hook: "dhīmā ← *dhīmma 'slow', a reconstructed form; a tadbhava (CDIAL 6814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C155-tez]
 <!-- hl-knowledge: introduces=[HI-LEX-C156-QUAL156-01]; assesses=[] -->
 
 **धीमा** — *dhīmā* — "slow, low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धीमा** (*dhīmā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhīmma*, "slow", a form CDIAL reconstructs from its descendants (CDIAL 6814). CDIAL asks whether it is related to *\*ḍhīmma*, "lump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

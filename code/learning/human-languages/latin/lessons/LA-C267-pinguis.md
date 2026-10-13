@@ -13,7 +13,8 @@ gloss: "fat"
 concept_tag: LA-QUAL267-PINGUIS
 prerequisites: [LA-C266-iustus, LA-C266-iniustus]
 sounds: []
-roots: []
+roots: [pinguis-latin]
+etymology_hook: "pinguis 'fat' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C266-iniustus]
 <!-- hl-knowledge: introduces=[LA-LEX-C267-QUAL267-01]; assesses=[] -->
 
 **pinguis, pingue** — "fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pinguis** has no sure origin; it is often linked with a Proto-Indo-European root *\*peyH-*, "fat, to swell" (EtymDB 2.1), or with Greek *pakhys*, "thick" (Lewis & Short), but neither link is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

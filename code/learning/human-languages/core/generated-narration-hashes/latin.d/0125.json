@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 125,
-  "sourceHash": "fnv1a64:2fabfade9c715cb8",
+  "sourceHash": "fnv1a64:da21175c0e32cc9c",
   "lessonIds": [
     "LA-C125-statua",
     "LA-C125-signum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch125.txt",
   "json": "latin/narration/ch125.json",
-  "textHash": "fnv1a64:0121705728025afe",
-  "jsonHash": "fnv1a64:0db84e9df2242ab3",
+  "textHash": "fnv1a64:479e19ed8d3e8f8b",
+  "jsonHash": "fnv1a64:592ec2b47f4245b6",
   "findings": []
 }

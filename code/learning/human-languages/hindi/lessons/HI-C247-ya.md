@@ -14,7 +14,8 @@ romanization: "yā"
 concept_tag: HI-THG247-YA
 prerequisites: [HI-C247-isliye, HI-C247-agar]
 sounds: []
-roots: []
+roots: [persian-ya]
+etymology_hook: "yā: usually traced to Persian yā 'or'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C247-agar]
 <!-- hl-knowledge: introduces=[HI-LEX-C247-THG247-05]; assesses=[] -->
 
 **या** — *yā* — "or".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**या** (*yā*) is a loan, usually traced to Persian *yā*, "or".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

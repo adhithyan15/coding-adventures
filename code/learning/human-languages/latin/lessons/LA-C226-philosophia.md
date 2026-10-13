@@ -13,7 +13,8 @@ gloss: "philosophy"
 concept_tag: LA-RES226-PHILOSOPHIA
 prerequisites: [LA-C225-culcita, LA-C226-grammatica]
 sounds: []
-roots: []
+roots: [philosophia-latin]
+etymology_hook: "philosophia 'philosophy' — from Greek philosophia: philos 'loving' + sophia 'wisdom'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C226-grammatica]
 <!-- hl-knowledge: introduces=[LA-LEX-C226-RES226-02]; assesses=[] -->
 
 **philosophia, philosophiae** — "philosophy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**philosophia** was borrowed from Greek *philosophia*, "love of wisdom" (Lewis & Short), from *philos*, "loving", and *sophia*, "wisdom" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

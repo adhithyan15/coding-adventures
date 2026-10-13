@@ -13,7 +13,8 @@ gloss: "blood"
 concept_tag: LA-CORPUS2-SANGUIS
 prerequisites: [LA-C64-genu, LA-C64-cor]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "sanguis 'blood' — origin uncertain; one proposal ties it to PIE *h1esh2r 'blood'; English sanguine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C64-cor]
 <!-- hl-knowledge: introduces=[LA-LEX-C64-CORPUS2-05]; assesses=[] -->
 
 **sanguis, sanguinis** — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sanguis** has no agreed origin; Lewis & Short call it doubtful. EtymDB 2.1 records a proposal that ties it to Proto-Indo-European *\*h1esh2r*, "blood", but not everyone accepts it. English *sanguine* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

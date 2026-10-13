@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a newspaper, then the Telugu for a number
 You'll want to know: పెళ్ళికూతురు.
 పెళ్ళికూతురు — peḷḷikūturu — "a bride".
 
+The word, taken apart.
+పెళ్ళికూతురు (peḷḷikūturu) is native Dravidian: peḷḷi, "marriage" (DEDR 4395), and a nasalised kūturu, "daughter", which DEDR 1873 lists with Kannada kūsu, "infant; maiden": "the wedding daughter". DEDR compares Sanskrit kūkuda, "one who gives a girl in marriage", a lexicon word, with the second.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a number, then the Telugu for a bride.
 
 You'll want to know: జనం.
 జనం — janaṁ — "people, a crowd".
+
+The word, taken apart.
+జనం (janaṁ) is Sanskrit jana, "race, person", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 5098).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a bride, then the Telugu for people.
 You'll want to know: దేవుడు.
 దేవుడు — dēvuḍu — "God, a god".
 
+The word, taken apart.
+దేవుడు (dēvuḍu) is Sanskrit dēva, "heavenly; a god" (CDIAL 6523), with the Telugu ending -uḍu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for people, then the Telugu for God.
 You'll want to know: దొంగ.
 దొంగ — doṅga — "a thief".
 
+The word, taken apart.
+దొంగ (doṅga) is native Dravidian, one word with Tamil toṅkaṉ and Malayalam toṅṅan (DEDR 2982). DEDR lists Telugu doṅga, "thief; false, furtive".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for God, then the Telugu for a thief.
 
 You'll want to know: జంతువు.
 జంతువు — jantuvu — "an animal".
+
+The word, taken apart.
+జంతువు (jantuvu) is Sanskrit jantu, "offspring, creature; any animal", taken over whole as a learned loan, a tatsama, with the Telugu ending -vu (CDIAL 5110).
 
 What you've built.
 One more word for this chapter.

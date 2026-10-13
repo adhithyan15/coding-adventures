@@ -11,7 +11,8 @@ romanization: "alāgē"
 concept_tag: TE-WORD-JUST-SO
 prerequisites: [TE-C49-perhaps]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "alāgē: native Dravidian, alā 'in that way' on the far-pointing base a- (DEDR 1), + emphatic -gē"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C49-perhaps]
 అలా means "in that way"; **-గే** is the small emphatic tail that makes it "just so". అలాగే is the yes you give to an instruction — not "that is correct" but "it shall be as you said".
 
 Now look at the front of it. అ- points far, and already carries అది, "that one", and అక్కడ, "there". ఇ- points near: ఇది, ఇక్కడ, and so ఇలా, "in this way". ఎ- asks: ఎక్కడ, ఎలా. Three vowels, one grid, and అలాగే is simply the far corner of it with an ending stuck on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అలాగే** (*alāgē*) is native Dravidian: *alā*, "in that way", built on the far-pointing base *a-* (DEDR 1), with the emphatic tail *-gē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

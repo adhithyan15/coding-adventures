@@ -11,7 +11,8 @@ romanization: "paṇḍu"
 concept_tag: TE-NOUN-FRUIT
 prerequisites: [TE-C45-wife]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "paṇḍu: native Dravidian, one word with Tamil paḻu 'to ripen' and Kannada paṇṇu (DEDR 4004)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C45-wife]
 పండు is also a verb: *to ripen*. The fruit is named for what happened to it — the ripened thing — and Telugu never troubled to invent a second noun. Say *paṇḍu* of a mango on the table and you mean the fruit; say it of the tree's crop and you mean it is coming ripe.
 
 Kannada writes the same inherited word ಹಣ್ಣು (*haṇṇu*). That *p-* at the front turning into *h-* is a regular Kannada sound law, and it has already turned up once, on పాలు beside ಹಾಲು. Watch for it again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పండు** (*paṇḍu*) is native Dravidian, one word with Tamil *paḻu*, "to ripen", and Kannada *paṇṇu*, "ripe fruit" (DEDR 4004). DEDR lists the Telugu as both "to ripen" and "fruit". DEDR compares Sanskrit *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

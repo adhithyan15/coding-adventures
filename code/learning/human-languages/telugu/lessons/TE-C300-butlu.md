@@ -14,7 +14,8 @@ romanization: "būṭlu"
 concept_tag: TE-VASTUVU300-BUTLU
 prerequisites: [TE-C299-karivepaku, TE-C299-majjiga]
 sounds: []
-roots: []
+roots: [english-boots]
+etymology_hook: "būṭlu ← English boots"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C299-majjiga]
 <!-- hl-knowledge: introduces=[TE-LEX-C300-VASTUVU300-01]; assesses=[] -->
 
 **బూట్లు** — *būṭlu* — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బూట్లు** (*būṭlu*) is a loan from English *boots*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

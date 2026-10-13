@@ -11,7 +11,8 @@ romanization: "oṇṭarigā"
 concept_tag: TE-MOOD-ALONE
 prerequisites: [TE-C97-regret, TE-C97-anxiety]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "oṇṭarigā: native oṇṭari 'alone' (DEDR 990), from the root for 'one', + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C97-anxiety]
 
 **నేను ఒంటరిగా ఉన్నాను** — "I am alone". The **-గా** ending again, on a word for "single, on
 one's own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒంటరిగా** (*oṇṭarigā*) is native Dravidian: *oṇṭari*, "one who is alone", which DEDR 990 lists under the root for "one", followed by the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

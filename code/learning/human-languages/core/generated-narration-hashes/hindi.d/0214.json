@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 214,
-  "sourceHash": "fnv1a64:ce34b28be9f4ac90",
+  "sourceHash": "fnv1a64:806e172daba27603",
   "lessonIds": [
     "HI-C214-cikana",
     "HI-C214-vyast",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch214.txt",
   "json": "hindi/narration/ch214.json",
-  "textHash": "fnv1a64:994d63d38cf1c99c",
-  "jsonHash": "fnv1a64:f64b68f1b4125957",
+  "textHash": "fnv1a64:b17f61366837a970",
+  "jsonHash": "fnv1a64:e7adc48c9a122142",
   "findings": []
 }

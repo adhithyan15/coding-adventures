@@ -13,7 +13,8 @@ gloss: "a wife"
 concept_tag: LA-FAMILIA2-UXOR
 prerequisites: [LA-C70-familia, LA-C71-maritus]
 sounds: []
-roots: []
+roots: [uxor-latin]
+etymology_hook: "uxor 'wife' — origin unknown; English uxorious, 'doting on one's wife', comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C71-maritus]
 <!-- hl-knowledge: introduces=[LA-LEX-C71-FAMILIA2-02]; assesses=[] -->
 
 **uxor, uxōris** — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uxor**, "wife", has no sure origin; Lewis & Short call it doubtful, and no later proposal has won agreement. English *uxorious*, "doting on one's wife", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

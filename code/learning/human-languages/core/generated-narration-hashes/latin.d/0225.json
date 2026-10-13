@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 225,
-  "sourceHash": "fnv1a64:2f60c60a04ae7bbe",
+  "sourceHash": "fnv1a64:73d1c9cbc3b91dfc",
   "lessonIds": [
     "LA-C225-gemma",
     "LA-C225-vestimentum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch225.txt",
   "json": "latin/narration/ch225.json",
-  "textHash": "fnv1a64:0793120ba2482998",
-  "jsonHash": "fnv1a64:0822e18c35525414",
+  "textHash": "fnv1a64:1f479bcd3aafe1df",
+  "jsonHash": "fnv1a64:8e91670e64343107",
   "findings": []
 }

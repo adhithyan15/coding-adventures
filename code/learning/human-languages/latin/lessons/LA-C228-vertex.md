@@ -13,7 +13,8 @@ gloss: "a whirlpool; the top"
 concept_tag: LA-RES228-VERTEX
 prerequisites: [LA-C228-cacumen, LA-C228-iugum]
 sounds: []
-roots: []
+roots: [vertex-latin, vertere-latin]
+etymology_hook: "vertex 'whirlpool, top' — built on vertō 'to turn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C228-iugum]
 <!-- hl-knowledge: introduces=[LA-LEX-C228-RES228-04]; assesses=[] -->
 
 **vertex, verticis** — "a whirlpool; the top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vertex** is built on *vertō*, "to turn" (Lewis & Short): a whirl, then the crown of the head where the hair whirls, then the top. *vortex*, "a whirl", is the older spelling of the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to go away, to leave"
 concept_tag: LA-VERB-DISCEDO
 prerequisites: [LA-C160-numero, LA-C160-deleo]
 sounds: []
-roots: []
+roots: [discedere-latin, cedere-latin]
+etymology_hook: "discēdō 'to leave' — dis- 'apart' + cēdō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C160-deleo]
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-03]; assesses=[] -->
 
 **discēdō, discēdere** — "to go away, to leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**discēdō** is *dis-*, "apart", with *cēdō*, "to go, to withdraw" (EtymDB 2.1): to go off in different directions, to leave.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

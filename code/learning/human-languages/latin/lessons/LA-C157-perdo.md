@@ -13,7 +13,8 @@ gloss: "to lose"
 concept_tag: LA-VERB-PERDO
 prerequisites: [LA-C157-ostendo, LA-C157-luceo]
 sounds: []
-roots: []
+roots: [perdere-latin, dare-latin]
+etymology_hook: "perdō 'to lose' — per- 'to destruction' + dō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C157-luceo]
 <!-- hl-knowledge: introduces=[LA-LEX-C157-ACT157-04]; assesses=[] -->
 
 **perdō, perdere** — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perdō** is *per-*, "through, to destruction", with *dō*, "to give, to put" (Lewis & Short): to make away with, so to lose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

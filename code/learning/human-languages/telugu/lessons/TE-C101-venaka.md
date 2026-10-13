@@ -14,7 +14,8 @@ romanization: "venaka"
 concept_tag: TE-LOC101-VENAKA
 prerequisites: [TE-C101-lopala, TE-C101-bayata]
 sounds: []
-roots: []
+roots: [dravidian-ven-back]
+etymology_hook: "venaka: native Dravidian, one word with Kannada bennu 'the back' (DEDR 5488)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C101-bayata]
 <!-- hl-knowledge: introduces=[TE-LEX-C101-LOC101-05]; assesses=[] -->
 
 **వెనక** — *venaka* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెనక** (*venaka*) is native Dravidian, one word with Tamil *veṉ* and Kannada *bennu*, "the back" (DEDR 5488), which lists Telugu *venuka*, "the rear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

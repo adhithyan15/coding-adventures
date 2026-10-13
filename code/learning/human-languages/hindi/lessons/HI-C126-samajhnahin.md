@@ -14,7 +14,8 @@ romanization: "samajh nahīṁ āyā"
 concept_tag: HI-WHAT-DIDNT-UNDERSTAND
 prerequisites: [HI-C125-maza, HI-C126-phirse]
 sounds: []
-roots: []
+roots: [sanskrit-sambudhyate]
+etymology_hook: "samajh ← Sanskrit saṁbudhyate 'wakes up, understands' (CDIAL 12959)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C126-phirse]
 come".
 
 **समझ** is "understanding", from **समझना**. It comes, or it doesn't.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समझ नहीं आया** (*samajh nahīṁ āyā*) is "understanding did not come". *samajh* comes from Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

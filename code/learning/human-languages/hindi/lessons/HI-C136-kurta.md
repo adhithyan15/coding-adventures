@@ -14,7 +14,8 @@ romanization: "kurtā"
 concept_tag: HI-THINGS136-KURTA
 prerequisites: [HI-C135-kamiz, HI-C135-paint, HI-C24-hara-pila, HI-C24-pila-history]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kurtā: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C135-paint]
 <!-- hl-knowledge: introduces=[HI-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **कुर्ता** — *kurtā* — "a kurta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुर्ता** (*kurtā*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

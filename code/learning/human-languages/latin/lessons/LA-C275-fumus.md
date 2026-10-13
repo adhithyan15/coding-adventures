@@ -13,7 +13,8 @@ gloss: "smoke"
 concept_tag: LA-RES275-FUMUS
 prerequisites: [LA-C275-lutum, LA-C275-pulvis]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fūmus 'smoke' — inherited, usually traced to PIE *dhuh2mos 'smoke'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C275-pulvis]
 <!-- hl-knowledge: introduces=[LA-LEX-C275-RES275-04]; assesses=[] -->
 
 **fūmus, fūmī** — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fūmus** is inherited, usually traced to Proto-Indo-European *\*dhuh2mos*, "smoke" (EtymDB 2.1); Greek *thymos*, "spirit, passion", is a cousin (Lewis & Short), as is English *dust*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

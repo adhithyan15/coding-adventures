@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 168,
-  "sourceHash": "fnv1a64:0f71f6f174616983",
+  "sourceHash": "fnv1a64:1fc960398aeeb567",
   "lessonIds": [
     "HI-C168-manna",
     "HI-C168-milana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch168.txt",
   "json": "hindi/narration/ch168.json",
-  "textHash": "fnv1a64:72920b3103b5a04b",
-  "jsonHash": "fnv1a64:fe2cbfb7367892bd",
+  "textHash": "fnv1a64:70c39fe0f8aa2140",
+  "jsonHash": "fnv1a64:23e0d8191d2265dc",
   "findings": []
 }

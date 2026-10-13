@@ -14,7 +14,8 @@ romanization: "bil"
 concept_tag: HI-NOUN-BILL
 prerequisites: [HI-C73-breakfast]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "bil ← English bill"
 duration:
   max_seconds: 240
 requires:

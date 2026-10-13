@@ -13,7 +13,8 @@ gloss: "very"
 concept_tag: LA-CAUSA179-VALDE
 prerequisites: [LA-C179-potius, LA-C179-maxime]
 sounds: []
-roots: []
+roots: [valde-latin, validus-latin, valere-latin]
+etymology_hook: "valdē 'very' — a shortened adverb of validus 'strong'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C179-maxime]
 <!-- hl-knowledge: introduces=[LA-LEX-C179-CAUSA179-04]; assesses=[] -->
 
 **valdē** — "very".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valdē** is a shortened adverb of *validus*, "strong" (Lewis & Short): strongly, so very.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

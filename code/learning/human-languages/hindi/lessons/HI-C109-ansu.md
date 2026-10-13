@@ -14,7 +14,8 @@ romanization: "ā̃sū"
 concept_tag: HI-MOOD-TEARS
 prerequisites: [HI-C108-chinta, HI-C109-hansi]
 sounds: []
-roots: []
+roots: [sanskrit-ashru]
+etymology_hook: "āṁsū ← Sanskrit aśru 'tear', a tadbhava (CDIAL 919)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C109-hansi]
 **आँसू** (*ā̃sū*) — "tears", a teardrop.
 
 **आँख** is the eye you know; **आँसू** is what it sheds. Both open on the same nasal **आँ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आँसू** (*āṁsū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśru*, "tear" (CDIAL 919). CDIAL notes that the word took a nasal vowel early, as the word for "eye" did.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

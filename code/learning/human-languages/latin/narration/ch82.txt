@@ -12,6 +12,9 @@ Before the new one: say the Latin for a fig, then the Latin for a nut.
 You'll want to know: mēnsa, mēnsae.
 mēnsa, mēnsae — "a table".
 
+The word, taken apart.
+mēnsa, "table", has no sure origin. It is often linked to mēnsus, "measured", the participle of mētior, "to measure", but the link is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a nut, then the Latin for a table.
 
 You'll want to know: sella, sellae.
 sella, sellae — "a chair, a seat".
+
+The word, taken apart.
+sella comes from an older sedla (Lewis & Short), built on Proto-Indo-European sed-, "to sit" (EtymDB 2.1), the root of sedeō, "to sit". English saddle is a cousin from the same root.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a table, then the Latin for a chair.
 You'll want to know: lectus, lectī.
 lectus, lectī — "a bed, a couch".
 
+The word, taken apart.
+lectus is inherited, usually traced to Proto-Indo-European legh-, "to lie" (EtymDB 2.1); Greek lekhos, "bed", is a cousin (Lewis & Short), and so is English lie. It is a different word from lēctus, "chosen".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a chair, then the Latin for a bed.
 You'll want to know: fenestra, fenestrae.
 fenestra, fenestrae — "a window".
 
+The word, taken apart.
+fenestra has no sure origin; it is often thought to be a loan from Etruscan, and the old link with Greek phainō, "to show", that Lewis & Short give is not generally accepted. English defenestrate is built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a bed, then the Latin for a window.
 
 You'll want to know: cubiculum, cubiculī.
 cubiculum, cubiculī — "a bedroom". English cubicle.
+
+The word, taken apart.
+cubiculum is built on cubō, "to lie down" (Lewis & Short), with -culum, an ending for a place or tool: a room to lie down in.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "namōdu cēyu"
 concept_tag: TE-VERB-NAMODU-CEYU
 prerequisites: [TE-C202-sampradincu, TE-C202-tanikhi-ceyu]
 sounds: []
-roots: []
+roots: [telugu-namodu-record, sey-do-dravidian]
+etymology_hook: "namōdu cēyu: namōdu, of uncertain origin, + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C202-tanikhi-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C202-KRIYA202-04]; assesses=[] -->
 
 **నమోదు చేయు** — *namōdu cēyu* — "to register, to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *namōdu*, "record", the first word of **నమోదు చేయు** (*namōdu cēyu*), is uncertain; DEDR and CDIAL do not list it. *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

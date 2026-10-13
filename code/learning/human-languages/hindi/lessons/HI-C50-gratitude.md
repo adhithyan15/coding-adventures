@@ -14,7 +14,8 @@ romanization: "ābhār"
 concept_tag: HI-NOUN-GRATITUDE
 prerequisites: [HI-C49-meeting, HI-C48-true, HI-C49-now]
 sounds: []
-roots: []
+roots: [sanskrit-abhara]
+etymology_hook: "ābhār ← Sanskrit ābhāra 'a load, a burden', a tatsama"
 duration:
   max_seconds: 210
 requires:

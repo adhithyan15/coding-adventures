@@ -11,7 +11,8 @@ romanization: "santōṣaṁgā"
 concept_tag: TE-FINE-GLADLY
 prerequisites: [TE-C93-comfortably, TE-C93-ease]
 sounds: []
-roots: []
+roots: [santosha-sanskrit]
+etymology_hook: "santōṣaṁgā: Sanskrit santoṣa 'satisfaction' (CDIAL 12895) + the adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C93-ease]
 
 It is **సంతోషం**, the "pleased" of your first introductions, with **-గా**. **సంతోషంగా** alone
 answers a request: "gladly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంతోషంగా** (*santōṣaṁgā*) is *santōṣaṁ*, "joy", from Sanskrit *santoṣa*, "satisfaction" (CDIAL 12895), with the Telugu adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "do ādmī"
 concept_tag: HI-NOUN-PLURAL-INVARIANT
 prerequisites: [HI-C91-bhashaen, HI-C39-aadmi, HI-C82-lambaa]
 sounds: []
-roots: []
+roots: [arabic-adami]
+etymology_hook: "ādmī ← Arabic ādamī 'human, of Adam', through Persian"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +65,8 @@ sentence with nothing to show for it.
 This is worth expecting rather than being surprised by, because a reading paper
 will give you an unchanged noun and ask you to count. **The number lives in the
 sentence, not always in the word.**
+
+**आदमी** is the Arabic loan *ādamī*, "human".
 
 ## Grammar Lens: the whole plural system, now complete
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-04, HI-LEX-C91-NOUN-03, HI-LEX-C91-NOUN-01] -->

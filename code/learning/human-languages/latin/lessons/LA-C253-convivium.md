@@ -13,7 +13,8 @@ gloss: "a banquet"
 concept_tag: LA-RES253-CONVIVIUM
 prerequisites: [LA-C252-tabella, LA-C253-feriae]
 sounds: []
-roots: []
+roots: [convivium-latin, vivere-latin]
+etymology_hook: "convīvium 'banquet' — con- 'together' + vīvō 'to live'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C253-feriae]
 <!-- hl-knowledge: introduces=[LA-LEX-C253-RES253-02]; assesses=[] -->
 
 **convīvium, convīviī** — "a banquet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convīvium** is *con-*, "together", with the root of *vīvō*, "to live" (Lewis & Short): living together, then a shared meal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "akasmāttugā"
 concept_tag: TE-SAMAYAM213-AKASMATTUGA
 prerequisites: [TE-C212-varaku, TE-C212-sankranti]
 sounds: []
-roots: []
+roots: [sanskrit-akasmat]
+etymology_hook: "akasmāttugā: Sanskrit akasmāt 'suddenly' + -u + the adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C212-sankranti]
 <!-- hl-knowledge: introduces=[TE-LEX-C213-SAMAYAM213-01]; assesses=[] -->
 
 **అకస్మాత్తుగా** — *akasmāttugā* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అకస్మాత్తుగా** (*akasmāttugā*) is Sanskrit *akasmāt*, "without cause, suddenly", with the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

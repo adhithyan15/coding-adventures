@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 187,
-  "sourceHash": "fnv1a64:eeaab22e4c3ba56a",
+  "sourceHash": "fnv1a64:fcdef381068b2f3f",
   "lessonIds": [
     "HI-C187-girjaghar",
     "HI-C187-thana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch187.txt",
   "json": "hindi/narration/ch187.json",
-  "textHash": "fnv1a64:e7824999a87a5674",
-  "jsonHash": "fnv1a64:0bb69496607dc8c0",
+  "textHash": "fnv1a64:7f616aec8e0e1d76",
+  "jsonHash": "fnv1a64:09e64da73bba13c5",
   "findings": []
 }

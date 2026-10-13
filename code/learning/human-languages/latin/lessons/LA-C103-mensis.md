@@ -13,7 +13,8 @@ gloss: "a month"
 concept_tag: LA-ANNUS-MENSIS
 prerequisites: [LA-C103-heri, LA-C103-annus]
 sounds: []
-roots: []
+roots: [mensis-latin]
+etymology_hook: "mēnsis 'month' — inherited, usually traced to PIE *meh1ns 'moon, month'; English moon and month"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C103-annus]
 <!-- hl-knowledge: introduces=[LA-LEX-C103-ANNUS-04]; assesses=[] -->
 
 **mēnsis, mēnsis** — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mēnsis** is inherited, usually traced to Proto-Indo-European *\*meh1ns*, "moon, month", from *\*meh1-*, "to measure" (EtymDB 2.1). English *moon* and *month* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

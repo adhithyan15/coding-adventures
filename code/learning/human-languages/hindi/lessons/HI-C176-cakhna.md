@@ -14,7 +14,8 @@ romanization: "cakhnā"
 concept_tag: HI-VERB-CAKHNA
 prerequisites: [HI-C176-dhakelna, HI-C176-phekna]
 sounds: []
-roots: []
+roots: [indo-aryan-cakshati]
+etymology_hook: "cakhnā ← *cakṣati 'tastes', a reconstructed form; a tadbhava (CDIAL 4557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C176-phekna]
 <!-- hl-knowledge: introduces=[HI-LEX-C176-ACT176-05]; assesses=[] -->
 
 **चखना** — *cakhnā* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चखना** (*cakhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cakṣati*, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

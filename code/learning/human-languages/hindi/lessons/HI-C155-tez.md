@@ -14,7 +14,8 @@ romanization: "tez"
 concept_tag: HI-QUAL155-TEZ
 prerequisites: [HI-C155-saf, HI-C155-ganda]
 sounds: []
-roots: []
+roots: [persian-tez]
+etymology_hook: "tez: usually traced to Persian tēz 'sharp, swift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C155-ganda]
 <!-- hl-knowledge: introduces=[HI-LEX-C155-QUAL155-05]; assesses=[] -->
 
 **तेज़** — *tez* — "fast, sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तेज़** (*tez*) is a loan, usually traced to Persian *tēz*, "sharp, swift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

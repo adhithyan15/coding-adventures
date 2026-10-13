@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a court, then the Hindi for an election.
 You'll want to know: जेल.
 जेल — jel — "a prison".
 
+The word, taken apart.
+जेल (jel) is a loan from English jail.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for an election, then the Hindi for a prison.
 
 You'll want to know: आज़ादी.
 आज़ादी — āzādī — "freedom".
+
+The word, taken apart.
+आज़ादी (āzādī) is a loan, usually traced to Persian āzādī, "freedom". It is built on āzād, "free".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a prison, then the Hindi for freedom.
 You'll want to know: शांति.
 शांति — śānti — "peace".
 
+The word, taken apart.
+शांति (śānti) is Sanskrit śānti, "calm, peace", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for freedom, then the Hindi for peace.
 You'll want to know: युद्ध.
 युद्ध — yuddh — "a war".
 
+The word, taken apart.
+युद्ध (yuddh) is Sanskrit yuddha, "fought; battle", taken over whole as a learned loan, a tatsama (CDIAL 10499).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for peace, then the Hindi for a war.
 
 You'll want to know: सेना.
 सेना — senā — "an army".
+
+The word, taken apart.
+सेना (senā) is Sanskrit senā, "army", taken over whole as a learned loan, a tatsama (CDIAL 13587). CDIAL lists the inherited form as sen.
 
 What you've built.
 One more word for this chapter.

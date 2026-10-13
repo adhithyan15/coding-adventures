@@ -14,7 +14,8 @@ romanization: "becainī"
 concept_tag: HI-THG259-BECAINI
 prerequisites: [HI-C258-visvas, HI-C258-akelapan]
 sounds: []
-roots: []
+roots: [persian-be]
+etymology_hook: "becainī: becain 'restless' (Persian be- 'without' + cain 'ease') + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C258-akelapan]
 <!-- hl-knowledge: introduces=[HI-LEX-C259-THG259-01]; assesses=[] -->
 
 **बेचैनी** — *becainī* — "restlessness, unease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेचैनी** (*becainī*) is *becain*, "restless", with the ending *-ī* that makes a noun. *be-* is the Persian "without"; *cain*, "ease", is of uncertain origin, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

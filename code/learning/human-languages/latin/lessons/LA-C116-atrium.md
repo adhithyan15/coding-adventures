@@ -13,7 +13,8 @@ gloss: "the main hall of a house"
 concept_tag: LA-LOC116-ATRIUM
 prerequisites: [LA-C116-aedificium, LA-C116-carcer]
 sounds: []
-roots: []
+roots: [atrium-latin]
+etymology_hook: "ātrium 'main hall' — origin unknown; ancient guesses include Greek aithrion and āter 'black'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C116-carcer]
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-03]; assesses=[] -->
 
 **ātrium, ātriī** — "the main hall of a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ātrium** has no sure origin. Lewis & Short report the ancient guesses: a Greek *aithrion*, "open court", or the Etruscan town of Atria. A link with *āter*, "black", from the smoke of the hearth, is also old; none is certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

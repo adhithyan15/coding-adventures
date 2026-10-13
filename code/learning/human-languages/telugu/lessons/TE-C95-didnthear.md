@@ -11,7 +11,8 @@ romanization: "vinipiñcalēdu"
 concept_tag: TE-ASK-DIDNT-HEAR
 prerequisites: [TE-C95-gently, TE-C95-show]
 sounds: []
-roots: []
+roots: [dravidian-vinu-hear, il]
+etymology_hook: "vinipiñcalēdu: native vinipincu 'to make heard' (DEDR 5516) + lē- 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C95-show]
 heard".
 
 It ends in the **లేదు** you know. Pair it with a fix: **వినిపించలేదు, గట్టిగా చెప్పండి**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వినిపించలేదు** (*vinipiñcalēdu*) is native Dravidian: *vinipincu*, "to cause to hear", which DEDR 5516 lists under *vinu*, "to hear", and the negative *lē-* (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

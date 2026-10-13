@@ -14,7 +14,8 @@ romanization: "ceraku"
 concept_tag: TE-VASTUVU303-CERAKU
 prerequisites: [TE-C303-tiga, TE-C303-veduru]
 sounds: []
-roots: []
+roots: [dravidian-ceruku-sugarcane]
+etymology_hook: "ceraku: Dravidian; DEDR 2795 lists ceṟaku 'sugarcane' with Kannada ceruku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C303-veduru]
 <!-- hl-knowledge: introduces=[TE-LEX-C303-VASTUVU303-04]; assesses=[] -->
 
 **చెరకు** — *ceraku* — "sugarcane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెరకు** (*ceraku*) is Dravidian. DEDR 2795 lists *ceṟaku*, "sugarcane", with Kannada *ceruku*, "sugarcane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

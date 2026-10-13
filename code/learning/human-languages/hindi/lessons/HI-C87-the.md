@@ -14,7 +14,8 @@ romanization: "the"
 concept_tag: HI-PAST-PLURAL
 prerequisites: [HI-C87-thii, HI-C86-ve, HI-C02-aap-tum]
 sounds: []
-roots: []
+roots: [sanskrit-sthita]
+etymology_hook: "the: plural of thā ← Sanskrit sthita 'standing, settled' (CDIAL 13768)"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ the polite level in Hindi is built out of plural forms. Asking a single guest
 
 For a group of women, थे adds a nasal and becomes **थीं** — worth recognising on
 a page now, and not worth drilling yet.
+
+**था** comes from Sanskrit *sthita*, "standing, settled" (CDIAL 13768).
 
 ## Grammar Lens: the level decision, once more
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-PAST-03, HI-CONCEPT-C02-AAPTUM-01, HI-LEX-C86-PRON-02] -->

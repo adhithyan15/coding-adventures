@@ -13,7 +13,8 @@ gloss: "a grandmother"
 concept_tag: LA-FAMILIA1-AVIA
 prerequisites: [LA-C70-filia, LA-C70-avus]
 sounds: []
-roots: []
+roots: [avia-latin, avus]
+etymology_hook: "avia 'grandmother' — the feminine of avus 'grandfather', usually traced to PIE *h2ewh2os"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C70-avus]
 <!-- hl-knowledge: introduces=[LA-LEX-C70-FAMILIA1-04]; assesses=[] -->
 
 **avia, aviae** — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avia** is the feminine of *avus*, "a grandfather" (Lewis & Short), which is usually traced to Proto-Indo-European *\*h2ewh2os*, "grandfather" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

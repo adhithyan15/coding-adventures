@@ -13,7 +13,8 @@ gloss: "a charge, a crime"
 concept_tag: LA-RES218-CRIMEN
 prerequisites: [LA-C218-reus, LA-C218-poena]
 sounds: []
-roots: []
+roots: [crimen-latin, cernere-latin]
+etymology_hook: "crīmen 'charge' — kin to cernō 'to sift, to decide': first a judgement"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C218-poena]
 <!-- hl-knowledge: introduces=[LA-LEX-C218-RES218-05]; assesses=[] -->
 
 **crīmen, crīminis** — "a charge, a crime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crīmen** belongs with *cernō*, "to sift, to decide" (Lewis & Short), and is usually traced to Proto-Indo-European *\*kreymn*, "a verdict, a sifting" (EtymDB 2.1): first a judgement, then a charge.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

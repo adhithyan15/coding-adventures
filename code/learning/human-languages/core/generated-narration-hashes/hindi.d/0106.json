@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 106,
-  "sourceHash": "fnv1a64:13a27983e729445f",
+  "sourceHash": "fnv1a64:a1bf974b47afaaae",
   "lessonIds": [
     "HI-C106-thakan",
     "HI-C106-zukam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch106.txt",
   "json": "hindi/narration/ch106.json",
-  "textHash": "fnv1a64:40990eb167e15065",
-  "jsonHash": "fnv1a64:a75c68e59a0eac78",
+  "textHash": "fnv1a64:4986a7201b43d21a",
+  "jsonHash": "fnv1a64:c79eaa20316457d3",
   "findings": []
 }

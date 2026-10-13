@@ -14,7 +14,8 @@ romanization: "jātara"
 concept_tag: TE-SAMAYAM289-JATARA
 prerequisites: [TE-C289-bhogi, TE-C289-panduga]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jātara: from Sanskrit yātrā 'journey; festival' (CDIAL 10456), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C289-panduga]
 <!-- hl-knowledge: introduces=[TE-LEX-C289-SAMAYAM289-03]; assesses=[] -->
 
 **జాతర** — *jātara* — "a village fair, a temple festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జాతర** (*jātara*) comes from Sanskrit *yātrā*, "journey; festival" (CDIAL 10456), reshaped to Telugu sounds: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

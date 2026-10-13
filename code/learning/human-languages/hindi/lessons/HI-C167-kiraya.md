@@ -14,7 +14,8 @@ romanization: "kirāyā"
 concept_tag: HI-READ167-KIRAYA
 prerequisites: [HI-C166-vijnapan, HI-C166-marammat]
 sounds: []
-roots: []
+roots: [arabic-kira]
+etymology_hook: "kirāyā ← Arabic kirāʾ 'hire, rent', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C166-marammat]
 
 The advert says **कमरा ख़ाली है। किराया: पाँच सौ रुपये।** (*kamrā khālī hai.
 kirāyā: pā̃c sau rupaye.*) The rent is five hundred rupees.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किराया** (*kirāyā*) is a loan from Arabic *kirāʾ*, "hire, rent", which reached Hindi through Persian. Its Arabic root is *k-r-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eppaṭikī"
 concept_tag: TE-SAMAYAM172-EPPATIKI
 prerequisites: [TE-C172-intalo, TE-C172-eta]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "eppaṭikī: native eppaṭi 'of what time' (DEDR 5151) + -kī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C172-eta]
 <!-- hl-knowledge: introduces=[TE-LEX-C172-SAMAYAM172-05]; assesses=[] -->
 
 **ఎప్పటికీ** — *eppaṭikī* — "forever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎప్పటికీ** (*eppaṭikī*) is native Dravidian: *eppaṭi*, "of what time", built on the question base *e-* (DEDR 5151), with the ending *-kī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cauṛā"
 concept_tag: HI-QUAL158-CAURA
 prerequisites: [HI-C157-javan, HI-C157-burha]
 sounds: []
-roots: []
+roots: [indo-aryan-ca-uda]
+etymology_hook: "cauṛā ← *ca-uḍa 'wide, open', a reconstructed form; a tadbhava (CDIAL 4534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C157-burha]
 <!-- hl-knowledge: introduces=[HI-LEX-C158-QUAL158-01]; assesses=[] -->
 
 **चौड़ा** — *cauṛā* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौड़ा** (*cauṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ca-uḍa*, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL suggests, with a "possibly", that it was built on *cau-*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

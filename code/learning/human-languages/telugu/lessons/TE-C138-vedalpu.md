@@ -14,7 +14,8 @@ romanization: "veḍalpu"
 concept_tag: TE-QUAL138-VEDALPU
 prerequisites: [TE-C138-andamaina, TE-C138-lotu]
 sounds: []
-roots: []
+roots: [telugu-vedalpu-wide]
+etymology_hook: "veḍalpu: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C138-lotu]
 <!-- hl-knowledge: introduces=[TE-LEX-C138-QUAL138-04]; assesses=[] -->
 
 **వెడల్పు** — *veḍalpu* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **వెడల్పు** (*veḍalpu*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vagaru"
 concept_tag: TE-NOUN-ASTRINGENT
 prerequisites: [TE-C73-pungent]
 sounds: []
-roots: []
+roots: [dravidian-uvar-astringent]
+etymology_hook: "vagaru: native Dravidian; DEDR 2674 lists it with Tamil uvar and Kannada ogar 'astringent taste'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C73-pungent]
 English has no everyday word for it and Telugu has had one for as long as it has been written down. Once you can name it you begin noticing it, which is most of what a word is for.
 
 With ఉప్పు, which you already have, that is the full set a Telugu cook thinks in: తీపి, పులుపు, చేదు, కారం, వగరు and salt. A meal carrying all of them is finished, and so is the visit — వెళ్ళొస్తాను.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వగరు** (*vagaru*) is native Dravidian. DEDR 2674 lists *ogaru* and *vagaru*, "astringent taste", with Tamil *uvar*, "to taste astringent", and Kannada *ogar*, "an astringent taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pareśān"
 concept_tag: HI-FEEL-TROUBLED
 prerequisites: [HI-C108-gussa, HI-C108-udas]
 sounds: []
-roots: []
+roots: [persian-pareshan]
+etymology_hook: "pareśān: usually traced to Persian parēshān 'scattered; distressed'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C108-udas]
 **परेशान** (*pareśān*) — "troubled, bothered, upset".
 
 **आप परेशान क्यों हैं?** — "why are you upset?", with the **क्यों** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परेशान** (*pareśān*) is a loan, usually traced to Persian *parēshān*, "scattered; distressed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

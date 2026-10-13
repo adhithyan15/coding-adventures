@@ -14,7 +14,8 @@ romanization: "gamaniñcu"
 concept_tag: TE-VERB-GAMANINCU
 prerequisites: [TE-C285-bedirincu, TE-C285-heccarincu]
 sounds: []
-roots: []
+roots: [dravidian-kaval-care]
+etymology_hook: "gamaniñcu: DEDR 1328 lists gamanincu 'to pay attention' with Kannada gamanisu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C285-heccarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C285-KRIYA285-03]; assesses=[] -->
 
 **గమనించు** — *gamaniñcu* — "to take note of, to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 1328 lists **గమనించు** (*gamaniñcu*), "to pay attention to", with Kannada *gamanisu*, "to heed", and Tamil *kavalai*, "care, concern".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

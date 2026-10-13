@@ -14,7 +14,8 @@ romanization: "ṭūṭnā"
 concept_tag: HI-VERB-TUTNA
 prerequisites: [HI-C226-banana, HI-C226-banna]
 sounds: []
-roots: []
+roots: [sanskrit-trutyati]
+etymology_hook: "ṭūṭnā ← Sanskrit truṭyati 'is broken', a tadbhava (CDIAL 6065)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C226-banna]
 <!-- hl-knowledge: introduces=[HI-LEX-C226-ACT226-05]; assesses=[] -->
 
 **टूटना** — *ṭūṭnā* — "to break (by itself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टूटना** (*ṭūṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *truṭyati*, "is broken" (CDIAL 6065).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a horse"
 concept_tag: LA-ANIMALIA1-EQUUS
 prerequisites: [LA-C89-campus, LA-C89-litus]
 sounds: []
-roots: []
+roots: [equus-latin]
+etymology_hook: "equus 'horse' — inherited, usually traced to PIE *h1ekwos 'horse'; Greek hippos is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C89-litus]
 <!-- hl-knowledge: introduces=[LA-LEX-C90-ANIMALIA1-01]; assesses=[] -->
 
 **equus, equī** — "a horse". English *equestrian*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**equus** is inherited. Old Latin wrote *equos*, and it is usually traced to Proto-Indo-European *\*h1ekwos*, "horse" (EtymDB 2.1); Greek *hippos*, "horse", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

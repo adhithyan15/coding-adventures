@@ -14,7 +14,8 @@ romanization: "nurugu"
 concept_tag: TE-VASTUVU271-NURUGU
 prerequisites: [TE-C271-penku, TE-C271-plastikku]
 sounds: []
-roots: []
+roots: [dravidian-nurai-foam]
+etymology_hook: "nurugu: native Dravidian; DEDR 3710 lists nurūgu, nuruvu 'foam' with Tamil nurai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C271-plastikku]
 <!-- hl-knowledge: introduces=[TE-LEX-C271-VASTUVU271-04]; assesses=[] -->
 
 **నురుగు** — *nurugu* — "foam, lather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నురుగు** (*nurugu*) is native Dravidian. DEDR 3710 lists *nurūgu* and *nuruvu*, "foam, froth", with Tamil *nurai* and Kannada *nore*, "foam".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

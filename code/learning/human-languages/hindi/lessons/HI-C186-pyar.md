@@ -14,7 +14,8 @@ romanization: "pyār"
 concept_tag: HI-THG186-PYAR
 prerequisites: [HI-C185-patta, HI-C186-gussa]
 sounds: []
-roots: []
+roots: [sanskrit-priyakara]
+etymology_hook: "pyār ← Sanskrit priyakāra 'doing a kindness', a tadbhava (CDIAL 8975)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C186-gussa]
 <!-- hl-knowledge: introduces=[HI-LEX-C186-THG186-02]; assesses=[] -->
 
 **प्यार** — *pyār* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्यार** (*pyār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *priyakāra*, "doing a kindness" (CDIAL 8975). It is built from *priya*, "dear", and *kāra*, "doing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

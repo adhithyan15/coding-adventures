@@ -14,7 +14,8 @@ romanization: "khushbū"
 concept_tag: HI-NOUN-FRAGRANCE
 prerequisites: [HI-C57-platter, HI-C55-cloud, HI-C56-shop]
 sounds: []
-roots: []
+roots: [persian-khushbu]
+etymology_hook: "khushbū: usually traced to Persian khushbū 'fragrance'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C57-platter]
 Two Persian pieces, and you already own one of them: *khush*, 'pleasant', is the *khush-* inside ख़ुशी, from the first time you were pleased to meet someone. *bū* is 'smell'. ख़ुशबू is a pleasant smell, said in the plainest way available.
 
 Persian builds a great many words like this, and Hindi took the habit along with the words. Once you can hear the seam in the middle, a whole shelf of vocabulary stops being arbitrary.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़ुशबू** (*khushbū*) is a loan, usually traced to Persian *khushbū*, "fragrance". It is built from *khush*, "pleasant", the word inside **ख़ुशी**, "happiness", and *bū*, "smell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

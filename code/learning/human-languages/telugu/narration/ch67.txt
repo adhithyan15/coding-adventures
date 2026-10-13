@@ -15,6 +15,9 @@ You'll want to know: గోడ.
 The word is inherited, and it does the same figurative work English asks of a wall. Somebody who will not listen is a గోడ (gōḍa), and a family with nothing hidden has no గోడ (gōḍa) inside it.
 Whitewashing the గోడ (gōḍa) before a festival is its own small season in a Telugu house. A guest who arrives to a fresh one has been told they were expected, and the right thing to say at that moment is నమస్కారం.
 
+The word, taken apart.
+గోడ (gōḍa) is native Dravidian, one word with Kannada gōḍe, "wall" (DEDR 2207).
+
 What you've built.
 One. What a house is measured by before anything is put inside it.
 
@@ -47,6 +50,9 @@ You'll want to know: కప్పు.
 కప్పు (kappu) is the roof — the thing that covers. It comes from the same stem as the everyday word for covering something over, so a lid on a గిన్నె and the roof over a room are one idea in Telugu.
 Village roofs were గడ్డి over beams for centuries and are tile or concrete now. The material changed and the word did not, which is usually a sign of a very old one.
 To be under somebody's కప్పు (kappu) is to be their guest, and it binds the person underneath as much as the person above. నమస్కారం comes first, and everything else follows it.
+
+The word, taken apart.
+కప్పు (kappu) is native Dravidian, from the verb kappu, "to cover", one word with Tamil kappu, "to overspread", and Kannada kappu, "to cover" (DEDR 1221). DEDR compares Sanskrit kavaca, "armour" (CDIAL 2957), which CDIAL takes from Dravidian.
 
 What you've built.
 Two: గోడ (gōḍa) and కప్పు (kappu). Sides, and a lid.
@@ -81,6 +87,9 @@ You'll want to know: గడప.
 It is the most watched piece of a Telugu house. The ముగ్గు is drawn just outside it, water is thrown across it at ఉదయం, and nobody steps on it if they can help it.
 Because it marks in from out, గడప (gaḍapa) also does the work of the word household. Asking whose గడప (gaḍapa) somebody comes from is asking about their family, not about their doorstep.
 
+The word, taken apart.
+గడప (gaḍapa) is native Dravidian. DEDR 1109 lists kaḍapa and gaḍapa, "threshold", under kaḍacu, "to pass over, cross", with Tamil kaṭa, "to pass through".
+
 What you've built.
 Three. The line you cross to be inside.
 
@@ -114,6 +123,9 @@ You'll want to know: మెట్టు.
 Telugu counts them and remembers them. The steps down to a చెరువు are named in some villages, and a house with a మెట్టు (meṭṭu) at its గడప (gaḍapa) is a house standing a little above the street.
 The word carries rank as well. A person who has risen has climbed a మెట్టు (meṭṭu), which is how a stair turns into a career with nobody explaining it.
 
+The word, taken apart.
+మెట్టు (meṭṭu) is native Dravidian, one word with Kannada meṭṭu (DEDR 5057). DEDR lists Telugu meṭṭu, "step, stair".
+
 What you've built.
 Four. Something to climb before you cross.
 
@@ -143,9 +155,10 @@ Before the new one: what did meṭṭu mean?
 
 You'll want to know: కిటికీ.
 కిటికీ (kiṭikī) — "a window".
-కిటికీ (kiṭikī) is a window. It is a borrowing, ultimately from Portuguese, and it arrived carrying the shape of window it names: a framed opening in a గోడ (gōḍa), rather than the small unglazed gap older houses left for గాలి.
+కిటికీ (kiṭikī) is a window. It is a borrowing, probably from the north, where Hindi says khiṛkī, and it arrived carrying the shape of window it names: a framed opening in a గోడ (gōḍa), rather than the small unglazed gap older houses left for గాలి.
 Telugu kept the borrowed word and the older habit side by side. A కిటికీ (kiṭikī) is opened at ఉదయం, shut against the sun in the middle of the day, and opened again by సాయంత్రం.
 A house with a గోడ (gōḍa), a కప్పు (kappu), a గడప (gaḍapa), a మెట్టు (meṭṭu) and a కిటికీ (kiṭikī) is a whole house. Whoever is standing at any one of them is somebody you can greet.
+CDIAL 3770 traces Hindi khiṛkī and Marathi khiḍkī to Sanskrit khaṭakkikā, "side door".
 
 What you've built.
 Five: గోడ (gōḍa), కప్పు (kappu), గడప (gaḍapa), మెట్టు (meṭṭu), కిటికీ (kiṭikī). A house you could walk up to and greet.

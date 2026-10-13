@@ -14,7 +14,8 @@ romanization: "ḍākṭar"
 concept_tag: HI-DOCTOR-DOCTOR
 prerequisites: [HI-C106-bimar, HI-C106-tabiyat]
 sounds: []
-roots: []
+roots: [english-doctor]
+etymology_hook: "ḍākṭar ← English doctor"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C106-tabiyat]
 
 **डाक्टर कहाँ हैं?** — "where is the doctor?", with the respectful plural **हैं** for a person
 you are asking after.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाक्टर** (*ḍākṭar*) is a loan from English *doctor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

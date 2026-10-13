@@ -14,7 +14,8 @@ romanization: "muft"
 concept_tag: HI-QUAL241-MUFT
 prerequisites: [HI-C241-sarkari, HI-C241-niji]
 sounds: []
-roots: []
+roots: [persian-muft]
+etymology_hook: "muft: usually traced to Persian muft 'free, gratis'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C241-niji]
 <!-- hl-knowledge: introduces=[HI-LEX-C241-QUAL241-03]; assesses=[] -->
 
 **मुफ़्त** — *muft* — "free (of charge)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुफ़्त** (*muft*) is a loan, usually traced to Persian *muft*, "free, gratis".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

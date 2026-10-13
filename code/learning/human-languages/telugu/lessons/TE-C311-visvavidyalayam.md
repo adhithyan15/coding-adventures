@@ -14,7 +14,8 @@ romanization: "viśvavidyālayaṁ"
 concept_tag: TE-PANI311-VISVAVIDYALAYAM
 prerequisites: [TE-C310-udyogi, TE-C311-kalasala]
 sounds: []
-roots: []
+roots: [sanskrit-vishva, sanskrit-vidya, sanskrit-alaya]
+etymology_hook: "viśvavidyālayaṁ: Sanskrit viśva 'all' (CDIAL 11962) + vidyā 'knowledge' (CDIAL 11741) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C311-kalasala]
 <!-- hl-knowledge: introduces=[TE-LEX-C311-PANI311-02]; assesses=[] -->
 
 **విశ్వవిద్యాలయం** — *viśvavidyālayaṁ* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విశ్వవిద్యాలయం** (*viśvavidyālayaṁ*) is Sanskrit: *viśva*, "all; the world" (CDIAL 11962), *vidyā*, "knowledge" (CDIAL 11741), and *ālaya*, "house" (CDIAL 1366), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taracugā"
 concept_tag: TE-SAMAYAM170-TARACUGA
 prerequisites: [TE-C170-samayam, TE-C170-appudappudu]
 sounds: []
-roots: []
+roots: [telugu-taracu-often]
+etymology_hook: "taracugā: origin of taracu uncertain, + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C170-appudappudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C170-SAMAYAM170-03]; assesses=[] -->
 
 **తరచుగా** — *taracugā* — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *taracu*, "often", the word in **తరచుగా** (*taracugā*), is uncertain: DEDR and CDIAL list no word of this shape with this sense. The ending *-gā* makes it an adverb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

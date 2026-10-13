@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 233,
-  "sourceHash": "fnv1a64:6a18cede1f1f5825",
+  "sourceHash": "fnv1a64:fe3cde57d321db35",
   "lessonIds": [
     "HI-C233-uttar",
     "HI-C233-daksin",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch233.txt",
   "json": "hindi/narration/ch233.json",
-  "textHash": "fnv1a64:34b2bc72903c450d",
-  "jsonHash": "fnv1a64:89aa8a8832856fe1",
+  "textHash": "fnv1a64:544da46569f7e495",
+  "jsonHash": "fnv1a64:bdbc28817676b0e5",
   "findings": []
 }

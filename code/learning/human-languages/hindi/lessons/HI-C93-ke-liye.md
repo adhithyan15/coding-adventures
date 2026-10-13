@@ -14,9 +14,10 @@ romanization: "parivār ke liye"
 concept_tag: HI-POST-COMPOUND-LIYE
 prerequisites: [HI-C93-ke-piichhe, HI-C44-family, HI-C84-mere-liye]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "liye: usually explained as a form of lenā 'to take', which CDIAL lists under Sanskrit labhate 'takes' (CDIAL 10948)"
 duration:
-  max_seconds: 240
+  max_seconds: 242
 requires:
   knowledge: [HI-LEX-C93-REL-05, HI-LEX-FAMILY, HI-LEX-C84-POSS-06, HI-LEX-C93-REL-01]
 introduces:
@@ -43,6 +44,11 @@ chapter. Then say the word for a family.
 <!-- hl-knowledge: introduces=[HI-LEX-C93-REL-06]; assesses=[] -->
 
 **यह परिवार के लिए है।** — This is for the family.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*liye*, "for", is usually explained as a form of *lenā*, "to take", which CDIAL lists under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-06, HI-LEX-C84-POSS-06] -->

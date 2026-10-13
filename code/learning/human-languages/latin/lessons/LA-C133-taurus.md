@@ -13,7 +13,8 @@ gloss: "a bull"
 concept_tag: LA-THINGS133-TAURUS
 prerequisites: [LA-C133-lepus, LA-C133-vulpes]
 sounds: []
-roots: []
+roots: [taurus-latin]
+etymology_hook: "taurus 'bull' — usually traced to PIE *tauros 'bull'; Greek tauros is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C133-vulpes]
 <!-- hl-knowledge: introduces=[LA-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **taurus, taurī** — "a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taurus** is usually traced to Proto-Indo-European *\*tauros*, "bull" (EtymDB 2.1); Greek *tauros*, "bull", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2bf71ab42120d9fe",
+  "sourceHash": "fnv1a64:45c1f32b2c20e778",
   "lessons": [
     {
       "id": "HI-C86-ham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2434e3a29d85d36f",
+      "sourceHash": "fnv1a64:c02b41233736d493",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हम (ham) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from asmad, \"we, us (the base of the plural forms)\" (CDIAL 986)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: where Hindi says \"we\" and English says \"I\"",
           "segments": [
@@ -87,7 +98,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,7 +147,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -167,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12570f4b1283b4a2",
+      "sourceHash": "fnv1a64:089265d2e0e4d749",
       "notice": null,
       "blocks": [
         {
@@ -204,6 +215,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वे (ve) is the plural partner of वह, \"that\". CDIAL lists vah under Sanskrit asau, \"that\" (CDIAL 972), but does not list ve itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the plural that is also a courtesy",
           "segments": [
@@ -235,7 +257,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -284,7 +306,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -315,7 +337,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1d34fcd8380fc35a",
+      "sourceHash": "fnv1a64:37f2fa758852307d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -359,6 +381,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हमें / तुम्हें (hamẽ / tumhẽ) is ham, \"we\", and tum, \"you\", with an ending -ẽ, \"to\". CDIAL lists ham under the Sanskrit plural base asmad- (CDIAL 986) and tum under yuṣmad- (CDIAL 10511)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same bend, a third time",
           "segments": [
@@ -388,7 +421,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -437,7 +470,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -468,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9863bc2d72e505af",
+      "sourceHash": "fnv1a64:c7dc486edbca67dd",
       "notice": null,
       "blocks": [
         {
@@ -513,6 +546,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपको / उसे (āpko / use) is āp, \"you\", with ko, \"to\", and us, \"him, her\", with the ending -e. āp comes from Sanskrit ātman, \"self\" (CDIAL 1135); CDIAL lists us under asau, \"that\" (CDIAL 972)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the whole set, at last",
           "segments": [
@@ -547,7 +591,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -596,7 +640,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -627,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:040bf3bd3b5b4c11",
+      "sourceHash": "fnv1a64:03eb549cbbe9da55",
       "notice": null,
       "blocks": [
         {
@@ -672,6 +716,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "binā comes from Sanskrit vinā, \"without\" (CDIAL 11772); ārṭikal is English article."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: what does the work instead",
           "segments": [
@@ -709,7 +764,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -767,7 +822,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "paṇḍiñcu"
 concept_tag: TE-VERB-PANDINCU
 prerequisites: [TE-C207-tempu, TE-C207-dunnu]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "paṇḍiñcu: native Dravidian; DEDR 4004 lists paṇḍincu 'to ripen' under paṇḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C207-dunnu]
 <!-- hl-knowledge: introduces=[TE-LEX-C207-KRIYA207-05]; assesses=[] -->
 
 **పండించు** — *paṇḍiñcu* — "to grow (crops)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పండించు** (*paṇḍiñcu*) is native Dravidian. DEDR 4004 lists *paṇḍiñcu*, "to ripen (tr.)", under *paṇḍu*, "to ripen, yield", one word with Tamil *paḻu*, "to ripen". DEDR compares Sanskrit *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

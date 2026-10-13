@@ -14,7 +14,8 @@ romanization: "kamar"
 concept_tag: HI-THINGS151-KAMAR
 prerequisites: [HI-C151-gardan, HI-C151-chati]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kamar: usually traced to Persian kamar 'waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C151-chati]
 <!-- hl-knowledge: introduces=[HI-LEX-C151-THINGS151-05]; assesses=[] -->
 
 **कमर** — *kamar* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमर** (*kamar*) is a loan, usually traced to Persian *kamar*, "waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "even if"
 concept_tag: LA-CAUSA178-ETSI
 prerequisites: [LA-C178-tamen, LA-C178-quamquam]
 sounds: []
-roots: []
+roots: [etsi-latin, si-latin]
+etymology_hook: "etsī 'even if' — et 'even' + sī 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C178-quamquam]
 <!-- hl-knowledge: introduces=[LA-LEX-C178-CAUSA178-04]; assesses=[] -->
 
 **etsī** — "even if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**etsī** is *et*, "even", with *sī*, "if" (EtymDB 2.1): even if.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

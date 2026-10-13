@@ -14,7 +14,8 @@ romanization: "sunsān"
 concept_tag: HI-QUAL239-SUNSAN
 prerequisites: [HI-C239-camakdar, HI-C239-dhudhla]
 sounds: []
-roots: []
+roots: [sanskrit-shunya]
+etymology_hook: "sunsān: perhaps from sūn 'empty' (CDIAL 12567), doubled; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C239-dhudhla]
 <!-- hl-knowledge: introduces=[HI-LEX-C239-QUAL239-03]; assesses=[] -->
 
 **सुनसान** — *sunsān* — "deserted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सुनसान** (*sunsān*) is uncertain. It may be built on *sūn*, "empty", which CDIAL lists under Sanskrit *śūnya*, "empty" (CDIAL 12567), but CDIAL does not list *sunsān* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

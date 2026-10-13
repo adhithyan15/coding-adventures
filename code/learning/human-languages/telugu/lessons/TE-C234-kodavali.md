@@ -14,7 +14,8 @@ romanization: "koḍavali"
 concept_tag: TE-VASTUVU234-KODAVALI
 prerequisites: [TE-C234-peda, TE-C234-nagali]
 sounds: []
-roots: []
+roots: [dravidian-kudu-crooked]
+etymology_hook: "koḍavali: native Dravidian; DEDR 2054 lists koḍavali 'sickle' with Tamil koṭu 'curved'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C234-nagali]
 <!-- hl-knowledge: introduces=[TE-LEX-C234-VASTUVU234-05]; assesses=[] -->
 
 **కొడవలి** — *koḍavali* — "a sickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొడవలి** (*koḍavali*) is native Dravidian. DEDR 2054 lists *koḍavali*, "sickle", with Tamil *koṭu*, "curved, bent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

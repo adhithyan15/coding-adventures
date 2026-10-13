@@ -13,7 +13,8 @@ gloss: "a hammer"
 concept_tag: LA-THINGS122-MALLEUS
 prerequisites: [LA-C121-candela, LA-C122-clavus]
 sounds: []
-roots: []
+roots: [malleus-latin]
+etymology_hook: "malleus 'hammer' — probably from PIE *melh2- 'to crush'; English mallet and maul"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C122-clavus]
 <!-- hl-knowledge: introduces=[LA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **malleus, malleī** — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malleus** is probably inherited, from a Proto-Indo-European root *\*melh2-*, "to grind, to crush" (EtymDB 2.1). English *mallet* and *maul* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

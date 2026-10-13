@@ -14,7 +14,8 @@ romanization: "vārāntaṁ"
 concept_tag: TE-SAMAYAM170-VARANTAM
 prerequisites: [TE-C170-taracuga, TE-C170-tedi]
 sounds: []
-roots: []
+roots: [sanskrit-vara-day, sanskrit-anta]
+etymology_hook: "vārāntaṁ: Sanskrit vāra 'day of the week' (CDIAL 11547) + anta 'end' (CDIAL 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C170-tedi]
 <!-- hl-knowledge: introduces=[TE-LEX-C170-SAMAYAM170-05]; assesses=[] -->
 
 **వారాంతం** — *vārāntaṁ* — "a weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వారాంతం** (*vārāntaṁ*) is Sanskrit: *vāra*, "day of the week" (CDIAL 11547), and *anta*, "end" (CDIAL 347), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

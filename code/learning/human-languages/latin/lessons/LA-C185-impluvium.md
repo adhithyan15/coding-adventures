@@ -13,7 +13,8 @@ gloss: "a rain basin"
 concept_tag: LA-RES185-IMPLUVIUM
 prerequisites: [LA-C185-tablinum, LA-C185-peristylium]
 sounds: []
-roots: []
+roots: [impluvium-latin, pluere-latin]
+etymology_hook: "impluvium 'rain basin' — built on impluō 'to rain into'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C185-peristylium]
 <!-- hl-knowledge: introduces=[LA-LEX-C185-RES185-04]; assesses=[] -->
 
 **impluvium, impluviī** — "a rain basin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impluvium** is built on *impluō*, "to rain into" (Lewis & Short), from *in*, "into", and *pluit*, "it rains": the basin the rain falls into.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

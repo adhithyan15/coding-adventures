@@ -14,7 +14,8 @@ romanization: "ḍhū̃ḍhnā"
 concept_tag: HI-VERB-DHUDHNA
 prerequisites: [HI-C163-harna, HI-C163-becna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhundh]
+etymology_hook: "ḍhūṁḍhnā ← *ḍhūṇḍh 'seek', a reconstructed form; a tadbhava (CDIAL 6839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C163-becna]
 <!-- hl-knowledge: introduces=[HI-LEX-C163-ACT163-04]; assesses=[] -->
 
 **ढूँढना** — *ḍhū̃ḍhnā* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढूँढना** (*ḍhūṁḍhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍhūṇḍh*, "seek", a form CDIAL reconstructs from its descendants (CDIAL 6839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

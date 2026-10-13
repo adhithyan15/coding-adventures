@@ -13,7 +13,8 @@ gloss: "to try, to test"
 concept_tag: LA-VERB-TEMPTO
 prerequisites: [LA-C228-ordo, LA-C229-decerno]
 sounds: []
-roots: []
+roots: [temptare-latin]
+etymology_hook: "temptō 'to try' — origin uncertain; English tempt and attempt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C229-decerno]
 <!-- hl-knowledge: introduces=[LA-LEX-C229-ACT229-02]; assesses=[] -->
 
 **temptō, temptāre** — "to try, to test".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temptō**, also spelled *tentō* (EtymDB 2.1), is often taken as a frequentative of *teneō*, "to hold", but its origin is uncertain. English *tempt* and *attempt* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

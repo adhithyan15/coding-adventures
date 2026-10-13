@@ -14,7 +14,8 @@ romanization: "mehnatī"
 concept_tag: HI-ADJ-HARDWORKING
 prerequisites: [HI-C83-hoshiyaar]
 sounds: []
-roots: []
+roots: [arabic-mihna]
+etymology_hook: "mehnatī: mehnat 'toil', from Arabic miḥna 'trial, ordeal' through Persian, + -ī"
 duration:
   max_seconds: 240
 requires:

@@ -61,6 +61,11 @@ Meanwhile *tempestās* kept going too, narrowing further to mean specifically
 **tempestad** ("storm, tempest"), sitting right alongside *tiempo*. So it's
 one word (*tempus*) widening back out, not two words fusing into one.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tempestās** was built inside Latin on *tempus* "time" (EtymDB 2.1). *tempus* itself has no sure origin: one proposal traces it to Proto-Indo-European *\*tempos*, "stretch", time seen as a stretch (EtymDB 2.1), and Lewis & Short call it doubtful.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02, LA-LEX-TEMPESTAS-PLUIT-01] -->
 

@@ -14,7 +14,8 @@ romanization: "sṭēḍiyaṁ"
 concept_tag: TE-STHALAM215-STEDIYAM
 prerequisites: [TE-C215-maidanam, TE-C215-thiyetaru]
 sounds: []
-roots: []
+roots: [english-stadium]
+etymology_hook: "sṭēḍiyaṁ ← English stadium"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C215-thiyetaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C215-STHALAM215-05]; assesses=[] -->
 
 **స్టేడియం** — *sṭēḍiyaṁ* — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్టేడియం** (*sṭēḍiyaṁ*) is a loan from English *stadium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

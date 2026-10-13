@@ -14,7 +14,8 @@ romanization: "appuḍappuḍu"
 concept_tag: TE-SAMAYAM170-APPUDAPPUDU
 prerequisites: [TE-C169-benuku, TE-C170-samayam]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "appuḍappuḍu: native appuḍu 'then' (DEDR 1), said twice"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C170-samayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C170-SAMAYAM170-02]; assesses=[] -->
 
 **అప్పుడప్పుడు** — *appuḍappuḍu* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అప్పుడప్పుడు** (*appuḍappuḍu*) is native Dravidian: *appuḍu*, "at that time, then", built on the far-pointing base *a-* (DEDR 1), said twice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

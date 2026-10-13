@@ -13,7 +13,8 @@ gloss: "empty"
 concept_tag: LA-PULCHER-VACUUS
 prerequisites: [LA-C96-pulcher, LA-C96-rotundus]
 sounds: []
-roots: []
+roots: [vacuus-latin, vacare-latin]
+etymology_hook: "vacuus 'empty' — built on vacō 'to be empty', whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C96-rotundus]
 <!-- hl-knowledge: introduces=[LA-LEX-C96-PULCHER-03]; assesses=[] -->
 
 **vacuus, vacua, vacuum** — "empty". English *vacuum*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vacuus** is built on *vacō*, "to be empty, to be free" (Lewis & Short). Where *vacō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

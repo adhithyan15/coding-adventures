@@ -14,7 +14,8 @@ romanization: "tūfān"
 concept_tag: HI-THG185-TUFAN
 prerequisites: [HI-C185-thand, HI-C185-garmi]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tūfān ← Arabic ṭūfān 'a flood, a deluge', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C185-garmi]
 <!-- hl-knowledge: introduces=[HI-LEX-C185-THG185-04]; assesses=[] -->
 
 **तूफ़ान** — *tūfān* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तूफ़ान** (*tūfān*) is a loan from Arabic *ṭūfān*, "a flood, a deluge", which reached Hindi through Persian. Its Arabic root is *ṭ-w-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a roof"
 concept_tag: LA-DOMUS2-TECTUM
 prerequisites: [LA-C82-cubiculum, LA-C83-culina]
 sounds: []
-roots: []
+roots: [tectum-latin, tegere-latin]
+etymology_hook: "tēctum 'roof' — 'what covers', from tegō 'to cover', from PIE *(s)teg-; English thatch is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C83-culina]
 <!-- hl-knowledge: introduces=[LA-LEX-C83-DOMUS2-02]; assesses=[] -->
 
 **tēctum, tēctī** — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tēctum** is the past participle of *tegō*, "to cover", used as a noun: "what covers" (Lewis & Short). *tegō* is usually traced to Proto-Indo-European *\*(s)teg-*, "to cover with a roof" (EtymDB 2.1); English *thatch* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for a crown, then the Latin for a ring.
 You'll want to know: arbor, arboris.
 arbor, arboris — "a tree". English arboretum.
 
+The word, taken apart.
+arbor had an older form arbōs (Lewis & Short). Its deeper origin is uncertain; EtymDB 2.1 records a proposed link with Proto-Indo-European h3erdh-, "high, to grow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a ring, then the Latin for a tree.
 
 You'll want to know: flōs, flōris.
 flōs, flōris — "a flower". English floral.
+
+The word, taken apart.
+flōs is inherited, usually traced to Proto-Indo-European bhleh3-, "to thrive, to bloom" (EtymDB 2.1). English bloom and blossom are cousins.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a tree, then the Latin for a flower.
 You'll want to know: folium, foliī.
 folium, foliī — "a leaf". English foliage.
 
+The word, taken apart.
+folium is inherited, usually traced to Proto-Indo-European bholh3yom, "leaf" (EtymDB 2.1); Greek phyllon, "leaf", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a flower, then the Latin for a leaf.
 You'll want to know: silva, silvae.
 silva, silvae — "a forest, a wood".
 
+The word, taken apart.
+silva has no sure origin. Lewis & Short compare Greek hylē, "wood, forest", and EtymDB 2.1 records a proposed Proto-Indo-European swel-, "forest", but neither link is settled. English sylvan comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a leaf, then the Latin for a forest.
 
 You'll want to know: mōns, montis.
 mōns, montis — "a mountain". English mount.
+
+The word, taken apart.
+mōns is probably inherited, from a Proto-Indo-European root men-, "to stand out" (EtymDB 2.1); ēmineō, "to stand out", and mentum, "chin", are often put in the same family (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

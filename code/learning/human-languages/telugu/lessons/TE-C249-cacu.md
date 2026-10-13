@@ -14,7 +14,8 @@ romanization: "cācu"
 concept_tag: TE-VERB-CACU
 prerequisites: [TE-C249-paku, TE-C249-vangu]
 sounds: []
-roots: []
+roots: [dravidian-caacu-stretch]
+etymology_hook: "cācu: native Dravidian; DEDR 2433 lists cāgu 'to be stretched' with Kannada cācu 'to stretch out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C249-vangu]
 <!-- hl-knowledge: introduces=[TE-LEX-C249-KRIYA249-04]; assesses=[] -->
 
 **చాచు** — *cācu* — "to stretch out (a limb)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చాచు** (*cācu*) is native Dravidian. DEDR 2433 lists a nasalised *cāgu*, "to be stretched", with Kannada *cācu*, "to stretch out", and sets beside them, with a query, Tamil *cāṭu*, "to stretch out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

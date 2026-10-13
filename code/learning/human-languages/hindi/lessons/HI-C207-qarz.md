@@ -14,7 +14,8 @@ romanization: "qarz"
 concept_tag: HI-THG207-QARZ
 prerequisites: [HI-C206-vada, HI-C207-sart]
 sounds: []
-roots: []
+roots: [arabic-qard]
+etymology_hook: "qarz ← Arabic qarḍ 'a loan', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C207-sart]
 <!-- hl-knowledge: introduces=[HI-LEX-C207-THG207-02]; assesses=[] -->
 
 **क़र्ज़** — *qarz* — "a debt, a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़र्ज़** (*qarz*) is a loan from Arabic *qarḍ*, "a loan", which reached Hindi through Persian. Its Arabic root is *q-r-ḍ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

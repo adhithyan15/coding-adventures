@@ -13,7 +13,8 @@ gloss: "to promise"
 concept_tag: LA-VERB-PROMITTO
 prerequisites: [LA-C166-signo, LA-C166-disputo]
 sounds: []
-roots: []
+roots: [promittere-latin, mittere-latin]
+etymology_hook: "prōmittō 'to promise' — prō 'forward' + mittō 'to send'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C166-disputo]
 <!-- hl-knowledge: introduces=[LA-LEX-C166-ACT166-04]; assesses=[] -->
 
 **prōmittō, prōmittere** — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōmittō** is *prō*, "forward", with *mittō*, "to send" (EtymDB 2.1): to send one's word ahead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

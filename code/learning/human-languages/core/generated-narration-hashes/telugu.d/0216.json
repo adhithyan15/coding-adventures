@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 216,
-  "sourceHash": "fnv1a64:14d084562c5c16f0",
+  "sourceHash": "fnv1a64:aa84bda9cdc25c8d",
   "lessonIds": [
     "TE-C216-snanapu-gadi",
     "TE-C216-punadi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch216.txt",
   "json": "telugu/narration/ch216.json",
-  "textHash": "fnv1a64:10e229949a49dfad",
-  "jsonHash": "fnv1a64:fc87696f97dc5546",
+  "textHash": "fnv1a64:cdcd48c7766a92c2",
+  "jsonHash": "fnv1a64:24478bb12f5df891",
   "findings": []
 }

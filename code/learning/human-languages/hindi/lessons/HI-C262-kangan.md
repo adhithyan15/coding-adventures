@@ -14,7 +14,8 @@ romanization: "kaṅgan"
 concept_tag: HI-THG262-KANGAN
 prerequisites: [HI-C262-pujari, HI-C262-gahna]
 sounds: []
-roots: []
+roots: [sanskrit-kankana]
+etymology_hook: "kaṅgan: Sanskrit kaṅkaṇa 'bracelet' (CDIAL 2597); CDIAL lists kaknā, not kaṅgan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C262-gahna]
 <!-- hl-knowledge: introduces=[HI-LEX-C262-THG262-05]; assesses=[] -->
 
 **कंगन** — *kaṅgan* — "a bangle, a bracelet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंगन** (*kaṅgan*) goes back to Sanskrit *kaṅkaṇa*, "bracelet" (CDIAL 2597). CDIAL lists Hindi *kaknā* and *kaknī* under it, but not *kaṅgan* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

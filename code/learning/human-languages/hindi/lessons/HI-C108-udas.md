@@ -15,6 +15,7 @@ concept_tag: HI-FEEL-SAD
 prerequisites: [HI-C108-dar, HI-C108-gussa]
 sounds: []
 roots: []
+etymology_hook: "udās: usually traced to Sanskrit udāsa 'indifference'; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C108-gussa]
 **उदास** (*udās*) — "sad".
 
 **मैं उदास हूँ** — "I am sad". Like **बीमार**, it describes you, so it takes **मैं ... हूँ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उदास** (*udās*) is usually traced to Sanskrit *udāsa*, "indifference", from *ud-ās-*, "to sit apart". CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

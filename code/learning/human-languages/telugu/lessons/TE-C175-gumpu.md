@@ -14,7 +14,8 @@ romanization: "gumpu"
 concept_tag: TE-STHALAM175-GUMPU
 prerequisites: [TE-C174-guha, TE-C174-loya]
 sounds: []
-roots: []
+roots: [dravidian-gumpu-crowd]
+etymology_hook: "gumpu: native Dravidian; DEDR 1741 lists gumpu 'group, crowd' with Tamil kumi 'to crowd'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C174-loya]
 <!-- hl-knowledge: introduces=[TE-LEX-C175-STHALAM175-01]; assesses=[] -->
 
 **గుంపు** — *gumpu* — "a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుంపు** (*gumpu*) is native Dravidian. DEDR 1741 lists *gumpu*, "a crowd, group", beside *gumi*, "crowd", with Tamil *kumi*, "to be heaped up, crowd together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

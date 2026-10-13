@@ -14,7 +14,8 @@ romanization: "arth"
 concept_tag: HI-THG198-ARTH
 prerequisites: [HI-C198-sabd, HI-C198-vakya]
 sounds: []
-roots: []
+roots: [sanskrit-artha]
+etymology_hook: "arth ← Sanskrit artha 'aim; thing, wealth; meaning', a tatsama (CDIAL 638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C198-vakya]
 <!-- hl-knowledge: introduces=[HI-LEX-C198-THG198-03]; assesses=[] -->
 
 **अर्थ** — *arth* — "a meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अर्थ** (*arth*) is Sanskrit *artha*, "aim; thing, wealth; meaning", taken over whole as a learned loan, a tatsama (CDIAL 638). CDIAL lists the inherited form as *āth*, "wealth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

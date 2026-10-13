@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 192,
-  "sourceHash": "fnv1a64:35387a52770647b8",
+  "sourceHash": "fnv1a64:1697d1fcd3915806",
   "lessonIds": [
     "LA-C192-cancer",
     "LA-C192-passer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch192.txt",
   "json": "latin/narration/ch192.json",
-  "textHash": "fnv1a64:b19e49edccf5518c",
-  "jsonHash": "fnv1a64:613697802ffaea1b",
+  "textHash": "fnv1a64:2d838fd4e0755594",
+  "jsonHash": "fnv1a64:9b8cd1f7819eeec8",
   "findings": []
 }

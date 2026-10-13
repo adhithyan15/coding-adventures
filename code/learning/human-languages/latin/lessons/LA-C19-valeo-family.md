@@ -56,6 +56,11 @@ move through the exchange:
 That last imperative became the Chapter 1 goodbye. Latin's farewell is
 therefore a wish for the other person to remain well.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valeō** is inherited, usually traced through Proto-Italic *\*walēō*, "to be strong", to Proto-Indo-European *\*h2welh1-*, "to rule, to be strong" (EtymDB 2.1).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01] -->
 

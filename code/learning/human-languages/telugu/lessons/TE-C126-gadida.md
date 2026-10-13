@@ -14,7 +14,8 @@ romanization: "gāḍida"
 concept_tag: TE-THINGS126-GADIDA
 prerequisites: [TE-C126-batu, TE-C126-pandi]
 sounds: []
-roots: []
+roots: [dravidian-kazhutai-donkey]
+etymology_hook: "gāḍida: Dravidian, one word with Tamil kaḻutai 'ass' (DEDR 1364), which compares Sanskrit gardabha"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C126-pandi]
 <!-- hl-knowledge: introduces=[TE-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **గాడిద** — *gāḍida* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గాడిద** (*gāḍida*) is a Dravidian word, one with Tamil *kaḻutai* and Kannada *kaḻte*, "ass" (DEDR 1364). DEDR compares Sanskrit *gardabha*, "ass" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

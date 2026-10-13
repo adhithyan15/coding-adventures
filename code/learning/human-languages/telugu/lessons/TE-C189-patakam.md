@@ -14,7 +14,8 @@ romanization: "patakaṁ"
 concept_tag: TE-VASTUVU189-PATAKAM
 prerequisites: [TE-C189-poti, TE-C189-vijeta]
 sounds: []
-roots: []
+roots: [telugu-patakam-medal]
+etymology_hook: "patakaṁ: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'medal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C189-vijeta]
 <!-- hl-knowledge: introduces=[TE-LEX-C189-VASTUVU189-03]; assesses=[] -->
 
 **పతకం** — *patakaṁ* — "a medal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పతకం** (*patakaṁ*) is uncertain. DEDR and CDIAL list no word of this shape meaning "medal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

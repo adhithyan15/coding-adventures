@@ -13,7 +13,8 @@ gloss: "especially"
 concept_tag: LA-CAUSA179-PRAESERTIM
 prerequisites: [LA-C178-etsi, LA-C178-nisi]
 sounds: []
-roots: []
+roots: [praesertim-latin, serere-join-latin]
+etymology_hook: "praesertim 'especially' — built on praeserō 'to put in front': placed first"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C178-nisi]
 <!-- hl-knowledge: introduces=[LA-LEX-C179-CAUSA179-01]; assesses=[] -->
 
 **praesertim** — "especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**praesertim** is built on *praeserō*, "to put in front of a row" (Lewis & Short), from *prae*, "before", and *serō*, "to join, to line up", with *-tim*, an adverb ending: placed first, so especially.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

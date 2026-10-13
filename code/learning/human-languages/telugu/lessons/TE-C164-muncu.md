@@ -14,7 +14,8 @@ romanization: "muñcu"
 concept_tag: TE-VERB-MUNCU
 prerequisites: [TE-C164-turumu, TE-C164-vadakattu]
 sounds: []
-roots: []
+roots: [dravidian-muzhuku-sink]
+etymology_hook: "muñcu: native Dravidian; DEDR 4993 lists muncu 'to plunge, immerse' with Tamil muḻukku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C164-vadakattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C164-KRIYA164-03]; assesses=[] -->
 
 **ముంచు** — *muñcu* — "to dip, to soak in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముంచు** (*muñcu*) is native Dravidian. DEDR 4993 lists *muñcu*, "to plunge, immerse", with Tamil *muḻukku*, "to immerse", and Kannada *muḻugisu*, "to dip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

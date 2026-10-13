@@ -14,7 +14,8 @@ romanization: "tohfā"
 concept_tag: HI-NOUN-PRESENT
 prerequisites: [HI-C56-field, HI-C55-sun, HI-C56-road]
 sounds: []
-roots: []
+roots: [arabic-tuhfa]
+etymology_hook: "tohfā ← Arabic tuḥfa 'a gift, a rarity', through Persian (Lane, root t-ḥ-f)"
 duration:
   max_seconds: 210
 requires:

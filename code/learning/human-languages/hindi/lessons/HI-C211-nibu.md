@@ -14,7 +14,8 @@ romanization: "nī̃bū"
 concept_tag: HI-THG211-NIBU
 prerequisites: [HI-C211-haldi, HI-C211-dhaniya]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "nīṁbū ← Sanskrit nimbū 'lime', a tadbhava (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C211-dhaniya]
 <!-- hl-knowledge: introduces=[HI-LEX-C211-THG211-05]; assesses=[] -->
 
 **नींबू** — *nī̃bū* — "a lemon, a lime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नींबू** (*nīṁbū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nimbū*, "lime" (CDIAL 7247). CDIAL takes the Sanskrit word from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

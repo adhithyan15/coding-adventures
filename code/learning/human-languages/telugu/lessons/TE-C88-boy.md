@@ -11,7 +11,8 @@ romanization: "abbāyi"
 concept_tag: TE-PEOPLE-BOY
 prerequisites: [TE-C87-really, TE-C88-children]
 sounds: []
-roots: []
+roots: [telugu-abbaayi-boy]
+etymology_hook: "abbāyi: origin uncertain; DEDR lists its partner ammāyi 'girl' (DEDR 183) but not abbāyi"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C88-children]
 **అబ్బాయి** (*abbāyi*) — "a boy", and in a family, "a son".
 
 **మా అబ్బాయి** — "our boy", which is how a parent says "my son" out loud.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **అబ్బాయి** (*abbāyi*) is uncertain. DEDR does not list it, though it lists its partner *ammāyi*, "girl", under *amma*, "mother" (DEDR 183).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

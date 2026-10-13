@@ -13,7 +13,8 @@ gloss: "low"
 concept_tag: LA-QUAL144-HUMILIS
 prerequisites: [LA-C143-antiquus, LA-C143-angustus]
 sounds: []
-roots: []
+roots: [humilis-latin, humus-latin]
+etymology_hook: "humilis 'low' — built on humus 'ground': near the ground; English humble"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C143-angustus]
 <!-- hl-knowledge: introduces=[LA-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **humilis, humile** — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**humilis** is built on *humus*, "earth, ground" (Lewis & Short): low, near the ground. *humus* is usually traced to Proto-Indo-European *\*dhéghōm*, "earth" (EtymDB 2.1). English *humble* comes from *humilis* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

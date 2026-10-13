@@ -13,7 +13,8 @@ gloss: "then, at that time"
 concept_tag: LA-QUANTUM-TUM
 prerequisites: [LA-C105-raro, LA-C105-iam]
 sounds: []
-roots: []
+roots: [tum-latin]
+etymology_hook: "tum 'then' — inherited, usually traced to PIE *tom 'that', a pointing word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C105-iam]
 <!-- hl-knowledge: introduces=[LA-LEX-C105-QUANTUM-03]; assesses=[] -->
 
 **tum** — "then, at that time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tum** is inherited, usually traced to Proto-Indo-European *\*tom*, "that" (EtymDB 2.1), a form of the pointing stem that also gave *tam*, "so" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

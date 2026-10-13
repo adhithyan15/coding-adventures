@@ -14,7 +14,8 @@ romanization: "mukhyamaina"
 concept_tag: TE-GUNAM259-MUKHYAMAINA
 prerequisites: [TE-C258-paristhiti, TE-C259-raddi]
 sounds: []
-roots: []
+roots: [sanskrit-mukhya, tamil-aaku-become]
+etymology_hook: "mukhyamaina: Sanskrit mukhya 'chief' (CDIAL 10174) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C259-raddi]
 <!-- hl-knowledge: introduces=[TE-LEX-C259-GUNAM259-02]; assesses=[] -->
 
 **ముఖ్యమైన** — *mukhyamaina* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముఖ్యమైన** (*mukhyamaina*) is Sanskrit *mukhya*, "pertaining to the face; chief" (CDIAL 10174), with native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

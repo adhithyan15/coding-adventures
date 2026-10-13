@@ -11,7 +11,8 @@ romanization: "ani"
 concept_tag: TE-QUOTATIVE-ANI
 prerequisites: [TE-C80-want, TE-C32-undu]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "ani: native Dravidian, 'having said', from anu 'to say' (DEDR 868)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C80-want]
 You already have **అనుకో**, "to think", with nothing it could think *about*. అని is what attaches a thought or a sentence to the verb.
 
 It comes **after** what is being reported, not before it: **తెలుగు సులభం అని అనుకుంటాను** — "I think that Telugu is easy", literally "Telugu-is-easy *that* I-think".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అని** (*ani*) is native Dravidian: the "having said" form of *anu*, "to say", which DEDR 868 lists.
 
 ## Grammar Lens: Telugu quotes forwards, not backwards
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C80-WISH-02]; assesses=[] -->

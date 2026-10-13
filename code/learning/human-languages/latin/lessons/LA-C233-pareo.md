@@ -13,7 +13,8 @@ gloss: "to obey"
 concept_tag: LA-VERB-PAREO
 prerequisites: [LA-C233-ligo, LA-C233-misceo]
 sounds: []
-roots: []
+roots: [parere]
+etymology_hook: "pāreō 'to obey' — probably from PIE *peh2s- 'to see': first 'to appear, be at hand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C233-misceo]
 <!-- hl-knowledge: introduces=[LA-LEX-C233-ACT233-05]; assesses=[] -->
 
 **pāreō, pārēre** — "to obey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāreō** is probably inherited, from a Proto-Indo-European *\*peh2s-*, "to watch, to see" (EtymDB 2.1): first to appear, to be at hand, then to be at someone's call, to obey.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

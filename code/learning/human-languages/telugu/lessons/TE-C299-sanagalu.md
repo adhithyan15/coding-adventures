@@ -14,7 +14,8 @@ romanization: "śanagalu"
 concept_tag: TE-VASTUVU299-SANAGALU
 prerequisites: [TE-C298-bolu, TE-C298-masaka]
 sounds: []
-roots: []
+roots: [sanskrit-canaka]
+etymology_hook: "śanagalu: cf. Sanskrit caṇaka 'chickpea' (CDIAL 4579) + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C298-masaka]
 <!-- hl-knowledge: introduces=[TE-LEX-C299-VASTUVU299-01]; assesses=[] -->
 
 **శనగలు** — *śanagalu* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శనగలు** (*śanagalu*) matches Sanskrit *caṇaka*, "chickpea" (CDIAL 4579), with the Telugu plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

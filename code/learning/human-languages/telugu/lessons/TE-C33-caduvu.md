@@ -50,7 +50,8 @@ when it says a child's *caduvu* is going well.
 
 The sisters scatter here as completely as they did over seeing: Tamil **படி**
 (*paḍi*), Kannada **ಓದು** (*ōdu*), Malayalam **വായിക്കുക** (*vāyikkuka*), Telugu
-**చదువు**. Four unrelated everyday verbs for one act.
+**చదువు**. Four different everyday verbs for one act. DEDR 2327 lists *caduvu*
+with a query, in an entry that compares Sanskrit *catura*, "clever".
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -73,7 +74,7 @@ ending in that short *u*.
 Chapter 32 gave you the harsh version of this with **రా**: there the word you
 call the verb by was not the word the endings attach to, and they went to
 *vaccu-* instead. This is the mild version — one stem, three vowels, plainly the
-same word. Expect the wobble; do not expect a second verb.
+same word.
 
 The respectful **-అండి** arrives exactly as it did on *cūḍaṇḍi*: **చదవండి**
 (*cadavaṇḍi*), "please read." The ending never changes; only the stem in front of

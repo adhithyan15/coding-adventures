@@ -14,7 +14,8 @@ romanization: "pahle"
 concept_tag: HI-TIME-BEFORE
 prerequisites: [HI-C90-kaam, HI-C28-subah]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila]
+etymology_hook: "pahlā ← *prathila 'first', a form CDIAL reconstructs (CDIAL 8652)"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ It does two jobs, and the difference is where it stands:
 
 *सुबह से पहले* is *before morning* — the time word, **से**, then **पहले**.
 That is the second use, and it is why this lesson comes after the one on **से**.
+
+**पहला** comes from a reconstructed *\*prathila*, "first" (CDIAL 8652).
 
 ## Grammar Lens: sequencing a day
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C90-ROUT-05, HI-LEX-C90-ROUT-03, HI-LEX-C90-ROUT-04] -->

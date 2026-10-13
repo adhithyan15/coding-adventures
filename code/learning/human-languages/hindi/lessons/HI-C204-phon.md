@@ -14,7 +14,8 @@ romanization: "phon"
 concept_tag: HI-THG204-PHON
 prerequisites: [HI-C204-havaijahaz, HI-C204-petrol]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "phon ← English phone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C204-petrol]
 <!-- hl-knowledge: introduces=[HI-LEX-C204-THG204-05]; assesses=[] -->
 
 **फ़ोन** — *phon* — "a telephone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फ़ोन** (*phon*) is a loan from English *phone*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

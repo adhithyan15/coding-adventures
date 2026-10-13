@@ -13,7 +13,8 @@ gloss: "a laurel"
 concept_tag: LA-RES250-LAURUS
 prerequisites: [LA-C250-quercus, LA-C250-pinus]
 sounds: []
-roots: []
+roots: [laurus-latin]
+etymology_hook: "laurus 'laurel' — origin unknown; probably a Mediterranean loan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C250-pinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C250-RES250-04]; assesses=[] -->
 
 **laurus, laurī** — "a laurel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laurus** has no sure origin; it is usually thought to be a loan from a lost Mediterranean language. German *Lorbeer*, "laurel", was borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

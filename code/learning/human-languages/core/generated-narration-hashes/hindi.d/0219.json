@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 219,
-  "sourceHash": "fnv1a64:0d75539fb5b090b6",
+  "sourceHash": "fnv1a64:36f58561edc63a40",
   "lessonIds": [
     "HI-C219-jel",
     "HI-C219-azadi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch219.txt",
   "json": "hindi/narration/ch219.json",
-  "textHash": "fnv1a64:8b8efd2988a72b84",
-  "jsonHash": "fnv1a64:06dade6ce7350d31",
+  "textHash": "fnv1a64:eca219024f1d0cc7",
+  "jsonHash": "fnv1a64:f39f36590fcdbfba",
   "findings": []
 }

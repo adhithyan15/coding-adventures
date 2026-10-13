@@ -13,7 +13,8 @@ gloss: "bright, clear; famous"
 concept_tag: LA-PULCHER-CLARUS
 prerequisites: [LA-C96-rotundus, LA-C96-vacuus]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "clārus 'bright, clear' — usually traced to PIE *klh1ros; perhaps first 'loud'; English clear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C96-vacuus]
 <!-- hl-knowledge: introduces=[LA-LEX-C96-PULCHER-04]; assesses=[] -->
 
 **clārus, clāra, clārum** — "bright, clear; famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clārus** is inherited, usually traced to Proto-Indo-European *\*klh1ros*, "clear, bright", from *\*kelh1-*, "to call, to shout" (EtymDB 2.1): it may first have meant "loud", like *clāmō*, "to shout" (Lewis & Short). English *clear* comes from *clārus* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

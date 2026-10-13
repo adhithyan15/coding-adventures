@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:b5ebce2fe46c24a3",
+  "sourceHash": "fnv1a64:5ac3b3be3845f74b",
   "lessonIds": [
     "HI-C61-vessel",
     "HI-S141-nuqta-borrowed",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch61.txt",
   "json": "hindi/narration/ch61.json",
-  "textHash": "fnv1a64:f134bd5e8a2aa13b",
-  "jsonHash": "fnv1a64:11aa7757a81f390f",
+  "textHash": "fnv1a64:3ed1f2fbd7893661",
+  "jsonHash": "fnv1a64:689fca578d15dde0",
   "findings": []
 }

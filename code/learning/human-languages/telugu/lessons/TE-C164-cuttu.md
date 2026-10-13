@@ -14,7 +14,8 @@ romanization: "cuṭṭu"
 concept_tag: TE-VERB-CUTTU
 prerequisites: [TE-C164-muncu, TE-C164-cimpu]
 sounds: []
-roots: []
+roots: [dravidian-curru-revolve]
+etymology_hook: "cuṭṭu: native Dravidian, one word with Tamil cuṟṟu and Kannada suttu (DEDR 2715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C164-cimpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C164-KRIYA164-05]; assesses=[] -->
 
 **చుట్టు** — *cuṭṭu* — "to wrap, to roll up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చుట్టు** (*cuṭṭu*) is native Dravidian, one word with Tamil *cuṟṟu* and Kannada *suttu* (DEDR 2715). DEDR lists Telugu *cuṭṭu*, "to roll, wrap, wind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

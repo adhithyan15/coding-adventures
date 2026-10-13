@@ -13,7 +13,8 @@ gloss: "high; deep"
 concept_tag: LA-MAGNUS-ALTUS
 prerequisites: [LA-C93-longus, LA-C93-brevis]
 sounds: []
-roots: []
+roots: [altus-latin, alere-latin]
+etymology_hook: "altus 'high' — the old participle of alō 'to nourish': first 'grown tall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C93-brevis]
 <!-- hl-knowledge: introduces=[LA-LEX-C93-MAGNUS-05]; assesses=[] -->
 
 **altus, alta, altum** — "high; deep". English *altitude*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**altus** is the old past participle of *alō*, "to nourish, to make grow" (Lewis & Short): high was first "grown tall". The root is usually traced to Proto-Indo-European *\*h2el-*, "to grow, to nourish" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

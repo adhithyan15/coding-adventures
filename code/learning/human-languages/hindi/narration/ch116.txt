@@ -13,6 +13,9 @@ You'll want to know: दादा.
 दादा (dādā) — "grandfather", your FATHER's father.
 English has one word for both grandfathers; Hindi has two, and says which side of the family you mean. मेरे दादा (dādā) — "my grandfather", with the respectful plural मेरे.
 
+The word, taken apart.
+दादा (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
+
 What you've built.
 A grandfather, on your father's side.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for a polite no, then the Hindi for the father
 You'll want to know: दादी.
 दादी (dādī) — "grandmother", your father's mother.
 It pairs with दादा (dādā): the -ई ending marks the woman, as in बच्ची beside बच्चा.
+
+The word, taken apart.
+दादी (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). dādī is its feminine.
 
 What you've built.
 The father's side, both grandparents.
@@ -73,6 +79,9 @@ You'll want to know: नाना.
 नाना (nānā) — "grandfather", your MOTHER's father.
 So दादा (dādā) and नाना (nānā) are both "grandfather" in English, and never the same man in Hindi.
 
+The word, taken apart.
+नाना (nānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL compares Sanskrit nanā, "mother".
+
 What you've built.
 A grandfather, on your mother's side.
 
@@ -103,6 +112,9 @@ You'll want to know: नानी.
 नानी (nānī) — "grandmother", your mother's mother.
 नानी (nānī) का घर — "grandmother's house", the mother's family home, where many summer holidays are spent.
 
+The word, taken apart.
+नानी (nānī) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). nānī is its feminine. CDIAL compares Sanskrit nanā, "mother".
+
 What you've built.
 All four grandparents, each with a name of their own.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for the mother's father, then the Hindi for th
 You'll want to know: चाचा.
 चाचा (cācā) — "uncle", your father's younger brother.
 Like the grandparents, an uncle's name says whose brother he is. मेरे चाचा (cācā) — "my uncle".
+
+The word, taken apart.
+चाचा (cācā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cācca, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). CDIAL suggests, with a query, a nursery word.
 
 What you've built.
 Four grandparents and an uncle: the family says which side.

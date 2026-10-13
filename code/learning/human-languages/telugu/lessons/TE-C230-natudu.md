@@ -14,7 +14,8 @@ romanization: "naṭuḍu"
 concept_tag: TE-VASTUVU230-NATUDU
 prerequisites: [TE-C230-kemera, TE-C230-vinodam]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "naṭuḍu: Sanskrit naṭa 'dancer, actor' (CDIAL 6933) + -uḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C230-vinodam]
 <!-- hl-knowledge: introduces=[TE-LEX-C230-VASTUVU230-05]; assesses=[] -->
 
 **నటుడు** — *naṭuḍu* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నటుడు** (*naṭuḍu*) is Sanskrit *naṭa*, "dancer, actor" (CDIAL 6933), with the Telugu ending *-uḍu*. CDIAL thinks *naṭa* probably came through Middle Indo-Aryan, and keeps it apart from a look-alike verb that it takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

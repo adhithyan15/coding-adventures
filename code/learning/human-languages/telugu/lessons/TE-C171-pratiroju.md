@@ -14,7 +14,8 @@ romanization: "pratirōju"
 concept_tag: TE-SAMAYAM171-PRATIROJU
 prerequisites: [TE-C170-varantam, TE-C171-suryastamayam]
 sounds: []
-roots: []
+roots: [sanskrit-prati, persian-roz]
+etymology_hook: "pratirōju: Sanskrit prati 'towards' (CDIAL 8540) + rōju 'day' ← Persian rōz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C171-suryastamayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C171-SAMAYAM171-02]; assesses=[] -->
 
 **ప్రతిరోజు** — *pratirōju* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రతిరోజు** (*pratirōju*) joins Sanskrit *prati*, "towards, against" (CDIAL 8540), used in Telugu as "each", to *rōju*, "day", from Persian *rōz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

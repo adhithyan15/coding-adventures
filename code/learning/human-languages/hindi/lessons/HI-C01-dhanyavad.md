@@ -15,6 +15,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [HI-C01-namaskar]
 sounds: [devanagari-inherent-a, matra-aa, halant-conjunct]
 roots: [dhanya, vaada]
+etymology_hook: "dhanyavād: Sanskrit dhanya 'fortunate, blessed' + vāda 'a saying', from vad 'to speak'"
 duration:
   max_seconds: 240
 requires:

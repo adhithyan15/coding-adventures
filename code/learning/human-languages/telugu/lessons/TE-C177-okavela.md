@@ -14,7 +14,8 @@ romanization: "okavēḷa"
 concept_tag: TE-KARANAM177-OKAVELA
 prerequisites: [TE-C176-gurinci, TE-C176-lekunda]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-vela]
+etymology_hook: "okavēḷa: native oka 'one' (DEDR 990) + vēḷa 'time' ← Sanskrit vēlā (CDIAL 12115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C176-lekunda]
 <!-- hl-knowledge: introduces=[TE-LEX-C177-KARANAM177-01]; assesses=[] -->
 
 **ఒకవేళ** — *okavēḷa* — "if by chance, in case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒకవేళ** (*okavēḷa*) is native *oka*, "one" (DEDR 990), and *vēḷa*, "time", from Sanskrit *vēlā*, "limit, time" (CDIAL 12115), a word CDIAL thinks probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

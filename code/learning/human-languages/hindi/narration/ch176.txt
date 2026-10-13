@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to burn (by itself), then the Hindi for to
 You'll want to know: हिलाना.
 हिलाना — hilānā — "to shake".
 
+The word, taken apart.
+हिलाना (hilānā) is the causing form of hilnā, "to shake, move", which CDIAL lists under a reconstructed hillati, "moves, shakes" (CDIAL 14120).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to put out (a fire or light), then the Hin
 
 You'll want to know: खींचना.
 खींचना — khī̃cnā — "to pull".
+
+The word, taken apart.
+खींचना (khī̃cnā) (khīṁcnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to shake, then the Hindi for to pull.
 You'll want to know: धकेलना.
 धकेलना — dhakelnā — "to push".
 
+The word, taken apart.
+धकेलना (dhakelnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhakk, "push, strike", a form CDIAL reconstructs from its descendants (CDIAL 6701).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to pull, then the Hindi for to push.
 You'll want to know: फेंकना.
 फेंकना — phẽknā — "to throw".
 
+The word, taken apart.
+फेंकना (phẽknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from phekk, "throw", a form CDIAL reconstructs from its descendants (CDIAL 9106).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to push, then the Hindi for to throw.
 
 You'll want to know: चखना.
 चखना — cakhnā — "to taste".
+
+The word, taken apart.
+चखना (cakhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557).
 
 What you've built.
 One more word for this chapter.

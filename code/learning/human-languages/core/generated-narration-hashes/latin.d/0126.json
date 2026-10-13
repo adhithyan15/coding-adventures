@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 126,
-  "sourceHash": "fnv1a64:b2c805e4b6a5c69f",
+  "sourceHash": "fnv1a64:bf44407104679983",
   "lessonIds": [
     "LA-C126-pallium",
     "LA-C126-zona",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch126.txt",
   "json": "latin/narration/ch126.json",
-  "textHash": "fnv1a64:a50e5bf74c0cbf8d",
-  "jsonHash": "fnv1a64:be3ac9aebd5728a6",
+  "textHash": "fnv1a64:4a543f7401c858e0",
+  "jsonHash": "fnv1a64:9f43e4eec3f31335",
   "findings": []
 }

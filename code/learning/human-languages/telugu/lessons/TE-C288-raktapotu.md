@@ -14,7 +14,8 @@ romanization: "raktapōṭu"
 concept_tag: TE-AROGYAM288-RAKTAPOTU
 prerequisites: [TE-C288-malabaddhakam, TE-C288-madhumeham]
 sounds: []
-roots: []
+roots: [sanskrit-rakta, dravidian-potu-thrust]
+etymology_hook: "raktapōṭu: Sanskrit rakta 'blood' (CDIAL 10539) + native pōṭu 'thrust' (DEDR 4560)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C288-madhumeham]
 <!-- hl-knowledge: introduces=[TE-LEX-C288-AROGYAM288-05]; assesses=[] -->
 
 **రక్తపోటు** — *raktapōṭu* — "blood pressure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రక్తపోటు** (*raktapōṭu*) is Sanskrit *rakta*, "red; blood" (CDIAL 10539), and native *pōṭu*, "a thrust, pain" (DEDR 4560).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

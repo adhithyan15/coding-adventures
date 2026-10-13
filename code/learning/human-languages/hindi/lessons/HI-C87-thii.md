@@ -14,7 +14,8 @@ romanization: "thī"
 concept_tag: HI-PAST-FEMININE
 prerequisites: [HI-C87-thaa, HI-C41-adjective-system]
 sounds: []
-roots: []
+roots: [sanskrit-sthita]
+etymology_hook: "thī: feminine of thā ← Sanskrit sthita 'standing, settled' (CDIAL 13768)"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +65,8 @@ A word ending in **-आ** swaps that ending for **-ई**. You learned it on
 adjectives, met it again on the habitual verb, and here it is a third time. The
 past copula behaves like an adjective because, historically, it once was one —
 a participle meaning *situated*, agreeing with whoever was situated.
+
+**था** comes from Sanskrit *sthita*, "standing, settled" (CDIAL 13768).
 
 ## Grammar Lens: what each tense listens to
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-PAST-01, HI-LEX-C87-PAST-02] -->

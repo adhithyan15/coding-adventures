@@ -14,7 +14,8 @@ romanization: "tempu"
 concept_tag: TE-VERB-TEMPU
 prerequisites: [TE-C207-callarcu, TE-C207-tattu]
 sounds: []
-roots: []
+roots: [dravidian-teri-snap]
+etymology_hook: "tempu: native Dravidian; DEDR 3437 lists t(r)empu 'to snap, break' with Tamil teṟi 'to snap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C207-tattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C207-KRIYA207-03]; assesses=[] -->
 
 **తెంపు** — *tempu* — "to pluck, to snap off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెంపు** (*tempu*) is native Dravidian. DEDR 3437 lists *tempu*, "to snap, break, cut", with Tamil *teṟi*, "to snap", and Kannada *tiṟi*, "to cut off". DEDR 3416 *tempu*, "daring", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

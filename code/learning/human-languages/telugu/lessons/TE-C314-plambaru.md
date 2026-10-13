@@ -14,7 +14,8 @@ romanization: "plambaru"
 concept_tag: TE-PANI314-PLAMBARU
 prerequisites: [TE-C313-hajaru, TE-C314-mestri]
 sounds: []
-roots: []
+roots: [english-plumber]
+etymology_hook: "plambaru ← English plumber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C314-mestri]
 <!-- hl-knowledge: introduces=[TE-LEX-C314-PANI314-02]; assesses=[] -->
 
 **ప్లంబరు** — *plambaru* — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్లంబరు** (*plambaru*) is a loan from English *plumber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

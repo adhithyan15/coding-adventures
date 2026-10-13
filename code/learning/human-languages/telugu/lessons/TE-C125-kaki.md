@@ -14,7 +14,8 @@ romanization: "kāki"
 concept_tag: TE-THINGS125-KAKI
 prerequisites: [TE-C125-nemali, TE-C125-sitakokacilaka]
 sounds: []
-roots: []
+roots: [dravidian-kaakkai-crow]
+etymology_hook: "kāki: Dravidian, one word with Tamil kākkai (DEDR 1425), which compares Sanskrit kāka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C125-sitakokacilaka]
 <!-- hl-knowledge: introduces=[TE-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **కాకి** — *kāki* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాకి** (*kāki*) is a Dravidian word, one with Tamil *kākkai* and Kannada *kāke*, "crow" (DEDR 1425). DEDR compares Sanskrit *kāka*, "crow" (CDIAL 2993), and notes that some of the Dravidian forms may be borrowed back from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

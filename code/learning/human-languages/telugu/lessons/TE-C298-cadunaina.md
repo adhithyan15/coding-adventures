@@ -14,7 +14,8 @@ romanization: "cadunaina"
 concept_tag: TE-GUNAM298-CADUNAINA
 prerequisites: [TE-C298-moddu, TE-C298-vankara]
 sounds: []
-roots: []
+roots: [dravidian-cati-bruise, tamil-aaku-become]
+etymology_hook: "cadunaina: native cadunu 'even, level' (DEDR 2322) + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C298-vankara]
 <!-- hl-knowledge: introduces=[TE-LEX-C298-GUNAM298-03]; assesses=[] -->
 
 **చదునైన** — *cadunaina* — "flat, level".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చదునైన** (*cadunaina*) is native Dravidian: *cadunu*, "even, level", which DEDR 2322 lists under *cadumu*, "to strike", with Kannada *sade*, "to pound", and *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

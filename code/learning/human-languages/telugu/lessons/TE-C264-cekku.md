@@ -14,7 +14,8 @@ romanization: "cekku"
 concept_tag: TE-VASTUVU264-CEKKU
 prerequisites: [TE-C263-nikkaru, TE-C263-baninu]
 sounds: []
-roots: []
+roots: [english-cheque]
+etymology_hook: "cekku ← English cheque"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C263-baninu]
 <!-- hl-knowledge: introduces=[TE-LEX-C264-VASTUVU264-01]; assesses=[] -->
 
 **చెక్కు** — *cekku* — "a cheque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెక్కు** (*cekku*) is a loan from English *cheque*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

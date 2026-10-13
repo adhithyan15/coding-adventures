@@ -14,7 +14,8 @@ romanization: "kala"
 concept_tag: TE-WANT107-KALA
 prerequisites: [TE-C107-korika, TE-C107-asa]
 sounds: []
-roots: []
+roots: [dravidian-kanavu-dream]
+etymology_hook: "kala: native Dravidian, one word with Tamil kaṉā and Kannada kanasu (DEDR 1407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C107-asa]
 <!-- hl-knowledge: introduces=[TE-LEX-C107-WANT107-03]; assesses=[] -->
 
 **కల** — *kala* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కల** (*kala*) is native Dravidian, one word with Tamil *kaṉā* and Kannada *kanasu* (DEDR 1407). DEDR lists Telugu *kala*, "dream".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

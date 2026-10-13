@@ -14,7 +14,8 @@ romanization: "khelnā / kheltā / kheltī / khelte"
 concept_tag: VERB-PLAY
 prerequisites: [HI-C70-game, HI-C69-go, HI-C68-india, HI-C69-railway]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khelnā ← *khel- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ Remove **-ना** to recover **खेल-**, then add the present endings you k
 **खेलता** (masculine), **खेलती** (feminine), and **खेलते** (respectful **आप**
 or plural). So **मैं खेलता हूँ / मैं खेलती हूँ** means "I play," while **आप
 खेलते हैं** means "you play."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेलना** (*khelnā*) is inherited from a reconstructed *\*khel-*, "play" (CDIAL 3918), the verb behind *khel*, "a game". CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

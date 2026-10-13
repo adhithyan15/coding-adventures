@@ -14,7 +14,8 @@ romanization: "ṭrak"
 concept_tag: HI-THG204-TRAK
 prerequisites: [HI-C203-saikil, HI-C203-skutar]
 sounds: []
-roots: []
+roots: [english-truck]
+etymology_hook: "ṭrak ← English truck"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C203-skutar]
 <!-- hl-knowledge: introduces=[HI-LEX-C204-THG204-01]; assesses=[] -->
 
 **ट्रक** — *ṭrak* — "a lorry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ट्रक** (*ṭrak*) is a loan from English *truck*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

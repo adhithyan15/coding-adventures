@@ -14,7 +14,8 @@ romanization: "davākhānā"
 concept_tag: HI-THG273-DAVAKHANA
 prerequisites: [HI-C272-bhasan, HI-C273-pulis]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davākhānā: davā 'medicine', from Arabic dawāʾ (Lane), + Persian khāna 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C273-pulis]
 <!-- hl-knowledge: introduces=[HI-LEX-C273-THG273-02]; assesses=[] -->
 
 **दवाख़ाना** — *davākhānā* — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दवाख़ाना** (*davākhānā*) is *davā*, "medicine", from Arabic *dawāʾ* through Persian (Lane, root *d-w-y*), with Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

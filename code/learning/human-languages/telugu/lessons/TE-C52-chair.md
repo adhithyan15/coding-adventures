@@ -11,7 +11,8 @@ romanization: "kurcī"
 concept_tag: TE-NOUN-CHAIR
 prerequisites: [TE-C52-door]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "kurcī ← Arabic kursī 'seat, throne', through Persian and Hindustani"
 duration:
   max_seconds: 210
 requires:

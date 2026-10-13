@@ -14,6 +14,9 @@ You'll want to know: తప్పు.
 క్షమించండి, నా తప్పు (tappu) — "sorry, my mistake".
 You have met it before without seeing it: తప్పకుండా, "certainly", is built on the verb behind this word, "to slip, to miss". Certainly is without slipping.
 
+The word, taken apart.
+తప్పు (tappu) is native Dravidian, one word with Tamil tappu and Kannada tappu (DEDR 3071). DEDR lists Telugu tappu, "error, mistake; to miss, fail".
+
 What you've built.
 A word for a mistake, and the word for certainly finally explained.
 
@@ -43,6 +46,9 @@ Before the new one: say the Telugu for please wait, then the Telugu for a mistak
 You'll want to know: సరిగ్గా.
 సరిగ్గా (sariggā) — "exactly, properly".
 Said alone, సరిగ్గా (sariggā)! is "exactly!". It shares its start with సరే, "okay": both lean on సరి, "right, even".
+
+The word, taken apart.
+సరిగ్గా (sariggā) is sari, "right, even", with the adverb ending -gā. The origin of sari is uncertain: DEDR has no entry for it, and it is usually traced to Sanskrit sadṛśa, "like, equal" (CDIAL 13120).
 
 What you've built.
 Wrong and exactly right, as a pair.
@@ -74,6 +80,9 @@ You'll want to know: బహుశా.
 బహుశా (bahuśā) — "probably, perhaps".
 బహుశా రేపు — "probably tomorrow". Compare ఏమో: ēmō shrugs, "who knows", while bahuśā makes a guess.
 
+The word, taken apart.
+బహుశా (bahuśā) is Sanskrit bahuśaḥ, "many times, often", from bahu, "much, many" (CDIAL 9187), taken over as a learned loan with its ending worn down.
+
 What you've built.
 A guess, next to the shrug you already had.
 
@@ -104,6 +113,9 @@ You'll want to know: అలాగా.
 అలాగా (alāgā) — "is that so?", "I see".
 It sits one vowel away from అలాగే, "alright then". Alāgā receives news; alāgē agrees to a plan. Say both and hear the difference in the last vowel.
 
+The word, taken apart.
+అలాగా (alāgā) is native Dravidian: alā, "in that way", built on the far-pointing base a- (DEDR 1), with -gā.
+
 What you've built.
 A way to show you are listening.
 
@@ -133,6 +145,9 @@ Before the new one: say the Telugu for probably, then the Telugu for I see.
 You'll want to know: నిజంగా.
 నిజంగా (nijaṁgā) — "really, truly".
 నిజం is "the truth", and -గా turns it into a manner, as it did for nemmadigā. As a question, నిజంగా (nijaṁgā)? is "really?".
+
+The word, taken apart.
+నిజంగా (nijaṁgā) is nijaṁ, "truth", from Sanskrit nija, "one's own, innate" (CDIAL 7181), with the Telugu adverb ending -gā.
 
 What you've built.
 Five replies: wrong, exactly, probably, I see, really.

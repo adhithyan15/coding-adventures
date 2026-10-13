@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a moment, then the Hindi for a minute.
 You'll want to know: रोज़.
 रोज़ — roz — "every day".
 
+The word, taken apart.
+रोज़ (roz) is a loan, usually traced to Persian rōz, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a minute, then the Hindi for every day.
 
 You'll want to know: कभी.
 कभी — kabhī — "sometimes, ever".
+
+The word, taken apart.
+कभी (kabhī) is inherited. CDIAL lists it under Sanskrit evam eva, "exactly so", crossed with the question stem ka- of kyā and kaun (CDIAL 2528).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for every day, then the Hindi for sometimes.
 You'll want to know: हमेशा.
 हमेशा — hameśā — "always".
 
+The word, taken apart.
+हमेशा (hameśā) is a loan, usually traced to Persian hamēsha, "always".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for sometimes, then the Hindi for always.
 You'll want to know: अक्सर.
 अक्सर — aksar — "often".
 
+The word, taken apart.
+अक्सर (aksar) is a loan from Arabic akthar, "more, most", which reached Hindi through Persian. Its Arabic root is k-th-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for always, then the Hindi for often.
 
 You'll want to know: कभी नहीं.
 कभी नहीं — kabhī nahī̃ — "never".
+
+The word, taken apart.
+कभी नहीं (kabhī nahī̃) (kabhī nahīṁ) is kabhī, "ever", which CDIAL lists under Sanskrit evam eva, "exactly so", crossed with the question stem ka- (CDIAL 2528), and nahīṁ, from nahi, "surely not" (CDIAL 7035).
 
 What you've built.
 One more word for this chapter.

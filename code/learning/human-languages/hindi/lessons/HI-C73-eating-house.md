@@ -14,7 +14,8 @@ romanization: "hoṭal"
 concept_tag: HI-NOUN-EATING-HOUSE
 prerequisites: [HI-C72-buy, HI-C72-expensive, HI-C71-today, HI-C72-money]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hoṭal ← English hotel, from Latin hospitāle"
 duration:
   max_seconds: 240
 requires:

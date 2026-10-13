@@ -14,7 +14,8 @@ romanization: "bhavanaṁ"
 concept_tag: TE-STHALAM292-BHAVANAM
 prerequisites: [TE-C292-gudise, TE-C292-kaluva]
 sounds: []
-roots: []
+roots: [sanskrit-bhavana]
+etymology_hook: "bhavanaṁ ← Sanskrit bhavana 'place of abode', a tatsama (CDIAL 9417)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C292-kaluva]
 <!-- hl-knowledge: introduces=[TE-LEX-C292-STHALAM292-03]; assesses=[] -->
 
 **భవనం** — *bhavanaṁ* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భవనం** (*bhavanaṁ*) is Sanskrit *bhavana*, "place of abode", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9417).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

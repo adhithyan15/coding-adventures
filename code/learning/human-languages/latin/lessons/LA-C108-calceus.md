@@ -13,7 +13,8 @@ gloss: "a shoe"
 concept_tag: LA-VESTIS-CALCEUS
 prerequisites: [LA-C108-vestis, LA-C108-tunica]
 sounds: []
-roots: []
+roots: [calceus-latin, calx-latin]
+etymology_hook: "calceus 'shoe' — built on calx, calcis 'heel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C108-tunica]
 <!-- hl-knowledge: introduces=[LA-LEX-C108-VESTIS-05]; assesses=[] -->
 
 **calceus, calceī** — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calceus** is built on *calx*, *calcis*, "the heel" (Lewis & Short): a shoe covers the heel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

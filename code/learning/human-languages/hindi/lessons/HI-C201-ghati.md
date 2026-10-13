@@ -14,7 +14,8 @@ romanization: "ghāṭī"
 concept_tag: HI-THG201-GHATI
 prerequisites: [HI-C200-dvip, HI-C201-registan]
 sounds: []
-roots: []
+roots: [sanskrit-ghatta]
+etymology_hook: "ghāṭī ← Sanskrit ghaṭṭa 'landing place; passage', a tadbhava (CDIAL 4414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C201-registan]
 <!-- hl-knowledge: introduces=[HI-LEX-C201-THG201-02]; assesses=[] -->
 
 **घाटी** — *ghāṭī* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाटी** (*ghāṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭṭa*, "landing place; passage" (CDIAL 4414). CDIAL notes that a Dravidian origin is supported, though a link with *ghāṭā* is possible.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

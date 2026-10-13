@@ -13,7 +13,8 @@ gloss: "to be silent"
 concept_tag: LA-VERB-TACEO
 prerequisites: [LA-C159-sentio, LA-C159-pendeo]
 sounds: []
-roots: []
+roots: [tacere-latin]
+etymology_hook: "taceō 'to be silent' — inherited from Proto-Italic *takēō; deeper origin doubtful"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C159-pendeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C159-ACT159-03]; assesses=[] -->
 
 **taceō, tacēre** — "to be silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taceō** is inherited from Proto-Italic *\*takēō*, "to be silent" (EtymDB 2.1), but Lewis & Short call its deeper origin doubtful. Gothic *þahan*, "to be silent", is often compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

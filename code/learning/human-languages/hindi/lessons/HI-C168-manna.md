@@ -14,7 +14,8 @@ romanization: "mānnā"
 concept_tag: HI-VERB-MANNA
 prerequisites: [HI-C167-manzil, HI-C167-rasid]
 sounds: []
-roots: []
+roots: [sanskrit-manyate]
+etymology_hook: "mānnā ← Sanskrit manyate 'thinks, honours; agrees', a tadbhava (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C167-rasid]
 <!-- hl-knowledge: introduces=[HI-LEX-C168-ACT168-01]; assesses=[] -->
 
 **मानना** — *mānnā* — "to accept, to agree, to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मानना** (*mānnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *manyate*, "thinks, honours; agrees" (CDIAL 9857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "abhinandanalu"
 concept_tag: TE-WELCOME-CONGRATS
 prerequisites: [TE-C99-namaste, TE-C99-delight]
 sounds: []
-roots: []
+roots: [sanskrit-abhinandana]
+etymology_hook: "abhinandanalu ← Sanskrit abhinandana 'rejoicing, praise' + Telugu plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C99-delight]
 
 **శుభాకాంక్షలు** wishes someone well for what is coming; **అభినందనలు** praises what they have
 done. A passed exam gets both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అభినందనలు** (*abhinandanalu*) is Sanskrit *abhinandana*, "rejoicing, praise", with the Telugu plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāf karnā"
 concept_tag: HI-VERB-SAFKARNA
 prerequisites: [HI-C224-tim, HI-C224-daur]
 sounds: []
-roots: []
+roots: [arabic-safi]
+etymology_hook: "sāf ← Arabic ṣāfī 'pure, clear' (Lane, root ṣ-f-w); karnā ← kṛ- 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C224-daur]
 <!-- hl-knowledge: introduces=[HI-LEX-C225-ACT225-01]; assesses=[] -->
 
 **साफ़ करना** — *sāf karnā* — "to clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साफ़ करना** (*sāf karnā*) is *sāf*, "clean", from Arabic *ṣāfī*, "pure", through Persian (Lane, root *ṣ-f-w*), with the inherited *karnā*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

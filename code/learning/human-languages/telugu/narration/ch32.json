@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ddb061490d53672e",
+  "sourceHash": "fnv1a64:f197e1c871c67fc3",
   "lessons": [
     {
       "id": "TE-C32-undu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:769adf464bbd0fe4",
+      "sourceHash": "fnv1a64:a4074a544702f27b",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telugu is alone in this word. Tamil says இரு (iru), Kannada ಇರು (iru), Malayalam ഇരിക്കുക (irikkuka) — one verb, three sisters. Telugu went its own way, as it did with lēdu."
+              "text": "The sisters' everyday \"be\" is another verb: Tamil இரு (iru), Kannada ಇರು (iru), Malayalam ഇരിക്കുക (irikkuka). Yet uṇḍu is Dravidian too: DEDR 697 files it with Tamil uḷ, \"to be\", and uṇṭu, \"there is\"."
             }
           ]
         },
@@ -103,7 +103,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is where Telugu parted from its sisters. Tamil negates iru with இல்லை (illai), Kannada with ಇಲ್ಲ (illa), Malayalam with ഇല്ല (illa) — one shared root, il-. Telugu dropped it and grew lē- instead."
+              "text": "Tamil negates iru with இல்லை (illai), Kannada with ಇಲ್ಲ (illa), Malayalam with ഇല്ല (illa) — one shared root, il-. Telugu's lē- looks different, but DEDR 2559 files it with il-."
             }
           ]
         },
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three pieces of uṇṭānu? (Stem, tense, person — uṇḍ-, -ta-, -ānu.) How do you say \"I am not there\"? (లేను, lēnu — a different verb entirely.) So what kind of word is lēdu? (The it-form of the negative verb lē-.) Which root do the other three sisters use, and does Telugu? (il-; Telugu does not.) Next: the same machine, tense piece swapped."
+              "text": "What are the three pieces of uṇṭānu? (Stem, tense, person — uṇḍ-, -ta-, -ānu.) How do you say \"I am not there\"? (లేను, lēnu — a different verb entirely.) So what kind of word is lēdu? (The it-form of the negative verb lē-.) Which root do the other three sisters use, and does Telugu? (il-; Telugu too, as lē-.) Next: the same machine, tense piece swapped."
             }
           ]
         }
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:401c8466d0d772aa",
+      "sourceHash": "fnv1a64:1711a015c2638e9d",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telugu keeps a second go-verb beside it. The family's inherited word for going is pō-, and Telugu has it as పోవు (pōvu), పోతాను (pōtānu) — the same verb as Tamil போ (pō), Malayalam പോകുക (pōkuka) and Kannada ಹೋಗು (hōgu). So Telugu did not lose the family's word; it gave the everyday job to veḷḷu, a verb of its own whose deeper history is best left open."
+              "text": "Telugu keeps a second go-verb beside it. The family's inherited word for going is pō-, and Telugu has it as పోవు (pōvu), పోతాను (pōtānu) — the same verb as Tamil போ (pō), Malayalam പോകുക (pōkuka) and Kannada ಹೋಗು (hōgu). So Telugu did not lose the family's word; it gave the everyday job to veḷḷu, which is Dravidian too: DEDR 5393 files it with Tamil viṭu, \"to leave\"."
             }
           ]
         },
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51834ca11921f22b",
+      "sourceHash": "fnv1a64:7d78f605882633a9",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +384,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every sister has this verb, and every sister's command-shape drifted somewhere different: Tamil வா (vā), Kannada ಬಾ (bā), Malayalam വരുക (varuka), Telugu రా (rā). A v, a b, an r — one old Dravidian come-word, worn three ways, not three separate verbs."
+              "text": "Every sister has this verb, and every sister's command-shape drifted somewhere different: Tamil வா (vā), Kannada ಬಾ (bā), Malayalam വരുക (varuka), Telugu రా (rā). A v, a b, an r — one old Dravidian come-word, worn three ways, not three separate verbs. DEDR 5270 files Telugu vaccu and rā- with Tamil varu: the verb is Dravidian."
             }
           ]
         },
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d289870004693398",
+      "sourceHash": "fnv1a64:ef7c3eb253ecf775",
       "notice": null,
       "blocks": [
         {
@@ -554,7 +554,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is Telugu's Sanskrit habit in miniature, and it is worth naming plainly. The verbs at the centre of living — be, go, come, eat — stayed Dravidian. The formal and ceremonial vocabulary layered on top came from Sanskrit. You met the same split in Chapter 1, where the greeting namaskāram is Sanskrit while avunu and sarē are native. Telugu borrowed far more of that top layer than Tamil ever did; it did not borrow the floor."
+              "text": "That is Telugu's Sanskrit habit in miniature, and it is worth naming plainly. The verbs at the centre of living — be, go, come, eat — stayed Dravidian. The formal and ceremonial vocabulary layered on top came from Sanskrit. You met the same split in Chapter 1, where the greeting namaskāram is Sanskrit while avunu and lēdu are native. Telugu borrowed far more of that top layer than Tamil ever did; it did not borrow the floor."
             }
           ]
         },
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:146e4b9450935c80",
+      "sourceHash": "fnv1a64:2979c194f4473f96",
       "notice": null,
       "blocks": [
         {
@@ -674,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here the sisters scatter completely. Tamil says பார் (pār), Kannada ನೋಡು (nōḍu), Malayalam കാണുക (kāṇuka), Telugu చూడు (cūḍu). Four languages, four unrelated everyday verbs."
+              "text": "Here the sisters scatter completely. Tamil says பார் (pār), Kannada ನೋಡು (nōḍu), Malayalam കാണുക (kāṇuka), Telugu చూడు (cūḍu). Four languages, four different everyday verbs. Telugu's is Dravidian: DEDR 2735 lists it as cūcu, \"to see\"."
             },
             {
               "kind": "speech",
@@ -805,7 +805,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1413881a1d5ae10c",
+      "sourceHash": "fnv1a64:a1f1212c0355a5ff",
       "notice": null,
       "blocks": [
         {
@@ -840,7 +840,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tamil has the exact cousin, தெரி (teri). The other two sisters picked different words — Kannada ಗೊತ್ತು, gottu, Malayalam അറിയാം, aṟiyām — but all four build the sentence the same way, which is the point of this lesson."
+              "text": "The verb is Dravidian: DEDR 3433 files teliyu with Tamil teḷi, \"to become clear\". Tamil's everyday match is தெரி (teri); Kannada and Malayalam use gottu and aṟiyām. All four build the sentence the same way."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "bacnā"
 concept_tag: HI-VERB-BACNA
 prerequisites: [HI-C169-barhana, HI-C169-bacana]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bacnā ← Sanskrit vañcati 'moves; escapes from', a tadbhava (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C169-bacana]
 <!-- hl-knowledge: introduces=[HI-LEX-C169-ACT169-05]; assesses=[] -->
 
 **बचना** — *bacnā* — "to escape, to be saved".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचना** (*bacnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vañcati*, "moves; escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

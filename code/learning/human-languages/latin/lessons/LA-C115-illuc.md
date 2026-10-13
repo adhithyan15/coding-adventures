@@ -13,7 +13,8 @@ gloss: "to there, thither"
 concept_tag: LA-LOC115-ILLUC
 prerequisites: [LA-C114-sinister, LA-C115-huc]
 sounds: []
-roots: []
+roots: [illuc-latin, ille-latin]
+etymology_hook: "illūc 'to there' — built on ille 'that': to that place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C115-huc]
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-02]; assesses=[] -->
 
 **illūc** — "to there, thither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**illūc** goes with *illic*, "there" (Lewis & Short), and is built on *ille*, "that": to that place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

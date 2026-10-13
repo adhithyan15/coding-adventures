@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 102,
-  "sourceHash": "fnv1a64:2537eef6d5b10461",
+  "sourceHash": "fnv1a64:c5b4e488b94f6115",
   "lessonIds": [
     "TE-C102-madhyalo",
     "TE-C102-vidhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch102.txt",
   "json": "telugu/narration/ch102.json",
-  "textHash": "fnv1a64:7de08cb62c4fb0e3",
-  "jsonHash": "fnv1a64:0c4ac8daee11753f",
+  "textHash": "fnv1a64:5beec6e369c46f74",
+  "jsonHash": "fnv1a64:bc9c2addbc01168a",
   "findings": []
 }

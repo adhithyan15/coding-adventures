@@ -14,7 +14,8 @@ romanization: "parīkṣā"
 concept_tag: HI-THG197-PARIKSA
 prerequisites: [HI-C196-cor, HI-C197-kaksa]
 sounds: []
-roots: []
+roots: [sanskrit-pariksha]
+etymology_hook: "parīkṣā ← Sanskrit parīkṣā 'inspection, test', a tatsama (CDIAL 7904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C197-kaksa]
 <!-- hl-knowledge: introduces=[HI-LEX-C197-THG197-02]; assesses=[] -->
 
 **परीक्षा** — *parīkṣā* — "an examination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परीक्षा** (*parīkṣā*) is Sanskrit *parīkṣā*, "inspection, test", taken over whole as a learned loan, a tatsama (CDIAL 7904). CDIAL lists the inherited form of the same word as *parakh*, "examination".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

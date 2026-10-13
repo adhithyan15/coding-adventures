@@ -11,7 +11,8 @@ romanization: "gaḍapa"
 concept_tag: TE-NOUN-THRESHOLD
 prerequisites: [TE-C67-roof]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "gaḍapa: native Dravidian; DEDR 1109 lists it under kaḍacu 'to pass over', with Tamil kaṭa"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C67-roof]
 It is the most watched piece of a Telugu house. The ముగ్గు is drawn just outside it, water is thrown across it at ఉదయం, and nobody steps on it if they can help it.
 
 Because it marks in from out, గడప also does the work of the word household. Asking whose గడప somebody comes from is asking about their family, not about their doorstep.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడప** (*gaḍapa*) is native Dravidian. DEDR 1109 lists *kaḍapa* and *gaḍapa*, "threshold", under *kaḍacu*, "to pass over, cross", with Tamil *kaṭa*, "to pass through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

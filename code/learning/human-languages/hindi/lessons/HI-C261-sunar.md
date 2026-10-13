@@ -14,7 +14,8 @@ romanization: "sunār"
 concept_tag: HI-THG261-SUNAR
 prerequisites: [HI-C261-kumhar, HI-C261-lohar]
 sounds: []
-roots: []
+roots: [sanskrit-suvarnakara]
+etymology_hook: "sunār ← Sanskrit suvarṇakāra 'goldsmith', a tadbhava (CDIAL 13520)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C261-lohar]
 <!-- hl-knowledge: introduces=[HI-LEX-C261-THG261-05]; assesses=[] -->
 
 **सुनार** — *sunār* — "a goldsmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुनार** (*sunār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *suvarṇakāra*, "goldsmith" (CDIAL 13520). It is built from *suvarṇa*, "gold", and *kāra*, "maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

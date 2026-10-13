@@ -14,7 +14,8 @@ romanization: "śauq se"
 concept_tag: HI-COMEIN-GLADLY
 prerequisites: [HI-C115-padharie, HI-C115-lijie]
 sounds: []
-roots: []
+roots: [arabic-shawq]
+etymology_hook: "śauq ← Arabic shawq 'longing', through Persian (Lane); se inherited"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C115-lijie]
 **शौक़ से** (*śauq se*) — "by all means", "gladly", literally "with pleasure".
 
 The answer when someone asks if they may: **क्या मैं बैठ सकता हूँ? — शौक़ से!**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शौक़ से** (*śauq se*) is "with relish". *śauq* comes from Arabic *shawq*, "longing, desire", which reached Hindi through Persian; its root is *sh-w-q* (Lane). *se* is inherited (CDIAL 13310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

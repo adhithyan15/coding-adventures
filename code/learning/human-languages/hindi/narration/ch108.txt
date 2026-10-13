@@ -13,6 +13,9 @@ You'll want to know: डर.
 डर (ḍar) — "fear".
 मुझे डर (ḍar) लग रहा है — "I am scared", literally "fear is striking me". Feelings take the मुझे frame.
 
+The word, taken apart.
+डर (ḍar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dara, "fear" (CDIAL 6186).
+
 What you've built.
 The first feeling.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for health, then the Hindi for fear.
 You'll want to know: गुस्सा.
 गुस्सा (gussā) — "anger".
 मुझे गुस्सा (gussā) आया — "I got angry", literally "anger came to me", on the आना you know.
+
+The word, taken apart.
+गुस्सा (gussā) is a loan from Arabic ghuṣṣa, "a choking; grief", which reached Hindi through Persian. Its Arabic root is gh-ṣ-ṣ (Lane). In Hindi it came to mean "anger".
 
 What you've built.
 A feeling that comes to you.
@@ -73,6 +79,9 @@ You'll want to know: उदास.
 उदास (udās) — "sad".
 मैं उदास (udās) हूँ — "I am sad". Like बीमार, it describes you, so it takes मैं... हूँ.
 
+The word, taken apart.
+उदास (udās) is usually traced to Sanskrit udāsa, "indifference", from ud-ās-, "to sit apart". CDIAL does not list it.
+
 What you've built.
 An honest answer on a bad day.
 
@@ -103,6 +112,9 @@ You'll want to know: परेशान.
 परेशान (pareśān) — "troubled, bothered, upset".
 आप परेशान (pareśān) क्यों हैं? — "why are you upset?", with the क्यों you know.
 
+The word, taken apart.
+परेशान (pareśān) is a loan, usually traced to Persian parēshān, "scattered; distressed".
+
 What you've built.
 A question to ask a friend who looks upset.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for sad, then the Hindi for troubled.
 You'll want to know: चिंता.
 चिंता (cintā) — "worry". It is feminine.
 चिंता (cintā) मत कीजिए — "don't worry", with the मत that forbids.
+
+The word, taken apart.
+चिंता (cintā) is Sanskrit cintā, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816).
 
 What you've built.
 Fear, anger, sadness, trouble, and a way to calm them.

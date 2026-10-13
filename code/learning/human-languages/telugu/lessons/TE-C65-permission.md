@@ -11,7 +11,8 @@ romanization: "anumati"
 concept_tag: TE-NOUN-PERMISSION
 prerequisites: [TE-C65-request]
 sounds: []
-roots: []
+roots: [sanskrit-anumati]
+etymology_hook: "anumati ← Sanskrit anumati 'assent, permission': anu 'along' + mati 'mind'"
 duration:
   max_seconds: 210
 requires:

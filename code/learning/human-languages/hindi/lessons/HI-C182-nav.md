@@ -14,7 +14,8 @@ romanization: "nāv"
 concept_tag: HI-THG182-NAV
 prerequisites: [HI-C181-cauraha, HI-C181-jahaz]
 sounds: []
-roots: []
+roots: [sanskrit-nava-boat]
+etymology_hook: "nāv ← Sanskrit nāvā 'boat', a tadbhava (CDIAL 7081)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C181-jahaz]
 <!-- hl-knowledge: introduces=[HI-LEX-C182-THG182-01]; assesses=[] -->
 
 **नाव** — *nāv* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाव** (*nāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāvā*, "boat" (CDIAL 7081). CDIAL lists the Hindi form as *nāu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

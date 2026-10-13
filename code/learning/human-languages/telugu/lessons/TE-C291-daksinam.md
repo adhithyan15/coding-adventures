@@ -14,7 +14,8 @@ romanization: "dakṣiṇaṁ"
 concept_tag: TE-STHALAM291-DAKSINAM
 prerequisites: [TE-C290-satabdam, TE-C290-balyam]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dakṣiṇaṁ ← Sanskrit dakṣiṇa 'right (hand); southern', a tatsama (CDIAL 6119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C290-balyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C291-STHALAM291-01]; assesses=[] -->
 
 **దక్షిణం** — *dakṣiṇaṁ* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దక్షిణం** (*dakṣiṇaṁ*) is Sanskrit *dakṣiṇa*, "right (hand); southern", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6119).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

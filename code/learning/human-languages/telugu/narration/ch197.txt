@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a responsibility, then the Telugu for an 
 You'll want to know: వడ్రంగి.
 వడ్రంగి — vaḍraṅgi — "a carpenter".
 
+The word, taken apart.
+The origin of వడ్రంగి (vaḍraṅgi) is uncertain. CDIAL 11375 has Sanskrit vardhaki, Prakrit vaḍḍhaï, "carpenter", which may be behind its first part, but no source says so.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for an application, then the Telugu for a car
 
 You'll want to know: రచయిత.
 రచయిత — racayita — "a writer, an author".
+
+The word, taken apart.
+రచయిత (racayita) is Sanskrit racayitā, "maker, composer", taken over as a learned loan, a tatsama, with the final -ā shortened.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a carpenter, then the Telugu for a writer
 You'll want to know: సమస్య.
 సమస్య — samasya — "a problem".
 
+The word, taken apart.
+సమస్య (samasya) is Sanskrit samasyā, "a problem set to be completed", taken over as a learned loan, a tatsama, with the final -ā shortened.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a writer, then the Telugu for a problem.
 You'll want to know: పరిష్కారం.
 పరిష్కారం — pariṣkāraṁ — "a solution".
 
+The word, taken apart.
+పరిష్కారం (pariṣkāraṁ) is Sanskrit pariṣkāra, "ornament", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7894). The sense "solution" is the one Telugu gives it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a problem, then the Telugu for a solution
 
 You'll want to know: అభిప్రాయం.
 అభిప్రాయం — abhiprāyaṁ — "an opinion".
+
+The word, taken apart.
+అభిప్రాయం (abhiprāyaṁ) is Sanskrit abhiprāya, "aim, intention, opinion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "gaṇitaṁ"
 concept_tag: TE-PANI274-GANITAM
 prerequisites: [TE-C274-javabu, TE-C274-visayam]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "gaṇitaṁ ← Sanskrit gaṇita 'counted', a tatsama (CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C274-visayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C274-PANI274-05]; assesses=[] -->
 
 **గణితం** — *gaṇitaṁ* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గణితం** (*gaṇitaṁ*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3996). Sanskrit already used it for "arithmetic" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "thirst"
 concept_tag: LA-AEGER-SITIS
 prerequisites: [LA-C68-fessus, LA-C68-fames]
 sounds: []
-roots: []
+roots: [sitis-latin]
+etymology_hook: "sitis 'thirst' — usually traced to PIE *dhgwhitis 'a wasting'; Greek phthisis is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C68-fames]
 <!-- hl-knowledge: introduces=[LA-LEX-C68-AEGER-04]; assesses=[] -->
 
 **sitis, sitis** — "thirst". **aqua** answers it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sitis** is usually traced to Proto-Indo-European *\*dhgwhitis*, "a wasting, a decline" (EtymDB 2.1), the form behind Greek *phthisis*, "decline, consumption"; Lewis & Short still called it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

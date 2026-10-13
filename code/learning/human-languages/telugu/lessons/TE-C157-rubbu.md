@@ -14,7 +14,8 @@ romanization: "rubbu"
 concept_tag: TE-VERB-RUBBU
 prerequisites: [TE-C157-udikincu, TE-C157-kalupu]
 sounds: []
-roots: []
+roots: [dravidian-urai-rub]
+etymology_hook: "rubbu: native Dravidian; DEDR 665 lists rubbu 'to grind in a mortar' with Tamil urai 'to rub'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C157-kalupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C157-KRIYA157-05]; assesses=[] -->
 
 **రుబ్బు** — *rubbu* — "to grind (wet batter)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రుబ్బు** (*rubbu*) is native Dravidian. DEDR 665 lists *rubbu*, "to grind in a mortar", with Tamil *urai*, "to rub into a paste", and Kannada *ujju*, "to rub". DEDR compares, with a query, Sanskrit *uñchati*, "gleans" (CDIAL 1680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

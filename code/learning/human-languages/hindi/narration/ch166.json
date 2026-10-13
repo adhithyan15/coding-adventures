@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "A Notice, a Message, Opening Times, an Advert, a Repair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4f089ccb864dd35f",
+  "sourceHash": "fnv1a64:f951172d475302fd",
   "lessons": [
     {
       "id": "HI-C166-sucna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a0bde442f6c06c0",
+      "sourceHash": "fnv1a64:8b08dfec61fce849",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूचना (sūcnā) is Sanskrit sūcanā, \"pointing out, information\", taken over whole as a learned loan, a tatsama. It is built on sūc-, \"to point out\", the root of sūcī, \"needle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78238255532a9ee3",
+      "sourceHash": "fnv1a64:18b4a582882e4b05",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संदेश (sandeś) is Sanskrit saṁdeśa, \"message, information\", taken over whole as a learned loan, a tatsama (CDIAL 12904). CDIAL lists the inherited form of the same word as sãdesā, \"news\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d39262ed94e073cd",
+      "sourceHash": "fnv1a64:8e485bae8ac4f065",
       "notice": null,
       "blocks": [
         {
@@ -337,6 +359,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समय (samay) is Sanskrit samaya, \"meeting; agreement; time\", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL marks Hindi samā as probably, and samai as certainly, taken from Sanskrit too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -347,7 +380,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8970848432211d17",
+      "sourceHash": "fnv1a64:e8a907076b1a4351",
       "notice": null,
       "blocks": [
         {
@@ -473,6 +506,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विज्ञापन (vijñāpan) is Sanskrit vijñāpana, \"making known\", taken over whole as a learned loan, a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -483,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -532,7 +576,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -563,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b098c67344b83832",
+      "sourceHash": "fnv1a64:0cf14fa2f5848058",
       "notice": null,
       "blocks": [
         {
@@ -609,6 +653,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मरम्मत (marammat) is a loan from Arabic maramma, \"a repairing\", which reached Hindi through Persian. Its Arabic root is r-m-m (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -619,7 +674,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -668,7 +723,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

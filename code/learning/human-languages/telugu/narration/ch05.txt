@@ -16,7 +16,7 @@ The letters in this word.
 మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu).
 
 The word, taken apart.
-మాట్లాడు (māṭlāḍu, "to speak, to talk") is native Dravidian, built on మాట (māṭa, "word, speech"). To say "I speak," Telugu adds a two-part ending to the stem — tense + person:
+మాట్లాడు (māṭlāḍu, "to speak, to talk") is native Dravidian, built on మాట (māṭa, "word, speech"; DEDR 4834). To say "I speak," Telugu adds a two-part ending to the stem — tense + person:
 māṭlāḍ- (speak) + -t- (present/future) + -ānu ("I") becomes మాట్లాడతాను (māṭlāḍatānu), "I speak / I will speak."
 The -ాను (-ānu) ending is "I," so nēnu is rarely needed. Change the ending, change the person: māṭlāḍtāḍu (he), māṭlāḍtundi (she/it), māṭlāḍtāru (they / you-respectful).
 
@@ -178,7 +178,7 @@ The letters in this word.
 తెలుగు (telugu): తె (te) + లు (lu) + గు (gu).
 
 The sentence, taken apart.
-నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) = నేను (nēnu, "I") + తెలుగు (telugu, "Telugu," the object) + మాట్లాడతాను (māṭlāḍatānu, "speak") — "I Telugu speak," the verb last as always. The name తెలుగు (telugu) is native, of debated origin (often linked to tenugu, and to the land Trilinga); its vowel-rich sound and habit of ending most words in a vowel earned it the old nickname "the Italian of the East." It is the language of the Kāvya poets and, today, of some eighty million speakers.
+నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) = నేను (nēnu, "I") + తెలుగు (telugu, "Telugu," the object) + మాట్లాడతాను (māṭlāḍatānu, "speak") — "I Telugu speak," the verb last as always. The name తెలుగు (telugu) is native (DEDR 3426), of debated origin (often linked to tenugu, and to the land Trilinga); its vowel-rich sound and habit of ending most words in a vowel earned it the old nickname "the Italian of the East." It is the language of the Kāvya poets and, today, of some eighty million speakers.
 
 Grammar Lens: no gender on "I speak".
 Māṭlāḍatānu is the same whether a man or a woman says it — Telugu, like Tamil, marks no gender in the first or second person (only the third: -āḍu he, -undi she/it). This is unlike Hindi, where even "I speak" changes for the speaker's gender (boltā/boltī).
@@ -293,6 +293,7 @@ The letters in this word.
 
 The word, taken apart.
 ఉండు (uṇḍu, "to be, to exist, to stay, to live") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru ("you are") and bāgunnānu ("I'm well") — and it also means "to reside": nēnu Hyderābādlō uṇṭānu ("I live in Hyderabad"). One verb covers "be," "stay," and "live."
+DEDR 697 lists Telugu uṇḍu, "to be, exist, live", with Tamil uḷ, "to be", and uṇṭu, "there is", and Kannada uḷ.
 
 Grammar Lens: "in" comes after the noun.
 Hyderābādlō = Hyderabad + -లో (-lō, "in"). The little word for "in" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. "Hyderabad-in I stay," the verb last.
@@ -323,6 +324,9 @@ You'll want to know: హంస.
 Say it: haṃsa.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, హ (ha), and writes it on its own.
+
+The word, taken apart.
+హంస (haṃsa) is Sanskrit haṃsa, taken over whole as a learned loan, a tatsama (CDIAL 13937). CDIAL glosses the Sanskrit word "goose"; Telugu uses it for the swan.
 
 Guided Practice.
 [pause 1 second]
@@ -391,8 +395,8 @@ The letters in this word.
 పని (pani, "work"): ప (pa) + ని (ni). చేయు (cēyu, "do"): చే (cē) + యు (yu).
 
 The word, taken apart.
-చేయు (cēyu, "to do, to make") is a core native Dravidian verb, and Telugu — like Hindi with karnā and Tamil with sey — builds compound verbs by putting a noun in front of it:
-పని చేయు (pani cēyu) = "work-do" = "to work" (pani, "work").
+చేయు (cēyu, "to do, to make") is a core native Dravidian verb (DEDR 1957), and Telugu — like Hindi with karnā and Tamil with sey — builds compound verbs by putting a noun in front of it:
+పని చేయు (pani cēyu) = "work-do" = "to work" (pani, "work", DEDR 3884).
 వంట చేయు (vaṇṭa cēyu) = "to cook".
 సహాయం చేయు (sahāyaṁ cēyu) = "to help" (sahāyaṁ from Sanskrit).
 So "I work" is నేను పని చేస్తాను (nēnu pani cēstānu) — cēy- + tense + "I." Master cēyu and a whole grammar of "do-verbs" opens up — and notice sahāyaṁ cēyu ("to help") pairs a Sanskrit noun with the native cēyu: Telugu's two vocabularies working together in a single verb.

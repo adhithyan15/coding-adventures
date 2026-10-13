@@ -11,7 +11,8 @@ romanization: "tūkaṁ"
 concept_tag: TE-NOUN-WEIGHT
 prerequisites: [TE-C72-price]
 sounds: []
-roots: []
+roots: [telugu-tuukam-weight]
+etymology_hook: "tūkaṁ: probably native; DEDR 3376 lists tūgu 'to weigh' with Kannada tūka 'weight'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C72-price]
 Almost everything in an అంగడి is sold by it: బియ్యం, ఉప్పు, చక్కెర, మిరప. The ధర you are quoted is a ధర for a తూకం, so the two words travel together.
 
 It carries fairness as well. Somebody who speaks with తూకం is somebody whose words are measured, and short తూకం is a serious accusation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తూకం** (*tūkaṁ*) is probably native Dravidian. DEDR 3376 lists a nasalised Telugu *tūgu*, "to hang, weigh", and *tūcu*, "to weigh", with Kannada *tūka*, "weighing, weight"; it does not list *tūkaṁ* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

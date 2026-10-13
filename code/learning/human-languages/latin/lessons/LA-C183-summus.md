@@ -13,7 +13,8 @@ gloss: "highest, the top of"
 concept_tag: LA-QUAL183-SUMMUS
 prerequisites: [LA-C183-honestus, LA-C183-medius]
 sounds: []
-roots: []
+roots: [summus-latin, superus-latin]
+etymology_hook: "summus 'highest' — the superlative belonging to superus 'upper'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C183-medius]
 <!-- hl-knowledge: introduces=[LA-LEX-C183-QUAL183-05]; assesses=[] -->
 
 **summus, summa, summum** — "highest, the top of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**summus** is the superlative belonging to *superus*, "upper" (Lewis & Short), from an older *\*supimos*, usually traced to Proto-Indo-European *\*(s)up-*, "up, over" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

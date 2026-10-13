@@ -1038,6 +1038,10 @@ The registry's legacy internal ShapeIDs `squareRect`, `roundedRect`, `stateStart
 through their corresponding shared semantic, layout, and backend-neutral paint shapes.
 The internal `labelRect` ShapeID lowers through label-only semantic geometry and emits no visible
 container fill or stroke.
+The internal `anchor` ShapeID survives as dedicated semantic IR, uses the upstream two-pixel compact
+layout, and lowers to a label-free filled circle in backend-neutral paint.
+The internal `rectWithTitle` ShapeID survives as dedicated semantic IR and lowers to a rounded
+container with a title divider in backend-neutral paint.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
@@ -1047,7 +1051,9 @@ invisible layout links,
 minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
-thick, and dotted links, titles, and accessibility metadata with named and numeric entity
+thick, and dotted links, including labeled links with independently selected point, circle, cross,
+or absent markers at either endpoint, titles, and accessibility
+metadata with named and numeric entity
 decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL

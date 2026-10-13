@@ -13,7 +13,8 @@ gloss: "to serve, to be a slave"
 concept_tag: LA-VERB-SERVIO
 prerequisites: [LA-C232-detego, LA-C232-videor]
 sounds: []
-roots: []
+roots: [servire-latin, servus-latin]
+etymology_hook: "serviō 'to serve' — the verb made from servus 'slave'; English serve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C232-videor]
 <!-- hl-knowledge: introduces=[LA-LEX-C232-ACT232-04]; assesses=[] -->
 
 **serviō, servīre** — "to serve, to be a slave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serviō** is the verb made from *servus*, "a slave" (EtymDB 2.1): to be a slave, to serve. English *serve* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

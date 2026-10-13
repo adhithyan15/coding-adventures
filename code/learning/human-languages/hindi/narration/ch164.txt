@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to look for, then the Hindi for to wear.
 You'll want to know: बुलाना.
 बुलाना — bulānā — "to call".
 
+The word, taken apart.
+बुलाना (bulānā) is the causing form of बोलना, "to speak": to call someone is to make them speak back. CDIAL lists both under a reconstructed boll-, "speak" (CDIAL 9321).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to wear, then the Hindi for to call.
 
 You'll want to know: सिखाना.
 सिखाना — sikhānā — "to teach".
+
+The word, taken apart.
+सिखाना (sikhānā) is the causing form of sīkhnā, "to learn": to teach is to make someone learn. CDIAL lists both under Sanskrit śikṣate, "learns" (CDIAL 12430).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to call, then the Hindi for to teach.
 You'll want to know: सीखना.
 सीखना — sīkhnā — "to learn".
 
+The word, taken apart.
+सीखना (sīkhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to teach, then the Hindi for to learn.
 You'll want to know: पहुँचना.
 पहुँचना — pahũcnā — "to arrive".
 
+The word, taken apart.
+पहुँचना (pahũcnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prabhūta, "much, great" (CDIAL 8716). Prakrit made a verb of it, "is strong, reaches", and Hindi kept "to reach".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to learn, then the Hindi for to arrive.
 
 You'll want to know: लौटना.
 लौटना — lauṭnā — "to come back".
+
+The word, taken apart.
+The origin of लौटना (lauṭnā) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

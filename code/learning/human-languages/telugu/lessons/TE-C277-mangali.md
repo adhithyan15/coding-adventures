@@ -14,7 +14,8 @@ romanization: "maṅgali"
 concept_tag: TE-PANI277-MANGALI
 prerequisites: [TE-C276-nallaballa, TE-C277-phiryadu]
 sounds: []
-roots: []
+roots: [telugu-mangali-barber]
+etymology_hook: "maṅgali: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'barber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C277-phiryadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C277-PANI277-02]; assesses=[] -->
 
 **మంగలి** — *maṅgali* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **మంగలి** (*maṅgali*) is uncertain. DEDR and CDIAL list no word of this shape meaning "barber".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

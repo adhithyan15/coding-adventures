@@ -13,7 +13,8 @@ gloss: "straight, right"
 concept_tag: LA-QUAL146-RECTUS
 prerequisites: [LA-C146-purus, LA-C146-sordidus]
 sounds: []
-roots: []
+roots: [rectus-latin, regere-latin]
+etymology_hook: "rēctus 'straight' — the participle of regō 'to keep straight'; English right is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C146-sordidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **rēctus, rēcta, rēctum** — "straight, right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēctus** is the past participle of *regō*, "to keep straight, to direct" (Lewis & Short), usually traced to Proto-Indo-European *\*h3regtos*, "straightened" (EtymDB 2.1). English *right* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

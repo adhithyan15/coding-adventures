@@ -11,7 +11,8 @@ romanization: "iṅkōsāri"
 concept_tag: TE-REPAIR-ONCE-MORE
 prerequisites: [TE-C85-sorrow, TE-C86-slowly]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-caari-time]
+etymology_hook: "iṅkōsāri: native iṅka 'still' (DEDR 410) + sāri 'a time' (DEDR 2464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C86-slowly]
 
 **ఇంకోసారి చెప్పండి** — "please say it once more". **సారి** is "a time, an occasion", and
 **ఇంకో** is "another".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంకోసారి** (*iṅkōsāri*) is native Dravidian: *iṅka*, "still, more" (DEDR 410), with *-ō*, "one", and *sāri*, "a time, a turn", which DEDR 2464 lists with Tamil *cāri*, "time, turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 91,
-  "sourceHash": "fnv1a64:016d4357a9ebf4b1",
+  "sourceHash": "fnv1a64:418a03df8bd047f4",
   "lessonIds": [
     "TE-C91-areyouwell",
     "TE-C91-longtime",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch91.txt",
   "json": "telugu/narration/ch91.json",
-  "textHash": "fnv1a64:a17951bbff7f5b80",
-  "jsonHash": "fnv1a64:90df5bdf7ca9758d",
+  "textHash": "fnv1a64:50fe9706485a918b",
+  "jsonHash": "fnv1a64:9c2e8d36d6ab4860",
   "findings": []
 }

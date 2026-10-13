@@ -14,7 +14,8 @@ romanization: "celliñcu"
 concept_tag: TE-VERB-CELLINCU
 prerequisites: [TE-C156-prakatana, TE-C156-rasidu]
 sounds: []
-roots: []
+roots: [dravidian-cel-go]
+etymology_hook: "celliñcu: native Dravidian, made from cellu 'to pass, be paid' (DEDR 2781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C156-rasidu]
 <!-- hl-knowledge: introduces=[TE-LEX-C157-KRIYA157-01]; assesses=[] -->
 
 **చెల్లించు** — *celliñcu* — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెల్లించు** (*celliñcu*) is native Dravidian, made from *cellu*, "to pass, be current, be paid" (DEDR 2781). Malayalam *celuttuka*, "to pay", stands in the same entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "konasāgu"
 concept_tag: TE-VERB-KONASAGU
 prerequisites: [TE-C165-guccu, TE-C165-allu]
 sounds: []
-roots: []
+roots: [dravidian-kone-end, dravidian-saagu-proceed]
+etymology_hook: "konasāgu: sāgu 'to continue' (DEDR 2430); first part matches kona 'end' (DEDR 2174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C165-allu]
 <!-- hl-knowledge: introduces=[TE-LEX-C166-KRIYA166-01]; assesses=[] -->
 
 **కొనసాగు** — *konasāgu* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొనసాగు** (*konasāgu*) is native Dravidian. Its second part is *sāgu*, "to go on, continue", one word with Kannada *sāgu* (DEDR 2430); its first part matches *kona*, "end, tip" (DEDR 2174), though DEDR does not list the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

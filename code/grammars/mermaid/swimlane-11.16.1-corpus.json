@@ -239,6 +239,22 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft -- submit ---> review\nreview == approve ===> approve\napprove -. release ...-> publish"
     },
     {
+      "name": "labeled-bidirectional-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft <-- submit --> review\nreview <== approve ==> approve\napprove <-. release .-> publish"
+    },
+    {
+      "name": "labeled-circle-cross-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g"
+    },
+    {
+      "name": "labeled-mixed-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- circle to cross --x b\nb x== cross to circle ==o c\nc <-. point to cross .-x d\nd o-. circle to point .-> e\ne -- none to circle --o f\nf <== point to cross ==x g"
+    },
+    {
+      "name": "labeled-open-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na -- solid open --- b\nb o-- circle open --- c\nc x== cross open === d\nd <== point open === e\ne -. dotted open .- f\nf o-. dotted circle open .- g"
+    },
+    {
       "name": "edge-identifiers",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done"
     },
@@ -305,6 +321,14 @@
     {
       "name": "label-rect-shape",
       "source": "swimlane-beta LR\nsubgraph Labels\n  before[Before]\n  caption@{ shape: labelRect, label: \"Context only\" }\n  after[After]\nend\nbefore --> caption --> after"
+    },
+    {
+      "name": "anchor-shape",
+      "source": "swimlane-beta LR\nsubgraph Routing\n  before[Before]\n  pin@{ shape: anchor }\n  after[After]\nend\nbefore --> pin --> after"
+    },
+    {
+      "name": "rect-with-title-shape",
+      "source": "swimlane-beta LR\nsubgraph State\n  before[Before]\n  item@{ shape: rectWithTitle, label: \"Details\" }\n  after[After]\nend\nbefore --> item --> after"
     },
     {
       "name": "legacy-internal-shape-aliases",

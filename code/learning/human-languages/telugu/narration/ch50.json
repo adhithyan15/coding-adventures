@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8162428def58a53a",
+  "sourceHash": "fnv1a64:f2738255c5f21cd5",
   "lessons": [
     {
       "id": "TE-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6bfd90cdaa581d3",
+      "sourceHash": "fnv1a64:a5eec52db77dd610",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు (ippuḍu) is native Dravidian: the near-pointing i-, \"this\", and -ppuḍu, \"time\". DEDR 410 lists ippuḍu, \"this time, now\", and DEDR 4559 sets it beside poddu, \"time, sun\", with Tamil poḻutu, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:898b5f57774cbd06",
+      "sourceHash": "fnv1a64:826854b6c7cb8b08",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎల్లుండి (elluṇḍi) is native Dravidian. DEDR 845 lists Telugu elli, \"tomorrow\", and elluṇḍi, \"the day after tomorrow\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6db34bc5fdccc97d",
+      "sourceHash": "fnv1a64:7a13db8cf25c6ca2",
       "notice": null,
       "blocks": [
         {
@@ -335,6 +357,10 @@
             {
               "kind": "speech",
               "text": "The ending is the -ం you have now sorted three times: the tatsama neuter, as on దీపం, హృదయం and భోజనం. When a Telugu noun ends in -ం and names an abstraction, Sanskrit is usually behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 8732 lists Sanskrit prayāṇa, \"setting out, journey\"."
             }
           ]
         },
@@ -439,7 +465,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:171bfcea5e2f0393",
+      "sourceHash": "fnv1a64:31d2fcf8c2461c3f",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Native, and a picture rather than an abstraction. బయలు is open ground, the outside; దేరు is to rise, to come forth. To set out is to come out into the open."
+              "text": "Native, and a picture rather than an abstraction. బయలు is open ground, the outside, and the verb దేరు follows it: to set out is to come out into the open."
             },
             {
               "kind": "speech",
@@ -480,6 +506,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first piece of బయలుదేరు (bayaludēru) is native Dravidian: bayalu, which DEDR 3940 lists as \"outside, exterior\" and DEDR 5258 as \"open space, plain\", with Tamil vayal, \"open space\". DEDR does not settle the second piece."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -490,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -548,7 +585,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -579,7 +616,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e46b082a0d87992",
+      "sourceHash": "fnv1a64:ae04250d2d828506",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +657,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళొస్తాను (veḷḷostānu) is two native Dravidian verbs run together: veḷḷi, \"having gone\" (DEDR 5393), and vastānu, \"I will come\", from vaccu (DEDR 5270)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +678,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +736,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

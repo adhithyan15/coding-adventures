@@ -14,7 +14,8 @@ romanization: "mahal"
 concept_tag: HI-THG202-MAHAL
 prerequisites: [HI-C201-khadan, HI-C202-gufa]
 sounds: []
-roots: []
+roots: [arabic-mahall]
+etymology_hook: "mahal ← Arabic maḥall 'a place of alighting, a quarter', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C202-gufa]
 <!-- hl-knowledge: introduces=[HI-LEX-C202-THG202-02]; assesses=[] -->
 
 **महल** — *mahal* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महल** (*mahal*) is a loan from Arabic *maḥall*, "a place of alighting, a quarter", which reached Hindi through Persian. Its Arabic root is *ḥ-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

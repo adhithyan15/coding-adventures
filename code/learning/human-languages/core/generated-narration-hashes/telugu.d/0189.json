@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 189,
-  "sourceHash": "fnv1a64:057fbf3eca5285cc",
+  "sourceHash": "fnv1a64:31d42d0e56c4f4b6",
   "lessonIds": [
     "TE-C189-poti",
     "TE-C189-vijeta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch189.txt",
   "json": "telugu/narration/ch189.json",
-  "textHash": "fnv1a64:f1af8fe6cbcce7aa",
-  "jsonHash": "fnv1a64:5e78fa1d8c41126b",
+  "textHash": "fnv1a64:2e44a8f8b5237fcb",
+  "jsonHash": "fnv1a64:491e35034524cd4c",
   "findings": []
 }

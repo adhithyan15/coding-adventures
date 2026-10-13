@@ -14,7 +14,8 @@ romanization: "nimpu"
 concept_tag: TE-VERB-NIMPU
 prerequisites: [TE-C198-sibbandi, TE-C199-dancu]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "nimpu: native Dravidian; DEDR 3682 lists nimpu 'to fill' with Tamil niṟai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C199-dancu]
 <!-- hl-knowledge: introduces=[TE-LEX-C199-KRIYA199-02]; assesses=[] -->
 
 **నింపు** — *nimpu* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నింపు** (*nimpu*) is native Dravidian. DEDR 3682 lists *nimpu*, "to fill", with Tamil *niṟai*, "to fill", and notes that in Telugu this root has run together with another, so that the two cannot be told apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

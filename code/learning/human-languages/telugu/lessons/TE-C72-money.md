@@ -11,7 +11,8 @@ romanization: "ḍabbu"
 concept_tag: TE-NOUN-MONEY
 prerequisites: [TE-C72-shop]
 sounds: []
-roots: []
+roots: [telugu-dabbu-money]
+etymology_hook: "ḍabbu: origin uncertain; DEDR and CDIAL list the shape only in other senses"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C72-shop]
 It is a borrowing, from the name of a small copper coin, and it travelled across the region on the coin's back.
 
 It is blunt and it is not rude. Asking whether somebody has డబ్బు today is an ordinary question in an అంగడి where the account is settled by the month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **డబ్బు** (*ḍabbu*) is uncertain. DEDR and CDIAL list words of this shape only in other senses: a drum's noise (DEDR 2947) and a ladle (CDIAL 6206).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

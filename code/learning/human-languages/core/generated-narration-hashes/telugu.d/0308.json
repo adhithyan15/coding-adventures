@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 308,
-  "sourceHash": "fnv1a64:00edd930137ae24b",
+  "sourceHash": "fnv1a64:b62b8700591a6fd3",
   "lessonIds": [
     "TE-C308-gunta",
     "TE-C308-mukka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch308.txt",
   "json": "telugu/narration/ch308.json",
-  "textHash": "fnv1a64:c63f9c612499d612",
-  "jsonHash": "fnv1a64:7e84307903f70c01",
+  "textHash": "fnv1a64:0a7ae953e8b15e1f",
+  "jsonHash": "fnv1a64:a3417afda70cdc45",
   "findings": []
 }

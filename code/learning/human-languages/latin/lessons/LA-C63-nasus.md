@@ -13,7 +13,8 @@ gloss: "the nose"
 concept_tag: LA-CORPUS1-NASUS
 prerequisites: [LA-C63-dens, LA-C63-lingua]
 sounds: []
-roots: []
+roots: [nasus-latin]
+etymology_hook: "nāsus 'nose' — inherited, usually traced to PIE *neh2s- 'nose'; English nose is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C63-lingua]
 <!-- hl-knowledge: introduces=[LA-LEX-C63-CORPUS1-05]; assesses=[] -->
 
 **nāsus, nāsī** — "the nose". English *nasal*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nāsus** is inherited, usually traced to Proto-Indo-European *\*neh2s-*, "nose" (EtymDB 2.1). English *nose* is a cousin from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

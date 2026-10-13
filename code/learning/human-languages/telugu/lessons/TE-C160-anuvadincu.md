@@ -14,7 +14,8 @@ romanization: "anuvadiñcu"
 concept_tag: TE-VERB-ANUVADINCU
 prerequisites: [TE-C160-sampadincu, TE-C160-vivarincu]
 sounds: []
-roots: []
+roots: [sanskrit-anuvada]
+etymology_hook: "anuvadiñcu: Sanskrit anuvāda 'repeating, explaining' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C160-vivarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C160-KRIYA160-03]; assesses=[] -->
 
 **అనువదించు** — *anuvadiñcu* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అనువదించు** (*anuvadiñcu*) is Sanskrit *anuvāda*, "repeating, explaining", made into a verb with the Telugu ending *-iñcu*. Its *vāda*, "speech", is in CDIAL 11507.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

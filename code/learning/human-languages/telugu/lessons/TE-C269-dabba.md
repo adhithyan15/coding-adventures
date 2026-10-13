@@ -14,7 +14,8 @@ romanization: "ḍabbā"
 concept_tag: TE-VASTUVU269-DABBA
 prerequisites: [TE-C268-intarnet, TE-C268-vebsait]
 sounds: []
-roots: []
+roots: [hindustani-dabba-box]
+etymology_hook: "ḍabbā: like Hindi ḍabbā 'box', from *ḍabba (CDIAL 5528), of non-Aryan origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C268-vebsait]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-01]; assesses=[] -->
 
 **డబ్బా** — *ḍabbā* — "a tin, a can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**డబ్బా** (*ḍabbā*) matches Hindi *ḍabbā*, "box", which CDIAL 5528 traces to a reconstructed *ḍabba*, "box", of non-Aryan origin, perhaps from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

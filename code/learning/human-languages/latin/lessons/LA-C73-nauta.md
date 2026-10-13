@@ -13,7 +13,8 @@ gloss: "a sailor"
 concept_tag: LA-HOMINES2-NAUTA
 prerequisites: [LA-C73-senex, LA-C73-regina]
 sounds: []
-roots: []
+roots: [nauta-latin]
+etymology_hook: "nauta 'sailor' — borrowed from Greek nautēs 'sailor'; English nautical shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C73-regina]
 <!-- hl-knowledge: introduces=[LA-LEX-C73-HOMINES2-04]; assesses=[] -->
 
 **nauta, nautae** — "a sailor". English *nautical*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nauta** was borrowed from Greek *nautēs*, "a sailor" (EtymDB 2.1). Latin also had a home-grown *nāvita*, "sailor", built on *nāvis*, "a ship" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

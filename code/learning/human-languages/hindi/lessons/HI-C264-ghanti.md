@@ -14,7 +14,8 @@ romanization: "ghaṇṭī"
 concept_tag: HI-THG264-GHANTI
 prerequisites: [HI-C264-sitar, HI-C264-tabla]
 sounds: []
-roots: []
+roots: [sanskrit-ghantika]
+etymology_hook: "ghaṇṭī ← Sanskrit ghaṇṭikā 'small bell', a tadbhava (CDIAL 4421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C264-tabla]
 <!-- hl-knowledge: introduces=[HI-LEX-C264-THG264-03]; assesses=[] -->
 
 **घंटी** — *ghaṇṭī* — "a bell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घंटी** (*ghaṇṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṇṭikā*, "small bell" (CDIAL 4421). It is built on *ghaṇṭā*, "bell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

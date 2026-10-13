@@ -13,7 +13,8 @@ gloss: "a father-in-law"
 concept_tag: LA-RES247-SOCER
 prerequisites: [LA-C246-musica, LA-C247-geminus]
 sounds: []
-roots: []
+roots: [socer-latin]
+etymology_hook: "socer 'father-in-law' — inherited, usually traced to PIE *swekuros; Greek hekyros is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C247-geminus]
 <!-- hl-knowledge: introduces=[LA-LEX-C247-RES247-02]; assesses=[] -->
 
 **socer, socerī** — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**socer** is inherited, usually traced to Proto-Indo-European *\*swekuros*, "father-in-law" (EtymDB 2.1); Greek *hekyros*, "father-in-law", is a cousin (Lewis & Short), and so is German *Schwager*, "brother-in-law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

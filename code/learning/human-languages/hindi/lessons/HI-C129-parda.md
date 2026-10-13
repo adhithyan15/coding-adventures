@@ -14,7 +14,8 @@ romanization: "pardā"
 concept_tag: HI-THINGS129-PARDA
 prerequisites: [HI-C129-takiya, HI-C129-kambal]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "pardā: usually traced to Persian parda 'curtain, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C129-kambal]
 <!-- hl-knowledge: introduces=[HI-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **परदा** — *pardā* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परदा** (*pardā*) is a loan, usually traced to Persian *parda*, "curtain, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

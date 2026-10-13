@@ -11,7 +11,8 @@ romanization: "ceruvu"
 concept_tag: TE-NOUN-TANK
 prerequisites: [TE-C55-river]
 sounds: []
-roots: []
+roots: [dravidian-cirai-confine]
+etymology_hook: "ceruvu: native Dravidian; DEDR 1980 lists it as 'tank', beside ceṟa 'confinement'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A చెరువు is not a natural lake. It is a dug and banked tank that cat
 So the word carries an argument about how the country was settled: the నది is where the water goes, the చెరువు is where it was made to stay. Kings had them dug and put their names on the bunds, and the names are still there.
 
 Indian English calls this a "tank", which is why the translation can sound strange until you have stood on the bund of one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెరువు** (*ceruvu*) is native Dravidian. DEDR 1980 lists *ceruvu*, "artificial lake, tank", beside *ceṟa*, "prison, confinement", in an entry with Tamil *ceṟi*, "to be close, crowded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

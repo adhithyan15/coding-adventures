@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 219,
-  "sourceHash": "fnv1a64:64acce7cdfdd5e97",
+  "sourceHash": "fnv1a64:69ea9d39a9ab5157",
   "lessonIds": [
     "LA-C219-fama",
     "LA-C219-nuntius",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch219.txt",
   "json": "latin/narration/ch219.json",
-  "textHash": "fnv1a64:f455b19c5764ddc2",
-  "jsonHash": "fnv1a64:3ef935784c2cada8",
+  "textHash": "fnv1a64:8f10ce85135096bd",
+  "jsonHash": "fnv1a64:95150178b23be547",
   "findings": []
 }

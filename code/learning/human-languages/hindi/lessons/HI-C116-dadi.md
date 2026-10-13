@@ -14,7 +14,8 @@ romanization: "dādī"
 concept_tag: HI-GRAND-DADI
 prerequisites: [HI-C115-jinahin, HI-C116-dada]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādī ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C116-dada]
 **दादी** (*dādī*) — "grandmother", your father's mother.
 
 It pairs with **दादा**: the **-ई** ending marks the woman, as in **बच्ची** beside **बच्चा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दादी** (*dādī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). *dādī* is its feminine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

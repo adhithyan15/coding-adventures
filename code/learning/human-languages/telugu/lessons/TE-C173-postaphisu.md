@@ -14,7 +14,8 @@ romanization: "pōsṭāphīsu"
 concept_tag: TE-STHALAM173-POSTAPHISU
 prerequisites: [TE-C173-hotalu, TE-C173-pakkana]
 sounds: []
-roots: []
+roots: [english-post-office]
+etymology_hook: "pōsṭāphīsu ← English post office"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C173-pakkana]
 <!-- hl-knowledge: introduces=[TE-LEX-C173-STHALAM173-05]; assesses=[] -->
 
 **పోస్టాఫీసు** — *pōsṭāphīsu* — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోస్టాఫీసు** (*pōsṭāphīsu*) is a loan from English *post office*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

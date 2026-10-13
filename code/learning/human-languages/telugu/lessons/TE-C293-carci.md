@@ -14,7 +14,8 @@ romanization: "carci"
 concept_tag: TE-STHALAM293-CARCI
 prerequisites: [TE-C293-jailu, TE-C293-masidu]
 sounds: []
-roots: []
+roots: [english-church]
+etymology_hook: "carci ← English church"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C293-masidu]
 <!-- hl-knowledge: introduces=[TE-LEX-C293-STHALAM293-03]; assesses=[] -->
 
 **చర్చి** — *carci* — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చర్చి** (*carci*) is a loan from English *church*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

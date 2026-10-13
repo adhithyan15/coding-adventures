@@ -14,7 +14,8 @@ romanization: "pāmu"
 concept_tag: TE-THINGS124-PAMU
 prerequisites: [TE-C124-jinka, TE-C124-nakka]
 sounds: []
-roots: []
+roots: [dravidian-paambu-snake]
+etymology_hook: "pāmu: native Dravidian, one word with Tamil pāmpu and Kannada pāvu (DEDR 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C124-nakka]
 <!-- hl-knowledge: introduces=[TE-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **పాము** — *pāmu* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాము** (*pāmu*) is native Dravidian, one word with Tamil *pāmpu* and Kannada *pāvu* (DEDR 4085). DEDR compares Prakrit *pāva*, "snake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

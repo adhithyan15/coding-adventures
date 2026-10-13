@@ -7005,9 +7005,18 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
-        labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
+        labeled_swimlane_operator_family(
+            value, &["<--", "o--", "x--", "--"], '-', 2, &[">", "o", "x", ""],
+            SwimlaneEdgeKind::Directed,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<==", "o==", "x==", "=="], '=', 2, &[">", "o", "x", ""],
+            SwimlaneEdgeKind::Thick,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<-.", "o-.", "x-.", "-."], '.', 1, &["->", "-o", "-x", "-"],
+            SwimlaneEdgeKind::Dotted,
+        ),
     ].into_iter().flatten().min_by_key(|operator| operator.at);
     let operator = match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
@@ -7035,6 +7044,19 @@ fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> Swi
     operator
 }
 
+fn labeled_swimlane_operator_family(
+    value: &str,
+    starts: &[&str],
+    repeated: char,
+    minimum_run: usize,
+    suffixes: &[&str],
+    kind: SwimlaneEdgeKind,
+) -> Option<SwimlaneOperator> {
+    starts.iter().flat_map(|start| suffixes.iter().filter_map(|suffix|
+        labeled_swimlane_operator(value, start, repeated, minimum_run, suffix, kind)
+    )).min_by_key(|operator| (operator.at, usize::MAX - operator.len))
+}
+
 fn labeled_swimlane_operator(
     value: &str,
     start: &str,
@@ -7058,8 +7080,18 @@ fn labeled_swimlane_operator(
             at,
             len: start.len() + end_at + run + suffix.len(),
             kind,
-            start_marker: EdgeMarker::None,
-            end_marker: EdgeMarker::Point,
+            start_marker: match start.chars().next() {
+                Some('<') => EdgeMarker::Point,
+                Some('o') => EdgeMarker::Circle,
+                Some('x') => EdgeMarker::Cross,
+                _ => EdgeMarker::None,
+            },
+            end_marker: match suffix.chars().last() {
+                Some('o') => EdgeMarker::Circle,
+                Some('x') => EdgeMarker::Cross,
+                Some('>') => EdgeMarker::Point,
+                _ => EdgeMarker::None,
+            },
             label: Some(label.to_string()),
             min_length: run - minimum_run + 1,
             id: None,
@@ -7217,8 +7249,10 @@ fn parse_swimlane_shape_attributes(
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
+                    "rectwithtitle" => DiagramShape::TitledRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
+                    "anchor" => DiagramShape::Anchor,
                     "notch-pent" | "loop-limit" | "notched-pentagon" => DiagramShape::LoopLimit,
                     "sl-rect" | "manual-input" | "sloped-rectangle" => DiagramShape::ManualInput,
                     "docs" | "documents" | "st-doc" | "stacked-document" => DiagramShape::MultiDocument,

@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to throw away, then the Telugu for to los
 You'll want to know: సంపాదించు.
 సంపాదించు — sampādiñcu — "to earn".
 
+The word, taken apart.
+సంపాదించు (sampādiñcu) is Sanskrit sampādana, "bringing about, procuring", made into a verb with the Telugu ending -iñcu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to lose, then the Telugu for to earn.
 
 You'll want to know: వివరించు.
 వివరించు — vivariñcu — "to explain".
+
+The word, taken apart.
+వివరించు (vivariñcu) is Sanskrit vivaraṇa, "opening up, explanation", made into a verb with the Telugu ending -iñcu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to earn, then the Telugu for to explain.
 You'll want to know: అనువదించు.
 అనువదించు — anuvadiñcu — "to translate".
 
+The word, taken apart.
+అనువదించు (anuvadiñcu) is Sanskrit anuvāda, "repeating, explaining", made into a verb with the Telugu ending -iñcu. Its vāda, "speech", is in CDIAL 11507.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to explain, then the Telugu for to transl
 You'll want to know: గుర్తుపెట్టుకో.
 గుర్తుపెట్టుకో — gurtupeṭṭukō — "to remember, to keep in mind".
 
+The word, taken apart.
+గుర్తుపెట్టుకో (gurtupeṭṭukō) is native Dravidian: gurtu, "a mark, sign", one word with Kannada gurtu (DEDR 1847); peṭṭu, "to put" (DEDR 4390); and -kō, "for oneself" (DEDR 2151): "to put a mark for oneself".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to translate, then the Telugu for to reme
 
 You'll want to know: ఒప్పుకో.
 ఒప్పుకో — oppukō — "to agree, to accept".
+
+The word, taken apart.
+ఒప్పుకో (oppukō) is native Dravidian: oppu, "to consent, agree", one word with Kannada oppu, "to agree" (DEDR 924), and -kō, "for oneself" (DEDR 2151).
 
 What you've built.
 One more word for this chapter.

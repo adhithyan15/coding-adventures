@@ -14,7 +14,8 @@ romanization: "hãsī"
 concept_tag: HI-MOOD-LAUGHTER
 prerequisites: [HI-C108-pareshan, HI-C108-chinta]
 sounds: []
-roots: []
+roots: [sanskrit-hasita]
+etymology_hook: "hãsī ← Sanskrit hasita 'laughter', a tadbhava (CDIAL 14023)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C108-chinta]
 **हँसी** (*hãsī*) — "laughter". It is feminine.
 
 **मुझे हँसी आ गई** — "I burst out laughing", literally "laughter came to me", like anger.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हँसी** (*hãsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasita*, "laughter" (CDIAL 14023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

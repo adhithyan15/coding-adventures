@@ -14,7 +14,8 @@ romanization: "kharīdnā"
 concept_tag: VERB-BUY
 prerequisites: [HI-C72-expensive, HI-C70-rest, HI-C71-very]
 sounds: []
-roots: []
+roots: [persian-kharidan]
+etymology_hook: "kharīdnā: usually traced to Persian kharīdan 'to buy'"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ dot off and the word still reads, but the two letters are not the same.
 
 Put the chapter together and you can shop: **दाम क्या है?** to ask, **बहुत
 महँगा** to complain, and ख़रीदना for what you came to do.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़रीदना** (*kharīdnā*) is a loan, usually traced to Persian *kharīdan*, "to buy". Hindi took its stem *kharīd-* and added the verb ending *-nā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

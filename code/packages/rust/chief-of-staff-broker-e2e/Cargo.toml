@@ -12,8 +12,6 @@ chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 
-[target.'cfg(unix)'.dependencies]
-libc = "0.2"
 
 [dev-dependencies]
 chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
@@ -40,6 +38,14 @@ test = false
 name = "broker-e2e-broker"
 path = "src/bin/broker.rs"
 test = false
+
+[[bin]]
+name = "broker-e2e-seatbelt-shim"
+path = "src/bin/seatbelt_shim.rs"
+test = false
+
+[target.'cfg(target_os = "macos")'.dependencies]
+chief-of-staff-macos-sandbox = { path = "../chief-of-staff-macos-sandbox" }
 
 [target.'cfg(unix)'.dev-dependencies]
 libc = "0.2"

@@ -13,7 +13,8 @@ gloss: "altogether"
 concept_tag: LA-CAUSA211-OMNINO
 prerequisites: [LA-C210-fere, LA-C210-tantum]
 sounds: []
-roots: []
+roots: [omnino-latin, omnis-latin]
+etymology_hook: "omnīnō 'altogether' — built on omnis 'all'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C210-tantum]
 <!-- hl-knowledge: introduces=[LA-LEX-C211-CAUSA211-01]; assesses=[] -->
 
 **omnīnō** — "altogether".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**omnīnō** is built on *omnis*, "all" (Lewis & Short): altogether. Where *omnis* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

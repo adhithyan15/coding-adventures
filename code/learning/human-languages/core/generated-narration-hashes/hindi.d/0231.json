@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 231,
-  "sourceHash": "fnv1a64:32b06efc102e4912",
+  "sourceHash": "fnv1a64:c2bcadd3fb2587e2",
   "lessonIds": [
     "HI-C231-bahna",
     "HI-C231-tapakna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch231.txt",
   "json": "hindi/narration/ch231.json",
-  "textHash": "fnv1a64:8da1f97fd2c80158",
-  "jsonHash": "fnv1a64:09ba05f26fb099e1",
+  "textHash": "fnv1a64:fe0597ed1a2e0606",
+  "jsonHash": "fnv1a64:c8ceac6f55a6d2e6",
   "findings": []
 }

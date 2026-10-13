@@ -13,7 +13,8 @@ gloss: "a lair, a resting place"
 concept_tag: LA-RES227-CUBILE
 prerequisites: [LA-C226-responsum, LA-C227-fatum]
 sounds: []
-roots: []
+roots: [cubile-latin, cubare-latin]
+etymology_hook: "cubīle 'lair' — built on cubō 'to lie down'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C227-fatum]
 <!-- hl-knowledge: introduces=[LA-LEX-C227-RES227-02]; assesses=[] -->
 
 **cubīle, cubīlis** — "a lair, a resting place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cubīle** is built on *cubō*, "to lie down" (Lewis & Short), with *-īle*, an ending for a place: a place to lie.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

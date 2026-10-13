@@ -12,6 +12,9 @@ Before the new one: say the Latin for cooked, then the Latin for distant.
 You'll want to know: pūblicus, pūblica, pūblicum.
 pūblicus, pūblica, pūblicum — "public".
 
+The word, taken apart.
+pūblicus comes from older poplicus, "of the people", as inscriptions write it (Lewis & Short), built on populus, "the people"; its spelling was probably influenced by pūbēs, "the grown men".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for distant, then the Latin for public.
 
 You'll want to know: prīvātus, prīvāta, prīvātum.
 prīvātus, prīvāta, prīvātum — "private".
+
+The word, taken apart.
+prīvātus is the past participle of prīvō, "to set apart, to deprive" (Lewis & Short), from prīvus, "single, one's own": set apart from the public.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for public, then the Latin for private.
 You'll want to know: commūnis, commūne.
 commūnis, commūne — "common, shared".
 
+The word, taken apart.
+commūnis is inherited; Old Latin wrote comoinis, and it is usually traced to Proto-Indo-European kom-moyni-, "held in common", from mey-, "to exchange" (EtymDB 2.1). mūnus, "a duty, a gift", has the same root (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for private, then the Latin for common.
 You'll want to know: inānis, ināne.
 inānis, ināne — "hollow, vain".
 
+The word, taken apart.
+inānis has no sure origin; Lewis & Short call it doubtful. English inane comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for common, then the Latin for hollow.
 
 You'll want to know: gravis, grave.
 gravis, grave — "heavy, serious".
+
+The word, taken apart.
+gravis is inherited, usually traced to Proto-Indo-European gwreh2us, "heavy" (EtymDB 2.1); Greek barys, "heavy", is a cousin (Lewis & Short). English gravity and grave, "serious", come from it.
 
 What you've built.
 One more word for this chapter.

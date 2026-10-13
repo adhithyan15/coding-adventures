@@ -14,7 +14,8 @@ romanization: "kaun"
 concept_tag: HI-DEIXIS-WHO
 prerequisites: [HI-C40-there, HI-C37-kitaab, HI-C38-pet]
 sounds: []
-roots: []
+roots: [sanskrit-kah-punar]
+etymology_hook: "kaun ← Sanskrit kaḥ punar 'who, then?', a tadbhava (CDIAL 2575)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,11 @@ opens with the same **k-**. That is the pattern: the near words you know open
 with **y-** (**यह** *yah*, **यहाँ** *yahā̃*), the far ones with **v-** (**वह**
 *vah*, **वहाँ** *vahā̃*), and the asking words with **k-**. The last lesson of
 this chapter lays it out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कौन** (*kaun*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaḥ punar*, literally "who, then", which CDIAL glosses "who" (CDIAL 2575).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C37-KITAAB-02, HI-CONCEPT-C37-KITAAB-03, HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02] -->

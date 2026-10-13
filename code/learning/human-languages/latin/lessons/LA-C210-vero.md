@@ -13,7 +13,8 @@ gloss: "indeed; but"
 concept_tag: LA-CAUSA210-VERO
 prerequisites: [LA-C209-usque, LA-C210-autem]
 sounds: []
-roots: []
+roots: [vero-latin, verus-latin]
+etymology_hook: "vērō 'indeed' — an old case form of vērus 'true'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C210-autem]
 <!-- hl-knowledge: introduces=[LA-LEX-C210-CAUSA210-02]; assesses=[] -->
 
 **vērō** — "indeed; but".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vērō** is an old case form of *vērus*, "true" (Lewis & Short): in truth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

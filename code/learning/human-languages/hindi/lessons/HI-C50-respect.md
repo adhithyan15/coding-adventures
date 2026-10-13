@@ -14,7 +14,8 @@ romanization: "ādar"
 concept_tag: HI-NOUN-RESPECT
 prerequisites: [HI-C50-favour, HI-C48-certainly, HI-C49-journey]
 sounds: []
-roots: []
+roots: [sanskrit-adara]
+etymology_hook: "ādar ← Sanskrit ādara 'regard, attentiveness', a tatsama"
 duration:
   max_seconds: 210
 requires:

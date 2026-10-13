@@ -14,7 +14,8 @@ romanization: "āūṅgā"
 concept_tag: HI-FUTURE-VOWEL-STEM
 prerequisites: [HI-C88-karunga, HI-C42-come, HI-S128-letter-uu]
 sounds: []
-roots: []
+roots: [sanskrit-apayati, sanskrit-gata]
+etymology_hook: "āūṅgā: ā- 'come', listed by CDIAL under āpayati (CDIAL 1200); the -gā is usually traced to gata 'gone'"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,8 @@ is worth a moment.
 **कर-** ends in a consonant, so the long *ū* rides underneath it as the small
 mark you have used for a long time. **आ-** ends in a vowel, so there is nothing
 to ride on — and the *ū* has to be written as a **full letter of its own**.
+
+The stem **आ-** is listed by CDIAL under Sanskrit *āpayati*, "causes to reach" (CDIAL 1200).
 
 ## Grammar Lens: the letter arrives where it was promised
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-02, HI-SCRIPT-RECOG-128] -->

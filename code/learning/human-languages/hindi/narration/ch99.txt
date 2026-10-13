@@ -22,6 +22,7 @@ where: the past copula. singular: था. plural or masculine-plural: थे.
 where: a noun. singular: बच्चा. plural or masculine-plural: बच्चे (bacce).
 Nouns bend the same way adjectives do, which is not a coincidence: to Hindi they are the same kind of word wearing the same endings. Learning noun plurals is not a new system — it is the one system arriving at a new place.
 This applies to masculine nouns ending in -आ and to those only. A noun shaped otherwise does something else, and the next lessons take those in turn.
+बच्चा itself is the loan usually traced to Persian bacca, "child".
 
 Grammar Lens: what changes with it.
 [a table of 2 rows, read aloud]
@@ -63,6 +64,7 @@ shape of the noun: ends in -आ. how it makes a plural: swaps the ending for -�
 shape of the noun: ends in a consonant. how it makes a plural: adds -एँ.
 That is the whole difference, and it follows from the shape rather than from a list to memorise: change what is there, or add where nothing is.
 Feminine nouns ending in a consonant, like किताब, are much the commonest case, and the nasal is what your ear should catch.
+किताब is Arabic kitāb, "book", which reached Hindi through Persian.
 
 Grammar Lens: the nasal you already write.
 The mark over the ending is the anusvāra, which you have been writing since हैं and मिलेंगे. It is doing the same job here that it does there: this is a plural, and the nasal is the sign of it.
@@ -106,6 +108,7 @@ noun: किताब. gender: feminine. plural: किताबें (kitābe�
 noun: भाषा. gender: feminine. plural: भाषाएँ (bhāṣāẽ).
 So the question to ask a noun is not "how does it end" on its own. It is gender first, ending second — and the two feminine rows do the same thing despite ending differently.
 The ए is written as a full letter here rather than as a mark, because भाषा ends in a vowel and there is nothing for a mark to sit on. That is the same rule that gave you आऊँगा and आओगे.
+भाषा is Sanskrit bhāṣā, "speech", a tatsama (CDIAL 9479).
 
 Grammar Lens: the three shapes, in the order to ask them.
 [a table of 2 rows, read aloud]
@@ -150,6 +153,7 @@ what tells you: the verb. how: हैं rather than है.
 what tells you: an adjective. how: लंबे rather than लंबा.
 दो आदमी (do ādmī) लंबे हैं। — Two men are tall. The noun is the only word in that sentence with nothing to show for it.
 This is worth expecting rather than being surprised by, because a reading paper will give you an unchanged noun and ask you to count. The number lives in the sentence, not always in the word.
+आदमी is the Arabic loan ādamī, "human".
 
 Grammar Lens: the whole plural system, now complete.
 [a table of 4 rows, read aloud]
@@ -193,6 +197,7 @@ It does two jobs that English keeps apart:
 job: a recipient. example: आदमी को (ko) — to the man.
 job: a definite or human object. example: आदमी को (ko) — the man, as the thing acted on.
 The second is the strange one to an English ear. English marks a direct object by word order and nothing else. Hindi puts को (ko) on an object when it is a person or a particular thing, and leaves it bare otherwise. Spanish does the same with a before a human object, so the demand is not unique to Hindi — only the marker is.
+CDIAL lists को (ko) under Sanskrit kakṣa, "armpit" (CDIAL 14342): "at the side of" became "to".
 
 Grammar Lens: three postpositions, one habit.
 [a table of 3 rows, read aloud]
@@ -236,6 +241,7 @@ word: उसका. plain: उसका. in front of a postposition: उसक�
 word: बच्चा. plain: बच्चा. in front of a postposition: बच्चे को (bacce ko).
 Hindi calls this shape the oblique. Every -आ word in the language wears it — possessives, adjectives, and now nouns — and it is always the same -ए.
 So the track has taught this bend four times on four kinds of word, and this is the fourth and last kind.
+बच्चा is usually traced to Persian bacca, "child".
 
 Grammar Lens: how to tell the two -ए apart.
 [a table of 2 rows, read aloud]
@@ -277,6 +283,7 @@ The word, taken apart.
 यह किताब (yah kitāb) means this book.
 English does exactly the same thing with the same two words — this is a pronoun in this is mine and a determiner in this book — so there is nothing here to translate differently. The reason it needs saying is that the track taught these words only as standalone answers, and a reading paper uses them in front of nouns far more often.
 There is a second reason it matters. Hindi has no article, so यह and वह are what a writer reaches for when the would have been enough in English. A sentence that begins वह आदमी is often best read as the man rather than that man.
+CDIAL lists यह under Sanskrit eṣa, "this" (CDIAL 2530).
 
 Grammar Lens: what fills the space before a noun.
 [a table of 3 rows, read aloud]

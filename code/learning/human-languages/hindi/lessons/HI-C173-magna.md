@@ -14,7 +14,8 @@ romanization: "mā̃gnā"
 concept_tag: HI-VERB-MAGNA
 prerequisites: [HI-C173-batna, HI-C173-cunna]
 sounds: []
-roots: []
+roots: [sanskrit-margati]
+etymology_hook: "māṁgnā ← Sanskrit mārgati 'seeks, requests', a tadbhava (CDIAL 10074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C173-cunna]
 <!-- hl-knowledge: introduces=[HI-LEX-C173-ACT173-05]; assesses=[] -->
 
 **माँगना** — *mā̃gnā* — "to ask for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माँगना** (*māṁgnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgati*, "seeks, requests" (CDIAL 10074). It is built on *mārga*, "path": to seek was "to track".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

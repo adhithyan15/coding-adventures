@@ -105,7 +105,7 @@ fn list_fixtures_reach_every_browser_backend_under_strict_mode() {
 #[test]
 fn list_fixtures_reach_every_native_backend_under_strict_mode() {
     let dir = scratch("native");
-    for backend in ["swiftui", "qt", "flutter", "xaml"] {
+    for backend in ["swiftui", "qt", "flutter", "xaml", "compose"] {
         let result = compile(backend, &dir, &["--strict-fixtures"]);
         assert!(
             result.status.success(),
@@ -114,6 +114,13 @@ fn list_fixtures_reach_every_native_backend_under_strict_mode() {
             String::from_utf8_lossy(&result.stderr)
         );
     }
+    // EM-6 (#14704): Compose's desktop shell shows the story's options, not an
+    // empty list, with the quote escaped for Kotlin.
+    let main = read(dir.join("compose/src/main/kotlin/MosaicAppShell.kt"));
+    assert!(
+        main.contains(r#"mosaicStringList(hostProps, "options", listOf<String>("List", "Board \"B\""))"#),
+        "compose shell must carry the labels:\n{main}"
+    );
 }
 
 /// A value no backend renders (an object) is still a warning by default and

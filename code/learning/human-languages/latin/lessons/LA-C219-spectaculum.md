@@ -13,7 +13,8 @@ gloss: "a show"
 concept_tag: LA-RES219-SPECTACULUM
 prerequisites: [LA-C219-fama, LA-C219-nuntius]
 sounds: []
-roots: []
+roots: [spectaculum-latin, spectare-latin]
+etymology_hook: "spectāculum 'show' — built on spectō 'to watch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C219-nuntius]
 <!-- hl-knowledge: introduces=[LA-LEX-C219-RES219-03]; assesses=[] -->
 
 **spectāculum, spectāculī** — "a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spectāculum** is built on *spectō*, "to look at, to watch" (Lewis & Short), with *-culum*, an ending for a means or place: something to watch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

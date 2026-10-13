@@ -11,7 +11,8 @@ romanization: "kaṣṭaṁ"
 concept_tag: TE-ADJ-DIFFICULT
 prerequisites: [TE-C76-easy, TE-C35-kutumbam]
 sounds: []
-roots: []
+roots: [sanskrit-kashta]
+etymology_hook: "kaṣṭaṁ ← Sanskrit kaṣṭa 'bad, difficult', a tatsama (CDIAL 2978)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C76-easy]
 The pair to సులభం, and a Sanskrit tatsama shared right across India.
 
 It carries more weight than English "difficult": **కష్టం** said alone about someone's situation means real hardship, not an awkward crossword.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కష్టం** (*kaṣṭaṁ*) is Sanskrit *kaṣṭa*, "bad, difficult", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 2978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

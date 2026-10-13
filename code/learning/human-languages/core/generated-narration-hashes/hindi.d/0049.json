@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 49,
-  "sourceHash": "fnv1a64:9c416e8c09ce8016",
+  "sourceHash": "fnv1a64:cdba63ff0c4c9b11",
   "lessonIds": [
     "HI-C49-now",
     "HI-C49-day-after",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch49.txt",
   "json": "hindi/narration/ch49.json",
-  "textHash": "fnv1a64:f47039780487322c",
-  "jsonHash": "fnv1a64:ec2e6e856fd87f6f",
+  "textHash": "fnv1a64:8a214151e205c5a6",
+  "jsonHash": "fnv1a64:a40c93db3851b197",
   "findings": []
 }

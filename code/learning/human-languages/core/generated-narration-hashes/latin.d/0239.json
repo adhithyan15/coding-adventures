@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 239,
-  "sourceHash": "fnv1a64:22abca115e21c416",
+  "sourceHash": "fnv1a64:6ca006ba77a63789",
   "lessonIds": [
     "LA-C239-simul",
     "LA-C239-fortasse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch239.txt",
   "json": "latin/narration/ch239.json",
-  "textHash": "fnv1a64:4553d33aa5d1535b",
-  "jsonHash": "fnv1a64:aa8f97dbeab03433",
+  "textHash": "fnv1a64:41e303cac5ba0dfa",
+  "jsonHash": "fnv1a64:9912b7946433e0e9",
   "findings": []
 }

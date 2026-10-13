@@ -11,7 +11,8 @@ romanization: "ninna"
 concept_tag: TE-TIME-YESTERDAY
 prerequisites: [TE-C75-today, TE-C20-vatavaranam]
 sounds: []
-roots: []
+roots: [dravidian-nerunal-yesterday]
+etymology_hook: "ninna: native Dravidian, one word with Kannada ninne and Malayalam innalē (DEDR 3758)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C75-today]
 With ఇవాళ and రేపు you now have the three days every conversation stands on, and నిన్న is the only one that looks backward.
 
 It is native Dravidian and short, with the doubled **న్న** you have seen in ఉన్నాను.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిన్న** (*ninna*) is native Dravidian, one word with Kannada *ninne* and Malayalam *innalē* (DEDR 3758). DEDR lists Telugu *ninna*, "yesterday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

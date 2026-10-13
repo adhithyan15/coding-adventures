@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 48,
-  "sourceHash": "fnv1a64:4ec35b6257d637a1",
+  "sourceHash": "fnv1a64:16416cdd77e12bcb",
   "lessonIds": [
     "HI-C48-true",
     "HI-C48-enough",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch48.txt",
   "json": "hindi/narration/ch48.json",
   "textHash": "fnv1a64:9d96f7f9cffa7a22",
-  "jsonHash": "fnv1a64:2c10f060ab776dcb",
+  "jsonHash": "fnv1a64:e415d689ae5583b5",
   "findings": []
 }

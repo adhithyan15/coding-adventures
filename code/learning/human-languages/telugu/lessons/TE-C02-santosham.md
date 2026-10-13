@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TE-C02-naa-peru]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
+etymology_hook: "santōṣam ← Sanskrit santoṣa 'satisfaction' (CDIAL 12895)"
 duration:
   max_seconds: 120
 requires:
@@ -47,6 +48,8 @@ santōṣam*) — "joy at having met you."
 *toṣa* ("satisfaction") — the *same* loan Kannada uses (*santōṣa*). Both reach
 for Sanskrit where Tamil keeps its native *magiḻcci*. Telugu — the most
 Sanskritised of the four Dravidian tongues — does so most readily of all.
+
+CDIAL 12895 lists Sanskrit *santoṣa*, "satisfaction".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C02-SANTOSHAM-01, TE-ETYMON-C02-SANTOSHAM-02] -->

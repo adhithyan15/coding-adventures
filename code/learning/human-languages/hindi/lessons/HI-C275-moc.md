@@ -14,7 +14,8 @@ romanization: "moc"
 concept_tag: HI-THG275-MOC
 prerequisites: [HI-C274-jalan, HI-C274-sujan]
 sounds: []
-roots: []
+roots: [indo-aryan-mocc]
+etymology_hook: "moc: origin uncertain; CDIAL has *mocc 'twist, wring' (10351) with no Hindi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C274-sujan]
 <!-- hl-knowledge: introduces=[HI-LEX-C275-THG275-01]; assesses=[] -->
 
 **मोच** — *moc* — "a sprain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोच** (*moc*) is uncertain. CDIAL has a reconstructed *\*mocc*, "twist, wring" (CDIAL 10351), but lists no Hindi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

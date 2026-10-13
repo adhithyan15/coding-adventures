@@ -14,7 +14,8 @@ romanization: "tāḍu"
 concept_tag: TE-THINGS110-TADU
 prerequisites: [TE-C110-talam, TE-C110-talamcevi]
 sounds: []
-roots: []
+roots: [dravidian-caratu-cord]
+etymology_hook: "tāḍu: native Dravidian; DEDR 2356 lists trāḍu 'cord, rope' with Tamil caraṭu 'twisted thread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C110-talamcevi]
 <!-- hl-knowledge: introduces=[TE-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **తాడు** — *tāḍu* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాడు** (*tāḍu*) is native Dravidian. DEDR 2356 lists *trāḍu*, "cord, rope, twine", with Tamil *caraṭu*, "twisted thread, cord".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

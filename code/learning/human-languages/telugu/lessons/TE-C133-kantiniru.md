@@ -14,7 +14,8 @@ romanization: "kaṇṭinīru"
 concept_tag: TE-THINGS133-KANTINIRU
 prerequisites: [TE-C133-guddalu, TE-C133-misalu]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, dravidian-niir-water]
+etymology_hook: "kaṇṭinīru: native kannu 'eye' (DEDR 1159) + nīru 'water' (DEDR 3690)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C133-misalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **కంటినీరు** — *kaṇṭinīru* — "tears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కంటినీరు** (*kaṇṭinīru*) is native Dravidian: *kaṇṭi*, "of the eye", from *kannu* (DEDR 1159), and *nīru*, "water" (DEDR 3690). DEDR compares Sanskrit *nīra*, "water", with *nīru* (CDIAL 7552); CDIAL reports the view that *nīra* came from Dravidian, though one scholar takes it as Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

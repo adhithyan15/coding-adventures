@@ -14,7 +14,8 @@ romanization: "baiṭhak"
 concept_tag: HI-THG183-BAITHAK
 prerequisites: [HI-C183-dukandar, HI-C183-grahak]
 sounds: []
-roots: []
+roots: [sanskrit-upavisati]
+etymology_hook: "baiṭhak: the noun of baiṭhnā 'to sit', from Sanskrit upaviśati 'sits down' (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C183-grahak]
 <!-- hl-knowledge: introduces=[HI-LEX-C183-THG183-04]; assesses=[] -->
 
 **बैठक** — *baiṭhak* — "a meeting, a sitting room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैठक** (*baiṭhak*) is the noun of **बैठना**, "to sit", with the ending *-ak*: a sitting, and a room to sit in. *baiṭhnā* comes from Sanskrit *upaviśati*, "sits down" (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

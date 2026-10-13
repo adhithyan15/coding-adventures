@@ -14,7 +14,8 @@ romanization: "sac meṁ?"
 concept_tag: HI-RIGHT-REALLY
 prerequisites: [HI-C112-galat, HI-C112-pakka]
 sounds: []
-roots: []
+roots: [satya, sanskrit-madhya]
+etymology_hook: "sac ← Sanskrit satya 'true' (CDIAL 13112); meṁ ← madhye 'in' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C112-pakka]
 **सच में?** (*sac meṁ?*) — "really?", literally "in truth?".
 
 **सच** is the "true" you know, with **में**, "in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सच में?** (*sac meṁ?*) is *sac*, "truth", with *meṁ*, "in". *sac* comes from Sanskrit *satya*, "true" (CDIAL 13112), and *meṁ* from *madhye*, "in, among" (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

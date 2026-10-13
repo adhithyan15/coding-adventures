@@ -14,7 +14,8 @@ romanization: "āj"
 concept_tag: HI-TIME-TODAY
 prerequisites: [HI-C70-rest, HI-C70-song, HI-C69-vehicle, HI-C69-railway]
 sounds: []
-roots: []
+roots: [sanskrit-adya]
+etymology_hook: "āj ← Sanskrit adya 'today', a tadbhava (CDIAL 242)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ missing middle of that set, and it is the one you will say most.
 
 **आज आप कैसे हैं?** is the greeting you have been making, with one word added
 that makes it about now rather than in general.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आज** (*āj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adya*, "today" (CDIAL 242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

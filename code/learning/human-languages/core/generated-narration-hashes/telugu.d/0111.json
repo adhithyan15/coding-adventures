@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 111,
-  "sourceHash": "fnv1a64:f0e0ffb5e52f191a",
+  "sourceHash": "fnv1a64:5988c594c213bfeb",
   "lessonIds": [
     "TE-C111-duvvena",
     "TE-C111-sabbu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch111.txt",
   "json": "telugu/narration/ch111.json",
-  "textHash": "fnv1a64:1e755eef8aee8d03",
-  "jsonHash": "fnv1a64:06aa7b87753698e3",
+  "textHash": "fnv1a64:d45be9ea01b6789d",
+  "jsonHash": "fnv1a64:c8af6736cf10fd82",
   "findings": []
 }

@@ -70,9 +70,9 @@ That is the clue to something
 worth naming outright. **Telugu is
 not in the same branch as Tamil, Kannada and Malayalam.** Those three are **South
 Dravidian**; Telugu heads **South-Central Dravidian**, with Gondi, Konda, Kui,
-Kuvi, Pengo and Manda. So the pattern was no run of accidents: *lēdu* against the
-sisters' *il-*, *uṇḍu* against their *iru*, *enimidi* and *tommidi* where *eṭṭu*
-and *oṉpatu* will not reach.
+Kuvi, Pengo and Manda. That is why so many everyday Telugu words look unlike
+the sisters' — *lēdu*, *uṇḍu*, *enimidi*, *tommidi* — even when DEDR files them
+with Tamil *il-*, *uṇṭu*, *eṭṭu* and old *toṇṭu*.
 
 ## The word, taken apart - and a question borrowed from far away
 <!-- hl-knowledge: introduces=[TE-ETYMON-C34-ADUGU-03]; assesses=[TE-ETYMON-C32-TINU-02] -->
@@ -90,7 +90,7 @@ and *bhōjanaṁ*, a third time.
 - [YOU SAY: the same wobble — "caduvutānu … cadivānu … cadavaṇḍi"]
 - [YOU SAY: four sisters, four verbs — "aḍugu … kēḷ … kēḷu … cōdikkuka"]
 - [YOU SAY: Telugu's own branch — "Gondi, Konda, Kui"]
-- [YOU SAY: what it explains — "lēdu … uṇḍu … enimidi, tommidi"]
+- [YOU SAY: words it explains — "lēdu … uṇḍu … enimidi, tommidi"]
 - [YOU SAY: the borrowed noun and its cousin — "praśna … pray"]
 
 ## Wrap-up Recall
@@ -100,6 +100,6 @@ and *bhōjanaṁ*, a third time.
 wanders its middle vowel. (*Aḍugutānu, aḍigānu, aḍagaṇḍi*; **చదువు**.) Do the four
 literary sisters share an ask-verb? (**No** — *aḍugu*, *kēḷ*, *kēḷu*,
 *cōdikkuka*.) Which branch is Telugu on, who is on it, and name two things that
-explains. (**South-Central Dravidian**, with Gondi, Konda and Kui; ***lēdu***
-against *il-*, ***uṇḍu*** against *iru*, ***enimidi*** and ***tommidi***.) Where
+explains. (**South-Central Dravidian**, with Gondi, Konda and Kui; why ***lēdu***,
+***uṇḍu***, ***enimidi*** and ***tommidi*** look unlike their Tamil cousins.) Where
 is *praśna* from? (**Sanskrit**, from the root behind English **pray**.)

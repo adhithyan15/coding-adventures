@@ -14,7 +14,8 @@ romanization: "pōṭīpaḍu"
 concept_tag: TE-VERB-POTIPADU
 prerequisites: [TE-C163-grahincu, TE-C163-pattincuko]
 sounds: []
-roots: []
+roots: [dravidian-potti-rivalry, dravidian-padu-suffer]
+etymology_hook: "pōṭīpaḍu: native pōṭi 'competition' (DEDR 4583) + paḍu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C163-pattincuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C163-KRIYA163-04]; assesses=[] -->
 
 **పోటీపడు** — *pōṭīpaḍu* — "to compete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోటీపడు** (*pōṭīpaḍu*) is native Dravidian: *pōṭī*, "competition", one word with Kannada *pōṭi*, "competition, rivalry" (DEDR 4583), and *paḍu*, "to undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

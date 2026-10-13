@@ -15,9 +15,9 @@ concept_tag: HI-NUMBERS-6-10
 prerequisites: [HI-C06-paanch-nasal]
 sounds: [matra-au, retroflex-tha]
 roots: [sanskrit-sas, sanskrit-sapta, sanskrit-ashta, sanskrit-nava, sanskrit-dasa]
-etymology_hook: "sapta → satta → सात sāt and aṣṭa → aṭṭha → आठ āṭh repeat EXACTLY the trīṇi→tiṇṇi→tīn mechanism from lesson 6 — a consonant cluster simplifies to a geminate, then the geminate simplifies again and the vowel lengthens to pay for it; nau (nine) shows a different fate entirely, an intervocalic -v- dissolving into a diphthong"
+etymology_hook: "sāt ← Sanskrit sapta (CDIAL 13139); chhah, āṭh, nau, das ← *kṣaṭ, aṣṭā, nava, daśa: all tadbhavas"
 duration:
-  max_seconds: 187
+  max_seconds: 214
 requires:
   knowledge: [HI-CONCEPT-C06-PAANCH-NASAL-01]
 introduces:
@@ -50,6 +50,11 @@ steps. Two more numbers here do exactly the same thing.
 | 8 | **आठ** | *āṭh* |
 | 9 | **नौ** | *nau* |
 | 10 | **दस** | *das* |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All five are tadbhavas: *chhah* from *\*kṣaṭ*, a variant CDIAL reconstructs beside *ṣaṭ*, "six" (CDIAL 12803); *sāt* from *sapta* (CDIAL 13139); *āṭh* from *aṣṭā* (CDIAL 941); *nau* from *nava* (CDIAL 6984); and *das* from *daśa* (CDIAL 6227).
 
 ## You'll want to know — sapta → satta → sāt, aṣṭa → aṭṭha → āṭh — the same mechanism again
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C21-NUMBERS-6-10-02]; assesses=[] -->

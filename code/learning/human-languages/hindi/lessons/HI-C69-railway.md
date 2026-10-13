@@ -14,7 +14,8 @@ romanization: "rel"
 concept_tag: HI-NOUN-RAILWAY
 prerequisites: [HI-C69-vehicle, HI-C68-english]
 sounds: []
-roots: []
+roots: [english-rail]
+etymology_hook: "rel ← English rail"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ matra, which is where an English *ay* sound usually lands in Devanagari.
 institution. The train itself is **रेलगाड़ी** — रेल plus the गाड़ी you learnt in
 the last lesson — and in speech people shorten that back to plain गाड़ी. Two
 words you now hold combine into the third without anything new.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेल** (*rel*) is a loan from English *rail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

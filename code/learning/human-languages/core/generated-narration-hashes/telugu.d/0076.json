@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 76,
-  "sourceHash": "fnv1a64:516263982b57a7b4",
+  "sourceHash": "fnv1a64:ee962accf4731dea",
   "lessonIds": [
     "TE-C76-very",
     "TE-C76-bad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch76.txt",
   "json": "telugu/narration/ch76.json",
-  "textHash": "fnv1a64:36b52588a705f144",
-  "jsonHash": "fnv1a64:2be43fa751cbde01",
+  "textHash": "fnv1a64:9cf00739e92d7c66",
+  "jsonHash": "fnv1a64:50107de1d4ec4e8a",
   "findings": []
 }

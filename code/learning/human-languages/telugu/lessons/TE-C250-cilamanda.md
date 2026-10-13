@@ -14,7 +14,8 @@ romanization: "cīlamaṇḍa"
 concept_tag: TE-AROGYAM250-CILAMANDA
 prerequisites: [TE-C250-araceyyi, TE-C250-madama]
 sounds: []
-roots: []
+roots: [dravidian-cilamande-ankle]
+etymology_hook: "cīlamaṇḍa: Dravidian; DEDR 2633 lists cīlamaṇḍa 'ankle' with Kannada cīlamaṇḍe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C250-madama]
 <!-- hl-knowledge: introduces=[TE-LEX-C250-AROGYAM250-03]; assesses=[] -->
 
 **చీలమండ** — *cīlamaṇḍa* — "the ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చీలమండ** (*cīlamaṇḍa*) is listed in DEDR 2633, "ankle", with Kannada *cīlamaṇḍe*, "ankle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

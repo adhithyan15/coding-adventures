@@ -14,7 +14,8 @@ romanization: "qilā"
 concept_tag: HI-THG202-QILA
 prerequisites: [HI-C202-gufa, HI-C202-mahal]
 sounds: []
-roots: []
+roots: [arabic-qala]
+etymology_hook: "qilā ← Arabic qalʿa 'fortress', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C202-mahal]
 <!-- hl-knowledge: introduces=[HI-LEX-C202-THG202-03]; assesses=[] -->
 
 **क़िला** — *qilā* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़िला** (*qilā*) is a loan from Arabic *qalʿa*, "fortress", which reached Hindi through Persian. Its Arabic root is *q-l-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

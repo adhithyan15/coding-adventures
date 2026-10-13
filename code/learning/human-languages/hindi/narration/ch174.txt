@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to choose, then the Hindi for to ask for.
 You'll want to know: लौटाना.
 लौटाना — lauṭānā — "to give back".
 
+The word, taken apart.
+लौटाना (lauṭānā) is the causing form of lauṭnā, "to come back": to give back is to make something return. The origin of lauṭnā is uncertain, and CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to ask for, then the Hindi for to give bac
 
 You'll want to know: सजाना.
 सजाना — sajānā — "to decorate".
+
+The word, taken apart.
+सजाना (sajānā) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, as the causing form of sājnā, "to prepare, decorate", under Sanskrit sajjayati, "equips, prepares" (CDIAL 13091).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to give back, then the Hindi for to decora
 You'll want to know: सँभालना.
 सँभालना — sãbhālnā — "to look after, to handle".
 
+The word, taken apart.
+सँभालना (sãbhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁbhārayati, "prepares, maintains" (CDIAL 12961). It is the causing form of saṁbharati, "brings together".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to decorate, then the Hindi for to look af
 You'll want to know: सुधारना.
 सुधारना — sudhārnā — "to improve, to correct".
 
+The word, taken apart.
+सुधारना (sudhārnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from śuddhakāra, "making clean", a form CDIAL reconstructs from its descendants (CDIAL 12521). It is built from śuddha, "pure", and kāra, "making".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to look after, then the Hindi for to impro
 
 You'll want to know: तोलना.
 तोलना — tolnā — "to weigh".
+
+The word, taken apart.
+तोलना (tolnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, "lifts, weighs, considers" (CDIAL 5979).
 
 What you've built.
 One more word for this chapter.

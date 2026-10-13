@@ -14,7 +14,8 @@ romanization: "registān"
 concept_tag: HI-THG201-REGISTAN
 prerequisites: [HI-C200-sima, HI-C200-dvip]
 sounds: []
-roots: []
+roots: [persian-registan]
+etymology_hook: "registān: usually traced to Persian rēgistān 'desert'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C200-dvip]
 <!-- hl-knowledge: introduces=[HI-LEX-C201-THG201-01]; assesses=[] -->
 
 **रेगिस्तान** — *registān* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेगिस्तान** (*registān*) is a loan, usually traced to Persian *rēgistān*, "desert". It is built from *rēg*, "sand", and *-stān*, "place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

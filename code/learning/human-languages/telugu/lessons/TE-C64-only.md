@@ -11,7 +11,8 @@ romanization: "mātramē"
 concept_tag: TE-WORD-ONLY
 prerequisites: [TE-C64-also]
 sounds: []
-roots: []
+roots: [sanskrit-matra]
+etymology_hook: "mātramē: Sanskrit mātrā 'measure' (CDIAL 10023) + the emphatic -ē"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C64-also]
 It is built on Sanskrit *mātra*, "a measure" — the same piece English carries in metre and in diameter. Saying మాత్రమే is saying "this much and no further".
 
 With a small quantity in front it does polite work. కొంచెం మాత్రమే, "only a little", accepts what is offered without taking much of it.
+
+CDIAL 10023 lists Sanskrit *mātrā*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

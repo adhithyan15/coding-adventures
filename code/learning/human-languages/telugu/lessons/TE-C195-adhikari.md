@@ -14,7 +14,8 @@ romanization: "adhikāri"
 concept_tag: TE-PANI195-ADHIKARI
 prerequisites: [TE-C194-vyapari, TE-C194-nanem]
 sounds: []
-roots: []
+roots: [sanskrit-adhikara]
+etymology_hook: "adhikāri ← Sanskrit adhikārin 'one in charge', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C194-nanem]
 <!-- hl-knowledge: introduces=[TE-LEX-C195-PANI195-01]; assesses=[] -->
 
 **అధికారి** — *adhikāri* — "an officer, an official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అధికారి** (*adhikāri*) is Sanskrit *adhikārin*, "one in charge, official", taken over as a learned loan, a tatsama, with the final *-n* dropped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

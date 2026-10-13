@@ -13,7 +13,8 @@ gloss: "an old man"
 concept_tag: LA-HOMINES2-SENEX
 prerequisites: [LA-C72-femina, LA-C73-puella]
 sounds: []
-roots: []
+roots: [senex-latin]
+etymology_hook: "senex 'old man' — inherited, usually traced to PIE *senos 'old'; senātus was the council of elders"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C73-puella]
 <!-- hl-knowledge: introduces=[LA-LEX-C73-HOMINES2-02]; assesses=[] -->
 
 **senex, senis** — "an old man". English *senior* and *senate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**senex** is inherited, usually traced to Proto-Indo-European *\*senos*, "old" (EtymDB 2.1). *senātus*, "the senate", was first the council of elders.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

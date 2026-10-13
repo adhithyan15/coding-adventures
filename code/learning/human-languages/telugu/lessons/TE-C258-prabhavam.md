@@ -14,7 +14,8 @@ romanization: "prabhāvaṁ"
 concept_tag: TE-KARANAM258-PRABHAVAM
 prerequisites: [TE-C258-paddhati, TE-C258-niyamam]
 sounds: []
-roots: []
+roots: [sanskrit-prabhava]
+etymology_hook: "prabhāvaṁ ← Sanskrit prabhāva 'power, influence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C258-niyamam]
 <!-- hl-knowledge: introduces=[TE-LEX-C258-KARANAM258-03]; assesses=[] -->
 
 **ప్రభావం** — *prabhāvaṁ* — "an effect, an influence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రభావం** (*prabhāvaṁ*) is Sanskrit *prabhāva*, "power, influence", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

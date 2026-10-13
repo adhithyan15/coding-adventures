@@ -14,7 +14,8 @@ romanization: "mohallā"
 concept_tag: HI-THG271-MOHALLA
 prerequisites: [HI-C271-byaj, HI-C271-kirayedar]
 sounds: []
-roots: []
+roots: [arabic-mahalla]
+etymology_hook: "mohallā ← Arabic maḥalla 'a quarter where people alight', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C271-kirayedar]
 <!-- hl-knowledge: introduces=[HI-LEX-C271-THG271-05]; assesses=[] -->
 
 **मोहल्ला** — *mohallā* — "a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोहल्ला** (*mohallā*) is a loan from Arabic *maḥalla*, "a quarter where people alight", which reached Hindi through Persian. Its Arabic root is *ḥ-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

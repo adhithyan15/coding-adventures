@@ -14,7 +14,8 @@ romanization: "surāhī"
 concept_tag: HI-THG270-SURAHI
 prerequisites: [HI-C270-dhakkan, HI-C270-jag]
 sounds: []
-roots: []
+roots: [arabic-surahi]
+etymology_hook: "surāhī ← Arabic ṣurāḥī 'a long-necked flask', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C270-jag]
 <!-- hl-knowledge: introduces=[HI-LEX-C270-THG270-04]; assesses=[] -->
 
 **सुराही** — *surāhī* — "a water jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुराही** (*surāhī*) is a loan from Arabic *ṣurāḥī*, "a long-necked flask", which reached Hindi through Persian. Its Arabic root is *ṣ-r-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

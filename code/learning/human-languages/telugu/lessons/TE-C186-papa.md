@@ -14,7 +14,8 @@ romanization: "pāpa"
 concept_tag: TE-VASTUVU186-PAPA
 prerequisites: [TE-C186-tallidandrulu, TE-C186-kavalalu]
 sounds: []
-roots: []
+roots: [dravidian-paapa-child]
+etymology_hook: "pāpa: native Dravidian; DEDR 4095 lists pāpa 'infant' with Kannada pāpa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C186-kavalalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C186-VASTUVU186-05]; assesses=[] -->
 
 **పాప** — *pāpa* — "a baby, a little one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాప** (*pāpa*) is native Dravidian. DEDR 4095 lists *pāpa*, "infant, child", with Kannada *pāpa*, "small child". CDIAL 8092 *pāpa*, "evil", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

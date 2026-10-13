@@ -11,7 +11,8 @@ romanization: "goḍḍali"
 concept_tag: TE-NOUN-AXE
 prerequisites: [TE-C68-message]
 sounds: []
-roots: []
+roots: [sanskrit-kuthara]
+etymology_hook: "goḍḍali: an Indo-Aryan loan (DEDR App. 32), from Sanskrit kuṭhāra 'axe', which CDIAL 3244 takes from Dravidian"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C68-message]
 The word is inherited and old. Its first piece turns up in other Telugu words about striking, so the name says plainly what the thing does.
 
 Asking for one is the ordinary polite request: దయచేసి, and then the word. The person hands it over handle first, and nobody throws a గొడ్డలి.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొడ్డలి** (*goḍḍali*) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 32), under Sanskrit *kuṭhāra*, "axe" (CDIAL 3244). CDIAL itself thinks *kuṭhāra* probably came from Dravidian, so the word may have gone north and come back. Tamil *kōṭāli* and Kannada *koḍali* are in the same appendix entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

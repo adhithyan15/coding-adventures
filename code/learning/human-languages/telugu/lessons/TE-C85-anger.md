@@ -11,7 +11,8 @@ romanization: "kōpaṁ"
 concept_tag: TE-WELLBEING-ANGER
 prerequisites: [TE-C85-heat, TE-C85-fear]
 sounds: []
-roots: []
+roots: [sanskrit-kopa]
+etymology_hook: "kōpaṁ ← Sanskrit kopa 'anger', a tatsama (CDIAL 3516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C85-fear]
 
 **నాకు కోపం వచ్చింది** — "I got angry", literally "to me anger came". Anger arrives the way a
 fever did, on the come-verb, and the person it happens to sits in the dative.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోపం** (*kōpaṁ*) is Sanskrit *kopa*, "anger", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

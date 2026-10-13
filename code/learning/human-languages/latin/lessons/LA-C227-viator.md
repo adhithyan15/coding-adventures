@@ -13,7 +13,8 @@ gloss: "a traveller"
 concept_tag: LA-RES227-VIATOR
 prerequisites: [LA-C227-hospitium, LA-C227-deversorium]
 sounds: []
-roots: []
+roots: [viator-latin, via-latin]
+etymology_hook: "viātor 'traveller' — built on viō 'to travel', from via 'road'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C227-deversorium]
 <!-- hl-knowledge: introduces=[LA-LEX-C227-RES227-05]; assesses=[] -->
 
 **viātor, viātōris** — "a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viātor** is built on *viō*, "to travel" (Lewis & Short), from *via*, "a road", with *-tor*, "one who does it". *via* is usually traced to Proto-Indo-European *\*wegh-*, "to go, to carry" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

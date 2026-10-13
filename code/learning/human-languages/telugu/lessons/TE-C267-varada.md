@@ -14,7 +14,8 @@ romanization: "varada"
 concept_tag: TE-VASTUVU267-VARADA
 prerequisites: [TE-C266-mogga, TE-C267-indradhanussu]
 sounds: []
-roots: []
+roots: [dravidian-varada-flood]
+etymology_hook: "varada: native Dravidian; DEDR 5323 lists vaṟada 'flood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C267-indradhanussu]
 <!-- hl-knowledge: introduces=[TE-LEX-C267-VASTUVU267-02]; assesses=[] -->
 
 **వరద** — *varada* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వరద** (*varada*) is native Dravidian. DEDR 5323 lists *vaṟada*, "flood, torrent", with Kuwi *vāru*, "flood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

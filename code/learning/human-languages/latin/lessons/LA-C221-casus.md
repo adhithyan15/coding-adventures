@@ -13,7 +13,8 @@ gloss: "an accident, a fall"
 concept_tag: LA-RES221-CASUS
 prerequisites: [LA-C221-eventus, LA-C221-fortuna]
 sounds: []
-roots: []
+roots: [casus-latin, cadere-latin]
+etymology_hook: "cāsus 'accident, fall' — built on cadō 'to fall'; English case"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C221-fortuna]
 <!-- hl-knowledge: introduces=[LA-LEX-C221-RES221-05]; assesses=[] -->
 
 **cāsus, cāsūs** — "an accident, a fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cāsus** is built on *cadō*, "to fall" (Lewis & Short): a falling, then what befalls. English *case* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

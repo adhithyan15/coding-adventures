@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 227,
-  "sourceHash": "fnv1a64:5eb04364a3507441",
+  "sourceHash": "fnv1a64:a6e2bea5fa8f9f6b",
   "lessonIds": [
     "HI-C227-phatna",
     "HI-C227-pharna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch227.txt",
   "json": "hindi/narration/ch227.json",
-  "textHash": "fnv1a64:b115e0bdb93d817a",
-  "jsonHash": "fnv1a64:046ce81c2b239462",
+  "textHash": "fnv1a64:39d94547ea9c5885",
+  "jsonHash": "fnv1a64:e0a15c6b06a9c77f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "niyam"
 concept_tag: HI-THG260-NIYAM
 prerequisites: [HI-C260-suvidha, HI-C260-asuvidha]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyam ← Sanskrit niyama 'restraint, rule', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C260-asuvidha]
 <!-- hl-knowledge: introduces=[HI-LEX-C260-THG260-03]; assesses=[] -->
 
 **नियम** — *niyam* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नियम** (*niyam*) is Sanskrit *niyama*, "restraint, rule", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

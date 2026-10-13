@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 182,
-  "sourceHash": "fnv1a64:00e299306f46782a",
+  "sourceHash": "fnv1a64:b5276182405a8978",
   "lessonIds": [
     "LA-C182-publicus",
     "LA-C182-privatus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch182.txt",
   "json": "latin/narration/ch182.json",
-  "textHash": "fnv1a64:aab264dd23b836fa",
-  "jsonHash": "fnv1a64:e4df5398cb85dee6",
+  "textHash": "fnv1a64:3166ae01a7068626",
+  "jsonHash": "fnv1a64:a5420c93252fe8ba",
   "findings": []
 }

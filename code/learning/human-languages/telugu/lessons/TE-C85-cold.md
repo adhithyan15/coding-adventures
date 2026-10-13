@@ -11,7 +11,8 @@ romanization: "cali"
 concept_tag: TE-WELLBEING-COLD
 prerequisites: [TE-C84-thirst, TE-C84-rest]
 sounds: []
-roots: []
+roots: [dravidian-cali-cold]
+etymology_hook: "cali: native Dravidian, one word with Tamil caḷi and Kannada cali 'cold' (DEDR 2408)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C84-rest]
 **ఇవాళ చలిగా ఉంది** — "it is cold today". **నాకు చలిగా ఉంది** — "I feel cold".
 
 The same frame again: with నాకు it is your body, without it it is the day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చలి** (*cali*) is native Dravidian, one word with Tamil *caḷi* and Kannada *cali*, "cold, chill" (DEDR 2408).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

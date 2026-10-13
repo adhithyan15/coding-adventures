@@ -13,7 +13,8 @@ gloss: "a branch"
 concept_tag: LA-THINGS129-RAMUS
 prerequisites: [LA-C128-rosa, LA-C128-lilium]
 sounds: []
-roots: []
+roots: [ramus-latin]
+etymology_hook: "rāmus 'branch' — probably kin to rādīx 'root', from PIE *wreh2d-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C128-lilium]
 <!-- hl-knowledge: introduces=[LA-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **rāmus, rāmī** — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rāmus** is probably related to *rādīx*, "root", from an older *\*rādmus* (Lewis & Short); both are traced to Proto-Indo-European *\*wreh2d-*, "root, branch" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

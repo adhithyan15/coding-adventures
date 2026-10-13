@@ -14,7 +14,8 @@ romanization: "balbu"
 concept_tag: TE-VASTUVU191-BALBU
 prerequisites: [TE-C190-tivaci, TE-C191-rabbaru]
 sounds: []
-roots: []
+roots: [english-bulb]
+etymology_hook: "balbu ← English bulb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C191-rabbaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C191-VASTUVU191-02]; assesses=[] -->
 
 **బల్బు** — *balbu* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బల్బు** (*balbu*) is a loan from English *bulb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

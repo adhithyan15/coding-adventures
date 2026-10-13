@@ -14,7 +14,8 @@ romanization: "kharc"
 concept_tag: HI-THG207-KHARC
 prerequisites: [HI-C207-kamai, HI-C207-bacat]
 sounds: []
-roots: []
+roots: [arabic-kharj]
+etymology_hook: "kharc ← Arabic kharj 'expenditure; tribute', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C207-bacat]
 <!-- hl-knowledge: introduces=[HI-LEX-C207-THG207-05]; assesses=[] -->
 
 **ख़र्च** — *kharc* — "expense, spending".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़र्च** (*kharc*) is a loan from Arabic *kharj*, "expenditure; tribute", which reached Hindi through Persian. Its Arabic root is *kh-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

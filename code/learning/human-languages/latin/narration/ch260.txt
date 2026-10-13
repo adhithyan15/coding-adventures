@@ -12,6 +12,9 @@ Before the new one: say the Latin for to give up, then the Latin for to exchange
 You'll want to know: exprimō, exprimere.
 exprimō, exprimere — "to press out, to express".
 
+The word, taken apart.
+exprimō is ex, "out", with premō, "to press" (Lewis & Short), its e weakened to i: to press out. English express comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to exchange, then the Latin for to press o
 
 You'll want to know: alō, alere.
 alō, alere — "to feed, to nourish".
+
+The word, taken apart.
+alō is inherited, usually traced to Proto-Indo-European h2el-, "to grow, to nourish" (EtymDB 2.1). Its old participle is altus, "grown tall, high".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to press out, then the Latin for to feed.
 You'll want to know: compōnō, compōnere.
 compōnō, compōnere — "to put together, to arrange".
 
+The word, taken apart.
+compōnō is con-, "together", with pōnō, "to put" (EtymDB 2.1). English compose and component come from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to feed, then the Latin for to put togethe
 You'll want to know: animadvertō, animadvertere.
 animadvertō, animadvertere — "to notice".
 
+The word, taken apart.
+animadvertō is contracted from animum advertō, "I turn the mind towards" (Lewis & Short): animus, "mind", and advertō, "to turn to".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to put together, then the Latin for to not
 
 You'll want to know: ērubēscō, ērubēscere.
 ērubēscō, ērubēscere — "to blush".
+
+The word, taken apart.
+ērubēscō is ex, "out", with rubēscō, "to grow red" (EtymDB 2.1), from ruber, "red".
 
 What you've built.
 One more word for this chapter.

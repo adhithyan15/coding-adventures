@@ -13,7 +13,8 @@ gloss: "a defendant"
 concept_tag: LA-RES218-REUS
 prerequisites: [LA-C218-passus, LA-C218-testis]
 sounds: []
-roots: []
+roots: [reus-latin, res-latin]
+etymology_hook: "reus 'defendant' — built on rēs 'matter, lawsuit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C218-testis]
 <!-- hl-knowledge: introduces=[LA-LEX-C218-RES218-03]; assesses=[] -->
 
 **reus, reī** — "a defendant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reus** is built on *rēs*, "a thing, a matter, a lawsuit" (Lewis & Short): the one the case concerns.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

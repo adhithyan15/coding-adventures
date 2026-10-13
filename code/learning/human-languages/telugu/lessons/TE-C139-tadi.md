@@ -14,7 +14,8 @@ romanization: "taḍi"
 concept_tag: TE-QUAL139-TADI
 prerequisites: [TE-C138-vedalpu, TE-C138-iruku]
 sounds: []
-roots: []
+roots: [dravidian-tan-cool]
+etymology_hook: "taḍi: native Dravidian; DEDR 3045 lists taḍi 'moisture, wet' with Tamil taṇ 'cool'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C138-iruku]
 <!-- hl-knowledge: introduces=[TE-LEX-C139-QUAL139-01]; assesses=[] -->
 
 **తడి** — *taḍi* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తడి** (*taḍi*) is native Dravidian. DEDR 3045 lists *taḍi*, "moisture, wet, damp", in an entry with Tamil *taṇ*, "cool". DEDR compares Prakrit *taṇṇāya*, "damp", and the northern words in CDIAL 13676.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
