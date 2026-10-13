@@ -13,7 +13,8 @@ gloss: "recently"
 concept_tag: IT-PAST137-RECENTEMENTE
 prerequisites: [IT-C137-gia, IT-C137-laltro-ieri]
 sounds: []
-roots: []
+roots: [recens-latin]
+etymology_hook: "recentemente — recente ← Latin recens + -mente, from Latin mente 'with a mind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C137-laltro-ieri]
 <!-- hl-knowledge: introduces=[IT-LEX-C137-PAST137-04]; assesses=[] -->
 
 **recentemente** — "recently". **Recentemente ho letto molto.** — "Recently I have read a lot." The ending **-mente** makes an adverb, the way English uses -ly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recentemente** — built from *recente*, "recent" ← Latin *recens* (EtymDB 2.1), with *-mente*, the adverb ending, which began as Latin *mente*, "with a mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "courage"
 concept_tag: IT-SAL216-CORAGGIO
 prerequisites: [IT-C215-pomata, IT-C216-fiducia]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "coraggio ← Old Provençal coratge, built on Latin cor 'heart' — English courage is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C216-fiducia]
 <!-- hl-knowledge: introduces=[IT-LEX-C216-SAL216-02]; assesses=[] -->
 
 **il coraggio** — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coraggio** ← Old Provençal *coratge*, "courage" — borrowed, built on Latin *cor*, "heart". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

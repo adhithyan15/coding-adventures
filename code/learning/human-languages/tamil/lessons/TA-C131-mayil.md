@@ -14,7 +14,8 @@ romanization: "mayil"
 concept_tag: TA-THINGS131-MAYIL
 prerequisites: [TA-C131-pura, TA-C131-antai]
 sounds: []
-roots: []
+roots: [dravidian-mayil-peacock]
+etymology_hook: "மயில் — native Dravidian (DEDR 4642); Malayalam mayil, Kannada mayla"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C131-antai]
 <!-- hl-knowledge: introduces=[TA-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **மயில்** — *mayil* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மயில்** (*mayil*) is native Dravidian. DEDR 4642 lists Malayalam *mayil* and Kannada *mayla*. The entry compares Sanskrit *mayūra*, "peacock" (CDIAL 9865).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-APPLAUDIR
 prerequisites: [FR-C207-epouser, FR-C207-divorcer]
 sounds: []
 roots: []
+etymology_hook: "applaudir ← Latin applaudere 'to clap the hands' — English applaud"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C207-divorcer]
 <!-- hl-knowledge: introduces=[FR-LEX-C208-VERBES208-01]; assesses=[] -->
 
 **applaudir** — "to applaud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**applaudir** ← Latin *applaudere*, "to clap the hands" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

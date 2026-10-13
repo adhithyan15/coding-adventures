@@ -13,7 +13,8 @@ gloss: "well known"
 concept_tag: GE-QUAL169-BEKANNT
 prerequisites: [GE-C168-voll, GE-C168-altmodisch]
 sounds: []
-roots: []
+roots: [germanic-kannijana]
+etymology_hook: "bekannt — a past participle built on kennen 'to know': known"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C168-altmodisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C169-QUAL169-01]; assesses=[] -->
 
 **bekannt** — "well known".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bekannt** is a past participle built on *kennen*, "to know" ← Old High German *kennan* ← Proto-Germanic *\*kannijaną* (EtymDB 2.1): known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

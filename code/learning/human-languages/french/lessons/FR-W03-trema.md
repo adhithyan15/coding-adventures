@@ -41,19 +41,19 @@ otherwise get wrong: **do these two vowels blend, or not?**
 ## You'll want to know: the problem the trema solves
 <!-- hl-knowledge: introduces=[FR-SCRIPT-TREMA-10]; assesses=[] -->
 
-French loves to fuse vowel pairs into one sound: *ai* = *eh*, *au* = *oh*, *ou* =
-*oo*, *oi* = *wa*. Usually that's what you want. But sometimes two vowels really
-should be sounded **separately** — and the tréma is how the spelling says so:
+French loves to fuse vowel pairs into one sound: *a-i* says *eh*, *a-u* *oh*,
+*o-u* *oo*, *o-i* *wa*. Usually that's what you want. But sometimes two vowels
+really should be sounded **separately** — and the tréma is how the spelling says so:
 **"break these apart; pronounce the marked vowel on its own."**
 
 - **naïve** = *na-**EEV*** (na-i, two syllables) — not "nave." (English kept the
   dots: *naïve*.)
 - **Noël** = *no-**EL*** ("Christmas") — *o* and *e* separately, not "nurl."
-- **maïs** = *ma-**EES*** ("corn") — vs **mais** (*meh*, "but"). The two dots are
-  the *only* difference, and they flip the meaning.
+- **maïs** = *ma-**EES*** ("corn"). Without the dots the same letters blend to
+  *meh*, a different word: the dots flip the meaning.
 - **Citroën**, **Israël**, **égoïste** — same rule: split the vowels.
 
-So the tréma is the **opposite** of a blend instruction: where *ai* says "merge,"
+So the tréma is the **opposite** of a blend instruction: where *a-i* says "merge,"
 *aï* says "don't."
 
 ## Writing: the trema
@@ -69,7 +69,7 @@ it. Same two dots, opposite purpose — that's the next lesson.)
 
 [PAUSE 1s]
 - [YOU SAY: "naïve" = na-EEV, "Noël" = no-EL — two syllables each]
-- [YOU SAY: "maïs" (ma-EES, corn) vs "mais" (meh, but) — the dots flip it]
+- [YOU SAY: "maïs" (ma-EES, corn), then the blended *meh* the dots forbid]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-SCRIPT-TREMA-10] -->

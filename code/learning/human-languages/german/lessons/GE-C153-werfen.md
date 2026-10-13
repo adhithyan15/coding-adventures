@@ -13,7 +13,8 @@ gloss: "to throw"
 concept_tag: GE-VERB-WERFEN
 prerequisites: [GE-C153-wandern, GE-C153-wechseln]
 sounds: []
-roots: []
+roots: [germanic-werpana]
+etymology_hook: "werfen ← Old High German werfan ← Proto-Germanic *werpaną 'to throw' — the same verb as English warp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C153-wechseln]
 <!-- hl-knowledge: introduces=[GE-LEX-C153-VERB153-03]; assesses=[] -->
 
 **werfen** — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**werfen** ← Old High German *werfan* ← Proto-Germanic *\*werpaną*, "to throw, to turn" — inherited, the same verb as English *warp*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a flower"
 concept_tag: PT-NATUREZA1-FLOR
 prerequisites: [PT-C55-viajar, PT-C56-arvore]
 sounds: []
-roots: []
+roots: [flos-latin]
+etymology_hook: "flor ← Latin flos, floris 'flower' — English floral and flourish share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C56-arvore]
 <!-- hl-knowledge: introduces=[PT-LEX-C56-NATUREZA1-02]; assesses=[] -->
 
 **a flor** — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flor** ← Latin *flos, floris*, "flower" (EtymDB 2.1) — inherited. It kept its *fl-*, though Latin *fl-* usually became *ch-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

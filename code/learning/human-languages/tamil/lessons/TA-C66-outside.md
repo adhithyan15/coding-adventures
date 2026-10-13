@@ -11,7 +11,8 @@ romanization: "veḷiyē"
 concept_tag: TA-ADVERB-VELIYE
 prerequisites: [TA-C66-inside, TA-C64-threshing-floor, TA-C65-open]
 sounds: []
-roots: []
+roots: [dravidian-veli-outside]
+etymology_hook: "வெளியே — native Dravidian (DEDR 5498); Malayalam veḷi 'outside'"
 duration:
   max_seconds: 225
 requires:
@@ -44,6 +45,11 @@ word built the same way: **வெளி** (*veḷi*, "the open, the outside") pl
 **வெளியே போ** (*veḷiyē pō*) — "go out". Put it beside **உள்ளே வா** and you have
 a matched pair of instructions, each one an old verb with a new word in front
 of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெளியே** (*veḷiyē*) is native Dravidian. DEDR 5498 lists Malayalam *veḷi*, "outside". The entry glosses *veḷi* "outside, open space".
 
 ## Why it's said this way: what the ending does to a word ending in a vowel
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-04] -->

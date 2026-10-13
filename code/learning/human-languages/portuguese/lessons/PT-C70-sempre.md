@@ -13,7 +13,8 @@ gloss: "always"
 concept_tag: PT-QUANDO1-SEMPRE
 prerequisites: [PT-C70-manha, PT-C70-minuto]
 sounds: []
-roots: []
+roots: [semper-latin]
+etymology_hook: "sempre ← Latin semper 'always' — English sempiternal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C70-minuto]
 <!-- hl-knowledge: introduces=[PT-LEX-C70-QUANDO1-05]; assesses=[] -->
 
 **sempre** — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sempre** ← Latin *semper*, "always" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

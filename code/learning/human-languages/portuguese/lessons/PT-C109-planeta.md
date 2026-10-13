@@ -13,7 +13,8 @@ gloss: "a planet"
 concept_tag: PT-COMIDA109-PLANETA
 prerequisites: [PT-C109-noz, PT-C109-pimenta]
 sounds: []
-roots: []
+roots: [planeta-latin]
+etymology_hook: "planeta ← Latin planeta, from Greek planetes 'wanderer' — English planet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C109-pimenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C109-COMIDA109-05]; assesses=[] -->
 
 **o planeta** — "a planet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**planeta** ← Latin *planeta*, "planet" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *planētēs*, "wanderer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

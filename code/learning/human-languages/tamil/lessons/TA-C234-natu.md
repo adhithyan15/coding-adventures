@@ -14,7 +14,8 @@ romanization: "nāṭu"
 concept_tag: TA-IDAM234-NATU
 prerequisites: [TA-C234-ancalakam, TA-C234-nakaram]
 sounds: []
-roots: []
+roots: [dravidian-naadu-country]
+etymology_hook: "நாடு — native Dravidian (DEDR 3638); Malayalam nāṭu, Kannada nāḍu, Telugu nāḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C234-nakaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C234-IDAM234-03]; assesses=[] -->
 
 **நாடு** — *nāṭu* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாடு** (*nāṭu*) is native Dravidian. DEDR 3638 lists Malayalam *nāṭu*, Kannada *nāḍu* and Telugu *nāḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭa"
 concept_tag: TA-VERB-KATA
 prerequisites: [TA-C161-arai, TA-C161-kalakku]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "கட — native Dravidian (DEDR 1109); Malayalam kaṭakka 'to pass over', Kannada kaḍe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C161-kalakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C162-ACT162-01]; assesses=[] -->
 
 **கட** — *kaṭa* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட** (*kaṭa*) is native Dravidian. DEDR 1109 lists Malayalam *kaṭakka*, "to pass over" and Kannada *kaḍe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

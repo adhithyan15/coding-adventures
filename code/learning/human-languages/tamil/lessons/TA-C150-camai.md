@@ -14,7 +14,8 @@ romanization: "camai"
 concept_tag: TA-VERB-CAMAI
 prerequisites: [TA-C150-campal, TA-C150-patu]
 sounds: []
-roots: []
+roots: [dravidian-camai-prepare]
+etymology_hook: "சமை — native Dravidian (DEDR 2342)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C150-patu]
 <!-- hl-knowledge: introduces=[TA-LEX-C150-QUAL150-04]; assesses=[] -->
 
 **சமை** — *camai* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சமை** (*camai*) is native Dravidian (DEDR 2342). The entry glosses *camai* "to be made, to get ready, to prepare": cooking is preparing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

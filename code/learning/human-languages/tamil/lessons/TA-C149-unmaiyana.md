@@ -14,7 +14,8 @@ romanization: "uṇmaiyāṉa"
 concept_tag: TA-QUAL149-UNMAIYANA
 prerequisites: [TA-C149-apattana, TA-C149-patukappana]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "உண்மையான — native Dravidian (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C149-patukappana]
 <!-- hl-knowledge: introduces=[TA-LEX-C149-QUAL149-04]; assesses=[] -->
 
 **உண்மையான** — *uṇmaiyāṉa* — "true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உண்மையான** (*uṇmaiyāṉa*) is native Dravidian (DEDR 697). It is *uṇmai*, "truth", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "mutalil"
 concept_tag: TA-REPLY-FIRST-OF-ALL
 prerequisites: [TA-C62-at-once, TA-C60-comb, TA-C61-pain]
 sounds: []
-roots: []
+roots: [dravidian-mutal-beginning]
+etymology_hook: "முதலில் — native: mutal 'beginning, first' (DEDR 4950) + the locative -il 'in'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C62-at-once]
 Before anything else. It puts an order on things that had none: முதலில் தண்ணீர், பிறகு சாதம் — water to begin with, and the rice after.
 
 With this one you can lay out a sequence end to end: முதலில், then உடனே or சீக்கிரம் for what follows fast, then பிறகு for what can wait.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதலில்** (*mutalil*) is native: *mutal*, "beginning, first" (DEDR 4950), with the locative *-il*, "in": "in the first place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

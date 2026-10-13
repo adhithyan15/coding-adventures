@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 217,
-  "sourceHash": "fnv1a64:eecbc7f16c401d7f",
+  "sourceHash": "fnv1a64:0ad635a630d374fc",
   "lessonIds": [
     "GE-C217-kaputt",
     "GE-C217-klug",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch217.txt",
   "json": "german/narration/ch217.json",
-  "textHash": "fnv1a64:6bd4a7271578fd2c",
-  "jsonHash": "fnv1a64:33352a61a342444d",
+  "textHash": "fnv1a64:9c704b91a2743a08",
+  "jsonHash": "fnv1a64:5f27b97ae51775bc",
   "findings": []
 }

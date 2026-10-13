@@ -13,7 +13,8 @@ gloss: "to repair; to notice"
 concept_tag: PT-VERB-REPARAR
 prerequisites: [PT-C133-descer, PT-C133-alugar]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "reparar ← Latin reparare 'to restore, to make ready again' — English repair"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C133-alugar]
 <!-- hl-knowledge: introduces=[PT-LEX-C133-VERBOS133-03]; assesses=[] -->
 
 **reparar** — "to repair; to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reparar** ← Latin *reparare*, "to restore, to get back" (Lewis & Short) — a learned borrowing from Latin. The sense "to notice" grew later. EtymDB 2.1 traces it only to Old Portuguese *reparar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

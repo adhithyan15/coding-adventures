@@ -13,7 +13,8 @@ gloss: "to continue"
 concept_tag: FR-VERB-CONTINUER
 prerequisites: [FR-C144-decider, FR-C144-essayer]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "continuer ← Latin continuare 'to join together' — English continue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C144-essayer]
 <!-- hl-knowledge: introduces=[FR-LEX-C144-VERBES144-05]; assesses=[] -->
 
 **continuer** — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**continuer** ← Latin *continuare*, "to join together" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

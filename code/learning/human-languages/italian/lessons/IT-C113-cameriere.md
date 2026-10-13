@@ -13,7 +13,8 @@ gloss: "a waiter"
 concept_tag: IT-LAVORO113-CAMERIERE
 prerequisites: [IT-C112-pompiere, IT-C113-postino]
 sounds: []
-roots: []
+roots: [latin-camera]
+etymology_hook: "cameriere — first the servant of the camera 'room', from Latin camera ← Greek kamara 'vault'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C113-postino]
 <!-- hl-knowledge: introduces=[IT-LEX-C113-LAVORO113-02]; assesses=[] -->
 
 **il cameriere** — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cameriere** — built from *camera*, "room", with *-iere*, the ending for a man who does a job: first the servant of the rooms. *camera* ← Latin *camera*, "a vault", from Greek *kamara*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

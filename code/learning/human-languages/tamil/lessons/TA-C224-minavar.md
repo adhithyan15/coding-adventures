@@ -14,7 +14,8 @@ romanization: "mīṉavar"
 concept_tag: TA-VELAI224-MINAVAR
 prerequisites: [TA-C223-patam, TA-C223-vittuppatam]
 sounds: []
-roots: []
+roots: [dravidian-miin-fish]
+etymology_hook: "மீனவர் — native Dravidian (DEDR 4885)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C223-vittuppatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C224-VELAI224-01]; assesses=[] -->
 
 **மீனவர்** — *mīṉavar* — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மீனவர்** (*mīṉavar*) is native Dravidian (DEDR 4885). It is *mīṉ*, "fish", with the respectful *-avar*: "fish people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naṭaṉamāṭu"
 concept_tag: TA-VERB-NATANAMATU
 prerequisites: [TA-C165-kontatu, TA-C165-alankari]
 sounds: []
-roots: []
+roots: [sanskrit-natana, dravidian-aadu-move]
+etymology_hook: "நடனமாடு — naṭaṉam ← Sanskrit naṭana 'dance' + native āṭu 'to dance, move' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C165-alankari]
 <!-- hl-knowledge: introduces=[TA-LEX-C165-ACT165-04]; assesses=[] -->
 
 **நடனமாடு** — *naṭaṉamāṭu* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடனமாடு** (*naṭaṉamāṭu*) is *naṭaṉam*, "dance", a well-established loan from Sanskrit *naṭana*, with native *āṭu*, "to dance, to move" (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

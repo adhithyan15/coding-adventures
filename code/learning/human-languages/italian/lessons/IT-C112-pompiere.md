@@ -14,6 +14,7 @@ concept_tag: IT-LAVORO112-POMPIERE
 prerequisites: [IT-C112-avvocato, IT-C112-ingegnere]
 sounds: []
 roots: []
+etymology_hook: "pompiere ← French pompier 'the pump man' — from the days of hand pumps"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C112-ingegnere]
 <!-- hl-knowledge: introduces=[IT-LEX-C112-LAVORO112-05]; assesses=[] -->
 
 **il pompiere** — "a firefighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pompiere** ← French *pompier*, "a pump man", built on *pompe*, "pump" — borrowed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a washbasin"
 concept_tag: PT-COISAS229-LAVATORIO
 prerequisites: [PT-C228-duzia, PT-C228-metade]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavatório ← Late Latin lavatorium 'washing place' — English lavatory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C228-metade]
 <!-- hl-knowledge: introduces=[PT-LEX-C229-COISAS229-01]; assesses=[] -->
 
 **o lavatório** — "a washbasin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavatório** ← Late Latin *lavatorium*, "washing place" (EtymDB 2.1) — a learned borrowing from Late Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

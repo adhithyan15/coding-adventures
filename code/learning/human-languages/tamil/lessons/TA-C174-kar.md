@@ -14,7 +14,8 @@ romanization: "kār"
 concept_tag: TA-IDAM174-KAR
 prerequisites: [TA-C174-pataku, TA-C174-mitivanti]
 sounds: []
-roots: []
+roots: [english-car]
+etymology_hook: "கார் ← English car"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C174-mitivanti]
 <!-- hl-knowledge: introduces=[TA-LEX-C174-IDAM174-03]; assesses=[] -->
 
 **கார்** — *kār* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கார்** (*kār*) is a loan from English *car*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

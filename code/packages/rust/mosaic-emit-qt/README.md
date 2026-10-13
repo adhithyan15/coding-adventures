@@ -191,6 +191,11 @@ behavior; partial or unsupported combinations remain reported degradations.
 | `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
 | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |
 
+An exact `width: 100%` on `Input`, `HostInput`, or `HostButton` lowers to
+`Layout.fillWidth: true`. This lowering is deliberately limited to controls
+whose width states either omit `width` or repeat `100%`; other percentages,
+intrinsic widths, and mixed fixed/fill states remain reported degradations.
+
 **`HostButton` (`Button` from Controls):**
 
 | moslayout prop          | QML output             |

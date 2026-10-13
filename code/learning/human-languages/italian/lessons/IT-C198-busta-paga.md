@@ -13,7 +13,8 @@ gloss: "a pay slip"
 concept_tag: IT-COSE198-BUSTA-PAGA
 prerequisites: [IT-C197-fila, IT-C198-cartella]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "busta paga — 'pay envelope'; pagare 'to pay' goes back to Latin pax 'peace'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C198-cartella]
 <!-- hl-knowledge: introduces=[IT-LEX-C198-COSE198-02]; assesses=[] -->
 
 **la busta paga** — "a pay slip".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**busta paga** is "pay envelope": *busta* ← Old French *boiste*, "a box"; *paga*, "pay", is the noun of *pagare*, "to pay", which EtymDB 2.1 traces to Latin *pax*, "peace": paying a creditor made peace with him.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

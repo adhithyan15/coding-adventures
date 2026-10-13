@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 177,
-  "sourceHash": "fnv1a64:e573e7ba90af4b7d",
+  "sourceHash": "fnv1a64:256d891b81e74078",
   "lessonIds": [
     "GE-C177-bewerben",
     "GE-C177-biegen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch177.txt",
   "json": "german/narration/ch177.json",
-  "textHash": "fnv1a64:83c20e551eb42522",
-  "jsonHash": "fnv1a64:ffd0a4bc6f428b87",
+  "textHash": "fnv1a64:133a73473a184355",
+  "jsonHash": "fnv1a64:7a7691bce97e5607",
   "findings": []
 }

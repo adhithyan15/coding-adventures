@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [TA-C02-enna]
 sounds: [e-interrogative]
 roots: [e-interrogative-dravidian]
+etymology_hook: "எப்படி — native: the question base e- + paḍi 'manner'; DEDR 5151 lists eppaṭi itself"
 reviews_of: [TA-C02-enna]
 duration:
   max_seconds: 240

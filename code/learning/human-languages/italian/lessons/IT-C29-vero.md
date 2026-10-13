@@ -13,7 +13,7 @@ sounds: [v-clear, open-e]
 roots: []
 etymology_hook: "vero is Latin vērus, 'true' — the same root as English very, verify and verdict (vērē dictum, 'truly said')"
 duration:
-  max_seconds: 250
+  max_seconds: 290
 requires:
   knowledge: [IT-LEX-DACCORDO-02, IT-ETYMON-DACCORDO-03, IT-TASK-C28-ORDINE-02, IT-LEX-INCONTRARE-02, IT-ETYMON-INCONTRARE-03, IT-NOTICE-INCONTRARE-04, IT-LEX-GIOCARE-02, IT-ETYMON-GIOCARE-03, IT-GRAMMAR-GIOCARE-04, IT-LEX-C04-PRACTICE-02, IT-NOTICE-C04-PRACTICE-03]
 introduces:
@@ -51,6 +51,11 @@ reviews_of: [IT-C29-daccordo, IT-C28-practice, IT-C20-incontrare, IT-C21-giocare
 
 It behaves as any describing word does and changes its ending with what it
 describes, exactly as *primo / prima* did.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vero** ← Latin *verus*, "true" — inherited. (EtymDB 2.1)
 
 ## Grammar lens: the turn it does at the end of a sentence
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-VERO-03]; assesses=[] -->

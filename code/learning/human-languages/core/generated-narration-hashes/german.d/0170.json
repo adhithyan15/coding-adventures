@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 170,
-  "sourceHash": "fnv1a64:35bcbb6dd3a2f42e",
+  "sourceHash": "fnv1a64:4494d9c5b96853eb",
   "lessonIds": [
     "GE-C170-selten",
     "GE-C170-meistens",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch170.txt",
   "json": "german/narration/ch170.json",
-  "textHash": "fnv1a64:d8778a5a997eff8e",
-  "jsonHash": "fnv1a64:50e73694e2822891",
+  "textHash": "fnv1a64:fe0be4725e3013dc",
+  "jsonHash": "fnv1a64:403fffaea0b05603",
   "findings": []
 }

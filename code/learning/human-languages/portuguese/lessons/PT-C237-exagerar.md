@@ -13,7 +13,8 @@ gloss: "to exaggerate"
 concept_tag: PT-VERB-EXAGERAR
 prerequisites: [PT-C236-ultrapassar, PT-C237-destruir]
 sounds: []
-roots: []
+roots: [exaggerare-latin]
+etymology_hook: "exagerar ← Latin exaggerare 'to heap up' — English exaggerate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C237-destruir]
 <!-- hl-knowledge: introduces=[PT-LEX-C237-VERBOS237-02]; assesses=[] -->
 
 **exagerar** — "to exaggerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exagerar** ← Latin *exaggerare*, "to heap up" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

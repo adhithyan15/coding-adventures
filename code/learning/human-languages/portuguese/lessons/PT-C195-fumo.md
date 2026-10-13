@@ -13,7 +13,8 @@ gloss: "smoke"
 concept_tag: PT-COISAS195-FUMO
 prerequisites: [PT-C195-lama, PT-C195-po]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fumo ← Latin fumus 'smoke' — English fume shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C195-po]
 <!-- hl-knowledge: introduces=[PT-LEX-C195-COISAS195-03]; assesses=[] -->
 
 **o fumo** — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumo** ← Latin *fumus*, "smoke" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

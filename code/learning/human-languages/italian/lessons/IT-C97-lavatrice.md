@@ -14,6 +14,7 @@ concept_tag: IT-CASA97-LAVATRICE
 prerequisites: [IT-C97-spazzatura, IT-C97-scopa]
 sounds: []
 roots: []
+etymology_hook: "lavatrice — built from lavare 'to wash' with -trice, the ending for a female doer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C97-scopa]
 <!-- hl-knowledge: introduces=[IT-LEX-C97-CASA97-04]; assesses=[] -->
 
 **la lavatrice** — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavatrice** — built from *lavare*, "to wash", with *-trice*, the ending for a female doer. EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

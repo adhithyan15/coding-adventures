@@ -13,7 +13,8 @@ gloss: "a discount"
 concept_tag: IT-COSE197-SCONTO
 prerequisites: [IT-C197-consiglio, IT-C197-promessa]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "sconto — s- 'off' + conto 'a reckoning': taken off the bill — English discount"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C197-promessa]
 <!-- hl-knowledge: introduces=[IT-LEX-C197-COSE197-03]; assesses=[] -->
 
 **lo sconto** — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sconto** is *s-*, "off", plus *conto*, "a reckoning": a sum taken off the bill. EtymDB 2.1 has no row for its origin; German *Skonto* is the same word, taken from Italian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

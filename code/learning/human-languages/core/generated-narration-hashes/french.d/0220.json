@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 220,
-  "sourceHash": "fnv1a64:82cf42899922ff75",
+  "sourceHash": "fnv1a64:3ed13d46ce017313",
   "lessonIds": [
     "FR-C220-ponctuel-ponctuelle",
     "FR-C220-etranger-etrangere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch220.txt",
   "json": "french/narration/ch220.json",
-  "textHash": "fnv1a64:47477bf569e68e23",
-  "jsonHash": "fnv1a64:d26321b738bb04e0",
+  "textHash": "fnv1a64:22623d8089edd5a8",
+  "jsonHash": "fnv1a64:af23037936055655",
   "findings": []
 }

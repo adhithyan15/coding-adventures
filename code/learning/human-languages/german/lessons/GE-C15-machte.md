@@ -13,7 +13,7 @@ sounds: [ch-ach, final-te]
 roots: [germanic-makon]
 etymology_hook: "machte and gemacht are built from the same stem by two different machines, and the stem itself never notices: German marks its past on the outside of a weak verb, never inside it"
 duration:
-  max_seconds: 150
+  max_seconds: 176
 requires:
   knowledge: [GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ER-01, GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01]
 introduces:
@@ -58,6 +58,11 @@ without a list.
 > *er machte das* · *er hat das gemacht*
 
 Same person, same event, two tenses.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**machte** is the stem of *machen* + the past ending *-te*. *machen* is the same verb as English *make*, which EtymDB 2.1 traces to Proto-Germanic *\*makōną*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MACHTE-01, GE-GRAMMAR-PERFEKT-ER-01] -->

@@ -13,7 +13,8 @@ gloss: "to cool down"
 concept_tag: PT-VERB-ARREFECER
 prerequisites: [PT-C201-secar, PT-C202-aquecer]
 sounds: []
-roots: []
+roots: [frigus-latin]
+etymology_hook: "arrefecer — a- + an old verb from Latin refrigescere 'to grow cool'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C202-aquecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C202-VERBOS202-02]; assesses=[] -->
 
 **arrefecer** — "to cool down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrefecer** is built from *a-* and an old verb from Latin *refrigescere*, "to grow cool" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uṇmaiyil"
 concept_tag: TA-KARANAM207-UNMAIYIL
 prerequisites: [TA-C207-appatiyanal, TA-C207-kittattatta]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "உண்மையில் — native Dravidian (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C207-kittattatta]
 <!-- hl-knowledge: introduces=[TA-LEX-C207-KARANAM207-03]; assesses=[] -->
 
 **உண்மையில்** — *uṇmaiyil* — "actually, in fact".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உண்மையில்** (*uṇmaiyil*) is native Dravidian (DEDR 697). It is *uṇmai*, "truth", with the locative *-il*: "in truth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

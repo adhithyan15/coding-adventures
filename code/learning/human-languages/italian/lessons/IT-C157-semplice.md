@@ -13,7 +13,8 @@ gloss: "simple"
 concept_tag: IT-QUAL157-SEMPLICE
 prerequisites: [IT-C156-maleducato, IT-C156-antipatico]
 sounds: []
-roots: []
+roots: [simplex-latin]
+etymology_hook: "semplice ← Latin simplex 'single, simple' — English simple is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C156-antipatico]
 <!-- hl-knowledge: introduces=[IT-LEX-C157-QUAL157-01]; assesses=[] -->
 
 **semplice** — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semplice** ← Latin *simplex*, "single, simple" (*simplicem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

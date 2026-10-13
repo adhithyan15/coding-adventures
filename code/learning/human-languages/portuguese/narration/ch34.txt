@@ -10,7 +10,11 @@ Warm-up.
 Before the new one: say the Portuguese for the throat, then the Portuguese for the stomach.
 
 You'll want to know: a dor.
-a dor — "pain". dor de cabeça: a headache.
+a dor — "pain". Put it with cabeça, "head", and you have a headache:
+dor + de + cabeça becomes dor de cabeça.
+
+The word, taken apart.
+dor from Latin dolor, "pain" (EtymDB 2.1) — inherited. The Latin -l- between vowels fell out: dolor became Old Portuguese door, then dor.
 
 What you've built.
 One more word for this chapter.
@@ -41,6 +45,9 @@ Before the new one: say the Portuguese for the stomach, then the Portuguese for 
 You'll want to know: a febre.
 a febre — "a fever".
 
+The word, taken apart.
+febre from Latin febris, "fever" — inherited. EtymDB 2.1 traces it only to Old Portuguese febre; it derives Italian febbre and Catalan febre from febris.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +76,9 @@ Before the new one: say the Portuguese for pain, then the Portuguese for a fever
 
 You'll want to know: a tosse.
 a tosse — "a cough".
+
+The word, taken apart.
+tosse from Latin tussis, "cough" (EtymDB 2.1) — inherited.
 
 What you've built.
 One more word for this chapter.
@@ -99,6 +109,9 @@ Before the new one: say the Portuguese for a fever, then the Portuguese for a co
 You'll want to know: o remédio.
 o remédio — "medicine".
 
+The word, taken apart.
+remédio from Latin remedium, "cure" (EtymDB 2.1), from re-, "again", and mederi, "to heal" — a learned borrowing from Latin. An inherited word would have lost the -d- between vowels.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +140,9 @@ Before the new one: say the Portuguese for a cough, then the Portuguese for medi
 
 You'll want to know: o hospital.
 o hospital — "a hospital".
+
+The word, taken apart.
+hospital from Latin hospitalis, "of guests" (Lewis & Short), from hospes, "guest" — a learned borrowing from Latin.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ippōtellām"
 concept_tag: TA-NERAM262-IPPOTELLAM
 prerequisites: [TA-C262-tamatamaka, TA-C262-kataiciyaka]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-podu-time, dravidian-ella-all]
+etymology_hook: "இப்போதெல்லாம் — native: ippōtu 'now' (DEDR 410, 4559) + ellām 'all' (DEDR 844)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C262-kataiciyaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C262-NERAM262-05]; assesses=[] -->
 
 **இப்போதெல்லாம்** — *ippōtellām* — "these days, nowadays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இப்போதெல்லாம்** (*ippōtellām*) is native: *ippōtu*, "now", from *i-*, "this" (DEDR 410), and *pōtu*, "time" (DEDR 4559), with *ellām*, "all" (DEDR 844): "all these times".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

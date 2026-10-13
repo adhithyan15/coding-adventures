@@ -13,7 +13,8 @@ gloss: "a roundabout"
 concept_tag: IT-COSE199-ROTONDA
 prerequisites: [IT-C199-casco, IT-C199-galleria]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "rotonda — the feminine of rotondo 'round', from Latin rotundus — English rotunda"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C199-galleria]
 <!-- hl-knowledge: introduces=[IT-LEX-C199-COSE199-03]; assesses=[] -->
 
 **la rotonda** — "a roundabout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rotonda** is the feminine of *rotondo*, "round", used as a noun: a round place. *rotondo* ← Latin *rotundus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

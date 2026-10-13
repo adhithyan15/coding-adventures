@@ -14,7 +14,8 @@ romanization: "cila nēraṅkaḷil"
 concept_tag: TA-NERAM171-CILA-NERANKALIL
 prerequisites: [TA-C170-mulai, TA-C171-atikkati]
 sounds: []
-roots: []
+roots: [dravidian-cil-few, dravidian-neram-time]
+etymology_hook: "சில நேரங்களில் — native: cila 'some' (DEDR 1571; Malayalam cila) + nēram 'time' (DEDR 3774)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C171-atikkati]
 <!-- hl-knowledge: introduces=[TA-LEX-C171-NERAM171-02]; assesses=[] -->
 
 **சில நேரங்களில்** — *cila nēraṅkaḷil* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சில நேரங்களில்** (*cila nēraṅkaḷil*) is native: *cila*, "some" (DEDR 1571; Malayalam *cila*), and *nēram*, "time" (DEDR 3774), plural and locative: "at some times".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

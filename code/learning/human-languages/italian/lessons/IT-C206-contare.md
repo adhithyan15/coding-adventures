@@ -13,7 +13,8 @@ gloss: "to count"
 concept_tag: IT-VERB-CONTARE
 prerequisites: [IT-C206-riempire, IT-C206-svuotare]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "contare ← Latin computare 'to reckon' — English count and compute share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C206-svuotare]
 <!-- hl-knowledge: introduces=[IT-LEX-C206-VERBI206-04]; assesses=[] -->
 
 **contare** — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contare** ← Latin *computare*, "to reckon" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

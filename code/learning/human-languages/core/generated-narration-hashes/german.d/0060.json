@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 60,
-  "sourceHash": "fnv1a64:76b1cd9f6f79539c",
+  "sourceHash": "fnv1a64:90d0cd78d0502cad",
   "lessonIds": [
     "GE-C60-gesund",
     "GE-C60-durst",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch60.txt",
   "json": "german/narration/ch60.json",
-  "textHash": "fnv1a64:e6a4441458c21c81",
-  "jsonHash": "fnv1a64:44c87e992132f6c7",
+  "textHash": "fnv1a64:0f06938e13d64075",
+  "jsonHash": "fnv1a64:d439df098263cab3",
   "findings": []
 }

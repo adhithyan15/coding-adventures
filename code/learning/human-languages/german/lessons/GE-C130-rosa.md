@@ -13,7 +13,8 @@ gloss: "pink"
 concept_tag: GE-FARBE130-ROSA
 prerequisites: [GE-C129-konzert, GE-C129-fest, GE-C06-ein-eine, GE-C06-sieben]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "rosa — Latin rosa 'rose': the colour of the rose"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C129-fest]
 <!-- hl-knowledge: introduces=[GE-LEX-C130-FARBE130-01]; assesses=[] -->
 
 **rosa** — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rosa** is Latin *rosa*, "rose": the colour of the flower — borrowed. EtymDB 2.1 has the German word but not its Latin source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

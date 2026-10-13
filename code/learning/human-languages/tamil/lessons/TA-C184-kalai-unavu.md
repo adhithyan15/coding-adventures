@@ -14,7 +14,8 @@ romanization: "kālai uṇavu"
 concept_tag: TA-PORUL184-KALAI-UNAVU
 prerequisites: [TA-C183-poriyal, TA-C184-panikkatti]
 sounds: []
-roots: []
+roots: [dravidian-un-eat]
+etymology_hook: "காலை உணவு — kālai 'morning' (origin uncertain) + native uṇavu 'food', from uṇ 'to eat' (DEDR 600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C184-panikkatti]
 <!-- hl-knowledge: introduces=[TA-LEX-C184-PORUL184-02]; assesses=[] -->
 
 **காலை உணவு** — *kālai uṇavu* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காலை உணவு** (*kālai uṇavu*) is *kālai*, "morning", and native *uṇavu*, "food", from *uṇ*, "to eat" (DEDR 600). The origin of *kālai* is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

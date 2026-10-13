@@ -14,7 +14,8 @@ romanization: "viṇṇappi"
 concept_tag: TA-VERB-VINNAPPI
 prerequisites: [TA-C227-pativu-cey, TA-C227-munpativu-cey]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapana]
+etymology_hook: "விண்ணப்பி — from viṇṇappam 'petition' ← Sanskrit vijñāpana 'a request', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C227-munpativu-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C227-ACT227-05]; assesses=[] -->
 
 **விண்ணப்பி** — *viṇṇappi* — "to apply (for a job, a loan)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விண்ணப்பி** (*viṇṇappi*) is a verb made from *viṇṇappam*, "petition", a well-established loan from Sanskrit *vijñāpana*, "a request, a making known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

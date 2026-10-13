@@ -13,7 +13,8 @@ gloss: "silk"
 concept_tag: IT-COSE230-SETA
 prerequisites: [IT-C230-cotone, IT-C230-lana]
 sounds: []
-roots: []
+roots: [saeta-latin]
+etymology_hook: "seta ← Latin saeta 'a bristle' — Latin ae became Italian e"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C230-lana]
 <!-- hl-knowledge: introduces=[IT-LEX-C230-COSE230-05]; assesses=[] -->
 
 **la seta** — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seta** ← Latin *saeta*, "a bristle, silk" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

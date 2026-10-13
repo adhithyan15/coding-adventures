@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 123,
-  "sourceHash": "fnv1a64:5653058b950d7fab",
+  "sourceHash": "fnv1a64:11dc1545a786b1d8",
   "lessonIds": [
     "GE-C123-butter",
     "GE-C123-sosse",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch123.txt",
   "json": "german/narration/ch123.json",
-  "textHash": "fnv1a64:4b682487010decd1",
-  "jsonHash": "fnv1a64:d891dc88b9dafbcd",
+  "textHash": "fnv1a64:3289c2ff1090ad35",
+  "jsonHash": "fnv1a64:da744c4018380528",
   "findings": []
 }

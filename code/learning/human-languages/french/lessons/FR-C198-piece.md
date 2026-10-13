@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES198-PIECE
 prerequisites: [FR-C198-reduction, FR-C198-soldes]
 sounds: []
 roots: []
+etymology_hook: "pièce ← Late Latin pettia 'a piece', from Gaulish — English piece"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C198-soldes]
 <!-- hl-knowledge: introduces=[FR-LEX-C198-CHOSES198-04]; assesses=[] -->
 
 **la pièce** — "a coin, a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pièce** ← Old French *piece* ← Late Latin *pettia*, "a piece", from Gaulish — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

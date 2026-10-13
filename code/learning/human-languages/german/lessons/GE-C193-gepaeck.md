@@ -14,6 +14,7 @@ concept_tag: GE-THING193-GEPAECK
 prerequisites: [GE-C193-unterkunft, GE-C193-jugendherberge]
 sounds: []
 roots: []
+etymology_hook: "Gepäck — ge- + the word for 'pack': everything packed together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C193-jugendherberge]
 <!-- hl-knowledge: introduces=[GE-LEX-C193-THING193-05]; assesses=[] -->
 
 **das Gepäck** — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gepäck** is *ge-*, the gathering prefix, + the word for "a pack" (EtymDB 2.1 has the word), the same word as English *pack*: everything packed together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

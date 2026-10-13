@@ -13,7 +13,8 @@ gloss: "plastic"
 concept_tag: PT-COISAS251-PLASTICO
 prerequisites: [PT-C250-espinho, PT-C251-gas]
 sounds: []
-roots: []
+roots: [plasticus-latin]
+etymology_hook: "plástico ← Latin plasticus, from Greek plastikos 'fit for moulding' — English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C251-gas]
 <!-- hl-knowledge: introduces=[PT-LEX-C251-COISAS251-02]; assesses=[] -->
 
 **o plástico** — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plástico** ← Latin *plasticus*, "of moulding" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *plastikos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

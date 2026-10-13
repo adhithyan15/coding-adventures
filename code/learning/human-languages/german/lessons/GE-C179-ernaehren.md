@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ERNAEHREN
 prerequisites: [GE-C179-erinnern, GE-C179-erlauben]
 sounds: []
 roots: []
+etymology_hook: "ernähren — er- + nähren 'to feed', from Old High German nerien 'to keep alive'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C179-erlauben]
 <!-- hl-knowledge: introduces=[GE-LEX-C179-VERB179-04]; assesses=[] -->
 
 **ernähren** — "to feed, to nourish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ernähren** is *er-* + the verb "to feed, to nourish", which grew out of Old High German *nerien*, "to save, to keep alive" ← Proto-Germanic *\*nazjaną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

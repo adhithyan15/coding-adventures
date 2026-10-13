@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 81,
-  "sourceHash": "fnv1a64:b9221930f9189023",
+  "sourceHash": "fnv1a64:dd7361f06fd3e994",
   "lessonIds": [
     "FR-C81-arbre",
     "FR-C81-fleur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch81.txt",
   "json": "french/narration/ch81.json",
-  "textHash": "fnv1a64:b307aade6a71b33b",
-  "jsonHash": "fnv1a64:ead06f92804ba163",
+  "textHash": "fnv1a64:daf9ad29360ab02d",
+  "jsonHash": "fnv1a64:10788327713bf20a",
   "findings": []
 }

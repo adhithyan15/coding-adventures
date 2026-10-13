@@ -13,7 +13,8 @@ gloss: "a thief"
 concept_tag: GE-THING207-DIEB
 prerequisites: [GE-C207-krankenwagen, GE-C207-feuerwehr]
 sounds: []
-roots: []
+roots: [germanic-theubaz]
+etymology_hook: "Dieb ← Old High German diob — the same word as English thief"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C207-feuerwehr]
 <!-- hl-knowledge: introduces=[GE-LEX-C207-THING207-03]; assesses=[] -->
 
 **der Dieb** — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dieb** ← Middle High German *diep* ← Old High German *diob* — inherited, the same word as English *thief* and Gothic *þiufs*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

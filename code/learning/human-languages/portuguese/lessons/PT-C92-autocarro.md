@@ -13,7 +13,8 @@ gloss: "a bus"
 concept_tag: PT-VIAGEM92-AUTOCARRO
 prerequisites: [PT-C92-navio, PT-C92-barco]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "autocarro = auto- (from Greek autos 'self') + carro 'car': a self-moving car"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C92-barco]
 <!-- hl-knowledge: introduces=[PT-LEX-C92-VIAGEM92-04]; assesses=[] -->
 
 **o autocarro** — "a bus". In Brazil, **o ônibus**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autocarro** is built from *auto-*, as in automobile (from Greek *autos*, "self"), and *carro*, "car".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-QUAL169-STOLZ
 prerequisites: [GE-C169-fremd, GE-C169-nervoes]
 sounds: []
 roots: []
+etymology_hook: "stolz ← Old High German stolz 'proud' — the origin of the word is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C169-nervoes]
 <!-- hl-knowledge: introduces=[GE-LEX-C169-QUAL169-04]; assesses=[] -->
 
 **stolz** — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stolz** ← Middle High German *stolz* ← Old High German *stolz*, "proud" (EtymDB 2.1). Where the Old High German word came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

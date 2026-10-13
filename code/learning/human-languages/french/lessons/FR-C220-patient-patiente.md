@@ -13,7 +13,8 @@ gloss: "patient"
 concept_tag: FR-QUAL220-PATIENT-PATIENTE
 prerequisites: [FR-C220-aimable, FR-C220-honnete]
 sounds: []
-roots: []
+roots: [pati-latin]
+etymology_hook: "patient ← Latin patiens 'enduring', from pati 'to suffer' — English patient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C220-honnete]
 <!-- hl-knowledge: introduces=[FR-LEX-C220-QUAL220-05]; assesses=[] -->
 
 **patient / patiente** — "patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patient** ← Latin *patiens*, *patientis*, "enduring", from *pati*, "to suffer" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

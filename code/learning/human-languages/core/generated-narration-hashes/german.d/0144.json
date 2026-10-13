@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 144,
-  "sourceHash": "fnv1a64:bd302c90a34647e3",
+  "sourceHash": "fnv1a64:a16e09716b38c87d",
   "lessonIds": [
     "GE-C144-aendern",
     "GE-C144-anrufen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch144.txt",
   "json": "german/narration/ch144.json",
-  "textHash": "fnv1a64:ff7d9bb5b29dd9ee",
-  "jsonHash": "fnv1a64:731962fc2d5b7ae4",
+  "textHash": "fnv1a64:cfc40a9ba20a5ae7",
+  "jsonHash": "fnv1a64:2441b22fbbeb488f",
   "findings": []
 }

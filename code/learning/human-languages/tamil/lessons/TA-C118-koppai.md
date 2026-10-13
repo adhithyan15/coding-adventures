@@ -14,7 +14,8 @@ romanization: "kōppai"
 concept_tag: TA-THINGS118-KOPPAI
 prerequisites: [TA-C118-pattiram, TA-C118-tattu]
 sounds: []
-roots: []
+roots: [portuguese-copo]
+etymology_hook: "கோப்பை ← Portuguese copo 'cup, glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C118-tattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **கோப்பை** — *kōppai* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோப்பை** (*kōppai*) is a loan from Portuguese *copo*, "cup, glass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

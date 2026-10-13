@@ -13,7 +13,8 @@ gloss: "to improve"
 concept_tag: PT-VERB-MELHORAR
 prerequisites: [PT-C175-faltar, PT-C175-merecer]
 sounds: []
-roots: []
+roots: [melior-latin]
+etymology_hook: "melhorar ← Late Latin meliorare, from melior 'better' — English ameliorate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C175-merecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C175-VERBOS175-05]; assesses=[] -->
 
 **melhorar** — "to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**melhorar** ← Late Latin *meliorare*, "to make better" (EtymDB 2.1), from *melior*, "better" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

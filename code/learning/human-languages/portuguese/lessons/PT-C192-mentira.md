@@ -13,7 +13,8 @@ gloss: "a lie"
 concept_tag: PT-COISAS192-MENTIRA
 prerequisites: [PT-C191-sogra, PT-C191-sogro]
 sounds: []
-roots: []
+roots: [mentiri-latin]
+etymology_hook: "mentira — built from the verb to lie, which ← Latin mentiri 'to lie'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C191-sogro]
 <!-- hl-knowledge: introduces=[PT-LEX-C192-COISAS192-01]; assesses=[] -->
 
 **a mentira** — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mentira** is built from the verb "to lie" (EtymDB 2.1), which ← Latin *mentiri*, "to lie" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

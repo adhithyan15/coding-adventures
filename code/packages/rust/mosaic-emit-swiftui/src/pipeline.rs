@@ -2334,6 +2334,22 @@ fn push_swiftui_animation(
     }
 }
 
+/// Lower Mosaic's portable elevation intent to a SwiftUI shadow.
+///
+/// The y offsets (4 / 16) match the depth constants used by XAML, Compose,
+/// Qt, and Flutter. SwiftUI's shadow API also needs a blur radius and color,
+/// so use the same 8 / 24 softness and 25% black used by Flutter's native
+/// elevation lowering. The authored CSS `box-shadow` value is deliberately
+/// not parsed here: `elevation` is the portable signal, while arbitrary and
+/// inset CSS shadows remain explicit drawing-effect debt.
+fn swiftui_elevation_shadow(value: &str) -> Option<&'static str> {
+    match value.trim().trim_matches('"') {
+        "raised" => Some("color: Color.black.opacity(0.25), radius: 8, x: 0, y: 4"),
+        "overlay" => Some("color: Color.black.opacity(0.25), radius: 24, x: 0, y: 16"),
+        _ => None,
+    }
+}
+
 /// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
 ///
 /// Each modifier renders on its own line, prefixed by `\n` + an indent of
@@ -2359,6 +2375,7 @@ fn push_swiftui_animation(
 /// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
 /// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | `elevation: raised\|overlay`                    | `.shadow(color:..., radius: 8\|24, x: 0, y: 4\|16)`             |
 /// | `opacity: N`                                   | `.opacity(N)`                                                    |
 /// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
@@ -2371,7 +2388,7 @@ fn push_swiftui_animation(
 ///
 /// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
 /// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
-/// → `.border` → `.opacity`. Content styling and sizing come BEFORE paint
+/// → `.border` → `.shadow` → `.opacity`. Content styling and sizing come BEFORE paint
 /// so the background fills, and the border strokes, the full frame rather
 /// than a text-sized box. See the inline comment in the emission body.
 ///
@@ -2526,6 +2543,7 @@ fn swiftui_modifier_chain_with_drops(
     // `100vh`/`100%` is not a number, so it cannot share a PropBucket with
     // the point values (#14837).
     let mut min_height_fills = false;
+    let mut elevation = PropBucket::new(layer_count);
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
@@ -2692,6 +2710,16 @@ fn swiftui_modifier_chain_with_drops(
             "opacity" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut opacity, v);
+                }
+            }
+            // Elevation is base-only on every native backend. A conditional
+            // shadow would need separate parameter buckets and a no-shadow
+            // sentinel that SwiftUI does not expose as a single modifier.
+            "elevation" if layer_idx.is_none() => {
+                if let Some(args) = swiftui_elevation_shadow(&p.value) {
+                    set(&mut elevation, args.to_string());
+                } else {
+                    dropped.push(p.clone());
                 }
             }
             "text-align"
@@ -3101,7 +3129,18 @@ fn swiftui_modifier_chain_with_drops(
         );
     }
 
-    // 8. .opacity — compositing applies to the fully styled part.
+    // 8. .shadow — elevation belongs outside the painted surface so it
+    // follows the final rounded/background/border silhouette.
+    if !elevation.empty() {
+        let args = layer_value(
+            &elevation,
+            state_layers,
+            "color: Color.clear, radius: 0, x: 0, y: 0",
+        );
+        out.push_str(&format!("\n{pad}.shadow({args})"));
+    }
+
+    // 9. .opacity — compositing applies to the fully styled part.
     if !opacity.empty() {
         let expr = layer_value(&opacity, state_layers, "1");
         out.push_str(&format!("\n{pad}.opacity({expr})"));
@@ -3179,6 +3218,18 @@ pub fn dropped_style_properties(
             }
             if (drop.name == "gap" && consumed_gap.contains(part.name.as_str()))
                 || (drop.name == "align" && consumed_align.contains(part.name.as_str()))
+            {
+                continue;
+            }
+            // Web-facing CSS shadows and the portable elevation token are
+            // authored together. A supported elevation tier now emits the
+            // equivalent native depth, so only a non-inset companion is
+            // consumed. Standalone and inset shadows stay honest debt.
+            if drop.name == "box-shadow"
+                && !drop.value.to_ascii_lowercase().contains("inset")
+                && base.iter().any(|prop| {
+                    prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
+                })
             {
                 continue;
             }
@@ -3298,6 +3349,9 @@ fn swiftui_drop_reason(name: &str) -> &'static str {
              coordinate space"
         }
         "box-shadow" => "no direct equivalent; SwiftUI uses .shadow with separate arguments",
+        "elevation" => {
+            "only the supported Mosaic elevation tokens `raised` and `overlay` lower to SwiftUI shadows"
+        }
         "border-style" => "SwiftUI .border draws a solid stroke only",
         "border-collapse" | "text-overflow" | "white-space" | "overflow" | "cursor" => {
             "no SwiftUI concept"
@@ -16444,6 +16498,58 @@ mod tests {
         assert_eq!(drops[0].value, "0 1px 2px #000");
         // The reason must say something actionable, not just "unsupported".
         assert!(drops[0].reason.contains(".shadow"), "got: {drops:?}");
+    }
+
+    #[test]
+    fn elevation_tokens_emit_native_shadows_after_surface_paint() {
+        let raised = swiftui_modifier_chain(
+            &[
+                sp("background", "#ffffff"),
+                sp("border-radius", "8px"),
+                sp("elevation", "raised"),
+            ],
+            &[],
+            0,
+            None,
+        );
+        assert!(
+            raised.contains(".shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 4)"),
+            "got:\n{raised}"
+        );
+        assert!(
+            raised.find(".cornerRadius(8)").unwrap() < raised.find(".shadow(").unwrap(),
+            "the native shadow must follow the final surface silhouette:\n{raised}"
+        );
+
+        let overlay = swiftui_modifier_chain(&[sp("elevation", "overlay")], &[], 0, None);
+        assert!(
+            overlay.contains(".shadow(color: Color.black.opacity(0.25), radius: 24, x: 0, y: 16)"),
+            "got:\n{overlay}"
+        );
+    }
+
+    #[test]
+    fn native_elevation_consumes_only_its_non_inset_css_companion() {
+        let drops = drops_for(vec![
+            ("elevation", "raised"),
+            ("box-shadow", "0 4px 8px rgba(0,0,0,.2)"),
+        ]);
+        assert!(drops.is_empty(), "got: {drops:?}");
+
+        let inset = drops_for(vec![
+            ("elevation", "raised"),
+            ("box-shadow", "5px -5px 0 0 #fff inset"),
+        ]);
+        assert_eq!(inset.len(), 1, "got: {inset:?}");
+        assert_eq!(inset[0].name, "box-shadow");
+    }
+
+    #[test]
+    fn unsupported_elevation_value_remains_a_drop() {
+        let drops = drops_for(vec![("elevation", "floaty")]);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "elevation");
+        assert!(drops[0].reason.contains("raised"), "got: {drops:?}");
     }
 
     #[test]

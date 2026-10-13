@@ -14,6 +14,7 @@ concept_tag: FR-NATURE34-PLAGE
 prerequisites: [FR-C82-pierre, FR-C82-sable]
 sounds: []
 roots: []
+etymology_hook: "plage ← Italian piaggia 'a sloping shore' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C82-sable]
 <!-- hl-knowledge: introduces=[FR-LEX-C82-NATURE34-04]; assesses=[] -->
 
 **la plage** — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plage** ← Italian *piaggia*, "a sloping shore" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

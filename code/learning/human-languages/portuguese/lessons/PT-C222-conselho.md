@@ -13,7 +13,8 @@ gloss: "a piece of advice"
 concept_tag: PT-COISAS222-CONSELHO
 prerequisites: [PT-C221-noiva, PT-C221-viuvo-a-viuva]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "conselho ← Latin consilium 'plan, advice, council' — English counsel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C221-viuvo-a-viuva]
 <!-- hl-knowledge: introduces=[PT-LEX-C222-COISAS222-01]; assesses=[] -->
 
 **o conselho** — "a piece of advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conselho** ← Latin *consilium*, "plan, advice" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

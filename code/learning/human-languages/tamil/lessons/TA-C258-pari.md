@@ -14,7 +14,8 @@ romanization: "paṟi"
 concept_tag: TA-VERB-PARI
 prerequisites: [TA-C257-muttamitu, TA-C258-uruku]
 sounds: []
-roots: []
+roots: [dravidian-pari-pluck]
+etymology_hook: "பறி — native Dravidian (DEDR 4027); Malayalam paṟikka 'to pluck', Kannada paṟi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C258-uruku]
 <!-- hl-knowledge: introduces=[TA-LEX-C258-ACT258-02]; assesses=[] -->
 
 **பறி** — *paṟi* — "to pick, to pluck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பறி** (*paṟi*) is native Dravidian. DEDR 4027 lists Malayalam *paṟikka*, "to pluck" and Kannada *paṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

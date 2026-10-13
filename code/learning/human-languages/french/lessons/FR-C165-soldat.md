@@ -13,7 +13,8 @@ gloss: "a soldier"
 concept_tag: FR-CHOSES165-SOLDAT
 prerequisites: [FR-C165-paix, FR-C165-armee]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "soldat ← Italian soldato 'one who is paid', from Late Latin solidus, a coin — English soldier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C165-armee]
 <!-- hl-knowledge: introduces=[FR-LEX-C165-CHOSES165-04]; assesses=[] -->
 
 **le soldat** — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soldat** ← Italian *soldato*, "one who is paid", from *soldo*, "pay", ← Late Latin *solidus*, a gold coin — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS48-JAMAIS
 prerequisites: [FR-C95-matin, FR-C95-toujours]
 sounds: []
 roots: []
+etymology_hook: "jamais ← Old French ja mais 'ever more', from Latin iam + magis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C95-toujours]
 <!-- hl-knowledge: introduces=[FR-LEX-C96-TEMPS48-01]; assesses=[] -->
 
 **jamais** — "never; ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jamais** ← Old French *ja mais*, "ever more" (EtymDB 2.1), from Latin *iam*, "already", and *magis*, "more" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a reason"
 concept_tag: PT-PORQUE84-RAZAO
 prerequisites: [PT-C83-desejar, PT-C83-desejo]
 sounds: []
-roots: []
+roots: [ratio-latin]
+etymology_hook: "razão ← Latin ratio, rationis 'reckoning, reason' — English ratio and reason"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C83-desejo]
 <!-- hl-knowledge: introduces=[PT-LEX-C84-PORQUE84-01]; assesses=[] -->
 
 **a razão** — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**razão** ← Latin *ratio, rationis*, "reckoning, reason" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

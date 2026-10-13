@@ -13,7 +13,8 @@ gloss: "a customer"
 concept_tag: IT-LAVORO113-CLIENTE
 prerequisites: [IT-C113-postino, IT-C113-cameriere]
 sounds: []
-roots: []
+roots: [cliens-latin]
+etymology_hook: "cliente ← Latin cliens 'a client, a follower', a learned word — English client is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C113-cameriere]
 <!-- hl-knowledge: introduces=[IT-LEX-C113-LAVORO113-03]; assesses=[] -->
 
 **il cliente** — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cliente** ← Latin *cliens*, *clientis*, "a client, a follower" — a learned borrowing. EtymDB 2.1 has no row for *cliente*; it derives French *client* from *cliens*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

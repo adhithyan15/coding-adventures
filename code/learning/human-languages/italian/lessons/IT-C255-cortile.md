@@ -14,6 +14,7 @@ concept_tag: IT-COSE255-CORTILE
 prerequisites: [IT-C255-cancello, IT-C255-recinzione]
 sounds: []
 roots: []
+etymology_hook: "cortile — corte 'a court' + -ile: an inner yard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C255-recinzione]
 <!-- hl-knowledge: introduces=[IT-LEX-C255-COSE255-04]; assesses=[] -->
 
 **il cortile** — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cortile** — built from *corte*, "a court", with *-ile*: a small court. *corte* ← Latin *cortem*, "an enclosed yard". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

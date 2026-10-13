@@ -13,7 +13,8 @@ gloss: "a glass"
 concept_tag: GE-GESCHIRR-GLAS
 prerequisites: [GE-C79-tasse, GE-C79-teller]
 sounds: []
-roots: []
+roots: [germanic-glasa]
+etymology_hook: "Glas ← Old High German glas ← Proto-Germanic *glasą — the same word as English glass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C79-teller]
 <!-- hl-knowledge: introduces=[GE-LEX-C79-GESCHIRR-03]; assesses=[] -->
 
 **das Glas** — "a glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Glas** ← Old High German *glas* ← Proto-Germanic *\*glasą* — inherited, the same word as English *glass*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

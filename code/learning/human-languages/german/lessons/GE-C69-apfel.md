@@ -13,7 +13,8 @@ gloss: "an apple"
 concept_tag: GE-ESSEN1-APFEL
 prerequisites: [GE-C69-huhn, GE-C69-obst]
 sounds: []
-roots: []
+roots: [germanic-aplaz]
+etymology_hook: "Apfel ← Old High German apful ← Proto-Germanic *aplaz — the same word as English apple, with pf for pp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C69-obst]
 <!-- hl-knowledge: introduces=[GE-LEX-C69-ESSEN1-05]; assesses=[] -->
 
 **der Apfel** — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Apfel** ← Old High German *apful* ← Proto-Germanic *\*aplaz* — inherited, the same word as English *apple*, with German *pf* where English kept *p*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

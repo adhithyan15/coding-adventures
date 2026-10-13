@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 179,
-  "sourceHash": "fnv1a64:c93f9605dcab8f94",
+  "sourceHash": "fnv1a64:f8d93297b00a4e8b",
   "lessonIds": [
     "PT-C179-agir",
     "PT-C179-avancar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch179.txt",
   "json": "portuguese/narration/ch179.json",
-  "textHash": "fnv1a64:8cb97ff8a24380a1",
-  "jsonHash": "fnv1a64:8f5a5eef6a7b7c83",
+  "textHash": "fnv1a64:727eb62aae01a230",
+  "jsonHash": "fnv1a64:079408a94e84393e",
   "findings": []
 }

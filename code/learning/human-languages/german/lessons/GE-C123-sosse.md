@@ -13,7 +13,8 @@ gloss: "a sauce"
 concept_tag: GE-ESSEN123-SOSSE
 prerequisites: [GE-C122-broetchen, GE-C123-butter]
 sounds: []
-roots: []
+roots: [salsus-latin]
+etymology_hook: "Soße ← French sauce ← Latin salsa 'salted' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C123-butter]
 <!-- hl-knowledge: introduces=[GE-LEX-C123-ESSEN123-02]; assesses=[] -->
 
 **die Soße** — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Soße** ← French *sauce* ← Latin *salsa*, "salted (thing)" (EtymDB 2.1) — borrowed, like English *sauce*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

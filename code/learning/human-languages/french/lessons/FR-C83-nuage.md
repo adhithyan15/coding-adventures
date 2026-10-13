@@ -13,7 +13,8 @@ gloss: "a cloud"
 concept_tag: FR-NATURE35-NUAGE
 prerequisites: [FR-C83-soleil, FR-C83-etoile]
 sounds: []
-roots: []
+roots: [nubes-latin]
+etymology_hook: "nuage — Old French nue 'cloud' + -age; nue ← Latin nubes 'cloud' — English nebula is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C83-etoile]
 <!-- hl-knowledge: introduces=[FR-LEX-C83-NATURE35-03]; assesses=[] -->
 
 **le nuage** — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuage** — built from Old French *nue*, "a cloud", with *-age*; *nue* ← Vulgar Latin *\*nuba* ← Latin *nubes*, "cloud". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

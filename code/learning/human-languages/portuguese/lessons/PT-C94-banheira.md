@@ -13,7 +13,8 @@ gloss: "a bathtub"
 concept_tag: PT-CASA94-BANHEIRA
 prerequisites: [PT-C93-forno, PT-C94-duche]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "banheira — built from the bath word (← Latin balneum 'bath') + -eira"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C94-duche]
 <!-- hl-knowledge: introduces=[PT-LEX-C94-CASA94-02]; assesses=[] -->
 
 **a banheira** — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banheira** is built from the word for a bath and *-eira*. The bath word ← Vulgar Latin *\*baneum*, from Latin *balneum*, "bath" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

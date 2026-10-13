@@ -11,7 +11,8 @@ romanization: "moḻi"
 concept_tag: TA-ABOUT-LANGUAGE
 prerequisites: [TA-C103-familyname, TA-C103-petname]
 sounds: []
-roots: []
+roots: [dravidian-mozhi-word]
+etymology_hook: "மொழி — native Dravidian (DEDR 4989); Malayalam moḻi 'word'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C103-petname]
 **மொழி** (*moḻi*) — "a language".
 
 **தமிழ் என் மொழி** — "Tamil is my language". **தாய்மொழி** is "mother tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மொழி** (*moḻi*) is native Dravidian. DEDR 4989 lists Malayalam *moḻi*, "word". The entry glosses *moḻi* "to say, to speak; word, language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

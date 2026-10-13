@@ -13,7 +13,8 @@ gloss: "a leg"
 concept_tag: FR-CORPS1-JAMBE
 prerequisites: [FR-C40-monsieur, FR-C49-bras]
 sounds: []
-roots: []
+roots: [gamba-latin]
+etymology_hook: "jambe ← Late Latin gamba 'hoof, leg' — English gammon (a leg of ham) is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C49-bras]
 <!-- hl-knowledge: introduces=[FR-LEX-C49-CORPS1-02]; assesses=[] -->
 
 **la jambe** — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jambe** ← Late Latin *gamba*, "a hoof, a leg" (Lewis & Short) — inherited: Latin *g* before *a* softened to the French *j*. EtymDB 2.1 traces Italian *gamba* to the same Late Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

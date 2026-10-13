@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 61,
-  "sourceHash": "fnv1a64:3a70bd14f4c4b9d5",
+  "sourceHash": "fnv1a64:5345dc6a7a5cc681",
   "lessonIds": [
     "GE-C61-angst",
     "GE-C61-freude",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch61.txt",
   "json": "german/narration/ch61.json",
-  "textHash": "fnv1a64:87a7de97d3141bd1",
-  "jsonHash": "fnv1a64:0b661c4fe9b25e00",
+  "textHash": "fnv1a64:554e852c2c7b9e44",
+  "jsonHash": "fnv1a64:5debf94fad18bed0",
   "findings": []
 }

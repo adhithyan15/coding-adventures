@@ -14,6 +14,7 @@ concept_tag: PT-COISAS254-BACALHAU
 prerequisites: [PT-C254-camarao, PT-C254-atum]
 sounds: []
 roots: []
+etymology_hook: "bacalhau — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C254-atum]
 <!-- hl-knowledge: introduces=[PT-LEX-C254-COISAS254-04]; assesses=[] -->
 
 **o bacalhau** — "salt cod".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bacalhau** — its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

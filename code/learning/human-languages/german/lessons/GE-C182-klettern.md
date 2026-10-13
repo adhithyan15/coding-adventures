@@ -14,6 +14,7 @@ concept_tag: GE-VERB-KLETTERN
 prerequisites: [GE-C181-informieren, GE-C182-kaempfen]
 sounds: []
 roots: []
+etymology_hook: "klettern — a word of uncertain origin, perhaps from Klette 'burr', clinging as you climb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C182-kaempfen]
 <!-- hl-knowledge: introduces=[GE-LEX-C182-VERB182-02]; assesses=[] -->
 
 **klettern** — "to climb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**klettern** is of uncertain origin. One account ties it to the word for "a burr", Old High German *kletta* (EtymDB 2.1), as if climbing were clinging; EtymDB has no source for *klettern* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

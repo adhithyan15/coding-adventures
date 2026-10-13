@@ -13,7 +13,8 @@ gloss: "society"
 concept_tag: FR-CHOSES222-SOCIETE
 prerequisites: [FR-C221-bouton, FR-C221-peche]
 sounds: []
-roots: []
+roots: [socius-latin]
+etymology_hook: "société ← Latin societas 'fellowship', from socius — English society"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C221-peche]
 <!-- hl-knowledge: introduces=[FR-LEX-C222-CHOSES222-01]; assesses=[] -->
 
 **la société** — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**société** ← Latin *societas*, "fellowship", from *socius*, "a companion" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "soap"
 concept_tag: IT-CASA96-SAPONE
 prerequisites: [IT-C96-coperta, IT-C96-asciugamano]
 sounds: []
-roots: []
+roots: [sapo-latin]
+etymology_hook: "sapone ← Latin sapo, saponis 'soap'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C96-asciugamano]
 <!-- hl-knowledge: introduces=[IT-LEX-C96-CASA96-03]; assesses=[] -->
 
 **il sapone** — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sapone** ← Latin *sapo, saponis*, "soap" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

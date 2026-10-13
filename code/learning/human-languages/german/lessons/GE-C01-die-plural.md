@@ -13,7 +13,7 @@ sounds: [vowel-ae]
 roots: [sa-thorder]
 etymology_hook: "German spends three articles on the singular and exactly one, die, on the plural — the same economy French makes with les"
 duration:
-  max_seconds: 150
+  max_seconds: 258
 requires:
   knowledge: [GE-LEX-DER-DIE-DAS-02, GE-LEX-TAG-02, GE-LEX-MORGEN-02, GE-LEX-ABEND-02, GE-LEX-NACHT-02]
 introduces:
@@ -72,6 +72,11 @@ German plurals are not built from one rule the way English adds *-s*. Each
 noun carries its own plural, which is why a German noun is worth learning as a
 set of three: *der Tag, die Tage*. The one thing that never varies is the
 article.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**die** goes back to Old High German *dio*, *diu*, plural forms of the pointing word "that" — inherited, from the same Proto-Germanic stem as English *the* and *that*. EtymDB 2.1 has no row for German *die*; it traces English *that* to Proto-Germanic *\*þat*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PLURAL-DIE-01, GE-LEX-TAGESZEITEN-PLURAL-03, GE-SOUND-UMLAUT-AE-02] -->

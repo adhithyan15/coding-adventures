@@ -13,7 +13,8 @@ gloss: "toothpaste"
 concept_tag: PT-CASA95-PASTA-DE-DENTES
 prerequisites: [PT-C95-sabonete, PT-C95-escova-de-dentes]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "pasta de dentes: the paste word ← Late Latin pasta 'dough'; dente ← Latin dens 'tooth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C95-escova-de-dentes]
 <!-- hl-knowledge: introduces=[PT-LEX-C95-CASA95-04]; assesses=[] -->
 
 **a pasta de dentes** — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pasta de dentes** is "paste of teeth": the paste word ← Late Latin *pasta*, "dough, paste", from Greek (EtymDB 2.1), and *dentes* is the plural of *dente* ← Latin *dens*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

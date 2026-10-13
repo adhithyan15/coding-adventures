@@ -13,7 +13,8 @@ gloss: "a dessert"
 concept_tag: FR-REPAS74-DESSERT
 prerequisites: [FR-C122-sauce, FR-C122-vinaigre]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "dessert — from the verb 'to clear the table': what comes after the dishes go"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C122-vinaigre]
 <!-- hl-knowledge: introduces=[FR-LEX-C122-REPAS74-04]; assesses=[] -->
 
 **le dessert** — "a dessert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dessert** — formed from the verb for "to clear the table", built from *des-* and the verb for "to serve" (EtymDB 2.1): what comes once the table is cleared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

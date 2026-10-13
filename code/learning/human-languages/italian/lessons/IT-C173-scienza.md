@@ -13,7 +13,8 @@ gloss: "science"
 concept_tag: IT-LAV173-SCIENZA
 prerequisites: [IT-C173-geografia, IT-C173-matematica]
 sounds: []
-roots: []
+roots: [scientia-latin]
+etymology_hook: "scienza ← Latin scientia 'knowledge', from scire 'to know' — English science"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C173-matematica]
 <!-- hl-knowledge: introduces=[IT-LEX-C173-LAV173-03]; assesses=[] -->
 
 **la scienza** — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scienza** ← Latin *scientia*, "knowledge" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

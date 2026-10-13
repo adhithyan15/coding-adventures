@@ -14,6 +14,7 @@ concept_tag: IT-VERB-ACCORGERSI
 prerequisites: [IT-C182-volare, IT-C182-abituarsi]
 sounds: []
 roots: []
+etymology_hook: "accorgersi — usually traced to Vulgar Latin accorrigere, from corrigere; not certain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C182-abituarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C182-VERBI182-05]; assesses=[] -->
 
 **accorgersi** — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accorgersi** is usually traced to a Vulgar Latin *accorrigere*, built on *corrigere*, "to set right", but the link is not certain. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

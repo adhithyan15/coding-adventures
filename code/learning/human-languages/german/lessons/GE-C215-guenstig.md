@@ -14,6 +14,7 @@ concept_tag: GE-QUAL215-GUENSTIG
 prerequisites: [GE-C215-gleichzeitig, GE-C215-grosszuegig]
 sounds: []
 roots: []
+etymology_hook: "günstig — built on the word for 'favour', from a verb 'to grant, not to begrudge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C215-grosszuegig]
 <!-- hl-knowledge: introduces=[GE-LEX-C215-QUAL215-05]; assesses=[] -->
 
 **günstig** — "good value, favourable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**günstig** is built on the word for "favour", Middle High German *gunst*, from the verb "to grant, not to begrudge" — inherited. Good value is a favourable price. EtymDB 2.1 has no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wall"
 concept_tag: FR-MAISON25-MUR
 prerequisites: [FR-C73-chaise, FR-C73-cle]
 sounds: []
-roots: []
+roots: [murus-latin]
+etymology_hook: "mur ← Latin murus 'wall' — English mural shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C73-cle]
 <!-- hl-knowledge: introduces=[FR-LEX-C73-MAISON25-05]; assesses=[] -->
 
 **le mur** — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mur** ← Latin *murus*, "wall" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

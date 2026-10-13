@@ -13,7 +13,8 @@ gloss: "an aunt"
 concept_tag: FR-FAMILLE9-TANTE
 prerequisites: [FR-C57-femme, FR-C57-oncle]
 sounds: []
-roots: []
+roots: [amita-latin]
+etymology_hook: "tante ← Old French ante, from Latin amita 'father's sister' — English aunt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C57-oncle]
 <!-- hl-knowledge: introduces=[FR-LEX-C57-FAMILLE9-04]; assesses=[] -->
 
 **la tante** — "an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tante** ← Old French *ante* ← Latin *amita*, "father's sister" — inherited. (EtymDB 2.1) The *t-* at the front is usually explained as a child's way of saying "your aunt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

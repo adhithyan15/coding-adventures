@@ -14,7 +14,8 @@ romanization: "kāppāṟṟu"
 concept_tag: TA-VERB-KAPPARRU
 prerequisites: [TA-C156-kantupiti, TA-C157-marai]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "காப்பாற்று — native Dravidian (DEDR 1416); Malayalam kākkuka 'to keep, defend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C157-marai]
 <!-- hl-knowledge: introduces=[TA-LEX-C157-ACT157-02]; assesses=[] -->
 
 **காப்பாற்று** — *kāppāṟṟu* — "to save, to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காப்பாற்று** (*kāppāṟṟu*) is native Dravidian. DEDR 1416 lists Malayalam *kākkuka*, "to keep, defend". The entry lists *kāppāṟṟu*, "to guard, to protect, to save", under *kā*, "to guard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES253-TUNNEL
 prerequisites: [FR-C253-permis-de-conduire, FR-C253-casque]
 sounds: []
 roots: []
+etymology_hook: "tunnel ← English tunnel, from Old French tonel 'a cask' — the word came home"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C253-casque]
 <!-- hl-knowledge: introduces=[FR-LEX-C253-CHOSES253-03]; assesses=[] -->
 
 **le tunnel** — "a tunnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tunnel** ← English *tunnel* (EtymDB 2.1) — borrowed back: English had taken it from Old French *tonel*, "a cask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

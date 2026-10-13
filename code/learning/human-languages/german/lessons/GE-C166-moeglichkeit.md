@@ -13,7 +13,8 @@ gloss: "a possibility"
 concept_tag: GE-THING166-MOEGLICHKEIT
 prerequisites: [GE-C166-loesung, GE-C166-erfahrung]
 sounds: []
-roots: []
+roots: [germanic-magan]
+etymology_hook: "Möglichkeit — the word for 'possible' + -keit; 'possible' is built on mögen, the verb behind English may"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C166-erfahrung]
 <!-- hl-knowledge: introduces=[GE-LEX-C166-THING166-04]; assesses=[] -->
 
 **die Möglichkeit** — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Möglichkeit** is the word for "possible" + *-keit*, the ending that makes a noun. "Possible" is built on *mögen*, "to be able", which EtymDB 2.1 traces to Proto-Germanic *\*maganą*, the verb behind English *may*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

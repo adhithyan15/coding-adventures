@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES250-ADULTE
 prerequisites: [FR-C250-etranger, FR-C250-touriste]
 sounds: []
 roots: []
+etymology_hook: "adulte ← Latin adultus 'grown up' — English adult and adolescent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C250-touriste]
 <!-- hl-knowledge: introduces=[FR-LEX-C250-CHOSES250-03]; assesses=[] -->
 
 **l'adulte** — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adulte** ← Latin *adultus*, "grown up", from *adolescere*, "to grow up" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

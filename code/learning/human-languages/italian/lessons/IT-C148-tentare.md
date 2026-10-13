@@ -13,7 +13,8 @@ gloss: "to attempt"
 concept_tag: IT-VERB-TENTARE
 prerequisites: [IT-C148-tacere, IT-C148-temere]
 sounds: []
-roots: []
+roots: [temptare-latin]
+etymology_hook: "tentare ← Latin temptare 'to test, to probe' — English tempt and attempt share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C148-temere]
 <!-- hl-knowledge: introduces=[IT-LEX-C148-VERBI148-03]; assesses=[] -->
 
 **tentare** — "to attempt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tentare** ← Latin *temptare*, "to test, to probe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

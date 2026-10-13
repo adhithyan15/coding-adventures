@@ -13,7 +13,8 @@ gloss: "a leaf"
 concept_tag: IT-NATURA1-FOGLIA
 prerequisites: [IT-C64-albero, IT-C64-fiore]
 sounds: []
-roots: []
+roots: [folium-latin]
+etymology_hook: "foglia ← Latin folia 'leaves' — English foliage shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C64-fiore]
 <!-- hl-knowledge: introduces=[IT-LEX-C64-NATURA1-03]; assesses=[] -->
 
 **la foglia** — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**foglia** ← Late Latin *folia*, "leaves", plural of *folium*, "leaf" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

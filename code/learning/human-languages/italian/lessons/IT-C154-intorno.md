@@ -13,7 +13,8 @@ gloss: "around"
 concept_tag: IT-LUOGO154-INTORNO
 prerequisites: [IT-C153-intanto, IT-C153-ormai]
 sounds: []
-roots: []
+roots: [tornus-latin]
+etymology_hook: "intorno — in + torno 'a turn', from Latin tornus 'a lathe' — English turn is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C153-ormai]
 <!-- hl-knowledge: introduces=[IT-LEX-C154-LUOGO154-01]; assesses=[] -->
 
 **intorno** — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intorno** is *in torno*, "in a turn": *torno* goes back to Latin *tornus*, "a lathe" (Lewis & Short), which Latin took from Greek *tornos*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

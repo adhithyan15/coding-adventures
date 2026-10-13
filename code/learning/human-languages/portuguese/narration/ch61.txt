@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a cow, then the Portuguese for a pig.
 You'll want to know: o pássaro.
 o pássaro — "a bird".
 
+The word, taken apart.
+pássaro from Latin passer, "sparrow" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a pig, then the Portuguese for a bird
 
 You'll want to know: o rato.
 o rato — "a mouse, a rat".
+
+The word, taken apart.
+rato from Vulgar Latin rattus, "rat" (EtymDB 2.1) — inherited. Where that word came from is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a bird, then the Portuguese for a mou
 You'll want to know: o lobo.
 o lobo — "a wolf".
 
+The word, taken apart.
+lobo from Latin lupus, "wolf" (EtymDB 2.1) — inherited. The Latin -p- between vowels became -b-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a mouse, then the Portuguese for a wo
 You'll want to know: o urso.
 o urso — "a bear".
 
+The word, taken apart.
+urso from Latin ursus, "bear" (EtymDB 2.1) — a learned borrowing from Latin. Spanish and Italian, which inherited it, say oso and orso.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a wolf, then the Portuguese for a bea
 
 You'll want to know: a raposa.
 a raposa — "a fox".
+
+The word, taken apart.
+raposa is "the bushy-tailed one": built from the word for a tail and -osa, "full of". Spanish has the same word.
 
 What you've built.
 One more word for this chapter.

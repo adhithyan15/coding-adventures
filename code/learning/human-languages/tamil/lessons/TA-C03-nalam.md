@@ -12,6 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [TA-C03-naan, TA-C03-eppadi-irukkirirgal]
 sounds: [final-m]
 roots: [nal-good-dravidian]
+etymology_hook: "நலம் — native, from nal 'good' (DEDR 3610), the root of naṉṟi; Malayalam nalam is the same word"
 reviews_of: [TA-C03-naan]
 duration:
   max_seconds: 240

@@ -13,7 +13,8 @@ gloss: "experience"
 concept_tag: IT-COSE196-ESPERIENZA
 prerequisites: [IT-C195-ricercatore, IT-C195-turista]
 sounds: []
-roots: []
+roots: [experientia-latin]
+etymology_hook: "esperienza ← Latin experientia 'a trial', from experiri 'to try' — English experience"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C195-turista]
 <!-- hl-knowledge: introduces=[IT-LEX-C196-COSE196-01]; assesses=[] -->
 
 **l'esperienza** — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esperienza** ← Latin *experientia*, "a trial, a proof", from *experiri*, "to try" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

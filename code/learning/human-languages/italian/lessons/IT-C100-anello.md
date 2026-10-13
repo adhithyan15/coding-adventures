@@ -13,7 +13,8 @@ gloss: "a ring"
 concept_tag: IT-OGGETTI100-ANELLO
 prerequisites: [IT-C100-telefonino, IT-C100-macchina-fotografica]
 sounds: []
-roots: []
+roots: [anellus-latin]
+etymology_hook: "anello ← Latin anellus 'a little ring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C100-macchina-fotografica]
 <!-- hl-knowledge: introduces=[IT-LEX-C100-OGGETTI100-05]; assesses=[] -->
 
 **l'anello** — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anello** ← Latin *anellus*, "a little ring" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

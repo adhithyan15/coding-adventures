@@ -13,7 +13,8 @@ gloss: "to hold on to"
 concept_tag: GE-VERB-FESTHALTEN
 prerequisites: [GE-C180-fangen, GE-C180-fernsehen]
 sounds: []
-roots: []
+roots: [germanic-haldana]
+etymology_hook: "festhalten — the word for 'firm' + the verb 'to hold': to hold firm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C180-fernsehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C180-VERB180-04]; assesses=[] -->
 
 **festhalten** — "to hold on to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**festhalten** is the word for "firm" + the verb "to hold", Old High German *haltan*, English *hold* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

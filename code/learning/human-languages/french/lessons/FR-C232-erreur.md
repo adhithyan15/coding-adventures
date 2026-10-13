@@ -13,7 +13,8 @@ gloss: "a mistake"
 concept_tag: FR-TRAV232-ERREUR
 prerequisites: [FR-C232-dictionnaire, FR-C232-universite]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "erreur ← Latin error 'a wandering', from errare — English error"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C232-universite]
 <!-- hl-knowledge: introduces=[FR-LEX-C232-TRAV232-04]; assesses=[] -->
 
 **l'erreur** — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erreur** ← Latin *error*, "a wandering", from *errare*, "to wander" (Lewis & Short) — taken from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

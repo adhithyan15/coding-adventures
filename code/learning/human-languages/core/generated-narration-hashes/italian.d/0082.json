@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 82,
-  "sourceHash": "fnv1a64:cb9bafb9cb97c552",
+  "sourceHash": "fnv1a64:4f4a445d4d9f57d0",
   "lessonIds": [
     "IT-C82-stazione",
     "IT-C82-autobus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch82.txt",
   "json": "italian/narration/ch82.json",
-  "textHash": "fnv1a64:4b0c4a966e57faad",
-  "jsonHash": "fnv1a64:3f9d143c40e97389",
+  "textHash": "fnv1a64:96ee866a22b02c1c",
+  "jsonHash": "fnv1a64:98227efeee492b44",
   "findings": []
 }

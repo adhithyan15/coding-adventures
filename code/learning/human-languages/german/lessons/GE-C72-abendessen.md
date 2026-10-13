@@ -13,7 +13,8 @@ gloss: "dinner"
 concept_tag: GE-ESSEN4-ABENDESSEN
 prerequisites: [GE-C71-oel, GE-C71-mittagessen]
 sounds: []
-roots: []
+roots: [germanic-etana, abanths]
+etymology_hook: "Abendessen — Abend 'evening' + the word for 'a meal', from the verb 'to eat', English eat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C71-mittagessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C72-ESSEN4-01]; assesses=[] -->
 
 **das Abendessen** — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Abendessen** is *Abend* + the word for "a meal", which is the verb "to eat" ← Old High German *ezzan* ← Proto-Germanic *\*etaną*, English *eat*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

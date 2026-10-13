@@ -11,7 +11,7 @@ concept_tag: PT-VERB-EXPECT
 prerequisites: [PT-C21-esperar-hope]
 sounds: [open-e, prop-e]
 roots: [sperare-latin]
-etymology_hook: "waiting for something made esperar a natural verb for expectation"
+etymology_hook: "esperar ← Latin sperare 'to hope, to look for' — English despair shares it"
 duration:
   max_seconds: 125
 requires:
@@ -51,6 +51,11 @@ Here **espero** is about what you think will arrive. Compare the three meanings:
 - **Espero um livro.** — I expect a book.
 
 Do not memorise three new verbs. Notice how the rest of the sentence guides you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esperar** ← Latin *sperare*, "to hope, to look for" (EtymDB 2.1) — inherited.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-HOPE-04, PT-GRAMMAR-ESPERAR-EXPECT-04] -->

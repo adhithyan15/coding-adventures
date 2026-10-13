@@ -13,7 +13,8 @@ gloss: "a woman"
 concept_tag: IT-OGGETTI102-DONNA
 prerequisites: [IT-C102-mondo, IT-C102-gente]
 sounds: []
-roots: []
+roots: [domina-latin]
+etymology_hook: "donna ← Latin domina 'mistress of the house' — madonna is 'my lady'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C102-gente]
 <!-- hl-knowledge: introduces=[IT-LEX-C102-OGGETTI102-04]; assesses=[] -->
 
 **la donna** — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**donna** ← Late Latin *domna*, from Latin *domina*, "mistress of the house" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

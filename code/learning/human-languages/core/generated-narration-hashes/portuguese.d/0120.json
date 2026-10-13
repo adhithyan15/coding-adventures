@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 120,
-  "sourceHash": "fnv1a64:7566f279b1530c90",
+  "sourceHash": "fnv1a64:a66d87551830103a",
   "lessonIds": [
     "PT-C120-tornozelo",
     "PT-C120-pulso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch120.txt",
   "json": "portuguese/narration/ch120.json",
-  "textHash": "fnv1a64:b392fd1824188c93",
-  "jsonHash": "fnv1a64:b4de7c67d3d88e23",
+  "textHash": "fnv1a64:58ec3b36f100f041",
+  "jsonHash": "fnv1a64:9188a675d44e6fa4",
   "findings": []
 }

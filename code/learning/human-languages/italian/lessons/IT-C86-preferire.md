@@ -13,7 +13,8 @@ gloss: "to prefer"
 concept_tag: IT-VERB-PREFERIRE
 prerequisites: [IT-C86-volere, IT-C86-vorrei]
 sounds: []
-roots: []
+roots: [praeferre-latin]
+etymology_hook: "preferire ← Latin praeferre 'to carry before' — English prefer is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C86-vorrei]
 <!-- hl-knowledge: introduces=[IT-LEX-C86-VOLERE86-03]; assesses=[] -->
 
 **preferire** — "to prefer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preferire** ← Latin *praeferre*, "to carry before, to prefer" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paḻakkam"
 concept_tag: TA-PORUL246-PALAKKAM
 prerequisites: [TA-C246-pattacu, TA-C246-kalaccaram]
 sounds: []
-roots: []
+roots: [dravidian-pazhaku-accustom]
+etymology_hook: "பழக்கம் — native Dravidian (DEDR 4000); Malayalam paḻakuka 'to be accustomed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C246-kalaccaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C246-PORUL246-04]; assesses=[] -->
 
 **பழக்கம்** — *paḻakkam* — "a habit, a custom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழக்கம்** (*paḻakkam*) is native Dravidian. DEDR 4000 lists Malayalam *paḻakuka*, "to be accustomed". It is the noun of *paḻaku*, "to become used to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

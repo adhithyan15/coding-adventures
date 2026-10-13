@@ -14,6 +14,7 @@ concept_tag: IT-CASA95-CUSCINO
 prerequisites: [IT-C95-scaffale, IT-C95-tenda]
 sounds: []
 roots: []
+etymology_hook: "cuscino ← Old French coissin — English cushion is the same French word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-tenda]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-05]; assesses=[] -->
 
 **il cuscino** — "a cushion, a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuscino** ← Old French *coissin* — borrowed; behind it is Vulgar Latin *coxinus*, "a seat pad". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a dress"
 concept_tag: PT-ROUPA1-VESTIDO
 prerequisites: [PT-C77-roupa, PT-C77-camisa]
 sounds: []
-roots: []
+roots: [vestitus-latin]
+etymology_hook: "vestido ← Latin vestitus 'clothed, clothing' — English vest and vestment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C77-camisa]
 <!-- hl-knowledge: introduces=[PT-LEX-C77-ROUPA1-03]; assesses=[] -->
 
 **o vestido** — "a dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestido** ← Latin *vestitus*, "clothed, clothing" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

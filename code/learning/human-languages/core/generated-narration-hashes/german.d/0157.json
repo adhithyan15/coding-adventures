@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 157,
-  "sourceHash": "fnv1a64:b38e224a4d5a0534",
+  "sourceHash": "fnv1a64:faf60797ae890c66",
   "lessonIds": [
     "GE-C157-tablette",
     "GE-C157-versicherung",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch157.txt",
   "json": "german/narration/ch157.json",
-  "textHash": "fnv1a64:bac918838d882bd9",
-  "jsonHash": "fnv1a64:93b266550e4a4232",
+  "textHash": "fnv1a64:7484c15477b6b404",
+  "jsonHash": "fnv1a64:4924fd2514d9c5a9",
   "findings": []
 }

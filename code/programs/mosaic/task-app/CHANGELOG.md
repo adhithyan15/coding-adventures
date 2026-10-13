@@ -4,8 +4,52 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.2` accumulate here until the next version is
+Entries added after `task-app-v0.5.4` accumulate here until the next version is
 cut.
+
+### Fixed — Qt elevation shadows leave the degradation report (#17386)
+
+Qt now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits equivalent native `MultiEffect`
+depth. Fresh strict generation retires ten false-positive shadow omissions and
+reduces the measured Qt style inventory from 93 to 83. A raw shadow without
+elevation and the inset theme-toggle moon effect remain explicit debt.
+
+## [0.5.4] - 2026-10-12
+
+### Fixed — SwiftUI elevation tokens emit native shadows (#17365)
+
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to fixed
+native `.shadow` modifiers. Fresh strict generation retires ten elevation drops
+and ten paired non-inset shadow omissions, reducing the measured SwiftUI style
+inventory from 83 to 63. Standalone raw shadows, inset shadows, and unsupported
+elevation values remain explicit debt.
+
+### Fixed — Compose elevation shadows leave the degradation report (#17356)
+
+Compose now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Compose style inventory from 50 to 40. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Qt controls preserve fill widths (#17338)
+
+Qt now lowers exact `width: 100%` declarations on TaskApp inputs and buttons
+to `Layout.fillWidth: true`. Fresh strict generation retires all 15 affected
+control-width omissions and reduces the measured Qt style inventory from 108
+to 93. The three remaining Qt width drops are `Text` geometry; other
+percentages and mixed fixed/fill states remain explicit debt.
+
+## [0.5.3] - 2026-10-12
+
+### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
+
+Flutter now emits the shared gap helper whenever an undecorated drag/drop body
+starting with `If`/`Else` calls it, and decorated conditional bodies retain any
+following ordinary child in the evaluated vertical list. This prevents an
+undefined Dart helper and silent child loss without changing TaskApp's current
+style-degradation inventory or native drag semantics.
 
 ### Fixed — Flutter elevation shadows leave the degradation report (#17308)
 

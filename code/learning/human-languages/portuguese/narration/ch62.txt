@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a bear, then the Portuguese for a fox
 You'll want to know: a cobra.
 a cobra — "a snake".
 
+The word, taken apart.
+cobra from Latin colubra, "snake" (EtymDB 2.1) — inherited. The -l- between vowels fell out. English cobra came from Portuguese.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a fox, then the Portuguese for a snak
 
 You'll want to know: a galinha.
 a galinha — "a hen". It lays o ovo.
+
+The word, taken apart.
+galinha from Latin gallina, "hen", from gallus, "rooster" — inherited. EtymDB 2.1 traces it only to Old Portuguese galinna; it derives Italian gallina from gallina.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a snake, then the Portuguese for a he
 You'll want to know: o pato.
 o pato — "a duck".
 
+The word, taken apart.
+pato probably from Andalusian Arabic baṭṭ, "duck" (EtymDB 2.1), though the link is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a hen, then the Portuguese for a duck
 You'll want to know: a ovelha.
 a ovelha — "a sheep".
 
+The word, taken apart.
+ovelha from Vulgar Latin ovicula, "little sheep" (EtymDB 2.1), from Latin ovis, "sheep" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a duck, then the Portuguese for a she
 
 You'll want to know: a cabra.
 a cabra — "a goat".
+
+The word, taken apart.
+cabra from Latin capra, "she-goat" (EtymDB 2.1) — inherited. The Latin -p- became -b-.
 
 What you've built.
 One more word for this chapter.

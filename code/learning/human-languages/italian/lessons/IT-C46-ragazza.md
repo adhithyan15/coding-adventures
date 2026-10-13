@@ -14,6 +14,7 @@ concept_tag: IT-PERSONE-RAGAZZA
 prerequisites: [IT-C46-ospite, IT-C46-ragazzo]
 sounds: []
 roots: []
+etymology_hook: "ragazza, feminine of ragazzo ← Medieval Latin ragatius"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C46-ragazzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C46-PERSONE-05]; assesses=[] -->
 
 **la ragazza** — "a girl, a young woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ragazza** is the feminine of *ragazzo*, which ← Medieval Latin *ragatius*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "short"
 concept_tag: PT-ADJ2-CURTO
 prerequisites: [PT-C65-feio, PT-C65-longo]
 sounds: []
-roots: []
+roots: [curtus-latin]
+etymology_hook: "curto ← Latin curtus 'cut short' — English curt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C65-longo]
 <!-- hl-knowledge: introduces=[PT-LEX-C65-ADJ2-04]; assesses=[] -->
 
 **curto** — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**curto** ← Latin *curtus*, "shortened, cut off" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

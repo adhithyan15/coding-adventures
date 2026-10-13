@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 50,
-  "sourceHash": "fnv1a64:5a37b5075b005283",
+  "sourceHash": "fnv1a64:6c9f402f39f5e5f4",
   "lessonIds": [
     "PT-C50-lampada",
     "PT-C50-sala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch50.txt",
   "json": "portuguese/narration/ch50.json",
-  "textHash": "fnv1a64:c7ee4d1c5428a168",
-  "jsonHash": "fnv1a64:51f73be2d99d97aa",
+  "textHash": "fnv1a64:9af401616f8ff786",
+  "jsonHash": "fnv1a64:0b0721ae917c1472",
   "findings": []
 }

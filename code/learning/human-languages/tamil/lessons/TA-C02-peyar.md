@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [TA-C01-vanakkam]
 sounds: []
 roots: [peyar-dravidian]
+etymology_hook: "பெயர் — native Dravidian (DEDR 4410): Malayalam pēr, Telugu pēru, Kannada pesar; not kin to English name"
 reviews_of: [TA-C01-vanakkam]
 duration:
   max_seconds: 240

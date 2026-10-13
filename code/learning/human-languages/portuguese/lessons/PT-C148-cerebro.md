@@ -13,7 +13,8 @@ gloss: "the brain"
 concept_tag: PT-SAUDE148-CEREBRO
 prerequisites: [PT-C147-aguentar, PT-C148-saude]
 sounds: []
-roots: []
+roots: [cerebrum-latin]
+etymology_hook: "cérebro ← Latin cerebrum 'brain' — English cerebral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C148-saude]
 <!-- hl-knowledge: introduces=[PT-LEX-C148-SAUDE148-02]; assesses=[] -->
 
 **o cérebro** — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cérebro** ← Latin *cerebrum*, "brain" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

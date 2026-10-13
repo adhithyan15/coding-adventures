@@ -14,7 +14,8 @@ romanization: "eṟumpu"
 concept_tag: TA-THINGS131-ERUMPU
 prerequisites: [TA-C131-antai, TA-C131-mayil]
 sounds: []
-roots: []
+roots: [dravidian-erumbu-ant]
+etymology_hook: "எறும்பு — native Dravidian (DEDR 864); Malayalam eṟumpu, Kannada iṟumpu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C131-mayil]
 <!-- hl-knowledge: introduces=[TA-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **எறும்பு** — *eṟumpu* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எறும்பு** (*eṟumpu*) is native Dravidian. DEDR 864 lists Malayalam *eṟumpu* and Kannada *iṟumpu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

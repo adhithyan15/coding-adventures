@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8dc6186fa4aefdac",
+  "sourceHash": "fnv1a64:b645848022d13730",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0a485bd22e5f3726",
+      "sourceHash": "fnv1a64:37314a75645be4ca",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "olá is friendly and fairly neutral — fine for most people; for real formality you add bom dia / boa tarde (built next). In Brazil you'll also hear oi for a casual \"hi.\""
+              "text": "olá is friendly and fairly neutral — fine for most people; for real formality you add a time-of-day greeting, \"good morning\" or \"good afternoon\" (built next). In Brazil you'll also hear oi for a casual \"hi.\""
             }
           ]
         },
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bbf70971b2d8452",
+      "sourceHash": "fnv1a64:d07daaa5b0f05272",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +384,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word that starts bom dia, boa tarde, boa noite."
+              "text": "The word that starts the Portuguese for \"good morning,\" \"good afternoon\" and \"good night.\""
             }
           ]
         },
@@ -417,7 +417,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bom / boa changes to match its noun: bom (m.), boa (f.), bons / boas (pl.) — Latin's adjective agreement, alive across the Romance family. So it's bom dia (m.) but boa tarde (f.)."
+              "text": "bom / boa changes to match its noun: bom (m.), boa (f.), bons / boas (pl.) — Latin's adjective agreement, alive across the Romance family. So a masculine noun takes bom and a feminine one boa, and this chapter's greetings use both."
             }
           ]
         },
@@ -444,11 +444,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why bom dia but boa tarde (gender)",
+              "instruction": "which form goes with a masculine noun, and which with a feminine one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why *bom dia* but *boa tarde* (gender)]"
+              "source": "[YOU SAY: which form goes with a masculine noun, and which with a feminine one]"
             }
           ]
         },
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is bom from, and why bom dia but boa tarde? (bonus; dia is masculine, tarde feminine.)"
+              "text": "What Latin word is bom from, and when does it become boa? (bonus; before a feminine noun.)"
             }
           ]
         }
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28c9e359abb8c28f",
+      "sourceHash": "fnv1a64:92a9865720f3dbdf",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +530,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia (\"the day\") is masculine even though it ends in -a."
+              "text": "Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: the word for \"day\" is masculine even though it ends in -a."
             }
           ]
         },
@@ -597,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87e00631960fdf21",
+      "sourceHash": "fnv1a64:5e6d1f0fe5a7047a",
       "notice": null,
       "blocks": [
         {
@@ -702,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab09717e2d52c514",
+      "sourceHash": "fnv1a64:59d9babc7295c6eb",
       "notice": null,
       "blocks": [
         {
@@ -744,7 +744,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to boa tarde, and after dark to boa noite. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)"
+              "text": "bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to the afternoon greeting, and after dark to the evening one, both built next. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)"
             }
           ]
         },
@@ -771,11 +771,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the day's arc — bom dia becomes boa tarde becomes boa noite",
+              "instruction": "\"bom dia,\" then Spanish \"buenos días\" — one blessing, then many",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the day's arc — bom dia → boa tarde → boa noite]"
+              "source": "[YOU SAY: \"bom dia,\" then Spanish \"buenos días\" — one blessing, then many]"
             }
           ]
         },
@@ -811,7 +811,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:821b5bca3dc1ee7f",
+      "sourceHash": "fnv1a64:31972b8547d9bdcf",
       "notice": null,
       "blocks": [
         {
@@ -905,7 +905,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f379be66cac94944",
+      "sourceHash": "fnv1a64:69b230c7b3014f27",
       "notice": null,
       "blocks": [
         {
@@ -980,6 +980,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the rule — Latin *-ct-* → Portuguese *-it-* (*noite*, *feito*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the day's arc — bom dia becomes boa tarde becomes boa noite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the day's arc — bom dia → boa tarde → boa noite]"
             }
           ]
         },
@@ -1015,7 +1024,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fed12964a9c23ed",
+      "sourceHash": "fnv1a64:3425bbc2de921307",
       "notice": null,
       "blocks": [
         {
@@ -1140,7 +1149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cba1eb28c1719d1",
+      "sourceHash": "fnv1a64:f281228676f1da01",
       "notice": null,
       "blocks": [
         {
@@ -1268,7 +1277,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite \"you\")."
+              "text": "In two chapters: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite \"you\")."
             }
           ]
         }

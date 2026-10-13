@@ -11,7 +11,7 @@ concept_tag: GE-TIME-HOUR
 prerequisites: [GE-C07-wochentage-2, GE-C01-der-die-das]
 sounds: [u-long, r-final]
 roots: [hora-latin]
-etymology_hook: "Uhr came in with the clocks themselves — Roman and monastic timekeeping arrived carrying its own word, and German took it rather than building one"
+etymology_hook: "Uhr ← Latin hōra 'hour' — borrowed, reaching German through Old French and Middle Dutch with the clocks themselves"
 duration:
   max_seconds: 150
 requires:
@@ -46,6 +46,11 @@ weekdays were German's gods — this word is neither.
 
 A *die*-word, and one syllable. It does two jobs: the object on the wall, and
 the word you say when telling the time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Uhr** ← Latin *hōra*, "hour" (EtymDB 2.1) — borrowed, not inherited; it reached German through Old French and Middle Dutch with the clocks themselves.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-UHR-01]; assesses=[GE-LEX-UHR-01] -->

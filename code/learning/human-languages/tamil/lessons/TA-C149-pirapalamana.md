@@ -14,7 +14,8 @@ romanization: "pirapalamāṉa"
 concept_tag: TA-QUAL149-PIRAPALAMANA
 prerequisites: [TA-C148-kaynta, TA-C148-nanainta]
 sounds: []
-roots: []
+roots: [sanskrit-prabala]
+etymology_hook: "பிரபலமான ← Sanskrit prabala 'strong' (CDIAL 8696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C148-nanainta]
 <!-- hl-knowledge: introduces=[TA-LEX-C149-QUAL149-01]; assesses=[] -->
 
 **பிரபலமான** — *pirapalamāṉa* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிரபலமான** (*pirapalamāṉa*) is a loan from Sanskrit *prabala*, "strong" (CDIAL 8696). Tamil shifted it from "strong" to "widely known", and *-āṉa* makes it a describing word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

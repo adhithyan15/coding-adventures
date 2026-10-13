@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES164-RESERVATION
 prerequisites: [FR-C164-passeport, FR-C164-douane]
 sounds: []
 roots: []
+etymology_hook: "réservation — from the verb 'to book', Latin reservare 'to keep back' — English reserve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C164-douane]
 <!-- hl-knowledge: introduces=[FR-LEX-C164-CHOSES164-03]; assesses=[] -->
 
 **la réservation** — "a booking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réservation** — built from the verb for "to book", ← Latin *reservare*, "to keep back" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

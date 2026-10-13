@@ -14,7 +14,8 @@ romanization: "kuṭipeyar"
 concept_tag: TA-VERB-KUTIPEYAR
 prerequisites: [TA-C197-campati, TA-C197-tavir]
 sounds: []
-roots: []
+roots: [dravidian-kudi-house, dravidian-peyar-move]
+etymology_hook: "குடிபெயர் — native: kuṭi 'house' (DEDR 1655) + peyar 'to move' (DEDR 4409), not peyar 'name'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C197-tavir]
 <!-- hl-knowledge: introduces=[TA-LEX-C197-ACT197-04]; assesses=[] -->
 
 **குடிபெயர்** — *kuṭipeyar* — "to move house, to relocate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடிபெயர்** (*kuṭipeyar*) is native: *kuṭi*, "house, home" (DEDR 1655), and *peyar*, "to move" (DEDR 4409): "move house". The *peyar* that means "name" is a different entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

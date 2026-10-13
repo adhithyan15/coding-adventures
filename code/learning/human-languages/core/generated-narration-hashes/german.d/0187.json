@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 187,
-  "sourceHash": "fnv1a64:db6b56cd8365e1e4",
+  "sourceHash": "fnv1a64:34218f773b751395",
   "lessonIds": [
     "GE-C187-spuelen",
     "GE-C187-starten",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch187.txt",
   "json": "german/narration/ch187.json",
-  "textHash": "fnv1a64:aecca49612fba3c4",
-  "jsonHash": "fnv1a64:7878f3ae7f636243",
+  "textHash": "fnv1a64:c2c870579004047e",
+  "jsonHash": "fnv1a64:e2a968d0e7ada085",
   "findings": []
 }

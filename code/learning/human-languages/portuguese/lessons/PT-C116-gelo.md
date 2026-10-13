@@ -13,7 +13,8 @@ gloss: "ice"
 concept_tag: PT-NATUREZA116-GELO
 prerequisites: [PT-C116-nevoeiro, PT-C116-tempestade]
 sounds: []
-roots: []
+roots: [gelu-latin]
+etymology_hook: "gelo ← Latin gelu 'frost' — English gelid and jelly share its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C116-tempestade]
 <!-- hl-knowledge: introduces=[PT-LEX-C116-NATUREZA116-03]; assesses=[] -->
 
 **o gelo** — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelo** ← Latin *gelu*, "frost" — inherited. EtymDB 2.1 traces it only to Old Portuguese *gelo*; it derives Spanish *hielo* from *gelu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

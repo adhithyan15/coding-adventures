@@ -13,7 +13,8 @@ gloss: "sugar"
 concept_tag: GE-ESSEN5-ZUCKER
 prerequisites: [GE-C73-kaese, GE-C73-salz]
 sounds: []
-roots: []
+roots: [sukkar-arabic]
+etymology_hook: "Zucker ← Italian zucchero ← Arabic sukkar — borrowed, like English sugar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C73-salz]
 <!-- hl-knowledge: introduces=[GE-LEX-C73-ESSEN5-05]; assesses=[] -->
 
 **der Zucker** — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zucker** ← Italian *zucchero* ← Arabic *sukkar* (EtymDB 2.1) — borrowed with the trade in sugar.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

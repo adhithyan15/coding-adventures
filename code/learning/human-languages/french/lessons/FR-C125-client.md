@@ -14,6 +14,7 @@ concept_tag: FR-METIERS77-CLIENT
 prerequisites: [FR-C125-facteur, FR-C125-serveur]
 sounds: []
 roots: []
+etymology_hook: "client ← Latin cliens 'a dependant, a follower' — English client"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C125-serveur]
 <!-- hl-knowledge: introduces=[FR-LEX-C125-METIERS77-04]; assesses=[] -->
 
 **le client** — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**client** ← Latin *cliens*, *clientis*, "a dependant, a follower" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

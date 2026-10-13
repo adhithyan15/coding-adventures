@@ -13,7 +13,8 @@ gloss: "vinegar"
 concept_tag: FR-REPAS74-VINAIGRE
 prerequisites: [FR-C122-sandwich, FR-C122-sauce]
 sounds: []
-roots: []
+roots: [vinum-latin]
+etymology_hook: "vinaigre — 'sour wine': vin + Old French aigre 'sour' — English vinegar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C122-sauce]
 <!-- hl-knowledge: introduces=[FR-LEX-C122-REPAS74-03]; assesses=[] -->
 
 **le vinaigre** — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vinaigre** — "sour wine": *vin*, "wine", and Old French *aigre*, "sour", ← Latin *acer*, "sharp". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

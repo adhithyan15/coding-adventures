@@ -13,7 +13,8 @@ gloss: "a lawn"
 concept_tag: FR-CHOSES254-PELOUSE
 prerequisites: [FR-C254-tronc, FR-C254-epine]
 sounds: []
-roots: []
+roots: [pilus]
+etymology_hook: "pelouse — from a southern word for 'hairy', Latin pilosus — short grass like hair"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C254-epine]
 <!-- hl-knowledge: introduces=[FR-LEX-C254-CHOSES254-03]; assesses=[] -->
 
 **la pelouse** — "a lawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pelouse** — from a southern word for "hairy", ← Latin *pilosus*, "hairy", from *pilus*, "a hair" (Lewis & Short): short grass like hair.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a shirt"
 concept_tag: IT-VESTITI105-CAMICIA
 prerequisites: [IT-C105-cappello, IT-C105-giacca]
 sounds: []
-roots: []
+roots: [latin-camisia]
+etymology_hook: "camicia ← Late Latin camisia 'shirt' — English chemise shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C105-giacca]
 <!-- hl-knowledge: introduces=[IT-LEX-C105-VESTITI105-03]; assesses=[] -->
 
 **la camicia** — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camicia** ← Late Latin *camisia*, "shirt" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

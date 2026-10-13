@@ -15,6 +15,7 @@ concept_tag: TA-PORUL244-PATIVAM
 prerequisites: [TA-C244-ancal-talai, TA-C244-pottalam]
 sounds: []
 roots: []
+etymology_hook: "படிவம் — origin uncertain; a modern word with no DEDR entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C244-pottalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C244-PORUL244-03]; assesses=[] -->
 
 **படிவம்** — *paṭivam* — "a form (to fill in)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **படிவம்** (*paṭivam*) is uncertain. It is a modern word for an official form, and DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

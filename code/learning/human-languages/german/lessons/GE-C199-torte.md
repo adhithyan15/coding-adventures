@@ -14,6 +14,7 @@ concept_tag: GE-THING199-TORTE
 prerequisites: [GE-C199-karotte, GE-C199-haehnchen]
 sounds: []
 roots: []
+etymology_hook: "Torte ← Italian torta ← Late Latin torta 'a round loaf' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C199-haehnchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C199-THING199-05]; assesses=[] -->
 
 **die Torte** — "a gateau, a layer cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Torte** ← Italian *torta*, "cake" ← Late Latin *torta*, "a kind of round bread" (EtymDB 2.1) — borrowed; English took *torte* from German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

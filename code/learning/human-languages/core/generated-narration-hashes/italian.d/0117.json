@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 117,
-  "sourceHash": "fnv1a64:2b6bcd8b1f0ac42c",
+  "sourceHash": "fnv1a64:62a67b1bc5f404ed",
   "lessonIds": [
     "IT-C117-prezzo",
     "IT-C117-calcio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch117.txt",
   "json": "italian/narration/ch117.json",
-  "textHash": "fnv1a64:c37c035f7ae0487d",
-  "jsonHash": "fnv1a64:48fafff334af7feb",
+  "textHash": "fnv1a64:b327538ae2f211e4",
+  "jsonHash": "fnv1a64:090f2152dd3b2b51",
   "findings": []
 }

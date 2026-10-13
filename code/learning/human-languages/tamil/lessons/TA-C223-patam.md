@@ -14,7 +14,8 @@ romanization: "pāṭam"
 concept_tag: TA-VELAI223-PATAM
 prerequisites: [TA-C223-niruvanam, TA-C223-tolircalai]
 sounds: []
-roots: []
+roots: [sanskrit-patha-recitation]
+etymology_hook: "பாடம் ← Sanskrit pāṭha 'text, study' (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C223-tolircalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C223-VELAI223-04]; assesses=[] -->
 
 **பாடம்** — *pāṭam* — "a lesson; a school subject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாடம்** (*pāṭam*) is a loan from Sanskrit *pāṭha*, "text, study" (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

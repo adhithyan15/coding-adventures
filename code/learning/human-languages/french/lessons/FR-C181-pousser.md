@@ -14,6 +14,7 @@ concept_tag: FR-VERB-POUSSER
 prerequisites: [FR-C180-ramasser, FR-C181-ressembler]
 sounds: []
 roots: []
+etymology_hook: "pousser ← Latin pulsare 'to push, to beat' — English push and pulse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C181-ressembler]
 <!-- hl-knowledge: introduces=[FR-LEX-C181-VERBES181-02]; assesses=[] -->
 
 **pousser** — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pousser** ← Latin *pulsare*, "to push, to beat" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

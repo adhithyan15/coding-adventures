@@ -14,6 +14,7 @@ concept_tag: PT-COISAS157-APARTAMENTO
 prerequisites: [PT-C156-privado-privada, PT-C156-pessoal]
 sounds: []
 roots: []
+etymology_hook: "apartamento ← French appartement, from Italian appartamento 'a separate part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C156-pessoal]
 <!-- hl-knowledge: introduces=[PT-LEX-C157-COISAS157-01]; assesses=[] -->
 
 **o apartamento** — "a flat, an apartment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apartamento** — borrowed, through French *appartement* from Italian *appartamento*, "a separate part".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

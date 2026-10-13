@@ -14,7 +14,8 @@ romanization: "mel"
 concept_tag: TA-VERB-MEL
 prerequisites: [TA-C226-tummu, TA-C226-vilunku]
 sounds: []
-roots: []
+roots: [dravidian-mel-chew]
+etymology_hook: "மெல் — native Dravidian (DEDR 5077); Kannada mellu 'to chew'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C226-vilunku]
 <!-- hl-knowledge: introduces=[TA-LEX-C226-ACT226-05]; assesses=[] -->
 
 **மெல்** — *mel* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மெல்** (*mel*) is native Dravidian. DEDR 5077 lists Kannada *mellu*, "to chew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

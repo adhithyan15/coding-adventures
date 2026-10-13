@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES203-CHAMPIONNAT
 prerequisites: [FR-C202-corde, FR-C203-defaite]
 sounds: []
 roots: []
+etymology_hook: "championnat — from the word for 'champion', Medieval Latin campio 'a fighter in a duel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C203-defaite]
 <!-- hl-knowledge: introduces=[FR-LEX-C203-CHOSES203-02]; assesses=[] -->
 
 **le championnat** — "a championship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**championnat** — built from the word for "champion", ← Medieval Latin *campio*, "a fighter in a duel", which EtymDB 2.1 takes from Frankish *\*kampjo*, "a fighter", with *-at*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

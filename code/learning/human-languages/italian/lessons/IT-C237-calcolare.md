@@ -13,7 +13,8 @@ gloss: "to calculate"
 concept_tag: IT-VERB-CALCOLARE
 prerequisites: [IT-C237-bruciare, IT-C237-buttare]
 sounds: []
-roots: []
+roots: [calculus-latin]
+etymology_hook: "calcolare ← Latin calculare, from calculus 'a pebble' used in counting — English calculate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C237-buttare]
 <!-- hl-knowledge: introduces=[IT-LEX-C237-VERBI237-04]; assesses=[] -->
 
 **calcolare** — "to calculate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calcolare** ← Latin *calculare*, "to reckon" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

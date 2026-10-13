@@ -14,7 +14,8 @@ romanization: "pāvāṭai"
 concept_tag: TA-THINGS121-PAVATAI
 prerequisites: [TA-C120-kagitam, TA-C121-katikaram]
 sounds: []
-roots: []
+roots: [tamil-pavadai-skirt]
+etymology_hook: "பாவாடை — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C121-katikaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **பாவாடை** — *pāvāṭai* — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **பாவாடை** (*pāvāṭai*) is uncertain. DEDR has no entry for it, and the parts of the word are not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

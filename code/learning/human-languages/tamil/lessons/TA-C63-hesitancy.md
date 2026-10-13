@@ -11,7 +11,8 @@ romanization: "tayakkam"
 concept_tag: TA-NOUN-HESITANCY
 prerequisites: [TA-C63-permission, TA-C61-sleep, TA-C62-soon]
 sounds: []
-roots: []
+roots: [tamil-tayanku-hesitate]
+etymology_hook: "தயக்கம் — noun of tayaṅku 'to hesitate'; native-looking, but DEDR has no entry, so its origin is uncertain"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C63-permission]
 The holding back before you ask: the half-step not taken, the sentence begun and dropped. Kannada carries the same idea in ಸಂಕೋಚ (*saṅkōca*).
 
 The தயவு inside தயவுசெய்து opens the same way and is a different word — that one is kindness given, this one is a foot kept back. Tamil puts them next to each other and expects you to hear the difference.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தயக்கம்** (*tayakkam*) is the noun of *tayaṅku*, "to hesitate". It looks native, but DEDR has no entry for it, so its origin is uncertain. DEDR 3454 has a near neighbour, *tiyaṅku*, "to be confused", without linking the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wife"
 concept_tag: PT-FAMILIA1-ESPOSA
 prerequisites: [PT-C37-avo-f, PT-C37-marido]
 sounds: []
-roots: []
+roots: [spondere-latin]
+etymology_hook: "esposa ← Latin sponsa 'promised woman', from spondere 'to pledge' — English spouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C37-marido]
 <!-- hl-knowledge: introduces=[PT-LEX-C37-FAMILIA1-05]; assesses=[] -->
 
 **a esposa** — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esposa** ← Latin *sponsa*, "promised woman" (EtymDB 2.1), from *spondere*, "to pledge" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

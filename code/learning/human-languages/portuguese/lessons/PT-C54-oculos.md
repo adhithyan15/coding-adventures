@@ -13,7 +13,8 @@ gloss: "glasses, spectacles"
 concept_tag: PT-COISAS3-OCULOS
 prerequisites: [PT-C53-presente, PT-C53-relogio]
 sounds: []
-roots: []
+roots: [oculus-latin]
+etymology_hook: "óculos ← Latin oculus 'eye': glasses are a pair of eyes — English ocular shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C53-relogio]
 <!-- hl-knowledge: introduces=[PT-LEX-C54-COISAS3-01]; assesses=[] -->
 
 **os óculos** — "glasses, spectacles". Plural in form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**óculos** ← Latin *oculus*, "eye" (Lewis & Short) — a learned borrowing from Latin. It is the plural of a learned word for a lens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

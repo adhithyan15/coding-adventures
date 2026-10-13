@@ -11,7 +11,8 @@ romanization: "ney"
 concept_tag: TA-NOUN-GHEE
 prerequisites: [TA-C59-curd, TA-C57-sand, TA-C58-goat]
 sounds: []
-roots: []
+roots: [dravidian-ney-ghee]
+etymology_hook: "நெய் — native Dravidian (DEDR 3746); Malayalam ney, Kannada ney, Telugu neyyi"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C59-curd]
 Butter cooked down until the water has gone and only the fat and the smell are left. Short, old, and Tamil's own. Telugu keeps it as నెయ్యి (*neyyi*); Kannada walked off to ತುಪ್ಪ (*tuppa*).
 
 A spoon of it goes over hot சாதம் at the start of a meal on a day that matters, which is most of what it does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நெய்** (*ney*) is native Dravidian. DEDR 3746 lists Malayalam *ney*, Kannada *ney* and Telugu *neyyi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

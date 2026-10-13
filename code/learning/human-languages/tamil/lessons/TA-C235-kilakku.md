@@ -14,7 +14,8 @@ romanization: "kiḻakku"
 concept_tag: TA-IDAM235-KILAKKU
 prerequisites: [TA-C235-vatakku, TA-C235-terku]
 sounds: []
-roots: []
+roots: [dravidian-kizh-below]
+etymology_hook: "கிழக்கு — native Dravidian (DEDR 1619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C235-terku]
 <!-- hl-knowledge: introduces=[TA-LEX-C235-IDAM235-04]; assesses=[] -->
 
 **கிழக்கு** — *kiḻakku* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிழக்கு** (*kiḻakku*) is native Dravidian (DEDR 1619). The entry lists *kiḻakku*, "east, the lowland of the Tamil country", under *kīḻ*, "below".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

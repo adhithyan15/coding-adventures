@@ -13,7 +13,8 @@ gloss: "to offer"
 concept_tag: FR-VERB-OFFRIR
 prerequisites: [FR-C237-ameliorer, FR-C237-empirer]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "offrir ← Latin offerre 'to bring before' — English offer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C237-empirer]
 <!-- hl-knowledge: introduces=[FR-LEX-C237-VERBES237-05]; assesses=[] -->
 
 **offrir** — "to offer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**offrir** ← Old French *ofrir* ← Vulgar Latin *\*offerire* ← Latin *offerre*, "to bring before" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

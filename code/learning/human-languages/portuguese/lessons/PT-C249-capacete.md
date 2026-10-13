@@ -13,7 +13,8 @@ gloss: "a helmet"
 concept_tag: PT-COISAS249-CAPACETE
 prerequisites: [PT-C249-autoestrada, PT-C249-multa]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "capacete — built on Latin caput 'head'; the route into Portuguese is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C249-multa]
 <!-- hl-knowledge: introduces=[PT-LEX-C249-COISAS249-05]; assesses=[] -->
 
 **o capacete** — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capacete** is built on Latin *caput*, "head", according to EtymDB 2.1; the route into Portuguese is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

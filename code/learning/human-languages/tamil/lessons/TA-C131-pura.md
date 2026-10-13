@@ -14,7 +14,8 @@ romanization: "puṟā"
 concept_tag: TA-THINGS131-PURA
 prerequisites: [TA-C130-amai, TA-C131-kili]
 sounds: []
-roots: []
+roots: [dravidian-puraa-dove]
+etymology_hook: "புறா — native Dravidian (DEDR 4334); Malayalam prāvu, Kannada poṟasu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C131-kili]
 <!-- hl-knowledge: introduces=[TA-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **புறா** — *puṟā* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புறா** (*puṟā*) is native Dravidian. DEDR 4334 lists Malayalam *prāvu* and Kannada *poṟasu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

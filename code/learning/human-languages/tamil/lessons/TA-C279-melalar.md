@@ -14,7 +14,8 @@ romanization: "mēlāḷar"
 concept_tag: TA-VELAI279-MELALAR
 prerequisites: [TA-C279-tolilali, TA-C279-kuttam]
 sounds: []
-roots: []
+roots: [dravidian-mel-above, dravidian-aal-man]
+etymology_hook: "மேலாளர் — native: mēl 'above' (DEDR 5086) + āḷar 'persons', from āḷ (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C279-kuttam]
 <!-- hl-knowledge: introduces=[TA-LEX-C279-VELAI279-03]; assesses=[] -->
 
 **மேலாளர்** — *mēlāḷar* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மேலாளர்** (*mēlāḷar*) is native: *mēl*, "what is above" (DEDR 5086), and *āḷar*, "persons", from *āḷ* (DEDR 399): "the one above".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

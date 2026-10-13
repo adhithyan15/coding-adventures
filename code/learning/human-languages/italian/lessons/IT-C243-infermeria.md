@@ -13,7 +13,8 @@ gloss: "a sick bay"
 concept_tag: IT-SAL243-INFERMERIA
 prerequisites: [IT-C243-cerotto, IT-C243-ambulanza]
 sounds: []
-roots: []
+roots: [infirmus]
+etymology_hook: "infermeria — infermo 'sick' + -eria: a place for the sick — English infirmary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C243-ambulanza]
 <!-- hl-knowledge: introduces=[IT-LEX-C243-SAL243-03]; assesses=[] -->
 
 **l'infermeria** — "a sick bay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infermeria** — built, like *infermiera*, on the old word *infermo*, "sick", with *-eria*, "a place for". *infermo* ← Latin *infirmus*, "weak". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 210,
-  "sourceHash": "fnv1a64:e48d94cce23313a6",
+  "sourceHash": "fnv1a64:09f4efc361b74efc",
   "lessonIds": [
     "IT-C210-preparare",
     "IT-C210-prestare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch210.txt",
   "json": "italian/narration/ch210.json",
-  "textHash": "fnv1a64:a8c44d5c849e3bc8",
-  "jsonHash": "fnv1a64:2493a9ebe296af01",
+  "textHash": "fnv1a64:85e220bb5644aaab",
+  "jsonHash": "fnv1a64:2222083872fa224b",
   "findings": []
 }

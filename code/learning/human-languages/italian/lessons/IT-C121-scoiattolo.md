@@ -13,7 +13,8 @@ gloss: "a squirrel"
 concept_tag: IT-ANIMALI121-SCOIATTOLO
 prerequisites: [IT-C120-rana, IT-C121-tartaruga]
 sounds: []
-roots: []
+roots: [sciurus-latin]
+etymology_hook: "scoiattolo ← Latin sciurus, from Greek skiouros 'shadow-tail' — English squirrel is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C121-tartaruga]
 <!-- hl-knowledge: introduces=[IT-LEX-C121-ANIMALI121-02]; assesses=[] -->
 
 **lo scoiattolo** — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scoiattolo** goes back, through a Vulgar Latin diminutive, to Latin *sciurus*, "squirrel"; Latin took it from Greek *skiouros*, "shadow-tail". EtymDB 2.1 has no row for *scoiattolo*, but records the Latin and Greek words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

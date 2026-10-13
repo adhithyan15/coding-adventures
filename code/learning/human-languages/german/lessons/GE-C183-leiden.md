@@ -14,6 +14,7 @@ concept_tag: GE-VERB-LEIDEN
 prerequisites: [GE-C182-landen, GE-C182-laecheln]
 sounds: []
 roots: []
+etymology_hook: "leiden ← Old High German līdan 'to go, to undergo' — to suffer is to go through something"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C182-laecheln]
 <!-- hl-knowledge: introduces=[GE-LEX-C183-VERB183-01]; assesses=[] -->
 
 **leiden** — "to suffer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leiden** ← Middle High German *līden* ← Old High German *līdan*, "to go, to undergo" (EtymDB 2.1) — inherited. To suffer is to go through something. Dutch *lijden* is the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

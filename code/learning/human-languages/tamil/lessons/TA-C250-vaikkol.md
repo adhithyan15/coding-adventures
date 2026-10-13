@@ -14,7 +14,8 @@ romanization: "vaikkōl"
 concept_tag: TA-PORUL250-VAIKKOL
 prerequisites: [TA-C250-alamaram, TA-C250-taracu]
 sounds: []
-roots: []
+roots: [dravidian-vai-straw]
+etymology_hook: "வைக்கோல் — native Dravidian (DEDR 5553); Malayalam vai-kkōl 'straw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C250-taracu]
 <!-- hl-knowledge: introduces=[TA-LEX-C250-PORUL250-05]; assesses=[] -->
 
 **வைக்கோல்** — *vaikkōl* — "straw, hay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வைக்கோல்** (*vaikkōl*) is native Dravidian. DEDR 5553 lists Malayalam *vai-kkōl*, "straw". The first part, *vai*, is itself "paddy straw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

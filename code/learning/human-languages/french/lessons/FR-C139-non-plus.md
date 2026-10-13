@@ -13,7 +13,8 @@ gloss: "neither, not either"
 concept_tag: FR-NEG139-NON-PLUS
 prerequisites: [FR-C139-rien, FR-C139-aucun]
 sounds: []
-roots: []
+roots: [plus-latin]
+etymology_hook: "non plus — non + plus 'more', from Latin plus — 'not more', so not either"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C139-aucun]
 <!-- hl-knowledge: introduces=[FR-LEX-C139-NEG139-03]; assesses=[] -->
 
 **non plus** — "neither, not either". The answer to a negative: **Je ne travaille pas samedi. — Moi non plus.** — "Me neither." After a yes, French says **moi aussi** instead.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**non plus** — *non*, "no, not", and *plus*, "more", ← Latin *plus* (EtymDB 2.1): "not more", that is, not either.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

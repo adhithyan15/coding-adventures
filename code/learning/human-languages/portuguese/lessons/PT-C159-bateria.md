@@ -14,6 +14,7 @@ concept_tag: PT-COISAS159-BATERIA
 prerequisites: [PT-C158-lei, PT-C158-tribunal]
 sounds: []
 roots: []
+etymology_hook: "bateria ← French batterie 'a battering, a set of guns' — English battery is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C158-tribunal]
 <!-- hl-knowledge: introduces=[PT-LEX-C159-COISAS159-01]; assesses=[] -->
 
 **a bateria** — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bateria** ← French *batterie*, "a battering, a set of guns" — borrowed. The French word comes from *battre*, "to beat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

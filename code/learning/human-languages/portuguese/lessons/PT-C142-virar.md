@@ -14,6 +14,7 @@ concept_tag: PT-VERB-VIRAR
 prerequisites: [PT-C142-evitar, PT-C142-atirar]
 sounds: []
 roots: []
+etymology_hook: "virar — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C142-atirar]
 <!-- hl-knowledge: introduces=[PT-LEX-C142-VERBOS142-03]; assesses=[] -->
 
 **virar** — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**virar** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

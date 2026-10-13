@@ -13,7 +13,8 @@ gloss: "deep"
 concept_tag: FR-QUAL160-PROFOND-PROFONDE
 prerequisites: [FR-C159-impoli-impolie, FR-C159-desagreable]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "profond ← Latin profundus 'deep', from fundus 'bottom' — English profound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C159-desagreable]
 <!-- hl-knowledge: introduces=[FR-LEX-C160-QUAL160-01]; assesses=[] -->
 
 **profond / profonde** — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profond** ← Old French *profont* ← Latin *profundus*, "deep", from *pro* and *fundus*, "bottom" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

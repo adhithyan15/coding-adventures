@@ -13,7 +13,8 @@ gloss: "a dress"
 concept_tag: GE-KLEIDUNG-KLEID
 prerequisites: [GE-C98-kleidung, GE-C98-hemd]
 sounds: []
-roots: []
+roots: [germanic-klaitha]
+etymology_hook: "Kleid ← Old High German kleid ← Proto-Germanic *klaiþą 'cloth' — the same word as English cloth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C98-hemd]
 <!-- hl-knowledge: introduces=[GE-LEX-C99-KLEIDUNG-01]; assesses=[] -->
 
 **das Kleid** — "a dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kleid** ← Old High German *kleid* ← Proto-Germanic *\*klaiþą*, "cloth" — inherited, the same word as English *cloth*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

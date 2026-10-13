@@ -13,7 +13,8 @@ gloss: "the forehead"
 concept_tag: IT-CORPO4-FRONTE
 prerequisites: [IT-C39-unghia, IT-C40-mento]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "fronte ← Latin frons, frontis 'forehead' — English front is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C40-mento]
 <!-- hl-knowledge: introduces=[IT-LEX-C40-CORPO4-02]; assesses=[] -->
 
 **la fronte** — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fronte** ← Latin *frons, frontis*, "forehead" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

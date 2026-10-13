@@ -13,7 +13,8 @@ gloss: "a bed sheet"
 concept_tag: PT-COISAS188-LENCOL
 prerequisites: [PT-C187-constipado-constipada, PT-C187-solteiro-solteira]
 sounds: []
-roots: []
+roots: [linum-latin]
+etymology_hook: "lençol ← Latin linteolum 'small linen cloth', from linum 'flax' — English linen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C187-solteiro-solteira]
 <!-- hl-knowledge: introduces=[PT-LEX-C188-COISAS188-01]; assesses=[] -->
 
 **o lençol** — "a bed sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lençol** ← Latin *linteolum*, "small linen cloth" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

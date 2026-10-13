@@ -13,7 +13,8 @@ gloss: "a neighbour"
 concept_tag: IT-PERSONE-VICINO
 prerequisites: [IT-C45-bambino, IT-C46-bambina]
 sounds: []
-roots: []
+roots: [vicinus-latin]
+etymology_hook: "vicino ← Latin vicinus 'neighbouring', from vicus 'village' — English vicinity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C46-bambina]
 <!-- hl-knowledge: introduces=[IT-LEX-C46-PERSONE-02]; assesses=[] -->
 
 **il vicino** — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vicino** ← Latin *vicinus*, "neighbouring", from *vicus*, "village" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

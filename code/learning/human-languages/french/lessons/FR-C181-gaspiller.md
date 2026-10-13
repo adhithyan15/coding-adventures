@@ -14,6 +14,7 @@ concept_tag: FR-VERB-GASPILLER
 prerequisites: [FR-C181-pousser, FR-C181-tirer]
 sounds: []
 roots: []
+etymology_hook: "gaspiller — from a dialect word for scattering chaff; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C181-tirer]
 <!-- hl-knowledge: introduces=[FR-LEX-C181-VERBES181-04]; assesses=[] -->
 
 **gaspiller** — "to waste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gaspiller** — from a dialect word for scattering chaff (EtymDB 2.1 has Old French *gaspail*, "chaff of wheat"); its deeper origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

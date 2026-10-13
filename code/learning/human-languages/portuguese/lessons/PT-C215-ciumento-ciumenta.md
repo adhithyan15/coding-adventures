@@ -13,7 +13,8 @@ gloss: "jealous"
 concept_tag: PT-QUAL215-CIUMENTO-CIUMENTA
 prerequisites: [PT-C214-talvez, PT-C214-alias]
 sounds: []
-roots: []
+roots: [zelus-latin]
+etymology_hook: "ciumento — built from ciúme 'jealousy' (from Greek zelos) + -ento 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C214-alias]
 <!-- hl-knowledge: introduces=[PT-LEX-C215-QUAL215-01]; assesses=[] -->
 
 **ciumento / ciumenta** — "jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ciumento** is built from *ciúme*, "jealousy", and *-ento*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

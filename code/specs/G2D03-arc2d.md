@@ -323,7 +323,9 @@ y = sin_r * xp + cos_r * yp + center.y
 ```
 tangent(self, t: f64) → Point
 ```
-The derivative with respect to $t$. Differentiating the parametric equation:
+The raw derivative with respect to the normalized parameter $t$, including
+the signed sweep factor. It is not a unit direction and excludes center
+translation. Zero sweep gives the zero vector. Differentiating the parametric equation:
 
 $$\frac{dx}{dt} = -r_x \sin(\phi) \cdot \frac{d\phi}{dt} \cdot \cos\theta - r_y \cos(\phi) \cdot \frac{d\phi}{dt} \cdot \sin\theta$$
 
@@ -718,8 +720,12 @@ where all four control points coincide.
 17. **SvgArc.to_cubic_beziers delegates correctly**: result matches CenterArc
     path.
 
-18. **Tangent at endpoints**: `tangent(0)` is perpendicular to the ellipse
-    radius at `start_angle`; `tangent(1)` is perpendicular at the end angle.
+18. **Tangent at endpoints**: `tangent(0)` and `tangent(1)` are orthogonal
+    to the rotated implicit ellipse gradient at their respective points.
+    Radius orthogonality holds for a circle; it does not hold for a general
+    ellipse. At local angle $\phi$, rotate the gradient
+    $(\cos\phi/r_x, \sin\phi/r_y)$ by `x_rotation` before taking the dot
+    product. Preserve derivative magnitude and signed sweep.
 
 19. **Magic constant k**: `k = (4/3) * tan(π/8) ≈ 0.5523` for quarter-circle.
 
@@ -755,6 +761,18 @@ where all four control points coincide.
 25. **Rotated center-form extrema**: consume the `center-arc-bounds` case with
     nonzero `x_rotation`, where both coordinate maxima occur in the arc
     interior. Ignoring rotation or bounding endpoints alone must fail.
+
+26. **Raw center-form tangent corpus**: consume all four `center-arc-tangent`
+    records in `geometry2d-v1/cases.json`. Check both components with absolute
+    tolerance `1e-12` and zero relative tolerance, plus finite outputs. Positive
+    axis, positive/negative rotated and zero-sweep records distinguish d/dt
+    from a unit direction, angle derivative, translated vector or sign error.
+    The neutral corpus bounds `t` to `[0,1]`, positive radii and other scalar
+    inputs to magnitude `1e6`, and sweep to one inclusive turn. Derivative
+    components have a separate `1e7` teaching bound since `tau * 1e6` exceeds
+    the existing point bound. These transport bounds do not restrict a native
+    API that already accepts other finite inputs or extrapolation. Native
+    non-finite rejection and lane adoption remain separately owned.
 
 Coverage threshold: ≥ 95% lines.
 

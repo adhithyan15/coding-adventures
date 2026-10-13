@@ -13,7 +13,8 @@ gloss: "to live"
 concept_tag: IT-VERB-VIVERE
 prerequisites: [IT-C50-chiudere, IT-C50-bere]
 sounds: []
-roots: []
+roots: [vivere-latin]
+etymology_hook: "vivere ← Latin vivere 'to live' — English vivid and survive share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-bere]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-03]; assesses=[] -->
 
 **vivere** — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vivere** ← Latin *vivere*, "to live" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

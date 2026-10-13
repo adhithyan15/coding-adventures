@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES164-DOUANE
 prerequisites: [FR-C163-sonnette, FR-C164-passeport]
 sounds: []
 roots: []
+etymology_hook: "douane ← Old Italian doana, from Arabic diwan 'a register, an office' — English divan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C164-passeport]
 <!-- hl-knowledge: introduces=[FR-LEX-C164-CHOSES164-02]; assesses=[] -->
 
 **la douane** — "customs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**douane** ← Old Italian *doana* ← Arabic *diwan*, "a register, an office", from Persian — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

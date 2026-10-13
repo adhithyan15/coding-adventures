@@ -14,7 +14,8 @@ romanization: "ārōkkiyamāṉa"
 concept_tag: TA-GUNAM238-AROKKIYAMANA
 prerequisites: [TA-C238-alavu, TA-C238-etai]
 sounds: []
-roots: []
+roots: [sanskrit-arogya]
+etymology_hook: "ஆரோக்கியமான ← Sanskrit ārogya 'health' (CDIAL 1330)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C238-etai]
 <!-- hl-knowledge: introduces=[TA-LEX-C238-GUNAM238-04]; assesses=[] -->
 
 **ஆரோக்கியமான** — *ārōkkiyamāṉa* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆரோக்கியமான** (*ārōkkiyamāṉa*) is a loan from Sanskrit *ārogya*, "health" (CDIAL 1330). *Ārōkkiyam* takes *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

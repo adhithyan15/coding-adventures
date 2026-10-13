@@ -14,7 +14,8 @@ romanization: "iḷanīr"
 concept_tag: TA-PORUL214-ILANIR
 prerequisites: [TA-C214-mor, TA-C214-palaccaru]
 sounds: []
-roots: []
+roots: [dravidian-ila-young, dravidian-niir-water]
+etymology_hook: "இளநீர் — native Dravidian (DEDR 513); Malayalam iḷa-nīr 'unripe coconut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C214-palaccaru]
 <!-- hl-knowledge: introduces=[TA-LEX-C214-PORUL214-03]; assesses=[] -->
 
 **இளநீர்** — *iḷanīr* — "tender coconut water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இளநீர்** (*iḷanīr*) is native Dravidian. DEDR 513 lists Malayalam *iḷa-nīr*, "unripe coconut". The entry lists *iḷa-nīr* itself: "young water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:04412c3d0b13f291",
+  "sourceHash": "fnv1a64:ff441b9a9884d11a",
   "lessons": [
     {
       "id": "TA-C29-kaalai-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec2aada931263b05",
+      "sourceHash": "fnv1a64:5c95061d6def6094",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vaṇakkam is native, from the verb \"to bow\" (DEDR 5236). Kālai, \"morning\", looks native too, but DEDR has no entry for it, and its origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: Be honest: this breaks the pattern every other language followed",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

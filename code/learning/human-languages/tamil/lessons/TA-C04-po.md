@@ -12,6 +12,7 @@ concept_tag: TA-VERB-PO
 prerequisites: [TA-C03-naan]
 sounds: [long-o]
 roots: [po-go-dravidian, dravidian-vaa-come]
+etymology_hook: "போ and vā are native Dravidian (DEDR 4572, 5270): Malayalam pōka and varuka, Kannada pōgu and bā"
 reviews_of: []
 duration:
   max_seconds: 180

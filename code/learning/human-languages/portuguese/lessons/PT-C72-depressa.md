@@ -13,7 +13,8 @@ gloss: "quickly"
 concept_tag: PT-ONDE-DEPRESSA
 prerequisites: [PT-C72-longe, PT-C72-perto]
 sounds: []
-roots: []
+roots: [latin-pressus]
+etymology_hook: "depressa = de + the word for haste (← Latin pressa 'pressed') — 'in a hurry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C72-perto]
 <!-- hl-knowledge: introduces=[PT-LEX-C72-ONDE-05]; assesses=[] -->
 
 **depressa** — "quickly". The opposite of **devagar**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**depressa** is built from *de* and the word for haste, which ← Latin *pressa*, "pressed" (EtymDB 2.1): "in a press, in a hurry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

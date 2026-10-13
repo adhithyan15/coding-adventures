@@ -13,7 +13,8 @@ gloss: "courage"
 concept_tag: GE-THING234-MUT
 prerequisites: [GE-C234-mehrheit, GE-C234-mode]
 sounds: []
-roots: []
+roots: [germanic-modaz]
+etymology_hook: "Mut ← Old High German muot 'spirit' — the same word as English mood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C234-mode]
 <!-- hl-knowledge: introduces=[GE-LEX-C234-THING234-05]; assesses=[] -->
 
 **der Mut** — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mut** ← Middle High German *muot* ← Old High German *muot*, "spirit, heart" — inherited, the same word as English *mood*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

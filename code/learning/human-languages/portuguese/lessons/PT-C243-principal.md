@@ -13,7 +13,8 @@ gloss: "main"
 concept_tag: PT-QUAL243-PRINCIPAL
 prerequisites: [PT-C243-possivel, PT-C243-impossivel]
 sounds: []
-roots: []
+roots: [princeps-latin]
+etymology_hook: "principal ← Latin principalis 'first, chief', from princeps 'first'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C243-impossivel]
 <!-- hl-knowledge: introduces=[PT-LEX-C243-QUAL243-05]; assesses=[] -->
 
 **principal** — "main".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**principal** ← Latin *principalis*, "first, chief" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

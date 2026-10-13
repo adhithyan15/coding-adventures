@@ -13,7 +13,8 @@ gloss: "to unite"
 concept_tag: PT-VERB-UNIR
 prerequisites: [PT-C144-transportar, PT-C144-matar]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "unir ← Latin unire 'to make one', from unus 'one' — English unite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C144-matar]
 <!-- hl-knowledge: introduces=[PT-LEX-C144-VERBOS144-05]; assesses=[] -->
 
 **unir** — "to unite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unir** ← Latin *unire*, "to make one" (EtymDB 2.1), from *unus*, "one" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

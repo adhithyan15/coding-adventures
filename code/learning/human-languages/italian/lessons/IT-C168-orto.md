@@ -13,7 +13,8 @@ gloss: "a vegetable garden"
 concept_tag: IT-COSE168-ORTO
 prerequisites: [IT-C167-patente, IT-C168-soffitta]
 sounds: []
-roots: []
+roots: [hortus-latin]
+etymology_hook: "orto ← Latin hortus 'a garden' — English horticulture shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C168-soffitta]
 <!-- hl-knowledge: introduces=[IT-LEX-C168-COSE168-02]; assesses=[] -->
 
 **l'orto** — "a vegetable garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orto** ← Latin *hortus*, "a garden" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "putticāli"
 concept_tag: TA-QUAL147-PUTTICALI
 prerequisites: [TA-C147-ilaiya, TA-C147-vayatana]
 sounds: []
-roots: []
+roots: [sanskrit-buddhi]
+etymology_hook: "புத்திசாலி — putti ← Sanskrit buddhi 'intelligence' (CDIAL 9277) + -cāli 'one who has' (← śālin)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C147-vayatana]
 <!-- hl-knowledge: introduces=[TA-LEX-C147-QUAL147-03]; assesses=[] -->
 
 **புத்திசாலி** — *putticāli* — "clever; a clever person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புத்திசாலி** (*putticāli*) is *putti*, "intelligence", from Sanskrit *buddhi* (CDIAL 9277), with *-cāli*, "one who has", itself from Sanskrit *śālin*, "possessing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

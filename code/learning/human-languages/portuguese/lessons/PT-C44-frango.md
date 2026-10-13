@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA1-FRANGO
 prerequisites: [PT-C44-manteiga, PT-C44-sal]
 sounds: []
 roots: []
+etymology_hook: "frango — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C44-sal]
 <!-- hl-knowledge: introduces=[PT-LEX-C44-COMIDA1-05]; assesses=[] -->
 
 **o frango** — "chicken (to eat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frango** — its origin is uncertain, and EtymDB 2.1 records no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

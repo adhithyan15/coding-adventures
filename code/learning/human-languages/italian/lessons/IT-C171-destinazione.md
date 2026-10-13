@@ -13,7 +13,8 @@ gloss: "a destination"
 concept_tag: IT-COSE171-DESTINAZIONE
 prerequisites: [IT-C171-arrivo, IT-C171-partenza]
 sounds: []
-roots: []
+roots: [destinare-latin]
+etymology_hook: "destinazione ← Latin destinatio 'a determining', a learned word — English destination"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C171-partenza]
 <!-- hl-knowledge: introduces=[IT-LEX-C171-COSE171-03]; assesses=[] -->
 
 **la destinazione** — "a destination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**destinazione** ← Latin *destinatio*, "a determining, a design" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *destinazione*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

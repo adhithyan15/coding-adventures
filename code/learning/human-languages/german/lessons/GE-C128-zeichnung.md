@@ -13,7 +13,8 @@ gloss: "a drawing"
 concept_tag: GE-SCHULE128-ZEICHNUNG
 prerequisites: [GE-C128-satz, GE-C128-seite]
 sounds: []
-roots: []
+roots: [germanic-taikna]
+etymology_hook: "Zeichnung — the verb 'to draw' + -ung; built on the word for 'sign', the same word as English token"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C128-seite]
 <!-- hl-knowledge: introduces=[GE-LEX-C128-SCHULE128-05]; assesses=[] -->
 
 **die Zeichnung** — "a drawing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zeichnung** is the verb "to draw" + *-ung*. The verb is built on the word for "a sign", Old High German *zeihhan* ← Proto-Germanic *\*taikną*, the same word as English *token*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

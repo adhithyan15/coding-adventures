@@ -13,7 +13,8 @@ gloss: "to argue"
 concept_tag: GE-VERB-STREITEN
 prerequisites: [GE-C150-sterben, GE-C150-stoeren]
 sounds: []
-roots: []
+roots: [germanic-stridana]
+etymology_hook: "streiten ← Old High German strītan 'to fight' ← Proto-Germanic *strīdaną — kin to English stride"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C150-stoeren]
 <!-- hl-knowledge: introduces=[GE-LEX-C150-VERB150-05]; assesses=[] -->
 
 **streiten** — "to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**streiten** ← Old High German *strītan*, "to fight" ← Proto-Germanic *\*strīdaną* — inherited; EtymDB 2.1 lists English *stride* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

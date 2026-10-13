@@ -13,7 +13,8 @@ gloss: "a painter"
 concept_tag: PT-COISAS190-PINTOR-A-PINTORA
 prerequisites: [PT-C190-poema, PT-C190-escritor-a-escritora]
 sounds: []
-roots: []
+roots: [pingere-latin]
+etymology_hook: "pintor ← Vulgar Latin *pinctor, from Latin pictor 'painter' — English picture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C190-escritor-a-escritora]
 <!-- hl-knowledge: introduces=[PT-LEX-C190-COISAS190-04]; assesses=[] -->
 
 **o pintor / a pintora** — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pintor** ← Vulgar Latin *\*pinctor* (EtymDB 2.1), from Latin *pictor*, "painter" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

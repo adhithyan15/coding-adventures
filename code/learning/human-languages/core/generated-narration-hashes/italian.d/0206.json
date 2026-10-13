@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 206,
-  "sourceHash": "fnv1a64:535de07a0d8f897c",
+  "sourceHash": "fnv1a64:21d9c4b32a6fb946",
   "lessonIds": [
     "IT-C206-raffreddare",
     "IT-C206-riempire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch206.txt",
   "json": "italian/narration/ch206.json",
-  "textHash": "fnv1a64:e3cf516c2a5f2331",
-  "jsonHash": "fnv1a64:b44198f2d703c84d",
+  "textHash": "fnv1a64:cc49c122ed992d88",
+  "jsonHash": "fnv1a64:2fead6acf15aa7f8",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: FR-LIEU62-GAUCHE
 prerequisites: [FR-C109-boite-aux-lettres, FR-C110-droite]
 sounds: []
 roots: []
+etymology_hook: "gauche — from Old French gauchir 'to warp', probably Frankish — English gauche, 'clumsy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C110-droite]
 <!-- hl-knowledge: introduces=[FR-LEX-C110-LIEU62-02]; assesses=[] -->
 
 **la gauche** — "the left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gauche** — formed from the Old French verb *gauchir*, "to veer, to warp" (EtymDB 2.1), usually traced to Frankish *\*walkan*, "to trample". The left was the clumsy hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

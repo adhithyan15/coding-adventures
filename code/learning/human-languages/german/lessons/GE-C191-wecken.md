@@ -13,7 +13,8 @@ gloss: "to wake (someone)"
 concept_tag: GE-VERB-WECKEN
 prerequisites: [GE-C191-vorbereiten, GE-C191-waehlen]
 sounds: []
-roots: []
+roots: [germanic-wakjana]
+etymology_hook: "wecken ← Old High German wecchen ← Proto-Germanic *wakjaną — a cousin of English wake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C191-waehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C191-VERB191-03]; assesses=[] -->
 
 **wecken** — "to wake (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wecken** ← Old High German *wecchen* ← Proto-Germanic *\*wakjaną*, "to wake up" — inherited, a cousin of English *wake*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to grasp, to understand; to realise"
 concept_tag: PT-VERB-PERCEBER
 prerequisites: [PT-C177-valer, PT-C177-habituar-se]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "perceber ← Latin percipere 'to perceive' — English perceive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C177-habituar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C177-VERBOS177-03]; assesses=[] -->
 
 **perceber** — "to grasp, to understand; to realise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perceber** ← Latin *percipere*, "to seize wholly, to perceive" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

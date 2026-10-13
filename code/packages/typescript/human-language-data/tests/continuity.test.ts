@@ -597,8 +597,9 @@ const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
  * italian 34 → 0, german 29 → 1, kannada 13 → 2, malayalam 12 → 0, marathi
  * 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic 10 → 0, urdu 9 → 5, tamil 8 → 0,
  * punjabi 7 → 2, russian 5 → 0, sanskrit 3 → 0, persian 2 → 2. Spanish, French,
- * Portuguese and Latin were not worked; their pins are the counts then. Hindi
- * was worked next: 57 → 33.
+ * Portuguese and Latin were not worked in that pass; their pins were the counts
+ * then. Hindi was worked next: 57 → 33. Portuguese later: 102 → 34. French
+ * later: 156 → 52.
  *
  * Every non-zero pin in a worked track is one shape, read in place each time: a
  * phrase the track teaches WHOLE before a later lesson unpacks one of its words.
@@ -608,6 +609,13 @@ const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
  * break the lesson that unpacks it, which says so. Hindi adds one more shape of
  * the same kind: a BUNDLE headword (पानी रोटी) that teaches separate words under
  * one string, so each word reads as untaught until a late lesson re-teaches it.
+ * Portuguese adds two shapes that are not borrowing at all: a late headword that
+ * is a HOMOGRAPH of a word inside a phrase taught whole (a chama, "a flame",
+ * against Como se chama?), and an ENGLISH gloss that spells a late headword
+ * (a massa, "pasta", against a pasta, "a folder").
+ * French adds one: a word a GRAMMAR lesson teaches, which registers no matcher
+ * (only word and phrase lessons do), so the credit falls to a later word lesson
+ * (au and aux in FR-C35-au-aux, credited instead to FR-C157-au-dessus).
  */
 const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   arabic: 0,
@@ -615,7 +623,28 @@ const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   // headword of an earlier phrase lesson, before ইস্ত্রি and নিঃশ্বাস get their own.
   bengali: 2,
   chinese: 0,
-  french: 156,
+  // Every French hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own, or is not
+  // French borrowing at all. Phrases: de rien (FR-C03-de-rien; four of rien,
+  // two of de), à plus tard (FR-C04; three of tard), au revoir (FR-C04; two of
+  // au), et vous ? / et toi ? (FR-C03-practice glosses it "and you?"; one of et),
+  // et quart / et demie (FR-C08; two of et), au printemps (FR-C09-en-saison;
+  // two of au), du pain, de l'eau (FR-C11-du; one of de), j'ai vingt ans (taught
+  // by the grammar lesson FR-C14-jai-vingt-ans, credited to
+  // FR-C14-avoir-etre-langues; one), passé simple (FR-C15-passe-simple; five of
+  // simple), les lettres que j'ai écrites (FR-C15-accord; two of que), j'ai mal
+  // au ventre and C'est combien ? / combien de (taught in place by FR-C31-ventre
+  // and FR-C32-combien; one of au, one of de, one of c'est), est-ce que
+  // (FR-C32-est-ce-que; three of que), la pomme de terre (FR-C68; one of
+  // terre), remplir un formulaire (FR-C145; one each of its two words), offrir
+  // un cadeau (FR-C210; one of offrir), and the être /
+  // ser · estar comparison headword (FR-C16-ser-estar), which credits être after
+  // seven chapter-19 lessons that name the verb FR-C16-suis introduces and
+  // FR-C16-etes derives. Two more of au follow the grammar lesson FR-C35-au-aux.
+  // Not borrowing: three uses of Mars are the Roman war-god behind mardi, where
+  // FR-C09-mars teaches mars, "March"; and five are the English gloss "to vote",
+  // which spells FR-C248's le vote.
+  french: 52,
   // GE-C02-ich-heisse teaches "mein Name ist" whole; GE-C36-mein opens "You
   // have said it since the second chapter as a single block."
   german: 1,
@@ -653,7 +682,21 @@ const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   marwadi: 0,
   // FA-R216 and FA-R252 recall لوله کش and چوب لباسی, each an earlier headword.
   persian: 2,
-  portuguese: 102,
+  // Every Portuguese hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own, or is not
+  // Portuguese borrowing at all. Phrases: Como se chama? (PT-C03-como-se-chama,
+  // which glosses se and chama itself; two uses of se, and one more in
+  // PT-C18-dizer's Como se diz…?), até logo / até amanhã / até breve (PT-C04;
+  // six of até, two of them the same "até + when" frame: PT-C07's Até sexta!
+  // and PT-C137's Pagar até segunda-feira), de nada (PT-C02; three
+  // of nada), a pasta de dentes (PT-C95; three of pasta), ao lado and noutro
+  // lado (PT-C89, PT-C151; three of lado), o fim de semana (PT-C128; five of
+  // fim), a partir de agora (PT-C150), deitar fora (PT-C204), and the ser vs.
+  // estar headword (PT-C16-ser-vs-estar; one of estar). Not borrowing: the four
+  // uses of chama are the verb "calls", where PT-C195 teaches a chama, "a
+  // flame"; and four are the English gloss "pasta; dough" of a massa (PT-C99),
+  // which spells PT-C193's a pasta, "a folder".
+  portuguese: 34,
   // PA-C09-pasand teaches ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ whole and PA-C10-chaa recalls it;
   // PA-C35-mainu takes it apart ("why the phrase could be used long before").
   punjabi: 2,

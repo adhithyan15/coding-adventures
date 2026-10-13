@@ -13,7 +13,8 @@ gloss: "a public holiday"
 concept_tag: PT-TEMPO212-FERIADO
 prerequisites: [PT-C212-prazo, PT-C212-epoca]
 sounds: []
-roots: []
+roots: [feria-latin]
+etymology_hook: "feriado ← Latin feriatus 'keeping holiday', from feriae 'holidays'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C212-epoca]
 <!-- hl-knowledge: introduces=[PT-LEX-C212-TEMPO212-05]; assesses=[] -->
 
 **o feriado** — "a public holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feriado** ← Latin *feriatus*, "keeping holiday" (Lewis & Short), from *feriae*, "holidays" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

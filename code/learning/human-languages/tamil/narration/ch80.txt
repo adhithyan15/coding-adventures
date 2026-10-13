@@ -17,6 +17,9 @@ You'll want to know: மற்றது.
 idu vēṇḍum. maṟṟadu vēṇḍām. — "I want this one. Not the other."
 The tail of the word is அது, the same that one that ends அதனால். Tamil builds a surprising amount out of that small word, and once you hear it inside a longer one you can usually guess what the longer one is doing.
 
+The word, taken apart.
+மற்றது (maṟṟadu) is native Dravidian. DEDR 4766 lists Malayalam maṟṟavan, "the other (man)" and Kannada maṟu, "other". The entry lists maṟṟu, "other", and -atu makes it "the other one".
+
 What you've built.
 A third way to point at a thing, once two of them are on the table.
 
@@ -142,6 +145,9 @@ No verb, and no word for is. Tamil names the thing and asks about it:
 Then chapter seventy-five lets you check what you heard, or push back on it:
 விலை குறைவா? — vilai kuṟaivā? — "Is the price low?"
 குறைவு is the shortfall word from chapter fifty-six, and the -ஆ on the end is the question ending. Two chapters, one sentence you can say across a counter.
+
+The phrase, taken apart.
+விலை எவ்வளவு? (vilai evvaḷavu?) is two native words: vilai, "price" (DEDR 5421), and evvaḷavu, "how much", the question base e- with aḷavu, "measure" (DEDR 295).
 
 What you've built.
 A whole shop exchange: choose one of two, ask the price, question the answer.

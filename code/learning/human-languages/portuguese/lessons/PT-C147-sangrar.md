@@ -13,7 +13,8 @@ gloss: "to bleed"
 concept_tag: PT-VERB-SANGRAR
 prerequisites: [PT-C147-substituir, PT-C147-corar]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "sangrar ← Latin sanguinare 'to bleed', from sanguis — the same root as sangue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C147-corar]
 <!-- hl-knowledge: introduces=[PT-LEX-C147-VERBOS147-03]; assesses=[] -->
 
 **sangrar** — "to bleed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sangrar** ← Latin *sanguinare*, "to bleed" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *sangrar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

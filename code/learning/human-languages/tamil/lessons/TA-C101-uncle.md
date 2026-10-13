@@ -11,7 +11,8 @@ romanization: "māmā"
 concept_tag: TA-GRAND-UNCLE
 prerequisites: [TA-C101-grandfather, TA-C101-grandmother]
 sounds: []
-roots: []
+roots: [dravidian-maama-uncle]
+etymology_hook: "மாமா — native Dravidian (DEDR 4813); Malayalam māman, Kannada māma, Telugu māma"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C101-grandmother]
 **மாமா** (*māmā*) — "uncle", above all your mother's brother; also "father-in-law".
 
 Tamil kinship names the side of the family, not only the generation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாமா** (*māmā*) is native Dravidian. DEDR 4813 lists Malayalam *māman*, Kannada *māma* and Telugu *māma*. The entry compares Sanskrit *māma*, "maternal uncle" (CDIAL 10055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

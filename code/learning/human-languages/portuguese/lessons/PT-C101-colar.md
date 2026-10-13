@@ -13,7 +13,8 @@ gloss: "a necklace"
 concept_tag: PT-COISAS101-COLAR
 prerequisites: [PT-C100-carteira, PT-C100-anel]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "colar ← Latin collare 'neckband', from collum 'neck' — English collar is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C100-anel]
 <!-- hl-knowledge: introduces=[PT-LEX-C101-COISAS101-01]; assesses=[] -->
 
 **o colar** — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colar** ← Latin *collare*, "neckband" (Lewis & Short), from *collum*, "neck" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

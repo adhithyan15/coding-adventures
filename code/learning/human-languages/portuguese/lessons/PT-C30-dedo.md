@@ -13,7 +13,8 @@ gloss: "a finger; a toe"
 concept_tag: PT-CORPO1-DEDO
 prerequisites: [PT-C30-perna, PT-C30-pe, PT-C22-jogar-brincar-tocar]
 sounds: []
-roots: []
+roots: [digitus-latin]
+etymology_hook: "dedo ← Latin digitus 'finger, toe' — English digit is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C30-pe]
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-04]; assesses=[] -->
 
 **o dedo** — "a finger; a toe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dedo** ← Latin *digitus*, "finger, toe" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

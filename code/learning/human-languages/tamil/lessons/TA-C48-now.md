@@ -11,7 +11,8 @@ romanization: "ippōdu"
 concept_tag: TA-LEAVE-NOW
 prerequisites: [TA-C47-just-so, TA-C46-teacher, TA-C47-true]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-podu-time]
+etymology_hook: "இப்போது — native: near base i- (DEDR 410) + pōtu 'time' (DEDR 4559; Malayalam pōtu)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C47-just-so]
 The same pattern as the word that closed the run before, wearing the near pointer instead of the far one: *i-* and *pōdu*, 'a time'. This time. And *appōdu* is that time, then.
 
 In speech it usually shortens to *ippō*, the way English lets "going to" collapse into "gonna". The full form is what you write; the short one is what you hear.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இப்போது** (*ippōdu*) is native: the near base *i-* (DEDR 410) and *pōtu*, "time" (DEDR 4559; Malayalam *pōtu*). "This time" is "now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

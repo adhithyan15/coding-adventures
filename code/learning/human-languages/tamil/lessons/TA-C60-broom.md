@@ -11,7 +11,8 @@ romanization: "tuṭaippam"
 concept_tag: TA-NOUN-BROOM
 prerequisites: [TA-C60-umbrella, TA-C58-crow, TA-C59-jaggery]
 sounds: []
-roots: []
+roots: [dravidian-tudai-wipe]
+etymology_hook: "துடைப்பம் — native Dravidian (DEDR 3301); Malayalam tuṭeppam"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C60-umbrella]
 Coconut ribs bound at one end, held short, swung low. It is the first thing that touches a வாசல் in the morning: the ground is swept, then wetted, and only then does the கோலம் go down on it.
 
 Three houses, three words again — Kannada ಪೊರಕೆ (*porake*), Telugu చీపురు (*cīpuru*), Tamil துடைப்பம். The doubled ப்ப in the middle is the one you have been holding since பெட்டி taught you to hold a letter twice.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துடைப்பம்** (*tuṭaippam*) is native Dravidian. DEDR 3301 lists Malayalam *tuṭeppam*. It comes from *tuṭai*, "to wipe, to sweep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

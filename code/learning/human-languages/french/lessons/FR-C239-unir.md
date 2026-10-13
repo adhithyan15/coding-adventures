@@ -13,7 +13,8 @@ gloss: "to unite"
 concept_tag: FR-VERB-UNIR
 prerequisites: [FR-C238-resoudre, FR-C238-voler]
 sounds: []
-roots: []
+roots: [unire-latin]
+etymology_hook: "unir ← Latin unire 'to make one', from unus — English unite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C238-voler]
 <!-- hl-knowledge: introduces=[FR-LEX-C239-VERBES239-01]; assesses=[] -->
 
 **unir** — "to unite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unir** ← Latin *unire*, "to make one", from *unus*, "one" — taken from Latin. (EtymDB 2.1 has its Old French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

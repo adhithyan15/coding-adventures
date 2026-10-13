@@ -14,6 +14,7 @@ concept_tag: GE-QUAL214-GEDULDIG
 prerequisites: [GE-C214-froehlich, GE-C214-furchtbar]
 sounds: []
 roots: []
+etymology_hook: "geduldig ← Middle High German gedultic — the word for 'patience' + -ig; Old English had geþyldig"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C214-furchtbar]
 <!-- hl-knowledge: introduces=[GE-LEX-C214-QUAL214-03]; assesses=[] -->
 
 **geduldig** — "patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geduldig** ← Middle High German *gedultic* (EtymDB 2.1): the word for "patience", from a verb "to endure", + *-ig*. EtymDB lists Old English *geþyldig*, "patient", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a waitress"
 concept_tag: GE-THING200-KELLNERIN
 prerequisites: [GE-C200-bestellung, GE-C200-trinkgeld]
 sounds: []
-roots: []
+roots: [cella-latin]
+etymology_hook: "Kellnerin — Kellner 'waiter' + -in; Kellner ← Medieval Latin cellenarius 'cellarer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C200-trinkgeld]
 <!-- hl-knowledge: introduces=[GE-LEX-C200-THING200-04]; assesses=[] -->
 
 **die Kellnerin** — "a waitress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kellnerin** ← Middle High German *këlnærinne* (EtymDB 2.1): *Kellner* + *-in*. *Kellner* goes back to Medieval Latin *cellenārius*, "cellar master".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

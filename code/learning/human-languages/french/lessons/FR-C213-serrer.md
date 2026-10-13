@@ -14,6 +14,7 @@ concept_tag: FR-VERB-SERRER
 prerequisites: [FR-C213-surprendre, FR-C213-soupconner]
 sounds: []
 roots: []
+etymology_hook: "serrer ← Late Latin serare 'to bolt', from sera 'a bar' — the verb behind serrure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C213-soupconner]
 <!-- hl-knowledge: introduces=[FR-LEX-C213-VERBES213-04]; assesses=[] -->
 
 **serrer** — "to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serrer** ← Old French *serrer* ← Vulgar Latin *\*serrare* ← Late Latin *serare*, "to bolt", from *sera*, "a bar" (EtymDB 2.1) — inherited: the verb behind *serrure*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

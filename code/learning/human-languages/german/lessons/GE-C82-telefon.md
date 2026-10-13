@@ -14,6 +14,7 @@ concept_tag: GE-NATUR1-TELEFON
 prerequisites: [GE-C81-tasche, GE-C81-geld]
 sounds: []
 roots: []
+etymology_hook: "Telefon ← French téléphone, from Greek tēle 'far' + phōnē 'sound' — a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C81-geld]
 <!-- hl-knowledge: introduces=[GE-LEX-C82-NATUR1-01]; assesses=[] -->
 
 **das Telefon** — "a telephone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Telefon** ← French *téléphone*, a modern coinage from Greek *tēle*, "far", and *phōnē*, "sound" — borrowed; EtymDB 2.1 traces English *telephone* the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

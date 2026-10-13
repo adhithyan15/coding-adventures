@@ -14,7 +14,8 @@ romanization: "aṭuppu"
 concept_tag: TA-THINGS118-ATUPPU
 prerequisites: [TA-C117-karuvi, TA-C117-utaimai]
 sounds: []
-roots: []
+roots: [dravidian-adu-cook]
+etymology_hook: "அடுப்பு — native Dravidian (DEDR 76); Malayalam aṭuppu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C117-utaimai]
 <!-- hl-knowledge: introduces=[TA-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **அடுப்பு** — *aṭuppu* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அடுப்பு** (*aṭuppu*) is native Dravidian. DEDR 76 lists Malayalam *aṭuppu*. It comes from *aṭu*, "to cook": the stove is the cooking place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

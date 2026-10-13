@@ -13,7 +13,8 @@ gloss: "a shadow, shade"
 concept_tag: GE-THING237-SCHATTEN
 prerequisites: [GE-C237-ruhe, GE-C237-sache]
 sounds: []
-roots: []
+roots: [germanic-skadwaz]
+etymology_hook: "Schatten ← Old High German scato ← Proto-Germanic *skadwaz — the same word as English shade and shadow"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C237-sache]
 <!-- hl-knowledge: introduces=[GE-LEX-C237-THING237-04]; assesses=[] -->
 
 **der Schatten** — "a shadow, shade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schatten** ← Middle High German *schate* ← Old High German *scato* ← Proto-Germanic *\*skadwaz*, "shade" — inherited, the same word as English *shade* and *shadow*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

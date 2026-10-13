@@ -13,7 +13,8 @@ gloss: "a drawing"
 concept_tag: PT-LAZER115-DESENHO
 prerequisites: [PT-C114-filme, PT-C114-cancao]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "desenho — from the verb to draw, which ← Latin designare 'to mark out' — English design"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C114-cancao]
 <!-- hl-knowledge: introduces=[PT-LEX-C115-LAZER115-01]; assesses=[] -->
 
 **o desenho** — "a drawing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desenho** is built from the verb "to draw", which ← Latin *designare*, "to mark out" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

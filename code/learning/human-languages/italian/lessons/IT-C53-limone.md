@@ -14,6 +14,7 @@ concept_tag: IT-VERDURA-LIMONE
 prerequisites: [IT-C53-cipolla, IT-C53-carota]
 sounds: []
 roots: []
+etymology_hook: "limone ← Arabic laymun, from Persian limu — English lemon shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C53-carota]
 <!-- hl-knowledge: introduces=[IT-LEX-C53-VERDURA-05]; assesses=[] -->
 
 **il limone** — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**limone** ← Arabic *laymun*, "lemon" — borrowed; the Arabic word came from Persian *limu*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

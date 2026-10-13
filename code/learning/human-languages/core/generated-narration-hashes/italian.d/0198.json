@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 198,
-  "sourceHash": "fnv1a64:9edf10437ae30e9a",
+  "sourceHash": "fnv1a64:4824c5e9f038b988",
   "lessonIds": [
     "IT-C198-cartella",
     "IT-C198-busta-paga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch198.txt",
   "json": "italian/narration/ch198.json",
-  "textHash": "fnv1a64:eacebf4671b13b3b",
-  "jsonHash": "fnv1a64:65211c149ec62581",
+  "textHash": "fnv1a64:da73f0cea0325b76",
+  "jsonHash": "fnv1a64:464293b0ae9a704c",
   "findings": []
 }

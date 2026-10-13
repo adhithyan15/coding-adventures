@@ -13,7 +13,8 @@ gloss: "a scientist"
 concept_tag: IT-COSE195-SCIENZIATO
 prerequisites: [IT-C195-pilota, IT-C195-commercialista]
 sounds: []
-roots: []
+roots: [scientia-latin]
+etymology_hook: "scienziato — scienza 'science' + -ato; from Latin scientia 'knowledge' — English scientist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C195-commercialista]
 <!-- hl-knowledge: introduces=[IT-LEX-C195-COSE195-03]; assesses=[] -->
 
 **lo scienziato** — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scienziato** — built from *scienza*, "science", with *-ato*. *scienza* ← Latin *scientia*, "knowledge". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

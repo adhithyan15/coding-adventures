@@ -14,7 +14,8 @@ romanization: "katai"
 concept_tag: TA-PORUL274-KATAI
 prerequisites: [TA-C274-icai, TA-C274-patal]
 sounds: []
-roots: []
+roots: [sanskrit-katha]
+etymology_hook: "கதை ← Sanskrit kathā 'conversation, story' (CDIAL 2704)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C274-patal]
 <!-- hl-knowledge: introduces=[TA-LEX-C274-PORUL274-03]; assesses=[] -->
 
 **கதை** — *katai* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கதை** (*katai*) is a loan from Sanskrit *kathā*, "conversation, story" (CDIAL 2704).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

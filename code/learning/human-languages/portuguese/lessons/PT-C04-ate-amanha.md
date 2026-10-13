@@ -13,7 +13,7 @@ sounds: [nasal-anha, final-o-is-u]
 roots: [hatta-arabic, ad-maneana-latin]
 etymology_hook: "amanhã ← Latin ad māneāna 'to the morning' — kin of Spanish mañana; note the nasal -ã"
 duration:
-  max_seconds: 160
+  max_seconds: 161
 requires:
   knowledge: [PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03]
 introduces:
@@ -50,7 +50,7 @@ wearing a heavy nasal ending.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-ATE-AMANHA-03]; assesses=[] -->
 
-- **até** = "until" (← Arabic *ḥattā*, from the last lesson).
+- **até** = "until" (usually traced to Arabic *ḥattā*, from the last lesson).
 - **amanhã** = "tomorrow," from Latin **ad māneāna**, *"to the morning [hour]."*
 
 That **māne** ("morning") root is shared right across Romance — you've now met
@@ -77,4 +77,4 @@ spellings, one sound, both from that doubled-*n*.
 
 [PAUSE 3s] What does *amanhã* come from, and literally mean? (*Ad māneāna* — "to
 the morning.") How does Portuguese spell the *ny* sound that Spanish writes as
-*ñ*? (As *nh*.) Next: "see you soon" — **até breve**.
+*ñ*? (As *nh*.) Next: "see you soon."

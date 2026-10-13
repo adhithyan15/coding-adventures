@@ -11,7 +11,8 @@ gloss: "second — and the ending that makes every other ordinal in the language
 concept_tag: TA-ORDINAL-SECOND
 prerequisites: [TA-C82-first, TA-W35-read-marradu, TA-C77-say, TA-W22-read-mele, TA-C07-numbers-1-5]
 sounds: []
-roots: []
+roots: [dravidian-iru-two, tamil-aaku-become]
+etymology_hook: "இரண்டாவது — native: iraṇṭu 'two' (DEDR 474) + -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 220
 requires:
@@ -48,6 +49,11 @@ reviews_of: [TA-C82-first, TA-W35-read-marradu, TA-C77-say, TA-W22-read-mele]
 
 **இரண்டாவது நாள்** (*iraṇḍāvadu nāḷ*), the second day. **இரண்டாவது கதவு**
 (*iraṇḍāvadu kadavu*), the second door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இரண்டாவது** (*iraṇḍāvadu*) is native: *iraṇṭu*, "two" (DEDR 474), with the ordinal ending *-āvatu*. That ending is usually analysed as *ā*, "to become" (DEDR 333), with *-atu*, "the one": "the one that became two".
 
 ## Grammar Lens: one ending, and one word that does not take it
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C82-ORDINAL-04]; assesses=[TA-LEX-C82-ORDINAL-03, TA-LEX-C82-ORDINAL-01] -->

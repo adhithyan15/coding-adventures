@@ -13,7 +13,8 @@ gloss: "to reach"
 concept_tag: PT-VERB-ALCANCAR
 prerequisites: [PT-C143-propor, PT-C143-apanhar]
 sounds: []
-roots: []
+roots: [calx-latin]
+etymology_hook: "alcançar — usually traced to Vulgar Latin *incalciare 'to follow on the heels', from calx 'heel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C143-apanhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C143-VERBOS143-03]; assesses=[] -->
 
 **alcançar** — "to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alcançar** — Old Portuguese also said *acalçar* (EtymDB 2.1). The usual account traces it to Vulgar Latin *\*incalciare*, "to follow on the heels", from Latin *calx*, "heel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

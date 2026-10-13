@@ -13,7 +13,8 @@ gloss: "the floor"
 concept_tag: IT-CASA3-PAVIMENTO
 prerequisites: [IT-C57-bagno, IT-C58-camera]
 sounds: []
-roots: []
+roots: [pavimentum-latin]
+etymology_hook: "pavimento ← Latin pavimentum 'a beaten floor' — English pavement is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C58-camera]
 <!-- hl-knowledge: introduces=[IT-LEX-C58-CASA3-02]; assesses=[] -->
 
 **il pavimento** — "the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pavimento** ← Latin *pavimentum*, "a floor of beaten stone", from *pavire*, "to beat down". EtymDB 2.1 records it both as inherited and as borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

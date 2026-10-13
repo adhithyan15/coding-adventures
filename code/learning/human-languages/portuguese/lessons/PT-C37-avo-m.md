@@ -13,7 +13,8 @@ gloss: "a grandfather"
 concept_tag: PT-FAMILIA1-AVO-M
 prerequisites: [PT-C36-triste, PT-C37-filha]
 sounds: []
-roots: []
+roots: [avus]
+etymology_hook: "avô ← Vulgar Latin *aviolus, a small form of Latin avus 'grandfather'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C37-filha]
 <!-- hl-knowledge: introduces=[PT-LEX-C37-FAMILIA1-02]; assesses=[] -->
 
 **o avô** — "a grandfather". The closed ô is the grandfather.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avô** ← Vulgar Latin *\*aviolus*, "little grandfather", from Latin *avus*, "grandfather" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *avoo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

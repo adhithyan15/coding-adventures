@@ -11,7 +11,8 @@ romanization: "āṇḍu"
 concept_tag: TA-NOUN-YEAR
 prerequisites: [TA-C73-month, TA-C71-play, TA-C72-cry]
 sounds: []
-roots: []
+roots: [dravidian-aandu-year]
+etymology_hook: "ஆண்டு — native Dravidian (DEDR 5153); Malayalam āṇṭu, Kannada ēḍu"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ It opens on the free-standing **ஆ**, because the word begins with that vowel �
 இன்று opens on இ. In the middle is the **ண்ட** you first read in வண்டி.
 
 Three sizes now, each holding the one before it: நாள், மாதம், ஆண்டு.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆண்டு** (*āṇḍu*) is native Dravidian. DEDR 5153 lists Malayalam *āṇṭu* and Kannada *ēḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

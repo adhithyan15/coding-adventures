@@ -13,7 +13,8 @@ gloss: "a butcher's"
 concept_tag: IT-COSE221-MACELLERIA
 prerequisites: [IT-C220-tasca, IT-C221-panetteria]
 sounds: []
-roots: []
+roots: [macellum-latin]
+etymology_hook: "macelleria — from macello ← Latin macellum 'a meat market'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C221-panetteria]
 <!-- hl-knowledge: introduces=[IT-LEX-C221-COSE221-02]; assesses=[] -->
 
 **la macelleria** — "a butcher's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macelleria** — built from *macello*, "a slaughterhouse", with *-eria*. *macello* ← Latin *macellum*, "a meat market". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-QUAL218-ORGOGLIOSO
 prerequisites: [IT-C217-davvero, IT-C218-geloso]
 sounds: []
 roots: []
+etymology_hook: "orgoglioso — full of orgoglio 'pride', a word from Frankish urgoli"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C218-geloso]
 <!-- hl-knowledge: introduces=[IT-LEX-C218-QUAL218-02]; assesses=[] -->
 
 **orgoglioso** — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orgoglioso** — built from *orgoglio*, "pride", with *-oso*, "full of". *orgoglio* ← Frankish *urgoli*, "pride" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

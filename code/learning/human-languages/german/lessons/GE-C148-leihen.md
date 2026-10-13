@@ -13,7 +13,8 @@ gloss: "to lend, to borrow"
 concept_tag: GE-VERB-LEIHEN
 prerequisites: [GE-C147-klingeln, GE-C148-kosten]
 sounds: []
-roots: []
+roots: [germanic-lihwana]
+etymology_hook: "leihen ← Old High German līhan ← Proto-Germanic *līhwaną — kin to English loan and lend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C148-kosten]
 <!-- hl-knowledge: introduces=[GE-LEX-C148-VERB148-02]; assesses=[] -->
 
 **leihen** — "to lend, to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leihen** ← Old High German *līhan* ← Proto-Germanic *\*līhwaną*, "to lend" — inherited. (EtymDB 2.1) English *loan* and *lend* come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ceyali"
 concept_tag: TA-PORUL189-CEYALI
 prerequisites: [TA-C189-melukuvartti, TA-C189-inaiyatalam]
 sounds: []
-roots: []
+roots: [sey-do-dravidian]
+etymology_hook: "செயலி — native Dravidian (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C189-inaiyatalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C189-PORUL189-04]; assesses=[] -->
 
 **செயலி** — *ceyali* — "an app".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செயலி** (*ceyali*) is native Dravidian (DEDR 1957). It is a modern coinage on *ceyal*, "action", from *cey*, "to do", with *-i*: "the thing that does".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "at once"
 concept_tag: IT-TEMPO153-SUBITO
 prerequisites: [IT-C152-sogno, IT-C153-raramente]
 sounds: []
-roots: []
+roots: [subitus-latin]
+etymology_hook: "subito ← Latin subito 'suddenly', a learned word — English sudden is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C153-raramente]
 <!-- hl-knowledge: introduces=[IT-LEX-C153-TEMPO153-02]; assesses=[] -->
 
 **subito** — "at once".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**subito** ← Latin *subito*, "suddenly" — a learned borrowing: a word passed down by speech would have softened its *b*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

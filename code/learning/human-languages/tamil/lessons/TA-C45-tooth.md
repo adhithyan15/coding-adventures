@@ -11,7 +11,8 @@ romanization: "pal"
 concept_tag: TA-NOUN-TOOTH
 prerequisites: [TA-C45-nose, TA-C43-family, TA-C44-salt]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth]
+etymology_hook: "பல் — native Dravidian (DEDR 3986): Malayalam pal, Kannada pal and hal-, Telugu pallu"
 duration:
   max_seconds: 210
 requires:

@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI102-ZAINO
 prerequisites: [IT-C101-lettera, IT-C101-messaggio]
 sounds: []
 roots: []
+etymology_hook: "zaino ← Lombardic zeina 'basket' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C101-messaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C102-OGGETTI102-01]; assesses=[] -->
 
 **lo zaino** — "a rucksack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zaino** ← Lombardic *zeina*, "basket" — borrowed from the Germanic language of the Lombards. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

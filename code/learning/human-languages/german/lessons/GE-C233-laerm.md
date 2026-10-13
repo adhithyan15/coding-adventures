@@ -14,6 +14,7 @@ concept_tag: GE-THING233-LAERM
 prerequisites: [GE-C232-kunst, GE-C232-landschaft]
 sounds: []
 roots: []
+etymology_hook: "Lärm ← Italian allarme 'to arms!' — borrowed; English alarm is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C232-landschaft]
 <!-- hl-knowledge: introduces=[GE-LEX-C233-THING233-01]; assesses=[] -->
 
 **der Lärm** — "noise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lärm** ← Italian *allarme*, "to arms!" (EtymDB 2.1) — borrowed, and its first syllable dropped. English *alarm* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

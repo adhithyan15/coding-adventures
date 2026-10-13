@@ -13,7 +13,8 @@ gloss: "to build"
 concept_tag: FR-VERB-CONSTRUIRE
 prerequisites: [FR-C233-repasser, FR-C233-reparer]
 sounds: []
-roots: []
+roots: [struere-latin]
+etymology_hook: "construire ← Latin construere 'to heap together' — shaped like détruire; English construct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C233-reparer]
 <!-- hl-knowledge: introduces=[FR-LEX-C233-VERBES233-03]; assesses=[] -->
 
 **construire** — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**construire** ← Latin *construere*, "to heap together, to build" — taken from Latin and shaped like *détruire*. (EtymDB 2.1 has its Old French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING201-TOPF
 prerequisites: [GE-C200-besteck, GE-C201-dose]
 sounds: []
 roots: []
+etymology_hook: "Topf ← Middle High German topf — a central German word of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C201-dose]
 <!-- hl-knowledge: introduces=[GE-LEX-C201-THING201-02]; assesses=[] -->
 
 **der Topf** — "a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Topf** ← Middle High German *topf* (EtymDB 2.1), a central German word of uncertain origin; Dutch *dop*, "little cup", may be related.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cīrakam"
 concept_tag: TA-THINGS139-CIRAKAM
 prerequisites: [TA-C138-milaku, TA-C138-katuku]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "சீரகம் ← Sanskrit jīraka 'cumin seed' (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C138-katuku]
 <!-- hl-knowledge: introduces=[TA-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **சீரகம்** — *cīrakam* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சீரகம்** (*cīrakam*) is a loan from Sanskrit *jīraka*, "cumin seed" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

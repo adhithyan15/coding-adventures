@@ -14,6 +14,7 @@ concept_tag: FR-QUAL244-SILENCIEUX-SILENCIEUSE
 prerequisites: [FR-C243-consultation, FR-C243-regime]
 sounds: []
 roots: []
+etymology_hook: "silencieux — from the word for 'silence', Latin silentium — English silent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C243-regime]
 <!-- hl-knowledge: introduces=[FR-LEX-C244-QUAL244-01]; assesses=[] -->
 
 **silencieux / silencieuse** — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**silencieux** — built from the word for "silence", ← Latin *silentium* (Lewis & Short), with *-eux*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

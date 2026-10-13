@@ -47,6 +47,11 @@ numbers, and they do the same odd thing.
 Not *einszehn*. Not "oneteen" in English either. Eleven is the first of two
 numbers that refuse the pattern, in German and in English alike.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elf** ← Old High German *einlif* ← Proto-Germanic *\*ainalif*, "one left" — inherited, the same word as English *eleven*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELF-01] -->
 

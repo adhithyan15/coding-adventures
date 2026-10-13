@@ -14,6 +14,7 @@ concept_tag: IT-PERCHE155-COMUNQUE
 prerequisites: [IT-C155-pero, IT-C155-invece]
 sounds: []
 roots: []
+etymology_hook: "comunque — come 'how' + -unque '-ever', from Latin umquam 'ever'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C155-invece]
 <!-- hl-knowledge: introduces=[IT-LEX-C155-PERCHE155-05]; assesses=[] -->
 
 **comunque** — "anyway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comunque** is *come*, "how", with *-unque*, "-ever": however. The ending goes back to Latin *umquam*, "ever". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

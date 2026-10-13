@@ -27,6 +27,9 @@ You'll want to know: The word.
 sexto (masculine), sexta (feminine) — sixth. o sexto andar — the sixth floor. a sexta vez — the sixth time.
 Friday is sexta-feira, and Sexta-feira Santa is Good Friday — "holy sixth feast-day", which is a striking thing to be able to read once you know the number is in there.
 
+The word, taken apart.
+sexto from Latin sextus, "sixth", from sex, "six" — inherited. EtymDB 2.1 has no ancestor row for sexto; it derives Old Portuguese sexto, also written sesto, from sextus.
+
 Why it's said this way: five numbered days, not seven.
 Count what the week actually numbers: segunda, terça, quarta, quinta, sexta. Five days, second through sixth. Then it stops.
 Sábado is the Sabbath and domingo is the Lord's day; both were older and holier than the sixth-century renaming, and neither gave way to a number. So the Portuguese week is a numbered middle with a named weekend at each end — and the five numbers in it are five of the ten ordinals this chapter and the last are teaching.
@@ -193,7 +196,10 @@ Recalls first, then the ninth — and the best word-history in the chapter.
 
 You'll want to know: The word.
 nono (masculine), nona (feminine) — ninth. o nono andar — the ninth floor. a nona vez — the ninth time.
-Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin had novēnus and squeezed it into nōnus, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound.
+Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin nōnus had already shrunk from an older nowenos, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound.
+
+The word, taken apart.
+nono from Latin nonus, "ninth" (EtymDB 2.1) — inherited. Latin nonus had itself shrunk from an older nowenos, built on the word for nine.
 
 Why it's said this way: the ninth hour that moved.
 Rome counted its hours from sunrise, so the ninth hour fell in the middle of the afternoon, and nōna hōra was the hour of a fixed prayer. Over centuries the prayer crept earlier and earlier until it was being said at midday — and the name went with it.
@@ -237,6 +243,9 @@ Recalls first, then the tenth, which closes the series.
 You'll want to know: The word.
 décimo (masculine), décima (feminine) — tenth. o décimo andar — the tenth floor. a décima vez — the tenth time.
 Dez is ten, and décimo carries the acute accent for exactly the reason sétimo did: the stress sits on the first syllable — DÉ-ci-mo — against where a reader would otherwise put it.
+
+The word, taken apart.
+décimo from Latin decimus, "tenth" (Lewis & Short), from decem, "ten" — a learned borrowing from Latin. The inherited descendant of decimus is a different word, meaning a tithe.
 
 Grammar Lens: past ten, the words stack.
 Portuguese does not invent a new word for eleventh. It stacks:

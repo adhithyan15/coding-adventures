@@ -13,7 +13,8 @@ gloss: "patience"
 concept_tag: PT-SAUDE211-PACIENCIA
 prerequisites: [PT-C210-xarope, PT-C210-pomada]
 sounds: []
-roots: []
+roots: [pati-latin]
+etymology_hook: "paciência ← Latin patientia 'endurance', from pati 'to suffer' — English patience"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C210-pomada]
 <!-- hl-knowledge: introduces=[PT-LEX-C211-SAUDE211-01]; assesses=[] -->
 
 **a paciência** — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paciência** ← Latin *patientia*, "endurance" (EtymDB 2.1), from *pati*, "to suffer" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

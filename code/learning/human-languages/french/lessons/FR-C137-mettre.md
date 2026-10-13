@@ -13,7 +13,8 @@ gloss: "to put; to put on"
 concept_tag: FR-VERB-METTRE
 prerequisites: [FR-C137-visiter, FR-C137-repondre]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "mettre ← Latin mittere 'to send, to let go' — English mission and admit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C137-repondre]
 <!-- hl-knowledge: introduces=[FR-LEX-C137-VERBES89-04]; assesses=[] -->
 
 **mettre** — "to put; to put on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mettre** ← Old French *metre* ← Latin *mittere*, "to send, to let go" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

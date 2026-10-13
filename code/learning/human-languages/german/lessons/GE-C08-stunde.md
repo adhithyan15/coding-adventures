@@ -13,7 +13,7 @@ sounds: [st-initial-scht, u-long]
 roots: [germanic-stundo]
 etymology_hook: "German did not lack a word for the hour — Stunde was already there. The loan did not replace it; the two split the work, Uhr for clock-reading and Stunde for a span of time"
 duration:
-  max_seconds: 165
+  max_seconds: 218
 requires:
   knowledge: [GE-ETYMON-UHR-HORA-01, GE-LEX-UHR-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -46,6 +46,11 @@ time German already had a perfectly good word, and took the Latin one anyway.
 
 Native Germanic, and older in the language than *Uhr*. It is the word for a
 duration: a lesson lasts *eine Stunde*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stunde** ← Old High German *stunta* ← Proto-Germanic *\*stundō*, "point in time" — inherited; old English *stound*, "a while", is the same word. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-STUNDE-01] -->

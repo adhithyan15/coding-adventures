@@ -13,7 +13,8 @@ gloss: "the chin"
 concept_tag: PT-CORPO4-QUEIXO
 prerequisites: [PT-C33-pele, PT-C33-unha]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "queixo ← Vulgar Latin *capseum, from capsa 'box' — English capsule shares capsa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C33-unha]
 <!-- hl-knowledge: introduces=[PT-LEX-C33-CORPO4-03]; assesses=[] -->
 
 **o queixo** — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**queixo** ← Vulgar Latin *\*capseum* (EtymDB 2.1), from Latin *capsa*, "box" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

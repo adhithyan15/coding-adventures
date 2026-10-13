@@ -14,7 +14,8 @@ romanization: "peruntaṉmaiyāṉa"
 concept_tag: TA-GUNAM212-PERUNTANMAIYANA
 prerequisites: [TA-C212-palavinamana, TA-C212-cuyanalamana]
 sounds: []
-roots: []
+roots: [dravidian-peru-big, dravidian-taan-self]
+etymology_hook: "பெருந்தன்மையான — native: perum 'great' (DEDR 4411) + taṉmai 'nature' (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C212-cuyanalamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C212-GUNAM212-03]; assesses=[] -->
 
 **பெருந்தன்மையான** — *peruntaṉmaiyāṉa* — "generous, big-hearted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெருந்தன்மையான** (*peruntaṉmaiyāṉa*) is native: *perum*, "great" (DEDR 4411), and *taṉmai*, "nature, character" (DEDR 3196): "great-natured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

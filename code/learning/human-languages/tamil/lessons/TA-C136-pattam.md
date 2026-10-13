@@ -14,7 +14,8 @@ romanization: "paṭṭam"
 concept_tag: TA-THINGS136-PATTAM
 prerequisites: [TA-C136-kuppi, TA-C136-pantu]
 sounds: []
-roots: []
+roots: [dravidian-pattam-flat]
+etymology_hook: "பட்டம் — probably native paṭṭam 'flat piece' (DEDR 3878); DEDR does not list the kite sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C136-pantu]
 <!-- hl-knowledge: introduces=[TA-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **பட்டம்** — *paṭṭam* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பட்டம்** (*paṭṭam*) is probably the same word as *paṭṭam*, "flat piece", which is native (DEDR 3878). DEDR does not list the "kite" sense, so the link is likely rather than proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

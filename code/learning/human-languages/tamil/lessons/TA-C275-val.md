@@ -14,7 +14,8 @@ romanization: "vāl"
 concept_tag: TA-PORUL275-VAL
 prerequisites: [TA-C274-vilanku, TA-C275-iraku]
 sounds: []
-roots: []
+roots: [sanskrit-vala-tail]
+etymology_hook: "வால் ← Indo-Aryan vāla 'tail' (CDIAL 11572), an early loan (DEDR App. 57)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C275-iraku]
 <!-- hl-knowledge: introduces=[TA-LEX-C275-PORUL275-02]; assesses=[] -->
 
 **வால்** — *vāl* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வால்** (*vāl*) is an early loan from Indo-Aryan *vāla*, "tail, hair" (CDIAL 11572). DEDR lists it in its appendix of such loans (DEDR App. 57), with Malayalam vāl and Telugu vālamu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

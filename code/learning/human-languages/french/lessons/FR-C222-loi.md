@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES222-LOI
 prerequisites: [FR-C222-societe, FR-C222-gouvernement]
 sounds: []
 roots: []
+etymology_hook: "loi ← Latin lex, legis 'law' — English legal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C222-gouvernement]
 <!-- hl-knowledge: introduces=[FR-LEX-C222-CHOSES222-03]; assesses=[] -->
 
 **la loi** — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loi** ← Old French *loi* ← Latin *lex*, *legis*, "law" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

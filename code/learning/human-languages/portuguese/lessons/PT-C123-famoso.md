@@ -13,7 +13,8 @@ gloss: "famous"
 concept_tag: PT-QUALIDADES123-FAMOSO
 prerequisites: [PT-C122-barulhento, PT-C122-ultimo]
 sounds: []
-roots: []
+roots: [fama-latin]
+etymology_hook: "famoso ← Latin famosus 'much talked of', from fama 'talk, fame' — English famous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C122-ultimo]
 <!-- hl-knowledge: introduces=[PT-LEX-C123-QUALIDADES123-01]; assesses=[] -->
 
 **famoso** — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**famoso** ← Latin *famosus*, "much talked of" (EtymDB 2.1), from *fama*, "talk, fame" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

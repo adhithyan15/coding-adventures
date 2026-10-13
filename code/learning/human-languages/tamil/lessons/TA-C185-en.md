@@ -14,7 +14,8 @@ romanization: "eṇ"
 concept_tag: TA-PORUL185-EN
 prerequisites: [TA-C184-kurippetu, TA-C185-varicai]
 sounds: []
-roots: []
+roots: [dravidian-en-number]
+etymology_hook: "எண் — native Dravidian (DEDR 793); Malayalam eṇ 'number'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C185-varicai]
 <!-- hl-knowledge: introduces=[TA-LEX-C185-PORUL185-02]; assesses=[] -->
 
 **எண்** — *eṇ* — "a number (phone, house, account)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எண்** (*eṇ*) is native Dravidian. DEDR 793 lists Malayalam *eṇ*, "number".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

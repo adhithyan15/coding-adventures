@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 216,
-  "sourceHash": "fnv1a64:3c95e0ad733e7102",
+  "sourceHash": "fnv1a64:5c8cff77ab7f86a8",
   "lessonIds": [
     "PT-C216-gratuito-gratuita",
     "PT-C216-moderno-moderna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch216.txt",
   "json": "portuguese/narration/ch216.json",
-  "textHash": "fnv1a64:e8328d156c5d18d7",
-  "jsonHash": "fnv1a64:9d42e939e115fe0e",
+  "textHash": "fnv1a64:ac2297b1211c0ac2",
+  "jsonHash": "fnv1a64:231ed7ae401b7130",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "history, a story"
 concept_tag: PT-TRAB230-HISTORIA
 prerequisites: [PT-C230-universidade, PT-C230-erro]
 sounds: []
-roots: []
+roots: [historia-latin]
+etymology_hook: "história ← Latin historia, from Greek historia 'inquiry' — English history and story"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C230-erro]
 <!-- hl-knowledge: introduces=[PT-LEX-C230-TRAB230-03]; assesses=[] -->
 
 **a história** — "history, a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**história** ← Latin *historia*, "inquiry, story" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *historia*, "inquiry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

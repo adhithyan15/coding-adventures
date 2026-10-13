@@ -13,7 +13,8 @@ gloss: "to look"
 concept_tag: PT-VERB-OLHAR
 prerequisites: [PT-C129-as-vezes, PT-C129-escutar]
 sounds: []
-roots: []
+roots: [oculus-latin]
+etymology_hook: "olhar ← Vulgar Latin *adoculare, from oculus 'eye' — the same root as óculos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C129-escutar]
 <!-- hl-knowledge: introduces=[PT-LEX-C129-TEMPO129-05]; assesses=[] -->
 
 **olhar** — "to look".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**olhar** ← Vulgar Latin *\*adoculare* (EtymDB 2.1), from Latin *oculus*, "eye" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

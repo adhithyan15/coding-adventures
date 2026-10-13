@@ -13,7 +13,8 @@ gloss: "talkative"
 concept_tag: PT-QUAL187-FALADOR-FALADORA
 prerequisites: [PT-C186-falso-falsa, PT-C187-trabalhador-trabalhadora]
 sounds: []
-roots: []
+roots: [fabulari-latin]
+etymology_hook: "falador — built from falar 'to speak' (← Latin fabulari) + -dor 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C187-trabalhador-trabalhadora]
 <!-- hl-knowledge: introduces=[PT-LEX-C187-QUAL187-02]; assesses=[] -->
 
 **falador / faladora** — "talkative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**falador** is built from *falar*, "to speak" (← Latin *fabulari*), and *-dor*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

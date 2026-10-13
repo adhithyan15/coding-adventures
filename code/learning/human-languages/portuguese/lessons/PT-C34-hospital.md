@@ -13,7 +13,8 @@ gloss: "a hospital"
 concept_tag: PT-SAUDE1-HOSPITAL
 prerequisites: [PT-C34-tosse, PT-C34-remedio]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "hospital ← Latin hospitalis 'of guests', from hospes 'guest' — English hostel shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C34-remedio]
 <!-- hl-knowledge: introduces=[PT-LEX-C34-SAUDE1-05]; assesses=[] -->
 
 **o hospital** — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hospital** ← Latin *hospitalis*, "of guests" (Lewis & Short), from *hospes*, "guest" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

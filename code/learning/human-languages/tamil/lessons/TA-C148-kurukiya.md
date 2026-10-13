@@ -14,7 +14,8 @@ romanization: "kuṟukiya"
 concept_tag: TA-QUAL148-KURUKIYA
 prerequisites: [TA-C148-alamana, TA-C148-akalamana]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "குறுகிய — native Dravidian (DEDR 1851); Malayalam kuṟu 'short, little'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C148-akalamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C148-QUAL148-03]; assesses=[] -->
 
 **குறுகிய** — *kuṟukiya* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறுகிய** (*kuṟukiya*) is native Dravidian. DEDR 1851 lists Malayalam *kuṟu*, "short, little". It comes from *kuṟuku*, "to become short, narrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

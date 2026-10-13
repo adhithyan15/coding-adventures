@@ -14,6 +14,7 @@ concept_tag: FR-VERB-EXISTER
 prerequisites: [FR-C214-enregistrer, FR-C214-entretenir]
 sounds: []
 roots: []
+etymology_hook: "exister ← Latin existere 'to stand out, to arise' — English exist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C214-entretenir]
 <!-- hl-knowledge: introduces=[FR-LEX-C214-VERBES214-03]; assesses=[] -->
 
 **exister** — "to exist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exister** ← Latin *existere*, "to stand out, to arise" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

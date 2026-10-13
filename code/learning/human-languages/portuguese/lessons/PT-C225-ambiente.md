@@ -13,7 +13,8 @@ gloss: "the environment"
 concept_tag: PT-COISAS225-AMBIENTE
 prerequisites: [PT-C224-jarra, PT-C224-planta]
 sounds: []
-roots: []
+roots: [ire-latin]
+etymology_hook: "ambiente ← Latin ambiens 'going around', from ambire — English ambient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C224-planta]
 <!-- hl-knowledge: introduces=[PT-LEX-C225-COISAS225-01]; assesses=[] -->
 
 **o ambiente** — "the environment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ambiente** ← Latin *ambiens, ambientis*, "going around" (EtymDB 2.1), from *ambire*, "to go around" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pativēṟṟu"
 concept_tag: TA-VERB-PATIVERRU
 prerequisites: [TA-C230-kurai-col, TA-C230-pativirakku]
 sounds: []
-roots: []
+roots: [dravidian-pati-imprint, dravidian-eeru-climb]
+etymology_hook: "பதிவேற்று — a coinage: pativu 'record' (DEDR 3911) + ēṟṟu 'to raise' (DEDR 916)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C230-pativirakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C230-ACT230-05]; assesses=[] -->
 
 **பதிவேற்று** — *pativēṟṟu* — "to upload".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதிவேற்று** (*pativēṟṟu*) is a modern coinage from native parts: *pativu*, "record" (DEDR 3911), and *ēṟṟu*, "to raise", from *ēṟu*, "to rise" (DEDR 916).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 243,
-  "sourceHash": "fnv1a64:08ac52d28dc0b1b1",
+  "sourceHash": "fnv1a64:924e48de9e395561",
   "lessonIds": [
     "GE-C243-nachteil",
     "GE-C243-wahrheit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch243.txt",
   "json": "german/narration/ch243.json",
-  "textHash": "fnv1a64:01a4418e77400231",
-  "jsonHash": "fnv1a64:e7952e5917b0de2f",
+  "textHash": "fnv1a64:d1fb0f26221b64d8",
+  "jsonHash": "fnv1a64:c8429c6aa305e6cb",
   "findings": []
 }

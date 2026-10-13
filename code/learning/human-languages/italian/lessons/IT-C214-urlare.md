@@ -13,7 +13,8 @@ gloss: "to scream"
 concept_tag: IT-VERB-URLARE
 prerequisites: [IT-C214-tossire, IT-C214-tremare]
 sounds: []
-roots: []
+roots: [ululare-latin]
+etymology_hook: "urlare ← Latin ululare 'to howl' — English ululate is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C214-tremare]
 <!-- hl-knowledge: introduces=[IT-LEX-C214-VERBI214-04]; assesses=[] -->
 
 **urlare** — "to scream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urlare** ← Latin *ululare*, "to howl" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

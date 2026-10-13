@@ -13,7 +13,8 @@ gloss: "culture"
 concept_tag: GE-THING232-KULTUR
 prerequisites: [GE-C232-kindheit, GE-C232-kenntnis]
 sounds: []
-roots: []
+roots: [cultura-latin]
+etymology_hook: "Kultur ← Latin cultūra 'tilling, cultivation', from colere 'to till' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C232-kenntnis]
 <!-- hl-knowledge: introduces=[GE-LEX-C232-THING232-03]; assesses=[] -->
 
 **die Kultur** — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kultur** ← Latin *cultūra*, "tilling, cultivation", from *colere*, "to till" (EtymDB 2.1) — borrowed: culture began in the field.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the German for a result, then the German for an explanat
 You'll want to know: das Erlebnis.
 das Erlebnis — "an experience (something lived)".
 
+The word, taken apart.
+Erlebnis is er- + leben, "to live", + -nis: something lived through. leben from Proto-Germanic libjaną. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an explanation, then the German for an ex
 
 You'll want to know: die Führung.
 die Führung — "a guided tour, leadership".
+
+The word, taken apart.
+Führung is the verb "to lead" + -ung. That verb first meant "to make go", built on fahren: a guide makes you travel. EtymDB 2.1 has the verb but not its source.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for an experience, then the German for a guid
 You'll want to know: die Gebühr.
 die Gebühr — "a fee".
 
+The word, taken apart.
+Gebühr comes from Middle High German gebür, "what is due", from an old verb meaning "to befall, to be fitting". EtymDB 2.1 has no source for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a guided tour, then the German for a fee.
 You'll want to know: das Gefühl.
 das Gefühl — "a feeling".
 
+The word, taken apart.
+Gefühl is ge- + fühlen, "to feel": a feeling. EtymDB 2.1 lists English feel beside it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a fee, then the German for a feeling.
 
 You'll want to know: die Gegend.
 die Gegend — "an area, a region".
+
+The word, taken apart.
+Gegend from Middle High German gegende (EtymDB 2.1), built on the word for "towards, against": the land that lies before you, a copy of Medieval Latin contrāta.
 
 What you've built.
 One more word for this chapter.

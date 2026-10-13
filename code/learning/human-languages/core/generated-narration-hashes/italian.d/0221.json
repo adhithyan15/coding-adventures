@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 221,
-  "sourceHash": "fnv1a64:85034c49325bf4ce",
+  "sourceHash": "fnv1a64:f18e2364d8a3a391",
   "lessonIds": [
     "IT-C221-panetteria",
     "IT-C221-macelleria",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch221.txt",
   "json": "italian/narration/ch221.json",
-  "textHash": "fnv1a64:8c22eb22fc268cf3",
-  "jsonHash": "fnv1a64:b6d898c7d3e422aa",
+  "textHash": "fnv1a64:2deddc612292fb88",
+  "jsonHash": "fnv1a64:5708aa1968b16880",
   "findings": []
 }

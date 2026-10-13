@@ -14,7 +14,8 @@ romanization: "keṭṭa"
 concept_tag: TA-THINGS143-KETTA
 prerequisites: [TA-C142-mulankai, TA-C143-kattaiviral, TA-C41-adjective-system]
 sounds: []
-roots: []
+roots: [dravidian-kedu-spoil]
+etymology_hook: "கெட்ட — native Dravidian (DEDR 1942); Malayalam keṭu 'ruin'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C143-kattaiviral]
 <!-- hl-knowledge: introduces=[TA-LEX-C143-THINGS143-02]; assesses=[] -->
 
 **கெட்ட** — *keṭṭa* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கெட்ட** (*keṭṭa*) is native Dravidian. DEDR 1942 lists Malayalam *keṭu*, "ruin". It is "spoiled", from *keṭu*, "to perish, to go bad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

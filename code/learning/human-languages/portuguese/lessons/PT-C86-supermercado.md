@@ -13,7 +13,8 @@ gloss: "a supermarket"
 concept_tag: PT-LUGARES86-SUPERMERCADO
 prerequisites: [PT-C85-cinema, PT-C85-camara-municipal]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "supermercado = super- 'above, beyond' (← Latin super) + mercado 'market'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C85-camara-municipal]
 <!-- hl-knowledge: introduces=[PT-LEX-C86-LUGARES86-01]; assesses=[] -->
 
 **o supermercado** — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**supermercado** is built from *super-*, "above, beyond" (← Latin *super*), and *mercado*, "market".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

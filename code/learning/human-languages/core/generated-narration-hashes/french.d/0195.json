@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 195,
-  "sourceHash": "fnv1a64:7e1ee5c4c17599ea",
+  "sourceHash": "fnv1a64:20d779eb30434f2b",
   "lessonIds": [
     "FR-C195-dialecte",
     "FR-C195-nouvelle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch195.txt",
   "json": "french/narration/ch195.json",
-  "textHash": "fnv1a64:ab3d578e23800c90",
-  "jsonHash": "fnv1a64:ff0dc6cc97701f7e",
+  "textHash": "fnv1a64:0762c145fa32b4ff",
+  "jsonHash": "fnv1a64:fc84e8a248de348c",
   "findings": []
 }

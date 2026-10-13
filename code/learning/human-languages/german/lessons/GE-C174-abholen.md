@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ABHOLEN
 prerequisites: [GE-C173-zusammen, GE-C173-allein]
 sounds: []
 roots: []
+etymology_hook: "abholen — ab- 'off, away' + holen 'to fetch': to fetch away"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C173-allein]
 <!-- hl-knowledge: introduces=[GE-LEX-C174-VERB174-01]; assesses=[] -->
 
 **abholen** — "to pick up, to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abholen** is *ab-*, "off, away", + *holen*, "to fetch" ← Middle High German *holen* (EtymDB 2.1): to collect and take away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

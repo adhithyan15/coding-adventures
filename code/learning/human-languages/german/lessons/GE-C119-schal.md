@@ -14,6 +14,7 @@ concept_tag: GE-KLEIDUNG119-SCHAL
 prerequisites: [GE-C118-krawatte, GE-C118-handschuhe]
 sounds: []
 roots: []
+etymology_hook: "Schal ← English shawl ← Persian šāl — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C118-handschuhe]
 <!-- hl-knowledge: introduces=[GE-LEX-C119-KLEIDUNG119-01]; assesses=[] -->
 
 **der Schal** — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schal** ← English *shawl* ← Persian *šāl*, "shawl, scarf" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

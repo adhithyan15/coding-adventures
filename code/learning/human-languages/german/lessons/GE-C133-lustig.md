@@ -13,7 +13,8 @@ gloss: "funny"
 concept_tag: GE-EIGEN133-LUSTIG
 prerequisites: [GE-C132-freundlich, GE-C133-boese]
 sounds: []
-roots: []
+roots: [germanic-lustuz]
+etymology_hook: "lustig ← Old High German lustīg: the word for 'pleasure' (English lust) + -ig"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C133-boese]
 <!-- hl-knowledge: introduces=[GE-LEX-C133-EIGEN133-02]; assesses=[] -->
 
 **lustig** — "funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lustig** ← Old High German *lustīg*: the word for "pleasure", Old High German *lust*, English *lust*, + *-ig* (EtymDB 2.1). Funny is what gives pleasure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

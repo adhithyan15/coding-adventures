@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES254-GROTTE
 prerequisites: [FR-C254-pelouse, FR-C254-sentier]
 sounds: []
 roots: []
+etymology_hook: "grotte ← Italian grotta, from Latin crypta — English grotto and crypt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C254-sentier]
 <!-- hl-knowledge: introduces=[FR-LEX-C254-CHOSES254-05]; assesses=[] -->
 
 **la grotte** — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grotte** ← Italian *grotta* ← Latin *crypta*, from Greek *krypte*, "a hidden place" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

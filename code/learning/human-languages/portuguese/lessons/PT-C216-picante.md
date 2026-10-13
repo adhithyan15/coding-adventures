@@ -13,7 +13,8 @@ gloss: "spicy"
 concept_tag: PT-QUAL216-PICANTE
 prerequisites: [PT-C216-moderno-moderna, PT-C216-antigo-antiga]
 sounds: []
-roots: []
+roots: [latin-picare]
+etymology_hook: "picante — 'stinging': from the verb to prick, to sting + -ante"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C216-antigo-antiga]
 <!-- hl-knowledge: introduces=[PT-LEX-C216-QUAL216-04]; assesses=[] -->
 
 **picante** — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**picante** is "stinging": built from the verb "to prick, to sting" and *-ante*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

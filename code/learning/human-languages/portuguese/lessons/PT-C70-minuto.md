@@ -13,7 +13,8 @@ gloss: "a minute"
 concept_tag: PT-QUANDO1-MINUTO
 prerequisites: [PT-C70-mes, PT-C70-manha]
 sounds: []
-roots: []
+roots: [minutus-latin]
+etymology_hook: "minuto ← Latin minutus 'made small': the first small part of an hour — English minute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C70-manha]
 <!-- hl-knowledge: introduces=[PT-LEX-C70-QUANDO1-04]; assesses=[] -->
 
 **o minuto** — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**minuto** ← Latin *minutus*, "made small" (EtymDB 2.1) — a learned borrowing from Latin. An hour was cut into small parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

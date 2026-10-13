@@ -14,7 +14,8 @@ romanization: "aṭaiyāḷa aṭṭai"
 concept_tag: TA-PORUL272-ATAIYALA-ATTAI
 prerequisites: [TA-C271-arancu, TA-C271-pappali]
 sounds: []
-roots: []
+roots: [dravidian-adaiyaalam-mark, dravidian-attai-cardboard]
+etymology_hook: "அடையாள அட்டை — native: aṭaiyāḷam 'mark, sign' (DEDR 89) + aṭṭai 'cardboard' (DEDR 98)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C271-pappali]
 <!-- hl-knowledge: introduces=[TA-LEX-C272-PORUL272-01]; assesses=[] -->
 
 **அடையாள அட்டை** — *aṭaiyāḷa aṭṭai* — "an identity card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அடையாள அட்டை** (*aṭaiyāḷa aṭṭai*) is native: *aṭaiyāḷam*, "mark, sign" (DEDR 89, which lists Malayalam aṭayāḷam), and *aṭṭai*, "cardboard" (DEDR 98): "the sign card".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

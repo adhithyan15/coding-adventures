@@ -14,6 +14,7 @@ concept_tag: IT-CASA94-FRIGORIFERO
 prerequisites: [IT-C94-televisore, IT-C94-computer]
 sounds: []
 roots: []
+etymology_hook: "frigorifero — Latin frigus 'cold' + ferre 'to carry': a bringer of cold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-computer]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-04]; assesses=[] -->
 
 **il frigorifero** — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frigorifero** is built from Latin *frigus*, "cold", and *ferre*, "to carry" (Lewis & Short): a bringer of cold. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

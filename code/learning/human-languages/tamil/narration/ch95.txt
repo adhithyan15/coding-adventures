@@ -13,6 +13,9 @@ You'll want to know: சரியாக.
 சரியாக (cariyāka) — "exactly, correctly".
 It is the சரி of "okay", with -ஆக. சரியாகச் சொன்னீர்கள் — "you said it exactly".
 
+The word, taken apart.
+சரியாக (cariyāka) is sari, "correct", with -āka, "in the manner of". As its own lesson said, the origin of sari is uncertain; the usual guess is Sanskrit sadṛśa, "like" (CDIAL 13120).
+
 What you've built.
 Okay, made into exactly.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for what did you say, then the Tamil for exact
 You'll want to know: உண்மையா?
 உண்மையா? (uṇmaiyā?) — "really?", literally "is it the truth?".
 உண்மை is "truth", and -ஆ makes the question.
+
+The word, taken apart.
+உண்மையா? (uṇmaiyā?) is uṇmai, "truth" (DEDR 697), with the question ending -ā: "is it true?"
 
 What you've built.
 A way to show surprise.
@@ -73,6 +79,9 @@ You'll want to know: ஒன்றுமில்லை.
 ஒன்றுமில்லை (oṉṟumillai) — "nothing", "it's nothing".
 ஒன்று is "one", and இல்லை is "no": not even one.
 
+The word, taken apart.
+ஒன்றுமில்லை (oṉṟumillai) is native: oṉṟum, "even one" (DEDR 990), and illai, "there is not" (DEDR 2559).
+
 What you've built.
 An answer that closes a question kindly.
 
@@ -103,6 +112,9 @@ You'll want to know: இன்னும் இல்லை.
 இன்னும் இல்லை (iṉṉum illai) — "not yet".
 இன்னும் is "still"; with இல்லை, "still no".
 
+The word, taken apart.
+இன்னும் இல்லை (iṉṉum illai) is native: iṉṉum, "still, yet" (DEDR 410), and illai, "not" (DEDR 2559).
+
 What you've built.
 Not yet.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for nothing, then the Tamil for not yet.
 You'll want to know: அதே.
 அதே (atē) — "the same", "that very one".
 It is அது, "that", with -ஏ, "exactly". When someone names what you meant: அதே (atē)!
+
+The word, taken apart.
+அதே (atē) is native: the far base a- (DEDR 1) with the stressing -ē: "that very one".
 
 What you've built.
 Exactly, really, nothing, not yet, the same.

@@ -13,7 +13,8 @@ gloss: "to fill"
 concept_tag: FR-VERB-REMPLIR
 prerequisites: [FR-C233-photographier, FR-C233-repeter]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "remplir — re- + Old French emplir 'to fill', from Latin implere — English replenish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C233-repeter]
 <!-- hl-knowledge: introduces=[FR-LEX-C234-VERBES234-01]; assesses=[] -->
 
 **remplir** — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remplir** ← Old French *remplir*: *re-* and *emplir*, "to fill", ← Latin *implere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

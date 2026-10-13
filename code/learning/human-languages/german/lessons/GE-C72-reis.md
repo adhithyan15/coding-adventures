@@ -13,7 +13,8 @@ gloss: "rice"
 concept_tag: GE-ESSEN4-REIS
 prerequisites: [GE-C72-abendessen, GE-C72-fruehstueck]
 sounds: []
-roots: []
+roots: [oryza-latin]
+etymology_hook: "Reis ← Middle High German rīs ← Latin oryza ← Greek oryza — borrowed, like English rice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C72-fruehstueck]
 <!-- hl-knowledge: introduces=[GE-LEX-C72-ESSEN4-03]; assesses=[] -->
 
 **der Reis** — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Reis** ← Middle High German *rīs* ← Latin *oryza* ← Greek *óryza* — borrowed, like English *rice*. (EtymDB 2.1 has the Latin and Greek step; its German *Reis* row is a different word, "twig".)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

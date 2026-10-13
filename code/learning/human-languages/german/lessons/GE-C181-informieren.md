@@ -13,7 +13,8 @@ gloss: "to inform"
 concept_tag: GE-VERB-INFORMIEREN
 prerequisites: [GE-C181-giessen, GE-C181-gruessen]
 sounds: []
-roots: []
+roots: [forma-latin]
+etymology_hook: "informieren ← Latin īnfōrmāre 'to shape, to instruct' — borrowed with -ieren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C181-gruessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C181-VERB181-05]; assesses=[] -->
 
 **informieren** — "to inform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**informieren** ← Latin *īnfōrmāre*, "to give shape to, to instruct", from *in-* and *fōrma*, "shape" (EtymDB 2.1) — borrowed, with the German ending *-ieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

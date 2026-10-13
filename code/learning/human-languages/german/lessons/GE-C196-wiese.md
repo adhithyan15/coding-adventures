@@ -14,6 +14,7 @@ concept_tag: GE-THING196-WIESE
 prerequisites: [GE-C196-ufer, GE-C196-strand]
 sounds: []
 roots: []
+etymology_hook: "Wiese ← Old High German wisa 'meadow' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C196-strand]
 <!-- hl-knowledge: introduces=[GE-LEX-C196-THING196-04]; assesses=[] -->
 
 **die Wiese** — "a meadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wiese** ← Middle High German *wise* ← Old High German *wisa*, "meadow" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "varai"
 concept_tag: TA-NERAM202-VARAI
 prerequisites: [TA-C201-vayirruvali, TA-C202-vara-iruti]
 sounds: []
-roots: []
+roots: [dravidian-varampu-limit]
+etymology_hook: "வரை — native Dravidian (DEDR 5261); Malayalam varampu 'limit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C202-vara-iruti]
 <!-- hl-knowledge: introduces=[TA-LEX-C202-NERAM202-02]; assesses=[] -->
 
 **வரை** — *varai* — "up to, until".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரை** (*varai*) is native Dravidian. DEDR 5261 lists Malayalam *varampu*, "limit". It means "limit, boundary": "up to the limit of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

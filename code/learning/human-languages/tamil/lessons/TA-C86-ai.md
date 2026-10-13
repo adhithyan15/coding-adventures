@@ -12,8 +12,9 @@ concept_tag: TA-ACCUSATIVE-AI
 prerequisites: [TA-C06-dative-ukku, TA-C37-avar, TA-C33-ninai]
 sounds: []
 roots: []
+etymology_hook: "-ஐ — the native Dravidian accusative ending; Malayalam marks the same case with -e"
 duration:
-  max_seconds: 240
+  max_seconds: 288
 requires:
   knowledge: [TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-C37-AVAR-01, TA-LEX-NINAI-01]
 introduces:
@@ -58,6 +59,11 @@ weight:
 **அவர்** became **அவரை**. Nothing else moved. The verb you already know from the
 thinking chapter did not change, and *nāṉ* is still optional because the *-ēṉ*
 on the end is already saying "I".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-ஐ** (*-ai*) is the native Dravidian accusative ending. It is a suffix, not a word, so the etymological dictionary gives it no entry of its own; Malayalam marks the same case with *-e*.
 
 ## Grammar Lens: where the two endings sit
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C86-AI-01, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-C37-AVAR-01] -->

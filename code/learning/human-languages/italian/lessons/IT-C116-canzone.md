@@ -13,7 +13,8 @@ gloss: "a song"
 concept_tag: IT-TEMPOLIBERO116-CANZONE
 prerequisites: [IT-C116-musica, IT-C116-film]
 sounds: []
-roots: []
+roots: [canere-latin]
+etymology_hook: "canzone ← Latin cantio 'a song', from canere 'to sing' — English chant shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C116-film]
 <!-- hl-knowledge: introduces=[IT-LEX-C116-TEMPOLIBERO116-03]; assesses=[] -->
 
 **la canzone** — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canzone** ← Latin *cantio*, "a song, singing", from *canere*, "to sing" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vaṭṭamāṉa"
 concept_tag: TA-GUNAM240-VATTAMANA
 prerequisites: [TA-C239-tanimai, TA-C240-urutiyana]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "வட்டமான — vaṭṭam 'circle', usually from Sanskrit vṛtta 'rounded' (CDIAL 12069), + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C240-urutiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C240-GUNAM240-02]; assesses=[] -->
 
 **வட்டமான** — *vaṭṭamāṉa* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வட்டமான** (*vaṭṭamāṉa*) is *vaṭṭam*, "circle", usually traced to Sanskrit *vṛtta*, "rounded" (CDIAL 12069), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

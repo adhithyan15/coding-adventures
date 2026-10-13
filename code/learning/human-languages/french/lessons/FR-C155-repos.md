@@ -14,6 +14,7 @@ concept_tag: FR-SANTE155-REPOS
 prerequisites: [FR-C154-foie, FR-C154-rein]
 sounds: []
 roots: []
+etymology_hook: "repos — from the verb 'to rest', Late Latin repausare — English repose and pause"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C154-rein]
 <!-- hl-knowledge: introduces=[FR-LEX-C155-SANTE155-01]; assesses=[] -->
 
 **le repos** — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**repos** — formed from the verb for "to rest", ← Late Latin *repausare*, "to rest", from *pausare*, "to pause". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

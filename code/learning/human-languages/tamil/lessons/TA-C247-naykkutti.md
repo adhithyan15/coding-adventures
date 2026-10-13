@@ -14,7 +14,8 @@ romanization: "nāykkuṭṭi"
 concept_tag: TA-PORUL247-NAYKKUTTI
 prerequisites: [TA-C247-kuruvi, TA-C247-kaluku]
 sounds: []
-roots: []
+roots: [dravidian-naay-dog, dravidian-kutti-child]
+etymology_hook: "நாய்க்குட்டி — native: nāy 'dog' (DEDR 3650) + kuṭṭi 'young one' (DEDR 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C247-kaluku]
 <!-- hl-knowledge: introduces=[TA-LEX-C247-PORUL247-03]; assesses=[] -->
 
 **நாய்க்குட்டி** — *nāykkuṭṭi* — "a puppy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாய்க்குட்டி** (*nāykkuṭṭi*) is native: *nāy*, "dog" (DEDR 3650), and *kuṭṭi*, "the young of an animal" (DEDR 1670, which lists Malayalam kuṭṭi).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

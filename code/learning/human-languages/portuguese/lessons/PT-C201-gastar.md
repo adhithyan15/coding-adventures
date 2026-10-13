@@ -13,7 +13,8 @@ gloss: "to spend (money)"
 concept_tag: PT-VERB-GASTAR
 prerequisites: [PT-C200-dicionario, PT-C201-reservar]
 sounds: []
-roots: []
+roots: [vastare-latin]
+etymology_hook: "gastar ← Latin vastare 'to lay waste' — English waste and devastate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C201-reservar]
 <!-- hl-knowledge: introduces=[PT-LEX-C201-VERBOS201-02]; assesses=[] -->
 
 **gastar** — "to spend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gastar** ← Latin *vastare*, "to lay waste" (EtymDB 2.1) — inherited. Its *g-* came from a Germanic cousin of the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

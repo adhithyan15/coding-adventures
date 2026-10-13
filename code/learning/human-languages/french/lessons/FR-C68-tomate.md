@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE20-TOMATE
 prerequisites: [FR-C68-orange, FR-C68-terre]
 sounds: []
 roots: []
+etymology_hook: "tomate ← Spanish tomate, from Nahuatl tomatl — English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C68-terre]
 <!-- hl-knowledge: introduces=[FR-LEX-C68-CUISINE20-04]; assesses=[] -->
 
 **la tomate** — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tomate** ← Spanish *tomate* ← Nahuatl *tomatl* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

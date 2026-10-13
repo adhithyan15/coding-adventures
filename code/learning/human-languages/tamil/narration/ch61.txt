@@ -14,6 +14,9 @@ You'll want to know: பசி.
 Hunger as a thing that arrives, rather than something you are. Kannada makes it ಹಸಿವು (hasivu) — the p traded for h one more time, exactly as it was between பசு and ಹಸು. Telugu went elsewhere, to ఆకలి (ākali).
 Set பசி (pasi) beside பசு and only the last mark separates them: one ends on the ி, the other on the ு. They are not related, and the difference is worth practising until it stops needing thought.
 
+The word, taken apart.
+பசி (pasi) is native Dravidian. DEDR 3825 lists Malayalam pai and Kannada pasi.
+
 What you've built.
 The first of five feelings.
 
@@ -46,6 +49,9 @@ You'll want to know: தாகம்.
 Thirst. Sanskrit-descended, unlike பசி (pasi) beside it, and taken in whole with the -am Tamil hangs on such arrivals — the same -am already sitting on புத்தகம்.
 It is answered with தண்ணீர் and with nothing else in particular, and a Tamil house offers the தண்ணீர் before it is asked for.
 
+The word, taken apart.
+தாகம் (tākam) is a loan from Sanskrit dāha, "burning, fever" (CDIAL 6321). The burning in the throat became Tamil's word for thirst.
+
 What you've built.
 Two.
 
@@ -77,6 +83,9 @@ You'll want to know: தூக்கம்.
 தூக்கம் (tūkkam) — "sleep".
 Sleep as a state — the sleep you get, lose, or need more of. Kannada ನಿದ್ದೆ (nidde) and Telugu నిద్ర (nidra) both took the Sanskrit word; Tamil kept its own and stayed out of it.
 Open it on a long ஊ, the same long ஊ that opens ஊசி, and then hold the க்க twice.
+
+The word, taken apart.
+தூக்கம் (tūkkam) is native Dravidian. DEDR 3376 lists Malayalam tūṅṅuka, "to hang, be drowsy". It comes from tūṅku, "to hang, to droop, to sleep": sleep is the head drooping.
 
 What you've built.
 Three.
@@ -141,6 +150,9 @@ You'll want to know: வலி.
 வலி (vali) — "pain".
 Pain, plainly: the ache itself, wherever it sits. Kannada says ನೋವು (nōvu). Put it with what you already have for the body and it does its work at once — a வலி (vali) in the முதுகு, a வலி (vali) in the பல்.
 Keep it away from vaḻi, the way or the route, which came up beside பாதை. வலி (vali) takes the plain ல; vaḻi takes the ழ you learned to curl the tongue back for. Two letters English would spell alike, and Tamil holds them apart.
+
+The word, taken apart.
+வலி (vali) is native Dravidian. DEDR 5281 lists Malayalam valayuka, "to be distressed".
 
 What you've built.
 Five, and the run is closed: hunger, thirst, sleep, a fever, and pain.

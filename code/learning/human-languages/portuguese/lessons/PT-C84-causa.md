@@ -13,7 +13,8 @@ gloss: "a cause"
 concept_tag: PT-PORQUE84-CAUSA
 prerequisites: [PT-C84-entao, PT-C84-por-isso]
 sounds: []
-roots: []
+roots: [causa-latin]
+etymology_hook: "causa ← Latin causa 'reason, lawsuit' — English cause is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C84-por-isso]
 <!-- hl-knowledge: introduces=[PT-LEX-C84-PORQUE84-05]; assesses=[] -->
 
 **a causa** — "a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**causa** ← Latin *causa*, "reason, lawsuit" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

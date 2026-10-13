@@ -54,6 +54,20 @@
     "node-class-decorators",
     "invisible-layout-link",
     "open-styled-links",
-    "styled-endpoint-markers"
+    "styled-endpoint-markers",
+    "minimum-link-lengths",
+    "styled-inline-link-labels",
+    "edge-identifiers",
+    "edge-class-styles",
+    "edge-animation-config",
+    "edge-curve-config",
+    "edge-step-curves",
+    "edge-bump-curves",
+    "edge-monotone-curves",
+    "edge-spline-curves",
+    "edge-rounded-curve",
+    "line-hops-arc",
+    "line-hops-gap",
+    "automatic-lane-ordering"
   ]
 }

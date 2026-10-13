@@ -14,7 +14,8 @@ romanization: "cutantiram"
 concept_tag: TA-KARANAM208-CUTANTIRAM
 prerequisites: [TA-C208-arivu, TA-C208-katamai]
 sounds: []
-roots: []
+roots: [sanskrit-svatantra]
+etymology_hook: "சுதந்திரம் ← Sanskrit svatantra 'self-dependent, independent', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C208-katamai]
 <!-- hl-knowledge: introduces=[TA-LEX-C208-KARANAM208-03]; assesses=[] -->
 
 **சுதந்திரம்** — *cutantiram* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுதந்திரம்** (*cutantiram*) is a well-established loan from Sanskrit *svatantra*, "self-dependent, independent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

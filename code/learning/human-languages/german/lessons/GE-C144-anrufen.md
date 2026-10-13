@@ -13,7 +13,8 @@ gloss: "to phone"
 concept_tag: GE-VERB-ANRUFEN
 prerequisites: [GE-C143-quittung, GE-C144-aendern]
 sounds: []
-roots: []
+roots: [germanic-hropana]
+etymology_hook: "anrufen — an- + rufen 'to call': to call someone up"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C144-aendern]
 <!-- hl-knowledge: introduces=[GE-LEX-C144-VERB144-02]; assesses=[] -->
 
 **anrufen** — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anrufen** is *an-*, "at, to", + *rufen*, "to call" (EtymDB 2.1 links the two): to call someone up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

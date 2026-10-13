@@ -13,7 +13,8 @@ gloss: "a kitchen"
 concept_tag: PT-CASA1-COZINHA
 prerequisites: [PT-C47-limao, PT-C48-casa]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "cozinha ← Latin coquina 'kitchen', from coquere 'to cook' — English kitchen shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C48-casa]
 <!-- hl-knowledge: introduces=[PT-LEX-C48-CASA1-02]; assesses=[] -->
 
 **a cozinha** — "a kitchen". Built on **cozinhar**, to cook.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cozinha** ← Latin *coquina*, "kitchen" (EtymDB 2.1), through Vulgar Latin *\*cocina* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

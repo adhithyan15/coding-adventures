@@ -13,7 +13,8 @@ gloss: "wet"
 concept_tag: PT-QUALIDADES125-MOLHADO
 prerequisites: [PT-C125-seguro, PT-C125-perigoso]
 sounds: []
-roots: []
+roots: [mollis-latin]
+etymology_hook: "molhado — 'soaked': from the verb to wet ← Vulgar Latin *molliare, from mollis 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C125-perigoso]
 <!-- hl-knowledge: introduces=[PT-LEX-C125-QUALIDADES125-04]; assesses=[] -->
 
 **molhado** — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**molhado** is the participle of the verb "to wet", which ← Vulgar Latin *\*molliare*, "to soften by soaking", from Latin *mollis*, "soft" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

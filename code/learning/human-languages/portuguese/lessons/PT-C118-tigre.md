@@ -13,7 +13,8 @@ gloss: "a tiger"
 concept_tag: PT-ANIMAIS118-TIGRE
 prerequisites: [PT-C117-burro, PT-C118-coelho]
 sounds: []
-roots: []
+roots: [tigris-latin]
+etymology_hook: "tigre ← Latin tigris, from Greek tigris — English tiger is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C118-coelho]
 <!-- hl-knowledge: introduces=[PT-LEX-C118-ANIMAIS118-02]; assesses=[] -->
 
 **o tigre** — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tigre** ← Latin *tigris*, "tiger" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *tigris*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

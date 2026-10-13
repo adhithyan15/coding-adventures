@@ -13,7 +13,8 @@ gloss: "a mountain"
 concept_tag: FR-NATURE33-MONTAGNE
 prerequisites: [FR-C81-fleur, FR-C81-feuille]
 sounds: []
-roots: []
+roots: [mons-latin]
+etymology_hook: "montagne ← Vulgar Latin *montanea, from mons 'mountain' — English mountain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C81-feuille]
 <!-- hl-knowledge: introduces=[FR-LEX-C81-NATURE33-04]; assesses=[] -->
 
 **la montagne** — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montagne** ← Vulgar Latin *\*montanea*, from Latin *mons*, *montis*, "mountain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

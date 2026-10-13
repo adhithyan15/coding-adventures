@@ -14,7 +14,8 @@ romanization: "cellappirāṇi"
 concept_tag: TA-PORUL187-CELLAPPIRANI
 prerequisites: [TA-C186-katal, TA-C186-natpu]
 sounds: []
-roots: []
+roots: [dravidian-celvam-wealth, sanskrit-prani]
+etymology_hook: "செல்லப்பிராணி — native cellam 'darling' (DEDR 2786) + pirāṇi ← Sanskrit prāṇin 'creature' (CDIAL 8932)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C186-natpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C187-PORUL187-01]; assesses=[] -->
 
 **செல்லப்பிராணி** — *cellappirāṇi* — "a pet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செல்லப்பிராணி** (*cellappirāṇi*) is native *cellam*, "treasure, darling" (DEDR 2786), and *pirāṇi*, "creature", from Sanskrit *prāṇin*, "living creature" (CDIAL 8932).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

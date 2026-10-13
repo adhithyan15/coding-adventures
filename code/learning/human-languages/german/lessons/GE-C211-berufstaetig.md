@@ -14,6 +14,7 @@ concept_tag: GE-QUAL211-BERUFSTAETIG
 prerequisites: [GE-C211-aufgeregt, GE-C211-ausgezeichnet]
 sounds: []
 roots: []
+etymology_hook: "berufstätig — Beruf 'profession' + -s- + tätig 'active', from the word for 'deed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C211-ausgezeichnet]
 <!-- hl-knowledge: introduces=[GE-LEX-C211-QUAL211-05]; assesses=[] -->
 
 **berufstätig** — "working, employed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**berufstätig** is *Beruf*, "profession", + *-s-* + the word for "active", built on the word for "a deed", Old High German *tāt*, English *deed* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

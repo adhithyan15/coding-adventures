@@ -13,7 +13,8 @@ gloss: "a statue"
 concept_tag: FR-CHOSES170-STATUE
 prerequisites: [FR-C170-tour, FR-C170-monument]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "statue ← Latin statua 'a standing image', from stare 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C170-monument]
 <!-- hl-knowledge: introduces=[FR-LEX-C170-CHOSES170-04]; assesses=[] -->
 
 **la statue** — "a statue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**statue** ← Latin *statua*, "a standing image", from *stare*, "to stand" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "illavē illai"
 concept_tag: TA-NOTATALL-NOT-AT-ALL
 prerequisites: [TA-C95-notyet, TA-C95-same]
 sounds: []
-roots: []
+roots: [il]
+etymology_hook: "இல்லவே இல்லை — native illai 'not' (DEDR 2559), doubled and stressed with -ē"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C95-same]
 **இல்லவே இல்லை** (*illavē illai*) — "not at all".
 
 It is **இல்லை** said twice, the first time with the **-ஏ** that says *exactly*: no, and no again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இல்லவே இல்லை** (*illavē illai*) is native *illai*, "not" (DEDR 2559), said twice, the first time with the stressing *-ē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

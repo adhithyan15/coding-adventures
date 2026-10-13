@@ -13,7 +13,8 @@ gloss: "the weekend"
 concept_tag: PT-QUALIDADES128-FIM-DE-SEMANA
 prerequisites: [PT-C128-magro, PT-C128-contente, PT-C07-dias-2]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "fim de semana — 'end of week': fim ← Latin finis 'end'; semana ← Late Latin septimana"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C128-contente]
 <!-- hl-knowledge: introduces=[PT-LEX-C128-QUALIDADES128-04]; assesses=[] -->
 
 **o fim de semana** — "the weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fim de semana** is "end of week": *fim* ← Latin *finis*, "end" (Lewis & Short), and *semana* ← Late Latin *septimana* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

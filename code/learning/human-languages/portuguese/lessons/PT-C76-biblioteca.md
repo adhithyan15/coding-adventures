@@ -13,7 +13,8 @@ gloss: "a library"
 concept_tag: PT-CIDADE4-BIBLIOTECA
 prerequisites: [PT-C76-policia, PT-C76-teatro]
 sounds: []
-roots: []
+roots: [bibliotheca-latin]
+etymology_hook: "biblioteca ← Latin bibliotheca, from Greek biblion 'book' + theke 'case'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C76-teatro]
 <!-- hl-knowledge: introduces=[PT-LEX-C76-CIDADE4-05]; assesses=[] -->
 
 **a biblioteca** — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biblioteca** ← Latin *bibliotheca*, "library" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *bibliothēkē*, a "book case".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

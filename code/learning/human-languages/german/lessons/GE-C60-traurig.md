@@ -14,6 +14,7 @@ concept_tag: GE-GEFUEHLE1-TRAURIG
 prerequisites: [GE-C60-durst, GE-C60-hunger]
 sounds: []
 roots: []
+etymology_hook: "traurig ← Old High German trūrag 'sorrowful'; a link to English dreary is suggested but uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C60-hunger]
 <!-- hl-knowledge: introduces=[GE-LEX-C60-GEFUEHLE1-04]; assesses=[] -->
 
 **traurig** — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traurig** ← Middle High German *trūrec* ← Old High German *trūrag* (EtymDB 2.1) — inherited. A link to English *dreary* is often suggested, but it is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

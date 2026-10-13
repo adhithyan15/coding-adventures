@@ -12,6 +12,9 @@ Tamil's neighbours each built "good morning" on a word meaning "good" or "auspic
 You'll want to know: காலை வணக்கம் — literally, "morning greetings".
 காலை வணக்கம் (kālai vaṇakkam) — "good morning" — is confirmed, by two independently-fetched sources, as Tamil's standard greeting for this time of day, used "from sunrise until around 11 AM." It's built from two words you already have: காலை (already met, Chapter 26, "morning") plus வணக்கம் (already met, Chapter 1, "reverence, homage" — Tamil's everyday word for "hello"). Literally: "morning salutations."
 
+The phrase, taken apart.
+Vaṇakkam is native, from the verb "to bow" (DEDR 5236). Kālai, "morning", looks native too, but DEDR has no entry for it, and its origin is uncertain.
+
 Why it's said this way: Be honest: this breaks the pattern every other language followed.
 Here's the honest structural surprise: Hindi, Kannada, Telugu, and Malayalam each build their morning greeting on a śubha-equivalent word ("good, auspicious") plus a time-word. Tamil does something genuinely different — there's no "good/auspicious" word here at all. It's simply வணக்கம், Tamil's own general greeting, specified with காலை in front of it to mean "morning" greetings specifically. Also be honest about a claim that didn't hold up: an initial search summary suggested a Sanskrit-borrowed word, "suprabhatham," serves as a casual alternative — but that claim appears on neither of the two pages actually fetched, so it's deliberately not asserted here.
 

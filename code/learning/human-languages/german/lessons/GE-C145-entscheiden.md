@@ -13,7 +13,8 @@ gloss: "to decide"
 concept_tag: GE-VERB-ENTSCHEIDEN
 prerequisites: [GE-C145-einladen, GE-C145-empfehlen]
 sounds: []
-roots: []
+roots: [germanic-skaithana]
+etymology_hook: "entscheiden — ent- + scheiden 'to separate': to decide is to separate the options"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C145-empfehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C145-VERB145-05]; assesses=[] -->
 
 **entscheiden** — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entscheiden** is *ent-* + the verb "to separate, to divide", Old High German *sceidan* ← Proto-Germanic *\*skaiþaną* (EtymDB 2.1): to decide is to cut between choices.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

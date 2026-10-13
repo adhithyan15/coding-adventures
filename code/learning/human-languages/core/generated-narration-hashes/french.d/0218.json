@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 218,
-  "sourceHash": "fnv1a64:7e16a54d169a6246",
+  "sourceHash": "fnv1a64:9eb9c601e2bd80da",
   "lessonIds": [
     "FR-C218-curieux-curieuse",
     "FR-C218-jaloux-jalouse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch218.txt",
   "json": "french/narration/ch218.json",
-  "textHash": "fnv1a64:41f656b9bbcbc81d",
-  "jsonHash": "fnv1a64:910e40245e58da0e",
+  "textHash": "fnv1a64:1726594cd3cf87c2",
+  "jsonHash": "fnv1a64:beff14ab7cb66ee9",
   "findings": []
 }

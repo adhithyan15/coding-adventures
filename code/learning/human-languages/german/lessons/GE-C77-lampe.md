@@ -13,7 +13,8 @@ gloss: "a lamp"
 concept_tag: GE-HAUS2-LAMPE
 prerequisites: [GE-C76-dach, GE-C77-garten]
 sounds: []
-roots: []
+roots: [lampas-latin]
+etymology_hook: "Lampe ← French lampe ← Latin lampas ← Greek lampas 'torch' — borrowed, like English lamp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C77-garten]
 <!-- hl-knowledge: introduces=[GE-LEX-C77-HAUS2-02]; assesses=[] -->
 
 **die Lampe** — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lampe** ← Middle High German *lampe*, from French *lampe* ← Latin *lampas* ← Greek *lampás*, "torch" (EtymDB 2.1) — borrowed, like English *lamp*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

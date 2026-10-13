@@ -13,7 +13,8 @@ gloss: "to take part"
 concept_tag: PT-VERB-PARTICIPAR
 prerequisites: [PT-C205-oferecer, PT-C205-observar]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "participar ← Latin participare 'to share in', from pars — English participate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C205-observar]
 <!-- hl-knowledge: introduces=[PT-LEX-C205-VERBOS205-04]; assesses=[] -->
 
 **participar** — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**participar** ← Latin *participare*, "to share in" (EtymDB 2.1), from *pars*, "part" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

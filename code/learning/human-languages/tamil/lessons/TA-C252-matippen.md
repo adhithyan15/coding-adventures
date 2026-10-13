@@ -14,7 +14,8 @@ romanization: "matippeṇ"
 concept_tag: TA-VELAI252-MATIPPEN
 prerequisites: [TA-C251-virpanai, TA-C251-mutalali]
 sounds: []
-roots: []
+roots: [dravidian-en-number]
+etymology_hook: "மதிப்பெண் — matippu 'value' (origin uncertain) + native eṇ 'number' (DEDR 793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C251-mutalali]
 <!-- hl-knowledge: introduces=[TA-LEX-C252-VELAI252-01]; assesses=[] -->
 
 **மதிப்பெண்** — *matippeṇ* — "a mark, a score".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மதிப்பெண்** (*matippeṇ*) is *matippu*, "value, worth", and native *eṇ*, "number" (DEDR 793): "the value number". The origin of *matippu* is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

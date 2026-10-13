@@ -13,7 +13,8 @@ gloss: "low"
 concept_tag: FR-QUAL160-BAS-BASSE
 prerequisites: [FR-C159-desagreable, FR-C160-profond-profonde]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "bas ← Late Latin bassus 'low' — the adjective behind baisser; English base"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C160-profond-profonde]
 <!-- hl-knowledge: introduces=[FR-LEX-C160-QUAL160-02]; assesses=[] -->
 
 **bas / basse** — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bas** ← Late Latin *bassus*, "low, stout" (EtymDB 2.1) — inherited: the adjective behind *baisser*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

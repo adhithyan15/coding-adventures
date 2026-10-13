@@ -14,6 +14,7 @@ concept_tag: IT-CITTA1-BANCA
 prerequisites: [IT-C81-mercato, IT-C81-scuola]
 sounds: []
 roots: []
+etymology_hook: "banca ← Old High German bank 'bench, counter' — English bench and bank are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C81-scuola]
 <!-- hl-knowledge: introduces=[IT-LEX-C81-CITTA1-05]; assesses=[] -->
 
 **la banca** — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banca** ← Old High German *bank*, "bench, counter" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

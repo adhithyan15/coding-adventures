@@ -13,7 +13,8 @@ gloss: "a tool"
 concept_tag: PT-COISAS196-FERRAMENTA
 prerequisites: [PT-C195-clima, PT-C196-agulha]
 sounds: []
-roots: []
+roots: [ferrum-latin]
+etymology_hook: "ferramenta ← Latin ferramenta 'iron tools', from ferrum 'iron'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C196-agulha]
 <!-- hl-knowledge: introduces=[PT-LEX-C196-COISAS196-02]; assesses=[] -->
 
 **a ferramenta** — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferramenta** ← Latin *ferramenta*, "iron tools" (EtymDB 2.1), from *ferrum*, "iron" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

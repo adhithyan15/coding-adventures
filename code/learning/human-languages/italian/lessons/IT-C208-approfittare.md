@@ -14,6 +14,7 @@ concept_tag: IT-VERB-APPROFITTARE
 prerequisites: [IT-C207-traslocare, IT-C208-applaudire]
 sounds: []
 roots: []
+etymology_hook: "approfittare — a- + profitto 'profit' ← Old French profit — English profit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C208-applaudire]
 <!-- hl-knowledge: introduces=[IT-LEX-C208-VERBI208-02]; assesses=[] -->
 
 **approfittare** — "to take advantage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**approfittare** — built from *profitto*, "profit", with *a-*: to make profit of. *profitto* ← Old French *profit*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

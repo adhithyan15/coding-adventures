@@ -13,7 +13,8 @@ gloss: "to stop"
 concept_tag: PT-VERB-PARAR
 prerequisites: [PT-C139-experimentar, PT-C139-continuar]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "parar ← Latin parare 'to make ready' — English prepare shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C139-continuar]
 <!-- hl-knowledge: introduces=[PT-LEX-C139-VERBOS139-04]; assesses=[] -->
 
 **parar** — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parar** ← Latin *parare*, "to make ready" (EtymDB 2.1) — inherited. Making ready to halt became halting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

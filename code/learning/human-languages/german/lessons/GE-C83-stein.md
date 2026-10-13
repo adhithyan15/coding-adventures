@@ -13,7 +13,8 @@ gloss: "a stone"
 concept_tag: GE-NATUR2-STEIN
 prerequisites: [GE-C82-berg, GE-C83-wald]
 sounds: []
-roots: []
+roots: [germanic-stainaz]
+etymology_hook: "Stein ← Old High German stein ← Proto-Germanic *stainaz — the same word as English stone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C83-wald]
 <!-- hl-knowledge: introduces=[GE-LEX-C83-NATUR2-02]; assesses=[] -->
 
 **der Stein** — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stein** ← Old High German *stein* ← Proto-Germanic *\*stainaz* — inherited, the same word as English *stone*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a sandal"
 concept_tag: PT-COISAS169-SANDALIA
 prerequisites: [PT-C168-abobora, PT-C168-ervilha]
 sounds: []
-roots: []
+roots: [sandalium-latin]
+etymology_hook: "sandália ← Latin sandalia, from Greek sandalion — English sandal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C168-ervilha]
 <!-- hl-knowledge: introduces=[PT-LEX-C169-COISAS169-01]; assesses=[] -->
 
 **a sandália** — "a sandal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sandália** ← Latin *sandalia*, "sandals" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *sandalion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

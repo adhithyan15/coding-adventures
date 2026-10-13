@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 183,
-  "sourceHash": "fnv1a64:948c63f02b6fe013",
+  "sourceHash": "fnv1a64:42d16a419f9c7646",
   "lessonIds": [
     "PT-C183-arredores",
     "PT-C183-centro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch183.txt",
   "json": "portuguese/narration/ch183.json",
-  "textHash": "fnv1a64:9dd4ea7cebc88c6f",
-  "jsonHash": "fnv1a64:22973cad1be45bbd",
+  "textHash": "fnv1a64:750387dde7e412ae",
+  "jsonHash": "fnv1a64:0173351e84af72e1",
   "findings": []
 }

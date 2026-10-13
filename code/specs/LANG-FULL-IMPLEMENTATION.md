@@ -1419,19 +1419,29 @@ backend immediately) come before the enabler-dependent items.
   missing, deeper, non-runtime-real, and overridden branches remain
   conservative.
   The same exact two-exponential proof now applies to a direct sign-rooted
-  operand; a third direct exponential, unrestricted roots, and overrides remain
-  conservative.
+  operand; unrestricted roots and overrides remain conservative.
+  The direct proof extends to exactly three exponentials, whose complete
+  sign-rooted tower remains finite. Exactly four exponentials are also accepted
+  over a proven nonpositive unit sign root, whose narrower tower remains finite;
+  a positive-capable fourth layer or a fifth nonpositive layer would overflow
+  binary64 before `ln` and therefore remains conservative.
   The same bounded proof extends to exactly three built-in exponentials per
-  branch; missing, deeper, non-runtime-real, and overridden branches remain
-  conservative.
+  branch. It also extends to exactly four built-in exponentials per branch when
+  every root is proven nonpositive; positive-capable, missing, deeper,
+  non-runtime-real, and overridden branches remain conservative.
+  Across every bounded conditional family above, branch roots may be unaliased
+  local real snapshots carrying runtime-real provenance across assignment;
+  globals, captured locals, and by-name aliases remain conservative across a
+  selector call.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
   already nonnegative and bounded; signed and nested-exponential forms stay
   conservative.
-  Provenance-backed local and other real-name branches remain conservative
-  across selector calls. Unary plus
-  and unary minus preserve the same runtime-real proof. Additive composition,
+  Unaliased local runtime-real snapshots may cross a procedure-call selector
+  through unary signs, additive or multiplicative composition, and powers with
+  finite static operands; standard-function transforms, globals, captured
+  locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES226-DISTRIBUTEUR
 prerequisites: [FR-C225-raison, FR-C226-carte-bancaire]
 sounds: []
 roots: []
+etymology_hook: "distributeur ← Late Latin distributor 'one who hands out' — English distributor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C226-carte-bancaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C226-CHOSES226-02]; assesses=[] -->
 
 **le distributeur** — "a cash machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**distributeur** ← Late Latin *distributor*, "one who hands out" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

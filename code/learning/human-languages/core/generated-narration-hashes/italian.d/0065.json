@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 65,
-  "sourceHash": "fnv1a64:14add1e2599b8fb6",
+  "sourceHash": "fnv1a64:9f827639b9d82f88",
   "lessonIds": [
     "IT-C65-fiume",
     "IT-C65-lago",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch65.txt",
   "json": "italian/narration/ch65.json",
-  "textHash": "fnv1a64:9ade55c04f368dc8",
-  "jsonHash": "fnv1a64:a72c37dc4d408f01",
+  "textHash": "fnv1a64:e9085570fbdc2827",
+  "jsonHash": "fnv1a64:85d2091b86c049ff",
   "findings": []
 }

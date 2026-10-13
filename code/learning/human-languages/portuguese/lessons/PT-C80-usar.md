@@ -13,7 +13,8 @@ gloss: "to use; to wear"
 concept_tag: PT-VERB-USAR
 prerequisites: [PT-C79-zero, PT-C80-pagar]
 sounds: []
-roots: []
+roots: [uti-latin]
+etymology_hook: "usar ← Vulgar Latin *usare, from usus 'use' — English use shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C80-pagar]
 <!-- hl-knowledge: introduces=[PT-LEX-C80-VERBOS6-02]; assesses=[] -->
 
 **usar** — "to use; to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**usar** ← Vulgar Latin *\*usare* (EtymDB 2.1), from Latin *usus*, "use" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

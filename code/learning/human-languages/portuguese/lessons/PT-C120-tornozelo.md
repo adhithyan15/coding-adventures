@@ -13,7 +13,8 @@ gloss: "an ankle"
 concept_tag: PT-CORPO120-TORNOZELO
 prerequisites: [PT-C119-golfinho, PT-C119-cotovelo]
 sounds: []
-roots: []
+roots: [tornare-latin]
+etymology_hook: "tornozelo — built on the turning word (← Latin tornare 'to turn on a lathe') with a small ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C119-cotovelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C120-CORPO120-01]; assesses=[] -->
 
 **o tornozelo** — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tornozelo** is built on the word for a turn, with a small-making ending: the joint the foot turns on. EtymDB 2.1 links it to the verb "to turn", which ← Latin *tornare*, "to turn on a lathe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

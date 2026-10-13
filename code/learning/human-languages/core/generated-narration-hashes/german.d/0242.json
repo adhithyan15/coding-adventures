@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 242,
-  "sourceHash": "fnv1a64:fadde4566f46f7dc",
+  "sourceHash": "fnv1a64:0aa98ba58763b0f4",
   "lessonIds": [
     "GE-C242-verkehr",
     "GE-C242-vertrauen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch242.txt",
   "json": "german/narration/ch242.json",
-  "textHash": "fnv1a64:ce8c45ac5c07c5fd",
-  "jsonHash": "fnv1a64:eb52bc5179f3f5d3",
+  "textHash": "fnv1a64:175acedd7a8a7af3",
+  "jsonHash": "fnv1a64:1fa11180f74b0224",
   "findings": []
 }

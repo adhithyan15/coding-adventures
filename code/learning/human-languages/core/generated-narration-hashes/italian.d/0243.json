@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 243,
-  "sourceHash": "fnv1a64:5d8b6a93f95fa17b",
+  "sourceHash": "fnv1a64:1a6ff7fba892f140",
   "lessonIds": [
     "IT-C243-cerotto",
     "IT-C243-ambulanza",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch243.txt",
   "json": "italian/narration/ch243.json",
-  "textHash": "fnv1a64:568348331e22a185",
-  "jsonHash": "fnv1a64:1a752a4e259432dd",
+  "textHash": "fnv1a64:6bf22e96f7fd08d9",
+  "jsonHash": "fnv1a64:2920aa687a555f40",
   "findings": []
 }

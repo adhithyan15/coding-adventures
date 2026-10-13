@@ -13,7 +13,8 @@ gloss: "a chair"
 concept_tag: GE-HAUS1-STUHL
 prerequisites: [GE-C75-schneiden, GE-C76-fenster]
 sounds: []
-roots: []
+roots: [germanic-stolaz]
+etymology_hook: "Stuhl ← Old High German stuol ← Proto-Germanic *stōlaz — the same word as English stool"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C76-fenster]
 <!-- hl-knowledge: introduces=[GE-LEX-C76-HAUS1-02]; assesses=[] -->
 
 **der Stuhl** — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stuhl** ← Old High German *stuol* ← Proto-Germanic *\*stōlaz*, "seat" — inherited, the same word as English *stool*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

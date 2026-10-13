@@ -13,7 +13,8 @@ gloss: "a career"
 concept_tag: PT-TRAB200-CARREIRA
 prerequisites: [PT-C199-torneira, PT-C200-entrevista]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "carreira — first a road for carts: carro 'cart' + -eira — English career"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C200-entrevista]
 <!-- hl-knowledge: introduces=[PT-LEX-C200-TRAB200-02]; assesses=[] -->
 
 **a carreira** — "a career".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carreira** was first a road for carts: built from *carro*, "cart", and *-eira*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

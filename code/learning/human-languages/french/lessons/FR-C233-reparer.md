@@ -13,7 +13,8 @@ gloss: "to repair"
 concept_tag: FR-VERB-REPARER
 prerequisites: [FR-C232-histoire, FR-C233-repasser]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "réparer ← Latin reparare 'to restore' — English repair"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C233-repasser]
 <!-- hl-knowledge: introduces=[FR-LEX-C233-VERBES233-02]; assesses=[] -->
 
 **réparer** — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réparer** ← Latin *reparare*, "to restore" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

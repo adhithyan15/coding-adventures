@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 133,
-  "sourceHash": "fnv1a64:6038999880f80bf0",
+  "sourceHash": "fnv1a64:d77383c6d2a756f5",
   "lessonIds": [
     "GE-C133-boese",
     "GE-C133-lustig",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch133.txt",
   "json": "german/narration/ch133.json",
-  "textHash": "fnv1a64:5839f1b775979bc4",
-  "jsonHash": "fnv1a64:abcb00c17ca9daab",
+  "textHash": "fnv1a64:3df817b2e2e37528",
+  "jsonHash": "fnv1a64:a8330b0e0a076906",
   "findings": []
 }

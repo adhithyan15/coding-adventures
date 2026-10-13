@@ -13,7 +13,8 @@ gloss: "by the way"
 concept_tag: GE-LINK251-UEBRIGENS
 prerequisites: [GE-C250-jedenfalls, GE-C250-eigentlich]
 sounds: []
-roots: []
+roots: [germanic-uber]
+etymology_hook: "übrigens — übrig 'left over' + -ens: by the way, as a leftover remark"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C250-eigentlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C251-LINK251-01]; assesses=[] -->
 
 **übrigens** — "by the way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**übrigens** is the word for "left over", Middle High German *überec* (EtymDB 2.1), built on the word for "over", + *-ens*: by the way, a leftover remark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

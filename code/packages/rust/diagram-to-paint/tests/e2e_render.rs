@@ -3774,6 +3774,152 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
                 )).count() >= 6, "styled cross markers must lower to paired path instructions");
             }
+            if fixture_name == "minimum-link-lengths" {
+                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3],
+                    "minimum link lengths must survive layout lowering");
+                let gaps = layout.nodes.windows(2).map(|nodes|
+                    nodes[1].x - (nodes[0].x + nodes[0].width)
+                ).collect::<Vec<_>>();
+                assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
+                    "minimum link lengths must reserve progressively wider rank gaps");
+            }
+            if fixture_name == "styled-inline-link-labels" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("approve"), Some("release")]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![2, 2, 3]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_width == Some(3.5)
+                )), "labeled thick links must lower to wide paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
+                )), "labeled dotted links must lower to dashed paths");
+            }
+            if fixture_name == "edge-identifiers" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("release")]);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.id")),
+                    Some(&"submit".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.id")),
+                    Some(&"release".to_string()));
+            }
+            if fixture_name == "edge-class-styles" {
+                assert_eq!(layout.edges[0].classes, ["urgent"]);
+                assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+                assert_eq!(layout.edges[1].style.stroke.as_deref(), Some("#059669"));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626")
+                        && path.stroke_width == Some(4.0)
+                        && path.stroke_dash.as_deref() == Some(&[8.0, 3.0])
+                )), "edge classes must lower to backend-neutral path paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#059669")
+                        && path.stroke_width == Some(5.0)
+                        && path.stroke_dash.as_deref() == Some(&[2.0, 2.0])
+                )), "direct edge styles must lower to backend-neutral path paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.classes")),
+                    Some(&"urgent".to_string()));
+            }
+            if fixture_name == "edge-animation-config" {
+                assert!(layout.edges.iter().all(|edge| edge.animate));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[9.0, 5.0])
+                )).count() >= 2, "animated edges must lower to a visible static dash pattern");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.animate")),
+                    Some(&"true".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.animation")),
+                    Some(&"fast".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.animation")),
+                    Some(&"slow".to_string()));
+            }
+            if fixture_name == "edge-curve-config" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )), "basis edges must lower to backend-neutral cubic paths");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"basis".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"linear".to_string()));
+            }
+            if fixture_name == "edge-step-curves" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                )), "centered step edges must lower to two orthogonal bends");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )).count() >= 2, "step-before and step-after edges must lower to one orthogonal bend");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"step".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"stepBefore".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.2.curve")),
+                    Some(&"stepAfter".to_string()));
+            }
+            if fixture_name == "edge-bump-curves" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )).count(), 2, "bump edges must lower to backend-neutral cubic paths");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"bumpX".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"bumpY".to_string()));
+            }
+            if fixture_name == "edge-monotone-curves" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )).count(), 2, "monotone edges must lower to backend-neutral cubic paths");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"monotoneX".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"monotoneY".to_string()));
+            }
+            if fixture_name == "edge-spline-curves" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )).count(), 3, "spline edges must lower to backend-neutral cubic paths");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"cardinal".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"catmullRom".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.2.curve")),
+                    Some(&"natural".to_string()));
+            }
+            if fixture_name == "edge-rounded-curve" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::QuadTo { .. })).count() == 2
+                )).count(), 1, "rounded edges must lower both orthogonal corners to quadratic curves");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"rounded".to_string()));
+            }
+            if fixture_name == "line-hops-arc" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later crossing edge must contain one arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.lineHops")),
+                    Some(&"arc".to_string()));
+            }
+            if fixture_name == "line-hops-gap" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later crossing edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.lineHops")),
+                    Some(&"gap".to_string()));
+            }
+            if fixture_name == "automatic-lane-ordering" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["laneB", "laneC", "laneA", "laneD"]);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.automaticLaneOrdering")),
+                    Some(&"true".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
+                    Some(&"laneB,laneC,laneA,laneD".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

@@ -13,7 +13,8 @@ gloss: "a song"
 concept_tag: PT-LAZER114-CANCAO
 prerequisites: [PT-C114-musica, PT-C114-filme]
 sounds: []
-roots: []
+roots: [cantare-latin]
+etymology_hook: "canção ← Latin cantio, cantionis 'song', from canere 'to sing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C114-filme]
 <!-- hl-knowledge: introduces=[PT-LEX-C114-LAZER114-05]; assesses=[] -->
 
 **a canção** — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canção** ← Latin *cantio, cantionis*, "song" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

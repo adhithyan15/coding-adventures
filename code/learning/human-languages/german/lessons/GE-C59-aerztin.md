@@ -13,7 +13,8 @@ gloss: "a doctor (a woman)"
 concept_tag: GE-GESUNDHEIT-AERZTIN
 prerequisites: [GE-C59-fieber, GE-C59-arzt]
 sounds: []
-roots: []
+roots: [archiater-latin]
+etymology_hook: "Ärztin — Arzt + -in, the ending that makes a woman's title; Arzt ← Late Latin archiater"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C59-arzt]
 <!-- hl-knowledge: introduces=[GE-LEX-C59-GESUNDHEIT-03]; assesses=[] -->
 
 **die Ärztin** — "a doctor (a woman)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ärztin** is *Arzt* + *-in*, the ending that names a woman. *Arzt* ← Late Latin *archiāter*, "chief physician" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

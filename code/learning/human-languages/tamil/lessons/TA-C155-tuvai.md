@@ -14,7 +14,8 @@ romanization: "tuvai"
 concept_tag: TA-VERB-TUVAI
 prerequisites: [TA-C155-potu, TA-C155-kattu2]
 sounds: []
-roots: []
+roots: [dravidian-tuvai-soak]
+etymology_hook: "துவை — native Dravidian (DEDR 3355); Malayalam tuvekka 'to steep, soak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C155-kattu2]
 <!-- hl-knowledge: introduces=[TA-LEX-C155-ACT155-05]; assesses=[] -->
 
 **துவை** — *tuvai* — "to wash (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துவை** (*tuvai*) is native Dravidian. DEDR 3355 lists Malayalam *tuvekka*, "to steep, soak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

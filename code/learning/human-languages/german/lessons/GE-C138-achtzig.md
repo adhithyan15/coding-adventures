@@ -13,7 +13,8 @@ gloss: "eighty"
 concept_tag: GE-ZAHL138-ACHTZIG
 prerequisites: [GE-C138-sechzig, GE-C138-siebzig]
 sounds: []
-roots: []
+roots: [ahto-germanic]
+etymology_hook: "achtzig — acht 'eight' + -zig 'tens' — the same build as English eighty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C138-siebzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C138-ZAHL138-03]; assesses=[] -->
 
 **achtzig** — "eighty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**achtzig** is *acht*, "eight", + *-zig*, "tens" — the same build as English *eighty*. EtymDB 2.1 has the German word but not its parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cōppu"
 concept_tag: TA-THINGS120-COPPU
 prerequisites: [TA-C119-porvai, TA-C120-kannati]
 sounds: []
-roots: []
+roots: [english-soap]
+etymology_hook: "சோப்பு ← English soap"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C120-kannati]
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **சோப்பு** — *cōppu* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சோப்பு** (*cōppu*) is a loan from English *soap*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

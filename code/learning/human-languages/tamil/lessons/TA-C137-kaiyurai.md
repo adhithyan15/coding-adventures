@@ -14,7 +14,8 @@ romanization: "kaiyuṟai"
 concept_tag: TA-THINGS137-KAIYURAI
 prerequisites: [TA-C137-valaiyal, TA-C137-kalurai]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-urai-sheath]
+etymology_hook: "கையுறை — native: kai 'hand' (DEDR 2023) + uṟai 'sheath, case' (DEDR 723)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C137-kalurai]
 <!-- hl-knowledge: introduces=[TA-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **கையுறை** — *kaiyuṟai* — "a glove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கையுறை** (*kaiyuṟai*) is native: *kai*, "hand" (DEDR 2023), and *uṟai*, "sheath, case" (DEDR 723): "the hand-cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

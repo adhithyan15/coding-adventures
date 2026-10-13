@@ -13,7 +13,8 @@ gloss: "hunger"
 concept_tag: IT-SALUTE-FAME
 prerequisites: [IT-C41-ospedale, IT-C41-malattia]
 sounds: []
-roots: []
+roots: [fames-latin]
+etymology_hook: "fame ← Latin fames 'hunger' — French faim is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C41-malattia]
 <!-- hl-knowledge: introduces=[IT-LEX-C41-SALUTE-05]; assesses=[] -->
 
 **la fame** — "hunger". **ho fame**: I am hungry, with **avere**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fame** ← Latin *fames*, "hunger" — inherited. EtymDB 2.1 has no row for *fame*; it derives French *faim* and Romanian *foame* from *fames*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

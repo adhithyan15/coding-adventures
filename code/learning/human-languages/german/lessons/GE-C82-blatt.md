@@ -13,7 +13,8 @@ gloss: "a leaf; a sheet of paper"
 concept_tag: GE-NATUR1-BLATT
 prerequisites: [GE-C82-baum, GE-C82-blume]
 sounds: []
-roots: []
+roots: [germanic-blada]
+etymology_hook: "Blatt ← Old High German blat ← Proto-Germanic *bladą 'leaf' — a cousin of English blade"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C82-blume]
 <!-- hl-knowledge: introduces=[GE-LEX-C82-NATUR1-04]; assesses=[] -->
 
 **das Blatt** — "a leaf; a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Blatt** ← Old High German *blat* ← Proto-Germanic *\*bladą*, "leaf" — inherited. (EtymDB 2.1) English *blade*, first a leaf of grass, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

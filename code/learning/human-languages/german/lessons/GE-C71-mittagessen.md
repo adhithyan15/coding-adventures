@@ -13,7 +13,8 @@ gloss: "lunch"
 concept_tag: GE-ESSEN3-MITTAGESSEN
 prerequisites: [GE-C71-honig, GE-C71-oel]
 sounds: []
-roots: []
+roots: [germanic-etana]
+etymology_hook: "Mittagessen — Mittag 'noon' + the word for 'a meal', from the verb 'to eat', English eat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C71-oel]
 <!-- hl-knowledge: introduces=[GE-LEX-C71-ESSEN3-05]; assesses=[] -->
 
 **das Mittagessen** — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mittagessen** is *Mittag* + the word for "a meal", which is the verb "to eat" ← Old High German *ezzan* ← Proto-Germanic *\*etaną*, the same verb as English *eat*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

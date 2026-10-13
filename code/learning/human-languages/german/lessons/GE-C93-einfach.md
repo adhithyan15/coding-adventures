@@ -14,6 +14,7 @@ concept_tag: GE-ADJ5-EINFACH
 prerequisites: [GE-C93-falsch, GE-C93-wichtig]
 sounds: []
 roots: []
+etymology_hook: "einfach — ein 'one' + -fach '-fold': 'onefold', the opposite of manifold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C93-wichtig]
 <!-- hl-knowledge: introduces=[GE-LEX-C93-ADJ5-04]; assesses=[] -->
 
 **einfach** — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einfach** is *ein*, "one", + *-fach*, "-fold" (Middle High German *vach*, EtymDB 2.1): "onefold", the opposite of manifold.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE2-TELEFONO
 prerequisites: [IT-C61-matita, IT-C62-borsa]
 sounds: []
 roots: []
+etymology_hook: "telefono — Greek tele 'far' + phone 'voice', like French téléphone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-borsa]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-02]; assesses=[] -->
 
 **il telefono** — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefono** is built, like French *téléphone*, from Greek *tele*, "far", and *phone*, "voice, sound". EtymDB 2.1 has no row for *telefono*; it records the French word built from these two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

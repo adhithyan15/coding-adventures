@@ -13,7 +13,8 @@ gloss: "a coast"
 concept_tag: GE-THING197-KUESTE
 prerequisites: [GE-C196-wiese, GE-C196-tal]
 sounds: []
-roots: []
+roots: [costa-latin]
+etymology_hook: "Küste ← Low German and Dutch kust ← Old French coste ← Latin costa 'rib, side' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C196-tal]
 <!-- hl-knowledge: introduces=[GE-LEX-C197-THING197-01]; assesses=[] -->
 
 **die Küste** — "a coast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Küste** came through Low German and Dutch from Old French *coste*, "side, coast", ← Latin *costa*, "rib, side" — borrowed, like English *coast*. EtymDB 2.1 has no row for the German word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

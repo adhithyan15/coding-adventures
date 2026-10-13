@@ -13,7 +13,8 @@ gloss: "a diet"
 concept_tag: PT-SAUDE240-DIETA
 prerequisites: [PT-C240-emergencia, PT-C240-consulta]
 sounds: []
-roots: []
+roots: [diaeta-latin]
+etymology_hook: "dieta ← Latin diaeta, from Greek diaita 'way of life' — English diet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C240-consulta]
 <!-- hl-knowledge: introduces=[PT-LEX-C240-SAUDE240-04]; assesses=[] -->
 
 **a dieta** — "a diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dieta** ← Latin *diaeta*, "way of life" (Lewis & Short) — a learned borrowing from Latin. Latin took it from Greek *diaita*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

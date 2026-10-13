@@ -13,7 +13,8 @@ gloss: "an advantage"
 concept_tag: GE-THING242-VORTEIL
 prerequisites: [GE-C242-verein, GE-C242-vorsicht]
 sounds: []
-roots: []
+roots: [germanic-daila]
+etymology_hook: "Vorteil — 'before' + Teil 'part': the share taken first"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C242-vorsicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C242-THING242-05]; assesses=[] -->
 
 **der Vorteil** — "an advantage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vorteil** is the word for "before" + the word for "part", Old High German *teil*, English *deal* (EtymDB 2.1): the share taken first. EtymDB lists English *foredeal* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a fishmonger's"
 concept_tag: PT-COISAS227-PEIXARIA
 prerequisites: [PT-C227-papelaria, PT-C227-livraria]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "peixaria — built from peixe 'fish' (← Latin piscis) + -aria 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C227-livraria]
 <!-- hl-knowledge: introduces=[PT-LEX-C227-COISAS227-03]; assesses=[] -->
 
 **a peixaria** — "a fishmonger's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peixaria** is built from *peixe*, "fish", and *-aria*, "shop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

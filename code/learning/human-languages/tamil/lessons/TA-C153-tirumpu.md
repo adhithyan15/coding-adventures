@@ -14,7 +14,8 @@ romanization: "tirumpu"
 concept_tag: TA-VERB-TIRUMPU
 prerequisites: [TA-C153-eru, TA-C153-iranku, TA-C32-vaa, TA-C32-paar, TA-C34-kel]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn]
+etymology_hook: "திரும்பு — native Dravidian (DEDR 3246); Kannada tiri 'to turn round'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C153-iranku]
 <!-- hl-knowledge: introduces=[TA-LEX-C153-ACT153-03]; assesses=[] -->
 
 **திரும்பு** — *tirumpu* — "to turn, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திரும்பு** (*tirumpu*) is native Dravidian. DEDR 3246 lists Kannada *tiri*, "to turn round". The entry lists *tirumpu*, "to turn, to return", with *tiri*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

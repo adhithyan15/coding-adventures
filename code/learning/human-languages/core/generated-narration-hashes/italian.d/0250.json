@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 250,
-  "sourceHash": "fnv1a64:1e943a28c77b4116",
+  "sourceHash": "fnv1a64:0325dbefe5e23e8c",
   "lessonIds": [
     "IT-C250-giornalista",
     "IT-C250-architetto",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch250.txt",
   "json": "italian/narration/ch250.json",
-  "textHash": "fnv1a64:584f4134788c46e8",
-  "jsonHash": "fnv1a64:66340889b8ea8de3",
+  "textHash": "fnv1a64:658d42e5f187c23a",
+  "jsonHash": "fnv1a64:a577a7c13ece7c49",
   "findings": []
 }

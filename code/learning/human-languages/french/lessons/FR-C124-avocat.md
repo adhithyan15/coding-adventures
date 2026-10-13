@@ -14,6 +14,7 @@ concept_tag: FR-METIERS76-AVOCAT
 prerequisites: [FR-C124-etudiant, FR-C124-chauffeur]
 sounds: []
 roots: []
+etymology_hook: "avocat — the lawyer from Latin advocatus; the fruit from Nahuatl ahuacatl, reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C124-chauffeur]
 <!-- hl-knowledge: introduces=[FR-LEX-C124-METIERS76-04]; assesses=[] -->
 
 **l'avocat** — "a lawyer; an avocado".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avocat** — two words in one. The lawyer ← Latin *advocatus*, "one called in to help" (EtymDB 2.1) — a learned borrowing. The fruit ← Spanish *aguacate*, from Nahuatl *ahuacatl* (EtymDB 2.1), reshaped to look like the lawyer word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

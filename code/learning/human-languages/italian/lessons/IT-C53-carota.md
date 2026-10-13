@@ -13,7 +13,8 @@ gloss: "a carrot"
 concept_tag: IT-VERDURA-CAROTA
 prerequisites: [IT-C53-pomodoro, IT-C53-cipolla]
 sounds: []
-roots: []
+roots: [carota-latin]
+etymology_hook: "carota ← Latin carota, from Greek karoton — English carrot is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C53-cipolla]
 <!-- hl-knowledge: introduces=[IT-LEX-C53-VERDURA-04]; assesses=[] -->
 
 **la carota** — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carota** ← Latin *carota*, "carrot" — inherited; Latin took it from Greek *karoton*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "oḻukkamāṉa"
 concept_tag: TA-GUNAM212-OLUKKAMANA
 prerequisites: [TA-C212-cuyanalamana, TA-C212-peruntanmaiyana]
 sounds: []
-roots: []
+roots: [dravidian-ozhuku-order]
+etymology_hook: "ஒழுக்கமான — native Dravidian (DEDR 1011); Malayalam oḻukkam 'plainness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C212-peruntanmaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C212-GUNAM212-04]; assesses=[] -->
 
 **ஒழுக்கமான** — *oḻukkamāṉa* — "well-behaved, disciplined".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒழுக்கமான** (*oḻukkamāṉa*) is native Dravidian. DEDR 1011 lists Malayalam *oḻukkam*, "plainness". The entry glosses *oḻukkam* "acting according to established rules, good conduct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

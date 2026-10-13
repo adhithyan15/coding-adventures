@@ -14,7 +14,8 @@ romanization: "teḷivāṉa"
 concept_tag: TA-GUNAM179-TELIVANA
 prerequisites: [TA-C179-ullur, TA-C179-velinattu]
 sounds: []
-roots: []
+roots: [dravidian-tel-become-clear]
+etymology_hook: "தெளிவான — native Dravidian (DEDR 3433); Malayalam teḷi 'clearness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C179-velinattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C179-GUNAM179-04]; assesses=[] -->
 
 **தெளிவான** — *teḷivāṉa* — "clear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தெளிவான** (*teḷivāṉa*) is native Dravidian. DEDR 3433 lists Malayalam *teḷi*, "clearness". It is *teḷivu*, "clarity", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

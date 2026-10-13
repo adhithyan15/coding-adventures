@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 189,
-  "sourceHash": "fnv1a64:75179d9f85090aae",
+  "sourceHash": "fnv1a64:58a8003328d8b5c6",
   "lessonIds": [
     "PT-C189-juiz-a-juiza",
     "PT-C189-eleicoes",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch189.txt",
   "json": "portuguese/narration/ch189.json",
-  "textHash": "fnv1a64:dda0ba396b45f0eb",
-  "jsonHash": "fnv1a64:2b0b269e274eeabc",
+  "textHash": "fnv1a64:13589b971546fb29",
+  "jsonHash": "fnv1a64:10db09f5af1c8428",
   "findings": []
 }

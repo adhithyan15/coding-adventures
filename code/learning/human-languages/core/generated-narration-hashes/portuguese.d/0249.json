@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 249,
-  "sourceHash": "fnv1a64:335f2e883c1eb95f",
+  "sourceHash": "fnv1a64:15a0dd27d505d395",
   "lessonIds": [
     "PT-C249-motor",
     "PT-C249-portagem",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch249.txt",
   "json": "portuguese/narration/ch249.json",
-  "textHash": "fnv1a64:2d9f90afe6ba2932",
-  "jsonHash": "fnv1a64:e44bbe3b9aa74144",
+  "textHash": "fnv1a64:abb32a6ac23ebd48",
+  "jsonHash": "fnv1a64:30e649740a92b8a8",
   "findings": []
 }

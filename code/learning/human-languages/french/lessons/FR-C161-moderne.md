@@ -14,6 +14,7 @@ concept_tag: FR-QUAL161-MODERNE
 prerequisites: [FR-C160-dangereux-dangereuse, FR-C160-sur-sure]
 sounds: []
 roots: []
+etymology_hook: "moderne ← Late Latin modernus 'of now', from modo 'lately' — English modern"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C160-sur-sure]
 <!-- hl-knowledge: introduces=[FR-LEX-C161-QUAL161-01]; assesses=[] -->
 
 **moderne** — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moderne** ← Late Latin *modernus*, "of now", from *modo*, "lately" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

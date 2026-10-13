@@ -11,7 +11,8 @@ romanization: "makaḷ"
 concept_tag: TA-NOUN-DAUGHTER
 prerequisites: [TA-C43-son, TA-C41-new]
 sounds: []
-roots: []
+roots: [proto-dravidian-makal-daughter]
+etymology_hook: "மகள் — native Dravidian (DEDR 4616); Malayalam mōḷ"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C43-son]
 **மகள்** (*makaḷ*) — "daughter".
 
 The same *maka-* stem as the last lesson, with *-aḷ* where that word had *-aṉ*: one ending marks a woman, the other a man. The sibling words you met earlier needed four separate forms to split brother from sister by age; here a single stem does the work of two. Malayalam's *makan* and *makaḷ* match Tamil almost letter for letter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மகள்** (*makaḷ*) is native Dravidian. DEDR 4616 lists Malayalam *mōḷ*. It is the feminine of the same word as *makaṉ*, "son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

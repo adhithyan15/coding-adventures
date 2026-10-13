@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 131,
-  "sourceHash": "fnv1a64:03162d20c7d5c5ca",
+  "sourceHash": "fnv1a64:f3bd8642f80c28e6",
   "lessonIds": [
     "GE-C131-beschaeftigt",
     "GE-C131-frei",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch131.txt",
   "json": "german/narration/ch131.json",
-  "textHash": "fnv1a64:cfd2da15aff47dbc",
-  "jsonHash": "fnv1a64:a59b194943320b42",
+  "textHash": "fnv1a64:bee3db1ea835ebc0",
+  "jsonHash": "fnv1a64:c69ee15afad2d877",
   "findings": []
 }

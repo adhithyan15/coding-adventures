@@ -2267,6 +2267,42 @@ fn conditional_lowered_px_expr(
     Some(expr)
 }
 
+/// Preserve the CSS fill-width spelling on a Qt Quick control.
+///
+/// `width: 100%` is not a scalar width. A control inside `RowLayout` or
+/// `ColumnLayout` expresses the same request with the attached
+/// `Layout.fillWidth` property. The lowering is deliberately all-or-nothing
+/// across state layers: a base fill width can remain a static `true` only when
+/// every width override also asks to fill. A state that switches to `120px`,
+/// `75%`, or an intrinsic keyword stays visible to the degradation reporter
+/// rather than being flattened into the wrong geometry.
+fn host_control_has_fill_width(base: &[StyleProp], layers: &[StateLayer<'_>]) -> bool {
+    fn raw_width(props: &[StyleProp]) -> Option<&str> {
+        props
+            .iter()
+            .find(|prop| prop.name == "width")
+            .map(|prop| prop.value.trim().trim_matches('"').trim())
+    }
+    if raw_width(base) != Some("100%") {
+        return false;
+    }
+    if layers
+        .iter()
+        .filter_map(|layer| raw_width(layer.props))
+        .any(|width| width != "100%")
+    {
+        return false;
+    }
+
+    record_style_read(base, "width");
+    for layer in layers {
+        if raw_width(layer.props).is_some() {
+            record_style_read(layer.props, "width");
+        }
+    }
+    true
+}
+
 /// Shared body of the two scalar builders above. `convert` is the whole
 /// difference between them.
 fn conditional_scalar_expr(
@@ -2570,7 +2606,9 @@ impl ElevationTier {
 /// error), so an unrecognized value here is treated defensively as "no
 /// elevation" rather than panicking. Base props only — matches
 /// `mosaic-emit-xaml`/`mosaic-emit-compose`'s `part_elevation_tier`; no real
-/// part conditions elevation on a state today.
+/// part conditions elevation on a state today. A non-inset CSS `box-shadow`
+/// authored beside a supported elevation token is the web fallback for the
+/// same depth intent, so the native shadow consumes that companion too.
 fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
     let value = base_props
         .iter()
@@ -2588,6 +2626,18 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         // Recording only recognised tiers keeps a manually constructed or
         // future unsupported value visible to the drop reporter.
         record_style_read(base_props, "elevation");
+
+        // #17386 -- TaskApp authors the web-facing CSS shadow and portable
+        // elevation token together. Qt already emits equivalent native depth
+        // from the supported token, so the non-inset companion is not a real
+        // drop. Inset shadows are drawing effects and remain explicit debt.
+        if base_props
+            .iter()
+            .find(|prop| prop.name == "box-shadow")
+            .is_some_and(|prop| !prop.value.to_ascii_lowercase().contains("inset"))
+        {
+            record_style_read(base_props, "box-shadow");
+        }
     }
     tier
 }
@@ -6253,10 +6303,14 @@ fn host_control_style_qml_lines(
     // its own is insufficient when the same control is emitted inside and
     // outside a Layout. Percentages and intrinsic CSS keywords remain
     // deliberate degradations because `qml_px_or_none` rejects them.
-    let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
-    if let Some(width) = width {
-        lines.push(format!("implicitWidth: {width}"));
-        lines.push(format!("Layout.preferredWidth: {width}"));
+    if host_control_has_fill_width(base, &state_layers) {
+        lines.push("Layout.fillWidth: true".to_string());
+    } else {
+        let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
+        if let Some(width) = width {
+            lines.push(format!("implicitWidth: {width}"));
+            lines.push(format!("Layout.preferredWidth: {width}"));
+        }
     }
     let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
     if let Some(height) = height {
@@ -17471,7 +17525,61 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_host_control_geometry_remains_a_reported_drop() {
+    fn host_control_full_width_lowers_but_intrinsic_height_remains_a_drop() {
+        for tag in ["Input", "HostInput", "HostButton"] {
+            let model = component("FluidControl", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "FluidControl".to_string(),
+                root: LayoutNode {
+                    tag: tag.to_string(),
+                    part_name: Some("control".to_string()),
+                    props: if tag == "HostButton" {
+                        vec![lp("label", LayoutPropValue::String("Save".to_string()))]
+                    } else {
+                        vec![]
+                    },
+                    children: vec![],
+                },
+            };
+            let style = StyleDef {
+                component_name: "FluidControl".to_string(),
+                parts: vec![PartStyle {
+                    name: "control".to_string(),
+                    base: vec![
+                        sp("width", "100%"),
+                        sp("height", "max-content"),
+                        sp("padding", "8px"),
+                    ],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains("Layout.fillWidth: true"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitWidth: 100"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitHeight: max-content"), "{tag}:\n{out}");
+
+            let dropped = dropped_style_properties(&model, &layout, &style);
+            let names: HashSet<&str> =
+                dropped.iter().map(|drop| drop.name.as_str()).collect();
+            assert!(
+                !names.contains("width"),
+                "{tag} fill width must lower: {dropped:?}"
+            );
+            assert!(
+                names.contains("height"),
+                "{tag} must report height: {dropped:?}"
+            );
+            assert!(
+                !names.contains("padding"),
+                "{tag} padding must lower: {dropped:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_host_control_percentage_width_remains_a_reported_drop() {
         let model = component("FluidButton", vec![], vec![]);
         let layout = LayoutDef {
             component_name: "FluidButton".to_string(),
@@ -17482,29 +17590,102 @@ mod tests {
                 children: vec![],
             },
         };
+        let style = style_with_part("FluidButton", "button", vec![("width", "75%")]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(!out.contains("implicitWidth: 75"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "width");
+    }
+
+    #[test]
+    fn repeated_state_fill_width_remains_a_static_native_fill() {
+        let model = component(
+            "ResponsiveInput",
+            vec![slot("focused", SlotType::Bool, false)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveInput".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("input".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
         let style = StyleDef {
-            component_name: "FluidButton".to_string(),
+            component_name: "ResponsiveInput".to_string(),
             parts: vec![PartStyle {
-                name: "button".to_string(),
-                base: vec![
-                    sp("width", "100%"),
-                    sp("height", "max-content"),
-                    sp("padding", "8px"),
-                ],
+                name: "input".to_string(),
+                base: vec![sp("width", "100%")],
                 transitions: vec![],
-                states: vec![],
+                states: vec![StateStyle {
+                    slot: Some("focused".to_string()),
+                    slot_is_bool: true,
+                    state: "true".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "100%")],
+                }],
             }],
         };
 
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
-        assert!(!out.contains("implicitWidth: 100"), "got:\n{out}");
-        assert!(!out.contains("implicitHeight: max-content"), "got:\n{out}");
+        assert!(out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(
+            !dropped_style_properties(&model, &layout, &style)
+                .iter()
+                .any(|drop| drop.name == "width")
+        );
+    }
+
+    #[test]
+    fn mixed_host_control_width_modes_remain_reported() {
+        let model = component(
+            "ResponsiveButton",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["fluid".to_string(), "fixed".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "ResponsiveButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("width", "100%")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "fixed".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "120px")],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
 
         let dropped = dropped_style_properties(&model, &layout, &style);
-        let names: HashSet<&str> = dropped.iter().map(|drop| drop.name.as_str()).collect();
-        assert!(names.contains("width"), "missing width drop: {dropped:?}");
-        assert!(names.contains("height"), "missing height drop: {dropped:?}");
-        assert!(!names.contains("padding"), "padding must lower: {dropped:?}");
+        assert!(
+            dropped.iter().any(|drop| drop.name == "width" && drop.value == "100%"),
+            "mixed base fill width must remain visible: {dropped:?}"
+        );
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell
@@ -17765,9 +17946,10 @@ mod tests {
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
 
-        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
-        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
-        assert_eq!(dropped[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -17809,7 +17991,11 @@ mod tests {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
                 name: "card".to_string(),
-                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                base: vec![
+                    sp("box-shadow", "0 8px 20px rgba(0,0,0,.2)"),
+                    sp("elevation", "floating"),
+                    sp("background", "#ffffff"),
+                ],
                 transitions: vec![],
                 states: vec![],
             }],
@@ -17820,9 +18006,10 @@ mod tests {
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
         assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
         let dropped = dropped_style_properties(&model, &layout, &style);
-        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
-        assert_eq!(dropped[0].name, "elevation");
-        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
+        assert_eq!(dropped[1].name, "elevation");
+        assert!(dropped[1].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]
@@ -17849,14 +18036,16 @@ mod tests {
             !out.contains("import QtQuick.Effects"),
             "got:\n{out}"
         );
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
     fn inset_box_shadow_alongside_elevation_still_shadows_from_elevation_only() {
-        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
-        // signal read, so an `inset` box-shadow value alongside a real
-        // `elevation` declaration behaves identically to any other
-        // box-shadow value -- it's ignored, not specially detected.
+        // The theme-toggle moon-icon `inset` hack is a drawing effect, not a
+        // portable depth fallback, so it must remain visible to the reporter
+        // even when native elevation is emitted alongside it.
         let style = StyleDef {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
@@ -17876,6 +18065,9 @@ mod tests {
 
         assert!(out.contains("MultiEffect {"), "got:\n{out}");
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -18104,7 +18296,7 @@ mod tests {
     /// TaskApp's board cards rely on that box for their fill, inset, spacing,
     /// border, overdue edge, radius, pointer cursor, and elevation.
     #[test]
-    fn host_draggable_lowers_native_container_styles_without_hiding_raw_shadow() {
+    fn host_draggable_lowers_native_container_styles_and_reconciles_native_shadow() {
         let style = StyleDef {
             component_name: "Board".to_string(),
             parts: vec![PartStyle {
@@ -18167,9 +18359,10 @@ mod tests {
             assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
         }
 
-        let drops = dropped_style_properties(&m, &l, &style);
-        assert_eq!(drops.len(), 1, "got: {drops:?}");
-        assert_eq!(drops[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the supported draggable surface should retire its paired shadow drop"
+        );
     }
 
     /// A draggable is a container, so its inheritable typography belongs on

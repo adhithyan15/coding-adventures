@@ -13,7 +13,8 @@ gloss: "an explanation"
 concept_tag: GE-THING228-ERKLAERUNG
 prerequisites: [GE-C228-erlaubnis, GE-C228-ergebnis]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "Erklärung — erklären 'to explain' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C228-ergebnis]
 <!-- hl-knowledge: introduces=[GE-LEX-C228-THING228-05]; assesses=[] -->
 
 **die Erklärung** — "an explanation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erklärung** is *erklären*, "to explain", + *-ung* (EtymDB 2.1). The verb is built on the word for "clear", from Latin *clārus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

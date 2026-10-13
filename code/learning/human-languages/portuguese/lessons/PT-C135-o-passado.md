@@ -13,7 +13,8 @@ gloss: "the past"
 concept_tag: PT-PAS135-O-PASSADO
 prerequisites: [PT-C135-anteontem, PT-C135-antigamente]
 sounds: []
-roots: []
+roots: [passus]
+etymology_hook: "passado — 'passed': the participle of the verb to pass, from Latin passus 'a step'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C135-antigamente]
 <!-- hl-knowledge: introduces=[PT-LEX-C135-PAS135-04]; assesses=[] -->
 
 **o passado** — "the past". The same word describes time gone by: **a semana passada** — "last week", **o mês passado** — "last month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passado** is "passed": the participle of the verb "to pass" (EtymDB 2.1), which goes back to Latin *passus*, "a step".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a fish"
 concept_tag: GE-ESSEN1-FISCH
 prerequisites: [GE-C68-malen, GE-C68-putzen]
 sounds: []
-roots: []
+roots: [germanic-fiskaz]
+etymology_hook: "Fisch ← Old High German fisk ← Proto-Germanic *fiskaz — the same word as English fish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C68-putzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C69-ESSEN1-01]; assesses=[] -->
 
 **der Fisch** — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fisch** ← Old High German *fisk* ← Proto-Germanic *\*fiskaz* — inherited, the same word as English *fish*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the temperature"
 concept_tag: GE-THING163-TEMPERATUR
 prerequisites: [GE-C162-wind, GE-C162-gewitter]
 sounds: []
-roots: []
+roots: [temperare-latin]
+etymology_hook: "Temperatur ← Latin temperātūra 'due measure', from temperāre 'to mix in proportion' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C162-gewitter]
 <!-- hl-knowledge: introduces=[GE-LEX-C163-THING163-01]; assesses=[] -->
 
 **die Temperatur** — "the temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Temperatur** ← Latin *temperātūra*, "due measure, mixture", from *temperāre*, "to mix in proportion" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

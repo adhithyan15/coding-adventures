@@ -13,7 +13,8 @@ gloss: "experience; an experiment"
 concept_tag: PT-COISAS247-EXPERIENCIA
 prerequisites: [PT-C247-sucesso, PT-C247-fracasso]
 sounds: []
-roots: []
+roots: [experiri-latin]
+etymology_hook: "experiência ← Latin experientia 'trial, experience' — English experience"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C247-fracasso]
 <!-- hl-knowledge: introduces=[PT-LEX-C247-COISAS247-03]; assesses=[] -->
 
 **a experiência** — "experience; an experiment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**experiência** ← Latin *experientia*, "trial, experience" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

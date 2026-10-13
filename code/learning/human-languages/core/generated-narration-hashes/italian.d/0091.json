@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 91,
-  "sourceHash": "fnv1a64:1638faab195b2f4f",
+  "sourceHash": "fnv1a64:3a262d0721fc5751",
   "lessonIds": [
     "IT-C91-dritto",
     "IT-C91-davanti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch91.txt",
   "json": "italian/narration/ch91.json",
-  "textHash": "fnv1a64:24a27cade619016f",
-  "jsonHash": "fnv1a64:d3f4471474ba0495",
+  "textHash": "fnv1a64:794a3d3d7f89487e",
+  "jsonHash": "fnv1a64:5323aede53b62d53",
   "findings": []
 }

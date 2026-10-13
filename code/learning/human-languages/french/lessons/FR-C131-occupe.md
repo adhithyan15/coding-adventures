@@ -13,7 +13,8 @@ gloss: "busy"
 concept_tag: FR-QUALITES83-OCCUPE
 prerequisites: [FR-C130-brun, FR-C130-joli]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "occupé — 'occupied', from Latin occupare 'to seize' — English occupied"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C130-joli]
 <!-- hl-knowledge: introduces=[FR-LEX-C131-QUALITES83-01]; assesses=[] -->
 
 **occupé** — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occupé** is the past participle of the verb for "to occupy", a learned borrowing of Latin *occupare*, "to seize", from *ob* and *capere*, "to take" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

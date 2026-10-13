@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 5,
-  "sourceHash": "fnv1a64:7e425a335bd8e04d",
+  "sourceHash": "fnv1a64:af83b7fef7ef189d",
   "lessonIds": [
     "PT-C05-falar",
     "PT-C05-morar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch05.txt",
   "json": "portuguese/narration/ch05.json",
-  "textHash": "fnv1a64:c389cba21fdfb939",
-  "jsonHash": "fnv1a64:248388aa6a6ccd0b",
+  "textHash": "fnv1a64:a85aafd84f64dbf3",
+  "jsonHash": "fnv1a64:fc303f81adbb48a7",
   "findings": []
 }

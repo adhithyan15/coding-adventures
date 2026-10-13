@@ -102,4 +102,4 @@ FR, DE keep.)
 [PAUSE 3s] What Latin verb is *falar* from, and which Spanish verb is its twin?
 (*fabulārī* — Spanish *hablar*.) What sound-law separates them? (Portuguese kept
 *f-*; Spanish shifted *f- → h-*: *filho/hijo*.) Does Portuguese keep or drop the
-pronoun? (Drops it.) Next: **morar**, "to live."
+pronoun? (Drops it.) Next: the verb "to live."

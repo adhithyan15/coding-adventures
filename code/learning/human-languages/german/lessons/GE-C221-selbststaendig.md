@@ -13,7 +13,8 @@ gloss: "independent, self-employed"
 concept_tag: GE-QUAL221-SELBSTSTAENDIG
 prerequisites: [GE-C221-schrecklich, GE-C221-schuechtern]
 sounds: []
-roots: []
+roots: [germanic-stana]
+etymology_hook: "selbstständig — selbst 'self' + ständig, from stehen 'to stand': standing by oneself"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C221-schuechtern]
 <!-- hl-knowledge: introduces=[GE-LEX-C221-QUAL221-04]; assesses=[] -->
 
 **selbstständig** — "independent, self-employed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**selbstständig** is the word for "self", which EtymDB 2.1 lists beside English *self*, + a word built on the verb "to stand", Old High German *stān*: standing on one's own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

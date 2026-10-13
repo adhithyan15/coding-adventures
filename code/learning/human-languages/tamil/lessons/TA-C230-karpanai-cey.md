@@ -14,7 +14,8 @@ romanization: "kaṟpaṉai cey"
 concept_tag: TA-VERB-KARPANAI-CEY
 prerequisites: [TA-C229-piri, TA-C229-vicu]
 sounds: []
-roots: []
+roots: [sanskrit-kalpana, sey-do-dravidian]
+etymology_hook: "கற்பனை செய் — kaṟpaṉai ← Sanskrit kalpanā 'forming, fancy', a well-established loan, + native sey"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C229-vicu]
 <!-- hl-knowledge: introduces=[TA-LEX-C230-ACT230-01]; assesses=[] -->
 
 **கற்பனை செய்** — *kaṟpaṉai cey* — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கற்பனை செய்** (*kaṟpaṉai cey*) is *kaṟpaṉai*, "imagination", a well-established loan from Sanskrit *kalpanā*, "forming, fancy", with native *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

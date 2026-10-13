@@ -13,7 +13,8 @@ gloss: "an armchair"
 concept_tag: GE-HAUS115-SESSEL
 prerequisites: [GE-C115-besen, GE-C115-waschmaschine]
 sounds: []
-roots: []
+roots: [germanic-setlaz]
+etymology_hook: "Sessel ← Middle High German sezzel ← Proto-Germanic *setlaz 'seat' — the same word as English settle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C115-waschmaschine]
 <!-- hl-knowledge: introduces=[GE-LEX-C115-HAUS115-05]; assesses=[] -->
 
 **der Sessel** — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sessel** ← Middle High German *sezzel* ← Proto-Germanic *\*setlaz*, "seat" — inherited, the same word as English *settle*, a long wooden bench. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an ambulance"
 concept_tag: GE-THING207-KRANKENWAGEN
 prerequisites: [GE-C206-spritze, GE-C206-notfall]
 sounds: []
-roots: []
+roots: [germanic-krangaz, germanic-wagnaz]
+etymology_hook: "Krankenwagen — krank 'ill' + Wagen 'vehicle': a vehicle for the sick"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C206-notfall]
 <!-- hl-knowledge: introduces=[GE-LEX-C207-THING207-01]; assesses=[] -->
 
 **der Krankenwagen** — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Krankenwagen** ← *krank* + *-n-* + the word for "vehicle", Middle High German *wagen* ← Proto-Germanic *\*wagnaz*, English *wagon* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to add"
 concept_tag: PT-VERB-ACRESCENTAR
 prerequisites: [PT-C140-proteger, PT-C141-acompanhar]
 sounds: []
-roots: []
+roots: [crescere-latin]
+etymology_hook: "acrescentar ← Vulgar Latin *accrescentare, from crescere 'to grow' — English increase"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C141-acompanhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C141-VERBOS141-02]; assesses=[] -->
 
 **acrescentar** — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acrescentar** ← Vulgar Latin *\*accrescentare*, "to make grow" (EtymDB 2.1), from *crescere*, "to grow" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

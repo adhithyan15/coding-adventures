@@ -11,7 +11,8 @@ romanization: "pataṟṟam"
 concept_tag: TA-FEEL-NERVOUS
 prerequisites: [TA-C89-sadness, TA-C89-worry]
 sounds: []
-roots: []
+roots: [dravidian-pataru-flurry]
+etymology_hook: "பதற்றம் — native Dravidian (DEDR 3910)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C89-worry]
 **பதற்றம்** (*pataṟṟam*) — "nervousness, tension, a flutter".
 
 **பதற்றமாக இருக்கிறது** — "I feel nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதற்றம்** (*pataṟṟam*) is native Dravidian (DEDR 3910). It is the noun of *pataṟu*, "to be flurried, to hurry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

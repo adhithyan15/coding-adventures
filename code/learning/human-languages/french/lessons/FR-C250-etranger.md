@@ -13,7 +13,8 @@ gloss: "a foreigner"
 concept_tag: FR-CHOSES250-ETRANGER
 prerequisites: [FR-C249-ecrivain, FR-C249-peintre]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "étranger — the adjective étranger 'foreign' used as a noun"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C249-peintre]
 <!-- hl-knowledge: introduces=[FR-LEX-C250-CHOSES250-01]; assesses=[] -->
 
 **l'étranger** — "a foreigner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étranger** — the adjective *étranger*, "foreign", used as a noun: a foreigner.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

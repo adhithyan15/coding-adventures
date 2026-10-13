@@ -13,7 +13,8 @@ gloss: "a salad; lettuce"
 concept_tag: GE-ESSEN6-SALAT
 prerequisites: [GE-C74-wurst, GE-C74-schinken]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "Salat ← Italian insalata 'salted', from Latin sal 'salt' — borrowed: greens dressed with salt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C74-schinken]
 <!-- hl-knowledge: introduces=[GE-LEX-C74-ESSEN6-04]; assesses=[] -->
 
 **der Salat** — "a salad; lettuce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Salat** ← Middle High German *salāt* (EtymDB 2.1), from Italian *insalata*, "salted" — borrowed: greens dressed with salt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

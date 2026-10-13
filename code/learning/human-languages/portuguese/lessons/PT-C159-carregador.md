@@ -13,7 +13,8 @@ gloss: "a charger"
 concept_tag: PT-COISAS159-CARREGADOR
 prerequisites: [PT-C158-tribunal, PT-C159-bateria]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "carregador — from the verb to load (from Latin carrus 'wagon') + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C159-bateria]
 <!-- hl-knowledge: introduces=[PT-LEX-C159-COISAS159-02]; assesses=[] -->
 
 **o carregador** — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carregador** is built from the verb "to load" and *-dor*, "one that does" (EtymDB 2.1). The verb goes back to Latin *carrus*, "wagon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

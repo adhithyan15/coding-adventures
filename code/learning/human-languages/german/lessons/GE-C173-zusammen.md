@@ -14,6 +14,7 @@ concept_tag: GE-ADV173-ZUSAMMEN
 prerequisites: [GE-C173-besonders, GE-C173-ungefaehr]
 sounds: []
 roots: []
+etymology_hook: "zusammen ← Old High German zisamane 'together' — a cousin of English same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C173-ungefaehr]
 <!-- hl-knowledge: introduces=[GE-LEX-C173-ADV173-04]; assesses=[] -->
 
 **zusammen** — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zusammen** ← Middle High German *zesamene* ← Old High German *zisamane*, "together" (EtymDB 2.1): *zu-*, "to", + an old word for "together", a cousin of English *same*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

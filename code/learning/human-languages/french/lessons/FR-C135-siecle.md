@@ -13,7 +13,8 @@ gloss: "a century"
 concept_tag: FR-TEMPS87-SIECLE
 prerequisites: [FR-C135-monnaie, FR-C135-date]
 sounds: []
-roots: []
+roots: [saeculum-latin]
+etymology_hook: "siècle ← Latin saeculum 'a generation, an age' — English secular, 'of the age'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C135-date]
 <!-- hl-knowledge: introduces=[FR-LEX-C135-TEMPS87-04]; assesses=[] -->
 
 **le siècle** — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**siècle** ← Church Latin *saeculum*, "a generation, an age" (Lewis & Short) — taken from Latin in a half-learned form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

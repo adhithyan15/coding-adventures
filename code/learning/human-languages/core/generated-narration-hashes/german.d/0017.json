@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:815c386b5855b728",
+  "sourceHash": "fnv1a64:c004c03bb7679150",
   "lessonIds": [
     "GE-C11-brot",
     "GE-C11-brot-bread",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:d33da866ce00351f",
-  "jsonHash": "fnv1a64:1518cf44315c90a7",
+  "textHash": "fnv1a64:4445a7f3e3a74510",
+  "jsonHash": "fnv1a64:8ca350add9080aeb",
   "findings": []
 }

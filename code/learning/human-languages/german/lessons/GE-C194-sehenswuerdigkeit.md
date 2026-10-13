@@ -13,7 +13,8 @@ gloss: "a sight (worth seeing)"
 concept_tag: GE-THING194-SEHENSWUERDIGKEIT
 prerequisites: [GE-C193-gepaeck, GE-C194-rucksack]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "Sehenswürdigkeit — sehen + würdig 'worthy' + -keit: something worth seeing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C194-rucksack]
 <!-- hl-knowledge: introduces=[GE-LEX-C194-THING194-02]; assesses=[] -->
 
 **die Sehenswürdigkeit** — "a sight (worth seeing)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sehenswürdigkeit** is *sehen*, "to see", + the word for "worthy", which EtymDB 2.1 lists beside English *worthy*, + *-keit*: a thing worth seeing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a dialect"
 concept_tag: IT-COSE249-DIALETTO
 prerequisites: [IT-C248-societa, IT-C248-governo]
 sounds: []
-roots: []
+roots: [dialectos-latin]
+etymology_hook: "dialetto ← Latin dialectos, from Greek dialektos 'a way of speaking' — English dialect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C248-governo]
 <!-- hl-knowledge: introduces=[IT-LEX-C249-COSE249-01]; assesses=[] -->
 
 **il dialetto** — "a dialect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dialetto** ← Latin *dialectos*, "a way of speaking", from Greek *dialektos*, "a conversation, a way of speaking" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

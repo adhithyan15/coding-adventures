@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 222,
-  "sourceHash": "fnv1a64:49664d5ad6c8029b",
+  "sourceHash": "fnv1a64:8f63749e9bfdf8f2",
   "lessonIds": [
     "TA-C222-tallupati",
     "TA-C222-rupay",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch222.txt",
   "json": "tamil/narration/ch222.json",
-  "textHash": "fnv1a64:79a7d1d5ef091a68",
-  "jsonHash": "fnv1a64:9fccbedf0e4628fc",
+  "textHash": "fnv1a64:44b426b853d64edb",
+  "jsonHash": "fnv1a64:797c4f0876ed9713",
   "findings": []
 }

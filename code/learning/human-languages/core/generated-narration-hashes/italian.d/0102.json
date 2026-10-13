@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 102,
-  "sourceHash": "fnv1a64:b28cedf356ef5d60",
+  "sourceHash": "fnv1a64:2b59f8fba5877126",
   "lessonIds": [
     "IT-C102-zaino",
     "IT-C102-mondo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch102.txt",
   "json": "italian/narration/ch102.json",
-  "textHash": "fnv1a64:d85b2be08e51ac6e",
-  "jsonHash": "fnv1a64:80b44bc2bedb5b4c",
+  "textHash": "fnv1a64:39f5dafb7722fa51",
+  "jsonHash": "fnv1a64:99f47c883321e2f9",
   "findings": []
 }

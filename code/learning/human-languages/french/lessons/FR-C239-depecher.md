@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DEPECHER
 prerequisites: [FR-C239-habituer, FR-C239-rendre-compte]
 sounds: []
 roots: []
+etymology_hook: "se dépêcher — the opposite of 'to hinder', Late Latin impedicare — English dispatch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C239-rendre-compte]
 <!-- hl-knowledge: introduces=[FR-LEX-C239-VERBES239-05]; assesses=[] -->
 
 **se dépêcher** — "to hurry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se dépêcher** — built in Old French as the opposite of the verb for "to hinder", ← Late Latin *impedicare*, "to catch, to entangle" (Lewis & Short): to get free and go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

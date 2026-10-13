@@ -13,7 +13,8 @@ gloss: "a ticket"
 concept_tag: PT-COISAS3-BILHETE
 prerequisites: [PT-C54-caixa, PT-C54-mala]
 sounds: []
-roots: []
+roots: [bulla]
+etymology_hook: "bilhete ← French billet 'note', from Latin bulla 'seal' — English billet shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C54-mala]
 <!-- hl-knowledge: introduces=[PT-LEX-C54-COISAS3-04]; assesses=[] -->
 
 **o bilhete** — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bilhete** ← French *billet*, "note" (EtymDB 2.1) — borrowed. Behind the French word is Latin *bulla*, a seal on a document.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

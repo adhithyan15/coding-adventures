@@ -11,7 +11,8 @@ romanization: "atē"
 concept_tag: TA-RIGHT-SAME
 prerequisites: [TA-C95-nothing, TA-C95-notyet]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அதே — native: the far base a- (DEDR 1) + the stressing -ē: 'that very one'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C95-notyet]
 **அதே** (*atē*) — "the same", "that very one".
 
 It is **அது**, "that", with **-ஏ**, "exactly". When someone names what you meant: **அதே!**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதே** (*atē*) is native: the far base *a-* (DEDR 1) with the stressing *-ē*: "that very one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

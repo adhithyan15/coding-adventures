@@ -13,7 +13,8 @@ gloss: "to fill"
 concept_tag: IT-VERB-RIEMPIRE
 prerequisites: [IT-C205-fermare, IT-C206-raffreddare]
 sounds: []
-roots: []
+roots: [implere-latin]
+etymology_hook: "riempire — ri- 'again' + empire 'to fill', from Latin implere 'to fill up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C206-raffreddare]
 <!-- hl-knowledge: introduces=[IT-LEX-C206-VERBI206-02]; assesses=[] -->
 
 **riempire** — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riempire** ← Latin *implere*, "to fill up", with *ri-*, "again" — inherited. EtymDB 2.1 has no row for *riempire*; it derives the older Italian *empire*, "to fill", from *implere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

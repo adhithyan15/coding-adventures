@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 57,
-  "sourceHash": "fnv1a64:9505c40d62352a18",
+  "sourceHash": "fnv1a64:8217e6cbb960fbca",
   "lessonIds": [
     "GE-C57-gesicht",
     "GE-C57-blut",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch57.txt",
   "json": "german/narration/ch57.json",
-  "textHash": "fnv1a64:bb1cdaec9cc1d213",
-  "jsonHash": "fnv1a64:12937b015025b73d",
+  "textHash": "fnv1a64:c1add17a3af48b2c",
+  "jsonHash": "fnv1a64:af8cca028a5da1da",
   "findings": []
 }

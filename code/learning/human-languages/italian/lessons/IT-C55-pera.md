@@ -13,7 +13,8 @@ gloss: "a pear"
 concept_tag: IT-DISPENSA-PERA
 prerequisites: [IT-C54-pranzo, IT-C55-colazione]
 sounds: []
-roots: []
+roots: [pirum-latin]
+etymology_hook: "pera ← Latin pirum 'pear' — English pear is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C55-colazione]
 <!-- hl-knowledge: introduces=[IT-LEX-C55-DISPENSA-02]; assesses=[] -->
 
 **la pera** — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pera** ← Vulgar Latin *pira*, from Latin *pirum*, "pear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caṅkili"
 concept_tag: TA-PORUL270-CANKILI
 prerequisites: [TA-C270-kaikkuttai, TA-C270-totu2]
 sounds: []
-roots: []
+roots: [sanskrit-shrinkhala]
+etymology_hook: "சங்கிலி ← Sanskrit śṛṅkhala 'chain' (CDIAL 12580)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C270-totu2]
 <!-- hl-knowledge: introduces=[TA-LEX-C270-PORUL270-03]; assesses=[] -->
 
 **சங்கிலி** — *caṅkili* — "a chain, a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சங்கிலி** (*caṅkili*) is a loan from Sanskrit *śṛṅkhala*, "chain" (CDIAL 12580).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

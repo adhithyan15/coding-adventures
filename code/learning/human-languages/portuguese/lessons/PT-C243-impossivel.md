@@ -13,7 +13,8 @@ gloss: "impossible"
 concept_tag: PT-QUAL243-IMPOSSIVEL
 prerequisites: [PT-C243-inteligente, PT-C243-possivel]
 sounds: []
-roots: []
+roots: [posse-latin]
+etymology_hook: "impossível ← Latin impossibilis, in- 'not' + possibilis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C243-possivel]
 <!-- hl-knowledge: introduces=[PT-LEX-C243-QUAL243-04]; assesses=[] -->
 
 **impossível** — "impossible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impossível** ← Latin *impossibilis*, "impossible" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

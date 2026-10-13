@@ -13,7 +13,8 @@ gloss: "a difference"
 concept_tag: FR-CHOSES251-DIFFERENCE
 prerequisites: [FR-C250-jumeau, FR-C251-resultat]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "différence ← Latin differentia — the noun beside différent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C251-resultat]
 <!-- hl-knowledge: introduces=[FR-LEX-C251-CHOSES251-02]; assesses=[] -->
 
 **la différence** — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**différence** ← Latin *differentia*, "a difference" — the noun beside *différent*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

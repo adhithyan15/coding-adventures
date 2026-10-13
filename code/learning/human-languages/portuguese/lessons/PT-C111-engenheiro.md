@@ -13,7 +13,8 @@ gloss: "an engineer"
 concept_tag: PT-TRABALHO111-ENGENHEIRO
 prerequisites: [PT-C111-motorista, PT-C111-advogado]
 sounds: []
-roots: []
+roots: [ingenium-latin]
+etymology_hook: "engenheiro — 'engine man': from the engine word (← Latin ingenium 'talent') + -eiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C111-advogado]
 <!-- hl-knowledge: introduces=[PT-LEX-C111-TRABALHO111-03]; assesses=[] -->
 
 **o engenheiro** — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**engenheiro** is built from the word for an engine or device and *-eiro*, like Medieval Latin *ingeniarius* (EtymDB 2.1). The engine word ← Latin *ingenium*, "talent, clever device".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

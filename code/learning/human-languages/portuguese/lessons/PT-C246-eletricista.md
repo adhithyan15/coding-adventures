@@ -13,7 +13,8 @@ gloss: "an electrician"
 concept_tag: PT-COISAS246-ELETRICISTA
 prerequisites: [PT-C245-teclado, PT-C246-mecanico]
 sounds: []
-roots: []
+roots: [electrum-latin]
+etymology_hook: "eletricista — built from elétrico 'electric' + -ista 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C246-mecanico]
 <!-- hl-knowledge: introduces=[PT-LEX-C246-COISAS246-02]; assesses=[] -->
 
 **o eletricista** — "an electrician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eletricista** is built from *elétrico*, "electric", and *-ista*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

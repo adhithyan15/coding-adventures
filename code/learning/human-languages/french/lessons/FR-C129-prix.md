@@ -13,7 +13,8 @@ gloss: "a price; a prize"
 concept_tag: FR-LOISIRS81-PRIX
 prerequisites: [FR-C129-fois, FR-C129-couleur]
 sounds: []
-roots: []
+roots: [pretium-latin]
+etymology_hook: "prix ← Latin pretium 'worth, price, reward' — English price, prize and praise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C129-couleur]
 <!-- hl-knowledge: introduces=[FR-LEX-C129-LOISIRS81-05]; assesses=[] -->
 
 **le prix** — "a price; a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prix** ← Old French *pris* ← Latin *pretium*, "worth, price, reward" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

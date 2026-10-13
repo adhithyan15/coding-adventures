@@ -14,6 +14,7 @@ concept_tag: PT-ADJ5-RICO
 prerequisites: [PT-C68-forte, PT-C68-fraco]
 sounds: []
 roots: []
+etymology_hook: "rico ← Gothic reiks 'mighty, powerful' — German Reich and English rich are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C68-fraco]
 <!-- hl-knowledge: introduces=[PT-LEX-C68-ADJ5-03]; assesses=[] -->
 
 **rico** — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rico** ← Gothic *reiks*, "mighty, powerful" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

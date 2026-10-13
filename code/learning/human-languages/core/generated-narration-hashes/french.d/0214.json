@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 214,
-  "sourceHash": "fnv1a64:5df2483ca678e605",
+  "sourceHash": "fnv1a64:daa9ff1928308fdc",
   "lessonIds": [
     "FR-C214-enregistrer",
     "FR-C214-entretenir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch214.txt",
   "json": "french/narration/ch214.json",
-  "textHash": "fnv1a64:781070199ff93364",
-  "jsonHash": "fnv1a64:1a774fcb4399be17",
+  "textHash": "fnv1a64:28e242b4428fcfa3",
+  "jsonHash": "fnv1a64:5c5b60a6d1d2d02e",
   "findings": []
 }

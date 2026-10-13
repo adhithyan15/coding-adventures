@@ -13,7 +13,8 @@ gloss: "a shoe"
 concept_tag: GE-KLEIDUNG-SCHUH
 prerequisites: [GE-C99-kleid, GE-C99-hose]
 sounds: []
-roots: []
+roots: [germanic-skohaz]
+etymology_hook: "Schuh ← Old High German scuoh ← Proto-Germanic *skōhaz — the same word as English shoe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C99-hose]
 <!-- hl-knowledge: introduces=[GE-LEX-C99-KLEIDUNG-03]; assesses=[] -->
 
 **der Schuh** — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schuh** ← Old High German *scuoh* ← Proto-Germanic *\*skōhaz* — inherited, the same word as English *shoe*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

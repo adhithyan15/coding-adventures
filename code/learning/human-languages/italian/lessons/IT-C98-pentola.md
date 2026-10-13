@@ -14,6 +14,7 @@ concept_tag: IT-CASA98-PENTOLA
 prerequisites: [IT-C98-armadio, IT-C98-divano]
 sounds: []
 roots: []
+etymology_hook: "pentola — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C98-divano]
 <!-- hl-knowledge: introduces=[IT-LEX-C98-CASA98-03]; assesses=[] -->
 
 **la pentola** — "a pot, a saucepan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pentola** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fair, right"
 concept_tag: FR-QUAL245-JUSTE
 prerequisites: [FR-C244-rugueux-rugueuse, FR-C245-semblable]
 sounds: []
-roots: []
+roots: [iustus-latin]
+etymology_hook: "juste ← Latin iustus 'lawful, right' — English justice and justify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C245-semblable]
 <!-- hl-knowledge: introduces=[FR-LEX-C245-QUAL245-02]; assesses=[] -->
 
 **juste** — "fair, right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**juste** ← Latin *iustus*, "lawful, right", from *ius*, "law" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

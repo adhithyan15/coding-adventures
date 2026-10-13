@@ -13,7 +13,8 @@ gloss: "a stop (bus, tram)"
 concept_tag: PT-LUGARES85-PARAGEM
 prerequisites: [PT-C84-causa, PT-C85-aeroporto]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "paragem — built from the verb 'to stop' (← Latin parare 'to make ready') + -agem"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C85-aeroporto]
 <!-- hl-knowledge: introduces=[PT-LEX-C85-LUGARES85-02]; assesses=[] -->
 
 **a paragem** — "a stop (bus, tram)". In Brazil, **o ponto**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paragem** is built from the verb "to stop" and *-agem*. That verb ← Latin *parare*, "to prepare, to make ready" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

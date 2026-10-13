@@ -14,7 +14,8 @@ romanization: "taṟceyalāka"
 concept_tag: TA-KARANAM266-TARCEYALAKA
 prerequisites: [TA-C266-elitaka, TA-C266-ventumenre]
 sounds: []
-roots: []
+roots: [dravidian-taan-self, sey-do-dravidian, tamil-aaku-become]
+etymology_hook: "தற்செயலாக — native: taṉ 'self' (DEDR 3196) + ceyal 'action' (DEDR 1957) + āka 'as'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C266-ventumenre]
 <!-- hl-knowledge: introduces=[TA-LEX-C266-KARANAM266-03]; assesses=[] -->
 
 **தற்செயலாக** — *taṟceyalāka* — "by chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தற்செயலாக** (*taṟceyalāka*) is native: *taṉ*, "of itself" (DEDR 3196), *ceyal*, "action", from *cey*, "to do" (DEDR 1957), and *āka*, "as": "as its own action".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

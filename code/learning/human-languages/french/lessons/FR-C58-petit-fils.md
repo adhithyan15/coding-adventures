@@ -13,7 +13,8 @@ gloss: "a grandson"
 concept_tag: FR-FAMILLE10-PETIT-FILS
 prerequisites: [FR-C58-invite, FR-C58-bebe]
 sounds: []
-roots: []
+roots: [filius]
+etymology_hook: "petit-fils — 'little son'; the son word ← Latin filius — compare English grandson"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C58-bebe]
 <!-- hl-knowledge: introduces=[FR-LEX-C58-FAMILLE10-04]; assesses=[] -->
 
 **le petit-fils** — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**petit-fils** — built from the French words for "little" and "son": a grandson. The "little" word ← Vulgar Latin *\*pittitus*, and the "son" word ← Latin *filius*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

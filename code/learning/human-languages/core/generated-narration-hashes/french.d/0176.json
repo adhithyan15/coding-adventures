@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 176,
-  "sourceHash": "fnv1a64:30af3311f6c3fd39",
+  "sourceHash": "fnv1a64:cc63f6606e0f56fc",
   "lessonIds": [
     "FR-C176-arreter",
     "FR-C176-changer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch176.txt",
   "json": "french/narration/ch176.json",
-  "textHash": "fnv1a64:2c58226f640245db",
-  "jsonHash": "fnv1a64:7bf6f3ad90e643c7",
+  "textHash": "fnv1a64:7854c6b79b6ef5f8",
+  "jsonHash": "fnv1a64:b20dc2a16d6ba222",
   "findings": []
 }

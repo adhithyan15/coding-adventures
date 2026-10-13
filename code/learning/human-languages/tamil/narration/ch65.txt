@@ -15,6 +15,9 @@ You already have சாப்பிடு (sāppiḍu) for what you chew. கு
 Say what is being drunk, and say it in front of the verb: தண்ணீர் குடி (taṇṇīr kuḍi), தேநீர் குடி (tēnīr kuḍi), பால் குடி (pāl kuḍi). Naming the liquid is not decoration. On its own, without anything in front of it, குடி is also the everyday noun for the drinking habit — a man described as being given to குடி is being described as a drinker. So a speaker who wants the plain, ordinary sense puts the drink in the sentence, and there is nothing left to misread.
 Across the family: Kannada uses ಕುಡಿ (kuḍi) and Malayalam കുടിക്കുക (kuṭikkuka) — the same word, worn a little differently. Telugu reached for something else entirely and drinks with త్రాగు (trāgu).
 
+The word, taken apart.
+குடி (kuḍi) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi.
+
 What you've built.
 The first of five everyday doings, and the one that completes the pair you had half of.
 
@@ -49,6 +52,9 @@ You'll want to know: நட.
 You have போ (pō) for going. போ says nothing about how — by bus, by train, on foot. நட names the feet. Where போ leaves the manner open, நட fills it in, so the two sit side by side rather than competing: pō to leave, naḍa to leave on foot.
 One neighbour worth hearing apart. You have met நடு (naṭu, "middle"), inside the words for midday and midnight. நட (naḍa) and நடு differ by the little ு hook at the end and by nothing else, and they are two separate words: one is an action, one is a position.
 Across the family: this one all four sisters kept. Kannada ನಡೆ (naḍe), Telugu నడుచు (naḍucu), Malayalam നടക്കുക (naṭakkuka) — and Tamil நட (naḍa). Where the drinking word split Telugu off, the walking word holds the family together.
+
+The word, taken apart.
+நட (naḍa) is native Dravidian. DEDR 3582 lists Malayalam naṭakka, Kannada naḍe and Telugu naḍa.
 
 What you've built.
 Two doings. One of them fills in what the other leaves open.
@@ -123,6 +129,9 @@ This is what undoes நட. Feet moving is naḍa; நிறுத்து (ni�
 It is a long word for a short act, and it comes apart. Inside it is the standing-family that gave you நிலை (nilai, "a state, a standing") — the piece you already met welded into வானிலை (vāṉilai, "weather"), the sky's standing. Where நிலை names the state, நிறுத்து is the making of it: bring the thing to a stand. The weather word and the stopping word are cousins, and knowing that is why niṟuttu has somewhere to sit in your memory rather than four syllables to survive on.
 Across the family: Kannada ನಿಲ್ಲಿಸು (nillisu) and Malayalam നിർത്തുക (nirttuka) are built the same way, from the same standing-verb.
 
+The word, taken apart.
+நிறுத்து (niṟuttu) is native Dravidian. DEDR 3675 lists Malayalam niṟuttuka, "to make to stand". It is the causative of nil, "to stand": to stop something is "to make it stand".
+
 What you've built.
 Three doings, and the first pair that undoes itself: naḍa against niṟuttu.
 
@@ -158,6 +167,9 @@ You have கதவு (kadavu), the door. திற (tiṟa) is what you do to i
 Tamil joins a verb to the thing it acts on with an ending this chapter does not open yet, so hold kadavu and tiṟa as two words you can say in sequence rather than a sentence you can build. The pair is worth having early even without the joint: a door and the act of opening it are two of the first things anyone needs at somebody else's house.
 Across the family, one old word in four shapes: Kannada has ತೆರೆ (tere), Telugu has తెరుచు (terucu), and Malayalam has തുറക്കുക (tuṟakkuka). Tamil's keeps the tapped ற the others softened away.
 
+The word, taken apart.
+திற (tiṟa) is native Dravidian. DEDR 3259 lists Malayalam tuṟakka, Kannada teṟa, "an opening" and Telugu teṟa.
+
 What you've built.
 Four doings, and a verb that belongs to a noun you already carry.
 
@@ -192,6 +204,9 @@ You'll want to know: மூடு.
 The verb that undoes திற (tiṟa). A கதவு you have opened is a கதவு you can மூடு (mūḍu), and the two travel together the way naḍa and niṟuttu do.
 The long ூ at its front is the same sign you read in மூன்று (mūṉṟu, "three"). Two words, one sign, no relation between their meanings — worth noticing so the shape stops being a surprise.
 Across the family, this one did not travel. Kannada shuts a door with ಮುಚ್ಚು (muccu), Telugu with మూయు (mūyu), and Malayalam with അടയ്ക്കുക (aṭaykkuka). Four sisters, three different words — after two verbs the family held in common, a reminder that the sharing is real but never guaranteed.
+
+The word, taken apart.
+மூடு (mūḍu) is native Dravidian. DEDR 5034 lists Malayalam mūṭuka, "to cover".
 
 What you've built.
 Five everyday doings, in pairs: sāppiḍu with kuḍi, naḍa with niṟuttu, tiṟa with mūḍu. Each one arrived beside the act that undoes it, which is the cheapest way there is to hold two words instead of one.

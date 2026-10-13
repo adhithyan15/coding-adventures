@@ -13,7 +13,8 @@ gloss: "a garden"
 concept_tag: GE-HAUS2-GARTEN
 prerequisites: [GE-C76-wand, GE-C76-dach]
 sounds: []
-roots: []
+roots: [gardaz-germanic]
+etymology_hook: "Garten ← Old High German garto ← Proto-Germanic *gardô 'enclosure' — the same word as English yard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C76-dach]
 <!-- hl-knowledge: introduces=[GE-LEX-C77-HAUS2-01]; assesses=[] -->
 
 **der Garten** — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Garten** ← Old High German *garto* ← Proto-Germanic *\*gardô*, "enclosed yard" — inherited, the same word as English *yard*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

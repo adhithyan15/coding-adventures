@@ -13,7 +13,8 @@ gloss: "salt"
 concept_tag: GE-ESSEN5-SALZ
 prerequisites: [GE-C73-marmelade, GE-C73-kaese]
 sounds: []
-roots: []
+roots: [germanic-salta]
+etymology_hook: "Salz ← Old High German salz ← Proto-Germanic *saltą — the same word as English salt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C73-kaese]
 <!-- hl-knowledge: introduces=[GE-LEX-C73-ESSEN5-04]; assesses=[] -->
 
 **das Salz** — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Salz** ← Old High German *salz* ← Proto-Germanic *\*saltą* — inherited, the same word as English *salt*, with German *z* where English kept *t*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

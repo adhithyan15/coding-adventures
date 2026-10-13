@@ -13,7 +13,8 @@ gloss: "a wrist"
 concept_tag: FR-CORPS4-POIGNET
 prerequisites: [FR-C52-cheville, FR-C52-coude]
 sounds: []
-roots: []
+roots: [pugnus-latin]
+etymology_hook: "poignet — the French word for 'fist' + -et; the fist word ← Latin pugnus — English pugnacious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C52-coude]
 <!-- hl-knowledge: introduces=[FR-LEX-C52-CORPS4-05]; assesses=[] -->
 
 **le poignet** — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poignet** — built from the French word for "fist", which goes back to Latin *pugnus*, with the small-thing ending *-et*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

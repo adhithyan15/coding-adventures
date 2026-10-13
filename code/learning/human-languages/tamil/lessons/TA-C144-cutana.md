@@ -14,7 +14,8 @@ romanization: "cūṭāṉa"
 concept_tag: TA-QUAL144-CUTANA
 prerequisites: [TA-C143-kuttaiyana, TA-C144-uyaramana, TA-C18-mani-homophone-time, TA-C28-afternoon-boundary, TA-C28-pirpakal]
 sounds: []
-roots: []
+roots: [dravidian-cudu-burn]
+etymology_hook: "சூடான — native Dravidian (DEDR 2654)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C144-uyaramana]
 <!-- hl-knowledge: introduces=[TA-LEX-C144-QUAL144-02]; assesses=[] -->
 
 **சூடான** — *cūṭāṉa* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சூடான** (*cūṭāṉa*) is native Dravidian (DEDR 2654). It is *cūṭu*, "heat", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

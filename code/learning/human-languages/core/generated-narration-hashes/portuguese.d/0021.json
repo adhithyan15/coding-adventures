@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 21,
-  "sourceHash": "fnv1a64:b5c497e85627fc5a",
+  "sourceHash": "fnv1a64:b6bad3a30811ed57",
   "lessonIds": [
     "PT-C21-trazer",
     "PT-C21-conseguir",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "portuguese/narration/ch21.txt",
   "json": "portuguese/narration/ch21.json",
-  "textHash": "fnv1a64:5dfe296ed150d05d",
-  "jsonHash": "fnv1a64:e5728ef6e2d1070f",
+  "textHash": "fnv1a64:7c391d8d21d2cd07",
+  "jsonHash": "fnv1a64:4e7ae3c451472ab1",
   "findings": []
 }

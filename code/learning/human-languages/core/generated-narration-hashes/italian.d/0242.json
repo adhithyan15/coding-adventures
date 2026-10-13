@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 242,
-  "sourceHash": "fnv1a64:726759b83021d180",
+  "sourceHash": "fnv1a64:f7eee3559ca14d84",
   "lessonIds": [
     "IT-C242-rallentare",
     "IT-C242-respirare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch242.txt",
   "json": "italian/narration/ch242.json",
-  "textHash": "fnv1a64:dbc85706340be04c",
-  "jsonHash": "fnv1a64:ab23ef4f9f160ae0",
+  "textHash": "fnv1a64:6d60d2d112f9ad31",
+  "jsonHash": "fnv1a64:121865a58ab81738",
   "findings": []
 }

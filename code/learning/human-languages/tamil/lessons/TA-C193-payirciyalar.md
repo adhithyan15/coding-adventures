@@ -14,7 +14,8 @@ romanization: "payiṟciyāḷar"
 concept_tag: TA-VELAI193-PAYIRCIYALAR
 prerequisites: [TA-C193-natikar, TA-C193-patakar]
 sounds: []
-roots: []
+roots: [dravidian-payil-practise]
+etymology_hook: "பயிற்சியாளர் — native Dravidian (DEDR 3942); Malayalam payiluka 'to learn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C193-patakar]
 <!-- hl-knowledge: introduces=[TA-LEX-C193-VELAI193-04]; assesses=[] -->
 
 **பயிற்சியாளர்** — *payiṟciyāḷar* — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயிற்சியாளர்** (*payiṟciyāḷar*) is native Dravidian. DEDR 3942 lists Malayalam *payiluka*, "to learn". It is *payiṟci*, "training", with *-āḷar*, "the one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

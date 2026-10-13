@@ -11,7 +11,8 @@ romanization: "viṭumuṟai"
 concept_tag: TA-CARE-HOLIDAY
 prerequisites: [TA-C106-late, TA-C106-letsgo]
 sounds: []
-roots: []
+roots: [dravidian-vidu-let-go, dravidian-muru-order]
+etymology_hook: "விடுமுறை — native: viṭu 'to leave, free' (DEDR 5393) + muṟai 'turn, time' (DEDR 5015)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C106-letsgo]
 **விடுமுறை** (*viṭumuṟai*) — "a holiday", "leave".
 
 **இன்று விடுமுறை** — "today is a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விடுமுறை** (*viṭumuṟai*) is native: *viṭu*, "to leave, to free" (DEDR 5393), and *muṟai*, "turn, time" (DEDR 5015): "a time of release".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

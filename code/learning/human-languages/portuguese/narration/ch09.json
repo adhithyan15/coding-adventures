@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f5603ae6b6ac06ed",
+  "sourceHash": "fnv1a64:453930c0a4c65d3a",
   "lessons": [
     {
       "id": "PT-C09-meses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29c3f7c826c603b5",
+      "sourceHash": "fnv1a64:ee091a9552b64d47",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which god is março named for? (Mars, the war-god.) Why is dezembro Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Julho — Julius; agosto — Augustus.) Next: the estações, the seasons."
+              "text": "Which god is março named for? (Mars, the war-god.) Why is dezembro Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Julho — Julius; agosto — Augustus.) Next: the seasons."
             }
           ]
         }

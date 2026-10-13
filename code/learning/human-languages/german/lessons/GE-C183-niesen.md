@@ -13,7 +13,8 @@ gloss: "to sneeze"
 concept_tag: GE-VERB-NIESEN
 prerequisites: [GE-C183-mischen, GE-C183-naehen]
 sounds: []
-roots: []
+roots: [germanic-hneusana]
+etymology_hook: "niesen ← Old High German niosan ← Proto-Germanic *hneusaną 'to sneeze' — Dutch niezen is the same verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C183-naehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C183-VERB183-05]; assesses=[] -->
 
 **niesen** — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**niesen** ← Old High German *niosan* ← Proto-Germanic *\*hneusaną*, "to sneeze" — inherited. (EtymDB 2.1) Dutch *niezen* is the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the German for a balcony, then the German for a cellar.
 You'll want to know: das Sofa.
 das Sofa — "a sofa".
 
+The word, taken apart.
+Sofa came in from French sofa, which EtymDB 2.1 traces to Arabic ṣuffa, "a long raised bench" — borrowed, like English sofa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a cellar, then the German for a sofa.
 
 You'll want to know: das Radio.
 das Radio — "a radio".
+
+The word, taken apart.
+Radio from English radio (EtymDB 2.1), short for radiotelegraphy and built on Latin radius, "ray, spoke" — borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a sofa, then the German for a radio.
 You'll want to know: das Wetter.
 das Wetter — "the weather".
 
+The word, taken apart.
+Wetter from Old High German wetar from Proto-Germanic wedrą — inherited, the same word as English weather. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a radio, then the German for the weather.
 You'll want to know: der Wind.
 der Wind — "the wind".
 
+The word, taken apart.
+Wind from Old High German wint from Proto-Germanic windaz — inherited, the same word as English wind. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for the weather, then the German for the wind
 
 You'll want to know: das Gewitter.
 das Gewitter — "a thunderstorm".
+
+The word, taken apart.
+Gewitter from Old High German giwitiri: ge-, the gathering prefix, + Wetter, "weather" (EtymDB 2.1 has giwitiri). A thunderstorm is weather all at once.
 
 What you've built.
 One more word for this chapter.

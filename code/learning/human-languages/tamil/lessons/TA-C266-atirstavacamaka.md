@@ -14,7 +14,8 @@ romanization: "atirṣṭavacamāka"
 concept_tag: TA-KARANAM266-ATIRSTAVACAMAKA
 prerequisites: [TA-C266-ventumenre, TA-C266-tarceyalaka]
 sounds: []
-roots: []
+roots: [sanskrit-adrshta, sanskrit-vasha, tamil-aaku-become]
+etymology_hook: "அதிர்ஷ்டவசமாக ← Sanskrit adṛṣṭa 'fate' (CDIAL 238) + vaśa 'power' (CDIAL 11430) + native āka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C266-tarceyalaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C266-KARANAM266-04]; assesses=[] -->
 
 **அதிர்ஷ்டவசமாக** — *atirṣṭavacamāka* — "luckily, fortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதிர்ஷ்டவசமாக** (*atirṣṭavacamāka*) is built from Sanskrit *adṛṣṭa*, "unseen; fate" (CDIAL 238), and *vaśa*, "power" (CDIAL 11430), with native *āka*, "as": "by the power of fate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

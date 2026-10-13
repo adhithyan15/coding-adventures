@@ -13,7 +13,8 @@ gloss: "a bill, an invoice"
 concept_tag: FR-LIRE142-LA-FACTURE
 prerequisites: [FR-C142-le-loyer, FR-C142-lannonce]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "facture ← Latin factura 'a making', from facere — English manufacture"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [FR-C142-lannonce]
 
 The bill says **Facture : loyer, 400 euros. À payer avant lundi.** Pay it before
 Monday.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facture** ← Latin *factura*, "a making" (EtymDB 2.1) — a learned borrowing; the bill is the account of work made.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

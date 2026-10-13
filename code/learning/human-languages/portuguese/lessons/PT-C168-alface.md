@@ -14,6 +14,7 @@ concept_tag: PT-COISAS168-ALFACE
 prerequisites: [PT-C167-qualidade, PT-C168-polvo]
 sounds: []
 roots: []
+etymology_hook: "alface ← Arabic al-khass 'the lettuce': al- is Arabic 'the'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C168-polvo]
 <!-- hl-knowledge: introduces=[PT-LEX-C168-COISAS168-02]; assesses=[] -->
 
 **a alface** — "lettuce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alface** ← Arabic *al-khass*, "the lettuce" (EtymDB 2.1) — borrowed. The *al-* is the Arabic word for "the".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

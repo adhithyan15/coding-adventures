@@ -13,7 +13,8 @@ gloss: "politics"
 concept_tag: GE-THING209-POLITIK
 prerequisites: [GE-C209-wahl, GE-C209-partei]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "Politik ← French politique ← Latin politicus ← Greek politikós 'of the city' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C209-partei]
 <!-- hl-knowledge: introduces=[GE-LEX-C209-THING209-04]; assesses=[] -->
 
 **die Politik** — "politics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Politik** ← French *politique* ← Latin *politicus* (EtymDB 2.1), from Greek *politikós*, "of the city" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

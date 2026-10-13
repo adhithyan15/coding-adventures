@@ -14,7 +14,8 @@ romanization: "kutirai"
 concept_tag: TA-THINGS128-KUTIRAI
 prerequisites: [TA-C128-alai, TA-C128-erumai, TA-C21-naay-poonai]
 sounds: []
-roots: []
+roots: [dravidian-kutirai-horse]
+etymology_hook: "குதிரை — native Dravidian (DEDR 1711); Malayalam kutira, Kannada kudire, Telugu kudira"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C128-erumai]
 <!-- hl-knowledge: introduces=[TA-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **குதிரை** — *kutirai* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குதிரை** (*kutirai*) is native Dravidian. DEDR 1711 lists Malayalam *kutira*, Kannada *kudire* and Telugu *kudira*. The entry sets it beside the native verb "to leap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

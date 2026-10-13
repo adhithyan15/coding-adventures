@@ -13,7 +13,8 @@ gloss: "a woman; a wife"
 concept_tag: GE-FAMILIE-FRAU
 prerequisites: [GE-C61-grossvater, GE-C62-grossmutter]
 sounds: []
-roots: []
+roots: [germanic-frawjo]
+etymology_hook: "Frau ← Old High German frouwa 'lady' ← Proto-Germanic *frawjōn; the Norse goddess Freyja is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C62-grossmutter]
 <!-- hl-knowledge: introduces=[GE-LEX-C62-FAMILIE-02]; assesses=[] -->
 
 **die Frau** — "a woman; a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Frau** ← Old High German *frouwa*, "lady, mistress" ← Proto-Germanic *\*frawjōn* — inherited. (EtymDB 2.1) The Norse goddess name *Freyja* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [final-o-is-u]
 roots: [quomodo-latin]
 etymology_hook: "como ← Latin quōmodo 'in what manner' — the same root as Spanish cómo, Italian come"
 duration:
-  max_seconds: 222
+  max_seconds: 225
 requires:
   knowledge: []
 introduces:
@@ -65,10 +65,11 @@ lives on in English **mode**, **mod**el, **mod**erate.
 
 Portuguese asks after you **two** ways, and you'll assemble both next lesson:
 
-- **Como vai?** — "how do you **go**?" (verb *ir*, "to go" — like French/German).
-- **Como está?** — "how do you **stand/are**?" (verb *estar* — like Spanish).
+- **Como vai?** — "how do you **go**?" (the verb "to go" — like French/German).
+- **Como está?** — "how do you **stand/are**?" (the verb "to stand, to be" — like
+  Spanish).
 
-Plus a third, verb-free favourite — **Tudo bem?** — coming up.
+Plus a third, verb-free favourite — "all good?" — coming up.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04] -->
@@ -84,4 +85,4 @@ Plus a third, verb-free favourite — **Tudo bem?** — coming up.
 [PAUSE 3s] What Latin word gives *como*, and name two siblings. (*quōmodo* →
 *cómo*, *come*, *comment*.) What's the only written difference between Portuguese
 *como* and Spanish *cómo*? (The Spanish accent that marks a question.) Next: the
-word behind Portuguese's favourite greeting — **tudo**.
+word behind Portuguese's favourite greeting — "everything."

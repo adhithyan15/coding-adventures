@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [TA-C02-nii-niingal]
 sounds: []
 roots: [yaa-dravidian]
+etymology_hook: "என்ன — native Dravidian, on the question base yā-/e- (DEDR 5151) that Malayalam and Kannada share"
 reviews_of: [TA-C02-nii-niingal, TA-C02-en-peyar]
 duration:
   max_seconds: 180

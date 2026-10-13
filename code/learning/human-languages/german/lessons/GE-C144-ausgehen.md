@@ -13,7 +13,8 @@ gloss: "to go out"
 concept_tag: GE-VERB-AUSGEHEN
 prerequisites: [GE-C144-anrufen, GE-C144-aufhoeren]
 sounds: []
-roots: []
+roots: [gehen-german]
+etymology_hook: "ausgehen — aus- 'out' + gehen 'to go': to go out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C144-aufhoeren]
 <!-- hl-knowledge: introduces=[GE-LEX-C144-VERB144-04]; assesses=[] -->
 
 **ausgehen** — "to go out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausgehen** is *aus-*, "out", + *gehen*, "to go" (EtymDB 2.1). *aus-* is the same word as English *out*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

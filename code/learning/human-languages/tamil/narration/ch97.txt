@@ -13,6 +13,9 @@ You'll want to know: கண்டிப்பாக.
 கண்டிப்பாக (kaṇṭippāka) — "definitely", "for sure".
 கண்டிப்பாக (kaṇṭippāka) வருகிறேன் — "I'll definitely come".
 
+The word, taken apart.
+கண்டிப்பாக (kaṇṭippāka) is built on kaṇṭippu, "strictness, firmness", which is usually traced to Sanskrit khaṇḍ-, "to break, to cut, to settle" (CDIAL 3797, khaṇḍita, "broken"). -āka makes it "definitely".
+
 What you've built.
 A firm yes.
 
@@ -43,6 +46,9 @@ You'll want to know: அப்படித்தான்.
 அப்படித்தான் (appaṭittāṉ) — "that's how it is", "quite so".
 அப்படி, "like that", with -தான், the same "that and no other" as சரிதான்.
 
+The word, taken apart.
+அப்படித்தான் (appaṭittāṉ) is native: appaṭi, "thus" (DEDR 1), and tāṉ, "just, indeed" (DEDR 3196).
+
 What you've built.
 A shrug that agrees.
 
@@ -72,6 +78,9 @@ Before the new one: say the Tamil for definitely, then the Tamil for that's how 
 You'll want to know: ஏன் இல்லை?
 ஏன் இல்லை? (ēṉ illai?) — "why not?".
 ஏன் is "why"; with இல்லை, "why not?" — as a question, or as a cheerful yes.
+
+The word, taken apart.
+ஏன் இல்லை? (ēṉ illai?) is native: ēṉ, "why" (DEDR 5151), and illai, "not" (DEDR 2559).
 
 What you've built.
 Definitely, that's how it is, why not.

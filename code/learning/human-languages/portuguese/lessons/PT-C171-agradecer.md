@@ -13,7 +13,8 @@ gloss: "to thank"
 concept_tag: PT-VERB-AGRADECER
 prerequisites: [PT-C171-beijar, PT-C171-cumprimentar]
 sounds: []
-roots: []
+roots: [gratus]
+etymology_hook: "agradecer — built on an old word for thanks, from Latin gratus 'pleasing, thankful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C171-cumprimentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C171-VERBOS171-03]; assesses=[] -->
 
 **agradecer** — "to thank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agradecer** is built on an old word for thanks or goodwill, from Latin *gratus*, "pleasing, thankful" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

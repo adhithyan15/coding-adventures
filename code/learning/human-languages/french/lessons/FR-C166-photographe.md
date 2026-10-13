@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES166-PHOTOGRAPHE
 prerequisites: [FR-C165-soldat, FR-C165-tradition]
 sounds: []
 roots: []
+etymology_hook: "photographe — one who writes with light: Greek phos + graphein"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C165-tradition]
 <!-- hl-knowledge: introduces=[FR-LEX-C166-CHOSES166-01]; assesses=[] -->
 
 **le photographe** — "a photographer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**photographe** — built like *photo*, from Greek *phos*, *photos*, "light", and *graphein*, "to write": one who writes with light.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

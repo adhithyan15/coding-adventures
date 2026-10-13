@@ -14,6 +14,7 @@ concept_tag: IT-CASA95-TENDA
 prerequisites: [IT-C95-vasca, IT-C95-scaffale]
 sounds: []
 roots: []
+etymology_hook: "tenda ← Vulgar Latin tenda, from tendere 'to stretch' — English tent is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-scaffale]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-04]; assesses=[] -->
 
 **la tenda** — "a curtain; a tent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tenda** ← Vulgar Latin *tenda*, built on Latin *tendere*, "to stretch" (Lewis & Short) — inherited. EtymDB 2.1 has no row for *tenda*; it derives Spanish *tienda* from *tenda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

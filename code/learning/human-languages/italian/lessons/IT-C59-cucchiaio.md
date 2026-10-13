@@ -13,7 +13,8 @@ gloss: "a spoon"
 concept_tag: IT-TAVOLA-CUCCHIAIO
 prerequisites: [IT-C59-bicchiere, IT-C59-piatto]
 sounds: []
-roots: []
+roots: [cochlearium-latin]
+etymology_hook: "cucchiaio ← Latin cochlearium 'spoon'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C59-piatto]
 <!-- hl-knowledge: introduces=[IT-LEX-C59-TAVOLA-03]; assesses=[] -->
 
 **il cucchiaio** — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cucchiaio** ← Latin *cochlearium*, "spoon" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

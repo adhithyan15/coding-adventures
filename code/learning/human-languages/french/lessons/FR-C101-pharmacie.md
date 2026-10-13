@@ -14,6 +14,7 @@ concept_tag: FR-VILLE53-PHARMACIE
 prerequisites: [FR-C101-restaurant, FR-C101-hotel]
 sounds: []
 roots: []
+etymology_hook: "pharmacie ← Medieval Latin pharmacia, from Greek pharmakon 'a drug' — English pharmacy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C101-hotel]
 <!-- hl-knowledge: introduces=[FR-LEX-C101-VILLE53-03]; assesses=[] -->
 
 **la pharmacie** — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pharmacie** ← Medieval Latin *pharmacia*, from Greek *pharmakeia*, "the use of drugs", built on *pharmakon*, "a drug" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

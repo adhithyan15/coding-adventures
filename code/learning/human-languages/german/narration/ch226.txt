@@ -12,6 +12,9 @@ Before the new one: say the German for training, then the German for an exhibiti
 You'll want to know: die Aussprache.
 die Aussprache — "pronunciation".
 
+The word, taken apart.
+Aussprache is aus-, "out", + Sprache, "speech" from Proto-Germanic sprēkijō (EtymDB 2.1): how a word is spoken out.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an exhibition, then the German for pronun
 
 You'll want to know: die Bedeutung.
 die Bedeutung — "a meaning".
+
+The word, taken apart.
+Bedeutung is bedeuten, "to mean", + -ung (EtymDB 2.1). bedeuten shares its root with Deutsch, "of the people".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for pronunciation, then the German for a mean
 You'll want to know: die Begrüßung.
 die Begrüßung — "a greeting, a welcome".
 
+The word, taken apart.
+Begrüßung is be- + grüßen, "to greet", + -ung. grüßen is the same verb as English greet. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a meaning, then the German for a greeting
 You'll want to know: die Beschreibung.
 die Beschreibung — "a description".
 
+The word, taken apart.
+Beschreibung is beschreiben, "to describe", + -ung (EtymDB 2.1). schreiben comes from Latin scrībere.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a greeting, then the German for a descrip
 
 You'll want to know: der Besuch.
 der Besuch — "a visit".
+
+The word, taken apart.
+Besuch is the noun of besuchen, "to visit", which is be- + suchen, "to seek" (EtymDB 2.1): a seeking out.
 
 What you've built.
 One more word for this chapter.

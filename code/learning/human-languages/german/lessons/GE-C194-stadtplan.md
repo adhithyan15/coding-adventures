@@ -13,7 +13,8 @@ gloss: "a city map"
 concept_tag: GE-THING194-STADTPLAN
 prerequisites: [GE-C194-rucksack, GE-C194-sehenswuerdigkeit]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "Stadtplan — the word for 'town' + Plan 'plan' ← French plan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C194-sehenswuerdigkeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C194-THING194-03]; assesses=[] -->
 
 **der Stadtplan** — "a city map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stadtplan** is the word for "town, city" + *Plan*, "plan" ← French *plan* (EtymDB 2.1): a plan of the town.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

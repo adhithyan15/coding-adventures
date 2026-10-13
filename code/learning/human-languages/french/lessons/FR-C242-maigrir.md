@@ -13,7 +13,8 @@ gloss: "to lose weight"
 concept_tag: FR-VERB-MAIGRIR
 prerequisites: [FR-C241-voter, FR-C241-accueillir]
 sounds: []
-roots: []
+roots: [macer-latin]
+etymology_hook: "maigrir — from the word for 'thin', Latin macer 'lean' — English meagre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C241-accueillir]
 <!-- hl-knowledge: introduces=[FR-LEX-C242-VERBES242-01]; assesses=[] -->
 
 **maigrir** — "to lose weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maigrir** — built from the word for "thin", ← Latin *macer*, "lean" (Lewis & Short), with the verb ending *-ir*. (EtymDB 2.1 has the Old French form of the adjective.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

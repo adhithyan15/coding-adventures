@@ -13,7 +13,8 @@ gloss: "a hen"
 concept_tag: FR-ANIMAUX38-POULE
 prerequisites: [FR-C86-renard, FR-C86-serpent]
 sounds: []
-roots: []
+roots: [pullus-latin]
+etymology_hook: "poule ← Latin pulla, feminine of pullus 'a young animal' — English pullet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C86-serpent]
 <!-- hl-knowledge: introduces=[FR-LEX-C86-ANIMAUX38-04]; assesses=[] -->
 
 **la poule** — "a hen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poule** ← Latin *pulla*, the feminine of *pullus*, "a young animal" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

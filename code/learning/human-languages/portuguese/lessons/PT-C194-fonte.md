@@ -13,7 +13,8 @@ gloss: "a fountain; a source"
 concept_tag: PT-COISAS194-FONTE
 prerequisites: [PT-C194-monumento, PT-C194-estatua]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "fonte ← Latin fons, fontis 'spring' — English fountain and font"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C194-estatua]
 <!-- hl-knowledge: introduces=[PT-LEX-C194-COISAS194-03]; assesses=[] -->
 
 **a fonte** — "a fountain; a source".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fonte** ← Latin *fons, fontis*, "spring, fountain" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

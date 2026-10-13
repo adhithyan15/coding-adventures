@@ -13,7 +13,8 @@ gloss: "sixty"
 concept_tag: IT-NUMERI132-SESSANTA
 prerequisites: [IT-C131-qualche-volta, IT-C132-zero]
 sounds: []
-roots: []
+roots: [sexaginta-latin]
+etymology_hook: "sessanta ← Latin sexaginta 'sixty' — Latin x became Italian ss"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C132-zero]
 <!-- hl-knowledge: introduces=[IT-LEX-C132-NUMERI132-02]; assesses=[] -->
 
 **sessanta** — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sessanta** ← Latin *sexaginta*, "sixty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

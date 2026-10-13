@@ -10,9 +10,11 @@ statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
-direct formatter-safe real procedure results that do not depend on pre-call
-local provenance. A real name-formal result is also allowed when its actual has
-the same proof. Unary signs, arithmetic composition with finite static operands,
+direct formatter-safe real procedure results or unaliased local runtime-real
+snapshots through unary signs, additive or multiplicative composition, and
+powers with finite static operands. Standard-function transforms, globals,
+captured locals, and other real-name branches remain conservative. A real name-formal result is also allowed
+when its actual has the same proof. Unary signs, arithmetic composition with finite static operands,
 and real-valued standard functions preserve it, while a finite static real
 actual is safe directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
@@ -84,10 +86,20 @@ Built-in `ln` may also map a runtime conditional when every branch is exactly
 two built-in exponentials over a proven bounded runtime-real sign root; missing,
 deeper, non-runtime-real, and overridden branches remain gated.
 The same exact two-exponential proof now applies to a direct sign-rooted
-operand; a third direct exponential, unrestricted roots, and overrides remain
-gated.
+operand; unrestricted roots and overrides remain gated.
+The direct proof extends to exactly three exponentials, whose complete
+sign-rooted tower remains finite. Exactly four exponentials are also accepted
+over a proven nonpositive unit sign root, whose narrower tower remains finite;
+a positive-capable fourth layer or a fifth nonpositive layer would overflow
+binary64 before `ln` and therefore remains gated.
 The same bounded proof extends to exactly three built-in exponentials per
-branch; missing, deeper, non-runtime-real, and overridden branches remain gated.
+branch. It also extends to exactly four built-in exponentials per branch when
+every root is proven nonpositive; positive-capable, missing, deeper,
+non-runtime-real, and overridden branches remain gated.
+Across every bounded conditional family above, branch roots may be unaliased
+local real snapshots carrying runtime-real provenance across assignment;
+globals, captured locals, and by-name aliases remain gated across a selector
+call.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

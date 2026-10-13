@@ -11,7 +11,8 @@ romanization: "koṭu"
 concept_tag: TA-VERB-GIVE
 prerequisites: [TA-C42-read]
 sounds: []
-roots: []
+roots: [dravidian-kodu-give]
+etymology_hook: "கொடு — native Dravidian (DEDR 2053); Malayalam koṭukka, Kannada koḍu"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C42-read]
 **கொடு** (*koṭu*) — "give".
 
 The everyday 'give'. Tamil distinguishes giving away from giving toward the speaker; this is the giving-away one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொடு** (*koṭu*) is native Dravidian. DEDR 2053 lists Malayalam *koṭukka* and Kannada *koḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

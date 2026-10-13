@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES250-PERSONNE-AGEE
 prerequisites: [FR-C250-touriste, FR-C250-adulte]
 sounds: []
 roots: []
+etymology_hook: "personne âgée — personne + âgée 'aged', from âge, Latin aetas 'age'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C250-adulte]
 <!-- hl-knowledge: introduces=[FR-LEX-C250-CHOSES250-04]; assesses=[] -->
 
 **la personne âgée** — "an elderly person".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**personne âgée** — *personne*, "a person", and *âgée*, "aged", from *âge*, "age", ← Vulgar Latin *\*aetaticum*, from Latin *aetas*, "age" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

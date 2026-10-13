@@ -13,7 +13,8 @@ gloss: "to reach"
 concept_tag: IT-VERB-RAGGIUNGERE
 prerequisites: [IT-C238-lamentarsi, IT-C238-mancare]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "raggiungere — ri- + aggiungere 'to join to': to catch up with"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C238-mancare]
 <!-- hl-knowledge: introduces=[IT-LEX-C239-VERBI239-01]; assesses=[] -->
 
 **raggiungere** — "to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raggiungere** is *ri-*, "again", plus *aggiungere*, "to join to": to catch up with. *aggiungere* ← Latin *adiungere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

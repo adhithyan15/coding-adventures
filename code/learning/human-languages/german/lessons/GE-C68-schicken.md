@@ -14,6 +14,7 @@ concept_tag: GE-VERB-SCHICKEN
 prerequisites: [GE-C67-rufen, GE-C68-tragen]
 sounds: []
 roots: []
+etymology_hook: "schicken ← Middle High German schicken 'to arrange, to put in order' — sending grew out of arranging"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C68-tragen]
 <!-- hl-knowledge: introduces=[GE-LEX-C68-VERBEN5-02]; assesses=[] -->
 
 **schicken** — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schicken** ← Middle High German *schicken*, "to arrange, to put in order" (EtymDB 2.1) — inherited; "to send" grew out of arranging for something to go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-INSEGNARE
 prerequisites: [IT-C49-correre, IT-C49-sentire]
 sounds: []
 roots: []
+etymology_hook: "insegnare ← Medieval Latin insignare, built on Latin signum 'a sign'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C49-sentire]
 <!-- hl-knowledge: introduces=[IT-LEX-C49-VERBI3-03]; assesses=[] -->
 
 **insegnare** — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insegnare** ← Medieval Latin *insignare* — inherited; inside it is Latin *signum*, "a sign". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

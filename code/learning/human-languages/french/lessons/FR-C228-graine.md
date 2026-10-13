@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES228-GRAINE
 prerequisites: [FR-C228-vase, FR-C228-plante]
 sounds: []
 roots: []
+etymology_hook: "graine ← Latin grana, plural of granum 'a grain' — English grain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C228-plante]
 <!-- hl-knowledge: introduces=[FR-LEX-C228-CHOSES228-03]; assesses=[] -->
 
 **la graine** — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**graine** ← Vulgar Latin *grana*, "grains", the plural of *granum* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

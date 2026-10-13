@@ -11,7 +11,8 @@ romanization: "taḷir"
 concept_tag: TA-NOUN-SHOOT
 prerequisites: [TA-C52-branch, TA-C50-flower, TA-C51-moon]
 sounds: []
-roots: []
+roots: [dravidian-talir-shoot]
+etymology_hook: "தளிர் — native Dravidian (DEDR 3131); Malayalam taḷir, Kannada taḷi 'to sprout'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C52-branch]
 The new growth at the end of a branch: the pale soft leaf before it hardens and goes green. Tamil keeps a word of its own for it rather than calling it a small leaf, which tells you how much attention the thing has had.
 
 *taḷirkka* is what a tree does after the first rains. Tamil says it of people as well — somebody who has been ill and is picking up again has *taḷirttu*, put out new growth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தளிர்** (*taḷir*) is native Dravidian. DEDR 3131 lists Malayalam *taḷir* and Kannada *taḷi*, "to sprout".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

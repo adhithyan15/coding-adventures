@@ -13,7 +13,8 @@ gloss: "an employee"
 concept_tag: FR-CHOSES224-EMPLOYE
 prerequisites: [FR-C223-concert, FR-C223-spectacle]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "employé — 'employed', from Latin implicare 'to involve' — English employee"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C223-spectacle]
 <!-- hl-knowledge: introduces=[FR-LEX-C224-CHOSES224-01]; assesses=[] -->
 
 **l'employé** — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**employé** is the past participle of the verb for "to employ", ← Latin *implicare*, "to involve" (Lewis & Short), used as a noun: one employed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

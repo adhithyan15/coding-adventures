@@ -13,7 +13,8 @@ gloss: "here"
 concept_tag: PT-ONDE-AQUI
 prerequisites: [PT-C71-cedo, PT-C71-devagar]
 sounds: []
-roots: []
+roots: [hic-latin]
+etymology_hook: "aqui ← Vulgar Latin *eccu hic 'look, here' — Spanish aquí and Italian qui share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C71-devagar]
 <!-- hl-knowledge: introduces=[PT-LEX-C72-ONDE-01]; assesses=[] -->
 
 **aqui** — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aqui** ← Vulgar Latin *\*eccu hic*, "look, here" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

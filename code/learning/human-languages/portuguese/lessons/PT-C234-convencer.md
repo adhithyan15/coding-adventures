@@ -13,7 +13,8 @@ gloss: "to convince"
 concept_tag: PT-VERB-CONVENCER
 prerequisites: [PT-C233-nevar, PT-C234-aconselhar]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "convencer ← Latin convincere 'to overcome, to prove' — English convince"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C234-aconselhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C234-VERBOS234-02]; assesses=[] -->
 
 **convencer** — "to convince".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convencer** ← Latin *convincere*, "to overcome, to prove" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

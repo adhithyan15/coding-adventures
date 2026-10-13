@@ -13,7 +13,8 @@ gloss: "a laundry"
 concept_tag: PT-COISAS197-LAVANDARIA
 prerequisites: [PT-C197-visita-guiada, PT-C197-rececao]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavandaria — built on Latin lavanda 'things to be washed', from lavare + -aria 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C197-rececao]
 <!-- hl-knowledge: introduces=[PT-LEX-C197-COISAS197-04]; assesses=[] -->
 
 **a lavandaria** — "a laundry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavandaria** is built on Latin *lavanda*, "things to be washed", from *lavare*, "to wash" (EtymDB 2.1), with *-aria*, "shop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

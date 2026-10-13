@@ -14,7 +14,8 @@ romanization: "payiṟci cey"
 concept_tag: TA-VERB-PAYIRCI-CEY
 prerequisites: [TA-C164-vivari, TA-C164-oppatai]
 sounds: []
-roots: []
+roots: [dravidian-payil-practise, sey-do-dravidian]
+etymology_hook: "பயிற்சி செய் — native: payiṟci 'training', from payil 'to practise' (DEDR 3942) + sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C164-oppatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C164-ACT164-03]; assesses=[] -->
 
 **பயிற்சி செய்** — *payiṟci cey* — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயிற்சி செய்** (*payiṟci cey*) is native: *payiṟci*, "training", from *payil*, "to practise, to learn" (DEDR 3942), and *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

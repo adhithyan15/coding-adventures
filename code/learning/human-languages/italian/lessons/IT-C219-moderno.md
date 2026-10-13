@@ -13,7 +13,8 @@ gloss: "modern"
 concept_tag: IT-QUAL219-MODERNO
 prerequisites: [IT-C219-falso, IT-C219-gratuito]
 sounds: []
-roots: []
+roots: [modernus-latin]
+etymology_hook: "moderno ← Late Latin modernus, from modo 'just now' — English modern"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C219-gratuito]
 <!-- hl-knowledge: introduces=[IT-LEX-C219-QUAL219-05]; assesses=[] -->
 
 **moderno** — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moderno** ← Late Latin *modernus*, "of just now", from *modo*, "just now" — a learned borrowing. EtymDB 2.1 has no row for *moderno*; it derives French *moderne* and Catalan *modern* from *modernus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

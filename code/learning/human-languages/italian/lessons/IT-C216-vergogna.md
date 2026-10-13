@@ -13,7 +13,8 @@ gloss: "shame"
 concept_tag: IT-SAL216-VERGOGNA
 prerequisites: [IT-C216-fiducia, IT-C216-coraggio]
 sounds: []
-roots: []
+roots: [verecundia-latin]
+etymology_hook: "vergogna ← Vulgar Latin verecunnia, from verecundia 'modesty, shame'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C216-coraggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C216-SAL216-03]; assesses=[] -->
 
 **la vergogna** — "shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vergogna** ← Vulgar Latin *verecunnia*, from Latin *verecundia*, "modesty, shame" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

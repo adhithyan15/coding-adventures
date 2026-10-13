@@ -10,10 +10,10 @@ gloss: he has — the second and last form where the b falls out
 concept_tag: GE-HABEN-ER-HAT
 prerequisites: [GE-C14-du-hast]
 sounds: [d-t-final, vowel-a]
-roots: []
+roots: [germanic-habjana]
 etymology_hook: "er hat and English he has lost the same consonant in the same cell of the same verb, and neither language has put it back"
 duration:
-  max_seconds: 145
+  max_seconds: 158
 requires:
   knowledge: [GE-GRAMMAR-HABEN-DU-HAST-01, GE-LEX-ER-01, GE-LEX-SIE-SHE-02, GE-GRAMMAR-THIRD-PERSON-T-03]
 introduces:
@@ -51,6 +51,11 @@ the German *a* sits further back than the English one.
 One form covers *er*, *sie* and *es*, exactly as the third-person *-t* always
 does. So the two breaks in this verb are neighbours: *du* **hast**, *er*
 **hat**, and every other form is the machine.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hat** is a form of *haben* ← Old High German *habēn* ← Proto-Germanic *\*habjaną* — inherited, the same verb as English *have*. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-HABEN-ER-HAT-01, GE-GRAMMAR-HABEN-DU-HAST-01] -->

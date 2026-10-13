@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 43,
-  "sourceHash": "fnv1a64:7c5d3e4eccf3fe2b",
+  "sourceHash": "fnv1a64:24100b42edcd9961",
   "lessonIds": [
     "PT-C43-fechar",
     "PT-C43-beber",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch43.txt",
   "json": "portuguese/narration/ch43.json",
-  "textHash": "fnv1a64:bb7d70bc98843041",
-  "jsonHash": "fnv1a64:9dd08ad1fd9f4384",
+  "textHash": "fnv1a64:ecde9d481597585a",
+  "jsonHash": "fnv1a64:b855ab014abb115e",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a towel"
 concept_tag: GE-HAUS114-HANDTUCH
 prerequisites: [GE-C113-kissen, GE-C114-decke]
 sounds: []
-roots: []
+roots: [germanic-handuz, germanic-doka]
+etymology_hook: "Handtuch — Hand + Tuch 'cloth': a hand cloth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C114-decke]
 <!-- hl-knowledge: introduces=[GE-LEX-C114-HAUS114-02]; assesses=[] -->
 
 **das Handtuch** — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Handtuch** is *Hand* + the word for "cloth", Old High German *tuoh* ← Proto-Germanic *\*dōkaz* (EtymDB 2.1): a cloth for the hands.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

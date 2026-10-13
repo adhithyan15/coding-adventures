@@ -13,7 +13,8 @@ gloss: "scissors"
 concept_tag: IT-OGGETTI100-FORBICI
 prerequisites: [IT-C99-martello, IT-C99-colla]
 sounds: []
-roots: []
+roots: [forfex-latin]
+etymology_hook: "forbici, plural of forbice ← Latin forfex 'shears'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C99-colla]
 <!-- hl-knowledge: introduces=[IT-LEX-C100-OGGETTI100-01]; assesses=[] -->
 
 **le forbici** — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forbici** is the plural of *forbice* ← Latin *forfex*, "shears" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

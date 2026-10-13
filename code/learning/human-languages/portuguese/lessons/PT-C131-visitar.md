@@ -13,7 +13,8 @@ gloss: "to visit"
 concept_tag: PT-VERB-VISITAR
 prerequisites: [PT-C130-noventa, PT-C130-comecar]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "visitar ← Latin visitare 'to go to see', from videre 'to see' — English visit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C130-comecar]
 <!-- hl-knowledge: introduces=[PT-LEX-C131-VERBOS131-01]; assesses=[] -->
 
 **visitar** — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visitar** ← Latin *visitare*, "to go to see" (EtymDB 2.1), from *videre*, "to see" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

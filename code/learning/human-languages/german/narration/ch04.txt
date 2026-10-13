@@ -125,6 +125,9 @@ wieder means again.
 sehen means to see.
 So it reads "on the seeing-again" becomes "until we see each other again." Note the capital W: welded together the three words became a noun, and German capitalises every noun. Ein Wiedersehen on its own is "a reunion."
 
+The phrase, taken apart.
+auf Wiedersehen is built from auf, wieder and sehen. auf from Old High German ūf, the same word as English up; sehen from Old High German sehan from Proto-Germanic sehwaną, the same verb as English see. (EtymDB 2.1).
+
 Why it's said this way.
 Set the three goodbyes side by side and each language shows what it thinks parting is:
 [a table of 3 rows, read aloud]
@@ -209,6 +212,9 @@ You'll want to know: bis.
 bis — "until, up to."
 Said biss: a short i as in English bit, and a crisp unvoiced s at the end — this one does not buzz, because the buzzing rule only applies before a vowel.
 
+The word, taken apart.
+bis from Middle High German biz (EtymDB 2.1) — inherited, most likely two small words meaning "by" and "to" run together.
+
 Grammar Lens: bis plus a time word.
 bis is a recipe, not a phrase. Put a word for time after it and you have a goodbye:
 bis + a time becomes "see you then".
@@ -278,6 +284,9 @@ Said biss BALT, with the stress on the second word and that final d hardening to
 Use it when you genuinely expect to see the person before long — it carries a small promise the way English "see you soon" does, and it sounds odd to someone you are unlikely to meet again.
 Its twins: Spanish hasta pronto, French à bientôt. All three are the same two-word recipe — preposition plus "soon."
 
+The phrase, taken apart.
+bis bald is bis + bald. bald from Old High German baldo, "boldly, quickly" (EtymDB 2.1) — the same word as English bold; "soon" grew out of "quickly".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bis bald" — biss BALT]
@@ -340,6 +349,9 @@ Said biss SHPAY-ter — remember the initial st is sht.
 Where bis bald promises "before long," bis später promises nothing: it is the German equivalent of a wave. That vagueness makes it the safe default when you have no idea when you will meet again.
 [a table of 1 row, read aloud]
 German: bis später. Spanish: hasta luego. French: à plus tard.
+
+The phrase, taken apart.
+bis später is bis + the comparative of spät, "late". spät from Old High German spāti from Proto-Germanic spēdiz — inherited. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -407,6 +419,9 @@ bis morgen — "until tomorrow" becomes "see you tomorrow."
 Said biss MOR-gen. Small m: here morgen is the adverb "tomorrow," not the noun der Morgen, "the morning."
 This is the one you say leaving work, or leaving a class you both attend again the next day. Unlike bis bald and bis später, it makes a claim that can be checked.
 
+The phrase, taken apart.
+bis morgen is bis + morgen, "tomorrow", which is the word for "morning" from Old High German morgan from Proto-Germanic murganaz. English morrow is the same word. (EtymDB 2.1).
+
 Grammar Lens: the bis… family, complete.
 One preposition, three time words, three goodbyes — and the same three in Spanish and French, built the same way:
 [a table of 3 rows, read aloud]
@@ -442,6 +457,9 @@ You'll want to know: ß.
 ß — the eszett, or scharfes S, "sharp S."
 It is not a capital B, and it is not exotic. It is ss wearing a single character, and it always sounds like a plain sharp s — never a z, never a b.
 It is a ligature: two letters fused into one shape. Its name says which two. Es-zett is literally "s-z" — in the old German hand the long s (a tall s drawn like an f without its crossbar) was joined to a following s or z, and the join hardened into ß.
+
+The letter, taken apart.
+ß is a letter, not a word: in the old German hand a long s joined to a following s or z fused into one shape, which is why it is called Es-zett, "s-z".
 
 Grammar Lens: ß after long, ss after short.
 Modern spelling gives it one clean job, and it is a genuinely useful one — the letter tells you how long to hold the vowel before it.

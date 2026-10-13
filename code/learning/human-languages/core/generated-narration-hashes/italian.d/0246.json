@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 246,
-  "sourceHash": "fnv1a64:6d3a8274f9074d98",
+  "sourceHash": "fnv1a64:6fffa48a953b9aaf",
   "lessonIds": [
     "IT-C246-antico",
     "IT-C246-giovane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch246.txt",
   "json": "italian/narration/ch246.json",
-  "textHash": "fnv1a64:0fe511425511c4ff",
-  "jsonHash": "fnv1a64:c83d86c1a9688dc2",
+  "textHash": "fnv1a64:47442156c22d4d99",
+  "jsonHash": "fnv1a64:cbb6687f91ce3ba4",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 75,
-  "sourceHash": "fnv1a64:c62a66581b0b999b",
+  "sourceHash": "fnv1a64:bcf7c15528073ce0",
   "lessonIds": [
     "TA-C75-polar",
     "TA-C75-answering",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch75.txt",
   "json": "tamil/narration/ch75.json",
-  "textHash": "fnv1a64:bf720cf23010b5b3",
-  "jsonHash": "fnv1a64:63ac43f38ecdbe5b",
+  "textHash": "fnv1a64:01a6fc66a0513db1",
+  "jsonHash": "fnv1a64:caf183570de6176e",
   "findings": []
 }

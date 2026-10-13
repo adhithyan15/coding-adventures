@@ -14,7 +14,8 @@ romanization: "kalaiñar"
 concept_tag: TA-VELAI253-KALAINAR
 prerequisites: [TA-C252-kanitam, TA-C252-ariviyal]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "கலைஞர் — kalai 'arts' (DEDR 1297 files it under kal 'learn' but compares Sanskrit kalā) + -ñar 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C252-ariviyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C253-VELAI253-01]; assesses=[] -->
 
 **கலைஞர்** — *kalaiñar* — "an artist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கலைஞர்** (*kalaiñar*) is *kalai*, "arts and learning", with the respectful ending *-ñar*, "one who". DEDR files *kalai* under *kal*, "to learn" (DEDR 1297), but compares Sanskrit *kalā*, "art"; many treat it as a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

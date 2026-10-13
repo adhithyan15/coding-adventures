@@ -14,7 +14,8 @@ romanization: "kaḻi"
 concept_tag: TA-VERB-KALI
 prerequisites: [TA-C158-pona, TA-C158-oru-kalattil]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass]
+etymology_hook: "கழி — native Dravidian (DEDR 1356); Malayalam kaḻiyuka 'to pass, be spent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C158-oru-kalattil]
 <!-- hl-knowledge: introduces=[TA-LEX-C158-KALAM158-05]; assesses=[] -->
 
 **கழி** — *kaḻi* — "to spend (time)". Said of time: **விடுமுறையைக் கிராமத்தில் கழித்தேன்** — *viṭumuṟaiyaik kirāmattil kaḻittēṉ* — "I spent the holiday in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழி** (*kaḻi*) is native Dravidian. DEDR 1356 lists Malayalam *kaḻiyuka*, "to pass, be spent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES253-CASQUE
 prerequisites: [FR-C252-colis, FR-C253-permis-de-conduire]
 sounds: []
 roots: []
+etymology_hook: "casque ← Spanish casco 'a skull, a helmet' — English cask is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C253-permis-de-conduire]
 <!-- hl-knowledge: introduces=[FR-LEX-C253-CHOSES253-02]; assesses=[] -->
 
 **le casque** — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casque** ← Spanish *casco*, "a skull, a helmet", from *cascar*, "to break", ← Latin *quassare*, "to shatter" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [i-short]
 roots: [in-germanic]
 etymology_hook: "in is English in unchanged, one of a handful of words the two languages never bothered to alter"
 duration:
-  max_seconds: 150
+  max_seconds: 160
 requires:
   knowledge: [GE-LEX-WOHNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02, GE-LEX-AUF-01]
 introduces:
@@ -50,6 +50,11 @@ never bothered to change.
 
 You have already met its neighbour *auf* ("on"). Between them they cover most of
 what English does with *in* and *on*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**in** ← Old High German *in* ← Proto-Germanic *\*in* — inherited, the same word as English *in*. (EtymDB 2.1)
 
 ## You'll want to know: Ich wohne in …
 <!-- hl-knowledge: introduces=[GE-LEX-ICH-WOHNE-IN-02]; assesses=[GE-LEX-IN-01, GE-LEX-WOHNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02] -->

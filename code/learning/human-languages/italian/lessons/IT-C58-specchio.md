@@ -13,7 +13,8 @@ gloss: "a mirror"
 concept_tag: IT-CASA3-SPECCHIO
 prerequisites: [IT-C58-pavimento, IT-C58-scala]
 sounds: []
-roots: []
+roots: [speculum-latin]
+etymology_hook: "specchio ← Latin speculum 'mirror'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C58-scala]
 <!-- hl-knowledge: introduces=[IT-LEX-C58-CASA3-04]; assesses=[] -->
 
 **lo specchio** — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**specchio** ← Vulgar Latin *speclum*, from Latin *speculum*, "mirror" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

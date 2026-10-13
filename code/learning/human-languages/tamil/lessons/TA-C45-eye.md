@@ -11,7 +11,8 @@ romanization: "kaṇ"
 concept_tag: TA-NOUN-EYE
 prerequisites: [TA-C44-book, TA-C43-child, TA-C44-fruit]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye]
+etymology_hook: "கண் — native Dravidian (DEDR 1159): Malayalam kaṇ, Kannada kaṇ, Telugu kannu"
 duration:
   max_seconds: 210
 requires:

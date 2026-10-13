@@ -13,7 +13,8 @@ gloss: "a frying pan"
 concept_tag: PT-CASA97-FRIGIDEIRA
 prerequisites: [PT-C96-armario, PT-C97-panela]
 sounds: []
-roots: []
+roots: [frigere-latin]
+etymology_hook: "frigideira — built from the verb to fry (← Latin frigere) + -deira"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C97-panela]
 <!-- hl-knowledge: introduces=[PT-LEX-C97-CASA97-02]; assesses=[] -->
 
 **a frigideira** — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frigideira** is built from the verb "to fry" and *-deira* (EtymDB 2.1). The verb ← Latin *frigere*, "to roast, to fry" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

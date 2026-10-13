@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES221-PECHE
 prerequisites: [FR-C221-pyjama, FR-C221-bouton]
 sounds: []
 roots: []
+etymology_hook: "pêche ← Latin persica 'the Persian (apple)' — English peach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C221-bouton]
 <!-- hl-knowledge: introduces=[FR-LEX-C221-CHOSES221-05]; assesses=[] -->
 
 **la pêche** — "a peach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pêche** ← Old French *pesche* ← Vulgar Latin *\*pessica*, from Latin *persica*, "the Persian (apple)" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

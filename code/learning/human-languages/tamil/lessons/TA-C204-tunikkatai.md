@@ -14,7 +14,8 @@ romanization: "tuṇikkaṭai"
 concept_tag: TA-IDAM204-TUNIKKATAI
 prerequisites: [TA-C204-unavakam, TA-C204-palporul-ankati]
 sounds: []
-roots: []
+roots: [dravidian-tuni-cloth, dravidian-kadai-shop]
+etymology_hook: "துணிக்கடை — native: tuṇi 'cloth' (DEDR 3307) + kaṭai 'shop' (DEDR 1142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C204-palporul-ankati]
 <!-- hl-knowledge: introduces=[TA-LEX-C204-IDAM204-05]; assesses=[] -->
 
 **துணிக்கடை** — *tuṇikkaṭai* — "a clothes shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துணிக்கடை** (*tuṇikkaṭai*) is native: *tuṇi*, "cloth" (DEDR 3307), and *kaṭai*, "shop" (DEDR 1142).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -75,8 +75,8 @@ Latin **nōmen**, "name" — the root of English **noun**, **nominal**,
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-ME-CHAMO-04]; assesses=[] -->
 
 *chamo* alone = "I call [someone]"; **me** chamo = "I call **myself**" —
-reflexive. The pronoun shifts with the person: **me** chamo (I) → **se** chama
-(he/she/você). And *eu* is dropped — the *-o* ending already says "I."
+reflexive. The pronoun shifts with the person, as the next lesson's question
+shows. And *eu* is dropped — the *-o* ending already says "I."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-ME-CHAMO-02, PT-ETYMON-ME-CHAMO-03, PT-GRAMMAR-ME-CHAMO-04] -->
@@ -92,4 +92,4 @@ reflexive. The pronoun shifts with the person: **me** chamo (I) → **se** chama
 [PAUSE 3s] What does *me chamo* literally mean, and its Latin root? ("I call
 myself"; *clāmāre* — claim/clamor.) How is Portuguese *ch* pronounced, vs Italian
 *ch*? (Portuguese *sh*; Italian hard *k*.) What's the noun-route alternative?
-(*O meu nome é …*, *nome* ← *nōmen*.) Next: ask it back — **Como se chama?**
+(*O meu nome é …*, *nome* ← *nōmen*.) Next: ask it back — "what's your name?"

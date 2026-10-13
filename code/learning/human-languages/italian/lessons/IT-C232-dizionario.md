@@ -13,7 +13,8 @@ gloss: "a dictionary"
 concept_tag: IT-LAV232-DIZIONARIO
 prerequisites: [IT-C232-giornale, IT-C232-rivista]
 sounds: []
-roots: []
+roots: [dictio-latin]
+etymology_hook: "dizionario ← Medieval Latin dictionarium, from dictio 'a word' — English dictionary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C232-rivista]
 <!-- hl-knowledge: introduces=[IT-LEX-C232-LAV232-05]; assesses=[] -->
 
 **il dizionario** — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dizionario** ← Medieval Latin *dictionarium*, a book of words, built on Latin *dictio*, "a saying, a word" (Lewis & Short) — a learned borrowing. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuṟuñceyti"
 concept_tag: TA-PORUL185-KURUNCEYTI
 prerequisites: [TA-C185-varicai, TA-C185-en]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short, sey-do-dravidian]
+etymology_hook: "குறுஞ்செய்தி — native: kuṟu 'short' (DEDR 1851) + ceyti 'message', from cey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C185-en]
 <!-- hl-knowledge: introduces=[TA-LEX-C185-PORUL185-03]; assesses=[] -->
 
 **குறுஞ்செய்தி** — *kuṟuñceyti* — "a text message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறுஞ்செய்தி** (*kuṟuñceyti*) is native: *kuṟu*, "short" (DEDR 1851), and *ceyti*, "news, message", from *cey*, "to do" (DEDR 1957): "a short message".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

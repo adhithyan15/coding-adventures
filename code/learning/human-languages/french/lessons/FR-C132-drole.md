@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES84-DROLE
 prerequisites: [FR-C132-prochain, FR-C132-celebre]
 sounds: []
 roots: []
+etymology_hook: "drôle ← Middle Dutch drol 'a little fellow, a goblin' — English droll"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C132-celebre]
 <!-- hl-knowledge: introduces=[FR-LEX-C132-QUALITES84-05]; assesses=[] -->
 
 **drôle** — "funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**drôle** ← Middle Dutch *drol*, "a little fellow, a goblin" — borrowed; it first meant "a rascal", then "a comic".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

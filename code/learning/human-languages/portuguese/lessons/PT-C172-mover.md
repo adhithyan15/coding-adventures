@@ -13,7 +13,8 @@ gloss: "to move (something)"
 concept_tag: PT-VERB-MOVER
 prerequisites: [PT-C171-convidar, PT-C171-estacionar]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "mover ← Latin movere 'to move' — English move and motion share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C171-estacionar]
 <!-- hl-knowledge: introduces=[PT-LEX-C172-VERBOS172-01]; assesses=[] -->
 
 **mover** — "to move (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mover** ← Latin *movere*, "to move" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

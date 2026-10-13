@@ -14,7 +14,8 @@ romanization: "araṇmaṉai"
 concept_tag: TA-IDAM236-ARANMANAI
 prerequisites: [TA-C236-turaimukam, TA-C236-kottai]
 sounds: []
-roots: []
+roots: [sanskrit-sharana, dravidian-manai-house]
+etymology_hook: "அரண்மனை — araṇ 'fortress', from Sanskrit śaraṇa 'refuge' (DEDR 201), + native maṉai 'house' (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C236-kottai]
 <!-- hl-knowledge: introduces=[TA-LEX-C236-IDAM236-05]; assesses=[] -->
 
 **அரண்மனை** — *araṇmaṉai* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அரண்மனை** (*araṇmaṉai*) is *araṇ*, "defence, fortress", which DEDR 201 traces to Sanskrit *śaraṇa*, "refuge", and native *maṉai*, "house" (DEDR 4776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

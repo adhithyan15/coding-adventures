@@ -14,7 +14,8 @@ romanization: "peṟṟōr"
 concept_tag: TA-PORUL273-PERROR
 prerequisites: [TA-C272-nakal, TA-C273-al]
 sounds: []
-roots: []
+roots: [dravidian-peru-get]
+etymology_hook: "பெற்றோர் — native: 'those who bore', from peṟu 'to get, to bear' (DEDR 4422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C273-al]
 <!-- hl-knowledge: introduces=[TA-LEX-C273-PORUL273-02]; assesses=[] -->
 
 **பெற்றோர்** — *peṟṟōr* — "parents".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெற்றோர்** (*peṟṟōr*) is native: "those who bore", from *peṟu*, "to get, to bear (a child)" (DEDR 4422, which lists Malayalam peṟuka).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

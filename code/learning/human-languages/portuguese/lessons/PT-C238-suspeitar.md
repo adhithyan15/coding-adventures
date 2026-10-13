@@ -13,7 +13,8 @@ gloss: "to suspect"
 concept_tag: PT-VERB-SUSPEITAR
 prerequisites: [PT-C238-levantar, PT-C238-surpreender]
 sounds: []
-roots: []
+roots: [specere-latin]
+etymology_hook: "suspeitar ← Latin suspectare 'to suspect': -ct- became -it-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C238-surpreender]
 <!-- hl-knowledge: introduces=[PT-LEX-C238-VERBOS238-03]; assesses=[] -->
 
 **suspeitar** — "to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suspeitar** ← Latin *suspectare*, "to look up at, to suspect" (EtymDB 2.1) — inherited. Latin *-ct-* became *-it-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

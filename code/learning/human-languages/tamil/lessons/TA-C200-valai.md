@@ -14,7 +14,8 @@ romanization: "vaḷai"
 concept_tag: TA-VERB-VALAI
 prerequisites: [TA-C199-oppitu, TA-C200-killu]
 sounds: []
-roots: []
+roots: [dravidian-valai-bend]
+etymology_hook: "வளை — native Dravidian (DEDR 5314); Malayalam vaḷayuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C200-killu]
 <!-- hl-knowledge: introduces=[TA-LEX-C200-ACT200-02]; assesses=[] -->
 
 **வளை** — *vaḷai* — "to bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வளை** (*vaḷai*) is native Dravidian. DEDR 5314 lists Malayalam *vaḷayuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

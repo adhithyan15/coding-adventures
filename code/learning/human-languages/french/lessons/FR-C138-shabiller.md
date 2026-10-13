@@ -13,7 +13,8 @@ gloss: "to get dressed"
 concept_tag: FR-VERB-SHABILLER
 prerequisites: [FR-C138-esperer, FR-C138-conduire]
 sounds: []
-roots: []
+roots: [habitus-latin]
+etymology_hook: "s'habiller ← Old French abiller 'to prepare', reshaped by the word for a garment — English habit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C138-conduire]
 <!-- hl-knowledge: introduces=[FR-LEX-C138-VERBES90-05]; assesses=[] -->
 
 **s'habiller** — "to get dressed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'habiller** ← Old French *abiller*, "to prepare, to trim" (EtymDB 2.1), usually traced to the word for "a log"; its *h* and its sense of dressing came from the word for a garment, ← Latin *habitus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [u-long, final-t]
 roots: [pie-bhuh]
 etymology_hook: "bist is bin's own stem carrying the ordinary du ending -st, which makes it the single predictable form in the paradigm"
 duration:
-  max_seconds: 150
+  max_seconds: 181
 requires:
   knowledge: [GE-LEX-DU-SIE-02, GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-SEIN-ICH-BIN-01]
 introduces:
@@ -49,6 +49,11 @@ Take *bin*, drop the *n*, add the familiar **-st**: *bi-* plus *-st* is
 
 Of the six present forms of *sein*, this is the only one that can be derived
 from another one. Enjoy it; it does not happen again.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bist** ← Old High German *bist* — inherited, from the same root as Old High German *bim*, "I am", which EtymDB 2.1 traces to Proto-Germanic *\*beuną*, "to be, to become". English *be* shares it.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-DU-BIST-01] -->

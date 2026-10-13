@@ -13,7 +13,8 @@ gloss: "angry; bad"
 concept_tag: GE-EIGEN133-BOESE
 prerequisites: [GE-C132-nett, GE-C132-freundlich]
 sounds: []
-roots: []
+roots: [germanic-bausijaz]
+etymology_hook: "böse ← Old High German bōsi ← Proto-Germanic *bausijaz 'puffed up, bad' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C132-freundlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C133-EIGEN133-01]; assesses=[] -->
 
 **böse** — "angry; bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**böse** ← Old High German *bōsi* ← Proto-Germanic *\*bausijaz*, "puffed up, arrogant, bad" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

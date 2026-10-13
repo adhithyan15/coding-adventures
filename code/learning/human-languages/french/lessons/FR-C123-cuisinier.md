@@ -13,7 +13,8 @@ gloss: "a cook"
 concept_tag: FR-METIERS75-CUISINIER
 prerequisites: [FR-C122-repas, FR-C123-infirmiere]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "cuisinier — cuisine + -ier: the one who works the kitchen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C123-infirmiere]
 <!-- hl-knowledge: introduces=[FR-LEX-C123-METIERS75-02]; assesses=[] -->
 
 **le cuisinier** — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuisinier** — built from *cuisine*, "kitchen", with *-ier*, "one who works at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

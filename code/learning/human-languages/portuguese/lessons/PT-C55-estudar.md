@@ -13,7 +13,8 @@ gloss: "to study"
 concept_tag: PT-VERB-ESTUDAR
 prerequisites: [PT-C55-sair, PT-C55-voltar]
 sounds: []
-roots: []
+roots: [studium-latin]
+etymology_hook: "estudar — from the noun for study, a learned borrowing of Latin studium 'zeal' — English study"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C55-voltar]
 <!-- hl-knowledge: introduces=[PT-LEX-C55-VERBOS5-04]; assesses=[] -->
 
 **estudar** — "to study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estudar** is built from the noun for study, a learned borrowing of Latin *studium*, "zeal, study" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

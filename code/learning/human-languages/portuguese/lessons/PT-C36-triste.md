@@ -13,7 +13,8 @@ gloss: "sad"
 concept_tag: PT-SENTIR-TRISTE
 prerequisites: [PT-C36-tristeza, PT-C36-feliz]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "triste ← Latin tristis 'sad' — French and Italian triste are its sisters"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C36-feliz]
 <!-- hl-knowledge: introduces=[PT-LEX-C36-SENTIR-05]; assesses=[] -->
 
 **triste** — "sad". The adjective beside **a tristeza**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**triste** ← Latin *tristis*, "sad" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

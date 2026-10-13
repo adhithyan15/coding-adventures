@@ -13,7 +13,8 @@ gloss: "successful"
 concept_tag: GE-QUAL213-ERFOLGREICH
 prerequisites: [GE-C212-einsam, GE-C213-eifersuechtig]
 sounds: []
-roots: []
+roots: [germanic-rikijaz]
+etymology_hook: "erfolgreich — Erfolg 'success' + reich 'rich': rich in success"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C213-eifersuechtig]
 <!-- hl-knowledge: introduces=[GE-LEX-C213-QUAL213-02]; assesses=[] -->
 
 **erfolgreich** — "successful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erfolgreich** is the word for "success", from a verb "to follow, to result", + *reich*, "rich" (EtymDB 2.1): rich in success. The "follow" verb is the same as English *follow*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

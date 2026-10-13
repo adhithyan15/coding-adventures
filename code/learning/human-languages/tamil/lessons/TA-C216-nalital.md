@@ -14,7 +14,8 @@ romanization: "nāḷitaḻ"
 concept_tag: TA-PORUL216-NALITAL
 prerequisites: [TA-C216-inaiyam, TA-C216-katavuccol]
 sounds: []
-roots: []
+roots: [proto-dravidian-naal-day, dravidian-itazh-petal]
+etymology_hook: "நாளிதழ் — native: nāḷ 'day' (DEDR 3656) + itaḻ 'petal, leaf' (DEDR 459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C216-katavuccol]
 <!-- hl-knowledge: introduces=[TA-LEX-C216-PORUL216-03]; assesses=[] -->
 
 **நாளிதழ்** — *nāḷitaḻ* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாளிதழ்** (*nāḷitaḻ*) is native: *nāḷ*, "day" (DEDR 3656), and *itaḻ*, "petal, leaf" (DEDR 459): "the daily leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "piṟantanāḷ"
 concept_tag: TA-ABOUT-BIRTHDAY
 prerequisites: [TA-C104-wedding, TA-C104-address]
 sounds: []
-roots: []
+roots: [dravidian-peru-get, proto-dravidian-naal-day]
+etymology_hook: "பிறந்தநாள் — native: piṟa 'to be born' (DEDR 4422) + nāḷ 'day' (DEDR 3656)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C104-address]
 **பிறந்தநாள்** (*piṟantanāḷ*) — "a birthday", literally "the day one was born".
 
 **பிறந்தநாள் வாழ்த்துகள்** — "happy birthday", with the wishes you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிறந்தநாள்** (*piṟantanāḷ*) is native: *piṟanta*, "on which one was born", from *piṟa*, "to be born" (DEDR 4422), and *nāḷ*, "day" (DEDR 3656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to order"
 concept_tag: IT-VERB-ORDINARE
 prerequisites: [IT-C232-rivista, IT-C232-dizionario]
 sounds: []
-roots: []
+roots: [ordo-latin]
+etymology_hook: "ordinare ← Latin ordinare 'to arrange', from ordo 'a row, an order' — English order"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C232-dizionario]
 <!-- hl-knowledge: introduces=[IT-LEX-C233-VERBI233-01]; assesses=[] -->
 
 **ordinare** — "to order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ordinare** ← Latin *ordinare*, "to arrange", from *ordo*, "a row, a rank" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

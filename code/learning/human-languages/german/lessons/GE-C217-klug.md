@@ -14,6 +14,7 @@ concept_tag: GE-QUAL217-KLUG
 prerequisites: [GE-C216-intelligent, GE-C217-kaputt]
 sounds: []
 roots: []
+etymology_hook: "klug ← Middle High German kluoc 'clever, fine' — inherited; Old Norse klókr is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C217-kaputt]
 <!-- hl-knowledge: introduces=[GE-LEX-C217-QUAL217-02]; assesses=[] -->
 
 **klug** — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**klug** ← Middle High German *kluoc*, "clever, fine" (EtymDB 2.1) — inherited; EtymDB lists Old Norse *klókr*, "clever", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

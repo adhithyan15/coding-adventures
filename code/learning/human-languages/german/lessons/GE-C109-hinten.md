@@ -13,7 +13,8 @@ gloss: "at the back"
 concept_tag: GE-RICHTUNG109-HINTEN
 prerequisites: [GE-C109-unten, GE-C109-vorne]
 sounds: []
-roots: []
+roots: [germanic-hinder]
+etymology_hook: "hinten ← Old High German hintana 'from behind' — kin to English behind and hind"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C109-vorne]
 <!-- hl-knowledge: introduces=[GE-LEX-C109-RICHTUNG109-04]; assesses=[] -->
 
 **hinten** — "at the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hinten** ← Old High German *hintana*, "from behind" — inherited, a cousin of English *behind* and *hind*, which EtymDB 2.1 traces to Proto-Germanic *\*hinder*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

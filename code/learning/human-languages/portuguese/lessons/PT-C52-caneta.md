@@ -13,7 +13,8 @@ gloss: "a pen"
 concept_tag: PT-COISAS1-CANETA
 prerequisites: [PT-C51-faca, PT-C51-garfo]
 sounds: []
-roots: []
+roots: [canna-latin]
+etymology_hook: "caneta — 'little reed': built from the reed word (← Latin canna) + -eta — English cane"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-garfo]
 <!-- hl-knowledge: introduces=[PT-LEX-C52-COISAS1-01]; assesses=[] -->
 
 **a caneta** — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caneta** is built from the word for a reed and *-eta*, "little" (EtymDB 2.1): a little reed, the old pen. The reed word ← Latin *canna*, from Greek *kanna* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

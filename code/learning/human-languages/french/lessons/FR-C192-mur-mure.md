@@ -13,7 +13,8 @@ gloss: "ripe"
 concept_tag: FR-QUAL192-MUR-MURE
 prerequisites: [FR-C191-inutile, FR-C192-cuit-cuite]
 sounds: []
-roots: []
+roots: [maturus-latin]
+etymology_hook: "mûr ← Latin maturus 'ripe' — English mature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C192-cuit-cuite]
 <!-- hl-knowledge: introduces=[FR-LEX-C192-QUAL192-02]; assesses=[] -->
 
 **mûr / mûre** — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mûr** ← Old French *meür* (EtymDB 2.1) ← Latin *maturus*, "ripe" (Lewis & Short) — inherited; the *t* between vowels dropped out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

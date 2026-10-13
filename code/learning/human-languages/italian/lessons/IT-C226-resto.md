@@ -13,7 +13,8 @@ gloss: "change (money)"
 concept_tag: IT-COSE226-RESTO
 prerequisites: [IT-C225-risultato, IT-C226-scontrino]
 sounds: []
-roots: []
+roots: [restare-latin]
+etymology_hook: "resto — what remains, from restare ← Latin restare — English rest (the remainder)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C226-scontrino]
 <!-- hl-knowledge: introduces=[IT-LEX-C226-COSE226-02]; assesses=[] -->
 
 **il resto** — "change (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**resto** is the noun of *restare*, "to remain": what remains. *restare* ← Latin *restare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

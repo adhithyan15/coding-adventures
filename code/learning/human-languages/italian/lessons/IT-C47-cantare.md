@@ -13,7 +13,8 @@ gloss: "to sing"
 concept_tag: IT-VERB-CANTARE
 prerequisites: [IT-C46-ragazzo, IT-C46-ragazza]
 sounds: []
-roots: []
+roots: [cantare-latin]
+etymology_hook: "cantare ← Latin cantare 'to sing' — English chant comes from it through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C46-ragazza]
 <!-- hl-knowledge: introduces=[IT-LEX-C47-VERBI1-01]; assesses=[] -->
 
 **cantare** — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantare** ← Latin *cantare*, "to sing", from *canere*, "to sing" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

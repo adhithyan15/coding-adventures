@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI100-SVEGLIA
 prerequisites: [IT-C99-colla, IT-C100-forbici]
 sounds: []
 roots: []
+etymology_hook: "sveglia — from the verb 'to wake', which goes back to Latin vigilare 'to keep awake'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C100-forbici]
 <!-- hl-knowledge: introduces=[IT-LEX-C100-OGGETTI100-02]; assesses=[] -->
 
 **la sveglia** — "an alarm clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sveglia** is built on the verb "to wake", which goes back to Latin *vigilare*, "to keep awake" (Lewis & Short); EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

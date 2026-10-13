@@ -13,7 +13,8 @@ gloss: "a piece of news"
 concept_tag: GE-THING235-NEUIGKEIT
 prerequisites: [GE-C234-mode, GE-C234-mut]
 sounds: []
-roots: []
+roots: [germanic-niwjaz]
+etymology_hook: "Neuigkeit — the word for 'new' + -igkeit: something new"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C234-mut]
 <!-- hl-knowledge: introduces=[GE-LEX-C235-THING235-01]; assesses=[] -->
 
 **die Neuigkeit** — "a piece of news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Neuigkeit** is the word for "new", Old High German *niuwi*, English *new* (EtymDB 2.1), + *-igkeit*: a new thing, a piece of news.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

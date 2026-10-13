@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 232,
-  "sourceHash": "fnv1a64:94cbec4878081ad5",
+  "sourceHash": "fnv1a64:3cf17f4a9febb4a1",
   "lessonIds": [
     "GE-C232-kindheit",
     "GE-C232-kenntnis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch232.txt",
   "json": "german/narration/ch232.json",
-  "textHash": "fnv1a64:dbc7be3dd0cf4240",
-  "jsonHash": "fnv1a64:ebea0fcc9a54e9dd",
+  "textHash": "fnv1a64:413910d18d2a2fef",
+  "jsonHash": "fnv1a64:c5e106e81b0e922c",
   "findings": []
 }

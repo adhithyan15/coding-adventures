@@ -305,6 +305,9 @@ dir means to you.
 Said vee gayt es deer — remember German w says v, and ie is a long ee.
 Every piece has been earned: wie from asking someone's name, geht from gehen, es and dir from the last two lessons. This is what the book has been building toward — a real question assembled from parts, not memorised whole.
 
+The phrase, taken apart.
+geht is a form of gehen from Old High German gān from Proto-Germanic gāną, "to go" — the same verb as English go. (EtymDB 2.1).
+
 You'll want to know: Wie geht's?
 In speech, geht es crushes together into geht's:
 Wie geht's? — the form you will actually hear.
@@ -372,6 +375,9 @@ Wie geht es Ihnen? — "How are you?", to a stranger or an elder.
 Listener: friend, family. Question: Wie geht es dir?
 Listener: stranger, elder. Question: Wie geht es Ihnen?
 Three of the four words never move. Only the last one changes.
+
+The word, taken apart.
+Ihnen is the "to them" form of sie, "they": German's polite "you" is the inherited word for "they", capitalised.
 
 Grammar Lens: politeness lives in the pronoun.
 This is a rule worth generalising: German carries politeness in the pronoun, not in the sentence. English reaches for extra words to be polite — "I was wondering whether you might…" — and stacks them in front. German usually leaves the sentence exactly as it is and changes who you are calling the person.
@@ -510,6 +516,9 @@ Nothing has been added. That is the whole trick.
 Es geht mir gut says it goes well. Take the gut away and German does not become vague — it becomes pointed. The listener was waiting for a gut or a schlecht, and you gave neither. The absence is the meaning.
 English does this too, with tone rather than deletion: "It's… going."
 
+The phrase, taken apart.
+geht from Old High German gān from Proto-Germanic gāną, "to go", the same verb as English go; es from Old High German iz, "it", English it's twin. (EtymDB 2.1).
+
 Grammar Lens: the answer ladder.
 You now hold the whole range, top to bottom, with no word left unexplained:
 [a table of 5 rows, read aloud]
@@ -544,6 +553,9 @@ Someone asks how you are; you answer. A conversation only starts when you ask ba
 You'll want to know: und.
 und — "and."
 It is English and with the vowel darkened, and it has barely changed in a thousand years — one of the oldest words either language still uses daily.
+
+The word, taken apart.
+und from Old High German unti from Proto-Germanic andi — inherited, the same word as English and. (EtymDB 2.1).
 
 Sounds you'll need.
 d-t-final — say oont, not oond. German hardens a d at the end of a word into a t. It is the same rule that makes Tag come out as tock rather than tahg: whatever the spelling, a final consonant goes voiceless. So und rhymes with English hunt, not with shunned.

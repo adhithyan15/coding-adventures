@@ -13,7 +13,8 @@ gloss: "to dream"
 concept_tag: PT-VERB-SONHAR
 prerequisites: [PT-C235-apresentar, PT-C235-emprestar]
 sounds: []
-roots: []
+roots: [somnus-latin]
+etymology_hook: "sonhar ← Latin somniare 'to dream', from somnium — the same root as sonho"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C235-emprestar]
 <!-- hl-knowledge: introduces=[PT-LEX-C236-VERBOS236-01]; assesses=[] -->
 
 **sonhar** — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sonhar** ← Latin *somniare*, "to dream" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

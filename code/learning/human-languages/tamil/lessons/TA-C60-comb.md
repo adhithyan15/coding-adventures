@@ -11,7 +11,8 @@ romanization: "sīppu"
 concept_tag: TA-NOUN-COMB
 prerequisites: [TA-C60-broom, TA-C58-bird, TA-C59-sugar]
 sounds: []
-roots: []
+roots: [dravidian-ciippu-comb]
+etymology_hook: "சீப்பு — native Dravidian (DEDR 1610); Malayalam cīppi, Telugu cīpu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C60-broom]
 A comb, and nothing borrowed about it. The ீ at the front is held long, and then the doubled ப்ப comes again, so it lands in the same shape as துடைப்பம் and பெட்டி.
 
 A சீப்பு and a மலர் are what go into hair on a morning that is being made something of, and the two turn up in the same sentence often enough to be worth learning together.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சீப்பு** (*sīppu*) is native Dravidian. DEDR 1610 lists Malayalam *cīppi* and Telugu *cīpu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

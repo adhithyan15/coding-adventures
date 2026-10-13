@@ -13,7 +13,8 @@ gloss: "a player"
 concept_tag: PT-COISAS252-JOGADOR
 prerequisites: [PT-C252-derrota, PT-C252-campeonato]
 sounds: []
-roots: []
+roots: [iocari-latin]
+etymology_hook: "jogador — built from jogar 'to play' (← Latin iocari 'to jest') + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C252-campeonato]
 <!-- hl-knowledge: introduces=[PT-LEX-C252-COISAS252-03]; assesses=[] -->
 
 **o jogador** — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jogador** is built from *jogar*, "to play", and *-dor*, "one who" (EtymDB 2.1). *jogar* ← Vulgar Latin *iocare*, from Latin *iocari*, "to jest" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

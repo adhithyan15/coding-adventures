@@ -13,7 +13,8 @@ gloss: "a hotel"
 concept_tag: FR-VILLE53-HOTEL
 prerequisites: [FR-C100-musee, FR-C101-restaurant]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "hôtel ← Old French hostel, from Late Latin hospitale — the worn-down twin of hôpital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C101-restaurant]
 <!-- hl-knowledge: introduces=[FR-LEX-C101-VILLE53-02]; assesses=[] -->
 
 **l'hôtel** — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hôtel** ← Old French *hostel* ← Late Latin *hospitale*, "a guest house", from *hospes*, "guest" — inherited. (EtymDB 2.1) *hôpital* is the same Latin word taken in by scholars; *hôtel* is the one worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

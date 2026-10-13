@@ -14,7 +14,8 @@ romanization: "māvaṭṭam"
 concept_tag: TA-IDAM265-MAVATTAM
 prerequisites: [TA-C264-nilam, TA-C264-pallattakku]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "மாவட்டம் — mā 'great' + vaṭṭam 'circle', usually from Sanskrit vṛtta (CDIAL 12069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C264-pallattakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C265-IDAM265-01]; assesses=[] -->
 
 **மாவட்டம்** — *māvaṭṭam* — "a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாவட்டம்** (*māvaṭṭam*) is *mā*, "great", and *vaṭṭam*, "circle", usually traced to Sanskrit *vṛtta*, "rounded" (CDIAL 12069): "the great circle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "religion"
 concept_tag: IT-COSE222-RELIGIONE
 prerequisites: [IT-C222-soldato, IT-C222-bandiera]
 sounds: []
-roots: []
+roots: [religio-latin]
+etymology_hook: "religione ← Latin religio 'reverence', a learned word — English religion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C222-bandiera]
 <!-- hl-knowledge: introduces=[IT-LEX-C222-COSE222-03]; assesses=[] -->
 
 **la religione** — "religion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**religione** ← Latin *religio*, "reverence, a bond" (*religionem*) — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

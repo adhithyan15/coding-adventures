@@ -13,7 +13,8 @@ gloss: "wet"
 concept_tag: GE-EIGEN135-NASS
 prerequisites: [GE-C134-sicher, GE-C135-gefaehrlich]
 sounds: []
-roots: []
+roots: [germanic-nataz]
+etymology_hook: "nass ← Old High German naz ← Proto-Germanic *nataz 'wet' — Dutch nat is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C135-gefaehrlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C135-EIGEN135-02]; assesses=[] -->
 
 **nass** — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nass** ← Old High German *naz* ← Proto-Germanic *\*nataz*, "wet" — inherited; Dutch *nat* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

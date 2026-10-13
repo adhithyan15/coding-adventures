@@ -14,7 +14,8 @@ romanization: "ammi"
 concept_tag: TA-PORUL190-AMMI
 prerequisites: [TA-C190-tippetti, TA-C190-panai]
 sounds: []
-roots: []
+roots: [dravidian-ammi-grindstone]
+etymology_hook: "அம்மி — native Dravidian (DEDR 184); Malayalam ammi, Kannada ammi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C190-panai]
 <!-- hl-knowledge: introduces=[TA-LEX-C190-PORUL190-04]; assesses=[] -->
 
 **அம்மி** — *ammi* — "a grinding stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அம்மி** (*ammi*) is native Dravidian. DEDR 184 lists Malayalam *ammi* and Kannada *ammi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a supermarket"
 concept_tag: GE-ORT106-SUPERMARKT
 prerequisites: [GE-C105-theater, GE-C105-rathaus, GE-C01-morgen, GE-C01-die-plural]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "Supermarkt — Latin super 'above, beyond' + Markt, after English supermarket"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C105-rathaus]
 <!-- hl-knowledge: introduces=[GE-LEX-C106-ORT106-01]; assesses=[] -->
 
 **der Supermarkt** — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Supermarkt** is Latin *super*, "above, beyond", + *Markt*, modelled on English *supermarket*. *Markt* ← Latin *mercātus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṟṟukkoḷ"
 concept_tag: TA-VERB-KARRUKKOL
 prerequisites: [TA-C156-tutai, TA-C156-perukku, TA-C33-ezhutu]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn, dravidian-kol-take]
+etymology_hook: "கற்றுக்கொள் — native: kaṟṟu, from kal 'to learn' (DEDR 1297) + koḷ 'to take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C156-perukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C156-ACT156-03]; assesses=[] -->
 
 **கற்றுக்கொள்** — *kaṟṟukkoḷ* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கற்றுக்கொள்** (*kaṟṟukkoḷ*) is native: *kaṟṟu*, "having learned", from *kal*, "to learn" (DEDR 1297), and *koḷ*, "to take" (DEDR 2151): "learn and take for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

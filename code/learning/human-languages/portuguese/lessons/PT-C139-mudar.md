@@ -13,7 +13,8 @@ gloss: "to change"
 concept_tag: PT-VERB-MUDAR
 prerequisites: [PT-C139-continuar, PT-C139-parar]
 sounds: []
-roots: []
+roots: [mutare-latin]
+etymology_hook: "mudar ← Latin mutare 'to change': -t- became -d- — English mutate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C139-parar]
 <!-- hl-knowledge: introduces=[PT-LEX-C139-VERBOS139-05]; assesses=[] -->
 
 **mudar** — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mudar** ← Latin *mutare*, "to change" (EtymDB 2.1) — inherited. The *-t-* between vowels became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "ripe; mature"
 concept_tag: PT-QUAL242-MADURO-MADURA
 prerequisites: [PT-C241-simples, PT-C242-cozido-cozida]
 sounds: []
-roots: []
+roots: [maturus-latin]
+etymology_hook: "maduro ← Latin maturus 'ripe' — English mature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C242-cozido-cozida]
 <!-- hl-knowledge: introduces=[PT-LEX-C242-QUAL242-02]; assesses=[] -->
 
 **maduro / madura** — "ripe; mature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maduro** ← Latin *maturus*, "ripe" (EtymDB 2.1) — inherited. The *-t-* became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

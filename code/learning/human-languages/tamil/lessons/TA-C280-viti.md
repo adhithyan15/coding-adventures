@@ -14,7 +14,8 @@ romanization: "viti"
 concept_tag: TA-VELAI280-VITI
 prerequisites: [TA-C279-valakkarinar, TA-C280-aracu]
 sounds: []
-roots: []
+roots: [sanskrit-vidhi]
+etymology_hook: "விதி ← Sanskrit vidhi 'rule; fate' (CDIAL 11755)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C280-aracu]
 <!-- hl-knowledge: introduces=[TA-LEX-C280-VELAI280-02]; assesses=[] -->
 
 **விதி** — *viti* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விதி** (*viti*) is a loan from Sanskrit *vidhi*, "rule; fate" (CDIAL 11755).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

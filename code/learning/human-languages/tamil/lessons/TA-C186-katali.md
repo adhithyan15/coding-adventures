@@ -14,7 +14,8 @@ romanization: "kātali"
 concept_tag: TA-PORUL186-KATALI
 prerequisites: [TA-C186-mamanar, TA-C186-katalan]
 sounds: []
-roots: []
+roots: [dravidian-kaadal-love]
+etymology_hook: "காதலி — native Dravidian (DEDR 1445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C186-katalan]
 <!-- hl-knowledge: introduces=[TA-LEX-C186-PORUL186-03]; assesses=[] -->
 
 **காதலி** — *kātali* — "a girlfriend, a (female) lover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காதலி** (*kātali*) is native Dravidian (DEDR 1445). It is *kātal*, "love", with *-i* for a woman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE231-ALLENATORE
 prerequisites: [IT-C231-campionato, IT-C231-giocatore]
 sounds: []
 roots: []
+etymology_hook: "allenatore — allenare 'to train' + -tore 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C231-giocatore]
 <!-- hl-knowledge: introduces=[IT-LEX-C231-COSE231-05]; assesses=[] -->
 
 **l'allenatore** — "a coach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allenatore** — built from *allenare*, "to train", with *-tore*, "one who": one who trains. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to appear"
 concept_tag: IT-VERB-APPARIRE
 prerequisites: [IT-C178-aggiungere, IT-C178-annunciare]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "apparire ← Latin apparere 'to come in sight' — English appear is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C178-annunciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C178-VERBI178-05]; assesses=[] -->
 
 **apparire** — "to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apparire** ← Latin *apparere*, "to come in sight" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

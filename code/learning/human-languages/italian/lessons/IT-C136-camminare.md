@@ -14,6 +14,7 @@ concept_tag: IT-VERB-CAMMINARE
 prerequisites: [IT-C135-riparare, IT-C136-raccontare]
 sounds: []
 roots: []
+etymology_hook: "camminare — from cammino 'a way'; usually traced to Gaulish, through Late Latin camminus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C136-raccontare]
 <!-- hl-knowledge: introduces=[IT-LEX-C136-VERBI136-02]; assesses=[] -->
 
 **camminare** — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camminare** — built from *cammino*, "a way, a road": to make one's way. EtymDB 2.1 lists French *chemin* as its cognate but has no row for where the pair came from; they are usually traced to a Gaulish word taken into Late Latin as *camminus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

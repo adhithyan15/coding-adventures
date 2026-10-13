@@ -13,7 +13,8 @@ gloss: "still, yet"
 concept_tag: PT-TEMPO150-AINDA
 prerequisites: [PT-C150-finalmente, PT-C150-partir-de-agora]
 sounds: []
-roots: []
+roots: [inde-latin]
+etymology_hook: "ainda — a- + an old inda, from Latin inde 'from then on'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C150-partir-de-agora]
 <!-- hl-knowledge: introduces=[PT-LEX-C150-TEMPO150-05]; assesses=[] -->
 
 **ainda** — "still, yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ainda** is built from *a-* and an old word *inda* (EtymDB 2.1), from Latin *inde*, "from there, from then on" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

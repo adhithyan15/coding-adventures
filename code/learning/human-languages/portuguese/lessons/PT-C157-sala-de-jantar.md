@@ -13,7 +13,8 @@ gloss: "a dining room"
 concept_tag: PT-COISAS157-SALA-DE-JANTAR
 prerequisites: [PT-C156-pessoal, PT-C157-apartamento]
 sounds: []
-roots: []
+roots: [ientare-latin]
+etymology_hook: "sala de jantar — 'room of dinner': sala, a Germanic word; jantar ← Latin ientare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C157-apartamento]
 <!-- hl-knowledge: introduces=[PT-LEX-C157-COISAS157-02]; assesses=[] -->
 
 **a sala de jantar** — "a dining room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sala de jantar** is "room of dinner": *sala*, a Germanic word for a hall, and *jantar* ← Latin *ientare*, "to have breakfast" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

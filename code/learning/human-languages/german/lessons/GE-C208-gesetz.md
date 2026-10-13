@@ -13,7 +13,8 @@ gloss: "a law"
 concept_tag: GE-THING208-GESETZ
 prerequisites: [GE-C207-diebstahl, GE-C207-gericht]
 sounds: []
-roots: []
+roots: [germanic-satjana]
+etymology_hook: "Gesetz — ge- + the verb 'to set': a law is what is set down"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C207-gericht]
 <!-- hl-knowledge: introduces=[GE-LEX-C208-THING208-01]; assesses=[] -->
 
 **das Gesetz** — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gesetz** is *ge-* + the verb "to set", Old High German *sezzen*, English *set* (EtymDB 2.1): a law is what has been set down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

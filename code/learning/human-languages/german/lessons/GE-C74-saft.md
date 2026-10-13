@@ -13,7 +13,8 @@ gloss: "juice"
 concept_tag: GE-ESSEN6-SAFT
 prerequisites: [GE-C73-salz, GE-C73-zucker]
 sounds: []
-roots: []
+roots: [germanic-sapa]
+etymology_hook: "Saft ← Middle High German saf — the same Germanic word as English sap"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C73-zucker]
 <!-- hl-knowledge: introduces=[GE-LEX-C74-ESSEN6-01]; assesses=[] -->
 
 **der Saft** — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Saft** ← Middle High German *saf* — inherited; EtymDB 2.1 lists it beside English *sap*, from Proto-Germanic *\*sapą*, "sap, juice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

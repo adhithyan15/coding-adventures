@@ -11,7 +11,8 @@ romanization: "malai"
 concept_tag: TA-NOUN-HILL
 prerequisites: [TA-C53-river, TA-C51-sun, TA-C52-branch]
 sounds: []
-roots: []
+roots: [mala-mountain-dravidian]
+etymology_hook: "மலை — native Dravidian (DEDR 4742): Malayalam mala, Kannada male, Telugu mala"
 duration:
   max_seconds: 210
 requires:

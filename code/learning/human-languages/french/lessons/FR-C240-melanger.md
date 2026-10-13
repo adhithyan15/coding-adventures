@@ -13,7 +13,8 @@ gloss: "to mix"
 concept_tag: FR-VERB-MELANGER
 prerequisites: [FR-C240-interrompre, FR-C240-attacher]
 sounds: []
-roots: []
+roots: [miscere-latin]
+etymology_hook: "mélanger — from the verb 'to mix', Latin miscere — English mix and melee"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C240-attacher]
 <!-- hl-knowledge: introduces=[FR-LEX-C240-VERBES240-04]; assesses=[] -->
 
 **mélanger** — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mélanger** — built from the verb for "to mix", ← Vulgar Latin *\*misculare*, from Latin *miscere*, "to mix" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

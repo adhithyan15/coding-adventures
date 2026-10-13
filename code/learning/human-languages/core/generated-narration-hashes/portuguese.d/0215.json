@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 215,
-  "sourceHash": "fnv1a64:68053bf5563239c3",
+  "sourceHash": "fnv1a64:06198b328e309b8b",
   "lessonIds": [
     "PT-C215-ciumento-ciumenta",
     "PT-C215-orgulhoso-orgulhosa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch215.txt",
   "json": "portuguese/narration/ch215.json",
-  "textHash": "fnv1a64:d14ee35269a6acbf",
-  "jsonHash": "fnv1a64:5d4ba7d988eefdac",
+  "textHash": "fnv1a64:74c58a792d39720f",
+  "jsonHash": "fnv1a64:a6f49debd2fd7a66",
   "findings": []
 }

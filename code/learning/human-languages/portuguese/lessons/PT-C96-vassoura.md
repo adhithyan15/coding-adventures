@@ -13,7 +13,8 @@ gloss: "a broom"
 concept_tag: PT-CASA96-VASSOURA
 prerequisites: [PT-C95-pente, PT-C96-lixo]
 sounds: []
-roots: []
+roots: [verrere-latin]
+etymology_hook: "vassoura ← Vulgar Latin *versoria, from verrere 'to sweep'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C96-lixo]
 <!-- hl-knowledge: introduces=[PT-LEX-C96-CASA96-02]; assesses=[] -->
 
 **a vassoura** — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vassoura** ← Vulgar Latin *\*versoria* (EtymDB 2.1), from Latin *verrere*, "to sweep" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

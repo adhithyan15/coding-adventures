@@ -14,7 +14,8 @@ romanization: "aracu"
 concept_tag: TA-VELAI280-ARACU
 prerequisites: [TA-C279-poriyalar, TA-C279-valakkarinar]
 sounds: []
-roots: []
+roots: [sanskrit-rajan]
+etymology_hook: "அரசு ← Sanskrit rājan 'king' (CDIAL 10679), as DEDR 201 says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C279-valakkarinar]
 <!-- hl-knowledge: introduces=[TA-LEX-C280-VELAI280-01]; assesses=[] -->
 
 **அரசு** — *aracu* — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அரசு** (*aracu*) is a loan from Sanskrit *rājan*, "king" (CDIAL 10679). DEDR 201 gives this source, and lists Malayalam aracu and Kannada arasu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

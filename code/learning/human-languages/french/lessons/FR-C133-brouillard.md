@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES85-BROUILLARD
 prerequisites: [FR-C133-chaleur, FR-C133-orage]
 sounds: []
 roots: []
+etymology_hook: "brouillard — from the verb 'to blur', Vulgar Latin *brodiculare 'to jumble together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C133-orage]
 <!-- hl-knowledge: introduces=[FR-LEX-C133-QUALITES85-05]; assesses=[] -->
 
 **le brouillard** — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brouillard** — built from Old French *broillas*, "fog", from the verb for "to blur, to mix up", ← Vulgar Latin *\*brodiculare*, "to jumble together" (EtymDB 2.1), with *-ard*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

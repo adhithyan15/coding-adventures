@@ -14,7 +14,8 @@ romanization: "naṭikar"
 concept_tag: TA-VELAI193-NATIKAR
 prerequisites: [TA-C192-caka-uliyar, TA-C193-parvaiyalar]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "நடிகர் — naṭi 'to act', from Sanskrit naṭ- 'to act, to dance', + -kar 'the one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C193-parvaiyalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C193-VELAI193-02]; assesses=[] -->
 
 **நடிகர்** — *naṭikar* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடிகர்** (*naṭikar*) is built on *naṭi*, "to act", from Sanskrit *naṭ-*, "to act, to dance" (as in *naṭana*), with *-kar*, "the one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Gifts, Welcomes, Apologies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3a5d6e01e31401b",
+  "sourceHash": "fnv1a64:ec0dda59e149ee9a",
   "lessons": [
     {
       "id": "TA-C99-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e676a49ea8b6277c",
+      "sourceHash": "fnv1a64:6e70363624ca76e8",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடியுங்கள் (kuṭiyuṅkaḷ) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi. It is kuḍi, \"drink\", with the polite ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38e3a268d4483d46",
+      "sourceHash": "fnv1a64:f31f18d8c0455390",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அன்பளிப்பு (aṉpaḷippu) is native: aṉpu, \"affection\" (DEDR 330), and aḷippu, \"giving\", from aḷi, \"to show favour, to bestow\" (DEDR 301). A gift given out of love."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df2a02456b0668b1",
+      "sourceHash": "fnv1a64:3bb321b0e05107f1",
       "notice": null,
       "blocks": [
         {
@@ -314,6 +336,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நல்வரவு (nalvaravu) is native: nal, \"good\" (DEDR 3610), and varavu, \"coming\" (DEDR 5270): \"a good coming\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -324,7 +357,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +406,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc54c85c9ab72349",
+      "sourceHash": "fnv1a64:e344c8a420ca6ebc",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மன்னித்துவிடுங்கள் (maṉṉittuviṭuṅkaḷ) is maṉṉi, \"to pardon\", with viṭu, \"to let go\" (DEDR 5393), and the polite ending. The origin of maṉṉi is uncertain: DEDR has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0433b5dc963ba38e",
+      "sourceHash": "fnv1a64:b133ee69a2a811b2",
       "notice": null,
       "blocks": [
         {
@@ -568,6 +612,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கவலைப்படாதீர்கள் (kavalaippaṭātīrkaḷ) is native: kavalai, \"worry\" (DEDR 1328), and paṭu, \"to experience, to undergo\" (DEDR 3853), with the polite negative: \"do not undergo worry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -578,7 +633,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -627,7 +682,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

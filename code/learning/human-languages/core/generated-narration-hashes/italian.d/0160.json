@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 160,
-  "sourceHash": "fnv1a64:3403ba49e1488eaa",
+  "sourceHash": "fnv1a64:7be60022a7836247",
   "lessonIds": [
     "IT-C160-conto",
     "IT-C160-mancia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch160.txt",
   "json": "italian/narration/ch160.json",
-  "textHash": "fnv1a64:eacb9d631edc4d10",
-  "jsonHash": "fnv1a64:06b2a15f9608237e",
+  "textHash": "fnv1a64:5d3bb1247937520d",
+  "jsonHash": "fnv1a64:bc5b6657638ffe4a",
   "findings": []
 }

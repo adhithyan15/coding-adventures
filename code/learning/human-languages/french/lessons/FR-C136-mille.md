@@ -13,7 +13,8 @@ gloss: "a thousand"
 concept_tag: FR-NOMBRES88-MILLE
 prerequisites: [FR-C136-soixante-dix, FR-C136-quatre-vingt-dix]
 sounds: []
-roots: []
+roots: [mille-latin]
+etymology_hook: "mille ← Latin mille 'a thousand' — English mile, a thousand paces"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C136-quatre-vingt-dix]
 <!-- hl-knowledge: introduces=[FR-LEX-C136-NOMBRES88-05]; assesses=[] -->
 
 **mille** — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mille** ← Latin *mille*, "a thousand" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

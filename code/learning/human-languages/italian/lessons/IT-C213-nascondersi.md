@@ -13,7 +13,8 @@ gloss: "to hide oneself"
 concept_tag: IT-VERB-NASCONDERSI
 prerequisites: [IT-C212-collegare, IT-C213-mescolare]
 sounds: []
-roots: []
+roots: [abscondere-latin]
+etymology_hook: "nascondersi — nascondere 'to hide' + -si 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C213-mescolare]
 <!-- hl-knowledge: introduces=[IT-LEX-C213-VERBI213-02]; assesses=[] -->
 
 **nascondersi** — "to hide oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nascondersi** is *nascondere*, "to hide", with *-si*, "oneself". *nascondere* ← Late Latin *inabscondere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

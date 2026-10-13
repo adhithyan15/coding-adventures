@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 102,
-  "sourceHash": "fnv1a64:4d66fa19c4dcb3b7",
+  "sourceHash": "fnv1a64:0afa0d3f2293517d",
   "lessonIds": [
     "PT-C102-mochila",
     "PT-C102-mundo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch102.txt",
   "json": "portuguese/narration/ch102.json",
-  "textHash": "fnv1a64:fe9bbf310f1d7e02",
-  "jsonHash": "fnv1a64:bca82049098d54fe",
+  "textHash": "fnv1a64:e794d0072a19ccce",
+  "jsonHash": "fnv1a64:c6ef9a51ec39a698",
   "findings": []
 }

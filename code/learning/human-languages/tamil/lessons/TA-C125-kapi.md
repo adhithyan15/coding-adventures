@@ -14,7 +14,8 @@ romanization: "kāpi"
 concept_tag: TA-THINGS125-KAPI
 prerequisites: [TA-C125-tocai, TA-C125-vatai, TA-C29-kaalai-vanakkam, TA-C30-maalai-vanakkam, TA-C30-maalai-vanakkam, TA-C25-iniya-iravu, TA-C25-goodnight-alternatives]
 sounds: []
-roots: []
+roots: [english-coffee]
+etymology_hook: "காபி ← English coffee"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C125-vatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **காபி** — *kāpi* — "coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காபி** (*kāpi*) is a loan from English *coffee*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

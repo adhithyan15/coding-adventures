@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 209,
-  "sourceHash": "fnv1a64:b67c2891e599e887",
+  "sourceHash": "fnv1a64:5832e743948f83a5",
   "lessonIds": [
     "PT-C209-desaparecer",
     "PT-C209-gravar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch209.txt",
   "json": "portuguese/narration/ch209.json",
-  "textHash": "fnv1a64:95fa6814b93031d3",
-  "jsonHash": "fnv1a64:c2eafae063c9699b",
+  "textHash": "fnv1a64:9657ffa458ff7798",
+  "jsonHash": "fnv1a64:bbf97de8cebb0e4a",
   "findings": []
 }

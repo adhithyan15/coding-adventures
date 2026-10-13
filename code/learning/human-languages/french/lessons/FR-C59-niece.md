@@ -13,7 +13,8 @@ gloss: "a niece"
 concept_tag: FR-FAMILLE11-NIECE
 prerequisites: [FR-C58-petite-fille, FR-C59-neveu]
 sounds: []
-roots: []
+roots: [nepos-latin]
+etymology_hook: "nièce ← Vulgar Latin *neptia, from Latin neptis 'granddaughter' — English niece"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C59-neveu]
 <!-- hl-knowledge: introduces=[FR-LEX-C59-FAMILLE11-02]; assesses=[] -->
 
 **la nièce** — "a niece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nièce** ← Vulgar Latin *\*neptia*, from Latin *neptis*, "granddaughter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

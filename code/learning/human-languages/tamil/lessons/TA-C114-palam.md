@@ -14,7 +14,8 @@ romanization: "pālam"
 concept_tag: TA-LOC114-PALAM
 prerequisites: [TA-C114-natuvil, TA-C114-teru]
 sounds: []
-roots: []
+roots: [dravidian-paalam-bridge]
+etymology_hook: "பாலம் — native Dravidian (DEDR 4099); Malayalam pālam, Kannada pāla"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C114-teru]
 <!-- hl-knowledge: introduces=[TA-LEX-C114-LOC114-03]; assesses=[] -->
 
 **பாலம்** — *pālam* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாலம்** (*pālam*) is native Dravidian. DEDR 4099 lists Malayalam *pālam* and Kannada *pāla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

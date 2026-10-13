@@ -14,7 +14,8 @@ romanization: "kaṭṭiṭam"
 concept_tag: TA-IDAM205-KATTITAM
 prerequisites: [TA-C205-currula, TA-C205-tiraiyarankam]
 sounds: []
-roots: []
+roots: [dravidian-kattu-tie, dravidian-idam-place]
+etymology_hook: "கட்டிடம் — native: kaṭṭu 'to build' (DEDR 1147) + iṭam 'place' (DEDR 434)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C205-tiraiyarankam]
 <!-- hl-knowledge: introduces=[TA-LEX-C205-IDAM205-03]; assesses=[] -->
 
 **கட்டிடம்** — *kaṭṭiṭam* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட்டிடம்** (*kaṭṭiṭam*) is native: *kaṭṭu*, "to build" (DEDR 1147), and *iṭam*, "place" (DEDR 434): "the built place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

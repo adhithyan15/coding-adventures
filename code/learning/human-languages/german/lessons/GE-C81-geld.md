@@ -13,7 +13,8 @@ gloss: "money"
 concept_tag: GE-SCHULE-GELD
 prerequisites: [GE-C81-bild, GE-C81-tasche]
 sounds: []
-roots: []
+roots: [germanic-gelda]
+etymology_hook: "Geld ← Old High German gelt 'payment' ← Proto-Germanic *geldą — from the same root as English yield"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C81-tasche]
 <!-- hl-knowledge: introduces=[GE-LEX-C81-SCHULE-05]; assesses=[] -->
 
 **das Geld** — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geld** ← Old High German *gelt*, "payment" ← Proto-Germanic *\*geldą*, "reward, payment" — inherited. (EtymDB 2.1) English *yield*, first "to pay", shares its root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

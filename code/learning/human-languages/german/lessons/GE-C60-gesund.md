@@ -13,7 +13,8 @@ gloss: "healthy"
 concept_tag: GE-GEFUEHLE1-GESUND
 prerequisites: [GE-C59-krankenhaus, GE-C59-krank]
 sounds: []
-roots: []
+roots: [germanic-gasundaz]
+etymology_hook: "gesund ← Old High German gisunt ← Proto-Germanic *gasundaz 'whole' — a cousin of English sound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C59-krank]
 <!-- hl-knowledge: introduces=[GE-LEX-C60-GEFUEHLE1-01]; assesses=[] -->
 
 **gesund** — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gesund** ← Old High German *gisunt* ← Proto-Germanic *\*gasundaz*, "sound, whole, healthy" — inherited, a cousin of English *sound*, as in "safe and sound". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

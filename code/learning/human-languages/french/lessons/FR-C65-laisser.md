@@ -13,7 +13,8 @@ gloss: "to leave (something); to let"
 concept_tag: FR-VERB-LAISSER
 prerequisites: [FR-C64-acheter, FR-C64-savoir]
 sounds: []
-roots: []
+roots: [laxare-latin]
+etymology_hook: "laisser ← Latin laxare 'to loosen', from laxus 'slack' — English lax and relax"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C64-savoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C65-VERBES17-01]; assesses=[] -->
 
 **laisser** — "to leave (something); to let".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laisser** ← Old French *laissier* ← Latin *laxare*, "to loosen", from *laxus*, "slack" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

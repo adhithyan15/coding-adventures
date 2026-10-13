@@ -13,7 +13,8 @@ gloss: "a receipt"
 concept_tag: GE-READ143-QUITTUNG
 prerequisites: [GE-C143-termin, GE-C143-oeffnungszeiten]
 sounds: []
-roots: []
+roots: [quietus-latin]
+etymology_hook: "Quittung — from quitt 'free of debt', via French quitte ← Latin quiētus 'at rest'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [GE-C143-oeffnungszeiten]
 [YOU READ: the receipt]
 
 The receipt says **Quittung: Miete, 400 Euro.** The rent is paid: keep it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Quittung** is built on *quitt*, "settled, free of debt", which EtymDB 2.1 lists beside French *quitte* and English *quit*; they go back to Latin *quiētus*, "at rest". A receipt shows you are quit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

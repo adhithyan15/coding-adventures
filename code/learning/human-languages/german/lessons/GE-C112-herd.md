@@ -13,7 +13,8 @@ gloss: "a cooker"
 concept_tag: GE-HAUS112-HERD
 prerequisites: [GE-C112-computer, GE-C112-kuehlschrank]
 sounds: []
-roots: []
+roots: [germanic-herthaz]
+etymology_hook: "Herd ← Old High German herd ← Proto-Germanic *herþaz 'hearth' — the same word as English hearth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C112-kuehlschrank]
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-05]; assesses=[] -->
 
 **der Herd** — "a cooker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Herd** ← Old High German *herd* ← Proto-Germanic *\*herþaz*, "hearth" — inherited, the same word as English *hearth*. (EtymDB 2.1) A cooker took over the hearth's job.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

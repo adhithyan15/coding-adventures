@@ -13,7 +13,8 @@ gloss: "to be useful, to serve"
 concept_tag: IT-VERB-SERVIRE
 prerequisites: [IT-C210-raccogliere, IT-C211-sembrare]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "servire ← Latin servire 'to serve', from servus 'a slave' — English serve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C211-sembrare]
 <!-- hl-knowledge: introduces=[IT-LEX-C211-VERBI211-02]; assesses=[] -->
 
 **servire** — "to be useful, to serve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**servire** ← Latin *servire*, "to serve" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

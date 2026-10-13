@@ -13,7 +13,8 @@ gloss: "a mark, a grade"
 concept_tag: IT-LAV259-VOTO
 prerequisites: [IT-C258-ritorno, IT-C259-universita]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "voto ← Latin votum 'a vow' — English vote and vow share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C259-universita]
 <!-- hl-knowledge: introduces=[IT-LEX-C259-LAV259-02]; assesses=[] -->
 
 **il voto** — "a mark, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voto** ← Latin *votum*, "a vow, a promise" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

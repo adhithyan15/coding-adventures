@@ -13,7 +13,8 @@ gloss: "shame"
 concept_tag: PT-SAUDE181-VERGONHA
 prerequisites: [PT-C181-confianca, PT-C181-coragem]
 sounds: []
-roots: []
+roots: [verecundia-latin]
+etymology_hook: "vergonha ← Latin verecundia 'modesty, shame'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C181-coragem]
 <!-- hl-knowledge: introduces=[PT-LEX-C181-SAUDE181-03]; assesses=[] -->
 
 **a vergonha** — "shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vergonha** ← Latin *verecundia*, "modesty, shame" — inherited. EtymDB 2.1 traces it only to Old Portuguese *vergonna*; it derives Spanish *vergüenza* from *verecundia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

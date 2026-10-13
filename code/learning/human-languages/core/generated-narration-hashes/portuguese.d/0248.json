@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 248,
-  "sourceHash": "fnv1a64:afbc358331537997",
+  "sourceHash": "fnv1a64:e8b1d4f20601937d",
   "lessonIds": [
     "PT-C248-nota",
     "PT-C248-cartao-bancario",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch248.txt",
   "json": "portuguese/narration/ch248.json",
-  "textHash": "fnv1a64:25f78047a4ad49ba",
-  "jsonHash": "fnv1a64:a0e4bfdd01e3623e",
+  "textHash": "fnv1a64:cefce38751fc4e6d",
+  "jsonHash": "fnv1a64:f20b4af09a9abac3",
   "findings": []
 }

@@ -28,7 +28,7 @@ it("adds Malayalam A2 connected composition without a copyable model", () => {
   const completeLesson = lesson?.blocks.map((block) => block.markdown).join("\n") ?? "";
   expect(completeLesson).toContain("no model, sentence bank, or copyable answer");
   expect(completeLesson).toContain("Put away romanization, dictionaries");
-  expect(completeLesson).toContain("either reformed or traditional Malayalam orthography");
+  expect(completeLesson).toMatch(/either reformed or traditional Malayalam\s+orthography/);
   expect(completeLesson).toContain("Task fulfilment and relevant content");
   expect(completeLesson).toContain("Organisation and cohesion");
   expect(completeLesson).toContain("Malayalam vocabulary and grammar");

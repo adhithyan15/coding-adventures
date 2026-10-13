@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES221-PYJAMA
 prerequisites: [FR-C221-ciseaux, FR-C221-montre]
 sounds: []
 roots: []
+etymology_hook: "pyjama ← English pyjamas, from Hindi and Persian 'a leg garment'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C221-montre]
 <!-- hl-knowledge: introduces=[FR-LEX-C221-CHOSES221-03]; assesses=[] -->
 
 **le pyjama** — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pyjama** ← English *pyjamas*, from Hindi *pajama*, from Persian, "a leg garment" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

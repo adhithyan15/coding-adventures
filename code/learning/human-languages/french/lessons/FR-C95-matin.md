@@ -14,6 +14,7 @@ concept_tag: FR-ADJ47-MATIN
 prerequisites: [FR-C95-semaine, FR-C95-mois]
 sounds: []
 roots: []
+etymology_hook: "matin ← Latin matutinum 'early morning' — English matins, the dawn prayers"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C95-mois]
 <!-- hl-knowledge: introduces=[FR-LEX-C95-ADJ47-04]; assesses=[] -->
 
 **le matin** — "the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**matin** ← Latin *matutinum*, "the early part of the day", from *matutinus*, "of the morning" (EtymDB 2.1 records the Latin word) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māttirai"
 concept_tag: TA-NALAM232-MATTIRAI
 prerequisites: [TA-C232-palvali, TA-C232-kayam]
 sounds: []
-roots: []
+roots: [sanskrit-matra]
+etymology_hook: "மாத்திரை ← Sanskrit mātrā 'measure, minute portion' (CDIAL 10023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C232-kayam]
 <!-- hl-knowledge: introduces=[TA-LEX-C232-NALAM232-03]; assesses=[] -->
 
 **மாத்திரை** — *māttirai* — "a tablet, a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாத்திரை** (*māttirai*) is a loan from Sanskrit *mātrā*, "measure, minute portion" (CDIAL 10023). A pill is a measured dose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

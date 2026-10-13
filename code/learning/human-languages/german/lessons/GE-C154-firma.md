@@ -13,7 +13,8 @@ gloss: "a company"
 concept_tag: GE-THING154-FIRMA
 prerequisites: [GE-C153-ziehen, GE-C154-arbeitsplatz]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "Firma ← Italian firma 'signature' ← Latin firmāre 'to make firm' — a firm is the name it signs with"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C154-arbeitsplatz]
 <!-- hl-knowledge: introduces=[GE-LEX-C154-THING154-02]; assesses=[] -->
 
 **die Firma** — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Firma** ← Italian *firma*, "signature" ← Latin *firmāre*, "to confirm" (EtymDB 2.1) — borrowed: a firm is the name it signs with. English *firm* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

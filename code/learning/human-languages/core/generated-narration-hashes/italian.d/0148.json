@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 148,
-  "sourceHash": "fnv1a64:64173212d1120121",
+  "sourceHash": "fnv1a64:b2616eec45fa1900",
   "lessonIds": [
     "IT-C148-tacere",
     "IT-C148-temere",
@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch148.txt",
   "json": "italian/narration/ch148.json",
-  "textHash": "fnv1a64:3c6039b9b7e237a9",
-  "jsonHash": "fnv1a64:3d966d202e26fcd5",
+  "textHash": "fnv1a64:6f735331ada1df4e",
+  "jsonHash": "fnv1a64:0b36ae5d0558dbae",
   "findings": []
 }

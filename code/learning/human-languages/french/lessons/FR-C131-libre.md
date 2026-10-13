@@ -13,7 +13,8 @@ gloss: "free"
 concept_tag: FR-QUALITES83-LIBRE
 prerequisites: [FR-C130-joli, FR-C131-occupe]
 sounds: []
-roots: []
+roots: [liber-latin]
+etymology_hook: "libre ← Latin liber 'free' — English liberty and liberal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C131-occupe]
 <!-- hl-knowledge: introduces=[FR-LEX-C131-QUALITES83-02]; assesses=[] -->
 
 **libre** — "free".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**libre** ← Latin *liber*, "free" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

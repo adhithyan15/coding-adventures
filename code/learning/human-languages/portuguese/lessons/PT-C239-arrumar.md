@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ARRUMAR
 prerequisites: [PT-C239-emagrecer, PT-C239-alimentar]
 sounds: []
 roots: []
+etymology_hook: "arrumar ← Old French arrumer 'to stow a ship's cargo'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C239-alimentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C239-VERBOS239-04]; assesses=[] -->
 
 **arrumar** — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrumar** ← Old French *arrumer*, "to stow a ship's cargo" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

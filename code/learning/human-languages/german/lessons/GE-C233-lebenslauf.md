@@ -13,7 +13,8 @@ gloss: "a CV"
 concept_tag: GE-THING233-LEBENSLAUF
 prerequisites: [GE-C233-laerm, GE-C233-laune]
 sounds: []
-roots: []
+roots: [germanic-libjana]
+etymology_hook: "Lebenslauf — Leben 'life' + -s- + Lauf 'run': the run of a life, after Latin curriculum vitae"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C233-laune]
 <!-- hl-knowledge: introduces=[GE-LEX-C233-THING233-03]; assesses=[] -->
 
 **der Lebenslauf** — "a CV".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lebenslauf** is the noun of *leben*, "to live", + *-s-* + the noun of *laufen*, "to run": the run of a life, a copy of Latin *curriculum vītae*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

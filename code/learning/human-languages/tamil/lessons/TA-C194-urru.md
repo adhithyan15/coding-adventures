@@ -14,7 +14,8 @@ romanization: "ūṟṟu"
 concept_tag: TA-VERB-URRU
 prerequisites: [TA-C193-payirciyalar, TA-C193-taccar]
 sounds: []
-roots: []
+roots: [dravidian-ooru-soak]
+etymology_hook: "ஊற்று — native Dravidian (DEDR 761); Kannada ūṟu 'to spring, ooze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C193-taccar]
 <!-- hl-knowledge: introduces=[TA-LEX-C194-ACT194-01]; assesses=[] -->
 
 **ஊற்று** — *ūṟṟu* — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊற்று** (*ūṟṟu*) is native Dravidian. DEDR 761 lists Kannada *ūṟu*, "to spring, ooze". It is the causative of *ūṟu*, "to flow, to spring": to pour is "to make flow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

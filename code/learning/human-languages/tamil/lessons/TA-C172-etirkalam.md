@@ -14,7 +14,8 @@ romanization: "etirkālam"
 concept_tag: TA-NERAM172-ETIRKALAM
 prerequisites: [TA-C171-orupotum, TA-C171-tamatam]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite, sanskrit-kaala-time]
+etymology_hook: "எதிர்காலம் — native etir 'in front' (DEDR 795) + kālam ← Sanskrit kāla 'time' (CDIAL 3084)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C171-tamatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C172-NERAM172-01]; assesses=[] -->
 
 **எதிர்காலம்** — *etirkālam* — "the future".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எதிர்காலம்** (*etirkālam*) is native *etir*, "in front" (DEDR 795), and *kālam*, "time", from Sanskrit *kāla* (CDIAL 3084): "the time in front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

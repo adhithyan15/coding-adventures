@@ -14,7 +14,8 @@ romanization: "oṭṭu"
 concept_tag: TA-VERB-OTTU
 prerequisites: [TA-C167-totar, TA-C167-iyakku]
 sounds: []
-roots: []
+roots: [dravidian-ottu-stick]
+etymology_hook: "ஒட்டு — native Dravidian (DEDR 958); Malayalam oṭṭuka 'to adhere', Kannada oṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C167-iyakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C167-ACT167-03]; assesses=[] -->
 
 **ஒட்டு** — *oṭṭu* — "to stick, to paste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒட்டு** (*oṭṭu*) is native Dravidian. DEDR 958 lists Malayalam *oṭṭuka*, "to adhere" and Kannada *oṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

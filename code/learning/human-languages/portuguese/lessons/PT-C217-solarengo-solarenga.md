@@ -13,7 +13,8 @@ gloss: "sunny"
 concept_tag: PT-QUAL217-SOLARENGO-SOLARENGA
 prerequisites: [PT-C217-divorciado-divorciada, PT-C217-nublado-nublada]
 sounds: []
-roots: []
+roots: [sol-latin]
+etymology_hook: "solarengo — built on sol 'sun' (← Latin sol)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C217-nublado-nublada]
 <!-- hl-knowledge: introduces=[PT-LEX-C217-QUAL217-03]; assesses=[] -->
 
 **solarengo / solarenga** — "sunny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**solarengo** is built on *sol*, "sun" (← Latin *sol*), with the endings *-ar* and *-engo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

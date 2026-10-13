@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-12 (elevation shadows leave the degradation report)
+
+- A non-inset CSS `box-shadow` paired with a supported Mosaic `elevation`
+  token now counts as consumed when Qt emits the equivalent native
+  `MultiEffect` depth (#17386).
+- Standalone shadows, inset shadows, and unsupported elevation values remain
+  explicit degradation debt. Emitted QML is unchanged.
+
+## 2026-10-12 (controls preserve fill widths)
+
+- Exact `width: 100%` declarations on `Input`, `HostInput`, and `HostButton`
+  now lower to Qt Quick's native `Layout.fillWidth: true` contract (#17338).
+- Other percentages, intrinsic widths, and controls whose states switch to a
+  scalar width remain explicit degradations instead of being flattened into
+  incorrect geometry.
+- Journal's inverse style-degradation ratchet drops its now-stale Qt `width`
+  pin while retaining the independently measured `min-height` gap.
+
 ## 2026-10-10 (HostDraggable preserves inherited text presentation)
 
 - Supported `color` and `font-size` declarations on `HostDraggable` now reach

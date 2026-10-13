@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Asking a Question — Three Ways, and Which One to Use",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:97f04bd9760d41e6",
+  "sourceHash": "fnv1a64:0ba150210b1c1d38",
   "lessons": [
     {
       "id": "FR-C32-intonation",
@@ -683,7 +683,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58ed603bdc5383c3",
+      "sourceHash": "fnv1a64:7bcaa32debce87db",
       "notice": null,
       "blocks": [
         {
@@ -714,23 +714,27 @@
             },
             {
               "kind": "speech",
-              "text": "Take it apart: pour (\"for\") + quoi (\"what\"). For what? French built its why out of two words you can already see, and English does the same thing in what for?"
+              "text": "Take it apart:"
             },
             {
               "kind": "speech",
-              "text": "And the answer is built to match:"
+              "text": "pour (\"for\") + quoi (\"what\") becomes pourquoi."
             },
             {
               "kind": "speech",
-              "text": "Pourquoi? — Why? Parce que… — Because…"
+              "text": "For what? French built its why out of two words you can still see inside it, and English does the same thing in what for?"
             },
             {
               "kind": "speech",
-              "text": "Par ce que is \"by that which\". So the question is for what and the answer is by that which — a matched pair, and the reason this book teaches them together rather than one now and one later."
+              "text": "Pourquoi? — Why?"
             },
             {
               "kind": "speech",
-              "text": "That gives you the last of the five question words, and with parce que you can now join two clauses into one sentence, which is more than a question: it is the beginning of connected speech."
+              "text": "The answer, \"because,\" is built to match — by this that against for what — and it gets a lesson of its own a few chapters on, where it joins two clauses into one sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives you the last of the five question words."
             }
           ]
         },
@@ -772,7 +776,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is pourquoi made of? (pour + quoi — for what.) What answers it? (Parce que… — because.) And what is parce que literally? (By that which.)"
+              "text": "What is pourquoi made of? (Two words, \"for\" and \"what\" — for what?) What does English build the same way? (What for?)"
             }
           ]
         }

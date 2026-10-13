@@ -45,11 +45,13 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-style": 4,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when SwiftUI emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "cursor": 2,
         "display": 1,
-        "elevation": 10,
         "flex-direction": 1,
         # Compact TaskApp scroll/name wrappers need flexible sizing in Flutter.
         # SwiftUI currently preserves the authored structure but reports those
@@ -75,7 +77,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-left-style": 1,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Compose emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "cursor": 2,
         "display": 1,
@@ -112,7 +117,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-top-style": 1,
         "border-top-width": 1,
         "border-width": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Qt emits equivalent MultiEffect depth. The
+        # inset theme-toggle moon remains unsupported drawing-effect debt.
+        "box-shadow": 1,
         "box-sizing": 1,
         "color": 2,
         # The compact task identity uses flexible name sizing in Flutter. Qt
@@ -132,7 +140,9 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "text-align": 6,
         "top": 6,
         "transform": 2,
-        "width": 18,
+        # Exact control `width: 100%` declarations now lower to
+        # `Layout.fillWidth`; the three remaining drops are Text geometry.
+        "width": 3,
     },
     "flutter": {
         "background": 2,

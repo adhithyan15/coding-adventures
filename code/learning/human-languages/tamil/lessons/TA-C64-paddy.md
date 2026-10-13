@@ -11,7 +11,8 @@ romanization: "nel"
 concept_tag: TA-NOUN-PADDY
 prerequisites: [TA-C63-humility, TA-C62-only, TA-C63-request]
 sounds: []
-roots: []
+roots: [dravidian-nel-paddy]
+etymology_hook: "நெல் — native Dravidian (DEDR 3753); Malayalam nel, Kannada nel"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C63-humility]
 Rice still in its husk — standing in the வயல், cut, carried, stored, but not yet அரிசி. The two words do not trade places: நெல் goes into the field and அரிசி comes out of the kitchen, and the husking is the border between them.
 
 Kannada ಭತ್ತ (*bhatta*) and Telugu వరి (*vari*) each have their own word for it, so this is one the three do not share.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நெல்** (*nel*) is native Dravidian. DEDR 3753 lists Malayalam *nel* and Kannada *nel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

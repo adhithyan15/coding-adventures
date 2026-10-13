@@ -13,7 +13,8 @@ gloss: "a painter"
 concept_tag: FR-CHOSES249-PEINTRE
 prerequisites: [FR-C249-poeme, FR-C249-ecrivain]
 sounds: []
-roots: []
+roots: [pingere-latin]
+etymology_hook: "peintre ← Latin pictor 'a painter' — the noun beside peindre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C249-ecrivain]
 <!-- hl-knowledge: introduces=[FR-LEX-C249-CHOSES249-05]; assesses=[] -->
 
 **le peintre** — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peintre** ← Old French *peintre* (EtymDB 2.1) ← Vulgar Latin *\*pinctor* ← Latin *pictor*, "a painter" (Lewis & Short) — inherited: the noun beside *peindre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

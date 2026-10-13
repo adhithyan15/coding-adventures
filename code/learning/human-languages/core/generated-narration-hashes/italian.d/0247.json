@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 247,
-  "sourceHash": "fnv1a64:48bd845e84d03a76",
+  "sourceHash": "fnv1a64:e9ebc3b1cb48ee53",
   "lessonIds": [
     "IT-C247-bottone",
     "IT-C247-taglia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch247.txt",
   "json": "italian/narration/ch247.json",
-  "textHash": "fnv1a64:c0831dea9b24c51e",
-  "jsonHash": "fnv1a64:754d776cf695874d",
+  "textHash": "fnv1a64:be90838a8072bd9d",
+  "jsonHash": "fnv1a64:32650ed5ef6f99d6",
   "findings": []
 }

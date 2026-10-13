@@ -13,7 +13,8 @@ gloss: "hair (on the head)"
 concept_tag: IT-CORPO2-CAPELLI
 prerequisites: [IT-C38-spalla, IT-C38-schiena]
 sounds: []
-roots: []
+roots: [capillus-latin]
+etymology_hook: "capelli, plural of capello ← Latin capillus 'a hair' — English capillary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C38-schiena]
 <!-- hl-knowledge: introduces=[IT-LEX-C38-CORPO2-05]; assesses=[] -->
 
 **i capelli** — "hair (on the head)". Plural in form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capelli** is the plural of *capello* ← Latin *capillus*, "a hair" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

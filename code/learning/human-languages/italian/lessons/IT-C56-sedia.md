@@ -14,6 +14,7 @@ concept_tag: IT-CASA1-SEDIA
 prerequisites: [IT-C56-finestra, IT-C56-tavolo]
 sounds: []
 roots: []
+etymology_hook: "sedia — built from the verb for 'to sit', from Latin sedere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C56-tavolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C56-CASA1-04]; assesses=[] -->
 
 **la sedia** — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sedia** — built from the Italian verb for "to sit", which ← Latin *sedere*, "to sit". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

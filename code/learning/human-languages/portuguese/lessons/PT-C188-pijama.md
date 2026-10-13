@@ -14,6 +14,7 @@ concept_tag: PT-COISAS188-PIJAMA
 prerequisites: [PT-C188-gaveta, PT-C188-poltrona]
 sounds: []
 roots: []
+etymology_hook: "pijama ← English pyjamas, from Hindi-Urdu pajama, from Persian 'leg garment'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C188-poltrona]
 <!-- hl-knowledge: introduces=[PT-LEX-C188-COISAS188-04]; assesses=[] -->
 
 **o pijama** — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pijama** ← English *pyjamas* (EtymDB 2.1) — borrowed. English took it from Hindi-Urdu *pājāma*, from Persian, "leg garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kēmarā"
 concept_tag: TA-PORUL220-KEMARA
 prerequisites: [TA-C219-vellam, TA-C220-vicaippalakai]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "கேமரா ← English camera"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C220-vicaippalakai]
 <!-- hl-knowledge: introduces=[TA-LEX-C220-PORUL220-02]; assesses=[] -->
 
 **கேமரா** — *kēmarā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கேமரா** (*kēmarā*) is a loan from English *camera*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

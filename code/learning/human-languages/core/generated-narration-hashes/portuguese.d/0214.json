@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 214,
-  "sourceHash": "fnv1a64:c46d74035756d69a",
+  "sourceHash": "fnv1a64:407d36c44e121f2d",
   "lessonIds": [
     "PT-C214-apenas",
     "PT-C214-juntos-juntas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch214.txt",
   "json": "portuguese/narration/ch214.json",
-  "textHash": "fnv1a64:532f37b1bdfc770a",
-  "jsonHash": "fnv1a64:71fec0d3f10111b6",
+  "textHash": "fnv1a64:0e3cb77371c0ecb9",
+  "jsonHash": "fnv1a64:56c487f5e2fce9a1",
   "findings": []
 }

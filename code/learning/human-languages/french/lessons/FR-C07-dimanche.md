@@ -13,7 +13,7 @@ sounds: [nasal-an, ch-sh]
 roots: [dies-latin, dominica-latin]
 etymology_hook: "dimanche ← diēs Dominica, 'the Lord's day' — the only weekday where the diēs moved to the FRONT"
 duration:
-  max_seconds: 200
+  max_seconds: 245
 requires:
   knowledge: [FR-LEX-SAMEDI-09, FR-GRAM-DI-JOUR-03]
 introduces:
@@ -76,6 +76,11 @@ same Roman week:
 
 Five days of Roman sky, then two days where a later faith wrote over it. The
 French week is a record of both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dimanche** ← Old French *diemenche* ← Latin *dies Dominica*, "the Lord's day" — inherited. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-DIMANCHE-11, FR-ETYMON-DIMANCHE-DOMINICA-12, FR-LEX-SAMEDI-09, FR-GRAM-DI-JOUR-03] -->

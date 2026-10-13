@@ -13,7 +13,8 @@ gloss: "skin"
 concept_tag: GE-KOERPER2-HAUT
 prerequisites: [GE-C57-gesicht, GE-C57-blut]
 sounds: []
-roots: []
+roots: [germanic-hudiz]
+etymology_hook: "Haut ← Old High German hūt ← Proto-Germanic *hūdiz 'hide' — the same word as English hide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C57-blut]
 <!-- hl-knowledge: introduces=[GE-LEX-C57-KOERPER2-03]; assesses=[] -->
 
 **die Haut** — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Haut** ← Old High German *hūt* ← Proto-Germanic *\*hūdiz*, "hide" — inherited, the same word as English *hide*, an animal's skin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

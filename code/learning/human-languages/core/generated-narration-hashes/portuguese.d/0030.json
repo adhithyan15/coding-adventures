@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 30,
-  "sourceHash": "fnv1a64:7660fc1fefca1870",
+  "sourceHash": "fnv1a64:146ef678affdd615",
   "lessonIds": [
     "PT-C30-braco",
     "PT-C30-perna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch30.txt",
   "json": "portuguese/narration/ch30.json",
-  "textHash": "fnv1a64:7981a97d4acb773b",
-  "jsonHash": "fnv1a64:1a12193f83e50707",
+  "textHash": "fnv1a64:509ec426f3379076",
+  "jsonHash": "fnv1a64:ac1b94997f4f191a",
   "findings": []
 }

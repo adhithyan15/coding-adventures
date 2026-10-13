@@ -13,7 +13,8 @@ gloss: "the chest"
 concept_tag: IT-OGGETTI102-PETTO
 prerequisites: [IT-C102-gente, IT-C102-donna]
 sounds: []
-roots: []
+roots: [pectus-latin]
+etymology_hook: "petto ← Latin pectus 'breast' — English pectoral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C102-donna]
 <!-- hl-knowledge: introduces=[IT-LEX-C102-OGGETTI102-05]; assesses=[] -->
 
 **il petto** — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**petto** ← Latin *pectus*, "breast" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

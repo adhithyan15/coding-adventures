@@ -14,6 +14,7 @@ concept_tag: PT-COISAS218-GORJETA
 prerequisites: [PT-C218-pequeno-almoco, PT-C218-lanche]
 sounds: []
 roots: []
+etymology_hook: "gorjeta — 'something for the throat': an old throat word (from French gorge) + -eta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C218-lanche]
 <!-- hl-knowledge: introduces=[PT-LEX-C218-COISAS218-03]; assesses=[] -->
 
 **a gorjeta** — "a tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gorjeta** is "something for the throat": built from an old word for the throat and *-eta*, "little" (EtymDB 2.1). That word came from French *gorge*, "throat" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

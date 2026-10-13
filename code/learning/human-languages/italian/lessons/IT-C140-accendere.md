@@ -13,7 +13,8 @@ gloss: "to switch on, to light"
 concept_tag: IT-VERB-ACCENDERE
 prerequisites: [IT-C139-la-ricevuta, IT-C139-lappuntamento]
 sounds: []
-roots: []
+roots: [accendere-latin]
+etymology_hook: "accendere ← Latin accendere 'to kindle' — English incendiary shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C139-lappuntamento]
 <!-- hl-knowledge: introduces=[IT-LEX-C140-VERBI140-01]; assesses=[] -->
 
 **accendere** — "to switch on, to light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accendere** ← Latin *accendere*, "to kindle" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

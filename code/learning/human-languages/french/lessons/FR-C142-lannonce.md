@@ -13,7 +13,8 @@ gloss: "an advert, an announcement"
 concept_tag: FR-LIRE142-LANNONCE
 prerequisites: [FR-C142-lavis, FR-C142-le-loyer]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "annonce — from the verb 'to announce', Latin annuntiare — English announce"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [FR-C142-le-loyer]
 
 The advert says **Chambre libre. Loyer : 400 euros.** A room is free, at 400 a
 month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annonce** — formed from the verb for "to announce", ← Latin *annuntiare*, "to make known", from *nuntius*, "a messenger" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

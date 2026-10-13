@@ -14,7 +14,8 @@ romanization: "pōṉa"
 concept_tag: TA-KALAM158-PONA
 prerequisites: [TA-C158-camipattil, TA-C158-erkanave]
 sounds: []
-roots: []
+roots: [po-go-dravidian]
+etymology_hook: "போன — native Dravidian (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C158-erkanave]
 <!-- hl-knowledge: introduces=[TA-LEX-C158-KALAM158-03]; assesses=[] -->
 
 **போன** — *pōṉa* — "last, previous". It is the past form of **போ**, "to go", used before a noun: **போன வாரம்** — *pōṉa vāram* — "last week"; **போன வருடம்** — *pōṉa varuṭam* — "last year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போன** (*pōṉa*) is native Dravidian (DEDR 4572). It is the past of *pō*, "to go": "the one that has gone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

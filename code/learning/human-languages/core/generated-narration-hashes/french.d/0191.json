@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 191,
-  "sourceHash": "fnv1a64:bd3bdecb01a0fdf4",
+  "sourceHash": "fnv1a64:ebff167f05ee97d1",
   "lessonIds": [
     "FR-C191-simple",
     "FR-C191-complique-compliquee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch191.txt",
   "json": "french/narration/ch191.json",
-  "textHash": "fnv1a64:43c1c2bce473c794",
-  "jsonHash": "fnv1a64:2da9dcdc5c1f76e4",
+  "textHash": "fnv1a64:e4ef00c4cdcf7910",
+  "jsonHash": "fnv1a64:e60c762645bd3bd2",
   "findings": []
 }

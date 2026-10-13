@@ -14,7 +14,8 @@ romanization: "roṭṭi"
 concept_tag: TA-PORUL214-ROTTI
 prerequisites: [TA-C214-ilanir, TA-C214-mavu]
 sounds: []
-roots: []
+roots: [hindustani-roti]
+etymology_hook: "ரொட்டி ← Hindustani roṭī 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C214-mavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C214-PORUL214-05]; assesses=[] -->
 
 **ரொட்டி** — *roṭṭi* — "bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரொட்டி** (*roṭṭi*) is a loan from Hindustani *roṭī*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

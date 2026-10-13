@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 254,
-  "sourceHash": "fnv1a64:44698d6fe80079e2",
+  "sourceHash": "fnv1a64:18dc8a7127ef67a7",
   "lessonIds": [
     "PT-C254-marisco",
     "PT-C254-camarao",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch254.txt",
   "json": "portuguese/narration/ch254.json",
-  "textHash": "fnv1a64:4c5ae584dfe3e8c1",
-  "jsonHash": "fnv1a64:a5fa5731f42bbd7a",
+  "textHash": "fnv1a64:da3ff2b96cba8f48",
+  "jsonHash": "fnv1a64:0e90d5cf628d49c0",
   "findings": []
 }

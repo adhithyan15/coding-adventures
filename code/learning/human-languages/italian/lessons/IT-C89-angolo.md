@@ -13,7 +13,8 @@ gloss: "a corner"
 concept_tag: IT-LUOGHI89-ANGOLO
 prerequisites: [IT-C89-fabbrica, IT-C89-ufficio]
 sounds: []
-roots: []
+roots: [angulus-latin]
+etymology_hook: "angolo ← Latin angulus 'corner' — English angle is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C89-ufficio]
 <!-- hl-knowledge: introduces=[IT-LEX-C89-LUOGHI89-03]; assesses=[] -->
 
 **l'angolo** — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**angolo** ← Latin *angulus*, "corner" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

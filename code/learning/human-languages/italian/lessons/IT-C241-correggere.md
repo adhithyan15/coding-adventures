@@ -13,7 +13,8 @@ gloss: "to correct"
 concept_tag: IT-VERB-CORREGGERE
 prerequisites: [IT-C240-svolgere, IT-C241-consegnare]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "correggere ← Latin corrigere 'to set straight' — English correct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C241-consegnare]
 <!-- hl-knowledge: introduces=[IT-LEX-C241-VERBI241-02]; assesses=[] -->
 
 **correggere** — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correggere** ← Latin *corrigere*, "to set straight" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

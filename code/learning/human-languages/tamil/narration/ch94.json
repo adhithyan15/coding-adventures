@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "When You Are Lost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:407432ddf7968241",
+  "sourceHash": "fnv1a64:d51f3e107f465a68",
   "lessons": [
     {
       "id": "TA-C94-dontunderstand",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:effaad9ac31d6184",
+      "sourceHash": "fnv1a64:4aebbd22038c0458",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புரியவில்லை (puriyavillai) is puri, \"to become clear\", with native illai, \"not\" (DEDR 2559). As an earlier lesson said, whether this puri is one root with an older puri, \"to do\", is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7a13be1ecc00bc66",
+      "sourceHash": "fnv1a64:7f5615450da8499b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எழுதுங்கள் (eḻutuṅkaḷ) is native Dravidian. DEDR 853 lists Malayalam eḻutuka. The ending -uṅkaḷ makes it a polite request."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -200,7 +222,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10d97a8f958efc8f",
+      "sourceHash": "fnv1a64:aa140199492b352e",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இன்னொரு முறை (iṉṉoru muṟai) is native: iṉṉoru, \"one more\", from iṉṉum, \"more\" (DEDR 410), and oru, \"one\"; and muṟai, \"order, turn, time\" (DEDR 5015)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -327,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11c033a27a489810",
+      "sourceHash": "fnv1a64:efc9164bfabaec3b",
       "notice": null,
       "blocks": [
         {
@@ -444,6 +477,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என்ன சொன்னீர்கள்? (eṉṉa coṉṉīrkaḷ?) is native: eṉṉa, \"what\" (DEDR 5151), and coṉṉīrkaḷ, \"you said\", the past of col, \"to say\" (DEDR 2855)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -454,7 +498,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -503,7 +547,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

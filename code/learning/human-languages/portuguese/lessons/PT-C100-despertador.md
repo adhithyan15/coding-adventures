@@ -14,6 +14,7 @@ concept_tag: PT-COISAS100-DESPERTADOR
 prerequisites: [PT-C99-massa, PT-C99-pera]
 sounds: []
 roots: []
+etymology_hook: "despertador — 'the waker': built from the verb to wake + -dor 'one that does'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C99-pera]
 <!-- hl-knowledge: introduces=[PT-LEX-C100-COISAS100-01]; assesses=[] -->
 
 **o despertador** — "an alarm clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**despertador** is "the waker": built from the verb "to wake up" and *-dor*, "one that does" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

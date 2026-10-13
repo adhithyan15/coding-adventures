@@ -14,6 +14,7 @@ concept_tag: PT-TRABALHO111-BOMBEIRO
 prerequisites: [PT-C111-advogado, PT-C111-engenheiro]
 sounds: []
 roots: []
+etymology_hook: "bombeiro — 'pump man': built from the pump word + -eiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C111-engenheiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C111-TRABALHO111-04]; assesses=[] -->
 
 **o bombeiro** — "a firefighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bombeiro** is "the pump man": built from the word for a pump and *-eiro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

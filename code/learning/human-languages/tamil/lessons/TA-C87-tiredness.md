@@ -11,7 +11,8 @@ romanization: "kaḷaippu"
 concept_tag: TA-UNWELL-TIRED
 prerequisites: [TA-C61-hunger, TA-C61-sleep]
 sounds: []
-roots: []
+roots: [tamil-kalai-weary]
+etymology_hook: "களைப்பு — noun of kaḷai 'to be weary'; native-looking, but DEDR has no entry for it, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C61-sleep]
 
 **எனக்குக் களைப்பாக இருக்கிறது** — "I feel tired", literally "to me it is tired-ly". The person
 sits in **எனக்கு**, "to me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**களைப்பு** (*kaḷaippu*) is the noun of *kaḷai*, "to be weary". It looks native, but DEDR has no entry for this verb (its *kaḷai* means "to weed"), so the origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kaṭṭil"
 concept_tag: TA-NOUN-BED
 prerequisites: [TA-C70-table, TA-C68-price, TA-C69-bus]
 sounds: []
-roots: []
+roots: [dravidian-kattil-cot]
+etymology_hook: "கட்டில் — native Dravidian (DEDR 1145); Malayalam kaṭṭil, Telugu kaṭli 'litter'"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ the கட்டில்.
 Its middle is the doubled **ட்ட** you took apart in சட்டை, and it closes on **ல்** — a letter
 with the vowel taken off, exactly like the ண் in வண்டி, except that here there is nothing
 after it to lean on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட்டில்** (*kaṭṭil*) is native Dravidian. DEDR 1145 lists Malayalam *kaṭṭil* and Telugu *kaṭli*, "litter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

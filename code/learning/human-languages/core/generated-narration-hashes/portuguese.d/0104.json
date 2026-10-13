@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 104,
-  "sourceHash": "fnv1a64:d43345db8a136187",
+  "sourceHash": "fnv1a64:44c77f42e2b299f4",
   "lessonIds": [
     "PT-C104-blusa",
     "PT-C104-fato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch104.txt",
   "json": "portuguese/narration/ch104.json",
-  "textHash": "fnv1a64:a875f772de636eae",
-  "jsonHash": "fnv1a64:40066a15b24307cb",
+  "textHash": "fnv1a64:a8bc75183f992e0c",
+  "jsonHash": "fnv1a64:4e827eb60343b887",
   "findings": []
 }

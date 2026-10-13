@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 123,
-  "sourceHash": "fnv1a64:5135b03935e6b27e",
+  "sourceHash": "fnv1a64:443031b134418453",
   "lessonIds": [
     "PT-C123-famoso",
     "PT-C123-importante",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch123.txt",
   "json": "portuguese/narration/ch123.json",
-  "textHash": "fnv1a64:03b93494b1cfad30",
-  "jsonHash": "fnv1a64:a67ec9d16bec5fa2",
+  "textHash": "fnv1a64:8cdddcda809eb150",
+  "jsonHash": "fnv1a64:61f68a240ef89139",
   "findings": []
 }

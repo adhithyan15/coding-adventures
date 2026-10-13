@@ -14,7 +14,8 @@ romanization: "karuttu"
 concept_tag: TA-PORUL277-KARUTTU
 prerequisites: [TA-C277-tolvi, TA-C277-polutupokku]
 sounds: []
-roots: []
+roots: [dravidian-karutu-think]
+etymology_hook: "கருத்து — native Dravidian (DEDR 1283); Malayalam karutuka 'to think'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C277-polutupokku]
 <!-- hl-knowledge: introduces=[TA-LEX-C277-PORUL277-05]; assesses=[] -->
 
 **கருத்து** — *karuttu* — "an opinion, a view".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கருத்து** (*karuttu*) is native Dravidian. DEDR 1283 lists Malayalam *karutuka*, "to think". It comes from *karutu*, "to intend, to consider".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

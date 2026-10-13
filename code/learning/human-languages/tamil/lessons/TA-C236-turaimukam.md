@@ -14,7 +14,8 @@ romanization: "tuṟaimukam"
 concept_tag: TA-IDAM236-TURAIMUKAM
 prerequisites: [TA-C236-arunkatciyakam, TA-C236-cantu]
 sounds: []
-roots: []
+roots: [dravidian-turai-harbour, dravidian-mukam-face]
+etymology_hook: "துறைமுகம் — native: tuṟai 'harbour' (DEDR 3370) + mukam 'face, front' (DEDR 4889)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C236-cantu]
 <!-- hl-knowledge: introduces=[TA-LEX-C236-IDAM236-03]; assesses=[] -->
 
 **துறைமுகம்** — *tuṟaimukam* — "a harbour, a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துறைமுகம்** (*tuṟaimukam*) is native: *tuṟai*, "harbour, landing place" (DEDR 3370), and *mukam*, "face, front" (DEDR 4889).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a desert"
 concept_tag: IT-NATURA119-DESERTO
 prerequisites: [IT-C118-roccia, IT-C119-onda]
 sounds: []
-roots: []
+roots: [desertum-latin]
+etymology_hook: "deserto ← Latin desertum 'a wasteland', from desertus 'abandoned' — English desert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C119-onda]
 <!-- hl-knowledge: introduces=[IT-LEX-C119-NATURA119-02]; assesses=[] -->
 
 **il deserto** — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deserto** ← Latin *desertum*, "a wasteland", from *desertus*, "abandoned" — inherited. EtymDB 2.1 has no row for *deserto*; it derives Old French *desert* and Friulian *disiert* from *desertum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

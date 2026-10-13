@@ -13,7 +13,8 @@ gloss: "to deserve"
 concept_tag: IT-VERB-MERITARE
 prerequisites: [IT-C145-coprire, IT-C145-criticare]
 sounds: []
-roots: []
+roots: [meritare-latin]
+etymology_hook: "meritare ← Latin meritare 'to earn' — English merit shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C145-criticare]
 <!-- hl-knowledge: introduces=[IT-LEX-C146-VERBI146-01]; assesses=[] -->
 
 **meritare** — "to deserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meritare** ← Latin *meritare*, "to earn" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

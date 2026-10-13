@@ -14,6 +14,7 @@ concept_tag: PT-COISAS198-LITRO
 prerequisites: [PT-C198-quantidade, PT-C198-quilo]
 sounds: []
 roots: []
+etymology_hook: "litro ← French litre, from Greek litra, a Sicilian weight"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C198-quilo]
 <!-- hl-knowledge: introduces=[PT-LEX-C198-COISAS198-03]; assesses=[] -->
 
 **o litro** — "a litre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**litro** ← French *litre*, "litre" (EtymDB 2.1) — borrowed. Behind it is Greek *litra*, a Sicilian weight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

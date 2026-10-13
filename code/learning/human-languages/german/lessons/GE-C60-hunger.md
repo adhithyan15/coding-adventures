@@ -13,7 +13,8 @@ gloss: "hunger"
 concept_tag: GE-GEFUEHLE1-HUNGER
 prerequisites: [GE-C60-gesund, GE-C60-durst]
 sounds: []
-roots: []
+roots: [germanic-hungruz]
+etymology_hook: "Hunger ← Old High German hungar ← Proto-Germanic *hungruz — the same word as English hunger"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C60-durst]
 <!-- hl-knowledge: introduces=[GE-LEX-C60-GEFUEHLE1-03]; assesses=[] -->
 
 **der Hunger** — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hunger** ← Old High German *hungar* ← Proto-Germanic *\*hungruz* — inherited, the same word as English *hunger*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

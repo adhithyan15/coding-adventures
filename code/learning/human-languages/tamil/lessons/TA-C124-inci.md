@@ -14,7 +14,8 @@ romanization: "iñci"
 concept_tag: TA-THINGS124-INCI
 prerequisites: [TA-C124-takkali, TA-C124-milakay]
 sounds: []
-roots: []
+roots: [dravidian-inci-ginger]
+etymology_hook: "இஞ்சி — native Dravidian (DEDR 429); Malayalam iñci"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C124-milakay]
 <!-- hl-knowledge: introduces=[TA-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **இஞ்சி** — *iñci* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இஞ்சி** (*iñci*) is native Dravidian. DEDR 429 lists Malayalam *iñci*. The entry compares Sanskrit *śṛṅgavera*, "ginger", and points to the native word for "root", *vēr*, in its second half.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "niṟuvaṉam"
 concept_tag: TA-VELAI223-NIRUVANAM
 prerequisites: [TA-C222-campalam, TA-C223-nerkanal]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "நிறுவனம் — native Dravidian (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C223-nerkanal]
 <!-- hl-knowledge: introduces=[TA-LEX-C223-VELAI223-02]; assesses=[] -->
 
 **நிறுவனம்** — *niṟuvaṉam* — "a company, an organisation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிறுவனம்** (*niṟuvaṉam*) is native Dravidian (DEDR 3675). It comes from *niṟuvu*, "to set up, to establish": a company is something set up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

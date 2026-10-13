@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 148,
-  "sourceHash": "fnv1a64:7b9271b7d21eecf3",
+  "sourceHash": "fnv1a64:d8ca85141ffb14ad",
   "lessonIds": [
     "GE-C148-kosten",
     "GE-C148-leihen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch148.txt",
   "json": "german/narration/ch148.json",
-  "textHash": "fnv1a64:10ef418894658b40",
-  "jsonHash": "fnv1a64:3cd8ee8dc95ad836",
+  "textHash": "fnv1a64:a2a579fbe9c591ef",
+  "jsonHash": "fnv1a64:9df2d1ea174061a1",
   "findings": []
 }

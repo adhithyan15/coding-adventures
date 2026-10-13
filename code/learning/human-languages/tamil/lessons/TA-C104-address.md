@@ -11,7 +11,8 @@ romanization: "mukavari"
 concept_tag: TA-ABOUT-ADDRESS
 prerequisites: [TA-C104-english, TA-C104-wedding]
 sounds: []
-roots: []
+roots: [sanskrit-mukha, dravidian-vari-line]
+etymology_hook: "முகவரி — mukam 'face' ← Sanskrit mukha (CDIAL 10158) + native vari 'line, writing' (DEDR 5263)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C104-wedding]
 **முகவரி** (*mukavari*) — "an address", literally "face-line".
 
 **உங்கள் முகவரி என்ன?** — "what is your address?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முகவரி** (*mukavari*) is "face-line": *mukam*, "face", from Sanskrit *mukha* (CDIAL 10158), and native *vari*, "line, writing" (DEDR 5263).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

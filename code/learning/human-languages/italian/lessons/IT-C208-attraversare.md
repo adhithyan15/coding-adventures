@@ -13,7 +13,8 @@ gloss: "to cross"
 concept_tag: IT-VERB-ATTRAVERSARE
 prerequisites: [IT-C208-applaudire, IT-C208-approfittare]
 sounds: []
-roots: []
+roots: [transversus-latin]
+etymology_hook: "attraversare — a- + traverso 'across', from Latin transversus — English traverse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C208-approfittare]
 <!-- hl-knowledge: introduces=[IT-LEX-C208-VERBI208-03]; assesses=[] -->
 
 **attraversare** — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**attraversare** — built from *traverso*, "across", with *a-*. *traverso* goes back to Latin *transversus*, "turned across" (Lewis & Short). EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

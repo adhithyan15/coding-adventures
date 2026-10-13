@@ -13,7 +13,8 @@ gloss: "a monument"
 concept_tag: PT-COISAS194-MONUMENTO
 prerequisites: [PT-C193-guia, PT-C193-entrada]
 sounds: []
-roots: []
+roots: [monere-latin]
+etymology_hook: "monumento ← Latin monumentum 'a reminder', from monere 'to remind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C193-entrada]
 <!-- hl-knowledge: introduces=[PT-LEX-C194-COISAS194-01]; assesses=[] -->
 
 **o monumento** — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monumento** ← Latin *monumentum*, "a reminder" (Lewis & Short), from *monere*, "to remind" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

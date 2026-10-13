@@ -13,7 +13,8 @@ gloss: "the day before yesterday"
 concept_tag: PT-PAS135-ANTEONTEM
 prerequisites: [PT-C134-nem, PT-C135-recentemente]
 sounds: []
-roots: []
+roots: [noctem]
+etymology_hook: "anteontem = ante 'before' + ontem 'yesterday', from Latin ad noctem 'at night'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C135-recentemente]
 <!-- hl-knowledge: introduces=[PT-LEX-C135-PAS135-02]; assesses=[] -->
 
 **anteontem** — "the day before yesterday". One day further back than yesterday: **Anteontem escrevi uma mensagem.** — "The day before yesterday I wrote a message." **escrevi** is the one-word past, like **falei**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anteontem** is built from *ante*, "before", and *ontem*, "yesterday", which goes back to Latin *ad noctem*, "at night" (EtymDB 2.1 lists Galician *onte* and Spanish *anoche* as its cousins).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

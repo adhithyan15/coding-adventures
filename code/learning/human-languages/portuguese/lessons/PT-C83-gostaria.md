@@ -13,7 +13,8 @@ gloss: "I would like"
 concept_tag: PT-QUERER83-GOSTARIA
 prerequisites: [PT-C82-levar, PT-C83-querer]
 sounds: []
-roots: []
+roots: [gustare-latin]
+etymology_hook: "gostaria — a form of gostar ← Latin gustare 'to taste' — English gusto shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C83-querer]
 <!-- hl-knowledge: introduces=[PT-LEX-C83-QUERER83-02]; assesses=[] -->
 
 **gostaria** — "I would like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gostaria** is a form of *gostar* ← Latin *gustare*, "to taste" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

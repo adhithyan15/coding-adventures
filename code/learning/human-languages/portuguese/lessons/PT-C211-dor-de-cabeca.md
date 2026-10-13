@@ -13,7 +13,8 @@ gloss: "a headache"
 concept_tag: PT-SAUDE211-DOR-DE-CABECA
 prerequisites: [PT-C211-osso, PT-C211-alergia]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "dor de cabeça — 'pain of head': dor ← Latin dolor; cabeça ← Vulgar Latin *capitia"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C211-alergia]
 <!-- hl-knowledge: introduces=[PT-LEX-C211-SAUDE211-05]; assesses=[] -->
 
 **a dor de cabeça** — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dor de cabeça** is "pain of head": *dor* ← Latin *dolor* (EtymDB 2.1), and *cabeça* ← Vulgar Latin *\*capitia* (EtymDB 2.1), from Latin *caput*, "head".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "toḻiṟcālai"
 concept_tag: TA-VELAI223-TOLIRCALAI
 prerequisites: [TA-C223-nerkanal, TA-C223-niruvanam]
 sounds: []
-roots: []
+roots: [dravidian-tozhil-work, sanskrit-shala]
+etymology_hook: "தொழிற்சாலை — native toḻil 'work' (DEDR 3524) + cālai 'hall' ← Sanskrit śālā (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C223-niruvanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C223-VELAI223-03]; assesses=[] -->
 
 **தொழிற்சாலை** — *toḻiṟcālai* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொழிற்சாலை** (*toḻiṟcālai*) is native *toḻil*, "work, trade" (DEDR 3524), and *cālai*, "hall", from Sanskrit *śālā* (CDIAL 12414): "the hall of work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ōṭai"
 concept_tag: TA-IDAM175-OTAI
 prerequisites: [TA-C175-palaivanam, TA-C175-kukai]
 sounds: []
-roots: []
+roots: [dravidian-oodu-run]
+etymology_hook: "ஓடை — native Dravidian (DEDR 1041); Malayalam ōṭuka 'to run, to flow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C175-kukai]
 <!-- hl-knowledge: introduces=[TA-LEX-C175-IDAM175-03]; assesses=[] -->
 
 **ஓடை** — *ōṭai* — "a stream, a brook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓடை** (*ōṭai*) is native Dravidian. DEDR 1041 lists Malayalam *ōṭuka*, "to run, to flow". It comes from *ōṭu*, "to run": "running water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

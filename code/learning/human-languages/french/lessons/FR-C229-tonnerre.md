@@ -13,7 +13,8 @@ gloss: "thunder"
 concept_tag: FR-CHOSES229-TONNERRE
 prerequisites: [FR-C228-branche, FR-C229-eclair]
 sounds: []
-roots: []
+roots: [tonare-latin]
+etymology_hook: "tonnerre ← Latin tonitrus 'thunder'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C229-eclair]
 <!-- hl-knowledge: introduces=[FR-LEX-C229-CHOSES229-02]; assesses=[] -->
 
 **le tonnerre** — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tonnerre** ← Old French *tuneire* ← Latin *tonitrus*, "thunder" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

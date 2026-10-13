@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 159,
-  "sourceHash": "fnv1a64:fdfc37c2c5312bde",
+  "sourceHash": "fnv1a64:5729f8bed9001e21",
   "lessonIds": [
     "FR-C159-confortable",
     "FR-C159-inconfortable",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch159.txt",
   "json": "french/narration/ch159.json",
-  "textHash": "fnv1a64:ea10a6ed79f167ec",
-  "jsonHash": "fnv1a64:f3a3759459bc94d7",
+  "textHash": "fnv1a64:2e85e13b701e4698",
+  "jsonHash": "fnv1a64:8daddaec0e6a1e2c",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "an ointment"
 concept_tag: IT-SAL215-POMATA
 prerequisites: [IT-C215-pillola, IT-C215-sciroppo]
 sounds: []
-roots: []
+roots: [pomum-latin]
+etymology_hook: "pomata — from pomo 'apple': ointment once made with apples — English pomade"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C215-sciroppo]
 <!-- hl-knowledge: introduces=[IT-LEX-C215-SAL215-05]; assesses=[] -->
 
 **la pomata** — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pomata** — built from *pomo*, "an apple", with *-ata*: ointments were once made with apples. *pomo* ← Latin *pomum*, "fruit". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

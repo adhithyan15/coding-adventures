@@ -13,7 +13,8 @@ gloss: "kind, nice"
 concept_tag: FR-ADJ44-GENTIL
 prerequisites: [FR-C92-sale, FR-C92-jeune]
 sounds: []
-roots: []
+roots: [gens]
+etymology_hook: "gentil ← Latin gentilis 'of the same clan' — English gentle and genteel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C92-jeune]
 <!-- hl-knowledge: introduces=[FR-LEX-C92-ADJ44-04]; assesses=[] -->
 
 **gentil** — "kind, nice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gentil** ← Latin *gentilis*, "of the same clan", from *gens*, "a clan" — inherited. (EtymDB 2.1) In Old French it meant "high-born, noble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

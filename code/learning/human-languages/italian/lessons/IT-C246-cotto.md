@@ -13,7 +13,8 @@ gloss: "cooked"
 concept_tag: IT-QUAL246-COTTO
 prerequisites: [IT-C246-piccante, IT-C246-crudo]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "cotto ← Latin coctus 'cooked', from coquere — Latin ct became tt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C246-crudo]
 <!-- hl-knowledge: introduces=[IT-LEX-C246-QUAL246-05]; assesses=[] -->
 
 **cotto** — "cooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cotto** ← Latin *coctus*, "cooked" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

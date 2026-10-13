@@ -14,7 +14,8 @@ romanization: "kuti"
 concept_tag: TA-VERB-KUTI
 prerequisites: [TA-C151-karpi, TA-C152-mara]
 sounds: []
-roots: []
+roots: [dravidian-kuti-leap]
+etymology_hook: "குதி — native Dravidian (DEDR 1705); Malayalam kuti 'leap', Kannada gudi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C152-mara]
 <!-- hl-knowledge: introduces=[TA-LEX-C152-ACT152-02]; assesses=[] -->
 
 **குதி** — *kuti* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குதி** (*kuti*) is native Dravidian. DEDR 1705 lists Malayalam *kuti*, "leap" and Kannada *gudi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

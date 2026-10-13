@@ -13,7 +13,8 @@ gloss: "art"
 concept_tag: GE-THING232-KUNST
 prerequisites: [GE-C232-kenntnis, GE-C232-kultur]
 sounds: []
-roots: []
+roots: [germanic-kunnana]
+etymology_hook: "Kunst ← Old High German kunst 'knowledge, skill' — built on können 'to be able'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C232-kultur]
 <!-- hl-knowledge: introduces=[GE-LEX-C232-THING232-04]; assesses=[] -->
 
 **die Kunst** — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kunst** ← Old High German *kunst*, "knowledge, skill" — inherited, built on *können*, "to be able", Old High German *kunnan* (EtymDB 2.1). Art was first skill.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES228-BRANCHE
 prerequisites: [FR-C228-graine, FR-C228-racine]
 sounds: []
 roots: []
+etymology_hook: "branche ← Late Latin branca 'a paw' — the noun behind brancher; English branch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C228-racine]
 <!-- hl-knowledge: introduces=[FR-LEX-C228-CHOSES228-05]; assesses=[] -->
 
 **la branche** — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**branche** ← Late Latin *branca*, "a paw" (EtymDB 2.1) — inherited: the noun behind *brancher*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

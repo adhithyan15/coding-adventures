@@ -13,7 +13,8 @@ gloss: "dead"
 concept_tag: GE-QUAL222-TOT
 prerequisites: [GE-C222-streng, GE-C222-sympathisch]
 sounds: []
-roots: []
+roots: [germanic-daudaz]
+etymology_hook: "tot ← Old High German tōt ← Proto-Germanic *daudaz — the same word as English dead"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C222-sympathisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C222-QUAL222-05]; assesses=[] -->
 
 **tot** — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tot** ← Old High German *tōt* ← Proto-Germanic *\*daudaz*, "dead" — inherited, the same word as English *dead*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

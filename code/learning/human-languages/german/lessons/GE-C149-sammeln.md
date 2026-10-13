@@ -14,6 +14,7 @@ concept_tag: GE-VERB-SAMMELN
 prerequisites: [GE-C149-nennen, GE-C149-riechen]
 sounds: []
 roots: []
+etymology_hook: "sammeln ← Middle High German sameln — built on an old word for 'together', a cousin of English same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C149-riechen]
 <!-- hl-knowledge: introduces=[GE-LEX-C149-VERB149-03]; assesses=[] -->
 
 **sammeln** — "to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sammeln** ← Middle High German *sameln* (EtymDB 2.1), built on an old word for "together", a cousin of English *same*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

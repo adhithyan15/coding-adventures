@@ -13,7 +13,8 @@ gloss: "a frog"
 concept_tag: FR-ANIMAUX40-GRENOUILLE
 prerequisites: [FR-C88-elephant, FR-C88-lapin]
 sounds: []
-roots: []
+roots: [rana-latin]
+etymology_hook: "grenouille ← Old French grenoille, from Latin rana 'frog' — English ranine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C88-lapin]
 <!-- hl-knowledge: introduces=[FR-LEX-C88-ANIMAUX40-04]; assesses=[] -->
 
 **la grenouille** — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grenouille** ← Old French *grenoille* (EtymDB 2.1), from Vulgar Latin *\*ranucula*, "a little frog", from Latin *rana*, "frog" (Lewis & Short) — inherited; the *g-* in front is usually put down to imitation of the croak.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

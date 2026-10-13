@@ -14,7 +14,8 @@ romanization: "cuvai pār"
 concept_tag: TA-VERB-CUVAI-PAR
 prerequisites: [TA-C224-kottanar, TA-C224-vinnani]
 sounds: []
-roots: []
+roots: [dravidian-cavi-taste, dravidian-paar-see]
+etymology_hook: "சுவை பார் — native: cuvai 'taste' (DEDR 2396) + pār 'to see, try' (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C224-vinnani]
 <!-- hl-knowledge: introduces=[TA-LEX-C225-ACT225-01]; assesses=[] -->
 
 **சுவை பார்** — *cuvai pār* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுவை பார்** (*cuvai pār*) is native: *cuvai*, "taste" (DEDR 2396), and *pār*, "to see, to try" (DEDR 4091): "see how it tastes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

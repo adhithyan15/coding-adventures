@@ -14,7 +14,8 @@ romanization: "iruṭṭu"
 concept_tag: TA-PORUL276-IRUTTU
 prerequisites: [TA-C275-ceti, TA-C275-koti2]
 sounds: []
-roots: []
+roots: [proto-dravidian-cira-darkness]
+etymology_hook: "இருட்டு — native Dravidian (DEDR 2552); Malayalam iruṭṭu 'darkness', Telugu irulu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C275-koti2]
 <!-- hl-knowledge: introduces=[TA-LEX-C276-PORUL276-01]; assesses=[] -->
 
 **இருட்டு** — *iruṭṭu* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இருட்டு** (*iruṭṭu*) is native Dravidian. DEDR 2552 lists Malayalam *iruṭṭu*, "darkness" and Telugu *irulu*. The same entry holds *iravu*, "night".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

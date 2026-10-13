@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA1-SAPATOS
 prerequisites: [PT-C77-vestido, PT-C77-calcas]
 sounds: []
 roots: []
+etymology_hook: "sapatos — the shoe word's origin is uncertain; Spanish zapato is its close cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C77-calcas]
 <!-- hl-knowledge: introduces=[PT-LEX-C77-ROUPA1-05]; assesses=[] -->
 
 **os sapatos** — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sapatos** is the plural of the word for a shoe, whose origin is uncertain. Spanish *zapato* is its close cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

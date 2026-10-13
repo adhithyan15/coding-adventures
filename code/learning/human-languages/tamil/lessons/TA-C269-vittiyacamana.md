@@ -14,7 +14,8 @@ romanization: "vittiyācamāṉa"
 concept_tag: TA-GUNAM269-VITTIYACAMANA
 prerequisites: [TA-C268-nermaiyana, TA-C269-ciranta]
 sounds: []
-roots: []
+roots: [sanskrit-vyatyasa]
+etymology_hook: "வித்தியாசமான — vittiyācam ← Sanskrit vyatyāsa 'inversion, contrast', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C269-ciranta]
 <!-- hl-knowledge: introduces=[TA-LEX-C269-GUNAM269-02]; assesses=[] -->
 
 **வித்தியாசமான** — *vittiyācamāṉa* — "different, unusual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வித்தியாசமான** (*vittiyācamāṉa*) is *vittiyācam*, "difference", a well-established loan from Sanskrit *vyatyāsa*, "inversion, contrast", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

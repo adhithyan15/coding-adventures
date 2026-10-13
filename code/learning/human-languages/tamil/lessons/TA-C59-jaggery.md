@@ -11,7 +11,8 @@ romanization: "vellam"
 concept_tag: TA-NOUN-JAGGERY
 prerequisites: [TA-C59-oil, TA-C57-smoke, TA-C58-crow]
 sounds: []
-roots: []
+roots: [dravidian-vellam-jaggery]
+etymology_hook: "வெல்லம் — native Dravidian (DEDR 5494); Malayalam vellam, Kannada bella, Telugu bellamu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C59-oil]
 Cane juice boiled down and left alone — no bleaching, no crystals — and sold as a dark heavy lump you break a piece off. Kannada has the same word as ಬೆಲ್ಲ (*bella*), with *v* softened to *b*.
 
 In an older Tamil kitchen sweetness meant this before it meant anything white, and வெல்லம் still goes into the food that has to taste the way it used to.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெல்லம்** (*vellam*) is native Dravidian. DEDR 5494 lists Malayalam *vellam*, Kannada *bella* and Telugu *bellamu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "periyappā"
 concept_tag: TA-INLAWS-PERIYAPPA
 prerequisites: [TA-C101-aunt, TA-C101-fathersyoungerbrother]
 sounds: []
-roots: []
+roots: [dravidian-peru-big, dravidian-appa-amma]
+etymology_hook: "பெரியப்பா — native: periya 'big' (DEDR 4411) + appā 'father' (DEDR 156): 'the big father'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C101-fathersyoungerbrother]
 **பெரியப்பா** (*periyappā*) — your father's elder brother, the *big father*.
 
 **பெரிய** is "big". Beside **சித்தப்பா**, the little father.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெரியப்பா** (*periyappā*) is native: *periya*, "big" (DEDR 4411), and *appā*, "father" (DEDR 156): "the big father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

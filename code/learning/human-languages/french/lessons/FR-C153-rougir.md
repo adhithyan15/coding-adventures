@@ -13,7 +13,8 @@ gloss: "to blush"
 concept_tag: FR-VERB-ROUGIR
 prerequisites: [FR-C153-remplacer, FR-C153-rencontrer]
 sounds: []
-roots: []
+roots: [rubeus-latin]
+etymology_hook: "rougir — rouge 'red' + -ir: to go red"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C153-rencontrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C153-VERBES153-04]; assesses=[] -->
 
 **rougir** — "to blush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rougir** — built from *rouge*, "red", with the verb ending *-ir*: to go red. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

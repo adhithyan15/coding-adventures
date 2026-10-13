@@ -14,7 +14,8 @@ romanization: "muḷ"
 concept_tag: TA-PORUL188-MUL
 prerequisites: [TA-C187-onay, TA-C187-ciruttai]
 sounds: []
-roots: []
+roots: [dravidian-mul-thorn]
+etymology_hook: "முள் — native Dravidian (DEDR 4995); Malayalam muḷ, Kannada muḷ, Telugu mullu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C187-ciruttai]
 <!-- hl-knowledge: introduces=[TA-LEX-C188-PORUL188-01]; assesses=[] -->
 
 **முள்** — *muḷ* — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முள்** (*muḷ*) is native Dravidian. DEDR 4995 lists Malayalam *muḷ*, Kannada *muḷ* and Telugu *mullu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

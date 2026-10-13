@@ -13,7 +13,8 @@ gloss: "to go for a walk"
 concept_tag: IT-VERB-PASSEGGIARE
 prerequisites: [IT-C180-osservare, IT-C180-partecipare]
 sounds: []
-roots: []
+roots: [latin-passus]
+etymology_hook: "passeggiare — passo 'a step' + -eggiare; passo ← Latin passus 'a pace'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C180-partecipare]
 <!-- hl-knowledge: introduces=[IT-LEX-C180-VERBI180-03]; assesses=[] -->
 
 **passeggiare** — "to go for a walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passeggiare** — built from *passo*, "a step", with *-eggiare*: to go step by step. *passo* ← Latin *passus*, "a pace". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

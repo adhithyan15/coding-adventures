@@ -13,7 +13,8 @@ gloss: "beef"
 concept_tag: GE-KLEIDUNG120-RINDFLEISCH
 prerequisites: [GE-C120-socken, GE-C120-bluse]
 sounds: []
-roots: []
+roots: [germanic-hrinthaz, germanic-flaiska]
+etymology_hook: "Rindfleisch — Rind 'cattle' + Fleisch 'meat': cattle meat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C120-bluse]
 <!-- hl-knowledge: introduces=[GE-LEX-C120-KLEIDUNG120-03]; assesses=[] -->
 
 **das Rindfleisch** — "beef".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rindfleisch** is the word for "cattle", Old High German *hrind* ← Proto-Germanic *\*hrinþaz*, + *Fleisch*, "meat" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

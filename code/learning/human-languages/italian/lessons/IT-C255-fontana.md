@@ -13,7 +13,8 @@ gloss: "a fountain"
 concept_tag: IT-COSE255-FONTANA
 prerequisites: [IT-C254-motore, IT-C254-benzina]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "fontana ← Late Latin fontana, from fontanus 'of a spring' — English fountain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C254-benzina]
 <!-- hl-knowledge: introduces=[IT-LEX-C255-COSE255-01]; assesses=[] -->
 
 **la fontana** — "a fountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fontana** ← Late Latin *fontana*, from Latin *fontanus*, "of a spring" — inherited. (EtymDB 2.1 records *fontanus*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

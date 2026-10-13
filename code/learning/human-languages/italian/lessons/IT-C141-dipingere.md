@@ -13,7 +13,8 @@ gloss: "to paint"
 concept_tag: IT-VERB-DIPINGERE
 prerequisites: [IT-C140-sorridere, IT-C140-gridare]
 sounds: []
-roots: []
+roots: [depingere-latin]
+etymology_hook: "dipingere ← Latin depingere 'to paint' — English depict shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C140-gridare]
 <!-- hl-knowledge: introduces=[IT-LEX-C141-VERBI141-01]; assesses=[] -->
 
 **dipingere** — "to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dipingere** ← Latin *depingere*, "to paint, to portray" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "closed"
 concept_tag: IT-QUALITA124-CHIUSO
 prerequisites: [IT-C124-libero, IT-C124-aperto]
 sounds: []
-roots: []
+roots: [claudere-latin]
+etymology_hook: "chiuso ← Latin clusus 'shut' — Latin cl- became Italian chi-; English closed is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C124-aperto]
 <!-- hl-knowledge: introduces=[IT-LEX-C124-QUALITA124-04]; assesses=[] -->
 
 **chiuso** — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiuso** ← Latin *clusus*, "shut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

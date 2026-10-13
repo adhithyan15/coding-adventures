@@ -13,7 +13,8 @@ gloss: "to celebrate"
 concept_tag: IT-VERB-FESTEGGIARE
 prerequisites: [IT-C148-trascorrere, IT-C148-trasportare]
 sounds: []
-roots: []
+roots: [festum-latin]
+etymology_hook: "festeggiare — festa 'a party' + the verb ending -eggiare — English feast"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C148-trasportare]
 <!-- hl-knowledge: introduces=[IT-LEX-C149-VERBI149-01]; assesses=[] -->
 
 **festeggiare** — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**festeggiare** — built from *festa*, "a party", with *-eggiare*, a verb ending. EtymDB 2.1 lists French *festoyer* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "green"
 concept_tag: PT-ADJ6-VERDE
 prerequisites: [PT-C68-pobre, PT-C68-amarelo]
 sounds: []
-roots: []
+roots: [viridis-latin]
+etymology_hook: "verde ← Latin viridis 'green', shortened to virdis — English verdant shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C68-amarelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C69-ADJ6-01]; assesses=[] -->
 
 **verde** — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verde** ← Latin *viridis*, "green" (EtymDB 2.1), shortened in speech to *virdis* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

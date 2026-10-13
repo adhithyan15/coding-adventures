@@ -13,7 +13,8 @@ gloss: "fifty"
 concept_tag: FR-HABITS57-CINQUANTE
 prerequisites: [FR-C105-trente, FR-C105-quarante]
 sounds: []
-roots: []
+roots: [quinquaginta-latin]
+etymology_hook: "cinquante ← Latin quinquaginta 'fifty' — the cinq- of cinq"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C105-quarante]
 <!-- hl-knowledge: introduces=[FR-LEX-C105-HABITS57-04]; assesses=[] -->
 
 **cinquante** — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinquante** ← Vulgar Latin *\*cinquaginta* ← Latin *quinquaginta*, "fifty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

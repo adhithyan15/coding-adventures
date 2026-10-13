@@ -11,7 +11,8 @@ romanization: "seruppu"
 concept_tag: TA-NOUN-SANDAL
 prerequisites: [TA-C67-sari, TA-C66-right]
 sounds: []
-roots: []
+roots: [dravidian-ceruppu-sandal]
+etymology_hook: "செருப்பு — native Dravidian (DEDR 1963); Malayalam cerippu, Kannada kera, Telugu ceppu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Footwear — and in Tamil it is really a doorway word.
 செருப்பு comes off at the வாசல் (*vāsal*) before anyone steps உள்ளே. So the thing you have
 just named is the one thing that stays வெளியே: three words from earlier chapters, and this one
 is the reason they get used every day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செருப்பு** (*seruppu*) is native Dravidian. DEDR 1963 lists Malayalam *cerippu*, Kannada *kera* and Telugu *ceppu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

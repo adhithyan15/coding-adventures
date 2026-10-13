@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 88,
-  "sourceHash": "fnv1a64:c97481c95de712f1",
+  "sourceHash": "fnv1a64:2fee11553f3d1deb",
   "lessonIds": [
     "PT-C88-elevador",
     "PT-C88-norte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch88.txt",
   "json": "portuguese/narration/ch88.json",
-  "textHash": "fnv1a64:7372bd5d9307b425",
-  "jsonHash": "fnv1a64:b83657427887a7ee",
+  "textHash": "fnv1a64:fc92079e2e253f54",
+  "jsonHash": "fnv1a64:405e5589046223c5",
   "findings": []
 }

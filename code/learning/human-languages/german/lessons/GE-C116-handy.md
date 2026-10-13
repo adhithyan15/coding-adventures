@@ -14,6 +14,7 @@ concept_tag: GE-DINGE116-HANDY
 prerequisites: [GE-C115-sessel, GE-C116-wecker]
 sounds: []
 roots: []
+etymology_hook: "Handy — taken from English handy, but German made it a noun for the mobile phone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C116-wecker]
 <!-- hl-knowledge: introduces=[GE-LEX-C116-DINGE116-02]; assesses=[] -->
 
 **das Handy** — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Handy** is taken from English *handy* (EtymDB 2.1), but German made it a noun for the mobile phone, a use English does not have.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

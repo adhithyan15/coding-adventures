@@ -13,7 +13,8 @@ gloss: "sand"
 concept_tag: PT-NATUREZA2-AREIA
 prerequisites: [PT-C57-lago, PT-C57-pedra]
 sounds: []
-roots: []
+roots: [arena-latin]
+etymology_hook: "areia ← Latin arena 'sand': the -n- fell out — English arena, a sanded floor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C57-pedra]
 <!-- hl-knowledge: introduces=[PT-LEX-C57-NATUREZA2-04]; assesses=[] -->
 
 **a areia** — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**areia** ← Latin *arena*, "sand" (EtymDB 2.1) — inherited. The *-n-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

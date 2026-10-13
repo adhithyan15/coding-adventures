@@ -13,7 +13,8 @@ gloss: "safe; sure"
 concept_tag: GE-EIGEN134-SICHER
 prerequisites: [GE-C134-fertig, GE-C134-bereit]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "sicher ← Old High German sihhur, an early West Germanic loan from Latin sēcūrus 'free from care'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C134-bereit]
 <!-- hl-knowledge: introduces=[GE-LEX-C134-EIGEN134-05]; assesses=[] -->
 
 **sicher** — "safe; sure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sicher** is an early West Germanic loan (Old High German *sihhur*, Old English *sicor*) from Latin *sēcūrus*, "free from care" (EtymDB 2.1). English *secure* is a later loan of the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to look for"
 concept_tag: GE-VERB-SUCHEN
 prerequisites: [GE-C64-wissen, GE-C64-finden]
 sounds: []
-roots: []
+roots: [germanic-sokijana]
+etymology_hook: "suchen ← Old High German suohhen ← Proto-Germanic *sōkijaną — the same verb as English seek"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C64-finden]
 <!-- hl-knowledge: introduces=[GE-LEX-C64-VERBEN1-05]; assesses=[] -->
 
 **suchen** — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suchen** ← Old High German *suohhen* ← Proto-Germanic *\*sōkijaną*, "to seek" — inherited, the same verb as English *seek*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

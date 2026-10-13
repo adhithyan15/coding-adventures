@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 124,
-  "sourceHash": "fnv1a64:63292bdeeb974b65",
+  "sourceHash": "fnv1a64:a23599dca82f5dbe",
   "lessonIds": [
     "PT-C124-simpatico",
     "PT-C124-gentil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch124.txt",
   "json": "portuguese/narration/ch124.json",
-  "textHash": "fnv1a64:66e24e5020f34176",
-  "jsonHash": "fnv1a64:90585a27ec7a326b",
+  "textHash": "fnv1a64:912e4a3c0ab5dc86",
+  "jsonHash": "fnv1a64:abf68de4849c975d",
   "findings": []
 }

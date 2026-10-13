@@ -13,7 +13,8 @@ gloss: "a race, a run"
 concept_tag: IT-COSE202-CORSA
 prerequisites: [IT-C202-racchetta, IT-C202-palestra]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "corsa — 'a run', from correre 'to run' ← Latin currere — English course is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C202-palestra]
 <!-- hl-knowledge: introduces=[IT-LEX-C202-COSE202-03]; assesses=[] -->
 
 **la corsa** — "a race, a run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corsa** is the past participle of *correre*, "to run", used as a noun: a run, a race. *correre* ← Latin *currere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vayal"
 concept_tag: TA-NOUN-FIELD
 prerequisites: [TA-C53-hill, TA-C51-moon, TA-C52-shoot]
 sounds: []
-roots: []
+roots: [dravidian-vayal-field]
+etymology_hook: "வயல் — native Dravidian (DEDR 5258); Malayalam vayal, Kannada bayal"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C53-hill]
 A wet field: the flooded one that grows rice, not a dry one. Malayalam writes വയൽ and means the same thing by it.
 
 The dry field is a *kollai*, a different word altogether, and the split earns its keep. A farmer telling you which of the two he has is telling you what he can grow on it and when.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வயல்** (*vayal*) is native Dravidian. DEDR 5258 lists Malayalam *vayal* and Kannada *bayal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

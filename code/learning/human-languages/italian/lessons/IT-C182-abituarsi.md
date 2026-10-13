@@ -13,7 +13,8 @@ gloss: "to get used to"
 concept_tag: IT-VERB-ABITUARSI
 prerequisites: [IT-C182-valere, IT-C182-volare]
 sounds: []
-roots: []
+roots: [habitus-latin]
+etymology_hook: "abituarsi ← Late Latin habituare, from habitus 'a habit' + -si — English habituate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C182-volare]
 <!-- hl-knowledge: introduces=[IT-LEX-C182-VERBI182-04]; assesses=[] -->
 
 **abituarsi** — "to get used to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abituarsi** ← Late Latin *habituare*, from *habitus*, "a condition, a habit", with *-si*, "oneself" — a learned borrowing. EtymDB 2.1 has no row for *abituarsi*; it derives French *habituer* from *habituare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a room"
 concept_tag: GE-HAUS2-ZIMMER
 prerequisites: [GE-C77-lampe, GE-C77-bad]
 sounds: []
-roots: []
+roots: [germanic-timra]
+etymology_hook: "Zimmer ← Old High German zimbar 'timber, building' ← Proto-Germanic *timrą — the same word as English timber"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C77-bad]
 <!-- hl-knowledge: introduces=[GE-LEX-C77-HAUS2-04]; assesses=[] -->
 
 **das Zimmer** — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zimmer** ← Old High German *zimbar*, "timber, a wooden building" ← Proto-Germanic *\*timrą* — inherited, the same word as English *timber*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

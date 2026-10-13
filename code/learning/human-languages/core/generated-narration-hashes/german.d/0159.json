@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 159,
-  "sourceHash": "fnv1a64:003adabf38a81de9",
+  "sourceHash": "fnv1a64:0c7b6c78eb33c67f",
   "lessonIds": [
     "GE-C159-adresse",
     "GE-C159-telefonnummer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch159.txt",
   "json": "german/narration/ch159.json",
-  "textHash": "fnv1a64:dfcf586207b2de14",
-  "jsonHash": "fnv1a64:ff952a3a0de2b6dd",
+  "textHash": "fnv1a64:a14de222384dc309",
+  "jsonHash": "fnv1a64:8ccb38a01c748ee8",
   "findings": []
 }

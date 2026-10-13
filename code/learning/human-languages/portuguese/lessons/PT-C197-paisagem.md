@@ -14,6 +14,7 @@ concept_tag: PT-COISAS197-PAISAGEM
 prerequisites: [PT-C196-violino, PT-C196-tambor]
 sounds: []
 roots: []
+etymology_hook: "paisagem ← French paysage, built on pays 'country, region'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C196-tambor]
 <!-- hl-knowledge: introduces=[PT-LEX-C197-COISAS197-01]; assesses=[] -->
 
 **a paisagem** — "a landscape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paisagem** ← French *paysage* — borrowed. The French word is built on *pays*, "country".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

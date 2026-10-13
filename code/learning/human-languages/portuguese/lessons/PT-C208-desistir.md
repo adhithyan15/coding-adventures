@@ -13,7 +13,8 @@ gloss: "to give up"
 concept_tag: PT-VERB-DESISTIR
 prerequisites: [PT-C207-entregar, PT-C207-corrigir]
 sounds: []
-roots: []
+roots: [sistere-latin]
+etymology_hook: "desistir ← Latin desistere 'to stand off, to leave off' — English desist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C207-corrigir]
 <!-- hl-knowledge: introduces=[PT-LEX-C208-VERBOS208-01]; assesses=[] -->
 
 **desistir** — "to give up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desistir** ← Latin *desistere*, "to stand off" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

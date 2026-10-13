@@ -13,7 +13,8 @@ gloss: "zero"
 concept_tag: GE-DINGE-NULL
 prerequisites: [GE-C101-hundert, GE-C101-tausend]
 sounds: []
-roots: []
+roots: [nullus-latin]
+etymology_hook: "null ← Italian nulla 'nothing' ← Latin nūllus 'none' — borrowed with Arabic numerals"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C101-tausend]
 <!-- hl-knowledge: introduces=[GE-LEX-C102-DINGE-01]; assesses=[] -->
 
 **null** — "zero".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**null** came in with Arabic numerals from Italian *nulla*, "nothing" ← Latin *nūllus*, "none", built from *ne*, "not", and *ūllus*, "any" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

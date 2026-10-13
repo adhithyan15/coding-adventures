@@ -13,7 +13,8 @@ gloss: "a cough"
 concept_tag: IT-CORPO4-TOSSE
 prerequisites: [IT-C40-dolore, IT-C40-febbre]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tosse ← Latin tussis 'cough'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C40-febbre]
 <!-- hl-knowledge: introduces=[IT-LEX-C40-CORPO4-05]; assesses=[] -->
 
 **la tosse** — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tosse** ← Latin *tussis*, "cough" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

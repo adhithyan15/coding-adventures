@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 16,
-  "sourceHash": "fnv1a64:bf02a2c2da0ab030",
+  "sourceHash": "fnv1a64:628cb6f5502971d8",
   "lessonIds": [
     "IT-C16-essere",
     "IT-C16-essere-stato",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "italian/narration/ch16.txt",
   "json": "italian/narration/ch16.json",
-  "textHash": "fnv1a64:068888ce09c4ad09",
-  "jsonHash": "fnv1a64:4eb49c7ad1b6215e",
+  "textHash": "fnv1a64:a5a5cace82988a94",
+  "jsonHash": "fnv1a64:f691184ab2860e78",
   "findings": []
 }

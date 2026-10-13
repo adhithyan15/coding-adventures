@@ -14,6 +14,7 @@ concept_tag: GE-QUAL223-UNGEDULDIG
 prerequisites: [GE-C223-treu, GE-C223-typisch]
 sounds: []
 roots: []
+etymology_hook: "ungeduldig — un- 'not' + geduldig 'patient'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C223-typisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C223-QUAL223-03]; assesses=[] -->
 
 **ungeduldig** — "impatient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ungeduldig** is *un-*, "not", + *geduldig* ← Middle High German *gedultic*, "patient" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

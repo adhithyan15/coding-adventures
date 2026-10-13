@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REPASSER
 prerequisites: [FR-C232-erreur, FR-C232-histoire]
 sounds: []
 roots: []
+etymology_hook: "repasser — re- + the verb 'to pass': the iron passed over the cloth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C232-histoire]
 <!-- hl-knowledge: introduces=[FR-LEX-C233-VERBES233-01]; assesses=[] -->
 
 **repasser** — "to iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**repasser** — built from *re-* and the verb for "to pass", ← Vulgar Latin *\*passare* (EtymDB 2.1): to pass the hot iron over the cloth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

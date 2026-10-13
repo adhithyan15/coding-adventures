@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9468044463289c1c",
+  "sourceHash": "fnv1a64:7d712b4fe8858c11",
   "lessons": [
     {
       "id": "TA-C04-po",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa9645867ddf55d5",
+      "sourceHash": "fnv1a64:21650d02c1174a69",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8705570e1770b8d",
+      "sourceHash": "fnv1a64:32f6271840008c43",
       "notice": null,
       "blocks": [
         {
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ac3e72f620d5447",
+      "sourceHash": "fnv1a64:0c912bb0daf87879",
       "notice": null,
       "blocks": [
         {
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45a1c48f51627ef5",
+      "sourceHash": "fnv1a64:eb20c43228024fa2",
       "notice": null,
       "blocks": [
         {
@@ -651,7 +651,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71a3211fb731462b",
+      "sourceHash": "fnv1a64:c3398eeac853a167",
       "notice": null,
       "blocks": [
         {

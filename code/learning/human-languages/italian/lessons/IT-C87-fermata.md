@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI87-FERMATA
 prerequisites: [IT-C86-desiderare, IT-C87-aeroporto]
 sounds: []
 roots: []
+etymology_hook: "fermata — built from the verb 'to stop', from Latin firmare 'to make firm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C87-aeroporto]
 <!-- hl-knowledge: introduces=[IT-LEX-C87-LUOGHI87-02]; assesses=[] -->
 
 **la fermata** — "a stop (bus, tram)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fermata** — built from the Italian verb for "to stop", which ← Latin *firmare*, "to make firm". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

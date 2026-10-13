@@ -11,7 +11,8 @@ romanization: "kuḍi"
 concept_tag: TA-VERB-KUDI
 prerequisites: [TA-C64-harvest, TA-C63-request, TA-C64-paddy]
 sounds: []
-roots: []
+roots: [dravidian-kudi-drink]
+etymology_hook: "குடி — native Dravidian (DEDR 1654); Malayalam kuṭi, Kannada kuḍi"
 duration:
   max_seconds: 230
 requires:
@@ -63,6 +64,11 @@ left to misread.
 Across the family: Kannada uses ಕುಡಿ (*kuḍi*) and Malayalam കുടിക്കുക
 (*kuṭikkuka*) — the same word, worn a little differently. Telugu reached for
 something else entirely and drinks with త్రాగు (*trāgu*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடி** (*kuḍi*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

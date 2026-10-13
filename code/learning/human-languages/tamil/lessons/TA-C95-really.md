@@ -11,7 +11,8 @@ romanization: "uṇmaiyā?"
 concept_tag: TA-RIGHT-REALLY
 prerequisites: [TA-C94-whatsaid, TA-C95-exactly]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "உண்மையா — native uṇmai 'truth' (DEDR 697) + the question ending -ā"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C95-exactly]
 **உண்மையா?** (*uṇmaiyā?*) — "really?", literally "is it the truth?".
 
 **உண்மை** is "truth", and **-ஆ** makes the question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உண்மையா?** (*uṇmaiyā?*) is *uṇmai*, "truth" (DEDR 697), with the question ending *-ā*: "is it true?"
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a sheep"
 concept_tag: IT-ANIMALI3-PECORA
 prerequisites: [IT-C70-gallina, IT-C70-anatra]
 sounds: []
-roots: []
+roots: [pecus-latin]
+etymology_hook: "pecora ← Latin pecora 'livestock' — English pecuniary shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C70-anatra]
 <!-- hl-knowledge: introduces=[IT-LEX-C70-ANIMALI3-04]; assesses=[] -->
 
 **la pecora** — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pecora** ← Latin *pecora*, "livestock", plural of *pecus* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

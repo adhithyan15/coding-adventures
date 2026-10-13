@@ -13,7 +13,8 @@ gloss: "religion"
 concept_tag: GE-THING236-RELIGION
 prerequisites: [GE-C236-rede, GE-C236-reihe]
 sounds: []
-roots: []
+roots: [religio-latin]
+etymology_hook: "Religion ← Latin religiō 'scruple, reverence' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C236-reihe]
 <!-- hl-knowledge: introduces=[GE-LEX-C236-THING236-05]; assesses=[] -->
 
 **die Religion** — "religion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Religion** ← Latin *religiō*, "scruple, reverence" (EtymDB 2.1) — borrowed, like English *religion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

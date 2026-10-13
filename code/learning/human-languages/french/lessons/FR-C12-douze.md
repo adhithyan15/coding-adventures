@@ -42,8 +42,8 @@ this one lets you hear the join.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-DOUZE-02]; assesses=[] -->
 
-- `vowel-ou` — **ou** is a single pure **oo**, as in English *food*. Never two
-  sounds.
+- `vowel-ou` — the letters **o-u** make a single pure **oo**, as in English
+  *food*. Never two sounds.
 - `z-voiced` — the same buzzed **z** as **onze**.
 - Together: **douze** = *DOOZ*, one syllable.
 
@@ -64,7 +64,7 @@ shared ending, and a strong hint about where that ending came from.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-DOUZE-02, FR-LEX-ONZE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "douze" — *DOOZ*, the *ou* a single pure vowel]
+- [YOU SAY: "douze" — *DOOZ*, the *o-u* a single pure vowel]
 - [YOU SAY: the digit surfacing — "deux, douze"]
 - [YOU SAY: the pair — "onze, douze"; hear the shared ending]
 

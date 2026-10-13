@@ -14,7 +14,8 @@ romanization: "tiruviḻā"
 concept_tag: TA-NERAM202-TIRUVILA
 prerequisites: [TA-C202-vara-iruti, TA-C202-varai]
 sounds: []
-roots: []
+roots: [sanskrit-shri, dravidian-vizhaa-festival]
+etymology_hook: "திருவிழா — tiru 'holy', usually from Sanskrit śrī (CDIAL 12708), + native viḻā 'festival' (DEDR 5427)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C202-varai]
 <!-- hl-knowledge: introduces=[TA-LEX-C202-NERAM202-03]; assesses=[] -->
 
 **திருவிழா** — *tiruviḻā* — "a temple festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருவிழா** (*tiruviḻā*) is *tiru*, "holy", usually traced to Sanskrit *śrī* (CDIAL 12708), and native *viḻā*, "festival" (DEDR 5427; Malayalam *viḻā*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

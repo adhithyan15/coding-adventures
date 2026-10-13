@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 7,
-  "sourceHash": "fnv1a64:6e0dc4d47364f3ea",
+  "sourceHash": "fnv1a64:3ddc63ea78b5c2e5",
   "lessonIds": [
     "PT-C07-dias-1",
     "PT-C07-dias-2"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch07.txt",
   "json": "portuguese/narration/ch07.json",
-  "textHash": "fnv1a64:13c0401b3efca1dc",
-  "jsonHash": "fnv1a64:215836241fe60cc4",
+  "textHash": "fnv1a64:0bb52758f58d1b17",
+  "jsonHash": "fnv1a64:8d2b636ea62d72cd",
   "findings": []
 }

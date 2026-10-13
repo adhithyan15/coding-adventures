@@ -13,7 +13,8 @@ gloss: "an apple"
 concept_tag: IT-FRUTTA-MELA
 prerequisites: [IT-C51-pollo, IT-C52-frutta]
 sounds: []
-roots: []
+roots: [melum-latin]
+etymology_hook: "mela ← Latin melum 'apple'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C52-frutta]
 <!-- hl-knowledge: introduces=[IT-LEX-C52-FRUTTA-02]; assesses=[] -->
 
 **la mela** — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mela** ← Vulgar Latin *mela*, from Latin *melum*, "apple" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA109-COMPOTA
 prerequisites: [PT-C108-sumo, PT-C109-pessego]
 sounds: []
 roots: []
+etymology_hook: "compota ← French compote, from Latin compositus 'put together' — English compote"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C109-pessego]
 <!-- hl-knowledge: introduces=[PT-LEX-C109-COMIDA109-02]; assesses=[] -->
 
 **a compota** — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compota** ← French *compote* (EtymDB 2.1) — borrowed. Behind it is Latin *compositus*, "put together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "sometimes"
 concept_tag: IT-TEMPO131-QUALCHE-VOLTA
 prerequisites: [IT-C131-secolo, IT-C131-spesso]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "qualche volta — 'some turn': volta 'a turn, a time' goes back to Latin volvere 'to roll'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C131-spesso]
 <!-- hl-knowledge: introduces=[IT-LEX-C131-TEMPO131-05]; assesses=[] -->
 
 **qualche volta** — "sometimes".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**qualche volta** is "some turn". EtymDB 2.1 records *qualche*, "some", as built on *che*, "that, which", from Latin *quid* or *quod*. *volta*, "a turn, a time", goes back to Latin *volvere*, "to roll, to turn"; EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uppumā"
 concept_tag: TA-PORUL183-UPPUMA
 prerequisites: [TA-C182-muti, TA-C183-ponkal]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt, dravidian-maa-flour]
+etymology_hook: "உப்புமா — native: uppu 'salt' (DEDR 2674) + mā 'flour, meal' (DEDR 4784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C183-ponkal]
 <!-- hl-knowledge: introduces=[TA-LEX-C183-PORUL183-02]; assesses=[] -->
 
 **உப்புமா** — *uppumā* — "upma, a semolina dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உப்புமா** (*uppumā*) is native: *uppu*, "salt" (DEDR 2674), and *mā*, "flour, meal" (DEDR 4784): "salted meal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

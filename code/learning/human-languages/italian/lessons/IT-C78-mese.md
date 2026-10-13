@@ -13,7 +13,8 @@ gloss: "a month"
 concept_tag: IT-TEMPO-MESE
 prerequisites: [IT-C77-contento, IT-C78-settimana]
 sounds: []
-roots: []
+roots: [mensis-latin]
+etymology_hook: "mese ← Latin mensis 'month'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-settimana]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-02]; assesses=[] -->
 
 **il mese** — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mese** ← Latin *mensis*, "month" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

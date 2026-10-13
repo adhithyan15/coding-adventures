@@ -13,7 +13,8 @@ gloss: "high, tall"
 concept_tag: GE-ADJ2-HOCH
 prerequisites: [GE-C90-schwer, GE-C90-billig]
 sounds: []
-roots: []
+roots: [germanic-hauhaz]
+etymology_hook: "hoch ← Old High German hōh ← Proto-Germanic *hauhaz — the same word as English high"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C90-billig]
 <!-- hl-knowledge: introduces=[GE-LEX-C90-ADJ2-03]; assesses=[] -->
 
 **hoch** — "high, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hoch** ← Old High German *hōh*, "high, tall" ← Proto-Germanic *\*hauhaz* — inherited, the same word as English *high*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

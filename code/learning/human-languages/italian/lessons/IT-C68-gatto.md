@@ -13,7 +13,8 @@ gloss: "a cat"
 concept_tag: IT-ANIMALI1-GATTO
 prerequisites: [IT-C67-fuoco, IT-C68-cane]
 sounds: []
-roots: []
+roots: [cattus-latin]
+etymology_hook: "gatto ← Late Latin cattus 'cat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C68-cane]
 <!-- hl-knowledge: introduces=[IT-LEX-C68-ANIMALI1-02]; assesses=[] -->
 
 **il gatto** — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gatto** ← Late Latin *cattus*, "cat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

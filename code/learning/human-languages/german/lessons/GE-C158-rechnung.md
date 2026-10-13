@@ -13,7 +13,8 @@ gloss: "a bill"
 concept_tag: GE-THING158-RECHNUNG
 prerequisites: [GE-C157-preis, GE-C158-angebot]
 sounds: []
-roots: []
+roots: [germanic-rekanona]
+etymology_hook: "Rechnung — the verb 'to reckon' + -ung; EtymDB lists it beside English reckoning"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C158-angebot]
 <!-- hl-knowledge: introduces=[GE-LEX-C158-THING158-02]; assesses=[] -->
 
 **die Rechnung** — "a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rechnung** is the verb "to reckon", Old High German *rehhanōn* ← Proto-Germanic *\*rekanōną*, + *-ung* — EtymDB 2.1 lists it beside English *reckoning*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

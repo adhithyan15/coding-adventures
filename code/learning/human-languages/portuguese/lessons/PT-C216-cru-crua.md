@@ -13,7 +13,8 @@ gloss: "raw"
 concept_tag: PT-QUAL216-CRU-CRUA
 prerequisites: [PT-C216-antigo-antiga, PT-C216-picante]
 sounds: []
-roots: []
+roots: [crudus-latin]
+etymology_hook: "cru ← Latin crudus 'raw, bloody': the -d- fell out — English crude"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C216-picante]
 <!-- hl-knowledge: introduces=[PT-LEX-C216-QUAL216-05]; assesses=[] -->
 
 **cru / crua** — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cru** ← Latin *crudus*, "raw, bloody" (EtymDB 2.1) — inherited. The *-d-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

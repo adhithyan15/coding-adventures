@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Two Ideas, One Sentence",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:daafe21d736424f5",
+  "sourceHash": "fnv1a64:fdfec6e1d6af96be",
   "lessons": [
     {
       "id": "FR-C36-svo",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0722373b778302",
+      "sourceHash": "fnv1a64:0affbfcc88aa56b2",
       "notice": null,
       "blocks": [
         {
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "parce qu'il est tard — because it's late."
+              "text": "parce qu'il est midi — because it's noon."
             },
             {
               "kind": "speech",
@@ -605,11 +605,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "elided — \"parce qu'il est tard\"",
+              "instruction": "elided — \"parce qu'il est midi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: elided — \"parce qu'il est tard\"]"
+              "source": "[YOU SAY: elided — \"parce qu'il est midi\"]"
             },
             {
               "kind": "prompt",

@@ -14,7 +14,8 @@ romanization: "māṭi"
 concept_tag: TA-IDAM205-MATI
 prerequisites: [TA-C205-tiraiyarankam, TA-C205-kattitam]
 sounds: []
-roots: []
+roots: [dravidian-maadam-storey]
+etymology_hook: "மாடி — native Dravidian (DEDR 4796); Malayalam māṭam 'house with an upper storey'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C205-kattitam]
 <!-- hl-knowledge: introduces=[TA-LEX-C205-IDAM205-04]; assesses=[] -->
 
 **மாடி** — *māṭi* — "an upper floor, a storey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாடி** (*māṭi*) is native Dravidian. DEDR 4796 lists Malayalam *māṭam*, "house with an upper storey". The entry compares Sanskrit and Prakrit words for upper-storeyed houses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

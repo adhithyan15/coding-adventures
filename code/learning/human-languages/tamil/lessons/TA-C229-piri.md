@@ -14,7 +14,8 @@ romanization: "piri"
 concept_tag: TA-VERB-PIRI
 prerequisites: [TA-C229-tittu, TA-C229-kanavu-kan]
 sounds: []
-roots: []
+roots: [dravidian-piri-part]
+etymology_hook: "பிரி — native Dravidian (DEDR 4176); Malayalam pirikka 'to sever'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C229-kanavu-kan]
 <!-- hl-knowledge: introduces=[TA-LEX-C229-ACT229-04]; assesses=[] -->
 
 **பிரி** — *piri* — "to separate, to part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிரி** (*piri*) is native Dravidian. DEDR 4176 lists Malayalam *pirikka*, "to sever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

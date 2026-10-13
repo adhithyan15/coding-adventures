@@ -14,6 +14,7 @@ concept_tag: GE-VERB-AENDERN
 prerequisites: [GE-C143-oeffnungszeiten, GE-C143-quittung]
 sounds: []
 roots: []
+etymology_hook: "ändern ← Middle High German endern 'to make other', from the word for 'other'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C143-quittung]
 <!-- hl-knowledge: introduces=[GE-LEX-C144-VERB144-01]; assesses=[] -->
 
 **ändern** — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ändern** ← Middle High German *endern* (EtymDB 2.1), from Old High German *antarōn*, "to make other", built on the word for "other", a cousin of English *other*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

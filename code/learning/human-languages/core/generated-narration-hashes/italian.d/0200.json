@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 200,
-  "sourceHash": "fnv1a64:2bdc8020f4791970",
+  "sourceHash": "fnv1a64:50ec5f3334ea1e58",
   "lessonIds": [
     "IT-C200-ramo",
     "IT-C200-tronco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch200.txt",
   "json": "italian/narration/ch200.json",
-  "textHash": "fnv1a64:9944aa029ffdbfb2",
-  "jsonHash": "fnv1a64:2fa6791872df7d35",
+  "textHash": "fnv1a64:0e7f847db214b165",
+  "jsonHash": "fnv1a64:9f7081e5a9af6dc1",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a corridor"
 concept_tag: PT-COISAS255-CORREDOR
 prerequisites: [PT-C254-bacalhau, PT-C254-salsicha]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "corredor — 'a runner': built from correr 'to run' + -dor — English corridor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C254-salsicha]
 <!-- hl-knowledge: introduces=[PT-LEX-C255-COISAS255-01]; assesses=[] -->
 
 **o corredor** — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corredor** is "a runner": built from *correr*, "to run", and *-dor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

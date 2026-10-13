@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 152,
-  "sourceHash": "fnv1a64:d03f27f9c7fb8632",
+  "sourceHash": "fnv1a64:d733c380f17ba6d8",
   "lessonIds": [
     "PT-C152-portanto",
     "PT-C152-de-qualquer-maneira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch152.txt",
   "json": "portuguese/narration/ch152.json",
-  "textHash": "fnv1a64:13f04e30fd793c5c",
-  "jsonHash": "fnv1a64:216d3d5b506abb46",
+  "textHash": "fnv1a64:4db9f07efc1b118b",
+  "jsonHash": "fnv1a64:08ce6141c3cbb6d6",
   "findings": []
 }

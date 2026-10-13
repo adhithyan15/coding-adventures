@@ -13,7 +13,8 @@ gloss: "a belt"
 concept_tag: FR-HABITS68-CEINTURE
 prerequisites: [FR-C116-veste, FR-C116-cravate]
 sounds: []
-roots: []
+roots: [cingere-latin]
+etymology_hook: "ceinture ← Latin cinctura 'a girdle', from cingere 'to gird' — English cincture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C116-cravate]
 <!-- hl-knowledge: introduces=[FR-LEX-C116-HABITS68-03]; assesses=[] -->
 
 **la ceinture** — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ceinture** ← Latin *cinctura*, "a girdle", from *cingere*, "to gird" (EtymDB 2.1) — inherited: *-nct-* became *-int-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

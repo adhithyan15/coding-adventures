@@ -13,7 +13,8 @@ gloss: "an accountant"
 concept_tag: FR-CHOSES224-COMPTABLE
 prerequisites: [FR-C224-employe, FR-C224-pilote]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "comptable — compter 'to count' + -able: the one who counts"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C224-pilote]
 <!-- hl-knowledge: introduces=[FR-LEX-C224-CHOSES224-03]; assesses=[] -->
 
 **le comptable** — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comptable** — *compter*, "to count", with *-able*: one who keeps the counts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

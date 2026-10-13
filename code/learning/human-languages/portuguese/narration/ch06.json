@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:eec85fc211a8654f",
+  "sourceHash": "fnv1a64:9fc34d5d7fbb16c4",
   "lessons": [
     {
       "id": "PT-C06-numeros-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4c0171075038a5a",
+      "sourceHash": "fnv1a64:7a9d031a7c872c14",
       "notice": null,
       "blocks": [
         {
@@ -89,7 +89,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "um is also \"a/an,\" gendered um (masc.) / uma (fem.): um café, uma cerveja. That much matches Spanish. The surprise is two: Portuguese still inflects it — dois (masc.) / duas (fem.) — a direct survival of Latin duo (masc.) / duae (fem.). So it's dois cafés but duas cervejas. Spanish levelled this to a single dos centuries ago; Portuguese kept the old split. The rest (três, quatro, cinco) don't change."
+              "text": "um is also \"a/an,\" gendered um (masc.) / uma (fem.): um dia, uma noite. That much matches Spanish. The surprise is two: Portuguese still inflects it — dois (masc.) / duas (fem.) — a direct survival of Latin duo (masc.) / duae (fem.). So it's dois dias but duas noites. Spanish levelled this to a single dos centuries ago; Portuguese kept the old split. The rest (três, quatro, cinco) don't change."
             }
           ]
         },
@@ -116,11 +116,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the gendered two — \"dois cafés\" (masc.) / \"duas cervejas\" (fem.)",
+              "instruction": "the gendered two — \"dois dias\" (masc.) / \"duas noites\" (fem.)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the gendered two — \"dois cafés\" (masc.) / \"duas cervejas\" (fem.)]"
+              "source": "[YOU SAY: the gendered two — \"dois dias\" (masc.) / \"duas noites\" (fem.)]"
             },
             {
               "kind": "prompt",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5d9159234b1b195",
+      "sourceHash": "fnv1a64:41e2f9d3d12f4ca1",
       "notice": null,
       "blocks": [
         {
@@ -224,7 +224,7 @@
             },
             {
               "kind": "speech",
-              "text": "The star is oito. Latin octō had a -ct- cluster, and Portuguese turned every Latin -ct- into -it-: octō becomes oito, noctem becomes noite (\"night\"), lactem becomes leite (\"milk\"), factum becomes feito (\"done\"). So oito, noite, and leite all carry the same fingerprint — once you spot the -it-, you can often guess the Latin word had a -ct-. (Spanish took a different path: octō becomes ocho, with -ct- becomes -ch-. Same cluster, two sisters, two solutions — oito vs ocho.)"
+              "text": "The star is oito. Latin octō had a -ct- cluster, and Portuguese turned every Latin -ct- into -it-: octō becomes oito, noctem becomes noite (\"night\"), factum becomes feito (\"done\"). So oito, noite, and feito all carry the same fingerprint — once you spot the -it-, you can often guess the Latin word had a -ct-. (Spanish took a different path: octō becomes ocho, with -ct- becomes -ch-. Same cluster, two sisters, two solutions — oito vs ocho.)"
             }
           ]
         },
@@ -271,11 +271,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the -ct- becomes -it- set — \"oito, noite, leite\" — then Spanish \"ocho\"",
+              "instruction": "the -ct- becomes -it- set — \"oito, noite, feito\" — then Spanish \"ocho\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *-ct- → -it-* set — \"oito, noite, leite\" — then Spanish \"ocho\"]"
+              "source": "[YOU SAY: the *-ct- → -it-* set — \"oito, noite, feito\" — then Spanish \"ocho\"]"
             }
           ]
         },
@@ -292,7 +292,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give 6–10 in Portuguese. (Seis, sete, oito, nove, dez.) What Latin cluster became -it- in oito, and one more example? (-ct-; noite from noctem / leite from lactem.) Why is dezembro Latin for \"ten\"? (The Roman year began in March.) Next chapter builds on this toward time and days."
+              "text": "Give 6–10 in Portuguese. (Seis, sete, oito, nove, dez.) What Latin cluster became -it- in oito, and one more example? (-ct-; noite from noctem / feito from factum.) Why is dezembro Latin for \"ten\"? (The Roman year began in March.) Next chapter builds on this toward time and days."
             }
           ]
         }

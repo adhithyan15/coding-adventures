@@ -13,7 +13,8 @@ gloss: "slow"
 concept_tag: GE-ADJ1-LANGSAM
 prerequisites: [GE-C89-kurz, GE-C89-schnell]
 sounds: []
-roots: []
+roots: [germanic-langaz]
+etymology_hook: "langsam ← Old High German lancsam 'long-lasting': the word for 'long' + -sam"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C89-schnell]
 <!-- hl-knowledge: introduces=[GE-LEX-C89-ADJ1-04]; assesses=[] -->
 
 **langsam** — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**langsam** ← Old High German *lancsam* ← Proto-Germanic *\*langasamaz*, "lengthy": the word for "long" + *-sam* (EtymDB 2.1). Slow is what takes long.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,10 +11,11 @@ romanization: "ām / illai / sari"
 concept_tag: RESPONSE-YESNO
 prerequisites: [TA-C01-sari, TA-C01-nandri, TA-C01-illai, TA-C01-aam, TA-C01-vanakkam]
 sounds: []
-roots: []
+roots: [ām, il, sari]
+etymology_hook: "ஆம் and இல்லை are native Dravidian (DEDR 333, 2559); சரி 'correct' is of uncertain origin"
 reviews_of: [TA-C01-sari, TA-C01-nandri, TA-C01-illai, TA-C01-aam, TA-C01-vanakkam]
 duration:
-  max_seconds: 120
+  max_seconds: 282
 requires:
   knowledge: []
 introduces:
@@ -54,6 +55,11 @@ Every reply is one word. Tamil is comfortable with that in a way English is not.
 
 Say the exchange, don't read it. Each of these five words is printed in Tamil in
 its own lesson, and the letters arrive later, one at a time.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In **ஆம் / இல்லை / சரி** (*ām / illai / sari*), *ām* is worn down from *ākum*, "it will be", a form of the native verb "to become" (DEDR 333), and *illai* is native "not being" (DEDR 2559); Malayalam has *ām* and *illa*. The origin of *sari* is uncertain, and its own lesson gives the usual guess.
 
 ## Grammar Lens: two habits behind the answers
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-POURQUOI158-DONC
 prerequisites: [FR-C157-derriere, FR-C157-a-cote]
 sounds: []
 roots: []
+etymology_hook: "donc ← Late Latin dunc 'then, so'; how dunc was formed is debated"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C157-a-cote]
 <!-- hl-knowledge: introduces=[FR-LEX-C158-POURQUOI158-01]; assesses=[] -->
 
 **donc** — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**donc** ← Late Latin *dunc*, "then, so" — inherited. How *dunc* was formed is debated; the usual account blends *tunc*, "then", with *dum*, "while". (EtymDB 2.1 has its Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a tablet (medicine)"
 concept_tag: FR-SANTE215-COMPRIME
 prerequisites: [FR-C215-grippe, FR-C215-ordonnance]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "comprimé — 'pressed', from Latin comprimere 'to press together' — English compress"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C215-ordonnance]
 <!-- hl-knowledge: introduces=[FR-LEX-C215-SANTE215-03]; assesses=[] -->
 
 **le comprimé** — "a tablet (medicine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comprimé** is the past participle of the verb for "to compress", ← Latin *comprimere*, "to press together" (Lewis & Short): a pressed tablet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

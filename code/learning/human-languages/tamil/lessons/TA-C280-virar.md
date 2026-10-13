@@ -14,7 +14,8 @@ romanization: "vīrar"
 concept_tag: TA-VELAI280-VIRAR
 prerequisites: [TA-C280-aparatam, TA-C280-pukar]
 sounds: []
-roots: []
+roots: [sanskrit-vira]
+etymology_hook: "வீரர் ← Sanskrit vīra 'man, hero' (CDIAL 12056) + the respectful plural -ar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C280-pukar]
 <!-- hl-knowledge: introduces=[TA-LEX-C280-VELAI280-05]; assesses=[] -->
 
 **வீரர்** — *vīrar* — "an athlete, a sportsperson; a hero, a warrior".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வீரர்** (*vīrar*) is *vīrar*, "heroes", from Sanskrit *vīra*, "man, hero" (CDIAL 12056), with the respectful plural *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

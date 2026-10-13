@@ -13,7 +13,8 @@ gloss: "a debt"
 concept_tag: PT-COISAS162-DIVIDA
 prerequisites: [PT-C161-exemplo, PT-C161-verdade]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "dívida ← Latin debita 'things owed', from debere 'to owe' — English debt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C161-verdade]
 <!-- hl-knowledge: introduces=[PT-LEX-C162-COISAS162-01]; assesses=[] -->
 
 **a dívida** — "a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dívida** ← Latin *debita*, "things owed", from *debere*, "to owe" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *divida*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a folder, a school bag"
 concept_tag: IT-COSE198-CARTELLA
 prerequisites: [IT-C197-saldi, IT-C197-fila]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "cartella — carta 'paper' + -ella: a holder for papers — from Latin charta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C197-fila]
 <!-- hl-knowledge: introduces=[IT-LEX-C198-COSE198-01]; assesses=[] -->
 
 **la cartella** — "a folder, a school bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cartella** — built from *carta*, "paper", with *-ella*, "little": a holder for papers. *carta* ← Latin *charta*, "paper". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

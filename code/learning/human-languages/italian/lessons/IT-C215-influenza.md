@@ -13,7 +13,8 @@ gloss: "flu"
 concept_tag: IT-SAL215-INFLUENZA
 prerequisites: [IT-C214-urlare, IT-C214-votare]
 sounds: []
-roots: []
+roots: [influere-latin]
+etymology_hook: "influenza ← Medieval Latin influentia 'a flowing in': illness blamed on the stars"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C214-votare]
 <!-- hl-knowledge: introduces=[IT-LEX-C215-SAL215-01]; assesses=[] -->
 
 **l'influenza** — "flu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**influenza** ← Medieval Latin *influentia*, "a flowing in" (EtymDB 2.1): epidemics were blamed on the influence of the stars. English took *influenza* from Italian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

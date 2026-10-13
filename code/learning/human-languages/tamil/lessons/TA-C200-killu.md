@@ -14,7 +14,8 @@ romanization: "kiḷḷu"
 concept_tag: TA-VERB-KILLU
 prerequisites: [TA-C199-vivati, TA-C199-oppitu]
 sounds: []
-roots: []
+roots: [dravidian-killu-pinch]
+etymology_hook: "கிள்ளு — native Dravidian (DEDR 1589); Malayalam kiḷḷuka, Kannada giṇḍu, Telugu gillu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C199-oppitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C200-ACT200-01]; assesses=[] -->
 
 **கிள்ளு** — *kiḷḷu* — "to pinch, to nip off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிள்ளு** (*kiḷḷu*) is native Dravidian. DEDR 1589 lists Malayalam *kiḷḷuka*, Kannada *giṇḍu* and Telugu *gillu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

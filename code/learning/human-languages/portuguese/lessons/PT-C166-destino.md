@@ -13,7 +13,8 @@ gloss: "a destination; fate"
 concept_tag: PT-COISAS166-DESTINO
 prerequisites: [PT-C166-chegada, PT-C166-partida]
 sounds: []
-roots: []
+roots: [destinare-latin]
+etymology_hook: "destino — from the verb to destine ← Latin destinare 'to make fast, to fix' — English destiny"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C166-partida]
 <!-- hl-knowledge: introduces=[PT-LEX-C166-COISAS166-05]; assesses=[] -->
 
 **o destino** — "a destination; fate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**destino** is built from the verb "to destine", which ← Latin *destinare*, "to make fast, to fix" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

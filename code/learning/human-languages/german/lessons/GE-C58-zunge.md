@@ -13,7 +13,8 @@ gloss: "the tongue"
 concept_tag: GE-KOERPER3-ZUNGE
 prerequisites: [GE-C57-bauch, GE-C58-ruecken]
 sounds: []
-roots: []
+roots: [germanic-tungo]
+etymology_hook: "Zunge ← Old High German zunga ← Proto-Germanic *tungōn — the same word as English tongue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C58-ruecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C58-KOERPER3-02]; assesses=[] -->
 
 **die Zunge** — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zunge** ← Old High German *zunga* ← Proto-Germanic *\*tungōn* — inherited, the same word as English *tongue*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

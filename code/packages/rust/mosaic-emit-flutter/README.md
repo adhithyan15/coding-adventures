@@ -162,7 +162,10 @@ Mosstyle `gap` values on `Row` and `Column` parts lower to horizontal and
 vertical `SizedBox` separators without replacing the flex container with a
 `Wrap`. Spacing is applied after Dart evaluates the generated child list, so
 conditional and repeated children receive exactly one gap only when they
-actually produce neighboring widgets.
+actually produce neighboring widgets. Native `HostDraggable` and
+`HostDropTarget` content bodies use the same vertical-list helper, and helper
+definition detection follows the exact decorated or lightweight child-list
+path so conditional bodies cannot emit incomplete Dart.
 
 ## Layout variants (UI48 §7.9)
 

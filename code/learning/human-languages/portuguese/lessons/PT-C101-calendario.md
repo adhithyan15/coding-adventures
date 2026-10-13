@@ -13,7 +13,8 @@ gloss: "a calendar"
 concept_tag: PT-COISAS101-CALENDARIO
 prerequisites: [PT-C101-fotografia, PT-C101-vela]
 sounds: []
-roots: []
+roots: [calendarium-latin]
+etymology_hook: "calendário ← Latin calendarium 'account book', from calendae, the first of the month"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C101-vela]
 <!-- hl-knowledge: introduces=[PT-LEX-C101-COISAS101-04]; assesses=[] -->
 
 **o calendário** — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calendário** ← Latin *calendarium*, "account book" (EtymDB 2.1), from *calendae*, the first day of the month — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

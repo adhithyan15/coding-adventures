@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Verbs at the Core",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:50cd8fc5636a744c",
+  "sourceHash": "fnv1a64:85f6bf1bcfb412ae",
   "lessons": [
     {
       "id": "PT-C18-ser-estar",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1492524030a6f654",
+      "sourceHash": "fnv1a64:600cdb26036a78f2",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +338,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "há is a form of haver from Latin habere, \"to have, to hold\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +388,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0817a007a8096237",
+      "sourceHash": "fnv1a64:76414708026db7b2",
       "notice": null,
       "blocks": [
         {
@@ -461,6 +472,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ter from Latin tenere, \"to hold\" (EtymDB 2.1), and que from Latin quid, \"what\" (EtymDB 2.1) — both inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +522,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a wolf, then the Tamil for a leopard.
 You'll want to know: முள்.
 முள் — muḷ — "a thorn".
 
+The word, taken apart.
+முள் (muḷ) is native Dravidian. DEDR 4995 lists Malayalam muḷ, Kannada muḷ and Telugu mullu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a leopard, then the Tamil for a thorn.
 
 You'll want to know: தாமரை.
 தாமரை — tāmarai — "a lotus".
+
+The word, taken apart.
+தாமரை (tāmarai) is native Dravidian. DEDR 3163 lists Malayalam tāmara, Kannada tāvare and Telugu tāmara. The entry compares Sanskrit tāmarasa, "lotus".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a thorn, then the Tamil for a lotus.
 You'll want to know: மல்லிகை.
 மல்லிகை — mallikai — "jasmine".
 
+The word, taken apart.
+மல்லிகை (mallikai) is a loan from Sanskrit mallikā, "jasmine" (CDIAL 9913). CDIAL compares Dravidian words for jasmine.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a lotus, then the Tamil for jasmine.
 You'll want to know: வேப்பமரம்.
 வேப்பமரம் — vēppamaram — "a neem tree".
 
+The word, taken apart.
+வேப்பமரம் (vēppamaram) is native: vēmpu, "neem" (DEDR 5531; Kannada bēvu), and maram, "tree" (DEDR 4711).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for jasmine, then the Tamil for a neem tree.
 
 You'll want to know: தென்னைமரம்.
 தென்னைமரம் — teṉṉaimaram — "a coconut palm".
+
+The word, taken apart.
+தென்னைமரம் (teṉṉaimaram) is native: teṉṉai, "coconut palm" (DEDR 3408), and maram, "tree" (DEDR 4711).
 
 What you've built.
 One more word for this chapter.

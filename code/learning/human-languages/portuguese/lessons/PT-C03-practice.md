@@ -11,6 +11,7 @@ concept_tag: CH3-PRACTICE
 prerequisites: [PT-C03-eu, PT-C03-me-chamo, PT-C03-como-se-chama, PT-C03-prazer]
 sounds: []
 roots: []
+etymology_hook: "review: eu ← Latin ego 'I'; chamo ← Latin clamo 'I call out'; prazer ← Latin placere 'to please'"
 duration:
   max_seconds: 245
 requires:
@@ -37,7 +38,7 @@ reviews_of: [PT-C03-me-chamo, PT-C03-como-se-chama, PT-C03-prazer, PT-C02-practi
 
 [PAUSE 2s] No new words. *eu, me chamo, como se chama, prazer* assemble into a
 real first meeting. This slots between your greetings (Ch. 1–2) and farewells
-(Ch. 4), so Portuguese now runs a whole conversation.
+(Ch. 4), so only the goodbye is still to come.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[PT-LEX-C03-PRACTICE-02]; assesses=[] -->
@@ -70,8 +71,8 @@ real first meeting. This slots between your greetings (Ch. 1–2) and farewells
 [PAUSE 1s]
 - [YOU SAY: the full casual meeting, both voices]
 - [YOU SAY: the same formally — with *o senhor / a senhora*]
-- [YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye:
-  "Olá! Me chamo … Como se chama? … Tudo bem? … Até logo!"]
+- [YOU SAY: chain it all — greet, name, ask, pleasure, how-are-you:
+  "Olá! Me chamo … Como se chama? … Prazer! … Tudo bem?"]
 
 [REPEAT x2] Run a whole first meeting start to finish.
 
@@ -81,5 +82,5 @@ real first meeting. This slots between your greetings (Ch. 1–2) and farewells
 [PAUSE 3s] Why does Portuguese usually drop *eu*? (The verb ending says who.)
 What does *me chamo* literally mean, and its root? ("I call myself"; *clāmāre*.)
 What does *prazer* mean, and its Italian twin? ("A pleasure"; *piacere*.)
-Portuguese now runs greet → introduce → how-are-you → goodbye, end to end —
-the loop is closed.
+Portuguese now runs greet → introduce → how-are-you, end to end; the
+goodbyes come next.

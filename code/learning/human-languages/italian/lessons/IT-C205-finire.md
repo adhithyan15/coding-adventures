@@ -13,7 +13,8 @@ gloss: "to finish"
 concept_tag: IT-VERB-FINIRE
 prerequisites: [IT-C204-costare, IT-C205-provare]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "finire ← Latin finire 'to finish', from finis 'end' — English finish is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C205-provare]
 <!-- hl-knowledge: introduces=[IT-LEX-C205-VERBI205-02]; assesses=[] -->
 
 **finire** — "to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**finire** ← Latin *finire*, "to bound, to finish", from *finis*, "end" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

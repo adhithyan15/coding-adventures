@@ -14,7 +14,8 @@ romanization: "kaṭaṟkarai"
 concept_tag: TA-LOC115-KATARKARAI
 prerequisites: [TA-C115-vanki, TA-C115-cantai]
 sounds: []
-roots: []
+roots: [dravidian-kadal-sea, dravidian-karai-shore]
+etymology_hook: "கடற்கரை — native: kaṭal 'sea' (DEDR 1118) + karai 'shore' (DEDR 1293)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C115-cantai]
 <!-- hl-knowledge: introduces=[TA-LEX-C115-LOC115-04]; assesses=[] -->
 
 **கடற்கரை** — *kaṭaṟkarai* — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடற்கரை** (*kaṭaṟkarai*) is native: *kaṭal*, "sea" (DEDR 1118), and *karai*, "shore, bank" (DEDR 1293).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

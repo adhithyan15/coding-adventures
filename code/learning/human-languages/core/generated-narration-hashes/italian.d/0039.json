@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 39,
-  "sourceHash": "fnv1a64:6c307742058d0d4d",
+  "sourceHash": "fnv1a64:a57f706bee7c42b4",
   "lessonIds": [
     "IT-C39-pancia",
     "IT-C39-viso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch39.txt",
   "json": "italian/narration/ch39.json",
-  "textHash": "fnv1a64:488a854091b65763",
-  "jsonHash": "fnv1a64:328a645a8a23ab17",
+  "textHash": "fnv1a64:67ee29a61c32dbdc",
+  "jsonHash": "fnv1a64:dfa61b0e1e540d77",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "the sun"
 concept_tag: IT-NATURA3-SOLE
 prerequisites: [IT-C66-isola, IT-C66-campo]
 sounds: []
-roots: []
+roots: [sol-latin]
+etymology_hook: "sole ← Latin sol 'sun' — English solar shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C66-campo]
 <!-- hl-knowledge: introduces=[IT-LEX-C66-NATURA3-04]; assesses=[] -->
 
 **il sole** — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sole** ← Latin *sol*, "sun" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

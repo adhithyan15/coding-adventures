@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 165,
-  "sourceHash": "fnv1a64:34d9f712cef244ea",
+  "sourceHash": "fnv1a64:282a12a2d25c0ea8",
   "lessonIds": [
     "PT-C165-couro",
     "PT-C165-metal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch165.txt",
   "json": "portuguese/narration/ch165.json",
-  "textHash": "fnv1a64:0b48b39d886116ce",
-  "jsonHash": "fnv1a64:11ee975c5e66352a",
+  "textHash": "fnv1a64:95b0c45bcc5a3d6e",
+  "jsonHash": "fnv1a64:2b99e608f7c21826",
   "findings": []
 }

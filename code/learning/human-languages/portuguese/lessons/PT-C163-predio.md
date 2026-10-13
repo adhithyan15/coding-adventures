@@ -13,7 +13,8 @@ gloss: "a block of flats, a building"
 concept_tag: PT-COISAS163-PREDIO
 prerequisites: [PT-C163-tunel, PT-C163-obras]
 sounds: []
-roots: []
+roots: [praedium-latin]
+etymology_hook: "prédio ← Latin praedium 'farm, estate': first land, then the building on it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C163-obras]
 <!-- hl-knowledge: introduces=[PT-LEX-C163-COISAS163-03]; assesses=[] -->
 
 **o prédio** — "a block of flats, a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prédio** ← Latin *praedium*, "farm, estate" (EtymDB 2.1) — a learned borrowing from Latin. It meant land first, then the building on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

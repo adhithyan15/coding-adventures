@@ -13,7 +13,8 @@ gloss: "a decision"
 concept_tag: PT-COISAS247-DECISAO
 prerequisites: [PT-C247-experiencia, PT-C247-escolha]
 sounds: []
-roots: []
+roots: [caedere-latin]
+etymology_hook: "decisão ← Latin decisio 'a cutting off, a settlement' — English decision"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C247-escolha]
 <!-- hl-knowledge: introduces=[PT-LEX-C247-COISAS247-05]; assesses=[] -->
 
 **a decisão** — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**decisão** ← Latin *decisio, decisionis*, "a cutting off" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

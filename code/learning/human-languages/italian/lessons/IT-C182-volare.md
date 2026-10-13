@@ -13,7 +13,8 @@ gloss: "to fly"
 concept_tag: IT-VERB-VOLARE
 prerequisites: [IT-C182-uccidere, IT-C182-valere]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "volare ← Latin volare 'to fly' — English volatile shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C182-valere]
 <!-- hl-knowledge: introduces=[IT-LEX-C182-VERBI182-03]; assesses=[] -->
 
 **volare** — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volare** ← Latin *volare*, "to fly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

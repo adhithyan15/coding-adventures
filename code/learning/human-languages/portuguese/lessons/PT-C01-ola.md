@@ -11,6 +11,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [stress-accent]
 roots: []
+etymology_hook: "olá — of uncertain origin, probably a natural call for attention; Spanish hola is its near-twin"
 duration:
   max_seconds: 180
 requires:
@@ -57,8 +58,8 @@ its close sibling, has the near-identical *hola*.
 <!-- hl-knowledge: introduces=[PT-PRAGMATIC-OLA-03]; assesses=[] -->
 
 *olá* is friendly and fairly neutral — fine for most people; for real formality
-you add *bom dia* / *boa tarde* (built next). In Brazil you'll also hear *oi*
-for a casual "hi."
+you add a time-of-day greeting, "good morning" or "good afternoon" (built
+next). In Brazil you'll also hear *oi* for a casual "hi."
 
 ## Writing — follow the greeting you can see
 <!-- hl-knowledge: introduces=[]; assesses=[PT-PHONO-OLA-01, PT-PRAGMATIC-OLA-03] -->

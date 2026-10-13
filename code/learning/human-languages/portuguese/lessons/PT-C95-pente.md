@@ -13,7 +13,8 @@ gloss: "a comb"
 concept_tag: PT-CASA95-PENTE
 prerequisites: [PT-C95-escova-de-dentes, PT-C95-pasta-de-dentes]
 sounds: []
-roots: []
+roots: [pecten-latin]
+etymology_hook: "pente ← Latin pecten, pectinis 'comb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C95-pasta-de-dentes]
 <!-- hl-knowledge: introduces=[PT-LEX-C95-CASA95-05]; assesses=[] -->
 
 **o pente** — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pente** ← Latin *pecten, pectinis*, "comb" (EtymDB 2.1) — inherited. Old Portuguese said *peitẽe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

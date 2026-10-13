@@ -44,28 +44,27 @@ difference between them has never been named.
 > The feminine of an adjective adds **-e**. That **-e** is itself silent — and it
 > makes the consonant in front of it audible.
 
-> **petit** — *puh-TEE*. · **petite** — *puh-TEET*.
+> **petit** — *puh-TEE*. · **petite** — *puh-TEET*. ("small")
 
-> **grand** — *grahn*. · **grande** — *grahnd*.
+> **vert** — *vair*. · **verte** — *vairt*. ("green")
 
-Nothing is added to the sound at the end. What changes is that the *t* and the
-*d* stop being final, so the rule from two lessons ago no longer silences them.
+Nothing is added to the sound at the end. What changes is that the *t* stops
+being final, so the rule from two lessons ago no longer silences it.
 
 This is worth holding on to, because it makes the feminine **easier to hear than
 to see**. A French listener knows *petite* from *petit* instantly — one ends in a
 consonant and one does not — while a reader has to notice a letter that is never
 said.
 
-The colours behave the same way, and you already own three of them: *vert* is
-*vair* and *verte* is *vairt*; *blanc* and *blanche*; *noir* and *noire*, where
-the *r* was already sounding and nothing changes at all.
+The other colours you own behave the same way: *blanc* and *blanche*; *noir* and
+*noire*, where the *r* was already sounding and nothing changes at all.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-FEMININ-E-01, FR-PHON-CONSONNE-FINALE-01, FR-GRAM-ADJ-AGREEMENT-04, FR-LEX-BON-03, FR-LEX-VERT-02, FR-LEX-BLANC-03, FR-LEX-NOIR-01, FR-GRAM-ADJ-APRES-NOM-10, FR-LEX-PAIN-01, FR-LEX-VIN-05] -->
 
 - [YOU SAY: the pair, hearing the *t* arrive — "petit, petite"]
-- [YOU SAY: "grand, grande"]
-- [YOU SAY: the colours — "vert, verte; blanc, blanche"]
+- [YOU SAY: "vert, verte" — the *t* arrives again]
+- [YOU SAY: "blanc, blanche"]
 - [YOU SAY: the one that does not change — "noir, noire"]
 - [YOU SAY: with a noun behind it — "le vin blanc", "la maison blanche"]
 - [YOU SAY: the pair you have had since page one — "bon, bonne"]

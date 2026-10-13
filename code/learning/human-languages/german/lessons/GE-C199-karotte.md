@@ -13,7 +13,8 @@ gloss: "a carrot"
 concept_tag: GE-THING199-KAROTTE
 prerequisites: [GE-C199-gras, GE-C199-frucht]
 sounds: []
-roots: []
+roots: [carota-latin]
+etymology_hook: "Karotte ← French carotte ← Latin carōta ← Greek karōton — borrowed, like English carrot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C199-frucht]
 <!-- hl-knowledge: introduces=[GE-LEX-C199-THING199-03]; assesses=[] -->
 
 **die Karotte** — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Karotte** ← French *carotte* ← Latin *carōta*, "carrot" (EtymDB 2.1), from Greek — borrowed, like English *carrot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

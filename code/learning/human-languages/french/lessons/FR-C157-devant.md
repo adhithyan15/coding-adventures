@@ -14,6 +14,7 @@ concept_tag: FR-LIEU157-DEVANT
 prerequisites: [FR-C157-au-dessus, FR-C157-au-dessous]
 sounds: []
 roots: []
+etymology_hook: "devant — de + the word for 'before', from Late Latin abante"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C157-au-dessous]
 <!-- hl-knowledge: introduces=[FR-LEX-C157-LIEU157-03]; assesses=[] -->
 
 **devant** — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**devant** — *de* and the word for "before", ← Late Latin *abante*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

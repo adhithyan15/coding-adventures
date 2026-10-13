@@ -13,7 +13,8 @@ gloss: "a bird"
 concept_tag: GE-TIERE1-VOGEL
 prerequisites: [GE-C85-kuh, GE-C86-schwein]
 sounds: []
-roots: []
+roots: [germanic-fuglaz]
+etymology_hook: "Vogel ← Old High German fogal ← Proto-Germanic *fuglaz 'bird' — the same word as English fowl"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C86-schwein]
 <!-- hl-knowledge: introduces=[GE-LEX-C86-TIERE1-02]; assesses=[] -->
 
 **der Vogel** — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vogel** ← Old High German *fogal* ← Proto-Germanic *\*fuglaz*, "bird" — inherited, the same word as English *fowl*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

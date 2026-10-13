@@ -13,7 +13,8 @@ gloss: "a mechanic"
 concept_tag: IT-COSE163-MECCANICO
 prerequisites: [IT-C162-batteria, IT-C162-caricabatterie]
 sounds: []
-roots: []
+roots: [mechanicus-latin]
+etymology_hook: "meccanico ← Latin mechanicus, from Greek mechanikos — English mechanic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C162-caricabatterie]
 <!-- hl-knowledge: introduces=[IT-LEX-C163-COSE163-01]; assesses=[] -->
 
 **il meccanico** — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meccanico** ← Latin *mechanicus*, "of machines", from Greek *mechanikos*, from *mechane*, "a machine" — a learned borrowing. EtymDB 2.1 has no row for *meccanico*; it derives Spanish *mecánico* from *mechanicus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

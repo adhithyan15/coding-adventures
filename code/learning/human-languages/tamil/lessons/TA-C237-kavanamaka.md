@@ -14,7 +14,8 @@ romanization: "kavaṉamāka"
 concept_tag: TA-KARANAM237-KAVANAMAKA
 prerequisites: [TA-C237-mattumallamal, TA-C237-onraka]
 sounds: []
-roots: []
+roots: [dravidian-kaval-care]
+etymology_hook: "கவனமாக — native Dravidian (DEDR 1328); Malayalam kavanam 'care'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C237-onraka]
 <!-- hl-knowledge: introduces=[TA-LEX-C237-KARANAM237-05]; assesses=[] -->
 
 **கவனமாக** — *kavaṉamāka* — "carefully".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கவனமாக** (*kavaṉamāka*) is native Dravidian. DEDR 1328 lists Malayalam *kavanam*, "care". It is *kavaṉam*, "care, attention", with *-āka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

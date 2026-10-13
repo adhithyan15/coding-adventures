@@ -14,6 +14,7 @@ concept_tag: IT-COSE1-BOTTIGLIA
 prerequisites: [IT-C60-pagare, IT-C60-usare]
 sounds: []
 roots: []
+etymology_hook: "bottiglia ← French bouteille — borrowed; English bottle is the same French word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C60-usare]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-01]; assesses=[] -->
 
 **la bottiglia** — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bottiglia** ← French *bouteille*, "bottle" — borrowed; the French word goes back to Medieval Latin *butticula*, "little cask". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to know (a fact)"
 concept_tag: GE-VERB-WISSEN
 prerequisites: [GE-C64-kaufen, GE-C64-spielen]
 sounds: []
-roots: []
+roots: [witan-germanic]
+etymology_hook: "wissen ← Old High German wizzan ← Proto-Germanic *witaną — English wit and wise share the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C64-spielen]
 <!-- hl-knowledge: introduces=[GE-LEX-C64-VERBEN1-03]; assesses=[] -->
 
 **wissen** — "to know (a fact)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wissen** ← Old High German *wizzan* ← Proto-Germanic *\*witaną*, "to know" — inherited, with German *ss* where English kept *t*. (EtymDB 2.1) English *wit* and *wise* share the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

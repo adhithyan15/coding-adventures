@@ -13,7 +13,8 @@ gloss: "a cellar"
 concept_tag: GE-THING161-KELLER
 prerequisites: [GE-C161-wohnzimmer, GE-C161-balkon]
 sounds: []
-roots: []
+roots: [cella-latin]
+etymology_hook: "Keller ← Old High German kellari ← Late Latin cellārium 'storeroom' — borrowed, like English cellar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C161-balkon]
 <!-- hl-knowledge: introduces=[GE-LEX-C161-THING161-05]; assesses=[] -->
 
 **der Keller** — "a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Keller** ← Old High German *kellari* ← Late Latin *cellārium*, "storeroom", from *cella*, "room" (EtymDB 2.1) — borrowed, like English *cellar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

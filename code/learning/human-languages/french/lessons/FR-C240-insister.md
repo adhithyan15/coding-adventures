@@ -14,6 +14,7 @@ concept_tag: FR-VERB-INSISTER
 prerequisites: [FR-C239-rendre-compte, FR-C239-depecher]
 sounds: []
 roots: []
+etymology_hook: "insister ← Latin insistere 'to stand on, to press on' — English insist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C239-depecher]
 <!-- hl-knowledge: introduces=[FR-LEX-C240-VERBES240-01]; assesses=[] -->
 
 **insister** — "to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insister** ← Latin *insistere*, "to stand on, to press on" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

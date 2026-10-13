@@ -13,7 +13,8 @@ gloss: "old"
 concept_tag: IT-AGG1-VECCHIO
 prerequisites: [IT-C72-piccolo, IT-C72-nuovo]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "vecchio ← Latin vetulus 'elderly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C72-nuovo]
 <!-- hl-knowledge: introduces=[IT-LEX-C72-AGG1-04]; assesses=[] -->
 
 **vecchio** — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vecchio** ← Vulgar Latin *veclus*, from Latin *vetulus*, "elderly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

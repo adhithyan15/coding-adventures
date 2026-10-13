@@ -11,7 +11,8 @@ romanization: "pattiramāka"
 concept_tag: TA-CARE-SAFELY
 prerequisites: [TA-C105-school, TA-C106-takecare]
 sounds: []
-roots: []
+roots: [bhadra-sanskrit]
+etymology_hook: "பத்திரமாக — pattiram 'safety' ← Sanskrit bhadra 'fortunate, good' (CDIAL 9377) + -āka"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C106-takecare]
 **பத்திரமாக** (*pattiramāka*) — "safely".
 
 **பத்திரமாகப் போங்கள்** — "go safely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பத்திரமாக** (*pattiramāka*) is *pattiram*, "safety, care", from Sanskrit *bhadra*, "fortunate, good" (CDIAL 9377), with *-āka*, "in the manner of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

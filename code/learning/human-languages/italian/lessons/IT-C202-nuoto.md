@@ -13,7 +13,8 @@ gloss: "swimming"
 concept_tag: IT-COSE202-NUOTO
 prerequisites: [IT-C202-palestra, IT-C202-corsa]
 sounds: []
-roots: []
+roots: [natare-latin]
+etymology_hook: "nuoto — the noun of nuotare 'to swim', from Latin natare — English natatorium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C202-corsa]
 <!-- hl-knowledge: introduces=[IT-LEX-C202-COSE202-04]; assesses=[] -->
 
 **il nuoto** — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuoto** is the noun of *nuotare*, "to swim". (EtymDB 2.1) *nuotare* goes back to Latin *natare*, "to swim".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

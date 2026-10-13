@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES200-GRENIER
 prerequisites: [FR-C200-cloture, FR-C200-cave]
 sounds: []
 roots: []
+etymology_hook: "grenier ← Latin granarium 'a granary', from granum 'grain' — English garner"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C200-cave]
 <!-- hl-knowledge: introduces=[FR-LEX-C200-CHOSES200-04]; assesses=[] -->
 
 **le grenier** — "an attic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grenier** ← Old French *grenier* ← Latin *granarium*, "a granary", from *granum*, "grain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

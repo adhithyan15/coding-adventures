@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 217,
-  "sourceHash": "fnv1a64:f24268f5e2894e88",
+  "sourceHash": "fnv1a64:695dae7b700c1cf4",
   "lessonIds": [
     "IT-C217-purtroppo",
     "IT-C217-forse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch217.txt",
   "json": "italian/narration/ch217.json",
-  "textHash": "fnv1a64:ecc5b574c758b87a",
-  "jsonHash": "fnv1a64:4fb86df92751b15a",
+  "textHash": "fnv1a64:7c6c3b3f4a59191e",
+  "jsonHash": "fnv1a64:322b6a67fc86d85c",
   "findings": []
 }

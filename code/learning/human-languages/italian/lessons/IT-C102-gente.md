@@ -13,7 +13,8 @@ gloss: "people"
 concept_tag: IT-OGGETTI102-GENTE
 prerequisites: [IT-C102-zaino, IT-C102-mondo]
 sounds: []
-roots: []
+roots: [gens]
+etymology_hook: "gente ← Latin gens, gentis 'clan, people' — English gentle shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C102-mondo]
 <!-- hl-knowledge: introduces=[IT-LEX-C102-OGGETTI102-03]; assesses=[] -->
 
 **la gente** — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gente** ← Latin *gens, gentis*, "clan, people" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

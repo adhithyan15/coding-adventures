@@ -13,7 +13,8 @@ gloss: "energy"
 concept_tag: IT-COSE169-ENERGIA
 prerequisites: [IT-C169-rifiuto, IT-C169-riciclaggio]
 sounds: []
-roots: []
+roots: [energia-latin]
+etymology_hook: "energia ← Late Latin energia, from Greek energeia 'activity' — English energy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C169-riciclaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C169-COSE169-05]; assesses=[] -->
 
 **l'energia** — "energy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**energia** ← Late Latin *energia*, from Greek *energeia*, "activity, work" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

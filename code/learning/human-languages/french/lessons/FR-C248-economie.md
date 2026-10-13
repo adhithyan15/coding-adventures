@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES248-ECONOMIE
 prerequisites: [FR-C248-vote, FR-C248-politique]
 sounds: []
 roots: []
+etymology_hook: "économie ← Latin oeconomia, from Greek oikonomia 'running a household'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C248-politique]
 <!-- hl-knowledge: introduces=[FR-LEX-C248-CHOSES248-05]; assesses=[] -->
 
 **l'économie** — "the economy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**économie** ← Latin *oeconomia*, from Greek *oikonomia*, "running a household", from *oikos*, "house" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a thread, a wire"
 concept_tag: FR-CHOSES230-FIL
 prerequisites: [FR-C229-environnement, FR-C229-pollution]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "fil ← Latin filum 'a thread' — English file and filament"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C229-pollution]
 <!-- hl-knowledge: introduces=[FR-LEX-C230-CHOSES230-01]; assesses=[] -->
 
 **le fil** — "a thread, a wire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fil** ← Old French *fil* ← Latin *filum*, "a thread" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

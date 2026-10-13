@@ -13,7 +13,8 @@ gloss: "a biscuit"
 concept_tag: FR-REPAS73-BISCUIT
 prerequisites: [FR-C121-glace, FR-C121-chocolat]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "biscuit ← Old French bescuit 'cooked two times', from Latin bis + coctus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C121-chocolat]
 <!-- hl-knowledge: introduces=[FR-LEX-C121-REPAS73-05]; assesses=[] -->
 
 **le biscuit** — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biscuit** ← Old French *bescuit*, "cooked two times": *bes-*, "two times", ← Latin *bis*, and the word for "cooked", ← Latin *coctus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

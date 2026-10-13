@@ -2203,8 +2203,43 @@ fn main() { out(1, VALUE); }\n",
     Prog {
         lang: Language::Algol60,
         ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
+        expect: Expect::Stdout("15"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
         expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier(sqrt(ln(exp(exp(exp(abs(sign(pick())))))))); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(result) end",
+        expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — ln may safely map one exponential over a bounded
@@ -4669,6 +4704,51 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary and true else false or boundary end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an ordinary procedure-call selector may choose bare,
+    // unaliased local runtime-real snapshots without exposing mutation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left else right; output(result) end",
+        expect: Expect::Stdout("3.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — unary signs preserve unaliased local runtime-real snapshots
+    // across an ordinary procedure-call selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then -left else +right; output(result) end",
+        expect: Expect::Stdout("3.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — additive finite-static transforms preserve an unaliased
+    // local runtime-real root across an ordinary procedure-call selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left + 1.0 else right - 0.25; output(result) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — multiplicative finite-static transforms preserve an unaliased
+    // local runtime-real root across an ordinary procedure-call selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left * 2.0 else 14.0 / right; output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite-static powers preserve an unaliased local runtime-real
+    // root across an ordinary procedure-call selector.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left ^ 2 else right ^ 1; output(result) end",
+        expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
@@ -14142,6 +14222,87 @@ fn algol_conditional_triple_exp_result_widening_runs_on_every_available_standard
 }
 
 #[test]
+fn algol_conditional_nonpositive_quadruple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL conditional nonpositive quadruple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional nonpositive quadruple-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-wrapped conditional nonpositive quadruple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-wrapped conditional nonpositive quadruple-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_local_runtime_real_roots_cross_all_bounded_conditional_result_widening_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))",
+                )
+        })
+        .expect(
+            "the ALGOL local-root bounded conditional result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but local-root bounded conditional result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_direct_double_exp_result_widening_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -14161,6 +14322,60 @@ fn algol_direct_double_exp_result_widening_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but direct double-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_direct_triple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(ln(exp(exp(exp(abs(sign(pick())))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL direct triple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but direct triple-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nonpositive_quadruple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL nonpositive quadruple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nonpositive quadruple-exp result widening did not complete"
             );
             continue;
         };
@@ -20602,6 +20817,134 @@ fn algol_conditional_identity_selector_write_runs_on_every_available_standard_ba
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the conditional identity selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_local_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("result := if choose() then left else right; output(result)")
+        })
+        .expect("the ALGOL call-selected local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_signed_local_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("result := if choose() then -left else +right; output(result)")
+        })
+        .expect("the ALGOL call-selected signed local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected signed local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_additive_local_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := if choose() then left + 1.0 else right - 0.25; output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected additive local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected additive local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_multiplicative_local_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := if choose() then left * 2.0 else 14.0 / right; output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected multiplicative local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected multiplicative local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_powered_local_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := if choose() then left ^ 2 else right ^ 1; output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected powered local runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected powered local runtime real did not run"
             );
             continue;
         };

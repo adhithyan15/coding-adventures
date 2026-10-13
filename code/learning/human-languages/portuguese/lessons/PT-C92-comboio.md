@@ -14,6 +14,7 @@ concept_tag: PT-VIAGEM92-COMBOIO
 prerequisites: [PT-C92-barco, PT-C92-autocarro]
 sounds: []
 roots: []
+etymology_hook: "comboio ← French convoi 'convoy': a train of carriages travelling together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C92-autocarro]
 <!-- hl-knowledge: introduces=[PT-LEX-C92-VIAGEM92-05]; assesses=[] -->
 
 **o comboio** — "a train". In Brazil, **o trem**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comboio** ← French *convoi*, "convoy" (EtymDB 2.1) — borrowed. A train is a convoy of carriages.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

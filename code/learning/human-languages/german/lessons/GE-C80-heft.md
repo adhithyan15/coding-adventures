@@ -14,6 +14,7 @@ concept_tag: GE-SACHEN-HEFT
 prerequisites: [GE-C80-loeffel, GE-C80-flasche]
 sounds: []
 roots: []
+etymology_hook: "Heft — from a verb meaning 'to fasten': an exercise book is sheets fastened together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C80-flasche]
 <!-- hl-knowledge: introduces=[GE-LEX-C80-SACHEN-03]; assesses=[] -->
 
 **das Heft** — "an exercise book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Heft** comes from a verb meaning "to fasten" ← Old High German *heften* ← Proto-Germanic *\*haftijaną*, "to bind" (EtymDB 2.1): a booklet is sheets fastened together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

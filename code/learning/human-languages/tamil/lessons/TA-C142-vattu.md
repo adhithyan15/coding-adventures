@@ -14,7 +14,8 @@ romanization: "vāttu"
 concept_tag: TA-THINGS142-VATTU
 prerequisites: [TA-C141-kalutai, TA-C142-ottakam]
 sounds: []
-roots: []
+roots: [hindustani-bat]
+etymology_hook: "வாத்து — probably from Hindustani baṭ 'duck', from Persian and Arabic baṭṭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C142-ottakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **வாத்து** — *vāttu* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாத்து** (*vāttu*) is probably a loan from Hindustani *baṭ*, "duck", which goes back to Persian and Arabic *baṭṭ*. DEDR has no native entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

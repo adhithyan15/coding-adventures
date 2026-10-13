@@ -14,7 +14,8 @@ romanization: "poḻutupōkku"
 concept_tag: TA-PORUL277-POLUTUPOKKU
 prerequisites: [TA-C277-verri, TA-C277-tolvi]
 sounds: []
-roots: []
+roots: [dravidian-podu-time, dravidian-poo-go]
+etymology_hook: "பொழுதுபோக்கு — native: poḻutu 'time' (DEDR 4559) + pōkku 'passing' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C277-tolvi]
 <!-- hl-knowledge: introduces=[TA-LEX-C277-PORUL277-04]; assesses=[] -->
 
 **பொழுதுபோக்கு** — *poḻutupōkku* — "a hobby, a pastime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொழுதுபோக்கு** (*poḻutupōkku*) is native: *poḻutu*, "time" (DEDR 4559), and *pōkku*, "passing", from *pō*, "to go" (DEDR 4572): "a passing of time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

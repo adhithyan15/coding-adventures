@@ -13,7 +13,8 @@ gloss: "to visit (sights)"
 concept_tag: GE-VERB-BESICHTIGEN
 prerequisites: [GE-C246-beraten, GE-C246-berichten]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "besichtigen — be- + the word for 'sight' + -igen: to take a good look at"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C246-berichten]
 <!-- hl-knowledge: introduces=[GE-LEX-C246-VERB246-05]; assesses=[] -->
 
 **besichtigen** — "to visit (sights)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**besichtigen** is *be-* + the word for "sight", from *sehen*, + *-igen* (EtymDB 2.1 has the verb): to take a careful look at.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

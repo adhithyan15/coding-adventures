@@ -13,7 +13,8 @@ gloss: "especially"
 concept_tag: GE-ADV173-BESONDERS
 prerequisites: [GE-C172-genau, GE-C173-ziemlich]
 sounds: []
-roots: []
+roots: [germanic-sundraz]
+etymology_hook: "besonders — from the word for 'apart, special' ← Proto-Germanic *sundraz: especially"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C173-ziemlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C173-ADV173-02]; assesses=[] -->
 
 **besonders** — "especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**besonders** is built on the word for "apart, special" ← Proto-Germanic *\*sundraz*, "isolated, alone" (EtymDB 2.1), with *be-* and an adverb *-s*: set apart, especially. English *asunder* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

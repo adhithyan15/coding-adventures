@@ -13,7 +13,8 @@ gloss: "quantity"
 concept_tag: PT-COISAS198-QUANTIDADE
 prerequisites: [PT-C197-lavandaria, PT-C197-cabeleireiro]
 sounds: []
-roots: []
+roots: [quantus-latin]
+etymology_hook: "quantidade ← Latin quantitas, from quantus 'how much' — English quantity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C197-cabeleireiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C198-COISAS198-01]; assesses=[] -->
 
 **a quantidade** — "quantity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quantidade** ← Latin *quantitas, quantitatis*, "how much" (EtymDB 2.1), from *quantus*, "how much" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

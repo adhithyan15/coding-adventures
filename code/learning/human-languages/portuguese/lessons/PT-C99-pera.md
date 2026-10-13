@@ -13,7 +13,8 @@ gloss: "a pear"
 concept_tag: PT-CASA99-PERA
 prerequisites: [PT-C99-caixa-de-correio, PT-C99-massa]
 sounds: []
-roots: []
+roots: [pirum-latin]
+etymology_hook: "pera ← Latin pira, plural of pirum 'pear' — English pear shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C99-massa]
 <!-- hl-knowledge: introduces=[PT-LEX-C99-CASA99-05]; assesses=[] -->
 
 **a pera** — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pera** ← Latin *pira*, "pears" (EtymDB 2.1), the plural of *pirum* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

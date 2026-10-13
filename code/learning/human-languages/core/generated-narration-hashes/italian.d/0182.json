@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 182,
-  "sourceHash": "fnv1a64:eced1d2c73ab6dfc",
+  "sourceHash": "fnv1a64:2341ce4fd8136401",
   "lessonIds": [
     "IT-C182-uccidere",
     "IT-C182-valere",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch182.txt",
   "json": "italian/narration/ch182.json",
-  "textHash": "fnv1a64:480d0b4446a9e343",
-  "jsonHash": "fnv1a64:ca2b1871fc9f4464",
+  "textHash": "fnv1a64:ac3fbed134e8486c",
+  "jsonHash": "fnv1a64:d068cc9e8efcc1df",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI104-SCARPE
 prerequisites: [IT-C104-gonna, IT-C104-cappotto]
 sounds: []
 roots: []
+etymology_hook: "scarpe — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C104-cappotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C104-VESTITI104-03]; assesses=[] -->
 
 **le scarpe** — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scarpe** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

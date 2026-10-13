@@ -13,7 +13,8 @@ gloss: "short"
 concept_tag: GE-ADJ1-KURZ
 prerequisites: [GE-C88-wuenschen, GE-C89-klein]
 sounds: []
-roots: []
+roots: [curtus-latin]
+etymology_hook: "kurz ← Old High German kurz ← Latin curtus 'shortened' — an early loan; English curt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C89-klein]
 <!-- hl-knowledge: introduces=[GE-LEX-C89-ADJ1-02]; assesses=[] -->
 
 **kurz** — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kurz** ← Old High German *kurz* ← Latin *curtus*, "shortened" (EtymDB 2.1) — an early loan from Latin. English *curt* comes from the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

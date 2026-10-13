@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 236,
-  "sourceHash": "fnv1a64:91fd657aafcb1b67",
+  "sourceHash": "fnv1a64:91dfe3ff22fe1bb4",
   "lessonIds": [
     "GE-C236-pflicht",
     "GE-C236-qualitaet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch236.txt",
   "json": "german/narration/ch236.json",
-  "textHash": "fnv1a64:4bc631d6ebc88a68",
-  "jsonHash": "fnv1a64:926d4debb8696827",
+  "textHash": "fnv1a64:f22d810fd626beec",
+  "jsonHash": "fnv1a64:eb29a435a679655e",
   "findings": []
 }

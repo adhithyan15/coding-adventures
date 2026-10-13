@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 144,
-  "sourceHash": "fnv1a64:18955e131b676ccf",
+  "sourceHash": "fnv1a64:27de891c5c777d6a",
   "lessonIds": [
     "PT-C144-calar-se",
     "PT-C144-temer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch144.txt",
   "json": "portuguese/narration/ch144.json",
-  "textHash": "fnv1a64:15f88c0ae168508f",
-  "jsonHash": "fnv1a64:87d41bb44d2d9e17",
+  "textHash": "fnv1a64:69f45610de88a712",
+  "jsonHash": "fnv1a64:6410a022eaf6f6c8",
   "findings": []
 }

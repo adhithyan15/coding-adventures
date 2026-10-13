@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 189,
-  "sourceHash": "fnv1a64:9dcb20ded672681f",
+  "sourceHash": "fnv1a64:cad3a06eb05b9443",
   "lessonIds": [
     "IT-C189-allegro",
     "IT-C189-timido",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch189.txt",
   "json": "italian/narration/ch189.json",
-  "textHash": "fnv1a64:501d71aafc02c1b1",
-  "jsonHash": "fnv1a64:228f5b6925249fd4",
+  "textHash": "fnv1a64:a14b0e7bdd0b0c57",
+  "jsonHash": "fnv1a64:d507e4fd583e3772",
   "findings": []
 }

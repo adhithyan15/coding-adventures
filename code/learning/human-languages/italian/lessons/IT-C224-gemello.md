@@ -13,7 +13,8 @@ gloss: "a twin"
 concept_tag: IT-COSE224-GEMELLO
 prerequisites: [IT-C224-anziano, IT-C224-neonato]
 sounds: []
-roots: []
+roots: [geminus-latin]
+etymology_hook: "gemello ← Latin gemellus 'a twin' — Gemini are the Twins in the sky"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C224-neonato]
 <!-- hl-knowledge: introduces=[IT-LEX-C224-COSE224-04]; assesses=[] -->
 
 **il gemello** — "a twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gemello** ← Latin *gemellus*, "a twin" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

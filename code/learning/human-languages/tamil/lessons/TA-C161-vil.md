@@ -14,7 +14,8 @@ romanization: "vil"
 concept_tag: TA-VERB-VIL
 prerequisites: [TA-C160-vilamparam, TA-C160-racitu]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "வில் — native Dravidian (DEDR 5421); Malayalam vilkka 'to sell', Kannada bil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C160-racitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C161-ACT161-01]; assesses=[] -->
 
 **வில்** — *vil* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வில்** (*vil*) is native Dravidian. DEDR 5421 lists Malayalam *vilkka*, "to sell" and Kannada *bil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

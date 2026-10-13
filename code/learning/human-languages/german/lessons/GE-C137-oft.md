@@ -14,6 +14,7 @@ concept_tag: GE-ZEIT137-OFT
 prerequisites: [GE-C137-jahrhundert, GE-C137-nie]
 sounds: []
 roots: []
+etymology_hook: "oft ← Middle High German ofte — the same word as English often"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C137-nie]
 <!-- hl-knowledge: introduces=[GE-LEX-C137-ZEIT137-05]; assesses=[] -->
 
 **oft** — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oft** ← Middle High German *ofte* — inherited, the same word as English *oft* and *often*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

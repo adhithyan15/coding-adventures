@@ -13,7 +13,8 @@ gloss: "a melon"
 concept_tag: IT-CIBO107-MELONE
 prerequisites: [IT-C107-fragola, IT-C107-ciliegia]
 sounds: []
-roots: []
+roots: [melo-latin]
+etymology_hook: "melone ← Late Latin melo 'melon'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-ciliegia]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-03]; assesses=[] -->
 
 **il melone** — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**melone** ← Late Latin *melo, melonis*, "melon" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

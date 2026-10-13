@@ -14,6 +14,7 @@ concept_tag: PT-FRUTA-LARANJA
 prerequisites: [PT-C45-maca, PT-C45-banana]
 sounds: []
 roots: []
+etymology_hook: "laranja ← Arabic nāranj, from Persian nārang — English orange is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C45-banana]
 <!-- hl-knowledge: introduces=[PT-LEX-C45-FRUTA-04]; assesses=[] -->
 
 **a laranja** — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laranja** ← Arabic *nāranj*, "orange" (EtymDB 2.1) — borrowed. Arabic took it from Persian *nārang*, and the first *n-* became *l-* in Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

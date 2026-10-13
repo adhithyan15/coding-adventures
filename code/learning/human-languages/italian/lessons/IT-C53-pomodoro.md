@@ -14,6 +14,7 @@ concept_tag: IT-VERDURA-POMODORO
 prerequisites: [IT-C52-uva, IT-C53-patata]
 sounds: []
 roots: []
+etymology_hook: "pomodoro — built from an older Italian phrase meaning 'golden apple'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C53-patata]
 <!-- hl-knowledge: introduces=[IT-LEX-C53-VERDURA-02]; assesses=[] -->
 
 **il pomodoro** — "a tomato". Literally "golden apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pomodoro** — built from an older Italian phrase meaning "golden apple". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

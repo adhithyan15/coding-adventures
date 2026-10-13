@@ -13,7 +13,8 @@ gloss: "a small bag"
 concept_tag: IT-COSE257-SACCHETTO
 prerequisites: [IT-C257-metallo, IT-C257-mattone]
 sounds: []
-roots: []
+roots: [saccus-latin]
+etymology_hook: "sacchetto — a little sacco 'sack', from Latin saccus ← Greek sakkos — English sack"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C257-mattone]
 <!-- hl-knowledge: introduces=[IT-LEX-C257-COSE257-03]; assesses=[] -->
 
 **il sacchetto** — "a small bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sacchetto** — built from *sacco*, "a sack", with *-etto*, "little". *sacco* ← Latin *saccus*, from Greek *sakkos*, "a bag of coarse cloth". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

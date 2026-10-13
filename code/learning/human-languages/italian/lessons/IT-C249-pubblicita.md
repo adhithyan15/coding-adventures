@@ -13,7 +13,8 @@ gloss: "advertising"
 concept_tag: IT-COSE249-PUBBLICITA
 prerequisites: [IT-C249-telegiornale, IT-C249-televisione]
 sounds: []
-roots: []
+roots: [publicus-latin]
+etymology_hook: "pubblicità — from pubblico 'public', Latin publicus — English publicity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C249-televisione]
 <!-- hl-knowledge: introduces=[IT-LEX-C249-COSE249-05]; assesses=[] -->
 
 **la pubblicità** — "advertising".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pubblicità** — built from *pubblico*, "public", with *-ità*, after French *publicité*. *pubblico* goes back to Latin *publicus*, "of the people" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

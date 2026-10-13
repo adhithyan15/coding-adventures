@@ -13,7 +13,8 @@ gloss: "a competition"
 concept_tag: GE-THING243-WETTBEWERB
 prerequisites: [GE-C243-wahrheit, GE-C243-werbung]
 sounds: []
-roots: []
+roots: [germanic-hwerbana]
+etymology_hook: "Wettbewerb — the word for 'a bet, a wager' + the noun of bewerben: competing for a prize"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C243-werbung]
 <!-- hl-knowledge: introduces=[GE-LEX-C243-THING243-04]; assesses=[] -->
 
 **der Wettbewerb** — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wettbewerb** is the word for "a wager", Old High German *wetti*, "pledge" (EtymDB 2.1), + the noun of *bewerben*: competing for a prize.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

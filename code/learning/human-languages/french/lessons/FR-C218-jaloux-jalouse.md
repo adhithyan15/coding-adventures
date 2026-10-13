@@ -14,6 +14,7 @@ concept_tag: FR-QUAL218-JALOUX-JALOUSE
 prerequisites: [FR-C217-cependant, FR-C218-curieux-curieuse]
 sounds: []
 roots: []
+etymology_hook: "jaloux ← Late Latin zelosus, from Greek zelos 'zeal' — English jealous and zealous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C218-curieux-curieuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C218-QUAL218-02]; assesses=[] -->
 
 **jaloux / jalouse** — "jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jaloux** ← Old French *jalous* ← Late Latin *zelosus*, from *zelus*, "zeal", from Greek *zelos* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

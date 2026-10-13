@@ -14,7 +14,8 @@ romanization: "ūṟa vai"
 concept_tag: TA-VERB-URA-VAI
 prerequisites: [TA-C196-aluttu, TA-C196-unar]
 sounds: []
-roots: []
+roots: [dravidian-ooru-soak, dravidian-vai-put]
+etymology_hook: "ஊற வை — native: ūṟa, from ūṟu 'to soak' (DEDR 761) + vai 'to put, keep' (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C196-unar]
 <!-- hl-knowledge: introduces=[TA-LEX-C196-ACT196-05]; assesses=[] -->
 
 **ஊற வை** — *ūṟa vai* — "to soak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊற வை** (*ūṟa vai*) is native: *ūṟa*, "to soak", from *ūṟu* (DEDR 761), and *vai*, "to put, to keep" (DEDR 5549): "keep it soaking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

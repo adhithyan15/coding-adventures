@@ -13,7 +13,8 @@ gloss: "a blanket; a ceiling"
 concept_tag: GE-HAUS114-DECKE
 prerequisites: [GE-C113-vorhang, GE-C113-kissen]
 sounds: []
-roots: []
+roots: [germanic-thaka]
+etymology_hook: "Decke ← Old High German decchī, from the verb 'to cover' — a cousin of Dach 'roof' and English thatch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C113-kissen]
 <!-- hl-knowledge: introduces=[GE-LEX-C114-HAUS114-01]; assesses=[] -->
 
 **die Decke** — "a blanket; a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Decke** ← Old High German *decchī*, from the verb "to cover" ← Proto-Germanic *\*þakjaną*, built on *\*þaką*, "roof" (EtymDB 2.1) — a cousin of *Dach* and English *thatch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

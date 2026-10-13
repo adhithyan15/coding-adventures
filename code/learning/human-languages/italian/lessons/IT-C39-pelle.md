@@ -13,7 +13,8 @@ gloss: "skin"
 concept_tag: IT-CORPO3-PELLE
 prerequisites: [IT-C39-viso, IT-C39-sangue]
 sounds: []
-roots: []
+roots: [pellis-latin]
+etymology_hook: "pelle ← Latin pellis 'skin, hide'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C39-sangue]
 <!-- hl-knowledge: introduces=[IT-LEX-C39-CORPO3-04]; assesses=[] -->
 
 **la pelle** — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pelle** ← Latin *pellis*, "skin, hide" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

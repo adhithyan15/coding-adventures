@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 154,
-  "sourceHash": "fnv1a64:c9cc5083d6f23b84",
+  "sourceHash": "fnv1a64:4d8e6e58c02fa245",
   "lessonIds": [
     "PT-C154-complicado-complicada",
     "PT-C154-necessario-necessaria",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch154.txt",
   "json": "portuguese/narration/ch154.json",
-  "textHash": "fnv1a64:bddecf18ae62f1ac",
-  "jsonHash": "fnv1a64:2f3ffda185a12e72",
+  "textHash": "fnv1a64:bf39c6350b61ef6b",
+  "jsonHash": "fnv1a64:38abcc39d656fc0c",
   "findings": []
 }

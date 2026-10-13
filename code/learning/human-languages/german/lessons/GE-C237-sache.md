@@ -13,7 +13,8 @@ gloss: "a thing, a matter"
 concept_tag: GE-THING237-SACHE
 prerequisites: [GE-C237-rolle, GE-C237-ruhe]
 sounds: []
-roots: []
+roots: [germanic-sako]
+etymology_hook: "Sache ← Old High German sahha 'a legal case' — the same word as English sake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C237-ruhe]
 <!-- hl-knowledge: introduces=[GE-LEX-C237-THING237-03]; assesses=[] -->
 
 **die Sache** — "a thing, a matter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sache** ← Middle High German *sache* ← Old High German *sahha*, "a legal case" — inherited, the same word as English *sake*, as in "for your sake". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

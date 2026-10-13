@@ -11,7 +11,8 @@ romanization: "kaṇṭippāka"
 concept_tag: TA-SURE-DEFINITELY
 prerequisites: [TA-C96-thatsright, TA-C96-dontknow]
 sounds: []
-roots: []
+roots: [sanskrit-khanda]
+etymology_hook: "கண்டிப்பாக — kaṇṭippu 'firmness', usually traced to Sanskrit khaṇḍ- 'to cut, settle' (CDIAL 3797), + -āka"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C96-dontknow]
 **கண்டிப்பாக** (*kaṇṭippāka*) — "definitely", "for sure".
 
 **கண்டிப்பாக வருகிறேன்** — "I'll definitely come".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கண்டிப்பாக** (*kaṇṭippāka*) is built on *kaṇṭippu*, "strictness, firmness", which is usually traced to Sanskrit *khaṇḍ-*, "to break, to cut, to settle" (CDIAL 3797, *khaṇḍita*, "broken"). *-āka* makes it "definitely".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

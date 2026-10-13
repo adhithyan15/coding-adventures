@@ -13,7 +13,8 @@ gloss: "round"
 concept_tag: PT-QUALIDADES126-REDONDO
 prerequisites: [PT-C126-macio, PT-C126-duro]
 sounds: []
-roots: []
+roots: [rotundus-latin]
+etymology_hook: "redondo ← Latin rotundus 'round', through Vulgar Latin *retundus — English rotund"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C126-duro]
 <!-- hl-knowledge: introduces=[PT-LEX-C126-QUALIDADES126-04]; assesses=[] -->
 
 **redondo** — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**redondo** ← Latin *rotundus*, "round" (EtymDB 2.1), through Vulgar Latin *\*retundus* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

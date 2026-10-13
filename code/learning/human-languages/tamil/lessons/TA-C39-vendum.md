@@ -11,10 +11,10 @@ romanization: vēṇḍum
 concept_tag: VERB-WANT
 prerequisites: [TA-C06-dative-subject, TA-C15-thanneer-arisi, TA-C32-teri, TA-C33-puri, TA-C34-pidi, TA-W19-read-muunru]
 sounds: [retroflex-nd, nasal-stop-voicing]
-roots: []
-etymology_hook: "வேண்டும் negates with a word of its own — வேண்டாம், built on the same வேண்ட- stem, not வேண்டும் இல்லை"
+roots: [dravidian-beku-want]
+etymology_hook: "வேண்டும் — native, from vēṇṭu 'to want' (DEDR 5528); Malayalam vēṇam, Kannada bēku"
 duration:
-  max_seconds: 285
+  max_seconds: 296
 requires:
   knowledge: [TA-LEX-DATIVE-SUBJECT-01, TA-GRAMMAR-DATIVE-SUBJECT-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-PIDI-01, TA-GRAMMAR-PIDI-02, TA-LEX-PURI-01, TA-GRAMMAR-PURI-02, TA-LEX-TERI-01, TA-GRAMMAR-TERI-02, TA-LEX-THANNEER-ARISI-01, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-EE-SIGN-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-TTA-01, TA-SCRIPT-U-SIGN-01, TA-SOUND-I-SIGN-WRITE-NANDRI-03]
 introduces:
@@ -54,6 +54,11 @@ it, with nothing else touched: **உங்களுக்குத் தண்�
 **த்** survives the swap, because it is the **dative** that licenses it. Compare
 **நான் தமிழ் பேசுகிறேன்**: same hard **த** in front, no dative behind, no
 doubling.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேண்டும்** (*vēṇḍum*) is native Dravidian, from the verb *vēṇṭu*, "to want" (DEDR 5528). Malayalam *vēṇam* and Kannada *bēku* say "it must" in the same way.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-EE-SIGN-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-TTA-01, TA-SCRIPT-U-SIGN-01] -->

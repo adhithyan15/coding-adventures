@@ -13,7 +13,8 @@ gloss: "to give back"
 concept_tag: IT-VERB-RESTITUIRE
 prerequisites: [IT-C239-realizzare, IT-C239-regalare]
 sounds: []
-roots: []
+roots: [restituere-latin]
+etymology_hook: "restituire ← Latin restituere 'to give back', a learned word — English restitution"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C239-regalare]
 <!-- hl-knowledge: introduces=[IT-LEX-C239-VERBI239-04]; assesses=[] -->
 
 **restituire** — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**restituire** ← Latin *restituere*, "to set up again, to give back" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

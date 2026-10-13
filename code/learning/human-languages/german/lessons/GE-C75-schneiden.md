@@ -13,7 +13,8 @@ gloss: "to cut"
 concept_tag: GE-VERB-SCHNEIDEN
 prerequisites: [GE-C75-nuss, GE-C75-bier]
 sounds: []
-roots: []
+roots: [germanic-snithana]
+etymology_hook: "schneiden ← Old High German snīdan ← Proto-Germanic *snīþaną 'to cut' — Dutch snijden is the same verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C75-bier]
 <!-- hl-knowledge: introduces=[GE-LEX-C75-ESSEN7-05]; assesses=[] -->
 
 **schneiden** — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schneiden** ← Old High German *snīdan* ← Proto-Germanic *\*snīþaną*, "to cut" — inherited; Dutch *snijden* is the same verb. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

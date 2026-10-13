@@ -13,7 +13,8 @@ gloss: "the world"
 concept_tag: PT-COISAS102-MUNDO
 prerequisites: [PT-C101-mensagem, PT-C102-mochila]
 sounds: []
-roots: []
+roots: [mundus-latin]
+etymology_hook: "mundo ← Latin mundus 'world' — English mundane shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C102-mochila]
 <!-- hl-knowledge: introduces=[PT-LEX-C102-COISAS102-02]; assesses=[] -->
 
 **o mundo** — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mundo** ← Latin *mundus*, "world" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

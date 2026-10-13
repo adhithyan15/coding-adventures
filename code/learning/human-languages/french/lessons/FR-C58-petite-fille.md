@@ -13,7 +13,8 @@ gloss: "a granddaughter"
 concept_tag: FR-FAMILLE10-PETITE-FILLE
 prerequisites: [FR-C58-bebe, FR-C58-petit-fils]
 sounds: []
-roots: []
+roots: [filius]
+etymology_hook: "petite-fille — 'little daughter': little + fille, from Latin filia"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C58-petit-fils]
 <!-- hl-knowledge: introduces=[FR-LEX-C58-FAMILLE10-05]; assesses=[] -->
 
 **la petite-fille** — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**petite-fille** — built from the French for "little", in its feminine form, and *fille*, "daughter": a granddaughter. The "little" word ← Vulgar Latin *\*pittitus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

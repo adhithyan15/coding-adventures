@@ -11,7 +11,8 @@ romanization: "aṅgē"
 concept_tag: TA-DEIXIS-THERE
 prerequisites: [TA-C40-here]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அங்கே — native: the far base a- + a place ending (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **இங்கே** *iṅgē*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அங்கே** (*aṅgē*) is native Dravidian: the far base *a-* with a place ending. DEDR 1 lists it under the same base as "that".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-04] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 251,
-  "sourceHash": "fnv1a64:43244c6043736e64",
+  "sourceHash": "fnv1a64:bebb79e06482b4a8",
   "lessonIds": [
     "PT-C251-gas",
     "PT-C251-plastico",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch251.txt",
   "json": "portuguese/narration/ch251.json",
-  "textHash": "fnv1a64:e145e36f9f4dc1b8",
-  "jsonHash": "fnv1a64:9b407098373694cd",
+  "textHash": "fnv1a64:ba2991dd79450078",
+  "jsonHash": "fnv1a64:12227e7da31d88d7",
   "findings": []
 }

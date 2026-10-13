@@ -13,7 +13,8 @@ gloss: "an actor"
 concept_tag: IT-COSE194-ATTORE
 prerequisites: [IT-C194-cantante, IT-C194-spettacolo]
 sounds: []
-roots: []
+roots: [actor-latin]
+etymology_hook: "attore ← Latin actor, actorem 'a doer, a performer' — Latin ct became tt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C194-spettacolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C194-COSE194-03]; assesses=[] -->
 
 **l'attore** — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**attore** ← Latin *actor*, "a doer, a performer" (*actorem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

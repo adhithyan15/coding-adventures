@@ -11,7 +11,8 @@ romanization: "cōrvu"
 concept_tag: TA-UNWELL-WEARY
 prerequisites: [TA-C87-cold, TA-C87-cough]
 sounds: []
-roots: []
+roots: [dravidian-cor-droop]
+etymology_hook: "சோர்வு — native Dravidian (DEDR 2884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C87-cough]
 
 **களைப்பு** is the tiredness of a long day; **சோர்வு** lasts longer. **சோர்வாக இருக்கிறது** —
 "I feel worn out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சோர்வு** (*cōrvu*) is native Dravidian (DEDR 2884). It is the noun of *cōr*, "to grow slack, to droop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

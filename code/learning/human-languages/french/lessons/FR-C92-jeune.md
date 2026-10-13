@@ -13,7 +13,8 @@ gloss: "young"
 concept_tag: FR-ADJ44-JEUNE
 prerequisites: [FR-C92-doux, FR-C92-sale]
 sounds: []
-roots: []
+roots: [iuvenis-latin]
+etymology_hook: "jeune ← Latin iuvenis 'young' — English juvenile shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C92-sale]
 <!-- hl-knowledge: introduces=[FR-LEX-C92-ADJ44-03]; assesses=[] -->
 
 **jeune** — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jeune** ← Latin *iuvenis*, "young" (EtymDB 2.1 records the Latin word) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

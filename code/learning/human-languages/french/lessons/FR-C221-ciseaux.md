@@ -13,7 +13,8 @@ gloss: "scissors"
 concept_tag: FR-CHOSES221-CISEAUX
 prerequisites: [FR-C220-honnete, FR-C220-patient-patiente]
 sounds: []
-roots: []
+roots: [caedere-latin]
+etymology_hook: "ciseaux — usually traced to Late Latin cisorium 'a cutting tool' — English scissors and chisel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C220-patient-patiente]
 <!-- hl-knowledge: introduces=[FR-LEX-C221-CHOSES221-01]; assesses=[] -->
 
 **les ciseaux** — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ciseaux** is the plural of the word for "a chisel", usually traced to Late Latin *cisorium*, "a cutting tool", from *caedere*, "to cut" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

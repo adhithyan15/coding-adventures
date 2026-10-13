@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 202,
-  "sourceHash": "fnv1a64:8293aca5622fde57",
+  "sourceHash": "fnv1a64:91e019ea327f65eb",
   "lessonIds": [
     "PT-C202-aquecer",
     "PT-C202-arrefecer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch202.txt",
   "json": "portuguese/narration/ch202.json",
-  "textHash": "fnv1a64:d5f4635d25fb5711",
-  "jsonHash": "fnv1a64:b96078bd44381cee",
+  "textHash": "fnv1a64:b7a372ec6879a3a1",
+  "jsonHash": "fnv1a64:1b13e27c5f046ac1",
   "findings": []
 }

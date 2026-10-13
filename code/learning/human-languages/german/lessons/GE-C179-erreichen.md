@@ -13,7 +13,8 @@ gloss: "to reach"
 concept_tag: GE-VERB-ERREICHEN
 prerequisites: [GE-C179-erlauben, GE-C179-ernaehren]
 sounds: []
-roots: []
+roots: [germanic-raikijana]
+etymology_hook: "erreichen — er- + reichen 'to reach', the same verb as English reach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C179-ernaehren]
 <!-- hl-knowledge: introduces=[GE-LEX-C179-VERB179-05]; assesses=[] -->
 
 **erreichen** — "to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erreichen** is *er-* + the verb "to reach", Old High German *reihhen* ← Proto-Germanic *\*raikijaną*, the same verb as English *reach*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

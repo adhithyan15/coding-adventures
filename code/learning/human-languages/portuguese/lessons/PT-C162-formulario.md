@@ -13,7 +13,8 @@ gloss: "a form"
 concept_tag: PT-COISAS162-FORMULARIO
 prerequisites: [PT-C162-divida, PT-C162-imposto]
 sounds: []
-roots: []
+roots: [forma-latin]
+etymology_hook: "formulário — built from the formula word (← Latin formula 'small form') + -ário"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C162-imposto]
 <!-- hl-knowledge: introduces=[PT-LEX-C162-COISAS162-03]; assesses=[] -->
 
 **o formulário** — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formulário** is built from the word for a formula and *-ário*. That word ← Latin *formula*, "a small form", from *forma* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

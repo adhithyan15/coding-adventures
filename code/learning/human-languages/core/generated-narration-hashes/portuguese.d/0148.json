@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 148,
-  "sourceHash": "fnv1a64:2d3c769d32131219",
+  "sourceHash": "fnv1a64:38791d2b0e061177",
   "lessonIds": [
     "PT-C148-saude",
     "PT-C148-cerebro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch148.txt",
   "json": "portuguese/narration/ch148.json",
-  "textHash": "fnv1a64:e981eb68d12840c7",
-  "jsonHash": "fnv1a64:da89ca848761955e",
+  "textHash": "fnv1a64:7455d9c1a06d3a0f",
+  "jsonHash": "fnv1a64:7dd41fdc7a6d3c8a",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a fence"
 concept_tag: FR-CHOSES200-CLOTURE
 prerequisites: [FR-C199-volant, FR-C200-portail]
 sounds: []
-roots: []
+roots: [claudere-latin]
+etymology_hook: "clôture ← Late Latin clausura, from clausus 'closed' — English closure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C200-portail]
 <!-- hl-knowledge: introduces=[FR-LEX-C200-CHOSES200-02]; assesses=[] -->
 
 **la clôture** — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clôture** ← Old French *closture* ← Late Latin *clausura*, "a bar, a lock", from *clausus*, "closed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a skirt"
 concept_tag: GE-KLEIDUNG119-ROCK
 prerequisites: [GE-C119-schal, GE-C119-stiefel]
 sounds: []
-roots: []
+roots: [germanic-hrukkaz]
+etymology_hook: "Rock ← Old High German roc 'tunic' ← Proto-Germanic *hrukkaz — first a coat, later a skirt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C119-stiefel]
 <!-- hl-knowledge: introduces=[GE-LEX-C119-KLEIDUNG119-03]; assesses=[] -->
 
 **der Rock** — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rock** ← Old High German *roc*, "tunic" ← Proto-Germanic *\*hrukkaz*, "robe, tunic" — inherited. (EtymDB 2.1) It first named a coat and later a skirt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

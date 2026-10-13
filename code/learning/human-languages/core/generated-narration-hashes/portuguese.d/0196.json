@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 196,
-  "sourceHash": "fnv1a64:ac964688719b760d",
+  "sourceHash": "fnv1a64:a968466a249cea63",
   "lessonIds": [
     "PT-C196-agulha",
     "PT-C196-ferramenta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch196.txt",
   "json": "portuguese/narration/ch196.json",
-  "textHash": "fnv1a64:30b58142190c4df7",
-  "jsonHash": "fnv1a64:c1226885efa4bbdb",
+  "textHash": "fnv1a64:b52530ce89881a3f",
+  "jsonHash": "fnv1a64:f91ca67edbd5d2a9",
   "findings": []
 }

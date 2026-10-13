@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 181,
-  "sourceHash": "fnv1a64:ad1b39e31faae36b",
+  "sourceHash": "fnv1a64:c1fa2d573a29ad4c",
   "lessonIds": [
     "GE-C181-fotografieren",
     "GE-C181-fruehstuecken",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch181.txt",
   "json": "german/narration/ch181.json",
-  "textHash": "fnv1a64:dff7f87a266313ad",
-  "jsonHash": "fnv1a64:05ba15856ef34766",
+  "textHash": "fnv1a64:69f13fe54a315adc",
+  "jsonHash": "fnv1a64:7b8a1db094ef57ce",
   "findings": []
 }

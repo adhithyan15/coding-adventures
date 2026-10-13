@@ -12,6 +12,9 @@ Before the new one: say the German for a chicken, then the German for a gateau.
 You'll want to know: die Speisekarte.
 die Speisekarte — "a menu".
 
+The word, taken apart.
+Speisekarte is the word for "food, a dish" (itself from Medieval Latin spēsa, "provisions") + Karte, "card", from Latin charta (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a gateau, then the German for a menu.
 
 You'll want to know: die Bestellung.
 die Bestellung — "an order".
+
+The word, taken apart.
+Bestellung is bestellen, "to order", + -ung. bestellen is be- + the verb "to put, to place", Proto-Germanic stallijaną. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a menu, then the German for an order.
 You'll want to know: das Trinkgeld.
 das Trinkgeld — "a tip".
 
+The word, taken apart.
+Trinkgeld is the stem of the verb "to drink", Old High German trinkan from Proto-Germanic drinkaną, English drink, + Geld, "money" (EtymDB 2.1): money for a drink.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for an order, then the German for a tip.
 You'll want to know: die Kellnerin.
 die Kellnerin — "a waitress".
 
+The word, taken apart.
+Kellnerin from Middle High German këlnærinne (EtymDB 2.1): Kellner + -in. Kellner goes back to Medieval Latin cellenārius, "cellar master".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a tip, then the German for a waitress.
 
 You'll want to know: das Besteck.
 das Besteck — "cutlery".
+
+The word, taken apart.
+Besteck comes from the verb "to stick in, to fit with" (EtymDB 2.1): a case with knives and forks stuck into it, then the cutlery itself.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "to fall"
 concept_tag: IT-VERB-CADERE
 prerequisites: [IT-C134-alzarsi, IT-C134-sedersi]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "cadere ← Latin cadere 'to fall' — English cadence and decay share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C134-sedersi]
 <!-- hl-knowledge: introduces=[IT-LEX-C134-VERBI134-05]; assesses=[] -->
 
 **cadere** — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cadere** ← Latin *cadere*, "to fall" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

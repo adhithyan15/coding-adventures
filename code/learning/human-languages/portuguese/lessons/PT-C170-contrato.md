@@ -13,7 +13,8 @@ gloss: "a contract"
 concept_tag: PT-TRAB170-CONTRATO
 prerequisites: [PT-C170-salario, PT-C170-reuniao]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "contrato ← Latin contractus 'a drawing together, an agreement'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C170-reuniao]
 <!-- hl-knowledge: introduces=[PT-LEX-C170-TRAB170-05]; assesses=[] -->
 
 **o contrato** — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contrato** ← Latin *contractus*, "a drawing together" (EtymDB 2.1), from *contrahere*, "to draw together" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

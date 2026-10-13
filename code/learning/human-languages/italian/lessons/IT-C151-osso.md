@@ -13,7 +13,8 @@ gloss: "a bone"
 concept_tag: IT-SAL151-OSSO
 prerequisites: [IT-C151-fegato, IT-C151-rene]
 sounds: []
-roots: []
+roots: [os-latin]
+etymology_hook: "osso ← Latin ossum, os 'bone' — English ossify shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C151-rene]
 <!-- hl-knowledge: introduces=[IT-LEX-C151-SAL151-05]; assesses=[] -->
 
 **l'osso** — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**osso** ← Latin *ossum*, "bone", a form of *os*, "bone" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

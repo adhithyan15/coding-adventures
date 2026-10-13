@@ -14,6 +14,7 @@ concept_tag: IT-COSE1-MATITA
 prerequisites: [IT-C61-carta, IT-C61-quaderno]
 sounds: []
 roots: []
+etymology_hook: "matita — shortened from the Italian name of haematite, a red stone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-quaderno]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-05]; assesses=[] -->
 
 **la matita** — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**matita** — shortened from the Italian name of haematite, a red stone. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know: வண்டி.
 The general word for a thing with wheels. A bullock cart is a வண்டி (vaṇḍi); so is a bicycle, and so is a car. Tamil starts here and adds a word in front when it needs to be exact.
 In the middle sits ண்ட — the curled-back ண closed by a புள்ளி and leaning on ட. That pair is one of the most common shapes in the language, and you will now start seeing it everywhere.
 
+The word, taken apart.
+வண்டி (vaṇḍi) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 50), beside Malayalam vaṇṭi, Kannada baṇḍi and Telugu baṇḍi. The entry traces it to Sanskrit bhāṇḍa, "goods, wares": the cart was the thing that carried them.
+
 What you've built.
 The word the rest of this chapter is built on.
 
@@ -45,6 +48,9 @@ You'll want to know: பேருந்து.
 பேருந்து (pērundu) — "a bus".
 A made word, and you can take it apart. பேர்- is the big-word பெரு, and உந்து is "to push along". A big pushed thing.
 This is the printed and announced word: it is what stands on the board at the stop and in the newspaper. In the street you will also hear the English "bus" said plainly, and both are understood — but only one of them is written on the board you have to read.
+
+The word, taken apart.
+பேருந்து (pērundu) is a modern Tamil coinage from native parts: pēr, "big" (DEDR 4411), and untu, a word for a motor vehicle, from the verb untu, "to push, to drive" (DEDR 625). A bus is "the big vehicle".
 
 What you've built.
 Two, and one of them you can take apart.
@@ -113,6 +119,9 @@ You'll want to know: ரயில்.
 A borrowed word, and it wears the borrowing openly: English "rail", written straight out in Tamil letters.
 There is a clue in the very first letter. Tamil words do not normally begin with ர, so a word that starts that way has almost always come in from somewhere else. You now have a small test you can run on a word before anyone tells you where it is from.
 
+The word, taken apart.
+ரயில் (rayil) is a loan from English rail, as in railway.
+
 What you've built.
 Three, and one of them is a visitor.
 
@@ -149,6 +158,9 @@ A made road, wide enough for a வண்டி (vaṇḍi) to go down.
 Set it beside பாதை (pātai), the path you already have. A பாதை is walked; a சாலை (sālai) is driven. The difference is not size so much as what it was made for.
 Both end in the same ை, which by now you have read four times.
 
+The word, taken apart.
+சாலை (sālai) is native Dravidian. DEDR 2471 lists Malayalam cāl, "track, furrow". The entry lists cālai, "street, road", beside cāl, "furrow, track".
+
 What you've built.
 Four, and the vehicles have somewhere to run.
 
@@ -182,6 +194,9 @@ You'll want to know: நிலையம்.
 The place where the vehicle stands still.
 Inside it is நிலை (nilai) — "standing, state" — and you have met that piece before without being told. It is sitting inside வானிலை (vāṉilai), the weather, which is literally the sky's state. One small piece, two words that could hardly be further apart.
 That is worth more than the word itself: Tamil builds long words out of short ones you already own, and from here on you can start looking for the pieces.
+
+The word, taken apart.
+நிலையம் (nilaiyam) is a modern use of a native word: nilai, "standing, place", from nil, "to stand" (DEDR 3675). A station is where things stand and stop.
 
 What you've built.
 Five, and the chapter runs end to end.

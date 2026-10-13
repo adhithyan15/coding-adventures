@@ -13,7 +13,8 @@ gloss: "a finger"
 concept_tag: IT-CORPO1-DITO
 prerequisites: [IT-C37-gamba, IT-C37-piede]
 sounds: []
-roots: []
+roots: [digitus-latin]
+etymology_hook: "dito ← Latin digitus 'finger' — English digit is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C37-piede]
 <!-- hl-knowledge: introduces=[IT-LEX-C37-CORPO1-04]; assesses=[] -->
 
 **il dito** — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dito** ← Latin *digitus*, "finger" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

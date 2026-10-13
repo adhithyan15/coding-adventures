@@ -13,7 +13,8 @@ gloss: "married"
 concept_tag: FR-QUAL162-MARIE-MARIEE
 prerequisites: [FR-C162-enrhume-enrhumee, FR-C162-celibataire]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "marié — 'married', from Latin maritare, from maritus — the Latin of mari"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C162-celibataire]
 <!-- hl-knowledge: introduces=[FR-LEX-C162-QUAL162-04]; assesses=[] -->
 
 **marié / mariée** — "married".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marié** is the past participle of the verb for "to marry", ← Latin *maritare*, from *maritus*, the Latin of *mari* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 120,
-  "sourceHash": "fnv1a64:013a1b0cf2d98f34",
+  "sourceHash": "fnv1a64:9f3e08bc70ee09d9",
   "lessonIds": [
     "GE-C120-socken",
     "GE-C120-bluse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch120.txt",
   "json": "german/narration/ch120.json",
-  "textHash": "fnv1a64:880938f9c8fea752",
-  "jsonHash": "fnv1a64:22aae5a047d8f8d9",
+  "textHash": "fnv1a64:27e6ce86705d06c2",
+  "jsonHash": "fnv1a64:d033ed544a08e317",
   "findings": []
 }

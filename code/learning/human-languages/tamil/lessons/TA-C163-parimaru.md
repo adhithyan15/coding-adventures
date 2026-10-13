@@ -14,7 +14,8 @@ romanization: "parimāṟu"
 concept_tag: TA-VERB-PARIMARU
 prerequisites: [TA-C162-tukku, TA-C163-tayar-cey]
 sounds: []
-roots: []
+roots: [dravidian-maaru-change]
+etymology_hook: "பரிமாறு — ends in native māṟu 'to change, exchange' (DEDR 4834); the first part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C163-tayar-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C163-ACT163-02]; assesses=[] -->
 
 **பரிமாறு** — *parimāṟu* — "to serve (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பரிமாறு** (*parimāṟu*) ends in native *māṟu*, "to change, to exchange" (DEDR 4834). The first part, *pari*, is not settled, so the origin of the whole word is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

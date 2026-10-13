@@ -14,7 +14,8 @@ romanization: "caṭṭi"
 concept_tag: TA-PORUL182-CATTI
 prerequisites: [TA-C182-kulay, TA-C182-tamlar]
 sounds: []
-roots: []
+roots: [dravidian-catti-pot]
+etymology_hook: "சட்டி — native Dravidian (DEDR 2306); Malayalam caṭṭi 'pot', Kannada caṭṭi, Telugu caṭṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C182-tamlar]
 <!-- hl-knowledge: introduces=[TA-LEX-C182-PORUL182-04]; assesses=[] -->
 
 **சட்டி** — *caṭṭi* — "a pan, a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சட்டி** (*caṭṭi*) is native Dravidian. DEDR 2306 lists Malayalam *caṭṭi*, "pot", Kannada *caṭṭi* and Telugu *caṭṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

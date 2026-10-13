@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 192,
-  "sourceHash": "fnv1a64:8a4921d1de43e544",
+  "sourceHash": "fnv1a64:898b86de2abbafcf",
   "lessonIds": [
     "GE-C192-abfahrt",
     "GE-C192-ankunft",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch192.txt",
   "json": "german/narration/ch192.json",
-  "textHash": "fnv1a64:6a88281d8cd96a20",
-  "jsonHash": "fnv1a64:4cda5c79cc57117c",
+  "textHash": "fnv1a64:0f2cf911d6535411",
+  "jsonHash": "fnv1a64:0dae41c515621ec2",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: FR-QUAL246-FACHE-FACHEE
 prerequisites: [FR-C246-travailleur-travailleuse, FR-C246-bavard-bavarde]
 sounds: []
 roots: []
+etymology_hook: "fâché — 'angered', from se fâcher"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C246-bavard-bavarde]
 <!-- hl-knowledge: introduces=[FR-LEX-C246-QUAL246-05]; assesses=[] -->
 
 **fâché / fâchée** — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fâché** is the past participle of the verb in *se fâcher*, "to get angry": angered.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

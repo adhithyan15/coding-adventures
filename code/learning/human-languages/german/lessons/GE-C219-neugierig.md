@@ -13,7 +13,8 @@ gloss: "curious"
 concept_tag: GE-QUAL219-NEUGIERIG
 prerequisites: [GE-C218-mager, GE-C218-mutig]
 sounds: []
-roots: []
+roots: [germanic-niwjaz]
+etymology_hook: "neugierig — neu 'new' + Gier 'greed' + -ig: greedy for new things"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C218-mutig]
 <!-- hl-knowledge: introduces=[GE-LEX-C219-QUAL219-01]; assesses=[] -->
 
 **neugierig** — "curious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neugierig** is the word for "new", Old High German *niuwi*, English *new*, + the word for "greed, craving" + *-ig* (EtymDB 2.1): greedy for new things.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

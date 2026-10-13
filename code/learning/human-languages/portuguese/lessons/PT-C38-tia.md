@@ -13,7 +13,8 @@ gloss: "an aunt"
 concept_tag: PT-FAMILIA2-TIA
 prerequisites: [PT-C37-esposa, PT-C38-tio]
 sounds: []
-roots: []
+roots: [thius]
+etymology_hook: "tia ← Late Latin thia, from Greek theia 'aunt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C38-tio]
 <!-- hl-knowledge: introduces=[PT-LEX-C38-FAMILIA2-02]; assesses=[] -->
 
 **a tia** — "an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tia** ← Late Latin *thia*, "aunt" (EtymDB 2.1), from Greek *theia* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

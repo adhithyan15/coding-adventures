@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 220,
-  "sourceHash": "fnv1a64:2f189eb25204e526",
+  "sourceHash": "fnv1a64:330602c7680b6ae1",
   "lessonIds": [
     "GE-C220-puenktlich",
     "GE-C220-regnerisch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch220.txt",
   "json": "german/narration/ch220.json",
-  "textHash": "fnv1a64:c30c4e1e7b5842d5",
-  "jsonHash": "fnv1a64:e051ac7d3644fa22",
+  "textHash": "fnv1a64:02fdbc71cee797d7",
+  "jsonHash": "fnv1a64:279502fd9acec0a9",
   "findings": []
 }

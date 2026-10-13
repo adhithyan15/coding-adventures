@@ -14,7 +14,8 @@ romanization: "veṅkāyam"
 concept_tag: TA-THINGS123-VENKAYAM
 prerequisites: [TA-C123-mampalam, TA-C123-tenkay]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright]
+etymology_hook: "வெங்காயம் — begins with native veṇ 'white' (DEDR 5496); the second part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C123-tenkay]
 <!-- hl-knowledge: introduces=[TA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **வெங்காயம்** — *veṅkāyam* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெங்காயம்** (*veṅkāyam*) begins with native *veṇ*, "white" (DEDR 5496). The second part is not settled, so the origin of the whole word is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

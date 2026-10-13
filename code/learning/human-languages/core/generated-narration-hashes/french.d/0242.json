@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 242,
-  "sourceHash": "fnv1a64:8f981dd92ab2e1d3",
+  "sourceHash": "fnv1a64:5ab949a2c1a7ffd4",
   "lessonIds": [
     "FR-C242-maigrir",
     "FR-C242-nourrir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch242.txt",
   "json": "french/narration/ch242.json",
-  "textHash": "fnv1a64:c4d05c6517dae0b5",
-  "jsonHash": "fnv1a64:55662acfba712108",
+  "textHash": "fnv1a64:a20be5c105f3c09a",
+  "jsonHash": "fnv1a64:159149ae010996a7",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS224-GARAGEM
 prerequisites: [PT-C223-roda, PT-C224-sotao]
 sounds: []
 roots: []
+etymology_hook: "garagem ← French garage, from garer 'to shelter' — English garage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C224-sotao]
 <!-- hl-knowledge: introduces=[PT-LEX-C224-COISAS224-02]; assesses=[] -->
 
 **a garagem** — "a garage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garagem** ← French *garage* (EtymDB 2.1) — borrowed. The French word comes from *garer*, "to shelter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

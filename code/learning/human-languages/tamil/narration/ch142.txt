@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a pig, then the Tamil for a donkey.
 You'll want to know: ஒட்டகம்.
 ஒட்டகம் — ottakam — "a camel".
 
+The word, taken apart.
+ஒட்டகம் (ottakam) is a loan from Sanskrit uṣṭra, "camel" (CDIAL 2387). The word came through a Prakrit form with -ṭṭ-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a donkey, then the Tamil for a camel.
 
 You'll want to know: வாத்து.
 வாத்து — vāttu — "a duck".
+
+The word, taken apart.
+வாத்து (vāttu) is probably a loan from Hindustani baṭ, "duck", which goes back to Persian and Arabic baṭṭ. DEDR has no native entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a camel, then the Tamil for a duck.
 You'll want to know: கன்னம்.
 கன்னம் — kaṉṉam — "a cheek".
 
+The word, taken apart.
+கன்னம் (kaṉṉam) is native Dravidian. DEDR 1413 lists Malayalam kannam and Kannada kanna.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a duck, then the Tamil for a cheek.
 You'll want to know: மணிக்கட்டு.
 மணிக்கட்டு — maṇikkaṭṭu — "a wrist".
 
+The word, taken apart.
+மணிக்கட்டு (maṇikkaṭṭu) is native Dravidian. DEDR 4673 lists Malayalam maṇikkeṭṭu and Kannada maṇikaṭṭu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a cheek, then the Tamil for a wrist.
 
 You'll want to know: முழங்கை.
 முழங்கை — muḻaṅkai — "an elbow".
+
+The word, taken apart.
+முழங்கை (muḻaṅkai) is native: DEDR 4990 lists muḻaṅkai, "elbow, forearm", built on muḻam, "cubit, joint", with kai, "hand, arm".
 
 What you've built.
 One more word for this chapter.

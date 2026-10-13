@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BEWEISEN
 prerequisites: [GE-C246-besichtigen, GE-C247-bestehen]
 sounds: []
 roots: []
+etymology_hook: "beweisen — be- + weisen 'to show': to show that something is so"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C247-bestehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C247-VERB247-02]; assesses=[] -->
 
 **beweisen** — "to prove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beweisen** is *be-* + the verb "to show, to point out" (EtymDB 2.1 has *weisen*): to show that something is so. English *wise* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

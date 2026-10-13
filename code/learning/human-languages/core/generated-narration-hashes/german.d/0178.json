@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 178,
-  "sourceHash": "fnv1a64:f8c700758aa606f3",
+  "sourceHash": "fnv1a64:75f40d9f7ba4b090",
   "lessonIds": [
     "GE-C178-duschen",
     "GE-C178-einschlafen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch178.txt",
   "json": "german/narration/ch178.json",
-  "textHash": "fnv1a64:f34a2585d8b7adaa",
-  "jsonHash": "fnv1a64:8412d8f422a19629",
+  "textHash": "fnv1a64:ee94b2c69f2b9259",
+  "jsonHash": "fnv1a64:7619283e0e1a890d",
   "findings": []
 }

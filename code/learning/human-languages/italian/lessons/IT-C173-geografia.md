@@ -13,7 +13,8 @@ gloss: "geography"
 concept_tag: IT-LAV173-GEOGRAFIA
 prerequisites: [IT-C172-stipendio, IT-C172-riunione]
 sounds: []
-roots: []
+roots: [geographia-latin]
+etymology_hook: "geografia ← Latin geographia, from Greek geographia 'describing the earth' — English geography"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C172-riunione]
 <!-- hl-knowledge: introduces=[IT-LEX-C173-LAV173-01]; assesses=[] -->
 
 **la geografia** — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geografia** ← Latin *geographia*, from Greek *geographia*, "a description of the earth" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

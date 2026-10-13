@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 47,
-  "sourceHash": "fnv1a64:ab7bc148a84c0d26",
+  "sourceHash": "fnv1a64:dd724979a9d750c5",
   "lessonIds": [
     "PT-C47-bolo",
     "PT-C47-mel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch47.txt",
   "json": "portuguese/narration/ch47.json",
-  "textHash": "fnv1a64:0aaace0b58e155d5",
-  "jsonHash": "fnv1a64:febb0d37fe0a8392",
+  "textHash": "fnv1a64:73fcdce522fc3574",
+  "jsonHash": "fnv1a64:11c4ead0fc25d039",
   "findings": []
 }

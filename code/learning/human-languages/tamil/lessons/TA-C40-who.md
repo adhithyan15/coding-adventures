@@ -11,7 +11,8 @@ romanization: "yār"
 concept_tag: TA-DEIXIS-WHO
 prerequisites: [TA-C40-there, TA-C38-vidai, TA-C39-oru]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "யார் — native, on the question base yā- (DEDR 5151); Malayalam yār and ār, Kannada yār"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ name the person.
 *yār* opens with **yā-**, not with the **i-** of near or the **a-** of far
 that the four words before it share. It is the one word in this chapter outside
 that pattern, so learn it as itself: the asking word for people.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**யார்** (*yār*) is native Dravidian, on the question base *yā-* (DEDR 5151). Malayalam has *yār* and *ār*, and Kannada *yār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02] -->

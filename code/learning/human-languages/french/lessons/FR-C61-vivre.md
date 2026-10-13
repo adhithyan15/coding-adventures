@@ -13,7 +13,8 @@ gloss: "to live"
 concept_tag: FR-VERB-VIVRE
 prerequisites: [FR-C61-manger, FR-C61-donner]
 sounds: []
-roots: []
+roots: [vivere-latin]
+etymology_hook: "vivre ← Latin vivere 'to live' — English vivid and revive share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C61-donner]
 <!-- hl-knowledge: introduces=[FR-LEX-C61-VERBES13-05]; assesses=[] -->
 
 **vivre** — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vivre** ← Latin *vivere*, "to live" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

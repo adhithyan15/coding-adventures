@@ -13,7 +13,8 @@ gloss: "a bathtub"
 concept_tag: FR-MAISON64-BAIGNOIRE
 prerequisites: [FR-C111-radio, FR-C112-douche]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "baignoire — from the verb 'to bathe' + -oire; Latin balneum 'a bath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C112-douche]
 <!-- hl-knowledge: introduces=[FR-LEX-C112-MAISON64-02]; assesses=[] -->
 
 **la baignoire** — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baignoire** — built from the verb for "to bathe", with *-oire*, "a thing for". The verb ← Latin *balneare*, from *balneum*, "a bath" (EtymDB 2.1 records *balneum*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

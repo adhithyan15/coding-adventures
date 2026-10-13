@@ -14,6 +14,7 @@ concept_tag: FR-VERB-FLOTTER
 prerequisites: [FR-C212-freiner, FR-C212-fonctionner]
 sounds: []
 roots: []
+etymology_hook: "flotter ← Frankish *flotan 'to float' — English float is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C212-fonctionner]
 <!-- hl-knowledge: introduces=[FR-LEX-C212-VERBES212-04]; assesses=[] -->
 
 **flotter** — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flotter** ← Old French *floter* ← Frankish *\*flotan*, "to float" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

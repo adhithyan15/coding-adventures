@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 86,
-  "sourceHash": "fnv1a64:3f0ba1bf0902a123",
+  "sourceHash": "fnv1a64:8af1b81c55e542e7",
   "lessonIds": [
     "IT-C86-volere",
     "IT-C86-vorrei",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch86.txt",
   "json": "italian/narration/ch86.json",
-  "textHash": "fnv1a64:1b3dc40fad30e34e",
-  "jsonHash": "fnv1a64:b8ec011e4a7b1068",
+  "textHash": "fnv1a64:4cb41cf76f99fb6d",
+  "jsonHash": "fnv1a64:bbd7564c3b7abfb9",
   "findings": []
 }

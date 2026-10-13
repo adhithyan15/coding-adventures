@@ -318,6 +318,12 @@ worse than none, so disputed or folk etymologies are flagged as such
 aren't (e.g. *querer*'s *quaerere* vs. *quarrel*'s *queri*) are kept
 separate.
 
+This is owed by **every lesson that introduces a word**, in every track, and
+it is measured: HL24 §9 states the rule (sourced, with "unknown" or
+"disputed" as allowed answers and an invented etymology never one), counts
+the word lessons with no `etymology_hook` and with no origin statement in the
+printed body, and pins both counts per track so they can only fall.
+
 ### Show the derivation, not just the root
 
 Naming the root is not enough. Where it's interesting — and it usually is —

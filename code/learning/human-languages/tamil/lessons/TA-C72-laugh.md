@@ -11,7 +11,8 @@ romanization: "siri"
 concept_tag: TA-VERB-SIRI
 prerequisites: [TA-C72-sorrow, TA-C70-floor, TA-C71-wash]
 sounds: []
-roots: []
+roots: [dravidian-ciri-laugh]
+etymology_hook: "சிரி — native Dravidian (DEDR 1562); Malayalam cirikka, Kannada kiri 'to grin'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ repeat a sign like that are easy to read and easy to say, and this is a good one
 before you meet its opposite.
 
 After three nouns, this is a verb: something a person **does**, not something they have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிரி** (*siri*) is native Dravidian. DEDR 1562 lists Malayalam *cirikka* and Kannada *kiri*, "to grin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

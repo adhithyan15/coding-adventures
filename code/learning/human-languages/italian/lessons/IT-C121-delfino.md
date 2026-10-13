@@ -13,7 +13,8 @@ gloss: "a dolphin"
 concept_tag: IT-ANIMALI121-DELFINO
 prerequisites: [IT-C121-gufo, IT-C121-balena]
 sounds: []
-roots: []
+roots: [delphinus-latin]
+etymology_hook: "delfino ← Latin delphinus, from Greek delphis — English dolphin is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C121-balena]
 <!-- hl-knowledge: introduces=[IT-LEX-C121-ANIMALI121-05]; assesses=[] -->
 
 **il delfino** — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**delfino** ← Latin *delphinus*, "a dolphin", which Latin took from Greek *delphis* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

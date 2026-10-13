@@ -13,7 +13,8 @@ gloss: "none, not a single"
 concept_tag: PT-NEG134-NENHUM
 prerequisites: [PT-C133-caminhar, PT-C134-nada]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "nenhum ← Latin nec unum 'not one' — Spanish ningún is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C134-nada]
 <!-- hl-knowledge: introduces=[PT-LEX-C134-NEG134-02]; assesses=[] -->
 
 **nenhum / nenhuma** — "none, not a single". It agrees with its noun, and it also keeps **não**: **Não há nenhum comboio ao sábado.** — "There is no train at all on Saturdays."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nenhum** ← Latin *nec unum*, "not one" — inherited. EtymDB 2.1 has no ancestor for it; *unus* is Latin for "one" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

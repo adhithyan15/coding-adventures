@@ -14,6 +14,7 @@ concept_tag: IT-COSE220-TASCA
 prerequisites: [IT-C220-cintura, IT-C220-pigiama]
 sounds: []
 roots: []
+etymology_hook: "tasca — usually traced to Frankish taska 'a pouch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C220-pigiama]
 <!-- hl-knowledge: introduces=[IT-LEX-C220-COSE220-05]; assesses=[] -->
 
 **la tasca** — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tasca** is usually traced to Frankish *taska*, "a pouch" — borrowed. EtymDB 2.1 gives both this and a Late Latin *tasca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

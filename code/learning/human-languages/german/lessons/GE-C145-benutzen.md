@@ -13,7 +13,8 @@ gloss: "to use"
 concept_tag: GE-VERB-BENUTZEN
 prerequisites: [GE-C144-ausgehen, GE-C144-aussehen]
 sounds: []
-roots: []
+roots: [germanic-nutona]
+etymology_hook: "benutzen — be- + the verb 'to use, to profit from' ← Old High German nuzzōn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C144-aussehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C145-VERB145-01]; assesses=[] -->
 
 **benutzen** — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**benutzen** is *be-* + the verb "to use, to profit from", Old High German *nuzzōn* ← Proto-Germanic *\*nutōną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

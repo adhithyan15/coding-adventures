@@ -13,7 +13,8 @@ gloss: "to recognise"
 concept_tag: PT-VERB-RECONHECER
 prerequisites: [PT-C143-alcancar, PT-C143-devolver]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "reconhecer ← Latin recognoscere 'to know again' — English recognise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C143-devolver]
 <!-- hl-knowledge: introduces=[PT-LEX-C143-VERBOS143-05]; assesses=[] -->
 
 **reconhecer** — "to recognise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reconhecer** ← Latin *recognoscere*, "to know again" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

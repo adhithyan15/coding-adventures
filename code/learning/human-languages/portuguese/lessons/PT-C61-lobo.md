@@ -13,7 +13,8 @@ gloss: "a wolf"
 concept_tag: PT-ANIMAIS2-LOBO
 prerequisites: [PT-C61-passaro, PT-C61-rato]
 sounds: []
-roots: []
+roots: [lupus-latin]
+etymology_hook: "lobo ← Latin lupus 'wolf': -p- became -b- — English lupine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C61-rato]
 <!-- hl-knowledge: introduces=[PT-LEX-C61-ANIMAIS2-03]; assesses=[] -->
 
 **o lobo** — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lobo** ← Latin *lupus*, "wolf" (EtymDB 2.1) — inherited. The Latin *-p-* between vowels became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wish"
 concept_tag: PT-QUERER83-DESEJO
 prerequisites: [PT-C83-preferir, PT-C83-desejar]
 sounds: []
-roots: []
+roots: [desidia-latin]
+etymology_hook: "desejo ← Vulgar Latin *desidium, from desidia 'idleness': idle longing became desire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C83-desejar]
 <!-- hl-knowledge: introduces=[PT-LEX-C83-QUERER83-05]; assesses=[] -->
 
 **o desejo** — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desejo** ← Vulgar Latin *\*desidium* (EtymDB 2.1), from Latin *desidia*, "idleness" — inherited. Idle longing became desire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

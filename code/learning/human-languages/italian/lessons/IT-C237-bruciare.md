@@ -14,6 +14,7 @@ concept_tag: IT-VERB-BRUCIARE
 prerequisites: [IT-C236-divertirsi, IT-C237-avvisare]
 sounds: []
 roots: []
+etymology_hook: "bruciare — origin uncertain; EtymDB records no source"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C237-avvisare]
 <!-- hl-knowledge: introduces=[IT-LEX-C237-VERBI237-02]; assesses=[] -->
 
 **bruciare** — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bruciare** — its origin is uncertain. EtymDB 2.1 records the word but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

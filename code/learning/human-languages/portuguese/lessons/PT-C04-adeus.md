@@ -82,4 +82,4 @@ safekeeping until next time.
 [PAUSE 3s] What does *adeus* literally mean, and from what? ("To God," ← *ad
 Deum*.) Name two sister-language goodbyes with the same "to God" origin.
 (*adiós*, *adieu*, *addio*.) What English goodbye hides "God be with ye"?
-(*Goodbye*.) Next: the softer "see you" goodbyes — starting with **até logo**.
+(*Goodbye*.) Next: the softer "see you" goodbyes — starting with "see you later."

@@ -13,7 +13,8 @@ gloss: "right away, in a moment"
 concept_tag: GE-TIME170-GLEICH
 prerequisites: [GE-C170-selten, GE-C170-meistens]
 sounds: []
-roots: []
+roots: [germanic-galikaz]
+etymology_hook: "gleich ← Old High German gilīh 'alike' — the same build as English alike: 'with the same body'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C170-meistens]
 <!-- hl-knowledge: introduces=[GE-LEX-C170-TIME170-03]; assesses=[] -->
 
 **gleich** — "right away, in a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gleich** ← Old High German *gilīh*, "alike" (EtymDB 2.1) — inherited: *gi-*, "together", + an old word for "body, shape", the same build as English *alike*. "Right away" means "at the same moment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

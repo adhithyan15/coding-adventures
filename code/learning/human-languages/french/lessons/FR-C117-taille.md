@@ -13,7 +13,8 @@ gloss: "size; the waist"
 concept_tag: FR-HABITS69-TAILLE
 prerequisites: [FR-C117-casquette, FR-C117-maillot]
 sounds: []
-roots: []
+roots: [talea-latin]
+etymology_hook: "taille — from the verb 'to cut', from Late Latin taliare — English tailor and detail"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C117-maillot]
 <!-- hl-knowledge: introduces=[FR-LEX-C117-HABITS69-04]; assesses=[] -->
 
 **la taille** — "size; the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taille** — formed from the verb for "to cut", ← Late Latin *taliare*, from *talea*, "a cutting, a twig" (EtymDB 2.1): the cut of a garment, then its size.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

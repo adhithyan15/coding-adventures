@@ -15,6 +15,7 @@ concept_tag: TA-PORUL246-PATTACU
 prerequisites: [TA-C245-pen, TA-C246-kontattam]
 sounds: []
 roots: []
+etymology_hook: "பட்டாசு — origin uncertain; often compared with Hindustani paṭākhā 'firecracker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C246-kontattam]
 <!-- hl-knowledge: introduces=[TA-LEX-C246-PORUL246-02]; assesses=[] -->
 
 **பட்டாசு** — *paṭṭācu* — "firecrackers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **பட்டாசு** (*paṭṭācu*) is uncertain. DEDR has no entry for it; it is often compared with Hindustani *paṭākhā*, "firecracker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

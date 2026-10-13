@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES194-PAPILLON
 prerequisites: [FR-C194-vallee, FR-C194-temperature]
 sounds: []
 roots: []
+etymology_hook: "papillon ← Latin papilio 'butterfly', half-learned; its worn-down twin gave English pavilion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C194-temperature]
 <!-- hl-knowledge: introduces=[FR-LEX-C194-CHOSES194-03]; assesses=[] -->
 
 **le papillon** — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**papillon** ← Latin *papilio*, *papilionis*, "a butterfly" (EtymDB 2.1) — semi-learned: it kept its middle *p*. The fully inherited twin, with *v*, became the word for a tent, English *pavilion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

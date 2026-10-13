@@ -13,7 +13,8 @@ gloss: "to shout"
 concept_tag: IT-VERB-GRIDARE
 prerequisites: [IT-C140-saltare, IT-C140-sorridere]
 sounds: []
-roots: []
+roots: [quiritare-latin]
+etymology_hook: "gridare ← Latin quiritare 'to cry for the citizens' help' — English cry is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C140-sorridere]
 <!-- hl-knowledge: introduces=[IT-LEX-C140-VERBI140-05]; assesses=[] -->
 
 **gridare** — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gridare** goes back to Latin *quiritare*, "to call on the citizens for help, to cry out" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *gridare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 138,
-  "sourceHash": "fnv1a64:a9217dc99b0aa59d",
+  "sourceHash": "fnv1a64:bc1e76e1f200d1c6",
   "lessonIds": [
     "PT-C138-acender",
     "PT-C138-apagar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch138.txt",
   "json": "portuguese/narration/ch138.json",
-  "textHash": "fnv1a64:e75ee68e099520f9",
-  "jsonHash": "fnv1a64:43d96aaf7cfe6999",
+  "textHash": "fnv1a64:3220bbd5278acb44",
+  "jsonHash": "fnv1a64:07d4227961013763",
   "findings": []
 }

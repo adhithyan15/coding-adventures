@@ -13,7 +13,8 @@ gloss: "a root"
 concept_tag: IT-COSE168-RADICE
 prerequisites: [IT-C168-pianta, IT-C168-seme]
 sounds: []
-roots: []
+roots: [radix-latin]
+etymology_hook: "radice ← Latin radix, radicem 'a root' — English radical and radish share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C168-seme]
 <!-- hl-knowledge: introduces=[IT-LEX-C168-COSE168-05]; assesses=[] -->
 
 **la radice** — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**radice** ← Latin *radix*, "a root" (*radicem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

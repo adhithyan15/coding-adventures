@@ -13,6 +13,9 @@ You'll want to know: வா.
 வா (vā) — "come".
 You met it beside its partner varu-; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the tense endings attach to varu-, not to vā.
 
+The word, taken apart.
+வா (vā) is native Dravidian. DEDR 5270 lists Malayalam varuka, Kannada bā and Telugu rā.
+
 What you've built.
 One more everyday action. Three follow, and each reuses the ones before.
 
@@ -38,6 +41,9 @@ Before the new one: what did vā mean?
 You'll want to know: உட்கார்.
 உட்கார் (uṭkār) — "sit".
 Built from uḷ, 'inside', and kār — to settle oneself in. Tamil often builds a verb from a place-word plus an action this way.
+
+The word, taken apart.
+உட்கார் (uṭkār) looks like a compound whose first part is uḷ, "inside", the native word for being within (DEDR 698), and it is usually taken that way. But DEDR has no entry for the verb itself, and the second part is not clear, so its origin is uncertain.
 
 What you've built.
 One more everyday action. Three follow, and each reuses the ones before.
@@ -67,6 +73,9 @@ You'll want to know: படி.
 படி (paṭi) — "read".
 Also 'to study'. The same word covers reading a page and studying a subject, so a student paṭikkiṟār whether they are holding a book or not.
 
+The word, taken apart.
+The origin of படி (paṭi) is the open question met in an earlier lesson: Tamil's own dictionaries list it as native, while others connect it to Sanskrit paṭh, "to recite". Tamil has no aspirated consonants, so a borrowed paṭh would arrive as paṭi either way.
+
 What you've built.
 One more everyday action. Three follow, and each reuses the ones before.
 
@@ -94,6 +103,9 @@ Before the new one: what did paṭi mean?
 You'll want to know: கொடு.
 கொடு (koṭu) — "give".
 The everyday 'give'. Tamil distinguishes giving away from giving toward the speaker; this is the giving-away one.
+
+The word, taken apart.
+கொடு (koṭu) is native Dravidian. DEDR 2053 lists Malayalam koṭukka and Kannada koḍu.
 
 What you've built.
 That closes the run: four more actions, each met on its own.

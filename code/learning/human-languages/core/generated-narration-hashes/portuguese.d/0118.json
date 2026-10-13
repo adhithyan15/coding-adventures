@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 118,
-  "sourceHash": "fnv1a64:c413f6be2b8504cd",
+  "sourceHash": "fnv1a64:3473d37860ea2ed4",
   "lessonIds": [
     "PT-C118-coelho",
     "PT-C118-tigre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch118.txt",
   "json": "portuguese/narration/ch118.json",
-  "textHash": "fnv1a64:bb9e0f3d609c42b0",
-  "jsonHash": "fnv1a64:c56c3277eb39940e",
+  "textHash": "fnv1a64:e897ef19580c6574",
+  "jsonHash": "fnv1a64:746dbb50a6087406",
   "findings": []
 }

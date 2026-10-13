@@ -13,7 +13,8 @@ gloss: "to thank"
 concept_tag: FR-VERB-REMERCIER
 prerequisites: [FR-C175-embrasser, FR-C175-saluer]
 sounds: []
-roots: []
+roots: [merces-latin]
+etymology_hook: "remercier — re- + the old verb made from merci 'thank you'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C175-saluer]
 <!-- hl-knowledge: introduces=[FR-LEX-C175-VERBES175-03]; assesses=[] -->
 
 **remercier** — "to thank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remercier** — built from *re-* and the old verb for "to thank", made from *merci*, "thank you". (EtymDB 2.1 has its Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
