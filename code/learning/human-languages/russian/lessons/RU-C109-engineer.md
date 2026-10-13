@@ -14,7 +14,8 @@ romanization: "inzhenér"
 concept_tag: RU-THINGS109-ENGINEER
 prerequisites: [RU-C108-driver, RU-C109-lawyer]
 sounds: []
-roots: []
+roots: [ingenium-latin]
+etymology_hook: "инженер ← German Ingenieur, from French ingénieur, Latin ingenium 'a clever device'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C109-lawyer]
 <!-- hl-knowledge: introduces=[RU-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **инженер** (*inzhenér*) — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**инженер** comes from German *Ingenieur*, from French *ingénieur*, from Latin *ingenium*, "talent, a clever device" (Vasmer); Kiparsky finds it as early as 1647.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

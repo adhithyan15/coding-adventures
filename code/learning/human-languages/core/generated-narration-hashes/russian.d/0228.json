@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 228,
-  "sourceHash": "fnv1a64:50db4c2867ee4daf",
+  "sourceHash": "fnv1a64:52d3f29e5541629a",
   "lessonIds": [
     "RU-C228-oshibka",
     "RU-C228-pravilo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch228.txt",
   "json": "russian/narration/ch228.json",
-  "textHash": "fnv1a64:3eb23a232f69226c",
-  "jsonHash": "fnv1a64:96380301d6c2c0ab",
+  "textHash": "fnv1a64:1c3e67396be0d0eb",
+  "jsonHash": "fnv1a64:92d40546638c1a31",
   "findings": []
 }

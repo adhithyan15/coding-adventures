@@ -14,7 +14,8 @@ romanization: "vkhod"
 concept_tag: RU-CHT139-VKHOD
 prerequisites: [RU-C139-raspisaniye, RU-C139-reklama]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "вход is в 'in' + ход 'a going', from ходить 'to walk'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [RU-C139-reklama]
 
 The sign over a door says **ВХОД**: you go in here. **Вход свободный** means
 entry is free.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вход** is *в*, "in", with *ход*, "a going", from *ходить*, "to walk": the way in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

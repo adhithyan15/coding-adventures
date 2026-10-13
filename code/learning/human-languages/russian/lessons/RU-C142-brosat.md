@@ -14,7 +14,8 @@ romanization: "brosát"
 concept_tag: RU-VERB-BROSAT
 prerequisites: [RU-C142-nosit, RU-C142-derzhat]
 sounds: []
-roots: []
+roots: [slavic-brosati]
+etymology_hook: "бросать ← Proto-Slavic *brŭsati; Vasmer reports a link with words for 'to scrape', but the origin is unsettled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C142-derzhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C142-ACT142-03]; assesses=[] -->
 
 **бросать** (*brosát*) — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бросать** ← Proto-Slavic *\*brŭsati* — inherited. Vasmer reports a comparison with Baltic and Slavic words for "to scrape", while Kopečný thought it might imitate a sound, so its origin is unsettled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

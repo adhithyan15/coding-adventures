@@ -14,7 +14,8 @@ romanization: "vrédnyy"
 concept_tag: RU-KACH188-VREDNYY
 prerequisites: [RU-C187-ostryy, RU-C188-poleznyy]
 sounds: []
-roots: []
+roots: [slavic-vered]
+etymology_hook: "вредный is вред 'harm' + -ный; вред is Church Slavonic, beside native веред 'a boil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C188-poleznyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C188-KACH188-02]; assesses=[] -->
 
 **вредный** (*vrédnyy*) — "harmful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вредный** is *вред*, "harm", with *-ный*. *вред* is Church Slavonic, Vasmer says, beside the native *веред*, "a boil, a sore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

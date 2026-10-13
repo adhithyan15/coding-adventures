@@ -14,7 +14,8 @@ romanization: "umirát"
 concept_tag: RU-VERB-UMIRAT
 prerequisites: [RU-C236-proveryat, RU-C236-zapolnyat]
 sounds: []
-roots: []
+roots: [pie-mer]
+etymology_hook: "умирать is у- + мирать, from мереть 'to die'; Latin mori 'to die' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C236-zapolnyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C237-ACT237-01]; assesses=[] -->
 
 **умирать** (*umirát*) — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**умирать** is *у-* with *-мирать*, from *мереть*, "to die", Proto-Slavic *\*merti*, which Vasmer relates to Lithuanian *mìrti* and Latin *morī*, "to die".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "síniy"
 concept_tag: RU-COLOUR1-BLUE
 prerequisites: [RU-C63-black, RU-C63-red]
 sounds: []
-roots: []
+roots: [slavic-sini]
+etymology_hook: "синий ← Proto-Slavic *sinĭ; Vasmer relates it to сиять 'to shine' and Sanskrit śyāma 'dark'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C63-red]
 <!-- hl-knowledge: introduces=[RU-LEX-C63-COLOUR1-04]; assesses=[] -->
 
 **синий** (*síniy*) — "blue (dark blue)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**синий** ← Proto-Slavic *\*sinĭ* — inherited. Vasmer relates it to *сиять*, "to shine", or to *сивый*, "grey", and to Sanskrit *śyāmá-*, "dark", and Lithuanian *šývas*, "light-coloured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

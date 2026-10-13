@@ -14,7 +14,8 @@ romanization: "futból"
 concept_tag: RU-THINGS114-FOOTBALL
 prerequisites: [RU-C113-life, RU-C114-price]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "футбол ← English football, 'foot ball'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C114-price]
 <!-- hl-knowledge: introduces=[RU-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **футбол** (*futból*) — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**футбол** comes from English *football*, "foot ball" (Trubachev, in Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

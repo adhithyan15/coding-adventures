@@ -14,7 +14,8 @@ romanization: "úzhinat"
 concept_tag: RU-VERB-UZHINAT
 prerequisites: [RU-C140-obedat, RU-C140-zavtrakat]
 sounds: []
-roots: []
+roots: [slavic-jugu]
+etymology_hook: "ужинать is ужин 'supper' made into a verb with -ать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C140-zavtrakat]
 <!-- hl-knowledge: introduces=[RU-LEX-C140-ACT140-03]; assesses=[] -->
 
 **ужинать** (*úzhinat*) — "to have dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ужинать** is *ужин*, "supper", made into a verb with *-ать*. *ужин* comes from Proto-Slavic *\*jugŭ*, "south, noon": first the midday meal (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

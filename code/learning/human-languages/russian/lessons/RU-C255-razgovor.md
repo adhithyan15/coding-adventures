@@ -14,7 +14,8 @@ romanization: "razgovór"
 concept_tag: RU-VESHCH255-RAZGOVOR
 prerequisites: [RU-C255-nomer, RU-C255-soobshcheniye]
 sounds: []
-roots: []
+roots: [slavic-govor]
+etymology_hook: "разговор is раз- + говор 'talk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C255-soobshcheniye]
 <!-- hl-knowledge: introduces=[RU-LEX-C255-VESHCH255-05]; assesses=[] -->
 
 **разговор** (*razgovór*) — "a conversation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**разговор** is *раз-*, "about, back and forth", with *говор*, "talk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

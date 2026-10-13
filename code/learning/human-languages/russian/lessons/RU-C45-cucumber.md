@@ -14,7 +14,8 @@ romanization: "oguréts"
 concept_tag: RU-VEG-CUCUMBER
 prerequisites: [RU-C45-tomato, RU-C45-onion]
 sounds: []
-roots: []
+roots: [greek-agouros]
+etymology_hook: "огурец ← Byzantine Greek agouros 'cucumber', from Greek aōros 'unripe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C45-onion]
 <!-- hl-knowledge: introduces=[RU-LEX-C45-VEG-04]; assesses=[] -->
 
 **огурец** (*oguréts*) — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**огурец** ← Byzantine Greek *ágouros*, "cucumber", from older Greek *áōros*, "unripe": cucumbers are eaten unripe, unlike melons (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

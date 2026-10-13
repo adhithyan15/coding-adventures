@@ -14,7 +14,8 @@ romanization: "konféta"
 concept_tag: RU-VESHCH250-KONFETA
 prerequisites: [RU-C250-makarony, RU-C250-tort]
 sounds: []
-roots: []
+roots: [conficere-latin]
+etymology_hook: "конфета came from Italian confetto, Latin confectum 'something prepared'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C250-tort]
 <!-- hl-knowledge: introduces=[RU-LEX-C250-VESHCH250-05]; assesses=[] -->
 
 **конфета** (*konféta*) — "a sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**конфета** — first *конфекты*, under Peter the Great, through German *Konfekt*; the form without *-к-* came through Italian *confetto*, from Latin *cōnfectum*, "something prepared" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

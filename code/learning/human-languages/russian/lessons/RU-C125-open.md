@@ -14,7 +14,8 @@ romanization: "otkrýtyy"
 concept_tag: RU-QUAL125-OPEN
 prerequisites: [RU-C124-busy, RU-C125-free]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "открытый is the 'opened' form of открыть, от- 'off' + крыть 'to cover'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C125-free]
 <!-- hl-knowledge: introduces=[RU-LEX-C125-QUAL125-02]; assesses=[] -->
 
 **открытый** (*otkrýtyy*) — "open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**открытый** is "opened", from *открыть*, "to open": *от-*, "off", with *крыть*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

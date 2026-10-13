@@ -14,7 +14,8 @@ romanization: "bédnyy"
 concept_tag: RU-KACH156-BEDNYY
 prerequisites: [RU-C155-vezhlivyy, RU-C156-bogatyy]
 sounds: []
-roots: []
+roots: [slavic-beda]
+etymology_hook: "бедный is беда 'misfortune' + -ный; Lithuanian bėda 'trouble' is a cousin of беда"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C156-bogatyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C156-KACH156-02]; assesses=[] -->
 
 **бедный** (*bédnyy*) — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бедный** is *беда*, "misfortune", with *-ный*: "unfortunate", then "poor". Vasmer compares Lithuanian *bėdà*, "trouble", and Latvian *będa*, "sorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

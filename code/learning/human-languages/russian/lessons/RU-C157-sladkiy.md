@@ -14,7 +14,8 @@ romanization: "sládkiy"
 concept_tag: RU-KACH157-SLADKIY
 prerequisites: [RU-C156-pustoy, RU-C157-goluboy]
 sounds: []
-roots: []
+roots: [slavic-soldu]
+etymology_hook: "сладкий is Church Slavonic, beside native солодкий; солод 'malt' shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C157-goluboy]
 <!-- hl-knowledge: introduces=[RU-LEX-C157-KACH157-02]; assesses=[] -->
 
 **сладкий** (*sládkiy*) — "sweet (taste)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сладкий** — taken from Church Slavonic, says Vasmer, in place of native *солодкий*: *-ла-* against *-оло-*. The native root is in *солод*, "malt", and Lithuanian *saldùs*, "sweet", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

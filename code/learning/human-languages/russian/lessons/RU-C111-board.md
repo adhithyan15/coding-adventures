@@ -14,7 +14,8 @@ romanization: "doská"
 concept_tag: RU-THINGS111-BOARD
 prerequisites: [RU-C110-class, RU-C111-exam, RU-C27-notices, RU-C27-pervoe-chtenie]
 sounds: []
-roots: []
+roots: [discus-latin]
+etymology_hook: "доска came through Germanic, as in Old High German tisc 'table', from Latin discus 'a disc'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [RU-C111-exam]
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **доска** (*doská*) — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**доска** ← Proto-Slavic *\*dŭska*, "a board, a table" — borrowed through Germanic (compare Old High German *tisc*, "table", Old English *disc*, "dish") from Latin *discus*, Greek *dískos*, "a disc" (Vasmer). German *Tisch*, "table", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

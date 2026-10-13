@@ -14,7 +14,8 @@ romanization: "fevrál"
 concept_tag: RU-VREMYA181-FEVRAL
 prerequisites: [RU-C180-lyogkiye, RU-C181-yanvar]
 sounds: []
-roots: []
+roots: [latin-februarius]
+etymology_hook: "февраль came through Byzantine Greek from Latin februarius, the month of purification"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C181-yanvar]
 <!-- hl-knowledge: introduces=[RU-LEX-C181-VREMYA181-02]; assesses=[] -->
 
 **февраль** (*fevrál*) — "February".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**февраль** — Old Russian *феврарь*; it came through Byzantine Greek *phebrouários* from Latin *februārius*, the month of the *februa*, purification rites (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

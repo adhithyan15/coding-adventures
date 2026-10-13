@@ -14,7 +14,8 @@ romanization: "ukól"
 concept_tag: RU-ZDOROV179-UKOL
 prerequisites: [RU-C178-zagorat, RU-C179-retsept]
 sounds: []
-roots: []
+roots: [slavic-koloti]
+etymology_hook: "укол is у- + кол, from колоть 'to prick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C179-retsept]
 <!-- hl-knowledge: introduces=[RU-LEX-C179-ZDOROV179-02]; assesses=[] -->
 
 **укол** (*ukól*) — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**укол** is *у-* with *кол*, from *колоть*, "to prick, to stab". Vasmer relates *колоть* to Lithuanian *kálti*, "to strike, to forge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

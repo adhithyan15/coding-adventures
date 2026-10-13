@@ -14,7 +14,8 @@ romanization: "zarpláta"
 concept_tag: RU-RABOTA170-ZARPLATA
 prerequisites: [RU-C169-lozh, RU-C170-dolzhnost]
 sounds: []
-roots: []
+roots: [slavic-platu]
+etymology_hook: "зарплата is заработная плата, 'earned pay', cut short"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C170-dolzhnost]
 <!-- hl-knowledge: introduces=[RU-LEX-C170-RABOTA170-02]; assesses=[] -->
 
 **зарплата** (*zarpláta*) — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зарплата** is *заработная плата*, "earned pay", cut short. Vasmer explains *плата*, "pay", from *плат*, "a cloth", since pieces of cloth once served as money.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

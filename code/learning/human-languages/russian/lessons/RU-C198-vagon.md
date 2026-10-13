@@ -14,7 +14,8 @@ romanization: "vagón"
 concept_tag: RU-VESHCH198-VAGON
 prerequisites: [RU-C197-pianino, RU-C198-passazhir]
 sounds: []
-roots: []
+roots: [english-waggon]
+etymology_hook: "вагон came from German Waggon or French wagon, from English waggon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C198-passazhir]
 <!-- hl-knowledge: introduces=[RU-LEX-C198-VESHCH198-02]; assesses=[] -->
 
 **вагон** (*vagón*) — "a carriage (of a train)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вагон** came from German *Waggon* or French *wagon*, which go back to English *waggon*; German *Wagen* and Russian *воз*, "a cart", are cousins of the English word (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

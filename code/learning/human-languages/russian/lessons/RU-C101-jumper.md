@@ -14,7 +14,8 @@ romanization: "svíter"
 concept_tag: RU-THINGS101-JUMPER
 prerequisites: [RU-C100-rucksack, RU-C101-people]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "свитер ← English sweater, from sweat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C101-people]
 <!-- hl-knowledge: introduces=[RU-LEX-C101-THINGS101-02]; assesses=[] -->
 
 **свитер** (*svíter*) — "a jumper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свитер** comes from English *sweater*, from *sweat*: first a garment for working up a sweat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

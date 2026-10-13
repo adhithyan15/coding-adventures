@@ -14,7 +14,8 @@ romanization: "stolítsa"
 concept_tag: RU-MESTO213-STOLITSA
 prerequisites: [RU-C213-granitsa, RU-C213-tamozhnya]
 sounds: []
-roots: []
+roots: [slavic-stolu]
+etymology_hook: "столица is from стол, once 'a throne, a seat of rule': the seat of power"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C213-tamozhnya]
 <!-- hl-knowledge: introduces=[RU-LEX-C213-MESTO213-03]; assesses=[] -->
 
 **столица** (*stolítsa*) — "a capital (city)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**столица** is built on *стол*, which in Old Russian meant "a throne, a princely seat" as well as "a table" (Vasmer): the capital is where the ruler sits.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

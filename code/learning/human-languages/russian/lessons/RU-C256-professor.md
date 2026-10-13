@@ -14,7 +14,8 @@ romanization: "proféssor"
 concept_tag: RU-RABOTA256-PROFESSOR
 prerequisites: [RU-C255-soobshcheniye, RU-C255-razgovor]
 sounds: []
-roots: []
+roots: [professio-latin]
+etymology_hook: "профессор came through German Professor from Latin professor 'a public teacher'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C255-razgovor]
 <!-- hl-knowledge: introduces=[RU-LEX-C256-RABOTA256-01]; assesses=[] -->
 
 **профессор** (*proféssor*) — "a professor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**профессор** — from 1720; it came through German *Professor* from Latin *professor*, "a public teacher", from *profitērī*, "to declare openly" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

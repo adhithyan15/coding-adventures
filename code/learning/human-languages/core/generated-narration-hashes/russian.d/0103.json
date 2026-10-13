@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 103,
-  "sourceHash": "fnv1a64:e170f44076736218",
+  "sourceHash": "fnv1a64:046f8812540470b4",
   "lessonIds": [
     "RU-C103-hat",
     "RU-C103-jacket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch103.txt",
   "json": "russian/narration/ch103.json",
-  "textHash": "fnv1a64:78976b5dea2e20d6",
-  "jsonHash": "fnv1a64:7428094b0845baa3",
+  "textHash": "fnv1a64:dec1bdee84994714",
+  "jsonHash": "fnv1a64:96927b35df051c40",
   "findings": []
 }

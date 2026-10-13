@@ -14,7 +14,8 @@ romanization: "grib"
 concept_tag: RU-PANTRY-MUSHROOM
 prerequisites: [RU-C47-honey, RU-C47-rice]
 sounds: []
-roots: []
+roots: [slavic-gribu]
+etymology_hook: "гриб ← Proto-Slavic *gribŭ; the origin is unclear, perhaps from a root 'to skim, slime'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C47-rice]
 <!-- hl-knowledge: introduces=[RU-LEX-C47-PANTRY-04]; assesses=[] -->
 
 **гриб** (*grib*) — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гриб** ← Proto-Slavic *\*gribŭ* — inherited, but its origin is unclear. Vasmer reports a possible link with Lithuanian *griẽti*, "to skim cream", from a sense "slime", among other proposals.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

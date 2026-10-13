@@ -14,7 +14,8 @@ romanization: "ustavát"
 concept_tag: RU-VERB-USTAVAT
 prerequisites: [RU-C176-speshit, RU-C176-otdykhat]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "уставать is у- + ставать, from стать 'to stand': to come to a stop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C176-otdykhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C176-ACT176-05]; assesses=[] -->
 
 **уставать** (*ustavát*) — "to get tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**уставать** is *у-* with *-ставать*, from *стать*, "to stand" (Vasmer): to tire is to come to a stop.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

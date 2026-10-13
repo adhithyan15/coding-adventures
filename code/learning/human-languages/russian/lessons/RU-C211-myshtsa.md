@@ -14,7 +14,8 @@ romanization: "mýshtsa"
 concept_tag: RU-ZDOROV211-MYSHTSA
 prerequisites: [RU-C210-plastyr, RU-C210-bint]
 sounds: []
-roots: []
+roots: [pie-mus]
+etymology_hook: "мышца is from мышь 'mouse', like Latin musculus 'little mouse, muscle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C210-bint]
 <!-- hl-knowledge: introduces=[RU-LEX-C211-ZDOROV211-01]; assesses=[] -->
 
 **мышца** (*mýshtsa*) — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мышца** is built on *мышь*, "a mouse", as Latin *mūsculus*, "a little mouse; a muscle", and Greek *mŷs*, "mouse; muscle" (Vasmer): a flexing muscle looks like a mouse under the skin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pésnya"
 concept_tag: RU-THINGS113-SONG
 prerequisites: [RU-C113-game, RU-C113-film]
 sounds: []
-roots: []
+roots: [slavic-peti]
+etymology_hook: "песня is from петь 'to sing': Old Russian pěsnĭ, 'what is sung'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C113-film]
 <!-- hl-knowledge: introduces=[RU-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **песня** (*pésnya*) — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**песня** comes from *петь*, "to sing", *пою*, "I sing" (Vasmer): Old Russian *песнь*, "what is sung".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

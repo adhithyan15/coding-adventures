@@ -14,7 +14,8 @@ romanization: "svádba"
 concept_tag: RU-VESHCH168-SVADBA
 prerequisites: [RU-C167-benzin, RU-C167-zapravka]
 sounds: []
-roots: []
+roots: [slavic-svatu]
+etymology_hook: "свадьба is from сват 'a matchmaker': first 'match-making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C167-zapravka]
 <!-- hl-knowledge: introduces=[RU-LEX-C168-VESHCH168-01]; assesses=[] -->
 
 **свадьба** (*svádba*) — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свадьба** — Old Russian *сватьба*; it comes from *сват*, "a matchmaker, an in-law" (Vasmer), and first meant "match-making". Vasmer connects *сват* with *свой*, "one's own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

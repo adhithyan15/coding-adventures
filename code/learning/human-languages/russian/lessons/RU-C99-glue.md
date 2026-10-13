@@ -14,7 +14,8 @@ romanization: "kley"
 concept_tag: RU-THINGS99-GLUE
 prerequisites: [RU-C98-nail, RU-C98-hammer]
 sounds: []
-roots: []
+roots: [slavic-kuleji]
+etymology_hook: "клей ← Proto-Slavic *kŭlějĭ; Greek kolla 'glue' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C98-hammer]
 <!-- hl-knowledge: introduces=[RU-LEX-C99-THINGS99-01]; assesses=[] -->
 
 **клей** (*kley*) — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**клей** ← Proto-Slavic *\*kŭlějĭ* — inherited, a cousin of Greek *kólla*, "glue" (Vasmer), the source of *collage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

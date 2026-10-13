@@ -14,7 +14,8 @@ romanization: "sudyá"
 concept_tag: RU-RABOTA171-SUDYA
 prerequisites: [RU-C171-pevets, RU-C171-veterinar]
 sounds: []
-roots: []
+roots: [slavic-sodu]
+etymology_hook: "судья ← Proto-Slavic *sǫdĭji, from суд 'a court, judgement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C171-veterinar]
 <!-- hl-knowledge: introduces=[RU-LEX-C171-RABOTA171-03]; assesses=[] -->
 
 **судья** (*sudyá*) — "a judge; a referee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**судья** ← Proto-Slavic *\*sǫdĭji*, built on *суд*, "judgement, court" — inherited (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

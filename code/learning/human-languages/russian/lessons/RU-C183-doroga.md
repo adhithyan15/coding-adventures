@@ -14,7 +14,8 @@ romanization: "doróga"
 concept_tag: RU-MESTO183-DOROGA
 prerequisites: [RU-C183-pereulok, RU-C183-trotuar]
 sounds: []
-roots: []
+roots: [slavic-dorga]
+etymology_hook: "дорога ← Proto-Slavic *dorga, linked with дёргать 'to tear': a track torn through the forest"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C183-trotuar]
 <!-- hl-knowledge: introduces=[RU-LEX-C183-MESTO183-03]; assesses=[] -->
 
 **дорога** (*doróga*) — "a road; the way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дорога**, "road", ← Proto-Slavic *\*dorga* — inherited. Vasmer links it with *дёргать*, "to pull, to tear": first "a strip torn through the forest". Serbo-Croatian *драга* means "a valley".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

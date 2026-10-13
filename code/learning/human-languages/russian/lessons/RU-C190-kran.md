@@ -14,7 +14,8 @@ romanization: "kran"
 concept_tag: RU-VESHCH190-KRAN
 prerequisites: [RU-C190-shtora, RU-C190-rakovina]
 sounds: []
-roots: []
+roots: [germanic-kran]
+etymology_hook: "кран ← Dutch kraan or Low German kran, 'a crane', the bird and the lifting machine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C190-rakovina]
 <!-- hl-knowledge: introduces=[RU-LEX-C190-VESHCH190-03]; assesses=[] -->
 
 **кран** (*kran*) — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кран** comes from Dutch *kraan* or Low German *kran*, "a crane", which goes with German *Kranich*, "crane (the bird)" (Vasmer). A tap is a little crane that lets water out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

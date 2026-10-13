@@ -14,7 +14,8 @@ romanization: "stroítel"
 concept_tag: RU-RABOTA171-STROITEL
 prerequisites: [RU-C171-sudya, RU-C171-soldat]
 sounds: []
-roots: []
+roots: [slavic-stroji]
+etymology_hook: "строитель is строить 'to build' + -тель, 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C171-soldat]
 <!-- hl-knowledge: introduces=[RU-LEX-C171-RABOTA171-05]; assesses=[] -->
 
 **строитель** (*stroítel*) — "a builder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**строитель** is *строить*, "to build", with *-тель*, "one who does it". *строить* comes from *строй*, "order, structure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

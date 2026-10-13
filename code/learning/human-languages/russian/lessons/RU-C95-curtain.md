@@ -14,7 +14,8 @@ romanization: "zanavéska"
 concept_tag: RU-THINGS95-CURTAIN
 prerequisites: [RU-C95-bathtub, RU-C95-shelf]
 sounds: []
-roots: []
+roots: [slavic-vesiti]
+etymology_hook: "занавеска is занавес 'curtain' + -ка; занавес is за- + навес 'what hangs', from весить 'to hang'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C95-shelf]
 <!-- hl-knowledge: introduces=[RU-LEX-C95-THINGS95-03]; assesses=[] -->
 
 **занавеска** (*zanavéska*) — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**занавеска** is *занавес*, "a curtain", with *-ка*, "little". *занавес* is *за-*, "across", with *навес*, "what is hung", from *вешать*, "to hang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nízkiy"
 concept_tag: RU-KACH243-NIZKIY
 prerequisites: [RU-C243-pozhiloy, RU-C243-vysokiy]
 sounds: []
-roots: []
+roots: [pie-ni]
+etymology_hook: "низкий is from низ 'the bottom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C243-vysokiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C243-KACH243-04]; assesses=[] -->
 
 **низкий** (*nízkiy*) — "low, short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**низкий** comes from *низ*, "the bottom" (Vasmer), which Vasmer explains from the PIE *\*ni*, "down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

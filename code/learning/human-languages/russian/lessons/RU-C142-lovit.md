@@ -14,7 +14,8 @@ romanization: "lovít"
 concept_tag: RU-VERB-LOVIT
 prerequisites: [RU-C142-derzhat, RU-C142-brosat]
 sounds: []
-roots: []
+roots: [slavic-lovu]
+etymology_hook: "ловить is from лов 'a catch, a hunt'; Greek leia 'booty' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C142-brosat]
 <!-- hl-knowledge: introduces=[RU-LEX-C142-ACT142-04]; assesses=[] -->
 
 **ловить** (*lovít*) — "to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ловить** comes from *лов*, "a catch, a hunt" (Vasmer), which Vasmer relates to Lithuanian *lavùs*, "agile", Greek *leía*, "booty", and Gothic *laun*, "reward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

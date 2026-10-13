@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 56,
-  "sourceHash": "fnv1a64:f163c54ceb4c5100",
+  "sourceHash": "fnv1a64:4e76b87cff88eb09",
   "lessonIds": [
     "RU-C56-mountain",
     "RU-C56-forest",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch56.txt",
   "json": "russian/narration/ch56.json",
-  "textHash": "fnv1a64:071b96df952e15e3",
-  "jsonHash": "fnv1a64:ec3bca22ed209df2",
+  "textHash": "fnv1a64:9a888bf22fbd7eac",
+  "jsonHash": "fnv1a64:03fb6c65a46fdf54",
   "findings": []
 }

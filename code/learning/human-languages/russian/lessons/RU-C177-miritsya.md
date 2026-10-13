@@ -14,7 +14,8 @@ romanization: "mirítsya"
 concept_tag: RU-VERB-MIRITSYA
 prerequisites: [RU-C177-sporit, RU-C177-ssoritsya]
 sounds: []
-roots: []
+roots: [slavic-miru]
+etymology_hook: "мириться is from мир 'peace' + -ся: to make peace with each other"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C177-ssoritsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C177-ACT177-05]; assesses=[] -->
 
 **мириться** (*mirítsya*) — "to make up (after a quarrel)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мириться** comes from *мир*, "peace", with *-иться*: to make peace with each other. *мир* is related to Lithuanian *mieras*, "peace" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

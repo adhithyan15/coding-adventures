@@ -14,7 +14,8 @@ romanization: "tigr"
 concept_tag: RU-THINGS117-TIGER
 prerequisites: [RU-C116-donkey, RU-C117-rabbit]
 sounds: []
-roots: []
+roots: [tigris-latin]
+etymology_hook: "тигр ← Greek tigris, through Old Church Slavonic, and later again through French tigre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C117-rabbit]
 <!-- hl-knowledge: introduces=[RU-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **тигр** (*tigr*) — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тигр** — Old Church Slavonic already had *tigrŭ*, from Greek *tígris*, which Vasmer traces to Avestan *tighri-*, "an arrow"; the modern word came again through French *tigre* or German *Tiger*, Latin *tigris*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

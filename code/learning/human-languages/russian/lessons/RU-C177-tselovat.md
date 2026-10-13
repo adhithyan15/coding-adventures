@@ -14,7 +14,8 @@ romanization: "tselovát"
 concept_tag: RU-VERB-TSELOVAT
 prerequisites: [RU-C176-ustavat, RU-C177-obnimat]
 sounds: []
-roots: []
+roots: [slavic-celu]
+etymology_hook: "целовать is from целый 'whole, unharmed': first 'to greet, to wish health'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C177-obnimat]
 <!-- hl-knowledge: introduces=[RU-LEX-C177-ACT177-02]; assesses=[] -->
 
 **целовать** (*tselovát*) — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**целовать** comes from *целый*, "whole, unharmed" (Vasmer); Old Russian *целовати* meant "to greet, to kiss". Vasmer compares Old High German *heilazzen* and Latin *salūtāre*, "to greet", both built on words for "whole, well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

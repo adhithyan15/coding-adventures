@@ -14,7 +14,8 @@ romanization: "férmer"
 concept_tag: RU-THINGS108-FARMER
 prerequisites: [RU-C108-police-officer, RU-C108-shop-assistant]
 sounds: []
-roots: []
+roots: [english-farmer]
+etymology_hook: "фермер ← English farmer or German Farmer, linked with ферма 'a farm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C108-shop-assistant]
 <!-- hl-knowledge: introduces=[RU-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **фермер** (*férmer*) — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фермер** comes from English *farmer* or German *Farmer*, and was felt to go with *ферма*, "a farm" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

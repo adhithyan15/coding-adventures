@@ -14,7 +14,8 @@ romanization: "sokhranyát"
 concept_tag: RU-VERB-SOKHRANYAT
 prerequisites: [RU-C145-podpisyvat, RU-C145-pechatat]
 sounds: []
-roots: []
+roots: [slavic-khoroniti]
+etymology_hook: "сохранять is с- + хранить 'to keep', Church Slavonic beside native хоронить"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C145-pechatat]
 <!-- hl-knowledge: introduces=[RU-LEX-C145-ACT145-03]; assesses=[] -->
 
 **сохранять** (*sokhranyát*) — "to keep; to save (a file)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сохранять** is *с-* with *хранять*, from *хранить*, "to keep", a Church Slavonic word, says Vasmer, beside the native *хоронить*, now "to bury".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

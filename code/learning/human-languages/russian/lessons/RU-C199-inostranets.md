@@ -14,7 +14,8 @@ romanization: "inostránets"
 concept_tag: RU-VESHCH199-INOSTRANETS
 prerequisites: [RU-C199-molodyozh, RU-C199-grazhdanin]
 sounds: []
-roots: []
+roots: [slavic-inu, slavic-storna]
+etymology_hook: "иностранец is иной 'other' + страна 'a country' + -ец: one from another land"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C199-grazhdanin]
 <!-- hl-knowledge: introduces=[RU-LEX-C199-VESHCH199-03]; assesses=[] -->
 
 **иностранец** (*inostránets*) — "a foreigner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**иностранец** is *иной*, "other", with *страна*, "a country", and *-ец*, "one who": a person from another land.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

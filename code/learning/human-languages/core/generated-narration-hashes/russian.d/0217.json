@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 217,
-  "sourceHash": "fnv1a64:4490199c44219896",
+  "sourceHash": "fnv1a64:e0ef75a8db87a788",
   "lessonIds": [
     "RU-C217-tupoy",
     "RU-C217-gladkiy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch217.txt",
   "json": "russian/narration/ch217.json",
-  "textHash": "fnv1a64:01b51b97bb627924",
-  "jsonHash": "fnv1a64:ff334f49404fa157",
+  "textHash": "fnv1a64:3db4e9c96e5893e8",
+  "jsonHash": "fnv1a64:5a105eafc5d05d28",
   "findings": []
 }

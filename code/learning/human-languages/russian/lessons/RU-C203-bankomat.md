@@ -14,7 +14,8 @@ romanization: "bankomát"
 concept_tag: RU-RABOTA203-BANKOMAT
 prerequisites: [RU-C203-pechat, RU-C203-biznes]
 sounds: []
-roots: []
+roots: [banka-germanic]
+etymology_hook: "банкомат is банк 'a bank' + -о- + автомат 'a machine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C203-biznes]
 <!-- hl-knowledge: introduces=[RU-LEX-C203-RABOTA203-04]; assesses=[] -->
 
 **банкомат** (*bankomát*) — "a cash machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**банкомат** is *банк*, "a bank", with *-о-* and *-мат*, from *автомат*, "an automatic machine", Greek *autómatos*, "self-moving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

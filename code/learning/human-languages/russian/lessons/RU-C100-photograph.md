@@ -14,7 +14,8 @@ romanization: "fotográfiya"
 concept_tag: RU-THINGS100-PHOTOGRAPH
 prerequisites: [RU-C99-purse, RU-C100-ring]
 sounds: []
-roots: []
+roots: [photos-greek, graphia-greek]
+etymology_hook: "фотография is Greek phōs 'light' + graphia 'writing': writing with light"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C100-ring]
 <!-- hl-knowledge: introduces=[RU-LEX-C100-THINGS100-02]; assesses=[] -->
 
 **фотография** (*fotográfiya*) — "a photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фотография** is an international coinage from Greek *phōs*, *phōtós*, "light", and *-graphía*, "writing": "writing with light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

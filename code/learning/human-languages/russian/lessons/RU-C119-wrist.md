@@ -14,7 +14,8 @@ romanization: "zapyástye"
 concept_tag: RU-THINGS119-WRIST
 prerequisites: [RU-C118-elbow, RU-C119-ankle]
 sounds: []
-roots: []
+roots: [slavic-pesti]
+etymology_hook: "запястье is за- 'behind' + пясть 'the hand's palm'; German Faust 'fist' is a cousin of пясть"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C119-ankle]
 <!-- hl-knowledge: introduces=[RU-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **запястье** (*zapyástye*) — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**запястье** is *за-*, "beyond", with *пясть*, "the palm, the metacarpus": the part beyond the hand. Vasmer relates *пясть* to Old High German *fûst*, "fist", so English *fist* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

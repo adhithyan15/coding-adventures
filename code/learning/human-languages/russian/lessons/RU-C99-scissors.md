@@ -14,7 +14,8 @@ romanization: "nózhnitsy"
 concept_tag: RU-THINGS99-SCISSORS
 prerequisites: [RU-C98-hammer, RU-C99-glue]
 sounds: []
-roots: []
+roots: [slavic-nozi]
+etymology_hook: "ножницы is built on нож 'knife': a pair of little knives"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C99-glue]
 <!-- hl-knowledge: introduces=[RU-LEX-C99-THINGS99-02]; assesses=[] -->
 
 **ножницы** (*nózhnitsy*) — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ножницы** is built on *нож*, "a knife", with *-ницы*, a plural ending for paired tools: a pair of blades.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

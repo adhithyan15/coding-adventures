@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 91,
-  "sourceHash": "fnv1a64:67f6b1461b2083b5",
+  "sourceHash": "fnv1a64:e342df3d96fc55fe",
   "lessonIds": [
     "RU-C91-west",
     "RU-C91-underground",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch91.txt",
   "json": "russian/narration/ch91.json",
-  "textHash": "fnv1a64:1ee0b4b000a79611",
-  "jsonHash": "fnv1a64:dc94898fb2e26b4f",
+  "textHash": "fnv1a64:9e8e4cc5cb946e84",
+  "jsonHash": "fnv1a64:bdc684a1917b5677",
   "findings": []
 }

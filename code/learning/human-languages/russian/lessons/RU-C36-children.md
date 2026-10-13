@@ -14,7 +14,8 @@ romanization: "déti"
 concept_tag: RU-FAMILY2-CHILDREN
 prerequisites: [RU-C35-husband, RU-C35-wife]
 sounds: []
-roots: []
+roots: [pie-dheh1-suckle]
+etymology_hook: "дети ← Proto-Slavic *děti; Vasmer traces it to a root 'to suckle', the root of доить 'to milk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C35-wife]
 <!-- hl-knowledge: introduces=[RU-LEX-C36-FAMILY2-01]; assesses=[] -->
 
 **дети** (*déti*) — "children".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дети** is the plural of *дитя*, "a child", ← Proto-Slavic *\*dětę*, *\*děti* — inherited. Vasmer traces it to the PIE root *\*dʰeh₁(i)-*, "to suckle", the root of *доить*, "to milk": a child is one who is nursed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

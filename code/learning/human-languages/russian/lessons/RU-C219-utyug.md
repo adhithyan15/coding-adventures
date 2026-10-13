@@ -14,7 +14,8 @@ romanization: "utyúg"
 concept_tag: RU-VESHCH219-UTYUG
 prerequisites: [RU-C219-zubnaya-pasta, RU-C219-britva]
 sounds: []
-roots: []
+roots: [turkic-utu]
+etymology_hook: "утюг ← Turkic *ütüg, as Turkish ütü 'an iron'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C219-britva]
 <!-- hl-knowledge: introduces=[RU-LEX-C219-VESHCH219-03]; assesses=[] -->
 
 **утюг** (*utyúg*) — "an iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**утюг** comes from Turkic *\*ütüg*, as in Turkish *ütü*, "a flat iron" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

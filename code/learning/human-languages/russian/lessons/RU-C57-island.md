@@ -14,7 +14,8 @@ romanization: "óstrov"
 concept_tag: RU-NATURE3-ISLAND
 prerequisites: [RU-C57-sand, RU-C57-shore]
 sounds: []
-roots: []
+roots: [pie-srew]
+etymology_hook: "остров ← Proto-Slavic *ostrovŭ, 'what the stream flows round', from о- + струя 'stream'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C57-shore]
 <!-- hl-knowledge: introduces=[RU-LEX-C57-NATURE3-04]; assesses=[] -->
 
 **остров** (*óstrov*) — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**остров** ← Proto-Slavic *\*ostrovŭ*, "what the current flows around": *о-*, "around", with the root of *струя*, "a stream" (Vasmer). The root is in Sanskrit *srávati*, "flows", and Greek *rhóos*, "a current".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

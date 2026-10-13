@@ -14,7 +14,8 @@ romanization: "tort"
 concept_tag: RU-VESHCH250-TORT
 prerequisites: [RU-C250-sliva, RU-C250-makarony]
 sounds: []
-roots: []
+roots: [italian-torta]
+etymology_hook: "торт apparently came through German Torte from Italian torta, Latin tortus 'twisted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C250-makarony]
 <!-- hl-knowledge: introduces=[RU-LEX-C250-VESHCH250-04]; assesses=[] -->
 
 **торт** (*tort*) — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**торт** apparently came through German *Torte* from Italian *torta*, from Latin *tortus*, "twisted", that is, a round piece of pastry (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shirókiy"
 concept_tag: RU-QUAL129-WIDE
 prerequisites: [RU-C129-hard, RU-C129-round]
 sounds: []
-roots: []
+roots: [slavic-shiru]
+etymology_hook: "широкий ← Proto-Slavic *širokŭ; Vasmer calls its further links unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C129-round]
 <!-- hl-knowledge: introduces=[RU-LEX-C129-QUAL129-04]; assesses=[] -->
 
 **широкий** (*shirókiy*) — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**широкий** ← Proto-Slavic *\*širokŭ* — inherited, from *\*širŭ*, "wide". Vasmer calls its further links unclear; a comparison with Gothic *skeirs*, "clear", is hard to square with the sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

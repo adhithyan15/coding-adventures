@@ -14,7 +14,8 @@ romanization: "stul"
 concept_tag: RU-HOME2-CHAIR
 prerequisites: [RU-C48-door, RU-C49-table]
 sounds: []
-roots: []
+roots: [norse-stoll]
+etymology_hook: "стул was perhaps borrowed from Old Norse stóll or Low German stuhl, 'chair'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C49-table]
 <!-- hl-knowledge: introduces=[RU-LEX-C49-HOME2-02]; assesses=[] -->
 
 **стул** (*stul*) — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стул** — first recorded in 1578, perhaps borrowed from Old Norse *stóll* or Low German *stuhl*, "chair" (Vasmer). A High German loan would have begun *шт-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

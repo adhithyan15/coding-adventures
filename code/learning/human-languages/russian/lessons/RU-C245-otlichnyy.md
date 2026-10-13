@@ -14,7 +14,8 @@ romanization: "otlíchnyy"
 concept_tag: RU-KACH245-OTLICHNYY
 prerequisites: [RU-C245-prekrasnyy, RU-C245-uzhasnyy]
 sounds: []
-roots: []
+roots: [slavic-liku]
+etymology_hook: "отличный is from отличить 'to distinguish', on лик 'a face, a look': stand-out"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C245-uzhasnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C245-KACH245-05]; assesses=[] -->
 
 **отличный** (*otlíchnyy*) — "excellent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отличный** comes from *отличить*, "to set apart", on the root of *лик*, "a face, an image": what stands out from the rest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

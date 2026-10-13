@@ -14,7 +14,8 @@ romanization: "rastí"
 concept_tag: RU-VERB-RASTI
 prerequisites: [RU-C234-sazhat, RU-C234-polivat]
 sounds: []
-roots: []
+roots: [slavic-orsti]
+etymology_hook: "расти has a Church Slavonic а for native о (рости); Proto-Slavic *orsti 'to grow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C234-polivat]
 <!-- hl-knowledge: introduces=[RU-LEX-C234-ACT234-04]; assesses=[] -->
 
 **расти** (*rastí*) — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**расти** ← Proto-Slavic *\*orsti*, "to grow" — inherited, but its *а* is Church Slavonic, says Vasmer, in place of native *рости*. Vasmer reports comparisons with Greek *órnymi*, "I stir", and Latin *orior*, "I rise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

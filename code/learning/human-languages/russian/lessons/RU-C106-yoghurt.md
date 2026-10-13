@@ -14,7 +14,8 @@ romanization: "yógurt"
 concept_tag: RU-THINGS106-YOGHURT
 prerequisites: [RU-C105-sauce, RU-C106-dessert]
 sounds: []
-roots: []
+roots: [turkish-yogurt]
+etymology_hook: "йогурт ← Turkish yoğurt, through western languages"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C106-dessert]
 <!-- hl-knowledge: introduces=[RU-LEX-C106-THINGS106-02]; assesses=[] -->
 
 **йогурт** (*yógurt*) — "a yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**йогурт** comes from Turkish *yoğurt*, "yoghurt", through the western European languages.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

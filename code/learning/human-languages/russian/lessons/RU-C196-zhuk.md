@@ -14,7 +14,8 @@ romanization: "zhuk"
 concept_tag: RU-VESHCH196-ZHUK
 prerequisites: [RU-C196-komar, RU-C196-mukha]
 sounds: []
-roots: []
+roots: [slavic-zhuk]
+etymology_hook: "жук is a sound-imitating word, from the buzz in жужжать 'to buzz'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C196-mukha]
 <!-- hl-knowledge: introduces=[RU-LEX-C196-VESHCH196-05]; assesses=[] -->
 
 **жук** (*zhuk*) — "a beetle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жук** is built on a sound-imitating stem, the one in *жужжать*, "to buzz" (Vasmer): the beetle as the buzzer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "platít"
 concept_tag: RU-VERB-PLATIT
 prerequisites: [RU-C204-probovat, RU-C204-zakazyvat]
 sounds: []
-roots: []
+roots: [slavic-platu]
+etymology_hook: "платить is from плата 'pay', held to go with плат 'a cloth', once used as money"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C204-zakazyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C204-ACT204-03]; assesses=[] -->
 
 **платить** (*platít*) — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**платить** comes from *плата*, "pay" (Vasmer), which is held to go with *плат*, "a piece of cloth", because cloth was once used in payment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

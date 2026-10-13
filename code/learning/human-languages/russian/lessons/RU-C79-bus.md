@@ -14,7 +14,8 @@ romanization: "avtóbus"
 concept_tag: RU-TRAVEL-BUS
 prerequisites: [RU-C78-theatre, RU-C78-restaurant]
 sounds: []
-roots: []
+roots: [omnibus-latin]
+etymology_hook: "автобус is an international word: Greek autos 'self' + bus, from Latin omnibus 'for all'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C78-restaurant]
 <!-- hl-knowledge: introduces=[RU-LEX-C79-TRAVEL-01]; assesses=[] -->
 
 **автобус** (*avtóbus*) — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**автобус** is an international word of the early 1900s: *авто-*, from Greek *autós*, "self", as in *automobile*, with *бус*, cut from Latin *omnibus*, "for everyone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

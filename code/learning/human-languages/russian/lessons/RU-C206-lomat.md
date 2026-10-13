@@ -14,7 +14,8 @@ romanization: "lomát"
 concept_tag: RU-VERB-LOMAT
 prerequisites: [RU-C206-gasit, RU-C206-stroit]
 sounds: []
-roots: []
+roots: [slavic-lomiti]
+etymology_hook: "ломать is from лом 'a break'; Old High German lam 'lame' is a cousin of лом"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C206-stroit]
 <!-- hl-knowledge: introduces=[RU-LEX-C206-ACT206-03]; assesses=[] -->
 
 **ломать** (*lomát*) — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ломать** goes with *ломить*, "to break", from *лом*, "a break, scrap" (Vasmer), which he relates to Lithuanian *lìmti*, "to break down", and Old High German *lam*, "lame": English *lame* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

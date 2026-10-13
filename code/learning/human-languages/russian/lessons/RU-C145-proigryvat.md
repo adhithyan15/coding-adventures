@@ -14,7 +14,8 @@ romanization: "proígryvat"
 concept_tag: RU-VERB-PROIGRYVAT
 prerequisites: [RU-C145-sokhranyat, RU-C145-skachivat]
 sounds: []
-roots: []
+roots: [slavic-igra]
+etymology_hook: "проигрывать is про- 'through, away' + играть 'to play': to play something away"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C145-skachivat]
 <!-- hl-knowledge: introduces=[RU-LEX-C145-ACT145-05]; assesses=[] -->
 
 **проигрывать** (*proígryvat*) — "to be beaten, to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**проигрывать** is *про-*, "through, away", with *-игрывать*, from *играть*, "to play": to play your stake away, to lose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

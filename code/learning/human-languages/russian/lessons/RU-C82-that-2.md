@@ -14,7 +14,8 @@ romanization: "ta"
 concept_tag: RU-DEF82-THAT-2
 prerequisites: [RU-C82-this-2, RU-C82-that]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "та is the feminine of тот, Proto-Slavic *ta; Lithuanian tà 'that' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C82-that]
 <!-- hl-knowledge: introduces=[RU-LEX-C82-DEF82-04]; assesses=[] -->
 
 **та** (*ta*) — "that (feminine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**та** is the feminine of *тот*, Proto-Slavic *\*ta*, a cousin of Lithuanian *tà*, "that" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kóshka"
 concept_tag: RU-ANIMALS1-CAT
 prerequisites: [RU-C59-world, RU-C60-dog]
 sounds: []
-roots: []
+roots: [slavic-kotu]
+etymology_hook: "кошка is a fond form of кот 'tomcat', as Маша is of Мария"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C60-dog]
 <!-- hl-knowledge: introduces=[RU-LEX-C60-ANIMALS1-02]; assesses=[] -->
 
 **кошка** (*kóshka*) — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кошка** — probably a fond form built on *кот*, "a tomcat", as the pet name *Маша* is built on *Мария*, "Mary" (Vasmer). Old Russian had *kotŭka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

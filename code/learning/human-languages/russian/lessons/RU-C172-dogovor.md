@@ -14,7 +14,8 @@ romanization: "dogovór"
 concept_tag: RU-RABOTA172-DOGOVOR
 prerequisites: [RU-C172-pensiya, RU-C172-komandirovka]
 sounds: []
-roots: []
+roots: [slavic-govor]
+etymology_hook: "договор is до- + говор 'talk': talking a matter through to the end"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C172-komandirovka]
 <!-- hl-knowledge: introduces=[RU-LEX-C172-RABOTA172-05]; assesses=[] -->
 
 **договор** (*dogovór*) — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**договор** is *до-*, "up to, through", with *говор*, "talk": an agreement reached by talking a matter through.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

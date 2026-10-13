@@ -14,7 +14,8 @@ romanization: "pívo"
 concept_tag: RU-VESHCH164-PIVO
 prerequisites: [RU-C163-shchi, RU-C163-blin]
 sounds: []
-roots: []
+roots: [pie-peh3-drink]
+etymology_hook: "пиво is from пить 'to drink': 'a drink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C163-blin]
 <!-- hl-knowledge: introduces=[RU-LEX-C164-VESHCH164-01]; assesses=[] -->
 
 **пиво** (*pívo*) — "beer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пиво** comes from *пить*, "to drink" (Vasmer): first "a drink", then "beer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

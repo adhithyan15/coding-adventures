@@ -14,7 +14,8 @@ romanization: "nogá"
 concept_tag: RU-BODY1-LEG
 prerequisites: [RU-C29-head, RU-C29-hand]
 sounds: []
-roots: []
+roots: [pie-h3nogwh]
+etymology_hook: "нога ← Proto-Slavic *noga, first 'claw'; Lithuanian nagà 'hoof' and English nail are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C29-hand]
 <!-- hl-knowledge: introduces=[RU-LEX-C29-BODY1-03]; assesses=[] -->
 
 **нога** (*nogá*) — "a leg, a foot". One word for both, like **рука**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нога** ← Proto-Slavic *\*noga* — inherited. Vasmer gives "claw" as the first sense and lists Lithuanian *nagà*, "hoof", Latin *unguis*, "nail", and Old High German *nagal*, "nail": English *nail* is a cousin, from PIE *\*h₃nogʷʰ-*, "nail, claw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

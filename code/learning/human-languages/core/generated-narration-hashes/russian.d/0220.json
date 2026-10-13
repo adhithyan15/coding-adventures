@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 220,
-  "sourceHash": "fnv1a64:7ce609aaa223c33c",
+  "sourceHash": "fnv1a64:65c5eb53203e6760",
   "lessonIds": [
     "RU-C220-planshet",
     "RU-C220-ekran",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch220.txt",
   "json": "russian/narration/ch220.json",
-  "textHash": "fnv1a64:0d1e28ee9ce698ac",
-  "jsonHash": "fnv1a64:a42bf6bc007d5b87",
+  "textHash": "fnv1a64:1666ef08be9e08a9",
+  "jsonHash": "fnv1a64:10e9236ec4250c86",
   "findings": []
 }

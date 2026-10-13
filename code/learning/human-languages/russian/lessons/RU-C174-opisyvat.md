@@ -14,7 +14,8 @@ romanization: "opísyvat"
 concept_tag: RU-VERB-OPISYVAT
 prerequisites: [RU-C173-nalivat, RU-C174-sovetovat]
 sounds: []
-roots: []
+roots: [pie-peyk]
+etymology_hook: "описывать is о- 'around' + писать 'to write': to write all round a thing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C174-sovetovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C174-ACT174-02]; assesses=[] -->
 
 **описывать** (*opísyvat*) — "to describe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**описывать** is *о-*, "around", with *-писывать*, from *писать*, "to write": to describe is to write all round a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

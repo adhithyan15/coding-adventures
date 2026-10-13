@@ -14,7 +14,8 @@ romanization: "nyúkhat"
 concept_tag: RU-VERB-NYUKHAT
 prerequisites: [RU-C208-zamechat, RU-C208-slyshat]
 sounds: []
-roots: []
+roots: [slavic-njukhati]
+etymology_hook: "нюхать ← Proto-Slavic *njuxati; Vasmer calls its links unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C208-slyshat]
 <!-- hl-knowledge: introduces=[RU-LEX-C208-ACT208-04]; assesses=[] -->
 
 **нюхать** (*nyúkhat*) — "to sniff, to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нюхать** ← Proto-Slavic *\*njuxati* — inherited. Vasmer calls its links unclear; a link with *\*ǫxati*, "to smell", is possible, he says.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ávgust"
 concept_tag: RU-VREMYA212-AVGUST
 prerequisites: [RU-C212-iyun, RU-C212-iyul]
 sounds: []
-roots: []
+roots: [augustus-latin]
+etymology_hook: "август came through Greek augoustos from Latin augustus, the month of Augustus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C212-iyul]
 <!-- hl-knowledge: introduces=[RU-LEX-C212-VREMYA212-03]; assesses=[] -->
 
 **август** (*ávgust*) — "August".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**август** — Old Russian *avŭgustŭ*; it came through Greek *aúgoustos* from Latin *augustus*, the month named for the emperor Augustus (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

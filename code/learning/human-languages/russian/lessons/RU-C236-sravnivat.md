@@ -14,7 +14,8 @@ romanization: "srávnivat"
 concept_tag: RU-VERB-SRAVNIVAT
 prerequisites: [RU-C236-schitat, RU-C236-izmeryat]
 sounds: []
-roots: []
+roots: [slavic-orvinu]
+etymology_hook: "сравнивать is с- + равный 'equal', the Church Slavonic shape of ровный 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C236-izmeryat]
 <!-- hl-knowledge: introduces=[RU-LEX-C236-ACT236-03]; assesses=[] -->
 
 **сравнивать** (*srávnivat*) — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сравнивать** is *с-* with *-равнивать*, from *равный*, "equal", the Church Slavonic shape of *ровный*, "level": to compare is to set things level.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

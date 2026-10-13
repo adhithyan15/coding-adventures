@@ -14,7 +14,8 @@ romanization: "lámpochka"
 concept_tag: RU-VESHCH160-LAMPOCHKA
 prerequisites: [RU-C160-korobka, RU-C160-yashchik]
 sounds: []
-roots: []
+roots: [lampas-latin]
+etymology_hook: "лампочка is лампа 'a lamp' + -очка 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C160-yashchik]
 <!-- hl-knowledge: introduces=[RU-LEX-C160-VESHCH160-05]; assesses=[] -->
 
 **лампочка** (*lámpochka*) — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лампочка** is *лампа*, "a lamp", with *-очка*, "little": a little lamp, a bulb. *лампа* came from German *Lampe* or French *lampe*, Greek *lampás*, "a torch" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

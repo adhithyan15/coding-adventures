@@ -14,7 +14,8 @@ romanization: "górod"
 concept_tag: RU-TOWN1-CITY
 prerequisites: [RU-C76-thousand, RU-C76-country]
 sounds: []
-roots: []
+roots: [pie-gherdh]
+etymology_hook: "город ← Proto-Slavic *gordŭ 'enclosure'; English yard is a cousin, and град the Church Slavonic twin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C76-country]
 <!-- hl-knowledge: introduces=[RU-LEX-C77-TOWN1-01]; assesses=[] -->
 
 **город** (*górod*) — "a city, a town".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**город** ← Proto-Slavic *\*gordŭ*, "an enclosure, a fort" — inherited. Vasmer lists Lithuanian *gardas*, "a fold", Gothic *gards*, "house", and Sanskrit *gṛhá-*, "house": English *yard* is a cousin. Church Slavonic has *град*, "city", as in Петроград, "Peter's city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

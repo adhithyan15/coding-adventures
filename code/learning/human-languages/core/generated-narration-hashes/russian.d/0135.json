@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 135,
-  "sourceHash": "fnv1a64:32f4d0b4c5c56af5",
+  "sourceHash": "fnv1a64:861497399ff51bb4",
   "lessonIds": [
     "RU-C135-to-lose",
     "RU-C135-to-win",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch135.txt",
   "json": "russian/narration/ch135.json",
-  "textHash": "fnv1a64:745304ae524ffd57",
-  "jsonHash": "fnv1a64:e627565e462e4dae",
+  "textHash": "fnv1a64:04b977381aea7e53",
+  "jsonHash": "fnv1a64:3bb90574d3478f5d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bélka"
 concept_tag: RU-THINGS118-SQUIRREL
 prerequisites: [RU-C117-frog, RU-C117-tortoise]
 sounds: []
-roots: []
+roots: [pie-bhel]
+etymology_hook: "белка is from белый 'white': Old Russian běla věverica, 'white squirrel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C117-tortoise]
 <!-- hl-knowledge: introduces=[RU-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **белка** (*bélka*) — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**белка** comes from *белый*, "white": Old Russian chronicles speak of *бела веверица*, "a white squirrel", fur paid as tribute; Vasmer calls the link proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

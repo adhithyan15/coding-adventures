@@ -14,7 +14,8 @@ romanization: "pit"
 concept_tag: RU-VERB-PIT
 prerequisites: [RU-C42-otkryvat, RU-C42-zakryvat]
 sounds: []
-roots: []
+roots: [pie-peh3-drink]
+etymology_hook: "пить ← Proto-Slavic *piti; Sanskrit pibati, Greek pinō and Latin bibo, all 'drink', are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C42-zakryvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C42-VERB5-03]; assesses=[] -->
 
 **пить** (*pit*) — "to drink". What you do with **вода** and **чай**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пить** ← Proto-Slavic *\*piti* — inherited from PIE *\*peh₃(i)-*, "to drink". Vasmer lists Sanskrit *píbati*, "drinks", Greek *pínō*, "I drink", and Latin *bibō*, "I drink", from older *\*pibō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

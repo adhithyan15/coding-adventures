@@ -14,7 +14,8 @@ romanization: "may"
 concept_tag: RU-VREMYA181-MAY
 prerequisites: [RU-C181-mart, RU-C181-aprel]
 sounds: []
-roots: []
+roots: [maius-latin]
+etymology_hook: "май came through Byzantine Greek maios from Latin maius, the month of Maia"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C181-aprel]
 <!-- hl-knowledge: introduces=[RU-LEX-C181-VREMYA181-05]; assesses=[] -->
 
 **май** (*may*) — "May".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**май** — Old Church Slavonic *маи*; it came through Byzantine Greek *máïos* from Latin *māius*, "May" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

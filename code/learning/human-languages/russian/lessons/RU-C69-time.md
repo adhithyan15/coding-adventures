@@ -14,7 +14,8 @@ romanization: "vrémya"
 concept_tag: RU-TIME2-TIME
 prerequisites: [RU-C69-hour, RU-C69-minute]
 sounds: []
-roots: []
+roots: [pie-wert]
+etymology_hook: "время is Church Slavonic, beside Old Russian веремя; it goes with вертеть 'to turn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C69-minute]
 <!-- hl-knowledge: introduces=[RU-LEX-C69-TIME2-05]; assesses=[] -->
 
 **время** (*vrémya*) — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**время** — taken from Church Slavonic, says Vasmer, in place of East Slavic *веремя*: *-ре-* against *-ере-* marks it. Vasmer relates it to *вертеть*, "to turn", and Sanskrit *vártman*, "a wheel track": time as what turns.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kovyór"
 concept_tag: RU-LOC92-RUG
 prerequisites: [RU-C92-journey, RU-C92-holidays]
 sounds: []
-roots: []
+roots: [turkic-kiviz]
+etymology_hook: "ковёр is probably a loan, perhaps from Bulgar *kavər; Turkic kiviz 'felt rug' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C92-holidays]
 <!-- hl-knowledge: introduces=[RU-LEX-C92-LOC92-05]; assesses=[] -->
 
 **ковёр** (*kovyór*) — "a rug, a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ковёр** ← Old Russian *kovĭrŭ*; its sounds are unusual, so it is probably a loan. Vasmer suggests, as possible, Danube or Volga Bulgar *\*kavər*, compare Turkic *kiviz*, "felt blanket", and Mongolian *kebis*, "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

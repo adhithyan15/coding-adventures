@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 125,
-  "sourceHash": "fnv1a64:5b76736b151fa481",
+  "sourceHash": "fnv1a64:2fe9118603e44a0c",
   "lessonIds": [
     "RU-C125-free",
     "RU-C125-open",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch125.txt",
   "json": "russian/narration/ch125.json",
-  "textHash": "fnv1a64:d2ba2e229afdd882",
-  "jsonHash": "fnv1a64:9bbc35cb42e9f6a3",
+  "textHash": "fnv1a64:6c42bdf965eb41cc",
+  "jsonHash": "fnv1a64:b2cdb9d991e9d828",
   "findings": []
 }

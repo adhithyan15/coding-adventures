@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 221,
-  "sourceHash": "fnv1a64:f2db6363a4697682",
+  "sourceHash": "fnv1a64:fd81e26e3f3366c7",
   "lessonIds": [
     "RU-C221-igrushka",
     "RU-C221-myach",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch221.txt",
   "json": "russian/narration/ch221.json",
-  "textHash": "fnv1a64:16a18d097762b78b",
-  "jsonHash": "fnv1a64:215aa7e6c50e4df3",
+  "textHash": "fnv1a64:44c9d233b22104f7",
+  "jsonHash": "fnv1a64:ebd7c9a37e61971c",
   "findings": []
 }

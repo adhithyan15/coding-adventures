@@ -14,7 +14,8 @@ romanization: "tantsevát"
 concept_tag: RU-VERB-TANTSEVAT
 prerequisites: [RU-C38-rabotat, RU-C38-pet]
 sounds: []
-roots: []
+roots: [german-tanz]
+etymology_hook: "танцевать is built on танец 'a dance', which came through Polish taniec from German Tanz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C38-pet]
 <!-- hl-knowledge: introduces=[RU-LEX-C38-VERB1-03]; assesses=[] -->
 
 **танцевать** (*tantsevát*) — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**танцевать** is built on *танец*, "a dance", which came through Polish *taniec* from Middle High German *tanz*, "a dance" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

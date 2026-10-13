@@ -14,7 +14,8 @@ romanization: "koléno"
 concept_tag: RU-BODY2-KNEE
 prerequisites: [RU-C30-neck, RU-C30-shoulder]
 sounds: []
-roots: []
+roots: [slavic-koleno]
+etymology_hook: "колено ← Proto-Slavic *kolěno; Lithuanian kelỹs 'knee' and Greek kōlon 'limb' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C30-shoulder]
 <!-- hl-knowledge: introduces=[RU-LEX-C30-BODY2-05]; assesses=[] -->
 
 **колено** (*koléno*) — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**колено** ← Proto-Slavic *\*kolěno* — inherited, a cousin of Lithuanian *kelỹs*, "knee", and Greek *kōlon*, "limb" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

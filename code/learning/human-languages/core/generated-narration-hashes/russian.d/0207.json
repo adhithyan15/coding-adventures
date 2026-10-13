@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 207,
-  "sourceHash": "fnv1a64:f58d2fabcbcd8d25",
+  "sourceHash": "fnv1a64:ad59dbbd68214d0a",
   "lessonIds": [
     "RU-C207-bolet",
     "RU-C207-lechit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch207.txt",
   "json": "russian/narration/ch207.json",
-  "textHash": "fnv1a64:3d978c7772cc3ba9",
-  "jsonHash": "fnv1a64:caa8400a2cd05ce6",
+  "textHash": "fnv1a64:a21c86500e6f57c2",
+  "jsonHash": "fnv1a64:92e77bbd8c5f9857",
   "findings": []
 }

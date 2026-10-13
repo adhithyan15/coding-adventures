@@ -14,7 +14,8 @@ romanization: "okhránnik"
 concept_tag: RU-RABOTA230-OKHRANNIK
 prerequisites: [RU-C230-kassir, RU-C230-parikmakher]
 sounds: []
-roots: []
+roots: [slavic-khoroniti]
+etymology_hook: "охранник is from охрана 'a guard', on хранить 'to keep', Church Slavonic beside native хоронить"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C230-parikmakher]
 <!-- hl-knowledge: introduces=[RU-LEX-C230-RABOTA230-04]; assesses=[] -->
 
 **охранник** (*okhránnik*) — "a security guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**охранник** is built on *охрана*, "a guard", on *хранить*, "to keep", which Vasmer calls Church Slavonic, beside native *хоронить*, now "to bury".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shit"
 concept_tag: RU-VERB-SHIT
 prerequisites: [RU-C172-komandirovka, RU-C172-dogovor]
 sounds: []
-roots: []
+roots: [pie-syuh1]
+etymology_hook: "шить ← Proto-Slavic *šiti; Latin suere and English sew are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C172-dogovor]
 <!-- hl-knowledge: introduces=[RU-LEX-C173-ACT173-01]; assesses=[] -->
 
 **шить** (*shit*) — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шить** ← Proto-Slavic *\*šiti* — inherited. Vasmer lists Lithuanian *siūti*, Sanskrit *sīvyati*, "sews", and Latin *suō*, "I sew": English *sew* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

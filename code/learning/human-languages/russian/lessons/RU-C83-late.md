@@ -14,7 +14,8 @@ romanization: "pózdno"
 concept_tag: RU-TIME83-LATE
 prerequisites: [RU-C83-midnight, RU-C83-early]
 sounds: []
-roots: []
+roots: [pie-pos]
+etymology_hook: "поздно ← Proto-Slavic *pozdŭ 'late', from PIE *pos 'after'; Latin post 'after' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C83-early]
 <!-- hl-knowledge: introduces=[RU-LEX-C83-TIME83-04]; assesses=[] -->
 
 **поздно** (*pózdno*) — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поздно** is the adverb of *поздний*, "late", Proto-Slavic *\*pozdŭ* — inherited, from the PIE *\*pos*, "after, behind", which Vasmer also finds in Lithuanian *pàs*, "at", and Latin *post*, "after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

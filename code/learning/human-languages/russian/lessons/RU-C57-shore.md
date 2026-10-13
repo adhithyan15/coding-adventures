@@ -14,7 +14,8 @@ romanization: "béreg"
 concept_tag: RU-NATURE3-SHORE
 prerequisites: [RU-C57-stone, RU-C57-sand]
 sounds: []
-roots: []
+roots: [pie-bhergh]
+etymology_hook: "берег ← Proto-Slavic *bergŭ, akin to German Berg 'mountain'; whether inherited or borrowed is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C57-sand]
 <!-- hl-knowledge: introduces=[RU-LEX-C57-NATURE3-03]; assesses=[] -->
 
 **берег** (*béreg*) — "a shore, a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**берег** ← Proto-Slavic *\*bergŭ*. Vasmer relates it to Old High German *berg*, "mountain", Avestan *barəzah-*, "height", and Sanskrit *bṛhant-*, "high": a bank is the raised edge. Inherited, that root should have given Slavic *з*, not *г*, so Berneker and others take the word from Germanic, and Kiparsky from another Indo-European language; Vasmer, judging by its tone and meaning, doubts a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

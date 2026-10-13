@@ -14,7 +14,8 @@ romanization: "málo"
 concept_tag: RU-WHERE2-ALITTLE
 prerequisites: [RU-C73-right, RU-C73-alot]
 sounds: []
-roots: []
+roots: [slavic-malu]
+etymology_hook: "мало is the adverb of малый 'small'; Gothic smals 'small' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C73-alot]
 <!-- hl-knowledge: introduces=[RU-LEX-C73-WHERE2-05]; assesses=[] -->
 
 **мало** (*málo*) — "a little, few".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мало** is *малый*, "small", made into an adverb with *-о*. *малый* is a cousin, Vasmer says, of Gothic *smals*, "small", and so of English *small*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

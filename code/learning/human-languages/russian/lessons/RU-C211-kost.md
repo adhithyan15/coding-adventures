@@ -14,7 +14,8 @@ romanization: "kost"
 concept_tag: RU-ZDOROV211-KOST
 prerequisites: [RU-C210-bint, RU-C211-myshtsa]
 sounds: []
-roots: []
+roots: [slavic-kosti]
+etymology_hook: "кость ← Proto-Slavic *kostĭ; Latin costa 'a rib' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C211-myshtsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C211-ZDOROV211-02]; assesses=[] -->
 
 **кость** (*kost*) — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кость** ← Proto-Slavic *\*kostĭ* — inherited, related to Latin *costa*, "a rib" (Vasmer). Some also link it with Greek *ostéon* and Latin *os*, "bone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

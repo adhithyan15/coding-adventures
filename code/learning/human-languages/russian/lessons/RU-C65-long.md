@@ -14,7 +14,8 @@ romanization: "dlínnyy"
 concept_tag: RU-SIZE-LONG
 prerequisites: [RU-C65-small, RU-C65-old]
 sounds: []
-roots: []
+roots: [pie-dlonghos]
+etymology_hook: "длинный is длина 'length' + -ный; it shares a root with долгий 'long', a cousin of Latin longus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C65-old]
 <!-- hl-knowledge: introduces=[RU-LEX-C65-SIZE-04]; assesses=[] -->
 
 **длинный** (*dlínnyy*) — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**длинный** is *длина*, "length", with the adjective ending *-ный*, on the root of *долгий*, "long (in time)". Vasmer relates *долгий* to Lithuanian *ìlgas*, Sanskrit *dīrghá-* and Greek *dolichós*, all "long", from PIE *\*dḷh₁gʰós*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

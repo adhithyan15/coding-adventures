@@ -14,7 +14,8 @@ romanization: "sobáka"
 concept_tag: RU-ANIMALS1-DOG
 prerequisites: [RU-C59-weather, RU-C59-world]
 sounds: []
-roots: []
+roots: [iranian-spaka]
+etymology_hook: "собака: Vasmer takes it from Iranian, as Median spaka 'dog'; Trubachev prefers Turkic köbäk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C59-world]
 <!-- hl-knowledge: introduces=[RU-LEX-C60-ANIMALS1-01]; assesses=[] -->
 
 **собака** (*sobáka*) — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**собака** — origin disputed. Vasmer takes it from a Middle Iranian *\*sabāka-*, compare Median *spaka*, "dog", which Herodotus records, a cousin of Greek *kýōn*, "dog". Trubachev, in a note, finds an Iranian source unlikely and prefers Turkic *köbäk*, "dog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ráno"
 concept_tag: RU-TIME83-EARLY
 prerequisites: [RU-C83-midday, RU-C83-midnight]
 sounds: []
-roots: []
+roots: [slavic-rano]
+etymology_hook: "рано ← Proto-Slavic *rano; Vasmer calls it hard to explain, perhaps a cousin of Lithuanian rýtas 'morning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C83-midnight]
 <!-- hl-knowledge: introduces=[RU-LEX-C83-TIME83-03]; assesses=[] -->
 
 **рано** (*ráno*) — "early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рано** ← Proto-Slavic *\*rano*, "early" — inherited, but Vasmer calls it hard to explain: some link it with Lithuanian *rýtas*, "morning", others with Greek *órthros*, "dawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

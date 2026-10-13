@@ -14,7 +14,8 @@ romanization: "bumága"
 concept_tag: RU-SCHOOL-PAPER
 prerequisites: [RU-C52-book, RU-C52-pen]
 sounds: []
-roots: []
+roots: [italian-bombagio]
+etymology_hook: "бумага is probably from Italian bombagio 'cotton', since early paper came from Italy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C52-pen]
 <!-- hl-knowledge: introduces=[RU-LEX-C52-SCHOOL-03]; assesses=[] -->
 
 **бумага** (*bumága*) — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бумага** — Vasmer thinks it is most probably from Italian: Korsch derived it from *bombagio*, "cotton", and most early paper in Russia was Italian. Greek *bómbyx*, "silk", cannot explain the Russian form, he says.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

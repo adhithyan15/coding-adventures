@@ -14,7 +14,8 @@ romanization: "otdykhát"
 concept_tag: RU-VERB-OTDYKHAT
 prerequisites: [RU-C176-opazdyvat, RU-C176-speshit]
 sounds: []
-roots: []
+roots: [slavic-dykh]
+etymology_hook: "отдыхать is от- 'back' + дыхать 'to breathe': to get one's breath back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C176-speshit]
 <!-- hl-knowledge: introduces=[RU-LEX-C176-ACT176-04]; assesses=[] -->
 
 **отдыхать** (*otdykhát*) — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отдыхать** is *от-*, "back", with *-дыхать*, from *дышать*, "to breathe": to rest is to get your breath back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

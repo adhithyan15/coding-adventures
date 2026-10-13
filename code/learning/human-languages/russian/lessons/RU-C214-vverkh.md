@@ -14,7 +14,8 @@ romanization: "vverkh"
 concept_tag: RU-MESTO214-VVERKH
 prerequisites: [RU-C214-nazad, RU-C214-vperyod]
 sounds: []
-roots: []
+roots: [slavic-virkhu]
+etymology_hook: "вверх is в 'into' + верх 'the top': upward"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C214-vperyod]
 <!-- hl-knowledge: introduces=[RU-LEX-C214-MESTO214-04]; assesses=[] -->
 
 **вверх** (*vverkh*) — "up, upwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вверх** is *в*, "into", with *верх*, "the top": upward. *верх* is a cousin of Lithuanian *viršùs*, "top" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

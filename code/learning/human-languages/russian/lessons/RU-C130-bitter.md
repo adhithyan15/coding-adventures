@@ -14,7 +14,8 @@ romanization: "górkiy"
 concept_tag: RU-QUAL130-BITTER
 prerequisites: [RU-C129-wide, RU-C129-narrow]
 sounds: []
-roots: []
+roots: [slavic-goreti]
+etymology_hook: "горький is from гореть 'to burn': a burning taste"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C129-narrow]
 <!-- hl-knowledge: introduces=[RU-LEX-C130-QUAL130-01]; assesses=[] -->
 
 **горький** (*górkiy*) — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**горький** goes with *гореть*, "to burn" (Vasmer): a bitter taste burns. Vasmer compares Irish *goirt*, "bitter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

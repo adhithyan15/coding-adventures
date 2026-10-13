@@ -14,7 +14,8 @@ romanization: "múkha"
 concept_tag: RU-VESHCH196-MUKHA
 prerequisites: [RU-C196-pauk, RU-C196-komar]
 sounds: []
-roots: []
+roots: [slavic-mukha]
+etymology_hook: "муха ← Proto-Slavic *muxa, with мошка 'a midge'; Latin musca 'fly' is related"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C196-komar]
 <!-- hl-knowledge: introduces=[RU-LEX-C196-VESHCH196-04]; assesses=[] -->
 
 **муха** (*múkha*) — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**муха** ← Proto-Slavic *\*muxa* — inherited, with *мошка*, "a midge" (Vasmer). Latin *musca*, "fly", and Greek *muîa*, "fly", go back to the same PIE word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

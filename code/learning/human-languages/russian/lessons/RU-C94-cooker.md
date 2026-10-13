@@ -14,7 +14,8 @@ romanization: "plitá"
 concept_tag: RU-THINGS94-COOKER
 prerequisites: [RU-C94-computer, RU-C94-fridge]
 sounds: []
-roots: []
+roots: [slavic-plita]
+etymology_hook: "плита: Old Russian плита 'a stone slab'; Vasmer thinks it a cousin of Greek plinthos 'brick', others a loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C94-fridge]
 <!-- hl-knowledge: introduces=[RU-LEX-C94-THINGS94-04]; assesses=[] -->
 
 **плита** (*plitá*) — "a cooker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плита** — Old Russian *плита*, "a stone slab, a brick". Vasmer thinks it most likely a cousin of Greek *plínthos*, "brick"; the common view takes it as a loan from that Greek word. A *плита* is the slab you cook on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "stol"
 concept_tag: RU-HOME2-TABLE
 prerequisites: [RU-C48-window, RU-C48-door]
 sounds: []
-roots: []
+roots: [slavic-stolu]
+etymology_hook: "стол ← Proto-Slavic *stolŭ, first 'a seat, throne'; it may go with стелить 'to spread' or стоять 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C48-door]
 <!-- hl-knowledge: introduces=[RU-LEX-C49-HOME2-01]; assesses=[] -->
 
 **стол** (*stol*) — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стол** ← Proto-Slavic *\*stolŭ* — inherited; Old Russian *stolŭ* also meant "throne, seat" (Vasmer). Vasmer compares Gothic *stōls*, "chair", and Lithuanian *stãlas*, "table", but also weighs the root of *стелить*, "to spread", so the deeper origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

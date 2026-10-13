@@ -14,7 +14,8 @@ romanization: "dýnya"
 concept_tag: RU-THINGS104-MELON
 prerequisites: [RU-C104-vegetables, RU-C104-strawberries]
 sounds: []
-roots: []
+roots: [slavic-dynja]
+etymology_hook: "дыня: Vasmer calls it a hard word; usually from дуть 'to swell', though Latin cydonea 'quince' is proposed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C104-strawberries]
 <!-- hl-knowledge: introduces=[RU-LEX-C104-THINGS104-04]; assesses=[] -->
 
 **дыня** (*dýnya*) — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дыня** — "a difficult word", says Vasmer. It is usually read as "a swollen fruit", from *дуть*, "to blow"; Knutsson derived it from Latin *cydōnea*, "quinces", through *\*kŭdynja*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

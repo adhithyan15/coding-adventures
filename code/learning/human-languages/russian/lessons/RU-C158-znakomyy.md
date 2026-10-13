@@ -14,7 +14,8 @@ romanization: "znakómyy"
 concept_tag: RU-KACH158-ZNAKOMYY
 prerequisites: [RU-C158-golodnyy, RU-C158-sytyy]
 sounds: []
-roots: []
+roots: [pie-gneh]
+etymology_hook: "знакомый is from знак 'a sign', on знать 'to know': someone you know"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C158-sytyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C158-KACH158-05]; assesses=[] -->
 
 **знакомый** (*znakómyy*) — "familiar; an acquaintance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**знакомый** is built on *знак*, "a sign, a mark", from *знать*, "to know": a person you know. *знать* is a cousin of English *know* and Latin *(g)nōscere*, "to get to know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

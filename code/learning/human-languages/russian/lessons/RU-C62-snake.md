@@ -14,7 +14,8 @@ romanization: "zmeyá"
 concept_tag: RU-ANIMALS3-SNAKE
 prerequisites: [RU-C61-fox, RU-C62-hare]
 sounds: []
-roots: []
+roots: [slavic-zemlja]
+etymology_hook: "змея is a taboo name, 'the earthly one', from земля 'earth': the creature that crawls on the ground"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C62-hare]
 <!-- hl-knowledge: introduces=[RU-LEX-C62-ANIMALS3-02]; assesses=[] -->
 
 **змея** (*zmeyá*) — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**змея** — a taboo name, "the earthly one, the one that crawls on the ground", from the root of *земля*, "earth" (Vasmer). Albanian makes "caterpillar" from its word for "earth" in the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

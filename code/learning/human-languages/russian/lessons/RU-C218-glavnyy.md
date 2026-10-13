@@ -14,7 +14,8 @@ romanization: "glávnyy"
 concept_tag: RU-KACH218-GLAVNYY
 prerequisites: [RU-C218-odinakovyy, RU-C218-pokhozhiy]
 sounds: []
-roots: []
+roots: [slavic-golva]
+etymology_hook: "главный is from глава 'head', the Church Slavonic shape of голова"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C218-pokhozhiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C218-KACH218-04]; assesses=[] -->
 
 **главный** (*glávnyy*) — "main".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**главный** comes from *глава*, "head; chapter", which Vasmer calls a loan from Church Slavonic in place of Russian *голова*, "head": the main thing is the head one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

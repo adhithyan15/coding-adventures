@@ -14,7 +14,8 @@ romanization: "bank"
 concept_tag: RU-TOWN2-BANK
 prerequisites: [RU-C77-market, RU-C77-school]
 sounds: []
-roots: []
+roots: [banka-germanic]
+etymology_hook: "банк came through German Bank from Italian banco, a money-changer's bench"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C77-school]
 <!-- hl-knowledge: introduces=[RU-LEX-C78-TOWN2-01]; assesses=[] -->
 
 **банк** (*bank*) — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**банк** — recorded from 1707; it came through German *Bank* from Italian *banco*, "a money-changer's table", then "a bank" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

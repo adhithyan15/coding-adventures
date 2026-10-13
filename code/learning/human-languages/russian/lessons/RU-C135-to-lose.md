@@ -14,7 +14,8 @@ romanization: "teryát"
 concept_tag: RU-VERB-TO-LOSE
 prerequisites: [RU-C134-to-find, RU-C134-to-look-for]
 sounds: []
-roots: []
+roots: [pie-terh1]
+etymology_hook: "терять: Vasmer puts the East Slavic word with тереть 'to rub', first 'to destroy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C134-to-look-for]
 <!-- hl-knowledge: introduces=[RU-LEX-C135-ACT135-01]; assesses=[] -->
 
 **терять** (*teryát*) — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**терять** — Old Russian *терять* meant "to destroy, to ruin". Vasmer finds its link with the South Slavic verbs for "to chase" uncertain and puts the East Slavic word with *тереть*, "to rub, to wear away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

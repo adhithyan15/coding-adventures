@@ -14,7 +14,8 @@ romanization: "krásnyy"
 concept_tag: RU-COLOUR1-RED
 prerequisites: [RU-C63-white, RU-C63-black]
 sounds: []
-roots: []
+roots: [slavic-krasa]
+etymology_hook: "красный is from краса 'beauty': it first meant 'beautiful', as Red Square's name once did"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C63-black]
 <!-- hl-knowledge: introduces=[RU-LEX-C63-COLOUR1-03]; assesses=[] -->
 
 **красный** (*krásnyy*) — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**красный** is built on *краса*, "beauty", and first meant "beautiful", as in *прекрасный*, "lovely"; the name of Moscow's Red Square first meant "the beautiful square". Vasmer thinks *краса* is probably related to Old Norse *hrósa*, "to boast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

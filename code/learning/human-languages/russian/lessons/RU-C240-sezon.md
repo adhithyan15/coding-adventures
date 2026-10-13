@@ -14,7 +14,8 @@ romanization: "sezón"
 concept_tag: RU-VREMYA240-SEZON
 prerequisites: [RU-C240-noyabr, RU-C240-dekabr]
 sounds: []
-roots: []
+roots: [french-saison]
+etymology_hook: "сезон ← French saison, from Latin satio 'sowing (time)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C240-dekabr]
 <!-- hl-knowledge: introduces=[RU-LEX-C240-VREMYA240-03]; assesses=[] -->
 
 **сезон** (*sezón*) — "a season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сезон** comes from French *saison*, "season", from Latin *satiō*, *satiōnem*, "a sowing; sowing time" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

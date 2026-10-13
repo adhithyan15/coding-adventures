@@ -14,7 +14,8 @@ romanization: "puteshéstvovat"
 concept_tag: RU-VERB-TO-TRAVEL
 prerequisites: [RU-C135-to-look, RU-C135-to-draw]
 sounds: []
-roots: []
+roots: [pie-pent]
+etymology_hook: "путешествовать is путь 'way' + шествовать 'to march'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C135-to-draw]
 <!-- hl-knowledge: introduces=[RU-LEX-C135-ACT135-05]; assesses=[] -->
 
 **путешествовать** (*puteshéstvovat*) — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**путешествовать** is the verb of *путешествие*, "a journey": *путь*, "way", with *шествовать*, "to march, to proceed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

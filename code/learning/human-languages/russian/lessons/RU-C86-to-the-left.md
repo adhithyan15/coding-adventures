@@ -14,7 +14,8 @@ romanization: "nalévo"
 concept_tag: RU-LOC86-TO-THE-LEFT
 prerequisites: [RU-C86-where-from, RU-C86-to-the-right]
 sounds: []
-roots: []
+roots: [slavic-levu]
+etymology_hook: "налево is на 'onto' + лево, from левый 'left'; Latin laevus 'left' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C86-to-the-right]
 <!-- hl-knowledge: introduces=[RU-LEX-C86-LOC86-05]; assesses=[] -->
 
 **налево** (*nalévo*) — "to the left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**налево** is *на*, "onto", with *лево*, from *левый*, "left", a cousin of Latin *laevus*, "left" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

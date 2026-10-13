@@ -14,7 +14,8 @@ romanization: "umyvátsya"
 concept_tag: RU-VERB-TO-WASH
 prerequisites: [RU-C131-to-drive, RU-C132-to-get-dressed]
 sounds: []
-roots: []
+roots: [slavic-myti]
+etymology_hook: "умываться is у- + мыть 'to wash' + -ся 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C132-to-get-dressed]
 <!-- hl-knowledge: introduces=[RU-LEX-C132-ACT132-02]; assesses=[] -->
 
 **умываться** (*umyvátsya*) — "to wash (oneself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**умываться** is *у-* with *мыть*, "to wash", and *-ся*, "oneself": to wash your own face and hands.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

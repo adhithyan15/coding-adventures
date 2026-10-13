@@ -14,7 +14,8 @@ romanization: "dvor"
 concept_tag: RU-MESTO241-DVOR
 prerequisites: [RU-C241-podval, RU-C241-balkon]
 sounds: []
-roots: []
+roots: [pie-dhwer]
+etymology_hook: "двор ← Proto-Slavic *dvorŭ, related to дверь 'door'; Sanskrit dvāra 'gate' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C241-balkon]
 <!-- hl-knowledge: introduces=[RU-LEX-C241-MESTO241-03]; assesses=[] -->
 
 **двор** (*dvor*) — "a yard, a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**двор** ← Proto-Slavic *\*dvorŭ* — inherited, with *дверь*, "door" (Vasmer). Vasmer relates it to Latvian *dvars*, "a gate", and Sanskrit *dvāra-*, "gate": a yard is the space inside the gate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

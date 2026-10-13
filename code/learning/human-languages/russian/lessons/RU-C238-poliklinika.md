@@ -14,7 +14,8 @@ romanization: "poliklínika"
 concept_tag: RU-ZDOROV238-POLIKLINIKA
 prerequisites: [RU-C238-kapli, RU-C238-termometr]
 sounds: []
-roots: []
+roots: [greek-kline]
+etymology_hook: "поликлиника is Greek polys 'many' + klinikē 'bedside (medicine)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C238-termometr]
 <!-- hl-knowledge: introduces=[RU-LEX-C238-ZDOROV238-04]; assesses=[] -->
 
 **поликлиника** (*poliklínika*) — "a clinic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поликлиника** is an international coinage: Greek *polýs*, "many", or *pólis*, "city", with *klinikḗ*, "medicine at the bedside", from *klínē*, "a bed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

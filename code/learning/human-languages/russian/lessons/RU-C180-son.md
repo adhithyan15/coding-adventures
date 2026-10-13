@@ -14,7 +14,8 @@ romanization: "son"
 concept_tag: RU-ZDOROV180-SON
 prerequisites: [RU-C179-perelom, RU-C180-golovnaya-bol]
 sounds: []
-roots: []
+roots: [pie-swep-sleep]
+etymology_hook: "сон ← Proto-Slavic *sŭnŭ, from *sŭpnŭ; Latin somnus and Greek hypnos are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C180-golovnaya-bol]
 <!-- hl-knowledge: introduces=[RU-LEX-C180-ZDOROV180-02]; assesses=[] -->
 
 **сон** (*son*) — "sleep; a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сон** ← Proto-Slavic *\*sŭnŭ*, from *\*sŭpnŭ*, with *спать*, "to sleep" — inherited. Vasmer lists Lithuanian *sãpnas*, "a dream", Sanskrit *svápna-*, Greek *hýpnos* and Latin *somnus*, "sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

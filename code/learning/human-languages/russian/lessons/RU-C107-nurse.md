@@ -14,7 +14,8 @@ romanization: "medsestrá"
 concept_tag: RU-THINGS107-NURSE
 prerequisites: [RU-C107-nut, RU-C107-pepper]
 sounds: []
-roots: []
+roots: [pie-swesor]
+etymology_hook: "медсестра is short for медицинская сестра, 'medical sister'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C107-pepper]
 <!-- hl-knowledge: introduces=[RU-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **медсестра** (*medsestrá*) — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**медсестра** is cut short from *медицинская сестра*, "medical sister": *мед-*, from *медицина*, "medicine", with *сестра*, "sister", a cousin of English *sister*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

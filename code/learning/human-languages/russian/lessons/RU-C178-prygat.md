@@ -14,7 +14,8 @@ romanization: "prýgat"
 concept_tag: RU-VERB-PRYGAT
 prerequisites: [RU-C178-trenirovatsya, RU-C178-begat]
 sounds: []
-roots: []
+roots: [slavic-pryg]
+etymology_hook: "прыгать ← Proto-Slavic *prygati; Lithuanian sprukti 'to slip away' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C178-begat]
 <!-- hl-knowledge: introduces=[RU-LEX-C178-ACT178-03]; assesses=[] -->
 
 **прыгать** (*prýgat*) — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**прыгать** ← Proto-Slavic *\*prygati* — inherited, with *прыжок*, "a jump". Vasmer relates it to Lithuanian *sprùkti*, "to slip away", and Latvian *sprukt*, "to escape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

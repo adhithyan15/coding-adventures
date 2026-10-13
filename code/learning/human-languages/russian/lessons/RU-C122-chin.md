@@ -14,7 +14,8 @@ romanization: "podboródok"
 concept_tag: RU-THINGS122-CHIN
 prerequisites: [RU-C121-stomach, RU-C121-throat]
 sounds: []
-roots: []
+roots: [slavic-borda]
+etymology_hook: "подбородок is под 'under' + борода 'beard'; Latin barba and English beard are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C121-throat]
 <!-- hl-knowledge: introduces=[RU-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **подбородок** (*podboródok*) — "a chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подбородок** is *под*, "under", with *борода*, "beard", and *-ок*: the part under the beard. Vasmer relates *борода* to Lithuanian *barzdà*, Latin *barba* and Old High German *bart*: English *beard* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

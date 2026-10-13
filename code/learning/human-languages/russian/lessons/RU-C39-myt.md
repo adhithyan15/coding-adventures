@@ -14,7 +14,8 @@ romanization: "myt"
 concept_tag: RU-VERB-MYT
 prerequisites: [RU-C38-smeyatsya, RU-C38-plakat]
 sounds: []
-roots: []
+roots: [slavic-myti]
+etymology_hook: "мыть ← Proto-Slavic *myti; Lithuanian máudyti 'to bathe, to wash' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C38-plakat]
 <!-- hl-knowledge: introduces=[RU-LEX-C39-VERB2-01]; assesses=[] -->
 
 **мыть** (*myt*) — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мыть** ← Proto-Slavic *\*myti*, present *\*myjǫ* — inherited, a cousin of Lithuanian *máudyti*, "to bathe, to wash", and Latvian *maût*, "to swim" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "koróva"
 concept_tag: RU-ANIMALS1-COW
 prerequisites: [RU-C60-cat, RU-C60-horse]
 sounds: []
-roots: []
+roots: [pie-kerh2-horn-head]
+etymology_hook: "корова ← Proto-Slavic *korva, 'the horned one'; Lithuanian kárvė 'cow' and Latin cervus 'deer' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C60-horse]
 <!-- hl-knowledge: introduces=[RU-LEX-C60-ANIMALS1-04]; assesses=[] -->
 
 **корова** (*koróva*) — "a cow". It gives **молоко**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**корова** ← Proto-Slavic *\*korva* — inherited, a cousin of Lithuanian *kárvė*, "cow", and, Vasmer says, of Greek *keraós*, "horned", and Latin *cervus*, "deer": the horned one. Church Slavonic has *крава*, "cow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

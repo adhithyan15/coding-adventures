@@ -14,7 +14,8 @@ romanization: "sólntse"
 concept_tag: RU-SKY-SUN
 prerequisites: [RU-C57-field, RU-C58-sky]
 sounds: []
-roots: []
+roots: [pie-sehwl]
+etymology_hook: "солнце ← Proto-Slavic *sŭlnĭce, 'little sun'; Latin sol and Lithuanian saulė are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C58-sky]
 <!-- hl-knowledge: introduces=[RU-LEX-C58-SKY-02]; assesses=[] -->
 
 **солнце** (*sólntse*) — "the sun". The **л** is written and not said.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**солнце** ← Proto-Slavic *\*sŭlnĭce*, a diminutive of *\*sŭlnĭ*, "sun", built like *сердце*, "heart" (Vasmer). Vasmer lists Lithuanian *sáulė*, "sun", and Sanskrit *svar*, "sun, light"; Latin *sōl* and English *sun* go back to the same PIE word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

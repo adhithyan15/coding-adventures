@@ -14,7 +14,8 @@ romanization: "pozavcherá"
 concept_tag: RU-TIME84-DAY-BEFORE-YESTERDAY
 prerequisites: [RU-C84-at-night, RU-C84-day-after-tomorrow]
 sounds: []
-roots: []
+roots: [slavic-vecheru]
+etymology_hook: "позавчера is по- + за 'beyond' + вчера 'yesterday': the day beyond yesterday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C84-day-after-tomorrow]
 <!-- hl-knowledge: introduces=[RU-LEX-C84-TIME84-05]; assesses=[] -->
 
 **позавчера** (*pozavcherá*) — "the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**позавчера** is *по-* with *за*, "beyond", and *вчера*, "yesterday": the day on the far side of yesterday. *вчера* comes from *вечер*, "evening" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

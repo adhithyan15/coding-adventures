@@ -14,7 +14,8 @@ romanization: "zimá"
 concept_tag: RU-SEASONS-WINTER
 prerequisites: [RU-C70-saturday, RU-C71-sunday]
 sounds: []
-roots: []
+roots: [pie-gheyom]
+etymology_hook: "зима ← Proto-Slavic *zima; Latin hiems and Greek cheima, 'winter', are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C71-sunday]
 <!-- hl-knowledge: introduces=[RU-LEX-C71-SEASONS-02]; assesses=[] -->
 
 **зима** (*zimá*) — "winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зима** ← Proto-Slavic *\*zima* — inherited. Vasmer lists Lithuanian *žiemà*, Sanskrit *himá-*, Greek *cheîma* and Latin *hiems*, all "winter", from PIE *\*ǵʰéyōm*, "winter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

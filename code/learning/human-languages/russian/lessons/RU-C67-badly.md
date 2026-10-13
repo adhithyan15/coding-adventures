@@ -14,7 +14,8 @@ romanization: "plókho"
 concept_tag: RU-WORTH-BADLY
 prerequisites: [RU-C67-expensive, RU-C67-cheap]
 sounds: []
-roots: []
+roots: [slavic-plokhu]
+etymology_hook: "плохо is the adverb of плохой 'bad', with the ending -о"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C67-cheap]
 <!-- hl-knowledge: introduces=[RU-LEX-C67-WORTH-05]; assesses=[] -->
 
 **плохо** (*plókho*) — "badly". The adverb of **плохой**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плохо** is *плохой*, "bad", made into an adverb with *-о*. *плохой* is Old Russian *ploxŭ*; its origin is not settled (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

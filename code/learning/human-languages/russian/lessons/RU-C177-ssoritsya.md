@@ -14,7 +14,8 @@ romanization: "ssóritsya"
 concept_tag: RU-VERB-SSORITSYA
 prerequisites: [RU-C177-tselovat, RU-C177-sporit]
 sounds: []
-roots: []
+roots: [slavic-sora]
+etymology_hook: "ссориться is from ссора 'a quarrel', probably from *sŭsora, related to Latin sermo 'talk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C177-sporit]
 <!-- hl-knowledge: introduces=[RU-LEX-C177-ACT177-04]; assesses=[] -->
 
 **ссориться** (*ssóritsya*) — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ссориться** comes from *ссора*, "a quarrel", probably from *\*sŭsora*, which Vasmer relates to Latin *sermō*, "talk", and Gothic *swaran*, "to swear": a quarrel is a talk gone wrong.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

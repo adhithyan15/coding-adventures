@@ -14,7 +14,8 @@ romanization: "bégat"
 concept_tag: RU-VERB-BEGAT
 prerequisites: [RU-C177-miritsya, RU-C178-trenirovatsya]
 sounds: []
-roots: []
+roots: [pie-bhegw]
+etymology_hook: "бегать is the repeated form of бежать 'to run'; Lithuanian bėgti 'to run' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C178-trenirovatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C178-ACT178-02]; assesses=[] -->
 
 **бегать** (*bégat*) — "to run about, to jog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бегать** is the repeated-action partner of *бежать*, "to run" (Vasmer): running about. Vasmer relates the root to Lithuanian *bėgti*, "to run", and Greek *phóbos*, "flight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

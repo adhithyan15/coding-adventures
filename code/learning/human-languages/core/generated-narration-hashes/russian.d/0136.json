@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 136,
-  "sourceHash": "fnv1a64:d1b2c6bf30966fa6",
+  "sourceHash": "fnv1a64:ceacc8f1d4344d79",
   "lessonIds": [
     "RU-C136-nikto",
     "RU-C136-nichego",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch136.txt",
   "json": "russian/narration/ch136.json",
-  "textHash": "fnv1a64:01b6c359ee652ca5",
-  "jsonHash": "fnv1a64:dfc34f5e09d084ea",
+  "textHash": "fnv1a64:63e9d450a6d2e52d",
+  "jsonHash": "fnv1a64:c78773a8c7b1285a",
   "findings": []
 }

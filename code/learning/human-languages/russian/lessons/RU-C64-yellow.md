@@ -14,7 +14,8 @@ romanization: "zhyóltyy"
 concept_tag: RU-COLOUR2-YELLOW
 prerequisites: [RU-C63-blue, RU-C63-green]
 sounds: []
-roots: []
+roots: [pie-ghel-shine]
+etymology_hook: "жёлтый ← Proto-Slavic *žĭltŭ; Lithuanian geltas 'yellow' and Latin fel 'bile' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C63-green]
 <!-- hl-knowledge: introduces=[RU-LEX-C64-COLOUR2-01]; assesses=[] -->
 
 **жёлтый** (*zhyóltyy*) — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жёлтый** ← Proto-Slavic *\*žĭltŭ* — inherited. Vasmer relates it to Lithuanian *geltas*, "yellow", Greek *cholḗ*, "bile", and Latin *fel*, "bile": bile was named for its colour. *желчь*, "bile", is its Russian twin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

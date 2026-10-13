@@ -14,7 +14,8 @@ romanization: "obéd"
 concept_tag: RU-MEALS-LUNCH
 prerequisites: [RU-C45-carrot, RU-C46-breakfast]
 sounds: []
-roots: []
+roots: [pie-ed]
+etymology_hook: "обед ← Proto-Slavic *obědŭ, об- + the root of есть 'to eat'; English eat is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C46-breakfast]
 <!-- hl-knowledge: introduces=[RU-LEX-C46-MEALS-02]; assesses=[] -->
 
 **обед** (*obéd*) — "lunch, the midday meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обед** ← Proto-Slavic *\*obědŭ* — *об-*, "around", with the root of *еда*, "food", and *есть*, "to eat" (Vasmer). That root is PIE *\*h₁ed-*, "to eat", so English *eat* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

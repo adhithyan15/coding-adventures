@@ -14,7 +14,8 @@ romanization: "tyanút"
 concept_tag: RU-VERB-TYANUT
 prerequisites: [RU-C174-perevodit, RU-C174-pomnit]
 sounds: []
-roots: []
+roots: [slavic-tegu]
+etymology_hook: "тянуть ← Proto-Slavic *tęgnǫti, with тяга 'pull'; Avestan thanjayeiti 'draws' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C174-pomnit]
 <!-- hl-knowledge: introduces=[RU-LEX-C175-ACT175-01]; assesses=[] -->
 
 **тянуть** (*tyanút*) — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тянуть** ← Proto-Slavic *\*tęgnǫti*, with *тяга*, "a pull" — inherited. Vasmer relates it to Avestan *thanjayeiti*, "draws (a cart, a bow)", and Latin *tēmō*, "a wagon pole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "muzéy"
 concept_tag: RU-TOWN2-MUSEUM
 prerequisites: [RU-C78-bank, RU-C78-station]
 sounds: []
-roots: []
+roots: [museum-latin]
+etymology_hook: "музей came from Polish muzeum or German Museum, Latin museum, Greek mouseion 'seat of the Muses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C78-station]
 <!-- hl-knowledge: introduces=[RU-LEX-C78-TOWN2-03]; assesses=[] -->
 
 **музей** (*muzéy*) — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**музей** came from Polish *muzeum* or German *Museum*, from Latin *mūsēum*, Greek *mouseîon*, "a place of the Muses, a school with a library" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

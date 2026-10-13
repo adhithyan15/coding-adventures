@@ -14,7 +14,8 @@ romanization: "otkrýtka"
 concept_tag: RU-VESHCH161-OTKRYTKA
 prerequisites: [RU-C161-konvert, RU-C161-marka]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "открытка is открытое письмо 'an open letter' made into one word with -ка"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C161-marka]
 <!-- hl-knowledge: introduces=[RU-LEX-C161-VESHCH161-04]; assesses=[] -->
 
 **открытка** (*otkrýtka*) — "a postcard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**открытка** is cut down from *открытое письмо*, "an open letter", with *-ка*: a postcard has no envelope. *открытый* is "opened", from *открыть*, "to open", on *крыть*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

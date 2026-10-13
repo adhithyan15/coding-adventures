@@ -14,7 +14,8 @@ romanization: "kefír"
 concept_tag: RU-VESHCH222-KEFIR
 prerequisites: [RU-C222-menyu, RU-C222-bulka]
 sounds: []
-roots: []
+roots: [caucasian-kefir]
+etymology_hook: "кефир is from the Caucasus, but its first source is not established"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C222-bulka]
 <!-- hl-knowledge: introduces=[RU-LEX-C222-VESHCH222-05]; assesses=[] -->
 
 **кефир** (*kefír*) — "kefir".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кефир** — the drink and its name came from the Caucasus, but the first source is not established (Trubachev, in Vasmer); Mingrelian *kipuri*, "sour milk", has been compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

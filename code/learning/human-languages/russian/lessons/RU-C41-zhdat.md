@@ -14,7 +14,8 @@ romanization: "zhdat"
 concept_tag: RU-VERB-ZHDAT
 prerequisites: [RU-C41-uchit, RU-C41-otvechat]
 sounds: []
-roots: []
+roots: [slavic-zhidati]
+etymology_hook: "ждать ← Proto-Slavic *žĭdati; Lithuanian geisti 'to desire' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C41-otvechat]
 <!-- hl-knowledge: introduces=[RU-LEX-C41-VERB4-04]; assesses=[] -->
 
 **ждать** (*zhdat*) — "to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ждать** ← Proto-Slavic *\*žĭdati* — inherited. Vasmer relates it to Lithuanian *geĩsti*, "to long for", and Old Prussian *gēide*, "they wait": to wait was to long for something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

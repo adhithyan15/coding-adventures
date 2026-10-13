@@ -14,7 +14,8 @@ romanization: "dólzhnost"
 concept_tag: RU-RABOTA170-DOLZHNOST
 prerequisites: [RU-C169-pravda, RU-C169-lozh]
 sounds: []
-roots: []
+roots: [slavic-dilgu]
+etymology_hook: "должность is from долг 'a debt, a duty': first 'an obligation'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C169-lozh]
 <!-- hl-knowledge: introduces=[RU-LEX-C170-RABOTA170-01]; assesses=[] -->
 
 **должность** (*dólzhnost*) — "a post, a position".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**должность** comes from *долг*, "a debt, a duty", and first meant "an obligation" (Vasmer). Vasmer relates *долг* to Gothic *dulgs*, "a debt", and Old Irish *dligid*, "a duty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

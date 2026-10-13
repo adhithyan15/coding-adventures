@@ -14,7 +14,8 @@ romanization: "otvechát"
 concept_tag: RU-VERB-OTVECHAT
 prerequisites: [RU-C41-slushat, RU-C41-uchit]
 sounds: []
-roots: []
+roots: [vet]
+etymology_hook: "отвечать goes with ответ 'answer': от- 'back' + Old Russian větŭ 'counsel, speech'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C41-uchit]
 <!-- hl-knowledge: introduces=[RU-LEX-C41-VERB4-03]; assesses=[] -->
 
 **отвечать** (*otvechát*) — "to answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отвечать** goes with *ответ*, "an answer": *от-*, "back", with an old root *вет-*, "counsel, word". Old Russian *větŭ* meant "counsel, agreement", and the same root is in *привет*, "hi", and *совет*, "advice" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

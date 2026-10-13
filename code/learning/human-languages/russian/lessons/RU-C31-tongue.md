@@ -14,7 +14,8 @@ romanization: "yazýk"
 concept_tag: RU-BODY3-TONGUE
 prerequisites: [RU-C30-knee, RU-C31-back]
 sounds: []
-roots: []
+roots: [pie-dnghwehas-tongue]
+etymology_hook: "язык ← Proto-Slavic *językŭ 'tongue'; Latin lingua and English tongue are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C31-back]
 <!-- hl-knowledge: introduces=[RU-LEX-C31-BODY3-02]; assesses=[] -->
 
 **язык** (*yazýk*) — "the tongue; a language". Both meanings, as in English "tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**язык** ← Proto-Slavic *\*językŭ*, "tongue" — inherited, from the old Indo-European word for "tongue" that also gave Old Latin *dingua*, later *lingua*, and English *tongue* (Vasmer). The Slavic shape is irregular. "Language" grew from the organ, as in English *tongue*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 100,
-  "sourceHash": "fnv1a64:cff97e04dfaa5be2",
+  "sourceHash": "fnv1a64:d38222ae8130b0a1",
   "lessonIds": [
     "RU-C100-ring",
     "RU-C100-photograph",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch100.txt",
   "json": "russian/narration/ch100.json",
-  "textHash": "fnv1a64:b255ebdf20aa68aa",
-  "jsonHash": "fnv1a64:f4469d1feb39c3de",
+  "textHash": "fnv1a64:d4ca939b415afb36",
+  "jsonHash": "fnv1a64:754b1c49297f8b97",
   "findings": []
 }

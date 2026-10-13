@@ -14,7 +14,8 @@ romanization: "zakrýtyy"
 concept_tag: RU-QUAL125-CLOSED
 prerequisites: [RU-C125-free, RU-C125-open]
 sounds: []
-roots: []
+roots: [slavic-kryti]
+etymology_hook: "закрытый is the 'closed' form of закрыть, за- + крыть 'to cover'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C125-open]
 <!-- hl-knowledge: introduces=[RU-LEX-C125-QUAL125-03]; assesses=[] -->
 
 **закрытый** (*zakrýtyy*) — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**закрытый** is "closed", from *закрыть*, "to close": *за-*, "over", with *крыть*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "szádi"
 concept_tag: RU-MESTO152-SZADI
 prerequisites: [RU-C152-vnutri, RU-C152-snaruzhi]
 sounds: []
-roots: []
+roots: [slavic-zadu]
+etymology_hook: "сзади is с 'from' + зади, from зад 'the back, the rear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C152-snaruzhi]
 <!-- hl-knowledge: introduces=[RU-LEX-C152-MESTO152-05]; assesses=[] -->
 
 **сзади** (*szádi*) — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сзади** is *с*, "from", with *зади*, from *зад*, "the back, the rear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

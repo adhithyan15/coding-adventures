@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 114,
-  "sourceHash": "fnv1a64:6805a59ea6ee6803",
+  "sourceHash": "fnv1a64:8543c2ade8414af3",
   "lessonIds": [
     "RU-C114-price",
     "RU-C114-football",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch114.txt",
   "json": "russian/narration/ch114.json",
-  "textHash": "fnv1a64:6e678abf6510db35",
-  "jsonHash": "fnv1a64:33edfa5e3227ba5d",
+  "textHash": "fnv1a64:13a274bf2322de6d",
+  "jsonHash": "fnv1a64:b50f01a90de204bf",
   "findings": []
 }

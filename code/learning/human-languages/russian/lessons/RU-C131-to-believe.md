@@ -14,7 +14,8 @@ romanization: "vérit"
 concept_tag: RU-VERB-TO-BELIEVE
 prerequisites: [RU-C131-to-visit, RU-C131-to-put]
 sounds: []
-roots: []
+roots: [pie-wehr-true]
+etymology_hook: "верить is from вера 'faith'; Avestan varənā 'faith' is a cousin, and probably Latin verus 'true'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C131-to-put]
 <!-- hl-knowledge: introduces=[RU-LEX-C131-ACT131-04]; assesses=[] -->
 
 **верить** (*vérit*) — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**верить** comes from *вера*, "faith" (Vasmer), Proto-Slavic *\*věra*, which Vasmer relates to Avestan *varənā-*, "faith", and probably to Latin *vērus*, "true", and German *wahr*, "true".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

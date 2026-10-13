@@ -14,7 +14,8 @@ romanization: "núzhnyy"
 concept_tag: RU-KACH188-NUZHNYY
 prerequisites: [RU-C188-poleznyy, RU-C188-vrednyy]
 sounds: []
-roots: []
+roots: [slavic-nuda]
+etymology_hook: "нужный is нужда 'need' + -ный; нужда goes with old нудить 'to compel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C188-vrednyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C188-KACH188-03]; assesses=[] -->
 
 **нужный** (*núzhnyy*) — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нужный** is built on *нужда*, "need", with *-ный*. Vasmer relates the root to *нудить*, "to force", and Sanskrit *nudáti*, "pushes away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

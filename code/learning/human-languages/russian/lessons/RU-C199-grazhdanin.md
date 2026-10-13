@@ -14,7 +14,8 @@ romanization: "grazhdanín"
 concept_tag: RU-VESHCH199-GRAZHDANIN
 prerequisites: [RU-C198-avariya, RU-C199-molodyozh]
 sounds: []
-roots: []
+roots: [pie-gherdh]
+etymology_hook: "гражданин is Church Slavonic, beside native горожанин; it copies Greek politēs 'a citizen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C199-molodyozh]
 <!-- hl-knowledge: introduces=[RU-LEX-C199-VESHCH199-02]; assesses=[] -->
 
 **гражданин** (*grazhdanín*) — "a citizen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гражданин** — taken from Church Slavonic, says Vasmer, beside native *горожанин*, "a town-dweller", from *град*, "city", the Church Slavonic shape of *город*. It copies Greek *polítēs*, "a citizen", from *pólis*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

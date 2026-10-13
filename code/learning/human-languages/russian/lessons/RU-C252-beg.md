@@ -14,7 +14,8 @@ romanization: "beg"
 concept_tag: RU-VESHCH252-BEG
 prerequisites: [RU-C252-tennis, RU-C252-basketbol]
 sounds: []
-roots: []
+roots: [pie-bhegw]
+etymology_hook: "бег ← Proto-Slavic *běgŭ, with бежать 'to run'; Lithuanian bėgas 'a run' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C252-basketbol]
 <!-- hl-knowledge: introduces=[RU-LEX-C252-VESHCH252-04]; assesses=[] -->
 
 **бег** (*beg*) — "running".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бег** ← Proto-Slavic *\*běgŭ*, with *бежать*, "to run" — inherited. Vasmer relates it to Lithuanian *bėgas*, "a running, flight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

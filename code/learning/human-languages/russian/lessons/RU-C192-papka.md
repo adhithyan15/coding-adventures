@@ -14,7 +14,8 @@ romanization: "pápka"
 concept_tag: RU-VESHCH192-PAPKA
 prerequisites: [RU-C192-slovar, RU-C192-lineyka]
 sounds: []
-roots: []
+roots: [german-pappe]
+etymology_hook: "папка ← German Pappe 'pasteboard', from Pappe 'paste, mush'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C192-lineyka]
 <!-- hl-knowledge: introduces=[RU-LEX-C192-VESHCH192-05]; assesses=[] -->
 
 **папка** (*pápka*) — "a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**папка** comes from German *Pappe*, "pasteboard", named for the paste that once glued its layers, from *Pappe*, "mush" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

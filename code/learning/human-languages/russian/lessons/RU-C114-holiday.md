@@ -14,7 +14,8 @@ romanization: "prázdnik"
 concept_tag: RU-THINGS114-HOLIDAY
 prerequisites: [RU-C114-football, RU-C114-concert]
 sounds: []
-roots: []
+roots: [slavic-porzdu]
+etymology_hook: "праздник is built on праздный 'idle', the Church Slavonic shape of порожний 'empty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C114-concert]
 <!-- hl-knowledge: introduces=[RU-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **праздник** (*prázdnik*) — "a holiday, a celebration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**праздник** is built on *праздный*, "idle, free", which Vasmer calls Church Slavonic, by its *-ра-*, beside native *порожний*, "empty": a holiday is a day free of work.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "teátr"
 concept_tag: RU-TOWN2-THEATRE
 prerequisites: [RU-C78-station, RU-C78-museum]
 sounds: []
-roots: []
+roots: [theatrum-latin]
+etymology_hook: "театр came under Peter the Great through French théâtre, from Latin theatrum, Greek theatron"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C78-museum]
 <!-- hl-knowledge: introduces=[RU-LEX-C78-TOWN2-04]; assesses=[] -->
 
 **театр** (*teátr*) — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**театр** — from Peter the Great's time; it came through French *théâtre* from Latin *theātrum*, Greek *théatron*, "a place for seeing", or straight from the Greek (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

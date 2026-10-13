@@ -14,7 +14,8 @@ romanization: "ucheník"
 concept_tag: RU-PEOPLE-PUPIL
 prerequisites: [RU-C37-guest, RU-C37-teacher]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "ученик is учить 'to teach' + -ник, 'a person': one who is taught"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C37-teacher]
 <!-- hl-knowledge: introduces=[RU-LEX-C37-PEOPLE-04]; assesses=[] -->
 
 **ученик** (*ucheník*) — "a pupil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ученик** is *учить*, "to teach, to learn", with *-ник*, a suffix for a person: the one who learns. The verb goes back to Proto-Slavic *\*učiti*, "to accustom" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

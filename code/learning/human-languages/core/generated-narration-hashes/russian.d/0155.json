@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 155,
-  "sourceHash": "fnv1a64:5ad4c90d2eaedf0f",
+  "sourceHash": "fnv1a64:1b9389a8c21cc825",
   "lessonIds": [
     "RU-C155-milyy",
     "RU-C155-umnyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch155.txt",
   "json": "russian/narration/ch155.json",
-  "textHash": "fnv1a64:42dc9ad48cbf960a",
-  "jsonHash": "fnv1a64:65bfb8e7c9de3313",
+  "textHash": "fnv1a64:86c4c288a474b677",
+  "jsonHash": "fnv1a64:e8d332c838f2408c",
   "findings": []
 }

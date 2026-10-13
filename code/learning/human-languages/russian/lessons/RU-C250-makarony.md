@@ -14,7 +14,8 @@ romanization: "makaróny"
 concept_tag: RU-VESHCH250-MAKARONY
 prerequisites: [RU-C250-arbuz, RU-C250-sliva]
 sounds: []
-roots: []
+roots: [italian-maccaroni]
+etymology_hook: "макароны ← Italian maccaroni, traced to Greek makaria 'a barley broth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C250-sliva]
 <!-- hl-knowledge: introduces=[RU-LEX-C250-VESHCH250-03]; assesses=[] -->
 
 **макароны** (*makaróny*) — "pasta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**макароны** comes, like German *Makkaroni* and French *macaroni*, from Italian *maccaroni*, which is traced to Greek *makaría*, "a dish of barley" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

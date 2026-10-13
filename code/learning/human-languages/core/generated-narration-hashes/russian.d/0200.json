@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 200,
-  "sourceHash": "fnv1a64:144089f174ef35c8",
+  "sourceHash": "fnv1a64:f332bb2721569aae",
   "lessonIds": [
     "RU-C200-sekret",
     "RU-C200-shutka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch200.txt",
   "json": "russian/narration/ch200.json",
-  "textHash": "fnv1a64:beb8ddb0217e3981",
-  "jsonHash": "fnv1a64:a16fc62da1b0c4be",
+  "textHash": "fnv1a64:fb1a62efb1d078b1",
+  "jsonHash": "fnv1a64:91b6cca013111b98",
   "findings": []
 }

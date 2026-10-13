@@ -14,7 +14,8 @@ romanization: "stomatólog"
 concept_tag: RU-ZDOROV210-STOMATOLOG
 prerequisites: [RU-C210-ozhog, RU-C210-allergiya]
 sounds: []
-roots: []
+roots: [stoma-greek]
+etymology_hook: "стоматолог ← Greek stoma 'mouth' + -logos 'one who studies'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C210-allergiya]
 <!-- hl-knowledge: introduces=[RU-LEX-C210-ZDOROV210-03]; assesses=[] -->
 
 **стоматолог** (*stomatólog*) — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стоматолог** is an international coinage from Greek *stóma*, *stómatos*, "mouth", with *-lógos*, "one who studies".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

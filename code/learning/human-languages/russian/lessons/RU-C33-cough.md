@@ -14,7 +14,8 @@ romanization: "káshel"
 concept_tag: RU-HEALTH2-COUGH
 prerequisites: [RU-C32-hospital, RU-C33-temperature]
 sounds: []
-roots: []
+roots: [slavic-kashili]
+etymology_hook: "кашель ← Proto-Slavic *kašĭlĭ; Lithuanian kosulỹs and Sanskrit kāsa 'cough' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C33-temperature]
 <!-- hl-knowledge: introduces=[RU-LEX-C33-HEALTH2-02]; assesses=[] -->
 
 **кашель** (*káshel*) — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кашель** ← Proto-Slavic *\*kašĭlĭ* — inherited, a cousin of Lithuanian *kosulỹs*, Sanskrit *kāsa-* and Old High German *huosto*, all "cough" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

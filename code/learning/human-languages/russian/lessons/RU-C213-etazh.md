@@ -14,7 +14,8 @@ romanization: "etázh"
 concept_tag: RU-MESTO213-ETAZH
 prerequisites: [RU-C213-stolitsa, RU-C213-kvartira]
 sounds: []
-roots: []
+roots: [statio-latin]
+etymology_hook: "этаж ← French étage 'a storey', from Latin *staticum, from statio 'a standing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C213-kvartira]
 <!-- hl-knowledge: introduces=[RU-LEX-C213-MESTO213-05]; assesses=[] -->
 
 **этаж** (*etázh*) — "a floor, a storey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**этаж** comes from French *étage*, "a storey", from a Latin *\*staticum*, from *statiō*, "a standing, a post" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

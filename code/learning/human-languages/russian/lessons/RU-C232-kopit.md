@@ -14,7 +14,8 @@ romanization: "kopít"
 concept_tag: RU-VERB-KOPIT
 prerequisites: [RU-C231-zanyatiye, RU-C231-otsenka]
 sounds: []
-roots: []
+roots: [slavic-kopa]
+etymology_hook: "копить is from копа 'a heap'; Lithuanian kõpti 'to heap up' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C231-otsenka]
 <!-- hl-knowledge: introduces=[RU-LEX-C232-ACT232-01]; assesses=[] -->
 
 **копить** (*kopít*) — "to save up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**копить** comes from *копа*, "a heap, a stack" (Vasmer), which Vasmer relates to Lithuanian *kõpti*, "to rake together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

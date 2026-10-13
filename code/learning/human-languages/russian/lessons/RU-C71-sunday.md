@@ -14,7 +14,8 @@ romanization: "voskresénye"
 concept_tag: RU-SEASONS-SUNDAY
 prerequisites: [RU-C70-friday, RU-C70-saturday]
 sounds: []
-roots: []
+roots: [slavic-kresiti]
+etymology_hook: "воскресенье is Church Slavonic 'resurrection': first the day of the Resurrection, then Sunday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C70-saturday]
 <!-- hl-knowledge: introduces=[RU-LEX-C71-SEASONS-01]; assesses=[] -->
 
 **воскресенье** (*voskresénye*) — "Sunday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**воскресенье** — Church Slavonic, says Vasmer, as its *вос-* shows: it meant "resurrection", then "the day of the Resurrection", then Sunday. Earlier, *неделя* named Sunday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

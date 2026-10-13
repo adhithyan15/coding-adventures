@@ -14,7 +14,8 @@ romanization: "zheníkh"
 concept_tag: RU-VESHCH168-ZHENIKH
 prerequisites: [RU-C167-zapravka, RU-C168-svadba]
 sounds: []
-roots: []
+roots: [pie-gwenh2]
+etymology_hook: "жених is from женить 'to marry off', from жена 'wife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C168-svadba]
 <!-- hl-knowledge: introduces=[RU-LEX-C168-VESHCH168-02]; assesses=[] -->
 
 **жених** (*zheníkh*) — "a bridegroom, a fiancé".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жених** is built on *женить*, "to marry (a man) off", from *жена*, "wife" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "allergíya"
 concept_tag: RU-ZDOROV210-ALLERGIYA
 prerequisites: [RU-C209-zhenitsya, RU-C210-ozhog]
 sounds: []
-roots: []
+roots: [greek-allos]
+etymology_hook: "аллергия ← allergy, coined from Greek allos 'other' + ergon 'work, action'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C210-ozhog]
 <!-- hl-knowledge: introduces=[RU-LEX-C210-ZDOROV210-02]; assesses=[] -->
 
 **аллергия** (*allergíya*) — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**аллергия** is an international coinage of 1906: Greek *állos*, "other", with *érgon*, "work, action": a changed reaction.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

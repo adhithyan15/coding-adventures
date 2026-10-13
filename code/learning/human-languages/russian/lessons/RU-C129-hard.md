@@ -14,7 +14,8 @@ romanization: "tvyórdyy"
 concept_tag: RU-QUAL129-HARD
 prerequisites: [RU-C128-dry, RU-C129-soft]
 sounds: []
-roots: []
+roots: [slavic-tvirdu]
+etymology_hook: "твёрдый ← Proto-Slavic *tvĭrdŭ; Lithuanian tvirtas 'firm' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C129-soft]
 <!-- hl-knowledge: introduces=[RU-LEX-C129-QUAL129-02]; assesses=[] -->
 
 **твёрдый** (*tvyórdyy*) — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**твёрдый** ← Proto-Slavic *\*tvĭrdŭ* — inherited, a cousin of Lithuanian *tvìrtas*, "firm", and Latvian *tvirts*, "strong" (Vasmer); *творить*, "to create", shares its root, Vasmer says.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kománda"
 concept_tag: RU-VESHCH166-KOMANDA
 prerequisites: [RU-C166-lyzhi, RU-C166-konki]
 sounds: []
-roots: []
+roots: [mandare-latin]
+etymology_hook: "команда came through French commande or German Kommando from Italian comando 'an order'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C166-konki]
 <!-- hl-knowledge: introduces=[RU-LEX-C166-VESHCH166-03]; assesses=[] -->
 
 **команда** (*kománda*) — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**команда** — from 1700; it came through French *commande* or German *Kommando* from Italian *comando*, "an order" (Vasmer). A team is a group under one command.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

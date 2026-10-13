@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 195,
-  "sourceHash": "fnv1a64:102720cc99355ddf",
+  "sourceHash": "fnv1a64:5f467b522f4f0837",
   "lessonIds": [
     "RU-C195-priroda",
     "RU-C195-vetka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch195.txt",
   "json": "russian/narration/ch195.json",
-  "textHash": "fnv1a64:e965d951df519caa",
-  "jsonHash": "fnv1a64:cd5b62a4ecf5d917",
+  "textHash": "fnv1a64:01cd881d7b7132f8",
+  "jsonHash": "fnv1a64:7a3fac090815226a",
   "findings": []
 }
