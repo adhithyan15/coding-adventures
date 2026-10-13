@@ -11,6 +11,7 @@ romanization: "nāḷ / tiṉam"
 prerequisites: [TA-C23-naal]
 sounds: [tamil-retroflex-lla]
 roots: [proto-dravidian-naal-day, sanskrit-dina]
+etymology_hook: "நாள் — native Dravidian (DEDR 3656); தினம் ← Sanskrit dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 240
 requires:

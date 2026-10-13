@@ -14,7 +14,8 @@ romanization: "uṭaṟpayiṟci"
 concept_tag: TA-NALAM261-UTARPAYIRCI
 prerequisites: [TA-C260-pili, TA-C261-carkkarai-noy]
 sounds: []
-roots: []
+roots: [dravidian-udal-body, dravidian-payil-practise]
+etymology_hook: "உடற்பயிற்சி — native: uṭal 'body' (DEDR 586) + payiṟci 'training' (DEDR 3942)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C261-carkkarai-noy]
 <!-- hl-knowledge: introduces=[TA-LEX-C261-NALAM261-02]; assesses=[] -->
 
 **உடற்பயிற்சி** — *uṭaṟpayiṟci* — "exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடற்பயிற்சி** (*uṭaṟpayiṟci*) is native: *uṭal*, "body" (DEDR 586), and *payiṟci*, "practice, training" (DEDR 3942): "body training".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

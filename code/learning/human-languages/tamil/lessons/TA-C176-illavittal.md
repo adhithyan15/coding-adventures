@@ -14,7 +14,8 @@ romanization: "illāviṭṭāl"
 concept_tag: TA-KARANAM176-ILLAVITTAL
 prerequisites: [TA-C176-melum, TA-C176-utaranamaka]
 sounds: []
-roots: []
+roots: [il, dravidian-vidu-let-go]
+etymology_hook: "இல்லாவிட்டால் — native: illā 'not being' (DEDR 2559) + viṭṭāl, from viṭu 'to leave' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C176-utaranamaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C176-KARANAM176-05]; assesses=[] -->
 
 **இல்லாவிட்டால்** — *illāviṭṭāl* — "otherwise, if not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இல்லாவிட்டால்** (*illāviṭṭāl*) is native: *illā*, "not being" (DEDR 2559), and *viṭṭāl*, "if it is left", from *viṭu* (DEDR 5393): "if not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pakir"
 concept_tag: TA-VERB-PAKIR
 prerequisites: [TA-C163-tayar-cey, TA-C163-parimaru]
 sounds: []
-roots: []
+roots: [dravidian-paku-divide]
+etymology_hook: "பகிர் — native Dravidian (DEDR 3808); Malayalam pakuka 'to divide'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C163-parimaru]
 <!-- hl-knowledge: introduces=[TA-LEX-C163-ACT163-03]; assesses=[] -->
 
 **பகிர்** — *pakir* — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பகிர்** (*pakir*) is native Dravidian. DEDR 3808 lists Malayalam *pakuka*, "to divide". It belongs with *paku*, "to be divided, to share out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

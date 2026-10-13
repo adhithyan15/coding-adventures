@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Getting There",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c64a2efaf8551993",
+  "sourceHash": "fnv1a64:8df72a30f611bb84",
   "lessons": [
     {
       "id": "TA-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbab542219f663fc",
+      "sourceHash": "fnv1a64:9bb29313608f409e",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வண்டி (vaṇḍi) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 50), beside Malayalam vaṇṭi, Kannada baṇḍi and Telugu baṇḍi. The entry traces it to Sanskrit bhāṇḍa, \"goods, wares\": the cart was the thing that carried them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6b43b5346dca4fc",
+      "sourceHash": "fnv1a64:22ed3393dc12417e",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேருந்து (pērundu) is a modern Tamil coinage from native parts: pēr, \"big\" (DEDR 4411), and untu, a word for a motor vehicle, from the verb untu, \"to push, to drive\" (DEDR 625). A bus is \"the big vehicle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed6eb431457e201d",
+      "sourceHash": "fnv1a64:023d80a9b03b89da",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +523,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ரயில் (rayil) is a loan from English rail, as in railway."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -587,7 +620,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -618,7 +651,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28e6a8754131d7cc",
+      "sourceHash": "fnv1a64:47ca8d83fab10542",
       "notice": null,
       "blocks": [
         {
@@ -663,6 +696,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாலை (sālai) is native Dravidian. DEDR 2471 lists Malayalam cāl, \"track, furrow\". The entry lists cālai, \"street, road\", beside cāl, \"furrow, track\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -673,7 +717,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -740,7 +784,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -771,7 +815,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6a5d0db0c0008f",
+      "sourceHash": "fnv1a64:96555edccf5511f7",
       "notice": null,
       "blocks": [
         {
@@ -816,6 +860,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிலையம் (nilaiyam) is a modern use of a native word: nilai, \"standing, place\", from nil, \"to stand\" (DEDR 3675). A station is where things stand and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -826,7 +881,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -893,7 +948,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

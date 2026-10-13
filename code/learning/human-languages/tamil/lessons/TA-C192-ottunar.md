@@ -14,7 +14,8 @@ romanization: "ōṭṭunar"
 concept_tag: TA-VELAI192-OTTUNAR
 prerequisites: [TA-C191-cillarai, TA-C192-kavalar]
 sounds: []
-roots: []
+roots: [dravidian-oodu-run]
+etymology_hook: "ஓட்டுநர் — native Dravidian (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C192-kavalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C192-VELAI192-02]; assesses=[] -->
 
 **ஓட்டுநர்** — *ōṭṭunar* — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓட்டுநர்** (*ōṭṭunar*) is native Dravidian (DEDR 1041). It is *ōṭṭu*, "to drive", the causative of *ōṭu*, "to run", with *-nar*, "the one who": "the one who makes it run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

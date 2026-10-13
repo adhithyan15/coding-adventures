@@ -14,7 +14,8 @@ romanization: "oppaṭai"
 concept_tag: TA-VERB-OPPATAI
 prerequisites: [TA-C163-caripar, TA-C164-vivari]
 sounds: []
-roots: []
+roots: [dravidian-o-suit, dravidian-adu-near]
+etymology_hook: "ஒப்படை — native: oppu 'agreement', from o 'to suit' (DEDR 924) + aṭai 'to entrust' (DEDR 79)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C164-vivari]
 <!-- hl-knowledge: introduces=[TA-LEX-C164-ACT164-02]; assesses=[] -->
 
 **ஒப்படை** — *oppaṭai* — "to hand over, to hand in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒப்படை** (*oppaṭai*) is native: *oppu*, "agreement, consent", from *o*, "to be suited, to agree" (DEDR 924), and *aṭai*, "to deliver, to entrust" (DEDR 79).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

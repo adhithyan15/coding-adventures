@@ -14,7 +14,8 @@ romanization: "cuttamāṉa"
 concept_tag: TA-QUAL145-CUTTAMANA
 prerequisites: [TA-C145-menmaiyana, TA-C145-katinamana]
 sounds: []
-roots: []
+roots: [sanskrit-shuddha]
+etymology_hook: "சுத்தமான ← Sanskrit śuddha 'clean, pure' (CDIAL 12520)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C145-katinamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **சுத்தமான** — *cuttamāṉa* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுத்தமான** (*cuttamāṉa*) is a loan from Sanskrit *śuddha*, "clean, pure" (CDIAL 12520).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

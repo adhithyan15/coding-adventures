@@ -14,7 +14,8 @@ romanization: "carkkarai nōy"
 concept_tag: TA-NALAM261-CARKKARAI-NOY
 prerequisites: [TA-C260-mita, TA-C260-pili]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara, dravidian-noo-pain]
+etymology_hook: "சர்க்கரை நோய் — carkkarai ← Sanskrit śarkarā 'sugar' (CDIAL 12338) + native nōy 'illness' (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C260-pili]
 <!-- hl-knowledge: introduces=[TA-LEX-C261-NALAM261-01]; assesses=[] -->
 
 **சர்க்கரை நோய்** — *carkkarai nōy* — "diabetes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சர்க்கரை நோய்** (*carkkarai nōy*) is *carkkarai*, "sugar", from Sanskrit *śarkarā*, "candied sugar" (CDIAL 12338), and native *nōy*, "illness, pain" (DEDR 3793): "sugar illness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

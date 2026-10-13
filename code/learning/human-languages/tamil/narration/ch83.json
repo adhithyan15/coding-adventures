@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "All the Way Up, and On a Calendar",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:c79abf923120ffc1",
+  "sourceHash": "fnv1a64:19c507df21d5bc5f",
   "lessons": [
     {
       "id": "TA-C83-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:854e1f113a2e8356",
+      "sourceHash": "fnv1a64:073d1260a811bc12",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆறாவது (āṟāvadu) is native: āṟu, \"six\" (DEDR 2485), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -153,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7800bab9bb6c9ef3",
+      "sourceHash": "fnv1a64:6937640a1934cce8",
       "notice": null,
       "blocks": [
         {
@@ -222,6 +233,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏழாவது (ēḻāvadu) is native: ēḻu, \"seven\" (DEDR 910), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +283,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -296,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3af469fcbfa86e3",
+      "sourceHash": "fnv1a64:1303fb5c156b316e",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +387,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எட்டாவது (eṭṭāvadu) is native: eṭṭu, \"eight\" (DEDR 784), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -404,7 +437,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0253fbdcf321e2e9",
+      "sourceHash": "fnv1a64:dc85c1802b868365",
       "notice": null,
       "blocks": [
         {
@@ -508,6 +541,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒன்பதாவது (oṉpadāvadu) is native: oṉpatu, \"nine\" (DEDR 1025; Malayalam ompatu), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -547,7 +591,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -582,7 +626,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7048b3de3bed413",
+      "sourceHash": "fnv1a64:6685cda2aa20b645",
       "notice": null,
       "blocks": [
         {
@@ -651,6 +695,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பத்தாவது (pattāvadu) is native: pattu, \"ten\" (DEDR 3918), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -690,7 +745,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -725,7 +780,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0776f9ac834235d2",
+      "sourceHash": "fnv1a64:69b6fabad03bfe30",
       "notice": null,
       "blocks": [
         {
@@ -794,6 +849,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதினொன்றாவது (patiṉoṉṟāvadu) is native: patiṉ-, the joining form of \"ten\" (DEDR 3918), oṉṟu, \"one\" (DEDR 990), and the ordinal ending -āvatu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending is a fact about numbers, not about ten",
           "segments": [
@@ -808,7 +874,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -848,7 +914,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -883,7 +949,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cfffb61d854eed7",
+      "sourceHash": "fnv1a64:856bd79657eaf6a6",
       "notice": null,
       "blocks": [
         {
@@ -948,6 +1014,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேதி (tēdi) is a loan from Sanskrit tithi, \"a lunar day\" (CDIAL 5810)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: a second ending, for one job",
           "segments": [
@@ -979,7 +1056,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1019,7 +1096,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

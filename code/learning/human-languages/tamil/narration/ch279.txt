@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a watermelon, then the Tamil for murukku.
 You'll want to know: தொழிலாளி.
 தொழிலாளி — toḻilāḷi — "a worker, a labourer".
 
+The word, taken apart.
+தொழிலாளி (toḻilāḷi) is native: toḻil, "work, occupation" (DEDR 3524), and āḷi, "one who does", from āḷ, "person" (DEDR 399).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for murukku, then the Tamil for a worker.
 
 You'll want to know: கூட்டம்.
 கூட்டம் — kūṭṭam — "a meeting; a crowd".
+
+The word, taken apart.
+கூட்டம் (kūṭṭam) is native Dravidian. DEDR 1882 lists Malayalam kūṭuka, "to come together" and Kannada kūḍu. It comes from kūṭu, "to come together, to assemble".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a worker, then the Tamil for a meeting; a 
 You'll want to know: மேலாளர்.
 மேலாளர் — mēlāḷar — "a manager".
 
+The word, taken apart.
+மேலாளர் (mēlāḷar) is native: mēl, "what is above" (DEDR 5086), and āḷar, "persons", from āḷ (DEDR 399): "the one above".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a meeting; a crowd, then the Tamil for a m
 You'll want to know: பொறியாளர்.
 பொறியாளர் — poṟiyāḷar — "an engineer".
 
+The word, taken apart.
+பொறியாளர் (poṟiyāḷar) is poṟi, "machine, contrivance", and native āḷar, "persons", from āḷ (DEDR 399): "machine person". DEDR has poṟi only as "mark, impression", so the origin of the "machine" sense is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a manager, then the Tamil for an engineer.
 
 You'll want to know: வழக்கறிஞர்.
 வழக்கறிஞர் — vaḻakkaṟiñar — "a lawyer".
+
+The word, taken apart.
+வழக்கறிஞர் (vaḻakkaṟiñar) is native: vaḻakku, "lawsuit, custom" (DEDR 5292, which lists Malayalam vaḻakku), and aṟiñar, "those who know", from aṟi, "to know" (DEDR 314): "one who knows lawsuits".
 
 What you've built.
 One more word for this chapter.

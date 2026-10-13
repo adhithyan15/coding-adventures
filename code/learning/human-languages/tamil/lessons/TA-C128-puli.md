@@ -14,7 +14,8 @@ romanization: "puli"
 concept_tag: TA-THINGS128-PULI
 prerequisites: [TA-C128-kutirai, TA-C128-yanai]
 sounds: []
-roots: []
+roots: [dravidian-puli-tiger]
+etymology_hook: "புலி — native Dravidian (DEDR 4307); Malayalam puli, Kannada puli, Telugu puli"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C128-yanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **புலி** — *puli* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புலி** (*puli*) is native Dravidian. DEDR 4307 lists Malayalam *puli*, Kannada *puli* and Telugu *puli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

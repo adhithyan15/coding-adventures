@@ -15,6 +15,9 @@ Anger — the ordinary everyday word for it, not a literary one.
 You can read all of it already, and one part of it you only just learned: கோ is க with the ◌ோ sign, the sign whose free-standing letter ஓ you met last chapter.
 It ends in ம், like வணக்கம், தூக்கம் and பணம் before it. That ending is now four words deep, and it is a good bet for a Tamil noun.
 
+The word, taken apart.
+கோபம் (kōpam) is a loan from Sanskrit kopa, "anger" (CDIAL 3516).
+
 What you've built.
 The first of five feelings.
 
@@ -48,6 +51,9 @@ You'll want to know: பயம்.
 Fear.
 Three letters and not one vowel sign anywhere: ப, ய, and ம with a புள்ளி. Every letter is carrying its own built-in a, which is the plainest a Tamil word can possibly be written.
 It ends in the same ம் as கோபம் (kōpam), which is not a coincidence — Tamil keeps a whole shelf of feeling-nouns with that ending.
+
+The word, taken apart.
+பயம் (payam) is a loan from Sanskrit bhaya, "fear, peril" (CDIAL 9390). Tamil wrote the bh as a plain p.
 
 What you've built.
 Two, and both of them end the same way.
@@ -117,6 +123,9 @@ One word for both kinds of sorry: sad about something, and sorry for something.
 This is the word that finishes an apology in ordinary speech. You already have தவறு (tavaṟu), the mistake, and மன்னிக்கவும் (maṉṉikkavum), which asks formally to be forgiven. வருத்தம் (varuttam) sits between them: it names the feeling rather than making the request, and it is the one you can say to a friend without sounding like a letter.
 Its middle is a doubled த்த, the same closing-and-leaning you read in சட்டை and வண்டி.
 
+The word, taken apart.
+வருத்தம் (varuttam) is native Dravidian. DEDR 5272 lists Malayalam varuttam, "trouble, affliction". It is the noun of varuntu, "to suffer, to grieve".
+
 What you've built.
 Three feelings, and one of them is an apology.
 
@@ -155,6 +164,9 @@ To laugh.
 Two letters, both wearing the same ி sign — ச and ர, each with the short i. Words that repeat a sign like that are easy to read and easy to say, and this is a good one to read aloud before you meet its opposite.
 After three nouns, this is a verb: something a person does, not something they have.
 
+The word, taken apart.
+சிரி (siri) is native Dravidian. DEDR 1562 lists Malayalam cirikka and Kannada kiri, "to grin".
+
 What you've built.
 Four, and the feelings start doing something.
 
@@ -189,6 +201,9 @@ You'll want to know: அழு.
 To cry — the mirror of the verb before it, and just as short.
 It opens on அ, the free-standing letter, because the word begins with that vowel: the same pattern you saw when ஓ opened ஓடு. And in the middle is ழ again, the third time you have met it after தமிழ் and கழுவு.
 Five feelings now: three you can have — கோபம் (kōpam), பயம் (payam), வருத்தம் (varuttam) — and two you can do, சிரி (siri) and அழு (aḻu).
+
+The word, taken apart.
+அழு (aḻu) is native Dravidian. DEDR 282 lists Malayalam aḻuka and Kannada aḻ.
 
 What you've built.
 Five: three nouns and two verbs.

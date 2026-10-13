@@ -14,7 +14,8 @@ romanization: "mita"
 concept_tag: TA-VERB-MITA
 prerequisites: [TA-C260-paravu, TA-C260-mulku]
 sounds: []
-roots: []
+roots: [dravidian-mi-top]
+etymology_hook: "மித — native Dravidian; DEDR 4841 lists it, with a query, among words for 'top, upon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C260-mulku]
 <!-- hl-knowledge: introduces=[TA-LEX-C260-ACT260-04]; assesses=[] -->
 
 **மித** — *mita* — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மித** (*mita*) is native Dravidian: DEDR 4841 lists it, with a query, among words for "top, height, upon": to float is to stay on top.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

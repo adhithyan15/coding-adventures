@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 257,
-  "sourceHash": "fnv1a64:0e9a9e768f422abc",
+  "sourceHash": "fnv1a64:fb9b09887affb554",
   "lessonIds": [
     "TA-C257-veru",
     "TA-C257-accariyappatu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch257.txt",
   "json": "tamil/narration/ch257.json",
-  "textHash": "fnv1a64:30fb482d2effb9f7",
-  "jsonHash": "fnv1a64:3dba1661cc9d8268",
+  "textHash": "fnv1a64:aae706432b129284",
+  "jsonHash": "fnv1a64:85afc495a439f10a",
   "findings": []
 }

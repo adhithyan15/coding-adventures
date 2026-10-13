@@ -14,7 +14,8 @@ romanization: "ārampi"
 concept_tag: TA-VERB-ARAMPI
 prerequisites: [TA-C225-kalarru, TA-C225-marru]
 sounds: []
-roots: []
+roots: [sanskrit-arambha]
+etymology_hook: "ஆரம்பி — a verb from Sanskrit ārambha 'beginning' (CDIAL 1307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C225-marru]
 <!-- hl-knowledge: introduces=[TA-LEX-C226-ACT226-01]; assesses=[] -->
 
 **ஆரம்பி** — *ārampi* — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆரம்பி** (*ārampi*) is a verb made from Sanskrit *ārambha*, "beginning" (CDIAL 1307).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vāṅgu"
 concept_tag: TA-VERB-VAANGU
 prerequisites: [TA-C68-money, TA-C66-right, TA-C67-sandal]
 sounds: []
-roots: []
+roots: [dravidian-vaangu-receive]
+etymology_hook: "வாங்கு — native Dravidian (DEDR 5336); Malayalam vāṅṅuka 'to take, receive'"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ doorway as at a counter.
 
 Set it against கொடு (*koṭu*), "give", which you already have. One hand out, one hand in, and
 the pair covers most of what happens over a counter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாங்கு** (*vāṅgu*) is native Dravidian. DEDR 5336 lists Malayalam *vāṅṅuka*, "to take, receive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

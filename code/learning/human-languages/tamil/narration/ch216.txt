@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a letter, then the Tamil for an envelope; 
 You'll want to know: இணையம்.
 இணையம் — iṇaiyam — "the internet".
 
+The word, taken apart.
+இணையம் (iṇaiyam) is native Dravidian (DEDR 457). It is a modern coinage on iṇai, "to join, to link": "the linked thing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for an envelope; a cover, then the Tamil for t
 
 You'll want to know: கடவுச்சொல்.
 கடவுச்சொல் — kaṭavuccol — "a password".
+
+The word, taken apart.
+கடவுச்சொல் (kaṭavuccol) is a modern coinage from native parts: kaṭavu, "a passing", from kaṭa, "to pass" (DEDR 1109), and col, "word" (DEDR 2855): "the passing word".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for the internet, then the Tamil for a passwor
 You'll want to know: நாளிதழ்.
 நாளிதழ் — nāḷitaḻ — "a newspaper".
 
+The word, taken apart.
+நாளிதழ் (nāḷitaḻ) is native: nāḷ, "day" (DEDR 3656), and itaḻ, "petal, leaf" (DEDR 459): "the daily leaf".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a password, then the Tamil for a newspaper
 You'll want to know: சீட்டு.
 சீட்டு — cīṭṭu — "a ticket; a slip of paper".
 
+The word, taken apart.
+The origin of சீட்டு (cīṭṭu) is uncertain. DEDR has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a newspaper, then the Tamil for a ticket; 
 
 You'll want to know: வரைபடம்.
 வரைபடம் — varaipaṭam — "a map".
+
+The word, taken apart.
+வரைபடம் (varaipaṭam) is native varai, "to draw" (DEDR 5263), and paṭam, "picture", from Sanskrit paṭa, "woven cloth" (CDIAL 7692): "a drawn picture".
 
 What you've built.
 One more word for this chapter.

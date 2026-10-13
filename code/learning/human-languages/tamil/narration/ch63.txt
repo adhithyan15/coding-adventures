@@ -14,6 +14,9 @@ You'll want to know: வேண்டுகோள்.
 A request as a thing you make and hand over, rather than the asking itself. It stands beside வேண்டும், which you already have, and you can hear that word at the front of it.
 Kannada ವಿನಂತಿ (vinanti) and Telugu మనవి (manavi) both went their own way. A வேண்டுகோள் (vēṇḍukōḷ) is what தயவுசெய்து is put in front of when the asking has to be formal.
 
+The word, taken apart.
+வேண்டுகோள் (vēṇḍukōḷ) is native: vēṇṭu, "to want, to ask for" (DEDR 5528), and kōḷ, a noun from koḷ, "to take, to hold" (DEDR 2151). A request is "a wanting put forward".
+
 What you've built.
 The first of five.
 
@@ -45,6 +48,9 @@ You'll want to know: அனுமதி.
 அனுமதி (aṉumati) — "permission".
 Permission to do a thing — asked for, given, refused. Here all three sisters took the same Sanskrit word and did not even change its shape: Kannada ಅನುಮತಿ (anumati), Telugu అనుమతి (anumati), Tamil அனுமதி (aṉumati).
 Hold it apart from விடை, which you already have. விடை is permission to go, taken formally at a door. அனுமதி (aṉumati) is the wider one and covers everything else you might be allowed.
+
+The word, taken apart.
+அனுமதி (aṉumati) is a well-established loan from Sanskrit anumati, "assent, permission".
 
 What you've built.
 Two.
@@ -78,6 +84,9 @@ You'll want to know: தயக்கம்.
 The holding back before you ask: the half-step not taken, the sentence begun and dropped. Kannada carries the same idea in ಸಂಕೋಚ (saṅkōca).
 The தயவு inside தயவுசெய்து opens the same way and is a different word — that one is kindness given, this one is a foot kept back. Tamil puts them next to each other and expects you to hear the difference.
 
+The word, taken apart.
+தயக்கம் (tayakkam) is the noun of tayaṅku, "to hesitate". It looks native, but DEDR has no entry for it, so its origin is uncertain. DEDR 3454 has a near neighbour, tiyaṅku, "to be confused", without linking the two.
+
 What you've built.
 Three.
 
@@ -110,6 +119,9 @@ You'll want to know: நம்பிக்கை.
 Trust, and the confidence that comes with it. All three are off the same old stem: Kannada ನಂಬಿಕೆ (nambike), Telugu నమ్మకం (nammakaṁ), Tamil நம்பிக்கை (nambikkai).
 A விருந்தாளி is given this before anything else is given, which is the whole of what a Tamil house means by hospitality.
 
+The word, taken apart.
+நம்பிக்கை (nambikkai) is native Dravidian. DEDR 3600 lists Malayalam nampuka, Kannada nambu and Telugu nammu. It is the noun of nampu, "to trust".
+
 What you've built.
 Four.
 
@@ -141,6 +153,9 @@ You'll want to know: பணிவு.
 பணிவு (paṇivu) — "humility".
 The bending: humility, deference, a manner rather than an act. Set it against மரியாதை, which you already have — மரியாதை is respect paid outward to somebody, பணிவு (paṇivu) is the carriage you keep in yourself.
 Telugu's మర్యాద (maryāda) is the same word as your மரியாதை, which makes the pair easy to keep straight across the two.
+
+The word, taken apart.
+பணிவு (paṇivu) is native Dravidian. DEDR 3888 lists Malayalam paṇiyuka, "to bow, salute". It is the noun of paṇi, "to be low, to bow".
 
 What you've built.
 Five, and the run is closed: a request, permission, hesitancy, trust, and humility.

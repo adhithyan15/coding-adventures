@@ -11,7 +11,8 @@ romanization: "periya"
 concept_tag: TA-ADJ-BIG
 prerequisites: [TA-C39-vendum, TA-C40-this, TA-C40-that]
 sounds: []
-roots: []
+roots: [dravidian-peru-big]
+etymology_hook: "பெரிய — native Dravidian (DEDR 4411); Malayalam periya, Kannada pēr"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ That is all an adjective does in this language.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெரிய** (*periya*) is native Dravidian. DEDR 4411 lists Malayalam *periya* and Kannada *pēr*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-LEX-C40-DEIXIS-01, TA-LEX-C40-DEIXIS-02] -->

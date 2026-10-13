@@ -14,7 +14,8 @@ romanization: "kuraṅku"
 concept_tag: TA-THINGS129-KURANKU
 prerequisites: [TA-C129-cinkam, TA-C129-karati]
 sounds: []
-roots: []
+roots: [dravidian-kurangu-monkey]
+etymology_hook: "குரங்கு — native Dravidian (DEDR 1769); Malayalam kuraṅṅu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C129-karati]
 <!-- hl-knowledge: introduces=[TA-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **குரங்கு** — *kuraṅku* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குரங்கு** (*kuraṅku*) is native Dravidian. DEDR 1769 lists Malayalam *kuraṅṅu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

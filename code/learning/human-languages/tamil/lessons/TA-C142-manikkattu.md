@@ -14,7 +14,8 @@ romanization: "maṇikkaṭṭu"
 concept_tag: TA-THINGS142-MANIKKATTU
 prerequisites: [TA-C142-vattu, TA-C142-kannam]
 sounds: []
-roots: []
+roots: [dravidian-manikkattu-wrist]
+etymology_hook: "மணிக்கட்டு — native Dravidian (DEDR 4673); Malayalam maṇikkeṭṭu, Kannada maṇikaṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C142-kannam]
 <!-- hl-knowledge: introduces=[TA-LEX-C142-THINGS142-04]; assesses=[] -->
 
 **மணிக்கட்டு** — *maṇikkaṭṭu* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மணிக்கட்டு** (*maṇikkaṭṭu*) is native Dravidian. DEDR 4673 lists Malayalam *maṇikkeṭṭu* and Kannada *maṇikaṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

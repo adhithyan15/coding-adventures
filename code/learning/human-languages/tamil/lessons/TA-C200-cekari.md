@@ -14,7 +14,8 @@ romanization: "cēkari"
 concept_tag: TA-VERB-CEKARI
 prerequisites: [TA-C200-valai, TA-C200-pucu]
 sounds: []
-roots: []
+roots: [dravidian-cekaram-collect]
+etymology_hook: "சேகரி — native Dravidian (DEDR 2801); Telugu sēkarincu 'to collect'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C200-pucu]
 <!-- hl-knowledge: introduces=[TA-LEX-C200-ACT200-04]; assesses=[] -->
 
 **சேகரி** — *cēkari* — "to collect, to gather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சேகரி** (*cēkari*) is native Dravidian. DEDR 2801 lists Telugu *sēkarincu*, "to collect". DEDR adds that the Malayalam forms look Sanskrit, though Sanskrit has no such word in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

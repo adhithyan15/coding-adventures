@@ -11,7 +11,8 @@ romanization: "kaḷam"
 concept_tag: TA-NOUN-THRESHING-FLOOR
 prerequisites: [TA-C64-crop, TA-C62-at-once, TA-C63-trust]
 sounds: []
-roots: []
+roots: [dravidian-kalam-floor]
+etymology_hook: "களம் — native Dravidian (DEDR 1376); Malayalam kaḷam, Kannada kaḷa"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C64-crop]
 The beaten flat ground at the edge of a village where cut நெல் is spread, trodden and winnowed. Telugu has the same word as కల్లం (*kallaṁ*), which makes it old.
 
 It is not காலம், the season word you already have. This one is short at the front and takes the ள; காலம் opens long and takes the ல. One mark and one letter, and they are unrelated.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**களம்** (*kaḷam*) is native Dravidian. DEDR 1376 lists Malayalam *kaḷam* and Kannada *kaḷa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

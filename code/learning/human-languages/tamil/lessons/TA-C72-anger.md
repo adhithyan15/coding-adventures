@@ -11,7 +11,8 @@ romanization: "kōpam"
 concept_tag: TA-NOUN-ANGER
 prerequisites: [TA-C71-play, TA-C70-table, TA-C71-rise]
 sounds: []
-roots: []
+roots: [sanskrit-kopa]
+etymology_hook: "கோபம் ← Sanskrit kopa 'anger' (CDIAL 3516)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You can read all of it already, and one part of it you only just learned: **க�
 
 It ends in **ம்**, like வணக்கம், தூக்கம் and பணம் before it. That ending is now four words
 deep, and it is a good bet for a Tamil noun.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோபம்** (*kōpam*) is a loan from Sanskrit *kopa*, "anger" (CDIAL 3516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

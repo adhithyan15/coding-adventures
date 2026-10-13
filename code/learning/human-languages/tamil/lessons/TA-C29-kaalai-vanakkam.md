@@ -12,9 +12,9 @@ concept_tag: GREETING-MORNING
 prerequisites: [TA-C26-kaalai, TA-C01-vanakkam-family-register]
 sounds: [tamil-geminate-kka, tamil-vowel-sign-ai]
 roots: [vaṇaṅku]
-etymology_hook: "காலை வணக்கம் (kālai vaṇakkam, 'good morning'), literally 'morning greetings/salutations,' is confirmed by TWO independently-fetched sources (talkpal.ai, preply.com — practical language-learning content, not lexicographic/scholarly references like TA-C26's Wiktionary and Tamil Lexicon; worth naming that source-tier difference explicitly) as Tamil's standard greeting for this time of day — talkpal.ai glosses it directly as காலை ('morning') + வணக்கம் ('a respectful greeting, similar to hello or salutations'), and preply.com independently labels it 'formal,' 'used before noon'; both agree on timing (roughly sunrise to 11 AM). Be honest about what this ISN'T: unlike Hindi/Kannada/Telugu/Malayalam, which each build their morning greeting on a śubha-equivalent word ('good, auspicious') plus a time-word, Tamil's own greeting is entirely different in structure — it's simply its own general greeting word, வணக்கம் (already met, TA-C01, 'reverence, homage,' Tamil's everyday word for 'hello'), specified with the time-of-day word காலை (already met, TA-C26) in front of it. Also be honest about a claim that did NOT check out: an initial WebSearch summary suggested a Sanskrit-borrowed word, 'suprabhatham,' serves as a casual alternative — but this claim appears on NEITHER of the two directly-fetched pages, so it is deliberately NOT asserted here"
+etymology_hook: "காலை வணக்கம் — native vaṇakkam 'bowing' (DEDR 5236); kālai 'morning' is of uncertain origin"
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [TA-ETYMON-KAALAI-01]
 introduces:
@@ -50,6 +50,11 @@ around 11 AM**." It's built from two words you already have:
 **வணக்கம்** (already met, Chapter 1, "**reverence, homage**" —
 Tamil's everyday word for "hello"). Literally: "**morning
 salutations**."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vaṇakkam* is native, from the verb "to bow" (DEDR 5236). *Kālai*, "morning", looks native too, but DEDR has no entry for it, and its origin is uncertain.
 
 ## Why it's said this way: Be honest: this breaks the pattern every other language followed
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-KAALAI-VANAKKAM-02]; assesses=[] -->

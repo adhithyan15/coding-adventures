@@ -14,7 +14,8 @@ romanization: "koṇṭāṭu"
 concept_tag: TA-VERB-KONTATU
 prerequisites: [TA-C164-kavani, TA-C165-palaku]
 sounds: []
-roots: []
+roots: [dravidian-kol-take, dravidian-aadu-move]
+etymology_hook: "கொண்டாடு — native: koṇṭu, from koḷ 'to take' (DEDR 2151) + āṭu 'to dance, play' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C165-palaku]
 <!-- hl-knowledge: introduces=[TA-LEX-C165-ACT165-02]; assesses=[] -->
 
 **கொண்டாடு** — *koṇṭāṭu* — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொண்டாடு** (*koṇṭāṭu*) is native: *koṇṭu*, "having taken", from *koḷ*, "to take" (DEDR 2151), and *āṭu*, "to move, to dance, to play" (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

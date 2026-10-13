@@ -11,7 +11,8 @@ romanization: "iṉṉum illai"
 concept_tag: TA-RIGHT-NOT-YET
 prerequisites: [TA-C95-really, TA-C95-nothing]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, il]
+etymology_hook: "இன்னும் இல்லை — native: iṉṉum 'still, yet' (DEDR 410) + illai 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C95-nothing]
 **இன்னும் இல்லை** (*iṉṉum illai*) — "not yet".
 
 **இன்னும்** is "still"; with **இல்லை**, "still no".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இன்னும் இல்லை** (*iṉṉum illai*) is native: *iṉṉum*, "still, yet" (DEDR 410), and *illai*, "not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

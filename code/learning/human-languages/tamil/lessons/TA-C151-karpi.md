@@ -14,7 +14,8 @@ romanization: "kaṟpi"
 concept_tag: TA-VERB-KARPI
 prerequisites: [TA-C151-anuppu, TA-C151-tetu, TA-C84-mudhal-vaasippu]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "கற்பி — native Dravidian (DEDR 1297); Malayalam kalkka 'to learn'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TA-C151-tetu]
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-05]; assesses=[] -->
 
 **கற்பி** — *kaṟpi* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கற்பி** (*kaṟpi*) is native Dravidian. DEDR 1297 lists Malayalam *kalkka*, "to learn". It is the causative of *kal*, "to learn": to teach is "to make learn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

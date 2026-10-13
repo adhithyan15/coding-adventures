@@ -11,7 +11,8 @@ romanization: "vānti"
 concept_tag: TA-DOCTOR-VOMIT
 prerequisites: [TA-C87-rest, TA-C88-hospital]
 sounds: []
-roots: []
+roots: [sanskrit-vanti]
+etymology_hook: "வாந்தி ← Sanskrit vānti 'vomiting' (CDIAL 11518)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C88-hospital]
 **வாந்தி** (*vānti*) — "vomiting".
 
 **வாந்தி வருகிறது** — "I feel sick", literally "vomiting is coming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாந்தி** (*vānti*) is a loan from Sanskrit *vānti*, "vomiting" (CDIAL 11518).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

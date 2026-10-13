@@ -14,7 +14,8 @@ romanization: "āccariyam"
 concept_tag: TA-GUNAM210-ACCARIYAM
 prerequisites: [TA-C210-poramai, TA-C210-vetkam]
 sounds: []
-roots: []
+roots: [sanskrit-ashcarya]
+etymology_hook: "ஆச்சரியம் ← Sanskrit āścarya 'wonderful', through a spoken āścariya (CDIAL 1464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C210-vetkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C210-GUNAM210-05]; assesses=[] -->
 
 **ஆச்சரியம்** — *āccariyam* — "surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆச்சரியம்** (*āccariyam*) is from Sanskrit *āścarya*, "wonderful", through a spoken form *āścariya* (CDIAL 1464).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to beg, then the Tamil for to manage.
 You'll want to know: பல்வலி.
 பல்வலி — palvali — "a toothache".
 
+The word, taken apart.
+பல்வலி (palvali) is native: pal, "tooth" (DEDR 3986), and vali, "pain" (DEDR 5281).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to manage, then the Tamil for a toothache.
 
 You'll want to know: காயம்.
 காயம் — kāyam — "a wound, an injury".
+
+The word, taken apart.
+The origin of காயம் (kāyam), "wound", is uncertain. DEDR does not give this sense, but it lists kāyam, "scar", beside kāy, "to form a callus, as from a wound" (DEDR 1460), and the two may be one word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a toothache, then the Tamil for a wound.
 You'll want to know: மாத்திரை.
 மாத்திரை — māttirai — "a tablet, a pill".
 
+The word, taken apart.
+மாத்திரை (māttirai) is a loan from Sanskrit mātrā, "measure, minute portion" (CDIAL 10023). A pill is a measured dose.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a wound, then the Tamil for a tablet.
 You'll want to know: நோயாளி.
 நோயாளி — nōyāḷi — "a patient".
 
+The word, taken apart.
+நோயாளி (nōyāḷi) is native Dravidian (DEDR 3793). It is nōy, "disease", with āḷi, "person".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a tablet, then the Tamil for a patient.
 
 You'll want to know: செவிலியர்.
 செவிலியர் — ceviliyar — "a nurse".
+
+The word, taken apart.
+The origin of செவிலியர் (ceviliyar) is uncertain. It is built on cevili, an old word for a nurse or foster mother, and DEDR has no entry for it.
 
 What you've built.
 One more word for this chapter.

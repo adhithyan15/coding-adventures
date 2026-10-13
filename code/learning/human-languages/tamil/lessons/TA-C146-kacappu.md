@@ -14,7 +14,8 @@ romanization: "kacappu"
 concept_tag: TA-QUAL146-KACAPPU
 prerequisites: [TA-C145-alukkana, TA-C145-vekamana]
 sounds: []
-roots: []
+roots: [dravidian-kaya-bitter]
+etymology_hook: "கசப்பு — native Dravidian (DEDR 1249); Malayalam kaśakka 'to be bitter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C145-vekamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **கசப்பு** — *kacappu* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கசப்பு** (*kacappu*) is native Dravidian. DEDR 1249 lists Malayalam *kaśakka*, "to be bitter". The entry compares Sanskrit *kaṣāya*, "astringent" (CDIAL 2974).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

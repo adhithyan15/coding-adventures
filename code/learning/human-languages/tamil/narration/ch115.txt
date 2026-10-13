@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a park, then the Tamil for a temple.
 You'll want to know: நூலகம்.
 நூலகம் — nūlakam — "a library".
 
+The word, taken apart.
+நூலகம் (nūlakam) is native: nūl, "thread, treatise, book" (DEDR 3726), and akam, "house, inside" (DEDR 7): "the house of books".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Say திங்கள் through ஞாயிறு. Each day ends in kiḻamai
 
 You'll want to know: வங்கி.
 வங்கி — vaṅki — "a bank".
+
+The word, taken apart.
+வங்கி (vaṅki) is a loan from English bank.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ One slot changes: இங்கே, அங்கே, எங்கே. Here, there
 You'll want to know: சந்தை.
 சந்தை — cantai — "a market".
 
+The word, taken apart.
+The origin of சந்தை (cantai) is uncertain. DEDR has no entry for it, and no well-established account of where it came from is available.
+
 What you've built.
 One more word for this chapter.
 
@@ -103,6 +112,9 @@ Before the new one: say the Tamil for a bank, then the Tamil for a market.
 You'll want to know: கடற்கரை.
 கடற்கரை — kaṭaṟkarai — "a beach".
 
+The word, taken apart.
+கடற்கரை (kaṭaṟkarai) is native: kaṭal, "sea" (DEDR 1118), and karai, "shore, bank" (DEDR 1293).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Tamil for a market, then the Tamil for a beach.
 
 You'll want to know: அலுவலகம்.
 அலுவலகம் — aluvalakam — "an office".
+
+The word, taken apart.
+அலுவலகம் (aluvalakam) is native: aluval, "business, affair" (DEDR 236), and akam, "house, place" (DEDR 7): "the place of business".
 
 What you've built.
 One more word for this chapter.

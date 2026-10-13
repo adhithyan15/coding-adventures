@@ -14,7 +14,8 @@ romanization: "veṟu"
 concept_tag: TA-VERB-VERU
 prerequisites: [TA-C256-ali, TA-C256-accitu]
 sounds: []
-roots: []
+roots: [dravidian-veru-hate]
+etymology_hook: "வெறு — native Dravidian (DEDR 5512); Malayalam veṟukka 'to loathe, to hate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C256-accitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C257-ACT257-01]; assesses=[] -->
 
 **வெறு** — *veṟu* — "to hate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெறு** (*veṟu*) is native Dravidian. DEDR 5512 lists Malayalam *veṟukka*, "to loathe, to hate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

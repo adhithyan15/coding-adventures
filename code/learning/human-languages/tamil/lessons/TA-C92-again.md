@@ -11,7 +11,8 @@ romanization: "maṟupaṭiyum"
 concept_tag: TA-AGAIN-AGAIN
 prerequisites: [TA-C91-well, TA-C92-slowly]
 sounds: []
-roots: []
+roots: [dravidian-maru-other]
+etymology_hook: "மறுபடியும் — native: maṟu 'other, next' (DEDR 4766) + paṭi 'time, manner' + -um 'also'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C92-slowly]
 **மறுபடியும்** (*maṟupaṭiyum*) — "again".
 
 **மறுபடியும் சொல்லுங்கள்** — "please say it again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மறுபடியும்** (*maṟupaṭiyum*) is native: *maṟu*, "other, next" (DEDR 4766), and *paṭi*, "manner, time", with *-um*, "also": "once more, another time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

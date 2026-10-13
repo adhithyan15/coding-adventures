@@ -11,7 +11,8 @@ romanization: "kuṭumpap peyar"
 concept_tag: TA-NEXTGEN-FAMILY-NAME
 prerequisites: [TA-C103-granddaughter, TA-C103-neighbour]
 sounds: []
-roots: []
+roots: [sanskrit-kutumba, peyar-dravidian]
+etymology_hook: "குடும்பப் பெயர் — kuṭumbam ← Sanskrit kuṭumba (CDIAL 3233) + native peyar 'name' (DEDR 4410)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C103-neighbour]
 
 **பெயர்** is the "name" of your first introductions; **குடும்பம்** is "family". Many Tamil names
 use a father's initial where English uses a surname.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடும்பப் பெயர்** (*kuṭumpap peyar*) is *kuṭumbam*, "family", from Sanskrit *kuṭumba* (CDIAL 3233), and native *peyar*, "name" (DEDR 4410).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

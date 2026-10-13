@@ -14,7 +14,8 @@ romanization: "vimāṉam"
 concept_tag: TA-IDAM263-VIMANAM
 prerequisites: [TA-C263-pokkuvarattu, TA-C263-nataipatai]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "விமானம் ← Sanskrit vimāna 'a chariot of the gods' (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C263-nataipatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C263-IDAM263-03]; assesses=[] -->
 
 **விமானம்** — *vimāṉam* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விமானம்** (*vimāṉam*) is a loan from Sanskrit *vimāna*, "a chariot of the gods" (CDIAL 11823), reused for the aeroplane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

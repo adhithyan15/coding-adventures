@@ -14,7 +14,8 @@ romanization: "vetuvetuppāṉa"
 concept_tag: TA-GUNAM241-VETUVETUPPANA
 prerequisites: [TA-C241-camamana, TA-C241-karatumuratana]
 sounds: []
-roots: []
+roots: [dravidian-ve-burn]
+etymology_hook: "வெதுவெதுப்பான — native Dravidian (DEDR 5517)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C241-karatumuratana]
 <!-- hl-knowledge: introduces=[TA-LEX-C241-GUNAM241-05]; assesses=[] -->
 
 **வெதுவெதுப்பான** — *vetuvetuppāṉa* — "lukewarm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெதுவெதுப்பான** (*vetuvetuppāṉa*) is native Dravidian (DEDR 5517). The entry lists *vetumpu*, "to become warm", under *vē*, "to burn, to be hot"; the doubled *vetuvetu-* makes it "mildly warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

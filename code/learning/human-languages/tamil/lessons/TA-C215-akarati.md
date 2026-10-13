@@ -14,7 +14,8 @@ romanization: "akarāti"
 concept_tag: TA-PORUL215-AKARATI
 prerequisites: [TA-C214-rotti, TA-C215-pencil]
 sounds: []
-roots: []
+roots: [tamil-akaram-letter-a, sanskrit-adi]
+etymology_hook: "அகராதி — akaram 'the letter a' + āti 'beginning' ← Sanskrit ādi (CDIAL 1152): 'from a onward'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C215-pencil]
 <!-- hl-knowledge: introduces=[TA-LEX-C215-PORUL215-02]; assesses=[] -->
 
 **அகராதி** — *akarāti* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அகராதி** (*akarāti*) is "from *a* onward": *akaram*, the letter *a*, and *āti*, "beginning", from Sanskrit *ādi* (CDIAL 1152). A dictionary runs from the first letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tirāṭcai"
 concept_tag: TA-THINGS140-TIRATCAI
 prerequisites: [TA-C139-koyya, TA-C139-elumiccai]
 sounds: []
-roots: []
+roots: [sanskrit-draksha]
+etymology_hook: "திராட்சை ← Sanskrit drākṣā 'vine, grape' (CDIAL 6628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C139-elumiccai]
 <!-- hl-knowledge: introduces=[TA-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **திராட்சை** — *tirāṭcai* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திராட்சை** (*tirāṭcai*) is a loan from Sanskrit *drākṣā*, "vine, grape" (CDIAL 6628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

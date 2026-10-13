@@ -14,7 +14,8 @@ romanization: "kuṟippāka"
 concept_tag: TA-KARANAM237-KURIPPAKA
 prerequisites: [TA-C236-kottai, TA-C236-aranmanai]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "குறிப்பாக — native Dravidian (DEDR 1847)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C236-aranmanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C237-KARANAM237-01]; assesses=[] -->
 
 **குறிப்பாக** — *kuṟippāka* — "especially, in particular".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறிப்பாக** (*kuṟippāka*) is native Dravidian (DEDR 1847). It is *kuṟippu*, "a mark, a pointing out", with *-āka*: "pointedly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

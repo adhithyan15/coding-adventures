@@ -11,7 +11,8 @@ romanization: "appōdu"
 concept_tag: TA-TIME-THEN
 prerequisites: [TA-C79-when-question]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-podu-time]
+etymology_hook: "அப்போது — native: far base a- (DEDR 1) + pōtu 'time' (DEDR 4559): 'that time'"
 duration:
   max_seconds: 215
 requires:
@@ -54,6 +55,11 @@ Near, far, question — the same three fronts you first met on இங்கே, 
 does, and for the same reason: both begin on the **a-** that means *that one, over there*.
 
 > **நாளை. அப்போது சொல்லுங்கள்.** — "Tomorrow. Tell me then."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்போது** (*appōdu*) is native: the far base *a-* (DEDR 1) and *pōtu*, "time" (DEDR 4559): "that time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

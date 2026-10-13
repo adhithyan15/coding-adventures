@@ -14,7 +14,8 @@ romanization: "paḻaku"
 concept_tag: TA-VERB-PALAKU
 prerequisites: [TA-C164-tercci-peru, TA-C164-kavani]
 sounds: []
-roots: []
+roots: [dravidian-pazhaku-accustom]
+etymology_hook: "பழகு — native Dravidian (DEDR 4000); Malayalam paḻakuka 'to be accustomed, acquainted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C164-kavani]
 <!-- hl-knowledge: introduces=[TA-LEX-C165-ACT165-01]; assesses=[] -->
 
 **பழகு** — *paḻaku* — "to get to know, to mix with (people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழகு** (*paḻaku*) is native Dravidian. DEDR 4000 lists Malayalam *paḻakuka*, "to be accustomed, acquainted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

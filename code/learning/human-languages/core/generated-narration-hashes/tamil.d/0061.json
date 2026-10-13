@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 61,
-  "sourceHash": "fnv1a64:8912291aba6bd290",
+  "sourceHash": "fnv1a64:0aa39af3fc028fa6",
   "lessonIds": [
     "TA-C61-hunger",
     "TA-C61-thirst",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch61.txt",
   "json": "tamil/narration/ch61.json",
-  "textHash": "fnv1a64:b43aabfbbb782a22",
-  "jsonHash": "fnv1a64:a814436c73656f3f",
+  "textHash": "fnv1a64:287256526de451bf",
+  "jsonHash": "fnv1a64:2c35ecd59c320f41",
   "findings": []
 }

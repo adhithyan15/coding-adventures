@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 236,
-  "sourceHash": "fnv1a64:e00fa111e24f3ceb",
+  "sourceHash": "fnv1a64:73f7b19ad6ce671c",
   "lessonIds": [
     "TA-C236-arunkatciyakam",
     "TA-C236-cantu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch236.txt",
   "json": "tamil/narration/ch236.json",
-  "textHash": "fnv1a64:72498de382c7dca6",
-  "jsonHash": "fnv1a64:c47612f082cdd1ac",
+  "textHash": "fnv1a64:7f18fb889d342cd8",
+  "jsonHash": "fnv1a64:bd648efa7256d5c4",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kuyavar"
 concept_tag: TA-VELAI224-KUYAVAR
 prerequisites: [TA-C223-vittuppatam, TA-C224-minavar]
 sounds: []
-roots: []
+roots: [dravidian-kuyavan-potter]
+etymology_hook: "குயவர் — native Dravidian (DEDR 1762); Malayalam kuyavan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C224-minavar]
 <!-- hl-knowledge: introduces=[TA-LEX-C224-VELAI224-02]; assesses=[] -->
 
 **குயவர்** — *kuyavar* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குயவர்** (*kuyavar*) is native Dravidian. DEDR 1762 lists Malayalam *kuyavan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

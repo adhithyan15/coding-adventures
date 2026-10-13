@@ -14,7 +14,8 @@ romanization: "rakaciyam"
 concept_tag: TA-KARANAM208-RAKACIYAM
 prerequisites: [TA-C208-cutantiram, TA-C208-takaval]
 sounds: []
-roots: []
+roots: [sanskrit-rahasya]
+etymology_hook: "ரகசியம் ← Sanskrit rahasya 'private, secret' (CDIAL 10669)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C208-takaval]
 <!-- hl-knowledge: introduces=[TA-LEX-C208-KARANAM208-05]; assesses=[] -->
 
 **ரகசியம்** — *rakaciyam* — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரகசியம்** (*rakaciyam*) is a loan from Sanskrit *rahasya*, "private, secret" (CDIAL 10669).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

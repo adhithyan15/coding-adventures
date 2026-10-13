@@ -14,7 +14,8 @@ romanization: "nilakkaṭalai"
 concept_tag: TA-PORUL278-NILAKKATALAI
 prerequisites: [TA-C278-karumpu, TA-C278-ventaikkay]
 sounds: []
-roots: []
+roots: [dravidian-nilam-ground, dravidian-kadalai-gram]
+etymology_hook: "நிலக்கடலை — native: nilam 'ground' (DEDR 3676) + kaṭalai 'gram' (DEDR 1120)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C278-ventaikkay]
 <!-- hl-knowledge: introduces=[TA-LEX-C278-PORUL278-03]; assesses=[] -->
 
 **நிலக்கடலை** — *nilakkaṭalai* — "a peanut, a groundnut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிலக்கடலை** (*nilakkaṭalai*) is native: *nilam*, "ground" (DEDR 3676), and *kaṭalai*, "Bengal gram" (DEDR 1120, which lists Kannada kaḍale): "the ground gram", since the nut ripens underground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

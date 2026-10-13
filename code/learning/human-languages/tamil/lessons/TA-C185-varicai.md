@@ -14,7 +14,8 @@ romanization: "varicai"
 concept_tag: TA-PORUL185-VARICAI
 prerequisites: [TA-C184-iravu-unavu, TA-C184-kurippetu]
 sounds: []
-roots: []
+roots: [dravidian-varicai-row]
+etymology_hook: "வரிசை — native Dravidian (DEDR 5269); Kannada varise 'line, row'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C184-kurippetu]
 <!-- hl-knowledge: introduces=[TA-LEX-C185-PORUL185-01]; assesses=[] -->
 
 **வரிசை** — *varicai* — "a queue, a row".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரிசை** (*varicai*) is native Dravidian. DEDR 5269 lists Kannada *varise*, "line, row".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

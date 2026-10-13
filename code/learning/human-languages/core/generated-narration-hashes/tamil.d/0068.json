@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 68,
-  "sourceHash": "fnv1a64:3328358abceb7126",
+  "sourceHash": "fnv1a64:fe0cb3ccfcd822ee",
   "lessonIds": [
     "TA-C68-shop",
     "TA-C68-price",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch68.txt",
   "json": "tamil/narration/ch68.json",
-  "textHash": "fnv1a64:5c6a6b54e74fc288",
-  "jsonHash": "fnv1a64:f05fb905acd1a3b0",
+  "textHash": "fnv1a64:04e1ab1132b3f0c1",
+  "jsonHash": "fnv1a64:0b49562fa60b06dd",
   "findings": []
 }

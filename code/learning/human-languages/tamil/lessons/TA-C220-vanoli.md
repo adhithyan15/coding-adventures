@@ -14,7 +14,8 @@ romanization: "vāṉoli"
 concept_tag: TA-PORUL220-VANOLI
 prerequisites: [TA-C220-vicaippalakai, TA-C220-kemara]
 sounds: []
-roots: []
+roots: [dravidian-vaanam-sky, dravidian-oli-sound]
+etymology_hook: "வானொலி — a coinage: vāṉ 'sky' (DEDR 5381) + oli 'sound' (DEDR 996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C220-kemara]
 <!-- hl-knowledge: introduces=[TA-LEX-C220-PORUL220-03]; assesses=[] -->
 
 **வானொலி** — *vāṉoli* — "the radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வானொலி** (*vāṉoli*) is a modern coinage from native parts: *vāṉ*, "sky" (DEDR 5381), and *oli*, "sound" (DEDR 996): "sound from the sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

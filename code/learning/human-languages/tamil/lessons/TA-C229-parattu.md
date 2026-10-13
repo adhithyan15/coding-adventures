@@ -14,7 +14,8 @@ romanization: "pārāṭṭu"
 concept_tag: TA-VERB-PARATTU
 prerequisites: [TA-C228-avacarappatu, TA-C228-neci]
 sounds: []
-roots: []
+roots: [dravidian-paaraattu-praise]
+etymology_hook: "பாராட்டு — native Dravidian (DEDR 4092); Malayalam pārāṭṭuka 'to extol'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C228-neci]
 <!-- hl-knowledge: introduces=[TA-LEX-C229-ACT229-01]; assesses=[] -->
 
 **பாராட்டு** — *pārāṭṭu* — "to praise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாராட்டு** (*pārāṭṭu*) is native Dravidian. DEDR 4092 lists Malayalam *pārāṭṭuka*, "to extol".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nūlakam"
 concept_tag: TA-LOC115-NULAKAM
 prerequisites: [TA-C114-punka, TA-C114-koyil]
 sounds: []
-roots: []
+roots: [dravidian-nuul-thread, dravidian-akam-inside]
+etymology_hook: "நூலகம் — native: nūl 'thread, book' (DEDR 3726) + akam 'house' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C114-koyil]
 <!-- hl-knowledge: introduces=[TA-LEX-C115-LOC115-01]; assesses=[] -->
 
 **நூலகம்** — *nūlakam* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நூலகம்** (*nūlakam*) is native: *nūl*, "thread, treatise, book" (DEDR 3726), and *akam*, "house, inside" (DEDR 7): "the house of books".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

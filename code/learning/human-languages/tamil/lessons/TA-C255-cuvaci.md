@@ -14,7 +14,8 @@ romanization: "cuvāci"
 concept_tag: TA-VERB-CUVACI
 prerequisites: [TA-C254-nulai, TA-C254-veliyeru]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "சுவாசி — a verb from Sanskrit śvāsa 'breath, breathing' (CDIAL 12769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C254-veliyeru]
 <!-- hl-knowledge: introduces=[TA-LEX-C255-ACT255-01]; assesses=[] -->
 
 **சுவாசி** — *cuvāci* — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுவாசி** (*cuvāci*) is a verb made from Sanskrit *śvāsa*, "breath, breathing" (CDIAL 12769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

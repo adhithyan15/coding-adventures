@@ -11,7 +11,8 @@ romanization: "kuṟaivu"
 concept_tag: TA-REPLY-LESS
 prerequisites: [TA-C56-a-lot, TA-C54-knife, TA-C55-lip]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "குறைவு — native Dravidian (DEDR 1851); Malayalam kuṟu 'short, little', Kannada kuṟu 'smallness'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C56-a-lot]
 *kuṟai* is to fall short, and குறைவு is the falling-short itself. That makes it a narrower word than the English "less": it does not merely compare two amounts, it says one of them did not come up to the mark. There is a small complaint folded inside it.
 
 Telugu's word for the same ground is తక్కువ (*takkuva*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறைவு** (*kuṟaivu*) is native Dravidian. DEDR 1851 lists Malayalam *kuṟu*, "short, little" and Kannada *kuṟu*, "smallness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

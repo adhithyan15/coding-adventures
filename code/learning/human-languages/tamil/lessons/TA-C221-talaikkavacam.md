@@ -14,7 +14,8 @@ romanization: "talaikkavacam"
 concept_tag: TA-PORUL221-TALAIKKAVACAM
 prerequisites: [TA-C220-nikalcci, TA-C220-tiraippatam]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, sanskrit-kavaca]
+etymology_hook: "தலைக்கவசம் — native talai 'head' (DEDR 3103) + kavacam ← Sanskrit kavaca 'armour' (CDIAL 2957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C220-tiraippatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C221-PORUL221-01]; assesses=[] -->
 
 **தலைக்கவசம்** — *talaikkavacam* — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தலைக்கவசம்** (*talaikkavacam*) is native *talai*, "head" (DEDR 3103), and *kavacam*, "armour", from Sanskrit *kavaca*, "coat of mail" (CDIAL 2957), which CDIAL notes may itself be Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

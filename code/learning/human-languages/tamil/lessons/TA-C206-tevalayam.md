@@ -14,7 +14,8 @@ romanization: "tēvālayam"
 concept_tag: TA-IDAM206-TEVALAYAM
 prerequisites: [TA-C205-mati, TA-C205-kaval-nilaiyam]
 sounds: []
-roots: []
+roots: [sanskrit-deva, sanskrit-alaya]
+etymology_hook: "தேவாலயம் ← Sanskrit deva 'god' + ālaya 'house' (CDIAL 1366): 'the house of God'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C205-kaval-nilaiyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C206-IDAM206-01]; assesses=[] -->
 
 **தேவாலயம்** — *tēvālayam* — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேவாலயம்** (*tēvālayam*) is Sanskrit *deva*, "god", and *ālaya*, "house, abode" (CDIAL 1366): "the house of God".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

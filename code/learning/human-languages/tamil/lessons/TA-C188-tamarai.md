@@ -14,7 +14,8 @@ romanization: "tāmarai"
 concept_tag: TA-PORUL188-TAMARAI
 prerequisites: [TA-C187-ciruttai, TA-C188-mul]
 sounds: []
-roots: []
+roots: [dravidian-taamarai-lotus]
+etymology_hook: "தாமரை — native Dravidian (DEDR 3163); Malayalam tāmara, Kannada tāvare, Telugu tāmara"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C188-mul]
 <!-- hl-knowledge: introduces=[TA-LEX-C188-PORUL188-02]; assesses=[] -->
 
 **தாமரை** — *tāmarai* — "a lotus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தாமரை** (*tāmarai*) is native Dravidian. DEDR 3163 lists Malayalam *tāmara*, Kannada *tāvare* and Telugu *tāmara*. The entry compares Sanskrit *tāmarasa*, "lotus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

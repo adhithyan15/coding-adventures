@@ -11,7 +11,8 @@ romanization: "oru nimiṭam"
 concept_tag: TA-AGAIN-MINUTE
 prerequisites: [TA-C92-again, TA-C92-loudly]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-nimesha]
+etymology_hook: "ஒரு நிமிடம் — native oru 'one' (DEDR 990) + nimiṭam ← Sanskrit nimeṣa 'a wink, a moment' (CDIAL 7243)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C92-loudly]
 **ஒரு நிமிடம்** (*oru nimiṭam*) — "one minute", said the way English says "a moment".
 
 **ஒரு** is "one"; **நிமிடம்** is "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒரு நிமிடம்** (*oru nimiṭam*) is native *oru*, "one" (DEDR 990), and *nimiṭam*, "minute", from Sanskrit *nimeṣa*, "a wink, a moment" (CDIAL 7243).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

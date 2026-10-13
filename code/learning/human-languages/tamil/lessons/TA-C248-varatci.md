@@ -14,7 +14,8 @@ romanization: "vaṟaṭci"
 concept_tag: TA-PORUL248-VARATCI
 prerequisites: [TA-C247-anil, TA-C247-pulu]
 sounds: []
-roots: []
+roots: [dravidian-vara-dry]
+etymology_hook: "வறட்சி — native Dravidian (DEDR 5320); Malayalam vaṟu 'dry', Telugu vaṟapu 'drought'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C247-pulu]
 <!-- hl-knowledge: introduces=[TA-LEX-C248-PORUL248-01]; assesses=[] -->
 
 **வறட்சி** — *vaṟaṭci* — "a drought".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வறட்சி** (*vaṟaṭci*) is native Dravidian. DEDR 5320 lists Malayalam *vaṟu*, "dry" and Telugu *vaṟapu*, "drought". It comes from *vaṟa*, "to dry up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

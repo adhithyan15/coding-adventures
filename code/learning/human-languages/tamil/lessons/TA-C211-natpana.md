@@ -14,7 +14,8 @@ romanization: "naṭpāṉa"
 concept_tag: TA-GUNAM211-NATPANA
 prerequisites: [TA-C210-accariyam, TA-C211-inimaiyana]
 sounds: []
-roots: []
+roots: [dravidian-nannu-draw-near]
+etymology_hook: "நட்பான — native Dravidian (DEDR 3588); Kannada naṇṭu 'friendship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C211-inimaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C211-GUNAM211-02]; assesses=[] -->
 
 **நட்பான** — *naṭpāṉa* — "friendly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நட்பான** (*naṭpāṉa*) is native Dravidian. DEDR 3588 lists Kannada *naṇṭu*, "friendship". It is *naṭpu*, "friendship", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

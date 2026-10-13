@@ -12,8 +12,9 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [tamil-inherent-a, pulli-virama, retroflex-n]
 roots: [vaṇaṅku]
+etymology_hook: "வணக்கம் — native: the act of bowing, from vaṇaṅku 'to bow' (DEDR 5236); Malayalam vaṇakkam is the same word"
 duration:
-  max_seconds: 180
+  max_seconds: 278
 requires:
   knowledge: []
 introduces:

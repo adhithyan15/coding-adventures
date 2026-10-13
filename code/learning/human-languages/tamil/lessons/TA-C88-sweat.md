@@ -11,7 +11,8 @@ romanization: "viyarvai"
 concept_tag: TA-DOCTOR-SWEAT
 prerequisites: [TA-C88-headache, TA-C88-health]
 sounds: []
-roots: []
+roots: [dravidian-veyar-sweat]
+etymology_hook: "வியர்வை — native Dravidian (DEDR 5486); Malayalam viyarppu, Kannada bemaru"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C88-health]
 **வியர்வை** (*viyarvai*) — "sweat".
 
 **வியர்வை வருகிறது** — "I am sweating", literally "sweat is coming", like **வாந்தி**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வியர்வை** (*viyarvai*) is native Dravidian. DEDR 5486 lists Malayalam *viyarppu* and Kannada *bemaru*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

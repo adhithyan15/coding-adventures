@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a man, then the Tamil for a woman.
 You'll want to know: கொண்டாட்டம்.
 கொண்டாட்டம் — koṇṭāṭṭam — "celebration, festivities".
 
+The word, taken apart.
+கொண்டாட்டம் (koṇṭāṭṭam) is the noun of koṇṭāṭu, "to celebrate", usually analysed as native koṇṭu, "having taken", from koḷ (DEDR 2151), and āṭu, "to dance, to play" (DEDR 347).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a woman, then the Tamil for celebration.
 
 You'll want to know: பட்டாசு.
 பட்டாசு — paṭṭācu — "firecrackers".
+
+The word, taken apart.
+The origin of பட்டாசு (paṭṭācu) is uncertain. DEDR has no entry for it; it is often compared with Hindustani paṭākhā, "firecracker".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for celebration, then the Tamil for firecracke
 You'll want to know: கலாச்சாரம்.
 கலாச்சாரம் — kalāccāram — "culture".
 
+The word, taken apart.
+கலாச்சாரம் (kalāccāram) is a modern coinage from Sanskrit kalā, "art" (CDIAL 2927), and ācāra, "conduct, custom" (CDIAL 1071). Which way kalā travelled is debated: CDIAL takes it from Dravidian, while DEDR files the native Tamil word for "art" under the verb "to learn" (DEDR 1297) and only compares kalā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for firecrackers, then the Tamil for culture.
 You'll want to know: பழக்கம்.
 பழக்கம் — paḻakkam — "a habit, a custom".
 
+The word, taken apart.
+பழக்கம் (paḻakkam) is native Dravidian. DEDR 4000 lists Malayalam paḻakuka, "to be accustomed". It is the noun of paḻaku, "to become used to".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for culture, then the Tamil for a habit.
 
 You'll want to know: பாரம்பரியம்.
 பாரம்பரியம் — pārampariyam — "tradition, heritage".
+
+The word, taken apart.
+பாரம்பரியம் (pārampariyam) is a well-established loan from Sanskrit pāramparya, "succession, handing down", built on paramparā, "an unbroken series".
 
 What you've built.
 One more word for this chapter.

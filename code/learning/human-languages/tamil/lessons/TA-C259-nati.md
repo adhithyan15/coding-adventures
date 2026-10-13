@@ -14,7 +14,8 @@ romanization: "naṭi"
 concept_tag: TA-VERB-NATI
 prerequisites: [TA-C258-kai-kulukku, TA-C259-patam-etu]
 sounds: []
-roots: []
+roots: [sanskrit-natana]
+etymology_hook: "நடி — a verb from Sanskrit naṭa 'actor, dancer' (CDIAL 6933)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C259-patam-etu]
 <!-- hl-knowledge: introduces=[TA-LEX-C259-ACT259-02]; assesses=[] -->
 
 **நடி** — *naṭi* — "to act (in a play or film)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடி** (*naṭi*) is a verb made from Sanskrit *naṭa*, "actor, dancer" (CDIAL 6933).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

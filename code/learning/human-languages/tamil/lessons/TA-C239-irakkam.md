@@ -14,7 +14,8 @@ romanization: "irakkam"
 concept_tag: TA-GUNAM239-IRAKKAM
 prerequisites: [TA-C239-perumai, TA-C239-tirupti]
 sounds: []
-roots: []
+roots: [dravidian-iranku-pity]
+etymology_hook: "இரக்கம் — native Dravidian (DEDR 473); Malayalam erakkam 'kindness, pity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C239-tirupti]
 <!-- hl-knowledge: introduces=[TA-LEX-C239-GUNAM239-04]; assesses=[] -->
 
 **இரக்கம்** — *irakkam* — "pity, compassion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இரக்கம்** (*irakkam*) is native Dravidian. DEDR 473 lists Malayalam *erakkam*, "kindness, pity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

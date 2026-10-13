@@ -14,7 +14,8 @@ romanization: "puttāṇṭu"
 concept_tag: TA-NERAM202-PUTTANTU
 prerequisites: [TA-C202-tiruvila, TA-C202-tipavali]
 sounds: []
-roots: []
+roots: [dravidian-putu-new, dravidian-aandu-year]
+etymology_hook: "புத்தாண்டு — native: putu 'new' (DEDR 4275) + āṇṭu 'year' (DEDR 5153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C202-tipavali]
 <!-- hl-knowledge: introduces=[TA-LEX-C202-NERAM202-05]; assesses=[] -->
 
 **புத்தாண்டு** — *puttāṇṭu* — "the New Year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புத்தாண்டு** (*puttāṇṭu*) is native: *putu*, "new" (DEDR 4275), and *āṇṭu*, "year" (DEDR 5153).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

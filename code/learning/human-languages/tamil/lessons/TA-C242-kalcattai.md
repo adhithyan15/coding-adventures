@@ -14,7 +14,8 @@ romanization: "kālcaṭṭai"
 concept_tag: TA-PORUL242-KALCATTAI
 prerequisites: [TA-C241-vetuvetuppana, TA-C242-atai]
 sounds: []
-roots: []
+roots: [dravidian-kaal-leg, dravidian-sattai-jacket]
+etymology_hook: "கால்சட்டை — native: kāl 'leg' (DEDR 1479) + caṭṭai 'jacket' (DEDR 2310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C242-atai]
 <!-- hl-knowledge: introduces=[TA-LEX-C242-PORUL242-02]; assesses=[] -->
 
 **கால்சட்டை** — *kālcaṭṭai* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கால்சட்டை** (*kālcaṭṭai*) is native: *kāl*, "leg" (DEDR 1479), and *caṭṭai*, "jacket, garment" (DEDR 2310): "the leg garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

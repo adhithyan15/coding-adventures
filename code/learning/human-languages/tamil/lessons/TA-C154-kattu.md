@@ -14,7 +14,8 @@ romanization: "kattu"
 concept_tag: TA-VERB-KATTU
 prerequisites: [TA-C154-valar, TA-C154-ennu]
 sounds: []
-roots: []
+roots: [dravidian-kattu-cry]
+etymology_hook: "கத்து — native Dravidian (DEDR 1206); Kannada kattu 'to cry, croak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C154-ennu]
 <!-- hl-knowledge: introduces=[TA-LEX-C154-ACT154-05]; assesses=[] -->
 
 **கத்து** — *kattu* — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கத்து** (*kattu*) is native Dravidian. DEDR 1206 lists Kannada *kattu*, "to cry, croak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

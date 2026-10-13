@@ -14,7 +14,8 @@ romanization: "vaḻakkamāka"
 concept_tag: TA-KARANAM207-VALAKKAMAKA
 prerequisites: [TA-C207-unmaiyil, TA-C207-potuvaka]
 sounds: []
-roots: []
+roots: [dravidian-vazhangu-custom]
+etymology_hook: "வழக்கமாக — native Dravidian (DEDR 5292)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C207-potuvaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C207-KARANAM207-05]; assesses=[] -->
 
 **வழக்கமாக** — *vaḻakkamāka* — "usually, as usual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வழக்கமாக** (*vaḻakkamāka*) is native Dravidian (DEDR 5292). It is *vaḻakkam*, "custom", from *vaḻaṅku*, "to be in use", with *-āka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

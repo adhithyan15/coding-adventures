@@ -14,7 +14,8 @@ romanization: "kaṉavu kāṇ"
 concept_tag: TA-VERB-KANAVU-KAN
 prerequisites: [TA-C229-parattu, TA-C229-tittu]
 sounds: []
-roots: []
+roots: [dravidian-kanavu-dream, dravidian-kaan-see]
+etymology_hook: "கனவு காண் — native: kaṉavu 'dream' (DEDR 1407; Malayalam kanavu) + kāṇ 'to see' (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C229-tittu]
 <!-- hl-knowledge: introduces=[TA-LEX-C229-ACT229-03]; assesses=[] -->
 
 **கனவு காண்** — *kaṉavu kāṇ* — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கனவு காண்** (*kaṉavu kāṇ*) is native: *kaṉavu*, "dream" (DEDR 1407; Malayalam *kanavu*), and *kāṇ*, "to see" (DEDR 1443): Tamil "sees" a dream.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

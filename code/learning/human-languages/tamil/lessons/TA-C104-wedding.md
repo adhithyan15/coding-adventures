@@ -11,7 +11,8 @@ romanization: "tirumaṇam"
 concept_tag: TA-ABOUT-WEDDING
 prerequisites: [TA-C104-language, TA-C104-english]
 sounds: []
-roots: []
+roots: [sanskrit-shri, dravidian-manam-union]
+etymology_hook: "திருமணம் — tiru 'auspicious', usually from Sanskrit śrī (CDIAL 12708), + native maṇam 'union' (DEDR 4667)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C104-english]
 **திருமணம்** (*tirumaṇam*) — "a wedding", "marriage".
 
 **திரு-** is "sacred, honoured", as in the title **திரு**, "Mr".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருமணம்** (*tirumaṇam*) is *tiru*, "holy, auspicious", usually traced to Sanskrit *śrī* (CDIAL 12708), and native *maṇam*, "union, marriage" (DEDR 4667; Malayalam *maṇam*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

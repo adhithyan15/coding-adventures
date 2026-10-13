@@ -11,7 +11,8 @@ romanization: "iṉiya payaṇam"
 concept_tag: TA-LEAVE-GOOD-JOURNEY
 prerequisites: [TA-C107-shallwego, TA-C107-seeyoulater]
 sounds: []
-roots: []
+roots: [proto-dravidian-in-sweet, sanskrit-prayana]
+etymology_hook: "இனிய பயணம் — native iṉiya 'sweet' (DEDR 530) + payaṇam ← Sanskrit prayāṇa 'journey' (CDIAL 8732)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C107-seeyoulater]
 **இனிய பயணம்** (*iṉiya payaṇam*) — "have a good journey", literally "a sweet journey".
 
 **இனிய** is "sweet, pleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இனிய பயணம்** (*iṉiya payaṇam*) is native *iṉiya*, "sweet, pleasant" (DEDR 530), and *payaṇam*, "journey", from Sanskrit *prayāṇa* (CDIAL 8732).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

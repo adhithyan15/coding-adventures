@@ -14,7 +14,8 @@ romanization: "tōcai"
 concept_tag: TA-THINGS125-TOCAI
 prerequisites: [TA-C124-ten, TA-C125-itli]
 sounds: []
-roots: []
+roots: [dravidian-dosai]
+etymology_hook: "தோசை — native Dravidian (DEDR 3542); Malayalam dōśa, Kannada dōse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C125-itli]
 <!-- hl-knowledge: introduces=[TA-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **தோசை** — *tōcai* — "a dosa, a thin pancake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோசை** (*tōcai*) is native Dravidian. DEDR 3542 lists Malayalam *dōśa* and Kannada *dōse*. The entry also compares Sanskrit *dhosaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

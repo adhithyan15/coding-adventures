@@ -14,7 +14,8 @@ romanization: "kuḻantaip paruvam"
 concept_tag: TA-NERAM203-KULANTAIP-PARUVAM
 prerequisites: [TA-C203-kalakketu, TA-C203-atuvarai]
 sounds: []
-roots: []
+roots: [dravidian-kuzha-young, sanskrit-parvan]
+etymology_hook: "குழந்தைப் பருவம் — native kuḻantai 'child' (DEDR 2149) + paruvam ← Sanskrit parvan 'section' (CDIAL 7947)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C203-atuvarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C203-NERAM203-05]; assesses=[] -->
 
 **குழந்தைப் பருவம்** — *kuḻantaip paruvam* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழந்தைப் பருவம்** (*kuḻantaip paruvam*) is native *kuḻantai*, "child" (DEDR 2149), and *paruvam*, "season, stage of life", from Sanskrit *parvan*, "joint, section" (CDIAL 7947).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

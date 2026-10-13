@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 254,
-  "sourceHash": "fnv1a64:9d727be13fb3799c",
+  "sourceHash": "fnv1a64:77ae7f43833f51b3",
   "lessonIds": [
     "TA-C254-katan-vanku",
     "TA-C254-celuttu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch254.txt",
   "json": "tamil/narration/ch254.json",
-  "textHash": "fnv1a64:c5c68b4233ab6a2e",
-  "jsonHash": "fnv1a64:69a3e82aca869847",
+  "textHash": "fnv1a64:1854f40fd3ccdcb6",
+  "jsonHash": "fnv1a64:e0840a9ea777138f",
   "findings": []
 }

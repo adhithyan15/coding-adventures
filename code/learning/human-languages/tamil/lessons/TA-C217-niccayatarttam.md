@@ -14,7 +14,8 @@ romanization: "niccayatārttam"
 concept_tag: TA-PORUL217-NICCAYATARTTAM
 prerequisites: [TA-C217-manamakal, TA-C217-manamakan]
 sounds: []
-roots: []
+roots: [sanskrit-niscaya]
+etymology_hook: "நிச்சயதார்த்தம் — built on niccayam ← Sanskrit niścaya 'conviction, settlement' (CDIAL 7439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C217-manamakan]
 <!-- hl-knowledge: introduces=[TA-LEX-C217-PORUL217-03]; assesses=[] -->
 
 **நிச்சயதார்த்தம்** — *niccayatārttam* — "an engagement (betrothal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிச்சயதார்த்தம்** (*niccayatārttam*) is built on *niccayam*, "settlement", from Sanskrit *niścaya*, "conviction" (CDIAL 7439): the engagement is the settling of the match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

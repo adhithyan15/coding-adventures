@@ -11,7 +11,8 @@ romanization: "viṭaipeṟukiṟēṉ"
 concept_tag: TA-LEAVE-TAKE-LEAVE
 prerequisites: [TA-C106-letsgo, TA-C106-holiday]
 sounds: []
-roots: []
+roots: [dravidian-vidu-let-go, dravidian-peru-get]
+etymology_hook: "விடைபெறுகிறேன் — native: viṭai 'leave' (DEDR 5393) + peṟu 'to get' (DEDR 4422)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C106-holiday]
 **விடைபெறுகிறேன்** (*viṭaipeṟukiṟēṉ*) — "I take my leave", literally "I receive leave".
 
 **விடை** is "leave, permission". The formal goodbye.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விடைபெறுகிறேன்** (*viṭaipeṟukiṟēṉ*) is native: *viṭai*, "leave, permission to go" (DEDR 5393), and *peṟu*, "to get" (DEDR 4422): "I get my leave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

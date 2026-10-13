@@ -14,7 +14,8 @@ romanization: "patil"
 concept_tag: TA-THINGS138-PATIL
 prerequisites: [TA-C137-vakuppu, TA-C138-tervu]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "பதில் ← Arabic badal 'exchange, substitute', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C138-tervu]
 <!-- hl-knowledge: introduces=[TA-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **பதில்** — *patil* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதில்** (*patil*) is a loan from Arabic *badal*, "exchange, substitute", through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

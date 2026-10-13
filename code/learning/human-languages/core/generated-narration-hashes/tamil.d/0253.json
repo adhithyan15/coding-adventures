@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 253,
-  "sourceHash": "fnv1a64:e357c50468698e7b",
+  "sourceHash": "fnv1a64:9eb6b81ae900d9d5",
   "lessonIds": [
     "TA-C253-kalainar",
     "TA-C253-atikari",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch253.txt",
   "json": "tamil/narration/ch253.json",
-  "textHash": "fnv1a64:c9f2396dec7cbc2c",
-  "jsonHash": "fnv1a64:0e49f59daa3003da",
+  "textHash": "fnv1a64:d431bdc9a731ff49",
+  "jsonHash": "fnv1a64:635a2516f7a65c27",
   "findings": []
 }

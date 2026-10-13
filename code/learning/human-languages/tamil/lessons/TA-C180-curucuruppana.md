@@ -14,7 +14,8 @@ romanization: "cuṟucuṟuppāṉa"
 concept_tag: TA-GUNAM180-CURUCURUPPANA
 prerequisites: [TA-C179-telivana, TA-C179-unarcci]
 sounds: []
-roots: []
+roots: [dravidian-curukku-quick]
+etymology_hook: "சுறுசுறுப்பான — native Dravidian (DEDR 2713)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C179-unarcci]
 <!-- hl-knowledge: introduces=[TA-LEX-C180-GUNAM180-01]; assesses=[] -->
 
 **சுறுசுறுப்பான** — *cuṟucuṟuppāṉa* — "active, energetic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுறுசுறுப்பான** (*cuṟucuṟuppāṉa*) is native Dravidian (DEDR 2713). The entry lists *cuṟucuṟuppu*, "diligence, bustling", under *cuṟukku*, "quickness"; *-āṉa* makes it "active".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

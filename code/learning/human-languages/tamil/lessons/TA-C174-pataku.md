@@ -14,7 +14,8 @@ romanization: "paṭaku"
 concept_tag: TA-IDAM174-PATAKU
 prerequisites: [TA-C173-kalipparai, TA-C173-cannal]
 sounds: []
-roots: []
+roots: [dravidian-padaku-boat]
+etymology_hook: "படகு — native Dravidian (DEDR 3838); Malayalam paṭaku 'ship, large boat', Kannada paḍagu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C173-cannal]
 <!-- hl-knowledge: introduces=[TA-LEX-C174-IDAM174-01]; assesses=[] -->
 
 **படகு** — *paṭaku* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**படகு** (*paṭaku*) is native Dravidian. DEDR 3838 lists Malayalam *paṭaku*, "ship, large boat" and Kannada *paḍagu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

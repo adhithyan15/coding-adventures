@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 198,
-  "sourceHash": "fnv1a64:2efbe32b876d4788",
+  "sourceHash": "fnv1a64:d0bafefa053ba4b8",
   "lessonIds": [
     "TA-C198-pirarttanai-cey",
     "TA-C198-emarru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch198.txt",
   "json": "tamil/narration/ch198.json",
-  "textHash": "fnv1a64:c713fd9115a97661",
-  "jsonHash": "fnv1a64:2399df51f4f92263",
+  "textHash": "fnv1a64:258581e74e2bc71d",
+  "jsonHash": "fnv1a64:0c3700fbc90f4cdb",
   "findings": []
 }

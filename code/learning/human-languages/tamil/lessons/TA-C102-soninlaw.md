@@ -11,7 +11,8 @@ romanization: "marumakaṉ"
 concept_tag: TA-INLAWS-SIL
 prerequisites: [TA-C102-motherinlaw, TA-C102-daughterinlaw]
 sounds: []
-roots: []
+roots: [dravidian-marumakan-nephew]
+etymology_hook: "மருமகன் — native Dravidian (DEDR 4715); Malayalam marumakan 'sister's son', Telugu manumāḍu 'grandson'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C102-daughterinlaw]
 **மருமகன்** (*marumakaṉ*) — "a son-in-law".
 
 **மகன்** is "son"; the same **மரு-** makes him family by marriage.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மருமகன்** (*marumakaṉ*) is native Dravidian. DEDR 4715 lists Malayalam *marumakan*, "sister's son" and Telugu *manumāḍu*, "grandson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

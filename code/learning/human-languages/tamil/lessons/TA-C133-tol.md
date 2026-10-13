@@ -14,7 +14,8 @@ romanization: "tōḷ"
 concept_tag: TA-THINGS133-TOL
 prerequisites: [TA-C132-nakku, TA-C132-viral]
 sounds: []
-roots: []
+roots: [dravidian-tool-shoulder]
+etymology_hook: "தோள் — native Dravidian (DEDR 3564); Malayalam tōḷ, Kannada tōḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C132-viral]
 <!-- hl-knowledge: introduces=[TA-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **தோள்** — *tōḷ* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோள்** (*tōḷ*) is native Dravidian. DEDR 3564 lists Malayalam *tōḷ* and Kannada *tōḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

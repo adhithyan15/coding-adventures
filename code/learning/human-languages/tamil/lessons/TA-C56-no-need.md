@@ -11,7 +11,8 @@ romanization: "tēvaiyillai"
 concept_tag: TA-REPLY-NO-NEED
 prerequisites: [TA-C56-less, TA-C54-bowl, TA-C55-nail]
 sounds: []
-roots: []
+roots: [dravidian-tevai-need, il]
+etymology_hook: "தேவையில்லை — native tēvai 'need' (DEDR 3469; Malayalam tēva) + illai 'there is not' (DEDR 2559)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C56-less]
 Two pieces, and the second one has been yours since the early writing lessons: *tēvai* is a need, *illai* is the no you learned to put on paper. Together they are how Tamil turns something down without turning the person down.
 
 A flat *illai* refuses the thing. தேவையில்லை says there is no call for it, which leaves everybody their footing. Telugu does the same work in one shorter piece, వద్దు (*vaddu*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேவையில்லை** (*tēvaiyillai*) is two native words: *tēvai*, "need" (DEDR 3469; Malayalam *tēva*), and *illai*, "there is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

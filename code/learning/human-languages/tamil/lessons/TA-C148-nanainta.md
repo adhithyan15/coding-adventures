@@ -14,7 +14,8 @@ romanization: "naṉainta"
 concept_tag: TA-QUAL148-NANAINTA
 prerequisites: [TA-C148-kurukiya, TA-C148-kaynta]
 sounds: []
-roots: []
+roots: [dravidian-nanai-wet]
+etymology_hook: "நனைந்த — native Dravidian (DEDR 3630); Malayalam nanayuka 'to become wet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C148-kaynta]
 <!-- hl-knowledge: introduces=[TA-LEX-C148-QUAL148-05]; assesses=[] -->
 
 **நனைந்த** — *naṉainta* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நனைந்த** (*naṉainta*) is native Dravidian. DEDR 3630 lists Malayalam *nanayuka*, "to become wet". It comes from *naṉai*, "to become wet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

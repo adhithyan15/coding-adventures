@@ -14,6 +14,9 @@ You'll want to know: சிறிது.
 You already have siṟiya, "small". சிறிது is the same root turned into an amount: not a small thing but a small quantity of something. Held a dish and asked how much, you say siṟitu and you get a little.
 Tamil has a koñcam as well, which is the one you will hear across a table, and which Telugu shares as koñcem. சிறிது (siṟitu) is the more formal of the two, and the one you would write down.
 
+The word, taken apart.
+சிறிது (siṟitu) is native Dravidian (DEDR 1594). It is the noun of siṟiya, "small": "that which is small".
+
 What you've built.
 The first of five answers to "how much?".
 
@@ -45,6 +48,9 @@ You'll want to know: நிறைய.
 நிறைய (niṟaiya) — "a lot".
 The other end of the same question. நிறைய (niṟaiya) is built on niṟai, to fill, so a lot in Tamil is a fullness: as much as the thing will hold and no argument about it.
 Telugu says ఎక్కువ (ekkuva) and builds it out of nothing to do with filling — a reminder that two languages can land on the same everyday answer by two quite different routes.
+
+The word, taken apart.
+நிறைய (niṟaiya) is native Dravidian. DEDR 3682 lists Malayalam niṟa, "fullness" and Kannada neṟe, "to become full". It comes from niṟai, "to become full".
 
 What you've built.
 Two, and they are opposite ends of one question.
@@ -78,6 +84,9 @@ You'll want to know: குறைவு.
 kuṟai is to fall short, and குறைவு (kuṟaivu) is the falling-short itself. That makes it a narrower word than the English "less": it does not merely compare two amounts, it says one of them did not come up to the mark. There is a small complaint folded inside it.
 Telugu's word for the same ground is తక్కువ (takkuva).
 
+The word, taken apart.
+குறைவு (kuṟaivu) is native Dravidian. DEDR 1851 lists Malayalam kuṟu, "short, little" and Kannada kuṟu, "smallness".
+
 What you've built.
 Three: a little, a lot, and not as much as there ought to be.
 
@@ -110,6 +119,9 @@ You'll want to know: தேவையில்லை.
 Two pieces, and the second one has been yours since the early writing lessons: tēvai is a need, illai is the no you learned to put on paper. Together they are how Tamil turns something down without turning the person down.
 A flat illai refuses the thing. தேவையில்லை (tēvaiyillai) says there is no call for it, which leaves everybody their footing. Telugu does the same work in one shorter piece, వద్దు (vaddu).
 
+The word, taken apart.
+தேவையில்லை (tēvaiyillai) is two native words: tēvai, "need" (DEDR 3469; Malayalam tēva), and illai, "there is not" (DEDR 2559).
+
 What you've built.
 Four, and this one is the polite way out.
 
@@ -141,6 +153,9 @@ You'll want to know: ஆகட்டும்.
 ஆகட்டும் (ākaṭṭum) — "let it be so".
 āku is to become, to come about. ஆகட்டும் (ākaṭṭum) is "let it come about" — what you say when somebody proposes something and you are content to let it happen. It agrees without promising to do anything.
 The ām you have been saying for yes is that same āku worn down by a great deal of use, which is why the two sit so alike in the mouth. Telugu's nearest of these is అలాగే (alāgē), "just so, alright then".
+
+The word, taken apart.
+ஆகட்டும் (ākaṭṭum) is native Dravidian. DEDR 333 lists Malayalam ākuka. It is the native verb "to become" with the ending that says "let it".
 
 What you've built.
 Five answers to an offer: a little, a lot, not enough, no need, and yes — let it happen.

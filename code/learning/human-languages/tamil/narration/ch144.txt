@@ -12,6 +12,9 @@ Before the new one: say the Tamil for long, then the Tamil for short.
 You'll want to know: உயரமான.
 உயரமான — uyaramāṉa — "tall".
 
+The word, taken apart.
+உயரமான (uyaramāṉa) is native Dravidian (DEDR 646). It is uyaram, "height", from uyar, "to rise", with -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Tell the time, ஒரு மணி, இரண்டு மணி, then name the 
 You'll want to know: சூடான.
 சூடான — cūṭāṉa — "hot".
 
+The word, taken apart.
+சூடான (cūṭāṉa) is native Dravidian (DEDR 2654). It is cūṭu, "heat", with -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Tamil for tall, then the Tamil for hot.
 
 You'll want to know: குளிர்ந்த.
 குளிர்ந்த — kuḷirnta — "cold".
+
+The word, taken apart.
+குளிர்ந்த (kuḷirnta) is native Dravidian. DEDR 1834 lists Malayalam kuḷir, "coldness".
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Tamil for hot, then the Tamil for cold.
 You'll want to know: கனமான.
 கனமான — kaṉamāṉa — "heavy".
 
+The word, taken apart.
+கனமான (kaṉamāṉa) is a loan from Sanskrit ghana, "compact, firm, dense" (CDIAL 4424). Kaṉam, "weight", takes -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Tamil for cold, then the Tamil for heavy.
 
 You'll want to know: லேசான.
 லேசான — lēcāṉa — "light (in weight)".
+
+The word, taken apart.
+The origin of லேசான (lēcāṉa) is uncertain. DEDR has no entry for lēcu, "light, slight", and its initial l- is not native to old Tamil, which points to a loan from a neighbouring language.
 
 What you've built.
 One more word for this chapter.

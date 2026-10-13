@@ -14,7 +14,8 @@ romanization: "teru"
 concept_tag: TA-LOC114-TERU
 prerequisites: [TA-C113-munnal, TA-C114-natuvil]
 sounds: []
-roots: []
+roots: [dravidian-teru-street]
+etymology_hook: "தெரு — native Dravidian (DEDR 3422); Malayalam teru, Telugu teruvu 'way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C114-natuvil]
 <!-- hl-knowledge: introduces=[TA-LEX-C114-LOC114-02]; assesses=[] -->
 
 **தெரு** — *teru* — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தெரு** (*teru*) is native Dravidian. DEDR 3422 lists Malayalam *teru* and Telugu *teruvu*, "way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

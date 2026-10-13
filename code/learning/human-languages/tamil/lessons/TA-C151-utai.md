@@ -14,7 +14,8 @@ romanization: "uṭai"
 concept_tag: TA-VERB-UTAI
 prerequisites: [TA-C150-camai, TA-C150-vettu]
 sounds: []
-roots: []
+roots: [dravidian-odi-break]
+etymology_hook: "உடை — native Dravidian (DEDR 946); Malayalam oṭiyuka 'to break'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C150-vettu]
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-01]; assesses=[] -->
 
 **உடை** — *uṭai* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடை** (*uṭai*) is native Dravidian. DEDR 946 lists Malayalam *oṭiyuka*, "to break". The entry lists *uṭai*, "to break as a pot, to crack", beside *oṭi*, "to break".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

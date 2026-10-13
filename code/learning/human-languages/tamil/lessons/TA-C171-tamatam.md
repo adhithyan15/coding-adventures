@@ -14,7 +14,8 @@ romanization: "tāmatam"
 concept_tag: TA-NERAM171-TAMATAM
 prerequisites: [TA-C171-eppotum, TA-C171-orupotum]
 sounds: []
-roots: []
+roots: [sanskrit-tamasa]
+etymology_hook: "தாமதம் — usually traced to Sanskrit tāmasa 'dark, dull' (CDIAL 5775): delay as sluggishness"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C171-orupotum]
 <!-- hl-knowledge: introduces=[TA-LEX-C171-NERAM171-05]; assesses=[] -->
 
 **தாமதம்** — *tāmatam* — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தாமதம்** (*tāmatam*) is usually traced to Sanskrit *tāmasa*, "dark, dull" (CDIAL 5775), from *tamas*, "darkness, inertia": delay as sluggishness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

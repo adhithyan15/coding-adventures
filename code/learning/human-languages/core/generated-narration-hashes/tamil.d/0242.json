@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 242,
-  "sourceHash": "fnv1a64:836b98d30db52d1f",
+  "sourceHash": "fnv1a64:0abae26350b376d7",
   "lessonIds": [
     "TA-C242-atai",
     "TA-C242-kalcattai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch242.txt",
   "json": "tamil/narration/ch242.json",
-  "textHash": "fnv1a64:e56c97a67fe8ed53",
-  "jsonHash": "fnv1a64:2450525b8fe93501",
+  "textHash": "fnv1a64:9920a0b1453453d4",
+  "jsonHash": "fnv1a64:b47e4089b4d85fe8",
   "findings": []
 }

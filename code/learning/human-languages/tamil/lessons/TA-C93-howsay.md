@@ -11,9 +11,10 @@ romanization: "eppaṭic colvatu?"
 concept_tag: TA-ASK-HOW-SAY
 prerequisites: [TA-C93-meaning, TA-C93-intamil]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-col-say]
+etymology_hook: "எப்படிச் சொல்வது — native: eppaṭi 'how' (DEDR 5151) + col 'to say' (DEDR 2855)"
 duration:
-  max_seconds: 200
+  max_seconds: 206
 requires:
   knowledge: [TA-LEX-C93-ASK-01, TA-LEX-C93-ASK-02]
 introduces:
@@ -42,6 +43,11 @@ reviews_of: [TA-C93-intamil]
 
 **தமிழில் இதை எப்படிச் சொல்வது?** — "how do you say this in Tamil?". **எப்படி** is the "how" you
 know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எப்படிச் சொல்வது?** (*eppaṭic colvatu?*) is native: *eppaṭi*, "how" (DEDR 5151), and *colvatu*, "saying", from *col*, "to say" (DEDR 2855).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nīḷamāṉa"
 concept_tag: TA-THINGS143-NILAMANA
 prerequisites: [TA-C143-ketta, TA-C143-alakana]
 sounds: []
-roots: []
+roots: [dravidian-niil-long]
+etymology_hook: "நீளமான — native Dravidian (DEDR 3692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C143-alakana]
 <!-- hl-knowledge: introduces=[TA-LEX-C143-THINGS143-04]; assesses=[] -->
 
 **நீளமான** — *nīḷamāṉa* — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நீளமான** (*nīḷamāṉa*) is native Dravidian (DEDR 3692). It is *nīḷam*, "length", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

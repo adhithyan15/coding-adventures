@@ -14,7 +14,8 @@ romanization: "ēri"
 concept_tag: TA-THINGS126-ERI
 prerequisites: [TA-C125-kapi, TA-C125-katal]
 sounds: []
-roots: []
+roots: [dravidian-eri-tank]
+etymology_hook: "ஏரி — native Dravidian (DEDR 901); Kannada ēri 'the bank of a tank, a tank'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C125-katal]
 <!-- hl-knowledge: introduces=[TA-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **ஏரி** — *ēri* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏரி** (*ēri*) is native Dravidian. DEDR 901 lists Kannada *ēri*, "the bank of a tank, a tank".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

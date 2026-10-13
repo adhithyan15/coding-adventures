@@ -14,7 +14,8 @@ romanization: "kaṭiṉamāṉa"
 concept_tag: TA-QUAL145-KATINAMANA
 prerequisites: [TA-C144-lecana, TA-C145-menmaiyana]
 sounds: []
-roots: []
+roots: [sanskrit-kathina]
+etymology_hook: "கடினமான ← Sanskrit kaṭhina 'hard, stiff' (CDIAL 2650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C145-menmaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **கடினமான** — *kaṭiṉamāṉa* — "hard, difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடினமான** (*kaṭiṉamāṉa*) is a loan from Sanskrit *kaṭhina*, "hard, stiff" (CDIAL 2650). CDIAL notes a proposal that the Sanskrit word itself came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

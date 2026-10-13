@@ -14,7 +14,8 @@ romanization: "mitivaṇṭi"
 concept_tag: TA-IDAM174-MITIVANTI
 prerequisites: [TA-C173-cannal, TA-C174-pataku]
 sounds: []
-roots: []
+roots: [dravidian-miti-tread, sanskrit-bhanda]
+etymology_hook: "மிதிவண்டி — native miti 'to tread' (DEDR 4861) + vaṇṭi 'cart', an Indo-Aryan loan (DEDR App. 50)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C174-pataku]
 <!-- hl-knowledge: introduces=[TA-LEX-C174-IDAM174-02]; assesses=[] -->
 
 **மிதிவண்டி** — *mitivaṇṭi* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மிதிவண்டி** (*mitivaṇṭi*) is *miti*, "to tread", native (DEDR 4861), and *vaṇṭi*, "cart", an Indo-Aryan loan (DEDR App. 50): "the treading cart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

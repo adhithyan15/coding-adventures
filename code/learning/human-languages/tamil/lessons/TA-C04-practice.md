@@ -11,6 +11,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C04-poy-varugiren, TA-C04-naalai, TA-C04-mindum-sandippom]
 sounds: []
 roots: []
+etymology_hook: "pōy varugiṟēṉ and nāḷai are native (DEDR 4572, 5270, 3656); sandi ← Sanskrit saṁdhi 'a joining'"
 reviews_of: [TA-C04-po, TA-C04-poy-varugiren, TA-C04-naalai, TA-C04-mindum-sandippom]
 duration:
   max_seconds: 240

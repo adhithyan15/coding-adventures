@@ -11,7 +11,8 @@ romanization: "eṉṉa vicēṣam?"
 concept_tag: TA-GREET-WHATS-NEW
 prerequisites: [TA-C108-eaten, TA-C108-longtime]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, sanskrit-vishesha]
+etymology_hook: "என்ன விசேஷம் — native eṉṉa 'what' (DEDR 5151) + vicēṣam ← Sanskrit viśeṣa 'something particular'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [TA-C108-longtime]
 <!-- hl-knowledge: introduces=[TA-LEX-C108-GREET-03]; assesses=[] -->
 
 **என்ன விசேஷம்?** (*eṉṉa vicēṣam?*) — "what's new?", literally "what's special?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**என்ன விசேஷம்?** (*eṉṉa vicēṣam?*) is native *eṉṉa*, "what" (DEDR 5151), and *vicēṣam*, "news, something special", a well-established loan from Sanskrit *viśeṣa*, "distinction, something particular".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

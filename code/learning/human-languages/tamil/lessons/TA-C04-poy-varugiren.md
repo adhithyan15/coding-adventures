@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [TA-C04-po, TA-C03-naan]
 sounds: [poy-participle]
 roots: [po-go-dravidian, dravidian-vaa-come]
+etymology_hook: "போய் வருகிறேன் — 'having gone, I come': native pō 'go' (DEDR 4572) and varu 'come' (DEDR 5270)"
 reviews_of: [TA-C04-po]
 duration:
   max_seconds: 240

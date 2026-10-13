@@ -14,7 +14,8 @@ romanization: "tirupti"
 concept_tag: TA-GUNAM239-TIRUPTI
 prerequisites: [TA-C239-emarram, TA-C239-perumai]
 sounds: []
-roots: []
+roots: [sanskrit-trpti]
+etymology_hook: "திருப்தி ← Sanskrit tṛpti 'satisfaction' (CDIAL 5931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C239-perumai]
 <!-- hl-knowledge: introduces=[TA-LEX-C239-GUNAM239-03]; assesses=[] -->
 
 **திருப்தி** — *tirupti* — "satisfaction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருப்தி** (*tirupti*) is a loan from Sanskrit *tṛpti*, "satisfaction" (CDIAL 5931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tiruppik koṭu"
 concept_tag: TA-VERB-TIRUPPIK-KOTU
 prerequisites: [TA-C194-picai, TA-C195-kontu-va]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn, dravidian-kodu-give]
+etymology_hook: "திருப்பிக் கொடு — native: tiruppi 'turning back' (DEDR 3246) + koṭu 'to give' (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C195-kontu-va]
 <!-- hl-knowledge: introduces=[TA-LEX-C195-ACT195-02]; assesses=[] -->
 
 **திருப்பிக் கொடு** — *tiruppik koṭu* — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருப்பிக் கொடு** (*tiruppik koṭu*) is native: *tiruppi*, "having turned back", from *tiruppu*, "to turn" (DEDR 3246), and *koṭu*, "to give" (DEDR 2053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

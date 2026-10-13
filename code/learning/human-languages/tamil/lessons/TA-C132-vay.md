@@ -14,7 +14,8 @@ romanization: "vāy"
 concept_tag: TA-THINGS132-VAY
 prerequisites: [TA-C132-kocu, TA-C132-mukam]
 sounds: []
-roots: []
+roots: [dravidian-vaay-mouth]
+etymology_hook: "வாய் — native Dravidian 'mouth' (DEDR 5352); Malayalam vāy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C132-mukam]
 <!-- hl-knowledge: introduces=[TA-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **வாய்** — *vāy* — "the mouth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாய்** (*vāy*) is native: DEDR 5352 is the entry for *vāy*, "mouth", and DEDR 1480 points to it for the compound *kāl-vāy*, "irrigation channel". Malayalam has *vāy* too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

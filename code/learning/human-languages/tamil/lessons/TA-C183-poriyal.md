@@ -14,7 +14,8 @@ romanization: "poriyal"
 concept_tag: TA-PORUL183-PORIYAL
 prerequisites: [TA-C183-campar, TA-C183-catni]
 sounds: []
-roots: []
+roots: [dravidian-pori-fry]
+etymology_hook: "பொரியல் — native Dravidian (DEDR 4537); Malayalam pori 'what is parched'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C183-catni]
 <!-- hl-knowledge: introduces=[TA-LEX-C183-PORUL183-05]; assesses=[] -->
 
 **பொரியல்** — *poriyal* — "a dry stir-fried vegetable dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொரியல்** (*poriyal*) is native Dravidian. DEDR 4537 lists Malayalam *pori*, "what is parched". It comes from *pori*, "to be parched, roasted, fried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

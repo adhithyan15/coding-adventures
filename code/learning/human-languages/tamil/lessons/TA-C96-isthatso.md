@@ -11,7 +11,8 @@ romanization: "appaṭiyā?"
 concept_tag: TA-NOTATALL-IS-THAT-SO
 prerequisites: [TA-C95-same, TA-C96-notatall]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அப்படியா — native appaṭi 'thus' (DEDR 1) + the question ending -ā"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C96-notatall]
 **அப்படியா?** (*appaṭiyā?*) — "is that so?", "oh, really?".
 
 **அப்படி** is "like that", and **-ஆ** makes it a question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்படியா?** (*appaṭiyā?*) is native: *appaṭi*, "thus" (DEDR 1), with the question ending *-ā*: "like that?"
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

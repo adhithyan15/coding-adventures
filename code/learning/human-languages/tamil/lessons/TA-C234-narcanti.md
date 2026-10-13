@@ -14,7 +14,8 @@ romanization: "nāṟcanti"
 concept_tag: TA-IDAM234-NARCANTI
 prerequisites: [TA-C234-natu, TA-C234-talainakaram]
 sounds: []
-roots: []
+roots: [dravidian-naanku-four, sandhi-sanskrit]
+etymology_hook: "நாற்சந்தி — native nāl 'four' (DEDR 3655) + canti 'junction' ← Sanskrit saṁdhi (CDIAL 12913)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C234-talainakaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C234-IDAM234-05]; assesses=[] -->
 
 **நாற்சந்தி** — *nāṟcanti* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாற்சந்தி** (*nāṟcanti*) is native *nāl*, "four" (DEDR 3655), and *canti*, "junction", from Sanskrit *saṁdhi* (CDIAL 12913): "the four-way junction".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

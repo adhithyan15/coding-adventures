@@ -11,7 +11,8 @@ romanization: "kaṇṇīr"
 concept_tag: TA-MOOD-TEARS
 prerequisites: [TA-C90-laughter, TA-C90-crying]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, dravidian-niir-water]
+etymology_hook: "கண்ணீர் — native: kaṇ 'eye' (DEDR 1159) + nīr 'water' (DEDR 3690): 'eye-water'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C90-crying]
 **கண்ணீர்** (*kaṇṇīr*) — "tears", literally "eye-water".
 
 It is **கண்**, "eye", and **நீர்**, "water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கண்ணீர்** (*kaṇṇīr*) is native: *kaṇ*, "eye" (DEDR 1159), and *nīr*, "water" (DEDR 3690). DEDR 1159 lists *kaṇṇīr* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

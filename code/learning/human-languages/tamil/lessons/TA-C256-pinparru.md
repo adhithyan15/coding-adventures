@@ -14,7 +14,8 @@ romanization: "piṉpaṟṟu"
 concept_tag: TA-VERB-PINPARRU
 prerequisites: [TA-C255-pal-tulakku, TA-C256-errukkol]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-parru-grasp]
+etymology_hook: "பின்பற்று — native: piṉ 'behind' (DEDR 4205) + paṟṟu 'to hold' (DEDR 4034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C256-errukkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C256-ACT256-02]; assesses=[] -->
 
 **பின்பற்று** — *piṉpaṟṟu* — "to follow (rules, directions)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பின்பற்று** (*piṉpaṟṟu*) is native: *piṉ*, "behind, after" (DEDR 4205), and *paṟṟu*, "to hold, to cling to" (DEDR 4034): "hold on from behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

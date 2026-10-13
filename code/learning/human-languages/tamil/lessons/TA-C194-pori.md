@@ -14,7 +14,8 @@ romanization: "pori"
 concept_tag: TA-VERB-PORI
 prerequisites: [TA-C194-narukku, TA-C194-uri]
 sounds: []
-roots: []
+roots: [dravidian-pori-fry]
+etymology_hook: "பொரி — native Dravidian (DEDR 4537); Malayalam pori 'what is parched'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C194-uri]
 <!-- hl-knowledge: introduces=[TA-LEX-C194-ACT194-04]; assesses=[] -->
 
 **பொரி** — *pori* — "to deep-fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொரி** (*pori*) is native Dravidian. DEDR 4537 lists Malayalam *pori*, "what is parched".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

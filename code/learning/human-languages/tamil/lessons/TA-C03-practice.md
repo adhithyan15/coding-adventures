@@ -11,6 +11,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C03-eppadi-irukkirirgal, TA-C03-nalam, TA-C03-paravayillai]
 sounds: []
 roots: []
+etymology_hook: "eppaḍi, nāṉ, nalam, iru and illai are all native Dravidian (DEDR 5151, 5160, 3610, 480, 2559)"
 reviews_of: [TA-C03-eppadi, TA-C03-eppadi-irukkirirgal, TA-C03-naan, TA-C03-nalam, TA-C03-paravayillai]
 duration:
   max_seconds: 240

@@ -11,7 +11,8 @@ romanization: "mīṇṭum vāruṅkaḷ"
 concept_tag: TA-LEAVE-COME-AGAIN
 prerequisites: [TA-C107-seeyoulater, TA-C107-goodjourney]
 sounds: []
-roots: []
+roots: [mindum-again-dravidian, dravidian-vaa-come]
+etymology_hook: "மீண்டும் வாருங்கள் — native: mīṇṭum 'again', from mīḷ 'return' (DEDR 4883) + vā 'come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C107-goodjourney]
 **மீண்டும் வாருங்கள்** (*mīṇṭum vāruṅkaḷ*) — "please come again".
 
 **மீண்டும்** is "again", with the welcome **வாருங்கள்**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மீண்டும் வாருங்கள்** (*mīṇṭum vāruṅkaḷ*) is native: *mīṇṭum*, "again", from *mīḷ*, "to return" (DEDR 4883), and *vā*, "come" (DEDR 5270), with the polite ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

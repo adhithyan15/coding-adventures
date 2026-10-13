@@ -14,7 +14,8 @@ romanization: "yāṉai"
 concept_tag: TA-THINGS128-YANAI
 prerequisites: [TA-C128-erumai, TA-C128-kutirai]
 sounds: []
-roots: []
+roots: [dravidian-yaanai-elephant]
+etymology_hook: "யானை — native Dravidian (DEDR 5161); Malayalam āna, Kannada āne, Telugu ēnika"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C128-kutirai]
 <!-- hl-knowledge: introduces=[TA-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **யானை** — *yāṉai* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**யானை** (*yāṉai*) is native Dravidian. DEDR 5161 lists Malayalam *āna*, Kannada *āne* and Telugu *ēnika*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

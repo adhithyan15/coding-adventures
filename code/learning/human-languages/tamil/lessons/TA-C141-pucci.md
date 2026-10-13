@@ -14,7 +14,8 @@ romanization: "pūcci"
 concept_tag: TA-THINGS141-PUCCI
 prerequisites: [TA-C140-kunru, TA-C141-tivu]
 sounds: []
-roots: []
+roots: [dravidian-pucci-insect]
+etymology_hook: "பூச்சி — native Dravidian (DEDR 4353); Malayalam pūcci, Kannada pūci"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C141-tivu]
 <!-- hl-knowledge: introduces=[TA-LEX-C141-THINGS141-02]; assesses=[] -->
 
 **பூச்சி** — *pūcci* — "an insect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூச்சி** (*pūcci*) is native Dravidian. DEDR 4353 lists Malayalam *pūcci* and Kannada *pūci*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

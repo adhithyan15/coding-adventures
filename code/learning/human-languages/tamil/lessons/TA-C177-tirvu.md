@@ -14,7 +14,8 @@ romanization: "tīrvu"
 concept_tag: TA-KARANAM177-TIRVU
 prerequisites: [TA-C177-vilaivu, TA-C177-piraccinai]
 sounds: []
-roots: []
+roots: [dravidian-tiir-end]
+etymology_hook: "தீர்வு — native Dravidian (DEDR 3278); Malayalam tīruka 'to be settled, finished'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C177-piraccinai]
 <!-- hl-knowledge: introduces=[TA-LEX-C177-KARANAM177-03]; assesses=[] -->
 
 **தீர்வு** — *tīrvu* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தீர்வு** (*tīrvu*) is native Dravidian. DEDR 3278 lists Malayalam *tīruka*, "to be settled, finished". It is the noun of *tīr*, "to end, to be settled": a solution ends the problem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

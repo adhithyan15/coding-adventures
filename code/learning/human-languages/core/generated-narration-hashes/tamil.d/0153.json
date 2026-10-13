@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 153,
-  "sourceHash": "fnv1a64:e1ceab8dff4a9047",
+  "sourceHash": "fnv1a64:907b533fcdfd0bbf",
   "lessonIds": [
     "TA-C153-eru",
     "TA-C153-iranku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch153.txt",
   "json": "tamil/narration/ch153.json",
-  "textHash": "fnv1a64:560cb61a6ebacae7",
-  "jsonHash": "fnv1a64:3a902800bed0d87f",
+  "textHash": "fnv1a64:a65d60df524a2784",
+  "jsonHash": "fnv1a64:06c7fc84fabc3e5f",
   "findings": []
 }

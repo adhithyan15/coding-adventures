@@ -256,7 +256,7 @@ Sounds you'll need.
 Say it sari, two light syllables, stress even. The opening sound sits between English s and ch, and Tamil treats that whole range as one sound chosen by position in the word rather than by a separate spelling — the same economy that lets one k-sound also be heard as g or a soft h.
 
 The word, taken apart.
-சரி (sari) is native Tamil for “correct, even, level,” and so “okay, agreed.” It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”
+சரி (sari) means “correct, even, level,” and so “okay, agreed.” Its origin is uncertain: DEDR has no entry for it, and the usual guess is Sanskrit sadṛśa, “like, equal,” through a Prakrit form such as sarisa (CDIAL 13120). It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”
 
 Grammar lens.
 One letter, several sounds. For its stop-consonants Tamil writes one letter per mouth-position and lets rules of position fill in the voicing (k/g, s/ch). The payoff is a strikingly small alphabet; the price is that the exact sound isn't always predictable from the letter alone — you pick it up by ear, word by word.
@@ -287,6 +287,9 @@ A whole exchange, built only from the five words:
 — vaṇakkam. — vaṇakkam. — sari? — ām. — naṉṟi. — sari. — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright.
 Every reply is one word. Tamil is comfortable with that in a way English is not.
 Say the exchange, don't read it. Each of these five words is printed in Tamil in its own lesson, and the letters arrive later, one at a time.
+
+The phrase, taken apart.
+In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, "it will be", a form of the native verb "to become" (DEDR 333), and illai is native "not being" (DEDR 2559); Malayalam has ām and illa. The origin of sari is uncertain, and its own lesson gives the usual guess.
 
 Grammar Lens: two habits behind the answers.
 One — Tamil often answers by echoing the verb.

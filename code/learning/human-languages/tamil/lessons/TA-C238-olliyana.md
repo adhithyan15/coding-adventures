@@ -14,7 +14,8 @@ romanization: "olliyāṉa"
 concept_tag: TA-GUNAM238-OLLIYANA
 prerequisites: [TA-C238-etai, TA-C238-arokkiyamana]
 sounds: []
-roots: []
+roots: [dravidian-olku-thin]
+etymology_hook: "ஒல்லியான — native Dravidian (DEDR 1004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C238-arokkiyamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C238-GUNAM238-05]; assesses=[] -->
 
 **ஒல்லியான** — *olliyāṉa* — "thin, slim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒல்லியான** (*olliyāṉa*) is native Dravidian (DEDR 1004). The entry lists *olli*, "a thin person, thinness", under *olku*, "to grow thin"; *-āṉa* makes it "thin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

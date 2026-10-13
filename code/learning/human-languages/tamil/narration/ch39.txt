@@ -16,6 +16,9 @@ You'll want to know: வேண்டும்.
 எனக்குத் தண்ணீர் வேண்டும் — enakkut taṇṇīr vēṇḍum — to me, water is wanted.
 English makes wanting something you do. Tamil does not: the thing wanted is the subject, and you sit in the dative — எனக்கு, the irregular one whose pronoun changes body before the suffix lands. Swap it and you change who wants it, with nothing else touched: உங்களுக்குத் தண்ணீர் வேண்டும் (vēṇḍum) — the joining த் survives the swap, because it is the dative that licenses it. Compare நான் தமிழ் பேசுகிறேன்: same hard த in front, no dative behind, no doubling.
 
+The word, taken apart.
+வேண்டும் (vēṇḍum) is native Dravidian, from the verb vēṇṭu, "to want" (DEDR 5528). Malayalam vēṇam and Kannada bēku say "it must" in the same way.
+
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
 வே + ண் + டு + ம்: வ with the ே of பேசு, retroflex ண under a puḷḷi, ட from எப்படி with the ு of இருக்கிறீர்கள், and ம under a puḷḷi — a four-piece word the strand owes you nothing for.
@@ -100,6 +103,9 @@ You'll want to know: ஒரு.
 ஒரு — oru — a, one.
 ஒரு தேநீர் வேண்டும் — oru tēnīr vēṇḍum — one tea, please.
 You learned ஒன்று in chapter 7 as the number one. ஒரு (oru) is the same word in the shape it takes when it leans on a noun. Tamil will not let you say oṉṟu tēnīr.
+
+The word, taken apart.
+ஒரு (oru) is native Dravidian. DEDR 990 lists Malayalam oru and Kannada or, also used before a noun.
 
 Grammar Lens: the counting form and the leaning form.
 [a table of 2 rows, read aloud]

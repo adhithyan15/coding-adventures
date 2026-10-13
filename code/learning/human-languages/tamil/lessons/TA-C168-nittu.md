@@ -14,7 +14,8 @@ romanization: "nīṭṭu"
 concept_tag: TA-VERB-NITTU
 prerequisites: [TA-C168-ulu, TA-C168-tontu]
 sounds: []
-roots: []
+roots: [dravidian-niil-long]
+etymology_hook: "நீட்டு — native Dravidian (DEDR 3692); Malayalam nīḷuka 'to grow long', Kannada nīḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C168-tontu]
 <!-- hl-knowledge: introduces=[TA-LEX-C168-ACT168-03]; assesses=[] -->
 
 **நீட்டு** — *nīṭṭu* — "to stretch out, to extend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நீட்டு** (*nīṭṭu*) is native Dravidian. DEDR 3692 lists Malayalam *nīḷuka*, "to grow long" and Kannada *nīḷ*. It is the causative of *nīḷ*, "to be long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

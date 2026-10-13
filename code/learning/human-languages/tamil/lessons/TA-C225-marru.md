@@ -14,7 +14,8 @@ romanization: "māṟṟu"
 concept_tag: TA-VERB-MARRU
 prerequisites: [TA-C225-mati2, TA-C225-kalarru]
 sounds: []
-roots: []
+roots: [dravidian-maaru-change]
+etymology_hook: "மாற்று — native Dravidian (DEDR 4834); Malayalam māṟuka 'to be changed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C225-kalarru]
 <!-- hl-knowledge: introduces=[TA-LEX-C225-ACT225-05]; assesses=[] -->
 
 **மாற்று** — *māṟṟu* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாற்று** (*māṟṟu*) is native Dravidian. DEDR 4834 lists Malayalam *māṟuka*, "to be changed". It is the causative of *māṟu*, "to change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

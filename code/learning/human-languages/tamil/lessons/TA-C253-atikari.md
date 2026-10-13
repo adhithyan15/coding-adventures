@@ -14,7 +14,8 @@ romanization: "atikāri"
 concept_tag: TA-VELAI253-ATIKARI
 prerequisites: [TA-C252-ariviyal, TA-C253-kalainar]
 sounds: []
-roots: []
+roots: [sanskrit-adhikarin]
+etymology_hook: "அதிகாரி ← Sanskrit adhikārin 'one in authority', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C253-kalainar]
 <!-- hl-knowledge: introduces=[TA-LEX-C253-VELAI253-02]; assesses=[] -->
 
 **அதிகாரி** — *atikāri* — "an officer, an official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதிகாரி** (*atikāri*) is a well-established loan from Sanskrit *adhikārin*, "one in authority".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vāṭikkaiyāḷar"
 concept_tag: TA-VELAI191-VATIKKAIYALAR
 prerequisites: [TA-C190-totti, TA-C191-kataikkarar]
 sounds: []
-roots: []
+roots: [dravidian-vaadikkai-custom]
+etymology_hook: "வாடிக்கையாளர் — native Dravidian (DEDR 5341); Kannada vāḍike 'custom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C191-kataikkarar]
 <!-- hl-knowledge: introduces=[TA-LEX-C191-VELAI191-02]; assesses=[] -->
 
 **வாடிக்கையாளர்** — *vāṭikkaiyāḷar* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாடிக்கையாளர்** (*vāṭikkaiyāḷar*) is native Dravidian. DEDR 5341 lists Kannada *vāḍike*, "custom". It is *vāṭikkai*, "habit, custom", with *-āḷar*, "persons": "the regulars".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

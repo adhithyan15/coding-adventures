@@ -14,7 +14,8 @@ romanization: "kottamalli"
 concept_tag: TA-PORUL271-KOTTAMALLI
 prerequisites: [TA-C270-cappatti, TA-C270-puri]
 sounds: []
-roots: []
+roots: [sanskrit-kustumbari]
+etymology_hook: "கொத்தமல்லி — origin uncertain; compared with Sanskrit kustumbarī 'coriander' (CDIAL 3380)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C270-puri]
 <!-- hl-knowledge: introduces=[TA-LEX-C271-PORUL271-01]; assesses=[] -->
 
 **கொத்தமல்லி** — *kottamalli* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **கொத்தமல்லி** (*kottamalli*) is uncertain. It is usually compared with Sanskrit *kustumbarī*, "coriander" (CDIAL 3380), which CDIAL itself takes as non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "alamāri"
 concept_tag: TA-PORUL213-ALAMARI
 prerequisites: [TA-C212-olukkamana, TA-C212-acinkamana]
 sounds: []
-roots: []
+roots: [portuguese-armario]
+etymology_hook: "அலமாரி ← Portuguese armário 'cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C212-acinkamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C213-PORUL213-01]; assesses=[] -->
 
 **அலமாரி** — *alamāri* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அலமாரி** (*alamāri*) is a loan from Portuguese *armário*, "cupboard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

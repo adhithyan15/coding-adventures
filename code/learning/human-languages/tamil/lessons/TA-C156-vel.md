@@ -14,7 +14,8 @@ romanization: "vel"
 concept_tag: TA-VERB-VEL
 prerequisites: [TA-C156-perukku, TA-C156-karrukkol]
 sounds: []
-roots: []
+roots: [dravidian-vel-conquer]
+etymology_hook: "வெல் — native Dravidian (DEDR 5493); Malayalam velluka 'to overcome'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C156-karrukkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C156-ACT156-04]; assesses=[] -->
 
 **வெல்** — *vel* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெல்** (*vel*) is native Dravidian. DEDR 5493 lists Malayalam *velluka*, "to overcome".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

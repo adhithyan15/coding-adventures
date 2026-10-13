@@ -14,7 +14,8 @@ romanization: "mūṭi"
 concept_tag: TA-PORUL182-MUTI
 prerequisites: [TA-C182-tamlar, TA-C182-catti]
 sounds: []
-roots: []
+roots: [dravidian-mudu-cover]
+etymology_hook: "மூடி — native Dravidian (DEDR 5034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C182-catti]
 <!-- hl-knowledge: introduces=[TA-LEX-C182-PORUL182-05]; assesses=[] -->
 
 **மூடி** — *mūṭi* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூடி** (*mūṭi*) is native Dravidian (DEDR 5034). It is "the cover", from *mūṭu*, "to cover, to close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

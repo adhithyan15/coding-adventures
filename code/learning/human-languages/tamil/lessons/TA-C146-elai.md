@@ -14,7 +14,8 @@ romanization: "ēḻai"
 concept_tag: TA-QUAL146-ELAI
 prerequisites: [TA-C146-karam, TA-C146-panakkara]
 sounds: []
-roots: []
+roots: [dravidian-ezhai-poor]
+etymology_hook: "ஏழை — native Dravidian (DEDR 911); Malayalam ēḻa 'a poor person'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C146-panakkara]
 <!-- hl-knowledge: introduces=[TA-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **ஏழை** — *ēḻai* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏழை** (*ēḻai*) is native Dravidian. DEDR 911 lists Malayalam *ēḻa*, "a poor person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

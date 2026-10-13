@@ -14,7 +14,8 @@ romanization: "mettai"
 concept_tag: TA-THINGS134-METTAI
 prerequisites: [TA-C133-tol2, TA-C134-tiraiccilai]
 sounds: []
-roots: []
+roots: [dravidian-mettai-mattress]
+etymology_hook: "மெத்தை — native Dravidian (DEDR 5068); Malayalam metta, Kannada mette, Telugu metta"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C134-tiraiccilai]
 <!-- hl-knowledge: introduces=[TA-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **மெத்தை** — *mettai* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மெத்தை** (*mettai*) is native Dravidian. DEDR 5068 lists Malayalam *metta*, Kannada *mette* and Telugu *metta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

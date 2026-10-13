@@ -14,7 +14,8 @@ romanization: "taḻumpu"
 concept_tag: TA-NALAM170-TALUMPU
 prerequisites: [TA-C170-ovvamai, TA-C170-torru]
 sounds: []
-roots: []
+roots: [dravidian-tazhumpu-scar]
+etymology_hook: "தழும்பு — native Dravidian (DEDR 3118); Malayalam taḻampu 'scar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C170-torru]
 <!-- hl-knowledge: introduces=[TA-LEX-C170-NALAM170-03]; assesses=[] -->
 
 **தழும்பு** — *taḻumpu* — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தழும்பு** (*taḻumpu*) is native Dravidian. DEDR 3118 lists Malayalam *taḻampu*, "scar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

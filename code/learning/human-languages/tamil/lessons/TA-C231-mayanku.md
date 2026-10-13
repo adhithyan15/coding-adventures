@@ -14,7 +14,8 @@ romanization: "mayaṅku"
 concept_tag: TA-VERB-MAYANKU
 prerequisites: [TA-C230-pativirakku, TA-C230-pativerru]
 sounds: []
-roots: []
+roots: [dravidian-mayanku-swoon]
+etymology_hook: "மயங்கு — native Dravidian (DEDR 4706); Malayalam mayaṅṅuka 'to be giddy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C230-pativerru]
 <!-- hl-knowledge: introduces=[TA-LEX-C231-ACT231-01]; assesses=[] -->
 
 **மயங்கு** — *mayaṅku* — "to faint, to pass out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மயங்கு** (*mayaṅku*) is native Dravidian. DEDR 4706 lists Malayalam *mayaṅṅuka*, "to be giddy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

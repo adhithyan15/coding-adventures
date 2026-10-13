@@ -14,7 +14,8 @@ romanization: "nēci"
 concept_tag: TA-VERB-NECI
 prerequisites: [TA-C228-rattu-cey, TA-C228-avacarappatu]
 sounds: []
-roots: []
+roots: [sanskrit-sneha]
+etymology_hook: "நேசி — from nēcam 'affection' ← Sanskrit sneha 'tenderness, love' (CDIAL 13802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C228-avacarappatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C228-ACT228-05]; assesses=[] -->
 
 **நேசி** — *nēci* — "to love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேசி** (*nēci*) is a verb made from *nēcam*, "love, affection", from Sanskrit *sneha*, "oiliness, tenderness, love" (CDIAL 13802). Tamil dropped the first *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

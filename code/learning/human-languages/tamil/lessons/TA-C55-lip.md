@@ -11,7 +11,8 @@ romanization: "utaṭu"
 concept_tag: TA-NOUN-LIP
 prerequisites: [TA-C55-back, TA-C53-field, TA-C54-knife]
 sounds: []
-roots: []
+roots: [dravidian-utatu-lip]
+etymology_hook: "உதடு — native Dravidian (DEDR 606); Malayalam utaṭu, Kannada odaḍu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C55-back]
 This is where the family stops agreeing. Malayalam says ചുണ്ട് (*cuṇṭŭ*), Telugu పెదవి (*pedavi*), Tamil உதடு — three words with nothing in common but the thing they name. It happens: a part of the body every language has a name for is not therefore a part every language named at the same time.
 
 The ட in the middle is the one made with the tongue curled back. Keep it curled and the word comes out right.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உதடு** (*utaṭu*) is native Dravidian. DEDR 606 lists Malayalam *utaṭu* and Kannada *odaḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

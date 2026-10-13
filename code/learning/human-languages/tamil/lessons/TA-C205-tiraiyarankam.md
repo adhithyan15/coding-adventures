@@ -14,7 +14,8 @@ romanization: "tiraiyaraṅkam"
 concept_tag: TA-IDAM205-TIRAIYARANKAM
 prerequisites: [TA-C204-tunikkatai, TA-C205-currula]
 sounds: []
-roots: []
+roots: [dravidian-tirai-curtain, sanskrit-ranga]
+etymology_hook: "திரையரங்கம் — native tirai 'screen' (DEDR 3244) + araṅkam ← Sanskrit raṅga 'stage' (CDIAL 10561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C205-currula]
 <!-- hl-knowledge: introduces=[TA-LEX-C205-IDAM205-02]; assesses=[] -->
 
 **திரையரங்கம்** — *tiraiyaraṅkam* — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திரையரங்கம்** (*tiraiyaraṅkam*) is native *tirai*, "screen" (DEDR 3244), and *araṅkam*, "stage, hall", from Sanskrit *raṅga*, "arena, stage" (CDIAL 10561), with a vowel put before the *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

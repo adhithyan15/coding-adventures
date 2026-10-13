@@ -11,7 +11,8 @@ romanization: "pakkattu vīṭṭukkārar"
 concept_tag: TA-NEXTGEN-NEIGHBOUR
 prerequisites: [TA-C103-grandson, TA-C103-granddaughter]
 sounds: []
-roots: []
+roots: [sanskrit-paksha, dravidian-viidu-house]
+etymology_hook: "பக்கத்து வீட்டுக்காரர் — pakkam 'side' ← Sanskrit pakṣa (CDIAL 7627) + native vīṭu 'house' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C103-granddaughter]
 house beside".
 
 **பக்கம்** is "side"; **வீடு** is "house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பக்கத்து வீட்டுக்காரர்** (*pakkattu vīṭṭukkārar*) is "the people of the house at the side": *pakkam*, "side", from Sanskrit *pakṣa*, "wing, side" (CDIAL 7627), *vīṭu*, "house", native (DEDR 5393), and *-kārar*, "the ones who belong to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

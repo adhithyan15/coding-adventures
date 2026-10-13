@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Why, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0a950d211799ee27",
+  "sourceHash": "fnv1a64:5c3377951c217b3c",
   "lessons": [
     {
       "id": "TA-C78-why",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c538fec0c90b3e91",
+      "sourceHash": "fnv1a64:575acdfd26e03e0b",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏன் (ēṉ) is native Dravidian (DEDR 5151). It is built on the native question base e-, \"what\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,7 +204,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -224,7 +235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0476cf1223155e1",
+      "sourceHash": "fnv1a64:a93e848e22334f9e",
       "notice": null,
       "blocks": [
         {
@@ -303,6 +314,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏனென்றால் (ēṉeṉṟāl) is native: ēṉ, \"why\" (DEDR 5151), and eṉṟāl, \"if one says\", from eṉ, \"to say\" (DEDR 868). \"Because\" is \"if you say why\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -313,7 +335,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -389,7 +411,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -590,7 +612,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:673362c41b0ee36f",
+      "sourceHash": "fnv1a64:771b3b741bd66aa2",
       "notice": null,
       "blocks": [
         {
@@ -656,6 +678,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதனால் (adaṉāl) is native: atu, \"that\" (DEDR 1), in its joining form ataṉ-, with -āl, \"by\": \"by that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -666,7 +699,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -751,7 +784,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

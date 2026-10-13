@@ -14,7 +14,8 @@ romanization: "oḻuṅkupaṭuttu"
 concept_tag: TA-VERB-OLUNKUPATUTTU
 prerequisites: [TA-C259-raci, TA-C259-palutu-par]
 sounds: []
-roots: []
+roots: [dravidian-ozhuku-order]
+etymology_hook: "ஒழுங்குபடுத்து — native: oḻuṅku 'order' (DEDR 1011) + paṭuttu 'to make' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C259-palutu-par]
 <!-- hl-knowledge: introduces=[TA-LEX-C259-ACT259-05]; assesses=[] -->
 
 **ஒழுங்குபடுத்து** — *oḻuṅkupaṭuttu* — "to tidy up, to arrange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒழுங்குபடுத்து** (*oḻuṅkupaṭuttu*) is native: *oḻuṅku*, "order, regularity" (DEDR 1011), and *paṭuttu*, "to make", the causative of *paṭu* (DEDR 3853): "put into order".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

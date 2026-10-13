@@ -14,7 +14,8 @@ romanization: "veṭṭu"
 concept_tag: TA-VERB-VETTU
 prerequisites: [TA-C150-patu, TA-C150-camai]
 sounds: []
-roots: []
+roots: [dravidian-vettu-cut]
+etymology_hook: "வெட்டு — native Dravidian (DEDR 5478); Malayalam veṭṭuka, Kannada beṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C150-camai]
 <!-- hl-knowledge: introduces=[TA-LEX-C150-QUAL150-05]; assesses=[] -->
 
 **வெட்டு** — *veṭṭu* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெட்டு** (*veṭṭu*) is native Dravidian. DEDR 5478 lists Malayalam *veṭṭuka* and Kannada *beṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

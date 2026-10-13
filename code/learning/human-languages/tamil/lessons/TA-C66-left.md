@@ -11,7 +11,8 @@ romanization: "iḍadu"
 concept_tag: TA-ADJECTIVE-IDADU
 prerequisites: [TA-C66-right]
 sounds: []
-roots: []
+roots: [dravidian-idam-left]
+etymology_hook: "இடது — native Dravidian (DEDR 449); Malayalam iṭam, Kannada eḍa"
 duration:
   max_seconds: 230
 requires:
@@ -43,6 +44,11 @@ and it behaves exactly like வலது: no **-ஏ**, straight in front of the 
 **இடது கை** (*iḍadu kai*) — "the left hand".
 
 Both hands, in two words you can now hold up and check against each other.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இடது** (*iḍadu*) is native Dravidian. DEDR 449 lists Malayalam *iṭam* and Kannada *eḍa*. The entry gives *iṭam*, "left side".
 
 ## Why it's said this way: the ட you have to place
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06] -->

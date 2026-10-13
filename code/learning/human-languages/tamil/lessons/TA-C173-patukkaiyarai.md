@@ -14,7 +14,8 @@ romanization: "paṭukkaiyaṟai"
 concept_tag: TA-IDAM173-PATUKKAIYARAI
 prerequisites: [TA-C173-camaiyalarai, TA-C173-kuliyalarai]
 sounds: []
-roots: []
+roots: [dravidian-padu-lie-down, dravidian-arai-chamber]
+etymology_hook: "படுக்கையறை — native: paṭukkai 'bed' (DEDR 3852) + aṟai 'room' (DEDR 322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C173-kuliyalarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C173-IDAM173-03]; assesses=[] -->
 
 **படுக்கையறை** — *paṭukkaiyaṟai* — "a bedroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**படுக்கையறை** (*paṭukkaiyaṟai*) is native: *paṭukkai*, "bed, lying down" (DEDR 3852), and *aṟai*, "room" (DEDR 322).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

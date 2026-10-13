@@ -12,9 +12,9 @@ concept_tag: VERB-GO
 prerequisites: [TA-C32-iru]
 sounds: [tamil-vowel-sign-oo, tamil-rra-letter]
 roots: [proto-dravidian-poo-go]
-etymology_hook: "போ is native Dravidian *pō-, and Kannada's ಹೋಗು shows the same p→h softening you met in pattu/hattu; its middle bead alone carries the tense"
+etymology_hook: "போ — native Dravidian (DEDR 4572): Malayalam pōka, Kannada pōgu and hōgu, Telugu pōvu"
 duration:
-  max_seconds: 240
+  max_seconds: 262
 requires:
   knowledge: [TA-LEX-IRU-01, TA-GRAMMAR-IRU-02]
 introduces:
@@ -55,6 +55,11 @@ off with a verb.
 
 You met the bare stem in the farewell chapter, where *pō!* is already a whole
 command: "go!"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போ** (*pō*) is native Dravidian. DEDR 4572 lists Malayalam *pōka*, Kannada *pōgu* (and *hōgu*) and Telugu *pōvu*.
 
 ## Grammar Lens: past, present, future — one bead each
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-PO-02]; assesses=[] -->

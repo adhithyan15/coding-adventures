@@ -11,7 +11,8 @@ gloss: "sixth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-SIXTH
 prerequisites: [TA-C82-fifth, TA-C82-second, TA-C78-because, TA-C66-whichway-recall]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "ஆறாவது — native: āṟu 'six' (DEDR 2485) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -47,6 +48,11 @@ and nothing else changes.
 Six to ten were a separate lesson from one to five when you learned to count,
 because the words themselves had to be learned. For ordering they are not a
 separate anything: the same ending, on the next number.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆறாவது** (*āṟāvadu*) is native: *āṟu*, "six" (DEDR 2485), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-01, TA-LEX-C82-ORDINAL-08, TA-LEX-C82-ORDINAL-03, TA-GRAMMAR-C82-ORDINAL-04] -->

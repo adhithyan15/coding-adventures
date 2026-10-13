@@ -14,7 +14,8 @@ romanization: "kavaṉi"
 concept_tag: TA-VERB-KAVANI
 prerequisites: [TA-C164-payirci-cey, TA-C164-tercci-peru]
 sounds: []
-roots: []
+roots: [dravidian-kaval-care]
+etymology_hook: "கவனி — native Dravidian (DEDR 1328); Malayalam kavanam 'care', Kannada gavana 'attention'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C164-tercci-peru]
 <!-- hl-knowledge: introduces=[TA-LEX-C164-ACT164-05]; assesses=[] -->
 
 **கவனி** — *kavaṉi* — "to pay attention, to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கவனி** (*kavaṉi*) is native Dravidian. DEDR 1328 lists Malayalam *kavanam*, "care" and Kannada *gavana*, "attention". It is a verb made from *kavaṉam*, "care, attention".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

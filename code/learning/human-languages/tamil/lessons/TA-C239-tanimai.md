@@ -14,7 +14,8 @@ romanization: "taṉimai"
 concept_tag: TA-GUNAM239-TANIMAI
 prerequisites: [TA-C239-tirupti, TA-C239-irakkam]
 sounds: []
-roots: []
+roots: [dravidian-taan-self]
+etymology_hook: "தனிமை — native Dravidian (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C239-irakkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C239-GUNAM239-05]; assesses=[] -->
 
 **தனிமை** — *taṉimai* — "loneliness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தனிமை** (*taṉimai*) is native Dravidian (DEDR 3196). It is *taṉi*, "alone", with *-mai*: "aloneness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

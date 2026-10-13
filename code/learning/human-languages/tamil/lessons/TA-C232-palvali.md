@@ -14,7 +14,8 @@ romanization: "palvali"
 concept_tag: TA-NALAM232-PALVALI
 prerequisites: [TA-C231-kencu, TA-C231-camali]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth, dravidian-vali-pain]
+etymology_hook: "பல்வலி — native: pal 'tooth' (DEDR 3986) + vali 'pain' (DEDR 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C231-camali]
 <!-- hl-knowledge: introduces=[TA-LEX-C232-NALAM232-01]; assesses=[] -->
 
 **பல்வலி** — *palvali* — "a toothache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல்வலி** (*palvali*) is native: *pal*, "tooth" (DEDR 3986), and *vali*, "pain" (DEDR 5281).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

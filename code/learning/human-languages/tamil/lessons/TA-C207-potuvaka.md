@@ -14,7 +14,8 @@ romanization: "poṭuvāka"
 concept_tag: TA-KARANAM207-POTUVAKA
 prerequisites: [TA-C207-kittattatta, TA-C207-unmaiyil]
 sounds: []
-roots: []
+roots: [dravidian-potu-common]
+etymology_hook: "பொதுவாக — native Dravidian (DEDR 4507); Malayalam potu 'common, general'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C207-unmaiyil]
 <!-- hl-knowledge: introduces=[TA-LEX-C207-KARANAM207-04]; assesses=[] -->
 
 **பொதுவாக** — *poṭuvāka* — "in general, generally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொதுவாக** (*poṭuvāka*) is native Dravidian. DEDR 4507 lists Malayalam *potu*, "common, general". It is *potu*, "common, general", with *-āka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

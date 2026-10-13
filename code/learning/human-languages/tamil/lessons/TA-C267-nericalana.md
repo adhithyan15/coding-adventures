@@ -14,7 +14,8 @@ romanization: "nericalāṉa"
 concept_tag: TA-GUNAM267-NERICALANA
 prerequisites: [TA-C267-mukkiyamana, TA-C267-avacaramana]
 sounds: []
-roots: []
+roots: [dravidian-neri-crowd]
+etymology_hook: "நெரிசலான — native: nerical 'crowding', from neri 'to be crowded together' (DEDR 3770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C267-avacaramana]
 <!-- hl-knowledge: introduces=[TA-LEX-C267-GUNAM267-04]; assesses=[] -->
 
 **நெரிசலான** — *nericalāṉa* — "crowded, congested".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நெரிசலான** (*nericalāṉa*) is native: *nerical*, "crowding", from *neri*, "to be crowded together" (DEDR 3770), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

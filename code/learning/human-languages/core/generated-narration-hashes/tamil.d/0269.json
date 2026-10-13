@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 269,
-  "sourceHash": "fnv1a64:372f53627be6f8c0",
+  "sourceHash": "fnv1a64:67493e3272b99d14",
   "lessonIds": [
     "TA-C269-ciranta",
     "TA-C269-vittiyacamana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch269.txt",
   "json": "tamil/narration/ch269.json",
-  "textHash": "fnv1a64:bfd9faa80ac75b23",
-  "jsonHash": "fnv1a64:f6017adf1b65b3e1",
+  "textHash": "fnv1a64:216c5ff0336be29a",
+  "jsonHash": "fnv1a64:619be0750233c7d1",
   "findings": []
 }

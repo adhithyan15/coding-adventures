@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to erase, then the Tamil for to print.
 You'll want to know: வெறு.
 வெறு — veṟu — "to hate".
 
+The word, taken apart.
+வெறு (veṟu) is native Dravidian. DEDR 5512 lists Malayalam veṟukka, "to loathe, to hate".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to print, then the Tamil for to hate.
 
 You'll want to know: ஆச்சரியப்படு.
 ஆச்சரியப்படு — āccariyappaṭu — "to be surprised".
+
+The word, taken apart.
+ஆச்சரியப்படு (āccariyappaṭu) is āccariyam, "wonder", from Sanskrit āścarya, "wonderful" (CDIAL 1464), with native paṭu, "to undergo" (DEDR 3853): "undergo wonder".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for to hate, then the Tamil for to be surprise
 You'll want to know: வெட்கப்படு.
 வெட்கப்படு — veṭkappaṭu — "to feel shy, to be embarrassed".
 
+The word, taken apart.
+வெட்கப்படு (veṭkappaṭu) is native: veṭkam, "shyness, shame" (DEDR 5500), and paṭu, "to undergo" (DEDR 3853).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for to be surprised, then the Tamil for to fee
 You'll want to know: பொறாமைப்படு.
 பொறாமைப்படு — poṟāmaippaṭu — "to be jealous".
 
+The word, taken apart.
+பொறாமைப்படு (poṟāmaippaṭu) is native: poṟāmai, "envy", literally "not bearing", from poṟu, "to bear" (DEDR 4565), and paṭu, "to undergo" (DEDR 3853).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for to feel shy, then the Tamil for to be jeal
 
 You'll want to know: முத்தமிடு.
 முத்தமிடு — muttamiṭu — "to kiss".
+
+The word, taken apart.
+முத்தமிடு (muttamiṭu) is native: muttam, "kiss" (DEDR 4960, which lists Malayalam muttam and Telugu muddu), and iṭu, "to put" (DEDR 442): "put a kiss".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kuḷircātaṉap peṭṭi"
 concept_tag: TA-PORUL182-KULIRCATANAP-PETTI
 prerequisites: [TA-C181-ellam, TA-C181-tatimanana]
 sounds: []
-roots: []
+roots: [dravidian-kulir-cool, sanskrit-sadhana, dravidian-petti-box]
+etymology_hook: "குளிர்சாதனப் பெட்டி — native kuḷir 'cold' + cātaṉam ← Sanskrit sādhana 'means' + native peṭṭi 'box'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C181-tatimanana]
 <!-- hl-knowledge: introduces=[TA-LEX-C182-PORUL182-01]; assesses=[] -->
 
 **குளிர்சாதனப் பெட்டி** — *kuḷircātaṉap peṭṭi* — "a refrigerator".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குளிர்சாதனப் பெட்டி** (*kuḷircātaṉap peṭṭi*) is "the cooling-device box": native *kuḷir*, "cold" (DEDR 1834), *cātaṉam*, "device", from Sanskrit *sādhana*, "means, instrument" (CDIAL 13334), and native *peṭṭi*, "box" (DEDR 4388).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

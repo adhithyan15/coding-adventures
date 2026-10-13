@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3b12491eb4f2db82",
+  "sourceHash": "fnv1a64:b43c9e398da31ceb",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9728717c4436e21",
+      "sourceHash": "fnv1a64:40361f91a2987fb1",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இது (idu) is native Dravidian: the near base i- (DEDR 410). Malayalam has itu and Kannada idu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be0bfe7b3ed4e3b0",
+      "sourceHash": "fnv1a64:a23d71833877d01c",
       "notice": null,
       "blocks": [
         {
@@ -171,6 +182,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அது (adu) is native Dravidian: the far base a- (DEDR 1). Malayalam has atu and Kannada adu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -232,7 +254,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a036e673c4ea737",
+      "sourceHash": "fnv1a64:08d70dddaf827dbf",
       "notice": null,
       "blocks": [
         {
@@ -273,6 +295,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இங்கே (iṅgē) is native Dravidian: the near base i- with a place ending. DEDR 410 lists it under the same base as \"this\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -352,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f2fd2feed9eeb8b",
+      "sourceHash": "fnv1a64:336be1f7da1f23ff",
       "notice": null,
       "blocks": [
         {
@@ -393,6 +426,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அங்கே (aṅgē) is native Dravidian: the far base a- with a place ending. DEDR 1 lists it under the same base as \"that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -423,7 +467,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -454,7 +498,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb9b4fc73e7c5f43",
+      "sourceHash": "fnv1a64:1446401816d1f9cb",
       "notice": null,
       "blocks": [
         {
@@ -495,6 +539,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "யார் (yār) is native Dravidian, on the question base yā- (DEDR 5151). Malayalam has yār and ār, and Kannada yār."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -543,7 +598,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -574,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e63e907cd6291a6b",
+      "sourceHash": "fnv1a64:e44db80c632b6148",
       "notice": null,
       "blocks": [
         {
@@ -615,6 +670,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எங்கே (eṅgē) is native Dravidian: the question base e- with a place ending (DEDR 5151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -645,7 +711,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

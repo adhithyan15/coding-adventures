@@ -14,7 +14,8 @@ romanization: "kāgitam"
 concept_tag: TA-THINGS120-KAGITAM
 prerequisites: [TA-C120-vali, TA-C120-pena, TA-C84-mudhal-vaasippu, TA-C84-lines, TA-C84-words]
 sounds: []
-roots: []
+roots: [persian-kaghaz]
+etymology_hook: "காகிதம் ← Persian kāghaz 'paper', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TA-C120-pena]
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **காகிதம்** — *kāgitam* — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காகிதம்** (*kāgitam*) is a loan from Persian *kāghaz*, "paper", through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

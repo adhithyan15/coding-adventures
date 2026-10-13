@@ -14,7 +14,8 @@ romanization: "pūri"
 concept_tag: TA-PORUL270-PURI
 prerequisites: [TA-C270-cankili, TA-C270-cappatti]
 sounds: []
-roots: []
+roots: [hindustani-puri]
+etymology_hook: "பூரி ← Hindustani pūrī, from Sanskrit pūrikā 'a cake' (CDIAL 8331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C270-cappatti]
 <!-- hl-knowledge: introduces=[TA-LEX-C270-PORUL270-05]; assesses=[] -->
 
 **பூரி** — *pūri* — "a puri, a puffed fried bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூரி** (*pūri*) is a loan from Hindustani *pūrī*, which goes back to Sanskrit *pūrikā*, "a cake" (CDIAL 8331).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

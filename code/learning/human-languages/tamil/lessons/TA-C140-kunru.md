@@ -14,7 +14,8 @@ romanization: "kuṉṟu"
 concept_tag: TA-THINGS140-KUNRU
 prerequisites: [TA-C140-urukay, TA-C140-aruvi]
 sounds: []
-roots: []
+roots: [dravidian-kunru-hill]
+etymology_hook: "குன்று — native Dravidian (DEDR 1864); Malayalam kunnu, Kannada koṇḍa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C140-aruvi]
 <!-- hl-knowledge: introduces=[TA-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **குன்று** — *kuṉṟu* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குன்று** (*kuṉṟu*) is native Dravidian. DEDR 1864 lists Malayalam *kunnu* and Kannada *koṇḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

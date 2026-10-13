@@ -14,7 +14,8 @@ romanization: "mūḻku"
 concept_tag: TA-VERB-MULKU
 prerequisites: [TA-C260-atikari2, TA-C260-paravu]
 sounds: []
-roots: []
+roots: [dravidian-muzhuku-sink]
+etymology_hook: "மூழ்கு — native Dravidian (DEDR 4993); Malayalam muḻukuka 'to sink', Kannada muḻugu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C260-paravu]
 <!-- hl-knowledge: introduces=[TA-LEX-C260-ACT260-03]; assesses=[] -->
 
 **மூழ்கு** — *mūḻku* — "to sink, to drown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூழ்கு** (*mūḻku*) is native Dravidian. DEDR 4993 lists Malayalam *muḻukuka*, "to sink" and Kannada *muḻugu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

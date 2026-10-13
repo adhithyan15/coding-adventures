@@ -14,7 +14,8 @@ romanization: "kuṇam"
 concept_tag: TA-GUNAM210-KUNAM
 prerequisites: [TA-C209-talarvana, TA-C210-manam]
 sounds: []
-roots: []
+roots: [sanskrit-guna]
+etymology_hook: "குணம் ← Sanskrit guṇa 'strand; quality' (CDIAL 4190)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C210-manam]
 <!-- hl-knowledge: introduces=[TA-LEX-C210-GUNAM210-02]; assesses=[] -->
 
 **குணம்** — *kuṇam* — "character, nature (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குணம்** (*kuṇam*) is a loan from Sanskrit *guṇa*, "strand; quality" (CDIAL 4190).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

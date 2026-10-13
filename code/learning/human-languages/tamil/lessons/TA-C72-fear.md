@@ -11,7 +11,8 @@ romanization: "payam"
 concept_tag: TA-NOUN-FEAR
 prerequisites: [TA-C72-anger, TA-C70-bed, TA-C71-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "பயம் ← Sanskrit bhaya 'fear, peril' (CDIAL 9390)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ carrying its own built-in *a*, which is the plainest a Tamil word can possibly b
 
 It ends in the same **ம்** as கோபம், which is not a coincidence — Tamil keeps a whole shelf of
 feeling-nouns with that ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயம்** (*payam*) is a loan from Sanskrit *bhaya*, "fear, peril" (CDIAL 9390). Tamil wrote the *bh* as a plain *p*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

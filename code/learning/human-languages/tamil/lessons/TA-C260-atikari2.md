@@ -14,7 +14,8 @@ romanization: "atikari"
 concept_tag: TA-VERB-ATIKARI2
 prerequisites: [TA-C259-palutu-par, TA-C259-olunkupatuttu]
 sounds: []
-roots: []
+roots: [sanskrit-adhika]
+etymology_hook: "அதிகரி — a verb from Sanskrit adhika 'additional, more' (CDIAL 250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C259-olunkupatuttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C260-ACT260-01]; assesses=[] -->
 
 **அதிகரி** — *atikari* — "to increase, to go up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதிகரி** (*atikari*) is a verb made from Sanskrit *adhika*, "additional, more" (CDIAL 250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

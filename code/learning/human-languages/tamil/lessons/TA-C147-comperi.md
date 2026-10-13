@@ -14,7 +14,8 @@ romanization: "cōmpēṟi"
 concept_tag: TA-QUAL147-COMPERI
 prerequisites: [TA-C147-vayatana, TA-C147-putticali]
 sounds: []
-roots: []
+roots: [dravidian-coombu-idle]
+etymology_hook: "சோம்பேறி — native Dravidian (DEDR 2882); Kannada jompisu 'to doze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C147-putticali]
 <!-- hl-knowledge: introduces=[TA-LEX-C147-QUAL147-04]; assesses=[] -->
 
 **சோம்பேறி** — *cōmpēṟi* — "lazy; a lazy person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சோம்பேறி** (*cōmpēṟi*) is native Dravidian. DEDR 2882 lists Kannada *jompisu*, "to doze". It is built on *cōmpu*, "to be idle, sluggish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

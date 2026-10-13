@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 170,
-  "sourceHash": "fnv1a64:f13db96932bc47a2",
+  "sourceHash": "fnv1a64:7bf9c3eebd4b10f2",
   "lessonIds": [
     "TA-C170-ovvamai",
     "TA-C170-torru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch170.txt",
   "json": "tamil/narration/ch170.json",
-  "textHash": "fnv1a64:e1f18fb34c4e7265",
-  "jsonHash": "fnv1a64:299d360a4c96d257",
+  "textHash": "fnv1a64:a3862a16a6c92252",
+  "jsonHash": "fnv1a64:4b7cea4700a93f5e",
   "findings": []
 }

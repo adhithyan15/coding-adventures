@@ -14,7 +14,8 @@ romanization: "paṉi"
 concept_tag: TA-THINGS127-PANI
 prerequisites: [TA-C126-man, TA-C127-natcattiram]
 sounds: []
-roots: []
+roots: [dravidian-pani-dew]
+etymology_hook: "பனி — native Dravidian (DEDR 4035); Malayalam pani 'dew', Kannada pani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C127-natcattiram]
 <!-- hl-knowledge: introduces=[TA-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **பனி** — *paṉi* — "dew, frost, snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பனி** (*paṉi*) is native Dravidian. DEDR 4035 lists Malayalam *pani*, "dew" and Kannada *pani*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

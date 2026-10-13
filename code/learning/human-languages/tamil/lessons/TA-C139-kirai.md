@@ -14,7 +14,8 @@ romanization: "kīrai"
 concept_tag: TA-THINGS139-KIRAI
 prerequisites: [TA-C138-katuku, TA-C139-cirakam]
 sounds: []
-roots: []
+roots: [dravidian-kiirai-greens]
+etymology_hook: "கீரை — native Dravidian (DEDR 1617); Malayalam cīra, Kannada kīre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C139-cirakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **கீரை** — *kīrai* — "leafy greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கீரை** (*kīrai*) is native Dravidian. DEDR 1617 lists Malayalam *cīra* and Kannada *kīre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

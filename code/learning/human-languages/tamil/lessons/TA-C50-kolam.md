@@ -11,7 +11,8 @@ romanization: "kōlam"
 concept_tag: TA-WELCOME-KOLAM
 prerequisites: [TA-C50-threshold, TA-C48-time, TA-C49-respect]
 sounds: []
-roots: []
+roots: [dravidian-kolam-form]
+etymology_hook: "கோலம் — native Dravidian (DEDR 2240); Malayalam kōlam 'form, figure', Kannada kōla 'ornament'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C50-threshold]
 Rice flour, drawn freehand on the ground each morning, usually by the woman of the house and usually before the sun is up. It is decoration and welcome at once — and because the flour feeds ants and birds, it is a small daily gift to whatever comes past.
 
 The older sense of the word is 'form, appearance, the shape a thing takes'. A *kōlam* is the shape the house puts on to receive the day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோலம்** (*kōlam*) is native Dravidian. DEDR 2240 lists Malayalam *kōlam*, "form, figure" and Kannada *kōla*, "ornament". The word first meant beauty, form and shape, and the drawing at the door is one of its senses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

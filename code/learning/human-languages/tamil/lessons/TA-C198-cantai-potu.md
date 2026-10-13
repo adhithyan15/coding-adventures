@@ -14,7 +14,8 @@ romanization: "caṇṭai pōṭu"
 concept_tag: TA-VERB-CANTAI-POTU
 prerequisites: [TA-C198-emarru, TA-C198-poy-col]
 sounds: []
-roots: []
+roots: [dravidian-candai-quarrel, dravidian-poodu-put]
+etymology_hook: "சண்டை போடு — native: caṇṭai 'quarrel' (DEDR 2318; Malayalam caṇṭa) + pōṭu 'to put' (DEDR 4581)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C198-poy-col]
 <!-- hl-knowledge: introduces=[TA-LEX-C198-ACT198-04]; assesses=[] -->
 
 **சண்டை போடு** — *caṇṭai pōṭu* — "to quarrel, to fight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சண்டை போடு** (*caṇṭai pōṭu*) is native: *caṇṭai*, "quarrel, fight" (DEDR 2318; Malayalam *caṇṭa*), and *pōṭu*, "to put, to throw" (DEDR 4581).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

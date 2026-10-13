@@ -12,6 +12,9 @@ Before the new one: say the Tamil for east, then the Tamil for west.
 You'll want to know: அருங்காட்சியகம்.
 அருங்காட்சியகம் — aruṅkāṭciyakam — "a museum".
 
+The word, taken apart.
+அருங்காட்சியகம் (aruṅkāṭciyakam) is a modern coinage from native parts: aru, "rare" (DEDR 221), kāṭci, "sight, show" (DEDR 1443), and akam, "house" (DEDR 7): "the house of rare sights".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for west, then the Tamil for a museum.
 
 You'll want to know: சந்து.
 சந்து — cantu — "a lane, an alley".
+
+The word, taken apart.
+சந்து (cantu) is usually traced to Sanskrit saṁdhi, "joint, junction" (CDIAL 12913): a lane is a gap between houses.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a museum, then the Tamil for a lane.
 You'll want to know: துறைமுகம்.
 துறைமுகம் — tuṟaimukam — "a harbour, a port".
 
+The word, taken apart.
+துறைமுகம் (tuṟaimukam) is native: tuṟai, "harbour, landing place" (DEDR 3370), and mukam, "face, front" (DEDR 4889).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a lane, then the Tamil for a harbour.
 You'll want to know: கோட்டை.
 கோட்டை — kōṭṭai — "a fort".
 
+The word, taken apart.
+கோட்டை (kōṭṭai) is native Dravidian. DEDR 2207 lists Malayalam kōṭṭa, "fort" and Kannada kōṭe. The entry compares Sanskrit koṭṭa, "fort".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a harbour, then the Tamil for a fort.
 
 You'll want to know: அரண்மனை.
 அரண்மனை — araṇmaṉai — "a palace".
+
+The word, taken apart.
+அரண்மனை (araṇmaṉai) is araṇ, "defence, fortress", which DEDR 201 traces to Sanskrit śaraṇa, "refuge", and native maṉai, "house" (DEDR 4776).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nakaram"
 concept_tag: TA-IDAM234-NAKARAM
 prerequisites: [TA-C233-vinati, TA-C234-ancalakam]
 sounds: []
-roots: []
+roots: [dravidian-nakar-town]
+etymology_hook: "நகரம் — native Dravidian (DEDR 3568); Malayalam nakar 'town'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C234-ancalakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C234-IDAM234-02]; assesses=[] -->
 
 **நகரம்** — *nakaram* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நகரம்** (*nakaram*) is native Dravidian. DEDR 3568 lists Malayalam *nakar*, "town". The entry compares Sanskrit *nagara*, "town, city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

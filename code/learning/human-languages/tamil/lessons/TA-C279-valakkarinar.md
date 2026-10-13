@@ -14,7 +14,8 @@ romanization: "vaḻakkaṟiñar"
 concept_tag: TA-VELAI279-VALAKKARINAR
 prerequisites: [TA-C279-melalar, TA-C279-poriyalar]
 sounds: []
-roots: []
+roots: [dravidian-vazhaku-custom, dravidian-ari-know]
+etymology_hook: "வழக்கறிஞர் — native: vaḻakku 'lawsuit' (DEDR 5292) + aṟiñar 'those who know' (DEDR 314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C279-poriyalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C279-VELAI279-05]; assesses=[] -->
 
 **வழக்கறிஞர்** — *vaḻakkaṟiñar* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வழக்கறிஞர்** (*vaḻakkaṟiñar*) is native: *vaḻakku*, "lawsuit, custom" (DEDR 5292, which lists Malayalam vaḻakku), and *aṟiñar*, "those who know", from *aṟi*, "to know" (DEDR 314): "one who knows lawsuits".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

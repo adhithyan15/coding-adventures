@@ -13,6 +13,9 @@ You'll want to know: தாத்தா.
 தாத்தா (tāttā) — "grandfather".
 என் தாத்தா (tāttā) — "my grandfather".
 
+The word, taken apart.
+தாத்தா (tāttā) is native Dravidian. DEDR 3160 lists Malayalam tātan, "father", Kannada tāta and Telugu tāta. The entry compares Sanskrit tāta, "father".
+
 What you've built.
 A grandfather.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a relative, then the Tamil for a grandfath
 You'll want to know: பாட்டி.
 பாட்டி (pāṭṭi) — "grandmother".
 பாட்டி (pāṭṭi) வீடு — "grandmother's house".
+
+The word, taken apart.
+பாட்டி (pāṭṭi) is native Dravidian. DEDR 4066 lists Malayalam pāṭṭan, "grandfather". The entry lists pāṭṭi, "grandmother", beside pāṭṭāṉ, "grandfather".
 
 What you've built.
 Both grandparents.
@@ -73,6 +79,9 @@ You'll want to know: மாமா.
 மாமா (māmā) — "uncle", above all your mother's brother; also "father-in-law".
 Tamil kinship names the side of the family, not only the generation.
 
+The word, taken apart.
+மாமா (māmā) is native Dravidian. DEDR 4813 lists Malayalam māman, Kannada māma and Telugu māma. The entry compares Sanskrit māma, "maternal uncle" (CDIAL 10055).
+
 What you've built.
 An uncle, named by side.
 
@@ -103,6 +112,9 @@ You'll want to know: அத்தை.
 அத்தை (attai) — "aunt", your father's sister; also "mother-in-law".
 மாமா (māmā) and அத்தை (attai) pair up across the two sides of the family.
 
+The word, taken apart.
+அத்தை (attai) is native Dravidian. DEDR 142 lists Malayalam atta, "mother", Kannada atte, "mother-in-law" and Telugu atta, "mother-in-law, father's sister". The entry compares Prakrit attā, "mother".
+
 What you've built.
 An aunt, named by side.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for an uncle, then the Tamil for an aunt.
 You'll want to know: சித்தப்பா.
 சித்தப்பா (cittappā) — your father's younger brother.
 It ends in அப்பா, "father": he is the little father.
+
+The word, taken apart.
+சித்தப்பா (cittappā) is native: citta-, "small, younger", from ciṟu, "small" (DEDR 1594), and appā, "father" (DEDR 156). The father's younger brother is "the small father".
 
 What you've built.
 Grandparents, uncle, aunt, and a little father.

@@ -14,7 +14,8 @@ romanization: "ravikkai"
 concept_tag: TA-PORUL242-RAVIKKAI
 prerequisites: [TA-C242-cattaippai, TA-C242-pottan]
 sounds: []
-roots: []
+roots: [dravidian-ravikkai-bodice]
+etymology_hook: "ரவிக்கை — native Dravidian (DEDR 5163); Kannada ṟavike 'bodice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C242-pottan]
 <!-- hl-knowledge: introduces=[TA-LEX-C242-PORUL242-05]; assesses=[] -->
 
 **ரவிக்கை** — *ravikkai* — "a blouse (worn with a sari)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரவிக்கை** (*ravikkai*) is native Dravidian. DEDR 5163 lists Kannada *ṟavike*, "bodice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

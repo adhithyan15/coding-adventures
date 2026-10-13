@@ -11,7 +11,8 @@ romanization: "ākaṭṭum"
 concept_tag: TA-REPLY-LET-IT-BE
 prerequisites: [TA-C56-no-need, TA-C54-box, TA-C55-bone]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ஆகட்டும் — native Dravidian (DEDR 333); Malayalam ākuka"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C56-no-need]
 *āku* is to become, to come about. ஆகட்டும் is "let it come about" — what you say when somebody proposes something and you are content to let it happen. It agrees without promising to do anything.
 
 The *ām* you have been saying for yes is that same *āku* worn down by a great deal of use, which is why the two sit so alike in the mouth. Telugu's nearest of these is అలాగే (*alāgē*), "just so, alright then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆகட்டும்** (*ākaṭṭum*) is native Dravidian. DEDR 333 lists Malayalam *ākuka*. It is the native verb "to become" with the ending that says "let it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

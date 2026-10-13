@@ -11,7 +11,8 @@ romanization: "kāṟṟu"
 concept_tag: TA-NOUN-WIND
 prerequisites: [TA-C56-let-it-be, TA-C55-neck, TA-C56-a-little]
 sounds: []
-roots: []
+roots: [dravidian-kaal-wind]
+etymology_hook: "காற்று — native Dravidian (DEDR 1481); Malayalam kāṟṟu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C56-let-it-be]
 Malayalam കാറ്റ് (*kāṟṟŭ*) is the same word with its ending worn shorter. Telugu takes గాలి (*gāli*), which covers air as much as wind.
 
 Tamil's word covers both too: the breeze coming through a doorway and the air inside a tyre are one word. What English splits into wind and air, Tamil leaves whole and lets the sentence decide.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காற்று** (*kāṟṟu*) is native Dravidian. DEDR 1481 lists Malayalam *kāṟṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
