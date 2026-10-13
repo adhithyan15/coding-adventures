@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.4` accumulate here until the next version is
 cut.
 
+### Fixed — Qt elevation shadows leave the degradation report (#17386)
+
+Qt now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits equivalent native `MultiEffect`
+depth. Fresh strict generation retires ten false-positive shadow omissions and
+reduces the measured Qt style inventory from 93 to 83. A raw shadow without
+elevation and the inset theme-toggle moon effect remain explicit debt.
+
 ## [0.5.4] - 2026-10-12
 
 ### Fixed — SwiftUI elevation tokens emit native shadows (#17365)

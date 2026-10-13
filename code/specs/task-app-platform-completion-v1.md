@@ -183,6 +183,10 @@ rather than letting them read as silent gaps.
     buttons to `Layout.fillWidth: true`, reducing Qt's fresh inventory from 108
     to 93. The three remaining Qt width drops are `Text` geometry; unsupported
     percentages and mixed fixed/fill states remain reported.
+    #17386 then reconciles Qt's ten non-inset CSS shadows with the supported
+    `elevation` tokens that already emit equivalent native `MultiEffect`
+    depth, reducing its fresh inventory from 93 to 83. The inset theme-toggle
+    moon and raw shadows without elevation remain drawing-effect debt.
     #17356 reconciles Compose's ten non-inset CSS shadows with the supported
     `elevation` tokens that already emit equivalent native depth, reducing its
     fresh inventory from 50 to 40. The inset theme-toggle moon and raw shadows
