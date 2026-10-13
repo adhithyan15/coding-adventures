@@ -1528,6 +1528,9 @@ where
         metadata.insert("swimlane.laneOrder".into(), diagram.lanes.iter()
             .map(|lane| lane.id.as_str()).collect::<Vec<_>>().join(","));
     }
+    if !diagram.ignore_cross_lane_edges {
+        metadata.insert("swimlane.ignoreCrossLaneEdges".into(), "false".into());
+    }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
         metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());

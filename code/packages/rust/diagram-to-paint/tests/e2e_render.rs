@@ -3971,6 +3971,14 @@ line "Target" [35, 50, 68, 82]"##,
                         matches!(child, PaintInstruction::Path(_))).count() == 2
                 )), "the note must lower to an outline and interior fold path");
             }
+            if fixture_name == "cross-lane-rank-constraints" {
+                let validate = layout.nodes.iter().find(|node| node.id == "validate").unwrap();
+                let build = layout.nodes.iter().find(|node| node.id == "build").unwrap();
+                assert!(build.x > validate.x + validate.width,
+                    "cross-lane rank constraints must place the destination after the source");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.ignoreCrossLaneEdges")), Some(&"false".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

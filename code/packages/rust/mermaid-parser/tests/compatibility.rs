@@ -2294,6 +2294,20 @@ fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_ignore_cross_lane_edges_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default cross-lane behavior should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: true\n---\n{source}"))
+        .expect("ignored cross-lane edges should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n---\n{source}"))
+        .expect("cross-lane rank constraints should parse");
+
+    assert!(defaulted.ignore_cross_lane_edges);
+    assert!(enabled.ignore_cross_lane_edges);
+    assert!(!disabled.ignore_cross_lane_edges);
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");
