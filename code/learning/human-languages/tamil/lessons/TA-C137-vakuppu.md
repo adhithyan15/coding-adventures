@@ -14,7 +14,8 @@ romanization: "vakuppu"
 concept_tag: TA-THINGS137-VAKUPPU
 prerequisites: [TA-C137-kalurai, TA-C137-kaiyurai, TA-C10-vaara-kizhamai, TA-C10-vaara-kizhamai]
 sounds: []
-roots: []
+roots: [dravidian-vaku-divide]
+etymology_hook: "வகுப்பு — native Dravidian (DEDR 5202); Malayalam vakuppu 'kind, section'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C137-kaiyurai]
 <!-- hl-knowledge: introduces=[TA-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **வகுப்பு** — *vakuppu* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வகுப்பு** (*vakuppu*) is native Dravidian. DEDR 5202 lists Malayalam *vakuppu*, "kind, section". It is the noun of *vaku*, "to divide": a class is a division.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

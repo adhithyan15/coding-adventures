@@ -14,7 +14,8 @@ romanization: "paṭikkaṭṭu"
 concept_tag: TA-IDAM204-PATIKKATTU
 prerequisites: [TA-C203-atuvarai, TA-C203-kulantaip-paruvam]
 sounds: []
-roots: []
+roots: [dravidian-padi-step]
+etymology_hook: "படிக்கட்டு — native Dravidian (DEDR 3850); Malayalam paṭi 'step', Telugu paḍi-kaṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C203-kulantaip-paruvam]
 <!-- hl-knowledge: introduces=[TA-LEX-C204-IDAM204-01]; assesses=[] -->
 
 **படிக்கட்டு** — *paṭikkaṭṭu* — "stairs, steps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**படிக்கட்டு** (*paṭikkaṭṭu*) is native Dravidian. DEDR 3850 lists Malayalam *paṭi*, "step" and Telugu *paḍi-kaṭṭu*. The entry lists *paṭikkaṭṭu*, "flight of steps", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

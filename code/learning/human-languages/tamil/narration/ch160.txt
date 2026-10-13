@@ -14,6 +14,9 @@ You'll want to know: கால அட்டவணை.
 [once you have stopped driving — read: the board]
 The board says பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி — pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi — "Bus departure time: 8 a.m." The bus leaves at eight, so be there before eight.
 
+The word, taken apart.
+கால அட்டவணை (kāla aṭṭavaṇai) is kālam, "time", from Sanskrit kāla (CDIAL 3084), and aṭṭavaṇai, "table, chart". The origin of aṭṭavaṇai is uncertain; DEDR has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ You'll want to know: அறிவிப்பு.
 [once you have stopped driving — read: the notice]
 The notice says ஞாயிறுதோறும் கடை விடுமுறை — ñāyiṟutōṟum kaṭai viṭumuṟai — "Shop closed every Sunday." Come on another day.
 
+The word, taken apart.
+அறிவிப்பு (aṟivippu) is native Dravidian. DEDR 314 lists Malayalam aṟiyuka, "to know". It is the noun of aṟivi, "to make known", from aṟi, "to know".
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Tamil for a timetable, then the Tamil for a notice.
 
 You'll want to know: வாடகை.
 வாடகை — vāṭakai — "rent; a fare". The money for a room, or for a ride: வீட்டு வாடகை — vīṭṭu vāṭakai — "the rent for a house".
+
+The word, taken apart.
+வாடகை (vāṭakai) is a well-established loan from Sanskrit bhāṭaka, "hire, rent".
 
 What you've built.
 One more word for this chapter.
@@ -105,6 +114,9 @@ You'll want to know: விளம்பரம்.
 [once you have stopped driving — read: the advert]
 The advert says வீடு வாடகைக்கு விடப்படும் — vīṭu vāṭakaikku viṭappaṭum — "House to let." A house is available to rent.
 
+The word, taken apart.
+விளம்பரம் (viḷamparam) is native Dravidian. DEDR 5433 lists Malayalam viḷamparam, "proclamation". It comes from viḷampu, "to proclaim, to make known".
+
 What you've built.
 One more word for this chapter.
 
@@ -133,6 +145,9 @@ Before the new one: say the Tamil for rent; a fare, then the Tamil for an advert
 
 You'll want to know: ரசீது.
 ரசீது — racītu — "a receipt". Ask for it when you pay: ரசீது கொடுங்கள் — racītu koṭuṅkaḷ — "The receipt, please."
+
+The word, taken apart.
+ரசீது (racītu) is a loan from Persian rasīd, "receipt", through Hindustani.
 
 What you've built.
 One more word for this chapter.

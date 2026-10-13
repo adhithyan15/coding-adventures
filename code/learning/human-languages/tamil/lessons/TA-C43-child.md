@@ -11,7 +11,8 @@ romanization: "kuḻandai"
 concept_tag: TA-NOUN-CHILD
 prerequisites: [TA-C42-give, TA-C41-big, TA-C41-small]
 sounds: []
-roots: []
+roots: [dravidian-kuzha-young]
+etymology_hook: "குழந்தை — native, among DEDR 2149's words for young and tender things; Telugu koḍuku 'son'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C42-give]
 **குழந்தை** (*kuḻandai*) — "child".
 
 Take it apart and the stem is *kuḻa-*, 'young, tender', closed off into a noun by *-ndai*. The same stem stands behind *kuḻavi*, 'infant'. Nothing in the word says boy or girl: it names the age, not the sex.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழந்தை** (*kuḻandai*) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam *koḻuntu*, "tender twig", and Telugu *koḍuku*, "son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "oṉṟumillai"
 concept_tag: TA-RIGHT-NOTHING
 prerequisites: [TA-C95-exactly, TA-C95-really]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, il]
+etymology_hook: "ஒன்றுமில்லை — native: oṉṟum 'even one' (DEDR 990) + illai 'there is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C95-really]
 **ஒன்றுமில்லை** (*oṉṟumillai*) — "nothing", "it's nothing".
 
 **ஒன்று** is "one", and **இல்லை** is "no": *not even one*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒன்றுமில்லை** (*oṉṟumillai*) is native: *oṉṟum*, "even one" (DEDR 990), and *illai*, "there is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

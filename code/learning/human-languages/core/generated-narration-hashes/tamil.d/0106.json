@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 106,
-  "sourceHash": "fnv1a64:2e90eee2b20d0df2",
+  "sourceHash": "fnv1a64:acb5f096a2778515",
   "lessonIds": [
     "TA-C106-takecare",
     "TA-C106-safely",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch106.txt",
   "json": "tamil/narration/ch106.json",
-  "textHash": "fnv1a64:c750c0995dd724af",
-  "jsonHash": "fnv1a64:937301967f0118c9",
+  "textHash": "fnv1a64:86fd82c2ed82b7b4",
+  "jsonHash": "fnv1a64:5e53c246ecd2c08d",
   "findings": []
 }

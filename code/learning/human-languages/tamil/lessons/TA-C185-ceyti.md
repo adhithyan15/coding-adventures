@@ -14,7 +14,8 @@ romanization: "ceyti"
 concept_tag: TA-PORUL185-CEYTI
 prerequisites: [TA-C185-en, TA-C185-kurunceyti]
 sounds: []
-roots: []
+roots: [sey-do-dravidian]
+etymology_hook: "செய்தி — native Dravidian (DEDR 1957); Malayalam ceyti 'news'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C185-kurunceyti]
 <!-- hl-knowledge: introduces=[TA-LEX-C185-PORUL185-04]; assesses=[] -->
 
 **செய்தி** — *ceyti* — "news; a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செய்தி** (*ceyti*) is native Dravidian. DEDR 1957 lists Malayalam *ceyti*, "news". The entry lists *ceyti*, "deed, news", under *cey*, "to do": news is what was done.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

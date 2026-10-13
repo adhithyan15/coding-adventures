@@ -11,7 +11,8 @@ romanization: "paḻaiya"
 concept_tag: TA-ADJ-OLD
 prerequisites: [TA-C41-new, TA-C40-where]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "பழைய — native Dravidian (DEDR 3999); Malayalam paḻa, Kannada paḻa, Telugu prā-"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **புதிய** *pudiya* a moment ago. Put them side by side and not
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழைய** (*paḻaiya*) is native Dravidian. DEDR 3999 lists Malayalam *paḻa*, Kannada *paḻa* and Telugu *prā-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05, TA-LEX-C40-DEIXIS-06] -->

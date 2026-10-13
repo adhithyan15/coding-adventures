@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 256,
-  "sourceHash": "fnv1a64:5d9b79d888cd7426",
+  "sourceHash": "fnv1a64:2884b8efb1123954",
   "lessonIds": [
     "TA-C256-errukkol",
     "TA-C256-pinparru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch256.txt",
   "json": "tamil/narration/ch256.json",
-  "textHash": "fnv1a64:9df743a81a15d40e",
-  "jsonHash": "fnv1a64:4d47414b471008a9",
+  "textHash": "fnv1a64:79f021dae26dc7cf",
+  "jsonHash": "fnv1a64:3a61aa7a806b531b",
   "findings": []
 }

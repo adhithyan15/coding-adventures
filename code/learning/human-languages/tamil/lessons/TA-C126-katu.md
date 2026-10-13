@@ -14,7 +14,8 @@ romanization: "kāṭu"
 concept_tag: TA-THINGS126-KATU
 prerequisites: [TA-C126-eri, TA-C126-kulam]
 sounds: []
-roots: []
+roots: [dravidian-kaadu-forest]
+etymology_hook: "காடு — native Dravidian (DEDR 1438); Malayalam kāṭu, Kannada kāḍu, Telugu kāḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C126-kulam]
 <!-- hl-knowledge: introduces=[TA-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **காடு** — *kāṭu* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காடு** (*kāṭu*) is native Dravidian. DEDR 1438 lists Malayalam *kāṭu*, Kannada *kāḍu* and Telugu *kāḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

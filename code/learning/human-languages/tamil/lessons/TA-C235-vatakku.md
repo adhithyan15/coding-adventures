@@ -14,7 +14,8 @@ romanization: "vaṭakku"
 concept_tag: TA-IDAM235-VATAKKU
 prerequisites: [TA-C234-narcanti, TA-C235-ticai]
 sounds: []
-roots: []
+roots: [dravidian-vada-north]
+etymology_hook: "வடக்கு — native Dravidian (DEDR 5218); Malayalam vaṭakku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C235-ticai]
 <!-- hl-knowledge: introduces=[TA-LEX-C235-IDAM235-02]; assesses=[] -->
 
 **வடக்கு** — *vaṭakku* — "north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வடக்கு** (*vaṭakku*) is native Dravidian. DEDR 5218 lists Malayalam *vaṭakku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

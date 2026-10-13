@@ -11,7 +11,8 @@ romanization: "payaṇam"
 concept_tag: TA-LEAVE-JOURNEY
 prerequisites: [TA-C48-time, TA-C46-doctor, TA-C47-certainly]
 sounds: []
-roots: []
+roots: [sanskrit-prayana]
+etymology_hook: "பயணம் ← Sanskrit prayāṇa 'setting out, journey' (CDIAL 8732), worn down; pirayāṇam is the fuller form"
 duration:
   max_seconds: 210
 requires:

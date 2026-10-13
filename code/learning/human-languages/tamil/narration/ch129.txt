@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an elephant, then the Tamil for a tiger.
 You'll want to know: சிங்கம்.
 சிங்கம் — ciṅkam — "a lion".
 
+The word, taken apart.
+சிங்கம் (ciṅkam) is a loan from Sanskrit siṁha, "lion" (CDIAL 13384). Tamil spells the nasal as ṅ, before k.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a tiger, then the Tamil for a lion.
 
 You'll want to know: கரடி.
 கரடி — karaṭi — "a bear".
+
+The word, taken apart.
+கரடி (karaṭi) is native Dravidian. DEDR 1263 lists Malayalam karaṭi, Kannada karaḍi and Telugu karaṭi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a lion, then the Tamil for a bear.
 You'll want to know: குரங்கு.
 குரங்கு — kuraṅku — "a monkey".
 
+The word, taken apart.
+குரங்கு (kuraṅku) is native Dravidian. DEDR 1769 lists Malayalam kuraṅṅu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a bear, then the Tamil for a monkey.
 You'll want to know: முயல்.
 முயல் — muyal — "a rabbit".
 
+The word, taken apart.
+முயல் (muyal) is native Dravidian. DEDR 4968 lists Malayalam muyal and Kannada mola.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a monkey, then the Tamil for a rabbit.
 
 You'll want to know: மான்.
 மான் — māṉ — "a deer".
+
+The word, taken apart.
+மான் (māṉ) is native Dravidian. DEDR 4780 lists Malayalam mān, "deer". The entry lists mā, "animal, beast", beside māṉ, "deer".
 
 What you've built.
 One more word for this chapter.

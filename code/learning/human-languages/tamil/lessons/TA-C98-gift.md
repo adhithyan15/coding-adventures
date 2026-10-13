@@ -11,7 +11,8 @@ romanization: "paricu"
 concept_tag: TA-WELCOME-GIFT
 prerequisites: [TA-C98-congrats, TA-C98-invitation]
 sounds: []
-roots: []
+roots: [dravidian-paricam-gift]
+etymology_hook: "பரிசு — with paricil 'gift' in DEDR 3970; a derivation from Sanskrit sparśa 'touch' is proposed, not settled"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C98-invitation]
 **பரிசு** (*paricu*) — "a gift", and "a prize".
 
 **உங்களுக்கு ஒரு பரிசு** — "a gift for you".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பரிசு** (*paricu*) belongs with *paricil*, "gift, present", in DEDR 3970, beside Malayalam *pariyam*, "a token given to the bride". The entry notes a proposal to derive the family from Sanskrit *sparśa*, "touch"; that is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

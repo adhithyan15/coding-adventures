@@ -13,6 +13,9 @@ You'll want to know: பார்த்துக்கொள்ளுங்க�
 பார்த்துக்கொள்ளுங்கள் (pārttukkoḷḷuṅkaḷ) — "take care", literally "look after (yourself)".
 It is built on பார், "to see, to look".
 
+The word, taken apart.
+பார்த்துக்கொள்ளுங்கள் (pārttukkoḷḷuṅkaḷ) is native: pār, "to look" (DEDR 4091), and koḷ, "to take, to keep" (DEDR 2151): "look after (yourself)".
+
 What you've built.
 The kindest goodbye.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a school, then the Tamil for take care.
 You'll want to know: பத்திரமாக.
 பத்திரமாக (pattiramāka) — "safely".
 பத்திரமாகப் போங்கள் — "go safely".
+
+The word, taken apart.
+பத்திரமாக (pattiramāka) is pattiram, "safety, care", from Sanskrit bhadra, "fortunate, good" (CDIAL 9377), with -āka, "in the manner of".
 
 What you've built.
 A wish for the road.
@@ -73,6 +79,9 @@ You'll want to know: நேரமாகிவிட்டது.
 நேரமாகிவிட்டது (nēramākiviṭṭatu) — "it has got late", literally "it has become time".
 நேரம் is "time". The first reason to leave.
 
+The word, taken apart.
+நேரமாகிவிட்டது (nēramākiviṭṭatu) is native: nēram, "time" (DEDR 3774), ā, "to become" (DEDR 333), and viṭu, "to let go", which marks the thing as done (DEDR 5393): "time has become (late)".
+
 What you've built.
 A reason to go.
 
@@ -103,6 +112,9 @@ You'll want to know: போகலாம்.
 போகலாம் (pōkalām) — "let's go", "we can go".
 It is போ, "go", with -லாம், "may, let us".
 
+The word, taken apart.
+போகலாம் (pōkalām) is native Dravidian. DEDR 4572 lists Malayalam pōka. It is pō, "to go", with -kalām, "let us".
+
 What you've built.
 Late, so let's go.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for it has got late, then the Tamil for let's 
 You'll want to know: விடுமுறை.
 விடுமுறை (viṭumuṟai) — "a holiday", "leave".
 இன்று விடுமுறை (viṭumuṟai) — "today is a holiday".
+
+The word, taken apart.
+விடுமுறை (viṭumuṟai) is native: viṭu, "to leave, to free" (DEDR 5393), and muṟai, "turn, time" (DEDR 5015): "a time of release".
 
 What you've built.
 Take care, safely, it's late, let's go, a holiday.

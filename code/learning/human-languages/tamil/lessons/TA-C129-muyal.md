@@ -14,7 +14,8 @@ romanization: "muyal"
 concept_tag: TA-THINGS129-MUYAL
 prerequisites: [TA-C129-karati, TA-C129-kuranku]
 sounds: []
-roots: []
+roots: [dravidian-muyal-hare]
+etymology_hook: "முயல் — native Dravidian (DEDR 4968); Malayalam muyal, Kannada mola"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C129-kuranku]
 <!-- hl-knowledge: introduces=[TA-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **முயல்** — *muyal* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முயல்** (*muyal*) is native Dravidian. DEDR 4968 lists Malayalam *muyal* and Kannada *mola*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

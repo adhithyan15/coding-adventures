@@ -14,7 +14,8 @@ romanization: "viṭiyal"
 concept_tag: TA-NERAM233-VITIYAL
 prerequisites: [TA-C232-ceviliyar, TA-C233-antutorum]
 sounds: []
-roots: []
+roots: [dravidian-vidi-dawn]
+etymology_hook: "விடியல் — native Dravidian (DEDR 5475); Telugu viḍi 'clearness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C233-antutorum]
 <!-- hl-knowledge: introduces=[TA-LEX-C233-NERAM233-02]; assesses=[] -->
 
 **விடியல்** — *viṭiyal* — "dawn, daybreak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விடியல்** (*viṭiyal*) is native Dravidian. DEDR 5475 lists Telugu *viḍi*, "clearness". The entry lists *viṭiyal*, "break of day", under *viṭi*, "to dawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

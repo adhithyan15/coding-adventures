@@ -14,7 +14,8 @@ romanization: "iyakku"
 concept_tag: TA-VERB-IYAKKU
 prerequisites: [TA-C166-yoci, TA-C167-totar]
 sounds: []
-roots: []
+roots: [dravidian-iyanku-move]
+etymology_hook: "இயக்கு — native Dravidian (DEDR 469); Malayalam iyakkuka 'to cause to move'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C167-totar]
 <!-- hl-knowledge: introduces=[TA-LEX-C167-ACT167-02]; assesses=[] -->
 
 **இயக்கு** — *iyakku* — "to operate, to run (a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இயக்கு** (*iyakku*) is native Dravidian. DEDR 469 lists Malayalam *iyakkuka*, "to cause to move". It is the causative of *iyaṅku*, "to move".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

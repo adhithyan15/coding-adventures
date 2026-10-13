@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 72,
-  "sourceHash": "fnv1a64:61ce565c63779036",
+  "sourceHash": "fnv1a64:e4dab76b8f7b0662",
   "lessonIds": [
     "TA-C72-anger",
     "TA-C72-fear",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch72.txt",
   "json": "tamil/narration/ch72.json",
-  "textHash": "fnv1a64:036c8a61fdfcbf1e",
-  "jsonHash": "fnv1a64:5c4f1dc356790255",
+  "textHash": "fnv1a64:95791d70c7e85e08",
+  "jsonHash": "fnv1a64:dad29c9fbad4d1f5",
   "findings": []
 }

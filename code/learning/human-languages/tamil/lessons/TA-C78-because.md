@@ -11,7 +11,8 @@ romanization: "ēṉeṉṟāl"
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [TA-C78-why, TA-C76-or, TA-C77-say]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, proto-dravidian-an-say]
+etymology_hook: "ஏனென்றால் — native: ēṉ 'why' (DEDR 5151) + eṉṟāl 'if one says', from eṉ 'to say' (DEDR 868)"
 duration:
   max_seconds: 235
 requires:
@@ -63,6 +64,11 @@ The second half is a whole sentence — the dative one from chapter six, *to me,
 ஏனென்றால் joins it on without changing either side.
 
 Everyday speech shortens it to **ஏன்னா**, the same wearing-down that made ஆனால் into ஆனா.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏனென்றால்** (*ēṉeṉṟāl*) is native: *ēṉ*, "why" (DEDR 5151), and *eṉṟāl*, "if one says", from *eṉ*, "to say" (DEDR 868). "Because" is "if you say why".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

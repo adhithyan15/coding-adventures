@@ -11,7 +11,8 @@ romanization: "naḍa"
 concept_tag: TA-VERB-NADA
 prerequisites: [TA-C65-drink, TA-C63-permission, TA-C64-grass]
 sounds: []
-roots: []
+roots: [dravidian-nada-walk]
+etymology_hook: "நட — native Dravidian (DEDR 3582); Malayalam naṭakka, Kannada naḍe, Telugu naḍa"
 duration:
   max_seconds: 230
 requires:
@@ -53,6 +54,11 @@ words: one is an action, one is a position.
 Across the family: this one all four sisters kept. Kannada ನಡೆ (*naḍe*), Telugu
 నడుచు (*naḍucu*), Malayalam നടക്കുക (*naṭakkuka*) — and Tamil நட. Where the
 drinking word split Telugu off, the walking word holds the family together.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நட** (*naḍa*) is native Dravidian. DEDR 3582 lists Malayalam *naṭakka*, Kannada *naḍe* and Telugu *naḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

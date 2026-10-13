@@ -14,7 +14,8 @@ romanization: "niṟainta"
 concept_tag: TA-GUNAM209-NIRAINTA
 prerequisites: [TA-C208-rakaciyam, TA-C209-kettuppona]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "நிறைந்த — native Dravidian (DEDR 3682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C209-kettuppona]
 <!-- hl-knowledge: introduces=[TA-LEX-C209-GUNAM209-02]; assesses=[] -->
 
 **நிறைந்த** — *niṟainta* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிறைந்த** (*niṟainta*) is native Dravidian (DEDR 3682). It is *niṟai*, "to become full", in the form "that has filled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

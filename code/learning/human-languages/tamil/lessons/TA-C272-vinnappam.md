@@ -14,7 +14,8 @@ romanization: "viṇṇappam"
 concept_tag: TA-PORUL272-VINNAPPAM
 prerequisites: [TA-C272-ataiyala-attai, TA-C272-vari]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapana]
+etymology_hook: "விண்ணப்பம் ← Sanskrit vijñāpana 'a request', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C272-vari]
 <!-- hl-knowledge: introduces=[TA-LEX-C272-PORUL272-03]; assesses=[] -->
 
 **விண்ணப்பம்** — *viṇṇappam* — "an application".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விண்ணப்பம்** (*viṇṇappam*) is a well-established loan from Sanskrit *vijñāpana*, "a request, a making known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

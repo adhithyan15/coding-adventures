@@ -14,7 +14,8 @@ romanization: "mirukakkāṭcicālai"
 concept_tag: TA-IDAM175-MIRUKAKKATCICALAI
 prerequisites: [TA-C175-otai, TA-C175-pannai]
 sounds: []
-roots: []
+roots: [sanskrit-mrga, dravidian-kaan-see, sanskrit-shala]
+etymology_hook: "மிருகக்காட்சிசாலை — mirukam ← Sanskrit mṛga + native kāṭci 'show' + cālai ← Sanskrit śālā 'hall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C175-pannai]
 <!-- hl-knowledge: introduces=[TA-LEX-C175-IDAM175-05]; assesses=[] -->
 
 **மிருகக்காட்சிசாலை** — *mirukakkāṭcicālai* — "a zoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மிருகக்காட்சிசாலை** (*mirukakkāṭcicālai*) is "the hall for showing animals": *mirukam*, "animal", from Sanskrit *mṛga* (CDIAL 10264), native *kāṭci*, "show, sight" (DEDR 1443), and *cālai*, "hall", from Sanskrit *śālā* (CDIAL 12414).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

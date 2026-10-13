@@ -14,7 +14,8 @@ romanization: "nītipati"
 concept_tag: TA-VELAI253-NITIPATI
 prerequisites: [TA-C253-kalainar, TA-C253-atikari]
 sounds: []
-roots: []
+roots: [sanskrit-niti, sanskrit-pati]
+etymology_hook: "நீதிபதி ← Sanskrit nīti 'justice' (CDIAL 7546) + pati 'master' (CDIAL 7727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C253-atikari]
 <!-- hl-knowledge: introduces=[TA-LEX-C253-VELAI253-03]; assesses=[] -->
 
 **நீதிபதி** — *nītipati* — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நீதிபதி** (*nītipati*) is built from Sanskrit *nīti*, "right conduct, justice" (CDIAL 7546), and *pati*, "master" (CDIAL 7727): "the master of justice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

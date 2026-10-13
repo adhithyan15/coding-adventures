@@ -11,7 +11,8 @@ romanization: "maṉaivi"
 concept_tag: TA-FAMILY-WIFE
 prerequisites: [TA-C100-boy, TA-C100-husband]
 sounds: []
-roots: []
+roots: [dravidian-manai-house]
+etymology_hook: "மனைவி — native Dravidian (DEDR 4776); Malayalam mana 'house', Kannada mane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C100-husband]
 
 It shares its start with **மனை**, "a house", from the hospital word: the wife is named from the
 home.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மனைவி** (*maṉaivi*) is native Dravidian. DEDR 4776 lists Malayalam *mana*, "house" and Kannada *mane*. The entry glosses *maṉai* both "house" and "wife": the wife is named from the home.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

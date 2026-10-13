@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a sale, then the Tamil for an employer.
 You'll want to know: மதிப்பெண்.
 மதிப்பெண் — matippeṇ — "a mark, a score".
 
+The word, taken apart.
+மதிப்பெண் (matippeṇ) is matippu, "value, worth", and native eṇ, "number" (DEDR 793): "the value number". The origin of matippu is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for an employer, then the Tamil for a mark.
 
 You'll want to know: பல்கலைக்கழகம்.
 பல்கலைக்கழகம் — palkalaikkaḻakam — "a university".
+
+The word, taken apart.
+பல்கலைக்கழகம் (palkalaikkaḻakam) is native: pal, "many" (DEDR 3987), kalai, "arts and learning" (DEDR 1297), and kaḻakam, "assembly, college" (DEDR 1345): "the college of many arts".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a mark, then the Tamil for a university.
 You'll want to know: கல்வி.
 கல்வி — kalvi — "education".
 
+The word, taken apart.
+கல்வி (kalvi) is native Dravidian. DEDR 1297 lists Malayalam kalkka, "to learn". It comes from kal, "to learn".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a university, then the Tamil for education
 You'll want to know: கணிதம்.
 கணிதம் — kaṇitam — "mathematics".
 
+The word, taken apart.
+கணிதம் (kaṇitam) is a loan from Sanskrit gaṇita, "counted, calculated" (CDIAL 3996).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for education, then the Tamil for mathematics.
 
 You'll want to know: அறிவியல்.
 அறிவியல் — aṟiviyal — "science".
+
+The word, taken apart.
+அறிவியல் (aṟiviyal) is native: aṟivu, "knowledge" (DEDR 314), and iyal, "nature, a field of study" (DEDR 471): "the study of knowledge".
 
 What you've built.
 One more word for this chapter.

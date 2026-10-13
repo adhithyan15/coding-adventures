@@ -14,7 +14,8 @@ romanization: "niṉaivūṭṭu"
 concept_tag: TA-VERB-NINAIVUTTU
 prerequisites: [TA-C196-unar, TA-C196-ura-vai]
 sounds: []
-roots: []
+roots: [dravidian-ninai-think-remember, dravidian-un-eat]
+etymology_hook: "நினைவூட்டு — native: niṉaivu 'memory' (DEDR 3683) + ūṭṭu 'to feed' (DEDR 600): 'feed the memory'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C196-ura-vai]
 <!-- hl-knowledge: introduces=[TA-LEX-C197-ACT197-01]; assesses=[] -->
 
 **நினைவூட்டு** — *niṉaivūṭṭu* — "to remind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நினைவூட்டு** (*niṉaivūṭṭu*) is native: *niṉaivu*, "memory", from *niṉai*, "to think, to remember" (DEDR 3683), and *ūṭṭu*, "to feed" (DEDR 600): to remind is "to feed the memory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "iṟaicci"
 concept_tag: TA-THINGS122-IRAICCI
 prerequisites: [TA-C122-muttai, TA-C122-min]
 sounds: []
-roots: []
+roots: [dravidian-iracci-flesh]
+etymology_hook: "இறைச்சி — native Dravidian (DEDR 529); Malayalam iṟacci, Telugu eṟaci"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C122-min]
 <!-- hl-knowledge: introduces=[TA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **இறைச்சி** — *iṟaicci* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இறைச்சி** (*iṟaicci*) is native Dravidian. DEDR 529 lists Malayalam *iṟacci* and Telugu *eṟaci*. The entry spells it *iṟacci*, "flesh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

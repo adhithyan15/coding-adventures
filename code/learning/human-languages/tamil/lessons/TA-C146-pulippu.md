@@ -14,7 +14,8 @@ romanization: "puḷippu"
 concept_tag: TA-QUAL146-PULIPPU
 prerequisites: [TA-C145-vekamana, TA-C146-kacappu]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour]
+etymology_hook: "புளிப்பு — native Dravidian (DEDR 4322); Kannada puḷy 'sour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C146-kacappu]
 <!-- hl-knowledge: introduces=[TA-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **புளிப்பு** — *puḷippu* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புளிப்பு** (*puḷippu*) is native Dravidian. DEDR 4322 lists Kannada *puḷy*, "sour". It is the noun of *puḷi*, "to turn sour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: கையெழுத்து.
 கையெழுத்து (kaiyeḻuttu) — "a signature", and "handwriting", literally "hand-writing".
 கை is "hand"; எழுத்து is "writing". இங்கே கையெழுத்துப் போடுங்கள் — "please sign here".
 
+The word, taken apart.
+கையெழுத்து (kaiyeḻuttu) is native: kai, "hand" (DEDR 2023), and eḻuttu, "writing" (DEDR 853): "hand-writing".
+
 What you've built.
 A signature, built from hand and writing.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a birthday, then the Tamil for a signature
 You'll want to know: தொழில்.
 தொழில் (toḻil) — "an occupation", "a trade".
 உங்கள் தொழில் (toḻil) என்ன? — "what is your occupation?".
+
+The word, taken apart.
+தொழில் (toḻil) is native Dravidian. DEDR 3524 lists Malayalam toḻil, "business" and Kannada tuḻil, "work".
 
 What you've built.
 The question after a name.
@@ -73,6 +79,9 @@ You'll want to know: கல்லூரி.
 கல்லூரி (kallūri) — "a college".
 It is built on கல், "to learn": a college is a learning-place.
 
+The word, taken apart.
+கல்லூரி (kallūri) is a modern coinage built on native kal, "to learn" (DEDR 1297): "the place of learning".
+
 What you've built.
 Where a student studies.
 
@@ -102,6 +111,9 @@ Before the new one: say the Tamil for an occupation, then the Tamil for a colleg
 You'll want to know: பள்ளி.
 பள்ளி (paḷḷi) — "a school".
 பள்ளிக்கூடம் is the fuller word; பள்ளி (paḷḷi) alone is what people say.
+
+The word, taken apart.
+பள்ளி (paḷḷi) is native Dravidian. DEDR 4018 lists Malayalam paḷḷi, Kannada haḷḷi, "village" and Telugu palli, "village". It first meant a hamlet, then a hermitage or temple, where children were taught. The entry compares Sanskrit pallī, "small village" (CDIAL 7972).
 
 What you've built.
 Signature, occupation, college, school.

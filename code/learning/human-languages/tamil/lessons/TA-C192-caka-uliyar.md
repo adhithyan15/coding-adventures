@@ -14,7 +14,8 @@ romanization: "caka ūḻiyar"
 concept_tag: TA-VELAI192-CAKA-ULIYAR
 prerequisites: [TA-C192-tapalkarar, TA-C192-viyapari]
 sounds: []
-roots: []
+roots: [sanskrit-saha, dravidian-uuzhiyam-service]
+etymology_hook: "சக ஊழியர் — caka 'fellow' ← Sanskrit saha 'with' + native ūḻiyar 'workers' (DEDR 758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C192-viyapari]
 <!-- hl-knowledge: introduces=[TA-LEX-C192-VELAI192-05]; assesses=[] -->
 
 **சக ஊழியர்** — *caka ūḻiyar* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சக ஊழியர்** (*caka ūḻiyar*) is *caka*, "fellow", from Sanskrit *saha*, "with", and native *ūḻiyar*, "workers", from *ūḻiyam*, "service" (DEDR 758; Malayalam *ūḻiyam*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

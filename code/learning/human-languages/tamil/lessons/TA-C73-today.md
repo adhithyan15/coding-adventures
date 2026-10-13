@@ -11,7 +11,8 @@ romanization: "iṉṟu"
 concept_tag: TA-ADVERB-TODAY
 prerequisites: [TA-C72-cry, TA-C71-rise, TA-C72-anger]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "இன்று — native Dravidian (DEDR 410); Malayalam innu"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ you are standing in, and it completes the middle of that little set.
 This is the careful, written form, and it is the one printed on a page. In fast speech you will
 also hear இன்னைக்கு (*iṉṉaikku*) for the same thing — worth recognising, but இன்று is the one
 to say.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இன்று** (*iṉṟu*) is native Dravidian. DEDR 410 lists Malayalam *innu*. It is the near base *i-*: "this day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

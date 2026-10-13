@@ -14,7 +14,8 @@ romanization: "elumiccai"
 concept_tag: TA-THINGS139-ELUMICCAI
 prerequisites: [TA-C139-palappalam, TA-C139-koyya]
 sounds: []
-roots: []
+roots: [dravidian-elumiccai-lime]
+etymology_hook: "எலுமிச்சை — native Dravidian (DEDR 836); Malayalam elumicca"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C139-koyya]
 <!-- hl-knowledge: introduces=[TA-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **எலுமிச்சை** — *elumiccai* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எலுமிச்சை** (*elumiccai*) is native Dravidian. DEDR 836 lists Malayalam *elumicca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

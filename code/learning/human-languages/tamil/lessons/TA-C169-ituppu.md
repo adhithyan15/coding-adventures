@@ -14,7 +14,8 @@ romanization: "iṭuppu"
 concept_tag: TA-NALAM169-ITUPPU
 prerequisites: [TA-C168-kottavi-vitu, TA-C169-kanukkal]
 sounds: []
-roots: []
+roots: [dravidian-idai-middle]
+etymology_hook: "இடுப்பு — native Dravidian (DEDR 448); Malayalam iṭa 'middle, waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C169-kanukkal]
 <!-- hl-knowledge: introduces=[TA-LEX-C169-NALAM169-02]; assesses=[] -->
 
 **இடுப்பு** — *iṭuppu* — "the waist, the hip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இடுப்பு** (*iṭuppu*) is native Dravidian. DEDR 448 lists Malayalam *iṭa*, "middle, waist". The entry lists *iṭuppu*, "waist, hips", under *iṭai*, "middle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

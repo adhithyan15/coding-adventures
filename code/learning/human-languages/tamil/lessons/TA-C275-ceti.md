@@ -14,7 +14,8 @@ romanization: "ceṭi"
 concept_tag: TA-PORUL275-CETI
 prerequisites: [TA-C275-val, TA-C275-kutu]
 sounds: []
-roots: []
+roots: [dravidian-cedi-shrub]
+etymology_hook: "செடி — native Dravidian (DEDR 1941); Malayalam ceṭi 'shrub', Telugu ceṭṭu 'tree, plant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C275-kutu]
 <!-- hl-knowledge: introduces=[TA-LEX-C275-PORUL275-04]; assesses=[] -->
 
 **செடி** — *ceṭi* — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செடி** (*ceṭi*) is native Dravidian. DEDR 1941 lists Malayalam *ceṭi*, "shrub" and Telugu *ceṭṭu*, "tree, plant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

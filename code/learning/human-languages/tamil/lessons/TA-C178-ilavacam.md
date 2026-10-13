@@ -14,7 +14,8 @@ romanization: "ilavacam"
 concept_tag: TA-GUNAM178-ILAVACAM
 prerequisites: [TA-C178-malivana, TA-C178-vilaiyuyarnta]
 sounds: []
-roots: []
+roots: [tamil-ilavacam-free]
+etymology_hook: "இலவசம் — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C178-vilaiyuyarnta]
 <!-- hl-knowledge: introduces=[TA-LEX-C178-GUNAM178-04]; assesses=[] -->
 
 **இலவசம்** — *ilavacam* — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **இலவசம்** (*ilavacam*) is uncertain. DEDR has no entry for it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "viyāpāri"
 concept_tag: TA-VELAI192-VIYAPARI
 prerequisites: [TA-C192-ottunar, TA-C192-tapalkarar]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "வியாபாரி — viyāpāram 'trade' ← Sanskrit vyāpāra 'business' (CDIAL 12205) + -i 'the one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C192-tapalkarar]
 <!-- hl-knowledge: introduces=[TA-LEX-C192-VELAI192-04]; assesses=[] -->
 
 **வியாபாரி** — *viyāpāri* — "a trader, a merchant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வியாபாரி** (*viyāpāri*) is *viyāpāram*, "trade", from Sanskrit *vyāpāra*, "occupation, business" (CDIAL 12205), with *-i*, "the one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

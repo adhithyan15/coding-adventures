@@ -14,7 +14,8 @@ romanization: "tōṭu"
 concept_tag: TA-PORUL270-TOTU2
 prerequisites: [TA-C269-vacatiyana, TA-C270-kaikkuttai]
 sounds: []
-roots: []
+roots: [dravidian-toodu-earring]
+etymology_hook: "தோடு — native Dravidian (DEDR 3545); Malayalam tōṭa 'ear-ring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C270-kaikkuttai]
 <!-- hl-knowledge: introduces=[TA-LEX-C270-PORUL270-02]; assesses=[] -->
 
 **தோடு** — *tōṭu* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோடு** (*tōṭu*) is native Dravidian. DEDR 3545 lists Malayalam *tōṭa*, "ear-ring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

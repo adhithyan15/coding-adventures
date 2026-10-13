@@ -14,7 +14,8 @@ romanization: "vēṇṭumeṉṟē"
 concept_tag: TA-KARANAM266-VENTUMENRE
 prerequisites: [TA-C265-ulakam, TA-C266-elitaka]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want, proto-dravidian-an-say]
+etymology_hook: "வேண்டுமென்றே — native: vēṇṭum 'it is wanted' (DEDR 5528) + eṉṟu 'saying' (DEDR 868) + -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C266-elitaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C266-KARANAM266-02]; assesses=[] -->
 
 **வேண்டுமென்றே** — *vēṇṭumeṉṟē* — "on purpose, deliberately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேண்டுமென்றே** (*vēṇṭumeṉṟē*) is native: *vēṇṭum*, "it is wanted" (DEDR 5528), and *eṉṟu*, "saying", from *eṉ*, "to say" (DEDR 868), with emphatic *-ē*: "saying 'it is wanted'".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

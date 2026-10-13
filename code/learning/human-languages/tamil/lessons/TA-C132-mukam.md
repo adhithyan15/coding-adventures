@@ -14,7 +14,8 @@ romanization: "mukam"
 concept_tag: TA-THINGS132-MUKAM
 prerequisites: [TA-C131-erumpu, TA-C132-kocu]
 sounds: []
-roots: []
+roots: [dravidian-mukam-face]
+etymology_hook: "முகம் — native Dravidian (DEDR 4889); Malayalam mukam, Kannada moga"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C132-kocu]
 <!-- hl-knowledge: introduces=[TA-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **முகம்** — *mukam* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முகம்** (*mukam*) is native Dravidian. DEDR 4889 lists Malayalam *mukam* and Kannada *moga*. Sanskrit *mukha*, "face" (CDIAL 10158), is close in sound and sense, but DEDR files the Dravidian word as an entry of its own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

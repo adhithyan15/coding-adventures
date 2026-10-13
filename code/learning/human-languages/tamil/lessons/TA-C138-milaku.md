@@ -14,7 +14,8 @@ romanization: "miḷaku"
 concept_tag: TA-THINGS138-MILAKU
 prerequisites: [TA-C138-patil, TA-C138-puli2]
 sounds: []
-roots: []
+roots: [dravidian-milaku-pepper]
+etymology_hook: "மிளகு — native Dravidian (DEDR 4867); Malayalam miḷaku, Kannada meṇasu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C138-puli2]
 <!-- hl-knowledge: introduces=[TA-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **மிளகு** — *miḷaku* — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மிளகு** (*miḷaku*) is native Dravidian. DEDR 4867 lists Malayalam *miḷaku* and Kannada *meṇasu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

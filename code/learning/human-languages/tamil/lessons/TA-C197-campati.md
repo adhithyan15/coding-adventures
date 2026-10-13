@@ -14,7 +14,8 @@ romanization: "campāti"
 concept_tag: TA-VERB-CAMPATI
 prerequisites: [TA-C196-ura-vai, TA-C197-ninaivuttu]
 sounds: []
-roots: []
+roots: [sanskrit-sampad]
+etymology_hook: "சம்பாதி — a verb from Sanskrit sampād- 'to bring about, to acquire', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C197-ninaivuttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C197-ACT197-02]; assesses=[] -->
 
 **சம்பாதி** — *campāti* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சம்பாதி** (*campāti*) is a verb made from Sanskrit *sampād-*, "to bring about, to acquire", a well-established loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "aḻaippu"
 concept_tag: TA-WELCOME-INVITATION
 prerequisites: [TA-C97-whynot, TA-C98-congrats]
 sounds: []
-roots: []
+roots: [dravidian-azhai-call]
+etymology_hook: "அழைப்பு — native Dravidian (DEDR 282)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C98-congrats]
 **அழைப்பு** (*aḻaippu*) — "an invitation", and "a call".
 
 **அழைப்புக்கு நன்றி** — "thank you for the invitation", with the **நன்றி** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழைப்பு** (*aḻaippu*) is native Dravidian (DEDR 282). The entry lists *aḻai*, "to call", beside *aḻu*, "to cry": an invitation is "a calling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭṭu"
 concept_tag: TA-VERB-KATTU2
 prerequisites: [TA-C155-ilu, TA-C155-potu]
 sounds: []
-roots: []
+roots: [dravidian-kattu-tie]
+etymology_hook: "கட்டு — native Dravidian (DEDR 1147); Kannada kaṭṭu 'to bind, to build'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C155-potu]
 <!-- hl-knowledge: introduces=[TA-LEX-C155-ACT155-04]; assesses=[] -->
 
 **கட்டு** — *kaṭṭu* — "to tie, to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட்டு** (*kaṭṭu*) is native Dravidian. DEDR 1147 lists Kannada *kaṭṭu*, "to bind, to build".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

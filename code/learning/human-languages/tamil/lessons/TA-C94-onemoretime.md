@@ -11,7 +11,8 @@ romanization: "iṉṉoru muṟai"
 concept_tag: TA-LOST-ONE-MORE
 prerequisites: [TA-C94-dontunderstand, TA-C94-write]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-muru-order]
+etymology_hook: "இன்னொரு முறை — native: iṉṉoru 'one more' (DEDR 410) + muṟai 'turn, time' (DEDR 5015)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C94-write]
 **இன்னொரு முறை** (*iṉṉoru muṟai*) — "one more time".
 
 **இன்னொரு** is "another", and **முறை** is "a time, a turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இன்னொரு முறை** (*iṉṉoru muṟai*) is native: *iṉṉoru*, "one more", from *iṉṉum*, "more" (DEDR 410), and *oru*, "one"; and *muṟai*, "order, turn, time" (DEDR 5015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

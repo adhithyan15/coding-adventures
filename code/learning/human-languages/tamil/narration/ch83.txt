@@ -18,6 +18,9 @@ You'll want to know: ஆறாவது.
 ஆறாவது (āṟāvadu) — "sixth". ஆறு (āṟu) takes -ஆவது, and nothing else changes.
 Six to ten were a separate lesson from one to five when you learned to count, because the words themselves had to be learned. For ordering they are not a separate anything: the same ending, on the next number.
 
+The word, taken apart.
+ஆறாவது (āṟāvadu) is native: āṟu, "six" (DEDR 2485), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: āṟu, then āṟāvadu]
@@ -49,6 +52,9 @@ Warm-up.
 You'll want to know: ஏழாவது.
 ஏழாவது (ēḻāvadu) — "seventh". ஏழு (ēḻu) takes -ஆவது, and nothing else changes.
 ஏழு carries the curled ḻ, the sound in the name Tamiḻ itself and the one this language shares with Malayalam while Kannada and Telugu hardened it away. Adding the ending does not soften it: ஏழாவது (ēḻāvadu), tongue still curled.
+
+The word, taken apart.
+ஏழாவது (ēḻāvadu) is native: ēḻu, "seven" (DEDR 910), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
 
 Guided Practice.
 [pause 1 second]
@@ -83,6 +89,9 @@ You'll want to know: எட்டாவது.
 எட்டாவது (eṭṭāvadu) — "eighth". எட்டு (eṭṭu) takes -ஆவது, and nothing else changes.
 எட்டு has the doubled retroflex ṭṭ. The ending lands after all of it, so the doubling is untouched: எட்டாவது (eṭṭāvadu).
 
+The word, taken apart.
+எட்டாவது (eṭṭāvadu) is native: eṭṭu, "eight" (DEDR 784), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: eṭṭu, then eṭṭāvadu]
@@ -114,6 +123,9 @@ Warm-up.
 You'll want to know: ஒன்பதாவது.
 ஒன்பதாவது (oṉpadāvadu) — "ninth". ஒன்பது (oṉpadu) takes -ஆவது, and nothing else changes.
 ஒன்பது was already a built word when you learned it: an old ஒன், one, in front of பது, ten — one short of ten. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it.
+
+The word, taken apart.
+ஒன்பதாவது (oṉpadāvadu) is native: oṉpatu, "nine" (DEDR 1025; Malayalam ompatu), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
 
 Guided Practice.
 [pause 1 second]
@@ -148,6 +160,9 @@ You'll want to know: பத்தாவது.
 பத்தாவது (pattāvadu) — "tenth". பத்து (pattu) takes -ஆவது, and nothing else changes.
 பத்தாவது நாள் (pattāvadu nāḷ), the tenth day, and the ten are done.
 
+The word, taken apart.
+பத்தாவது (pattāvadu) is native: pattu, "ten" (DEDR 3918), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: pattu, then pattāvadu]
@@ -180,6 +195,9 @@ Warm-up.
 You'll want to know: பதினொன்றாவது.
 பதினொன்றாவது (patiṉoṉṟāvadu) — "eleventh".
 பதினொன்று was itself a built word: patiṉ-, the joining shape of ten, with oṉṟu welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, none of which had to be learned as a whole.
+
+The word, taken apart.
+பதினொன்றாவது (patiṉoṉṟāvadu) is native: patiṉ-, the joining form of "ten" (DEDR 3918), oṉṟu, "one" (DEDR 990), and the ordinal ending -āvatu.
 
 Grammar Lens: the ending is a fact about numbers, not about ten.
 Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Tamil there is no set. -ஆவது attaches to a number, so every number you learn from here on arrives with its ordinal already made: இருபது gives இருபதாவது (irupadāvadu), twentieth, without a lesson.
@@ -215,6 +233,9 @@ Warm-up.
 
 You'll want to know: தேதி.
 தேதி (tēdi) — "a date", the day-number on a calendar.
+
+The word, taken apart.
+தேதி (tēdi) is a loan from Sanskrit tithi, "a lunar day" (CDIAL 5810).
 
 Grammar Lens: a second ending, for one job.
 Tamil has a second ordinal ending, and it is not a free alternative to the first: -ஆம் (-ām) is what a date takes.

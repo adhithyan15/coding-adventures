@@ -14,7 +14,8 @@ romanization: "kaṭal"
 concept_tag: TA-THINGS125-KATAL
 prerequisites: [TA-C125-vatai, TA-C125-kapi]
 sounds: []
-roots: []
+roots: [dravidian-kadal-sea]
+etymology_hook: "கடல் — native Dravidian (DEDR 1118); Malayalam kaṭal, Kannada kaḍal, Telugu kaḍali"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C125-kapi]
 <!-- hl-knowledge: introduces=[TA-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **கடல்** — *kaṭal* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடல்** (*kaṭal*) is native Dravidian. DEDR 1118 lists Malayalam *kaṭal*, Kannada *kaḍal* and Telugu *kaḍali*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

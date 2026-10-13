@@ -14,7 +14,8 @@ romanization: "malivāṉa"
 concept_tag: TA-GUNAM178-MALIVANA
 prerequisites: [TA-C177-anupavam, TA-C178-cuvaiyana]
 sounds: []
-roots: []
+roots: [dravidian-mal-abundance]
+etymology_hook: "மலிவான — native Dravidian (DEDR 4729)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C178-cuvaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C178-GUNAM178-02]; assesses=[] -->
 
 **மலிவான** — *malivāṉa* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மலிவான** (*malivāṉa*) is native Dravidian (DEDR 4729). It is *malivu*, "abundance", from *mali*, "to abound": what is plentiful is cheap.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eppōtum"
 concept_tag: TA-NERAM171-EPPOTUM
 prerequisites: [TA-C171-atikkati, TA-C171-cila-nerankalil]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-podu-time]
+etymology_hook: "எப்போதும் — native: eppōtu 'when' (DEDR 5151) + -um 'any': 'at any time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C171-cila-nerankalil]
 <!-- hl-knowledge: introduces=[TA-LEX-C171-NERAM171-03]; assesses=[] -->
 
 **எப்போதும்** — *eppōtum* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எப்போதும்** (*eppōtum*) is native: *eppōtu*, "when" (DEDR 5151), with *-um*, "also, any": "at any time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

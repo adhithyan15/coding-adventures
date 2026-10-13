@@ -14,7 +14,8 @@ romanization: "racītu"
 concept_tag: TA-PATI160-RACITU
 prerequisites: [TA-C160-vatakai, TA-C160-vilamparam]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "ரசீது ← Persian rasīd 'receipt', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C160-vilamparam]
 <!-- hl-knowledge: introduces=[TA-LEX-C160-PATI160-05]; assesses=[] -->
 
 **ரசீது** — *racītu* — "a receipt". Ask for it when you pay: **ரசீது கொடுங்கள்** — *racītu koṭuṅkaḷ* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரசீது** (*racītu*) is a loan from Persian *rasīd*, "receipt", through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

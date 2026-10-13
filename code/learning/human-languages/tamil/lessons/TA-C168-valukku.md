@@ -14,7 +14,8 @@ romanization: "vaḻukku"
 concept_tag: TA-VERB-VALUKKU
 prerequisites: [TA-C168-tontu, TA-C168-nittu]
 sounds: []
-roots: []
+roots: [dravidian-vazhukku-slime]
+etymology_hook: "வழுக்கு — native Dravidian (DEDR 5299); Malayalam vaḻukku 'unctuous'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C168-nittu]
 <!-- hl-knowledge: introduces=[TA-LEX-C168-ACT168-04]; assesses=[] -->
 
 **வழுக்கு** — *vaḻukku* — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வழுக்கு** (*vaḻukku*) is native Dravidian. DEDR 5299 lists Malayalam *vaḻukku*, "unctuous". The entry glosses *vaḻukku* "slimy substance": to slip is to slide as on slime.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

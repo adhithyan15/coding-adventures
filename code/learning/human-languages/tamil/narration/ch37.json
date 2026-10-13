@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ff650eabda73f9b",
+  "sourceHash": "fnv1a64:14044529a416f81d",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:084921272a578543",
+      "sourceHash": "fnv1a64:cabbab21e71266b0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:902ac97b3b54a543",
+      "sourceHash": "fnv1a64:77af81c7102b651e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -835,6 +835,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர் (avar) is native Dravidian: the far base a- with the respectful -ar (DEDR 1). Malayalam and Kannada have avar too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the column that was empty",
           "segments": [
@@ -866,7 +877,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -915,7 +926,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -946,7 +957,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:30fc8c871f6986df",
+      "sourceHash": "fnv1a64:0a243bd9a0a82d93",
       "notice": {
         "modality": "sight",
         "needs": [

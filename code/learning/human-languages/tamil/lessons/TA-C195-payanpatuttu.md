@@ -14,7 +14,8 @@ romanization: "payaṉpaṭuttu"
 concept_tag: TA-VERB-PAYANPATUTTU
 prerequisites: [TA-C195-tiruppik-kotu, TA-C195-ottu2]
 sounds: []
-roots: []
+roots: [dravidian-paya-yield]
+etymology_hook: "பயன்படுத்து — payaṉ 'use' (usually linked to paya 'to yield', DEDR 3937) + paṭuttu (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C195-ottu2]
 <!-- hl-knowledge: introduces=[TA-LEX-C195-ACT195-04]; assesses=[] -->
 
 **பயன்படுத்து** — *payaṉpaṭuttu* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயன்படுத்து** (*payaṉpaṭuttu*) is *payaṉ*, "use", with *paṭuttu*, "to make become", from *paṭu* (DEDR 3853): "put to use". *Payaṉ* is usually connected with *paya*, "to yield" (DEDR 3937), but DEDR does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

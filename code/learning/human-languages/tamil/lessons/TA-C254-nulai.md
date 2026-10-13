@@ -14,7 +14,8 @@ romanization: "nuḻai"
 concept_tag: TA-VERB-NULAI
 prerequisites: [TA-C254-celuttu, TA-C254-terntetu]
 sounds: []
-roots: []
+roots: [dravidian-nuzhai-enter]
+etymology_hook: "நுழை — native Dravidian (DEDR 3714); Malayalam nuḻayuka 'to creep through'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C254-terntetu]
 <!-- hl-knowledge: introduces=[TA-LEX-C254-ACT254-04]; assesses=[] -->
 
 **நுழை** — *nuḻai* — "to enter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நுழை** (*nuḻai*) is native Dravidian. DEDR 3714 lists Malayalam *nuḻayuka*, "to creep through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

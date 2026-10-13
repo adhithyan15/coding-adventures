@@ -11,7 +11,8 @@ romanization: "marumakaḷ"
 concept_tag: TA-INLAWS-DIL
 prerequisites: [TA-C102-periyamma, TA-C102-motherinlaw]
 sounds: []
-roots: []
+roots: [dravidian-marumakan-nephew]
+etymology_hook: "மருமகள் — native Dravidian (DEDR 4715); Malayalam marumakan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C102-motherinlaw]
 **மருமகள்** (*marumakaḷ*) — "a daughter-in-law".
 
 **மகள்** is "daughter"; **மரு-** marks the relation by marriage.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மருமகள்** (*marumakaḷ*) is native Dravidian. DEDR 4715 lists Malayalam *marumakan*. The entry lists the masculine form, "nephew, son-in-law"; here *maru-* is joined to *makaḷ*, "daughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

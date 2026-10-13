@@ -11,7 +11,8 @@ romanization: avarkaḷ
 concept_tag: TA-THIRD-PLURAL
 prerequisites: [TA-C85-avan-aval, TA-C02-nii-niingal]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அவர்கள் — native: avar, far base a- (DEDR 1, which lists avarkaḷ) + the plural -kaḷ"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ double duty as a polite singular *you* and a plain plural *you*.
 **The ending you have been pronouncing for eighty chapters turns out to be a
 word-building piece**, and now it builds something for you rather than arriving
 pre-attached.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவர்கள்** (*avarkaḷ*) is native: *avar*, "that person", from the far base *a-* (DEDR 1, which lists *avarkaḷ*), with the plural ending *-kaḷ*.
 
 ## Grammar Lens: the same double duty
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C85-AVARGAL-01, TA-LEX-C85-AVAN-AVAL-01] -->

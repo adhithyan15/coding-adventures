@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a butterfly, then the Tamil for a bee.
 You'll want to know: மூங்கில்.
 மூங்கில் — mūṅkil — "bamboo".
 
+The word, taken apart.
+மூங்கில் (mūṅkil) is native Dravidian. DEDR 5028 lists Malayalam mūṅkil.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a bee, then the Tamil for bamboo.
 
 You'll want to know: வானவில்.
 வானவில் — vāṉavil — "a rainbow".
+
+The word, taken apart.
+வானவில் (vāṉavil) is native: vāṉam, "sky" (DEDR 5381), and vil, "bow" (DEDR 5422): "the sky's bow".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for bamboo, then the Tamil for a rainbow.
 You'll want to know: மூடுபனி.
 மூடுபனி — mūṭupaṉi — "fog, mist".
 
+The word, taken apart.
+மூடுபனி (mūṭupaṉi) is native: mūṭu, "to cover" (DEDR 5034), and paṉi, "dew, mist" (DEDR 4035): "the covering mist".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a rainbow, then the Tamil for fog.
 You'll want to know: தென்றல்.
 தென்றல் — teṉṟal — "a gentle breeze".
 
+The word, taken apart.
+தென்றல் (teṉṟal) is native Dravidian. DEDR 3449 lists Malayalam tennal, "southern breeze". It is "the south wind", from teṉ, "south".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for fog, then the Tamil for a gentle breeze.
 
 You'll want to know: வெள்ளம்.
 வெள்ளம் — veḷḷam — "a flood".
+
+The word, taken apart.
+வெள்ளம் (veḷḷam) is native Dravidian. DEDR 5503 lists Malayalam veḷḷam, "water".
 
 What you've built.
 One more word for this chapter.

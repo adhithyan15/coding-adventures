@@ -13,6 +13,9 @@ You'll want to know: குழந்தைகள்.
 குழந்தைகள் (kuḻantaikaḷ) — "children".
 -கள் is the plural. உங்களுக்குக் குழந்தைகள் (kuḻantaikaḷ) இருக்கிறார்களா? — "do you have children?".
 
+The word, taken apart.
+குழந்தைகள் (kuḻantaikaḷ) is native Dravidian (DEDR 2149). It is kuḻandai, "child", with the plural -kaḷ.
+
 What you've built.
 The question that follows a name.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for don't worry, then the Tamil for children.
 You'll want to know: பையன்.
 பையன் (paiyaṉ) — "a boy", and in a family, "a son".
 என் பையன் (paiyaṉ) — "my boy", "my son".
+
+The word, taken apart.
+பையன் (paiyaṉ) is native Dravidian. DEDR 3939 lists Malayalam paital and Telugu paida.
 
 What you've built.
 A boy.
@@ -73,6 +79,9 @@ You'll want to know: கணவர்.
 கணவர் (kaṇavar) — "a husband", in its respectful form.
 என் கணவர் (kaṇavar) — "my husband".
 
+The word, taken apart.
+கணவர் (kaṇavar) is native Dravidian (DEDR 1173). The entry lists kaṇavaṉ, "husband"; -ar is the respectful ending.
+
 What you've built.
 A husband.
 
@@ -103,6 +112,9 @@ You'll want to know: மனைவி.
 மனைவி (maṉaivi) — "a wife".
 It shares its start with மனை, "a house", from the hospital word: the wife is named from the home.
 
+The word, taken apart.
+மனைவி (maṉaivi) is native Dravidian. DEDR 4776 lists Malayalam mana, "house" and Kannada mane. The entry glosses maṉai both "house" and "wife": the wife is named from the home.
+
 What you've built.
 Husband and wife.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a husband, then the Tamil for a wife.
 You'll want to know: உறவினர்.
 உறவினர் (uṟaviṉar) — "a relative".
 உறவு is "a tie, a relationship"; a relative is one who has one with you.
+
+The word, taken apart.
+உறவினர் (uṟaviṉar) is native Dravidian (DEDR 710). It is built on uṟavu, "relationship", from uṟu, "to be joined, to be close".
 
 What you've built.
 Children, boy, husband, wife, relative.

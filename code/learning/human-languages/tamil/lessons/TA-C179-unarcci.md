@@ -14,7 +14,8 @@ romanization: "uṇarcci"
 concept_tag: TA-GUNAM179-UNARCCI
 prerequisites: [TA-C179-velinattu, TA-C179-telivana]
 sounds: []
-roots: []
+roots: [dravidian-unar-perceive]
+etymology_hook: "உணர்ச்சி — native Dravidian (DEDR 603); Malayalam uṇaruka 'to wake', Kannada oṇar 'to feel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C179-telivana]
 <!-- hl-knowledge: introduces=[TA-LEX-C179-GUNAM179-05]; assesses=[] -->
 
 **உணர்ச்சி** — *uṇarcci* — "a feeling, an emotion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உணர்ச்சி** (*uṇarcci*) is native Dravidian. DEDR 603 lists Malayalam *uṇaruka*, "to wake" and Kannada *oṇar*, "to feel". It is the noun of *uṇar*, "to wake, to perceive, to feel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

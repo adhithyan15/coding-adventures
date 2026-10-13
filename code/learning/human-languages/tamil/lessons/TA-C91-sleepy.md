@@ -11,7 +11,8 @@ romanization: "tūkkam varukiṟatu"
 concept_tag: TA-WEATHER-SLEEPY
 prerequisites: [TA-C91-sunshine, TA-C91-heat]
 sounds: []
-roots: []
+roots: [dravidian-tuunku-hang-sleep, dravidian-vaa-come]
+etymology_hook: "தூக்கம் வருகிறது — native: tūkkam 'sleep' (DEDR 3376) + varu 'to come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C91-heat]
 **தூக்கம் வருகிறது** (*tūkkam varukiṟatu*) — "I am sleepy", literally "sleep is coming".
 
 **தூக்கம்** is the sleep you know, on the coming frame of laughter and tears.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தூக்கம் வருகிறது** (*tūkkam varukiṟatu*) is native: *tūkkam*, "sleep" (DEDR 3376), and *varu*, "to come" (DEDR 5270). In Tamil, sleep comes to you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

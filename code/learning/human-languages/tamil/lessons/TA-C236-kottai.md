@@ -14,7 +14,8 @@ romanization: "kōṭṭai"
 concept_tag: TA-IDAM236-KOTTAI
 prerequisites: [TA-C236-cantu, TA-C236-turaimukam]
 sounds: []
-roots: []
+roots: [dravidian-koottai-fort]
+etymology_hook: "கோட்டை — native Dravidian (DEDR 2207); Malayalam kōṭṭa 'fort', Kannada kōṭe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C236-turaimukam]
 <!-- hl-knowledge: introduces=[TA-LEX-C236-IDAM236-04]; assesses=[] -->
 
 **கோட்டை** — *kōṭṭai* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோட்டை** (*kōṭṭai*) is native Dravidian. DEDR 2207 lists Malayalam *kōṭṭa*, "fort" and Kannada *kōṭe*. The entry compares Sanskrit *koṭṭa*, "fort".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

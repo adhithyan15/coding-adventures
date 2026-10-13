@@ -11,7 +11,8 @@ romanization: "mēlē"
 concept_tag: TA-ADVERB-MELE
 prerequisites: [TA-C65-doing-recall, TA-C64-paddy, TA-C65-drink]
 sounds: []
-roots: []
+roots: [dravidian-mel-above]
+etymology_hook: "மேலே — native Dravidian (DEDR 5086); Malayalam mē 'over'"
 duration:
   max_seconds: 225
 requires:
@@ -47,6 +48,11 @@ is one new word buying you a whole instruction.
 Underneath it is **மேல்** (*mēl*), the bare word for "the top", a native
 Dravidian positional word. Kannada says **ಮೇಲೆ** (*mēle*) for the same idea, and
 it is the same word, worn the same way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மேலே** (*mēlē*) is native Dravidian. DEDR 5086 lists Malayalam *mē*, "over". The entry lists *mēl*, "that which is over or above", and *-ē* turns it into "up there".
 
 ## Why it's said this way: you have met this ending before
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01] -->

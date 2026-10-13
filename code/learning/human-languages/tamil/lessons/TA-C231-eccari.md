@@ -14,7 +14,8 @@ romanization: "eccari"
 concept_tag: TA-VERB-ECCARI
 prerequisites: [TA-C231-mayanku, TA-C231-vatu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "எச்சரி — native, in the entry for eḻu 'to rise' (DEDR 851), with Telugu eccarincu 'to caution'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C231-vatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C231-ACT231-03]; assesses=[] -->
 
 **எச்சரி** — *eccari* — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எச்சரி** (*eccari*) is native. DEDR 851, the entry for *eḻu*, "to rise", lists Telugu *eccarincu*, "to remind, to caution": a warning rouses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

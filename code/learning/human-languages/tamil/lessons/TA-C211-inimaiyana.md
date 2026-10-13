@@ -14,7 +14,8 @@ romanization: "iṉimaiyāṉa"
 concept_tag: TA-GUNAM211-INIMAIYANA
 prerequisites: [TA-C210-vetkam, TA-C210-accariyam]
 sounds: []
-roots: []
+roots: [proto-dravidian-in-sweet]
+etymology_hook: "இனிமையான — native Dravidian (DEDR 530)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C210-accariyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C211-GUNAM211-01]; assesses=[] -->
 
 **இனிமையான** — *iṉimaiyāṉa* — "pleasant, sweet (of a voice or manner)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இனிமையான** (*iṉimaiyāṉa*) is native Dravidian (DEDR 530). It is *iṉimai*, "sweetness", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

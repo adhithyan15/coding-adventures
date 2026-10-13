@@ -14,7 +14,8 @@ romanization: "kōtumai"
 concept_tag: TA-PORUL243-KOTUMAI
 prerequisites: [TA-C242-pottan, TA-C242-ravikkai]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "கோதுமை ← Sanskrit godhūma 'wheat' (CDIAL 4287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C242-ravikkai]
 <!-- hl-knowledge: introduces=[TA-LEX-C243-PORUL243-01]; assesses=[] -->
 
 **கோதுமை** — *kōtumai* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோதுமை** (*kōtumai*) is a loan from Sanskrit *godhūma*, "wheat" (CDIAL 4287).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

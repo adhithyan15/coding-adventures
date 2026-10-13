@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 8,
-  "sourceHash": "fnv1a64:fe0379b604a5b653",
+  "sourceHash": "fnv1a64:a1f220ed06730248",
   "lessonIds": [
     "TA-C08-sontham",
     "TA-C08-tayavuseytu",
@@ -20,7 +20,7 @@
   "drivablePrefix": 3,
   "text": "tamil/narration/ch08.txt",
   "json": "tamil/narration/ch08.json",
-  "textHash": "fnv1a64:833d7589870c3e18",
-  "jsonHash": "fnv1a64:5fc200a6aa24dc57",
+  "textHash": "fnv1a64:7de748840002880f",
+  "jsonHash": "fnv1a64:478e6e214686f984",
   "findings": []
 }

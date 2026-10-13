@@ -14,7 +14,8 @@ romanization: "alai"
 concept_tag: TA-THINGS128-ALAI
 prerequisites: [TA-C127-minnal, TA-C127-puyal]
 sounds: []
-roots: []
+roots: [dravidian-alai-wave]
+etymology_hook: "அலை — native Dravidian (DEDR 240); Malayalam ala 'wave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C127-puyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **அலை** — *alai* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அலை** (*alai*) is native Dravidian. DEDR 240 lists Malayalam *ala*, "wave". It belongs with *alaṅku*, "to move, to shake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 246,
-  "sourceHash": "fnv1a64:9896b3850915c29a",
+  "sourceHash": "fnv1a64:b3b69a557a2428d9",
   "lessonIds": [
     "TA-C246-kontattam",
     "TA-C246-pattacu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch246.txt",
   "json": "tamil/narration/ch246.json",
-  "textHash": "fnv1a64:2e7cd9be4d38c574",
-  "jsonHash": "fnv1a64:bdf779e41001eb27",
+  "textHash": "fnv1a64:a5c7ae8226bb5d0f",
+  "jsonHash": "fnv1a64:6c0a2312fb3289f0",
   "findings": []
 }

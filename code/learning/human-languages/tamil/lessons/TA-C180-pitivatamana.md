@@ -14,7 +14,8 @@ romanization: "piṭivātamāṉa"
 concept_tag: TA-GUNAM180-PITIVATAMANA
 prerequisites: [TA-C180-curucuruppana, TA-C180-kurumpana]
 sounds: []
-roots: []
+roots: [dravidian-pidi-seize, vada]
+etymology_hook: "பிடிவாதமான — native piṭi 'to hold' (DEDR 4148) + vātam ← Sanskrit vāda 'argument' (CDIAL 11507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C180-kurumpana]
 <!-- hl-knowledge: introduces=[TA-LEX-C180-GUNAM180-03]; assesses=[] -->
 
 **பிடிவாதமான** — *piṭivātamāṉa* — "stubborn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிடிவாதமான** (*piṭivātamāṉa*) is *piṭivātam*, "stubbornness": native *piṭi*, "to seize, to hold" (DEDR 4148), and *vātam*, "argument", from Sanskrit *vāda*, "speech, dispute" (CDIAL 11507). It is "holding to one's argument".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

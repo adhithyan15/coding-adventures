@@ -14,7 +14,8 @@ romanization: "tāmatamāka"
 concept_tag: TA-NERAM262-TAMATAMAKA
 prerequisites: [TA-C262-avvappotu, TA-C262-varantorum]
 sounds: []
-roots: []
+roots: [sanskrit-tamasa, tamil-aaku-become]
+etymology_hook: "தாமதமாக — tāmatam 'delay', usually from Sanskrit tāmasa (CDIAL 5775), + native āka 'as' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C262-varantorum]
 <!-- hl-knowledge: introduces=[TA-LEX-C262-NERAM262-03]; assesses=[] -->
 
 **தாமதமாக** — *tāmatamāka* — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தாமதமாக** (*tāmatamāka*) is *tāmatam*, "delay", usually traced to Sanskrit *tāmasa*, "dark, dull" (CDIAL 5775), with native *āka*, "as", from *āku*, "to become" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

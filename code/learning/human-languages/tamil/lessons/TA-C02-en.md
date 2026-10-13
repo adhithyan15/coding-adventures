@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [TA-C02-peyar]
 sounds: []
 roots: [naan-dravidian]
+etymology_hook: "என் — native Dravidian, the 'my' form of the first-person pronoun (DEDR 5160); Malayalam en-, Kannada en-"
 reviews_of: [TA-C02-peyar]
 duration:
   max_seconds: 180

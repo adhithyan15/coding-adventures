@@ -11,7 +11,8 @@ romanization: "āṭu"
 concept_tag: TA-NOUN-GOAT
 prerequisites: [TA-C58-cow, TA-C56-a-lot, TA-C57-sand]
 sounds: []
-roots: []
+roots: [dravidian-aadu-goat]
+etymology_hook: "ஆடு — native Dravidian (DEDR 5152); Malayalam āṭu, Kannada āḍu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C58-cow]
 Smaller, cheaper, and kept by houses with no land for a பசு. It eats what it finds and needs nobody to cut for it.
 
 Start it long — ஆ, held — and put the ட of கூடை in the middle. That keeps it clear of அது, which starts short and is a different word entirely. Kannada parts company here and says ಮೇಕೆ (*mēke*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆடு** (*āṭu*) is native Dravidian. DEDR 5152 lists Malayalam *āṭu* and Kannada *āḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

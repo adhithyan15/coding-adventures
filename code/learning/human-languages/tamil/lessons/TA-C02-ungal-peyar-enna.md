@@ -12,6 +12,7 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [TA-C02-enna, TA-C02-nii-niingal, TA-C02-peyar]
 sounds: []
 roots: []
+etymology_hook: "உங்கள் பெயர் என்ன — three native words: 'your' (DEDR 3688), 'name' (DEDR 4410), 'what' (DEDR 5151)"
 reviews_of: [TA-C02-enna, TA-C02-nii-niingal, TA-C02-en-peyar]
 duration:
   max_seconds: 180

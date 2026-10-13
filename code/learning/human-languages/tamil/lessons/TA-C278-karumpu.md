@@ -15,6 +15,7 @@ concept_tag: TA-PORUL278-KARUMPU
 prerequisites: [TA-C277-polutupokku, TA-C277-karuttu]
 sounds: []
 roots: []
+etymology_hook: "கரும்பு — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C277-karuttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C278-PORUL278-01]; assesses=[] -->
 
 **கரும்பு** — *karumpu* — "sugarcane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **கரும்பு** (*karumpu*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

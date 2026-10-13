@@ -11,7 +11,8 @@ romanization: "pārttukkoḷḷuṅkaḷ"
 concept_tag: TA-CARE-TAKE-CARE
 prerequisites: [TA-C105-college, TA-C105-school]
 sounds: []
-roots: []
+roots: [dravidian-paar-see, dravidian-kol-take]
+etymology_hook: "பார்த்துக்கொள்ளுங்கள் — native: pār 'to look' (DEDR 4091) + koḷ 'to take, keep' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C105-school]
 **பார்த்துக்கொள்ளுங்கள்** (*pārttukkoḷḷuṅkaḷ*) — "take care", literally "look after (yourself)".
 
 It is built on **பார்**, "to see, to look".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பார்த்துக்கொள்ளுங்கள்** (*pārttukkoḷḷuṅkaḷ*) is native: *pār*, "to look" (DEDR 4091), and *koḷ*, "to take, to keep" (DEDR 2151): "look after (yourself)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

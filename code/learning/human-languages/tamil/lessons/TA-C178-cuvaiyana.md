@@ -14,7 +14,8 @@ romanization: "cuvaiyāṉa"
 concept_tag: TA-GUNAM178-CUVAIYANA
 prerequisites: [TA-C177-nokkam, TA-C177-anupavam]
 sounds: []
-roots: []
+roots: [dravidian-cavi-taste]
+etymology_hook: "சுவையான — native Dravidian (DEDR 2396); Kannada savi 'palatable'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C177-anupavam]
 <!-- hl-knowledge: introduces=[TA-LEX-C178-GUNAM178-01]; assesses=[] -->
 
 **சுவையான** — *cuvaiyāṉa* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுவையான** (*cuvaiyāṉa*) is native Dravidian. DEDR 2396 lists Kannada *savi*, "palatable". The entry lists *cuvai*, "to taste", beside *cavi*, "taste"; *-āṉa* makes it "tasty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

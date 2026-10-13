@@ -14,7 +14,8 @@ romanization: "pirārttaṉai cey"
 concept_tag: TA-VERB-PIRARTTANAI-CEY
 prerequisites: [TA-C197-kutipeyar, TA-C197-totarpu-kol]
 sounds: []
-roots: []
+roots: [sanskrit-prarthana, sey-do-dravidian]
+etymology_hook: "பிரார்த்தனை செய் — pirārttaṉai ← Sanskrit prārthana 'wish, request' (CDIAL 8954) + native sey 'do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C197-totarpu-kol]
 <!-- hl-knowledge: introduces=[TA-LEX-C198-ACT198-01]; assesses=[] -->
 
 **பிரார்த்தனை செய்** — *pirārttaṉai cey* — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிரார்த்தனை செய்** (*pirārttaṉai cey*) is *pirārttaṉai*, "prayer", from Sanskrit *prārthana*, "a wish, a request" (CDIAL 8954), with native *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

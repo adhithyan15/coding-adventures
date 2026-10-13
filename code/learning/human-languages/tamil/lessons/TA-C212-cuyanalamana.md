@@ -14,7 +14,8 @@ romanization: "cuyanalamāṉa"
 concept_tag: TA-GUNAM212-CUYANALAMANA
 prerequisites: [TA-C211-paluppu, TA-C212-palavinamana]
 sounds: []
-roots: []
+roots: [sanskrit-sva, nal-good-dravidian]
+etymology_hook: "சுயநலமான — cuya 'self' ← Sanskrit sva + native nalam 'welfare' (DEDR 3610)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C212-palavinamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C212-GUNAM212-02]; assesses=[] -->
 
 **சுயநலமான** — *cuyanalamāṉa* — "selfish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுயநலமான** (*cuyanalamāṉa*) is *cuya*, "self", from Sanskrit *sva*, and native *nalam*, "welfare" (DEDR 3610): "self-welfare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

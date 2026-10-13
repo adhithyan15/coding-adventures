@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 228,
-  "sourceHash": "fnv1a64:efb0a831093b98a2",
+  "sourceHash": "fnv1a64:84ba48b23670220f",
   "lessonIds": [
     "TA-C228-tattaccu-cey",
     "TA-C228-molipeyar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch228.txt",
   "json": "tamil/narration/ch228.json",
-  "textHash": "fnv1a64:f9f9732448d5ef50",
-  "jsonHash": "fnv1a64:9616df418d3f1bab",
+  "textHash": "fnv1a64:7b92d98d3a92fdb3",
+  "jsonHash": "fnv1a64:e6a64fc2d5697a57",
   "findings": []
 }

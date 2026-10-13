@@ -14,7 +14,8 @@ romanization: "viḻu"
 concept_tag: TA-VERB-VILU
 prerequisites: [TA-C152-nintu, TA-C152-para]
 sounds: []
-roots: []
+roots: [dravidian-vizhu-fall]
+etymology_hook: "விழு — native Dravidian (DEDR 5430); Malayalam vīḻuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C152-para]
 <!-- hl-knowledge: introduces=[TA-LEX-C152-ACT152-05]; assesses=[] -->
 
 **விழு** — *viḻu* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விழு** (*viḻu*) is native Dravidian. DEDR 5430 lists Malayalam *vīḻuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

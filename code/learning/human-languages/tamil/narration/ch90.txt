@@ -13,6 +13,9 @@ You'll want to know: சிரிப்பு.
 சிரிப்பு (sirippu) — "laughter", and "a smile".
 சிரிப்பு (sirippu) வருகிறது — "I feel like laughing", literally "laughter is coming".
 
+The word, taken apart.
+சிரிப்பு (sirippu) is native Dravidian. DEDR 1562 lists Malayalam ciri, "laughter".
+
 What you've built.
 Laughter, which comes to you.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for shivering, then the Tamil for laughter.
 You'll want to know: அழுகை.
 அழுகை (aḻukai) — "crying".
 அழுகை (aḻukai) வருகிறது — "I feel like crying", on the same frame as laughter.
+
+The word, taken apart.
+அழுகை (aḻukai) is native Dravidian (DEDR 282). It is the noun of aḻu, "to cry".
 
 What you've built.
 Crying, in the same frame.
@@ -73,6 +79,9 @@ You'll want to know: கண்ணீர்.
 கண்ணீர் (kaṇṇīr) — "tears", literally "eye-water".
 It is கண், "eye", and நீர், "water".
 
+The word, taken apart.
+கண்ணீர் (kaṇṇīr) is native: kaṇ, "eye" (DEDR 1159), and nīr, "water" (DEDR 3690). DEDR 1159 lists kaṇṇīr itself.
+
 What you've built.
 Tears, made of eye and water.
 
@@ -103,6 +112,9 @@ You'll want to know: தனியாக.
 தனியாக (taṉiyāka) — "alone".
 நான் தனியாக (taṉiyāka) இருக்கிறேன் — "I am alone". தனி is "single, separate".
 
+The word, taken apart.
+தனியாக (taṉiyāka) is native Dravidian (DEDR 3196). The entry lists taṉi, "singleness, solitude", beside tāṉ, "oneself"; -āka makes it "alone".
+
 What you've built.
 Alone.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for tears, then the Tamil for alone.
 You'll want to know: பசிக்கிறது.
 பசிக்கிறது (pasikkiṟatu) — "I am hungry", literally "it hungers".
 It is பசி, "hunger", made into a verb. எனக்குப் பசிக்கிறது (pasikkiṟatu) — "I'm hungry".
+
+The word, taken apart.
+பசிக்கிறது (pasikkiṟatu) is native Dravidian (DEDR 3825). It is paci, "to be hungry", in the form that says "it is happening".
 
 What you've built.
 Laughter, crying, tears, alone, and hunger as a verb.

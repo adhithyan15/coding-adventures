@@ -14,7 +14,8 @@ romanization: "piracciṉai"
 concept_tag: TA-KARANAM177-PIRACCINAI
 prerequisites: [TA-C176-illavittal, TA-C177-vilaivu]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "பிரச்சினை ← Sanskrit praśna 'question' (CDIAL 8818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C177-vilaivu]
 <!-- hl-knowledge: introduces=[TA-LEX-C177-KARANAM177-02]; assesses=[] -->
 
 **பிரச்சினை** — *piracciṉai* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிரச்சினை** (*piracciṉai*) is a loan from Sanskrit *praśna*, "question" (CDIAL 8818). Tamil broke up the *pr-* and the *śn*, and the sense moved from a question to a problem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

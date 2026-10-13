@@ -14,6 +14,9 @@ Name a Tamil month, சித்திரை or தை, then give a தேதி
 You'll want to know: தேர்வு.
 தேர்வு — tērvu — "an exam".
 
+The word, taken apart.
+தேர்வு (tērvu) is native Dravidian (DEDR 3419). It is the noun of tēr, "to examine, to inquire into", which DEDR files with teri, "to become clear".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a class, then the Tamil for an exam.
 
 You'll want to know: பதில்.
 பதில் — patil — "an answer".
+
+The word, taken apart.
+பதில் (patil) is a loan from Arabic badal, "exchange, substitute", through Persian and Hindustani.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Tamil for an exam, then the Tamil for an answer.
 You'll want to know: புளி.
 புளி — puḷi — "tamarind".
 
+The word, taken apart.
+புளி (puḷi) is native Dravidian. DEDR 4322 lists Kannada puḷy, "sour" and Telugu puli, "sour". The tree is named for its sourness.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Tamil for an answer, then the Tamil for tamarind.
 You'll want to know: மிளகு.
 மிளகு — miḷaku — "pepper".
 
+The word, taken apart.
+மிளகு (miḷaku) is native Dravidian. DEDR 4867 lists Malayalam miḷaku and Kannada meṇasu.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Tamil for tamarind, then the Tamil for pepper.
 
 You'll want to know: கடுகு.
 கடுகு — kaṭuku — "mustard seed".
+
+The word, taken apart.
+கடுகு (kaṭuku) is native Dravidian. DEDR 1137 lists Malayalam kaṭuku. It belongs with kaṭu, "pungent".
 
 What you've built.
 One more word for this chapter.

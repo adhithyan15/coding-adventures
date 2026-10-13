@@ -14,7 +14,8 @@ romanization: "koyyā"
 concept_tag: TA-THINGS139-KOYYA
 prerequisites: [TA-C139-kirai, TA-C139-palappalam]
 sounds: []
-roots: []
+roots: [portuguese-goiaba]
+etymology_hook: "கொய்யா — probably from Portuguese goiaba 'guava', which came with the Portuguese from the Americas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C139-palappalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **கொய்யா** — *koyyā* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொய்யா** (*koyyā*) is probably a loan from Portuguese *goiaba*, "guava": the fruit came to India from the Americas with the Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

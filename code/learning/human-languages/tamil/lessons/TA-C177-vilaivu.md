@@ -14,7 +14,8 @@ romanization: "viḷaivu"
 concept_tag: TA-KARANAM177-VILAIVU
 prerequisites: [TA-C176-utaranamaka, TA-C176-illavittal]
 sounds: []
-roots: []
+roots: [dravidian-vilai-produce]
+etymology_hook: "விளைவு — native Dravidian (DEDR 5437); Malayalam viḷa 'crop'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C176-illavittal]
 <!-- hl-knowledge: introduces=[TA-LEX-C177-KARANAM177-01]; assesses=[] -->
 
 **விளைவு** — *viḷaivu* — "a result, a consequence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளைவு** (*viḷaivu*) is native Dravidian. DEDR 5437 lists Malayalam *viḷa*, "crop". It is the noun of *viḷai*, "to be produced, to result".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

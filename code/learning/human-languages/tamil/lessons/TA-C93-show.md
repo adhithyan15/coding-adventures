@@ -11,7 +11,8 @@ romanization: "kāṭṭuṅkaḷ"
 concept_tag: TA-ASK-SHOW
 prerequisites: [TA-C93-intamil, TA-C93-howsay]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see]
+etymology_hook: "காட்டுங்கள் — native Dravidian (DEDR 1443); Malayalam kāṭṭuka 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C93-howsay]
 **காட்டுங்கள்** (*kāṭṭuṅkaḷ*) — "please show me".
 
 When a word will not come, point and say **காட்டுங்கள்**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காட்டுங்கள்** (*kāṭṭuṅkaḷ*) is native Dravidian. DEDR 1443 lists Malayalam *kāṭṭuka*, "to show". The verb *kāṭṭu*, "to show", is "to make see", from *kāṇ*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

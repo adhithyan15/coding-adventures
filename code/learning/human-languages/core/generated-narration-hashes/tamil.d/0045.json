@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 45,
-  "sourceHash": "fnv1a64:a5e9edbd47dabe7d",
+  "sourceHash": "fnv1a64:44999e3a7cadf38b",
   "lessonIds": [
     "TA-C45-eye",
     "TA-C45-ear",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch45.txt",
   "json": "tamil/narration/ch45.json",
-  "textHash": "fnv1a64:c45d12d9507b3790",
-  "jsonHash": "fnv1a64:678d2aefb39eb2a5",
+  "textHash": "fnv1a64:1d15aeb6036876ee",
+  "jsonHash": "fnv1a64:2c8cb3cc3fec0325",
   "findings": []
 }

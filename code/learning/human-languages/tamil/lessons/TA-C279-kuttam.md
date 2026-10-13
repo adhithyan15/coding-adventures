@@ -14,7 +14,8 @@ romanization: "kūṭṭam"
 concept_tag: TA-VELAI279-KUTTAM
 prerequisites: [TA-C278-murukku, TA-C279-tolilali]
 sounds: []
-roots: []
+roots: [dravidian-kuudu-join]
+etymology_hook: "கூட்டம் — native Dravidian (DEDR 1882); Malayalam kūṭuka 'to come together', Kannada kūḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C279-tolilali]
 <!-- hl-knowledge: introduces=[TA-LEX-C279-VELAI279-02]; assesses=[] -->
 
 **கூட்டம்** — *kūṭṭam* — "a meeting; a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கூட்டம்** (*kūṭṭam*) is native Dravidian. DEDR 1882 lists Malayalam *kūṭuka*, "to come together" and Kannada *kūḍu*. It comes from *kūṭu*, "to come together, to assemble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "puḷi"
 concept_tag: TA-THINGS138-PULI2
 prerequisites: [TA-C138-tervu, TA-C138-patil]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour]
+etymology_hook: "புளி — native Dravidian (DEDR 4322); Kannada puḷy 'sour', Telugu puli 'sour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C138-patil]
 <!-- hl-knowledge: introduces=[TA-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **புளி** — *puḷi* — "tamarind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புளி** (*puḷi*) is native Dravidian. DEDR 4322 lists Kannada *puḷy*, "sour" and Telugu *puli*, "sour". The tree is named for its sourness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pal tulakku"
 concept_tag: TA-VERB-PAL-TULAKKU
 prerequisites: [TA-C255-vinku, TA-C255-eluppu]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth, dravidian-tulanku-shine]
+etymology_hook: "பல் துலக்கு — native: pal 'tooth' (DEDR 3986) + tulakku 'to polish' (DEDR 3360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C255-eluppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C255-ACT255-05]; assesses=[] -->
 
 **பல் துலக்கு** — *pal tulakku* — "to brush one's teeth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல் துலக்கு** (*pal tulakku*) is native: *pal*, "tooth" (DEDR 3986), and *tulakku*, "to polish, to make shine" (DEDR 3360).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ēṟkaṉavē"
 concept_tag: TA-KALAM158-ERKANAVE
 prerequisites: [TA-C157-anai, TA-C158-camipattil]
 sounds: []
-roots: []
+roots: [tamil-erkanave-already]
+etymology_hook: "ஏற்கனவே — origin uncertain; it may contain a form of ēl 'to be fitting' (DEDR 905)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C158-camipattil]
 <!-- hl-knowledge: introduces=[TA-LEX-C158-KALAM158-02]; assesses=[] -->
 
 **ஏற்கனவே** — *ēṟkaṉavē* — "already". **நான் ஏற்கனவே சாப்பிட்டேன்** — *nāṉ ēṟkaṉavē cāppiṭṭēṉ* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ஏற்கனவே** (*ēṟkaṉavē*) is uncertain. It may contain *ēṟka*, a form of *ēl*, "to happen, to be fitting" (DEDR 905), but DEDR does not list the word itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

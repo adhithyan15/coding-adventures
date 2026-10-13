@@ -11,7 +11,8 @@ romanization: "pudiya"
 concept_tag: TA-ADJ-NEW
 prerequisites: [TA-C41-good, TA-C39-oru, TA-C40-who]
 sounds: []
-roots: []
+roots: [dravidian-putu-new]
+etymology_hook: "புதிய — native Dravidian (DEDR 4275); Malayalam putu, Kannada hosa"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **நல்ல** *nalla* a moment ago. Put them side by side and nothing
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புதிய** (*pudiya*) is native Dravidian. DEDR 4275 lists Malayalam *putu* and Kannada *hosa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-C40-DEIXIS-05] -->

@@ -11,7 +11,8 @@ romanization: "maṭṭum"
 concept_tag: TA-REPLY-ONLY
 prerequisites: [TA-C61-pain, TA-C60-needle, TA-C61-hunger]
 sounds: []
-roots: []
+roots: [dravidian-mattam-measure]
+etymology_hook: "மட்டும் — native, read as 'to the limit', from the family of maṭṭam 'measure, limit' (DEDR 4660)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C61-pain]
 This and nothing beside it. Where English puts *only* in front of the thing it limits, Tamil hangs மட்டும் on the end of it: தண்ணீர் மட்டும் — water, and nothing else.
 
 Telugu does the same job with మాత్రమే (*mātramē*). The doubled ட்ட in the middle is the one held twice, as in ஆகட்டும்.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மட்டும்** (*maṭṭum*) is native, from the family of *maṭṭam*, "measure, limit, extent" (DEDR 4660): "only" is "up to the limit". DEDR does not list *maṭṭum* itself, so the link is the usual reading rather than a recorded one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

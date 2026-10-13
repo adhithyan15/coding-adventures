@@ -14,7 +14,8 @@ romanization: "pūṅkā"
 concept_tag: TA-LOC114-PUNKA
 prerequisites: [TA-C114-teru, TA-C114-palam]
 sounds: []
-roots: []
+roots: [dravidian-puu-flower]
+etymology_hook: "பூங்கா — native: pū 'flower' (DEDR 4345) + kā 'grove, garden' (DEDR 1418)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C114-palam]
 <!-- hl-knowledge: introduces=[TA-LEX-C114-LOC114-04]; assesses=[] -->
 
 **பூங்கா** — *pūṅkā* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூங்கா** (*pūṅkā*) is native: *pū*, "flower" (DEDR 4345), and *kā*, "grove, garden" (DEDR 1418): "flower-garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

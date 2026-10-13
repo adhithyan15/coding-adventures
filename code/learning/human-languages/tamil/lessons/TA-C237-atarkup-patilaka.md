@@ -14,7 +14,8 @@ romanization: "ataṟkup patilāka"
 concept_tag: TA-KARANAM237-ATARKUP-PATILAKA
 prerequisites: [TA-C236-aranmanai, TA-C237-kurippaka]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, arabic-badal]
+etymology_hook: "அதற்குப் பதிலாக — native ataṟku 'for that' (DEDR 1) + patil ← Arabic badal 'substitute' + -āka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C237-kurippaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C237-KARANAM237-02]; assesses=[] -->
 
 **அதற்குப் பதிலாக** — *ataṟkup patilāka* — "instead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அதற்குப் பதிலாக** (*ataṟkup patilāka*) is native *ataṟku*, "for that" (DEDR 1), and *patil*, "exchange, answer", from Arabic *badal*, "substitute", with *-āka*: "as a substitute for that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

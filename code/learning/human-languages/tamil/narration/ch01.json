@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:42e505810c450303",
+  "sourceHash": "fnv1a64:e7090faa9be183bc",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8b9c90dff4168c39",
+      "sourceHash": "fnv1a64:0652b1d5107d4aa8",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5cc6dedb8f4a28b",
+      "sourceHash": "fnv1a64:61454495219673c1",
       "notice": null,
       "blocks": [
         {
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:816301d55864bb87",
+      "sourceHash": "fnv1a64:924a370f10f329af",
       "notice": null,
       "blocks": [
         {
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d689e25197ef4007",
+      "sourceHash": "fnv1a64:45cd4b798b6e562e",
       "notice": null,
       "blocks": [
         {
@@ -971,7 +971,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21c1c361efe64cde",
+      "sourceHash": "fnv1a64:7663577545a18708",
       "notice": null,
       "blocks": [
         {
@@ -1032,7 +1032,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சரி (sari) is native Tamil for “correct, even, level,” and so “okay, agreed.” It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”"
+              "text": "சரி (sari) means “correct, even, level,” and so “okay, agreed.” Its origin is uncertain: DEDR has no entry for it, and the usual guess is Sanskrit sadṛśa, “like, equal,” through a Prakrit form such as sarisa (CDIAL 13120). It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”"
             }
           ]
         },
@@ -1119,7 +1119,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f0ae42e8fc0cd04",
+      "sourceHash": "fnv1a64:5c7f719eed34da49",
       "notice": null,
       "blocks": [
         {
@@ -1164,6 +1164,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, \"it will be\", a form of the native verb \"to become\" (DEDR 333), and illai is native \"not being\" (DEDR 2559); Malayalam has ām and illa. The origin of sari is uncertain, and its own lesson gives the usual guess."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: two habits behind the answers",
           "segments": [
@@ -1203,7 +1214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1234,7 +1245,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1265,7 +1276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4209b4fd830d3b7",
+      "sourceHash": "fnv1a64:a0bdf40cb79bb28d",
       "notice": null,
       "blocks": [
         {

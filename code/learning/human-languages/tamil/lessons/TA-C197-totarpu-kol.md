@@ -14,7 +14,8 @@ romanization: "toṭarpu koḷ"
 concept_tag: TA-VERB-TOTARPU-KOL
 prerequisites: [TA-C197-tavir, TA-C197-kutipeyar]
 sounds: []
-roots: []
+roots: [dravidian-todu-touch, dravidian-kol-take]
+etymology_hook: "தொடர்பு கொள் — native: toṭarpu 'connection', from toṭu 'to touch' (DEDR 3480) + koḷ 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C197-kutipeyar]
 <!-- hl-knowledge: introduces=[TA-LEX-C197-ACT197-05]; assesses=[] -->
 
 **தொடர்பு கொள்** — *toṭarpu koḷ* — "to contact, to get in touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொடர்பு கொள்** (*toṭarpu koḷ*) is native: *toṭarpu*, "connection", from *toṭu*, "to touch, to be connected" (DEDR 3480), and *koḷ*, "to take" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "attai"
 concept_tag: TA-GRAND-AUNT
 prerequisites: [TA-C101-grandmother, TA-C101-uncle]
 sounds: []
-roots: []
+roots: [dravidian-atta-elder]
+etymology_hook: "அத்தை — native Dravidian (DEDR 142); Malayalam atta 'mother', Kannada atte 'mother-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C101-uncle]
 **அத்தை** (*attai*) — "aunt", your father's sister; also "mother-in-law".
 
 **மாமா** and **அத்தை** pair up across the two sides of the family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அத்தை** (*attai*) is native Dravidian. DEDR 142 lists Malayalam *atta*, "mother", Kannada *atte*, "mother-in-law" and Telugu *atta*, "mother-in-law, father's sister". The entry compares Prakrit *attā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

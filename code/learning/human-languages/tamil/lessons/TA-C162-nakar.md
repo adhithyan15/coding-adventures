@@ -14,7 +14,8 @@ romanization: "nakar"
 concept_tag: TA-VERB-NAKAR
 prerequisites: [TA-C162-tanku, TA-C162-curru]
 sounds: []
-roots: []
+roots: [tamil-nakar-move]
+etymology_hook: "நகர் 'move' — origin uncertain; DEDR's nakar 'house, town' (3568) is a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C162-curru]
 <!-- hl-knowledge: introduces=[TA-LEX-C162-ACT162-04]; assesses=[] -->
 
 **நகர்** — *nakar* — "to move, to shift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **நகர்** (*nakar*), "to move, to shift", is uncertain. DEDR has no entry for this verb; its *nakar*, "house, town" (DEDR 3568), is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

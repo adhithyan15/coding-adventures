@@ -14,7 +14,8 @@ romanization: "talaiccuṟṟal"
 concept_tag: TA-NALAM261-TALAICCURRAL
 prerequisites: [TA-C261-yoka, TA-C261-arippu]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-curru-revolve]
+etymology_hook: "தலைச்சுற்றல் — native: talai 'head' (DEDR 3103) + cuṟṟal 'spinning' (DEDR 2715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C261-arippu]
 <!-- hl-knowledge: introduces=[TA-LEX-C261-NALAM261-05]; assesses=[] -->
 
 **தலைச்சுற்றல்** — *talaiccuṟṟal* — "dizziness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தலைச்சுற்றல்** (*talaiccuṟṟal*) is native: *talai*, "head" (DEDR 3103), and *cuṟṟal*, "spinning", from *cuṟṟu*, "to revolve" (DEDR 2715): "head spinning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ālamaram"
 concept_tag: TA-PORUL250-ALAMARAM
 prerequisites: [TA-C250-kutaram, TA-C250-uncal]
 sounds: []
-roots: []
+roots: [dravidian-aal-banyan, dravidian-maram-tree]
+etymology_hook: "ஆலமரம் — native: āl 'banyan' (DEDR 382) + maram 'tree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C250-uncal]
 <!-- hl-knowledge: introduces=[TA-LEX-C250-PORUL250-03]; assesses=[] -->
 
 **ஆலமரம்** — *ālamaram* — "a banyan tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆலமரம்** (*ālamaram*) is native: *āl*, "banyan" (DEDR 382, which lists Malayalam āl and Kannada āla), and *maram*, "tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

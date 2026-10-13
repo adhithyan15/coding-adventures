@@ -14,7 +14,8 @@ romanization: "muṭivu cey"
 concept_tag: TA-VERB-MUTIVU-CEY
 prerequisites: [TA-C159-inimel, TA-C159-tittam]
 sounds: []
-roots: []
+roots: [dravidian-mudi-end, sey-do-dravidian]
+etymology_hook: "முடிவு செய் — native: muṭivu 'end', from muṭi 'to end' (DEDR 4922) + sey 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C159-tittam]
 <!-- hl-knowledge: introduces=[TA-LEX-C159-ETIR159-04]; assesses=[] -->
 
 **முடிவு செய்** — *muṭivu cey* — "to decide". **நான் தினமும் நடக்க முடிவு செய்தேன்** — *nāṉ tiṉamum naṭakka muṭivu ceytēṉ* — "I decided to walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முடிவு செய்** (*muṭivu cey*) is native: *muṭivu*, "end, conclusion", from *muṭi*, "to end" (DEDR 4922), and *sey*, "to do" (DEDR 1957): "make an end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

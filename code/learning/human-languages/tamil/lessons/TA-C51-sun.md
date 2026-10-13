@@ -11,7 +11,8 @@ romanization: "sūriyaṉ"
 concept_tag: TA-NOUN-SUN
 prerequisites: [TA-C51-sky, TA-C49-respect, TA-C50-kolam]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "சூரியன் ← Sanskrit sūrya, also sūriya 'sun' (CDIAL 13574), with the Tamil -aṉ"
 duration:
   max_seconds: 210
 requires:

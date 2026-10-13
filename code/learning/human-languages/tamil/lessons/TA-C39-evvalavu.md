@@ -11,8 +11,8 @@ romanization: evvaḷavu
 concept_tag: TA-PRICE-HOW-MUCH
 prerequisites: [TA-C39-vendum, TA-C19-vayathu, TA-C19-age-register-grammar, TA-C36-teneer]
 sounds: [e-interrogative, tamil-geminate-vva]
-roots: []
-etymology_hook: "எவ்வளவு and எத்தனை split the work English gives to one phrase: measure versus count"
+roots: [e-interrogative-dravidian, dravidian-alavu-measure]
+etymology_hook: "எவ்வளவு — native: question base e- (DEDR 5151) + aḷavu 'measure' (DEDR 295)"
 duration:
   max_seconds: 285
 requires:

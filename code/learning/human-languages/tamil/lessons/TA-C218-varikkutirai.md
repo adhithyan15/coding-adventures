@@ -14,7 +14,8 @@ romanization: "varikkutirai"
 concept_tag: TA-PORUL218-VARIKKUTIRAI
 prerequisites: [TA-C217-vila, TA-C218-ottakaccivinki]
 sounds: []
-roots: []
+roots: [dravidian-vari-line, dravidian-kutirai-horse]
+etymology_hook: "வரிக்குதிரை — native: vari 'stripe' (DEDR 5263) + kutirai 'horse' (DEDR 1711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C218-ottakaccivinki]
 <!-- hl-knowledge: introduces=[TA-LEX-C218-PORUL218-02]; assesses=[] -->
 
 **வரிக்குதிரை** — *varikkutirai* — "a zebra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரிக்குதிரை** (*varikkutirai*) is native: *vari*, "stripe, line" (DEDR 5263), and *kutirai*, "horse" (DEDR 1711): "the striped horse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

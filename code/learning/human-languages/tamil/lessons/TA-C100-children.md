@@ -11,7 +11,8 @@ romanization: "kuḻantaikaḷ"
 concept_tag: TA-FAMILY-CHILDREN
 prerequisites: [TA-C99-forgive, TA-C99-dontworry]
 sounds: []
-roots: []
+roots: [dravidian-kuzha-young]
+etymology_hook: "குழந்தைகள் — native Dravidian (DEDR 2149)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C99-dontworry]
 **குழந்தைகள்** (*kuḻantaikaḷ*) — "children".
 
 **-கள்** is the plural. **உங்களுக்குக் குழந்தைகள் இருக்கிறார்களா?** — "do you have children?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழந்தைகள்** (*kuḻantaikaḷ*) is native Dravidian (DEDR 2149). It is *kuḻandai*, "child", with the plural *-kaḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

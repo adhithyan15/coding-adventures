@@ -14,7 +14,8 @@ romanization: "cuṟṟulā"
 concept_tag: TA-IDAM205-CURRULA
 prerequisites: [TA-C204-palporul-ankati, TA-C204-tunikkatai]
 sounds: []
-roots: []
+roots: [dravidian-curru-revolve, dravidian-ulaa-stroll]
+etymology_hook: "சுற்றுலா — native: cuṟṟu 'to go around' (DEDR 2715) + ulā 'a stroll, procession' (DEDR 2693)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C204-tunikkatai]
 <!-- hl-knowledge: introduces=[TA-LEX-C205-IDAM205-01]; assesses=[] -->
 
 **சுற்றுலா** — *cuṟṟulā* — "a tour, a sightseeing trip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுற்றுலா** (*cuṟṟulā*) is native: *cuṟṟu*, "to go around" (DEDR 2715), and *ulā*, "a stroll, a procession" (DEDR 2693).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

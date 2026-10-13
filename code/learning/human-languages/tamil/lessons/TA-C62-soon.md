@@ -11,7 +11,8 @@ romanization: "sīkkiram"
 concept_tag: TA-REPLY-SOON
 prerequisites: [TA-C62-still, TA-C60-umbrella, TA-C61-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-shighra]
+etymology_hook: "சீக்கிரம் ← Sanskrit śīghra 'quick' (CDIAL 12484)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C62-still]
 Soon, and quickly — Tamil lets one word carry nearness in நேரம் and speed of doing together, and which one is meant comes out of the sentence around it.
 
 Set it against பிறகு and the pair covers the whole span: சீக்கிரம் is the near end, பிறகு the loose one that promises nothing. Kannada says ಬೇಗ (*bēga*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சீக்கிரம்** (*sīkkiram*) is a loan from Sanskrit *śīghra*, "quick" (CDIAL 12484).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

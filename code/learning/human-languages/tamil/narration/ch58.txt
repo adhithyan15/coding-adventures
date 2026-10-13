@@ -14,6 +14,9 @@ You'll want to know: பசு.
 The animal a Tamil household is built around. Kannada says ಹಸು (hasu): the same word, with the p-for-h trade Kannada makes right through its old words — the one this book pointed out when the numbers were lined up side by side. Tamil keeps the p.
 It belongs to a விவசாயி before it belongs to anybody, and in a கிராமம் it stands tied in the yard rather than shut in a shed, near enough to the வாசல் that you step around it going in.
 
+The word, taken apart.
+பசு (pasu) is a loan from Sanskrit paśu, "domestic animal" (CDIAL 7984). Tamil narrowed it to the cow.
+
 What you've built.
 The first of five animals.
 
@@ -45,6 +48,9 @@ You'll want to know: ஆடு.
 ஆடு (āṭu) — "a goat".
 Smaller, cheaper, and kept by houses with no land for a பசு (pasu). It eats what it finds and needs nobody to cut for it.
 Start it long — ஆ, held — and put the ட of கூடை in the middle. That keeps it clear of அது, which starts short and is a different word entirely. Kannada parts company here and says ಮೇಕೆ (mēke).
+
+The word, taken apart.
+ஆடு (āṭu) is native Dravidian. DEDR 5152 lists Malayalam āṭu and Kannada āḍu.
 
 What you've built.
 Two.
@@ -78,6 +84,9 @@ You'll want to know: கோழி.
 Hen or cock alike; the word does not split them, and where the difference matters a second word goes in front. Kannada ಕೋಳಿ (kōḷi) and Telugu కోడి (kōḍi) are the same word three ways, and the middle letter is where they separate: Tamil's ழ, Kannada's ಳ, Telugu's డ.
 It is the clock of a கிராமம். A கோழி (kōḻi) has a house awake well before anybody there needs to know the மணி.
 
+The word, taken apart.
+கோழி (kōḻi) is native Dravidian. DEDR 2248 lists Malayalam kōḻi, Kannada kōḻi and Telugu kōḍi.
+
 What you've built.
 Three.
 
@@ -110,6 +119,9 @@ You'll want to know: காக்கை.
 Named off the noise it makes, and the sisters landed on the same trick from the same starting point: Kannada ಕಾಗೆ (kāge). Say it once and you have the etymology.
 Of everything with wings around a Tamil house this is the one the house deals with daily. சாதம் set out on the வாசல் step is put there for the காக்கை (kākkai), and it comes down within the minute.
 
+The word, taken apart.
+காக்கை (kākkai) is native Dravidian. DEDR 1425 lists Malayalam kākka, Kannada kāge and Telugu kāki. The word imitates the bird's call, and the entry gives the cry too.
+
 What you've built.
 Four.
 
@@ -141,6 +153,9 @@ You'll want to know: பறவை.
 பறவை (paṟavai) — "a bird".
 The wide word. Whatever flies is a பறவை (paṟavai), the கோழி (kōḻi) and the காக்கை (kākkai) taken in along with everything that was never given a name of its own.
 Here the three go three ways: Kannada ಹಕ್ಕಿ (hakki), Telugu పక్షి (pakṣi) off the Sanskrit, and Tamil's own பறவை (paṟavai). The ற in the middle is the hard one, the same ற standing in ஆறு.
+
+The word, taken apart.
+பறவை (paṟavai) is native Dravidian. DEDR 4020 lists Malayalam paṟava. It comes from paṟa, "to fly": a bird is "the flyer".
 
 What you've built.
 Five, and the run is closed: a cow, a goat, a hen, a crow, and the word for everything that flies.

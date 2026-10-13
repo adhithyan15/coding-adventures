@@ -14,7 +14,8 @@ romanization: "kālakkeṭu"
 concept_tag: TA-NERAM203-KALAKKETU
 prerequisites: [TA-C203-nurrantu, TA-C203-ituvarai]
 sounds: []
-roots: []
+roots: [sanskrit-kaala-time, dravidian-kada-cross]
+etymology_hook: "காலக்கெடு — kālam ← Sanskrit kāla (CDIAL 3084) + native keṭu 'fixed term' (DEDR 1109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C203-ituvarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C203-NERAM203-03]; assesses=[] -->
 
 **காலக்கெடு** — *kālakkeṭu* — "a deadline".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காலக்கெடு** (*kālakkeṭu*) is *kālam*, "time", from Sanskrit *kāla* (CDIAL 3084), and native *keṭu*, "fixed time, term", which DEDR 1109 lists among words for passing through and limits of time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

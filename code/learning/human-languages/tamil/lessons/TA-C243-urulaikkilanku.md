@@ -14,7 +14,8 @@ romanization: "uruḷaikkiḻaṅku"
 concept_tag: TA-PORUL243-URULAIKKILANKU
 prerequisites: [TA-C242-ravikkai, TA-C243-kotumai]
 sounds: []
-roots: []
+roots: [dravidian-urul-roll, dravidian-kizhanku-tuber]
+etymology_hook: "உருளைக்கிழங்கு — native: uruḷai 'round thing' (DEDR 664) + kiḻaṅku 'tuber' (DEDR 1578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C243-kotumai]
 <!-- hl-knowledge: introduces=[TA-LEX-C243-PORUL243-02]; assesses=[] -->
 
 **உருளைக்கிழங்கு** — *uruḷaikkiḻaṅku* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உருளைக்கிழங்கு** (*uruḷaikkiḻaṅku*) is native: *uruḷai*, "anything that rolls, a ball" (DEDR 664), and *kiḻaṅku*, "edible root, tuber" (DEDR 1578, which lists Malayalam kiḻaṅṅu): "the round tuber".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

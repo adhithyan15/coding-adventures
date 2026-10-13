@@ -11,7 +11,8 @@ romanization: "maruttuvamaṉai"
 concept_tag: TA-DOCTOR-HOSPITAL
 prerequisites: [TA-C87-weariness, TA-C87-rest]
 sounds: []
-roots: []
+roots: [dravidian-marundu-medicine, dravidian-manai-house]
+etymology_hook: "மருத்துவமனை — native: maruttuvam 'medicine' (DEDR 4719) + maṉai 'house' (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C87-rest]
 **மருத்துவமனை** (*maruttuvamaṉai*) — "a hospital", literally "medicine-house".
 
 **மனை** is "a house, a dwelling". **மருத்துவமனை எங்கே?** — "where is the hospital?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மருத்துவமனை** (*maruttuvamaṉai*) is native: *maruttuvam*, "medicine" (DEDR 4719), and *maṉai*, "house" (DEDR 4776). A hospital is "the house of medicine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

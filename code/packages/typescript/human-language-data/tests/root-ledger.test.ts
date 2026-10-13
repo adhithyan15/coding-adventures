@@ -249,7 +249,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   russian: { withoutHook: 1135, withoutVisible: 1148 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
   spanish: { withoutHook: 486, withoutVisible: 209 },
-  tamil: { withoutHook: 1185, withoutVisible: 1144 },
+  // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
+  // but four have a "taken apart" block: native words cite the Dravidian Etymological
+  // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read
+  // from the moli-mandala/data (Jambu) files; no source text is copied. The four left
+  // without a block (TA-C06-dative-subject, TA-C37-ivar, TA-C37-ivar-en-nanbar,
+  // TA-C39-evvalavu) already estimate at 294-299 s, so any visible block would cross the
+  // 300-second limit; their hooks carry the etymology.
+  tamil: { withoutHook: 0, withoutVisible: 4 },
   telugu: { withoutHook: 1376, withoutVisible: 1318 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
 };

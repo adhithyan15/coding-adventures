@@ -11,7 +11,8 @@ romanization: "periyammā"
 concept_tag: TA-INLAWS-PERIYAMMA
 prerequisites: [TA-C101-fathersyoungerbrother, TA-C102-fatherselderbrother]
 sounds: []
-roots: []
+roots: [dravidian-peru-big, dravidian-appa-amma]
+etymology_hook: "பெரியம்மா — native: periya 'big' (DEDR 4411) + ammā 'mother' (DEDR 183)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C102-fatherselderbrother]
 **பெரியப்பா**.
 
 **அம்மா** is the mother you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெரியம்மா** (*periyammā*) is native: *periya*, "big" (DEDR 4411), and *ammā*, "mother" (DEDR 183): "the big mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

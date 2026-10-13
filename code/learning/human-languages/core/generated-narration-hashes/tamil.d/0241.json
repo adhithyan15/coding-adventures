@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 241,
-  "sourceHash": "fnv1a64:d894f135ba5e8058",
+  "sourceHash": "fnv1a64:9f0de34df33adf7a",
   "lessonIds": [
     "TA-C241-cataranamana",
     "TA-C241-apurvamana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch241.txt",
   "json": "tamil/narration/ch241.json",
-  "textHash": "fnv1a64:56d0ffc3f38194bc",
-  "jsonHash": "fnv1a64:933d6d1167d83053",
+  "textHash": "fnv1a64:4e7a67849f426b70",
+  "jsonHash": "fnv1a64:e067bb577b502b6a",
   "findings": []
 }

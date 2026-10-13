@@ -11,7 +11,8 @@ romanization: "uṭaṉē"
 concept_tag: TA-REPLY-AT-ONCE
 prerequisites: [TA-C62-soon, TA-C60-broom, TA-C61-fever]
 sounds: []
-roots: []
+roots: [dravidian-udan-together]
+etymology_hook: "உடனே — native Dravidian (DEDR 945); Malayalam uṭan 'at once'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C62-soon]
 Tighter than சீக்கிரம்: not soon but now, with nothing allowed in between. It is the word that answers an instruction you intend to obey.
 
 Say it ending long, on the ே. That final length is doing the work — it is what makes the word press rather than merely inform.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடனே** (*uṭaṉē*) is native Dravidian. DEDR 945 lists Malayalam *uṭan*, "at once". The entry glosses *uṭaṉ* "together with, immediately after, at once", and *-ē* stresses it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

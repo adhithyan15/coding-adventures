@@ -14,7 +14,8 @@ romanization: "vīcu"
 concept_tag: TA-VERB-VICU
 prerequisites: [TA-C229-kanavu-kan, TA-C229-piri]
 sounds: []
-roots: []
+roots: [dravidian-viisu-fan]
+etymology_hook: "வீசு — native Dravidian (DEDR 5450); Malayalam vīcuka 'to fan, cast'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C229-piri]
 <!-- hl-knowledge: introduces=[TA-LEX-C229-ACT229-05]; assesses=[] -->
 
 **வீசு** — *vīcu* — "to throw, to fling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வீசு** (*vīcu*) is native Dravidian. DEDR 5450 lists Malayalam *vīcuka*, "to fan, cast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

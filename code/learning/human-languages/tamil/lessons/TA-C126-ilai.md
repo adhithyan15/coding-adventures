@@ -14,7 +14,8 @@ romanization: "ilai"
 concept_tag: TA-THINGS126-ILAI
 prerequisites: [TA-C126-kulam, TA-C126-katu]
 sounds: []
-roots: []
+roots: [dravidian-ilai-leaf]
+etymology_hook: "இலை — native Dravidian (DEDR 497); Malayalam ila, Kannada ele"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C126-katu]
 <!-- hl-knowledge: introduces=[TA-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **இலை** — *ilai* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இலை** (*ilai*) is native Dravidian. DEDR 497 lists Malayalam *ila* and Kannada *ele*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

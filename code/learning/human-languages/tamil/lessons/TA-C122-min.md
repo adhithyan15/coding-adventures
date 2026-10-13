@@ -14,7 +14,8 @@ romanization: "mīṉ"
 concept_tag: TA-THINGS122-MIN
 prerequisites: [TA-C122-venney, TA-C122-muttai]
 sounds: []
-roots: []
+roots: [dravidian-miin-fish]
+etymology_hook: "மீன் — native Dravidian (DEDR 4885); Malayalam mīn, Kannada mīn, Telugu mīnu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C122-muttai]
 <!-- hl-knowledge: introduces=[TA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **மீன்** — *mīṉ* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மீன்** (*mīṉ*) is native Dravidian. DEDR 4885 lists Malayalam *mīn*, Kannada *mīn* and Telugu *mīnu*. The entry compares Sanskrit *mīna*, "fish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

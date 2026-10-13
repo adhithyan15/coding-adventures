@@ -14,7 +14,8 @@ romanization: "kaṇitam"
 concept_tag: TA-VELAI252-KANITAM
 prerequisites: [TA-C252-palkalaikkalakam, TA-C252-kalvi]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "கணிதம் ← Sanskrit gaṇita 'counted, calculated' (CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C252-kalvi]
 <!-- hl-knowledge: introduces=[TA-LEX-C252-VELAI252-04]; assesses=[] -->
 
 **கணிதம்** — *kaṇitam* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கணிதம்** (*kaṇitam*) is a loan from Sanskrit *gaṇita*, "counted, calculated" (CDIAL 3996).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

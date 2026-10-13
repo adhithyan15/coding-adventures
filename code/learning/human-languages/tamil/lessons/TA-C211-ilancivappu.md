@@ -14,7 +14,8 @@ romanization: "iḷañcivappu"
 concept_tag: TA-GUNAM211-ILANCIVAPPU
 prerequisites: [TA-C211-natpana, TA-C211-muttal]
 sounds: []
-roots: []
+roots: [dravidian-ila-young, dravidian-native-colors]
+etymology_hook: "இளஞ்சிவப்பு — native: iḷam 'young, tender' (DEDR 513) + civappu 'redness' (DEDR 1931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C211-muttal]
 <!-- hl-knowledge: introduces=[TA-LEX-C211-GUNAM211-04]; assesses=[] -->
 
 **இளஞ்சிவப்பு** — *iḷañcivappu* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இளஞ்சிவப்பு** (*iḷañcivappu*) is native: *iḷam*, "young, tender" (DEDR 513), and *civappu*, "redness" (DEDR 1931): "young red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

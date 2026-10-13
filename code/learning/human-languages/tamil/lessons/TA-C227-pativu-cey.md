@@ -14,7 +14,8 @@ romanization: "pativu cey"
 concept_tag: TA-VERB-PATIVU-CEY
 prerequisites: [TA-C227-tiruttu, TA-C227-vicari]
 sounds: []
-roots: []
+roots: [dravidian-pati-imprint, sey-do-dravidian]
+etymology_hook: "பதிவு செய் — native: pativu 'impression', from pati 'to be imprinted' (DEDR 3911) + sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C227-vicari]
 <!-- hl-knowledge: introduces=[TA-LEX-C227-ACT227-03]; assesses=[] -->
 
 **பதிவு செய்** — *pativu cey* — "to register, to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதிவு செய்** (*pativu cey*) is native: *pativu*, "impression, record", from *pati*, "to be imprinted" (DEDR 3911), and *sey*, "to do" (DEDR 1957): "make a record".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

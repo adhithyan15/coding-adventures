@@ -14,7 +14,8 @@ romanization: "veḷināṭṭu"
 concept_tag: TA-GUNAM179-VELINATTU
 prerequisites: [TA-C179-payanulla, TA-C179-ullur]
 sounds: []
-roots: []
+roots: [dravidian-veli-outside, dravidian-naadu-country]
+etymology_hook: "வெளிநாட்டு — native: veḷi 'outside' (DEDR 5498) + nāṭu 'country' (DEDR 3638; Malayalam nāṭu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C179-ullur]
 <!-- hl-knowledge: introduces=[TA-LEX-C179-GUNAM179-03]; assesses=[] -->
 
 **வெளிநாட்டு** — *veḷināṭṭu* — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெளிநாட்டு** (*veḷināṭṭu*) is native: *veḷi*, "outside" (DEDR 5498), and *nāṭu*, "country" (DEDR 3638; Malayalam *nāṭu*): "of the outside country".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

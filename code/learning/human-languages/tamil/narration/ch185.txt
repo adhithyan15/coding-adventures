@@ -12,6 +12,9 @@ Before the new one: say the Tamil for dinner, then the Tamil for a notebook.
 You'll want to know: வரிசை.
 வரிசை — varicai — "a queue, a row".
 
+The word, taken apart.
+வரிசை (varicai) is native Dravidian. DEDR 5269 lists Kannada varise, "line, row".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a notebook, then the Tamil for a queue.
 
 You'll want to know: எண்.
 எண் — eṇ — "a number (phone, house, account)".
+
+The word, taken apart.
+எண் (eṇ) is native Dravidian. DEDR 793 lists Malayalam eṇ, "number".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a queue, then the Tamil for a number.
 You'll want to know: குறுஞ்செய்தி.
 குறுஞ்செய்தி — kuṟuñceyti — "a text message".
 
+The word, taken apart.
+குறுஞ்செய்தி (kuṟuñceyti) is native: kuṟu, "short" (DEDR 1851), and ceyti, "news, message", from cey, "to do" (DEDR 1957): "a short message".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a number, then the Tamil for a text messag
 You'll want to know: செய்தி.
 செய்தி — ceyti — "news; a message".
 
+The word, taken apart.
+செய்தி (ceyti) is native Dravidian. DEDR 1957 lists Malayalam ceyti, "news". The entry lists ceyti, "deed, news", under cey, "to do": news is what was done.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a text message, then the Tamil for news; a
 
 You'll want to know: மின்னஞ்சல்.
 மின்னஞ்சல் — miṉṉañcal — "an email".
+
+The word, taken apart.
+மின்னஞ்சல் (miṉṉañcal) is a modern coinage from two native words: miṉ, "lightning, electricity" (DEDR 4876), and añcal, "relay, letter post" (DEDR 54, which lists Malayalam añcal and Telugu ance): "electric post".
 
 What you've built.
 One more word for this chapter.

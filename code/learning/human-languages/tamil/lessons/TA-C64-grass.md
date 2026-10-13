@@ -11,7 +11,8 @@ romanization: "pul"
 concept_tag: TA-NOUN-GRASS
 prerequisites: [TA-C64-paddy, TA-C62-still, TA-C63-permission]
 sounds: []
-roots: []
+roots: [dravidian-pul-grass]
+etymology_hook: "புல் — native Dravidian (DEDR 4300); Malayalam pul, Kannada pul, Telugu pullu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C64-paddy]
 Grass, of the kind cut and carried home. Kannada makes it ಹುಲ್ಲು (*hullu*) — the *p*-for-*h* trade a third time, and by now you can guess a Kannada word before you meet it. Telugu went elsewhere, to గడ్డి (*gaḍḍi*).
 
 புல் and பல் sit one mark apart, and the mark is the whole difference: keep the உ round and low and the word stays grass. A பசு and an ஆடு are put out for புல்.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புல்** (*pul*) is native Dravidian. DEDR 4300 lists Malayalam *pul*, Kannada *pul* and Telugu *pullu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

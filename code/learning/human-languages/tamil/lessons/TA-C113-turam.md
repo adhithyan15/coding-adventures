@@ -14,7 +14,8 @@ romanization: "tūram"
 concept_tag: TA-LOC113-TURAM
 prerequisites: [TA-C113-neraka, TA-C113-arukil]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "தூரம் ← Sanskrit dūra 'distant, distance' (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C113-arukil]
 <!-- hl-knowledge: introduces=[TA-LEX-C113-LOC113-03]; assesses=[] -->
 
 **தூரம்** — *tūram* — "distance; far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தூரம்** (*tūram*) is a loan from Sanskrit *dūra*, "distant, distance" (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

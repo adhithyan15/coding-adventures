@@ -14,7 +14,8 @@ romanization: "vimāṉa nilaiyam"
 concept_tag: TA-IDAM263-VIMANA-NILAIYAM
 prerequisites: [TA-C263-nataipatai, TA-C263-vimanam]
 sounds: []
-roots: []
+roots: [sanskrit-vimana, dravidian-nil-stand]
+etymology_hook: "விமான நிலையம் — vimāṉam ← Sanskrit vimāna (CDIAL 11823) + native nilaiyam 'station' (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C263-vimanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C263-IDAM263-04]; assesses=[] -->
 
 **விமான நிலையம்** — *vimāṉa nilaiyam* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விமான நிலையம்** (*vimāṉa nilaiyam*) is *vimāṉam*, "aeroplane", from Sanskrit *vimāna* (CDIAL 11823), and native *nilaiyam*, "station", from *nil*, "to stand" (DEDR 3675).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

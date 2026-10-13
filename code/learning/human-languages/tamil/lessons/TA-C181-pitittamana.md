@@ -14,7 +14,8 @@ romanization: "piṭittamāṉa"
 concept_tag: TA-GUNAM181-PITITTAMANA
 prerequisites: [TA-C180-nakaiccuvaiyana, TA-C180-cuvaraciyamana]
 sounds: []
-roots: []
+roots: [dravidian-pidi-seize]
+etymology_hook: "பிடித்தமான — native Dravidian (DEDR 4148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C180-cuvaraciyamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C181-GUNAM181-01]; assesses=[] -->
 
 **பிடித்தமான** — *piṭittamāṉa* — "favourite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிடித்தமான** (*piṭittamāṉa*) is native Dravidian (DEDR 4148). The entry lists *piṭittam*, "grasp"; what you are fond of is what "takes hold" of you, as in *enakku piṭikkum*, "I like it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

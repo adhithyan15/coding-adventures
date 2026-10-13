@@ -14,7 +14,8 @@ romanization: "eṭai"
 concept_tag: TA-GUNAM238-ETAI
 prerequisites: [TA-C238-niram, TA-C238-alavu]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "எடை — native Dravidian (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C238-alavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C238-GUNAM238-03]; assesses=[] -->
 
 **எடை** — *eṭai* — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எடை** (*eṭai*) is native Dravidian (DEDR 851). The entry lists *eṭai*, "weighing, weight", in the family of *eṭu*, "to lift": weight is what is lifted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

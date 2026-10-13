@@ -14,7 +14,8 @@ romanization: "iṇaiyataḷam"
 concept_tag: TA-PORUL189-INAIYATALAM
 prerequisites: [TA-C189-pacai, TA-C189-melukuvartti]
 sounds: []
-roots: []
+roots: [dravidian-inai-join, sanskrit-tala]
+etymology_hook: "இணையதளம் — a coinage: iṇaiyam, from native iṇai 'to join' (DEDR 457) + taḷam ← Sanskrit tala 'surface'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C189-melukuvartti]
 <!-- hl-knowledge: introduces=[TA-LEX-C189-PORUL189-03]; assesses=[] -->
 
 **இணையதளம்** — *iṇaiyataḷam* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இணையதளம்** (*iṇaiyataḷam*) is a modern coinage: *iṇaiyam*, "the internet", from native *iṇai*, "to join, to link" (DEDR 457), and *taḷam*, "surface, platform", from Sanskrit *tala*, "surface" (CDIAL 5731).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

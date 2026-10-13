@@ -11,7 +11,8 @@ romanization: "uṟaviṉar"
 concept_tag: TA-FAMILY-RELATIVE
 prerequisites: [TA-C100-husband, TA-C100-wife]
 sounds: []
-roots: []
+roots: [dravidian-uru-be-joined]
+etymology_hook: "உறவினர் — native Dravidian (DEDR 710)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C100-wife]
 **உறவினர்** (*uṟaviṉar*) — "a relative".
 
 **உறவு** is "a tie, a relationship"; a relative is one who has one with you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உறவினர்** (*uṟaviṉar*) is native Dravidian (DEDR 710). It is built on *uṟavu*, "relationship", from *uṟu*, "to be joined, to be close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

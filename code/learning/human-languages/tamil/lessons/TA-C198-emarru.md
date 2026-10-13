@@ -14,7 +14,8 @@ romanization: "ēmāṟṟu"
 concept_tag: TA-VERB-EMARRU
 prerequisites: [TA-C197-totarpu-kol, TA-C198-pirarttanai-cey]
 sounds: []
-roots: []
+roots: [dravidian-emaru-deceive]
+etymology_hook: "ஏமாற்று — native Dravidian (DEDR 898); Telugu ēmāṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C198-pirarttanai-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C198-ACT198-02]; assesses=[] -->
 
 **ஏமாற்று** — *ēmāṟṟu* — "to cheat, to deceive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏமாற்று** (*ēmāṟṟu*) is native Dravidian. DEDR 898 lists Telugu *ēmāṟu*. It is the causative of *ēmāṟu*, "to be deceived".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

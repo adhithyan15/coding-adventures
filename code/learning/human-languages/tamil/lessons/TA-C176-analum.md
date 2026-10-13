@@ -14,7 +14,8 @@ romanization: "āṉālum"
 concept_tag: TA-KARANAM176-ANALUM
 prerequisites: [TA-C175-pannai, TA-C175-mirukakkatcicalai]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ஆனாலும் — native: āṉāl 'but', from ā 'to become' (DEDR 333) + -um 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C175-mirukakkatcicalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C176-KARANAM176-01]; assesses=[] -->
 
 **ஆனாலும்** — *āṉālum* — "however, even so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆனாலும்** (*āṉālum*) is native: *āṉāl*, "but", from *ā*, "to become" (DEDR 333), with *-um*, "even": "even so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

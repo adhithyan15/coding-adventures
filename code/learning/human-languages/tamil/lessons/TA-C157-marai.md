@@ -14,7 +14,8 @@ romanization: "maṟai"
 concept_tag: TA-VERB-MARAI
 prerequisites: [TA-C156-vel, TA-C156-kantupiti]
 sounds: []
-roots: []
+roots: [dravidian-mara-forget]
+etymology_hook: "மறை — native Dravidian (DEDR 4760); Kannada maṟe 'to vanish from sight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C156-kantupiti]
 <!-- hl-knowledge: introduces=[TA-LEX-C157-ACT157-01]; assesses=[] -->
 
 **மறை** — *maṟai* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மறை** (*maṟai*) is native Dravidian. DEDR 4760 lists Kannada *maṟe*, "to vanish from sight". The entry lists *maṟai*, "to be hidden, to hide", beside *maṟa*, "to forget".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

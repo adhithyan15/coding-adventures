@@ -12,7 +12,7 @@ concept_tag: TA-PROXIMAL-PERSON
 prerequisites: [TA-C37-nanban]
 sounds: [tamil-standing-vowel-i, pulli-virama]
 roots: [dravidian-i-proximal-deictic]
-etymology_hook: "இவர் is the இ- 'near' base plus the respectful -அர்; அ- points away and எ- asks which"
+etymology_hook: "இவர் — native: the near base i- + respectful -ar (DEDR 410); Malayalam and Kannada say ivar too"
 duration:
   max_seconds: 245
 requires:

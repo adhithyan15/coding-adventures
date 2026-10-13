@@ -14,7 +14,8 @@ romanization: "koṭṭāvi viṭu"
 concept_tag: TA-VERB-KOTTAVI-VITU
 prerequisites: [TA-C168-nittu, TA-C168-valukku]
 sounds: []
-roots: []
+roots: [dravidian-kottaavi-yawn, dravidian-vidu-let-go]
+etymology_hook: "கொட்டாவி விடு — native: koṭṭāvi 'yawn' (DEDR 2172; Malayalam kōṭṭāvi) + viṭu 'let out' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C168-valukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C168-ACT168-05]; assesses=[] -->
 
 **கொட்டாவி விடு** — *koṭṭāvi viṭu* — "to yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொட்டாவி விடு** (*koṭṭāvi viṭu*) is native: *koṭṭāvi*, "a yawn" (DEDR 2172; Malayalam *kōṭṭāvi*), and *viṭu*, "to let out" (DEDR 5393).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

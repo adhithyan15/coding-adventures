@@ -14,7 +14,8 @@ romanization: "caṭṉi"
 concept_tag: TA-PORUL183-CATNI
 prerequisites: [TA-C183-uppuma, TA-C183-campar]
 sounds: []
-roots: []
+roots: [hindustani-catni]
+etymology_hook: "சட்னி ← Hindustani caṭnī, the source of English chutney too"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C183-campar]
 <!-- hl-knowledge: introduces=[TA-LEX-C183-PORUL183-04]; assesses=[] -->
 
 **சட்னி** — *caṭṉi* — "a chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சட்னி** (*caṭṉi*) is a loan from Hindustani *caṭnī*, "chutney", the source of English *chutney* too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

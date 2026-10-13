@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 83,
-  "sourceHash": "fnv1a64:c79abf923120ffc1",
+  "sourceHash": "fnv1a64:19c507df21d5bc5f",
   "lessonIds": [
     "TA-C83-sixth",
     "TA-C83-seventh",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "tamil/narration/ch83.txt",
   "json": "tamil/narration/ch83.json",
-  "textHash": "fnv1a64:ea0c85883f8619ce",
-  "jsonHash": "fnv1a64:81848f036a3e17c1",
+  "textHash": "fnv1a64:36f6a53492231b2b",
+  "jsonHash": "fnv1a64:c8ea79939527be50",
   "findings": []
 }

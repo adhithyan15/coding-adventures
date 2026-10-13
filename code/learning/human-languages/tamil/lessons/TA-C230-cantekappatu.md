@@ -14,7 +14,8 @@ romanization: "cantēkappaṭu"
 concept_tag: TA-VERB-CANTEKAPPATU
 prerequisites: [TA-C229-vicu, TA-C230-karpanai-cey]
 sounds: []
-roots: []
+roots: [sanskrit-sandeha]
+etymology_hook: "சந்தேகப்படு — cantēkam ← Sanskrit saṁdeha 'doubt' (CDIAL 12905) + native paṭu 'to undergo'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C230-karpanai-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C230-ACT230-02]; assesses=[] -->
 
 **சந்தேகப்படு** — *cantēkappaṭu* — "to doubt, to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சந்தேகப்படு** (*cantēkappaṭu*) is *cantēkam*, "doubt", from Sanskrit *saṁdeha*, "doubt" (CDIAL 12905), with native *paṭu*, "to undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

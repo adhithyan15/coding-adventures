@@ -11,7 +11,8 @@ romanization: "mūḍu"
 concept_tag: TA-VERB-MUUDU
 prerequisites: [TA-C65-open, TA-W21-read-kudi, TA-C63-humility, TA-C64-harvest]
 sounds: []
-roots: []
+roots: [dravidian-mudu-cover]
+etymology_hook: "மூடு — native Dravidian (DEDR 5034); Malayalam mūṭuka 'to cover'"
 duration:
   max_seconds: 250
 requires:
@@ -58,6 +59,11 @@ held in common, a reminder that the sharing is real but never guaranteed.
      rather than spelled out here because narration speaks these comments aloud,
      so quoting it would put it in the learner's ear by the same route the drill
      was kept from putting it in their mouth. The omission is deliberate. -->
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூடு** (*mūḍu*) is native Dravidian. DEDR 5034 lists Malayalam *mūṭuka*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

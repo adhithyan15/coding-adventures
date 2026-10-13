@@ -14,7 +14,8 @@ romanization: "ōṭṭu"
 concept_tag: TA-VERB-OTTU2
 prerequisites: [TA-C195-kontu-va, TA-C195-tiruppik-kotu]
 sounds: []
-roots: []
+roots: [dravidian-oodu-run]
+etymology_hook: "ஓட்டு — native Dravidian (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C195-tiruppik-kotu]
 <!-- hl-knowledge: introduces=[TA-LEX-C195-ACT195-03]; assesses=[] -->
 
 **ஓட்டு** — *ōṭṭu* — "to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓட்டு** (*ōṭṭu*) is native Dravidian (DEDR 1041). It is the causative of *ōṭu*, "to run": to drive is "to make run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "pai"
 concept_tag: TA-NOUN-BAG
 prerequisites: [TA-C68-buy, TA-C66-left, TA-C67-cap]
 sounds: []
-roots: []
+roots: [dravidian-pai-bag]
+etymology_hook: "பை — native Dravidian (DEDR 4450); Malayalam pai"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ you carry home.
 
 Five words now stand in a row you can walk through in order: the கடை you go to, the விலை you
 ask for, the பணம் you hand over, the வாங்கு that does it, and the பை it all leaves in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பை** (*pai*) is native Dravidian. DEDR 4450 lists Malayalam *pai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

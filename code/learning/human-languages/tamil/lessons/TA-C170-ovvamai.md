@@ -14,7 +14,8 @@ romanization: "ovvāmai"
 concept_tag: TA-NALAM170-OVVAMAI
 prerequisites: [TA-C169-itayam, TA-C169-irattam]
 sounds: []
-roots: []
+roots: [dravidian-o-suit]
+etymology_hook: "ஒவ்வாமை — native Dravidian (DEDR 924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C169-irattam]
 <!-- hl-knowledge: introduces=[TA-LEX-C170-NALAM170-01]; assesses=[] -->
 
 **ஒவ்வாமை** — *ovvāmai* — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒவ்வாமை** (*ovvāmai*) is native Dravidian (DEDR 924). It is the negative noun of *o*, "to suit, to agree": "not agreeing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

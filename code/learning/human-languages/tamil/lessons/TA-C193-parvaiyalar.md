@@ -14,7 +14,8 @@ romanization: "pārvaiyāḷar"
 concept_tag: TA-VELAI193-PARVAIYALAR
 prerequisites: [TA-C192-viyapari, TA-C192-caka-uliyar]
 sounds: []
-roots: []
+roots: [dravidian-paar-see]
+etymology_hook: "பார்வையாளர் — native Dravidian (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C192-caka-uliyar]
 <!-- hl-knowledge: introduces=[TA-LEX-C193-VELAI193-01]; assesses=[] -->
 
 **பார்வையாளர்** — *pārvaiyāḷar* — "a spectator, a viewer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பார்வையாளர்** (*pārvaiyāḷar*) is native Dravidian (DEDR 4091). It is *pārvai*, "sight", from *pār*, "to look", with *-āḷar*, "persons".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caripār"
 concept_tag: TA-VERB-CARIPAR
 prerequisites: [TA-C163-pakir, TA-C163-peram-pecu]
 sounds: []
-roots: []
+roots: [sari, dravidian-paar-see]
+etymology_hook: "சரிபார் — sari 'correct' (origin uncertain) + native pār 'to look' (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C163-peram-pecu]
 <!-- hl-knowledge: introduces=[TA-LEX-C163-ACT163-05]; assesses=[] -->
 
 **சரிபார்** — *caripār* — "to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சரிபார்** (*caripār*) is *sari*, "correct", and native *pār*, "to look" (DEDR 4091): "look to see it is right". The origin of *sari* is uncertain, as its own lesson said.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

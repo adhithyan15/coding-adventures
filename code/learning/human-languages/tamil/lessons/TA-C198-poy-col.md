@@ -14,7 +14,8 @@ romanization: "poy col"
 concept_tag: TA-VERB-POY-COL
 prerequisites: [TA-C198-pirarttanai-cey, TA-C198-emarru]
 sounds: []
-roots: []
+roots: [dravidian-poy-lie, dravidian-col-say]
+etymology_hook: "பொய் சொல் — native: poy 'a lie' (DEDR 4531) + col 'to say' (DEDR 2855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C198-emarru]
 <!-- hl-knowledge: introduces=[TA-LEX-C198-ACT198-03]; assesses=[] -->
 
 **பொய் சொல்** — *poy col* — "to tell a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொய் சொல்** (*poy col*) is native: *poy*, "a lie" (DEDR 4531), and *col*, "to say" (DEDR 2855).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

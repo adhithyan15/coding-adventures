@@ -14,7 +14,8 @@ romanization: "raci"
 concept_tag: TA-VERB-RACI
 prerequisites: [TA-C259-patam-etu, TA-C259-nati]
 sounds: []
-roots: []
+roots: [sanskrit-rasa]
+etymology_hook: "ரசி — a verb from Sanskrit rasa 'juice, taste, relish' (CDIAL 10650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C259-nati]
 <!-- hl-knowledge: introduces=[TA-LEX-C259-ACT259-03]; assesses=[] -->
 
 **ரசி** — *raci* — "to enjoy, to appreciate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரசி** (*raci*) is a verb made from Sanskrit *rasa*, "juice, taste, relish" (CDIAL 10650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

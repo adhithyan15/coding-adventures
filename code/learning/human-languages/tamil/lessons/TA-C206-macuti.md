@@ -14,7 +14,8 @@ romanization: "macūti"
 concept_tag: TA-IDAM206-MACUTI
 prerequisites: [TA-C205-kaval-nilaiyam, TA-C206-tevalayam]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "மசூதி ← Arabic masjid 'mosque', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C206-tevalayam]
 <!-- hl-knowledge: introduces=[TA-LEX-C206-IDAM206-02]; assesses=[] -->
 
 **மசூதி** — *macūti* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மசூதி** (*macūti*) is a loan from Arabic *masjid*, "mosque", through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

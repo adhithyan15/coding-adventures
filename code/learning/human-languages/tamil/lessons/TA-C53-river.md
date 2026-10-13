@@ -11,7 +11,8 @@ romanization: "nadi"
 concept_tag: TA-NOUN-RIVER
 prerequisites: [TA-C52-seed, TA-C51-sky, TA-C52-tree]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "நதி ← Sanskrit nadī 'river' (CDIAL 6943)"
 duration:
   max_seconds: 210
 requires:

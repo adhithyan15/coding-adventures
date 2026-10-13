@@ -14,7 +14,8 @@ romanization: "paravu"
 concept_tag: TA-VERB-PARAVU
 prerequisites: [TA-C259-olunkupatuttu, TA-C260-atikari2]
 sounds: []
-roots: []
+roots: [dravidian-para-spread]
+etymology_hook: "பரவு — native Dravidian (DEDR 3949); Malayalam parakka 'to spread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C260-atikari2]
 <!-- hl-knowledge: introduces=[TA-LEX-C260-ACT260-02]; assesses=[] -->
 
 **பரவு** — *paravu* — "to spread (of news, disease, fire)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பரவு** (*paravu*) is native Dravidian. DEDR 3949 lists Malayalam *parakka*, "to spread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

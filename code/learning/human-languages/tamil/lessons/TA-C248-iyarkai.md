@@ -14,7 +14,8 @@ romanization: "iyaṟkai"
 concept_tag: TA-PORUL248-IYARKAI
 prerequisites: [TA-C248-varatci, TA-C248-nilanatukkam]
 sounds: []
-roots: []
+roots: [dravidian-iyal-nature]
+etymology_hook: "இயற்கை — native Dravidian, built on iyal 'nature, quality' (DEDR 471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C248-nilanatukkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C248-PORUL248-03]; assesses=[] -->
 
 **இயற்கை** — *iyaṟkai* — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இயற்கை** (*iyaṟkai*) is native Dravidian, built on *iyal*, "to be fitting; nature, quality" (DEDR 471), which gives Malayalam iyaluka.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paḻutta"
 concept_tag: TA-GUNAM178-PALUTTA
 prerequisites: [TA-C178-vilaiyuyarnta, TA-C178-ilavacam]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "பழுத்த — native Dravidian (DEDR 4004); Malayalam paḻukka 'to grow ripe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C178-ilavacam]
 <!-- hl-knowledge: introduces=[TA-LEX-C178-GUNAM178-05]; assesses=[] -->
 
 **பழுத்த** — *paḻutta* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழுத்த** (*paḻutta*) is native Dravidian. DEDR 4004 lists Malayalam *paḻukka*, "to grow ripe". It is *paḻu*, "to ripen", in the form "that has ripened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

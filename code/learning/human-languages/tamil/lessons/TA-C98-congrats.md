@@ -11,7 +11,8 @@ romanization: "vāḻttukaḷ"
 concept_tag: TA-WELCOME-CONGRATS
 prerequisites: [TA-C97-thatshow, TA-C97-whynot]
 sounds: []
-roots: []
+roots: [vaazh-live-dravidian]
+etymology_hook: "வாழ்த்துகள் — native Dravidian (DEDR 5372); Malayalam vāḻttuka 'to bless'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C97-whynot]
 **வாழ்த்துகள்** (*vāḻttukaḷ*) — "congratulations", "good wishes".
 
 It is built on **வாழ்**, "to live": to wish someone well is to wish them life.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாழ்த்துகள்** (*vāḻttukaḷ*) is native Dravidian. DEDR 5372 lists Malayalam *vāḻttuka*, "to bless". It is *vāḻttu*, "a good wish", with the plural *-kaḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

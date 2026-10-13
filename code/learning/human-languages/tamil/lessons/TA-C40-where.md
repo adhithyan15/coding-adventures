@@ -11,7 +11,8 @@ romanization: "eṅgē"
 concept_tag: TA-DEIXIS-WHERE
 prerequisites: [TA-C40-who]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "எங்கே — native: the question base e- + a place ending (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ Its partners are **இங்கே** *iṅgē* and **அங்கே** *aṅgē*
 already met. The three differ by one sound at the front — **e-** for ask — and
 that is not a coincidence. It is the whole system, and the last lesson of this
 chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எங்கே** (*eṅgē*) is native Dravidian: the question base *e-* with a place ending (DEDR 5151).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-06] -->

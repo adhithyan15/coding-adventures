@@ -14,7 +14,8 @@ romanization: "tairiyamāṉa"
 concept_tag: TA-QUAL147-TAIRIYAMANA
 prerequisites: [TA-C147-putticali, TA-C147-comperi]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya]
+etymology_hook: "தைரியமான — tairiyam ← Sanskrit dhairya 'steadiness, courage', a well-established loan, + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C147-comperi]
 <!-- hl-knowledge: introduces=[TA-LEX-C147-QUAL147-05]; assesses=[] -->
 
 **தைரியமான** — *tairiyamāṉa* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தைரியமான** (*tairiyamāṉa*) is *tairiyam*, "courage", a well-established loan from Sanskrit *dhairya*, "steadiness, courage", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

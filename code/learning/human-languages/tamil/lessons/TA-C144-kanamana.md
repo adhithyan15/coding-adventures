@@ -14,7 +14,8 @@ romanization: "kaṉamāṉa"
 concept_tag: TA-QUAL144-KANAMANA
 prerequisites: [TA-C144-cutana, TA-C144-kulirnta]
 sounds: []
-roots: []
+roots: [sanskrit-ghana]
+etymology_hook: "கனமான ← Sanskrit ghana 'compact, firm, dense' (CDIAL 4424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C144-kulirnta]
 <!-- hl-knowledge: introduces=[TA-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **கனமான** — *kaṉamāṉa* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கனமான** (*kaṉamāṉa*) is a loan from Sanskrit *ghana*, "compact, firm, dense" (CDIAL 4424). *Kaṉam*, "weight", takes *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

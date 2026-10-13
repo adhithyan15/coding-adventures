@@ -11,7 +11,8 @@ romanization: "vā"
 concept_tag: TA-VERB-COME
 prerequisites: [TA-C32-vaa]
 sounds: []
-roots: []
+roots: [dravidian-vaa-come]
+etymology_hook: "வா — native Dravidian (DEDR 5270); Malayalam varuka, Kannada bā, Telugu rā"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C32-vaa]
 **வா** (*vā*) — "come".
 
 You met it beside its partner *varu-*; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the tense endings attach to *varu-*, not to *vā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வா** (*vā*) is native Dravidian. DEDR 5270 lists Malayalam *varuka*, Kannada *bā* and Telugu *rā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

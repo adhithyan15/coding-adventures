@@ -14,7 +14,8 @@ romanization: "kattarikkōl"
 concept_tag: TA-THINGS135-KATTARIKKOL
 prerequisites: [TA-C134-kanini, TA-C135-minviciri]
 sounds: []
-roots: []
+roots: [sanskrit-kartari, dravidian-kol-stick]
+etymology_hook: "கத்தரிக்கோல் — kattari ← Sanskrit kartari 'scissors' (CDIAL 2858) + native kōl 'rod' (DEDR 2237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C135-minviciri]
 <!-- hl-knowledge: introduces=[TA-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **கத்தரிக்கோல்** — *kattarikkōl* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கத்தரிக்கோல்** (*kattarikkōl*) is *kattari*, "scissors", from Sanskrit *kartari*, "scissors, knife" (CDIAL 2858), with native *kōl*, "stick, rod" (DEDR 2237).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

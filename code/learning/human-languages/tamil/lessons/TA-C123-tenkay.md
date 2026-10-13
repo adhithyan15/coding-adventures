@@ -14,7 +14,8 @@ romanization: "tēṅkāy"
 concept_tag: TA-THINGS123-TENKAY
 prerequisites: [TA-C123-valaippalam, TA-C123-mampalam]
 sounds: []
-roots: []
+roots: [dravidian-tengu-coconut]
+etymology_hook: "தேங்காய் — native Dravidian (DEDR 3408); Malayalam teṅṅu 'coconut tree', Kannada teṅgu, Telugu teṅkāya"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C123-mampalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **தேங்காய்** — *tēṅkāy* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேங்காய்** (*tēṅkāy*) is native Dravidian. DEDR 3408 lists Malayalam *teṅṅu*, "coconut tree", Kannada *teṅgu* and Telugu *teṅkāya*. It is *teṅ*, "coconut palm", with *kāy*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

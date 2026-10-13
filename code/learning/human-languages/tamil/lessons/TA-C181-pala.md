@@ -14,7 +14,8 @@ romanization: "pala"
 concept_tag: TA-GUNAM181-PALA
 prerequisites: [TA-C181-pitittamana, TA-C181-mocamana]
 sounds: []
-roots: []
+roots: [dravidian-pala-many]
+etymology_hook: "பல — native Dravidian (DEDR 3987); Malayalam pala, Kannada pala, Telugu palu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C181-mocamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C181-GUNAM181-03]; assesses=[] -->
 
 **பல** — *pala* — "many, several".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல** (*pala*) is native Dravidian. DEDR 3987 lists Malayalam *pala*, Kannada *pala* and Telugu *palu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

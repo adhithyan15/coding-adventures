@@ -14,7 +14,8 @@ romanization: "ulakam"
 concept_tag: TA-IDAM265-ULAKAM
 prerequisites: [TA-C265-kopuram, TA-C265-cirai]
 sounds: []
-roots: []
+roots: [sanskrit-loka]
+etymology_hook: "உலகம் ← Sanskrit loka 'free space, the world' (CDIAL 11119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C265-cirai]
 <!-- hl-knowledge: introduces=[TA-LEX-C265-IDAM265-05]; assesses=[] -->
 
 **உலகம்** — *ulakam* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உலகம்** (*ulakam*) is a loan from Sanskrit *loka*, "free space, the world" (CDIAL 11119).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nēramākiviṭṭatu"
 concept_tag: TA-CARE-LATE
 prerequisites: [TA-C106-takecare, TA-C106-safely]
 sounds: []
-roots: []
+roots: [dravidian-neram-time, tamil-aaku-become]
+etymology_hook: "நேரமாகிவிட்டது — native: nēram 'time' (DEDR 3774) + ā 'become' (DEDR 333) + viṭu (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C106-safely]
 **நேரமாகிவிட்டது** (*nēramākiviṭṭatu*) — "it has got late", literally "it has become time".
 
 **நேரம்** is "time". The first reason to leave.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேரமாகிவிட்டது** (*nēramākiviṭṭatu*) is native: *nēram*, "time" (DEDR 3774), *ā*, "to become" (DEDR 333), and *viṭu*, "to let go", which marks the thing as done (DEDR 5393): "time has become (late)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

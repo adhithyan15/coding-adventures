@@ -14,7 +14,8 @@ romanization: "kukai"
 concept_tag: TA-IDAM175-KUKAI
 prerequisites: [TA-C174-payani, TA-C175-palaivanam]
 sounds: []
-roots: []
+roots: [sanskrit-guha]
+etymology_hook: "குகை ← Sanskrit guhā 'hiding place, cave' (CDIAL 4220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C175-palaivanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C175-IDAM175-02]; assesses=[] -->
 
 **குகை** — *kukai* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குகை** (*kukai*) is a loan from Sanskrit *guhā*, "hiding place, cave" (CDIAL 4220).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

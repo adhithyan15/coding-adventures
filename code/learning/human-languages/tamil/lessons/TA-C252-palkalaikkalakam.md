@@ -14,7 +14,8 @@ romanization: "palkalaikkaḻakam"
 concept_tag: TA-VELAI252-PALKALAIKKALAKAM
 prerequisites: [TA-C251-mutalali, TA-C252-matippen]
 sounds: []
-roots: []
+roots: [dravidian-pala-many, dravidian-kal-learn, dravidian-kazhakam-assembly]
+etymology_hook: "பல்கலைக்கழகம் — native: pal 'many' (DEDR 3987) + kalai 'arts' (DEDR 1297) + kaḻakam 'college' (DEDR 1345)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C252-matippen]
 <!-- hl-knowledge: introduces=[TA-LEX-C252-VELAI252-02]; assesses=[] -->
 
 **பல்கலைக்கழகம்** — *palkalaikkaḻakam* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல்கலைக்கழகம்** (*palkalaikkaḻakam*) is native: *pal*, "many" (DEDR 3987), *kalai*, "arts and learning" (DEDR 1297), and *kaḻakam*, "assembly, college" (DEDR 1345): "the college of many arts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūṭupaṉi"
 concept_tag: TA-PORUL219-MUTUPANI
 prerequisites: [TA-C219-munkil, TA-C219-vanavil]
 sounds: []
-roots: []
+roots: [dravidian-mudu-cover, dravidian-pani-dew]
+etymology_hook: "மூடுபனி — native: mūṭu 'to cover' (DEDR 5034) + paṉi 'mist' (DEDR 4035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C219-vanavil]
 <!-- hl-knowledge: introduces=[TA-LEX-C219-PORUL219-03]; assesses=[] -->
 
 **மூடுபனி** — *mūṭupaṉi* — "fog, mist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூடுபனி** (*mūṭupaṉi*) is native: *mūṭu*, "to cover" (DEDR 5034), and *paṉi*, "dew, mist" (DEDR 4035): "the covering mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

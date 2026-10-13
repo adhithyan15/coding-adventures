@@ -11,7 +11,8 @@ romanization: "peṭṭi"
 concept_tag: TA-NOUN-BOX
 prerequisites: [TA-C54-bowl, TA-C52-seed, TA-C53-village]
 sounds: []
-roots: []
+roots: [dravidian-petti-box]
+etymology_hook: "பெட்டி — native Dravidian (DEDR 4388); Malayalam peṭṭi, Kannada peṭṭi, Telugu peṭṭe"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C54-bowl]
 Malayalam പെട്ടി, Telugu పెట్టె, Tamil பெட்டி — the family agrees again, down to the doubled ட in the middle. Two words in one short run where all three sisters say the same thing is worth noticing.
 
 A பெட்டி is a box of any size: the tin trunk clothes live in, a matchbox, and the carriage of a train, which Tamil calls a *rayil peṭṭi*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெட்டி** (*peṭṭi*) is native Dravidian. DEDR 4388 lists Malayalam *peṭṭi*, Kannada *peṭṭi* and Telugu *peṭṭe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

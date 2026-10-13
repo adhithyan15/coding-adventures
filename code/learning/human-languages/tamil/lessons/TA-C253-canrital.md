@@ -14,7 +14,8 @@ romanization: "cāṉṟitaḻ"
 concept_tag: TA-VELAI253-CANRITAL
 prerequisites: [TA-C253-nitipati, TA-C253-oyvutiyam]
 sounds: []
-roots: []
+roots: [dravidian-itazh-petal]
+etymology_hook: "சான்றிதழ் — a coinage: cāṉṟu 'proof' (origin uncertain) + native itaḻ 'leaf' (DEDR 459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C253-oyvutiyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C253-VELAI253-05]; assesses=[] -->
 
 **சான்றிதழ்** — *cāṉṟitaḻ* — "a certificate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சான்றிதழ்** (*cāṉṟitaḻ*) is a modern coinage: *cāṉṟu*, "proof, witness", and native *itaḻ*, "leaf, petal" (DEDR 459): "a leaf of proof". The origin of *cāṉṟu* is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

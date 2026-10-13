@@ -14,7 +14,8 @@ romanization: "vāṭu"
 concept_tag: TA-VERB-VATU
 prerequisites: [TA-C230-pativerru, TA-C231-mayanku]
 sounds: []
-roots: []
+roots: [dravidian-vaadu-wither]
+etymology_hook: "வாடு — native Dravidian (DEDR 5342); Malayalam vāṭuka 'to fade, wither'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C231-mayanku]
 <!-- hl-knowledge: introduces=[TA-LEX-C231-ACT231-02]; assesses=[] -->
 
 **வாடு** — *vāṭu* — "to wilt, to wither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாடு** (*vāṭu*) is native Dravidian. DEDR 5342 lists Malayalam *vāṭuka*, "to fade, wither".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
