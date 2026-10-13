@@ -14,7 +14,8 @@ romanization: "sarṭṭiphikkaṟṟŭ"
 concept_tag: ML-VASTU324-SARTTIPHIKKARRU
 prerequisites: [ML-C323-malli, ML-C324-rekha]
 sounds: []
-roots: []
+roots: [english-certificate]
+etymology_hook: "sarṭṭiphikkaṟṟŭ ← English certificate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C324-rekha]
 <!-- hl-knowledge: introduces=[ML-LEX-C324-VASTU324-02]; assesses=[] -->
 
 **സർട്ടിഫിക്കറ്റ്** — *sarṭṭiphikkaṟṟŭ* — "a certificate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സർട്ടിഫിക്കറ്റ്** (*sarṭṭiphikkaṟṟŭ*) ← English *certificate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taniye"
 concept_tag: ML-KARANAM317-TANIYE
 prerequisites: [ML-C316-pancayattu, ML-C316-nattinpuram]
 sounds: []
-roots: []
+roots: [dravidian-tan-self]
+etymology_hook: "taniye: native Dravidian; DEDR 3196 lists Malayalam tani 'by itself, alone' under tān 'self'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C316-nattinpuram]
 <!-- hl-knowledge: introduces=[ML-LEX-C317-KARANAM317-01]; assesses=[] -->
 
 **തനിയെ** — *taniye* — "alone, by oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തനിയെ** (*taniye*) is native Dravidian: DEDR 3196 lists *tani*, "by itself, alone", under *tān*, "self", with Tamil *tāṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

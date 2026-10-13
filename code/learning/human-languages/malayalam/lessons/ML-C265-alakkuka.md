@@ -14,7 +14,8 @@ romanization: "aḷakkuka"
 concept_tag: ML-VERB-ALAKKUKA
 prerequisites: [ML-C265-ketuttuka, ML-C265-kettuka]
 sounds: []
-roots: []
+roots: [dravidian-ala-measure]
+etymology_hook: "aḷakkuka: native Dravidian, one word with Tamil aḷa and Kannada aḷe (DEDR 295)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C265-kettuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C265-KRIYA265-05]; assesses=[] -->
 
 **അളക്കുക** — *aḷakkuka* — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അളക്കുക** (*aḷakkuka*) is native Dravidian, one word with Tamil *aḷa*, Kannada *aḷe* and Telugu *alavi* (DEDR 295).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

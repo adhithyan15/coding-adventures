@@ -14,7 +14,8 @@ romanization: "ōphākkuka"
 concept_tag: ML-VERB-OPHAKKUKA
 prerequisites: [ML-C188-maykkuka, ML-C188-onakkuka]
 sounds: []
-roots: []
+roots: [english-off, aaka-dravidian]
+etymology_hook: "ōphākkuka: English off + native ākkuka 'to make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C188-onakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C188-KRIYA188-03]; assesses=[] -->
 
 **ഓഫാക്കുക** — *ōphākkuka* — "to switch off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓഫാക്കുക** (*ōphākkuka*) joins English *off* to native *ākkuka*, "to make" (DEDR 333): "make it off". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

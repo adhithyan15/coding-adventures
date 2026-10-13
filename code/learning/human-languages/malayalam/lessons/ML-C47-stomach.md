@@ -11,7 +11,8 @@ romanization: "vayaṟŭ"
 concept_tag: ML-NOUN-STOMACH
 prerequisites: [ML-C47-finger, ML-C45-wife]
 sounds: []
-roots: []
+roots: [dravidian-vayiru-belly]
+etymology_hook: "vayaṟŭ: native Dravidian, one word with Tamil vayiṟu and Kannada basaṟ(u) (DEDR 5259)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native, and Tamil வயிறு (*vayiṟu*) is again the near-twin. The two s
 So on a single body the family sorts itself twice over. Leg, tooth and finger run back to one shared ancestor; the belly splits the four into two camps of two.
 
 The ends of these words are worth a moment as well. This one closes on റ് , the hard *ṟ* with the half-vowel after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വയറ്** (*vayaṟŭ*) is native Dravidian, one word with Tamil *vayiṟu* and Kannada *basaṟ(u)* (DEDR 5259).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

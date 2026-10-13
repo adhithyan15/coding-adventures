@@ -14,7 +14,8 @@ romanization: "ippōḻuṁ"
 concept_tag: ML-SAMAYAM196-IPPOLUM
 prerequisites: [ML-C195-munkutti, ML-C196-ituvare]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-pozhutu-time]
+etymology_hook: "ippōḻuṁ: native Dravidian, ippōḷ 'now' (DEDR 410, 4559) + -uṁ 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C196-ituvare]
 <!-- hl-knowledge: introduces=[ML-LEX-C196-SAMAYAM196-02]; assesses=[] -->
 
 **ഇപ്പോഴും** — *ippōḻuṁ* — "still, even now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇപ്പോഴും** (*ippōḻuṁ*) is native Dravidian: *ippōḷ*, "now", built from "this" (DEDR 410) and "time" (DEDR 4559, with Tamil *poḻutu*), with *-uṁ*, "even": "even now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

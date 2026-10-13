@@ -14,7 +14,8 @@ romanization: "kuttaneyuḷḷa"
 concept_tag: ML-GUNAM285-KUTTANEYULLA
 prerequisites: [ML-C285-paranna, ML-C285-culinna]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "kuttaneyuḷḷa: kuttane 'steeply', of uncertain origin, + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C285-culinna]
 <!-- hl-knowledge: introduces=[ML-LEX-C285-GUNAM285-03]; assesses=[] -->
 
 **കുത്തനെയുള്ള** — *kuttaneyuḷḷa* — "steep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുത്തനെയുള്ള** (*kuttaneyuḷḷa*) is "that is steep": *kuttane*, "steeply", a word of uncertain origin, with native *uḷḷa*, "that is" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

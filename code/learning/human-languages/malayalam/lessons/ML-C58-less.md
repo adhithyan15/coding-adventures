@@ -11,7 +11,8 @@ romanization: "kuṟavŭ"
 concept_tag: ML-WORD-LESS
 prerequisites: [ML-C58-more, ML-C56-basket]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟavŭ: native Dravidian, from the verb 'to dwindle, fall short'; Tamil kuṟu 'short' (DEDR 1851)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The mirror of the last one, built the same way: കുറയുക (*kuṟayuka*
 കുറവ് is less of something, and it is also a shortfall or a lack. A house short of water has a water കുറവ്, and a piece of work with something missing has a കുറവ് in it.
 
 The റ here is the hard trilled one you met in the rock-word, and the ŭ closes the word the way it closed the root-word and the seed-word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറവ്** (*kuṟavŭ*) is native Dravidian, a noun from the verb "to dwindle, fall short"; DEDR 1851 lists the root with Tamil *kuṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

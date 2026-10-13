@@ -14,7 +14,8 @@ romanization: "uṇaruka"
 concept_tag: ML-VERB-UNARUKA
 prerequisites: [ML-C171-elunnelkkuka, ML-C171-urannuka]
 sounds: []
-roots: []
+roots: [dravidian-unar-wake]
+etymology_hook: "uṇaruka: native Dravidian, one word with Tamil uṇar and Kannada oṇar (DEDR 603)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C171-urannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C171-ACT171-03]; assesses=[] -->
 
 **ഉണരുക** — *uṇaruka* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉണരുക** (*uṇaruka*) is native Dravidian, one word with Tamil *uṇar* and Kannada *oṇar* (DEDR 603). It also means "to perceive, be aware".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "veṇṭaykka"
 concept_tag: ML-VASTU259-VENTAYKKA
 prerequisites: [ML-C258-trikonam, ML-C259-pavaykka]
 sounds: []
-roots: []
+roots: [malayalam-venda]
+etymology_hook: "veṇṭaykka: a plant name of uncertain origin + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C259-pavaykka]
 <!-- hl-knowledge: introduces=[ML-LEX-C259-VASTU259-02]; assesses=[] -->
 
 **വെണ്ടയ്ക്ക** — *veṇṭaykka* — "okra, lady's finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെണ്ടയ്ക്ക** (*veṇṭaykka*) is a plant name of uncertain origin with the ending for an unripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

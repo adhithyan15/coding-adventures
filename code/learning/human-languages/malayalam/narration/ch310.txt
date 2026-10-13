@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to describe, then the Malayalam for to
 You'll want to know: തെന്നുക.
 തെന്നുക — tennuka — "to slip".
 
+The word, taken apart.
+തെന്നുക (tennuka) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to avoid, then the Malayalam for to sl
 
 You'll want to know: ഉരയ്ക്കുക.
 ഉരയ്ക്കുക — uraykkuka — "to scrub, to rub".
+
+The word, taken apart.
+ഉരയ്ക്കുക (uraykkuka) is native Dravidian, one word with Tamil urai, Kannada urdu and Telugu ora (DEDR 665). DEDR 665 compares Sanskrit uñch, with a query.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to slip, then the Malayalam for to scr
 You'll want to know: അഴിക്കുക.
 അഴിക്കുക — aḻikkuka — "to untie, to undo".
 
+The word, taken apart.
+അഴിക്കുക (aḻikkuka) is native Dravidian, one word with Tamil aḻi and Kannada aḻi (DEDR 277).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to scrub, then the Malayalam for to un
 You'll want to know: ഉപേക്ഷിക്കുക.
 ഉപേക്ഷിക്കുക — upēkṣikkuka — "to give up, to abandon".
 
+The word, taken apart.
+ഉപേക്ഷിക്കുക (upēkṣikkuka) is built on Sanskrit upēkṣā, "overlooking, disregard" (CDIAL 2319), with the ending that makes a Malayalam verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to untie, then the Malayalam for to gi
 
 You'll want to know: ആവർത്തിക്കുക.
 ആവർത്തിക്കുക — āvarttikkuka — "to repeat".
+
+The word, taken apart.
+ആവർത്തിക്കുക (āvarttikkuka) is built on Sanskrit āvartana, "turning round, recurrence" (CDIAL 1420), with the ending that makes a Malayalam verb.
 
 What you've built.
 One more word for this chapter.

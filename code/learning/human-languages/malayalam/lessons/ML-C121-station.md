@@ -11,7 +11,8 @@ romanization: "sṟṟēṣan"
 concept_tag: ML-TRAVEL-STATION
 prerequisites: [ML-C121-ticket, ML-C121-bus]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṟṟēṣan ← English station, from Latin statio 'a standing'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C121-bus]
 
 **സ്റ്റേഷൻ** (*sṟṟēṣan*) — "a station", from English. **സ്റ്റേഷൻ എവിടെ?** — "where is the
 station?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്റ്റേഷൻ** (*sṟṟēṣan*) ← English *station*, from Latin *statio*, "a standing place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

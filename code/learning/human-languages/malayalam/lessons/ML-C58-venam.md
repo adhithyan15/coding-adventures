@@ -11,7 +11,8 @@ romanization: "vēṇaṁ"
 concept_tag: ML-WORD-WANT
 prerequisites: [ML-C58-a-little, ML-C06-dative-subject, ML-C15-vellam-ari]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "vēṇaṁ: native Dravidian, one word with Tamil vēṇṭu (DEDR 5528)"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ Say them.
 This is the word the rest of the chapter is built against. The next lesson
 gives you its negative partner, and between them they make a whole exchange:
 one word offers, one accepts, one declines.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേണം** (*vēṇaṁ*) is native Dravidian, one word with Tamil *vēṇṭu* (DEDR 5528).
 
 ## Grammar Lens: nobody wants anything in Malayalam
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-WANT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C15-VELLAM-ARI-01] -->

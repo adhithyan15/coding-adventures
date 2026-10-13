@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 260,
-  "sourceHash": "fnv1a64:5302e9bf30b97706",
+  "sourceHash": "fnv1a64:7e5b81c5a9c9aa99",
   "lessonIds": [
     "ML-C260-kaccavatam",
     "ML-C260-kaccavatakkaran",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch260.txt",
   "json": "malayalam/narration/ch260.json",
-  "textHash": "fnv1a64:f6f3dfdf314aa84c",
-  "jsonHash": "fnv1a64:1d07ea222157eef4",
+  "textHash": "fnv1a64:633b3d53c3716e2e",
+  "jsonHash": "fnv1a64:4b44b7720ad684de",
   "findings": []
 }

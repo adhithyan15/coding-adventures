@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 62,
-  "sourceHash": "fnv1a64:17d0e5d9969be81c",
+  "sourceHash": "fnv1a64:e8de066a48e872a7",
   "lessonIds": [
     "ML-C62-rope",
     "ML-C62-thread",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch62.txt",
   "json": "malayalam/narration/ch62.json",
-  "textHash": "fnv1a64:c752357150fc3d7e",
-  "jsonHash": "fnv1a64:0a07570062e25343",
+  "textHash": "fnv1a64:0cd4fe09c7ef8b45",
+  "jsonHash": "fnv1a64:b8ffae7a920e5a89",
   "findings": []
 }

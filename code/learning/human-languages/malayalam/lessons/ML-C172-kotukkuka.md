@@ -14,7 +14,8 @@ romanization: "koṭukkuka"
 concept_tag: ML-VERB-KOTUKKUKA
 prerequisites: [ML-C171-kalukuka, ML-C172-vevikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kodu-give]
+etymology_hook: "koṭukkuka: native Dravidian, one word with Tamil koṭu and Kannada koḍu (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C172-vevikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C172-ACT172-02]; assesses=[] -->
 
 **കൊടുക്കുക** — *koṭukkuka* — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊടുക്കുക** (*koṭukkuka*) is native Dravidian, one word with Tamil *koṭu* and Kannada *koḍu* (DEDR 2053). It is the "give" that goes to a third person, the partner of *tarū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

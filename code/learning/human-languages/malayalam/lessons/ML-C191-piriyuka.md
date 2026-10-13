@@ -14,7 +14,8 @@ romanization: "piriyuka"
 concept_tag: ML-VERB-PIRIYUKA
 prerequisites: [ML-C191-tulayuka, ML-C191-urukuka]
 sounds: []
-roots: []
+roots: [dravidian-piri-part]
+etymology_hook: "piriyuka: native Dravidian, one word with Tamil piri (DEDR 4176)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C191-urukuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C191-KRIYA191-04]; assesses=[] -->
 
 **പിരിയുക** — *piriyuka* — "to part, to separate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിരിയുക** (*piriyuka*) is native Dravidian, one word with Tamil *piri* (DEDR 4176).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

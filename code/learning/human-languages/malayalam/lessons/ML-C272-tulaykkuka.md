@@ -14,7 +14,8 @@ romanization: "tuḷaykkuka"
 concept_tag: ML-VERB-TULAYKKUKA
 prerequisites: [ML-C272-meyuka, ML-C272-neyyuka]
 sounds: []
-roots: []
+roots: [dravidian-tol-hole]
+etymology_hook: "tuḷaykkuka: native Dravidian, one word with Tamil toḷ and Kannada toḷe (DEDR 3528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C272-neyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C272-KRIYA272-04]; assesses=[] -->
 
 **തുളയ്ക്കുക** — *tuḷaykkuka* — "to drill, to bore a hole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുളയ്ക്കുക** (*tuḷaykkuka*) is native Dravidian, one word with Tamil *toḷ* and Kannada *toḷe* (DEDR 3528). It is the verb of *tuḷa*, "a hole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

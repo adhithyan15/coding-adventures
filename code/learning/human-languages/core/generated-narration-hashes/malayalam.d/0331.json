@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 331,
-  "sourceHash": "fnv1a64:31a44e17e0e33584",
+  "sourceHash": "fnv1a64:6a9bb04c3f992907",
   "lessonIds": [
     "ML-C331-cirava",
     "ML-C331-cattukam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch331.txt",
   "json": "malayalam/narration/ch331.json",
-  "textHash": "fnv1a64:9083fc6a61d069bd",
-  "jsonHash": "fnv1a64:7a4ba0e3e092793b",
+  "textHash": "fnv1a64:e85469ab8e46488b",
+  "jsonHash": "fnv1a64:23476c541bc9b190",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "aṅṅane"
 concept_tag: ML-WORD-JUST-SO
 prerequisites: [ML-C49-perhaps, ML-C47-stomach]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "aṅṅane: native Dravidian, the far-pointing base + 'manner'; Tamil aṅṅaṉ (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ This one the book has half-taught already. The chapter on pointing laid out a pa
 Swap its opening for the far one and the question becomes an answer. അങ്ങനെ is 'that way' — the manner just spoken of, agreed to.
 
 Kannada does the same trick with ಹಾಗೆ (*hāge*), built on its own far-pointer. The machinery is inherited; each sister runs it with her own parts.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അങ്ങനെ** (*aṅṅane*) is native Dravidian, from the far-pointing base of *atŭ*. DEDR 1 lists it with Tamil *aṅṅaṉ*, "in that manner".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

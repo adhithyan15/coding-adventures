@@ -14,7 +14,8 @@ romanization: "kūṭṭuka"
 concept_tag: ML-VERB-KUTTUKA
 prerequisites: [ML-C303-tukkuka, ML-C303-ennuka]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūṭṭuka: native Dravidian, 'make come together'; Tamil kūṭu (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C303-ennuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C303-KRIYA303-03]; assesses=[] -->
 
 **കൂട്ടുക** — *kūṭṭuka* — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂട്ടുക** (*kūṭṭuka*) is native Dravidian, the causative of the verb "to come together"; DEDR 1882 lists the root with Tamil *kūṭu* and Kannada *kūḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

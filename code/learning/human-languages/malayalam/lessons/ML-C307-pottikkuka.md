@@ -14,7 +14,8 @@ romanization: "poṭṭikkuka"
 concept_tag: ML-VERB-POTTIKKUKA
 prerequisites: [ML-C307-valaruka, ML-C307-abhinayikkuka]
 sounds: []
-roots: []
+roots: [dravidian-pottu-burst]
+etymology_hook: "poṭṭikkuka: native Dravidian, 'make burst'; Tamil poṭṭu (DEDR 4490)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C307-abhinayikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C307-KRIYA307-04]; assesses=[] -->
 
 **പൊട്ടിക്കുക** — *poṭṭikkuka* — "to burst, to set off (firecrackers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊട്ടിക്കുക** (*poṭṭikkuka*) is native Dravidian, the causative of the verb "to burst, crack"; DEDR 4490 lists the root with Tamil *poṭṭu* and Kannada *poṭṭage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

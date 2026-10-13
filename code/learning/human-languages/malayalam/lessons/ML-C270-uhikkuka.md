@@ -14,7 +14,8 @@ romanization: "ūhikkuka"
 concept_tag: ML-VERB-UHIKKUKA
 prerequisites: [ML-C269-marikkuka, ML-C270-etirkkuka]
 sounds: []
-roots: []
+roots: [sanskrit-uha]
+etymology_hook: "ūhikkuka ← Sanskrit ūha 'consideration, conjecture' (CDIAL 2443) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C270-etirkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C270-KRIYA270-02]; assesses=[] -->
 
 **ഊഹിക്കുക** — *ūhikkuka* — "to guess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഊഹിക്കുക** (*ūhikkuka*) is built on Sanskrit *ūha*, "consideration, conjecture" (CDIAL 2443), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

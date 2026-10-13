@@ -11,7 +11,8 @@ romanization: "chardi"
 concept_tag: ML-BODY-VOMIT
 prerequisites: [ML-C117-sweat, ML-C117-tablet]
 sounds: []
-roots: []
+roots: [sanskrit-chardi]
+etymology_hook: "chardi ← Sanskrit chardi 'vomiting', a tatsama (CDIAL 4999)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C117-tablet]
 
 **ഛർദ്ദി** (*chardi*) — "vomiting". It opens with **ഛ**, the letter you wrote from
 **അച്ഛൻ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഛർദ്ദി** (*chardi*) ← Sanskrit *chardi*, "vomiting", taken over whole as a tatsama (CDIAL 4999).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

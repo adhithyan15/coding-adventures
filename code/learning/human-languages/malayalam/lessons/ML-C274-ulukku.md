@@ -14,7 +14,8 @@ romanization: "uḷukkŭ"
 concept_tag: ML-AROGYAM274-ULUKKU
 prerequisites: [ML-C273-nulluka, ML-C274-niru]
 sounds: []
-roots: []
+roots: [dravidian-ulukku-sprain]
+etymology_hook: "uḷukkŭ: native Dravidian, one word with Tamil uḷukku and Kannada ulaku (DEDR 2702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C274-niru]
 <!-- hl-knowledge: introduces=[ML-LEX-C274-AROGYAM274-02]; assesses=[] -->
 
 **ഉളുക്ക്** — *uḷukkŭ* — "a sprain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉളുക്ക്** (*uḷukkŭ*) is native Dravidian, one word with Tamil *uḷukku*, Kannada *ulaku* and Telugu *iluku* (DEDR 2702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

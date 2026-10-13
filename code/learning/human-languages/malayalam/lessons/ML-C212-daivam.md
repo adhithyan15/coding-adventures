@@ -14,7 +14,8 @@ romanization: "daivaṁ"
 concept_tag: ML-VASTU212-DAIVAM
 prerequisites: [ML-C212-samgitam, ML-C212-matsaram]
 sounds: []
-roots: []
+roots: [sanskrit-daiva]
+etymology_hook: "daivaṁ ← Sanskrit daiva 'divine; divine power', a tatsama (CDIAL 6569)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C212-matsaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C212-VASTU212-04]; assesses=[] -->
 
 **ദൈവം** — *daivaṁ* — "God".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദൈവം** (*daivaṁ*) ← Sanskrit *daiva*, "divine; divine power", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 6569). It is built on *dēva*, "god".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

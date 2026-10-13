@@ -14,7 +14,8 @@ romanization: "janikkuka"
 concept_tag: ML-VERB-JANIKKUKA
 prerequisites: [ML-C269-prartthikkuka, ML-C269-alankarikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-jan]
+etymology_hook: "janikkuka ← Sanskrit jan 'to be born' (CDIAL 5204) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C269-alankarikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C269-KRIYA269-04]; assesses=[] -->
 
 **ജനിക്കുക** — *janikkuka* — "to be born".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജനിക്കുക** (*janikkuka*) is built on the Sanskrit root *jan*, "to be born", as in *jāyatē*, "is born" (CDIAL 5204), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pūrippikkuka"
 concept_tag: ML-VERB-PURIPPIKKUKA
 prerequisites: [ML-C184-bhedamakuka, ML-C184-vyayamam-ceyyuka]
 sounds: []
-roots: []
+roots: [sanskrit-purna]
+etymology_hook: "pūrippikkuka ← Sanskrit pūrayati 'fills' (CDIAL 8335), as a Malayalam causative"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C184-vyayamam-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C184-KRIYA184-04]; assesses=[] -->
 
 **പൂരിപ്പിക്കുക** — *pūrippikkuka* — "to fill in (a form)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂരിപ്പിക്കുക** (*pūrippikkuka*) is built on Sanskrit *pūrayati*, "fills" (CDIAL 8335), made into a Malayalam causative: "make full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

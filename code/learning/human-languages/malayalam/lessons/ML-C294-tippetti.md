@@ -14,7 +14,8 @@ romanization: "tīppeṭṭi"
 concept_tag: ML-VASTU294-TIPPETTI
 prerequisites: [ML-C293-paripati, ML-C294-kalcappatu]
 sounds: []
-roots: []
+roots: [dravidian-ti-fire, dravidian-petti-box]
+etymology_hook: "tīppeṭṭi: native Dravidian, 'fire box': tī (DEDR 3266) + peṭṭi (DEDR 4388)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C294-kalcappatu]
 <!-- hl-knowledge: introduces=[ML-LEX-C294-VASTU294-02]; assesses=[] -->
 
 **തീപ്പെട്ടി** — *tīppeṭṭi* — "a matchbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീപ്പെട്ടി** (*tīppeṭṭi*) is native Dravidian, "the fire box": *tī*, "fire" (DEDR 3266), and *peṭṭi*, "box" (DEDR 4388). DEDR 4388 compares Sanskrit *peṭaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

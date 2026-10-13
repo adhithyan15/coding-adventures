@@ -14,7 +14,8 @@ romanization: "tōṭŭ"
 concept_tag: ML-STHALAM239-TOTU
 prerequisites: [ML-C239-kunnu, ML-C239-kayal]
 sounds: []
-roots: []
+roots: [dravidian-todu-channel]
+etymology_hook: "tōṭŭ: native Dravidian, one word with Kannada tōḍu (DEDR 3543)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C239-kayal]
 <!-- hl-knowledge: introduces=[ML-LEX-C239-STHALAM239-04]; assesses=[] -->
 
 **തോട്** — *tōṭŭ* — "a stream, a canal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോട്** (*tōṭŭ*) is native Dravidian, one word with Kannada *tōḍu* (DEDR 3543).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nṛttaṁ"
 concept_tag: ML-DANCE
 prerequisites: [ML-C99-paaduka, ML-C97-sundaram]
 sounds: []
-roots: []
+roots: [sanskrit-nrtta]
+etymology_hook: "nṛttaṁ ← Sanskrit nṛtta 'dancing', a tatsama (CDIAL 7580)"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +58,8 @@ what that sign does when **ആണ്** arrives: it is already the **m**, and it 
 
 **Two words, two different endings, and neither one gains a sound.** The first
 gives one up; the second only changes how its **m** is written.
+
+**Where the word comes from.** It is Sanskrit *nṛtta*, "dancing" (CDIAL 7580), with Malayalam's noun ending.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-DANCE-01, ML-LEX-C99-SONG-01, ML-LEX-C41-DEIXIS-01] -->

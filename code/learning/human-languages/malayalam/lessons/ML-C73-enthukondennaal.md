@@ -11,9 +11,10 @@ romanization: entukoṇṭennāl
 concept_tag: ML-BECAUSE-FORMAL
 prerequisites: [ML-C73-kaaranam]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-kolu-take, dravidian-en-say]
+etymology_hook: "entukoṇṭennāl: native Dravidian, 'if one says why': entukoṇṭŭ + ennāl (DEDR 5151, 2151, 868)"
 duration:
-  max_seconds: 240
+  max_seconds: 256
 requires:
   knowledge: [ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01]
 introduces:
@@ -58,6 +59,11 @@ being unfamiliar, and this one is signposted more clearly than most.
 This book does not take the tail apart for you. The pieces after
 **എന്തുകൊണ്ട്** are read different ways by different grammars, and guessing
 between them would teach you something that might be wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്തുകൊണ്ടെന്നാൽ** (*entukoṇṭennāl*) is native Dravidian: *entukoṇṭŭ*, "why" (DEDR 5151 and 2151), with *ennāl*, "if one says" (DEDR 868, with Tamil *eṉ*): "if you ask why".
 
 ## Grammar Lens: which one to use
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C73-BECAUSE-01, ML-LEX-C73-KAARANAM-01] -->

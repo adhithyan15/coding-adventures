@@ -14,7 +14,8 @@ romanization: "tavi"
 concept_tag: ML-VASTU207-TAVI
 prerequisites: [ML-C207-melukutiri, ML-C207-catti]
 sounds: []
-roots: []
+roots: [malayalam-tavi]
+etymology_hook: "tavi 'ladle': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C207-catti]
 <!-- hl-knowledge: introduces=[ML-LEX-C207-VASTU207-04]; assesses=[] -->
 
 **തവി** — *tavi* — "a ladle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തവി** (*tavi*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

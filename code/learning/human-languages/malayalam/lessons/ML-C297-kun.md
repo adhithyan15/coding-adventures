@@ -14,7 +14,8 @@ romanization: "kūṇ"
 concept_tag: ML-VASTU297-KUN
 prerequisites: [ML-C297-maida, ML-C297-aval]
 sounds: []
-roots: []
+roots: [dravidian-kun-mushroom]
+etymology_hook: "kūṇ: native Dravidian, one word with Kota ki·n and Toda kyu·n (DEDR 1893)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C297-aval]
 <!-- hl-knowledge: introduces=[ML-LEX-C297-VASTU297-03]; assesses=[] -->
 
 **കൂൺ** — *kūṇ* — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂൺ** (*kūṇ*) is native Dravidian, one word with Kota *ki·n*, Toda *kyu·n* and Tulu *gūnu* (DEDR 1893).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

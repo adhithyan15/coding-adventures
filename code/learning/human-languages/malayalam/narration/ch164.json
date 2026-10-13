@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "Aviyal, Pappadam, Hot, Cold, Long",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:613f281661d4fe6c",
+  "sourceHash": "fnv1a64:73b234b62310926b",
   "lessons": [
     {
       "id": "ML-C164-aviyal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31385de6bc696d56",
+      "sourceHash": "fnv1a64:5c1fea2b427e0eee",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവിയൽ (aviyal) is native Dravidian, from the verb \"to boil, to cook in steam\"; DEDR 268 lists the root with Tamil avi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56637778773ff4ee",
+      "sourceHash": "fnv1a64:e4ec4fc6f0cd6f85",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പപ്പടം (pappaṭaṁ) is native Dravidian, one word with Tamil pappaṭam, Kannada pappaḍi and Telugu appaḍamu (DEDR 3928). DEDR 3928 compares Sanskrit parpaṭa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f38b87b6f22ff58b",
+      "sourceHash": "fnv1a64:a2a66f0ad8c96400",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചൂടുള്ള (cūṭuḷḷa) is native Dravidian, \"having heat\": cūṭŭ, \"heat\" (DEDR 2654), with the ending -uḷḷa, \"that has\", from the verb \"to be\" (DEDR 697, with Tamil uḷ). DEDR 2654 compares Sanskrit cūḍ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:044746a128bdba43",
+      "sourceHash": "fnv1a64:73076f0761dab2bb",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തണുപ്പുള്ള (taṇuppuḷḷa) is native Dravidian, \"having cold\": taṇuppŭ, \"coldness\" (DEDR 3045), with -uḷḷa, \"that has\", from the verb \"to be\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:662def22c5bc9a63",
+      "sourceHash": "fnv1a64:a5f0b8428eac8ac2",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീളമുള്ള (nīḷamuḷḷa) is native Dravidian, \"having length\": the noun for \"length, distance\" (DEDR 3692, with Tamil nīḷ, \"to grow long\"), with -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

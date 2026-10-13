@@ -11,7 +11,8 @@ romanization: "ceḷi"
 concept_tag: ML-NOUN-MUD
 prerequisites: [ML-C59-sand, ML-C57-lip]
 sounds: []
-roots: []
+roots: [dravidian-celi-mud]
+etymology_hook: "ceḷi: native Dravidian, one word with Tamil caḷḷal (DEDR 2412)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it names wet mud — the kind a monsoon makes, not the dry earth 
 Kerala spends several months a year in it, and the word carries a mild disgust that the English one does not quite have. To say a thing has ചെളി on it is to say somebody should deal with that.
 
 The ള at the end is the retroflex *ḷ*, tongue curled back again, and it is a different letter from the ൽ that closed the sand-word. Malayalam distinguishes three *l* sounds, and this run has now used two of them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെളി** (*ceḷi*) is native Dravidian, one word with Tamil *caḷḷal* (DEDR 2412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

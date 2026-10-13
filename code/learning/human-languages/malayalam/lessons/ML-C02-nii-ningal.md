@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [ML-C02-peru]
 sounds: [long-ii]
 roots: [niin-dravidian]
+etymology_hook: "nī and niṅṅaḷ: native Dravidian, one pair with Tamil nī and nīṅkaḷ (DEDR 3684, 3688)"
 duration:
   max_seconds: 180
 requires:
@@ -47,6 +48,8 @@ reviews_of: [ML-C02-enre-peru-aanu]
 as Tamil *nī*, Kannada *nīnu*, Telugu *nuvvu*. **നിങ്ങൾ** (*niṅṅaḷ*) is the
 respectful/plural "you" — *nī* + a plural ending, the exact cousin of Tamil
 *nīṅgaḷ*.
+
+DEDR 3684 lists Tamil *nī*, Kannada *nīn(u)* and Telugu *nīvu*; DEDR 3688 gives the plural, Malayalam *niṅṅaḷ* with Tamil *nīṅkaḷ*.
 
 ## Grammar Lens: respect by the plural
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C02-RESPECT-BY-PLURAL-01]; assesses=[ML-LEX-NII-NINGAL-01] -->

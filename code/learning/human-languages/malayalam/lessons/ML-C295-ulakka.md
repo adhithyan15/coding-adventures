@@ -14,7 +14,8 @@ romanization: "ulakka"
 concept_tag: ML-VASTU295-ULAKKA
 prerequisites: [ML-C295-ammi, ML-C295-ural]
 sounds: []
-roots: []
+roots: [dravidian-ulakkai-pestle]
+etymology_hook: "ulakka: native Dravidian, one word with Tamil ulakkai and Kannada olake (DEDR 672)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C295-ural]
 <!-- hl-knowledge: introduces=[ML-LEX-C295-VASTU295-05]; assesses=[] -->
 
 **ഉലക്ക** — *ulakka* — "a pestle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉലക്ക** (*ulakka*) is native Dravidian, one word with Tamil *ulakkai* and Kannada *olake* (DEDR 672). DEDR 672 compares Sanskrit *ulūkhala*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

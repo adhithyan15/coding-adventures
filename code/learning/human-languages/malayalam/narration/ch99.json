@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Songs and Stories",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2fd6b3f285080fd7",
+  "sourceHash": "fnv1a64:094980011d60e3a0",
   "lessons": [
     {
       "id": "ML-C99-paattu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6592af8832795ad",
+      "sourceHash": "fnv1a64:3f1d261da7aa97d1",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "You have done this before without a new word to do it on. നല്ലതാണ് has been in the book since the opinion chapter. പാട്ടാണ് is the same event on a word you met a moment ago — no യ, no വ, nothing inserted."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian: DEDR 4065 lists pāṭṭu, \"song\", with Tamil pāṭu, \"to sing\", and Kannada pāḍu."
             }
           ]
         },
@@ -154,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab9fda6b20a4640c",
+      "sourceHash": "fnv1a64:58011bb9225a6738",
       "notice": null,
       "blocks": [
         {
@@ -218,6 +222,10 @@
             {
               "kind": "speech",
               "text": "Two words, one pattern between them — and that is all it is. The book has put other nouns beside their verbs — വായന beside വായിക്കുക, ചോദ്യം beside ചോദിക്കുക — and not one of them does this. പാട്ട് (pāṭṭŭ)/പാടുക (pāṭuka) is the only pair in the book where the consonant itself changes weight."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian, one word with Tamil pāṭu, Kannada pāḍu and Telugu pāḍu (DEDR 4065)."
             }
           ]
         },
@@ -293,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:486c6e9bea026c1f",
+      "sourceHash": "fnv1a64:11b40faf0860b3c5",
       "notice": null,
       "blocks": [
         {
@@ -353,6 +361,10 @@
             {
               "kind": "speech",
               "text": "Two words, two different endings, and neither one gains a sound. The first gives one up; the second only changes how its m is written."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is Sanskrit nṛtta, \"dancing\" (CDIAL 7580), with Malayalam's noun ending."
             }
           ]
         },
@@ -428,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10dd2199155151b4",
+      "sourceHash": "fnv1a64:35cae9a677027ee5",
       "notice": null,
       "blocks": [
         {
@@ -489,6 +501,10 @@
             {
               "kind": "speech",
               "text": "That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛttaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is Sanskrit kathā, \"conversation; story\" (CDIAL 2704), built on katham, \"how\"."
             }
           ]
         },

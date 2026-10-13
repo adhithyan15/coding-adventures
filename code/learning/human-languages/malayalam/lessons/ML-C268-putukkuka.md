@@ -14,7 +14,8 @@ romanization: "putukkuka"
 concept_tag: ML-VERB-PUTUKKUKA
 prerequisites: [ML-C268-nirasikkuka, ML-C268-amgikarikkuka]
 sounds: []
-roots: []
+roots: [dravidian-putu-new]
+etymology_hook: "putukkuka: native Dravidian, one word with Tamil putu and Kannada posa (DEDR 4275)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C268-amgikarikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C268-KRIYA268-03]; assesses=[] -->
 
 **പുതുക്കുക** — *putukkuka* — "to renew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുതുക്കുക** (*putukkuka*) is native Dravidian, one word with Tamil *putu* and Kannada *posa* (DEDR 4275). It is the verb of *putiya*, "new": "make new".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

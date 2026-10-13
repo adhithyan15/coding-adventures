@@ -14,7 +14,8 @@ romanization: "teṟṟāya"
 concept_tag: ML-QUAL170-TERRAYA
 prerequisites: [ML-C169-vilakutiya, ML-C170-vilakuranna, ML-C105-thalasthaanam]
 sounds: []
-roots: []
+roots: [dravidian-terru-slip, aaka-dravidian]
+etymology_hook: "teṟṟāya: native Dravidian, teṟṟŭ 'mistake' (DEDR 3445) + āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C170-vilakuranna]
 <!-- hl-knowledge: introduces=[ML-LEX-C170-QUAL170-02]; assesses=[] -->
 
 **തെറ്റായ** — *teṟṟāya* — "wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെറ്റായ** (*teṟṟāya*) is native Dravidian: *teṟṟŭ*, "a slip, a mistake" (DEDR 3445, with Tamil *teṟṟu*), with *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

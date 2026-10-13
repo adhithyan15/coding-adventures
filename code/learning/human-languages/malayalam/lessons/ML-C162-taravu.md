@@ -14,7 +14,8 @@ romanization: "tāṟāvŭ"
 concept_tag: ML-THINGS162-TARAVU
 prerequisites: [ML-C162-kurukkan, ML-C162-ottakam]
 sounds: []
-roots: []
+roots: [dravidian-tara-duck]
+etymology_hook: "tāṟāvŭ: native Dravidian, one word with Tamil tārā (DEDR 3169)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C162-ottakam]
 <!-- hl-knowledge: introduces=[ML-LEX-C162-THINGS162-04]; assesses=[] -->
 
 **താറാവ്** — *tāṟāvŭ* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താറാവ്** (*tāṟāvŭ*) is native Dravidian, one word with Tamil *tārā* (DEDR 3169).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

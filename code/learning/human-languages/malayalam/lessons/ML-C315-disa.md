@@ -14,7 +14,8 @@ romanization: "diśa"
 concept_tag: ML-STHALAM315-DISA
 prerequisites: [ML-C315-videsam, ML-C315-sthalam]
 sounds: []
-roots: []
+roots: [sanskrit-dish]
+etymology_hook: "diśa ← Sanskrit diś 'direction, region', a tatsama (CDIAL 6339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C315-sthalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C315-STHALAM315-04]; assesses=[] -->
 
 **ദിശ** — *diśa* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദിശ** (*diśa*) ← Sanskrit *diś*, "direction, region", taken over whole as a tatsama (CDIAL 6339).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

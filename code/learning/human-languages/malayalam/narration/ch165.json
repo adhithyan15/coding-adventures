@@ -4,7 +4,7 @@
   "chapter": 165,
   "title": "Clean, Sweet, Bitter, Spicy, Sour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07061df81654dbc4",
+  "sourceHash": "fnv1a64:55a88b5ca2741852",
   "lessons": [
     {
       "id": "ML-C165-vrttiyulla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5f77de4dfd9c707",
+      "sourceHash": "fnv1a64:1a55f560c110cff8",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വൃത്തിയുള്ള (vṛttiyuḷḷa) joins vṛtti, \"cleanliness\", from Sanskrit vṛtti, \"conduct\" (CDIAL 12070), to native -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b99ba972ca58fe5c",
+      "sourceHash": "fnv1a64:bb40adbf69c2b359",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മധുരമുള്ള (madhuramuḷḷa) joins Sanskrit madhura, \"sweet\" (CDIAL 9793), to native -uḷḷa, \"that has\" (DEDR 697): \"having sweetness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d37a2a26d69f803e",
+      "sourceHash": "fnv1a64:df45ef7f99c8c23f",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കയ്പുള്ള (kaypuḷḷa) is native Dravidian, \"having bitterness\": the noun for bitterness (DEDR 1249, with Tamil kaya, \"to be bitter\"), with -uḷḷa, \"that has\" (DEDR 697). DEDR 1249 compares Sanskrit kaṣāya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c55bfc1036ab4bc5",
+      "sourceHash": "fnv1a64:71547137ee69ae8e",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എരിവുള്ള (erivuḷḷa) is native Dravidian, \"having pungency\": the noun for burning, pungency (DEDR 811, with Tamil eri, \"to burn\"), with -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cf9519dfaa28ef",
+      "sourceHash": "fnv1a64:1e7006c38269deff",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +618,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുളിയുള്ള (puḷiyuḷḷa) is native Dravidian, \"having sourness\": puḷi, \"sourness, tamarind\" (DEDR 4322, with Tamil puḷi), with -uḷḷa, \"that has\" (DEDR 697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -584,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -633,7 +688,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

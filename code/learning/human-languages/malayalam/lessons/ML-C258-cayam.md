@@ -14,7 +14,8 @@ romanization: "cāyaṁ"
 concept_tag: ML-VASTU258-CAYAM
 prerequisites: [ML-C257-kitappumuri, ML-C257-uruli]
 sounds: []
-roots: []
+roots: [dravidian-cay-colour]
+etymology_hook: "cāyaṁ: native Dravidian, one word with Tamil cāy (DEDR 2457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C257-uruli]
 <!-- hl-knowledge: introduces=[ML-LEX-C258-VASTU258-01]; assesses=[] -->
 
 **ചായം** — *cāyaṁ* — "paint, dye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചായം** (*cāyaṁ*) is native Dravidian, one word with Tamil *cāy* (DEDR 2457). Its related senses are "beauty, shape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

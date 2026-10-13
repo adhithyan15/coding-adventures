@@ -14,7 +14,8 @@ romanization: "mṛduvāya"
 concept_tag: ML-QUAL166-MRDUVAYA
 prerequisites: [ML-C166-vegamulla, ML-C166-kattiyulla]
 sounds: []
-roots: []
+roots: [sanskrit-mrdu, aaka-dravidian]
+etymology_hook: "mṛduvāya: Sanskrit mṛdu 'soft' (CDIAL 10292) + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C166-kattiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C166-QUAL166-04]; assesses=[] -->
 
 **മൃദുവായ** — *mṛduvāya* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൃദുവായ** (*mṛduvāya*) joins Sanskrit *mṛdu*, "soft" (CDIAL 10292), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

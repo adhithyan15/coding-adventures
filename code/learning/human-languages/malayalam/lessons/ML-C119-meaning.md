@@ -11,7 +11,8 @@ romanization: "arthaṁ"
 concept_tag: ML-REP-MEANING
 prerequisites: [ML-C119-oncemore, ML-C119-loudly]
 sounds: []
-roots: []
+roots: [sanskrit-artha]
+etymology_hook: "arthaṁ ← Sanskrit artha 'aim, thing, meaning', a tatsama (CDIAL 638)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C119-loudly]
 
 **അർത്ഥം** (*arthaṁ*) — "meaning". **ഇതിന്റെ അർത്ഥം എന്താണ്?** — "what is the meaning of
 this?", with **എന്താണ്**, "what is".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അർത്ഥം** (*arthaṁ*) ← Sanskrit *artha*, "aim, thing, meaning", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 638).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

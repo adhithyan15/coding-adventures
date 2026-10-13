@@ -14,7 +14,8 @@ romanization: "uṇaṅṅiya"
 concept_tag: ML-QUAL167-UNANNIYA
 prerequisites: [ML-C166-kathinamaya, ML-C167-nanavulla, ML-C74-purpose]
 sounds: []
-roots: []
+roots: [dravidian-unangu-dry]
+etymology_hook: "uṇaṅṅiya: native Dravidian, 'having dried'; Tamil uṇaṅku (DEDR 601)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C167-nanavulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C167-QUAL167-02]; assesses=[] -->
 
 **ഉണങ്ങിയ** — *uṇaṅṅiya* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉണങ്ങിയ** (*uṇaṅṅiya*) is native Dravidian, a past form of the verb "to dry"; DEDR 601 lists the root with Tamil *uṇaṅku* and Kannada *oṇagu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vijayaṁ"
 concept_tag: ML-KARANAM282-VIJAYAM
 prerequisites: [ML-C282-suraksa, ML-C282-sramam]
 sounds: []
-roots: []
+roots: [sanskrit-vijaya]
+etymology_hook: "vijayaṁ ← Sanskrit vijaya 'victory', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C282-sramam]
 <!-- hl-knowledge: introduces=[ML-LEX-C282-KARANAM282-05]; assesses=[] -->
 
 **വിജയം** — *vijayaṁ* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിജയം** (*vijayaṁ*) ← Sanskrit *vijaya*, "victory", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

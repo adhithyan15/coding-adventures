@@ -14,7 +14,8 @@ romanization: "iṣṭika"
 concept_tag: ML-VASTU216-ISTIKA
 prerequisites: [ML-C216-plasrriku, ML-C216-palaka]
 sounds: []
-roots: []
+roots: [sanskrit-ishtaka]
+etymology_hook: "iṣṭika ← Sanskrit iṣṭakā 'brick', a tatsama (CDIAL 1600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C216-palaka]
 <!-- hl-knowledge: introduces=[ML-LEX-C216-VASTU216-04]; assesses=[] -->
 
 **ഇഷ്ടിക** — *iṣṭika* — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇഷ്ടിക** (*iṣṭika*) ← Sanskrit *iṣṭakā*, "brick", taken over whole as a tatsama (CDIAL 1600).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

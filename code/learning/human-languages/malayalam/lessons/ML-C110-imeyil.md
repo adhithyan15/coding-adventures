@@ -12,6 +12,7 @@ concept_tag: ML-NOUN-EMAIL-INTERNET
 prerequisites: [ML-C110-thapaal, ML-W108-full-stop]
 sounds: []
 roots: [english-email, english-internet]
+etymology_hook: "imeyil, inṟarneṟṟŭ ← English e-mail and internet, borrowed whole"
 duration:
   max_seconds: 245
 requires:
@@ -52,6 +53,11 @@ with, **ഇന്റർനെറ്റ്** on the half-*u*.
 |---|---|
 | **തപാൽ** | carries **കത്ത്** |
 | **ഇന്റർനെറ്റ്** | carries **ഇമെയിൽ** |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇമെയിൽ — ഇന്റർനെറ്റ്** (*imeyil — inṟarneṟṟŭ*) are English *e-mail* and *internet*, borrowed whole and written in Malayalam letters.
 
 ## Grammar Lens: you can already say an address out loud
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PUNCT-FULL-STOP-01, ML-LEX-C110-EMAIL-01] -->

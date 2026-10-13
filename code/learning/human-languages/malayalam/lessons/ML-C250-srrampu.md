@@ -14,7 +14,8 @@ romanization: "sṟṟāmpŭ"
 concept_tag: ML-VASTU250-SRRAMPU
 prerequisites: [ML-C250-vartta, ML-C250-patram]
 sounds: []
-roots: []
+roots: [english-stamp]
+etymology_hook: "sṟṟāmpŭ ← English stamp"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C250-patram]
 <!-- hl-knowledge: introduces=[ML-LEX-C250-VASTU250-05]; assesses=[] -->
 
 **സ്റ്റാമ്പ്** — *sṟṟāmpŭ* — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്റ്റാമ്പ്** (*sṟṟāmpŭ*) ← English *stamp*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

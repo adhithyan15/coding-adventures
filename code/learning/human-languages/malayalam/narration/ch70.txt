@@ -24,6 +24,7 @@ The ending changes the word slightly as it lands, and the two changes here are t
 വെള്ളം ends in -ം. That -ം becomes -വും: വെള്ളവും.
 അരി ends in ഇ. A യ് slides in to keep the two vowels apart: അരിയും. Which letter slides in depends on the vowel; after ഇ it is യ്.
 Neither is a special case to memorise. Both are the same instinct a mouth has when one sound runs into another, and Malayalam writes down what the mouth already does.
+Where the words come from. The ending -um is native Dravidian; Tamil joins a list with the same -um. Both nouns are native as well: veḷḷam, "water", is one word with Tamil veḷḷam, "flood" (DEDR 5503), and ari, "rice", with Tamil ari (DEDR 215).
 
 Guided Practice.
 [pause 1 second]
@@ -64,6 +65,7 @@ a noun ending in a full vowel becomes a letter slides in, chosen by that vowel; 
 a noun ending in ൽ becomes the letter unfurls to ല and takes the ending plainly: പാൽ, പാലും.
 That last one looks like a change and is not. ൽ is ല with its vowel stripped away, and a letter in that state has no vowel to give. -ഉം brings one, so the full ല comes back to carry it.
 It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it.
+Where the word comes from. pāl, "milk", is native Dravidian, one word with Tamil pāl and Kannada pāl (DEDR 4096). DEDR 4096 compares Sanskrit pālana, with a query.
 
 Guided Practice.
 [pause 1 second]
@@ -104,6 +106,7 @@ There is also a separate word, അല്ലെങ്കിൽ (alleṅkil), whic
 ചായ അല്ലെങ്കിൽ കാപ്പി.
 Both are heard. The ending is the shorter and more usual thing in a spoken question; the standing word is easier to reach for while the ending is still new, and it is the one that will look familiar on a page because it sits where an English reader expects or to sit.
 Reach for whichever arrives first. A learner who says the long one has said the thing; the ending will come with hearing it.
+Where the words come from. cāya, "tea", came through Hindustani cāy from Chinese chá. kāppi, "coffee", is English coffee, a word that goes back through Dutch and Turkish to Arabic qahwa. The choosing ending -ō is native.
 
 Guided Practice.
 [pause 1 second]

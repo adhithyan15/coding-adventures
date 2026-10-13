@@ -11,7 +11,8 @@ romanization: "vātil"
 concept_tag: ML-NOUN-DOOR
 prerequisites: [ML-C51-salutation, ML-C50-now]
 sounds: []
-roots: []
+roots: [dravidian-vayil-door]
+etymology_hook: "vātil: native Dravidian, one word with Tamil vāyil and Kannada bāgil (DEDR 5354)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Tamil writes its door-word வாயில் (*vāyil*), and once you see it be
 Malayalam's വാതിൽ is the same word with a *t* where Tamil has a *y*, and the dictionaries connect the two. The mouth-word itself, വായ്, sits in this book's chapter on the face.
 
 Kannada says ಬಾಗಿಲು (*bāgilu*), which is a different word altogether. The chillu ൽ at the end here is the same one that closed the leg-word and the finger-word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാതിൽ** (*vātil*) is native Dravidian, one word with Tamil *vāyil*, Kannada *bāgil* and Telugu *vākili* (DEDR 5354).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

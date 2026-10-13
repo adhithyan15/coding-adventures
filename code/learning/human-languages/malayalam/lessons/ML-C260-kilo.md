@@ -14,7 +14,8 @@ romanization: "kilō"
 concept_tag: ML-JOLI260-KILO
 prerequisites: [ML-C260-kaccavatakkaran, ML-C260-tulasu]
 sounds: []
-roots: []
+roots: [english-kilo]
+etymology_hook: "kilō ← English kilo, from French, short for kilogramme"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C260-tulasu]
 <!-- hl-knowledge: introduces=[ML-LEX-C260-JOLI260-04]; assesses=[] -->
 
 **കിലോ** — *kilō* — "a kilo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിലോ** (*kilō*) ← English *kilo*, from French, short for *kilogramme*; *kilo-* is Greek *chilioi*, "thousand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

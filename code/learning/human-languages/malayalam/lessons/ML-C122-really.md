@@ -11,7 +11,8 @@ romanization: "śarikkuṁ"
 concept_tag: ML-RESP-REALLY
 prerequisites: [ML-C121-station, ML-C121-map]
 sounds: []
-roots: []
+roots: [sari]
+etymology_hook: "śarikkuṁ: śari 'right' + the endings -kk- and -uṁ: 'truly, rightly'; śari's own origin is uncertain (CDIAL 13120)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C121-map]
 
 **ശരിക്കും** (*śarikkuṁ*) — "really, truly", built on **ശരി** (*śari*), "right, okay".
 **ശരിക്കും?** — "really?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശരിക്കും** (*śarikkuṁ*) is *śari*, "right", with two endings: "rightly, truly". The origin of *śari* itself is uncertain; it is usually traced to Sanskrit *sadṛśa*, "alike" (CDIAL 13120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

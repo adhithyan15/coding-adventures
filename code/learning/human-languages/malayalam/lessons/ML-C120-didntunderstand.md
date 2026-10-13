@@ -11,7 +11,8 @@ romanization: "manassilāyilla"
 concept_tag: ML-REP-DIDNT-UNDERSTAND
 prerequisites: [ML-C120-show, ML-C120-didnthear]
 sounds: []
-roots: []
+roots: [sanskrit-manas-mind, aaka-dravidian, illa-not-dravidian]
+etymology_hook: "manassilāyilla: Sanskrit manas 'mind' (CDIAL 9822) + native 'became' (DEDR 333) + illa (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C120-didnthear]
 
 **മനസ്സിലായില്ല** (*manassilāyilla*) — "I didn't understand", literally "it didn't come into
 the mind": **മനസ്സ്** (*manassŭ*), "mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മനസ്സിലായില്ല** (*manassilāyilla*) is "it did not become in the mind": Sanskrit *manas*, "mind" (CDIAL 9822), with the place ending, then native *āyi*, "became" (DEDR 333), and *illa*, "not" (DEDR 2559). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for uncle, then the Malayalam for a nephew
 You'll want to know: വിലാസം.
 വിലാസം (vilāsaṁ) — "address". നിങ്ങളുടെ വിലാസം എന്താണ്? — "what is your address?"
 
+The word, taken apart.
+വിലാസം (vilāsaṁ) has the form of Sanskrit vilāsa, "play, display" (CDIAL 11900). How that word came to mean a postal address is not clear.
+
 What you've built.
 The name question, asked about a place.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a nephew, then the Malayalam for addre
 
 You'll want to know: കല്യാണം.
 കല്യാണം (kalyāṇaṁ) — "wedding". കല്യാണത്തിന് ക്ഷണം — "an invitation to a wedding", with ക്ഷണം from the welcome chapter.
+
+The word, taken apart.
+കല്യാണം (kalyāṇaṁ) from Sanskrit kalyāṇa, "beautiful, auspicious", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 2952). An auspicious event became the name of the wedding.
 
 What you've built.
 The biggest invitation of all.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for address, then the Malayalam for a wedd
 You'll want to know: ഭാഷ.
 ഭാഷ (bhāṣa) — "language". മലയാളം ഭാഷ — "the Malayalam language".
 
+The word, taken apart.
+ഭാഷ (bhāṣa) from Sanskrit bhāṣā, "speech", taken over whole as a tatsama (CDIAL 9479).
+
 What you've built.
 The word for what you are learning.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a wedding, then the Malayalam for lang
 You'll want to know: ഇംഗ്ലീഷ്.
 ഇംഗ്ലീഷ് (iṁglīṣ) — "English". എനിക്ക് ഇംഗ്ലീഷ് അറിയാം — "I know English", built like എനിക്ക് മലയാളം അറിയാം.
 
+The word, taken apart.
+ഇംഗ്ലീഷ് (iṁglīṣ) from English English, the language named for the Angles, one of the peoples who brought it to Britain.
+
 What you've built.
 The language you already speak, in Malayalam.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for language, then the Malayalam for Engli
 
 You'll want to know: ഓഫീസ്.
 ഓഫീസ് (ōphīs) — "office", from English.
+
+The word, taken apart.
+ഓഫീസ് (ōphīs) from English office, from Latin officium, "duty, service".
 
 What you've built.
 Where the work happens.

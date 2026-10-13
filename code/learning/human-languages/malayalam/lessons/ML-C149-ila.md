@@ -14,7 +14,8 @@ romanization: "ila"
 concept_tag: ML-THINGS149-ILA
 prerequisites: [ML-C148-tiram, ML-C149-puntottam]
 sounds: []
-roots: []
+roots: [dravidian-ilai-leaf]
+etymology_hook: "ila: native Dravidian, one word with Tamil ilai and Kannada ele (DEDR 497)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C149-puntottam]
 <!-- hl-knowledge: introduces=[ML-LEX-C149-THINGS149-02]; assesses=[] -->
 
 **ഇല** — *ila* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇല** (*ila*) is native Dravidian, one word with Tamil *ilai* and Kannada *ele* (DEDR 497).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

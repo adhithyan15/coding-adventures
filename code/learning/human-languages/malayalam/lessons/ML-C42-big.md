@@ -11,7 +11,8 @@ romanization: "valiya"
 concept_tag: ML-ADJ-BIG
 prerequisites: [ML-C39-paal]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "valiya: native Dravidian, one word with Tamil val and Kannada bal (DEDR 5276)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ That is all an adjective does in this language.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വലിയ** (*valiya*) is native Dravidian, one word with Tamil *val*, Kannada *bal* and Telugu *valanu* (DEDR 5276). Its first sense is "strong": bigness grew out of strength.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02] -->

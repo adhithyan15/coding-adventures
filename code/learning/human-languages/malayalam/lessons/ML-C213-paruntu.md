@@ -14,7 +14,8 @@ romanization: "paruntŭ"
 concept_tag: ML-VASTU213-PARUNTU
 prerequisites: [ML-C213-vavval, ML-C213-kuyil]
 sounds: []
-roots: []
+roots: [dravidian-paruntu-kite]
+etymology_hook: "paruntŭ: native Dravidian, one word with Tamil paruntu and Kannada pardu (DEDR 3977)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C213-kuyil]
 <!-- hl-knowledge: introduces=[ML-LEX-C213-VASTU213-04]; assesses=[] -->
 
 **പരുന്ത്** — *paruntŭ* — "a kite (the bird)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരുന്ത്** (*paruntŭ*) is native Dravidian, one word with Tamil *paruntu* and Kannada *pardu* (DEDR 3977).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

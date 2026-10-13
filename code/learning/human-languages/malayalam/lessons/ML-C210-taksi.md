@@ -14,7 +14,8 @@ romanization: "ṭāksi"
 concept_tag: ML-VASTU210-TAKSI
 prerequisites: [ML-C210-laisansu, ML-C210-baikku]
 sounds: []
-roots: []
+roots: [english-taxi]
+etymology_hook: "ṭāksi ← English taxi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C210-baikku]
 <!-- hl-knowledge: introduces=[ML-LEX-C210-VASTU210-05]; assesses=[] -->
 
 **ടാക്സി** — *ṭāksi* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടാക്സി** (*ṭāksi*) ← English *taxi*, short for *taximeter cab*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

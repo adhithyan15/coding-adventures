@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for an engineer, then the Malayalam for a 
 You'll want to know: വാക്ക്.
 വാക്ക് — vākkŭ — "a word".
 
+The word, taken apart.
+വാക്ക് (vākkŭ) from Sanskrit vāc, "speech, word" (CDIAL 11472), with Malayalam's half-u.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a lawyer, then the Malayalam for a wor
 
 You'll want to know: വാക്യം.
 വാക്യം — vākyaṁ — "a sentence".
+
+The word, taken apart.
+വാക്യം (vākyaṁ) from Sanskrit vākya, "speech, words", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11468). It is built on the root vac, "to speak".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a word, then the Malayalam for a sente
 You'll want to know: ഫീസ്.
 ഫീസ് — phīsŭ — "fees".
 
+The word, taken apart.
+ഫീസ് (phīsŭ) from English fees.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a sentence, then the Malayalam for fee
 You'll want to know: സഹപാഠി.
 സഹപാഠി — sahapāṭhi — "a classmate".
 
+The word, taken apart.
+സഹപാഠി (sahapāṭhi) from Sanskrit sahapāṭhin, "fellow student": saha, "with", and pāṭha, "recitation, study" (CDIAL 8035).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for fees, then the Malayalam for a classma
 
 You'll want to know: വിദ്യാഭ്യാസം.
 വിദ്യാഭ്യാസം — vidyābhyāsaṁ — "education".
+
+The word, taken apart.
+വിദ്യാഭ്യാസം (vidyābhyāsaṁ) is Sanskrit: vidyā, "knowledge" (CDIAL 11741), and abhyāsa, "repetition, practice", with Malayalam's noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.

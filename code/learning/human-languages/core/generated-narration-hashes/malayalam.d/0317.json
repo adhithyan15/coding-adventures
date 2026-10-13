@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 317,
-  "sourceHash": "fnv1a64:c1cc0dd8cafedb50",
+  "sourceHash": "fnv1a64:146f88e379ca8c7e",
   "lessonIds": [
     "ML-C317-taniye",
     "ML-C317-entayalum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch317.txt",
   "json": "malayalam/narration/ch317.json",
-  "textHash": "fnv1a64:db88d7a0725a5fc5",
-  "jsonHash": "fnv1a64:008876c32cb39c4c",
+  "textHash": "fnv1a64:24d5228011c70b86",
+  "jsonHash": "fnv1a64:560d995a6752cc2c",
   "findings": []
 }

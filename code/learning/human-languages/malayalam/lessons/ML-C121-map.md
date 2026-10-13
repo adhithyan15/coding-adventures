@@ -11,7 +11,8 @@ romanization: "bhūpaṭaṁ"
 concept_tag: ML-TRAVEL-MAP
 prerequisites: [ML-C121-bus, ML-C121-station]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-pata]
+etymology_hook: "bhūpaṭaṁ: built from Sanskrit bhū 'earth' (CDIAL 9546) + paṭa 'cloth, picture' (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C121-station]
 
 **ഭൂപടം** (*bhūpaṭaṁ*) — "a map", literally "earth picture": **ഭൂ** (*bhū*), "earth", and
 **പടം** (*paṭaṁ*), "picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭൂപടം** (*bhūpaṭaṁ*) is built from Sanskrit parts: *bhū*, "earth" (CDIAL 9546), and *paṭa*, "woven cloth" (CDIAL 7692), which in Malayalam has come to mean a picture. A map is an earth-picture.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

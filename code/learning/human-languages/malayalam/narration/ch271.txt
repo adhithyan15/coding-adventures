@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to argue, then the Malayalam for to pa
 You'll want to know: കടം വാങ്ങുക.
 കടം വാങ്ങുക — kaṭaṁ vāṅṅuka — "to borrow".
 
+The word, taken apart.
+കടം വാങ്ങുക (kaṭaṁ vāṅṅuka) is native Dravidian, "take a debt": kaṭam, "debt, obligation" (DEDR 1113, with Tamil kaṭam), and vāṅṅuka, "to take, receive" (DEDR 5336).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to pay attention, then the Malayalam f
 
 You'll want to know: കടം കൊടുക്കുക.
 കടം കൊടുക്കുക — kaṭaṁ koṭukkuka — "to lend".
+
+The word, taken apart.
+കടം കൊടുക്കുക (kaṭaṁ koṭukkuka) is native Dravidian, "give a debt": kaṭam, "debt" (DEDR 1113), and koṭukkuka, "to give" (DEDR 2053, with Tamil koṭu).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to borrow, then the Malayalam for to l
 You'll want to know: പണിയുക.
 പണിയുക — paṇiyuka — "to build".
 
+The word, taken apart.
+പണിയുക (paṇiyuka) is native Dravidian: DEDR 3884 lists it, "to build", beside paṇi, "work, labour, building", with Tamil paṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to lend, then the Malayalam for to bui
 You'll want to know: കേടാകുക.
 കേടാകുക — kēṭākuka — "to break down, to go bad".
 
+The word, taken apart.
+കേടാകുക (kēṭākuka) is native Dravidian, "become damaged": kēṭu, "damage" (DEDR 1942), and ākuka, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to build, then the Malayalam for to br
 
 You'll want to know: തുടരുക.
 തുടരുക — tuṭaruka — "to continue".
+
+The word, taken apart.
+തുടരുക (tuṭaruka) is native Dravidian, one word with Tamil toṭu (DEDR 3480). Its root is "to be linked, to continue".
 
 What you've built.
 One more word for this chapter.

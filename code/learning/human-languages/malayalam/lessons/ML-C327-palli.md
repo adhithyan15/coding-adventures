@@ -14,7 +14,8 @@ romanization: "palli"
 concept_tag: ML-VASTU327-PALLI
 prerequisites: [ML-C327-cemmariyatu, ML-C327-mutala]
 sounds: []
-roots: []
+roots: [dravidian-palli-lizard]
+etymology_hook: "palli: native Dravidian, one word with Tamil palli and Kannada palli (DEDR 3994)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C327-mutala]
 <!-- hl-knowledge: introduces=[ML-LEX-C327-VASTU327-03]; assesses=[] -->
 
 **പല്ലി** — *palli* — "a house lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പല്ലി** (*palli*) is native Dravidian, one word with Tamil *palli*, Kannada *palli* and Telugu *palli* (DEDR 3994). DEDR 3994 compares Sanskrit *pallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

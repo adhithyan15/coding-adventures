@@ -14,7 +14,8 @@ romanization: "vaḻutana"
 concept_tag: ML-THINGS150-VALUTANA
 prerequisites: [ML-C150-urulakkilannu, ML-C150-takkali, ML-C28-uchakazhinju]
 sounds: []
-roots: []
+roots: [dravidian-vazhutalai-brinjal]
+etymology_hook: "vaḻutana: native Dravidian, one word with Tamil vaḻutalai (DEDR 5301)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C150-takkali]
 <!-- hl-knowledge: introduces=[ML-LEX-C150-THINGS150-03]; assesses=[] -->
 
 **വഴുതന** — *vaḻutana* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വഴുതന** (*vaḻutana*) is native Dravidian, one word with Tamil *vaḻutalai* (DEDR 5301). DEDR 5301 compares Sanskrit *bhaṇṭākī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "Get down, Swim, Jump, Fall, Live",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0b109d5477a72c1a",
+  "sourceHash": "fnv1a64:4efba7911759a69d",
   "lessons": [
     {
       "id": "ML-C176-irannuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43324d064b7cb8a3",
+      "sourceHash": "fnv1a64:030eb5edf1b5b355",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇറങ്ങുക (iṟaṅṅuka) is native Dravidian, one word with Tamil iṟaṅku, Kannada eṟagu and Telugu eṟãgu (DEDR 516)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57b29996c4ddcb9e",
+      "sourceHash": "fnv1a64:6bce8181fd49e670",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീന്തുക (nīntuka) is native Dravidian, one word with Tamil nīntu, Kannada īsu and Telugu īdu (DEDR 3687)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb459815315e168c",
+      "sourceHash": "fnv1a64:d6b582244f0a7ec6",
       "notice": null,
       "blocks": [
         {
@@ -323,6 +345,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാടുക (cāṭuka) is native Dravidian, one word with Tamil cāṭṭam (DEDR 2440)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -333,7 +366,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -382,7 +415,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -413,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efeef66e006793fc",
+      "sourceHash": "fnv1a64:2a5f80dad3f6d7e5",
       "notice": null,
       "blocks": [
         {
@@ -446,6 +479,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീഴുക (vīḻuka) is native Dravidian, one word with Tamil viḻu and Kannada bīḻ (DEDR 5430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -456,7 +500,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -505,7 +549,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -536,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:403614077caac9b9",
+      "sourceHash": "fnv1a64:a4cab37508d56fdd",
       "notice": null,
       "blocks": [
         {
@@ -569,6 +613,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജീവിക്കുക (jīvikkuka) is built on Sanskrit jīva, \"life\" (CDIAL 5239), from jīvati, \"is alive\" (CDIAL 5241), with the ending that makes a Malayalam verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -579,7 +634,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -628,7 +683,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

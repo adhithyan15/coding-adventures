@@ -14,7 +14,8 @@ romanization: "uṭamastan"
 concept_tag: ML-CAN143-UTAMASTAN
 prerequisites: [ML-C142-upakaranam, ML-C143-sampattu, ML-C23-naal]
 sounds: []
-roots: []
+roots: [dravidian-utai-possess, stha-sanskrit]
+etymology_hook: "uṭamastan: native uṭama 'property' (DEDR 593) + Sanskrit -stha 'standing in'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C143-sampattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C143-CAN143-02]; assesses=[] -->
 
 **ഉടമസ്ഥൻ** — *uṭamastan* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉടമസ്ഥൻ** (*uṭamastan*) joins native *uṭama*, "property" (DEDR 593, with Tamil *uṭai*, "wealth"), to Sanskrit *-stha*, "standing in", with the masculine ending *-n*: "one who stands in possession".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

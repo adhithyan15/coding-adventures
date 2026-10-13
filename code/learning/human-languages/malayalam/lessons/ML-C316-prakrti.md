@@ -14,7 +14,8 @@ romanization: "prakṛti"
 concept_tag: ML-STHALAM316-PRAKRTI
 prerequisites: [ML-C315-vatakku, ML-C316-bhumi]
 sounds: []
-roots: []
+roots: [sanskrit-prakrti]
+etymology_hook: "prakṛti ← Sanskrit prakṛti 'cause, source, nature', a tatsama (CDIAL 8446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C316-bhumi]
 <!-- hl-knowledge: introduces=[ML-LEX-C316-STHALAM316-02]; assesses=[] -->
 
 **പ്രകൃതി** — *prakṛti* — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രകൃതി** (*prakṛti*) ← Sanskrit *prakṛti*, "cause, source, nature", taken over whole as a tatsama (CDIAL 8446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kampi"
 concept_tag: ML-VASTU331-KAMPI
 prerequisites: [ML-C331-cattukam, ML-C331-kuja]
 sounds: []
-roots: []
+roots: [dravidian-kambi-wire]
+etymology_hook: "kampi: native Dravidian, one word with Tamil kampi and Kannada kambi (DEDR 1241)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C331-kuja]
 <!-- hl-knowledge: introduces=[ML-LEX-C331-VASTU331-04]; assesses=[] -->
 
 **കമ്പി** — *kampi* — "a wire, a metal rod".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കമ്പി** (*kampi*) is native Dravidian, one word with Tamil *kampi*, Kannada *kambi* and Telugu *kambi* (DEDR 1241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

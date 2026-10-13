@@ -14,7 +14,8 @@ romanization: "kaśuvaṇṭi"
 concept_tag: ML-VASTU333-KASUVANTI
 prerequisites: [ML-C332-caram, ML-C332-tai]
 sounds: []
-roots: []
+roots: [portuguese-caju, dravidian-andi-nut]
+etymology_hook: "kaśuvaṇṭi: kaśu, from Portuguese caju 'cashew', + native aṇṭi 'kernel, nut' (DEDR 126)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C332-tai]
 <!-- hl-knowledge: introduces=[ML-LEX-C333-VASTU333-01]; assesses=[] -->
 
 **കശുവണ്ടി** — *kaśuvaṇṭi* — "a cashew nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കശുവണ്ടി** (*kaśuvaṇṭi*) joins *kaśu*, from Portuguese *caju*, "cashew", a word from the Tupi of Brazil, to native *aṇṭi*, "kernel, nut" (DEDR 126, with Tamil *aṇṭi-kkoṭṭai*). DEDR 126 notes a possible link with Sanskrit *aṣṭi*, "kernel" (CDIAL 955).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

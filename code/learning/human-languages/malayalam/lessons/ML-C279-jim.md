@@ -14,7 +14,8 @@ romanization: "jiṁ"
 concept_tag: ML-STHALAM279-JIM
 prerequisites: [ML-C279-maitanam, ML-C279-myusiyam]
 sounds: []
-roots: []
+roots: [english-gym]
+etymology_hook: "jiṁ ← English gym"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C279-myusiyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C279-STHALAM279-03]; assesses=[] -->
 
 **ജിം** — *jiṁ* — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജിം** (*jiṁ*) ← English *gym*, short for *gymnasium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

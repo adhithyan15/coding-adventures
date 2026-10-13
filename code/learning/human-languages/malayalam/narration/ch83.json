@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Where You Came From",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0337a7b0c20682d9",
+  "sourceHash": "fnv1a64:bf28109e93513c68",
   "lessons": [
     {
       "id": "ML-C83-ninnu",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5af87220c3ee73c0",
+      "sourceHash": "fnv1a64:3b856feb05aa4023",
       "notice": null,
       "blocks": [
         {
@@ -225,6 +225,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എവിടെ നിന്ന് (eviṭe ninnŭ) is native Dravidian: eviṭe, \"where\" (DEDR 5151), with ninnŭ, the past form of the verb \"to stand\" (DEDR 3675, with Tamil nil). \"From where\" is \"having stood where\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -235,7 +246,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -284,7 +295,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

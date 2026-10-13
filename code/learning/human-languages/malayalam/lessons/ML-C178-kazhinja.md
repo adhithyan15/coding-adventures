@@ -14,7 +14,8 @@ romanization: "kaḻiñña"
 concept_tag: ML-BHUTAM178-KAZHINJA
 prerequisites: [ML-C178-atuttite, ML-C178-itinakam]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass]
+etymology_hook: "kaḻiñña: native Dravidian, 'passed', from the verb 'to pass, be over'; Tamil kaḻi (DEDR 1356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C178-itinakam]
 <!-- hl-knowledge: introduces=[ML-LEX-C178-BHUTAM178-03]; assesses=[] -->
 
 **കഴിഞ്ഞ** — *kaḻiñña* — "last, previous". **കഴിഞ്ഞ വർഷം ഞാൻ കൊച്ചിയിൽ പോയി** — *kaḻiñña varṣaṁ ñān kocciyil pōyi* — "Last year I went to Kochi."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴിഞ്ഞ** (*kaḻiñña*) is native Dravidian, a past form of the verb "to pass, be over"; DEDR 1356 lists the root with Tamil *kaḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 231,
-  "sourceHash": "fnv1a64:eea89e420ee38b0e",
+  "sourceHash": "fnv1a64:64b8ccc426b25393",
   "lessonIds": [
     "ML-C231-caruka",
     "ML-C231-muttuka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch231.txt",
   "json": "malayalam/narration/ch231.json",
-  "textHash": "fnv1a64:b474fe4e33945ba4",
-  "jsonHash": "fnv1a64:7cae2988f190520e",
+  "textHash": "fnv1a64:ed6d84346fd75b01",
+  "jsonHash": "fnv1a64:21486ab8b4013b35",
   "findings": []
 }

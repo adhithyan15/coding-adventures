@@ -14,7 +14,8 @@ romanization: "celavaḻikkuka"
 concept_tag: ML-VERB-CELAVAZHIKKUKA
 prerequisites: [ML-C178-kazhinja, ML-C178-orikkal]
 sounds: []
-roots: []
+roots: [dravidian-cel-go, dravidian-azhi-loose]
+etymology_hook: "celavaḻikkuka: native Dravidian, celavŭ 'expense' (DEDR 2781) + aḻikkuka 'to spend, loosen' (DEDR 277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C178-orikkal]
 <!-- hl-knowledge: introduces=[ML-LEX-C178-BHUTAM178-05]; assesses=[] -->
 
 **ചെലവഴിക്കുക** — *celavaḻikkuka* — "to spend (time, money)". **ഞാൻ അവധിക്കാലം ഗ്രാമത്തിൽ ചെലവഴിച്ചു** — *ñān avadhikkālaṁ grāmattil celavaḻiccu* — "I spent the holidays in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെലവഴിക്കുക** (*celavaḻikkuka*) is native Dravidian: *celavŭ*, "expense" (DEDR 2781, with Tamil *cel*, "to go"), and the verb "to loosen, spend" (DEDR 277, with Tamil *aḻi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

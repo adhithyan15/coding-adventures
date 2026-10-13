@@ -14,7 +14,8 @@ romanization: "pariśōdhikkuka"
 concept_tag: ML-VERB-PARISODHIKKUKA
 prerequisites: [ML-C226-tayyarakkuka, ML-C226-purttiyakkuka]
 sounds: []
-roots: []
+roots: [sanskrit-parishodhana]
+etymology_hook: "pariśōdhikkuka ← Sanskrit pariśōdhana 'cleansing, examining' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C226-purttiyakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C226-KRIYA226-05]; assesses=[] -->
 
 **പരിശോധിക്കുക** — *pariśōdhikkuka* — "to check, to inspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിശോധിക്കുക** (*pariśōdhikkuka*) is built on Sanskrit *pariśōdhana*, "thorough cleansing, examining", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vāl"
 concept_tag: ML-VASTU254-VAL
 prerequisites: [ML-C254-annan, ML-C254-nantu]
 sounds: []
-roots: []
+roots: [sanskrit-vala]
+etymology_hook: "vāl ← Sanskrit vāla 'tail, tail-hair' (CDIAL 11572); DEDR appendix 57 lists it among Indo-Aryan loans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C254-nantu]
 <!-- hl-knowledge: introduces=[ML-LEX-C254-VASTU254-04]; assesses=[] -->
 
 **വാൽ** — *vāl* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാൽ** (*vāl*) ← Sanskrit *vāla*, "tail, hair of the tail" (CDIAL 11572). DEDR appendix 57, which gathers Dravidian words taken from Indo-Aryan, lists it with Tamil *vāl* and Kannada *bāla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: WORD-IS
 prerequisites: [ML-C02-peru, ML-C01-athe, ML-C01-illa, ML-C01-sari]
 sounds: [independent-aa, retroflex-nu]
 roots: [aaka-dravidian]
+etymology_hook: "āṇŭ 'is': native Dravidian, grown from the verb 'to be, become', Tamil ā, āku (DEDR 333)"
 duration:
   max_seconds: 180
 requires:
@@ -52,6 +53,8 @@ Here's the point: Tamil, Kannada, and Telugu all use the **zero copula** — *no
 word for "is." Yet Malayalam, though it is Tamil's *closest* sister,
 grammaticalised a "to be" verb. So where Tamil says only *eṉ peyar Arun*,
 Malayalam adds *āṇŭ*: *enṟe pēr Arun āṇŭ*.
+
+DEDR 333 lists that verb with Tamil *ā*, Kannada *āgu* and Telugu *agu*. DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: the verb comes last
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C02-COPULA-01]; assesses=[ML-LEX-AANU-01] -->

@@ -14,7 +14,8 @@ romanization: "saṁśayikkuka"
 concept_tag: ML-VERB-SAMSAYIKKUKA
 prerequisites: [ML-C229-tilannuka, ML-C229-vatuka]
 sounds: []
-roots: []
+roots: [sanskrit-samshaya]
+etymology_hook: "saṁśayikkuka ← Sanskrit saṁśaya 'doubt' (CDIAL 13030) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C229-vatuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C229-KRIYA229-04]; assesses=[] -->
 
 **സംശയിക്കുക** — *saṁśayikkuka* — "to doubt, to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംശയിക്കുക** (*saṁśayikkuka*) is built on Sanskrit *saṁśaya*, "doubt" (CDIAL 13030), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

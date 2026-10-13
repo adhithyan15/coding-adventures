@@ -14,7 +14,8 @@ romanization: "karaṭi"
 concept_tag: ML-THINGS162-KARATI
 prerequisites: [ML-C161-mulla, ML-C161-tamara]
 sounds: []
-roots: []
+roots: [dravidian-karadi-bear]
+etymology_hook: "karaṭi: native Dravidian, one word with Tamil karaṭi and Kannada karaḍi (DEDR 1263)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C161-tamara]
 <!-- hl-knowledge: introduces=[ML-LEX-C162-THINGS162-01]; assesses=[] -->
 
 **കരടി** — *karaṭi* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരടി** (*karaṭi*) is native Dravidian, one word with Tamil *karaṭi*, Kannada *karaḍi* and Telugu *karaṭi* (DEDR 1263).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

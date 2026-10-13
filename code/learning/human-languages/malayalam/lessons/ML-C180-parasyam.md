@@ -14,7 +14,8 @@ romanization: "parasyaṁ"
 concept_tag: ML-VAYANA180-PARASYAM
 prerequisites: [ML-C180-ariyippu, ML-C180-vataka]
 sounds: []
-roots: []
+roots: [malayalam-parasyam]
+etymology_hook: "parasyaṁ 'advertisement': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [ML-C180-vataka]
 [YOU READ: the advert]
 
 The advert says **വീട് വാടകയ്ക്ക്** — *vīṭŭ vāṭakaykkŭ* — "House for rent."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരസ്യം** (*parasyaṁ*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

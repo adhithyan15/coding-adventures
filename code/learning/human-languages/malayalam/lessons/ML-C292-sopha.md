@@ -14,7 +14,8 @@ romanization: "sōpha"
 concept_tag: ML-VASTU292-SOPHA
 prerequisites: [ML-C292-kotunkarru, ML-C292-vellappokkam]
 sounds: []
-roots: []
+roots: [english-sofa]
+etymology_hook: "sōpha ← English sofa, from Arabic ṣuffa 'a bench'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C292-vellappokkam]
 <!-- hl-knowledge: introduces=[ML-LEX-C292-VASTU292-05]; assesses=[] -->
 
 **സോഫ** — *sōpha* — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സോഫ** (*sōpha*) ← English *sofa*, which goes back through Turkish to Arabic *ṣuffa*, "a raised bench".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

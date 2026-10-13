@@ -11,7 +11,8 @@ romanization: "sukhamilla"
 concept_tag: ML-UNWELL-NOT-WELL
 prerequisites: [ML-C115-rest, ML-C115-dizzy]
 sounds: []
-roots: []
+roots: [sukha-sanskrit, illa-not-dravidian]
+etymology_hook: "sukhamilla: Sanskrit sukha 'well-being' (CDIAL 13451) + native illa 'is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C115-dizzy]
 
 **സുഖമില്ല** (*sukhamilla*) — "(I'm) not well", **സുഖം** (*sukhaṁ*), "well-being",
 with **ഇല്ല** (*illa*), "there isn't". It answers **സുഖമാണോ?**, "are you well?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സുഖമില്ല** (*sukhamilla*) joins Sanskrit *sukha*, "well-being" (CDIAL 13451), to native *illa*, "there is not" (DEDR 2559, with Tamil *illai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

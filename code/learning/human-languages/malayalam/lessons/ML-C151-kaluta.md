@@ -14,7 +14,8 @@ romanization: "kaḻuta"
 concept_tag: ML-THINGS151-KALUTA
 prerequisites: [ML-C150-veluttulli, ML-C151-kutira, ML-C28-uchakazhinju]
 sounds: []
-roots: []
+roots: [dravidian-kazhutai-donkey]
+etymology_hook: "kaḻuta: native Dravidian, one word with Tamil kaḻutai and Kannada kaḻte (DEDR 1364)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C151-kutira]
 <!-- hl-knowledge: introduces=[ML-LEX-C151-THINGS151-02]; assesses=[] -->
 
 **കഴുത** — *kaḻuta* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴുത** (*kaḻuta*) is native Dravidian, one word with Tamil *kaḻutai* and Kannada *kaḻte* (DEDR 1364). DEDR 1364 compares Sanskrit *gardabha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

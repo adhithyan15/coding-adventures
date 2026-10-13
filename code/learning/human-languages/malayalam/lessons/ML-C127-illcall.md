@@ -11,7 +11,8 @@ romanization: "viḷikkāṁ"
 concept_tag: ML-LEAVE-ILL-CALL
 prerequisites: [ML-C127-letsgo, ML-C127-holiday]
 sounds: []
-roots: []
+roots: [dravidian-vil-call]
+etymology_hook: "viḷikkāṁ: native Dravidian, the calling verb (DEDR 5433) + -āṁ"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C127-holiday]
 <!-- hl-knowledge: introduces=[ML-LEX-C127-CARE-05]; assesses=[] -->
 
 **വിളിക്കാം** (*viḷikkāṁ*) — "I'll call (you)", the **‑ആം** ending on **വിളിക്കൂ**'s verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളിക്കാം** (*viḷikkāṁ*) is native Dravidian: the calling verb (DEDR 5433, with Tamil *viḷ*) with the ending *-āṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

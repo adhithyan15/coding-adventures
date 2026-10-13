@@ -14,7 +14,8 @@ romanization: "cārjŭ ceyyuka"
 concept_tag: ML-VERB-CARJU-CEYYUKA
 prerequisites: [ML-C185-rajivaykkuka, ML-C185-ariyikkuka]
 sounds: []
-roots: []
+roots: [english-charge, cey-do-dravidian]
+etymology_hook: "cārjŭ ceyyuka: English charge + native ceyyuka 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C185-ariyikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C185-KRIYA185-03]; assesses=[] -->
 
 **ചാർജ് ചെയ്യുക** — *cārjŭ ceyyuka* — "to charge (a phone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാർജ് ചെയ്യുക** (*cārjŭ ceyyuka*) joins English *charge* to native *ceyyuka*, "to do" (DEDR 1957, with Tamil *cey*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

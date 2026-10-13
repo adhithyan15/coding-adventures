@@ -14,7 +14,8 @@ romanization: "strī"
 concept_tag: ML-VASTU325-STRI
 prerequisites: [ML-C325-kunnu2, ML-C325-al]
 sounds: []
-roots: []
+roots: [sanskrit-stri]
+etymology_hook: "strī ← Sanskrit strī 'woman, wife', a tatsama (CDIAL 13734)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C325-al]
 <!-- hl-knowledge: introduces=[ML-LEX-C325-VASTU325-03]; assesses=[] -->
 
 **സ്ത്രീ** — *strī* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്ത്രീ** (*strī*) ← Sanskrit *strī*, "woman, wife", taken over whole as a tatsama (CDIAL 13734).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "talayaṇa"
 concept_tag: ML-THINGS158-TALAYANA
 prerequisites: [ML-C158-toni, ML-C158-treyin]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-anai-support]
+etymology_hook: "talayaṇa: native Dravidian, 'head support': tala (DEDR 3103) + aṇa 'support, prop' (DEDR 123)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C158-treyin]
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-03]; assesses=[] -->
 
 **തലയണ** — *talayaṇa* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തലയണ** (*talayaṇa*) is native Dravidian, "the head's support": *tala*, "head" (DEDR 3103), and *aṇa*, "a support, a prop" (DEDR 123, with Tamil *aṇai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

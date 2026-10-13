@@ -11,7 +11,8 @@ romanization: "cakka"
 concept_tag: ML-FRUIT-JACKFRUIT
 prerequisites: [ML-C132-curry, ML-C133-mango]
 sounds: []
-roots: []
+roots: [dravidian-cakkai-jackfruit]
+etymology_hook: "cakka: native Dravidian, one word with Tamil cakkai and Kannada jaka (DEDR 2275)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C133-mango]
 <!-- hl-knowledge: introduces=[ML-LEX-C133-SWEETSOUR-02]; assesses=[] -->
 
 **ചക്ക** (*cakka*) — "a jackfruit", the huge fruit that grows straight off the trunk.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചക്ക** (*cakka*) is native Dravidian, one word with Tamil *cakkai* and Kannada *jaka* (DEDR 2275). English *jack* in *jackfruit* comes from this word, through Portuguese *jaca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uṟappuḷḷa"
 concept_tag: ML-GUNAM246-URAPPULLA
 prerequisites: [ML-C246-janapriyamaya, ML-C246-avesakaramaya]
 sounds: []
-roots: []
+roots: [dravidian-urai-firm, dravidian-ul-be]
+etymology_hook: "uṟappuḷḷa: native Dravidian, 'having firmness': uṟappu (DEDR 721) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C246-avesakaramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C246-GUNAM246-04]; assesses=[] -->
 
 **ഉറപ്പുള്ള** — *uṟappuḷḷa* — "firm, sturdy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറപ്പുള്ള** (*uṟappuḷḷa*) is native Dravidian, "having firmness": *uṟappu*, "firmness, support" (DEDR 721), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

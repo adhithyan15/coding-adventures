@@ -11,7 +11,8 @@ romanization: "pōkāṁ"
 concept_tag: ML-LEAVE-LETS-GO
 prerequisites: [ML-C127-takecare, ML-C127-late]
 sounds: []
-roots: []
+roots: [po-go-dravidian]
+etymology_hook: "pōkāṁ: native Dravidian, the going verb (DEDR 4572) + -āṁ 'let us'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C127-late]
 
 **പോകാം** (*pōkāṁ*) — "let's go", with the **‑ആം** ending of **പോയി വരാം** and
 **കാണാം**: "let's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പോകാം** (*pōkāṁ*) is native Dravidian: the verb "to go" (DEDR 4572, with Tamil *pō*) with the ending *-āṁ*, "let us".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

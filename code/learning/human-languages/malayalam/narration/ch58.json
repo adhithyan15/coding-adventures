@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Six More Short Answers",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:40ec91c01732bd5c",
+  "sourceHash": "fnv1a64:87ea455e6e974b6c",
   "lessons": [
     {
       "id": "ML-C58-more",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb891e6a8d6127ac",
+      "sourceHash": "fnv1a64:9bd24d3f75090728",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടുതൽ (kūṭutal) is native Dravidian, a noun from the verb \"to come together, be added\"; DEDR 1882 lists the root with Tamil kūṭu and Kannada kūḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d14627cf5b3664c4",
+      "sourceHash": "fnv1a64:f61072732fed88c0",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറവ് (kuṟavŭ) is native Dravidian, a noun from the verb \"to dwindle, fall short\"; DEDR 1851 lists the root with Tamil kuṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:882aa40fe49ce011",
+      "sourceHash": "fnv1a64:a274313f3b84c4f4",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറച്ച് (kuṟaccŭ) is native Dravidian, a form of the verb \"to dwindle, fall short\", the same root as the word for \"less\"; DEDR 1851 lists the root with Tamil kuṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:486e8150d8b5d74d",
+      "sourceHash": "fnv1a64:ce0839c85c7e53c3",
       "notice": null,
       "blocks": [
         {
@@ -471,6 +504,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേണം (vēṇaṁ) is native Dravidian, one word with Tamil vēṇṭu (DEDR 5528)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: nobody wants anything in Malayalam",
           "segments": [
@@ -489,7 +533,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -529,7 +573,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -560,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f722823f3089f1d",
+      "sourceHash": "fnv1a64:a13cfc1dbf47743d",
       "notice": null,
       "blocks": [
         {
@@ -605,6 +649,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേണ്ട (vēṇṭa) is native Dravidian, the negative of the same verb as vēṇaṁ; DEDR 5528 lists the root with Tamil vēṇṭu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -615,7 +670,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -664,7 +719,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -695,7 +750,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5d580d7727487b1",
+      "sourceHash": "fnv1a64:3c47fc8f0e0bedbe",
       "notice": null,
       "blocks": [
         {
@@ -740,6 +795,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോരും (pōruṁ) is native Dravidian, from the verb \"to suit, to suffice\"; DEDR 4594 lists the root with Tamil pōru and Kodagu po·r-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -750,7 +816,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -799,7 +865,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

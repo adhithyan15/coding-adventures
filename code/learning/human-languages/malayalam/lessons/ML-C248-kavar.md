@@ -14,7 +14,8 @@ romanization: "kavar"
 concept_tag: ML-VASTU248-KAVAR
 prerequisites: [ML-C248-gyas, ML-C248-paippu]
 sounds: []
-roots: []
+roots: [english-cover]
+etymology_hook: "kavar ← English cover"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C248-paippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C248-VASTU248-03]; assesses=[] -->
 
 **കവർ** — *kavar* — "a carry bag, a cover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവർ** (*kavar*) ← English *cover*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "accār"
 concept_tag: ML-VASTU208-ACCAR
 prerequisites: [ML-C207-tavi, ML-C207-arippa]
 sounds: []
-roots: []
+roots: [persian-achar]
+etymology_hook: "accār ← Persian āchār 'pickle', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C207-arippa]
 <!-- hl-knowledge: introduces=[ML-LEX-C208-VASTU208-01]; assesses=[] -->
 
 **അച്ചാർ** — *accār* — "a pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അച്ചാർ** (*accār*) ← Persian *āchār*, "pickle", which came in through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

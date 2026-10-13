@@ -11,7 +11,8 @@ romanization: "sūci"
 concept_tag: ML-NOUN-NEEDLE
 prerequisites: [ML-C62-thread, ML-C60-hen]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūci ← Sanskrit sūcī 'needle', a tatsama (CDIAL 13551)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *sūcī*, from a root about piercing and pointing, and the same root gi
 So the needle and the pointer come from one idea: the thing that goes in, and the thing that points out. A Malayalam newsreader saying that a report *indicates* something is standing on this root.
 
 With *nūlŭ* through the eye of it, a സൂചി is what turns cloth back into something a person can wear.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സൂചി** (*sūci*) ← Sanskrit *sūcī*, "needle", taken over whole as a tatsama (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

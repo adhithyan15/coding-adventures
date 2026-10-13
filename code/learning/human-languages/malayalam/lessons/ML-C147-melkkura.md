@@ -14,7 +14,8 @@ romanization: "mēlkkūra"
 concept_tag: ML-THINGS147-MELKKURA
 prerequisites: [ML-C147-bagu, ML-C147-bhitti]
 sounds: []
-roots: []
+roots: [dravidian-mel-top, dravidian-kurai-thatch]
+etymology_hook: "mēlkkūra: native Dravidian, 'the top thatch': mēl 'above' (DEDR 5086) + kūra 'hut, thatch' (DEDR 1904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C147-bhitti]
 <!-- hl-knowledge: introduces=[ML-LEX-C147-THINGS147-05]; assesses=[] -->
 
 **മേൽക്കൂര** — *mēlkkūra* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മേൽക്കൂര** (*mēlkkūra*) is native Dravidian, "the covering above": *mēl*, "what is above" (DEDR 5086, with Tamil *mē*), and *kūra*, "hut, thatch" (DEDR 1904, with Tamil *kūrai*, "roof").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uṟumpŭ"
 concept_tag: ML-THINGS153-URUMPU
 prerequisites: [ML-C153-pravu, ML-C153-pumparra, ML-C31-afternoon-convergence]
 sounds: []
-roots: []
+roots: [dravidian-erumpu-ant]
+etymology_hook: "uṟumpŭ: native Dravidian, one word with Tamil eṟumpu and Kannada iṟumpu (DEDR 864)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C153-pumparra]
 <!-- hl-knowledge: introduces=[ML-LEX-C153-THINGS153-03]; assesses=[] -->
 
 **ഉറുമ്പ്** — *uṟumpŭ* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറുമ്പ്** (*uṟumpŭ*) is native Dravidian, one word with Tamil *eṟumpu* and Kannada *iṟumpu* (DEDR 864).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

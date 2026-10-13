@@ -14,7 +14,8 @@ romanization: "paṭaruka"
 concept_tag: ML-VERB-PATARUKA
 prerequisites: [ML-C311-polikkuka, ML-C311-kaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-padar-spread]
+etymology_hook: "paṭaruka: native Dravidian, one word with Tamil paṭar (DEDR 3844)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C311-kaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C311-KRIYA311-05]; assesses=[] -->
 
 **പടരുക** — *paṭaruka* — "to spread (of a creeper, fire, illness)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പടരുക** (*paṭaruka*) is native Dravidian, one word with Tamil *paṭar* (DEDR 3844).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

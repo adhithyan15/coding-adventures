@@ -11,7 +11,8 @@ romanization: "puka"
 concept_tag: ML-NOUN-SMOKE
 prerequisites: [ML-C59-mud, ML-C57-nail]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke]
+etymology_hook: "puka: native Dravidian, one word with Tamil pukai and Kannada poge (DEDR 4240)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *pukai*, and Malayalam has clipped the tail off where 
 A Kerala kitchen fire makes a great deal of പുക, and the word covers steam and vapour as well, so a hot vessel and a smouldering one can be described with it alike.
 
 It is a short word doing a wide job, which is common in this layer of the language: the oldest words tend to be the briefest and the busiest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുക** (*puka*) is native Dravidian, one word with Tamil *pukai*, Kannada *poge* and Telugu *poga* (DEDR 4240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

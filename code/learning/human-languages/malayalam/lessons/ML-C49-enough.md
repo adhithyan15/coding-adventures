@@ -11,7 +11,8 @@ romanization: "mati"
 concept_tag: ML-WORD-ENOUGH
 prerequisites: [ML-C49-true, ML-C47-tooth]
 sounds: []
-roots: []
+roots: [dravidian-mati-enough]
+etymology_hook: "mati 'enough': origin uncertain; DEDR has no entry for this word"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two syllables that make a whole sentence. Hand someone rice and they say മത�
 Malayalam has a small handful of these — words that are already a finished utterance and take no verb, no subject and no ending. This book has met one before in ഇല്ല.
 
 Dictionaries connect മതി with a root about measuring and reckoning; the connection is plausible rather than settled, and it is more honest to leave it that way than to tidy it. Kannada says ಸಾಕು (*sāku*), which is not this word at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മതി** (*mati*) is of uncertain origin. It has no entry in DEDR, and no account of it is settled enough to repeat here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

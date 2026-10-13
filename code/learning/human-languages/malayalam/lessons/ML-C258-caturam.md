@@ -14,7 +14,8 @@ romanization: "caturaṁ"
 concept_tag: ML-VASTU258-CATURAM
 prerequisites: [ML-C258-akrti, ML-C258-vrttam]
 sounds: []
-roots: []
+roots: [sanskrit-catura]
+etymology_hook: "caturaṁ ← Sanskrit catura 'square', a tatsama (CDIAL 4595)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C258-vrttam]
 <!-- hl-knowledge: introduces=[ML-LEX-C258-VASTU258-04]; assesses=[] -->
 
 **ചതുരം** — *caturaṁ* — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചതുരം** (*caturaṁ*) ← Sanskrit *catura*, "square", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 4595). It is built on *catur*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

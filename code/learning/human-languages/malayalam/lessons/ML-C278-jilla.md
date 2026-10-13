@@ -14,7 +14,8 @@ romanization: "jilla"
 concept_tag: ML-STHALAM278-JILLA
 prerequisites: [ML-C278-traphiku, ML-C278-kettitam]
 sounds: []
-roots: []
+roots: [arabic-dila]
+etymology_hook: "jilla ← Hindustani zilā 'district', from Arabic ḍilʿ 'side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C278-kettitam]
 <!-- hl-knowledge: introduces=[ML-LEX-C278-STHALAM278-05]; assesses=[] -->
 
 **ജില്ല** — *jilla* — "a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജില്ല** (*jilla*) ← Hindustani *zilā*, "district", from Arabic *ḍilʿ*, "side, rib", which came in with Mughal and British administration.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

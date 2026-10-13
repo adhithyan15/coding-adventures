@@ -14,7 +14,8 @@ romanization: "urulakkiḻaṅṅŭ"
 concept_tag: ML-THINGS150-URULAKKILANNU
 prerequisites: [ML-C149-valappalam, ML-C149-muntiri]
 sounds: []
-roots: []
+roots: [dravidian-urul-round, dravidian-kizhangu-tuber]
+etymology_hook: "urulakkiḻaṅṅŭ: native Dravidian, 'round tuber': uruḷa 'ball' (DEDR 664) + kiḻaṅṅu 'tuber' (DEDR 1578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C149-muntiri]
 <!-- hl-knowledge: introduces=[ML-LEX-C150-THINGS150-01]; assesses=[] -->
 
 **ഉരുളക്കിഴങ്ങ്** — *urulakkiḻaṅṅŭ* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരുളക്കിഴങ്ങ്** (*urulakkiḻaṅṅŭ*) is native Dravidian, "the round tuber": *uruḷa*, "a ball, round" (DEDR 664, with Tamil *uruḷ*), and *kiḻaṅṅŭ*, "bulb, yam" (DEDR 1578, with Tamil *kiḻaṅku*). The potato came from the Americas; the name was made from old words. DEDR 664 compares Sanskrit *uṇḍeraka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

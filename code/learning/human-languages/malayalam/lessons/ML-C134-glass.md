@@ -11,7 +11,8 @@ romanization: "glās"
 concept_tag: ML-TABLE-GLASS
 prerequisites: [ML-C133-ginger, ML-C133-sugar]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "glās ← English glass"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C133-sugar]
 <!-- hl-knowledge: introduces=[ML-LEX-C134-TABLE-01]; assesses=[] -->
 
 **ഗ്ലാസ്** (*glās*) — "a glass". **ഒരു ഗ്ലാസ് വെള്ളം** — "a glass of water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗ്ലാസ്** (*glās*) ← English *glass*, borrowed for the drinking vessel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

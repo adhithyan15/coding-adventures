@@ -14,7 +14,8 @@ romanization: "dīpāvali"
 concept_tag: ML-VASTU326-DIPAVALI
 prerequisites: [ML-C325-ceruppakkaran, ML-C326-vetikkettu]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīpāvali ← Sanskrit dīpāvali 'row of lamps', a tatsama (CDIAL 6358)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C326-vetikkettu]
 <!-- hl-knowledge: introduces=[ML-LEX-C326-VASTU326-02]; assesses=[] -->
 
 **ദീപാവലി** — *dīpāvali* — "Diwali".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദീപാവലി** (*dīpāvali*) ← Sanskrit *dīpāvali*, "row of lamps", taken over whole as a tatsama (CDIAL 6358). Its parts are *dīpa*, "lamp", and *āvali*, "row".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

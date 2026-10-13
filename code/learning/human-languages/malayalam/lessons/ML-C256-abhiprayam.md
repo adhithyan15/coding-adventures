@@ -14,7 +14,8 @@ romanization: "abhiprāyaṁ"
 concept_tag: ML-VASTU256-ABHIPRAYAM
 prerequisites: [ML-C256-vinodam, ML-C256-kalippattam]
 sounds: []
-roots: []
+roots: [sanskrit-abhipraya]
+etymology_hook: "abhiprāyaṁ ← Sanskrit abhiprāya 'intention, opinion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C256-kalippattam]
 <!-- hl-knowledge: introduces=[ML-LEX-C256-VASTU256-03]; assesses=[] -->
 
 **അഭിപ്രായം** — *abhiprāyaṁ* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഭിപ്രായം** (*abhiprāyaṁ*) ← Sanskrit *abhiprāya*, "intention, opinion", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

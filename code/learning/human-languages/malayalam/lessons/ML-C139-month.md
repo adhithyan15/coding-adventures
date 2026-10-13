@@ -11,7 +11,8 @@ romanization: "māsaṁ"
 concept_tag: ML-SPAN-MONTH
 prerequisites: [ML-C139-minute, ML-C139-hour]
 sounds: []
-roots: []
+roots: [sanskrit-masa]
+etymology_hook: "māsaṁ ← Sanskrit māsa 'moon, month', a tatsama (CDIAL 10104)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C139-hour]
 <!-- hl-knowledge: introduces=[ML-LEX-C139-TIME-04]; assesses=[] -->
 
 **മാസം** (*māsaṁ*) — "a month". **ചിങ്ങം** and **കന്നി** are months.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാസം** (*māsaṁ*) ← Sanskrit *māsa*, "moon, month", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10104). English *month* and *moon* are distant relatives of the same Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

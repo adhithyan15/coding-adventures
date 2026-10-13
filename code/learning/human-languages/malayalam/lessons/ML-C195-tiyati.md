@@ -14,7 +14,8 @@ romanization: "tīyati"
 concept_tag: ML-SAMAYAM195-TIYATI
 prerequisites: [ML-C194-kanpola, ML-C195-ennum]
 sounds: []
-roots: []
+roots: [sanskrit-tithi]
+etymology_hook: "tīyati ← Sanskrit tithi 'a lunar day' (CDIAL 5810), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C195-ennum]
 <!-- hl-knowledge: introduces=[ML-LEX-C195-SAMAYAM195-02]; assesses=[] -->
 
 **തീയതി** — *tīyati* — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീയതി** (*tīyati*) is a tadbhava of Sanskrit *tithi*, "a lunar day" (CDIAL 5810), reshaped in the mouth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

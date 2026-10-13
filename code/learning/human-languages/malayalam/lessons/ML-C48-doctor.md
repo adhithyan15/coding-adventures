@@ -11,7 +11,8 @@ romanization: "vaidyan"
 concept_tag: ML-NOUN-DOCTOR
 prerequisites: [ML-C48-student, ML-C46-lamp]
 sounds: []
-roots: []
+roots: [sanskrit-vaidya]
+etymology_hook: "vaidyan ← Sanskrit vaidya 'learned; a physician', a tatsama (CDIAL 12140)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The same *vidyā* as the last word, stretched into an adjective: *vaidya* is 'th
 Kannada has ವೈದ್ಯ (*vaidya*) without that ending. Malayalam adds it; Kannada leaves the Sanskrit word standing as it came.
 
 In a Kerala street today the word usually points at a practitioner of the traditional medicine, and the everyday word for a hospital doctor is the English one, worn down into Malayalam sounds. Both live side by side, which is worth saying rather than tidying away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൈദ്യൻ** (*vaidyan*) ← Sanskrit *vaidya*, "learned; a physician", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 12140). Sanskrit *vaidya* first meant "one versed in the Vedas", then "physician".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

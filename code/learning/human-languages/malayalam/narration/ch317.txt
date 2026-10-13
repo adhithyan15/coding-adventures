@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a village council, then the Malayalam 
 You'll want to know: തനിയെ.
 തനിയെ — taniye — "alone, by oneself".
 
+The word, taken apart.
+തനിയെ (taniye) is native Dravidian: DEDR 3196 lists tani, "by itself, alone", under tān, "self", with Tamil tāṉ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for the countryside, then the Malayalam fo
 
 You'll want to know: എന്തായാലും.
 എന്തായാലും — entāyāluṁ — "anyway, in any case".
+
+The word, taken apart.
+എന്തായാലും (entāyāluṁ) is native Dravidian, "whatever it may become": entŭ, "what" (DEDR 5151), āyāl, "if it becomes" (DEDR 333), and -uṁ, "even". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for alone, then the Malayalam for anyway.
 You'll want to know: വെറുതെ.
 വെറുതെ — veṟute — "for no reason, idly".
 
+The word, taken apart.
+വെറുതെ (veṟute) is native Dravidian: DEDR 5513 lists it, "for nothing, idly", under veṟu, "empty, bare", with Tamil veṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for anyway, then the Malayalam for for no 
 You'll want to know: ഒട്ടും.
 ഒട്ടും — oṭṭuṁ — "not at all".
 
+The word, taken apart.
+ഒട്ടും (oṭṭuṁ) ends in -uṁ, "even"; the origin of its first part is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for for no reason, then the Malayalam for 
 
 You'll want to know: കഷ്ടിച്ച്.
 കഷ്ടിച്ച് — kaṣṭiccŭ — "barely, hardly".
+
+The word, taken apart.
+കഷ്ടിച്ച് (kaṣṭiccŭ) is a Malayalam verb form built on Sanskrit kaṣṭa, "bad, difficult" (CDIAL 2978): "with difficulty".
 
 What you've built.
 One more word for this chapter.

@@ -12,8 +12,9 @@ concept_tag: COURTESY-THANKS
 prerequisites: [ML-C01-namaskaram]
 sounds: [nda-conjunct, i-vowel-sign]
 roots: [nal]
+etymology_hook: "nandi, said nanni: native Dravidian, from nal 'good'; Tamil naṉṟi is the same word (DEDR 3610)"
 duration:
-  max_seconds: 240
+  max_seconds: 243
 requires:
   knowledge: [ML-LEX-NAMASKARAM-01]
 introduces:
@@ -73,6 +74,8 @@ The same idea, five ways:
 | Kannada | *dhanyavāda* (ಧನ್ಯವಾದ) | Sanskrit |
 | Telugu | *dhanyavādamulu* (ధన్యవాదములు) | Sanskrit |
 | Hindi | *dhanyavād* / *shukriyā* | Sanskrit / Perso-Arabic |
+
+DEDR 3610 lists Malayalam *nanni*, "goodness", under the root *nal* with Tamil *naṉṟi*. DEDR 3610 compares the Sanskrit name *Nala*.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NANDI-01] -->

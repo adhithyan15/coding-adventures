@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 86,
-  "sourceHash": "fnv1a64:8453fc878eaa428f",
+  "sourceHash": "fnv1a64:5a0106f4ed6ee240",
   "lessonIds": [
     "ML-C86-oppam",
     "ML-C86-koode",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch86.txt",
   "json": "malayalam/narration/ch86.json",
-  "textHash": "fnv1a64:3056ba5892b465cb",
-  "jsonHash": "fnv1a64:f3a6b0fc1fec28b6",
+  "textHash": "fnv1a64:77e438ac2fca930e",
+  "jsonHash": "fnv1a64:52c8325dd7c4ddd3",
   "findings": []
 }

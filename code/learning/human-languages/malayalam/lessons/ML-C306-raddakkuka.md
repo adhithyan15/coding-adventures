@@ -14,7 +14,8 @@ romanization: "ṟaddākkuka"
 concept_tag: ML-VERB-RADDAKKUKA
 prerequisites: [ML-C306-tiruttuka, ML-C306-vivarttanam-ceyyuka]
 sounds: []
-roots: []
+roots: [arabic-radd, aaka-dravidian]
+etymology_hook: "ṟaddākkuka: Arabic radd 'rejection', through Hindustani, + native ākkuka 'to make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C306-vivarttanam-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C306-KRIYA306-03]; assesses=[] -->
 
 **റദ്ദാക്കുക** — *ṟaddākkuka* — "to cancel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റദ്ദാക്കുക** (*ṟaddākkuka*) joins *radd*, "cancelled", from Arabic *radd*, "rejection, returning", by way of Hindustani, to native *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

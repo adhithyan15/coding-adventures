@@ -14,7 +14,8 @@ romanization: "kokkŭ"
 concept_tag: ML-VASTU213-KOKKU
 prerequisites: [ML-C213-kuyil, ML-C213-paruntu]
 sounds: []
-roots: []
+roots: [dravidian-kokku-heron]
+etymology_hook: "kokkŭ: native Dravidian, one word with Tamil kokku and Kannada kokku (DEDR 2125)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C213-paruntu]
 <!-- hl-knowledge: introduces=[ML-LEX-C213-VASTU213-05]; assesses=[] -->
 
 **കൊക്ക്** — *kokkŭ* — "a crane, a heron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊക്ക്** (*kokkŭ*) is native Dravidian, one word with Tamil *kokku*, Kannada *kokku* and Telugu *koṅga* (DEDR 2125). DEDR 2125 compares Sanskrit *kaṅka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

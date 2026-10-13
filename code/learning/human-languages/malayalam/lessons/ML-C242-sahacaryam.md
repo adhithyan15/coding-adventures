@@ -14,7 +14,8 @@ romanization: "sāhacaryaṁ"
 concept_tag: ML-KARANAM242-SAHACARYAM
 prerequisites: [ML-C242-vyatyasam, ML-C242-karyam]
 sounds: []
-roots: []
+roots: [sanskrit-sahacarya]
+etymology_hook: "sāhacaryaṁ ← Sanskrit sāhacarya 'companionship, accompaniment', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C242-karyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C242-KARANAM242-05]; assesses=[] -->
 
 **സാഹചര്യം** — *sāhacaryaṁ* — "a situation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാഹചര്യം** (*sāhacaryaṁ*) ← Sanskrit *sāhacarya*, "companionship, accompaniment", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

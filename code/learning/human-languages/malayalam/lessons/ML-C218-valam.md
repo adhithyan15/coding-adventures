@@ -14,7 +14,8 @@ romanization: "vaḷaṁ"
 concept_tag: ML-VASTU218-VALAM
 prerequisites: [ML-C217-piccala, ML-C217-cunnampu]
 sounds: []
-roots: []
+roots: [dravidian-valar-grow]
+etymology_hook: "vaḷaṁ: native Dravidian; DEDR 5304 lists Malayalam vaḷam 'manure' with the verb 'to grow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C217-cunnampu]
 <!-- hl-knowledge: introduces=[ML-LEX-C218-VASTU218-01]; assesses=[] -->
 
 **വളം** — *vaḷaṁ* — "manure, fertiliser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വളം** (*vaḷaṁ*) is native Dravidian: DEDR 5304 lists it, "manure", beside the verb "to grow, increase", with Tamil *vaḷ*, "fertility": manure is what makes things grow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

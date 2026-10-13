@@ -14,7 +14,8 @@ romanization: "enniṭṭuṁ"
 concept_tag: ML-KARANAM241-ENNITTUM
 prerequisites: [ML-C241-sambandhiccu, ML-C241-enkilum]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "enniṭṭuṁ: native Dravidian, a form of the verb 'to say' (DEDR 868) + -uṁ 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C241-enkilum]
 <!-- hl-knowledge: introduces=[ML-LEX-C241-KARANAM241-03]; assesses=[] -->
 
 **എന്നിട്ടും** — *enniṭṭuṁ* — "and yet, still".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്നിട്ടും** (*enniṭṭuṁ*) is native Dravidian: a past form of the verb "to say" (DEDR 868, with Tamil *eṉ*), with *-uṁ*, "even": "even having said so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

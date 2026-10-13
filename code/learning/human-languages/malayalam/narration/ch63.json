@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "How the Body Reports",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbb8cadecfb1126e",
+  "sourceHash": "fnv1a64:9d7d7aecb005395b",
   "lessons": [
     {
       "id": "ML-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c32bc393a080e59",
+      "sourceHash": "fnv1a64:d680b24603fb7d43",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശപ്പ് (viśappŭ) is native Dravidian, a noun from the verb \"to be hungry\"; DEDR 5384 lists the root with Tamil vicarppu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fbd7846edd56dd7",
+      "sourceHash": "fnv1a64:69370d8de2ee8668",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷീണം (kṣīṇaṁ) from Sanskrit kṣīṇa, \"worn away, feeble\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 3690)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c0161a03c0d3a92",
+      "sourceHash": "fnv1a64:397d3ed9a1fc5d5e",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേദന (vēdana) from Sanskrit vēdanā, \"feeling, pain\", taken over whole as a tatsama (CDIAL 12106). It is built on the root vid, \"to know, to feel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10f34d2a03f4d992",
+      "sourceHash": "fnv1a64:8bf2bdad80b9f27c",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമ (cuma) is probably native Dravidian. DEDR 1964 sets it beside Tamil cerumu, \"to clear the throat, cough\", and Kannada kemmu, but puts a query against the Malayalam word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -528,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -559,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba897d140ec85f6a",
+      "sourceHash": "fnv1a64:c127feda488aa85c",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +648,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പനി (pani) is native Dravidian, one word with Tamil paṉi and Kannada pani (DEDR 4035). In Tamil the same word means \"dew, cold\"; Malayalam kept the shiver and made it a fever."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +669,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +718,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

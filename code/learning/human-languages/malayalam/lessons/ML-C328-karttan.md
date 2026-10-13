@@ -14,7 +14,8 @@ romanization: "karṭṭan"
 concept_tag: ML-VASTU328-KARTTAN
 prerequisites: [ML-C328-bencu, ML-C328-selphu]
 sounds: []
-roots: []
+roots: [english-curtain]
+etymology_hook: "karṭṭan ← English curtain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C328-selphu]
 <!-- hl-knowledge: introduces=[ML-LEX-C328-VASTU328-03]; assesses=[] -->
 
 **കർട്ടൻ** — *karṭṭan* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കർട്ടൻ** (*karṭṭan*) ← English *curtain*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

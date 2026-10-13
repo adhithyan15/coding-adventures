@@ -14,7 +14,8 @@ romanization: "karimpŭ"
 concept_tag: ML-VASTU333-KARIMPU
 prerequisites: [ML-C332-tai, ML-C333-kasuvanti]
 sounds: []
-roots: []
+roots: [dravidian-karumpu-sugarcane]
+etymology_hook: "karimpŭ: native Dravidian, one word with Tamil karumpu and Kannada karvu (DEDR 1288)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C333-kasuvanti]
 <!-- hl-knowledge: introduces=[ML-LEX-C333-VASTU333-02]; assesses=[] -->
 
 **കരിമ്പ്** — *karimpŭ* — "sugarcane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരിമ്പ്** (*karimpŭ*) is native Dravidian, one word with Tamil *karumpu* and Kannada *karvu* (DEDR 1288).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

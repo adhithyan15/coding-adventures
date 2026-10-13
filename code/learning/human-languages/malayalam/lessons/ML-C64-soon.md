@@ -11,7 +11,8 @@ romanization: "uṭane"
 concept_tag: ML-WORD-SOON
 prerequisites: [ML-C64-then, ML-C62-thread]
 sounds: []
-roots: []
+roots: [dravidian-utan-with]
+etymology_hook: "uṭane: native Dravidian, built on uṭan 'together with, at once'; Tamil uṭaṉ (DEDR 945)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, built on *uṭan*, meaning along with — what happens beside 
 So the two words you now have divide the near future between them. *Pinne* leaves a gap; ഉടനെ closes it.
 
 In Kerala speech it also softens a refusal: not now, but not far off either.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉടനെ** (*uṭane*) is native Dravidian, built on *uṭan*, "together with, at once"; DEDR 945 lists the root with Tamil *uṭaṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

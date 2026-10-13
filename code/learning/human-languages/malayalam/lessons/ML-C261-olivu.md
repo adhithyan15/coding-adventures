@@ -14,7 +14,8 @@ romanization: "oḻivŭ"
 concept_tag: ML-JOLI261-OLIVU
 prerequisites: [ML-C261-posrrman, ML-C261-abhimukham]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-quit]
+etymology_hook: "oḻivŭ: native Dravidian, the noun of the verb 'to be free, empty'; Tamil oḻi (DEDR 1009)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C261-abhimukham]
 <!-- hl-knowledge: introduces=[ML-LEX-C261-JOLI261-03]; assesses=[] -->
 
 **ഒഴിവ്** — *oḻivŭ* — "a vacancy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴിവ്** (*oḻivŭ*) is native Dravidian, the noun of the verb "to leave off, be free"; DEDR 1009 lists Malayalam *oḻivu*, "vacancy", itself, beside Tamil *oḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

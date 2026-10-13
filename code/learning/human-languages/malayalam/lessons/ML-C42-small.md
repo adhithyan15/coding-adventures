@@ -11,7 +11,8 @@ romanization: "ceṟiya"
 concept_tag: ML-ADJ-SMALL
 prerequisites: [ML-C42-big]
 sounds: []
-roots: []
+roots: [dravidian-ciru-small]
+etymology_hook: "ceṟiya: native Dravidian, one word with Tamil ciṟu and Telugu ciṟu 'small' (DEDR 1594)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **വലിയ** *valiya* a moment ago. Put them side by side and nothin
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെറിയ** (*ceṟiya*) is native Dravidian, one word with Tamil *ciṟu*, Kannada *kiṟu* and Telugu *ciṟu*, all "small" (DEDR 1594).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-02] -->

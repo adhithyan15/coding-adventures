@@ -15,6 +15,9 @@ Sanskrit satya, built on sat, 'being, that which is'. Truth, in that word's pict
 Malayalam already has ശരി (śari) for the everyday "right, okay" of a conversation. സത്യം (satyaṁ) is the heavier one: not 'that will do' but 'that is so'.
 Kannada answers with ನಿಜ (nija), a different Sanskrit word, whose older sense is 'one's own, innate'. Two languages, two borrowings, and each picked a different picture of what being true is.
 
+The word, taken apart.
+സത്യം (satyaṁ) from Sanskrit satya, "true; truth", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13112).
+
 What you've built.
 The first of five short replies.
 
@@ -47,6 +50,9 @@ Two syllables that make a whole sentence. Hand someone rice and they say മത�
 Malayalam has a small handful of these — words that are already a finished utterance and take no verb, no subject and no ending. This book has met one before in ഇല്ല.
 Dictionaries connect മതി (mati) with a root about measuring and reckoning; the connection is plausible rather than settled, and it is more honest to leave it that way than to tidy it. Kannada says ಸಾಕು (sāku), which is not this word at all.
 
+The word, taken apart.
+മതി (mati) is of uncertain origin. It has no entry in DEDR, and no account of it is settled enough to repeat here.
+
 What you've built.
 Two replies: true, and enough.
 
@@ -77,6 +83,9 @@ You'll want to know: തീർച്ചയായും.
 A long word, and every piece of it is Malayalam's own. തീർച്ച (tīrcca) is 'a settling, a thing decided', off the verb തീരുക, 'to come to an end'. Add the adverb-making tail and the whole says 'in a settled way'.
 Kannada reaches for ಖಂಡಿತ (khaṇḍita) here, Sanskrit for 'cut, broken off'. The two languages arrived at the same idea from the same direction — a matter is certain once it has been finished off — but one built the word at home and one imported it.
 There is a chillu ർ inside, the third chapter running to end up leaning on one.
+
+The word, taken apart.
+തീർച്ചയായും (tīrccayāyuṁ) is native Dravidian: a noun meaning "completion, finality", from the verb "to be finished, settled" (DEDR 3278, with Tamil tīr and Kannada tīr), followed by an ending meaning "as". What is settled is certain.
 
 What you've built.
 Three. True, enough, certainly.
@@ -110,6 +119,9 @@ Take it apart and it says "on one side". ഒരു (oru) is the one you met lean
 So a Malayalam speaker hedges by naming a side rather than by naming a doubt. The word is half native, half borrowed, and joined so smoothly that the seam is easy to miss.
 Kannada hedges with ಬಹುಶಃ (bahuśaḥ), a wholly Sanskrit word meaning something closer to 'in many ways'. Same job, different picture again.
 
+The word, taken apart.
+ഒരുപക്ഷേ (orupakṣē) joins native oru, "one" (DEDR 990), to Sanskrit pakṣa, "wing, side" (CDIAL 7627), with the ending -ē: "on one side", one of the possibilities.
+
 What you've built.
 Four. True, enough, certainly, perhaps.
 
@@ -140,6 +152,9 @@ You'll want to know: അങ്ങനെ.
 This one the book has half-taught already. The chapter on pointing laid out a pattern: i- for what is near, a- for what is far, e- for what is being asked about. എങ്ങനെ (eṅṅane), 'how?', was the question member of exactly this set.
 Swap its opening for the far one and the question becomes an answer. അങ്ങനെ (aṅṅane) is 'that way' — the manner just spoken of, agreed to.
 Kannada does the same trick with ಹಾಗೆ (hāge), built on its own far-pointer. The machinery is inherited; each sister runs it with her own parts.
+
+The word, taken apart.
+അങ്ങനെ (aṅṅane) is native Dravidian, from the far-pointing base of atŭ. DEDR 1 lists it with Tamil aṅṅaṉ, "in that manner".
 
 What you've built.
 Five, and the run is closed: true, enough, certainly, perhaps, just so.

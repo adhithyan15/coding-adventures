@@ -14,7 +14,8 @@ romanization: "gyās"
 concept_tag: ML-VASTU248-GYAS
 prerequisites: [ML-C247-curunta, ML-C247-cittayulla]
 sounds: []
-roots: []
+roots: [english-gas]
+etymology_hook: "gyās ← English gas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C247-cittayulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C248-VASTU248-01]; assesses=[] -->
 
 **ഗ്യാസ്** — *gyās* — "cooking gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗ്യാസ്** (*gyās*) ← English *gas*, a word coined in the 1600s from Greek *chaos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

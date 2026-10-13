@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:39013d4fc3aeb3f5",
+  "sourceHash": "fnv1a64:6cddcc7cb5b7b162",
   "lessons": [
     {
       "id": "ML-C43-run",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0bd35951b8dc02c",
+      "sourceHash": "fnv1a64:509934157084fcaa",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓടൂ (ōṭū) is native Dravidian, one word with Tamil ōṭu, Kannada ōḍu and Telugu ōḍu (DEDR 1041)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4275c77beefa9ee",
+      "sourceHash": "fnv1a64:4dd99fc3b4f11624",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +185,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറങ്ങൂ (uṟaṅṅū) is native Dravidian, one word with Tamil uṟaṅku (DEDR 707)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -233,7 +255,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -264,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74323f630f448d23",
+      "sourceHash": "fnv1a64:d6a17bfa2e492759",
       "notice": null,
       "blocks": [
         {
@@ -301,6 +323,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിൽക്കൂ (nilkkū) is native Dravidian, one word with Tamil nil, Kannada nil and Telugu nilucu (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -311,7 +344,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -360,7 +393,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -391,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c3ddbcc90d185d7",
+      "sourceHash": "fnv1a64:0252dcac3490bd13",
       "notice": null,
       "blocks": [
         {
@@ -428,6 +461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തരൂ (tarū) is native Dravidian, one word with Tamil taru and Kannada tar (DEDR 3098). It is the \"give\" that moves toward the speaker or the listener; giving to anyone else takes another verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -438,7 +482,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,7 +522,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

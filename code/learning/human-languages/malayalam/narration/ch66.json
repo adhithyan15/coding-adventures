@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Out in the Paddy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9b22de4329409d0a",
+  "sourceHash": "fnv1a64:28daf1d08373e854",
   "lessons": [
     {
       "id": "ML-C66-paddy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46ae9ca2622c8e1b",
+      "sourceHash": "fnv1a64:49d2629be240bd3c",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നെല്ല് (nellŭ) is native Dravidian, one word with Tamil nel and Kannada nel (DEDR 3753)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5db83538c918112a",
+      "sourceHash": "fnv1a64:7f9be6495c5f1924",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുല്ല് (pullŭ) is native Dravidian, one word with Tamil pul, Kannada pul and Telugu pulu (DEDR 4300)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d3014fbea37102d",
+      "sourceHash": "fnv1a64:3f8cff765e3842c7",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കതിര് (katirŭ) is native Dravidian, one word with Tamil katir and Kannada kadir (DEDR 1194). DEDR 1193 lists the same shape meaning \"ray of light\", with Tamil katir."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:629c408a5999d01b",
+      "sourceHash": "fnv1a64:f88d052d4de80b70",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കലപ്പ (kalappa) is native Dravidian, one word with Tamil kalappai (DEDR 1304)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -546,7 +590,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -577,7 +621,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:850e94e187e84e30",
+      "sourceHash": "fnv1a64:ccf240d519651a6a",
       "notice": null,
       "blocks": [
         {
@@ -622,6 +666,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊയ്ത്ത് (koyttŭ) is native Dravidian, a noun from the verb \"to cut, to reap\"; DEDR 2119 lists the root with Tamil koy, Kannada koy and Telugu kōyu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -632,7 +687,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -699,7 +754,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

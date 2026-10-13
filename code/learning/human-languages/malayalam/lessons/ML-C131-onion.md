@@ -11,7 +11,8 @@ romanization: "uḷḷi"
 concept_tag: ML-KITCHEN-ONION
 prerequisites: [ML-C131-egg, ML-C131-vegetables]
 sounds: []
-roots: []
+roots: [dravidian-ulli-onion]
+etymology_hook: "uḷḷi: native Dravidian, one word with Tamil uḷḷi and Kannada uḷḷi (DEDR 705)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C131-vegetables]
 <!-- hl-knowledge: introduces=[ML-LEX-C131-KITCHEN-05]; assesses=[] -->
 
 **ഉള്ളി** (*uḷḷi*) — "an onion", in almost every Kerala dish.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉള്ളി** (*uḷḷi*) is native Dravidian, one word with Tamil *uḷḷi*, Kannada *uḷḷi* and Telugu *ulli* (DEDR 705). DEDR 705 compares Sanskrit *ūlī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

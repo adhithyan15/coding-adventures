@@ -14,7 +14,8 @@ romanization: "caviṭṭuka"
 concept_tag: ML-VERB-CAVITTUKA
 prerequisites: [ML-C307-pukalttuka, ML-C308-atikkuka]
 sounds: []
-roots: []
+roots: [dravidian-cavittu-tread]
+etymology_hook: "caviṭṭuka: native Dravidian, one word with Tamil cavaṭṭu (DEDR 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C308-atikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C308-KRIYA308-02]; assesses=[] -->
 
 **ചവിട്ടുക** — *caviṭṭuka* — "to kick, to step on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചവിട്ടുക** (*caviṭṭuka*) is native Dravidian, one word with Tamil *cavaṭṭu* (DEDR 2387).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

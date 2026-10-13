@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for black pepper, then the Malayalam for g
 You'll want to know: കുതിര.
 കുതിര — kutira — "a horse".
 
+The word, taken apart.
+കുതിര (kutira) is native Dravidian, one word with Tamil kutirai, Kannada kudire and Telugu kudira (DEDR 1711).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ One word or a phrase: how does Malayalam say "afternoon"? (A phrase, uccakaḻi�
 You'll want to know: കഴുത.
 കഴുത — kaḻuta — "a donkey".
 
+The word, taken apart.
+കഴുത (kaḻuta) is native Dravidian, one word with Tamil kaḻutai and Kannada kaḻte (DEDR 1364). DEDR 1364 compares Sanskrit gardabha.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for a horse, then the Malayalam for a donk
 
 You'll want to know: പോത്ത്.
 പോത്ത് — pōttŭ — "a buffalo".
+
+The word, taken apart.
+പോത്ത് (pōttŭ) is native Dravidian, one word with Tamil pōttu, Kannada pōta and Telugu pōtu (DEDR 4586). In DEDR the sense is "male buffalo".
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Suprabhātaṁ, "good morning," is the very same Sanskrit word in which neighbou
 You'll want to know: പന്നി.
 പന്നി — panni — "a pig".
 
+The word, taken apart.
+പന്നി (panni) is native Dravidian, one word with Tamil paṉṟi, Kannada pandi and Telugu pandi (DEDR 4039).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Malayalam for a buffalo, then the Malayalam for a pi
 
 You'll want to know: സിംഹം.
 സിംഹം — simhaṁ — "a lion".
+
+The word, taken apart.
+സിംഹം (simhaṁ) from Sanskrit siṁha, "lion", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13384).
 
 What you've built.
 One more word for this chapter.

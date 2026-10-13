@@ -14,7 +14,8 @@ romanization: "vicitramāya"
 concept_tag: ML-GUNAM205-VICITRAMAYA
 prerequisites: [ML-C205-upayogapradamaya, ML-C205-mikacca]
 sounds: []
-roots: []
+roots: [sanskrit-vicitra, aaka-dravidian]
+etymology_hook: "vicitramāya: Sanskrit vicitra 'variegated, strange' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C205-mikacca]
 <!-- hl-knowledge: introduces=[ML-LEX-C205-GUNAM205-04]; assesses=[] -->
 
 **വിചിത്രമായ** — *vicitramāya* — "strange, odd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിചിത്രമായ** (*vicitramāya*) joins Sanskrit *vicitra*, "many-coloured, strange", to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "viśadīkarikkuka"
 concept_tag: ML-VERB-VISADIKARIKKUKA
 prerequisites: [ML-C225-kontupokuka, ML-C226-carcca-ceyyuka]
 sounds: []
-roots: []
+roots: [sanskrit-vishada]
+etymology_hook: "viśadīkarikkuka: Sanskrit viśada 'clear' + -karikkuka 'make' (on the root kṛ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C226-carcca-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C226-KRIYA226-02]; assesses=[] -->
 
 **വിശദീകരിക്കുക** — *viśadīkarikkuka* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിശദീകരിക്കുക** (*viśadīkarikkuka*) is built on Sanskrit *viśada*, "clear, bright", with *-karikkuka*, "to make", on the Sanskrit root *kṛ*: "to make clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

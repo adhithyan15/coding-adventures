@@ -11,7 +11,8 @@ romanization: "pēna"
 concept_tag: ML-CLASS-PEN
 prerequisites: [ML-C139-month, ML-C139-year]
 sounds: []
-roots: []
+roots: [portuguese-pena]
+etymology_hook: "pēna ← Portuguese pena 'feather, quill pen'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C139-year]
 <!-- hl-knowledge: introduces=[ML-LEX-C140-SCHOOL-01]; assesses=[] -->
 
 **പേന** (*pēna*) — "a pen". **ഒരു പേന തരൂ** — "please give me a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പേന** (*pēna*) ← Portuguese *pena*, "feather, quill", the pen it once was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

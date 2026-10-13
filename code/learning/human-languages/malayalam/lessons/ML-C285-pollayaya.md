@@ -14,7 +14,8 @@ romanization: "poḷḷayāya"
 concept_tag: ML-GUNAM285-POLLAYAYA
 prerequisites: [ML-C285-culinna, ML-C285-kuttaneyulla]
 sounds: []
-roots: []
+roots: [dravidian-polla-hollow, aaka-dravidian]
+etymology_hook: "poḷḷayāya: native Dravidian, poḷḷa 'hollow, empty' (DEDR 4560) + āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C285-kuttaneyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C285-GUNAM285-04]; assesses=[] -->
 
 **പൊള്ളയായ** — *poḷḷayāya* — "hollow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊള്ളയായ** (*poḷḷayāya*) is native Dravidian: *poḷḷa*, "a tube; perforated, empty" (DEDR 4560), and *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

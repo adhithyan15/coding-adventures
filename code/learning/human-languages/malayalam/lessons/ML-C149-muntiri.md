@@ -14,7 +14,8 @@ romanization: "muntiri"
 concept_tag: ML-THINGS149-MUNTIRI
 prerequisites: [ML-C149-mambalam, ML-C149-valappalam, ML-C28-uchakazhinju]
 sounds: []
-roots: []
+roots: [dravidian-muntiri-grape]
+etymology_hook: "muntiri: native Dravidian, one word with Tamil muntiri (DEDR 4963)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C149-valappalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C149-THINGS149-05]; assesses=[] -->
 
 **മുന്തിരി** — *muntiri* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുന്തിരി** (*muntiri*) is native Dravidian, one word with Tamil *muntiri* (DEDR 4963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

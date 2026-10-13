@@ -14,7 +14,8 @@ romanization: "sthiramāya"
 concept_tag: ML-GUNAM206-STHIRAMAYA
 prerequisites: [ML-C206-anusaranayulla, ML-C206-svartthamaya]
 sounds: []
-roots: []
+roots: [sanskrit-sthira, aaka-dravidian]
+etymology_hook: "sthiramāya: Sanskrit sthira 'firm, durable' (CDIAL 13771) + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C206-svartthamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C206-GUNAM206-04]; assesses=[] -->
 
 **സ്ഥിരമായ** — *sthiramāya* — "permanent, regular".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്ഥിരമായ** (*sthiramāya*) joins Sanskrit *sthira*, "firm, durable" (CDIAL 13771), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

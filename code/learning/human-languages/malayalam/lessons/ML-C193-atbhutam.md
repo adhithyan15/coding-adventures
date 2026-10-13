@@ -14,7 +14,8 @@ romanization: "atbhutaṁ"
 concept_tag: ML-AROGYAM193-ATBHUTAM
 prerequisites: [ML-C193-nanam, ML-C193-abhimanam]
 sounds: []
-roots: []
+roots: [sanskrit-adbhuta]
+etymology_hook: "atbhutaṁ ← Sanskrit adbhuta 'wonderful', a tatsama (CDIAL 240)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C193-abhimanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C193-AROGYAM193-05]; assesses=[] -->
 
 **അത്ഭുതം** — *atbhutaṁ* — "wonder, surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അത്ഭുതം** (*atbhutaṁ*) ← Sanskrit *adbhuta*, "wonderful", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

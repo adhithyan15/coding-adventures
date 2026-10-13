@@ -14,7 +14,8 @@ romanization: "guha"
 concept_tag: ML-STHALAM239-GUHA
 prerequisites: [ML-C239-kayal, ML-C239-totu]
 sounds: []
-roots: []
+roots: [sanskrit-guha]
+etymology_hook: "guha ← Sanskrit guhā 'hiding place, cave', a tatsama (CDIAL 4220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C239-totu]
 <!-- hl-knowledge: introduces=[ML-LEX-C239-STHALAM239-05]; assesses=[] -->
 
 **ഗുഹ** — *guha* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗുഹ** (*guha*) ← Sanskrit *guhā*, "hiding place, cave", taken over whole as a tatsama (CDIAL 4220).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know.
 ഇന്ത്യ is one. കേരളം is not — it is a part of one.
 നാട് could not tell you that. It covers a home region, a district or a country, and the situation decides which — so it can name the thing without fixing its size. രാജ്യം (rājyaṁ) fixes it. That is the whole of what this word adds.
 
+The word, taken apart.
+രാജ്യം (rājyaṁ) from Sanskrit rājya, "kingship, kingdom" (CDIAL 10694), a tatsama built on rājan, "king".
+
 Why it's said this way.
 The Sanskrit behind it means a realm, and it is built on the word for a king. What the word names is kingship — rule as an institution — not the land, the people or the borders.
 It ends in -ം, which by now tells you what it will do when a case ending arrives.
@@ -45,6 +48,9 @@ You'll want to know.
 രാജ്യം, rājyaṁ, a country.
 നഗരം, nagaraṁ, a city.
 ഊര്, ūrŭ, a town, a settled place — yours already.
+
+The word, taken apart.
+നഗരം (nagaraṁ) from Sanskrit nagara, "town" (CDIAL 6924), a tatsama with Malayalam's noun ending -ṁ.
 
 Why it's said this way.
 These two are not a big one and a small one, and it is worth saying so rather than teaching you a rule that Malayalam does not keep.

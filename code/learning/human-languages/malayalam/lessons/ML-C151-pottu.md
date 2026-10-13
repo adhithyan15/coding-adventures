@@ -14,7 +14,8 @@ romanization: "pōttŭ"
 concept_tag: ML-THINGS151-POTTU
 prerequisites: [ML-C151-kutira, ML-C151-kaluta]
 sounds: []
-roots: []
+roots: [dravidian-pottu-buffalo]
+etymology_hook: "pōttŭ: native Dravidian, one word with Tamil pōttu and Kannada pōta (DEDR 4586)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C151-kaluta]
 <!-- hl-knowledge: introduces=[ML-LEX-C151-THINGS151-03]; assesses=[] -->
 
 **പോത്ത്** — *pōttŭ* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പോത്ത്** (*pōttŭ*) is native Dravidian, one word with Tamil *pōttu*, Kannada *pōta* and Telugu *pōtu* (DEDR 4586). In DEDR the sense is "male buffalo".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

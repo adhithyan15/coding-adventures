@@ -236,7 +236,13 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   japanese: { withoutHook: 601, withoutVisible: 688 },
   kannada: { withoutHook: 1330, withoutVisible: 1281 },
   latin: { withoutHook: 1095, withoutVisible: 1105 },
-  malayalam: { withoutHook: 1367, withoutVisible: 1275 },
+  // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
+  // and says where its word comes from, almost always in a "taken apart" block. Native words
+  // cite the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only
+  // cognates the full DEDR article lists and keeping its own "Cf. Skt." and "?" caveats;
+  // Sanskrit loans cite Turner's CDIAL where it has the form; English, Portuguese, Arabic and
+  // Persian loans name the donor. 47 say the origin is uncertain or only usually traced.
+  malayalam: { withoutHook: 0, withoutVisible: 0 },
   marathi: { withoutHook: 1163, withoutVisible: 1116 },
   marwadi: { withoutHook: 552, withoutVisible: 716 },
   persian: { withoutHook: 1300, withoutVisible: 1311 },

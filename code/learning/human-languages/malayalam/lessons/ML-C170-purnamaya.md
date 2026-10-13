@@ -14,7 +14,8 @@ romanization: "pūrṇamāya"
 concept_tag: ML-QUAL170-PURNAMAYA
 prerequisites: [ML-C170-vilakuranna, ML-C170-terraya]
 sounds: []
-roots: []
+roots: [sanskrit-purna, aaka-dravidian]
+etymology_hook: "pūrṇamāya: Sanskrit pūrṇa 'full' (CDIAL 8339) + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C170-terraya]
 <!-- hl-knowledge: introduces=[ML-LEX-C170-QUAL170-03]; assesses=[] -->
 
 **പൂർണ്ണമായ** — *pūrṇamāya* — "complete, whole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂർണ്ണമായ** (*pūrṇamāya*) joins Sanskrit *pūrṇa*, "filled, full" (CDIAL 8339), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

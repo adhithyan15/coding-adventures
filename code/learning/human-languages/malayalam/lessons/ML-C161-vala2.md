@@ -14,7 +14,8 @@ romanization: "vāḻa"
 concept_tag: ML-THINGS161-VALA2
 prerequisites: [ML-C161-mannu, ML-C161-tennu, ML-C17-ucha-paathira, ML-C17-ucha-paathira]
 sounds: []
-roots: []
+roots: [dravidian-vazhai-plantain]
+etymology_hook: "vāḻa: native Dravidian, one word with Tamil vāḻai and Kannada bāḻe (DEDR 5373)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C161-tennu]
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-03]; assesses=[] -->
 
 **വാഴ** — *vāḻa* — "a banana plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാഴ** (*vāḻa*) is native Dravidian, one word with Tamil *vāḻai* and Kannada *bāḻe* (DEDR 5373). DEDR 5373 compares Sanskrit *vārabuṣā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 310,
-  "sourceHash": "fnv1a64:547688eb33f948a0",
+  "sourceHash": "fnv1a64:1011d4808ee0eeef",
   "lessonIds": [
     "ML-C310-tennuka",
     "ML-C310-uraykkuka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch310.txt",
   "json": "malayalam/narration/ch310.json",
-  "textHash": "fnv1a64:0e92600cb8b97a9c",
-  "jsonHash": "fnv1a64:b8ff5a0a4b940485",
+  "textHash": "fnv1a64:64d326a587a43059",
+  "jsonHash": "fnv1a64:8cea5d0cd6a0a717",
   "findings": []
 }

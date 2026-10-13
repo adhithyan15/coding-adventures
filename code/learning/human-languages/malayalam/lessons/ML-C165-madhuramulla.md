@@ -14,7 +14,8 @@ romanization: "madhuramuḷḷa"
 concept_tag: ML-QUAL165-MADHURAMULLA
 prerequisites: [ML-C164-nilamulla, ML-C165-vrttiyulla]
 sounds: []
-roots: []
+roots: [sanskrit-madhura, dravidian-ul-be]
+etymology_hook: "madhuramuḷḷa: Sanskrit madhura 'sweet' (CDIAL 9793) + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C165-vrttiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C165-QUAL165-02]; assesses=[] -->
 
 **മധുരമുള്ള** — *madhuramuḷḷa* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മധുരമുള്ള** (*madhuramuḷḷa*) joins Sanskrit *madhura*, "sweet" (CDIAL 9793), to native *-uḷḷa*, "that has" (DEDR 697): "having sweetness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

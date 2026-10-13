@@ -14,7 +14,8 @@ romanization: "karaḷ"
 concept_tag: ML-AROGYAM235-KARAL
 prerequisites: [ML-C235-uppurri, ML-C235-nattellu]
 sounds: []
-roots: []
+roots: [dravidian-karul-liver]
+etymology_hook: "karaḷ: native Dravidian, one word with Kannada karuḷ (DEDR 1274)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C235-nattellu]
 <!-- hl-knowledge: introduces=[ML-LEX-C235-AROGYAM235-04]; assesses=[] -->
 
 **കരൾ** — *karaḷ* — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരൾ** (*karaḷ*) is native Dravidian, one word with Kannada *karuḷ* (DEDR 1274). Its older sense covers the heart and the inner organs together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

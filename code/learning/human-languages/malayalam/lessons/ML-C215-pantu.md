@@ -14,7 +14,8 @@ romanization: "pantŭ"
 concept_tag: ML-VASTU215-PANTU
 prerequisites: [ML-C214-sviccu, ML-C214-arakkaval]
 sounds: []
-roots: []
+roots: [dravidian-pantu-ball]
+etymology_hook: "pantŭ: native Dravidian, one word with Tamil pantu and Telugu banti (DEDR 3925)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C214-arakkaval]
 <!-- hl-knowledge: introduces=[ML-LEX-C215-VASTU215-01]; assesses=[] -->
 
 **പന്ത്** — *pantŭ* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പന്ത്** (*pantŭ*) is native Dravidian, one word with Tamil *pantu* and Telugu *banti* (DEDR 3925).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

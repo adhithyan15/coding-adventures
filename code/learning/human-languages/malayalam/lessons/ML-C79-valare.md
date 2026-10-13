@@ -11,7 +11,8 @@ romanization: "vaḷare"
 concept_tag: ML-WORD-VERY
 prerequisites: [ML-R78-genitive-recall, ML-C42-good, ML-C42-big, ML-C42-adjective-system]
 sounds: []
-roots: []
+roots: [dravidian-valar-grow]
+etymology_hook: "vaḷare: native Dravidian, 'growing much', from the verb to grow; Tamil vaḷ (DEDR 5304)"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +65,11 @@ standing in front of the one it describes:
 
 Read that right to left and it unpacks cleanly: a book; a good book; a very good
 book. Each new word reaches forward over everything after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വളരെ** (*vaḷare*) is native Dravidian, built on the verb "to grow, increase"; DEDR 5304 lists the root with Tamil *vaḷ* and Kannada *baḷe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C79-DEGREE-01] -->

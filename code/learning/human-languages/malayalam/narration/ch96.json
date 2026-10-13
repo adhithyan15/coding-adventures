@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0c0a7419fa6d14d5",
+  "sourceHash": "fnv1a64:fb059d97d555ce51",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9edd45baf0039fb",
+      "sourceHash": "fnv1a64:f31268454cc528e3",
       "notice": null,
       "blocks": [
         {
@@ -112,6 +112,10 @@
             {
               "kind": "speech",
               "text": "You were shown this once, at മോശം. Here it is again — and this time it is not a fact about one word you were given. It is something you do, to a word you met a minute ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian: DEDR 855 lists it with Tamil eḷi, \"easy\"."
             }
           ]
         },
@@ -196,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5000578f4e80b5f9",
+      "sourceHash": "fnv1a64:f1bd50bdf96bb482",
       "notice": null,
       "blocks": [
         {
@@ -254,6 +258,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രയാസം (prayāsaṁ) from Sanskrit prayāsa, \"effort, exertion\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. What costs effort is difficult."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -264,7 +279,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -304,7 +319,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

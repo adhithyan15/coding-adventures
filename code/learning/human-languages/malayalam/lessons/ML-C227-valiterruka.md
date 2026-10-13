@@ -14,7 +14,8 @@ romanization: "vaḻiteṟṟuka"
 concept_tag: ML-VERB-VALITERRUKA
 prerequisites: [ML-C227-hajarakuka, ML-C227-panketukkuka]
 sounds: []
-roots: []
+roots: [dravidian-vazhi-way, dravidian-terru-slip]
+etymology_hook: "vaḻiteṟṟuka: native Dravidian, 'slip from the way': vaḻi (DEDR 5297) + teṟṟuka (DEDR 3445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C227-panketukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C227-KRIYA227-04]; assesses=[] -->
 
 **വഴിതെറ്റുക** — *vaḻiteṟṟuka* — "to lose one's way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വഴിതെറ്റുക** (*vaḻiteṟṟuka*) is native Dravidian, "slip from the path": *vaḻi*, "way" (DEDR 5297), and the verb "to slip, err" (DEDR 3445, with Tamil *teṟṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

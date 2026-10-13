@@ -14,7 +14,8 @@ romanization: "tiraññeṭukkuka"
 concept_tag: ML-VERB-TIRANNETUKKUKA
 prerequisites: [ML-C182-varukkuka, ML-C182-olikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tirai-seek, dravidian-ezhu-rise]
+etymology_hook: "tiraññeṭukkuka: native Dravidian, 'search and take up': tirayuka (DEDR 3242) + eṭukkuka (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C182-olikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C183-KRIYA183-01]; assesses=[] -->
 
 **തിരഞ്ഞെടുക്കുക** — *tiraññeṭukkuka* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരഞ്ഞെടുക്കുക** (*tiraññeṭukkuka*) is native Dravidian, "take up having searched": the past of the searching verb (DEDR 3242, with Tamil *tirakku*) and the verb "to lift, take up" (DEDR 851, with Tamil *eḻu*, "to rise").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

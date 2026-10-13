@@ -12,8 +12,9 @@ concept_tag: RESPONSE-NO
 prerequisites: [ML-C01-athe]
 sounds: [independent-vowel-i, lla-conjunct]
 roots: [il]
+etymology_hook: "illa: native Dravidian 'is not', one word with Tamil illai and Kannada illa (DEDR 2559)"
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [ML-LEX-ATHE-01]
 introduces:
@@ -68,6 +69,8 @@ The same idea, five ways:
 | Kannada | *illa* (ಇಲ್ಲ) | the **same** root |
 | Telugu | *lēdu* (లేదు) | native, a **different** root |
 | Hindi | *nahīṁ* (नहीं) | Indo-European (unrelated) |
+
+DEDR 2559 lists Malayalam *illa* with Tamil *illai* and Kannada *illa*.
 
 ## Grammar Lens: Dravidian negates by *being*
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01]; assesses=[ML-LEX-ILLA-01] -->

@@ -14,7 +14,8 @@ romanization: "ammāyiyappan"
 concept_tag: ML-VASTU289-AMMAYIYAPPAN
 prerequisites: [ML-C289-marumakal, ML-C289-ammayiyamma]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammāyiyappan: native Dravidian, ammāyi (DEDR 183) + appan 'father' (DEDR 156)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C289-ammayiyamma]
 <!-- hl-knowledge: introduces=[ML-LEX-C289-VASTU289-05]; assesses=[] -->
 
 **അമ്മായിയപ്പൻ** — *ammāyiyappan* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അമ്മായിയപ്പൻ** (*ammāyiyappan*) is native Dravidian: *ammāyi* (DEDR 183) and *appan*, "father" (DEDR 156, with Tamil *appaṉ*). DEDR 183 compares Sanskrit *ambā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

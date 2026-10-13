@@ -14,7 +14,8 @@ romanization: "vārṣikaṁ"
 concept_tag: ML-SAMAYAM277-VARSIKAM
 prerequisites: [ML-C276-apurvamayi, ML-C277-muhurttam]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "vārṣikaṁ ← Sanskrit vārṣika 'belonging to the rains; annual', a tatsama (CDIAL 11571)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C277-muhurttam]
 <!-- hl-knowledge: introduces=[ML-LEX-C277-SAMAYAM277-02]; assesses=[] -->
 
 **വാർഷികം** — *vārṣikaṁ* — "an anniversary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാർഷികം** (*vārṣikaṁ*) ← Sanskrit *vārṣika*, "belonging to the rains; annual", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11571). It is built on *varṣa*, "rain; year".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

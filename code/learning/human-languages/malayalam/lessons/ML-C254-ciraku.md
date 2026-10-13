@@ -14,7 +14,8 @@ romanization: "ciṟakŭ"
 concept_tag: ML-VASTU254-CIRAKU
 prerequisites: [ML-C254-nantu, ML-C254-val]
 sounds: []
-roots: []
+roots: [dravidian-cirai-wing]
+etymology_hook: "ciṟakŭ: native Dravidian, one word with Tamil ciṟai and Kannada eṟake (DEDR 2591)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C254-val]
 <!-- hl-knowledge: introduces=[ML-LEX-C254-VASTU254-05]; assesses=[] -->
 
 **ചിറക്** — *ciṟakŭ* — "a wing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിറക്** (*ciṟakŭ*) is native Dravidian, one word with Tamil *ciṟai*, Kannada *eṟake* and Telugu *eṟaka* (DEDR 2591).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

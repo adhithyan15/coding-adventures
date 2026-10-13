@@ -11,7 +11,8 @@ romanization: "anugrahaṁ"
 concept_tag: ML-NOUN-BLESSING
 prerequisites: [ML-C51-respect, ML-C49-perhaps]
 sounds: []
-roots: []
+roots: [sanskrit-anugraha]
+etymology_hook: "anugrahaṁ ← Sanskrit anugraha 'favour, kindness', a tatsama (CDIAL 314)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C51-respect]
 That *graha* is a busy word. ഗ്രഹം in Malayalam is a planet, and it is the same noun: in the older astronomy a planet was a seizer, something that took hold of a life. One root, a blessing at one end and a planet at the other.
 
 Kannada blesses with ಆಶೀರ್ವಾದ (*āśīrvāda*), a different Sanskrit compound built on speech rather than on grasp. A blessing said, against a blessing laid on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അനുഗ്രഹം** (*anugrahaṁ*) ← Sanskrit *anugraha*, "favour, kindness", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 314).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

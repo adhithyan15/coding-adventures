@@ -11,7 +11,8 @@ romanization: "orupakṣē"
 concept_tag: ML-WORD-PERHAPS
 prerequisites: [ML-C49-certainly, ML-C47-finger]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-paksha]
+etymology_hook: "orupakṣē: native oru 'one' + Sanskrit pakṣa 'side, wing' (CDIAL 7627): 'on one side'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Take it apart and it says "on one side". ഒരു (*oru*) is the *one* you met 
 So a Malayalam speaker hedges by naming a side rather than by naming a doubt. The word is half native, half borrowed, and joined so smoothly that the seam is easy to miss.
 
 Kannada hedges with ಬಹುಶಃ (*bahuśaḥ*), a wholly Sanskrit word meaning something closer to 'in many ways'. Same job, different picture again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരുപക്ഷേ** (*orupakṣē*) joins native *oru*, "one" (DEDR 990), to Sanskrit *pakṣa*, "wing, side" (CDIAL 7627), with the ending *-ē*: "on one side", one of the possibilities.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

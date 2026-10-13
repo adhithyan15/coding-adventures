@@ -14,7 +14,8 @@ romanization: "tīrumānikkuka"
 concept_tag: ML-VERB-TIRUMANIKKUKA
 prerequisites: [ML-C179-ini-mutal, ML-C179-bhavi]
 sounds: []
-roots: []
+roots: [dravidian-tir-finish]
+etymology_hook: "tīrumānikkuka: native Dravidian, from tīrumānam 'decision' (DEDR 3278) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C179-bhavi]
 <!-- hl-knowledge: introduces=[ML-LEX-C179-BHAVI179-04]; assesses=[] -->
 
 **തീരുമാനിക്കുക** — *tīrumānikkuka* — "to decide". **ഞാൻ പോകാൻ തീരുമാനിച്ചു** — *ñān pōkān tīrumāniccu* — "I decided to go."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീരുമാനിക്കുക** (*tīrumānikkuka*) is native Dravidian, the verb of *tīrumānaṁ*, "a decision", which DEDR 3278 lists with Tamil *tīr*, "to be settled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

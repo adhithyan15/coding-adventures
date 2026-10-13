@@ -14,7 +14,8 @@ romanization: "bhāvi"
 concept_tag: ML-BHAVI179-BHAVI
 prerequisites: [ML-C179-atutta, ML-C179-ini-mutal]
 sounds: []
-roots: []
+roots: [sanskrit-bhavin]
+etymology_hook: "bhāvi ← Sanskrit bhāvin 'that is to be, future', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C179-ini-mutal]
 <!-- hl-knowledge: introduces=[ML-LEX-C179-BHAVI179-03]; assesses=[] -->
 
 **ഭാവി** — *bhāvi* — "the future". **ഭാവിയിൽ ഞാൻ ഒരു അധ്യാപകൻ ആകും** — *bhāviyil ñān oru adhyāpakan ākuṁ* — "In the future I will become a teacher."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭാവി** (*bhāvi*) ← Sanskrit *bhāvin*, "that is to be, future", taken over whole as a tatsama. It is built on the root *bhū*, "to be, to become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

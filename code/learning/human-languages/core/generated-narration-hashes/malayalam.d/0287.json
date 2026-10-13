@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 287,
-  "sourceHash": "fnv1a64:00358618ba1b7f85",
+  "sourceHash": "fnv1a64:4484008bc664182e",
   "lessonIds": [
     "ML-C287-palaharam",
     "ML-C287-palampori",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch287.txt",
   "json": "malayalam/narration/ch287.json",
-  "textHash": "fnv1a64:cfdc919726dd4ec9",
-  "jsonHash": "fnv1a64:5114bfdd47c5cd2f",
+  "textHash": "fnv1a64:87496fdd33721e3e",
+  "jsonHash": "fnv1a64:cff035147f372b74",
   "findings": []
 }

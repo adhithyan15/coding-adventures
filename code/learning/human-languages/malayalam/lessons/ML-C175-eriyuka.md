@@ -14,7 +14,8 @@ romanization: "eṟiyuka"
 concept_tag: ML-VERB-ERIYUKA
 prerequisites: [ML-C175-vilkkuka, ML-C175-ayaykkuka, ML-W108-the-rest-more, ML-W108-the-rest-more]
 sounds: []
-roots: []
+roots: [dravidian-eri-throw]
+etymology_hook: "eṟiyuka: native Dravidian, one word with Tamil eṟi and Kannada iṟi (DEDR 859)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C175-ayaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C175-ACT175-04]; assesses=[] -->
 
 **എറിയുക** — *eṟiyuka* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എറിയുക** (*eṟiyuka*) is native Dravidian, one word with Tamil *eṟi* and Kannada *iṟi* (DEDR 859).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

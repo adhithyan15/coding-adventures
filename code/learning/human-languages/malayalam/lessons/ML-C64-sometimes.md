@@ -11,7 +11,8 @@ romanization: "cilappōḷ"
 concept_tag: ML-WORD-SOMETIMES
 prerequisites: [ML-C64-soon, ML-C62-needle]
 sounds: []
-roots: []
+roots: [dravidian-cila-some, dravidian-pozhutu-time]
+etymology_hook: "cilappōḷ: native Dravidian, 'some times': cila 'some' + a word for 'time' (DEDR 1571, 4559)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two pieces, and you can take them apart by ear: *cila*, some or a few, and *pō�
 That tail is the same one closing *ippōḷ*, the now-word. One says at this time, the other says at some times, and the shared ending is the reason the two rhyme.
 
 It is the word a Malayali reaches for when hedging: not a denial, only a fence around a claim.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിലപ്പോൾ** (*cilappōḷ*) is native Dravidian, "some times": *cila*, "some" (DEDR 1571, with Tamil *cila*), joined to a word for "time" (DEDR 4559, with Tamil *pōtu*), the same word that ends *ippōḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 307,
-  "sourceHash": "fnv1a64:8c90a957de02211a",
+  "sourceHash": "fnv1a64:898c973b0477694e",
   "lessonIds": [
     "ML-C307-valarttuka",
     "ML-C307-valaruka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch307.txt",
   "json": "malayalam/narration/ch307.json",
-  "textHash": "fnv1a64:bd8197257083abfd",
-  "jsonHash": "fnv1a64:b1cc4d6a0d4555c2",
+  "textHash": "fnv1a64:bd177047207e3d71",
+  "jsonHash": "fnv1a64:302141d8c244a19a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pākkaṟṟŭ"
 concept_tag: ML-JOLI298-PAKKARRU
 prerequisites: [ML-C297-nellikka, ML-C298-palacarakku]
 sounds: []
-roots: []
+roots: [english-packet]
+etymology_hook: "pākkaṟṟŭ ← English packet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C298-palacarakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C298-JOLI298-02]; assesses=[] -->
 
 **പാക്കറ്റ്** — *pākkaṟṟŭ* — "a packet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാക്കറ്റ്** (*pākkaṟṟŭ*) ← English *packet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taṇuppuḷḷa"
 concept_tag: ML-THINGS164-TANUPPULLA
 prerequisites: [ML-C164-pappatam, ML-C164-cutulla]
 sounds: []
-roots: []
+roots: [dravidian-tan-cool, dravidian-ul-be]
+etymology_hook: "taṇuppuḷḷa: native Dravidian, 'having cold': taṇuppŭ (DEDR 3045) + uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C164-cutulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C164-THINGS164-04]; assesses=[] -->
 
 **തണുപ്പുള്ള** — *taṇuppuḷḷa* — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തണുപ്പുള്ള** (*taṇuppuḷḷa*) is native Dravidian, "having cold": *taṇuppŭ*, "coldness" (DEDR 3045), with *-uḷḷa*, "that has", from the verb "to be" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

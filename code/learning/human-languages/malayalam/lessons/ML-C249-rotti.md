@@ -14,7 +14,8 @@ romanization: "ṟoṭṭi"
 concept_tag: ML-VASTU249-ROTTI
 prerequisites: [ML-C249-mavu, ML-C249-gotambu]
 sounds: []
-roots: []
+roots: [sanskrit-rotika]
+etymology_hook: "ṟoṭṭi ← Hindustani roṭī; CDIAL 10837 sets up an Indo-Aryan *rōṭṭa 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C249-gotambu]
 <!-- hl-knowledge: introduces=[ML-LEX-C249-VASTU249-03]; assesses=[] -->
 
 **റൊട്ടി** — *ṟoṭṭi* — "bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റൊട്ടി** (*ṟoṭṭi*) came in through Hindustani *roṭī*, "bread"; CDIAL 10837 sets up an Indo-Aryan *\*rōṭṭa*, "bread", with Sanskrit *rōṭikā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

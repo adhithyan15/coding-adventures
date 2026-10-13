@@ -11,7 +11,8 @@ romanization: "kṛtajñata"
 concept_tag: ML-NOUN-GRATITUDE
 prerequisites: [ML-C50-farewell, ML-C49-true]
 sounds: []
-roots: []
+roots: [sanskrit-krtajna]
+etymology_hook: "kṛtajñata ← Sanskrit kṛtajñatā 'gratitude': kṛta 'what was done' + jña 'knowing'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit again, and legible once opened: *kṛta* is 'done', *jña* is 'knowing'
 Malayalam already has നന്ദി (*nandi*) for the everyday thank-you, and that one is the family's own. So the pair here is the pattern this book keeps meeting: a native word for the ordinary moment and a Sanskrit one for the formal register, the letter, the speech.
 
 Kannada has ಕೃತಜ್ಞತೆ (*kṛtajñate*), the same borrowing with a Kannada ending. Where the formal register is concerned the sisters agree far more often than they do in the kitchen.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൃതജ്ഞത** (*kṛtajñata*) ← Sanskrit *kṛtajñatā*, "gratitude", taken over whole: *kṛta*, "what was done", + *jña*, "knowing", + the abstract ending *-tā*. The grateful one knows what was done for them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

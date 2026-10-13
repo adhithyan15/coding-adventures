@@ -14,7 +14,8 @@ romanization: "tamāśa"
 concept_tag: ML-VASTU252-TAMASA
 prerequisites: [ML-C251-rabbar, ML-C251-vivaram]
 sounds: []
-roots: []
+roots: [persian-tamasha]
+etymology_hook: "tamāśa ← Hindustani tamāśā 'spectacle, fun', from Arabic and Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C251-vivaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C252-VASTU252-01]; assesses=[] -->
 
 **തമാശ** — *tamāśa* — "a joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തമാശ** (*tamāśa*) ← Hindustani *tamāśā*, "a show, fun", from Arabic *tamāšā*, "walking about to see the sights", through Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

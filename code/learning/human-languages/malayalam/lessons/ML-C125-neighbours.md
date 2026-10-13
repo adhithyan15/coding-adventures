@@ -11,7 +11,8 @@ romanization: "ayalkkār"
 concept_tag: ML-KIN-NEIGHBOURS
 prerequisites: [ML-C125-grandchild, ML-C125-relative]
 sounds: []
-roots: []
+roots: [dravidian-ayal-near]
+etymology_hook: "ayalkkār: native Dravidian, ayal 'neighbourhood' (DEDR 189) + the plural of persons"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C125-relative]
 <!-- hl-knowledge: introduces=[ML-LEX-C125-KIN-03]; assesses=[] -->
 
 **അയൽക്കാർ** (*ayalkkār*) — "the neighbours", from **അയൽ** (*ayal*), "next door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അയൽക്കാർ** (*ayalkkār*) is native Dravidian: *ayal*, "neighbourhood" (DEDR 189, with Tamil *ayal*), with an ending for the people of a place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

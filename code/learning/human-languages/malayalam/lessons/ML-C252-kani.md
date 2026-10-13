@@ -14,7 +14,8 @@ romanization: "kaṇi"
 concept_tag: ML-VASTU252-KANI
 prerequisites: [ML-C252-tamasa, ML-C252-vallamkali]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see]
+etymology_hook: "kaṇi: native, the thing first seen; it belongs with the verb 'to see' (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C252-vallamkali]
 <!-- hl-knowledge: introduces=[ML-LEX-C252-VASTU252-03]; assesses=[] -->
 
 **കണി** — *kaṇi* — "the Vishu kani, the first auspicious sight of the year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണി** (*kaṇi*) is native Dravidian, "the sight": it belongs with the seeing verb, *kāṇuka* (DEDR 1443, with Tamil *kāṇ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

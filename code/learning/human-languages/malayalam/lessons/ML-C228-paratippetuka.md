@@ -14,7 +14,8 @@ romanization: "parātippeṭuka"
 concept_tag: ML-VERB-PARATIPPETUKA
 prerequisites: [ML-C227-valiterruka, ML-C227-parkku-ceyyuka]
 sounds: []
-roots: []
+roots: [malayalam-parati, dravidian-padu-happen]
+etymology_hook: "parātippeṭuka: parāti 'complaint', of uncertain origin, + native peṭuka (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C227-parkku-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C228-KRIYA228-01]; assesses=[] -->
 
 **പരാതിപ്പെടുക** — *parātippeṭuka* — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരാതിപ്പെടുക** (*parātippeṭuka*) joins *parāti*, "a complaint", whose origin is uncertain, to native *peṭuka*, "to fall into" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "atutanne"
 concept_tag: ML-RESP-SAME
 prerequisites: [ML-C122-nothing, ML-C122-ohno]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-tan-self]
+etymology_hook: "atutanne: native Dravidian, atŭ 'that' (DEDR 1) + tanne 'itself', from tān 'self' (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C122-ohno]
 
 **അതുതന്നെ** (*atutanne*) — "that very one, exactly that": **അത്** (*atŭ*), "that", with
 **തന്നെ**, "itself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതുതന്നെ** (*atutanne*) is native Dravidian: *atŭ*, "that" (DEDR 1), with *tanne*, "itself", built on *tān*, "self" (DEDR 3196, with Tamil *tāṉ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

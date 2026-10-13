@@ -14,7 +14,8 @@ romanization: "bhūmi"
 concept_tag: ML-STHALAM316-BHUMI
 prerequisites: [ML-C315-disa, ML-C315-vatakku]
 sounds: []
-roots: []
+roots: [sanskrit-bhumi]
+etymology_hook: "bhūmi ← Sanskrit bhūmi 'earth, ground', a tatsama (CDIAL 9557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C315-vatakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C316-STHALAM316-01]; assesses=[] -->
 
 **ഭൂമി** — *bhūmi* — "the earth, land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭൂമി** (*bhūmi*) ← Sanskrit *bhūmi*, "earth, ground", taken over whole as a tatsama (CDIAL 9557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

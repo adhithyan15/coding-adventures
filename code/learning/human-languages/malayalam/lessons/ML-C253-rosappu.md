@@ -14,7 +14,8 @@ romanization: "ṟōsāppū"
 concept_tag: ML-VASTU253-ROSAPPU
 prerequisites: [ML-C253-almaram, ML-C253-plavu]
 sounds: []
-roots: []
+roots: [english-rose, dravidian-pu-flower]
+etymology_hook: "ṟōsāppū: rōsa, from English rose or Portuguese rosa, + native pū 'flower' (DEDR 4345)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C253-plavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C253-VASTU253-03]; assesses=[] -->
 
 **റോസാപ്പൂ** — *ṟōsāppū* — "a rose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റോസാപ്പൂ** (*ṟōsāppū*) joins *rōsa*, from English *rose* or Portuguese *rosa*, to native *pū*, "flower" (DEDR 4345). DEDR 4345 compares Sanskrit *puṣpa*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

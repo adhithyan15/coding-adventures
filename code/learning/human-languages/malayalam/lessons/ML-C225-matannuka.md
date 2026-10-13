@@ -14,7 +14,8 @@ romanization: "maṭaṅṅuka"
 concept_tag: ML-VERB-MATANNUKA
 prerequisites: [ML-C225-ninnuka, ML-C225-ettuka]
 sounds: []
-roots: []
+roots: [dravidian-madangu-fold]
+etymology_hook: "maṭaṅṅuka: native Dravidian, one word with Tamil maṭaṅku (DEDR 4645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C225-ettuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C225-KRIYA225-04]; assesses=[] -->
 
 **മടങ്ങുക** — *maṭaṅṅuka* — "to return, to go back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മടങ്ങുക** (*maṭaṅṅuka*) is native Dravidian, one word with Tamil *maṭaṅku* (DEDR 4645). Its first sense is "to be bent, folded back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

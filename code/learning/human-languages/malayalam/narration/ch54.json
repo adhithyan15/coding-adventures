@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "A Tree, Part by Part",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0c5ec422fc1cdd7",
+  "sourceHash": "fnv1a64:7aedbb53fd33e728",
   "lessons": [
     {
       "id": "ML-C54-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1016f5a91ec961b7",
+      "sourceHash": "fnv1a64:a2654d97224e7d42",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരം (maraṁ) is native Dravidian, one word with Tamil maram, Kannada mara and Telugu m(r)ānu (DEDR 4711)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:777eb4ae73f7cc01",
+      "sourceHash": "fnv1a64:c965a4a315d9a86d",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊമ്പ് (kompŭ) is native Dravidian, one word with Tamil kompu, Kannada kombu and Telugu kommu (DEDR 2115). One word covers the branch, the horn and the tusk: anything that juts out to a point."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93d93275370a092d",
+      "sourceHash": "fnv1a64:58bf9eec4b76dfa6",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടി (taṭi) is native Dravidian. DEDR 3030 lists it in the sense \"stick, staff\", with Tamil taṭi and Kannada taḍi; its sense of bulk, \"stout, robust\", sits in DEDR 3020 with Tamil taṭa, \"large\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6db5d2f31eb72556",
+      "sourceHash": "fnv1a64:7d798eed85648863",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേര് (vērŭ) is native Dravidian, one word with Tamil vēr, Kannada bēr(u) and Telugu vēru (DEDR 5535)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -528,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -559,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daf032e4e540258d",
+      "sourceHash": "fnv1a64:1d70e56ff2288306",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +648,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിത്ത് (vittŭ) is native Dravidian, one word with Tamil vittu, Kannada bittu and Telugu vittu (DEDR 5401)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +669,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +718,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

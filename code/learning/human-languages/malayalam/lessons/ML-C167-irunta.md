@@ -14,7 +14,8 @@ romanization: "iruṇṭa"
 concept_tag: ML-QUAL167-IRUNTA
 prerequisites: [ML-C167-nanavulla, ML-C167-unanniya]
 sounds: []
-roots: []
+roots: [dravidian-irul-dark]
+etymology_hook: "iruṇṭa: native Dravidian, built on iruḷ 'darkness'; Tamil iruḷ (DEDR 2552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C167-unanniya]
 <!-- hl-knowledge: introduces=[ML-LEX-C167-QUAL167-03]; assesses=[] -->
 
 **ഇരുണ്ട** — *iruṇṭa* — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇരുണ്ട** (*iruṇṭa*) is native Dravidian, a form built on *iruḷ*, "darkness"; DEDR 2552 lists the root with Tamil *iruḷ* and Kannada *iruḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

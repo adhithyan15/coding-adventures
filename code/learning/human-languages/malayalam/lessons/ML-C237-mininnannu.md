@@ -14,7 +14,8 @@ romanization: "miniññānnŭ"
 concept_tag: ML-SAMAYAM237-MININNANNU
 prerequisites: [ML-C237-talennu, ML-C237-pirrennu]
 sounds: []
-roots: []
+roots: [dravidian-nanru-day]
+etymology_hook: "miniññānnŭ: native Dravidian; DEDR 2920 lists Malayalam mini-ñānnu 'day before yesterday'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C237-pirrennu]
 <!-- hl-knowledge: introduces=[ML-LEX-C237-SAMAYAM237-05]; assesses=[] -->
 
 **മിനിഞ്ഞാന്ന്** — *miniññānnŭ* — "the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മിനിഞ്ഞാന്ന്** (*miniññānnŭ*) is native Dravidian: DEDR 2920 lists it, "the day before yesterday", under *ñānnu*, "day", with Tamil *ñāṉṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

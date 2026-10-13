@@ -14,7 +14,8 @@ romanization: "nilāvŭ"
 concept_tag: ML-VASTU292-NILAVU
 prerequisites: [ML-C291-cennaya, ML-C292-tira]
 sounds: []
-roots: []
+roots: [dravidian-nila-moonlight]
+etymology_hook: "nilāvŭ: native Dravidian, one word with Tamil nilavu (DEDR 3754)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C292-tira]
 <!-- hl-knowledge: introduces=[ML-LEX-C292-VASTU292-02]; assesses=[] -->
 
 **നിലാവ്** — *nilāvŭ* — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിലാവ്** (*nilāvŭ*) is native Dravidian, one word with Tamil *nilavu* (DEDR 3754).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

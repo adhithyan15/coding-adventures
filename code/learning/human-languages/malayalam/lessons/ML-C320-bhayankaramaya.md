@@ -14,7 +14,8 @@ romanization: "bhayaṅkaramāya"
 concept_tag: ML-GUNAM320-BHAYANKARAMAYA
 prerequisites: [ML-C320-sadharana, ML-C320-priyappetta]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya, aaka-dravidian]
+etymology_hook: "bhayaṅkaramāya: Sanskrit bhayaṅkara 'fear-making' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C320-priyappetta]
 <!-- hl-knowledge: introduces=[ML-LEX-C320-GUNAM320-04]; assesses=[] -->
 
 **ഭയങ്കരമായ** — *bhayaṅkaramāya* — "terrible, awful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭയങ്കരമായ** (*bhayaṅkaramāya*) is Sanskrit *bhayaṅkara*, "causing fear": *bhaya*, "fear", and *kara*, "making", with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

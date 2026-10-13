@@ -14,7 +14,8 @@ romanization: "ekkiḷ"
 concept_tag: ML-AROGYAM313-EKKIL
 prerequisites: [ML-C312-kuttivayppu, ML-C312-ambulansu]
 sounds: []
-roots: []
+roots: [dravidian-ekkil-hiccup]
+etymology_hook: "ekkiḷ: native Dravidian, one word with Kannada ekku and Telugu ekkili (DEDR 772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C312-ambulansu]
 <!-- hl-knowledge: introduces=[ML-LEX-C313-AROGYAM313-01]; assesses=[] -->
 
 **എക്കിൾ** — *ekkiḷ* — "a hiccup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എക്കിൾ** (*ekkiḷ*) is native Dravidian, one word with Kannada *ekku* and Telugu *ekkili* (DEDR 772). The word imitates the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

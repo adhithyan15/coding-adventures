@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:36cf2538edcf7536",
+  "sourceHash": "fnv1a64:5556e138b8dfa8d3",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2168b906855da7d1",
+      "sourceHash": "fnv1a64:6abb7d7f2548a4a5",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "You have seen this done before, and not only last chapter. കുട്ടി has been taking the same യ since ഇത് എന്റെ കുട്ടിയാണ്, and for the same reason: it ends in ഇ too, ആണ് begins with a vowel, and something has to stand between them."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian: DEDR 1374 lists Malayalam kaḷi, \"play, game\", with Tamil kaḷi, \"to exult, rejoice\", and Kodagu kaḷi, \"play\", in an entry that also holds the words for toddy and intoxication; its comparison with Sanskrit kalyā, \"liquor\", belongs to those."
             }
           ]
         },
@@ -169,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dae4be336daae054",
+      "sourceHash": "fnv1a64:8a09cebd875daf72",
       "notice": null,
       "blocks": [
         {
@@ -233,6 +237,10 @@
             {
               "kind": "speech",
               "text": "Verb after verb in this book already ends in -ിക്കുക — സംസാരിക്കുക, വായിക്കുക, ചോദിക്കുക, കുടിക്കുക — so this one arrives asking nothing new of you. The only new part is the two syllables at the front."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian, the verb belonging to kaḷi (DEDR 1374, with Tamil kaḷi, \"to rejoice\", and Kodagu kaḷi, \"to play\")."
             }
           ]
         },
@@ -317,7 +325,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6a1c7552f7c10762",
+      "sourceHash": "fnv1a64:d3ed70217140df6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -407,6 +415,10 @@
             {
               "kind": "speech",
               "text": "That -ŭ is not a full vowel, so when an ending arrives it steps out of the way rather than sending a letter in ahead of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is English cinema, short for cinematograph, from Greek kinēma, \"movement\"."
             }
           ]
         },

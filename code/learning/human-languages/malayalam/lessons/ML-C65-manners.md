@@ -11,7 +11,8 @@ romanization: "maryāda"
 concept_tag: ML-NOUN-MANNERS
 prerequisites: [ML-C65-consent, ML-C63-cough]
 sounds: []
-roots: []
+roots: [sanskrit-maryada]
+etymology_hook: "maryāda ← Sanskrit maryādā 'boundary', a tatsama (CDIAL 9895)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *maryādā*, whose first sense was a boundary mark set at the edge of a
 Kerala keeps both senses live in one word. To have മര്യാദ is to know where the edges are and to stop at them without being asked.
 
 Beside *bahumānaṁ*, respect, which is something a person shows another, this is something a person keeps for themselves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മര്യാദ** (*maryāda*) ← Sanskrit *maryādā*, "boundary", taken over whole as a tatsama (CDIAL 9895). A boundary became the line good conduct keeps to.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

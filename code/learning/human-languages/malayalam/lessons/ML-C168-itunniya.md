@@ -14,7 +14,8 @@ romanization: "iṭuṅṅiya"
 concept_tag: ML-QUAL168-ITUNNIYA
 prerequisites: [ML-C167-alamulla, ML-C168-vitiyulla]
 sounds: []
-roots: []
+roots: [dravidian-iduku-narrow]
+etymology_hook: "iṭuṅṅiya: native Dravidian, 'squeezed', from the verb 'to be straitened'; Tamil iṭukku (DEDR 445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C168-vitiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C168-QUAL168-02]; assesses=[] -->
 
 **ഇടുങ്ങിയ** — *iṭuṅṅiya* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടുങ്ങിയ** (*iṭuṅṅiya*) is native Dravidian, a past form of the verb "to be straitened, squeezed"; DEDR 445 lists the root with Tamil *iṭukku* and Kannada *iḍaku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

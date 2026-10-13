@@ -14,7 +14,8 @@ romanization: "kūṟṟan"
 concept_tag: ML-GUNAM284-KURRAN
 prerequisites: [ML-C283-talkkalika, ML-C283-nerittu]
 sounds: []
-roots: []
+roots: [malayalam-kurran]
+etymology_hook: "kūṟṟan 'huge': of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C283-nerittu]
 <!-- hl-knowledge: introduces=[ML-LEX-C284-GUNAM284-01]; assesses=[] -->
 
 **കൂറ്റൻ** — *kūṟṟan* — "huge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂറ്റൻ** (*kūṟṟan*) is of uncertain origin. DEDR 1924 lists a Malayalam *kūṟṟan* meaning "enemy, destroyer", and whether "huge" is the same word is not known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

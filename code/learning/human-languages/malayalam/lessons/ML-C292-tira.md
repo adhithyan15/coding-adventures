@@ -14,7 +14,8 @@ romanization: "tira"
 concept_tag: ML-VASTU292-TIRA
 prerequisites: [ML-C291-kala3, ML-C291-cennaya]
 sounds: []
-roots: []
+roots: [dravidian-tirai-wave]
+etymology_hook: "tira: native Dravidian, one word with Tamil tirai and Kannada tere (DEDR 3244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C291-cennaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C292-VASTU292-01]; assesses=[] -->
 
 **തിര** — *tira* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിര** (*tira*) is native Dravidian, one word with Tamil *tirai*, Kannada *tere* and Telugu *tera* (DEDR 3244).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

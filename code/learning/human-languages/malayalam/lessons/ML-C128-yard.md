@@ -11,7 +11,8 @@ romanization: "muṟṟaṁ"
 concept_tag: ML-HOME-YARD
 prerequisites: [ML-C128-kitchen, ML-C128-bathroom]
 sounds: []
-roots: []
+roots: [dravidian-murram-yard]
+etymology_hook: "muṟṟaṁ: native Dravidian, one word with Tamil muṟṟam (DEDR 5016)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C128-bathroom]
 
 **മുറ്റം** (*muṟṟaṁ*) — "the yard", the swept ground in front of a Kerala house where
 the **കോലം** is drawn.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുറ്റം** (*muṟṟaṁ*) is native Dravidian, one word with Tamil *muṟṟam* (DEDR 5016).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

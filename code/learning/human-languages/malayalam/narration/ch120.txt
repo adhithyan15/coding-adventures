@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for meaning, then the Malayalam for please
 You'll want to know: കാണിക്കൂ.
 കാണിക്കൂ (kāṇikkū) — "please show (me)", from കാണുക (kāṇuka), "to see".
 
+The word, taken apart.
+കാണിക്കൂ (kāṇikkū) is native Dravidian, the causative of kāṇuka, "to see": "make see"; DEDR 1443 lists the root with Tamil kāṇ and Kannada kāṇ.
+
 What you've built.
 To see, turned into to show.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for please wait, then the Malayalam for pl
 
 You'll want to know: കേട്ടില്ല.
 കേട്ടില്ല (kēṭṭilla) — "(I) didn't hear", കേട്ടു, "heard", with ഇല്ല, "not". Follow it with ഒന്നുകൂടി പറയൂ.
+
+The word, taken apart.
+കേട്ടില്ല (kēṭṭilla) is native Dravidian: kēṭṭu, "heard", the past of the hearing verb (DEDR 2017, with Tamil kēḷ), with illa, "not" (DEDR 2559).
 
 What you've built.
 Heard, and the no that follows.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for please show, then the Malayalam for I 
 You'll want to know: മനസ്സിലായില്ല.
 മനസ്സിലായില്ല (manassilāyilla) — "I didn't understand", literally "it didn't come into the mind": മനസ്സ് (manassŭ), "mind".
 
+The word, taken apart.
+മനസ്സിലായില്ല (manassilāyilla) is "it did not become in the mind": Sanskrit manas, "mind" (CDIAL 9822), with the place ending, then native āyi, "became" (DEDR 333), and illa, "not" (DEDR 2559). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 Mind, and the no that closes it.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for I didn't hear, then the Malayalam for 
 You'll want to know: സഹായിക്കൂ.
 സഹായിക്കൂ (sahāyikkū) — "please help (me)".
 
+The word, taken apart.
+സഹായിക്കൂ (sahāyikkū) is built on Sanskrit sahāya, "companion, helper" (CDIAL 13309), with the ending that makes a Malayalam verb, here in its request form.
+
 What you've built.
 The request when you are stuck.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for I didn't understand, then the Malayala
 
 You'll want to know: നിർത്തൂ.
 നിർത്തൂ (nirttū) — "please stop (it)", said to a driver or about a noise. ഇവിടെ നിർത്തൂ — "please stop here", with ഇവിടെ, "here".
+
+The word, taken apart.
+നിർത്തൂ (nirttū) is native Dravidian, the causative of the verb "to stand": "make stand"; DEDR 3675 lists the root with Tamil nil and Kannada nil.
 
 What you've built.
 The request in a taxi.

@@ -14,7 +14,8 @@ romanization: "cirikkuka"
 concept_tag: ML-VERB-CIRIKKUKA
 prerequisites: [ML-C172-vilikkuka, ML-C172-karayuka, ML-C87-avane]
 sounds: []
-roots: []
+roots: [dravidian-ciri-laugh]
+etymology_hook: "cirikkuka: native Dravidian, one word with Tamil ciri and Kannada kiri (DEDR 1562)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C172-karayuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C173-ACT173-01]; assesses=[] -->
 
 **ചിരിക്കുക** — *cirikkuka* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിരിക്കുക** (*cirikkuka*) is native Dravidian, one word with Tamil *ciri* and Kannada *kiri* (DEDR 1562).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to fly, then the Malayalam for to foll
 You'll want to know: പങ്കുവെക്കുക.
 പങ്കുവെക്കുക — paṅkuvekkuka — "to share".
 
+The word, taken apart.
+പങ്കുവെക്കുക (paṅkuvekkuka) is native Dravidian, "lay out in shares": paṅku, "part, share" (DEDR 3808, with Tamil paku, "to divide"), and vekkuka, "to put, place" (DEDR 5549, with Tamil vai).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to follow, then the Malayalam for to s
 
 You'll want to know: കെട്ടിപ്പിടിക്കുക.
 കെട്ടിപ്പിടിക്കുക — keṭṭippiṭikkuka — "to hug".
+
+The word, taken apart.
+കെട്ടിപ്പിടിക്കുക (keṭṭippiṭikkuka) is native Dravidian, "bind and hold": the verb "to tie, clasp" (DEDR 1147, with Tamil kaṭṭu) and the verb "to seize, hold" (DEDR 4148, with Tamil piṭi). DEDR 1147 compares Sanskrit ghaṭṭa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to share, then the Malayalam for to hu
 You'll want to know: വഴക്കിടുക.
 വഴക്കിടുക — vaḻakkiṭuka — "to quarrel".
 
+The word, taken apart.
+വഴക്കിടുക (vaḻakkiṭuka) is native Dravidian: vaḻakku, "lawsuit, quarrel" (DEDR 5292, with Tamil vaḻaṅku), and iṭuka, "to put" (DEDR 442).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to hug, then the Malayalam for to quar
 You'll want to know: പിണങ്ങുക.
 പിണങ്ങുക — piṇaṅṅuka — "to sulk, to fall out".
 
+The word, taken apart.
+പിണങ്ങുക (piṇaṅṅuka) is native Dravidian, one word with Tamil piṇai and Kannada peṇe (DEDR 4160). Its root is about tying and entangling.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to quarrel, then the Malayalam for to 
 
 You'll want to know: കളിയാക്കുക.
 കളിയാക്കുക — kaḷiyākkuka — "to tease, to make fun of".
+
+The word, taken apart.
+കളിയാക്കുക (kaḷiyākkuka) is native Dravidian, "make into a game": kaḷi, "play, jest" (DEDR 1374), and ākkuka, "to make" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

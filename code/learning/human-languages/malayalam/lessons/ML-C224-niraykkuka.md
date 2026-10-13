@@ -14,7 +14,8 @@ romanization: "niṟaykkuka"
 concept_tag: ML-VERB-NIRAYKKUKA
 prerequisites: [ML-C224-vilambuka, ML-C224-rucikkuka]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "niṟaykkuka: native Dravidian, 'make full'; Tamil niṟai (DEDR 3682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C224-rucikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-04]; assesses=[] -->
 
 **നിറയ്ക്കുക** — *niṟaykkuka* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിറയ്ക്കുക** (*niṟaykkuka*) is native Dravidian, the causative of the verb "to become full"; DEDR 3682 lists the root with Tamil *niṟai*, Kannada *neṟe* and Telugu *neṟayu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

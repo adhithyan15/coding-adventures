@@ -14,7 +14,8 @@ romanization: "kuṭṭikkālaṁ"
 concept_tag: ML-SAMAYAM236-KUTTIKKALAM
 prerequisites: [ML-C235-karal, ML-C235-vrkka]
 sounds: []
-roots: []
+roots: [dravidian-kutti-young, sanskrit-kaala-time]
+etymology_hook: "kuṭṭikkālaṁ: native kuṭṭi 'child' (DEDR 1670) + Sanskrit kāla 'time' (CDIAL 3084)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C235-vrkka]
 <!-- hl-knowledge: introduces=[ML-LEX-C236-SAMAYAM236-01]; assesses=[] -->
 
 **കുട്ടിക്കാലം** — *kuṭṭikkālaṁ* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുട്ടിക്കാലം** (*kuṭṭikkālaṁ*) joins native *kuṭṭi*, "child" (DEDR 1670), to Sanskrit *kāla*, "time" (CDIAL 3084): "child-time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

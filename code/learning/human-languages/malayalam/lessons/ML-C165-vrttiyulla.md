@@ -14,7 +14,8 @@ romanization: "vṛttiyuḷḷa"
 concept_tag: ML-QUAL165-VRTTIYULLA
 prerequisites: [ML-C164-tanuppulla, ML-C164-nilamulla, ML-C88-tens]
 sounds: []
-roots: []
+roots: [sanskrit-vrtti-conduct, dravidian-ul-be]
+etymology_hook: "vṛttiyuḷḷa: Sanskrit vṛtti (CDIAL 12070) + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C164-nilamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C165-QUAL165-01]; assesses=[] -->
 
 **വൃത്തിയുള്ള** — *vṛttiyuḷḷa* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൃത്തിയുള്ള** (*vṛttiyuḷḷa*) joins *vṛtti*, "cleanliness", from Sanskrit *vṛtti*, "conduct" (CDIAL 12070), to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

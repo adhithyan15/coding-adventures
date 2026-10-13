@@ -14,7 +14,8 @@ romanization: "maida"
 concept_tag: ML-VASTU297-MAIDA
 prerequisites: [ML-C296-paravatani, ML-C296-virippu]
 sounds: []
-roots: []
+roots: [persian-maida]
+etymology_hook: "maida ← Hindustani maidā 'fine flour', from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C296-virippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C297-VASTU297-01]; assesses=[] -->
 
 **മൈദ** — *maida* — "refined white flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൈദ** (*maida*) ← Hindustani *maidā*, "fine flour", a word from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

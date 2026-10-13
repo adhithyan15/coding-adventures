@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a burn, then the Malayalam for diabete
 You'll want to know: ബോറടി.
 ബോറടി — bōraṭi — "boredom".
 
+The word, taken apart.
+ബോറടി (bōraṭi) joins English bore to native aṭi, "a blow, a stroke" (DEDR 77, with Tamil aṭu).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for diabetes, then the Malayalam for bored
 
 You'll want to know: മുഴ.
 മുഴ — muḻa — "a lump, a swelling bump".
+
+The word, taken apart.
+മുഴ (muḻa) is native Dravidian: DEDR 4988 lists it, "protuberance, tumour, excrescence".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for boredom, then the Malayalam for a lump
 You'll want to know: ചതവ്.
 ചതവ് — catavŭ — "a bruise".
 
+The word, taken apart.
+ചതവ് (catavŭ) is native Dravidian, a noun from the verb "to be bruised, squashed"; DEDR 2322 lists the root with Tamil cati and Kannada sadaku.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a lump, then the Malayalam for a bruis
 You'll want to know: മഞ്ഞപ്പിത്തം.
 മഞ്ഞപ്പിത്തം — maññappittaṁ — "jaundice".
 
+The word, taken apart.
+മഞ്ഞപ്പിത്തം (maññappittaṁ) joins native mañña, "yellow" (DEDR 4635, with Tamil mañcaḷ, "turmeric"), to Sanskrit pitta, "bile" (CDIAL 8181): "yellow bile".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a bruise, then the Malayalam for jaund
 
 You'll want to know: രക്തസമ്മർദ്ദം.
 രക്തസമ്മർദ്ദം — raktasammarddaṁ — "blood pressure".
+
+The word, taken apart.
+രക്തസമ്മർദ്ദം (raktasammarddaṁ) is Sanskrit: rakta, "red; blood" (CDIAL 10539), and sammarda, "pressing, crushing".
 
 What you've built.
 One more word for this chapter.

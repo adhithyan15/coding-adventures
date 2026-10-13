@@ -11,7 +11,8 @@ romanization: "bas"
 concept_tag: ML-TRAVEL-BUS
 prerequisites: [ML-C121-call, ML-C121-ticket]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bas ← English bus, short for Latin omnibus 'for all'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C121-ticket]
 <!-- hl-knowledge: introduces=[ML-LEX-C121-TRAVEL-03]; assesses=[] -->
 
 **ബസ്** (*bas*) — "a bus". The **ബ** is the letter you wrote from **ബുധൻ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബസ്** (*bas*) ← English *bus*, short for *omnibus*, Latin for "for everyone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

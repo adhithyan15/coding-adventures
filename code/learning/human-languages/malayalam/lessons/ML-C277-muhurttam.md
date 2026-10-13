@@ -14,7 +14,8 @@ romanization: "muhūrttaṁ"
 concept_tag: ML-SAMAYAM277-MUHURTTAM
 prerequisites: [ML-C276-mikkappolum, ML-C276-apurvamayi]
 sounds: []
-roots: []
+roots: [sanskrit-muhurta]
+etymology_hook: "muhūrttaṁ ← Sanskrit muhūrta 'moment', a tatsama (CDIAL 10229)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C276-apurvamayi]
 <!-- hl-knowledge: introduces=[ML-LEX-C277-SAMAYAM277-01]; assesses=[] -->
 
 **മുഹൂർത്തം** — *muhūrttaṁ* — "an auspicious moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുഹൂർത്തം** (*muhūrttaṁ*) ← Sanskrit *muhūrta*, "moment", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10229).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

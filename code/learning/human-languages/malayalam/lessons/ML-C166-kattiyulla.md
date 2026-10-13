@@ -14,7 +14,8 @@ romanization: "kaṭṭiyuḷḷa"
 concept_tag: ML-QUAL166-KATTIYULLA
 prerequisites: [ML-C166-bharamulla, ML-C166-vegamulla]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind, dravidian-ul-be]
+etymology_hook: "kaṭṭiyuḷḷa: native Dravidian, 'having solidity': kaṭṭi (DEDR 1148) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C166-vegamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C166-QUAL166-03]; assesses=[] -->
 
 **കട്ടിയുള്ള** — *kaṭṭiyuḷḷa* — "thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കട്ടിയുള്ള** (*kaṭṭiyuḷḷa*) is native Dravidian, "having solidity": *kaṭṭi*, "what is condensed, solid" (DEDR 1148, with Tamil *kaṭṭu*), with *-uḷḷa*, "that has" (DEDR 697). DEDR 1148 compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

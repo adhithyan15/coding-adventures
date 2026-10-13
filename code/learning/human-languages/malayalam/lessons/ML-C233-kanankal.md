@@ -14,7 +14,8 @@ romanization: "kaṇaṅkāl"
 concept_tag: ML-AROGYAM233-KANANKAL
 prerequisites: [ML-C232-olukuka, ML-C232-nivarttuka]
 sounds: []
-roots: []
+roots: [dravidian-kan-joint, dravidian-kal-leg]
+etymology_hook: "kaṇaṅkāl: native Dravidian, 'the leg's joint': kaṇ 'joint' (DEDR 1160) + kāl 'leg' (DEDR 1479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C232-nivarttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C233-AROGYAM233-01]; assesses=[] -->
 
 **കണങ്കാൽ** — *kaṇaṅkāl* — "the ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണങ്കാൽ** (*kaṇaṅkāl*) is native Dravidian, "the joint of the leg": *kaṇ*, "a joint, a node" (DEDR 1160, with Tamil *kaṇ*), and *kāl*, "leg" (DEDR 1479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

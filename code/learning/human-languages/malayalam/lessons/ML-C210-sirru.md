@@ -14,7 +14,8 @@ romanization: "sīṟṟŭ"
 concept_tag: ML-VASTU210-SIRRU
 prerequisites: [ML-C209-sandesam, ML-C210-lageju]
 sounds: []
-roots: []
+roots: [english-seat]
+etymology_hook: "sīṟṟŭ ← English seat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C210-lageju]
 <!-- hl-knowledge: introduces=[ML-LEX-C210-VASTU210-02]; assesses=[] -->
 
 **സീറ്റ്** — *sīṟṟŭ* — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സീറ്റ്** (*sīṟṟŭ*) ← English *seat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

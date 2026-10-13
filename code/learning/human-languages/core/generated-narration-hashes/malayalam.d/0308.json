@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 308,
-  "sourceHash": "fnv1a64:5e7015016194c0a2",
+  "sourceHash": "fnv1a64:594beaae0bd657ad",
   "lessonIds": [
     "ML-C308-atikkuka",
     "ML-C308-cavittuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch308.txt",
   "json": "malayalam/narration/ch308.json",
-  "textHash": "fnv1a64:4a729e3b577d6a55",
-  "jsonHash": "fnv1a64:d9a20b033dc90f8f",
+  "textHash": "fnv1a64:c7460c7a6756c70f",
+  "jsonHash": "fnv1a64:06ca17044d27bdc6",
   "findings": []
 }

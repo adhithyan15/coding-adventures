@@ -14,7 +14,8 @@ romanization: "pāspōrṭṭŭ"
 concept_tag: ML-VASTU324-PASPORTTU
 prerequisites: [ML-C324-rekha, ML-C324-sarttiphikkarru]
 sounds: []
-roots: []
+roots: [english-passport]
+etymology_hook: "pāspōrṭṭŭ ← English passport"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C324-sarttiphikkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C324-VASTU324-03]; assesses=[] -->
 
 **പാസ്പോർട്ട്** — *pāspōrṭṭŭ* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാസ്പോർട്ട്** (*pāspōrṭṭŭ*) ← English *passport*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

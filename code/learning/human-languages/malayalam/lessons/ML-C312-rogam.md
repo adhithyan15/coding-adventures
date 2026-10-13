@@ -14,7 +14,8 @@ romanization: "rōgaṁ"
 concept_tag: ML-AROGYAM312-ROGAM
 prerequisites: [ML-C311-kaykkuka, ML-C311-pataruka]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rōgaṁ ← Sanskrit rōga 'disease', a tatsama (CDIAL 10829)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C311-pataruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C312-AROGYAM312-01]; assesses=[] -->
 
 **രോഗം** — *rōgaṁ* — "a disease, an illness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രോഗം** (*rōgaṁ*) ← Sanskrit *rōga*, "disease", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10829).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

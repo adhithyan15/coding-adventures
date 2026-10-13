@@ -11,7 +11,8 @@ romanization: "apēkṣa"
 concept_tag: ML-NOUN-REQUEST
 prerequisites: [ML-C64-but, ML-C63-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-apeksha]
+etymology_hook: "apēkṣa ← Sanskrit apēkṣā 'expectation, request', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *apekṣā*, made of a piece meaning toward and a root meaning to look.
 It carries the ക്ഷ pair you have now met twice, in *kṣamikkaṇaṁ* and in *kṣīṇaṁ*, this time sitting in the middle of the word rather than at its head.
 
 Beside *dayavāyi*, which softens whatever follows it, അപേക്ഷ names the asking itself and can stand on its own at the head of a written petition.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപേക്ഷ** (*apēkṣa*) ← Sanskrit *apēkṣā*, "expectation, request", taken over whole as a tatsama. Its parts are *apa*, "away, toward", and *īkṣ*, "to look".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṭuttiṭe"
 concept_tag: ML-BHUTAM178-ATUTTITE
 prerequisites: [ML-C177-arenkilum, ML-C177-entenkilum]
 sounds: []
-roots: []
+roots: [dravidian-atu-near]
+etymology_hook: "aṭuttiṭe: native Dravidian, aṭuttŭ 'near' (DEDR 79) + a tail meaning 'place, time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C177-entenkilum]
 <!-- hl-knowledge: introduces=[ML-LEX-C178-BHUTAM178-01]; assesses=[] -->
 
 **അടുത്തിടെ** — *aṭuttiṭe* — "recently". Malayalam's past does not change for "I", "you" or "he": **ഞാൻ അടുത്തിടെ ഒരു പുസ്തകം വായിച്ചു** — *ñān aṭuttiṭe oru pustakaṁ vāyiccu* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടുത്തിടെ** (*aṭuttiṭe*) is native Dravidian: *aṭuttŭ*, "near" (DEDR 79, with Tamil *aṭu*), with a tail meaning "place": "in the near place" of time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

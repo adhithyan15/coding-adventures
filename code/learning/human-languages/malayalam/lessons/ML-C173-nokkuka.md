@@ -14,7 +14,8 @@ romanization: "nōkkuka"
 concept_tag: ML-VERB-NOKKUKA
 prerequisites: [ML-C172-karayuka, ML-C173-cirikkuka]
 sounds: []
-roots: []
+roots: [dravidian-nokku-look]
+etymology_hook: "nōkkuka: native Dravidian, one word with Tamil nōkku and Kannada nōḍu (DEDR 3794)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C173-cirikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C173-ACT173-02]; assesses=[] -->
 
 **നോക്കുക** — *nōkkuka* — "to look".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നോക്കുക** (*nōkkuka*) is native Dravidian, one word with Tamil *nōkku* and Kannada *nōḍu* (DEDR 3794).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

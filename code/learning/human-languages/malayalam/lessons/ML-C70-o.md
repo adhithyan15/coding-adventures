@@ -11,9 +11,10 @@ romanization: "cāyayō kāppiyō"
 concept_tag: ML-JOIN-O
 prerequisites: [ML-C70-um-more, ML-C39-chaaya, ML-C39-kaapi]
 sounds: []
-roots: []
+roots: [chinese-cha-tea, english-coffee]
+etymology_hook: "cāya ← Hindustani cāy ← Chinese chá; kāppi ← English coffee, from Arabic qahwa"
 duration:
-  max_seconds: 240
+  max_seconds: 287
 requires:
   knowledge: [ML-CONCEPT-C70-UM-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-KAAPI-01]
 introduces:
@@ -76,6 +77,8 @@ English reader expects *or* to sit.
 
 **Reach for whichever arrives first.** A learner who says the long one has said
 the thing; the ending will come with hearing it.
+
+**Where the words come from.** *cāya*, "tea", came through Hindustani *cāy* from Chinese *chá*. *kāppi*, "coffee", is English *coffee*, a word that goes back through Dutch and Turkish to Arabic *qahwa*. The choosing ending *-ō* is native.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-O-01, ML-CONCEPT-C70-UM-02] -->

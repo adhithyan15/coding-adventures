@@ -14,7 +14,8 @@ romanization: "mēstiri"
 concept_tag: ML-JOLI263-MESTIRI
 prerequisites: [ML-C262-gayakan, ML-C263-asari]
 sounds: []
-roots: []
+roots: [portuguese-mestre]
+etymology_hook: "mēstiri ← Portuguese mestre 'master (craftsman)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C263-asari]
 <!-- hl-knowledge: introduces=[ML-LEX-C263-JOLI263-02]; assesses=[] -->
 
 **മേസ്തിരി** — *mēstiri* — "a mason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മേസ്തിരി** (*mēstiri*) ← Portuguese *mestre*, "master, master craftsman", from Latin *magister*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

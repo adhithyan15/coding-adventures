@@ -14,7 +14,8 @@ romanization: "potiyuka"
 concept_tag: ML-VERB-POTIYUKA
 prerequisites: [ML-C264-aticcuvaruka, ML-C264-matakkuka]
 sounds: []
-roots: []
+roots: [dravidian-putai-cover]
+etymology_hook: "potiyuka: native Dravidian, one word with Tamil putai and Kannada pode (DEDR 4509)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C264-matakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C265-KRIYA265-01]; assesses=[] -->
 
 **പൊതിയുക** — *potiyuka* — "to wrap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊതിയുക** (*potiyuka*) is native Dravidian, one word with Tamil *putai*, Kannada *pode* and Telugu *podugu* (DEDR 4509).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

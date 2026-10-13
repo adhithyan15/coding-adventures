@@ -14,7 +14,8 @@ romanization: "pāvāṭa"
 concept_tag: ML-VASTU248-PAVATA
 prerequisites: [ML-C248-paippu, ML-C248-kavar]
 sounds: []
-roots: []
+roots: [malayalam-pavada]
+etymology_hook: "pāvāṭa 'skirt': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C248-kavar]
 <!-- hl-knowledge: introduces=[ML-LEX-C248-VASTU248-04]; assesses=[] -->
 
 **പാവാട** — *pāvāṭa* — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാവാട** (*pāvāṭa*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

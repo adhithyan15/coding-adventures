@@ -11,7 +11,8 @@ romanization: "eḻutū"
 concept_tag: ML-VERB-WRITE
 prerequisites: [ML-C44-speak, ML-C42-new]
 sounds: []
-roots: []
+roots: [dravidian-ezhutu-write]
+etymology_hook: "eḻutū: native Dravidian, one word with Tamil eḻutu (DEDR 853)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C44-speak]
 **എഴുതൂ** (*eḻutū*) — "write".
 
 From *eḻuttu*, 'letter' — the writing verb is built from the thing written, which is the reverse of how Kannada does it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എഴുതൂ** (*eḻutū*) is native Dravidian, one word with Tamil *eḻutu* (DEDR 853). Its older senses are "to paint" and "to draw": writing began as drawing lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

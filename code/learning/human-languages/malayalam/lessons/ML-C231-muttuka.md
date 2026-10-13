@@ -14,7 +14,8 @@ romanization: "muṭṭuka"
 concept_tag: ML-VERB-MUTTUKA
 prerequisites: [ML-C230-boratikkuka, ML-C231-caruka]
 sounds: []
-roots: []
+roots: [dravidian-muttu-knock]
+etymology_hook: "muṭṭuka: native Dravidian, one word with Tamil muṭṭu and Kannada moṭṭu (DEDR 4932)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C231-caruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C231-KRIYA231-02]; assesses=[] -->
 
 **മുട്ടുക** — *muṭṭuka* — "to knock (on a door)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുട്ടുക** (*muṭṭuka*) is native Dravidian, one word with Tamil *muṭṭu* and Kannada *moṭṭu* (DEDR 4932). DEDR 4932 compares Sanskrit *muṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

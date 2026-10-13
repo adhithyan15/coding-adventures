@@ -14,7 +14,8 @@ romanization: "cīppŭ"
 concept_tag: ML-WANT146-CIPPU
 prerequisites: [ML-C146-kattil, ML-C146-kannati, ML-C26-raavile]
 sounds: []
-roots: []
+roots: [malayalam-cippu]
+etymology_hook: "cīppŭ 'comb': origin uncertain; DEDR's cīppu is a door-bolt"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C146-kannati]
 <!-- hl-knowledge: introduces=[ML-LEX-C146-WANT146-05]; assesses=[] -->
 
 **ചീപ്പ്** — *cīppŭ* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചീപ്പ്** (*cīppŭ*) is of uncertain origin. DEDR 2622 lists a Malayalam *cīppu*, but with the sense "a bolt"; whether the comb is the same word is not known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

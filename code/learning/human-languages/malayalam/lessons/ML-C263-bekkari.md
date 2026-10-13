@@ -14,7 +14,8 @@ romanization: "bēkkaṟi"
 concept_tag: ML-JOLI263-BEKKARI
 prerequisites: [ML-C263-mestiri, ML-C263-kavalkkaran]
 sounds: []
-roots: []
+roots: [english-bakery]
+etymology_hook: "bēkkaṟi ← English bakery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C263-kavalkkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C263-JOLI263-04]; assesses=[] -->
 
 **ബേക്കറി** — *bēkkaṟi* — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബേക്കറി** (*bēkkaṟi*) ← English *bakery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

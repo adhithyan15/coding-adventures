@@ -14,7 +14,8 @@ romanization: "ara"
 concept_tag: ML-AROGYAM192-ARA
 prerequisites: [ML-C192-tonta, ML-C192-tuta]
 sounds: []
-roots: []
+roots: [dravidian-arai-waist]
+etymology_hook: "ara: native Dravidian, one word with Tamil arai (DEDR 230)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C192-tuta]
 <!-- hl-knowledge: introduces=[ML-LEX-C192-AROGYAM192-05]; assesses=[] -->
 
 **അര** — *ara* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അര** (*ara*) is native Dravidian, one word with Tamil *arai* (DEDR 230).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

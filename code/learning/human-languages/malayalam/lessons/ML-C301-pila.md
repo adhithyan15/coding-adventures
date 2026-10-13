@@ -14,7 +14,8 @@ romanization: "piḻa"
 concept_tag: ML-JOLI301-PILA
 prerequisites: [ML-C301-karar, ML-C301-nikuti]
 sounds: []
-roots: []
+roots: [dravidian-pizhai-fault]
+etymology_hook: "piḻa: native Dravidian, one word with Tamil piḻai (DEDR 4187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C301-nikuti]
 <!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-03]; assesses=[] -->
 
 **പിഴ** — *piḻa* — "a fine, a penalty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിഴ** (*piḻa*) is native Dravidian, one word with Tamil *piḻai* (DEDR 4187). Its first sense is "a fault, an oversight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

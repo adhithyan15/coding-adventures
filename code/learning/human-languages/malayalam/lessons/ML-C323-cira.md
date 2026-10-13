@@ -14,7 +14,8 @@ romanization: "cīra"
 concept_tag: ML-VASTU323-CIRA
 prerequisites: [ML-C322-cammanti, ML-C323-tannimattan]
 sounds: []
-roots: []
+roots: [dravidian-kirai-greens]
+etymology_hook: "cīra: native Dravidian, one word with Tamil kīrai and Kannada kīre (DEDR 1617)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C323-tannimattan]
 <!-- hl-knowledge: introduces=[ML-LEX-C323-VASTU323-02]; assesses=[] -->
 
 **ചീര** — *cīra* — "spinach, greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചീര** (*cīra*) is native Dravidian, one word with Tamil *kīrai*, Kannada *kīre* and Telugu *kīra* (DEDR 1617).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

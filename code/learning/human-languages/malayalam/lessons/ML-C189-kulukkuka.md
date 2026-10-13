@@ -14,7 +14,8 @@ romanization: "kulukkuka"
 concept_tag: ML-VERB-KULUKKUKA
 prerequisites: [ML-C189-tuppuka, ML-C189-piliyuka]
 sounds: []
-roots: []
+roots: [dravidian-kulungu-shake]
+etymology_hook: "kulukkuka: native Dravidian, one word with Tamil kuluṅku and Kannada kuluku (DEDR 1806)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C189-piliyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C189-KRIYA189-03]; assesses=[] -->
 
 **കുലുക്കുക** — *kulukkuka* — "to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുലുക്കുക** (*kulukkuka*) is native Dravidian, one word with Tamil *kuluṅku* and Kannada *kuluku* (DEDR 1806).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "adhyāpakan"
 concept_tag: ML-NOUN-TEACHER
 prerequisites: [ML-C47-stomach, ML-C46-fruit]
 sounds: []
-roots: []
+roots: [sanskrit-adhyapaka]
+etymology_hook: "adhyāpakan ← Sanskrit adhyāpaka 'teacher, one who makes others study', a tatsama (CDIAL 278)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *adhyāpaka*, 'one who causes another to study', with a Malayalam endin
 The Sanskrit word is itself built out of a going-toward: *adhi* plus a root about approaching, so a teacher is the one who brings the student up to the text.
 
 Kannada picked a different Sanskrit word for the same job, ಶಿಕ್ಷಕ (*śikṣaka*). Two sisters, two borrowings, one classroom — which is a fair picture of how these languages have handled Sanskrit generally: not one loan, but a choice among several.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അധ്യാപകൻ** (*adhyāpakan*) ← Sanskrit *adhyāpaka*, "teacher, one who makes others study", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

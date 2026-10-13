@@ -14,7 +14,8 @@ romanization: "janapriyamāya"
 concept_tag: ML-GUNAM246-JANAPRIYAMAYA
 prerequisites: [ML-C245-vayalarru, ML-C246-paramparagata]
 sounds: []
-roots: []
+roots: [sanskrit-priya, aaka-dravidian]
+etymology_hook: "janapriyamāya: Sanskrit jana 'people' + priya 'dear' (CDIAL 8974) + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C246-paramparagata]
 <!-- hl-knowledge: introduces=[ML-LEX-C246-GUNAM246-02]; assesses=[] -->
 
 **ജനപ്രിയമായ** — *janapriyamāya* — "popular".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജനപ്രിയമായ** (*janapriyamāya*) is Sanskrit *jana*, "people", and *priya*, "dear" (CDIAL 8974), with native *āya*, "having become" (DEDR 333): "dear to the people". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

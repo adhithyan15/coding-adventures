@@ -22,6 +22,9 @@ You'll want to know: ആറാം.
 ആറാം ദിവസം (āṟāṁ divasaṁ), the sixth day.
 That "nothing else to notice" is the point of the whole chapter. Six to ten were a separate lesson from one to five when you learned to count, because the words themselves had to be learned. For ordering they are not a separate anything.
 
+The word, taken apart.
+ആറാം (āṟāṁ) is native Dravidian: "six" (DEDR 2485, with Tamil āṟu and Kannada āṟu) with the ordinal ending -āṁ.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: āṟŭ, then āṟāṁ]
@@ -58,6 +61,9 @@ One honest warning about the page. This word begins with ഏ, the independent lo
 [once you have stopped driving — read: the letter]
 Do not copy it yet. That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were.
 
+The word, taken apart.
+ഏഴാം (ēḻāṁ) is native Dravidian: "seven" (DEDR 910, with Tamil ēḻu and Kannada ēḻu) with the ordinal ending -āṁ.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ēḻŭ, then ēḻāṁ — keep the ḻ curled both times]
@@ -89,6 +95,9 @@ You'll want to know: എട്ടാം.
 എട്ടാം (eṭṭāṁ) — "eighth".
 എട്ട് has a doubled retroflex ṭṭ, written as ട stacked under ട with the virama between them. The ending lands after all of that, so the stack is untouched: എട്ടാം (eṭṭāṁ).
 എട്ടാം ദിവസം (eṭṭāṁ divasaṁ), the eighth day.
+
+The word, taken apart.
+എട്ടാം (eṭṭāṁ) is native Dravidian: "eight" (DEDR 784, with Tamil eṭṭu) with the ordinal ending -āṁ.
 
 Guided Practice.
 [pause 1 second]
@@ -122,6 +131,9 @@ You'll want to know: ഒമ്പതാം.
 ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it.
 ഒമ്പതാം ദിവസം (ompathāṁ divasaṁ), the ninth day.
 
+The word, taken apart.
+ഒമ്പതാം (ompathāṁ) is native Dravidian: "nine" (DEDR 1025, with Tamil oṉpatu, ompatu and Kannada ombattu) with the ordinal ending -āṁ.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ompathŭ, then ompathāṁ]
@@ -153,6 +165,9 @@ Warm-up.
 You'll want to know: പത്താം.
 പത്താം (pathāṁ) — "tenth". പത്ത് loses its ŭ and takes ആം, and the ten are done.
 പത്താം ദിവസം (pathāṁ divasaṁ), the tenth day.
+
+The word, taken apart.
+പത്താം (pathāṁ) is native Dravidian: "ten" (DEDR 3918, with Tamil pattu and Kannada pattu) with the ordinal ending -āṁ.
 
 Guided Practice.
 [pause 1 second]
@@ -186,6 +201,9 @@ You'll want to know: പതിനൊന്നാം.
 പതിനൊന്നാം (patinonnāṁ) — "eleventh".
 പതിനൊന്ന് was itself a built word: pathin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole.
 പതിനൊന്നാം ദിവസം (patinonnāṁ divasaṁ), the eleventh day.
+
+The word, taken apart.
+പതിനൊന്നാം (patinonnāṁ) is native Dravidian throughout: the joining shape of "ten" (DEDR 3918, with Tamil patiṉ-), "one" (DEDR 990), and the ordinal ending -āṁ.
 
 Grammar Lens: the ending is a fact about numbers, not about ten.
 Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupathāṁ), twentieth, without a lesson.
@@ -223,6 +241,9 @@ You'll want to know: ആദ്യം.
 ആദ്യം (ādyaṁ) — "at first", "first of all".
 This is not another ordinal. ഒന്നാം picks an item out of a line: the first door, the first way. ആദ്യം (ādyaṁ) puts an action first in time, and it pairs with പിന്നെ, which you already have:
 ആദ്യം (ādyaṁ) ഊണ്, പിന്നെ ചായ. — Ādyaṁ ūṇŭ, pinne cāya. "Lunch first, then tea."
+
+The word, taken apart.
+ആദ്യം (ādyaṁ) from Sanskrit ādya, "first, earliest", built on ādi, "beginning" (CDIAL 1152), with Malayalam's noun ending -ṁ.
 
 Why it's said this way — the one word Malayalam borrowed here.
 Notice what did and did not get borrowed. Malayalam's ordinals are native, and their ending is so regular that it never needed a special word for first — the one place its sisters all reached for മുതൽ. But for first as an adverb, the language reached into Sanskrit and took ആദ്യം (ādyaṁ), from ādya, "primary".

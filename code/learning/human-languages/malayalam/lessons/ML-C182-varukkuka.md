@@ -14,7 +14,8 @@ romanization: "vaṟukkuka"
 concept_tag: ML-VERB-VARUKKUKA
 prerequisites: [ML-C182-porikkuka, ML-C182-tilappikkuka]
 sounds: []
-roots: []
+roots: [dravidian-varu-fry]
+etymology_hook: "vaṟukkuka: native Dravidian, one word with Tamil vaṟu (DEDR 5325)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C182-tilappikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C182-KRIYA182-04]; assesses=[] -->
 
 **വറുക്കുക** — *vaṟukkuka* — "to roast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വറുക്കുക** (*vaṟukkuka*) is native Dravidian, one word with Tamil *vaṟu* (DEDR 5325).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

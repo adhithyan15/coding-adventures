@@ -14,7 +14,8 @@ romanization: "utsāhaṁ"
 concept_tag: ML-AROGYAM234-UTSAHAM
 prerequisites: [ML-C233-vayarilakkam, ML-C233-alarji]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "utsāhaṁ ← Sanskrit utsāha 'power, energy', a tatsama (CDIAL 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C233-alarji]
 <!-- hl-knowledge: introduces=[ML-LEX-C234-AROGYAM234-01]; assesses=[] -->
 
 **ഉത്സാഹം** — *utsāhaṁ* — "enthusiasm, keenness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉത്സാഹം** (*utsāhaṁ*) ← Sanskrit *utsāha*, "power, energy", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1882).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

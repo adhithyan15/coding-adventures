@@ -14,7 +14,8 @@ romanization: "svārtthamāya"
 concept_tag: ML-GUNAM206-SVARTTHAMAYA
 prerequisites: [ML-C206-kusrtiyulla, ML-C206-anusaranayulla]
 sounds: []
-roots: []
+roots: [sanskrit-artha, aaka-dravidian]
+etymology_hook: "svārtthamāya: Sanskrit svārtha 'one's own aim': sva 'own' + artha 'aim' (CDIAL 638); + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C206-anusaranayulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C206-GUNAM206-03]; assesses=[] -->
 
 **സ്വാർത്ഥമായ** — *svārtthamāya* — "selfish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വാർത്ഥമായ** (*svārtthamāya*) is Sanskrit *svārtha*, "one's own aim": *sva*, "own", and *artha*, "aim" (CDIAL 638), with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tekkŭ"
 concept_tag: ML-STHALAM198-TEKKU
 prerequisites: [ML-C197-valattu, ML-C197-nere]
 sounds: []
-roots: []
+roots: [dravidian-ten-south]
+etymology_hook: "tekkŭ: native Dravidian, one word with Tamil teṉ (DEDR 3449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C197-nere]
 <!-- hl-knowledge: introduces=[ML-LEX-C198-STHALAM198-01]; assesses=[] -->
 
 **തെക്ക്** — *tekkŭ* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെക്ക്** (*tekkŭ*) is native Dravidian, one word with Tamil *teṉ* (DEDR 3449).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

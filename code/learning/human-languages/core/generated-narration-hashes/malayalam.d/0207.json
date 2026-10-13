@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 207,
-  "sourceHash": "fnv1a64:fa59c3c70442018f",
+  "sourceHash": "fnv1a64:655c3e18b3397202",
   "lessonIds": [
     "ML-C207-tara",
     "ML-C207-melukutiri",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch207.txt",
   "json": "malayalam/narration/ch207.json",
-  "textHash": "fnv1a64:c2dccf19b8ba8163",
-  "jsonHash": "fnv1a64:832b5a5c5c499ee4",
+  "textHash": "fnv1a64:bc100c0bdd9e59bd",
+  "jsonHash": "fnv1a64:7d0965a88c331b70",
   "findings": []
 }

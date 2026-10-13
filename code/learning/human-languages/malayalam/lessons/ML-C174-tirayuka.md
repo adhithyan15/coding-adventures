@@ -14,7 +14,8 @@ romanization: "tirayuka"
 concept_tag: ML-VERB-TIRAYUKA
 prerequisites: [ML-C174-nirttuka, ML-C174-kattirikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tirai-seek]
+etymology_hook: "tirayuka: native Dravidian, one word with Tamil tirakku (DEDR 3242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C174-kattirikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C174-ACT174-03]; assesses=[] -->
 
 **തിരയുക** — *tirayuka* — "to search".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരയുക** (*tirayuka*) is native Dravidian, one word with Tamil *tirakku* (DEDR 3242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

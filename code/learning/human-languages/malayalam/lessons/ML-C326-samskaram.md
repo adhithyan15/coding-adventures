@@ -14,7 +14,8 @@ romanization: "saṁskāraṁ"
 concept_tag: ML-VASTU326-SAMSKARAM
 prerequisites: [ML-C326-puja, ML-C326-paramparyam]
 sounds: []
-roots: []
+roots: [sanskrit-samskara]
+etymology_hook: "saṁskāraṁ ← Sanskrit saṁskāra 'preparation, refinement', a tatsama (CDIAL 13038)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C326-paramparyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C326-VASTU326-05]; assesses=[] -->
 
 **സംസ്കാരം** — *saṁskāraṁ* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംസ്കാരം** (*saṁskāraṁ*) ← Sanskrit *saṁskāra*, "preparation, refinement", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13038). Culture is what refines a people.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

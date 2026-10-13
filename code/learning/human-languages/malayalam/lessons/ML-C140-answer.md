@@ -11,7 +11,8 @@ romanization: "uttaraṁ"
 concept_tag: ML-CLASS-ANSWER
 prerequisites: [ML-C140-paper, ML-C140-class]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttaraṁ ← Sanskrit uttara 'upper, following; an answer', a tatsama (CDIAL 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C140-class]
 <!-- hl-knowledge: introduces=[ML-LEX-C140-SCHOOL-05]; assesses=[] -->
 
 **ഉത്തരം** (*uttaraṁ*) — "an answer", what follows a question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉത്തരം** (*uttaraṁ*) ← Sanskrit *uttara*, "upper, following; an answer", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1767). An answer is what follows the question.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uruṇṭa"
 concept_tag: ML-GUNAM204-URUNTA
 prerequisites: [ML-C204-minusamulla, ML-C204-parukkan]
 sounds: []
-roots: []
+roots: [dravidian-urul-round]
+etymology_hook: "uruṇṭa: native Dravidian, 'rolled', from the verb to roll; Tamil uruḷ (DEDR 664)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C204-parukkan]
 <!-- hl-knowledge: introduces=[ML-LEX-C204-GUNAM204-05]; assesses=[] -->
 
 **ഉരുണ്ട** — *uruṇṭa* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരുണ്ട** (*uruṇṭa*) is native Dravidian, a past form of the verb "to roll": "rolled round"; DEDR 664 lists the root with Tamil *uruḷ* and Kannada *uruḷ*. DEDR 664 compares Sanskrit *uṇḍeraka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

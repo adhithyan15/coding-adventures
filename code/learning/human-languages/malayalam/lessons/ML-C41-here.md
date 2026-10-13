@@ -11,7 +11,8 @@ romanization: "iviṭe"
 concept_tag: ML-DEIXIS-HERE
 prerequisites: [ML-C41-that]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "iviṭe: native Dravidian, the near-pointing base + a tail meaning 'place'; Tamil says iṅkē (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇവിടെ** (*iviṭe*) is native Dravidian: the near-pointing base of *itŭ* with a tail meaning "place". DEDR 410 gathers the near-pointing words, with Tamil *iṅkē*, "here".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-03] -->

@@ -14,7 +14,8 @@ gloss: "a feather"
 concept_tag: ML-ANCHOR-THOOVAL
 prerequisites: [ML-S111-letter-ca]
 sounds: []
-roots: []
+roots: [dravidian-tuval-feather]
+etymology_hook: "tūval: native Dravidian, one word with Tamil tūval (DEDR 3393)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *tūval*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൽ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൂവൽ** (*tūval*) is native Dravidian, one word with Tamil *tūval* (DEDR 3393). DEDR 3393 compares Sanskrit *tūla*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-THOOVAL] -->

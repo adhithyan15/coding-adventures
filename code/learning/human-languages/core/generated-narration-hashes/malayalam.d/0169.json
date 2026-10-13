@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 169,
-  "sourceHash": "fnv1a64:d15fa9ca031c38ac",
+  "sourceHash": "fnv1a64:87f9dd700d71ec5e",
   "lessonIds": [
     "ML-C169-buddhiyulla",
     "ML-C169-matiyulla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch169.txt",
   "json": "malayalam/narration/ch169.json",
-  "textHash": "fnv1a64:b921383af83d7276",
-  "jsonHash": "fnv1a64:2065541d172ab485",
+  "textHash": "fnv1a64:b130cdc5425ef481",
+  "jsonHash": "fnv1a64:4b60823c0d6ca0b6",
   "findings": []
 }
