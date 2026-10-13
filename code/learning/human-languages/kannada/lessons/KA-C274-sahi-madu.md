@@ -14,7 +14,8 @@ romanization: "sahi māḍu"
 concept_tag: KA-VERB-SAHI-MADU
 prerequisites: [KA-C274-jama-madu, KA-C274-himpade]
 sounds: []
-roots: []
+roots: [arabic-sahih, maadu-do-dravidian]
+etymology_hook: "sahi māḍu: Hindustani sahī 'signature', from Arabic ṣaḥīḥ 'correct', + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C274-himpade]
 <!-- hl-knowledge: introduces=[KA-LEX-C274-KRIYE274-05]; assesses=[] -->
 
 **ಸಹಿ ಮಾಡು** — *sahi māḍu* — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಹಿ ಮಾಡು** (*sahi māḍu*) is Hindustani *sahī*, "a signature", from Arabic *ṣaḥīḥ*, "correct, sound", with native *māḍu*, "to do" (DEDR 4797). A signature marks a paper as correct.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

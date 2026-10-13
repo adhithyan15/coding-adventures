@@ -14,7 +14,8 @@ romanization: "bhēdi"
 concept_tag: KA-AROGYA245-BHEDI
 prerequisites: [KA-C244-hiru, KA-C244-alavadisu]
 sounds: []
-roots: []
+roots: [sanskrit-bheda]
+etymology_hook: "bhēdi: from Sanskrit bheda 'breaking, division' (CDIAL 9610), in the sense of a loosening of the bowels"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C244-alavadisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C245-AROGYA245-01]; assesses=[] -->
 
 **ಭೇದಿ** — *bhēdi* — "diarrhoea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭೇದಿ** (*bhēdi*) comes from Sanskrit *bheda*, "cleft, division, breaking" (CDIAL 9610), with the ending *-i*: the bowels "breaking loose".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

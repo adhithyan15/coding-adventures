@@ -14,6 +14,9 @@ You'll want to know: ಹೊಲ.
 ಹೊಲ (hola) is inherited, and it is the dry field — ground that is ploughed and planted and waits on the ಮಳೆಗಾಲ for its water.
 It lies past the edge of the ಹಳ್ಳಿ, along the ದಾರಿ you learned to ask for, and it is where the ರೈತ is when he is not at home.
 
+The word, taken apart.
+ಹೊಲ (hola) is native Dravidian, one word with Tamil pulam and Telugu polamu (DEDR 4303). DEDR gives the older Kannada pola, "a plough-field": the p- has become h-.
+
 What you've built.
 The first of five field words.
 
@@ -45,6 +48,9 @@ You'll want to know: ಹುಲ್ಲು.
 ಹುಲ್ಲು (hullu) is what comes up on ground nobody planted, and it is why the ಹಸು and the ಮೇಕೆ from the animal chapter are walked out of the yard at all.
 Say it carefully against ಹಲ್ಲು, the tooth-word. One vowel sign separates them and the rest of the two words is identical. It is the closest pair this book has handed you, and the good news is that the ಹಸು eats the one with your teeth.
 
+The word, taken apart.
+ಹುಲ್ಲು (hullu) is native Dravidian, one word with Tamil pul (DEDR 4300). DEDR gives the older Kannada pul: the p- has become h-.
+
 What you've built.
 Two.
 
@@ -74,6 +80,9 @@ You'll want to know: ಭತ್ತ.
 ಭತ್ತ (bhatta) — "paddy, rice in the husk".
 ಭತ್ತ (bhatta) completes a set you have been assembling since the water-and-rice chapter. One plant, three names, and Kannada keeps them strictly apart: ಭತ್ತ (bhatta) standing in the ಹೊಲ (hola), ಅಕ್ಕಿ once it is husked and in the sack, ಅನ್ನ once it is cooked and on the plate.
 English makes do with rice for all three and adds a word when it must. Kannada gives each stage its own name, and a speaker who used the wrong one would be understood but marked as not from here.
+
+The word, taken apart.
+ಭತ್ತ (bhatta) is a loan from Indo-Aryan. DEDR lists Kannada batta, bhatta, "paddy, rice in the husk", in its appendix of such loans (DEDR App. 56).
 
 What you've built.
 Three.
@@ -106,6 +115,9 @@ You'll want to know: ಬೆಳೆ.
 ಬೆಳೆ (beḷe) is the general one: ಭತ್ತ (bhatta) is a ಬೆಳೆ (beḷe), and so is everything else a ಹೊಲ (hola) is put to. Native, and made from the everyday word for growing — so the same shape names the growing and the grown thing, the way ನೂಲು named the thread and the spinning.
 The chain runs the length of this book by now. A ಬೀಜ goes into the ground, the ಮಳೆಗಾಲ arrives, and a ಬೆಳೆ (beḷe) stands in the ಹೊಲ (hola).
 
+The word, taken apart.
+ಬೆಳೆ (beḷe) is native Dravidian, one word with Tamil viḷai (DEDR 5437). DEDR lists beḷe, "to grow; crop", itself: the old v- has become b-.
+
 What you've built.
 Four.
 
@@ -136,6 +148,9 @@ You'll want to know: ಸುಗ್ಗಿ.
 ಸುಗ್ಗಿ (suggi) is not only the cutting. It is the season, and it is the mood of the season — the stretch of weeks when the ಬೆಳೆ (beḷe) is in and there is enough, and Karnataka's harvest festival carries the word in its name.
 So these five words end where a farming year does. It opened with ಮಳೆಗಾಲ in the seasons chapter, ran through the ಬೀಜ and the ಬೆಳೆ (beḷe), and arrives at the ಸುಗ್ಗಿ (suggi) with the ಹೊಲ (hola) empty and the house full.
 Which makes this the right place to take your leave of the ಹಳ್ಳಿ. You can name what it grows now, and thank the people who grew it.
+
+The word, taken apart.
+ಸುಗ್ಗಿ (suggi) is native Dravidian (DEDR 2647). DEDR lists Kannada suggi, "harvest season", and compares Marathi sugī, "season of plenty".
 
 What you've built.
 Five: ಹೊಲ (hola), ಹುಲ್ಲು (hullu), ಭತ್ತ (bhatta), ಬೆಳೆ (beḷe), ಸುಗ್ಗಿ (suggi). A field, what grows on it, and the season that takes it in.

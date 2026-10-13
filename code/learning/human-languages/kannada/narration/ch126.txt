@@ -12,6 +12,9 @@ Before the new one: say the Kannada for upma, then the Kannada for finger millet
 You'll want to know: ನಿಂಬೆ.
 ನಿಂಬೆ — nimbe — "a lemon".
 
+The word, taken apart.
+ನಿಂಬೆ (nimbe) comes from Sanskrit nimbū, "the lime", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's -e replaced the final -ū.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for finger millet, then the Kannada for a le
 
 You'll want to know: ದ್ರಾಕ್ಷಿ.
 ದ್ರಾಕ್ಷಿ — drākṣi — "grapes".
+
+The word, taken apart.
+ದ್ರಾಕ್ಷಿ (drākṣi) comes from Sanskrit drākṣā, "vine, grape", reshaped to Kannada sounds: a tadbhava (CDIAL 6628). The final -ā became Kannada -i.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a lemon, then the Kannada for grapes.
 You'll want to know: ಹಲಸು.
 ಹಲಸು — halasu — "a jackfruit".
 
+The word, taken apart.
+ಹಲಸು (halasu) is native Dravidian, one word with Tamil palā and Telugu panasa (DEDR 3988). DEDR gives the older Kannada palasu: the p- has become h-. DEDR 3988 compares Sanskrit panasa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for grapes, then the Kannada for a jackfruit
 You'll want to know: ಮೆಣಸು.
 ಮೆಣಸು — menasu — "pepper, chilli".
 
+The word, taken apart.
+ಮೆಣಸು (menasu) is native Dravidian, one word with Tamil miḷaku and Malayalam miḷaku (DEDR 4867). DEDR lists Kannada meṇasu, "pepper".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a jackfruit, then the Kannada for pepper
 
 You'll want to know: ಜೀರಿಗೆ.
 ಜೀರಿಗೆ — jīrige — "cumin".
+
+The word, taken apart.
+ಜೀರಿಗೆ (jīrige) comes from Sanskrit jīraka, "cummin-seed", reshaped to Kannada sounds: a tadbhava (CDIAL 5234).
 
 What you've built.
 One more word for this chapter.

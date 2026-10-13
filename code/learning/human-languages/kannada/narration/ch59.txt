@@ -15,6 +15,9 @@ Inherited, and it holds the moving wind and the still air on one shape. ಗಾ�
 Now put it beside the weather-word you already have. ಹವಾಮಾನ was built from a Persian piece meaning air and a Sanskrit piece meaning measure — a borrowed air-word for the forecast on the radio. ಗಾಳಿ (gāḷi) is the air on your face. The formal report and the thing itself ended up in different layers of the language, and a Kannada speaker moves between them without noticing.
 ಗಾಳಿ (gāḷi) also carries rumour, the way English talks about something being in the air.
 
+The word, taken apart.
+ಗಾಳಿ (gāḷi) is native Dravidian, one word with Telugu gāli (DEDR 1499).
+
 What you've built.
 The first of five things the weather does to the ground.
 
@@ -47,6 +50,9 @@ One word for cold water in the air, however it arrives: the fog on a ಬೆಟ�
 The Kodagu and Chikkamagaluru hills are where this word lives hardest. Coffee country sits high enough that ಮಂಜು (mañju) is what the mornings are made of for months at a stretch.
 Held up beside ಮೋಡ the pair is tidy: the ಮೋಡ is the water overhead, the ಮಂಜು (mañju) is the same water come down to stand among the trees.
 
+The word, taken apart.
+ಮಂಜು (mañju) is native Dravidian, one word with Tamil mañcu and Telugu mancu (DEDR 4641).
+
 What you've built.
 Two, and the second is the first one's water at ground level.
 
@@ -77,6 +83,9 @@ You'll want to know: ಮರಳು.
 Say it slowly and you will hear ಮರ standing at the front of it. Do not trust that. The tree-word and the sand-word are separate items that happen to begin alike, and a learner who joins them has invented an etymology. Kannada has plenty of real ones; this is not one, and knowing when to stop is part of the skill.
 What ಮರಳು (maraḷu) genuinely does share is a shape with a doing-word. ಮರಳು (maraḷu) also means to turn back, to return — so the same run of letters is both the sand on a river bed and the act of going home. In a chapter about taking your leave that is a happy accident and nothing more, but it is the kind of accident worth noticing, because the two are told apart by nothing except what sits around them.
 The ಮರಳು (maraḷu) you meet most is on the bank of a ನದಿ, where the river drops what it has been carrying.
+
+The word, taken apart.
+ಮರಳು (maraḷu) is native Dravidian, close kin of maṇṇu, "earth": DEDR 4666 lists the sand words maḷal and maral beside it; the entry also has Tamil maṇal.
 
 What you've built.
 Three, and one warning about reading too much into a spelling.
@@ -110,6 +119,9 @@ Inherited, and unavoidable. From June onward the ಮಳೆಗಾಲ turns every 
 It is also the mud a rice field wants. Paddy is planted into standing water and soft ground, so ಕೆಸರು (kesaru) is not a complaint in a farmer's mouth the way it is in a city one — the ರೈತ needs it, and a dry season without it is the bad outcome.
 Then, as everywhere, it goes figurative. To throw ಕೆಸರು (kesaru) at somebody is to smear their name, and Kannada arrived at that picture on its own, from a place where mud is genuinely at hand for half the year.
 
+The word, taken apart.
+ಕೆಸರು (kesaru) is native Dravidian, one word with Tamil cēṟu (DEDR 2020). DEDR gives Kannada kesaṟ, "wet soil, mud". DEDR 2020 compares Sanskrit kedāra.
+
 What you've built.
 Four, and this one the season makes.
 
@@ -140,6 +152,9 @@ You'll want to know: ಬೆಂಕಿ.
 Kannada's own, and once again it stands apart from its sisters: Tamil reaches for neruppu, Telugu for maṇṭa, and Kannada for ಬೆಂಕಿ (beṅki). The bone-word did this to you a chapter ago. Being close relatives has never obliged four languages to agree.
 The ದೀಪ from the asking-chapter needs this word before it is any use, and so does the ಬಿಸಿ under ಬಿಸಿಲು. Fire is the thing the ಗಾಳಿ (gāḷi) feeds and the ಕೆಸರು (kesaru) puts out.
 And with ಬೆಂಕಿ (beṅki) the run closes the way it opened, on something you can point at. ಆಕಾಶ was overhead and out of reach; this one is on the floor of the kitchen, close enough to warm your hands at.
+
+The word, taken apart.
+ಬೆಂಕಿ (beṅki) is native Dravidian, of the root bē, "to burn", and DEDR 5517 lists beṅki, "heat, fire", itself; the entry also has Tamil vē.
 
 What you've built.
 Five: ಗಾಳಿ (gāḷi), ಮಂಜು (mañju), ಮರಳು (maraḷu), ಕೆಸರು (kesaru), ಬೆಂಕಿ (beṅki). Air, water, ground and the thing that undoes all three.

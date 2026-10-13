@@ -14,7 +14,8 @@ romanization: "adhikāri"
 concept_tag: KA-KELASA231-ADHIKARI
 prerequisites: [KA-C231-sandarsana, KA-C231-gumasta]
 sounds: []
-roots: []
+roots: [sanskrit-adhikarin]
+etymology_hook: "adhikāri ← Sanskrit adhikārin 'one in charge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C231-gumasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C231-KELASA231-05]; assesses=[] -->
 
 **ಅಧಿಕಾರಿ** — *adhikāri* — "an officer, an official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಧಿಕಾರಿ** (*adhikāri*) is Sanskrit *adhikārin*, "one with authority, one in charge", from *adhikāra*, "authority". Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

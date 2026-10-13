@@ -14,7 +14,8 @@ romanization: "sōphā"
 concept_tag: KA-VASTU190-SOPHA
 prerequisites: [KA-C189-devaru, KA-C189-upavasa]
 sounds: []
-roots: []
+roots: [english-sofa]
+etymology_hook: "sōphā ← English sofa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C189-upavasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C190-VASTU190-01]; assesses=[] -->
 
 **ಸೋಫಾ** — *sōphā* — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೋಫಾ** (*sōphā*) is a loan from English *sofa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

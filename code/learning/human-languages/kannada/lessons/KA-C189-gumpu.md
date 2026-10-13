@@ -14,7 +14,8 @@ romanization: "gumpu"
 concept_tag: KA-VASTU189-GUMPU
 prerequisites: [KA-C188-mullu, KA-C188-tulasi]
 sounds: []
-roots: []
+roots: [dravidian-gumpu-crowd]
+etymology_hook: "gumpu: native Dravidian (DEDR 1741)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C188-tulasi]
 <!-- hl-knowledge: introduces=[KA-LEX-C189-VASTU189-01]; assesses=[] -->
 
 **ಗುಂಪು** — *gumpu* — "a group, a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಂಪು** (*gumpu*) is native Dravidian (DEDR 1741). DEDR lists *gumpu* among *gumi*, *gummu*, "heap, crowd".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "upavāsa"
 concept_tag: KA-VASTU189-UPAVASA
 prerequisites: [KA-C189-puje, KA-C189-devaru]
 sounds: []
-roots: []
+roots: [sanskrit-upavasa]
+etymology_hook: "upavāsa ← Sanskrit upavāsa 'fast, fasting', a tatsama (CDIAL 2244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C189-devaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C189-VASTU189-05]; assesses=[] -->
 
 **ಉಪವಾಸ** — *upavāsa* — "fasting, a fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಪವಾಸ** (*upavāsa*) is Sanskrit *upavāsa*, "fast, fasting", taken over whole as a learned loan, a tatsama (CDIAL 2244).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

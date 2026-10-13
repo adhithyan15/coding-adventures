@@ -14,7 +14,8 @@ romanization: "sāsive"
 concept_tag: KA-VASTU293-SASIVE
 prerequisites: [KA-C292-astavyasta, KA-C292-anukula]
 sounds: []
-roots: []
+roots: [sanskrit-sarshapa]
+etymology_hook: "sāsive: tadbhava of Sanskrit sarṣapa 'mustard seed' (CDIAL 13281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C292-anukula]
 <!-- hl-knowledge: introduces=[KA-LEX-C293-VASTU293-01]; assesses=[] -->
 
 **ಸಾಸಿವೆ** — *sāsive* — "mustard seeds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಸಿವೆ** (*sāsive*) is a tadbhava of Sanskrit *sarṣapa*, "mustard seed" (CDIAL 13281), close to Pali *sāsapa*: the *rṣ* became *s* and the *p* became *v*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

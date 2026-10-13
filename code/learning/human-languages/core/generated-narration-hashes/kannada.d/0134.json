@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 134,
-  "sourceHash": "fnv1a64:6727e1f8f4c8cf80",
+  "sourceHash": "fnv1a64:5270d0d6e03b8069",
   "lessonIds": [
     "KA-C134-ili",
     "KA-C134-emme",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch134.txt",
   "json": "kannada/narration/ch134.json",
-  "textHash": "fnv1a64:92dac691fd6c042f",
-  "jsonHash": "fnv1a64:e253ce54b636aefd",
+  "textHash": "fnv1a64:c46763321347f20a",
+  "jsonHash": "fnv1a64:c5d29f2fd91f1a21",
   "findings": []
 }

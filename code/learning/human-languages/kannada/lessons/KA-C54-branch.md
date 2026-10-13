@@ -11,7 +11,8 @@ romanization: "kombe"
 concept_tag: KA-NOUN-BRANCH
 prerequisites: [KA-C54-tree, KA-C52-chair]
 sounds: []
-roots: []
+roots: [dravidian-kompu-branch]
+etymology_hook: "kombe: native Dravidian, one word with Tamil kompu and Telugu komma (DEDR 2115)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Beside it stands ಕೊಂಬು (*kombu*), a horn, and the two are the same wor
 That picture is not a Kannada peculiarity. Tamil keeps *kombu* doing both jobs as well, so the joining is old — older than any of the four sisters.
 
 English does the reverse trick and puts the tree onto the animal, calling the branched horns of a stag its antlers and its crown. The picture travels in whichever direction a language happens to take it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಂಬೆ** (*kombe*) is native Dravidian, one word with Tamil *kompu* and Telugu *komma* (DEDR 2115). DEDR lists Kannada *kombu* and *kombe*, "branch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

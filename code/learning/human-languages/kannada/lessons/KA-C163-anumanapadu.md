@@ -14,7 +14,8 @@ romanization: "anumānapaḍu"
 concept_tag: KA-VERB-ANUMANAPADU
 prerequisites: [KA-C162-bhagavahisu, KA-C162-vargayisu]
 sounds: []
-roots: []
+roots: [sanskrit-anumana, dravidian-padu-suffer]
+etymology_hook: "anumānapaḍu: Sanskrit anumāna 'inference' (CDIAL 328) + native paḍu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C162-vargayisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C163-KRIYE163-01]; assesses=[] -->
 
 **ಅನುಮಾನಪಡು** — *anumānapaḍu* — "to doubt, to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅನುಮಾನಪಡು** (*anumānapaḍu*) is *anumāna*, "doubt, suspicion", from Sanskrit *anumāna*, "inference, thought" (CDIAL 328), and native *paḍu*, "to undergo, feel" (DEDR 3853): "to feel a doubt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 221,
-  "sourceHash": "fnv1a64:0752233d71109b82",
+  "sourceHash": "fnv1a64:e20f42db56d79a8d",
   "lessonIds": [
     "KA-C221-sebu",
     "KA-C221-kittale",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch221.txt",
   "json": "kannada/narration/ch221.json",
-  "textHash": "fnv1a64:c0ddfa5aa2785b15",
-  "jsonHash": "fnv1a64:4c7fff25c4a8ae25",
+  "textHash": "fnv1a64:1f0f7002b7d88571",
+  "jsonHash": "fnv1a64:6d5228d8cce84fd6",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for lazy, then the Kannada for clever.
 You'll want to know: ಕೆಟ್ಟ.
 ಕೆಟ್ಟ — keṭṭa — "bad, spoiled".
 
+The word, taken apart.
+ಕೆಟ್ಟ (keṭṭa) is native Dravidian, from keḍu, "to be spoiled, become bad", which DEDR 1942 lists; keṭṭa is its past form, "spoiled"; the entry also has Tamil keṭu and Malayalam keṭu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for clever, then the Kannada for bad.
 
 You'll want to know: ಭಯಂಕರ.
 ಭಯಂಕರ — bhayaṅkara — "terrible".
+
+The word, taken apart.
+ಭಯಂಕರ (bhayaṅkara) is Sanskrit bhayaṅkara, "causing fear": bhaya, "fear" (CDIAL 9390), and kara, "making".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for bad, then the Kannada for terrible.
 You'll want to know: ಧೈರ್ಯವಂತ.
 ಧೈರ್ಯವಂತ — dhairyavanta — "brave".
 
+The word, taken apart.
+ಧೈರ್ಯವಂತ (dhairyavanta) is Sanskrit dhairya, "firmness, courage", with -vanta, from Sanskrit -vant, "having": "having courage".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for terrible, then the Kannada for brave.
 You'll want to know: ಚಿನ್ನದ.
 ಚಿನ್ನದ — cinnada — "golden".
 
+The word, taken apart.
+ಚಿನ್ನದ (cinnada) is native Dravidian, one word with Tamil ciṉṉam (DEDR 2596). Cinnada is "of gold", from cinna, "gold", which DEDR lists with Tamil ciṉṉam, "gold coin".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for brave, then the Kannada for golden.
 
 You'll want to know: ಬೆಳ್ಳಿಯ.
 ಬೆಳ್ಳಿಯ — beḷḷiya — "silver".
+
+The word, taken apart.
+ಬೆಳ್ಳಿಯ (beḷḷiya) is native Dravidian, of the root for "white, bright", and DEDR 5496 lists beḷḷi, "silver", itself; the entry also has Tamil veḷ.
 
 What you've built.
 One more word for this chapter.

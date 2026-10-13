@@ -14,7 +14,8 @@ romanization: "muñce"
 concept_tag: KA-KALA171-MUNCE
 prerequisites: [KA-C171-dinanka, KA-C171-varantya]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "muñce: native Dravidian, one word with Tamil muṉ (DEDR 5020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C171-varantya]
 <!-- hl-knowledge: introduces=[KA-LEX-C171-KALA171-05]; assesses=[] -->
 
 **ಮುಂಚೆ** — *muñce* — "before, earlier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂಚೆ** (*muñce*) is native Dravidian, one word with Tamil *muṉ* (DEDR 5020). DEDR lists *mun*, *munnu*, "that which is before", the root of *muñce*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "mēke"
 concept_tag: KA-NOUN-GOAT
 prerequisites: [KA-C60-cow, KA-C58-more]
 sounds: []
-roots: []
+roots: [dravidian-meeke-goat]
+etymology_hook: "mēke: native Dravidian, one word with Telugu mēka (DEDR 5087)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C60-cow]
 ಮೇಕೆ is shared right across the family — Telugu says it almost exactly the same way — and it names the animal that goes where the ಹಸು does not.
 
 A ಹಸು is walked to flat ground. A ಮೇಕೆ is let up a ಬೆಟ್ಟ, and it will strip the ಎಲೆ off a low ಕೊಂಬೆ standing on its back legs to reach. That difference is the whole reason a household keeps both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಕೆ** (*mēke*) is native Dravidian, one word with Telugu *mēka* (DEDR 5087). DEDR 5087 compares Sanskrit *meka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

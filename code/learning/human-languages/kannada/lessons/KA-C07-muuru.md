@@ -48,6 +48,11 @@ you have never studied, look for a word that starts *mū-*.
 
 The long vowel is written with the sign **ೂ** hanging under ಮ.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂರು** (*mūru*) is native Dravidian, one word with Tamil *mūṉṟu* and Telugu *mūḍu* (DEDR 5052). The entry gives the older Kannada spelling *mūṟu*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-MUURU-01, KA-SCRIPT-RECOG-02, KA-LEX-C05-MAADU-01, KA-GRAMMAR-C05-MAADU-02] -->
 

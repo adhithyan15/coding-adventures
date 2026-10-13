@@ -14,7 +14,8 @@ romanization: "aḷu"
 concept_tag: KA-VERB-ALU
 prerequisites: [KA-C153-tallu, KA-C153-ele]
 sounds: []
-roots: []
+roots: [dravidian-azhu-weep]
+etymology_hook: "aḷu: native Dravidian, one word with Tamil aḻu and Malayalam aḻuka (DEDR 282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C153-ele]
 <!-- hl-knowledge: introduces=[KA-LEX-C153-ACT153-05]; assesses=[] -->
 
 **ಅಳು** — *aḷu* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಳು** (*aḷu*) is native Dravidian, one word with Tamil *aḻu* and Malayalam *aḻuka* (DEDR 282). DEDR lists the older Kannada *aḻu*, "to weep, cry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

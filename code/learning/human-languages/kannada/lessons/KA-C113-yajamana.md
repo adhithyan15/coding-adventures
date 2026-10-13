@@ -14,7 +14,8 @@ romanization: "yajamāna"
 concept_tag: KA-CAN113-YAJAMANA
 prerequisites: [KA-C112-sadhana, KA-C113-asti]
 sounds: []
-roots: []
+roots: [sanskrit-yajamana]
+etymology_hook: "yajamāna ← Sanskrit yajamāna 'the patron of a sacrifice', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C113-asti]
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-02]; assesses=[] -->
 
 **ಯಜಮಾನ** — *yajamāna* — "an owner, the master".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಜಮಾನ** (*yajamāna*) is Sanskrit *yajamāna*, "the one who pays for a sacrifice", taken over whole. The patron who paid became the master of the house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

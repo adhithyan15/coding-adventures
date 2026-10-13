@@ -11,7 +11,8 @@ romanization: "summane"
 concept_tag: KA-RESP-NO-REASON
 prerequisites: [KA-C102-all, KA-C102-onlyone]
 sounds: []
-roots: []
+roots: [dravidian-cumma-idle]
+etymology_hook: "summane: native Dravidian, one word with Tamil cummā (DEDR 2678)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C102-onlyone]
 **ಸುಮ್ಮನೆ** (*summane*) — "for no reason, idly, quietly".
 
 **ಸುಮ್ಮನೆ** answers **ಯಾಕೆ?**, "why?", when there is no reason at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಮ್ಮನೆ** (*summane*) is native Dravidian, one word with Tamil *cummā* (DEDR 2678). DEDR lists *summane* itself, "quietly, for nothing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

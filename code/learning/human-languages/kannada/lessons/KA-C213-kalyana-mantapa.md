@@ -14,7 +14,8 @@ romanization: "kalyāṇa maṇṭapa"
 concept_tag: KA-STHALA213-KALYANA-MANTAPA
 prerequisites: [KA-C212-dikku, KA-C213-kote]
 sounds: []
-roots: []
+roots: [sanskrit-kalyana, sanskrit-mandapa]
+etymology_hook: "kalyāṇa maṇṭapa ← Sanskrit kalyāṇa 'auspicious' (CDIAL 2952) + maṇḍapa 'pavilion' (CDIAL 9740)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C213-kote]
 <!-- hl-knowledge: introduces=[KA-LEX-C213-STHALA213-02]; assesses=[] -->
 
 **ಕಲ್ಯಾಣ ಮಂಟಪ** — *kalyāṇa maṇṭapa* — "a wedding hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲ್ಯಾಣ ಮಂಟಪ** (*kalyāṇa maṇṭapa*) is Sanskrit *kalyāṇa*, "beautiful, lucky", the word for a wedding (CDIAL 2952), and *maṇṭapa*, "open pavilion" (CDIAL 9740): the pavilion for the wedding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

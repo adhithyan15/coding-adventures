@@ -14,7 +14,8 @@ romanization: "haṇe"
 concept_tag: KA-AROGYA168-HANE
 prerequisites: [KA-C167-sidi, KA-C167-gorake-hode]
 sounds: []
-roots: []
+roots: [dravidian-pane-forehead]
+etymology_hook: "haṇe: native Dravidian (DEDR 3896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C167-gorake-hode]
 <!-- hl-knowledge: introduces=[KA-LEX-C168-AROGYA168-01]; assesses=[] -->
 
 **ಹಣೆ** — *haṇe* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಣೆ** (*haṇe*) is native Dravidian (DEDR 3896). DEDR lists Kannada *paṇe*, *haṇe*, "forehead": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

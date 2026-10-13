@@ -14,7 +14,8 @@ romanization: "uḷi"
 concept_tag: KA-VERB-ULI
 prerequisites: [KA-C165-nenapisikollu, KA-C165-urulu]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-remain]
+etymology_hook: "uḷi: native Dravidian, one word with Tamil oḻi (DEDR 1009)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C165-urulu]
 <!-- hl-knowledge: introduces=[KA-LEX-C165-KRIYE165-04]; assesses=[] -->
 
 **ಉಳಿ** — *uḷi* — "to remain, to be left over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಳಿ** (*uḷi*) is native Dravidian, one word with Tamil *oḻi* (DEDR 1009). DEDR gives the older Kannada *uḻi*, "to be left, remain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

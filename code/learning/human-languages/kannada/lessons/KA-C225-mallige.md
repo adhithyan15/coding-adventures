@@ -14,7 +14,8 @@ romanization: "mallige"
 concept_tag: KA-VASTU225-MALLIGE
 prerequisites: [KA-C224-prani, KA-C225-bevu]
 sounds: []
-roots: []
+roots: [sanskrit-mallika]
+etymology_hook: "mallige ← Sanskrit mallikā 'jasmine', reshaped as a tadbhava (CDIAL 9913)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C225-bevu]
 <!-- hl-knowledge: introduces=[KA-LEX-C225-VASTU225-02]; assesses=[] -->
 
 **ಮಲ್ಲಿಗೆ** — *mallige* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಲ್ಲಿಗೆ** (*mallige*) comes from Sanskrit *mallikā*, "jasmine", reshaped to Kannada sounds: a tadbhava (CDIAL 9913). The *-kā* softened to Kannada *-ge*. CDIAL compares Dravidian words for jasmine as well.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

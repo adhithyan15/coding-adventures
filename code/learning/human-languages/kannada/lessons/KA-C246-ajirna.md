@@ -14,7 +14,8 @@ romanization: "ajīrṇa"
 concept_tag: KA-AROGYA246-AJIRNA
 prerequisites: [KA-C245-cikitse, KA-C246-uluku]
 sounds: []
-roots: []
+roots: [sanskrit-ajirna]
+etymology_hook: "ajīrṇa ← Sanskrit ajīrṇa 'indigestion', a- 'not' + jīrṇa 'digested'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C246-uluku]
 <!-- hl-knowledge: introduces=[KA-LEX-C246-AROGYA246-02]; assesses=[] -->
 
 **ಅಜೀರ್ಣ** — *ajīrṇa* — "indigestion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಜೀರ್ಣ** (*ajīrṇa*) is Sanskrit *ajīrṇa*, "indigestion": *a-*, "not", and *jīrṇa*, "digested". A tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

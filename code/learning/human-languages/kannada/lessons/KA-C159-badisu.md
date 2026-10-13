@@ -14,7 +14,8 @@ romanization: "baḍisu"
 concept_tag: KA-VERB-BADISU
 prerequisites: [KA-C159-suli, KA-C159-are]
 sounds: []
-roots: []
+roots: [kannada-badisu-serve]
+etymology_hook: "baḍisu: origin uncertain; DEDR has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C159-are]
 <!-- hl-knowledge: introduces=[KA-LEX-C159-KRIYE159-03]; assesses=[] -->
 
 **ಬಡಿಸು** — *baḍisu* — "to serve (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಬಡಿಸು** (*baḍisu*) is uncertain. DEDR has no entry for it in the sense "to serve food", CDIAL does not record it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "siguttēne"
 concept_tag: KA-SOON-SEE-YOU
 prerequisites: [KA-C106-later, KA-C106-phone]
 sounds: []
-roots: []
+roots: [sigu-meet-dravidian]
+etymology_hook: "siguttēne: native sigu 'to be found, be got' (DEDR 2498)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C106-phone]
 same verb as **ಸಿಗೋಣ** (*sigōṇa*), "let's meet".
 
 **ನಾಳೆ ಸಿಗುತ್ತೇನೆ** (*nāḷe siguttēne*) — "I'll see you tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಗುತ್ತೇನೆ** (*siguttēne*) is native Dravidian: *sigu*, "to be caught, be got, be found" (DEDR 2498, with Tamil *cikku*), in the "I" form: "I will be found".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

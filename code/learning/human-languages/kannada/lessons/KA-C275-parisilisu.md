@@ -14,7 +14,8 @@ romanization: "pariśīlisu"
 concept_tag: KA-VERB-PARISILISU
 prerequisites: [KA-C274-sahi-madu, KA-C275-carj-madu]
 sounds: []
-roots: []
+roots: [sanskrit-parishilana]
+etymology_hook: "pariśīlisu: Sanskrit pariśīlana 'close study' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C275-carj-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C275-KRIYE275-02]; assesses=[] -->
 
 **ಪರಿಶೀಲಿಸು** — *pariśīlisu* — "to check, to verify".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರಿಶೀಲಿಸು** (*pariśīlisu*) is Sanskrit *pariśīlana*, "close study, examination", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for because, then the Kannada for a bed.
 You'll want to know: ದಿಂಬು.
 ದಿಂಬು — dimbu — "a pillow".
 
+The word, taken apart.
+The origin of ದಿಂಬು (dimbu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a bed, then the Kannada for a pillow.
 
 You'll want to know: ಕಂಬಳಿ.
 ಕಂಬಳಿ — kambaḷi — "a blanket".
+
+The word, taken apart.
+ಕಂಬಳಿ (kambaḷi) comes from Sanskrit kambala, "woollen blanket", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final -a became -i, and the l became ḷ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a pillow, then the Kannada for a blanket
 You'll want to know: ಪರದೆ.
 ಪರದೆ — parade — "a curtain, a screen".
 
+The word, taken apart.
+ಪರದೆ (parade) is a loan from Persian parda, "curtain, veil", which came through Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a blanket, then the Kannada for a curtai
 You'll want to know: ಬೀಗ.
 ಬೀಗ — bīga — "a lock".
 
+The word, taken apart.
+ಬೀಗ (bīga) is native Dravidian, one word with Tamil pīkam and Telugu bīgamu (DEDR 4211). DEDR lists Kannada bīga, "lock", with Tamil pīkam, "padlock".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a curtain, then the Kannada for a lock.
 
 You'll want to know: ಮೊಳೆ.
 ಮೊಳೆ — moḷe — "a nail (to hammer)".
+
+The word, taken apart.
+ಮೊಳೆ (moḷe) is native Dravidian, one word with Tamil muḷai and Telugu mola (DEDR 4998). DEDR lists moḷe itself, "pin, nail, spike, peg".
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 161,
-  "sourceHash": "fnv1a64:e0eed8aeb07250a3",
+  "sourceHash": "fnv1a64:e2611431c293972a",
   "lessonIds": [
     "KA-C161-antisu",
     "KA-C161-tilisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch161.txt",
   "json": "kannada/narration/ch161.json",
-  "textHash": "fnv1a64:a512a0f393e0169b",
-  "jsonHash": "fnv1a64:2b83a84a2d60ceea",
+  "textHash": "fnv1a64:87f4229a2686d62a",
+  "jsonHash": "fnv1a64:9786d8b05794c905",
   "findings": []
 }

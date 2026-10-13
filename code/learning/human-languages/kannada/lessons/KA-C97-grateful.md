@@ -11,7 +11,8 @@ romanization: "ābhāri"
 concept_tag: KA-COUR-GRATEFUL
 prerequisites: [KA-C97-pardon, KA-C97-introduction]
 sounds: []
-roots: []
+roots: [sanskrit-abhara]
+etymology_hook: "ābhāri: built on Sanskrit ābhāra 'a burden': the grateful person carries a kindness"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C97-introduction]
 
 **ನಾನು ನಿಮಗೆ ಆಭಾರಿ** (*nānu nimage ābhāri*) — "I am grateful to you", a deeper
 thanks than **ಧನ್ಯವಾದ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಭಾರಿ** (*ābhāri*) is from Sanskrit *ābhāra*, "a burden", with the ending of one who has it: the grateful person carries the weight of a kindness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

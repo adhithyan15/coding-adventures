@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 87,
-  "sourceHash": "fnv1a64:f7fd862ac6ee2fab",
+  "sourceHash": "fnv1a64:3eb5ec068c286675",
   "lessonIds": [
     "KA-C87-really",
     "KA-C87-nothing",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch87.txt",
   "json": "kannada/narration/ch87.json",
-  "textHash": "fnv1a64:6ad4b812d4d9fa86",
-  "jsonHash": "fnv1a64:9a72f680e4de0b9c",
+  "textHash": "fnv1a64:198eaba58df2d887",
+  "jsonHash": "fnv1a64:fa6fb487dbbe8074",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for short, then the Kannada for heavy.
 You'll want to know: ಹಗುರ.
 ಹಗುರ — hagura — "light (in weight)".
 
+The word, taken apart.
+The origin of ಹಗುರ (hagura) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for heavy, then the Kannada for light.
 
 You'll want to know: ಮೃದು.
 ಮೃದು — mṛdu — "soft".
+
+The word, taken apart.
+ಮೃದು (mṛdu) is Sanskrit mṛdu, "soft, tender", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for light, then the Kannada for soft.
 You'll want to know: ಗಟ್ಟಿ.
 ಗಟ್ಟಿ — gaṭṭi — "hard, strong".
 
+The word, taken apart.
+ಗಟ್ಟಿ (gaṭṭi) is native Dravidian, one word with Tamil kaṭṭu, Telugu kaṭṭu and Malayalam kaṭṭa (DEDR 1148). DEDR lists gaṭṭi itself, "firmness, hardness".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for soft, then the Kannada for hard.
 You'll want to know: ಕೊಳಕು.
 ಕೊಳಕು — koḷaku — "dirty".
 
+The word, taken apart.
+ಕೊಳಕು (koḷaku) is native Dravidian. DEDR 1822 lists the older Kannada koḻaku, "a decayed, putrid state", under koḻe, "to rot", and Tulu koḷaků, "filthy, dirty". DEDR 1822 compares Sanskrit kuṇapa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for hard, then the Kannada for dirty.
 
 You'll want to know: ವೇಗ.
 ವೇಗ — vēga — "speed; fast".
+
+The word, taken apart.
+ವೇಗ (vēga) is Sanskrit vēga, "violent agitation; speed", taken over whole as a learned loan, a tatsama (CDIAL 12089).
 
 What you've built.
 One more word for this chapter.

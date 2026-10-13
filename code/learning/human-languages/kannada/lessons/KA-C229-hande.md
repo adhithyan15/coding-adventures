@@ -14,7 +14,8 @@ romanization: "haṇḍe"
 concept_tag: KA-VASTU229-HANDE
 prerequisites: [KA-C228-abhipraya, KA-C228-vicara]
 sounds: []
-roots: []
+roots: [sanskrit-handa-pot]
+etymology_hook: "haṇḍe: probably the northern word for 'pot', Marathi haṇḍā, from *hāṇḍa (CDIAL 14050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C228-vicara]
 <!-- hl-knowledge: introduces=[KA-LEX-C229-VASTU229-01]; assesses=[] -->
 
 **ಹಂಡೆ** — *haṇḍe* — "a large water-heating pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಂಡೆ** (*haṇḍe*) is probably the northern word for a large pot, Marathi *haṇḍā*, which CDIAL 14050 traces to a reconstructed *\*hāṇḍa*, "pot"; CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

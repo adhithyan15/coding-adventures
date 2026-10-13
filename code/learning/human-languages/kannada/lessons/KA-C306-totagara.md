@@ -14,7 +14,8 @@ romanization: "tōṭagāra"
 concept_tag: KA-KELASA306-TOTAGARA
 prerequisites: [KA-C306-mestri, KA-C306-plambar]
 sounds: []
-roots: []
+roots: [dravidian-tottam-garden]
+etymology_hook: "tōṭagāra: native Dravidian; DEDR 3549 lists tōṭagāṟa 'gardener', from tōṭa 'garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C306-plambar]
 <!-- hl-knowledge: introduces=[KA-LEX-C306-KELASA306-05]; assesses=[] -->
 
 **ತೋಟಗಾರ** — *tōṭagāra* — "a gardener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೋಟಗಾರ** (*tōṭagāra*) is native Dravidian, DEDR 3549 lists *tōṭagāṟa*, "gardener", itself, beside *tōṭa*, "garden"; the entry also has Tamil *tōṇṭu* and Malayalam *tōṇṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

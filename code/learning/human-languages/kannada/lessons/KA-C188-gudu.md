@@ -14,7 +14,8 @@ romanization: "gūḍu"
 concept_tag: KA-VASTU188-GUDU
 prerequisites: [KA-C187-neralu, KA-C187-kattale]
 sounds: []
-roots: []
+roots: [dravidian-kuutu-nest]
+etymology_hook: "gūḍu: native Dravidian, one word with Tamil kūṭu (DEDR 1883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C187-kattale]
 <!-- hl-knowledge: introduces=[KA-LEX-C188-VASTU188-01]; assesses=[] -->
 
 **ಗೂಡು** — *gūḍu* — "a nest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೂಡು** (*gūḍu*) is native Dravidian, one word with Tamil *kūṭu* (DEDR 1883). DEDR lists *gūḍu* itself, "nest". DEDR 1883 compares Sanskrit *kūṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

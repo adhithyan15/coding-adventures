@@ -14,7 +14,8 @@ romanization: "bhāvane"
 concept_tag: KA-AROGYA169-BHAVANE
 prerequisites: [KA-C169-ontitana, KA-C169-kutuhala]
 sounds: []
-roots: []
+roots: [sanskrit-bhavana]
+etymology_hook: "bhāvane ← Sanskrit bhāvanā 'imagination', a tatsama (CDIAL 9476)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C169-kutuhala]
 <!-- hl-knowledge: introduces=[KA-LEX-C169-AROGYA169-05]; assesses=[] -->
 
 **ಭಾವನೆ** — *bhāvane* — "a feeling, an emotion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಾವನೆ** (*bhāvane*) is Sanskrit *bhāvanā*, "imagination", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 9476).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

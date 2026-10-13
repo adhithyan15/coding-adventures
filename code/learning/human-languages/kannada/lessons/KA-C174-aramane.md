@@ -14,7 +14,8 @@ romanization: "aramane"
 concept_tag: KA-STHALA174-ARAMANE
 prerequisites: [KA-C174-guhe, KA-C174-mrgalaya]
 sounds: []
-roots: []
+roots: [sanskrit-rajan, dravidian-manai-house]
+etymology_hook: "aramane: ara- 'royal', from arasu 'king', which DEDR 201 derives from Sanskrit rājan, + native mane 'house' (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C174-mrgalaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C174-STHALA174-05]; assesses=[] -->
 
 **ಅರಮನೆ** — *aramane* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರಮನೆ** (*aramane*) is "the king's house". DEDR 201 lists *ara-mane*, "royal dwelling, palace", itself. Its first part is *arasu*, "king", which DEDR derives from Sanskrit *rājan*, "king", through an early southern form; the second is native *mane*, "house" (DEDR 4776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

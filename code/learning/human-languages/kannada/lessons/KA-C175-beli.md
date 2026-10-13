@@ -14,7 +14,8 @@ romanization: "bēli"
 concept_tag: KA-STHALA175-BELI
 prerequisites: [KA-C174-mrgalaya, KA-C174-aramane]
 sounds: []
-roots: []
+roots: [dravidian-veli-fence]
+etymology_hook: "bēli: native Dravidian, one word with Tamil vēli (DEDR 5538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C174-aramane]
 <!-- hl-knowledge: introduces=[KA-LEX-C175-STHALA175-01]; assesses=[] -->
 
 **ಬೇಲಿ** — *bēli* — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಲಿ** (*bēli*) is native Dravidian, one word with Tamil *vēli* (DEDR 5538). DEDR lists *bēli* itself, "fence, hedge": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

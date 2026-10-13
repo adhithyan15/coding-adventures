@@ -12,6 +12,9 @@ Before the new one: say the Kannada for blurred, then the Kannada for crowded.
 You'll want to know: ನಲ್ಲಿ.
 ನಲ್ಲಿ — nalli — "a tap".
 
+The word, taken apart.
+ನಲ್ಲಿ (nalli) is usually traced to Sanskrit nala, "a reed" (CDIAL 6936): a tap is a little pipe, like a hollow reed.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for crowded, then the Kannada for a tap.
 
 You'll want to know: ಮೆಟ್ಟಿಲು.
 ಮೆಟ್ಟಿಲು — meṭṭilu — "stairs, a step".
+
+The word, taken apart.
+ಮೆಟ್ಟಿಲು (meṭṭilu) is native Dravidian, from meṭṭu, "to step, tread", and DEDR 5057 lists meṭṭige, meṭla, "a step, a stair", beside it; the entry also has Tamil meṭṭu and Telugu meṭṭu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a tap, then the Kannada for stairs.
 You'll want to know: ಹಿಟ್ಟು.
 ಹಿಟ್ಟು — hiṭṭu — "flour".
 
+The word, taken apart.
+ಹಿಟ್ಟು (hiṭṭu) is older piṭṭu, "flour", with the p- turned to h-: DEDR 3084 gives piṭṭu, "flour, food", under Kannada. Where it comes from is not settled. It matches Prakrit piṭṭha, "flour", from Sanskrit piṣṭa, "ground" (CDIAL 8218), but DEDR does not call it a loan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for stairs, then the Kannada for flour.
 You'll want to know: ಬೇಳೆ.
 ಬೇಳೆ — bēḷe — "lentils, dal".
 
+The word, taken apart.
+ಬೇಳೆ (bēḷe) is native Dravidian (DEDR 4444). DEDR lists bēḷe, "split pulse".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for flour, then the Kannada for lentils.
 
 You'll want to know: ಹುಣಸೆಹಣ್ಣು.
 ಹುಣಸೆಹಣ್ಣು — huṇasehaṇṇu — "tamarind".
+
+The word, taken apart.
+ಹುಣಸೆಹಣ್ಣು (huṇasehaṇṇu) is native Dravidian: huṇase, "tamarind", which DEDR 4322 lists as puṇise, huṇise, from the root for "sour", and haṇṇu, "ripe fruit", which DEDR 4004 lists as paṇṇu. DEDR 4004 compares Sanskrit phala, "fruit".
 
 What you've built.
 One more word for this chapter.

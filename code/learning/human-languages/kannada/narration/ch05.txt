@@ -19,6 +19,7 @@ The word, taken apart.
 ಮಾತನಾಡು (mātanāḍu, "to speak, to talk") is native Dravidian, built on ಮಾತು (mātu, "word, speech") + āḍu ("to play/do") — "to word-play," i.e. to converse. To say "I speak," Kannada adds a two-part ending to the stem:
 mātanāḍ- + -utt- (present) + -ēne ("I") becomes ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne), "I speak."
 The -ಏನೆ (-ēne) ending is "I," so nānu is rarely needed. Change the ending, change the person: mātanāḍuttāne (he), mātanāḍuttāḷe (she), mātanāḍuttāre (they / you-respectful).
+DEDR 4834 lists Kannada mātu, "word, saying", with Telugu māṭa, "word", and even Telugu māṭal-āḍu, "to speak"; āḍu is in DEDR 347.
 
 Grammar Lens: stem + tense + person.
 Every Kannada verb is built this way — a stem, a tense-marker, a person-ending. And, like Tamil and Telugu, Kannada marks no gender in the first person: mātanāḍuttēne is the same for a man or a woman.
@@ -100,6 +101,7 @@ The letters in this word.
 
 The sentence, taken apart.
 ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) = ನಾನು (nānu, "I") + ಕನ್ನಡ (kannaḍa, the object) + ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne, "speak") — "I Kannada speak," the verb last as always. The name ಕನ್ನಡ (kannaḍa) is native (often linked to kar-nāḍu, "the black/high land," whence Karnataka). Kannada has a literature over a thousand years old and holds the second-most Jnanpith literary awards of any Indian language — a classical tongue, spoken by some fifty million.
+DEDR 1284 lists kannaḍa and karṇāṭa for the Kannada country and its language, with Tamil kaṉṉaṭam.
 
 Grammar Lens: no gender on "I speak".
 Mātanāḍuttēne is the same whether a man or a woman says it — Kannada, like Tamil and Telugu, marks no gender in the first or second person (only the third: -āne he, -āḷe she). This is unlike Hindi, where even "I speak" changes for the speaker's gender (boltā/boltī).
@@ -133,6 +135,7 @@ The letters in this word.
 
 The word, taken apart.
 ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": nānu Beṅgaḷūrinalli iddēne ("I live in Bangalore"). One verb covers "be," "stay," and "live."
+DEDR 480 lists Kannada ir, iru, "to be, exist, stay", with Tamil iru.
 
 Grammar Lens: "in" comes after the noun.
 Beṅgaḷūrinalli = Bengaḷūru + -alli ("in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
@@ -172,6 +175,7 @@ The word, taken apart.
 aḍuge māḍu = "to cook".
 ಸಹಾಯ ಮಾಡು (sahāya māḍu) = "to help" (sahāya from Sanskrit).
 So "I work" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu ("to help") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb.
+DEDR 1970 lists kelasa with Telugu kelasamu, "work"; DEDR 4797 lists māḍu with Malayalam māṭuka, "to build".
 
 Grammar Lens: noun + ಮಾಡು = a new verb.
 This "noun + māḍu" pattern is the exact twin of Hindi's "noun + karnā," Tamil's "noun + sey," and Telugu's "noun + cēyu." Four languages — two of them from an unrelated family — all landed on the same trick.

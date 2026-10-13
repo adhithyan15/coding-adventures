@@ -14,7 +14,8 @@ romanization: "moṇakālu"
 concept_tag: KA-THINGS135-MONAKALU
 prerequisites: [KA-C135-galla, KA-C135-kenne]
 sounds: []
-roots: []
+roots: [dravidian-muzham-joint, dravidian-kaal-leg]
+etymology_hook: "moṇakālu: native moṇa 'joint' + kālu 'leg'; DEDR 4990 lists moḻa kāl 'knee'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C135-kenne]
 <!-- hl-knowledge: introduces=[KA-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **ಮೊಣಕಾಲು** — *moṇakālu* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಣಕಾಲು** (*moṇakālu*) is native Dravidian. DEDR 4990 lists *moḻa kāl*, "knee", from *moḻa*, *moṇa*, "joint", and *kāl*, "leg" (DEDR 1479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 283,
-  "sourceHash": "fnv1a64:cd9cd261d6eac5db",
+  "sourceHash": "fnv1a64:487346f5cd7c2c1f",
   "lessonIds": [
     "KA-C283-nadi",
     "KA-C283-seleta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch283.txt",
   "json": "kannada/narration/ch283.json",
-  "textHash": "fnv1a64:45f50b8d9167fdb9",
-  "jsonHash": "fnv1a64:559109105c869d46",
+  "textHash": "fnv1a64:9fe9d626c3d70829",
+  "jsonHash": "fnv1a64:6dff4ebfb3286ab1",
   "findings": []
 }

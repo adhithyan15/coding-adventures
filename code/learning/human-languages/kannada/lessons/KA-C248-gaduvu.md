@@ -14,7 +14,8 @@ romanization: "gaḍuvu"
 concept_tag: KA-KALA248-GADUVU
 prerequisites: [KA-C248-dasaka, KA-C248-varsikotsava]
 sounds: []
-roots: []
+roots: [kannada-gaduvu]
+etymology_hook: "gaḍuvu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C248-varsikotsava]
 <!-- hl-knowledge: introduces=[KA-LEX-C248-KALA248-03]; assesses=[] -->
 
 **ಗಡುವು** — *gaḍuvu* — "a deadline".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಗಡುವು** (*gaḍuvu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

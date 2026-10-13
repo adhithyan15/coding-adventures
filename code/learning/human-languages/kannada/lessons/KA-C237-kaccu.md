@@ -14,7 +14,8 @@ romanization: "kaccu"
 concept_tag: KA-VERB-KACCU
 prerequisites: [KA-C236-caukasi-madu, KA-C236-eru]
 sounds: []
-roots: []
+roots: [dravidian-kaccu-bite]
+etymology_hook: "kaccu: native Dravidian, one word with Tamil kaccu (DEDR 1097)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C236-eru]
 <!-- hl-knowledge: introduces=[KA-LEX-C237-KRIYE237-01]; assesses=[] -->
 
 **ಕಚ್ಚು** — *kaccu* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಚ್ಚು** (*kaccu*) is native Dravidian, one word with Tamil *kaccu* (DEDR 1097). DEDR lists *kaccu* itself, "to bite, sting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

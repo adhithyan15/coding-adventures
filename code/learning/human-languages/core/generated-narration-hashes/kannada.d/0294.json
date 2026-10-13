@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 294,
-  "sourceHash": "fnv1a64:ca87b29f1ad6a5ee",
+  "sourceHash": "fnv1a64:a009e452e6ca8151",
   "lessonIds": [
     "KA-C294-kadalekayi",
     "KA-C294-masale",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch294.txt",
   "json": "kannada/narration/ch294.json",
-  "textHash": "fnv1a64:db73abf2c07eca1b",
-  "jsonHash": "fnv1a64:4b1648aa43767bae",
+  "textHash": "fnv1a64:271ad3a044dc700b",
+  "jsonHash": "fnv1a64:bd57ee9880402906",
   "findings": []
 }

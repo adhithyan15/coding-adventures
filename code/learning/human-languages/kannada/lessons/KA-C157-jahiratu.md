@@ -14,7 +14,8 @@ romanization: "jāhīrātu"
 concept_tag: KA-ODU157-JAHIRATU
 prerequisites: [KA-C157-suchane, KA-C157-badige]
 sounds: []
-roots: []
+roots: [arabic-zahir]
+etymology_hook: "jāhīrātu ← Hindustani jāhirāt 'notices', from Arabic ẓāhir 'manifest, public'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [KA-C157-badige]
 [YOU READ: the advert]
 
 The advert says **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — "House for rent."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಾಹೀರಾತು** (*jāhīrātu*) came through Hindustani *jāhirāt*, "public notices", from Arabic *ẓāhir*, "manifest, public": an advertisement makes a thing known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

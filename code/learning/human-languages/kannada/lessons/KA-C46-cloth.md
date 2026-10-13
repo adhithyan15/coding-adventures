@@ -11,7 +11,8 @@ romanization: "baṭṭe"
 concept_tag: KA-NOUN-CLOTH
 prerequisites: [KA-C46-fruit, KA-C43-give]
 sounds: []
-roots: []
+roots: [kannada-batte-cloth]
+etymology_hook: "baṭṭe: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C46-fruit]
 Sanskrit has *paṭṭa*, 'a strip of cloth, a bandage', and here the borrowing most likely ran the unusual way — out of Dravidian and into Sanskrit, rather than the direction this book has shown so often. The same strip reached English by another road: Hindi *paṭṭī*, a wrapping, is the soldier's *puttee*.
 
 Older Kannada also used ಬಟ್ಟೆ for a road — the way you go — a sense the modern language has quietly let go of.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಬಟ್ಟೆ** (*baṭṭe*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "trikōna"
 concept_tag: KA-VASTU193-TRIKONA
 prerequisites: [KA-C193-vrtta, KA-C193-cauka]
 sounds: []
-roots: []
+roots: [sanskrit-trikona]
+etymology_hook: "trikōna ← Sanskrit trikoṇa 'three-cornered', tri 'three' + koṇa 'corner'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C193-cauka]
 <!-- hl-knowledge: introduces=[KA-LEX-C193-VASTU193-05]; assesses=[] -->
 
 **ತ್ರಿಕೋನ** — *trikōna* — "a triangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತ್ರಿಕೋನ** (*trikōna*) is Sanskrit *trikoṇa*, "three-cornered": *tri*, "three", and *koṇa*, "corner".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

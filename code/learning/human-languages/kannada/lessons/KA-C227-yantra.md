@@ -14,7 +14,8 @@ romanization: "yantra"
 concept_tag: KA-VASTU227-YANTRA
 prerequisites: [KA-C227-antu, KA-C227-tarc]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "yantra ← Sanskrit yantra 'controlling device; any contrivance', a tatsama (CDIAL 10412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C227-tarc]
 <!-- hl-knowledge: introduces=[KA-LEX-C227-VASTU227-05]; assesses=[] -->
 
 **ಯಂತ್ರ** — *yantra* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಂತ್ರ** (*yantra*) is Sanskrit *yantra*, "controlling device; any contrivance", taken over whole as a learned loan, a tatsama (CDIAL 10412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

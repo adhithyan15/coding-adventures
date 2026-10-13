@@ -11,7 +11,8 @@ romanization: "alli"
 concept_tag: KA-DEIXIS-THERE
 prerequisites: [KA-C41-here, KA-C37-baayi]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "alli: native Dravidian, the far-pointing base a- + a place ending; DEDR 1 lists alli"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **ಇಲ್ಲಿ** *illi*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲ್ಲಿ** (*alli*) is native Dravidian: the far-pointing base *a-* with an ending for place. DEDR 1 lists *alli* itself, "in that place, there".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02] -->

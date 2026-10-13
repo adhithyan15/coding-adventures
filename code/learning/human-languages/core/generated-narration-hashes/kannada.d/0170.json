@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 170,
-  "sourceHash": "fnv1a64:809c13a920f353c0",
+  "sourceHash": "fnv1a64:9fb665b44ef01ba8",
   "lessonIds": [
     "KA-C170-herige",
     "KA-C170-drsti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch170.txt",
   "json": "kannada/narration/ch170.json",
-  "textHash": "fnv1a64:352b4653e173b5a0",
-  "jsonHash": "fnv1a64:1cc38d97bf7b0a02",
+  "textHash": "fnv1a64:091f76954b9f5eea",
+  "jsonHash": "fnv1a64:e5016cd0e52003f8",
   "findings": []
 }

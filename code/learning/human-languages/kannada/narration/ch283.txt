@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a nurse, then the Kannada for surprise.
 You'll want to know: ನಾಡಿ.
 ನಾಡಿ — nāḍi — "the pulse".
 
+The word, taken apart.
+ನಾಡಿ (nāḍi) is Sanskrit nāḍī, "tubular organ, tube", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 7047). The pulse is felt in a vessel.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for surprise, then the Kannada for the pulse
 
 You'll want to know: ಸೆಳೆತ.
 ಸೆಳೆತ — seḷeta — "a cramp, a spasm".
+
+The word, taken apart.
+ಸೆಳೆತ (seḷeta) is native Dravidian, from seḷe, "to draw, pull", which DEDR 2791 lists: a cramp is a pulling; the entry also has Telugu celuku.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for the pulse, then the Kannada for a cramp.
 You'll want to know: ಮುರಿತ.
 ಮುರಿತ — murita — "a fracture".
 
+The word, taken apart.
+ಮುರಿತ (murita) is native Dravidian, from muri, "to break", which DEDR 5008 lists as muṟi; the entry also has Tamil muṟi, Telugu muṟiyu and Malayalam muṟi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a cramp, then the Kannada for a fracture
 You'll want to know: ಆಪರೇಷನ್.
 ಆಪರೇಷನ್ — āpareṣan — "an operation, surgery".
 
+The word, taken apart.
+ಆಪರೇಷನ್ (āpareṣan) is a loan from English operation.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a fracture, then the Kannada for an oper
 
 You'll want to know: ಗರ್ಭಿಣಿ.
 ಗರ್ಭಿಣಿ — garbhiṇi — "pregnant; a pregnant woman".
+
+The word, taken apart.
+ಗರ್ಭಿಣಿ (garbhiṇi) is Sanskrit garbhiṇī, "pregnant", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 4062).
 
 What you've built.
 One more word for this chapter.

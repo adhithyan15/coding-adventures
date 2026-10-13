@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 177,
-  "sourceHash": "fnv1a64:1e9126b6de1bdf0d",
+  "sourceHash": "fnv1a64:d7b9333cc2d36507",
   "lessonIds": [
     "KA-C177-nikharavagi",
     "KA-C177-sahajavagi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch177.txt",
   "json": "kannada/narration/ch177.json",
-  "textHash": "fnv1a64:5274305d98882b96",
-  "jsonHash": "fnv1a64:87a2a1f411ce572f",
+  "textHash": "fnv1a64:93e9107cd1d94315",
+  "jsonHash": "fnv1a64:4e9ffbe455fafa53",
   "findings": []
 }

@@ -11,9 +11,10 @@ romanization: "nanage kannaḍa baruttade"
 concept_tag: KA-PHRASE-CAN
 prerequisites: [KA-C73-in-order-to, KA-S151-letter-tta, KA-C05-naanu-kannada-maatanaaduttene, KA-C06-dative-subject, KA-C57-shoulder, KA-C57-lip]
 sounds: []
-roots: []
+roots: [baa-come-dravidian]
+etymology_hook: "nanage kannaḍa baruttade: native, 'to me Kannada comes': baru 'to come' (DEDR 5270), kannaḍa (DEDR 1284)"
 duration:
-  max_seconds: 210
+  max_seconds: 281
 requires:
   knowledge: [KA-SCRIPT-RECOG-151, KA-LEX-C05-KANNADA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-LEX-C32-BAA-01, KA-LEX-C73-ABLE-02]
 introduces:
@@ -47,6 +48,11 @@ A skill is not held; it arrives.
 You already say **ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ** ("I speak Kannada"). That reports
 what you do. This one reports what you can do, and it is the sentence a stranger
 asks you for.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನನಗೆ ಕನ್ನಡ ಬರುತ್ತದೆ** (*nanage kannaḍa baruttade*) is native Dravidian throughout: *nanage*, "to me" (DEDR 5160), *kannaḍa* (DEDR 1284), and *baruttade*, "it comes", from *baru*, "to come" (DEDR 5270). A language you can speak is one that "comes to you".
 
 ## Grammar Lens: the fourth thing the dative frame carries
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C73-ABLE-05]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for money, then the Kannada for small change
 You'll want to know: ಹತ್ತಿ.
 ಹತ್ತಿ — hatti — "cotton".
 
+The word, taken apart.
+ಹತ್ತಿ (hatti) is native Dravidian, one word with Tamil parutti, Telugu patti and Malayalam parutti (DEDR 3976). DEDR lists older parti, patti, "cotton": the p- has become h-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for small change, then the Kannada for cotto
 
 You'll want to know: ರೇಷ್ಮೆ.
 ರೇಷ್ಮೆ — rēṣme — "silk".
+
+The word, taken apart.
+ರೇಷ್ಮೆ (rēṣme) is Persian rēsham, "silk", which came into Kannada through Hindustani, with a final -e added.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for cotton, then the Kannada for silk.
 You'll want to know: ಲಕೋಟೆ.
 ಲಕೋಟೆ — lakōṭe — "an envelope".
 
+The word, taken apart.
+Where ಲಕೋಟೆ (lakōṭe) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "envelope".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for silk, then the Kannada for an envelope.
 You'll want to know: ಅಂಚೆಚೀಟಿ.
 ಅಂಚೆಚೀಟಿ — añcecīṭi — "a postage stamp".
 
+The word, taken apart.
+ಅಂಚೆಚೀಟಿ (añcecīṭi) is native añce, "the post" (DEDR 54), with cīṭi, "a slip, a note", which probably came from Hindi cīṭhī, ciṭṭhī, "a note, a letter"; CDIAL 4832 traces that to a reconstructed ciṣṭa, "message".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an envelope, then the Kannada for a post
 
 You'll want to know: ಪಾರ್ಸೆಲ್.
 ಪಾರ್ಸೆಲ್ — pārsel — "a parcel".
+
+The word, taken apart.
+ಪಾರ್ಸೆಲ್ (pārsel) is a loan from English parcel.
 
 What you've built.
 One more word for this chapter.

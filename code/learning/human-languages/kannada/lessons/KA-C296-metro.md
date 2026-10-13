@@ -14,7 +14,8 @@ romanization: "meṭrō"
 concept_tag: KA-VASTU296-METRO
 prerequisites: [KA-C295-parsel, KA-C296-skutar]
 sounds: []
-roots: []
+roots: [english-metro]
+etymology_hook: "meṭrō ← English metro"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C296-skutar]
 <!-- hl-knowledge: introduces=[KA-LEX-C296-VASTU296-02]; assesses=[] -->
 
 **ಮೆಟ್ರೋ** — *meṭrō* — "the metro".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೆಟ್ರೋ** (*meṭrō*) is a loan from English *metro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

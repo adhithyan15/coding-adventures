@@ -14,7 +14,8 @@ romanization: "mūlaka"
 concept_tag: KA-KARANA215-MULAKA
 prerequisites: [KA-C214-addaraste, KA-C214-kavalu]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mūlaka: Sanskrit mūla 'root' (CDIAL 10250) + -ka; 'by means of' is Kannada's sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C214-kavalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C215-KARANA215-01]; assesses=[] -->
 
 **ಮೂಲಕ** — *mūlaka* — "through, by means of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂಲಕ** (*mūlaka*) is Sanskrit *mūla*, "root" (CDIAL 10250), with *-ka*. In Kannada "from the root of" came to mean "by means of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

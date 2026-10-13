@@ -12,6 +12,9 @@ Before the new one: say the Kannada for on the other side, then the Kannada for 
 You'll want to know: ಸಲುವಾಗಿ.
 ಸಲುವಾಗಿ — saluvāgi — "for the sake of, for".
 
+The word, taken apart.
+ಸಲುವಾಗಿ (saluvāgi) is saluva, "for, on behalf of", with the adverb ending -āgi. The origin of saluva is uncertain; neither DEDR nor CDIAL records it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for on this side, then the Kannada for for t
 
 You'll want to know: ಇಲ್ಲದಿದ್ದರೆ.
 ಇಲ್ಲದಿದ್ದರೆ — illadiddare — "otherwise".
+
+The word, taken apart.
+ಇಲ್ಲದಿದ್ದರೆ (illadiddare) is native Dravidian: illade, "not being", which DEDR 2559 lists, and iddare, "if it is", from iru, "to be" (DEDR 480): "if it is not so".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for for the sake of, then the Kannada for ot
 You'll want to know: ಆದರೂ.
 ಆದರೂ — ādarū — "even so, nevertheless".
 
+The word, taken apart.
+ಆದರೂ (ādarū) is native Dravidian: the "even if" form of āgu, "to become" (DEDR 333). "Even if it is so" is "even so". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for otherwise, then the Kannada for even so.
 You'll want to know: ಒಂದು ವೇಳೆ.
 ಒಂದು ವೇಳೆ — ondu vēḷe — "in case, if by chance".
 
+The word, taken apart.
+ಒಂದು ವೇಳೆ (ondu vēḷe) is ondu, "one" (DEDR 990), native, and vēḷe, "time", from Sanskrit velā, "limit, time" (CDIAL 12115): "at one time", if it so happens.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for even so, then the Kannada for in case.
 
 You'll want to know: ಬದಲು.
 ಬದಲು — badalu — "instead (of)".
+
+The word, taken apart.
+ಬದಲು (badalu) is a loan from Arabic badal, "substitute, exchange", which came through Persian and Hindustani.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "saṃskṛti"
 concept_tag: KA-KARANA215-SAMSKRTI
 prerequisites: [KA-C215-bagge, KA-C215-sampradaya]
 sounds: []
-roots: []
+roots: [sanskrit-samskrti]
+etymology_hook: "saṃskṛti ← Sanskrit saṃskṛti 'preparation', a tatsama (CDIAL 13040)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C215-sampradaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C215-KARANA215-05]; assesses=[] -->
 
 **ಸಂಸ್ಕೃತಿ** — *saṃskṛti* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಸ್ಕೃತಿ** (*saṃskṛti*) is Sanskrit *saṃskṛti*, "preparation", taken over whole as a learned loan, a tatsama (CDIAL 13040). The word for "preparation, refinement" was taken up for "culture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

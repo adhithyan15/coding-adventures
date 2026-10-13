@@ -93,6 +93,9 @@ One letter and a vowel sign: ಬ (ba) with the long-ā stroke. As it stands it i
 But you cannot thread beads onto bā. Underneath, the verb's working stem is ಬರು- (baru-), and everything attaches to that:
 baru- + -utt- + -ēne becomes ಬರುತ್ತೇನೆ (baruttēne), "I come."
 
+The word, taken apart.
+ಬಾ (bā / baru) is native Dravidian, one word with Tamil varu, vā and Malayalam varuka (DEDR 5270). DEDR gives Kannada bar, bā: the old v- has become b-.
+
 Grammar Lens: two shapes, one verb.
 Most Kannada verbs have nothing to hide. Iru gives iruttēne, hōgu gives hōguttēne; the name of the verb is the stem. A small handful do not, and bā is the one you will meet daily: call it bā, build on baru-.
 That is exactly what Chapter 4's farewell was made of:

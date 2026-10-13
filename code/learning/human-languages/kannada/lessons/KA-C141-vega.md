@@ -14,7 +14,8 @@ romanization: "vēga"
 concept_tag: KA-QUAL141-VEGA
 prerequisites: [KA-C141-gatti, KA-C141-kolaku]
 sounds: []
-roots: []
+roots: [sanskrit-vega]
+etymology_hook: "vēga ← Sanskrit vēga 'violent agitation; speed', a tatsama (CDIAL 12089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C141-kolaku]
 <!-- hl-knowledge: introduces=[KA-LEX-C141-QUAL141-05]; assesses=[] -->
 
 **ವೇಗ** — *vēga* — "speed; fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೇಗ** (*vēga*) is Sanskrit *vēga*, "violent agitation; speed", taken over whole as a learned loan, a tatsama (CDIAL 12089).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "saujanya"
 concept_tag: KA-NOUN-COURTESY
 prerequisites: [KA-C65-trust, KA-C63-health]
 sounds: []
-roots: []
+roots: [sanskrit-saujanya]
+etymology_hook: "saujanya ← Sanskrit saujanya 'goodness, kindness', from sujana 'a good person', a tatsama"
 duration:
   max_seconds: 210
 requires:

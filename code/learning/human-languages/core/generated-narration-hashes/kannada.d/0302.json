@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 302,
-  "sourceHash": "fnv1a64:cc3e78f0396d3c73",
+  "sourceHash": "fnv1a64:706eadc40b1f08b3",
   "lessonIds": [
     "KA-C302-hittale",
     "KA-C302-kattige",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch302.txt",
   "json": "kannada/narration/ch302.json",
-  "textHash": "fnv1a64:1b5d83b70f515164",
-  "jsonHash": "fnv1a64:b7040af3abbeedde",
+  "textHash": "fnv1a64:05f5376ca8cfd8e5",
+  "jsonHash": "fnv1a64:b171891c7f39d065",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kare"
 concept_tag: KA-VERB-KARE
 prerequisites: [KA-C149-seru, KA-C149-todu]
 sounds: []
-roots: []
+roots: [dravidian-karai-call]
+etymology_hook: "kare: native Dravidian, one word with Tamil karai (DEDR 1291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C149-todu]
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-04]; assesses=[] -->
 
 **ಕರೆ** — *kare* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರೆ** (*kare*) is native Dravidian, one word with Tamil *karai* (DEDR 1291). DEDR lists *kare* itself, "to call, invite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

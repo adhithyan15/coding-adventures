@@ -15,6 +15,9 @@ It stands between the two things it joins, in the same place English puts and: �
 You have had a hundred and thirty nouns and no way to say two of them in one breath. Every list so far had to be a series of separate sentences. This is the word that ends that.
 A note on how it is actually said. In unhurried speech Kannada will often join two nouns by simply naming them one after the other, with nothing between; ಮತ್ತು (mattu) is what a careful sentence, a notice or a written list reaches for. Both are ordinary standard-colloquial Kannada, and ಮತ್ತು (mattu) is the one that never sounds wrong.
 
+The word, taken apart.
+ಮತ್ತು (mattu) is native Dravidian, of the root maṟu, "other, next", and DEDR 4766 lists mattu, "and, besides", itself; the entry also has Tamil maṟu, Telugu maṟi and Malayalam maṟu.
+
 What you've built.
 The first join. Two things, one sentence.
 
@@ -96,6 +99,7 @@ You'll want to know: ಅಥವಾ.
 It goes where ಮತ್ತು (mattu) went, between the two things — but now the two are alternatives instead of a pair: ಚಹಾ ಅಥವಾ ಕಾಫಿ? (cahā athavā kāphi?) — "tea or coffee?"
 That one question is most of what a host says and most of what a shop asks, and until this word there was no way to put a choice to anybody.
 ಅಥವಾ (athavā) is a Sanskrit word taken over whole — atha ("then") plus vā ("or") — and it is at home in speech as well as on the page. Quick speech will also just name the two options with a rise between them, or slip ಇಲ್ಲ in the gap; ಅಥವಾ (athavā) is the one that makes the choice unmistakable.
+CDIAL 231 lists Sanskrit athavā, "or".
 
 What you've built.
 A pair, and now a choice.
@@ -131,6 +135,9 @@ You'll want to know: ಆದರೆ.
 You have read it before without being told. The word for "in that case" — ಹಾಗಾದರೆ (hāgādare) — is ಹಾಗೆ (hāge, "that way") with ಆದರೆ (ādare) welded on behind it. The piece you could not name was doing this job all along.
 ಚಹಾ ಇದೆ, ಆದರೆ ಕಾಫಿ ಇಲ್ಲ (cahā ide, ādare kāphi illa) — "there is tea, but there is no coffee."
 ಆದರೆ (ādare) opens the second half of the sentence, not the first, exactly as English but does.
+
+The word, taken apart.
+ಆದರೆ (ādare) is native Dravidian: the "if" form of āgu, "to become" (DEDR 333). "If it is so" turned into "but". DEDR 333 compares Sanskrit ām.
 
 Grammar Lens: a verb doing a conjunction's job.
 ಆದರೆ (ādare) is not a conjunction by birth. It is the verb ಆಗು (āgu, "to become") carrying the ending -ದರೆ (-dare), which is Kannada's "if". Read literally it says "if it becomes" — "granted that, all the same".
@@ -170,6 +177,9 @@ You'll want to know: ನಾನೂ.
 ನಾನೂ (nānū) — "I too, me as well".
 Look at what changed. ನಾನು (nānu, "I") became ನಾನೂ (nānū): the last vowel got longer, and nothing else moved. That lengthening is a word in its own right — a suffix, -ೂ (-ū) — and it means "as well".
 You already met ಕೂಡ (kūḍa) doing the same adding job as a separate word. ನಾನು ಕೂಡ and ನಾನೂ (nānū) say the same thing; the second one welds it on.
+
+The word, taken apart.
+ನಾನೂ (nānū) is native Dravidian: nānu, "I" (DEDR 5160), with the ending -ū, "too, even".
 
 Grammar Lens: the same ending on two nouns means both.
 Put -ೂ on two nouns instead of one and you have said "both":

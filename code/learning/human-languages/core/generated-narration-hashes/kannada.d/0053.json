@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 53,
-  "sourceHash": "fnv1a64:3455441898d1bbdc",
+  "sourceHash": "fnv1a64:7481419c327ab678",
   "lessonIds": [
     "KA-C53-sky",
     "KA-C53-sunshine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch53.txt",
   "json": "kannada/narration/ch53.json",
-  "textHash": "fnv1a64:f1761af9d6265c33",
-  "jsonHash": "fnv1a64:431b2ddbaa5c5243",
+  "textHash": "fnv1a64:bd859fa6749ee3c6",
+  "jsonHash": "fnv1a64:a4331b5b976d521b",
   "findings": []
 }

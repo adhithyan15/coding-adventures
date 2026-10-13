@@ -14,7 +14,8 @@ romanization: "heṅgasu"
 concept_tag: KA-VASTU263-HENGASU
 prerequisites: [KA-C263-hudugi, KA-C263-gandasu]
 sounds: []
-roots: []
+roots: [dravidian-pen-woman]
+etymology_hook: "heṅgasu: native Dravidian, one word with Tamil peṇ and Telugu peṇṭi (DEDR 4395)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C263-gandasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C263-VASTU263-04]; assesses=[] -->
 
 **ಹೆಂಗಸು** — *heṅgasu* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಂಗಸು** (*heṅgasu*) is native Dravidian, one word with Tamil *peṇ*, Telugu *peṇṭi* and Malayalam *peṇ* (DEDR 4395). DEDR lists *heṅgasu*, "female", beside *peṇ*, "woman". DEDR 4395 compares Sanskrit *paṇḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

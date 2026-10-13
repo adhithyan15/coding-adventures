@@ -14,7 +14,8 @@ romanization: "soṇṭa"
 concept_tag: KA-THINGS136-SONTA
 prerequisites: [KA-C136-uguru, KA-C136-ede]
 sounds: []
-roots: []
+roots: [dravidian-sonta-waist]
+etymology_hook: "soṇṭa: native Dravidian, one word with Telugu toṇṭi (DEDR 2840)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C136-ede]
 <!-- hl-knowledge: introduces=[KA-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **ಸೊಂಟ** — *soṇṭa* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೊಂಟ** (*soṇṭa*) is native Dravidian, one word with Telugu *toṇṭi* (DEDR 2840). DEDR lists *soṇṭa* itself, "hip, loins, waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

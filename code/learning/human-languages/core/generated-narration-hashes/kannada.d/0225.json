@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 225,
-  "sourceHash": "fnv1a64:08e4dd514c241edb",
+  "sourceHash": "fnv1a64:116de8df06580de6",
   "lessonIds": [
     "KA-C225-bevu",
     "KA-C225-mallige",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch225.txt",
   "json": "kannada/narration/ch225.json",
-  "textHash": "fnv1a64:390c07917e2f739f",
-  "jsonHash": "fnv1a64:2c2dbf0ad60c0889",
+  "textHash": "fnv1a64:e2e244ec07fb74f7",
+  "jsonHash": "fnv1a64:42feb6831c471478",
   "findings": []
 }

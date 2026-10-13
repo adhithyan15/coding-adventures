@@ -14,7 +14,8 @@ romanization: "prapañca"
 concept_tag: KA-STHALA287-PRAPANCA
 prerequisites: [KA-C287-bara, KA-C287-bhukampa]
 sounds: []
-roots: []
+roots: [sanskrit-prapanca]
+etymology_hook: "prapañca ← Sanskrit prapañca 'expansion, the visible world'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C287-bhukampa]
 <!-- hl-knowledge: introduces=[KA-LEX-C287-STHALA287-04]; assesses=[] -->
 
 **ಪ್ರಪಂಚ** — *prapañca* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಪಂಚ** (*prapañca*) is Sanskrit *prapañca*, "expansion, the visible world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

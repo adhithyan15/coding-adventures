@@ -14,7 +14,8 @@ romanization: "dāṭu"
 concept_tag: KA-VERB-DATU
 prerequisites: [KA-C273-haru, KA-C273-suttadu]
 sounds: []
-roots: []
+roots: [dravidian-taantu-leap]
+etymology_hook: "dāṭu: native Dravidian, one word with Tamil tāṇṭu (DEDR 3158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C273-suttadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C273-KRIYE273-03]; assesses=[] -->
 
 **ದಾಟು** — *dāṭu* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಾಟು** (*dāṭu*) is native Dravidian, one word with Tamil *tāṇṭu* (DEDR 3158). DEDR lists *dāṭu*, "to pass or step over, cross". DEDR 3158 compares Sanskrit *tāṇḍava*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for famous, then the Kannada for safe.
 You'll want to know: ಅಪಾಯಕಾರಿ.
 ಅಪಾಯಕಾರಿ — apāyakāri — "dangerous".
 
+The word, taken apart.
+ಅಪಾಯಕಾರಿ (apāyakāri) is Sanskrit apāya, "departure, misfortune" (CDIAL 481), and kārin, "causing": "causing misfortune".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for safe, then the Kannada for dangerous.
 
 You'll want to know: ಸುಳ್ಳು.
 ಸುಳ್ಳು — suḷḷu — "a lie; false".
+
+The word, taken apart.
+ಸುಳ್ಳು (suḷḷu) is native Dravidian (DEDR 2708). DEDR lists Kannada suḷḷu, "a lie".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for dangerous, then the Kannada for a lie; f
 You'll want to know: ನೇರಳೆ.
 ನೇರಳೆ — nēraḷe — "purple".
 
+The word, taken apart.
+ನೇರಳೆ (nēraḷe) is native Dravidian, one word with Telugu nēreḍu (DEDR 2917). DEDR lists nēṟaḷe, the jambolan tree, whose dark purple fruit gives the colour its name.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a lie; false, then the Kannada for purpl
 You'll want to know: ಬೂದು.
 ಬೂದು — būdu — "grey".
 
+The word, taken apart.
+ಬೂದು (būdu) means "ash-coloured". DEDR 4316 lists Kannada būdu, "ashes", in brackets, as probably borrowed from Sanskrit bhūti, "ashes".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for purple, then the Kannada for grey.
 
 You'll want to know: ಖಾರ.
 ಖಾರ — khāra — "spicy".
+
+The word, taken apart.
+ಖಾರ (khāra) comes from Sanskrit kṣāra, "corrosive; alkali", reshaped to Kannada sounds: a tadbhava (CDIAL 3674). Prakrit khāra shows the change of kṣ- to kh-; the sharp taste became "hot, spicy".
 
 What you've built.
 One more word for this chapter.

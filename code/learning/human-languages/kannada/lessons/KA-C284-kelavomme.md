@@ -14,7 +14,8 @@ romanization: "kelavomme"
 concept_tag: KA-KALA284-KELAVOMME
 prerequisites: [KA-C284-ninne, KA-C284-samaya]
 sounds: []
-roots: []
+roots: [dravidian-kela-some, proto-dravidian-numbers]
+etymology_hook: "kelavomme: native kelavu 'some' (DEDR 1571) + omme 'once' (DEDR 990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C284-samaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C284-KALA284-05]; assesses=[] -->
 
 **ಕೆಲವೊಮ್ಮೆ** — *kelavomme* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಲವೊಮ್ಮೆ** (*kelavomme*) is native Dravidian: *kelavu*, "some, a few" (DEDR 1571), and *omme*, "once", which DEDR 990 lists under the word for "one": "some times".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

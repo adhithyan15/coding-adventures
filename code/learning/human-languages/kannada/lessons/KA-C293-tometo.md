@@ -14,7 +14,8 @@ romanization: "ṭomēṭo"
 concept_tag: KA-VASTU293-TOMETO
 prerequisites: [KA-C293-kottambari, KA-C293-karibevu]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "ṭomēṭo ← English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C293-karibevu]
 <!-- hl-knowledge: introduces=[KA-LEX-C293-VASTU293-04]; assesses=[] -->
 
 **ಟೊಮೇಟೊ** — *ṭomēṭo* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೊಮೇಟೊ** (*ṭomēṭo*) is a loan from English *tomato*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77f8195bbda6dd9a",
+  "sourceHash": "fnv1a64:921fe96c1280784e",
   "lessons": [
     {
       "id": "KA-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ddd18d1a8eb7ba53",
+      "sourceHash": "fnv1a64:8ae6084b64a64a5a",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೋಡು (nōḍu) is native Dravidian. DEDR 3794 lists it with Malayalam nōṭṭam, \"viewing\", and Tamil nōṭṭam, \"examination\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f3beb9489a289b2",
+      "sourceHash": "fnv1a64:59400994bf50d486",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +185,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೇಳು (kēḷu) is native Dravidian, one word with Tamil kēḷ and Malayalam kēḷkka (DEDR 2017)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -233,7 +255,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -264,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9be794769e68de8",
+      "sourceHash": "fnv1a64:7e9812045d819232",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +317,11 @@
             },
             {
               "kind": "speech",
-              "text": "Built from māta, 'word' — itself from Sanskrit — plus āḍu, 'to play'. To speak is to play with words."
+              "text": "Built from māta, 'word' — a native Dravidian word, not a Sanskrit one — plus āḍu, 'to play'. To speak is to play with words."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4834 lists Kannada mātu, māta, \"word, saying\", cognate with Telugu māṭa; āḍu is in DEDR 347."
             }
           ]
         },
@@ -391,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35154a6be164d840",
+      "sourceHash": "fnv1a64:455e9baaf0346bf4",
       "notice": null,
       "blocks": [
         {
@@ -428,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬರೆ (bare) is native Dravidian, one word with Tamil vari and Malayalam vara (DEDR 5263). DEDR 5263 compares, with a query, Prakrit rajju, \"a writer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -438,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -487,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

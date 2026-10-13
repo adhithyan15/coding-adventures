@@ -14,7 +14,8 @@ romanization: "samaya"
 concept_tag: KA-KALA284-SAMAYA
 prerequisites: [KA-C284-suryasta, KA-C284-ninne]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samaya ← Sanskrit samaya 'meeting; agreement; time', a tatsama (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C284-ninne]
 <!-- hl-knowledge: introduces=[KA-LEX-C284-KALA284-04]; assesses=[] -->
 
 **ಸಮಯ** — *samaya* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಮಯ** (*samaya*) is Sanskrit *samaya*, "meeting; agreement; time", taken over whole as a learned loan, a tatsama (CDIAL 13185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

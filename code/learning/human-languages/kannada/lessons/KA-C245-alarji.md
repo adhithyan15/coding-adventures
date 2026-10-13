@@ -14,7 +14,8 @@ romanization: "alarji"
 concept_tag: KA-AROGYA245-ALARJI
 prerequisites: [KA-C244-alavadisu, KA-C245-bhedi]
 sounds: []
-roots: []
+roots: [english-allergy]
+etymology_hook: "alarji ← English allergy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C245-bhedi]
 <!-- hl-knowledge: introduces=[KA-LEX-C245-AROGYA245-02]; assesses=[] -->
 
 **ಅಲರ್ಜಿ** — *alarji* — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲರ್ಜಿ** (*alarji*) is a loan from English *allergy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

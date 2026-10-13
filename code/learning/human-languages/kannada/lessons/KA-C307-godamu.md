@@ -14,7 +14,8 @@ romanization: "gōdāmu"
 concept_tag: KA-KELASA307-GODAMU
 prerequisites: [KA-C306-plambar, KA-C306-totagara]
 sounds: []
-roots: []
+roots: [english-godown]
+etymology_hook: "gōdāmu ← English godown 'warehouse', which English took from Malay"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C306-totagara]
 <!-- hl-knowledge: introduces=[KA-LEX-C307-KELASA307-01]; assesses=[] -->
 
 **ಗೋದಾಮು** — *gōdāmu* — "a warehouse, a godown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೋದಾಮು** (*gōdāmu*) is English *godown*, "a warehouse", in the shape Hindustani gives it, *godām*. English took the word from Malay.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

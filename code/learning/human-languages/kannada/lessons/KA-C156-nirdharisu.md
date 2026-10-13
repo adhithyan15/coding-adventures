@@ -14,7 +14,8 @@ romanization: "nirdharisu"
 concept_tag: KA-VERB-NIRDHARISU
 prerequisites: [KA-C156-innu-munde, KA-C156-bhavishya]
 sounds: []
-roots: []
+roots: [sanskrit-nirdhara]
+etymology_hook: "nirdharisu: Sanskrit nirdhāra 'settling, decision' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C156-bhavishya]
 <!-- hl-knowledge: introduces=[KA-LEX-C156-MUNDE156-04]; assesses=[] -->
 
 **ನಿರ್ಧರಿಸು** — *nirdharisu* — "to decide". **ನಾನು ಹೋಗಲು ನಿರ್ಧರಿಸಿದೆ** — *nānu hōgalu nirdhariside* — "I decided to go."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರ್ಧರಿಸು** (*nirdharisu*) is Sanskrit *nirdhāra*, "settling, determination", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

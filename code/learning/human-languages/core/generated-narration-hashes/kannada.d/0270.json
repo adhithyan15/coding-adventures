@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 270,
-  "sourceHash": "fnv1a64:17e734b824903184",
+  "sourceHash": "fnv1a64:ae9506cc0db1abf9",
   "lessonIds": [
     "KA-C270-bhugola",
     "KA-C270-pada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch270.txt",
   "json": "kannada/narration/ch270.json",
-  "textHash": "fnv1a64:95ba70a50babc84a",
-  "jsonHash": "fnv1a64:a850b372dccc7d2f",
+  "textHash": "fnv1a64:833b9e8a8d771fa3",
+  "jsonHash": "fnv1a64:6d981fb3849745fb",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kai kuluku"
 concept_tag: KA-VERB-KAI-KULUKU
 prerequisites: [KA-C280-pisuguttu, KA-C280-cappale-tattu]
 sounds: []
-roots: []
+roots: [dravidian-kai-hand, dravidian-kuluku-shake]
+etymology_hook: "kai kuluku: native kai 'hand' (DEDR 2023) + kuluku 'to shake' (DEDR 1806)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C280-cappale-tattu]
 <!-- hl-knowledge: introduces=[KA-LEX-C280-KRIYE280-03]; assesses=[] -->
 
 **ಕೈ ಕುಲುಕು** — *kai kuluku* — "to shake hands".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೈ ಕುಲುಕು** (*kai kuluku*) is native Dravidian: *kai*, "hand" (DEDR 2023), and *kuluku*, "to shake", which DEDR 1806 lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

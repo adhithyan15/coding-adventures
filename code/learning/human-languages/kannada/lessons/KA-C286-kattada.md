@@ -14,7 +14,8 @@ romanization: "kaṭṭaḍa"
 concept_tag: KA-STHALA286-KATTADA
 prerequisites: [KA-C285-amavasye, KA-C285-madhyantara]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind]
+etymology_hook: "kaṭṭaḍa: native Dravidian, from kaṭṭu 'to bind, build' (DEDR 1147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C285-madhyantara]
 <!-- hl-knowledge: introduces=[KA-LEX-C286-STHALA286-01]; assesses=[] -->
 
 **ಕಟ್ಟಡ** — *kaṭṭaḍa* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಟ್ಟಡ** (*kaṭṭaḍa*) is native Dravidian, from *kaṭṭu*, "to bind, build", which DEDR 1147 lists: a building is "what is built"; the entry also has Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *keṭṭuka*. DEDR 1147 compares Sanskrit *ghaṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

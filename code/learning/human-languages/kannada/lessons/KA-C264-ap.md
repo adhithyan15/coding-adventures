@@ -14,7 +14,8 @@ romanization: "āp"
 concept_tag: KA-VASTU264-AP
 prerequisites: [KA-C264-vebsait, KA-C264-pasvard]
 sounds: []
-roots: []
+roots: [english-app]
+etymology_hook: "āp ← English app"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C264-pasvard]
 <!-- hl-knowledge: introduces=[KA-LEX-C264-VASTU264-04]; assesses=[] -->
 
 **ಆಪ್** — *āp* — "an app".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಪ್** (*āp*) is a loan from English *app*. It is short for "application".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

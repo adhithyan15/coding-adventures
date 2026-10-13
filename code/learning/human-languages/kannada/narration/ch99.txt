@@ -13,6 +13,9 @@ You'll want to know: ಉಸಿರು.
 ಉಸಿರು (usiru) — "breath".
 ಉಸಿರು ತೆಗೆದುಕೊಳ್ಳಿ (usiru tegedukoḷḷi) — "take a breath", with ತೆಗೆದುಕೊ, "take", as in ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ.
 
+The word, taken apart.
+ಉಸಿರು (usiru) is native Dravidian, one word with Tamil uy (DEDR 645). DEDR lists Kannada usir, usuru, "breath, life", with Telugu usuru.
+
 What you've built.
 What the body does all day.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for peace of mind, then the Kannada for brea
 
 You'll want to know: ಚರ್ಮ.
 ಚರ್ಮ (carma) — "skin". The ರ್ sits on top of ಮ as a small hook.
+
+The word, taken apart.
+ಚರ್ಮ (carma) is Sanskrit carman, "hide, skin", taken over whole as a learned loan, a tatsama (CDIAL 4701). Kannada drops the final -n.
 
 What you've built.
 The body's cover.
@@ -71,6 +77,9 @@ Before the new one: say the Kannada for breath, then the Kannada for skin.
 You'll want to know: ರಕ್ತ.
 ರಕ್ತ (rakta) — "blood". The ಕ್ತ is k and t stacked into one.
 
+The word, taken apart.
+ರಕ್ತ (rakta) is Sanskrit rakta, "coloured, red; blood", taken over whole as a learned loan, a tatsama (CDIAL 10539). Blood was named for its colour.
+
 What you've built.
 A word for the doctor and the hospital.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for skin, then the Kannada for blood.
 
 You'll want to know: ಹೊಟ್ಟೆನೋವು.
 ಹೊಟ್ಟೆನೋವು (hoṭṭenōvu) — "a stomach ache", built exactly like ತಲೆನೋವು: ಹೊಟ್ಟೆ (hoṭṭe), "stomach", with ನೋವು, "pain".
+
+The word, taken apart.
+ಹೊಟ್ಟೆನೋವು (hoṭṭenōvu) is hoṭṭe, "belly" (DEDR 4494, older Kannada poṭṭe), and nōvu, "pain", native Dravidian (DEDR 3793).
 
 What you've built.
 The pattern of headache, used again.
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for blood, then the Kannada for a stomach ac
 You'll want to know: ತೂಕ.
 ತೂಕ (tūka) — "weight".
 ನಿಮ್ಮ ತೂಕ ಎಷ್ಟು? (nimma tūka eṣṭu?) — "what is your weight?", a doctor's question, with ಎಷ್ಟು, "how much".
+
+The word, taken apart.
+ತೂಕ (tūka) is native Dravidian, of the root tūgu, "to weigh, swing", which DEDR 3376 lists; the entry also has Tamil tūṅku.
 
 What you've built.
 A number the doctor asks for.

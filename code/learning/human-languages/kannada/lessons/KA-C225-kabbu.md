@@ -14,7 +14,8 @@ romanization: "kabbu"
 concept_tag: KA-VASTU225-KABBU
 prerequisites: [KA-C225-mallige, KA-C225-suryakanti]
 sounds: []
-roots: []
+roots: [kannada-kabbu-sugarcane]
+etymology_hook: "kabbu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C225-suryakanti]
 <!-- hl-knowledge: introduces=[KA-LEX-C225-VASTU225-04]; assesses=[] -->
 
 **ಕಬ್ಬು** — *kabbu* — "sugarcane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಕಬ್ಬು** (*kabbu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

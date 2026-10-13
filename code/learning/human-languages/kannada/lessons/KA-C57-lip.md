@@ -11,7 +11,8 @@ romanization: "tuṭi"
 concept_tag: KA-NOUN-LIP
 prerequisites: [KA-C57-back, KA-C55-hill]
 sounds: []
-roots: []
+roots: [dravidian-tuti-lip]
+etymology_hook: "tuṭi: native Dravidian, one word with Tamil tuṭi (DEDR 3296)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two syllables, inherited, and here the four sisters go four different ways. Tami
 ತುಟಿ sits directly on the ಬಾಯಿ you already have. The mouth is the opening; the ತುಟಿ is its edge.
 
 And it is the piece of the face that Kannada uses for keeping quiet. To say nothing at all is to not move the ತುಟಿ — a phrase built out of a body part rather than out of a word for silence, which is how a great many everyday expressions in this language are put together.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಟಿ** (*tuṭi*) is native Dravidian, one word with Tamil *tuṭi* (DEDR 3296).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāla koḍu"
 concept_tag: KA-VERB-SALA-KODU
 prerequisites: [KA-C277-banna-haccu, KA-C277-daunlod-madu]
 sounds: []
-roots: []
+roots: [dravidian-caal-debt, dravidian-kodu-give]
+etymology_hook: "sāla koḍu: native sāla 'debt' (DEDR 2472) + koḍu 'to give' (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C277-daunlod-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C278-KRIYE278-01]; assesses=[] -->
 
 **ಸಾಲ ಕೊಡು** — *sāla koḍu* — "to lend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಲ ಕೊಡು** (*sāla koḍu*) is native Dravidian: *sāla*, "debt", which DEDR 2472 lists, and *koḍu*, "to give" (DEDR 2053): "to give a debt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

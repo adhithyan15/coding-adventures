@@ -14,7 +14,8 @@ romanization: "cikitse"
 concept_tag: KA-AROGYA245-CIKITSE
 prerequisites: [KA-C245-uta, KA-C245-gulle]
 sounds: []
-roots: []
+roots: [sanskrit-cikitsa]
+etymology_hook: "cikitse ← Sanskrit cikitsā 'medical treatment', with Kannada's -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C245-gulle]
 <!-- hl-knowledge: introduces=[KA-LEX-C245-AROGYA245-05]; assesses=[] -->
 
 **ಚಿಕಿತ್ಸೆ** — *cikitse* — "medical treatment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಕಿತ್ಸೆ** (*cikitse*) is Sanskrit *cikitsā*, "medical treatment", with Kannada's *-e* for the Sanskrit *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to find out, then the Kannada for to bor
 You'll want to know: ಒಗ್ಗರಣೆ ಹಾಕು.
 ಒಗ್ಗರಣೆ ಹಾಕು — oggaraṇe hāku — "to temper (fry spices in hot oil)".
 
+The word, taken apart.
+ಒಗ್ಗರಣೆ ಹಾಕು (oggaraṇe hāku) is oggaraṇe, "seasoning", which DEDR lists among Indo-Aryan loans (DEDR App. 17), and hāku, "to put", whose history neither DEDR nor CDIAL gives.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to borrow, then the Kannada for to tempe
 
 You'll want to know: ನೆನೆಸು.
 ನೆನೆಸು — nenesu — "to soak".
+
+The word, taken apart.
+ನೆನೆಸು (nenesu) is native Dravidian, from nene, "to become wet", and DEDR 3630 lists nenasu, "to make wet, moisten", itself; the entry also has Tamil naṉai, Telugu nānu and Malayalam nana.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to temper, then the Kannada for to soak.
 You'll want to know: ಹಿಂಡು.
 ಹಿಂಡು — hiṇḍu — "to wring, to squeeze out".
 
+The word, taken apart.
+ಹಿಂಡು (hiṇḍu) is native Dravidian, one word with Tamil piḻi (DEDR 4183). DEDR lists piṇḍu, hiṇḍu, "to squeeze out, wring". DEDR 4183 compares Sanskrit piṇyāka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to soak, then the Kannada for to wring.
 You'll want to know: ಅದ್ದು.
 ಅದ್ದು — addu — "to dip".
 
+The word, taken apart.
+ಅದ್ದು (addu) is native Dravidian, one word with Telugu addu (DEDR 285). DEDR lists addu, "to immerse, dip".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to wring, then the Kannada for to dip.
 
 You'll want to know: ಹರಿ.
 ಹರಿ — hari — "to tear, to rip".
+
+The word, taken apart.
+ಹರಿ (hari) is native Dravidian, one word with Tamil pari and Malayalam pari (DEDR 3963). DEDR lists pari, hari, "to run, flow, go away": the p- has become h-.
 
 What you've built.
 One more word for this chapter.

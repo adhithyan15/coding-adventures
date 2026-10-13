@@ -14,7 +14,8 @@ romanization: "āṭagāra"
 concept_tag: KA-KELASA196-ATAGARA
 prerequisites: [KA-C196-lekhaka, KA-C196-nirdesaka]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move]
+etymology_hook: "āṭagāra: native āṭa 'play', from āḍu (DEDR 347), + -gāra 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C196-nirdesaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C196-KELASA196-03]; assesses=[] -->
 
 **ಆಟಗಾರ** — *āṭagāra* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಟಗಾರ** (*āṭagāra*) is *āṭa*, "play, game", the noun of native *āḍu*, "to play" (DEDR 347), with *-gāra*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

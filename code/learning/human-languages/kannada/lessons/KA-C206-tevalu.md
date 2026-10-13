@@ -14,7 +14,8 @@ romanization: "tevaḷu"
 concept_tag: KA-VERB-TEVALU
 prerequisites: [KA-C205-lattisu, KA-C206-edavu]
 sounds: []
-roots: []
+roots: [dravidian-tavazh-crawl]
+etymology_hook: "tevaḷu: native Dravidian, one word with Tamil tavaḻ and Telugu temalu (DEDR 3109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C206-edavu]
 <!-- hl-knowledge: introduces=[KA-LEX-C206-KRIYE206-02]; assesses=[] -->
 
 **ತೆವಳು** — *tevaḷu* — "to crawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆವಳು** (*tevaḷu*) is native Dravidian, one word with Tamil *tavaḻ* and Telugu *temalu* (DEDR 3109). DEDR lists *tevaḷu* itself, "to creep along".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

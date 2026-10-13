@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a cross street, then the Kannada for a f
 You'll want to know: ಮೂಲಕ.
 ಮೂಲಕ — mūlaka — "through, by means of".
 
+The word, taken apart.
+ಮೂಲಕ (mūlaka) is Sanskrit mūla, "root" (CDIAL 10250), with -ka. In Kannada "from the root of" came to mean "by means of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a fork, then the Kannada for through.
 
 You'll want to know: ಪ್ರಕಾರ.
 ಪ್ರಕಾರ — prakāra — "according to".
+
+The word, taken apart.
+ಪ್ರಕಾರ (prakāra) is Sanskrit prakāra, "sort, manner", taken over whole as a learned loan, a tatsama (CDIAL 8435). "In the manner of" became "according to".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for through, then the Kannada for according 
 You'll want to know: ಬಗ್ಗೆ.
 ಬಗ್ಗೆ — bagge — "about, concerning".
 
+The word, taken apart.
+ಬಗ್ಗೆ (bagge) is native Dravidian, from bage, "to think; thought, regard", and DEDR 5205 lists bagge, "on account of, with regard to", itself; the entry also has Tamil vakai and Telugu vagacu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for according to, then the Kannada for about
 You'll want to know: ಸಂಪ್ರದಾಯ.
 ಸಂಪ್ರದಾಯ — sampradāya — "a tradition".
 
+The word, taken apart.
+ಸಂಪ್ರದಾಯ (sampradāya) is Sanskrit sampradāya, "a handing down, tradition", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for about, then the Kannada for a tradition.
 
 You'll want to know: ಸಂಸ್ಕೃತಿ.
 ಸಂಸ್ಕೃತಿ — saṃskṛti — "culture".
+
+The word, taken apart.
+ಸಂಸ್ಕೃತಿ (saṃskṛti) is Sanskrit saṃskṛti, "preparation", taken over whole as a learned loan, a tatsama (CDIAL 13040). The word for "preparation, refinement" was taken up for "culture".
 
 What you've built.
 One more word for this chapter.

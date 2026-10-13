@@ -11,11 +11,11 @@ romanization: nanage kannaḍa gottu
 concept_tag: KA-DATIVE-SUBJECT
 prerequisites: [KA-C06-dative-stacking, KA-C05-naanu-kannada-maatanaaduttene, KA-S06-letter-da]
 sounds: [gemination-tt]
-roots: [dravidian-dative-ku]
-etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking, wanting all happen TO you rather than being done BY you — so 'I know Kannada' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); gottu is not even a verb but a noun-like word meaning 'known', which is why nothing in the sentence is 'doing' anything"
+roots: [dravidian-dative-ku, dravidian-kuri-mark]
+etymology_hook: "gottu 'known' is native, the same root as Tamil kuṟi 'a mark' (DEDR 1847)"
 reviews_of: [KA-C06-dative-stacking, KA-C06-dative-ge, KA-C05-naanu-kannada-maatanaaduttene, KA-C03-naanu]
 duration:
-  max_seconds: 290
+  max_seconds: 294
 requires:
   knowledge: [KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02, KA-SCRIPT-RECOG-06, KA-GRAMMAR-C06-DATIVE-STACKING-01]
 introduces:
@@ -53,7 +53,7 @@ use *nānu*.
 
 **You are not the subject**: *nānu* has moved into the dative, and the sentence
 is about *kannaḍa*. And *gottu* is not an action — it is "**[is] known**." Nothing
-here is *doing* anything.
+here is *doing* anything. *Gottu* is the same root as Tamil *kuṟi*, "a mark" (DEDR 1847).
 
 ## Grammar Lens: Why: things that happen *to* you
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C06-DATIVE-SUBJECT-02]; assesses=[] -->

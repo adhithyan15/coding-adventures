@@ -14,7 +14,8 @@ romanization: "āph māḍu"
 concept_tag: KA-VERB-APH-MADU
 prerequisites: [KA-C164-alisu, KA-C164-an-madu]
 sounds: []
-roots: []
+roots: [english-off, maadu-do-dravidian]
+etymology_hook: "āph māḍu: English off + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C164-an-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C164-KRIYE164-05]; assesses=[] -->
 
 **ಆಫ್ ಮಾಡು** — *āph māḍu* — "to switch off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಫ್ ಮಾಡು** (*āph māḍu*) is English *off* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

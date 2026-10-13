@@ -14,7 +14,8 @@ romanization: "mudrisu"
 concept_tag: KA-VERB-MUDRISU
 prerequisites: [KA-C201-pasagu, KA-C201-nenapidu]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "mudrisu: Sanskrit mudrā 'seal' (CDIAL 10203) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C201-nenapidu]
 <!-- hl-knowledge: introduces=[KA-LEX-C201-KRIYE201-05]; assesses=[] -->
 
 **ಮುದ್ರಿಸು** — *mudrisu* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುದ್ರಿಸು** (*mudrisu*) is Sanskrit *mudrā*, "seal, stamp" (CDIAL 10203), made into a Kannada verb with *-isu*: to print is to stamp.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

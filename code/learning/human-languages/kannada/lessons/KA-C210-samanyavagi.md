@@ -14,7 +14,8 @@ romanization: "sāmānyavāgi"
 concept_tag: KA-KALA210-SAMANYAVAGI
 prerequisites: [KA-C209-dhyana, KA-C210-konege]
 sounds: []
-roots: []
+roots: [sanskrit-samanya]
+etymology_hook: "sāmānyavāgi: Sanskrit sāmānya 'common' (CDIAL 13351) + the adverb ending -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C210-konege]
 <!-- hl-knowledge: introduces=[KA-LEX-C210-KALA210-02]; assesses=[] -->
 
 **ಸಾಮಾನ್ಯವಾಗಿ** — *sāmānyavāgi* — "usually".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಮಾನ್ಯವಾಗಿ** (*sāmānyavāgi*) is *sāmānya*, "common, ordinary", from Sanskrit *sāmānya*, "equal, alike" (CDIAL 13351), with the adverb ending *-āgi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

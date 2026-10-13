@@ -11,7 +11,8 @@ romanization: "kāge"
 concept_tag: KA-NOUN-CROW
 prerequisites: [KA-C60-hen, KA-C58-no-thanks]
 sounds: []
-roots: []
+roots: [dravidian-kaakkai-crow]
+etymology_hook: "kāge: native Dravidian, one word with Tamil kākkai and Telugu kāki (DEDR 1425)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C60-hen]
 ಕಾಗೆ is an imitation word: the bird is named for the noise it makes, and the same trick produced the crow-word in each of the sister languages. Once you hear one you have the etymology.
 
 Of all the birds in this chapter it is the one a household actually deals with day to day. Cooked rice set out on a step at the back of the house is put there for the ಕಾಗೆ, and it arrives within the minute.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಗೆ** (*kāge*) is native Dravidian, one word with Tamil *kākkai* and Telugu *kāki* (DEDR 1425). The entry also lists *kā kā*, the cawing of crows. DEDR 1425 compares Sanskrit *kāka*. DEDR 1425 notes that some of the Dravidian forms may be borrowed back from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

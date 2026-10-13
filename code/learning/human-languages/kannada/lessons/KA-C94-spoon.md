@@ -11,7 +11,8 @@ romanization: "camaca"
 concept_tag: KA-TABLE-SPOON
 prerequisites: [KA-C93-vomiting, KA-C94-snack]
 sounds: []
-roots: []
+roots: [persian-camca]
+etymology_hook: "camaca ← Hindustani camcā, from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C94-snack]
 **ಚಮಚ** (*camaca*) — "a spoon".
 
 **ಒಂದು ಚಮಚ ಕೊಡಿ** (*ondu camaca koḍi*) — "please give me a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಮಚ** (*camaca*) came through Hindustani *camcā*, "spoon", a Persian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

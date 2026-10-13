@@ -14,7 +14,8 @@ romanization: "turisu"
 concept_tag: KA-VERB-TURISU
 prerequisites: [KA-C199-badalisu, KA-C200-gunavagu]
 sounds: []
-roots: []
+roots: [dravidian-turi-itch]
+etymology_hook: "turisu: native Dravidian, from tuṟi 'itching' (DEDR 2865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C200-gunavagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C200-KRIYE200-02]; assesses=[] -->
 
 **ತುರಿಸು** — *turisu* — "to itch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುರಿಸು** (*turisu*) is native Dravidian, from *tuṟi*, "itching", which DEDR 2865 lists, with *-isu*; the entry also has Tamil *coṟi*, Telugu *durada* and Malayalam *coṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

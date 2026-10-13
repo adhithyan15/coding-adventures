@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a post office, then the Kannada for a va
 You'll want to know: ಗಡಿ.
 ಗಡಿ — gaḍi — "a frontier, a boundary".
 
+The word, taken apart.
+The origin of ಗಡಿ (gaḍi) is uncertain. DEDR has no entry for it in the sense "boundary", CDIAL does not record it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a valley, then the Kannada for a frontie
 
 You'll want to know: ಕಾಲುವೆ.
 ಕಾಲುವೆ — kāluve — "a canal, a channel".
+
+The word, taken apart.
+ಕಾಲುವೆ (kāluve) is native Dravidian, one word with Tamil kāl (DEDR 1480). DEDR lists kāluve, "water-course, channel". DEDR 1480 compares Sanskrit khalla.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a frontier, then the Kannada for a canal
 You'll want to know: ಸುರಂಗ.
 ಸುರಂಗ — suraṅga — "a tunnel".
 
+The word, taken apart.
+ಸುರಂಗ (suraṅga) is usually traced to Sanskrit suruṅgā, "an underground passage" (CDIAL 13506), a word often thought to be borrowed from Greek syrinx, "pipe, channel".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a canal, then the Kannada for a tunnel.
 You'll want to know: ಇಳಿಜಾರು.
 ಇಳಿಜಾರು — iḷijāru — "a downward slope".
 
+The word, taken apart.
+ಇಳಿಜಾರು (iḷijāru) is native Dravidian: iḷi, "to come down" (DEDR 502), and jāru, "to slip, slide", which DEDR 2360 lists as jari, jaragu: "a sliding down".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a tunnel, then the Kannada for a downwar
 
 You'll want to know: ಹಿತ್ತಿಲು.
 ಹಿತ್ತಿಲು — hittilu — "a backyard".
+
+The word, taken apart.
+ಹಿತ್ತಿಲು (hittilu) is native Dravidian, built on the root for "behind", which DEDR 4205 lists as older Kannada pin, pindu: the yard behind the house. DEDR does not list hittilu itself.
 
 What you've built.
 One more word for this chapter.

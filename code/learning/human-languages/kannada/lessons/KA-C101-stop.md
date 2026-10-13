@@ -11,7 +11,8 @@ romanization: "nillisi"
 concept_tag: KA-DO-STOP
 prerequisites: [KA-C101-open, KA-C101-close]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nillisi: native Dravidian, 'make stop', from nil 'to stand' (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C101-close]
 
 **ನಿಲ್ಲಿಸಿ** (*nillisi*) — "please stop (it)", said to a driver or about a machine.
 It comes from **ನಿಲ್ಲು**, "to stop, to stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಲ್ಲಿಸಿ** (*nillisi*) is native Dravidian, from *nil*, "to stand, stop", with *-isu*, "to make": *nillisu*, "to make stop"; DEDR 3675 lists the root with Tamil *nil*, Telugu *nilucu* and Malayalam *nilkka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

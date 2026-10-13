@@ -14,7 +14,8 @@ romanization: "karu"
 concept_tag: KA-VASTU261-KARU
 prerequisites: [KA-C260-ato, KA-C261-sakuprani]
 sounds: []
-roots: []
+roots: [dravidian-kanru-calf]
+etymology_hook: "karu: native Dravidian, one word with Tamil kaṉṟu and Telugu kandu (DEDR 1411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C261-sakuprani]
 <!-- hl-knowledge: introduces=[KA-LEX-C261-VASTU261-02]; assesses=[] -->
 
 **ಕರು** — *karu* — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರು** (*karu*) is native Dravidian, one word with Tamil *kaṉṟu*, Telugu *kandu* and Malayalam *kannu* (DEDR 1411). DEDR lists older *kaṟu*, "calf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

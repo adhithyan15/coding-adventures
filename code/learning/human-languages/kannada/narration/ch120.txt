@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a doll, then the Kannada for a ball.
 You'll want to know: ಗಾಳಿಪಟ.
 ಗಾಳಿಪಟ — gāḷipaṭa — "a kite".
 
+The word, taken apart.
+ಗಾಳಿಪಟ (gāḷipaṭa) is gāḷi, "wind", native Dravidian (DEDR 1499), and paṭa, "cloth", from Sanskrit paṭa, "woven cloth" (CDIAL 7692). A kite is a cloth for the wind.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a ball, then the Kannada for a kite.
 
 You'll want to know: ಅಂಗಿ.
 ಅಂಗಿ — aṅgi — "a shirt".
+
+The word, taken apart.
+ಅಂಗಿ (aṅgi) comes from Sanskrit aṅgikā, "woman's bodice", reshaped to Kannada sounds: a tadbhava (CDIAL 132). Kannada shortened it to aṅgi, and the garment became a shirt.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a kite, then the Kannada for a shirt.
 You'll want to know: ಸೀರೆ.
 ಸೀರೆ — sīre — "a sari".
 
+The word, taken apart.
+ಸೀರೆ (sīre) is native Dravidian, one word with Tamil cīrai and Telugu cīra (DEDR 2629). DEDR lists sīre itself, "cloth, a woman's garment".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a shirt, then the Kannada for a sari.
 You'll want to know: ಪಂಚೆ.
 ಪಂಚೆ — paṁce — "a dhoti".
 
+The word, taken apart.
+The origin of ಪಂಚೆ (paṁce) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a sari, then the Kannada for a dhoti.
 
 You'll want to know: ಚಪ್ಪಲಿ.
 ಚಪ್ಪಲಿ — cappali — "sandals".
+
+The word, taken apart.
+The origin of ಚಪ್ಪಲಿ (cappali) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kaṭṭige"
 concept_tag: KA-VASTU302-KATTIGE
 prerequisites: [KA-C301-kavali, KA-C302-hittale]
 sounds: []
-roots: []
+roots: [sanskrit-kashtha]
+etymology_hook: "kaṭṭige: origin uncertain; perhaps Sanskrit kāṣṭhikā 'piece of wood' (CDIAL 3120)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C302-hittale]
 <!-- hl-knowledge: introduces=[KA-LEX-C302-VASTU302-02]; assesses=[] -->
 
 **ಕಟ್ಟಿಗೆ** — *kaṭṭige* — "firewood, wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಕಟ್ಟಿಗೆ** (*kaṭṭige*) comes from is uncertain. It may be a tadbhava of Sanskrit *kāṣṭhikā*, "a piece of wood" (CDIAL 3120), through Prakrit *kaṭṭha*, but no source records the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

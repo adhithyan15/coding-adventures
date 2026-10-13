@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 211,
-  "sourceHash": "fnv1a64:3179534c12432e53",
+  "sourceHash": "fnv1a64:fb21e5a324d12f91",
   "lessonIds": [
     "KA-C211-niyamitavagi",
     "KA-C211-illiyavarege",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch211.txt",
   "json": "kannada/narration/ch211.json",
-  "textHash": "fnv1a64:ecb960b856eb1140",
-  "jsonHash": "fnv1a64:63475834ba47fa5e",
+  "textHash": "fnv1a64:c4c6a10c478b4029",
+  "jsonHash": "fnv1a64:5a72019b1d1c188e",
   "findings": []
 }

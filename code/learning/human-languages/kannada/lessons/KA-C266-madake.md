@@ -14,7 +14,8 @@ romanization: "maḍake"
 concept_tag: KA-VASTU266-MADAKE
 prerequisites: [KA-C266-balb, KA-C266-rimot]
 sounds: []
-roots: []
+roots: [dravidian-madake-pot]
+etymology_hook: "maḍake: native Dravidian, one word with Tamil maṭā and Malayalam miṭāvu (DEDR 4651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C266-rimot]
 <!-- hl-knowledge: introduces=[KA-LEX-C266-VASTU266-03]; assesses=[] -->
 
 **ಮಡಕೆ** — *maḍake* — "an earthen pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಡಕೆ** (*maḍake*) is native Dravidian, one word with Tamil *maṭā* and Malayalam *miṭāvu* (DEDR 4651). DEDR lists *maḍake*, *maḍike*, "pot". DEDR 4651 compares Prakrit *maḍakka*, "pot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

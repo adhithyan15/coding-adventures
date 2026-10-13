@@ -14,7 +14,8 @@ romanization: "gellu"
 concept_tag: KA-VERB-GELLU
 prerequisites: [KA-C150-kattu, KA-C150-holi]
 sounds: []
-roots: []
+roots: [dravidian-vel-win]
+etymology_hook: "gellu: native Dravidian, one word with Tamil keli and Telugu gelucu (DEDR 1972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C150-holi]
 <!-- hl-knowledge: introduces=[KA-LEX-C151-ACT151-01]; assesses=[] -->
 
 **ಗೆಲ್ಲು** — *gellu* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೆಲ್ಲು** (*gellu*) is native Dravidian, one word with Tamil *keli* and Telugu *gelucu* (DEDR 1972). DEDR lists *gel*, *gellu*, "to win".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

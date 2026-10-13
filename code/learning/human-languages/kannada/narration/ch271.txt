@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a barber, then the Kannada for a washerm
 You'll want to know: ಪಿಂಚಣಿ.
 ಪಿಂಚಣಿ — piñcaṇi — "a pension".
 
+The word, taken apart.
+ಪಿಂಚಣಿ (piñcaṇi) is a loan from English pension. Kannada reshaped it to piñcaṇi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a washerman, then the Kannada for a pens
 
 You'll want to know: ದಂಡ.
 ದಂಡ — daṇḍa — "a fine, a penalty".
+
+The word, taken apart.
+ದಂಡ (daṇḍa) is Sanskrit daṇḍa, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a pension, then the Kannada for a fine.
 You'll want to know: ಮುಷ್ಕರ.
 ಮುಷ್ಕರ — muṣkara — "a strike (by workers)".
 
+The word, taken apart.
+ಮುಷ್ಕರ (muṣkara) is native Dravidian, DEDR 5011 lists muṣkara, "stubbornness, obstinacy", beside muṟuku, "pride": a strike is a stubborn refusal to work; the entry also has Tamil muṟukku, Telugu muriyu and Malayalam muṟukuka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a fine, then the Kannada for a strike.
 You'll want to know: ಸಂಸ್ಥೆ.
 ಸಂಸ್ಥೆ — saṃsthe — "an organisation, an institution".
 
+The word, taken apart.
+ಸಂಸ್ಥೆ (saṃsthe) is Sanskrit saṁsthā, "assembly; standing together", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 13049). Kannada writes the nasal as ṃ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a strike, then the Kannada for an organi
 
 You'll want to know: ಇಲಾಖೆ.
 ಇಲಾಖೆ — ilākhe — "a government department".
+
+The word, taken apart.
+ಇಲಾಖೆ (ilākhe) is Hindustani ilāqa, "district, jurisdiction", from Arabic ʿalāqa, "connection", through Persian.
 
 What you've built.
 One more word for this chapter.

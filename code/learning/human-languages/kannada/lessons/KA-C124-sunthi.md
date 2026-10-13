@@ -14,7 +14,8 @@ romanization: "śuṇṭhi"
 concept_tag: KA-THINGS124-SUNTHI
 prerequisites: [KA-C124-alugadde, KA-C124-badanekayi]
 sounds: []
-roots: []
+roots: [sanskrit-shunthi]
+etymology_hook: "śuṇṭhi ← Sanskrit śuṇṭhī 'dry ginger', a tatsama (CDIAL 12515)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C124-badanekayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **ಶುಂಠಿ** — *śuṇṭhi* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶುಂಠಿ** (*śuṇṭhi*) is Sanskrit *śuṇṭhī*, "dry ginger", taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 12515).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

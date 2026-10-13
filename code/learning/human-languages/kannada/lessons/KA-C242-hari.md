@@ -14,7 +14,8 @@ romanization: "hari"
 concept_tag: KA-VERB-HARI
 prerequisites: [KA-C242-hindu, KA-C242-addu]
 sounds: []
-roots: []
+roots: [dravidian-pari-run]
+etymology_hook: "hari: native Dravidian, one word with Tamil pari and Malayalam pari (DEDR 3963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-addu]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-05]; assesses=[] -->
 
 **ಹರಿ** — *hari* — "to tear, to rip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹರಿ** (*hari*) is native Dravidian, one word with Tamil *pari* and Malayalam *pari* (DEDR 3963). DEDR lists *pari*, *hari*, "to run, flow, go away": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

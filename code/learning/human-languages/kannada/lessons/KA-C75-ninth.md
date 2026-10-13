@@ -11,7 +11,8 @@ romanization: "ombattaneya"
 concept_tag: KA-ORDINAL-NINTH
 prerequisites: [KA-C75-eighth, KA-C74-fourth, KA-S139-letter-va, KA-C59-mud, KA-C07-ombattu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ombattaneya: native ombattu 'nine' (DEDR 1025) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +51,11 @@ the two-syllable **ಆರು** — takes the final **-ು** off and goes on afte
 everything else.
 
 **ಒಂಬತ್ತನೆಯ ದಿನ** (*ombattaneya dina*), the ninth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂಬತ್ತನೆಯ** (*ombattaneya*) is built from *ombattu*, "nine", native Dravidian (DEDR 1025, with Tamil *oṉpatu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-03] -->

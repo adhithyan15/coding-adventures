@@ -14,7 +14,8 @@ romanization: "aṅgi"
 concept_tag: KA-THINGS120-ANGI
 prerequisites: [KA-C119-cendu, KA-C120-galipata]
 sounds: []
-roots: []
+roots: [sanskrit-angika]
+etymology_hook: "aṅgi ← Sanskrit aṅgikā 'woman's bodice', reshaped as a tadbhava (CDIAL 132)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C120-galipata]
 <!-- hl-knowledge: introduces=[KA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **ಅಂಗಿ** — *aṅgi* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಗಿ** (*aṅgi*) comes from Sanskrit *aṅgikā*, "woman's bodice", reshaped to Kannada sounds: a tadbhava (CDIAL 132). Kannada shortened it to *aṅgi*, and the garment became a shirt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

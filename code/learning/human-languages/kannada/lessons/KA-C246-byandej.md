@@ -14,7 +14,8 @@ romanization: "byāṇḍēj"
 concept_tag: KA-AROGYA246-BYANDEJ
 prerequisites: [KA-C246-ajirna, KA-C246-hunnu]
 sounds: []
-roots: []
+roots: [english-bandage]
+etymology_hook: "byāṇḍēj ← English bandage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C246-hunnu]
 <!-- hl-knowledge: introduces=[KA-LEX-C246-AROGYA246-04]; assesses=[] -->
 
 **ಬ್ಯಾಂಡೇಜ್** — *byāṇḍēj* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬ್ಯಾಂಡೇಜ್** (*byāṇḍēj*) is a loan from English *bandage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

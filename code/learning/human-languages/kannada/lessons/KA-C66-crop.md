@@ -11,7 +11,8 @@ romanization: "beḷe"
 concept_tag: KA-NOUN-CROP
 prerequisites: [KA-C66-paddy, KA-C64-soon]
 sounds: []
-roots: []
+roots: [dravidian-vilai-grow]
+etymology_hook: "beḷe: native Dravidian, one word with Tamil viḷai (DEDR 5437)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C66-paddy]
 ಬೆಳೆ is the general one: ಭತ್ತ is a ಬೆಳೆ, and so is everything else a ಹೊಲ is put to. Native, and made from the everyday word for growing — so the same shape names the growing and the grown thing, the way ನೂಲು named the thread and the spinning.
 
 The chain runs the length of this book by now. A ಬೀಜ goes into the ground, the ಮಳೆಗಾಲ arrives, and a ಬೆಳೆ stands in the ಹೊಲ.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಳೆ** (*beḷe*) is native Dravidian, one word with Tamil *viḷai* (DEDR 5437). DEDR lists *beḷe*, "to grow; crop", itself: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gōḍe"
 concept_tag: KA-STHALA287-GODE
 prerequisites: [KA-C287-bhukampa, KA-C287-prapanca]
 sounds: []
-roots: []
+roots: [dravidian-kottai-fort]
+etymology_hook: "gōḍe: native Dravidian, one word with Telugu kōṭa (DEDR 2207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C287-prapanca]
 <!-- hl-knowledge: introduces=[KA-LEX-C287-STHALA287-05]; assesses=[] -->
 
 **ಗೋಡೆ** — *gōḍe* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೋಡೆ** (*gōḍe*) is native Dravidian, one word with Telugu *kōṭa* (DEDR 2207). DEDR lists *gōḍe* beside *kōṭe*, "fort, rampart". DEDR 2207 compares Sanskrit *koṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

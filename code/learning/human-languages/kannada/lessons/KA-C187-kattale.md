@@ -14,7 +14,8 @@ romanization: "kattale"
 concept_tag: KA-VASTU187-KATTALE
 prerequisites: [KA-C187-hima, KA-C187-neralu]
 sounds: []
-roots: []
+roots: [dravidian-kar-black]
+etymology_hook: "kattale: native Dravidian; DEDR 1278 lists kattale 'darkness' under the root for 'black'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C187-neralu]
 <!-- hl-knowledge: introduces=[KA-LEX-C187-VASTU187-05]; assesses=[] -->
 
 **ಕತ್ತಲೆ** — *kattale* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕತ್ತಲೆ** (*kattale*) is native Dravidian, of the root for "black, dark", and DEDR 1278 lists *kattale*, "darkness", itself; the entry also has Tamil *karu*, Telugu *kaggu* and Malayalam *kari*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

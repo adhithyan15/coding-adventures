@@ -14,7 +14,8 @@ romanization: "sākṣi"
 concept_tag: KA-KARANA289-SAKSI
 prerequisites: [KA-C289-nepa, KA-C289-adhara]
 sounds: []
-roots: []
+roots: [sanskrit-sakshi]
+etymology_hook: "sākṣi ← Sanskrit sākṣi 'witness', a tatsama (CDIAL 13321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C289-adhara]
 <!-- hl-knowledge: introduces=[KA-LEX-C289-KARANA289-05]; assesses=[] -->
 
 **ಸಾಕ್ಷಿ** — *sākṣi* — "evidence; a witness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಕ್ಷಿ** (*sākṣi*) is Sanskrit *sākṣi*, "witness", taken over whole as a learned loan, a tatsama (CDIAL 13321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "karibēvu"
 concept_tag: KA-VASTU293-KARIBEVU
 prerequisites: [KA-C293-sasive, KA-C293-kottambari]
 sounds: []
-roots: []
+roots: [dravidian-kar-black, dravidian-veempu-neem]
+etymology_hook: "karibēvu: native kari 'black' (DEDR 1278) + bēvu 'neem' (DEDR 5531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C293-kottambari]
 <!-- hl-knowledge: introduces=[KA-LEX-C293-VASTU293-03]; assesses=[] -->
 
 **ಕರಿಬೇವು** — *karibēvu* — "curry leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರಿಬೇವು** (*karibēvu*) is native Dravidian: *kari*, "black", which DEDR 1278 lists, and *bēvu*, "neem tree" (DEDR 5531): "black neem".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

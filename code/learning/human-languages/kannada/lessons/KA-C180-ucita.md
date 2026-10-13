@@ -14,7 +14,8 @@ romanization: "ucita"
 concept_tag: KA-GUNA180-UCITA
 prerequisites: [KA-C179-sappe, KA-C179-dubari]
 sounds: []
-roots: []
+roots: [sanskrit-ucita]
+etymology_hook: "ucita ← Sanskrit ucita 'fitting, customary'; 'free of charge' is Kannada's sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C179-dubari]
 <!-- hl-knowledge: introduces=[KA-LEX-C180-GUNA180-01]; assesses=[] -->
 
 **ಉಚಿತ** — *ucita* — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಚಿತ** (*ucita*) is Sanskrit *ucita*, "fitting, customary". The sense "free of charge" grew in Kannada, from what is given as is fitting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

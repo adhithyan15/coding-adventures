@@ -14,7 +14,8 @@ romanization: "caduraṅga"
 concept_tag: KA-VASTU228-CADURANGA
 prerequisites: [KA-C227-yantra, KA-C228-phutbal]
 sounds: []
-roots: []
+roots: [sanskrit-caturanga]
+etymology_hook: "caduraṅga ← Sanskrit caturaṅga 'having four limbs; a kind of chess', reshaped as a tadbhava (CDIAL 4596)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C228-phutbal]
 <!-- hl-knowledge: introduces=[KA-LEX-C228-VASTU228-02]; assesses=[] -->
 
 **ಚದುರಂಗ** — *caduraṅga* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚದುರಂಗ** (*caduraṅga*) comes from Sanskrit *caturaṅga*, "having four limbs; a kind of chess", reshaped to Kannada sounds: a tadbhava (CDIAL 4596). The *t* softened to *d*. The four limbs were the four arms of an old army.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

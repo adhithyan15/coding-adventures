@@ -15,7 +15,7 @@ roots: [proto-dravidian-numbers]
 etymology_hook: "One anusvara, three nasals: ondu takes n, entu takes nn, ombattu takes m, each from the letter that follows"
 reviews_of: [KA-C07-entu, KA-C07-ondu]
 duration:
-  max_seconds: 180
+  max_seconds: 198
 requires:
   knowledge: [KA-ETYMON-C07-NUMBERS-6-10-03, KA-LEX-C07-ONDU-01]
 introduces:
@@ -48,6 +48,11 @@ wants next to it — so it says *m*. One written mark, three sounds so far, each
 one decided by the letter after it and never by the mark itself.
 
 That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂಬತ್ತು** (*ombattu*) is native Dravidian, one word with Tamil *oṉpatu* and Malayalam *ompatu* (DEDR 1025).
 
 ## Sounds you'll need: a doubled letter stacks
 <!-- hl-knowledge: introduces=[KA-SCRIPT-C08-DAYAVITTU-04]; assesses=[] -->

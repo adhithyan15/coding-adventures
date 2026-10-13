@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 240,
-  "sourceHash": "fnv1a64:518175ec3ea5e8c2",
+  "sourceHash": "fnv1a64:de1d8dbd775b6db3",
   "lessonIds": [
     "KA-C240-bogalu",
     "KA-C240-kugu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch240.txt",
   "json": "kannada/narration/ch240.json",
-  "textHash": "fnv1a64:8d7b6983172257ea",
-  "jsonHash": "fnv1a64:eb4f719d4ce2c225",
+  "textHash": "fnv1a64:ce24d6cf4247b185",
+  "jsonHash": "fnv1a64:4eaab9b9c6acc01d",
   "findings": []
 }

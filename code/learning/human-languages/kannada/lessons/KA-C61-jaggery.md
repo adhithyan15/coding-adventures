@@ -11,7 +11,8 @@ romanization: "bella"
 concept_tag: KA-NOUN-JAGGERY
 prerequisites: [KA-C61-oil, KA-C59-mud]
 sounds: []
-roots: []
+roots: [dravidian-vellam-jaggery]
+etymology_hook: "bella: native Dravidian, one word with Tamil vellam and Telugu bellamu (DEDR 5494)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C61-oil]
 ಬೆಲ್ಲ is cane juice boiled down and set in a lump, brown and sticky and sold by weight rather than by the spoon. Kannada's own word, and the older of the two sweet things in this chapter.
 
 South Karnataka cooking puts a piece of it into food that is not a sweet at all — into the same dish as the *uppu* you already have, deliberately, so that neither taste wins. A cook who leaves it out is making somebody else's version of the dish.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಲ್ಲ** (*bella*) is native Dravidian, one word with Tamil *vellam* and Telugu *bellamu* (DEDR 5494).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

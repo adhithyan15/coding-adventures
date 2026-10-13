@@ -12,6 +12,9 @@ Before the new one: say the Kannada for the face, then the Kannada for the tongu
 You'll want to know: ಗಲ್ಲ.
 ಗಲ್ಲ — galla — "the chin".
 
+The word, taken apart.
+ಗಲ್ಲ (galla) is Sanskrit galla, "cheek", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for the tongue, then the Kannada for the chi
 
 You'll want to know: ಕೆನ್ನೆ.
 ಕೆನ್ನೆ — kenne — "a cheek".
+
+The word, taken apart.
+ಕೆನ್ನೆ (kenne) is native Dravidian, one word with Tamil ceṉṉi (DEDR 1989). DEDR lists kenne, "the upper cheek". DEDR 1989 compares Sanskrit kenāra.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for the chin, then the Kannada for a cheek.
 You'll want to know: ಮೊಣಕಾಲು.
 ಮೊಣಕಾಲು — moṇakālu — "a knee".
 
+The word, taken apart.
+ಮೊಣಕಾಲು (moṇakālu) is native Dravidian. DEDR 4990 lists moḻa kāl, "knee", from moḻa, moṇa, "joint", and kāl, "leg" (DEDR 1479).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a cheek, then the Kannada for a knee.
 You'll want to know: ಮೊಣಕೈ.
 ಮೊಣಕೈ — moṇakai — "an elbow".
 
+The word, taken apart.
+ಮೊಣಕೈ (moṇakai) is native Dravidian. DEDR 4990 lists moḻa key, "elbow", from moḻa, moṇa, "joint", and kai, "hand" (DEDR 2023).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a knee, then the Kannada for an elbow.
 
 You'll want to know: ಮಣಿಕಟ್ಟು.
 ಮಣಿಕಟ್ಟು — maṇikaṭṭu — "a wrist".
+
+The word, taken apart.
+ಮಣಿಕಟ್ಟು (maṇikaṭṭu) is native Dravidian, one word with Tamil maṇikkaṭṭu and Telugu maṇikaṭṭu (DEDR 4673). DEDR lists maṇikaṭṭu itself, "wrist". DEDR 4673 compares Sanskrit maṇibandha.
 
 What you've built.
 One more word for this chapter.

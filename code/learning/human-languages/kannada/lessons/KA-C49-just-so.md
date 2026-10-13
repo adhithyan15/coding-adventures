@@ -11,7 +11,8 @@ romanization: "hāge"
 concept_tag: KA-WORD-JUST-SO
 prerequisites: [KA-C49-perhaps, KA-C47-stomach]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "hāge: native Dravidian, the far-pointing base a- 'that'; DEDR 1 lists hāge 'in that manner'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ Now set it beside ಹೇಗೆ, the question word for 'how' that this book gave 
 ಹೀಗೆ — this way. ಹಾಗೆ — that way. ಹೇಗೆ — which way?
 
 That is the same three-way grid as ಇದು, ಅದು and ಎಲ್ಲಿ: ಇ- for what is near, ಅ- for what is away, ಎ- for what is being asked about. Kannada builds a great many of its small words on those three vowels, and once you can hear them you stop learning such words one at a time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಗೆ** (*hāge*) is native Dravidian, built on the far-pointing base *a-*, "that". DEDR 1 lists *hāge* itself, "in that manner, thus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

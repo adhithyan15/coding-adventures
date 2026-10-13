@@ -14,7 +14,8 @@ romanization: "hāvu"
 concept_tag: KA-THINGS131-HAVU
 prerequisites: [KA-C130-jinke, KA-C130-nari]
 sounds: []
-roots: []
+roots: [dravidian-paampu-snake]
+etymology_hook: "hāvu: native Dravidian, one word with Tamil pāmpu and Telugu pāmu (DEDR 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C130-nari]
 <!-- hl-knowledge: introduces=[KA-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **ಹಾವು** — *hāvu* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾವು** (*hāvu*) is native Dravidian, one word with Tamil *pāmpu* and Telugu *pāmu* (DEDR 4085). DEDR gives the older Kannada *pāvu*: the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

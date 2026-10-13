@@ -14,7 +14,8 @@ romanization: "kuggu"
 concept_tag: KA-VERB-KUGGU
 prerequisites: [KA-C243-alladisu, KA-C244-sarisu]
 sounds: []
-roots: []
+roots: [dravidian-kuggu-sink]
+etymology_hook: "kuggu: native Dravidian, one word with Telugu kuṅgu (DEDR 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C244-sarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C244-KRIYE244-02]; assesses=[] -->
 
 **ಕುಗ್ಗು** — *kuggu* — "to shrink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಗ್ಗು** (*kuggu*) is native Dravidian, one word with Telugu *kuṅgu* (DEDR 1767). DEDR lists *kuggu* itself, "to sink, become low, decrease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

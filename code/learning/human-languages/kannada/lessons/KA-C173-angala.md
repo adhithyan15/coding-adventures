@@ -14,7 +14,8 @@ romanization: "aṅgaḷa"
 concept_tag: KA-STHALA173-ANGALA
 prerequisites: [KA-C173-saucalaya, KA-C173-kone]
 sounds: []
-roots: []
+roots: [dravidian-angala-yard]
+etymology_hook: "aṅgaḷa: native Dravidian (DEDR 33)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-kone]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-05]; assesses=[] -->
 
 **ಅಂಗಳ** — *aṅgaḷa* — "a courtyard, a front yard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಗಳ** (*aṅgaḷa*) is native Dravidian (DEDR 33). DEDR lists Kannada *aṅgaḷa*, *aṅgaḷu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

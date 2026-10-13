@@ -14,7 +14,8 @@ romanization: "ādudarinda"
 concept_tag: KA-WHY115-ADUDARINDA
 prerequisites: [KA-C114-bayasu, KA-C115-karana]
 sounds: []
-roots: []
+roots: [tamil-aaku-become, dravidian-a-distal-deictic]
+etymology_hook: "ādudarinda: native āda 'which became' (DEDR 333) + adu 'that' (DEDR 1) + -inda 'from'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C115-karana]
 <!-- hl-knowledge: introduces=[KA-LEX-C115-WHY115-02]; assesses=[] -->
 
 **ಆದುದರಿಂದ** — *ādudarinda* — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆದುದರಿಂದ** (*ādudarinda*) is native Dravidian: *ādudu*, "that which became", from *āgu*, "to become" (DEDR 333), with *adu*, "that" (DEDR 1), and *-inda*, "from, because of": "because of that which happened". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

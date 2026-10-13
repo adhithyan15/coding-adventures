@@ -14,7 +14,8 @@ romanization: "dinasi"
 concept_tag: KA-KELASA233-DINASI
 prerequisites: [KA-C232-anubhava, KA-C232-rajiname]
 sounds: []
-roots: []
+roots: [kannada-dinasi]
+etymology_hook: "dinasi: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C232-rajiname]
 <!-- hl-knowledge: introduces=[KA-LEX-C233-KELASA233-01]; assesses=[] -->
 
 **ದಿನಸಿ** — *dinasi* — "groceries, provisions".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ದಿನಸಿ** (*dinasi*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

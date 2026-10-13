@@ -14,7 +14,8 @@ romanization: "hāsu"
 concept_tag: KA-VERB-HASU
 prerequisites: [KA-C198-bidu, KA-C199-nungu]
 sounds: []
-roots: []
+roots: [dravidian-paacu-spread]
+etymology_hook: "hāsu: native Dravidian, one word with Tamil pāy and Malayalam pāy (DEDR 4088)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C199-nungu]
 <!-- hl-knowledge: introduces=[KA-LEX-C199-KRIYE199-02]; assesses=[] -->
 
 **ಹಾಸು** — *hāsu* — "to spread out (a mat, bedding)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಸು** (*hāsu*) is native Dravidian, one word with Tamil *pāy* and Malayalam *pāy* (DEDR 4088). DEDR gives the older Kannada *pāsu*, "to spread", and lists *hāsu*, "bed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

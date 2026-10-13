@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 257,
-  "sourceHash": "fnv1a64:07402d94f1a3d56b",
+  "sourceHash": "fnv1a64:9af636b5d930b4fd",
   "lessonIds": [
     "KA-C257-nalli",
     "KA-C257-mettilu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch257.txt",
   "json": "kannada/narration/ch257.json",
-  "textHash": "fnv1a64:a8bcf5e2b0544637",
-  "jsonHash": "fnv1a64:e49eb9368effea51",
+  "textHash": "fnv1a64:c8f7a1e114267058",
+  "jsonHash": "fnv1a64:635ce50b35a9f57d",
   "findings": []
 }

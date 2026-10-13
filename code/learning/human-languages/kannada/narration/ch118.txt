@@ -12,6 +12,9 @@ Before the new one: say the Kannada for soap, then the Kannada for a towel.
 You'll want to know: ಕನ್ನಡಕ.
 ಕನ್ನಡಕ — kannaḍaka — "glasses, spectacles".
 
+The word, taken apart.
+ಕನ್ನಡಕ (kannaḍaka) is native Dravidian, one word with Tamil kaṇṇāṭi (DEDR 1182). DEDR lists kanaḍaka, "pair of spectacles", beside kannaḍi, "mirror, lens". The entry explains the Tamil word as kaṇ, "eye", with āṭi, "mirror".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Before the new one: say the Kannada for a towel, then the Kannada for glasses.
 You'll want to know: ಗಡಿಯಾರ.
 ಗಡಿಯಾರ — gaḍiyāra — "a clock, a watch".
 
+The word, taken apart.
+ಗಡಿಯಾರ (gaḍiyāra) came from Hindustani ghaṛiyāl, "a gong, a clock". That goes back to Sanskrit ghaṭikā (CDIAL 4406), the small pot that marked time as a water-clock.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Kannada for glasses, then the Kannada for a clock.
 
 You'll want to know: ಚೀಲ.
 ಚೀಲ — cīla — "a bag".
+
+The word, taken apart.
+ಚೀಲ (cīla) is native Dravidian (DEDR 2632). DEDR lists Kannada cīra, cīla, cīlu, "bag, sack".
 
 What you've built.
 One more word for this chapter.
@@ -104,6 +113,9 @@ Say what the colon: and the brackets ( ) tell a reader.
 You'll want to know: ಲೇಖನಿ.
 ಲೇಖನಿ — lēkhani — "a pen".
 
+The word, taken apart.
+ಲೇಖನಿ (lēkhani) is Sanskrit lekhanī, "instrument for scraping", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 11103). The tool that scratched letters became the pen.
+
 What you've built.
 One more word for this chapter.
 
@@ -134,6 +146,9 @@ Before the new one: say the Kannada for a bag, then the Kannada for a pen.
 
 You'll want to know: ಕಾಗದ.
 ಕಾಗದ — kāgada — "paper; a letter".
+
+The word, taken apart.
+ಕಾಗದ (kāgada) is a loan from Persian kāghaz, "paper", which came through Hindustani.
 
 What you've built.
 One more word for this chapter.

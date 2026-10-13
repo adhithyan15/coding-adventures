@@ -14,7 +14,8 @@ romanization: "gubbacci"
 concept_tag: KA-VASTU297-GUBBACCI
 prerequisites: [KA-C296-sabdakosa, KA-C297-jenunona]
 sounds: []
-roots: []
+roots: [dravidian-kuruvi-bird]
+etymology_hook: "gubbacci: native Dravidian, one word with Tamil kuruvi and Malayalam kuruvi (DEDR 1793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C297-jenunona]
 <!-- hl-knowledge: introduces=[KA-LEX-C297-VASTU297-02]; assesses=[] -->
 
 **ಗುಬ್ಬಚ್ಚಿ** — *gubbacci* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಬ್ಬಚ್ಚಿ** (*gubbacci*) is native Dravidian, one word with Tamil *kuruvi* and Malayalam *kuruvi* (DEDR 1793). DEDR lists *gubbacci*, "a small bird, a sparrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

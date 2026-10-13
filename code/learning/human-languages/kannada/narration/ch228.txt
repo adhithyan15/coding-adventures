@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a torch, then the Kannada for a machine.
 You'll want to know: ಫುಟ್ಬಾಲ್.
 ಫುಟ್ಬಾಲ್ — phuṭbāl — "football".
 
+The word, taken apart.
+ಫುಟ್ಬಾಲ್ (phuṭbāl) is a loan from English football.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a machine, then the Kannada for football
 
 You'll want to know: ಚದುರಂಗ.
 ಚದುರಂಗ — caduraṅga — "chess".
+
+The word, taken apart.
+ಚದುರಂಗ (caduraṅga) comes from Sanskrit caturaṅga, "having four limbs; a kind of chess", reshaped to Kannada sounds: a tadbhava (CDIAL 4596). The t softened to d. The four limbs were the four arms of an old army.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for football, then the Kannada for chess.
 You'll want to know: ಹವ್ಯಾಸ.
 ಹವ್ಯಾಸ — havyāsa — "a hobby".
 
+The word, taken apart.
+ಹವ್ಯಾಸ (havyāsa) is usually traced to Sanskrit abhyāsa, "practice, repetition", worn down in speech: a tadbhava. A hobby is what you keep practising.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for chess, then the Kannada for a hobby.
 You'll want to know: ಅಭಿಪ್ರಾಯ.
 ಅಭಿಪ್ರಾಯ — abhiprāya — "an opinion".
 
+The word, taken apart.
+ಅಭಿಪ್ರಾಯ (abhiprāya) is Sanskrit abhiprāya, "aim, intention, opinion", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a hobby, then the Kannada for an opinion
 
 You'll want to know: ವಿಚಾರ.
 ವಿಚಾರ — vicāra — "an idea, a matter".
+
+The word, taken apart.
+ವಿಚಾರ (vicāra) is Sanskrit vicāra, "mode of action; pondering", taken over whole as a learned loan, a tatsama (CDIAL 11683).
 
 What you've built.
 One more word for this chapter.

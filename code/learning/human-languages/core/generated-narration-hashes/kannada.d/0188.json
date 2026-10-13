@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 188,
-  "sourceHash": "fnv1a64:21bb8823ab0a5889",
+  "sourceHash": "fnv1a64:ce5acbdd4824f654",
   "lessonIds": [
     "KA-C188-gudu",
     "KA-C188-balli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch188.txt",
   "json": "kannada/narration/ch188.json",
-  "textHash": "fnv1a64:0ab960dcef98fa21",
-  "jsonHash": "fnv1a64:1af6d7372901d85d",
+  "textHash": "fnv1a64:9d0be4857cea2a6d",
+  "jsonHash": "fnv1a64:54770288f8fdc5d3",
   "findings": []
 }

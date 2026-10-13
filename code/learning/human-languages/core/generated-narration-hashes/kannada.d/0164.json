@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 164,
-  "sourceHash": "fnv1a64:ac12b27f734517f9",
+  "sourceHash": "fnv1a64:944dc80dadcd6e31",
   "lessonIds": [
     "KA-C164-aplod-madu",
     "KA-C164-klik-madu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch164.txt",
   "json": "kannada/narration/ch164.json",
-  "textHash": "fnv1a64:e8566759c3a0f953",
-  "jsonHash": "fnv1a64:05cb649989c9b140",
+  "textHash": "fnv1a64:07731af877a7eebd",
+  "jsonHash": "fnv1a64:df651a172dfaed86",
   "findings": []
 }

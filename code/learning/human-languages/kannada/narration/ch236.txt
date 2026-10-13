@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to lift, then the Kannada for to throw.
 You'll want to know: ಬಿಚ್ಚು.
 ಬಿಚ್ಚು — biccu — "to untie, to take off (clothes)".
 
+The word, taken apart.
+The origin of ಬಿಚ್ಚು (biccu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to throw, then the Kannada for to untie.
 
 You'll want to know: ಎಬ್ಬಿಸು.
 ಎಬ್ಬಿಸು — ebbisu — "to wake (someone) up".
+
+The word, taken apart.
+ಎಬ್ಬಿಸು (ebbisu) is native Dravidian, of the root for "to rise, awake", and DEDR 851 lists ebbisu, "to rouse, awaken", itself; the entry also has Tamil eḻu and Malayalam eḻuka.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to untie, then the Kannada for to wake.
 You'll want to know: ಎಚ್ಚರಗೊಳ್ಳು.
 ಎಚ್ಚರಗೊಳ್ಳು — eccaragoḷḷu — "to wake up".
 
+The word, taken apart.
+ಎಚ್ಚರಗೊಳ್ಳು (eccaragoḷḷu) is native Dravidian: eccara, "wakefulness", which DEDR 851 lists, and koḷḷu, "to take" (DEDR 2151): "to take wakefulness".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to wake, then the Kannada for to wake up
 You'll want to know: ಚೌಕಾಸಿ ಮಾಡು.
 ಚೌಕಾಸಿ ಮಾಡು — caukāsi māḍu — "to bargain".
 
+The word, taken apart.
+ಚೌಕಾಸಿ ಮಾಡು (caukāsi māḍu) is caukāsi, "haggling", whose origin is uncertain, and native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to wake up, then the Kannada for to barg
 
 You'll want to know: ಏರು.
 ಏರು — ēru — "to climb, to go up".
+
+The word, taken apart.
+ಏರು (ēru) is native Dravidian, one word with Tamil ēṟu and Malayalam ēṟuka (DEDR 916). DEDR lists Kannada ēṟu, "to rise, ascend, climb".
 
 What you've built.
 One more word for this chapter.

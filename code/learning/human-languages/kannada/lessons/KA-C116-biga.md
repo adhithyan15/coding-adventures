@@ -14,7 +14,8 @@ romanization: "bīga"
 concept_tag: KA-THINGS116-BIGA
 prerequisites: [KA-C116-kambali, KA-C116-parade]
 sounds: []
-roots: []
+roots: [dravidian-biga-lock]
+etymology_hook: "bīga: native Dravidian, one word with Tamil pīkam and Telugu bīgamu (DEDR 4211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C116-parade]
 <!-- hl-knowledge: introduces=[KA-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **ಬೀಗ** — *bīga* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀಗ** (*bīga*) is native Dravidian, one word with Tamil *pīkam* and Telugu *bīgamu* (DEDR 4211). DEDR lists Kannada *bīga*, "lock", with Tamil *pīkam*, "padlock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

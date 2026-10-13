@@ -14,7 +14,8 @@ romanization: "lābha"
 concept_tag: KA-KELASA233-LABHA
 prerequisites: [KA-C232-rajiname, KA-C233-dinasi]
 sounds: []
-roots: []
+roots: [sanskrit-labha]
+etymology_hook: "lābha ← Sanskrit lābha 'finding, profit', a tatsama (CDIAL 11018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C233-dinasi]
 <!-- hl-knowledge: introduces=[KA-LEX-C233-KELASA233-02]; assesses=[] -->
 
 **ಲಾಭ** — *lābha* — "profit, gain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲಾಭ** (*lābha*) is Sanskrit *lābha*, "finding, profit", taken over whole as a learned loan, a tatsama (CDIAL 11018).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

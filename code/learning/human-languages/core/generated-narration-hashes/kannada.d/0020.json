@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 20,
-  "sourceHash": "fnv1a64:e7628eff646edac6",
+  "sourceHash": "fnv1a64:6ac5eecbe5f3c983",
   "lessonIds": [
     "KA-C20-hannondu-ippattu",
     "KA-R20-second-pass-what-the-dative-carries",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch20.txt",
   "json": "kannada/narration/ch20.json",
-  "textHash": "fnv1a64:ec8f24185e1515ef",
-  "jsonHash": "fnv1a64:c324e073dfa807de",
+  "textHash": "fnv1a64:8d2d6b3e599c3d48",
+  "jsonHash": "fnv1a64:ecaf7ab06edcbf9a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "mīse"
 concept_tag: KA-THINGS139-MISE
 prerequisites: [KA-C139-doni, KA-C139-kanniru]
 sounds: []
-roots: []
+roots: [dravidian-miisai-moustache]
+etymology_hook: "mīse: native Dravidian, one word with Tamil mīcai and Telugu mīsamu (DEDR 4879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C139-kanniru]
 <!-- hl-knowledge: introduces=[KA-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **ಮೀಸೆ** — *mīse* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೀಸೆ** (*mīse*) is native Dravidian, one word with Tamil *mīcai* and Telugu *mīsamu* (DEDR 4879).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

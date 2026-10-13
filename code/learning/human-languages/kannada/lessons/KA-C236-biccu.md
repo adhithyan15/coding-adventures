@@ -14,7 +14,8 @@ romanization: "biccu"
 concept_tag: KA-VERB-BICCU
 prerequisites: [KA-C235-ettu, KA-C235-ese]
 sounds: []
-roots: []
+roots: [kannada-biccu]
+etymology_hook: "biccu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C235-ese]
 <!-- hl-knowledge: introduces=[KA-LEX-C236-KRIYE236-01]; assesses=[] -->
 
 **ಬಿಚ್ಚು** — *biccu* — "to untie, to take off (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಬಿಚ್ಚು** (*biccu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

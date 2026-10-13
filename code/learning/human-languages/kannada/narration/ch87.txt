@@ -13,6 +13,9 @@ You'll want to know: ನಿಜವಾಗಲೂ.
 ನಿಜವಾಗಲೂ? (nijavāgalū?) — "really?", built on ನಿಜ (nija), "true".
 Said with rising voice it is surprise; said flat, it is "truly".
 
+The word, taken apart.
+ನಿಜವಾಗಲೂ (nijavāgalū) is nija, "true", from Sanskrit nija, "innate, one's own" (CDIAL 7181), with forms of the native āgu, "to become" (DEDR 333), and -ū, "even": "even truly?" DEDR 333 compares Sanskrit ām.
+
 What you've built.
 True, turned into a question.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for I didn't understand, then the Kannada fo
 
 You'll want to know: ಏನೂ ಇಲ್ಲ.
 ಏನೂ ಇಲ್ಲ (ēnū illa) — "nothing", literally "anything, there isn't". ಏನು (ēnu), "what", takes ‑ಊ to become "anything".
+
+The word, taken apart.
+ಏನೂ ಇಲ್ಲ (ēnū illa) is native Dravidian: ēnū, "even what", from ēnu, "what" (DEDR 5151), and illa, "is not" (DEDR 2559). "Not even anything" is nothing.
 
 What you've built.
 What, and not, make nothing.
@@ -71,6 +77,9 @@ Before the new one: say the Kannada for really, then the Kannada for nothing.
 You'll want to know: ಅಯ್ಯೋ.
 ಅಯ್ಯೋ (ayyō) — "oh no!", "oh dear!". You hear it everywhere in the south when something goes wrong.
 
+The word, taken apart.
+ಅಯ್ಯೋ (ayyō) is native Dravidian (DEDR 196). DEDR lists ayyō, an interjection of grief, under ayya, "father, master". DEDR 196 compares, with a query, Sanskrit ārya and aye.
+
 What you've built.
 The sound of a small disaster.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for nothing, then the Kannada for oh no.
 
 You'll want to know: ಹೌದಾ.
 ಹೌದಾ? (haudā?) — "is that so?", "really?". It is ಹೌದು (haudu), "yes", with the question ending ‑ಆ.
+
+The word, taken apart.
+ಹೌದಾ (haudā) is haudu, "yes, it is so", with -ā, the ending that makes a question. Haudu is usually explained as a form of āgu, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 Yes, turned into a question.
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for oh no, then the Kannada for is that so.
 You'll want to know: ಅದೇ.
 ಅದೇ (adē) — "that very one, the same". It is ಅದು (adu), "that", with the emphatic ‑ಏ.
 ಅದೇ (adē)! — "that's it! exactly that one!"
+
+The word, taken apart.
+ಅದೇ (adē) is native Dravidian: adu, "that" (DEDR 1), with -ē, the ending that stresses: "that very one".
 
 What you've built.
 That, made emphatic.

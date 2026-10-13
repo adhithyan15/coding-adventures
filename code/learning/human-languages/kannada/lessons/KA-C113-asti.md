@@ -14,7 +14,8 @@ romanization: "āsti"
 concept_tag: KA-CAN113-ASTI
 prerequisites: [KA-C112-avakasa, KA-C112-sadhana]
 sounds: []
-roots: []
+roots: [sanskrit-asti]
+etymology_hook: "āsti: origin uncertain; often linked to Sanskrit asti 'existence, what is'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C112-sadhana]
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-01]; assesses=[] -->
 
 **ಆಸ್ತಿ** — *āsti* — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಆಸ್ತಿ** (*āsti*) is uncertain. It is often linked to Sanskrit *asti*, "it is" (CDIAL 977), so that property is "what one has", but no source settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

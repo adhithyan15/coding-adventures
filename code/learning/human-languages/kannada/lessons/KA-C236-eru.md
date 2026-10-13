@@ -14,7 +14,8 @@ romanization: "ēru"
 concept_tag: KA-VERB-ERU
 prerequisites: [KA-C236-eccaragollu, KA-C236-caukasi-madu]
 sounds: []
-roots: []
+roots: [dravidian-eeru-rise]
+etymology_hook: "ēru: native Dravidian, one word with Tamil ēṟu and Malayalam ēṟuka (DEDR 916)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C236-caukasi-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C236-KRIYE236-05]; assesses=[] -->
 
 **ಏರು** — *ēru* — "to climb, to go up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏರು** (*ēru*) is native Dravidian, one word with Tamil *ēṟu* and Malayalam *ēṟuka* (DEDR 916). DEDR lists Kannada *ēṟu*, "to rise, ascend, climb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "guddali"
 concept_tag: KA-VASTU230-GUDDALI
 prerequisites: [KA-C230-hundi, KA-C230-sutkes]
 sounds: []
-roots: []
+roots: [dravidian-guddali-hoe]
+etymology_hook: "guddali: native Dravidian, one word with Tamil kuntāli and Telugu guddali (DEDR 1722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C230-sutkes]
 <!-- hl-knowledge: introduces=[KA-LEX-C230-VASTU230-04]; assesses=[] -->
 
 **ಗುದ್ದಲಿ** — *guddali* — "a hoe, a pickaxe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುದ್ದಲಿ** (*guddali*) is native Dravidian, one word with Tamil *kuntāli* and Telugu *guddali* (DEDR 1722). DEDR lists *guddali* itself, "a pickaxe, hoe". DEDR 1722 compares Sanskrit *kuddāla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

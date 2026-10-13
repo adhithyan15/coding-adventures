@@ -14,7 +14,8 @@ romanization: "ādhāra"
 concept_tag: KA-KARANA289-ADHARA
 prerequisites: [KA-C289-andare, KA-C289-nepa]
 sounds: []
-roots: []
+roots: [sanskrit-adhara]
+etymology_hook: "ādhāra ← Sanskrit ādhāra 'support, substratum', a tatsama (CDIAL 1165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C289-nepa]
 <!-- hl-knowledge: introduces=[KA-LEX-C289-KARANA289-04]; assesses=[] -->
 
 **ಆಧಾರ** — *ādhāra* — "a basis, grounds; support".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಧಾರ** (*ādhāra*) is Sanskrit *ādhāra*, "support, substratum", taken over whole as a learned loan, a tatsama (CDIAL 1165).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

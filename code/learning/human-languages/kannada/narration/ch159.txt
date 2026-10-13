@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to pay, then the Kannada for to bathe.
 You'll want to know: ಸುಲಿ.
 ಸುಲಿ — suli — "to peel".
 
+The word, taken apart.
+ಸುಲಿ (suli) is native Dravidian, one word with Tamil coli- (DEDR 2856). DEDR lists suli itself, "to strip off, peel". Its note compares an Indo-Aryan verb, Prakrit chollaï, "to skin" (CDIAL 5073), and leaves the direction of borrowing open.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to bathe, then the Kannada for to peel.
 
 You'll want to know: ಅರೆ.
 ಅರೆ — are — "to grind".
+
+The word, taken apart.
+ಅರೆ (are) is native Dravidian, one word with Tamil arai and Telugu rāyu (DEDR 228). DEDR lists are itself, "to grind, pulverize".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to peel, then the Kannada for to grind.
 You'll want to know: ಬಡಿಸು.
 ಬಡಿಸು — baḍisu — "to serve (food)".
 
+The word, taken apart.
+The origin of ಬಡಿಸು (baḍisu) is uncertain. DEDR has no entry for it in the sense "to serve food", CDIAL does not record it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to grind, then the Kannada for to serve.
 You'll want to know: ರುಚಿ ನೋಡು.
 ರುಚಿ ನೋಡು — ruci nōḍu — "to taste".
 
+The word, taken apart.
+ರುಚಿ ನೋಡು (ruci nōḍu) is ruci, "taste", from Sanskrit ruci, "light, beauty; relish" (CDIAL 10762), and nōḍu, "to look" (DEDR 3794), native. To taste is to "look at the taste".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to serve, then the Kannada for to taste.
 
 You'll want to know: ಅಗಿ.
 ಅಗಿ — agi — "to chew".
+
+The word, taken apart.
+ಅಗಿ (agi) is native Dravidian (DEDR 2265). DEDR lists agi, "to champ, bite, chew", beside jagi.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 89,
-  "sourceHash": "fnv1a64:5ed5c5bfef6d8049",
+  "sourceHash": "fnv1a64:3a8477bfa4a38004",
   "lessonIds": [
     "KA-C89-takecare",
     "KA-C89-safely",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch89.txt",
   "json": "kannada/narration/ch89.json",
-  "textHash": "fnv1a64:2856e212e1240c83",
-  "jsonHash": "fnv1a64:472f91eab9034b64",
+  "textHash": "fnv1a64:9719695e6fa1baba",
+  "jsonHash": "fnv1a64:80dbe4bee37f9319",
   "findings": []
 }

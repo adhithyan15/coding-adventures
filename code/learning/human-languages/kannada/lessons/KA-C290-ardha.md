@@ -14,7 +14,8 @@ romanization: "ardha"
 concept_tag: KA-GUNA290-ARDHA
 prerequisites: [KA-C289-adhara, KA-C289-saksi]
 sounds: []
-roots: []
+roots: [sanskrit-ardha]
+etymology_hook: "ardha ← Sanskrit ardha 'half', a tatsama (CDIAL 644)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C289-saksi]
 <!-- hl-knowledge: introduces=[KA-LEX-C290-GUNA290-01]; assesses=[] -->
 
 **ಅರ್ಧ** — *ardha* — "half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರ್ಧ** (*ardha*) is Sanskrit *ardha*, "half", taken over whole as a learned loan, a tatsama (CDIAL 644).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

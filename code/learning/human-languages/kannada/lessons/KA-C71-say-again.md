@@ -11,9 +11,10 @@ romanization: "innondu sala hēḷi"
 concept_tag: KA-PHRASE-REPEAT
 prerequisites: [KA-C71-another, KA-C70-say, KA-C08-dayavittu, KA-C55-tank, KA-C36-magu, KA-C35-snehita, KA-C35-kutumba]
 sounds: []
-roots: []
+roots: [pesu-speak-dravidian]
+etymology_hook: "innondu sala hēḷi: native innondu 'one more' (DEDR 410, 990), hēḷu 'say' (DEDR 4430); sala 'time' is uncertain"
 duration:
-  max_seconds: 210
+  max_seconds: 226
 requires:
   knowledge: [KA-LEX-C71-MORE-01, KA-LEX-C70-TELL-01, KA-ETYMON-C08-DAYAVITTU-01]
 introduces:
@@ -52,6 +53,11 @@ Put ದಯವಿಟ್ಟು in front and it is as polite as it gets: **ದಯ�
 ಹೇಳಿ**. Said with a slight rise it is warm rather than demanding, and nobody in
 Karnataka will mind hearing it — a stranger trying the language is worth the
 second go.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ** (*innondu sala hēḷi*) is *innondu*, "one more" (DEDR 410, 990), *sala*, "time, turn", whose origin is uncertain, and *hēḷi*, the polite form of *hēḷu*, "to say" (DEDR 4430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

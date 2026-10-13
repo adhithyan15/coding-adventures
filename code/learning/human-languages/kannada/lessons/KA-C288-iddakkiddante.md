@@ -14,7 +14,8 @@ romanization: "iddakkiddante"
 concept_tag: KA-KARANA288-IDDAKKIDDANTE
 prerequisites: [KA-C287-gode, KA-C288-allade]
 sounds: []
-roots: []
+roots: [dravidian-iru-be]
+etymology_hook: "iddakkiddante: native, built twice on iddu, past of iru 'to be' (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C288-allade]
 <!-- hl-knowledge: introduces=[KA-LEX-C288-KARANA288-02]; assesses=[] -->
 
 **ಇದ್ದಕ್ಕಿದ್ದಂತೆ** — *iddakkiddante* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇದ್ದಕ್ಕಿದ್ದಂತೆ** (*iddakkiddante*) is native Dravidian, built twice on *iddu*, "having been", the past form of *iru*, "to be", which DEDR 480 lists, with *-ante*, "as, like".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

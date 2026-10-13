@@ -12,6 +12,7 @@ concept_tag: KA-WORD-CERTAINLY
 prerequisites: [KA-C49-enough, KA-C47-hair]
 sounds: []
 roots: []
+etymology_hook: "khaṇḍita ← Sanskrit khaṇḍita 'broken, cut off' (CDIAL 3797): a matter cut and settled"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C49-enough]
 Sanskrit *khaṇḍita* means 'broken, cut off' — a piece severed from the rest.
 
 The road from there to 'certainly' is worth walking. A matter that has been cut is a matter that has been settled: nothing left hanging, no remainder to argue over. English does the very same thing with *decide*, which is Latin for cutting off, and with a *clear-cut* answer. Two languages, no contact between them, one metaphor.
+
+CDIAL 3797 lists Sanskrit *khaṇḍita*, "broken".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

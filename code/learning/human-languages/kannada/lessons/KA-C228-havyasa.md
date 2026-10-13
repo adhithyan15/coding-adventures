@@ -14,7 +14,8 @@ romanization: "havyāsa"
 concept_tag: KA-VASTU228-HAVYASA
 prerequisites: [KA-C228-phutbal, KA-C228-caduranga]
 sounds: []
-roots: []
+roots: [sanskrit-abhyasa]
+etymology_hook: "havyāsa: usually traced to Sanskrit abhyāsa 'practice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C228-caduranga]
 <!-- hl-knowledge: introduces=[KA-LEX-C228-VASTU228-03]; assesses=[] -->
 
 **ಹವ್ಯಾಸ** — *havyāsa* — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹವ್ಯಾಸ** (*havyāsa*) is usually traced to Sanskrit *abhyāsa*, "practice, repetition", worn down in speech: a tadbhava. A hobby is what you keep practising.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

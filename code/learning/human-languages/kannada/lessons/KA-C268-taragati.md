@@ -14,7 +14,8 @@ romanization: "taragati"
 concept_tag: KA-KELASA268-TARAGATI
 prerequisites: [KA-C268-anceyavanu, KA-C268-kampani]
 sounds: []
-roots: []
+roots: [kannada-taragati-class]
+etymology_hook: "taragati: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C268-kampani]
 <!-- hl-knowledge: introduces=[KA-LEX-C268-KELASA268-05]; assesses=[] -->
 
 **ತರಗತಿ** — *taragati* — "a class, a classroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ತರಗತಿ** (*taragati*) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "class".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

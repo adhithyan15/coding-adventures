@@ -14,6 +14,7 @@ You'll want to know: ಆಕಾಶ.
 Sanskrit ākāśa, built on a piece meaning "to shine, to be visible". The sky is named for being the open lit place where a thing can be seen at all, rather than for being a lid over the world.
 Kannada holds an inherited word for the same overhead space, ಬಾನು (bānu), which owes Sanskrit nothing. The two divide the work: ಆಕಾಶ (ākāśa) does the ordinary shift and turns up in weather talk, while ಬಾನು keeps to songs and poetry. A borrowed word taking the daily job and leaving the old one the ceremony is an arrangement you have watched before, at the ಬಾಗಿಲು.
 ākāśa travelled as well. Traders carried it east, and Malay and Indonesian still say angkasa for the sky.
+CDIAL 1008 lists Sanskrit ākāśa, "sky".
 
 What you've built.
 The space the rest of this chapter hangs in.
@@ -47,6 +48,9 @@ Under it sits ಬಿಸಿ (bisi), "hot" — the word on a cup of ಚಹಾ that
 That is worth pausing on. English talks about the weather by naming the sun; Kannada reaches first for what the sun does to you standing in it. A Bengaluru sentence about the afternoon is far more likely to be about ಬಿಸಿಲು (bisilu) than about any sun-word at all.
 Kannada has two sun-words even so. ನೇಸರು (nēsaru) is its own, kept alive mostly in verse and in names; the borrowed one you have already had a piece of, inside the sunrise word the good-morning lesson took apart.
 
+The word, taken apart.
+ಬಿಸಿಲು (bisilu) is native Dravidian, of the root bē, "to burn, be scorched", and DEDR 5517 lists bisil itself, "heat and glare of the sun, sunshine"; the entry also has Tamil vē.
+
 What you've built.
 Two: the sky, and what comes down out of it by day.
 
@@ -77,6 +81,7 @@ You'll want to know: ಚಂದ್ರ.
 Sanskrit candra means "shining, bright". Kannada took it whole, the way it took ಆಕಾಶ (ākāśa), and it is the word a newsreader says.
 Kannada's own moon-word is ತಿಂಗಳು (tiṅgaḷu), and that word also means a month. One shape for the moon and for the stretch of time it measures — the moon being the oldest calendar there is, and Kannada keeping that fact inside a single word. The twelve month-names you met are Sanskrit; ತಿಂಗಳು is what a Kannada speaker actually counts in.
 candra went a long way west too. It shares an ancestor with the Latin piece behind English candle and incandescent: a very old root for burning white.
+CDIAL 4661 lists Sanskrit candra, "shining; moon".
 
 What you've built.
 Three, and two of them borrowed.
@@ -110,6 +115,9 @@ You'll want to know: ಚುಕ್ಕಿ.
 Which is why it belongs to the ರಂಗೋಲಿ as much as to the night. The pattern at the doorway is set out first as a grid of ಚುಕ್ಕಿ (cukki), points of rice flour placed at even spacing, and the lines are drawn around and between them afterwards. A woman saying she is putting down ಚುಕ್ಕಿ (cukki) in the morning is talking about her doorstep.
 The borrowed word for a star is ನಕ್ಷತ್ರ (nakṣatra), and that is the one an astrologer reaches for. ಚುಕ್ಕಿ (cukki) is the one a child points with.
 
+The word, taken apart.
+ಚುಕ್ಕಿ (cukki) is native Dravidian. DEDR 2646 lists Kannada cukke, "small mark, dot", and cikki, "spot, star", with Telugu cukka, "star, spot, dot". Tamil cukkai, "star", is a loan from Telugu, the entry says.
+
 What you've built.
 Four, and this one reaches back down to the doorstep.
 
@@ -140,6 +148,9 @@ You'll want to know: ಮೋಡ.
 ಮೋಡ (mōḍa) is inherited and quite plain: the grey thing standing between you and the ಬಿಸಿಲು (bisilu). ಮೋಡ (mōḍa) ಇದೆ — there is cloud — is a whole weather report, and it is the one Kannada speakers give each other most of the year.
 Weather words stretch, and this one has. ಮೋಡ (mōḍa) also describes a face that has gone dull and closed, and a mood that will not lift. English went the same way with clouded and overcast, from the far side of the world and with no contact at all. When two unrelated languages reach for the same picture, the picture is doing the work rather than any borrowing.
 With that, the sky is furnished.
+
+The word, taken apart.
+ಮೋಡ (mōḍa) is native Dravidian, one word with Tamil mūṭam and Telugu mōḍamu (DEDR 5033).
 
 What you've built.
 Five: ಆಕಾಶ (ākāśa), ಬಿಸಿಲು (bisilu), ಚಂದ್ರ (candra), ಚುಕ್ಕಿ (cukki), ಮೋಡ (mōḍa). You can say what is overhead.

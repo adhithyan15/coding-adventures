@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 214,
-  "sourceHash": "fnv1a64:53cf5994b904f395",
+  "sourceHash": "fnv1a64:fbe5cec0d356bbfb",
   "lessonIds": [
     "KA-C214-ancu",
     "KA-C214-tudi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch214.txt",
   "json": "kannada/narration/ch214.json",
-  "textHash": "fnv1a64:5fb86f827576c58e",
-  "jsonHash": "fnv1a64:c81944e5ed5470d3",
+  "textHash": "fnv1a64:7eaeae91869061ab",
+  "jsonHash": "fnv1a64:136bcfa89fda59e2",
   "findings": []
 }

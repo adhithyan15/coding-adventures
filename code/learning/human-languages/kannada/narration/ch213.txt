@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a ground, then the Kannada for a directi
 You'll want to know: ಕೋಟೆ.
 ಕೋಟೆ — kōṭe — "a fort".
 
+The word, taken apart.
+ಕೋಟೆ (kōṭe) is native Dravidian, one word with Tamil kōṭṭai (DEDR 2207). DEDR lists kōṭe itself, "fort, rampart". DEDR 2207 compares Sanskrit koṭṭa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a direction, then the Kannada for a fort
 
 You'll want to know: ಕಲ್ಯಾಣ ಮಂಟಪ.
 ಕಲ್ಯಾಣ ಮಂಟಪ — kalyāṇa maṇṭapa — "a wedding hall".
+
+The word, taken apart.
+ಕಲ್ಯಾಣ ಮಂಟಪ (kalyāṇa maṇṭapa) is Sanskrit kalyāṇa, "beautiful, lucky", the word for a wedding (CDIAL 2952), and maṇṭapa, "open pavilion" (CDIAL 9740): the pavilion for the wedding.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a fort, then the Kannada for a wedding h
 You'll want to know: ಜಿಮ್.
 ಜಿಮ್ — jim — "a gym".
 
+The word, taken apart.
+ಜಿಮ್ (jim) is a loan from English gym.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a wedding hall, then the Kannada for a g
 You'll want to know: ಕ್ರೀಡಾಂಗಣ.
 ಕ್ರೀಡಾಂಗಣ — krīḍāṅgaṇa — "a stadium".
 
+The word, taken apart.
+ಕ್ರೀಡಾಂಗಣ (krīḍāṅgaṇa) is Sanskrit krīḍā, "play, sport", and aṅgaṇa, "courtyard": "a yard for sport".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a gym, then the Kannada for a stadium.
 
 You'll want to know: ವಸ್ತುಸಂಗ್ರಹಾಲಯ.
 ವಸ್ತುಸಂಗ್ರಹಾಲಯ — vastusaṅgrahālaya — "a museum".
+
+The word, taken apart.
+ವಸ್ತುಸಂಗ್ರಹಾಲಯ (vastusaṅgrahālaya) is three Sanskrit words: vastu, "thing" (CDIAL 11449), saṅgraha, "collection" (CDIAL 12852), and ālaya, "house" (CDIAL 1366): "a house for a collection of things".
 
 What you've built.
 One more word for this chapter.

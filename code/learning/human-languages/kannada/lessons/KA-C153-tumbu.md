@@ -14,7 +14,8 @@ romanization: "tumbu"
 concept_tag: KA-VERB-TUMBU
 prerequisites: [KA-C152-nade, KA-C153-tere]
 sounds: []
-roots: []
+roots: [dravidian-tumbu-fill]
+etymology_hook: "tumbu: native Dravidian, one word with Irula thumba (DEDR 3331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C153-tere]
 <!-- hl-knowledge: introduces=[KA-LEX-C153-ACT153-02]; assesses=[] -->
 
 **ತುಂಬು** — *tumbu* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಂಬು** (*tumbu*) is native Dravidian, one word with Irula *thumba* (DEDR 3331). DEDR lists *tumbu* itself, "to become full", and *tumbisu*, "to fill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

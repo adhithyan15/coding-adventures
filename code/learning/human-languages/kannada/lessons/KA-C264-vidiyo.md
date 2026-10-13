@@ -14,7 +14,8 @@ romanization: "viḍiyō"
 concept_tag: KA-VASTU264-VIDIYO
 prerequisites: [KA-C264-pasvard, KA-C264-ap]
 sounds: []
-roots: []
+roots: [english-video]
+etymology_hook: "viḍiyō ← English video"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C264-ap]
 <!-- hl-knowledge: introduces=[KA-LEX-C264-VASTU264-05]; assesses=[] -->
 
 **ವಿಡಿಯೋ** — *viḍiyō* — "a video".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಡಿಯೋ** (*viḍiyō*) is a loan from English *video*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

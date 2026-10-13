@@ -14,7 +14,8 @@ romanization: "katte"
 concept_tag: KA-THINGS133-KATTE
 prerequisites: [KA-C133-batukoli, KA-C133-handi]
 sounds: []
-roots: []
+roots: [dravidian-kazhutai-donkey]
+etymology_hook: "katte: native Dravidian, one word with Tamil kaḻutai (DEDR 1364)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C133-handi]
 <!-- hl-knowledge: introduces=[KA-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **ಕತ್ತೆ** — *katte* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕತ್ತೆ** (*katte*) is native Dravidian, one word with Tamil *kaḻutai* (DEDR 1364). DEDR gives Kannada *kaḻte* and *katte*. DEDR 1364 compares Sanskrit *gardabha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

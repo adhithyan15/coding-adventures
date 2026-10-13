@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a library, then the Kannada for a bank.
 You'll want to know: ಸಂತೆ.
 ಸಂತೆ — sante — "a market".
 
+The word, taken apart.
+The origin of ಸಂತೆ (sante) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a bank, then the Kannada for a market.
 
 You'll want to know: ಕಡಲತೀರ.
 ಕಡಲತೀರ — kaḍalatīra — "a beach".
+
+The word, taken apart.
+ಕಡಲತೀರ (kaḍalatīra) is kaḍal, "sea", native Dravidian (DEDR 1118, with Tamil kaṭal), and tīra, "shore", from Sanskrit tīra (CDIAL 5842).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a market, then the Kannada for a beach.
 You'll want to know: ತೋಟ.
 ತೋಟ — tōṭa — "a garden".
 
+The word, taken apart.
+ತೋಟ (tōṭa) is native Dravidian, listed in DEDR 3549 as tōṭa, "garden", under tōḍu, "to dig"; the entry also has Malayalam tōṭṭam.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a beach, then the Kannada for a garden.
 You'll want to know: ಮೂಲೆ.
 ಮೂಲೆ — mūle — "a corner".
 
+The word, taken apart.
+ಮೂಲೆ (mūle) is native Dravidian, one word with Tamil mūlai and Telugu mūla (DEDR 5044).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a garden, then the Kannada for a corner.
 
 You'll want to know: ತಿರುವು.
 ತಿರುವು — tiruvu — "a turn, a bend".
+
+The word, taken apart.
+ತಿರುವು (tiruvu) is native Dravidian, from tiri, "to turn round", which DEDR 3246 lists with "a turn" among its senses; the entry also has Tamil tiri.
 
 What you've built.
 One more word for this chapter.

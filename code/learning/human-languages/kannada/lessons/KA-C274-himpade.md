@@ -14,7 +14,8 @@ romanization: "himpaḍe"
 concept_tag: KA-VERB-HIMPADE
 prerequisites: [KA-C274-ottu, KA-C274-jama-madu]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-padu-suffer]
+etymology_hook: "himpaḍe: native him 'behind' (DEDR 4205) + paḍe 'to obtain' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C274-jama-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C274-KRIYE274-04]; assesses=[] -->
 
 **ಹಿಂಪಡೆ** — *himpaḍe* — "to withdraw (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂಪಡೆ** (*himpaḍe*) is native Dravidian: *him*, "behind, back", which DEDR 4205 lists with older Kannada *pin*, and *paḍe*, "to get, obtain" (DEDR 3853): "to get back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

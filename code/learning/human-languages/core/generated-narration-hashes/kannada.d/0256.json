@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 256,
-  "sourceHash": "fnv1a64:e377f1df50123e08",
+  "sourceHash": "fnv1a64:fef3647b9f81458e",
   "lessonIds": [
     "KA-C256-tollu",
     "KA-C256-cappate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch256.txt",
   "json": "kannada/narration/ch256.json",
-  "textHash": "fnv1a64:81e9ed49794239ca",
-  "jsonHash": "fnv1a64:d319e2a2c5756861",
+  "textHash": "fnv1a64:61b5a58b68138e13",
+  "jsonHash": "fnv1a64:85a39d3c790b9d75",
   "findings": []
 }

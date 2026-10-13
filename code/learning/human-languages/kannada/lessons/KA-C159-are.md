@@ -14,7 +14,8 @@ romanization: "are"
 concept_tag: KA-VERB-ARE
 prerequisites: [KA-C158-snana-madu, KA-C159-suli]
 sounds: []
-roots: []
+roots: [dravidian-arai-grind]
+etymology_hook: "are: native Dravidian, one word with Tamil arai and Telugu rāyu (DEDR 228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C159-suli]
 <!-- hl-knowledge: introduces=[KA-LEX-C159-KRIYE159-02]; assesses=[] -->
 
 **ಅರೆ** — *are* — "to grind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರೆ** (*are*) is native Dravidian, one word with Tamil *arai* and Telugu *rāyu* (DEDR 228). DEDR lists *are* itself, "to grind, pulverize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

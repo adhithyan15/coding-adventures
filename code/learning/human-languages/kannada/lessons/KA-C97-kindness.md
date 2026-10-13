@@ -11,7 +11,8 @@ romanization: "daye"
 concept_tag: KA-COUR-KINDNESS
 prerequisites: [KA-C97-grateful, KA-C97-dontforget]
 sounds: []
-roots: []
+roots: [sanskrit-daya]
+etymology_hook: "daye ← Sanskrit dayā 'sympathy', a tatsama (CDIAL 6185)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C97-dontforget]
 
 **ದಯೆ** (*daye*) — "kindness, compassion". It is the *daya* inside **ದಯವಿಟ್ಟು**,
 "please", the word the book took apart early on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಯೆ** (*daye*) is Sanskrit *dayā*, "sympathy", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 6185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

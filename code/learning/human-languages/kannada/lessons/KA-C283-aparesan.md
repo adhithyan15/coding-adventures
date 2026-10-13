@@ -14,7 +14,8 @@ romanization: "āpareṣan"
 concept_tag: KA-AROGYA283-APARESAN
 prerequisites: [KA-C283-seleta, KA-C283-murita]
 sounds: []
-roots: []
+roots: [english-operation]
+etymology_hook: "āpareṣan ← English operation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C283-murita]
 <!-- hl-knowledge: introduces=[KA-LEX-C283-AROGYA283-04]; assesses=[] -->
 
 **ಆಪರೇಷನ್** — *āpareṣan* — "an operation, surgery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಪರೇಷನ್** (*āpareṣan*) is a loan from English *operation*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "bhāṣe"
 concept_tag: KA-YOU-LANGUAGE
 prerequisites: [KA-C91-wedding, KA-C91-hometown]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāṣe ← Sanskrit bhāṣā 'speech', a tatsama (CDIAL 9479)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C91-hometown]
 **ಭಾಷೆ** (*bhāṣe*) — "language".
 
 **ಕನ್ನಡ ಭಾಷೆ** (*kannaḍa bhāṣe*) — "the Kannada language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಾಷೆ** (*bhāṣe*) is Sanskrit *bhāṣā*, "speech", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 9479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

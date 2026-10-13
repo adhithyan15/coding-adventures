@@ -14,7 +14,8 @@ romanization: "beresu"
 concept_tag: KA-VERB-BERESU
 prerequisites: [KA-C272-cellu, KA-C272-suri]
 sounds: []
-roots: []
+roots: [dravidian-viracu-mix]
+etymology_hook: "beresu: native Dravidian, one word with Telugu berayu (DEDR 5407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C272-suri]
 <!-- hl-knowledge: introduces=[KA-LEX-C272-KRIYE272-03]; assesses=[] -->
 
 **ಬೆರೆಸು** — *beresu* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆರೆಸು** (*beresu*) is native Dravidian, one word with Telugu *berayu* (DEDR 5407). DEDR lists *berasu*, *berisu*, "to mingle together, mix".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

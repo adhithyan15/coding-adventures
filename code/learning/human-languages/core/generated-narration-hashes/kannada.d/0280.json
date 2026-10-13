@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 280,
-  "sourceHash": "fnv1a64:649a1beca9962cde",
+  "sourceHash": "fnv1a64:6a027adfb6002c20",
   "lessonIds": [
     "KA-C280-pisuguttu",
     "KA-C280-cappale-tattu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch280.txt",
   "json": "kannada/narration/ch280.json",
-  "textHash": "fnv1a64:f4b87206085b3189",
-  "jsonHash": "fnv1a64:49258c903d82761f",
+  "textHash": "fnv1a64:e9780603583c5d69",
+  "jsonHash": "fnv1a64:fcf0f87a504e98f4",
   "findings": []
 }

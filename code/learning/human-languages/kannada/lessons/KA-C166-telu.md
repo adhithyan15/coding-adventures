@@ -14,7 +14,8 @@ romanization: "tēlu"
 concept_tag: KA-VERB-TELU
 prerequisites: [KA-C166-tottikku, KA-C166-soru]
 sounds: []
-roots: []
+roots: [dravidian-teel-float]
+etymology_hook: "tēlu: native Dravidian, one word with Tamil tēlu and Telugu tēlu (DEDR 3464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-soru]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-05]; assesses=[] -->
 
 **ತೇಲು** — *tēlu* — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೇಲು** (*tēlu*) is native Dravidian, one word with Tamil *tēlu* and Telugu *tēlu* (DEDR 3464). DEDR lists *tēl(u)*, "to float".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

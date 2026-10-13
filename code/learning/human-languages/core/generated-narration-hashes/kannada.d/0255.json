@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 255,
-  "sourceHash": "fnv1a64:f6f8bdbd1660f1df",
+  "sourceHash": "fnv1a64:ba7f474ac0af22bb",
   "lessonIds": [
     "KA-C255-tunta",
     "KA-C255-santa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch255.txt",
   "json": "kannada/narration/ch255.json",
-  "textHash": "fnv1a64:c1fe042423eb786e",
-  "jsonHash": "fnv1a64:9745bc96338393b5",
+  "textHash": "fnv1a64:ce1e1e227db26a90",
+  "jsonHash": "fnv1a64:e9d4086141bda5a4",
   "findings": []
 }

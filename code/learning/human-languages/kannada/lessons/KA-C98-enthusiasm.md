@@ -11,7 +11,8 @@ romanization: "utsāha"
 concept_tag: KA-MOOD-EAGER
 prerequisites: [KA-C97-kindness, KA-C98-boredom]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "utsāha ← Sanskrit utsāha 'power, firmness; joy', a tatsama (CDIAL 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C98-boredom]
 <!-- hl-knowledge: introduces=[KA-LEX-C98-MOODS-02]; assesses=[] -->
 
 **ಉತ್ಸಾಹ** (*utsāha*) — "enthusiasm, eagerness", the opposite of **ಬೇಸರ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉತ್ಸಾಹ** (*utsāha*) is Sanskrit *utsāha*, "power, firmness; joy", taken over whole as a learned loan, a tatsama (CDIAL 1882).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

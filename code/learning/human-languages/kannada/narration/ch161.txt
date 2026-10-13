@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to sneeze, then the Kannada for to shive
 You'll want to know: ಅಂಟಿಸು.
 ಅಂಟಿಸು — aṇṭisu — "to stick, to paste".
 
+The word, taken apart.
+ಅಂಟಿಸು (aṇṭisu) is native Dravidian, from aṇṭu, "to stick, adhere", which DEDR 96 lists, with -isu, "to make"; the entry also has Tamil aṭṭu, Telugu aṇṭu and Malayalam aṭṭuka.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to shiver, then the Kannada for to stick
 
 You'll want to know: ತಿಳಿಸು.
 ತಿಳಿಸು — tiḷisu — "to inform, to let know".
+
+The word, taken apart.
+ತಿಳಿಸು (tiḷisu) is native Dravidian, from tiḷi, "to become clear", with -isu, "to make": to inform is "to make clear"; DEDR 3433 lists the root with Tamil teḷ, Telugu teli and Malayalam teḷi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to stick, then the Kannada for to inform
 You'll want to know: ಭೇಟಿ ಮಾಡು.
 ಭೇಟಿ ಮಾಡು — bhēṭi māḍu — "to meet (someone)".
 
+The word, taken apart.
+ಭೇಟಿ ಮಾಡು (bhēṭi māḍu) is bhēṭi, "a meeting, a visit", from Hindustani bheṇṭ, "meeting", and native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to inform, then the Kannada for to meet.
 You'll want to know: ಕಾಯ್ದಿರಿಸು.
 ಕಾಯ್ದಿರಿಸು — kāydirisu — "to reserve, to book".
 
+The word, taken apart.
+ಕಾಯ್ದಿರಿಸು (kāydirisu) is native Dravidian: kāy, "to guard, keep" (DEDR 1416), and iḍu, "to put, place" (DEDR 442), with -isu: "to put aside and keep".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to meet, then the Kannada for to reserve
 
 You'll want to know: ರದ್ದು ಮಾಡು.
 ರದ್ದು ಮಾಡು — raddu māḍu — "to cancel".
+
+The word, taken apart.
+ರದ್ದು ಮಾಡು (raddu māḍu) is raddu, "cancelled", from Arabic radd, "rejection, return", which came through Hindustani, and native māḍu, "to do" (DEDR 4797).
 
 What you've built.
 One more word for this chapter.

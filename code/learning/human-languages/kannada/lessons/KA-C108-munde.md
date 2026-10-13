@@ -14,7 +14,8 @@ romanization: "munde"
 concept_tag: KA-LOC108-MUNDE
 prerequisites: [KA-C108-kelage, KA-C108-horage]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "munde: native Dravidian, one word with Tamil muṉ (DEDR 5020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C108-horage]
 <!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-03]; assesses=[] -->
 
 **ಮುಂದೆ** — *munde* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂದೆ** (*munde*) is native Dravidian, one word with Tamil *muṉ* (DEDR 5020). DEDR lists *munda*, *mundu*, "the front", under *mun*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

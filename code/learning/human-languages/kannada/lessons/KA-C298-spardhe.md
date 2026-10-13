@@ -14,7 +14,8 @@ romanization: "spardhe"
 concept_tag: KA-VASTU298-SPARDHE
 prerequisites: [KA-C298-sinima, KA-C298-sangita]
 sounds: []
-roots: []
+roots: [sanskrit-spardha]
+etymology_hook: "spardhe ← Sanskrit spardhā 'rivalry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C298-sangita]
 <!-- hl-knowledge: introduces=[KA-LEX-C298-VASTU298-04]; assesses=[] -->
 
 **ಸ್ಪರ್ಧೆ** — *spardhe* — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಪರ್ಧೆ** (*spardhe*) is Sanskrit *spardhā*, "rivalry, competition", with the Kannada *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

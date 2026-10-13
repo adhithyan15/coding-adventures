@@ -11,9 +11,10 @@ romanization: "nānū"
 concept_tag: KA-SUFFIX-ALSO
 prerequisites: [KA-C67-but, KA-C64-also, KA-C39-haalu, KA-C51-salutation, KA-C48-doctor, KA-C48-student, KA-C48-teacher, KA-C65-manners, KA-C66-field]
 sounds: []
-roots: []
+roots: [naan-dravidian]
+etymology_hook: "nānū: native nānu 'I' (DEDR 5160) + -ū 'too, even'"
 duration:
-  max_seconds: 210
+  max_seconds: 220
 requires:
   knowledge: [KA-LEX-C67-LINK-03, KA-LEX-C64-JOIN-02, KA-LEX-C39-HAALU-01]
 introduces:
@@ -46,6 +47,11 @@ and nothing else moved. That lengthening is a word in its own right — a suffix
 
 You already met ಕೂಡ (*kūḍa*) doing the same adding job as a separate word.
 ನಾನು ಕೂಡ and ನಾನೂ say the same thing; the second one welds it on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾನೂ** (*nānū*) is native Dravidian: *nānu*, "I" (DEDR 5160), with the ending *-ū*, "too, even".
 
 ## Grammar Lens: the same ending on two nouns means both
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C67-LINK-06]; assesses=[] -->

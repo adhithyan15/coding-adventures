@@ -12,6 +12,7 @@ concept_tag: KA-VERB-IRU
 prerequisites: [KA-C05-maatanaadu, KA-C03-niivu-hegiddiira, KA-C04-hoogu]
 sounds: [independent-i]
 roots: [dravidian-iru-be]
+etymology_hook: "iru: native Dravidian, one word with Tamil iru (DEDR 480)"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,8 @@ very same *iru* Tamil uses, and the verb behind Chapter 3's *hēgiddīrā* ("how
 you") and *cennāgiddēne* ("I'm well"). It also means "to reside": *nānu
 Beṅgaḷūrinalli iddēne* ("I live in Bangalore"). One
 verb covers "be," "stay," and "live."
+
+DEDR 480 lists Kannada *ir*, *iru*, "to be, exist, stay", with Tamil *iru*.
 
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-IRU-02]; assesses=[] -->

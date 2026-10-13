@@ -14,7 +14,8 @@ romanization: "avadhi"
 concept_tag: KA-KALA211-AVADHI
 prerequisites: [KA-C211-varege, KA-C211-sadyakke]
 sounds: []
-roots: []
+roots: [sanskrit-avadhi]
+etymology_hook: "avadhi ← Sanskrit avadhi 'limit, term', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C211-sadyakke]
 <!-- hl-knowledge: introduces=[KA-LEX-C211-KALA211-05]; assesses=[] -->
 
 **ಅವಧಿ** — *avadhi* — "a period, a duration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅವಧಿ** (*avadhi*) is Sanskrit *avadhi*, "limit, term", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

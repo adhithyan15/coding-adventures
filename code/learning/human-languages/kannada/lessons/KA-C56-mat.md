@@ -11,7 +11,8 @@ romanization: "cāpe"
 concept_tag: KA-NOUN-MAT
 prerequisites: [KA-C55-path, KA-C54-tree]
 sounds: []
-roots: []
+roots: [dravidian-caappai-mat]
+etymology_hook: "cāpe: native Dravidian, one word with Tamil cāppai (DEDR 2452)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The woven mat that gets unrolled on the floor: for sitting on, for eating on, fo
 The ಕುರ್ಚಿ arrived from outside with its Persian name, and it arrived late. The ಚಾಪೆ was already there. A Kannada house has for a very long time sat and eaten and slept at floor level, and the ಚಾಪೆ is the piece of furniture that arrangement needs — one object doing what a chair, a table and a bed do elsewhere, then rolling up to occupy nothing.
 
 Offering a guest a ಚಾಪೆ is the older form of the courtesy the ಕುರ್ಚಿ now performs, and in a ಹಳ್ಳಿ it is still the usual one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಾಪೆ** (*cāpe*) is native Dravidian, one word with Tamil *cāppai* (DEDR 2452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

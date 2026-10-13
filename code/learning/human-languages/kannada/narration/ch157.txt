@@ -14,6 +14,9 @@ You'll want to know: ವೇಳಾಪಟ್ಟಿ.
 [once you have stopped driving — read: the board]
 The board says ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮ — bas: beḷigge eṇṭu — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
+The word, taken apart.
+ವೇಳಾಪಟ್ಟಿ (vēḷāpaṭṭi) is vēḷā, "time", from Sanskrit velā, "limit, time" (CDIAL 12115), and paṭṭi, "list", from Sanskrit paṭṭikā, "slab, tablet" (CDIAL 7699): a table of times.
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ You'll want to know: ಸೂಚನೆ.
 [once you have stopped driving — read: the notice]
 The notice says ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ — indu aṅgaḍi muccide — "The shop is closed today." Come back on another day.
 
+The word, taken apart.
+ಸೂಚನೆ (sūcane) is Sanskrit sūcanā, "a pointing out, an indication", with Kannada's -e for the Sanskrit -ā.
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Kannada for a timetable, then the Kannada for a noti
 
 You'll want to know: ಬಾಡಿಗೆ.
 ಬಾಡಿಗೆ — bāḍige — "rent; for hire". The money for a house: ಮನೆ ಬಾಡಿಗೆ — mane bāḍige — "the rent for the house".
+
+The word, taken apart.
+ಬಾಡಿಗೆ (bāḍige) is usually traced to Hindustani bhāṛā, "rent, fare, hire", with the Kannada ending -ige.
 
 What you've built.
 One more word for this chapter.
@@ -105,6 +114,9 @@ You'll want to know: ಜಾಹೀರಾತು.
 [once you have stopped driving — read: the advert]
 The advert says ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ — mane bāḍigege ide — "House for rent."
 
+The word, taken apart.
+ಜಾಹೀರಾತು (jāhīrātu) came through Hindustani jāhirāt, "public notices", from Arabic ẓāhir, "manifest, public": an advertisement makes a thing known.
+
 What you've built.
 One more word for this chapter.
 
@@ -133,6 +145,9 @@ Before the new one: say the Kannada for rent, then the Kannada for an advertisem
 
 You'll want to know: ರಸೀದಿ.
 ರಸೀದಿ — rasīdi — "a receipt". Ask for it when you pay: ದಯವಿಟ್ಟು ರಸೀದಿ ಕೊಡಿ — dayaviṭṭu rasīdi koḍi — "The receipt, please."
+
+The word, taken apart.
+ರಸೀದಿ (rasīdi) is a loan from Persian rasīd, "arrived; a receipt", through Hindustani: a receipt says the money has arrived.
 
 What you've built.
 One more word for this chapter.

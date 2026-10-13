@@ -14,7 +14,8 @@ romanization: "nikharavāgi"
 concept_tag: KA-KARANA177-NIKHARAVAGI
 prerequisites: [KA-C176-ondu-vele, KA-C176-badalu]
 sounds: []
-roots: []
+roots: [kannada-nikhara]
+etymology_hook: "nikharavāgi: nikhara 'exact' + the adverb ending -āgi; the origin of nikhara is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C176-badalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C177-KARANA177-01]; assesses=[] -->
 
 **ನಿಖರವಾಗಿ** — *nikharavāgi* — "exactly, precisely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಖರವಾಗಿ** (*nikharavāgi*) is *nikhara*, "exact, precise", with the adverb ending *-āgi*. The origin of *nikhara* is uncertain; no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

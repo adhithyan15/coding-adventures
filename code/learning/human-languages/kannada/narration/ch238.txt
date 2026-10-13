@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to hit, then the Kannada for to try.
 You'll want to know: ಟೈಪ್ ಮಾಡು.
 ಟೈಪ್ ಮಾಡು — ṭaip māḍu — "to type".
 
+The word, taken apart.
+ಟೈಪ್ ಮಾಡು (ṭaip māḍu) is English type with native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to try, then the Kannada for to type.
 
 You'll want to know: ಕಳೆದುಹೋಗು.
 ಕಳೆದುಹೋಗು — kaḷeduhōgu — "to get lost".
+
+The word, taken apart.
+ಕಳೆದುಹೋಗು (kaḷeduhōgu) is native Dravidian: kaḷedu, from kaḷe, "to send forth, lose" (DEDR 1356), and hōgu, "to go" (DEDR 4572): "to go lost".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to type, then the Kannada for to get los
 You'll want to know: ಒಪ್ಪು.
 ಒಪ್ಪು — oppu — "to agree".
 
+The word, taken apart.
+ಒಪ್ಪು (oppu) is native Dravidian, one word with Tamil o and Telugu oppu (DEDR 924). DEDR lists oppu itself, "to agree with, assent".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to get lost, then the Kannada for to agr
 You'll want to know: ನಿರಾಕರಿಸು.
 ನಿರಾಕರಿಸು — nirākarisu — "to refuse".
 
+The word, taken apart.
+ನಿರಾಕರಿಸು (nirākarisu) is Sanskrit nirākaraṇa, "putting away, rejection", made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to agree, then the Kannada for to refuse
 
 You'll want to know: ಸಂಪಾದಿಸು.
 ಸಂಪಾದಿಸು — sampādisu — "to earn".
+
+The word, taken apart.
+ಸಂಪಾದಿಸು (sampādisu) is the Sanskrit verb sampād-, "to bring about, provide" (CDIAL 12938), made into a Kannada verb with -isu.
 
 What you've built.
 One more word for this chapter.

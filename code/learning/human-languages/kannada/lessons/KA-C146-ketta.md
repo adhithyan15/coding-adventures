@@ -14,7 +14,8 @@ romanization: "keṭṭa"
 concept_tag: KA-QUAL146-KETTA
 prerequisites: [KA-C145-somari, KA-C145-jana]
 sounds: []
-roots: []
+roots: [dravidian-ketu-spoil]
+etymology_hook: "keṭṭa: native Dravidian, 'spoiled', from keḍu 'to be ruined' (DEDR 1942); Tamil keṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C145-jana]
 <!-- hl-knowledge: introduces=[KA-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **ಕೆಟ್ಟ** — *keṭṭa* — "bad, spoiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಟ್ಟ** (*keṭṭa*) is native Dravidian, from *keḍu*, "to be spoiled, become bad", which DEDR 1942 lists; *keṭṭa* is its past form, "spoiled"; the entry also has Tamil *keṭu* and Malayalam *keṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

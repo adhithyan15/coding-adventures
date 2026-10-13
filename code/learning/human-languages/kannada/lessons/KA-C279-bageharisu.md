@@ -14,7 +14,8 @@ romanization: "bageharisu"
 concept_tag: KA-VERB-BAGEHARISU
 prerequisites: [KA-C279-ugulu, KA-C279-akalisu]
 sounds: []
-roots: []
+roots: [dravidian-vakai-think, dravidian-pari-run]
+etymology_hook: "bageharisu: native bage 'thought, concern' (DEDR 5205) + harisu 'make go away' (DEDR 3963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C279-akalisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C279-KRIYE279-04]; assesses=[] -->
 
 **ಬಗೆಹರಿಸು** — *bageharisu* — "to solve, to sort out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಗೆಹರಿಸು** (*bageharisu*) is native Dravidian: *bage*, "thought, concern" (DEDR 5205), and *harisu*, "to make go away", from *hari*, "to run, flow, go away" (DEDR 3963). Reading the whole as "to make a worry go away" is likely, but no source spells it out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-TEACHER
 prerequisites: [KA-C47-stomach, KA-C46-fruit]
 sounds: []
 roots: []
+etymology_hook: "śikṣaka ← Sanskrit śikṣaka 'one who teaches', a well-established loan"
 duration:
   max_seconds: 210
 requires:

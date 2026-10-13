@@ -14,7 +14,8 @@ romanization: "hindikku"
 concept_tag: KA-VERB-HINDIKKU
 prerequisites: [KA-C280-kai-kuluku, KA-C280-talupisu]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-iru-put]
+etymology_hook: "hindikku: native hindu 'behind' (DEDR 4205) + ikku 'to put' (DEDR 492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C280-talupisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C280-KRIYE280-05]; assesses=[] -->
 
 **ಹಿಂದಿಕ್ಕು** — *hindikku* — "to overtake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂದಿಕ್ಕು** (*hindikku*) is native Dravidian: *hindu*, "behind", which DEDR 4205 lists as *pindu*, and *ikku*, "to put, place" (DEDR 492): "to put behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

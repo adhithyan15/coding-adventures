@@ -11,7 +11,8 @@ romanization: "irabahudu"
 concept_tag: KA-RESP-MAYBE
 prerequisites: [KA-C95-notlikethat, KA-C95-oh]
 sounds: []
-roots: []
+roots: [dravidian-iru-be, baa-come-dravidian]
+etymology_hook: "irabahudu: native iru 'to be' (DEDR 480) + bahudu 'it may', usually from baru 'to come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C95-oh]
 
 **ಇರಬಹುದು** (*irabahudu*) — "maybe, it could be", from **ಇರು** (*iru*), "to be",
 with **‑ಬಹುದು**, "may".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇರಬಹುದು** (*irabahudu*) is native Dravidian: *ira*, from *iru*, "to be" (DEDR 480), and *bahudu*, "it may", usually explained as an old future form of *baru*, "to come" (DEDR 5270): "it may come to be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

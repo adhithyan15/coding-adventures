@@ -14,7 +14,8 @@ romanization: "pandya"
 concept_tag: KA-VASTU191-PANDYA
 prerequisites: [KA-C191-citra, KA-C191-kride]
 sounds: []
-roots: []
+roots: [dravidian-panta-wager]
+etymology_hook: "pandya: DEDR 3921 lists Kannada panta, pandya 'bet, wager', noting a derivation from Sanskrit paṇita 'a wager'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C191-kride]
 <!-- hl-knowledge: introduces=[KA-LEX-C191-VASTU191-03]; assesses=[] -->
 
 **ಪಂದ್ಯ** — *pandya* — "a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಂದ್ಯ** (*pandya*) is listed in DEDR 3921 as Kannada *panta*, *pandya*, "bet, wager", with Tamil *pantayam*, "contest for a prize". The entry notes that one scholar derives these words from Sanskrit *paṇita*, "a wager", so the origin is not settled. A match is a contest with a stake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

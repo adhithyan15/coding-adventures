@@ -11,7 +11,8 @@ romanization: "mañju"
 concept_tag: KA-NOUN-MIST
 prerequisites: [KA-C59-wind, KA-C57-back]
 sounds: []
-roots: []
+roots: [dravidian-manju-mist]
+etymology_hook: "mañju: native Dravidian, one word with Tamil mañcu and Telugu mancu (DEDR 4641)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ One word for cold water in the air, however it arrives: the fog on a ಬೆಟ�
 The Kodagu and Chikkamagaluru hills are where this word lives hardest. Coffee country sits high enough that ಮಂಜು is what the mornings are made of for months at a stretch.
 
 Held up beside ಮೋಡ the pair is tidy: the ಮೋಡ is the water overhead, the ಮಂಜು is the same water come down to stand among the trees.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಂಜು** (*mañju*) is native Dravidian, one word with Tamil *mañcu* and Telugu *mancu* (DEDR 4641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

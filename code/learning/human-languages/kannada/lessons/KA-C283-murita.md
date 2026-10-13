@@ -14,7 +14,8 @@ romanization: "murita"
 concept_tag: KA-AROGYA283-MURITA
 prerequisites: [KA-C283-nadi, KA-C283-seleta]
 sounds: []
-roots: []
+roots: [dravidian-muri-break]
+etymology_hook: "murita: native Dravidian, 'a breaking', from muri 'to break' (DEDR 5008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C283-seleta]
 <!-- hl-knowledge: introduces=[KA-LEX-C283-AROGYA283-03]; assesses=[] -->
 
 **ಮುರಿತ** — *murita* — "a fracture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುರಿತ** (*murita*) is native Dravidian, from *muri*, "to break", which DEDR 5008 lists as *muṟi*; the entry also has Tamil *muṟi*, Telugu *muṟiyu* and Malayalam *muṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

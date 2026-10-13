@@ -14,7 +14,8 @@ romanization: "pārsel"
 concept_tag: KA-VASTU295-PARSEL
 prerequisites: [KA-C295-lakote, KA-C295-anceciti]
 sounds: []
-roots: []
+roots: [english-parcel]
+etymology_hook: "pārsel ← English parcel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C295-anceciti]
 <!-- hl-knowledge: introduces=[KA-LEX-C295-VASTU295-05]; assesses=[] -->
 
 **ಪಾರ್ಸೆಲ್** — *pārsel* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾರ್ಸೆಲ್** (*pārsel*) is a loan from English *parcel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

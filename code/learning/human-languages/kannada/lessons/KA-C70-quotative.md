@@ -11,9 +11,10 @@ romanization: "anta"
 concept_tag: KA-QUOTATIVE
 prerequisites: [KA-C70-say, KA-C49-true, KA-C54-branch, KA-C42-small, KA-C41-there, KA-C41-here, KA-C68-is-not, KA-C68-neither]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "anta: native, usually explained as a form of an-, en- 'to say' (DEDR 868)"
 duration:
-  max_seconds: 210
+  max_seconds: 268
 requires:
   knowledge: [KA-LEX-C70-TELL-01, KA-LEX-C49-REPLY-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C39-KAAPI-01]
 introduces:
@@ -49,6 +50,11 @@ coffee." Literally: "there is no coffee — thus — tell."
 
 Nothing inside the quoted part changes. ಕಾಫಿ ಇಲ್ಲ is the same three syllables
 whether you are saying it or reporting it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂತ** (*anta*) is native Dravidian, usually explained as a form of the verb *an-*, *en-*, "to say", which DEDR 868 lists with Tamil *eṉ* and Telugu *anu*. A quotation in Kannada ends with "saying".
 
 ## Grammar Lens: the quotation closes before the verb arrives
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C70-TELL-03]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baḷasu"
 concept_tag: KA-VERB-BALASU
 prerequisites: [KA-C236-eru, KA-C237-kaccu]
 sounds: []
-roots: []
+roots: [dravidian-vazhakku-use]
+etymology_hook: "baḷasu: native Dravidian, one word with Tamil vaḻaṅku (DEDR 5292)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C237-kaccu]
 <!-- hl-knowledge: introduces=[KA-LEX-C237-KRIYE237-02]; assesses=[] -->
 
 **ಬಳಸು** — *baḷasu* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಳಸು** (*baḷasu*) is native Dravidian, one word with Tamil *vaḻaṅku* (DEDR 5292). DEDR gives the older Kannada *baḻasu*, "to use", beside *baḻake*, "use, custom, practice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

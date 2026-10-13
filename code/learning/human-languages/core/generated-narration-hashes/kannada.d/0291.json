@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 291,
-  "sourceHash": "fnv1a64:41c04ab67a1ee521",
+  "sourceHash": "fnv1a64:16da48746de0622f",
   "lessonIds": [
     "KA-C291-tannage",
     "KA-C291-beccage",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch291.txt",
   "json": "kannada/narration/ch291.json",
-  "textHash": "fnv1a64:6ac5ab0420f0e96e",
-  "jsonHash": "fnv1a64:a80f981178b75004",
+  "textHash": "fnv1a64:685d1ef2722f2cca",
+  "jsonHash": "fnv1a64:226be027521834db",
   "findings": []
 }

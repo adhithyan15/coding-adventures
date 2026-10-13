@@ -14,7 +14,8 @@ romanization: "galla"
 concept_tag: KA-THINGS135-GALLA
 prerequisites: [KA-C134-mukha, KA-C134-nalige]
 sounds: []
-roots: []
+roots: [sanskrit-galla]
+etymology_hook: "galla ← Sanskrit galla 'cheek', a tatsama (CDIAL 4089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C134-nalige]
 <!-- hl-knowledge: introduces=[KA-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **ಗಲ್ಲ** — *galla* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಲ್ಲ** (*galla*) is Sanskrit *galla*, "cheek", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

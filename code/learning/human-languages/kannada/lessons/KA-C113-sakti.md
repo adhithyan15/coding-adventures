@@ -14,7 +14,8 @@ romanization: "śakti"
 concept_tag: KA-CAN113-SAKTI
 prerequisites: [KA-C113-asti, KA-C113-yajamana]
 sounds: []
-roots: []
+roots: [sanskrit-shakti]
+etymology_hook: "śakti ← Sanskrit śakti 'power', a tatsama (CDIAL 12250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C113-yajamana]
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-03]; assesses=[] -->
 
 **ಶಕ್ತಿ** — *śakti* — "strength, power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಕ್ತಿ** (*śakti*) is Sanskrit *śakti*, "power", taken over whole as a learned loan, a tatsama (CDIAL 12250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

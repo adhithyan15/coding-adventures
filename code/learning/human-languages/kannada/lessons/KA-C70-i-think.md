@@ -11,9 +11,10 @@ romanization: "adu nija anta yōcisuttēne"
 concept_tag: KA-PHRASE-OPINION
 prerequisites: [KA-C70-because, KA-C33-yocisu, KA-C54-seed, KA-C37-baayi, KA-C37-moogu, KA-C37-kivi]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "adu nija anta yōcisuttēne: native adu 'that' (DEDR 1) and anta 'saying' (DEDR 868); nija ← Sanskrit (CDIAL 7181)"
 duration:
-  max_seconds: 210
+  max_seconds: 259
 requires:
   knowledge: [KA-LEX-C70-TELL-04, KA-LEX-C70-TELL-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C33-YOCISU-01, KA-LEX-C49-REPLY-01, KA-LEX-C41-DEIXIS-02]
 introduces:
@@ -47,6 +48,11 @@ A thought is a whole sentence, and Kannada could not hand it one without ಅಂ�
 
 Read it in Kannada order: **ಅದು ನಿಜ** (the thought) — **ಅಂತ** (closed off) —
 **ಯೋಚಿಸುತ್ತೇನೆ** ("I think").
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ** (*adu nija anta yōcisuttēne*) is built from *adu*, "that" (DEDR 1), *nija*, "true", from Sanskrit *nija* (CDIAL 7181), *anta*, "saying" (DEDR 868), and *yōcisu*, "to think", whose origin is uncertain.
 
 ## Grammar Lens: one frame, and the slot you change
 <!-- hl-knowledge: introduces=[KA-PRAGMATICS-C70-TELL-07]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raddu māḍu"
 concept_tag: KA-VERB-RADDU-MADU
 prerequisites: [KA-C161-bheti-madu, KA-C161-kaydirisu]
 sounds: []
-roots: []
+roots: [arabic-radd, maadu-do-dravidian]
+etymology_hook: "raddu māḍu: raddu ← Arabic radd 'rejection' through Hindustani + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C161-kaydirisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C161-KRIYE161-05]; assesses=[] -->
 
 **ರದ್ದು ಮಾಡು** — *raddu māḍu* — "to cancel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರದ್ದು ಮಾಡು** (*raddu māḍu*) is *raddu*, "cancelled", from Arabic *radd*, "rejection, return", which came through Hindustani, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

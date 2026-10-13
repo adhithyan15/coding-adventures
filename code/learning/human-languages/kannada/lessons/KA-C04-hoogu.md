@@ -12,6 +12,7 @@ concept_tag: KA-VERB-HOOGU
 prerequisites: [KA-C03-naanu, KA-C03-hege]
 sounds: [long-o]
 roots: [hoogu-go-dravidian, baa-come-dravidian]
+etymology_hook: "hōgu and bā are native Dravidian (DEDR 4572, 5270): Tamil pō and vā, Telugu pōvu and vaccu"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ partner: *bā* ("come").
 As commands they are whole words: *hōgu!* ("go!"), *bā!* ("come!"). You need
 both, because Kannada — like every Dravidian language — does not say a plain
 "goodbye." It says "I go, and I **come back**."
+
+DEDR 4572 lists Kannada *pōgu*, *hōgu* with Tamil *pō*; DEDR 5270 lists *bar*, *bā* with Tamil *varu*, *vā*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02, KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02] -->

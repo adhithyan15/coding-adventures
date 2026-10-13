@@ -14,7 +14,8 @@ romanization: "dōṇi"
 concept_tag: KA-THINGS139-DONI
 prerequisites: [KA-C139-kamala, KA-C139-godhi]
 sounds: []
-roots: []
+roots: [sanskrit-drona]
+etymology_hook: "dōṇi ← Sanskrit droṇī 'wooden trough' (CDIAL 6641), through Prakrit dōṇī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C139-godhi]
 <!-- hl-knowledge: introduces=[KA-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **ದೋಣಿ** — *dōṇi* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೋಣಿ** (*dōṇi*) comes from Sanskrit *droṇī*, "wooden trough" (CDIAL 6641), through Prakrit *dōṇī*: a tadbhava. A hollowed log carried water and people alike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

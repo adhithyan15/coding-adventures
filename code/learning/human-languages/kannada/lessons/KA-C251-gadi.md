@@ -14,7 +14,8 @@ romanization: "gaḍi"
 concept_tag: KA-STHALA251-GADI
 prerequisites: [KA-C250-ance-kaceri, KA-C250-kanive]
 sounds: []
-roots: []
+roots: [kannada-gadi-border]
+etymology_hook: "gaḍi: origin uncertain; DEDR has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-kanive]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-01]; assesses=[] -->
 
 **ಗಡಿ** — *gaḍi* — "a frontier, a boundary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಗಡಿ** (*gaḍi*) is uncertain. DEDR has no entry for it in the sense "boundary", CDIAL does not record it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

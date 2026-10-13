@@ -15,6 +15,9 @@ Two syllables, and one of the oldest words the family has. Tamil says maram, Mal
 ಮರ (mara) is the standing tree and equally the wood it is cut into. A carpenter and a forester reach for the same word, and Kannada has felt no need to split them — the thing and the material are one item as far as the language is concerned.
 It is also the first word of this chapter for a plain reason: everything else here is a part of it.
 
+The word, taken apart.
+ಮರ (mara) is native Dravidian, one word with Tamil maram (DEDR 4711).
+
 What you've built.
 The thing the next four words belong to.
 
@@ -47,6 +50,9 @@ Beside it stands ಕೊಂಬು (kombu), a horn, and the two are the same word 
 That picture is not a Kannada peculiarity. Tamil keeps kombu doing both jobs as well, so the joining is old — older than any of the four sisters.
 English does the reverse trick and puts the tree onto the animal, calling the branched horns of a stag its antlers and its crown. The picture travels in whichever direction a language happens to take it.
 
+The word, taken apart.
+ಕೊಂಬೆ (kombe) is native Dravidian, one word with Tamil kompu and Telugu komma (DEDR 2115). DEDR lists Kannada kombu and kombe, "branch".
+
 What you've built.
 Two: the tree, and what comes out of it sideways.
 
@@ -77,6 +83,9 @@ You'll want to know: ಎಲೆ.
 Inherited, and close to its sisters: Tamil ilai, Malayalam ila. Telugu is the one that walked off, using āku instead.
 The everyday weight of ಎಲೆ (ele) is heavier than "leaf" suggests. Say it on its own in a Kannada house and you are usually talking about the betel leaf — ಎಲೆ (ele) ಅಡಿಕೆ, leaf and areca nut, handed to a guest at the end of an ūṭa and at the end of a welcome. The ಬಾಗಿಲು, the ಕುರ್ಚಿ, the ರಂಗೋಲಿ and the ಹೂಮಾಲೆ each had their moment; the ಎಲೆ (ele) is what the visitor is holding on the way out.
 The other big ಎಲೆ (ele) is the plantain leaf a meal is served on, which is a plate you do not wash.
+
+The word, taken apart.
+ಎಲೆ (ele) is native Dravidian, one word with Tamil ilai (DEDR 497).
 
 What you've built.
 Three, and this one is handed to people.
@@ -110,6 +119,9 @@ Tamil says vēr, Malayalam says vēr, Telugu says vēru — and Kannada says ಬ
 Two sound laws now separate Kannada from its sisters, and both of them are visible in a single chapter: the p that became h in ಹಣ್ಣು and ಹೂವು, and the v that became b in this word.
 ಬೇರು (bēru) also does the figurative work English gives roots: where a family comes from, what a word descends from. Both languages dug the same hole.
 
+The word, taken apart.
+ಬೇರು (bēru) is native Dravidian, one word with Tamil vēr and Telugu vēru (DEDR 5535). DEDR gives Kannada bēr(u): the old v- has become b-.
+
 What you've built.
 Four, and the lowest one shows the law.
 
@@ -140,6 +152,7 @@ You'll want to know: ಬೀಜ.
 Four inherited words, and then this one, straight out of Sanskrit and unaltered. The chapter closes on a borrowing, which is a fair picture of the language: the tree is Dravidian from the ಬೇರು (bēru) up, and the word for what starts it came from elsewhere.
 Kannada kept its own word for the act, though. ಬಿತ್ತು (bittu) is to sow, and it is as native as ಮರ (mara). So a ರೈತ sows with an inherited word and names what he is sowing with a borrowed one, in the same breath and without noticing.
 ಬೀಜ (bīja) also does the abstract job — the seed of a quarrel, the seed of an idea — in Kannada exactly as in English, and it was doing it in Sanskrit long before either.
+CDIAL 9250 lists Sanskrit bīja, "seed".
 
 What you've built.
 Five: ಮರ (mara), ಕೊಂಬೆ (kombe), ಎಲೆ (ele), ಬೇರು (bēru), ಬೀಜ (bīja). A tree from the ground up, and the thing it began as.

@@ -14,7 +14,8 @@ romanization: "yaśassu"
 concept_tag: KA-KARANA216-YASASSU
 prerequisites: [KA-C215-sampradaya, KA-C215-samskrti]
 sounds: []
-roots: []
+roots: [sanskrit-yashas]
+etymology_hook: "yaśassu ← Sanskrit yaśas 'splendour, renown', a tatsama (CDIAL 10443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C215-samskrti]
 <!-- hl-knowledge: introduces=[KA-LEX-C216-KARANA216-01]; assesses=[] -->
 
 **ಯಶಸ್ಸು** — *yaśassu* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಶಸ್ಸು** (*yaśassu*) is Sanskrit *yaśas*, "splendour, renown", taken over whole as a learned loan, a tatsama, with Kannada's added *-u* (CDIAL 10443). The final *-s* is doubled before Kannada's *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

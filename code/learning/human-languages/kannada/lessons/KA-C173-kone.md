@@ -14,7 +14,8 @@ romanization: "kōṇe"
 concept_tag: KA-STHALA173-KONE
 prerequisites: [KA-C173-snanada-mane, KA-C173-saucalaya]
 sounds: []
-roots: []
+roots: [dravidian-kone-room]
+etymology_hook: "kōṇe: native Dravidian (DEDR 2211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-saucalaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-04]; assesses=[] -->
 
 **ಕೋಣೆ** — *kōṇe* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೋಣೆ** (*kōṇe*) is native Dravidian (DEDR 2211). DEDR lists Kannada *kōṇe*, "an inner apartment, a kitchen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

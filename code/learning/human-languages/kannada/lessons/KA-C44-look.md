@@ -11,7 +11,8 @@ romanization: "nōḍu"
 concept_tag: KA-VERB-LOOK
 prerequisites: [KA-C42-small]
 sounds: []
-roots: []
+roots: [dravidian-nookku-look]
+etymology_hook: "nōḍu: native Dravidian (DEDR 3794), with Malayalam nōṭṭam 'viewing'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: []
 **ನೋಡು** (*nōḍu*) — "look".
 
 Also 'to see' and, in the right sentence, 'to look after'. One stem covering watching, seeing and caring for is common across the Dravidian languages.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೋಡು** (*nōḍu*) is native Dravidian. DEDR 3794 lists it with Malayalam *nōṭṭam*, "viewing", and Tamil *nōṭṭam*, "examination".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

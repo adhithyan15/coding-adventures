@@ -12,6 +12,9 @@ Before the new one: say the Kannada for cement, then the Kannada for bamboo.
 You'll want to know: ಜಗಲಿ.
 ಜಗಲಿ — jagali — "a raised veranda, a front porch".
 
+The word, taken apart.
+ಜಗಲಿ (jagali) is native Dravidian, one word with Telugu jagati (DEDR 2279). DEDR lists jagali, "a raised place, a seat of mud or stone".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for bamboo, then the Kannada for a raised ve
 
 You'll want to know: ಅಟ್ಟ.
 ಅಟ್ಟ — aṭṭa — "a loft, an attic".
+
+The word, taken apart.
+DEDR 93 lists ಅಟ್ಟ (aṭṭa) beside Tamil aṭṭam, "terraced roof", but marks the Kannada word as one of the tatsamas, and notes that it is uncertain whether the word is Indo-Aryan or Dravidian in origin. Sanskrit has aṭṭa, "tower" (CDIAL 180), which CDIAL calls non-Aryan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a raised veranda, then the Kannada for a
 You'll want to know: ಚಿಲಕ.
 ಚಿಲಕ — cilaka — "a door latch, a bolt".
 
+The word, taken apart.
+ಚಿಲಕ (cilaka) is native Dravidian, one word with Telugu cilaka (DEDR 2561). DEDR lists cilaka, "a hasp or small chain for fastening a door".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a loft, then the Kannada for a door latc
 You'll want to know: ಹಿಡಿಕೆ.
 ಹಿಡಿಕೆ — hiḍike — "a handle".
 
+The word, taken apart.
+ಹಿಡಿಕೆ (hiḍike) is native Dravidian, from hiḍi, "to grasp", and DEDR 4148 lists piḍi, "a hold, a handle, a hilt", with the older p-; the entry also has Tamil piṭi, Telugu piḍi and Malayalam piṭi.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a door latch, then the Kannada for a han
 
 You'll want to know: ವಾಸನೆ.
 ವಾಸನೆ — vāsane — "a smell".
+
+The word, taken apart.
+ವಾಸನೆ (vāsane) is Sanskrit vāsanā, built on vāsa, "perfume" (CDIAL 11592), with the Kannada -e for final -ā.
 
 What you've built.
 One more word for this chapter.

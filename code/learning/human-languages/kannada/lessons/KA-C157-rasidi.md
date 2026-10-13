@@ -14,7 +14,8 @@ romanization: "rasīdi"
 concept_tag: KA-ODU157-RASIDI
 prerequisites: [KA-C157-badige, KA-C157-jahiratu]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasīdi ← Persian rasīd 'arrived; a receipt', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C157-jahiratu]
 <!-- hl-knowledge: introduces=[KA-LEX-C157-ODU157-05]; assesses=[] -->
 
 **ರಸೀದಿ** — *rasīdi* — "a receipt". Ask for it when you pay: **ದಯವಿಟ್ಟು ರಸೀದಿ ಕೊಡಿ** — *dayaviṭṭu rasīdi koḍi* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಸೀದಿ** (*rasīdi*) is a loan from Persian *rasīd*, "arrived; a receipt", through Hindustani: a receipt says the money has arrived.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dvīpa"
 concept_tag: KA-THINGS128-DVIPA
 prerequisites: [KA-C128-ale, KA-C128-jalapata]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dvīpa ← Sanskrit dvīpa 'land, island', a tatsama (CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C128-jalapata]
 <!-- hl-knowledge: introduces=[KA-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **ದ್ವೀಪ** — *dvīpa* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದ್ವೀಪ** (*dvīpa*) is Sanskrit *dvīpa*, "land, island", taken over whole as a learned loan, a tatsama (CDIAL 6691).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

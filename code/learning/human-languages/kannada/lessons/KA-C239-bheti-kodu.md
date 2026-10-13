@@ -14,7 +14,8 @@ romanization: "bhēṭi koḍu"
 concept_tag: KA-VERB-BHETI-KODU
 prerequisites: [KA-C239-alankarisu, KA-C239-hancu]
 sounds: []
-roots: []
+roots: [hindustani-bhent, dravidian-kodu-give]
+etymology_hook: "bhēṭi koḍu: bhēṭi 'a visit' through Hindustani + native koḍu 'to give' (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C239-hancu]
 <!-- hl-knowledge: introduces=[KA-LEX-C239-KRIYE239-04]; assesses=[] -->
 
 **ಭೇಟಿ ಕೊಡು** — *bhēṭi koḍu* — "to pay a visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭೇಟಿ ಕೊಡು** (*bhēṭi koḍu*) is *bhēṭi*, "a meeting, a visit", from Hindustani *bheṇṭ*, and native *koḍu*, "to give" (DEDR 2053): "to give a visit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

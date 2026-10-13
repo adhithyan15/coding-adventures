@@ -11,7 +11,8 @@ romanization: "bēre"
 concept_tag: KA-RESP-OTHER
 prerequisites: [KA-C101-call, KA-C101-urgent]
 sounds: []
-roots: []
+roots: [dravidian-veru-other]
+etymology_hook: "bēre: native Dravidian; DEDR 5548 lists bēṟe 'other'; Tamil vēṟu"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C101-urgent]
 **ಬೇರೆ** (*bēre*) — "other, different".
 
 **ಬೇರೆ ಬೇಕು** (*bēre bēku*) — "I want a different one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇರೆ** (*bēre*) is native Dravidian, from *bēṟu*, "separation", and DEDR 5548 lists *bēṟe*, "separate, other", itself: the old *v-* has become *b-*; the entry also has Tamil *vēṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

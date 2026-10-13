@@ -14,7 +14,8 @@ romanization: "oraḷu"
 concept_tag: KA-VASTU192-ORALU
 prerequisites: [KA-C191-tanda, KA-C191-kriket]
 sounds: []
-roots: []
+roots: [dravidian-ural-mortar]
+etymology_hook: "oraḷu: native Dravidian, one word with Tamil ural (DEDR 651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C191-kriket]
 <!-- hl-knowledge: introduces=[KA-LEX-C192-VASTU192-01]; assesses=[] -->
 
 **ಒರಳು** — *oraḷu* — "a grinding stone, a mortar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒರಳು** (*oraḷu*) is native Dravidian, one word with Tamil *ural* (DEDR 651). DEDR lists Kannada *oral*, *oraḷ*, "mortar of stone or wood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

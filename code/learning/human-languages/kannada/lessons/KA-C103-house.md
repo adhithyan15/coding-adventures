@@ -11,7 +11,8 @@ romanization: "mane"
 concept_tag: KA-HOME-HOUSE
 prerequisites: [KA-C102-onlyone, KA-C102-fornoreason]
 sounds: []
-roots: []
+roots: [dravidian-manai-house]
+etymology_hook: "mane: native Dravidian, one word with Tamil maṉai (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C102-fornoreason]
 **ಮನೆ** (*mane*) — "house, home".
 
 **ನಮ್ಮ ಮನೆ** (*namma mane*) — "our home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮನೆ** (*mane*) is native Dravidian, one word with Tamil *maṉai* (DEDR 4776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

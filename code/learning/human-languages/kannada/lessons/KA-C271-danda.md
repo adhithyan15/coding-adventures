@@ -14,7 +14,8 @@ romanization: "daṇḍa"
 concept_tag: KA-KELASA271-DANDA
 prerequisites: [KA-C270-dhobi, KA-C271-pincani]
 sounds: []
-roots: []
+roots: [sanskrit-danda]
+etymology_hook: "daṇḍa ← Sanskrit daṇḍa 'stick, club; punishment', a tatsama (CDIAL 6128)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C271-pincani]
 <!-- hl-knowledge: introduces=[KA-LEX-C271-KELASA271-02]; assesses=[] -->
 
 **ದಂಡ** — *daṇḍa* — "a fine, a penalty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಂಡ** (*daṇḍa*) is Sanskrit *daṇḍa*, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

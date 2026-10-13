@@ -14,7 +14,8 @@ romanization: "vakīla"
 concept_tag: KA-KELASA268-VAKILA
 prerequisites: [KA-C267-pampu, KA-C267-getu]
 sounds: []
-roots: []
+roots: [arabic-wakil]
+etymology_hook: "vakīla ← Arabic wakīl 'agent', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C267-getu]
 <!-- hl-knowledge: introduces=[KA-LEX-C268-KELASA268-01]; assesses=[] -->
 
 **ವಕೀಲ** — *vakīla* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಕೀಲ** (*vakīla*) is Arabic *wakīl*, "agent, one who acts for another", which came into Kannada through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

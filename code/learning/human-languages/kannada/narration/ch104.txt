@@ -13,6 +13,9 @@ You'll want to know: ವ್ಯಾಪಾರ.
 ವ್ಯಾಪಾರ (vyāpāra) — "business, trade".
 ನನ್ನದು ವ್ಯಾಪಾರ (nannadu vyāpāra) — "mine is business", an answer to ನಿಮ್ಮ ಉದ್ಯೋಗ ಏನು?
 
+The word, taken apart.
+ವ್ಯಾಪಾರ (vyāpāra) is Sanskrit vyāpāra, "occupation, business", taken over whole as a learned loan, a tatsama (CDIAL 12205).
+
 What you've built.
 One answer to what do you do.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for state, then the Kannada for business.
 
 You'll want to know: ಕೆಲಸಗಾರ.
 ಕೆಲಸಗಾರ (kelasagāra) — "a worker", ಕೆಲಸ (kelasa), "work", with ‑ಗಾರ, "one who does it".
+
+The word, taken apart.
+ಕೆಲಸಗಾರ (kelasagāra) is kelasa, "work", native Dravidian (DEDR 1970, with Telugu kelasamu), and -gāra, the ending for "one who does it".
 
 What you've built.
 Work, and the person who does it.
@@ -130,6 +136,9 @@ Before the new one: say the Kannada for the police, then the Kannada for a drive
 You'll want to know: ಅಂಗಡಿ.
 ಅಂಗಡಿ (aṅgaḍi) — "a shop".
 ಅಂಗಡಿ ಎಲ್ಲಿ? (aṅgaḍi elli?) — "where is the shop?"
+
+The word, taken apart.
+ಅಂಗಡಿ (aṅgaḍi) is native Dravidian, one word with Tamil aṅkāṭi and Telugu aṅgaḍi (DEDR 35). DEDR 35 compares, with a query, Sanskrit aṅgaṇa.
 
 What you've built.
 Where the price is asked.

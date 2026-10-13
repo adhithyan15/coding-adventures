@@ -14,7 +14,8 @@ romanization: "bāḍu"
 concept_tag: KA-VERB-BADU
 prerequisites: [KA-C203-belesu, KA-C203-aralu]
 sounds: []
-roots: []
+roots: [dravidian-vaatu-wither]
+etymology_hook: "bāḍu: native Dravidian, one word with Tamil vāṭu and Telugu vāḍu (DEDR 5342)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C203-aralu]
 <!-- hl-knowledge: introduces=[KA-LEX-C203-KRIYE203-03]; assesses=[] -->
 
 **ಬಾಡು** — *bāḍu* — "to wilt, to wither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಡು** (*bāḍu*) is native Dravidian, one word with Tamil *vāṭu* and Telugu *vāḍu* (DEDR 5342). DEDR lists *bāḍu* itself, "to wither, fade": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

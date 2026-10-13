@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 269,
-  "sourceHash": "fnv1a64:f45b599513383001",
+  "sourceHash": "fnv1a64:51b753d0f61019a1",
   "lessonIds": [
     "KA-C269-varadi",
     "KA-C269-samasye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch269.txt",
   "json": "kannada/narration/ch269.json",
-  "textHash": "fnv1a64:5c85e0601b12b931",
-  "jsonHash": "fnv1a64:2f84d3a33396d6ef",
+  "textHash": "fnv1a64:3bf7ffad623f2350",
+  "jsonHash": "fnv1a64:9165b3c9a7c5673d",
   "findings": []
 }

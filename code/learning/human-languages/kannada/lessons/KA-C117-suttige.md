@@ -14,7 +14,8 @@ romanization: "suttige"
 concept_tag: KA-THINGS117-SUTTIGE
 prerequisites: [KA-C116-biga, KA-C116-mole]
 sounds: []
-roots: []
+roots: [dravidian-cutti-hammer]
+etymology_hook: "suttige: native Dravidian, one word with Tamil cutti and Telugu sutte (DEDR 2668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C116-mole]
 <!-- hl-knowledge: introduces=[KA-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **ಸುತ್ತಿಗೆ** — *suttige* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುತ್ತಿಗೆ** (*suttige*) is native Dravidian, one word with Tamil *cutti* and Telugu *sutte* (DEDR 2668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

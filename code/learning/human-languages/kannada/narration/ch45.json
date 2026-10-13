@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "The Older Generation",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3be6fbcfa349beb9",
+  "sourceHash": "fnv1a64:3e7226226ab0a5f6",
   "lessons": [
     {
       "id": "KA-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:546ca5b8ae32eae4",
+      "sourceHash": "fnv1a64:9eab8db62b6026ed",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEDR 50 lists Kannada ajja, \"grandfather\", and ajji, \"grandmother\", with Tamil accaṉ, \"father\", but notes that the whole group is probably a loan from Indo-Aryan: Prakrit ajja, from Sanskrit ārya, \"noble, honoured\" (CDIAL 1347). So ಅಜ್ಜ (ajja) is most likely an old loan, not a native Dravidian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa0d7d9092274833",
+      "sourceHash": "fnv1a64:41fa8dd8f682e850",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +185,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEDR 50 lists Kannada ajji, \"grandmother\", beside ajja, \"grandfather\", and notes that the group is probably a loan from Indo-Aryan: Prakrit ajja, from Sanskrit ārya, \"noble, honoured\" (CDIAL 1347). So ಅಜ್ಜಿ (ajji) is most likely an old loan, not a native Dravidian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -224,7 +246,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -255,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e5f628dcb483da3",
+      "sourceHash": "fnv1a64:2b2d11fec001bf62",
       "notice": null,
       "blocks": [
         {
@@ -287,6 +309,10 @@
             {
               "kind": "speech",
               "text": "The everyday word, and a native one. Its own stem also gives ಗಂಡು (gaṇḍu), 'male', so what it names is a man of the house rather than anything about the wedding. Formal Kannada keeps the Sanskrit pati alongside it for writing and ceremony."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 1173 lists Kannada gaṇḍu, \"male\", and gaṇḍa, \"husband\", with Tamil kaṇṭaṉ, \"warrior, husband\". DEDR 1173 compares Sanskrit gaṇḍa, \"hero\"."
             }
           ]
         },
@@ -382,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f85e47c3015457c",
+      "sourceHash": "fnv1a64:0a97cd29c2962518",
       "notice": null,
       "blocks": [
         {
@@ -419,6 +445,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಂಡತಿ (heṇḍati) is native Dravidian. DEDR 4395 lists the older Kannada form peṇḍati, \"wife\", with peṇ, \"female, woman\", and Tamil peṇ: the p- has become h-. DEDR 4395 compares Sanskrit paṇḍa, \"weakling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -429,7 +466,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,7 +515,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

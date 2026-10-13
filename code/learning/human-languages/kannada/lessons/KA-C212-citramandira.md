@@ -14,7 +14,8 @@ romanization: "citramandira"
 concept_tag: KA-STHALA212-CITRAMANDIRA
 prerequisites: [KA-C212-bandaru, KA-C212-karkhane]
 sounds: []
-roots: []
+roots: [sanskrit-citra, sanskrit-mandira]
+etymology_hook: "citramandira: Sanskrit citra 'picture' (CDIAL 4803) + mandira 'dwelling, temple' (CDIAL 9852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C212-karkhane]
 <!-- hl-knowledge: introduces=[KA-LEX-C212-STHALA212-03]; assesses=[] -->
 
 **ಚಿತ್ರಮಂದಿರ** — *citramandira* — "a cinema hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿತ್ರಮಂದಿರ** (*citramandira*) is Sanskrit *citra*, "bright; picture" (CDIAL 4803), and *mandira*, "dwelling, temple" (CDIAL 9852): "a house of pictures".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

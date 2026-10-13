@@ -14,7 +14,8 @@ romanization: "nibhāyisu"
 concept_tag: KA-VERB-NIBHAYISU
 prerequisites: [KA-C243-uccarisu, KA-C243-kudisu]
 sounds: []
-roots: []
+roots: [sanskrit-nirvaha]
+etymology_hook: "nibhāyisu: usually traced to Sanskrit nirvāha 'accomplishing' through Prakrit (CDIAL 7397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-kudisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-04]; assesses=[] -->
 
 **ನಿಭಾಯಿಸು** — *nibhāyisu* — "to manage, to cope with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಭಾಯಿಸು** (*nibhāyisu*) is usually traced to Sanskrit *nirvāha*, "carrying through, accomplishing", through a Middle Indo-Aryan form (CDIAL 7397), made into a verb with *-isu*: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

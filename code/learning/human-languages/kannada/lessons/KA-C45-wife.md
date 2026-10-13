@@ -11,7 +11,8 @@ romanization: "heṇḍati"
 concept_tag: KA-NOUN-WIFE
 prerequisites: [KA-C45-husband, KA-C43-sit]
 sounds: []
-roots: []
+roots: [dravidian-pen-female]
+etymology_hook: "heṇḍati: native Dravidian, older Kannada peṇḍati 'wife' (DEDR 4395); Tamil peṇ 'woman'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C45-husband]
 **ಹೆಂಡತಿ** (*heṇḍati*) — "wife".
 
 Built on ಹೆಣ್ಣು (*heṇṇu*), 'female', with a *-ti* ending. And *heṇṇu* carries the sound change you already met in ಹೋಗು: where its sisters keep an old *p-*, Kannada has *h-*. So Tamil *peṇ*, 'woman', and this *heṇ-* are one word wearing two faces.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಂಡತಿ** (*heṇḍati*) is native Dravidian. DEDR 4395 lists the older Kannada form *peṇḍati*, "wife", with *peṇ*, "female, woman", and Tamil *peṇ*: the *p-* has become *h-*. DEDR 4395 compares Sanskrit *paṇḍa*, "weakling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āse"
 concept_tag: KA-CAN113-ASE
 prerequisites: [KA-C113-yajamana, KA-C113-sakti]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āse ← Sanskrit āśā 'wish, expectation', reshaped as a tadbhava (CDIAL 1456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C113-sakti]
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-04]; assesses=[] -->
 
 **ಆಸೆ** — *āse* — "a wish, a desire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಸೆ** (*āse*) comes from Sanskrit *āśā*, "wish, expectation", reshaped to Kannada sounds: a tadbhava (CDIAL 1456). The *ś* became *s*, and the final *-ā* became Kannada *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

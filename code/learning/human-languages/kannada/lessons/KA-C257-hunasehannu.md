@@ -14,7 +14,8 @@ romanization: "huṇasehaṇṇu"
 concept_tag: KA-VASTU257-HUNASEHANNU
 prerequisites: [KA-C257-hittu, KA-C257-bele]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour, dravidian-pazhu-ripen]
+etymology_hook: "huṇasehaṇṇu: native huṇase 'tamarind' (DEDR 4322) + haṇṇu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C257-bele]
 <!-- hl-knowledge: introduces=[KA-LEX-C257-VASTU257-05]; assesses=[] -->
 
 **ಹುಣಸೆಹಣ್ಣು** — *huṇasehaṇṇu* — "tamarind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಣಸೆಹಣ್ಣು** (*huṇasehaṇṇu*) is native Dravidian: *huṇase*, "tamarind", which DEDR 4322 lists as *puṇise*, *huṇise*, from the root for "sour", and *haṇṇu*, "ripe fruit", which DEDR 4004 lists as *paṇṇu*. DEDR 4004 compares Sanskrit *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

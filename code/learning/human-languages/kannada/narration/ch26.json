@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c95696951addef3d",
+  "sourceHash": "fnv1a64:4f7dbd05c49a852e",
   "lessons": [
     {
       "id": "KA-C26-belagge",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45fd76dfb807f293",
+      "sourceHash": "fnv1a64:2ebe8d7503fb11c0",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +192,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಜು (īju) is native Dravidian, one word with Tamil nīntu (DEDR 3687). The entry gives Kannada īju beside īsu and hīju."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -222,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

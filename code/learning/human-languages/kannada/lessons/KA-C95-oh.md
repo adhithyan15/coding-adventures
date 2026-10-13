@@ -11,7 +11,8 @@ romanization: "ōhō"
 concept_tag: KA-RESP-OH-I-SEE
 prerequisites: [KA-C95-notpossible, KA-C95-notlikethat]
 sounds: []
-roots: []
+roots: [kannada-interjection]
+etymology_hook: "ōhō: an exclamation, made from the sound itself"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C95-notlikethat]
 <!-- hl-knowledge: introduces=[KA-LEX-C95-MAYBE-03]; assesses=[] -->
 
 **ಓಹೋ** (*ōhō*) — "oh, I see!", the sound of understanding arriving.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಓಹೋ** (*ōhō*) is an exclamation: the sound of surprise made into a word, as in many languages. It has no etymology beyond the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

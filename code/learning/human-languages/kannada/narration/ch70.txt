@@ -15,6 +15,9 @@ You have had ಮಾತಾಡು (mātāḍu, "to speak") for a while. The two ar
 You have also read the polite command form of it already, in the sentence a stranger needs most: ದಯವಿಟ್ಟು ದಾರಿ ಹೇಳಿ (dayaviṭṭu dāri hēḷi) — "please tell me the way." The -ಇ on the end is the polite request ending, so ಹೇಳಿ is "please tell".
 The reason this verb arrives here rather than with the other verbs is what comes next: it is the verb a reported sentence hangs on, and until the following lesson there was nothing to hang.
 
+The word, taken apart.
+ಹೇಳು (hēḷu) is native Dravidian, one word with Tamil pēcu (DEDR 4430). DEDR gives the older Kannada pēḻ, "to say": the p- has become h- and the ḻ has become ḷ.
+
 What you've built.
 A verb with a hole in it, waiting for something to be said.
 
@@ -54,6 +57,9 @@ You'll want to know: ಅಂತ.
 English opens a report with that and lets it run: "he said that there is no coffee." Kannada does the opposite. It says the thing first, exactly as it was said, and then shuts it with ಅಂತ (anta):
 ಕಾಫಿ ಇಲ್ಲ ಅಂತ ಹೇಳಿ (kāphi illa anta hēḷi) — "please say that there is no coffee." Literally: "there is no coffee — thus — tell."
 Nothing inside the quoted part changes. ಕಾಫಿ ಇಲ್ಲ is the same three syllables whether you are saying it or reporting it.
+
+The word, taken apart.
+ಅಂತ (anta) is native Dravidian, usually explained as a form of the verb an-, en-, "to say", which DEDR 868 lists with Tamil eṉ and Telugu anu. A quotation in Kannada ends with "saying".
 
 Grammar Lens: the quotation closes before the verb arrives.
 ಅಂತ (anta) comes after the clause it closes, and the verb of saying or thinking comes after that. So a Kannada report is built back to front from an English one:
@@ -140,6 +146,9 @@ Take it apart and there is nothing in it you have not already met.
 ಕಾಫಿ ಇಲ್ಲ, ಏಕೆಂದರೆ ಹಾಲು ಇಲ್ಲ (kāphi illa, ēkendare hālu illa) — "there is no coffee, because there is no milk."
 A reason can now be asked for and given. Neither was possible in this book an hour ago.
 
+The word, taken apart.
+ಏಕೆಂದರೆ (ēkendare) is native Dravidian: ēke, "why" (DEDR 5151), and endare, "if one says", from en-, "to say" (DEDR 868). "If you ask why" opens the reason.
+
 Grammar Lens: the same ending, for the third time.
 ಏಕೆಂದರೆ (ēkendare) opens the reason, exactly where English puts because, and the reason comes second. That is worth saying plainly because Kannada does not always work that way: most of its subordinate machinery comes BEFORE the main clause, and this borrowed-looking word is one of the few that comes after.
 Notice the ending you have now seen three times. ಆದರೆ, ಹಾಗಾದರೆ, ಏಕೆಂದರೆ (ēkendare) — all three are little conditional sentences that hardened into joining words, and -ದರೆ is the piece doing it in each.
@@ -181,6 +190,9 @@ You'll want to know: ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತ�
 ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ (adu nija anta yōcisuttēne) — "I think that is true."
 ಯೋಚಿಸು (yōcisu, "to think") has been in this book since the chapter of mind verbs, and until the last lesson it could not do the one thing thinking is for. A thought is a whole sentence, and Kannada could not hand it one without ಅಂತ (anta).
 Read it in Kannada order: ಅದು ನಿಜ (the thought) — ಅಂತ (anta) (closed off) — ಯೋಚಿಸುತ್ತೇನೆ ("I think").
+
+The phrase, taken apart.
+ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ (adu nija anta yōcisuttēne) is built from adu, "that" (DEDR 1), nija, "true", from Sanskrit nija (CDIAL 7181), anta, "saying" (DEDR 868), and yōcisu, "to think", whose origin is uncertain.
 
 Grammar Lens: one frame, and the slot you change.
 Only the first slot ever changes:

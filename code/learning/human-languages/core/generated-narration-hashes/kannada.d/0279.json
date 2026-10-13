@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 279,
-  "sourceHash": "fnv1a64:827206e8b8d92be6",
+  "sourceHash": "fnv1a64:13e85786a4d982c4",
   "lessonIds": [
     "KA-C279-cuccu",
     "KA-C279-ugulu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch279.txt",
   "json": "kannada/narration/ch279.json",
-  "textHash": "fnv1a64:ec294a87ecc40e24",
-  "jsonHash": "fnv1a64:946c01d9b0d00afe",
+  "textHash": "fnv1a64:663e34cb2a40fbdc",
+  "jsonHash": "fnv1a64:a9507a04371344cb",
   "findings": []
 }

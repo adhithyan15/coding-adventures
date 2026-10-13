@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a room, then the Kannada for a courtyard
 You'll want to know: ಪ್ರವಾಸಿ.
 ಪ್ರವಾಸಿ — pravāsi — "a tourist".
 
+The word, taken apart.
+ಪ್ರವಾಸಿ (pravāsi) is Sanskrit pravāsin, "one who is away from home, a traveller", from pravāsa, "a stay abroad". Kannada drops the final -n.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a courtyard, then the Kannada for a tour
 
 You'll want to know: ಸರೋವರ.
 ಸರೋವರ — sarōvara — "a lake".
+
+The word, taken apart.
+ಸರೋವರ (sarōvara) is Sanskrit sarovara, "a fine lake": saras, "lake, pool" (CDIAL 13254), and vara, "best".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a tourist, then the Kannada for a lake.
 You'll want to know: ಗುಹೆ.
 ಗುಹೆ — guhe — "a cave".
 
+The word, taken apart.
+ಗುಹೆ (guhe) is Sanskrit guhā, "hiding place, cave", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 4220).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a lake, then the Kannada for a cave.
 You'll want to know: ಮೃಗಾಲಯ.
 ಮೃಗಾಲಯ — mṛgālaya — "a zoo".
 
+The word, taken apart.
+ಮೃಗಾಲಯ (mṛgālaya) is Sanskrit mṛga, "wild animal, deer" (CDIAL 10264), and ālaya, "house" (CDIAL 1366): "a house of animals".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a cave, then the Kannada for a zoo.
 
 You'll want to know: ಅರಮನೆ.
 ಅರಮನೆ — aramane — "a palace".
+
+The word, taken apart.
+ಅರಮನೆ (aramane) is "the king's house". DEDR 201 lists ara-mane, "royal dwelling, palace", itself. Its first part is arasu, "king", which DEDR derives from Sanskrit rājan, "king", through an early southern form; the second is native mane, "house" (DEDR 4776).
 
 What you've built.
 One more word for this chapter.

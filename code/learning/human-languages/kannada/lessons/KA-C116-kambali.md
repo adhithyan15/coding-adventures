@@ -14,7 +14,8 @@ romanization: "kambaḷi"
 concept_tag: KA-THINGS116-KAMBALI
 prerequisites: [KA-C115-mamca, KA-C116-dimbu]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kambaḷi ← Sanskrit kambala 'woollen blanket', reshaped as a tadbhava (CDIAL 2771)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C116-dimbu]
 <!-- hl-knowledge: introduces=[KA-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **ಕಂಬಳಿ** — *kambaḷi* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂಬಳಿ** (*kambaḷi*) comes from Sanskrit *kambala*, "woollen blanket", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final *-a* became *-i*, and the *l* became *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

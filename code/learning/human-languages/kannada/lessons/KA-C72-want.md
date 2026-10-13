@@ -11,9 +11,10 @@ romanization: "nanage cahā bēku"
 concept_tag: KA-VERB-WANT
 prerequisites: [KA-C72-when-clause, KA-C58-no-thanks, KA-C06-dative-subject, KA-C56-basket, KA-C20-havamana, KA-C16-tingalugalu, KA-C14-kaalagalu]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want, naan-dravidian]
+etymology_hook: "nanage cahā bēku: native nanage 'to me' (DEDR 5160) and bēku 'is wanted' (DEDR 5528); cahā is a loan through Hindustani"
 duration:
-  max_seconds: 210
+  max_seconds: 271
 requires:
   knowledge: [KA-LEX-C72-WANT-01, KA-LEX-C58-REPLY-04, KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-LEX-C39-CHAHA-01]
 introduces:
@@ -51,6 +52,11 @@ half.
 
 On its own it answers an offer: somebody holds up the pot, you say the wanting
 word or you say ಬೇಡ, and that is the whole exchange.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನನಗೆ ಚಹಾ ಬೇಕು** (*nanage cahā bēku*) is *nanage*, "to me" (DEDR 5160), *cahā*, "tea", and *bēku*, "it is wanted" (DEDR 5528, with Tamil *vēṇṭu*). *Bēku* and *nanage* are native; *cahā* came through Hindustani *chā*, which goes back to Chinese *chá*.
 
 ## Grammar Lens: the pair, and the missing half
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C72-WANT-04]; assesses=[] -->

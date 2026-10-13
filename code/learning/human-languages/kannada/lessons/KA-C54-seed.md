@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SEED
 prerequisites: [KA-C54-root, KA-C52-garland]
 sounds: []
 roots: []
+etymology_hook: "bīja ← Sanskrit bīja 'seed', taken over whole (CDIAL 9250)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Four inherited words, and then this one, straight out of Sanskrit and unaltered.
 Kannada kept its own word for the act, though. ಬಿತ್ತು (*bittu*) is to sow, and it is as native as ಮರ. So a ರೈತ sows with an inherited word and names what he is sowing with a borrowed one, in the same breath and without noticing.
 
 ಬೀಜ also does the abstract job — the seed of a quarrel, the seed of an idea — in Kannada exactly as in English, and it was doing it in Sanskrit long before either.
+
+CDIAL 9250 lists Sanskrit *bīja*, "seed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

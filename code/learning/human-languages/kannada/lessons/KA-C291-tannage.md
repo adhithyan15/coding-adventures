@@ -14,7 +14,8 @@ romanization: "taṇṇage"
 concept_tag: KA-GUNA291-TANNAGE
 prerequisites: [KA-C290-sulabha, KA-C290-mukhya]
 sounds: []
-roots: []
+roots: [dravidian-tan-cool]
+etymology_hook: "taṇṇage: native Dravidian, from taṇ 'coolness, cold' (DEDR 3045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C290-mukhya]
 <!-- hl-knowledge: introduces=[KA-LEX-C291-GUNA291-01]; assesses=[] -->
 
 **ತಣ್ಣಗೆ** — *taṇṇage* — "cool, cold (to the touch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಣ್ಣಗೆ** (*taṇṇage*) is native Dravidian, from *taṇ*, "coolness, cold", which DEDR 3045 lists, with the adverb ending *-age*; the entry also has Tamil *taṇ*, Telugu *taniyu* and Malayalam *taṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

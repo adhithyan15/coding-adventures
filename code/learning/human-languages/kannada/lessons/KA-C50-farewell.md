@@ -11,7 +11,8 @@ romanization: "bīḷkoḍuge"
 concept_tag: KA-NOUN-FAREWELL
 prerequisites: [KA-C50-set-out, KA-C48-guest]
 sounds: []
-roots: []
+roots: [dravidian-vidu-let-go, dravidian-kodu-give]
+etymology_hook: "bīḷkoḍuge: native, 'a giving of leave': bīḷ-, from biḍu 'to let go' (DEDR 5393), + koḍuge 'a gift' (DEDR 2053)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Take it apart and something you already own falls out of it. ಬೀಳ್ಕೊ�
 Notice whose act it is. Kannada makes the leave-taking belong to the one who stays: the host gives the departure away. The traveller only walks.
 
 Five words for going: now, the day after tomorrow, a journey, to set out, and the send-off at the end of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀಳ್ಕೊಡುಗೆ** (*bīḷkoḍuge*) is native Dravidian, "a giving of leave": *bīḷ-* belongs with *biḍu*, "to let go, quit" (DEDR 5393), and *koḍuge*, "a gift", is from *koḍu*, "to give" (DEDR 2053). DEDR 5393 compares Sanskrit *avamocana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

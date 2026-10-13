@@ -14,7 +14,8 @@ romanization: "toṭṭikku"
 concept_tag: KA-VERB-TOTTIKKU
 prerequisites: [KA-C166-ulu, KA-C166-cimukisu]
 sounds: []
-roots: []
+roots: [kannada-totti-drip]
+etymology_hook: "toṭṭikku: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-cimukisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-03]; assesses=[] -->
 
 **ತೊಟ್ಟಿಕ್ಕು** — *toṭṭikku* — "to drip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ತೊಟ್ಟಿಕ್ಕು** (*toṭṭikku*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

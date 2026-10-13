@@ -14,7 +14,8 @@ romanization: "vārāntya"
 concept_tag: KA-KALA171-VARANTYA
 prerequisites: [KA-C171-agaga, KA-C171-dinanka]
 sounds: []
-roots: []
+roots: [vara-sanskrit, sanskrit-anta]
+etymology_hook: "vārāntya: Sanskrit vāra 'day of the week' (CDIAL 11547) + anta 'end' (CDIAL 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C171-dinanka]
 <!-- hl-knowledge: introduces=[KA-LEX-C171-KALA171-04]; assesses=[] -->
 
 **ವಾರಾಂತ್ಯ** — *vārāntya* — "the weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾರಾಂತ್ಯ** (*vārāntya*) is Sanskrit *vāra*, "day of the week" (CDIAL 11547), and *antya*, "last", from *anta*, "end" (CDIAL 347): "the week's end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

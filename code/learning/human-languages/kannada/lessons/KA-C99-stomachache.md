@@ -11,7 +11,8 @@ romanization: "hoṭṭenōvu"
 concept_tag: KA-BODY2-STOMACH
 prerequisites: [KA-C99-skin, KA-C99-blood]
 sounds: []
-roots: []
+roots: [dravidian-potta-belly, dravidian-noo-pain]
+etymology_hook: "hoṭṭenōvu: hoṭṭe 'belly' (DEDR 4494) + native nōvu 'pain' (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C99-blood]
 
 **ಹೊಟ್ಟೆನೋವು** (*hoṭṭenōvu*) — "a stomach ache", built exactly like **ತಲೆನೋವು**:
 **ಹೊಟ್ಟೆ** (*hoṭṭe*), "stomach", with **ನೋವು**, "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಟ್ಟೆನೋವು** (*hoṭṭenōvu*) is *hoṭṭe*, "belly" (DEDR 4494, older Kannada *poṭṭe*), and *nōvu*, "pain", native Dravidian (DEDR 3793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

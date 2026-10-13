@@ -14,7 +14,8 @@ romanization: "carcisu"
 concept_tag: KA-VERB-CARCISU
 prerequisites: [KA-C202-munduvarisu, KA-C202-samparkisu]
 sounds: []
-roots: []
+roots: [sanskrit-carca]
+etymology_hook: "carcisu: Sanskrit carcā 'discussion' (CDIAL 4695) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C202-samparkisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C202-KRIYE202-05]; assesses=[] -->
 
 **ಚರ್ಚಿಸು** — *carcisu* — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚರ್ಚಿಸು** (*carcisu*) is Sanskrit *carcā*, "repetition, discussion" (CDIAL 4695), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

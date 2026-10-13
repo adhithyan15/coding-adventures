@@ -12,6 +12,9 @@ Before the new one: say the Kannada for easy, then the Kannada for important.
 You'll want to know: ತಣ್ಣಗೆ.
 ತಣ್ಣಗೆ — taṇṇage — "cool, cold (to the touch)".
 
+The word, taken apart.
+ತಣ್ಣಗೆ (taṇṇage) is native Dravidian, from taṇ, "coolness, cold", which DEDR 3045 lists, with the adverb ending -age; the entry also has Tamil taṇ, Telugu taniyu and Malayalam taṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for important, then the Kannada for cool.
 
 You'll want to know: ಬೆಚ್ಚಗೆ.
 ಬೆಚ್ಚಗೆ — beccage — "warm".
+
+The word, taken apart.
+ಬೆಚ್ಚಗೆ (beccage) is native Dravidian, DEDR 5517 lists beccage, "heat, warmth; warm", itself, under the root for "to burn"; the entry also has Malayalam vēka.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for cool, then the Kannada for warm.
 You'll want to know: ವಿಚಿತ್ರ.
 ವಿಚಿತ್ರ — vicitra — "strange, odd".
 
+The word, taken apart.
+ವಿಚಿತ್ರ (vicitra) is Sanskrit vicitra, "many-coloured, strange", built on citra, "bright, variegated" (CDIAL 4803).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for warm, then the Kannada for strange.
 You'll want to know: ಅದ್ಭುತ.
 ಅದ್ಭುತ — adbhuta — "wonderful, amazing".
 
+The word, taken apart.
+ಅದ್ಭುತ (adbhuta) is Sanskrit adbhuta, "wonderful", taken over whole as a learned loan, a tatsama (CDIAL 240).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for strange, then the Kannada for wonderful.
 
 You'll want to know: ಆಸಕ್ತಿಕರ.
 ಆಸಕ್ತಿಕರ — āsaktikara — "interesting".
+
+The word, taken apart.
+ಆಸಕ್ತಿಕರ (āsaktikara) is Sanskrit āsakti, "attachment, interest", from āsakta, "attached" (CDIAL 1477), and kara, "causing" (CDIAL 2779): "causing interest".
 
 What you've built.
 One more word for this chapter.

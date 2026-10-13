@@ -11,7 +11,8 @@ romanization: "meccuge"
 concept_tag: KA-WISH-PRAISE
 prerequisites: [KA-C105-hospitality, KA-C105-love]
 sounds: []
-roots: []
+roots: [dravidian-meccu-like]
+etymology_hook: "meccuge: native Dravidian, from meccu 'to approve, like' (DEDR 4722)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C105-love]
 
 **ಮೆಚ್ಚುಗೆ** (*meccuge*) — "appreciation, praise", from **ಮೆಚ್ಚು** (*meccu*), "to like,
 to admire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೆಚ್ಚುಗೆ** (*meccuge*) is native Dravidian, from *meccu*, "to approve, like", which DEDR 4722 lists itself; the entry also has Tamil *maruvu* and Telugu *maragu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

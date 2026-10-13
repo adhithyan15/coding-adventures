@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 147,
-  "sourceHash": "fnv1a64:d53afd554d0690ee",
+  "sourceHash": "fnv1a64:d6b8abcb3789ee60",
   "lessonIds": [
     "KA-C147-kudi",
     "KA-C147-odu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch147.txt",
   "json": "kannada/narration/ch147.json",
-  "textHash": "fnv1a64:6c7692a8532f5d87",
-  "jsonHash": "fnv1a64:d072b359a3240f46",
+  "textHash": "fnv1a64:9429bd687494cd42",
+  "jsonHash": "fnv1a64:1182bb675d303ae3",
   "findings": []
 }

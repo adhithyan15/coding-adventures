@@ -14,7 +14,8 @@ romanization: "turimaṇe"
 concept_tag: KA-VASTU192-TURIMANE
 prerequisites: [KA-C192-miksi, KA-C192-jaradi]
 sounds: []
-roots: []
+roots: [dravidian-turi-bore, dravidian-mane-stool]
+etymology_hook: "turimaṇe: native turi 'to grate, scrape' (DEDR 3339) + maṇe 'stool, low seat' (DEDR 4675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C192-jaradi]
 <!-- hl-knowledge: introduces=[KA-LEX-C192-VASTU192-05]; assesses=[] -->
 
 **ತುರಿಮಣೆ** — *turimaṇe* — "a coconut grater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುರಿಮಣೆ** (*turimaṇe*) is native Dravidian: *turi*, "to grate, scrape out" (DEDR 3339), and *maṇe*, "stool, low bench" (DEDR 4675): the grater is a little stool you sit on to scrape the coconut.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

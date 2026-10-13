@@ -14,7 +14,8 @@ romanization: "amāvāsye"
 concept_tag: KA-KALA285-AMAVASYE
 prerequisites: [KA-C285-marudina, KA-C285-balya]
 sounds: []
-roots: []
+roots: [sanskrit-amavasya]
+etymology_hook: "amāvāsye ← Sanskrit amāvāsyā, from amā 'at home' + vāsa 'dwelling' (CDIAL 563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C285-balya]
 <!-- hl-knowledge: introduces=[KA-LEX-C285-KALA285-04]; assesses=[] -->
 
 **ಅಮಾವಾಸ್ಯೆ** — *amāvāsye* — "the new moon day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಮಾವಾಸ್ಯೆ** (*amāvāsye*) is Sanskrit *amāvāsyā*, the new-moon night, built from *amā*, "at home, together", and *vāsa*, "dwelling" (CDIAL 563): the night the sun and moon dwell together. Kannada has *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

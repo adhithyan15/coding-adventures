@@ -14,7 +14,8 @@ romanization: "mēladhikāri"
 concept_tag: KA-KELASA194-MELADHIKARI
 prerequisites: [KA-C194-darji, KA-C194-manegelasa]
 sounds: []
-roots: []
+roots: [dravidian-mel-above, sanskrit-adhikarin]
+etymology_hook: "mēladhikāri: native mēl 'above' (DEDR 5086) + Sanskrit adhikārin 'one in charge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C194-manegelasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C194-KELASA194-05]; assesses=[] -->
 
 **ಮೇಲಧಿಕಾರಿ** — *mēladhikāri* — "a boss, a superior".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಲಧಿಕಾರಿ** (*mēladhikāri*) is native *mēl*, "above" (DEDR 5086), and *adhikāri*, "an official", from Sanskrit *adhikārin*, "one in charge": "the official above".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

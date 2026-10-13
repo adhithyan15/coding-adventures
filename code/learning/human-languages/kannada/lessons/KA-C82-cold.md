@@ -11,7 +11,8 @@ romanization: "śīta"
 concept_tag: KA-UNWELL-COLD
 prerequisites: [KA-C63-pain, KA-C82-tiredness]
 sounds: []
-roots: []
+roots: [sanskrit-shita]
+etymology_hook: "śīta ← Sanskrit śīta 'cold', a tatsama (CDIAL 12485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C82-tiredness]
 "cold, chill".
 
 **ನನಗೆ ಶೀತ ಆಗಿದೆ** (*nanage śīta āgide*) — "I have a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶೀತ** (*śīta*) is Sanskrit *śīta*, "cold", taken over whole as a learned loan, a tatsama (CDIAL 12485). In Kannada it also names the common cold.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

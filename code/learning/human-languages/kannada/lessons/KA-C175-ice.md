@@ -14,7 +14,8 @@ romanization: "īce"
 concept_tag: KA-STHALA175-ICE
 prerequisites: [KA-C175-pakka, KA-C175-ace]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "īce: native Dravidian, on the near-pointing base i- (DEDR 410), which lists īce itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C175-ace]
 <!-- hl-knowledge: introduces=[KA-LEX-C175-STHALA175-05]; assesses=[] -->
 
 **ಈಚೆ** — *īce* — "on this side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಈಚೆ** (*īce*) is native Dravidian, built on the near-pointing base *i-*, "this". DEDR 410 lists *īce* itself, "this side, on this side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

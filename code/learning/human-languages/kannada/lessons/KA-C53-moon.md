@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-MOON
 prerequisites: [KA-C53-sunshine, KA-C51-respect]
 sounds: []
 roots: []
+etymology_hook: "candra ← Sanskrit candra 'shining; moon', taken over whole (CDIAL 4661)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *candra* means "shining, bright". Kannada took it whole, the way it too
 Kannada's own moon-word is ತಿಂಗಳು (*tiṅgaḷu*), and that word also means a month. One shape for the moon and for the stretch of time it measures — the moon being the oldest calendar there is, and Kannada keeping that fact inside a single word. The twelve month-names you met are Sanskrit; ತಿಂಗಳು is what a Kannada speaker actually counts in.
 
 *candra* went a long way west too. It shares an ancestor with the Latin piece behind English *candle* and *incandescent*: a very old root for burning white.
+
+CDIAL 4661 lists Sanskrit *candra*, "shining; moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

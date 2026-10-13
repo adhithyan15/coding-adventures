@@ -14,7 +14,8 @@ romanization: "kāyisu"
 concept_tag: KA-VERB-KAYISU
 prerequisites: [KA-C165-urulu, KA-C165-uli]
 sounds: []
-roots: []
+roots: [dravidian-kaay-hot]
+etymology_hook: "kāyisu: native Dravidian; DEDR 1458 lists kāyisu 'to make hot' under kāy 'to grow hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C165-uli]
 <!-- hl-knowledge: introduces=[KA-LEX-C165-KRIYE165-05]; assesses=[] -->
 
 **ಕಾಯಿಸು** — *kāyisu* — "to heat (milk, water)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಯಿಸು** (*kāyisu*) is native Dravidian, from *kāy*, "to grow hot", and DEDR 1458 lists *kāyisu*, "to make hot", itself; the entry also has Tamil *kāy* and Malayalam *kāyuka*. DEDR 1458 compares Sanskrit *kandu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

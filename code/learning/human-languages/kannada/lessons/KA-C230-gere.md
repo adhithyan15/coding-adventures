@@ -14,7 +14,8 @@ romanization: "gere"
 concept_tag: KA-VASTU230-GERE
 prerequisites: [KA-C229-gantu, KA-C229-sarapali]
 sounds: []
-roots: []
+roots: [dravidian-kirai-scratch]
+etymology_hook: "gere: native Dravidian, one word with Malayalam cira (DEDR 1564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C229-sarapali]
 <!-- hl-knowledge: introduces=[KA-LEX-C230-VASTU230-01]; assesses=[] -->
 
 **ಗೆರೆ** — *gere* — "a line".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೆರೆ** (*gere*) is native Dravidian, one word with Malayalam *cira* (DEDR 1564). DEDR lists *gere*, "a scratch, as with the fingers", under *kere*, "to scratch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

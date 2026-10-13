@@ -11,7 +11,8 @@ romanization: "nildāṇa"
 concept_tag: KA-FIND-STATION
 prerequisites: [KA-C100-ticket, KA-C100-bus]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand, sanskrit-sthana]
+etymology_hook: "nildāṇa: native nil 'to stand' (DEDR 3675) + tāṇa 'place', from Sanskrit sthāna (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C100-bus]
 to stand", which you know.
 
 **ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿ?** (*bas nildāṇa elli?*) — "where is the bus stop?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಲ್ದಾಣ** (*nildāṇa*) is *nil*, "to stand, stop" (DEDR 3675), native, and *-dāṇa*, "place", a reshaped form of Sanskrit *sthāna*, "place of abode" (CDIAL 13753). It is "the stopping place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

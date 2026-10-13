@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 116,
-  "sourceHash": "fnv1a64:a2c25a471815c47e",
+  "sourceHash": "fnv1a64:0d01c447b0096c2c",
   "lessonIds": [
     "KA-C116-dimbu",
     "KA-C116-kambali",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch116.txt",
   "json": "kannada/narration/ch116.json",
-  "textHash": "fnv1a64:63234c1f61b74f3c",
-  "jsonHash": "fnv1a64:ce1e8c0c37485d4e",
+  "textHash": "fnv1a64:4ca6e0987dbe309d",
+  "jsonHash": "fnv1a64:63cc8c395cf3177d",
   "findings": []
 }

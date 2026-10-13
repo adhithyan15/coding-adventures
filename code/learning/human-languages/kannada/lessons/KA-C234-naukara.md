@@ -14,7 +14,8 @@ romanization: "naukara"
 concept_tag: KA-KELASA234-NAUKARA
 prerequisites: [KA-C233-itihasa, KA-C234-sibbandi]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukara ← Persian naukar 'servant', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C234-sibbandi]
 <!-- hl-knowledge: introduces=[KA-LEX-C234-KELASA234-02]; assesses=[] -->
 
 **ನೌಕರ** — *naukara* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೌಕರ** (*naukara*) is a loan from Persian *naukar*, "servant", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

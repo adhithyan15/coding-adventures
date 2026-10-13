@@ -14,7 +14,8 @@ romanization: "gūbe"
 concept_tag: KA-THINGS131-GUBE
 prerequisites: [KA-C131-gili, KA-C131-parivala]
 sounds: []
-roots: []
+roots: [dravidian-kuukai-owl]
+etymology_hook: "gūbe: native Dravidian, one word with Tamil kūkai and Telugu gūba (DEDR 1871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C131-parivala]
 <!-- hl-knowledge: introduces=[KA-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **ಗೂಬೆ** — *gūbe* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೂಬೆ** (*gūbe*) is native Dravidian, one word with Tamil *kūkai* and Telugu *gūba* (DEDR 1871). DEDR lists *gūbe* beside *gūge*. DEDR 1871 compares Sanskrit *ghūka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

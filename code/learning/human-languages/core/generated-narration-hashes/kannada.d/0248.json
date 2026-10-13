@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 248,
-  "sourceHash": "fnv1a64:d28638b4c4bd7b72",
+  "sourceHash": "fnv1a64:5f4cfec525b60b3f",
   "lessonIds": [
     "KA-C248-dasaka",
     "KA-C248-varsikotsava",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch248.txt",
   "json": "kannada/narration/ch248.json",
-  "textHash": "fnv1a64:cb6ce8ef5b9e3b33",
-  "jsonHash": "fnv1a64:bf8104443ca17eed",
+  "textHash": "fnv1a64:9d8f86a4c7309ba8",
+  "jsonHash": "fnv1a64:ddf8ddfbc696398b",
   "findings": []
 }

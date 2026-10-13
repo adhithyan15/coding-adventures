@@ -14,7 +14,8 @@ romanization: "huṇṇu"
 concept_tag: KA-AROGYA246-HUNNU
 prerequisites: [KA-C246-uluku, KA-C246-ajirna]
 sounds: []
-roots: []
+roots: [dravidian-pun-wound]
+etymology_hook: "huṇṇu: native Dravidian, one word with Tamil puṇ (DEDR 4268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C246-ajirna]
 <!-- hl-knowledge: introduces=[KA-LEX-C246-AROGYA246-03]; assesses=[] -->
 
 **ಹುಣ್ಣು** — *huṇṇu* — "a sore, an ulcer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಣ್ಣು** (*huṇṇu*) is native Dravidian, one word with Tamil *puṇ* (DEDR 4268). DEDR gives the older Kannada *puṇ*, "wound, ulcer": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

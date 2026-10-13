@@ -14,7 +14,8 @@ romanization: "jiguṭu"
 concept_tag: KA-GUNA219-JIGUTU
 prerequisites: [KA-C219-nunupu, KA-C219-oratu]
 sounds: []
-roots: []
+roots: [dravidian-jigatu-sticky]
+etymology_hook: "jiguṭu: native Dravidian, one word with Telugu jigaṭa (DEDR 2488)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C219-oratu]
 <!-- hl-knowledge: introduces=[KA-LEX-C219-GUNA219-05]; assesses=[] -->
 
 **ಜಿಗುಟು** — *jiguṭu* — "sticky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿಗುಟು** (*jiguṭu*) is native Dravidian, one word with Telugu *jigaṭa* (DEDR 2488). DEDR lists *jigaṭu*, "stickiness, gum". DEDR 2488 compares Sanskrit *cikka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

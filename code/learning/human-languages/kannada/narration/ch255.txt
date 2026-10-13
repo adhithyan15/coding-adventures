@@ -12,6 +12,9 @@ Before the new one: say the Kannada for brown, then the Kannada for pink.
 You'll want to know: ತುಂಟ.
 ತುಂಟ — tuṇṭa — "naughty, mischievous".
 
+The word, taken apart.
+ತುಂಟ (tuṇṭa) is native Dravidian, one word with Tamil tuṇṭaṉ, Telugu tuṇṭa and Malayalam tuṇṭan (DEDR 3312). DEDR lists tuṇṭa itself, "a mischievous man, a rogue".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for pink, then the Kannada for naughty.
 
 You'll want to know: ಶಾಂತ.
 ಶಾಂತ — śānta — "calm, quiet".
+
+The word, taken apart.
+ಶಾಂತ (śānta) is Sanskrit śānta, "abated, calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for naughty, then the Kannada for calm.
 You'll want to know: ಸ್ವಾರ್ಥಿ.
 ಸ್ವಾರ್ಥಿ — svārthi — "selfish".
 
+The word, taken apart.
+ಸ್ವಾರ್ಥಿ (svārthi) is Sanskrit svārthin, "one who seeks his own interest": sva, "own", and artha, "aim, interest". Kannada drops the final -n.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for calm, then the Kannada for selfish.
 You'll want to know: ಗಂಭೀರ.
 ಗಂಭೀರ — gambhīra — "serious".
 
+The word, taken apart.
+ಗಂಭೀರ (gambhīra) is Sanskrit gambhīra, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4031). Depth became seriousness.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for selfish, then the Kannada for serious.
 
 You'll want to know: ಗುಂಡಗೆ.
 ಗುಂಡಗೆ — guṇḍage — "round".
+
+The word, taken apart.
+ಗುಂಡಗೆ (guṇḍage) is native Dravidian, from guṇḍu, "anything round", and DEDR 1695 lists guṇḍage, "round", itself; the entry also has Tamil kuṇṭu and Telugu guṇḍu.
 
 What you've built.
 One more word for this chapter.

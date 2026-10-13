@@ -14,7 +14,8 @@ romanization: "guṇḍage"
 concept_tag: KA-GUNA255-GUNDAGE
 prerequisites: [KA-C255-svarthi, KA-C255-gambhira]
 sounds: []
-roots: []
+roots: [dravidian-gundu-round]
+etymology_hook: "guṇḍage: native Dravidian; DEDR 1695 lists guṇḍage 'round'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C255-gambhira]
 <!-- hl-knowledge: introduces=[KA-LEX-C255-GUNA255-05]; assesses=[] -->
 
 **ಗುಂಡಗೆ** — *guṇḍage* — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಂಡಗೆ** (*guṇḍage*) is native Dravidian, from *guṇḍu*, "anything round", and DEDR 1695 lists *guṇḍage*, "round", itself; the entry also has Tamil *kuṇṭu* and Telugu *guṇḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

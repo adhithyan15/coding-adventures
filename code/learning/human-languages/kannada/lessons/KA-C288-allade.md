@@ -14,7 +14,8 @@ romanization: "allade"
 concept_tag: KA-KARANA288-ALLADE
 prerequisites: [KA-C287-prapanca, KA-C287-gode]
 sounds: []
-roots: []
+roots: [dravidian-al-not]
+etymology_hook: "allade: native Dravidian, 'not being', from alla 'is not' (DEDR 234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C287-gode]
 <!-- hl-knowledge: introduces=[KA-LEX-C288-KARANA288-01]; assesses=[] -->
 
 **ಅಲ್ಲದೆ** — *allade* — "moreover, besides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲ್ಲದೆ** (*allade*) is native Dravidian, from *alla*, "is not", which DEDR 234 lists: "not being (only that)" came to mean "besides"; the entry also has Tamil *al-* and Malayalam *alla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

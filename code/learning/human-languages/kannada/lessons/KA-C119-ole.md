@@ -14,7 +14,8 @@ romanization: "ole"
 concept_tag: KA-THINGS119-OLE
 prerequisites: [KA-C118-lekhani, KA-C118-kagada]
 sounds: []
-roots: []
+roots: [dravidian-ulai-fireplace]
+etymology_hook: "ole: native Dravidian, one word with Tamil ulai (DEDR 2857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C118-kagada]
 <!-- hl-knowledge: introduces=[KA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **ಒಲೆ** — *ole* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಲೆ** (*ole*) is native Dravidian, one word with Tamil *ulai* (DEDR 2857). DEDR lists *ole* itself, "fireplace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

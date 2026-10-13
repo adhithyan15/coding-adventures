@@ -14,7 +14,8 @@ romanization: "moḷe"
 concept_tag: KA-THINGS116-MOLE
 prerequisites: [KA-C116-parade, KA-C116-biga]
 sounds: []
-roots: []
+roots: [dravidian-mulai-peg]
+etymology_hook: "moḷe: native Dravidian, one word with Tamil muḷai and Telugu mola (DEDR 4998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C116-biga]
 <!-- hl-knowledge: introduces=[KA-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **ಮೊಳೆ** — *moḷe* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಳೆ** (*moḷe*) is native Dravidian, one word with Tamil *muḷai* and Telugu *mola* (DEDR 4998). DEDR lists *moḷe* itself, "pin, nail, spike, peg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ākāra"
 concept_tag: KA-VASTU193-AKARA
 prerequisites: [KA-C192-turimane, KA-C193-rattu]
 sounds: []
-roots: []
+roots: [sanskrit-akara]
+etymology_hook: "ākāra ← Sanskrit ākāra 'shape, appearance', a tatsama (CDIAL 1004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C193-rattu]
 <!-- hl-knowledge: introduces=[KA-LEX-C193-VASTU193-02]; assesses=[] -->
 
 **ಆಕಾರ** — *ākāra* — "a shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಕಾರ** (*ākāra*) is Sanskrit *ākāra*, "shape, appearance", taken over whole as a learned loan, a tatsama (CDIAL 1004).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

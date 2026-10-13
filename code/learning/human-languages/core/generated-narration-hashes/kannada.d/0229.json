@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 229,
-  "sourceHash": "fnv1a64:500b4e4119eb734d",
+  "sourceHash": "fnv1a64:79ac4c59a6db5a71",
   "lessonIds": [
     "KA-C229-hande",
     "KA-C229-totti",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch229.txt",
   "json": "kannada/narration/ch229.json",
-  "textHash": "fnv1a64:a7cecc18d14640cf",
-  "jsonHash": "fnv1a64:a99e8c37e59d3594",
+  "textHash": "fnv1a64:038c98bd4940dfab",
+  "jsonHash": "fnv1a64:db8c5ff5fb49423b",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "āmēle"
 concept_tag: KA-WORD-AFTERWARDS
 prerequisites: [KA-C63-health, KA-C62-thread]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-mel-above]
+etymology_hook: "āmēle: native, ā 'that' (DEDR 1) + mēle 'above, after' (DEDR 5086): 'after that'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C63-health]
 ಆಮೇಲೆ opens with the same far-pointing ಆ that stands at the front of ಅದು and ಅಲ್ಲಿ. Not this one, not here — that one, over there, and here it is time rather than place: not now, later.
 
 Put it in front of a farewell you already own and you have a new one. ಆಮೇಲೆ ಸಿಗೋಣ sits beside ಮತ್ತೆ ಸಿಗೋಣ and ನಾಳೆ ಸಿಗೋಣ, three ways of promising the same thing with different amounts of commitment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಮೇಲೆ** (*āmēle*) is native Dravidian: *ā*, "that", the far-pointing base (DEDR 1), and *mēle*, "the top; above, after" (DEDR 5086, with Tamil *mēl*). It is "after that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

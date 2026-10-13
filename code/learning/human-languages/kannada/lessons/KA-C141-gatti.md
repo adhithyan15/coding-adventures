@@ -14,7 +14,8 @@ romanization: "gaṭṭi"
 concept_tag: KA-QUAL141-GATTI
 prerequisites: [KA-C141-hagura, KA-C141-mrdu]
 sounds: []
-roots: []
+roots: [dravidian-katti-hard]
+etymology_hook: "gaṭṭi: native Dravidian, one word with Tamil kaṭṭu and Telugu kaṭṭu (DEDR 1148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C141-mrdu]
 <!-- hl-knowledge: introduces=[KA-LEX-C141-QUAL141-03]; assesses=[] -->
 
 **ಗಟ್ಟಿ** — *gaṭṭi* — "hard, strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಟ್ಟಿ** (*gaṭṭi*) is native Dravidian, one word with Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *kaṭṭa* (DEDR 1148). DEDR lists *gaṭṭi* itself, "firmness, hardness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

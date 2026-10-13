@@ -14,7 +14,8 @@ romanization: "māhiti"
 concept_tag: KA-KELASA269-MAHITI
 prerequisites: [KA-C269-samasye, KA-C269-suddi]
 sounds: []
-roots: []
+roots: [arabic-mahiyat]
+etymology_hook: "māhiti: origin uncertain; usually traced to Arabic māhiyat 'nature, state of affairs'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C269-suddi]
 <!-- hl-knowledge: introduces=[KA-LEX-C269-KELASA269-04]; assesses=[] -->
 
 **ಮಾಹಿತಿ** — *māhiti* — "information".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಮಾಹಿತಿ** (*māhiti*) comes from is uncertain: DEDR and CDIAL do not list it. It is usually traced to Arabic *māhiyat*, "nature, state of affairs", through Persian and the languages to the north.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

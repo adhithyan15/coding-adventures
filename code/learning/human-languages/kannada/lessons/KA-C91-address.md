@@ -11,7 +11,8 @@ romanization: "viḷāsa"
 concept_tag: KA-YOU-ADDRESS
 prerequisites: [KA-C90-neighbours, KA-C90-uncle]
 sounds: []
-roots: []
+roots: [sanskrit-vilasa]
+etymology_hook: "viḷāsa: usually traced to Sanskrit vilāsa 'display, sport' (CDIAL 11900); the sense 'address' is Kannada's"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C90-uncle]
 
 **ನಿಮ್ಮ ವಿಳಾಸ ಏನು?** (*nimma viḷāsa ēnu?*) — "what is your address?", built like
 **ನಿಮ್ಮ ಹೆಸರು ಏನು?** from the start of the book.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಳಾಸ** (*viḷāsa*) is usually traced to Sanskrit *vilāsa*, glossed "sport, coquetry" in CDIAL 11900. How it came to mean a postal address is not recorded.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

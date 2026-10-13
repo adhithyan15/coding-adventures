@@ -14,7 +14,8 @@ romanization: "huṇḍi"
 concept_tag: KA-VASTU230-HUNDI
 prerequisites: [KA-C229-sarapali, KA-C230-gere]
 sounds: []
-roots: []
+roots: [hindustani-hundi]
+etymology_hook: "huṇḍi: origin uncertain; perhaps Hindi huṇḍī 'bill of exchange', Sanskrit huṇḍikā (CDIAL 14138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C230-gere]
 <!-- hl-knowledge: introduces=[KA-LEX-C230-VASTU230-02]; assesses=[] -->
 
 **ಹುಂಡಿ** — *huṇḍi* — "a money box, a collection box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಹುಂಡಿ** (*huṇḍi*) comes from is uncertain. It may be the same word as Hindi *huṇḍī*, "a bill of exchange", from Sanskrit *huṇḍikā* (CDIAL 14138), which CDIAL compares with Persian *hunduwī*, but no source records the sense "collection box".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

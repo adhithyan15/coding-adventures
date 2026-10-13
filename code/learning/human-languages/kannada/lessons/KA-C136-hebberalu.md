@@ -14,7 +14,8 @@ romanization: "hebberaḷu"
 concept_tag: KA-THINGS136-HEBBERALU
 prerequisites: [KA-C135-monakai, KA-C135-manikattu]
 sounds: []
-roots: []
+roots: [dravidian-peru-great, dravidian-viral-finger]
+etymology_hook: "hebberaḷu: usually 'the big finger', a form of per 'great' (DEDR 4411) + beraḷu 'finger' (DEDR 5409)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C135-manikattu]
 <!-- hl-knowledge: introduces=[KA-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **ಹೆಬ್ಬೆರಳು** — *hebberaḷu* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆಬ್ಬೆರಳು** (*hebberaḷu*) is native Dravidian, usually explained as "the big finger": *heb-*, a form of the root for "great", which DEDR 4411 lists as Kannada *per*, *pēr*; then *beraḷu*, "finger" (DEDR 5409).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

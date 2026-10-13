@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 216,
-  "sourceHash": "fnv1a64:4573ef746e18a268",
+  "sourceHash": "fnv1a64:6e387039304b6aae",
   "lessonIds": [
     "KA-C216-yasassu",
     "KA-C216-svatantrya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch216.txt",
   "json": "kannada/narration/ch216.json",
-  "textHash": "fnv1a64:d698380f98987fb6",
-  "jsonHash": "fnv1a64:fa8382dc98d332aa",
+  "textHash": "fnv1a64:c291cacc8c5daf05",
+  "jsonHash": "fnv1a64:2f52e11b431548bb",
   "findings": []
 }

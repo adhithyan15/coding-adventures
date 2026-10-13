@@ -14,7 +14,8 @@ romanization: "sāmpradāyika"
 concept_tag: KA-GUNA181-SAMPRADAYIKA
 prerequisites: [KA-C181-accumeccina, KA-C181-adhunika]
 sounds: []
-roots: []
+roots: [sanskrit-sampradaya]
+etymology_hook: "sāmpradāyika ← Sanskrit sāmpradāyika 'traditional', from sampradāya 'tradition'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C181-adhunika]
 <!-- hl-knowledge: introduces=[KA-LEX-C181-GUNA181-05]; assesses=[] -->
 
 **ಸಾಂಪ್ರದಾಯಿಕ** — *sāmpradāyika* — "traditional".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಂಪ್ರದಾಯಿಕ** (*sāmpradāyika*) is Sanskrit *sāmpradāyika*, "traditional", from *sampradāya*, "a handing down, tradition", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

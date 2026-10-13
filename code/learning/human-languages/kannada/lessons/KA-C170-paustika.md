@@ -14,7 +14,8 @@ romanization: "pauṣṭika"
 concept_tag: KA-AROGYA170-PAUSTIKA
 prerequisites: [KA-C170-sonku, KA-C170-bokke]
 sounds: []
-roots: []
+roots: [sanskrit-paushtika]
+etymology_hook: "pauṣṭika ← Sanskrit pauṣṭika 'nourishing', from puṣṭi 'growth', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C170-bokke]
 <!-- hl-knowledge: introduces=[KA-LEX-C170-AROGYA170-05]; assesses=[] -->
 
 **ಪೌಷ್ಟಿಕ** — *pauṣṭika* — "nutritious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೌಷ್ಟಿಕ** (*pauṣṭika*) is Sanskrit *pauṣṭika*, "nourishing, promoting growth", from *puṣṭi*, "growth", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

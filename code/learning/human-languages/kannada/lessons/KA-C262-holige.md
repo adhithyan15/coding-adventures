@@ -14,7 +14,8 @@ romanization: "hōḷige"
 concept_tag: KA-VASTU262-HOLIGE
 prerequisites: [KA-C262-torana, KA-C262-kunkuma]
 sounds: []
-roots: []
+roots: [sanskrit-poli-cake]
+etymology_hook: "hōḷige: probably a tadbhava of Sanskrit pōlī 'a cake of grain and ghee' (CDIAL 8423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C262-kunkuma]
 <!-- hl-knowledge: introduces=[KA-LEX-C262-VASTU262-03]; assesses=[] -->
 
 **ಹೋಳಿಗೆ** — *hōḷige* — "holige, a sweet stuffed flatbread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೋಳಿಗೆ** (*hōḷige*) is probably a tadbhava of Sanskrit *pōlī*, "a cake of scorched grain and ghee" (CDIAL 8423), with *p-* turned to *h-* and an added *-ige*; CDIAL does not list the Kannada word, but Marathi *poḷī* is there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

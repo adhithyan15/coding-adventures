@@ -14,7 +14,8 @@ romanization: "madhyantara"
 concept_tag: KA-KALA285-MADHYANTARA
 prerequisites: [KA-C285-balya, KA-C285-amavasye]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-antara]
+etymology_hook: "madhyantara ← Sanskrit madhya 'middle' (CDIAL 9804) + antara 'interval' (CDIAL 357)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C285-amavasye]
 <!-- hl-knowledge: introduces=[KA-LEX-C285-KALA285-05]; assesses=[] -->
 
 **ಮಧ್ಯಂತರ** — *madhyantara* — "an interval (in a film, a match)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಧ್ಯಂತರ** (*madhyantara*) is Sanskrit *madhya*, "middle" (CDIAL 9804), and *antara*, "the inside, an interval" (CDIAL 357): "a break in the middle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

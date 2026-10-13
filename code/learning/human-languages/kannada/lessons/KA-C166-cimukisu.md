@@ -14,7 +14,8 @@ romanization: "cimukisu"
 concept_tag: KA-VERB-CIMUKISU
 prerequisites: [KA-C165-kayisu, KA-C166-ulu]
 sounds: []
-roots: []
+roots: [dravidian-cimmu-flick]
+etymology_hook: "cimukisu: native Dravidian, of cimmu 'to flick, squirt' (DEDR 2548)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-ulu]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-02]; assesses=[] -->
 
 **ಚಿಮುಕಿಸು** — *cimukisu* — "to sprinkle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಮುಕಿಸು** (*cimukisu*) is native Dravidian, of the root *cimmu*, "to flick with the fingers, squirt", which DEDR 2548 lists; the entry also has Telugu *cimmu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

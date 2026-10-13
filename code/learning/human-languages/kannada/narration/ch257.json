@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "Tap, Stairs, Flour, Lentils, Tamarind",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07402d94f1a3d56b",
+  "sourceHash": "fnv1a64:9af636b5d930b4fd",
   "lessons": [
     {
       "id": "KA-C257-nalli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89f4658acbc5b12b",
+      "sourceHash": "fnv1a64:b89c4425e91cbc5a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಲ್ಲಿ (nalli) is usually traced to Sanskrit nala, \"a reed\" (CDIAL 6936): a tap is a little pipe, like a hollow reed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55c1d91f4ba57fed",
+      "sourceHash": "fnv1a64:391900f1182ee202",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆಟ್ಟಿಲು (meṭṭilu) is native Dravidian, from meṭṭu, \"to step, tread\", and DEDR 5057 lists meṭṭige, meṭla, \"a step, a stair\", beside it; the entry also has Tamil meṭṭu and Telugu meṭṭu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e561e4b213a4c43",
+      "sourceHash": "fnv1a64:6f7f9d4e1fabe94b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿಟ್ಟು (hiṭṭu) is older piṭṭu, \"flour\", with the p- turned to h-: DEDR 3084 gives piṭṭu, \"flour, food\", under Kannada. Where it comes from is not settled. It matches Prakrit piṭṭha, \"flour\", from Sanskrit piṣṭa, \"ground\" (CDIAL 8218), but DEDR does not call it a loan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9da0b57495f1b0e",
+      "sourceHash": "fnv1a64:e71a4b9a4c6246bb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಳೆ (bēḷe) is native Dravidian (DEDR 4444). DEDR lists bēḷe, \"split pulse\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42d8cd8dfa779658",
+      "sourceHash": "fnv1a64:c49bbf5c77ce56b8",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಣಸೆಹಣ್ಣು (huṇasehaṇṇu) is native Dravidian: huṇase, \"tamarind\", which DEDR 4322 lists as puṇise, huṇise, from the root for \"sour\", and haṇṇu, \"ripe fruit\", which DEDR 4004 lists as paṇṇu. DEDR 4004 compares Sanskrit phala, \"fruit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

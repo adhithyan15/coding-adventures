@@ -13,6 +13,9 @@ You'll want to know: ತಿಂಡಿ.
 ತಿಂಡಿ (tiṇḍi) — "a snack, a light meal", also the word for breakfast. It comes from ತಿನ್ನು (tinnu), "to eat".
 ತಿಂಡಿ ಆಯ್ತಾ? (tiṇḍi āytā?) — "have you had breakfast?"
 
+The word, taken apart.
+ತಿಂಡಿ (tiṇḍi) is native Dravidian, from tin, "to eat", and DEDR 3263 lists tiṇḍi, "food", itself; the entry also has Tamil tiṉ.
+
 What you've built.
 Something to eat, from the verb to eat.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for vomiting, then the Kannada for a snack.
 You'll want to know: ಚಮಚ.
 ಚಮಚ (camaca) — "a spoon".
 ಒಂದು ಚಮಚ ಕೊಡಿ (ondu camaca koḍi) — "please give me a spoon".
+
+The word, taken apart.
+ಚಮಚ (camaca) came through Hindustani camcā, "spoon", a Persian word.
 
 What you've built.
 A first thing to ask for at the table.
@@ -73,6 +79,9 @@ You'll want to know: ಲೋಟ.
 ಲೋಟ (lōṭa) — "a tumbler, a drinking glass".
 ಒಂದು ಲೋಟ ನೀರು (ondu lōṭa nīru) — "a glass of water".
 
+The word, taken apart.
+ಲೋಟ (lōṭa) came from Hindustani lōṭā, "a small round metal pot". Its deeper origin is not settled.
+
 What you've built.
 What water comes in.
 
@@ -101,6 +110,9 @@ Before the new one: say the Kannada for a spoon, then the Kannada for a glass.
 
 You'll want to know: ತಟ್ಟೆ.
 ತಟ್ಟೆ (taṭṭe) — "a plate". The doubled ಟ್ಟ is stacked, as you saw in ದಯವಿಟ್ಟು.
+
+The word, taken apart.
+ತಟ್ಟೆ (taṭṭe) is native Dravidian, one word with Tamil taṭṭu (DEDR 3035). DEDR lists taṭṭe itself, "flatness; a flat basket", and notes Marathi tāṭ, "a dining plate".
 
 What you've built.
 What food comes on.
@@ -131,6 +143,9 @@ Before the new one: say the Kannada for a glass, then the Kannada for a plate.
 You'll want to know: ಬೆಲೆ.
 ಬೆಲೆ (bele) — "price".
 ಇದರ ಬೆಲೆ ಎಷ್ಟು? (idara bele eṣṭu?) — "what is the price of this?", with ಎಷ್ಟು, "how much".
+
+The word, taken apart.
+ಬೆಲೆ (bele) is native Dravidian, one word with Tamil vilai and Telugu vela (DEDR 5421). DEDR lists bele, "price", under bil, "to sell": the old v- has become b-.
 
 What you've built.
 The question before paying.

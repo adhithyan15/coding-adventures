@@ -14,7 +14,8 @@ romanization: "kikkirida"
 concept_tag: KA-GUNA256-KIKKIRIDA
 prerequisites: [KA-C256-donku, KA-C256-masuku]
 sounds: []
-roots: []
+roots: [dravidian-kikkiri-crowd]
+etymology_hook: "kikkirida: native Dravidian, one word with Tamil ceṟi and Telugu krikkiṟincu (DEDR 1509)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C256-masuku]
 <!-- hl-knowledge: introduces=[KA-LEX-C256-GUNA256-05]; assesses=[] -->
 
 **ಕಿಕ್ಕಿರಿದ** — *kikkirida* — "crowded, packed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಿಕ್ಕಿರಿದ** (*kikkirida*) is native Dravidian, one word with Tamil *ceṟi* and Telugu *krikkiṟincu* (DEDR 1509). DEDR lists *kikkaṟisu*, "to be closely united or crowded". DEDR 1509 compares, with a query, Sanskrit *kiṣkindha-.*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

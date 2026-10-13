@@ -14,7 +14,8 @@ romanization: "sara"
 concept_tag: KA-VASTU259-SARA
 prerequisites: [KA-C259-salu2, KA-C259-karavastra]
 sounds: []
-roots: []
+roots: [kannada-sara-necklace]
+etymology_hook: "sara: origin uncertain; compare sarapaṇi 'neck chain' (DEDR 2358)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C259-karavastra]
 <!-- hl-knowledge: introduces=[KA-LEX-C259-VASTU259-05]; assesses=[] -->
 
 **ಸರ** — *sara* — "a necklace, a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಸರ** (*sara*) comes from is uncertain. It looks like the first part of *sarapaṇi*, "a neck chain", which DEDR 2358 lists for Kannada, Tamil and Telugu, but DEDR does not split that word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an effect, then the Kannada for a differ
 You'll want to know: ಬೇಕಂತಲೇ.
 ಬೇಕಂತಲೇ — bēkantalē — "deliberately, on purpose".
 
+The word, taken apart.
+ಬೇಕಂತಲೇ (bēkantalē) is native Dravidian: bēku, "it is wanted" (DEDR 5528), anta, "saying" (DEDR 868), and -lē, an emphatic ending: "on purpose, because it was wanted".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a difference, then the Kannada for delib
 
 You'll want to know: ಅಕಸ್ಮಾತ್.
 ಅಕಸ್ಮಾತ್ — akasmāt — "by chance, accidentally".
+
+The word, taken apart.
+ಅಕಸ್ಮಾತ್ (akasmāt) is Sanskrit akasmāt, "without a cause, suddenly", literally "from no why", taken over whole: a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for deliberately, then the Kannada for by ch
 You'll want to know: ಬೇಕಾದರೆ.
 ಬೇಕಾದರೆ — bēkādare — "if you want, if necessary".
 
+The word, taken apart.
+ಬೇಕಾದರೆ (bēkādare) is native Dravidian: bēku, "it is wanted" (DEDR 5528), and ādare, "if it becomes", from āgu, "to become" (DEDR 333): "if it becomes wanted". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for by chance, then the Kannada for if you w
 You'll want to know: ಯಾವುದಕ್ಕೂ.
 ಯಾವುದಕ್ಕೂ — yāvudakkū — "in case, to be on the safe side".
 
+The word, taken apart.
+ಯಾವುದಕ್ಕೂ (yāvudakkū) is native Dravidian: yāvudu, "which thing", on the question base yā- (DEDR 5151), with -kkū, "even for": "for whatever may come".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for if you want, then the Kannada for in cas
 
 You'll want to know: ಅಂದಹಾಗೆ.
 ಅಂದಹಾಗೆ — andahāge — "by the way".
+
+The word, taken apart.
+ಅಂದಹಾಗೆ (andahāge) is native Dravidian: anda, "said", from an-, "to say" (DEDR 868), and hāge, "in that way" (DEDR 1): "as was said".
 
 What you've built.
 One more word for this chapter.

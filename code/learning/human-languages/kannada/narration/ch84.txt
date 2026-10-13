@@ -13,6 +13,9 @@ You'll want to know: ಬಾಯಾರಿಕೆ.
 ಬಾಯಾರಿಕೆ (bāyārike) — "thirst". It begins with ಬಾಯಿ (bāyi), "mouth", which you already know: thirst is a dry mouth.
 ನನಗೆ ಬಾಯಾರಿಕೆ (nanage bāyārike) — "I am thirsty".
 
+The word, taken apart.
+ಬಾಯಾರಿಕೆ (bāyārike) is native Dravidian: bāyi, "mouth" (DEDR 5352, with Tamil vāy), and āru, "to dry up" (DEDR 404), with the noun ending -ike. Thirst is the mouth drying out.
+
 What you've built.
 Hunger's partner: the body asking for water.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for laughter, then the Kannada for thirst.
 You'll want to know: ಸುಸ್ತು.
 ಸುಸ್ತು (sustu) — "weariness", the everyday word for feeling worn out.
 ಸುಸ್ತಾಗಿದೆ (sustāgide) — "I'm worn out". ಆಯಾಸ is a little more formal; ಸುಸ್ತು (sustu) is what you hear at home.
+
+The word, taken apart.
+ಸುಸ್ತು (sustu) is a loan from Persian sust, "weak, slack", which came to Kannada through Hindustani.
 
 What you've built.
 The everyday cousin of āyāsa.
@@ -73,6 +79,9 @@ You'll want to know: ಬೆವರು.
 ಬೆವರು (bevaru) — "sweat", and also "to sweat".
 On a hot day in the ಬಿಸಿಲು (bisilu), "sunshine", this is the word you need.
 
+The word, taken apart.
+ಬೆವರು (bevaru) is native Dravidian, one word with Tamil veyar (DEDR 5486). DEDR gives Kannada bemar(u), bevaru: the old v- has become b-.
+
 What you've built.
 What the sunshine does to the body.
 
@@ -103,6 +112,9 @@ You'll want to know: ಆಸ್ಪತ್ರೆ.
 ಆಸ್ಪತ್ರೆ (āspatre) — "hospital".
 ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿ? (āspatre elli?) — "where is the hospital?", with ಎಲ್ಲಿ, "where", which you already know.
 
+The word, taken apart.
+ಆಸ್ಪತ್ರೆ (āspatre) is a loan from English hospital. Kannada reshaped the English word to its own sounds.
+
 What you've built.
 A place to ask for when the body needs help.
 
@@ -132,6 +144,9 @@ Before the new one: say the Kannada for sweat, then the Kannada for hospital.
 You'll want to know: ಮಾತ್ರೆ.
 ಮಾತ್ರೆ (mātre) — "a tablet, a pill".
 ಮಾತ್ರೆ ಬೇಕು (mātre bēku) — "I need a tablet", with ಬೇಕು, "want, need".
+
+The word, taken apart.
+ಮಾತ್ರೆ (mātre) is Sanskrit mātrā, "measure; minute portion", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 10023). The sense moved from "a measured amount" to a pill that holds one.
 
 What you've built.
 What the doctor gives.

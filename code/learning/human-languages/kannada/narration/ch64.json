@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Joining Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3db1ec3edd356ed8",
+  "sourceHash": "fnv1a64:a99544b6962141b6",
   "lessons": [
     {
       "id": "KA-C64-after",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d49c2df79e7b02fc",
+      "sourceHash": "fnv1a64:c5d5d1af4ae3fe4e",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಮೇಲೆ (āmēle) is native Dravidian: ā, \"that\", the far-pointing base (DEDR 1), and mēle, \"the top; above, after\" (DEDR 5086, with Tamil mēl). It is \"after that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73b4f1b0feba3269",
+      "sourceHash": "fnv1a64:db5ea52f88114241",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +206,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡ (kūḍa) is native Dravidian, from kūḍu, \"to join, come together\", and DEDR 1882 lists kūḍa, \"along with\", itself; the entry also has Tamil kūṭu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +227,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58c3d6d6b065c8d8",
+      "sourceHash": "fnv1a64:e27a5a006dc7f46e",
       "notice": null,
       "blocks": [
         {
@@ -326,6 +348,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇನ್ನೂ (innū) is native Dravidian: innu, \"still, yet, more\", which DEDR 410 lists on the near-pointing base i-, with the ending -ū, \"even\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -336,7 +369,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -385,7 +418,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -416,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac36cbdec17058eb",
+      "sourceHash": "fnv1a64:eb4a04b760172a50",
       "notice": null,
       "blocks": [
         {
@@ -457,6 +490,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಗ (bēga) comes from Sanskrit vēga, \"violent agitation; speed\", reshaped to Kannada sounds: a tadbhava (CDIAL 12089). The Sanskrit v- became Kannada b-, and the noun \"speed\" became \"quickly, soon\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -467,7 +511,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,7 +560,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -547,7 +591,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33dec9b748be9ecd",
+      "sourceHash": "fnv1a64:2f7fc0e8e7093ab5",
       "notice": null,
       "blocks": [
         {
@@ -588,6 +632,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾಗಾದರೆ (hāgādare) is native Dravidian: hāge, \"in that way\" (DEDR 1), and ādare, \"if it becomes\", from āgu, \"to become\" (DEDR 333). \"If it is that way\" means \"in that case\". DEDR 333 compares Sanskrit ām."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -598,7 +653,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -647,7 +702,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

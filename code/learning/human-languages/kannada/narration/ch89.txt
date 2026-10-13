@@ -12,6 +12,9 @@ Before the new one: say the Kannada for come in, then the Kannada for welcome.
 You'll want to know: ಹುಷಾರು.
 ಹುಷಾರು (huṣāru) — "careful, take care". Said at parting it means "look after yourself"; said on its own it can also mean "well again".
 
+The word, taken apart.
+ಹುಷಾರು (huṣāru) is a loan from Persian hušyār, "awake, alert, careful", which came to Kannada through Hindustani.
+
 What you've built.
 A warm word at the door.
 
@@ -42,6 +45,9 @@ You'll want to know: ಜೋಪಾನ.
 ಜೋಪಾನ (jōpāna) — "carefully, safely".
 ಜೋಪಾನವಾಗಿ ಹೋಗಿ (jōpānavāgi hōgi) — "go safely", with the same ‑ಆಗಿ ending as ನಿಧಾನವಾಗಿ.
 
+The word, taken apart.
+ಜೋಪಾನ (jōpāna) is native Dravidian, one word with Telugu jōka (DEDR 2871). DEDR lists jōpāna itself, "looking after", in a Kannada dialect, with jōke, "care, caution".
+
 What you've built.
 The second half of a caring goodbye.
 
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for take care, then the Kannada for safely.
 
 You'll want to know: ತಡವಾಯಿತು.
 ತಡವಾಯಿತು (taḍavāyitu) — "it's late", literally "it has become late". ತಡ (taḍa) is "delay, lateness".
+
+The word, taken apart.
+ತಡವಾಯಿತು (taḍavāyitu) is native Dravidian: taḍa, "delay", which DEDR 3031 lists itself, and āyitu, "it became", from āgu, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 The reason people stand up to leave.
@@ -100,6 +109,9 @@ Before the new one: say the Kannada for safely, then the Kannada for it's late.
 You'll want to know: ಹೋಗೋಣ.
 ಹೋಗೋಣ (hōgōṇa) — "let's go". The ending ‑ಓಣ (-ōṇa) means "let's", the same one you know from ಸಿಗೋಣ (sigōṇa), "let's meet".
 
+The word, taken apart.
+ಹೋಗೋಣ (hōgōṇa) is native Dravidian: hōgu, "to go" (DEDR 4572, with Tamil pō), with -ōṇa, the ending that means "let us".
+
 What you've built.
 A known ending on a known verb.
 
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for it's late, then the Kannada for let's go
 You'll want to know: ರಜೆ.
 ರಜೆ (raje) — "a holiday, time off".
 ನಾಳೆ ರಜೆ (nāḷe raje) — "tomorrow is a holiday", with ನಾಳೆ, "tomorrow".
+
+The word, taken apart.
+ರಜೆ (raje) came through Hindustani rajā, "leave, permission", from Arabic riḍā, "consent". Leave from work is what you are given permission for.
 
 What you've built.
 A good reason to say goodbye cheerfully.

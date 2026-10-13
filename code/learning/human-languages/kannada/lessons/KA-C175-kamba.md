@@ -14,7 +14,8 @@ romanization: "kamba"
 concept_tag: KA-STHALA175-KAMBA
 prerequisites: [KA-C174-aramane, KA-C175-beli]
 sounds: []
-roots: []
+roots: [sanskrit-skambha]
+etymology_hook: "kamba ← Sanskrit skambha 'prop, pillar', reshaped as a tadbhava (CDIAL 13639)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C175-beli]
 <!-- hl-knowledge: introduces=[KA-LEX-C175-STHALA175-02]; assesses=[] -->
 
 **ಕಂಬ** — *kamba* — "a pillar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂಬ** (*kamba*) comes from Sanskrit *skambha*, "prop, pillar", reshaped to Kannada sounds: a tadbhava (CDIAL 13639). Prakrit *khaṁbha* shows the step between; Kannada softened the *kh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

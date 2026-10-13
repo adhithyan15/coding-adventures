@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a TV serial, then the Kannada for a nove
 You'll want to know: ಗಾಜು.
 ಗಾಜು — gāju — "glass (the material)".
 
+The word, taken apart.
+ಗಾಜು (gāju) is probably a tadbhava of Sanskrit kāca, "glass" (CDIAL 3007): k became g and c became j. CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a novel, then the Kannada for glass.
 
 You'll want to know: ಪ್ಲಾಸ್ಟಿಕ್.
 ಪ್ಲಾಸ್ಟಿಕ್ — plāsṭik — "plastic".
+
+The word, taken apart.
+ಪ್ಲಾಸ್ಟಿಕ್ (plāsṭik) is a loan from English plastic.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for glass, then the Kannada for plastic.
 You'll want to know: ಇಟ್ಟಿಗೆ.
 ಇಟ್ಟಿಗೆ — iṭṭige — "a brick".
 
+The word, taken apart.
+ಇಟ್ಟಿಗೆ (iṭṭige) is a tadbhava of Sanskrit iṣṭakā, "brick" (CDIAL 1600), through Prakrit iṭṭagā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for plastic, then the Kannada for a brick.
 You'll want to know: ಪಟ್ಟಿ.
 ಪಟ್ಟಿ — paṭṭi — "a list".
 
+The word, taken apart.
+Where ಪಟ್ಟಿ (paṭṭi), "a list", comes from is not settled. DEDR 3877 lists Kannada paṭṭe, paṭṭi, "a stripe", as native, and Sanskrit has paṭṭikā, "a slab, a tablet" (CDIAL 7699); a list is a strip of writing, and either could have given the sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a brick, then the Kannada for a list.
 
 You'll want to know: ಕಾವಲಿ.
 ಕಾವಲಿ — kāvali — "a griddle, a dosa pan".
+
+The word, taken apart.
+ಕಾವಲಿ (kāvali) is native Dravidian, one word with Tamil kāy (DEDR 1488). DEDR lists kāvali, "a pan for frying or baking".
 
 What you've built.
 One more word for this chapter.
