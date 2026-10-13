@@ -1443,8 +1443,9 @@ backend immediately) come before the enabler-dependent items.
   finite static operands and pure supported standard-function transforms.
   The exact bounded `entier(sign(...))` transform also crosses that selector;
   finite specialisation may carry the same unaliased local-rooted proof through
-  a real name formal. Unrestricted runtime `entier`, globals, captured locals,
-  and other real-name branches remain conservative. Additive composition,
+  a real name formal. Unary signs may wrap that exact name actual while
+  preserving the proof. Unrestricted runtime `entier`, globals, captured
+  locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and
