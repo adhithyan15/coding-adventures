@@ -2265,6 +2265,23 @@ fn swimlane_rounded_curve_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_line_hops_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneLineHops;
+
+    let source = "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third";
+    let arc = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\n{source}"))
+        .expect("arc line hops should parse");
+    let gap = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: gap\n---\n{source}"))
+        .expect("gap line hops should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: false\n---\n{source}"))
+        .expect("disabled line hops should parse");
+
+    assert_eq!(arc.line_hops, Some(SwimlaneLineHops::Arc));
+    assert_eq!(gap.line_hops, Some(SwimlaneLineHops::Gap));
+    assert_eq!(disabled.line_hops, None);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

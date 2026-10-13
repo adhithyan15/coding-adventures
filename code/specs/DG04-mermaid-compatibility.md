@@ -1062,6 +1062,8 @@ The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic a
 two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
 The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
 commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
+Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
+Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
@@ -1071,5 +1073,5 @@ handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
 and link catalog beyond the documented marker forms, configuration-driven lane
-ordering and line hops, and exact upstream routing or typography remain
+ordering, line hops on non-straight routes, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
