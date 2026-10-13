@@ -1040,6 +1040,8 @@ The internal `labelRect` ShapeID lowers through label-only semantic geometry and
 container fill or stroke.
 The internal `anchor` ShapeID survives as dedicated semantic IR, uses the upstream two-pixel compact
 layout, and lowers to a label-free filled circle in backend-neutral paint.
+The internal `rectWithTitle` ShapeID survives as dedicated semantic IR and lowers to a rounded
+container with a title divider in backend-neutral paint.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
