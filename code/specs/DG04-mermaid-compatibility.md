@@ -1044,6 +1044,8 @@ The internal `rectWithTitle` ShapeID survives as dedicated semantic IR and lower
 container with a title divider in backend-neutral paint.
 The internal `kanbanItem`, `mindmapCircle`, and `defaultMindmapNode` ShapeIDs remain accepted in
 attribute form and lower through shared rounded-container or circular semantic, layout, and paint geometry.
+The internal `classBox`, `erBox`, and `requirementBox` ShapeIDs remain accepted in attribute form and
+lower through shared titled-container semantic, layout, and backend-neutral paint geometry.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick

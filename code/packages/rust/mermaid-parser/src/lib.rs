@@ -7250,7 +7250,7 @@ fn parse_swimlane_shape_attributes(
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
-                    "rectwithtitle" => DiagramShape::TitledRect,
+                    "rectwithtitle" | "classbox" | "erbox" | "requirementbox" => DiagramShape::TitledRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
                     "anchor" => DiagramShape::Anchor,

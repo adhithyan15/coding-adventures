@@ -81,6 +81,7 @@
     "anchor-shape",
     "rect-with-title-shape",
     "internal-container-shapes",
+    "internal-compartment-shapes",
     "legacy-internal-shape-aliases",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
