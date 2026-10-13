@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **`[hosts.broker]` on macOS** (D18S P2.7b; #13980).
+  - The broker runs confined by the Seatbelt shim, which the table must pin
+    as well (`seatbelt_shim`, `seatbelt_shim_sha256`).
+  - Startup stops with `BrokerShimMissing` if the pair is absent, and with
+    `BrokerShim` if the shim fails verification or is the broker itself.
+  - Linux never opens the shim.
+  - So `channel_keys` now works on macOS too. Elsewhere `[hosts.broker]`
+    is still refused (`BrokerUnsupported`).
 - **`channel_keys` requires `[hosts.broker]`, on every platform** (D18S
   P2.6d-2c, the owner's decision; #13980). The daemon refuses to start
   with `ChannelKeysNeedBroker` otherwise. Off Linux `[hosts.broker]` is

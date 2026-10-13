@@ -10,7 +10,7 @@
 use chief_of_staff_broker_callbacks::InFlight;
 use chief_of_staff_broker_launcher::{
     abandon_pending_on_write_channels, launch as launch_broker, start_relay, BrokerKeyFiles,
-    BrokerRelay, HostGone, PinnedBindingResolver, RelayConfig, ResponseSink, VerifiedExecutable,
+    BrokerProgram, BrokerRelay, HostGone, PinnedBindingResolver, RelayConfig, ResponseSink,
 };
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::MessageMetadataSource;
@@ -300,7 +300,7 @@ pub trait MonotonicClock: Send + Sync {
 /// P2.6d-2b). Without it, channel requests go to the in-daemon dispatcher,
 /// as before.
 pub struct ChannelBrokers {
-    program: Arc<VerifiedExecutable>,
+    program: Arc<BrokerProgram>,
     keys: BrokerKeyFiles,
     backend: Arc<dyn StorageBackend>,
     metadata: Arc<dyn MessageMetadataSource>,
@@ -312,7 +312,7 @@ impl ChannelBrokers {
     /// Brokers launched from `program`, holding the keys `keys` names, over
     /// `backend`, with message ids and timestamps from `metadata`.
     pub fn new(
-        program: Arc<VerifiedExecutable>,
+        program: Arc<BrokerProgram>,
         keys: BrokerKeyFiles,
         backend: Arc<dyn StorageBackend>,
         metadata: Arc<dyn MessageMetadataSource>,

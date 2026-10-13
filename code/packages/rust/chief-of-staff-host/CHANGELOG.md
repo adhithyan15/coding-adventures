@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **The broker end-to-end tests run on macOS too** (D18S P2.7b).
+  - `chief-of-staff-host-test-seatbelt-shim` is a test fixture behind the
+    `test-broker` feature, whose body is the production shim's.
+  - On macOS the tests pin it in `[hosts.broker]`, so the weather
+    reference agent's and the Level 1 composition's channels go through a
+    confined broker there as well.
 - **The end-to-end tests run their channels through a real broker** (D18S
   P2.6d-2c). The weather reference agent and the production Level 1
   composition now configure `[hosts.broker]`. They compose the brokers with
