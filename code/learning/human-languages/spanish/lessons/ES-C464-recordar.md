@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECORDAR
 prerequisites: [ES-C463-sintesis-guia, ES-C364-corazon, ES-C356-cita]
 sounds: [r-tap, d-soft, diphthong-ue, stress-final]
 roots: [cor-latin]
+etymology_hook: "recordar ← Latin recordari: re- 'back' + cor 'heart' — English record"
 duration:
   max_seconds: 280
 requires:

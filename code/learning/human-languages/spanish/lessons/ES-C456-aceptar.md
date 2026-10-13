@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACEPTAR
 prerequisites: [ES-C456-cargo, ES-C382-pagar, ES-C311-cuenta]
 sounds: [soft-c, p-b-hard, stress-final]
 roots: [capere-latin]
+etymology_hook: "aceptar ← Latin accipere: ad- 'towards' + capere 'to take' — English accept"
 duration:
   max_seconds: 275
 requires:

@@ -11,6 +11,7 @@ concept_tag: ES-REF-TALLER
 prerequisites: [ES-C433-junto, ES-C363-coche, ES-C394-trabajo]
 sounds: [ll-digraph]
 roots: []
+etymology_hook: "taller ← French atelier 'a workshop', in Old French a place where wood was worked"
 duration:
   max_seconds: 235
 requires:
@@ -57,6 +58,9 @@ class. *Un taller de cocina*, *un taller de reparación de bicicletas*.
 The two meanings share a core that English keeps as well: a place where people
 work with their hands, rather than sit and listen. If a notice offers you a
 *taller*, expect to do something, not to watch.
+
+*Taller* came from French *atelier*, "a workshop", in Old French a place where
+wood was worked.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-01, ES-LEX-C363-WHERE-41] -->

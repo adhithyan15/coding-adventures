@@ -11,6 +11,7 @@ concept_tag: ES-REF-DOCUMENTACION
 prerequisites: [ES-C435-curriculum]
 sounds: []
 roots: []
+etymology_hook: "documentación — documentar + -ción, the ending that turns an action into a thing"
 duration:
   max_seconds: 250
 requires:

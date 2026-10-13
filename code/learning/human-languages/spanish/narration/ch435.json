@@ -4,7 +4,7 @@
   "chapter": 435,
   "title": "Los Papeles Del Trabajo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a06feaf8f60672d3",
+  "sourceHash": "fnv1a64:20e807b073f998d5",
   "lessons": [
     {
       "id": "ES-C435-curriculum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5cd95769999c953",
+      "sourceHash": "fnv1a64:8f00ecef139c4e60",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:431afacd07065bdd",
+      "sourceHash": "fnv1a64:aa75b6e10fe123ef",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a21484b46a1b81a6",
+      "sourceHash": "fnv1a64:610261529e49ec07",
       "notice": null,
       "blocks": [
         {
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "-encia and English -ence are the same ending, inherited by both from Latin. Hundreds of words pair this way, and the pairing almost never misleads."
+              "text": "-encia and English -ence are the same ending, taken by both from Latin. Hundreds of words pair this way, and the pairing almost never misleads."
             },
             {
               "kind": "speech",
@@ -371,6 +371,10 @@
             {
               "kind": "speech",
               "text": "That is not true of short words, where the false friends live — embarazada does not mean embarrassed, and éxito is not exit. The long formal endings are the safe ones."
+            },
+            {
+              "kind": "speech",
+              "text": "Experiencia is Latin experientia, \"a trial, a proof\" (Lewis & Short), from experiri, \"to try\"."
             }
           ]
         },
@@ -446,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28ef83cb7c9b8c3b",
+      "sourceHash": "fnv1a64:31237cb21fec3be0",
       "notice": null,
       "blocks": [
         {
@@ -585,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:694a8bb1a9abcae1",
+      "sourceHash": "fnv1a64:e3309b397f7705f8",
       "notice": null,
       "blocks": [
         {
@@ -649,7 +653,7 @@
             },
             {
               "kind": "speech",
-              "text": "And the root is not what you would expect. Latin iubilare meant to shout for joy — it is the same word under jubilee and jubilant. Retiring in Spanish is, etymologically, letting out a cheer."
+              "text": "And the root is not what you would expect. Latin iubilare meant to shout for joy — it is the same word under jubilant. Retiring in Spanish is, etymologically, letting out a cheer."
             },
             {
               "kind": "speech",

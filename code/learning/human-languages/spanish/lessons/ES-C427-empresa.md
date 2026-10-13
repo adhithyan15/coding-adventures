@@ -11,6 +11,7 @@ concept_tag: ES-THING-EMPRESA
 prerequisites: [ES-C427-abogado]
 sounds: [m-b-cluster, pr-cluster, stress-penultimate]
 roots: [prehendere-latin]
+etymology_hook: "empresa — 'a thing taken on', from Latin in- + prehendere 'to take hold of' — English enterprise"
 duration:
   max_seconds: 240
 requires:

@@ -10,7 +10,8 @@ gloss: "to state, to say that something is so"
 concept_tag: ES-VERB-AFIRMAR
 prerequisites: [ES-C479-adelantado, ES-C479-sustituir]
 sounds: []
-roots: []
+roots: [firmus-latin]
+etymology_hook: "afirmar ← Latin affirmare 'to make firm', built on firmus 'firm' — English affirm"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C479-sustituir]
 > *The director states that there is no problem.*
 
 More formal than *decir*; news reports use it a lot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**afirmar** ← Latin *affirmare*, "to make firm, to assert" (EtymDB 2.1), built on *firmus*, "firm" — the *firmus* inside *firmar*, "to sign".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

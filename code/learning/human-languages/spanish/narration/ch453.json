@@ -4,7 +4,7 @@
   "chapter": 453,
   "title": "El turno",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8306dc4a2bb50962",
+  "sourceHash": "fnv1a64:ac342a8184ddf04a",
   "lessons": [
     {
       "id": "ES-C453-limpieza",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f15251c1fae2be67",
+      "sourceHash": "fnv1a64:7db554404571532b",
       "notice": null,
       "blocks": [
         {
@@ -112,7 +112,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is an older Spanish word for clean, neto, from Latin nitidus, and it survives in el peso neto on a packet. Where Spanish kept two, it usually gave them separate jobs."
+              "text": "Another Latin word for gleaming, nitidus, gave Spanish neto, and it survives in el peso neto on a packet. Where Spanish kept two, it usually gave them separate jobs."
             }
           ]
         },
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7982c8322c1c75f7",
+      "sourceHash": "fnv1a64:0de2d76fdb560f16",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c37cc2ac15f4c98",
+      "sourceHash": "fnv1a64:1c2362ef17083b14",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28950343836c016c",
+      "sourceHash": "fnv1a64:4e31fb5e2a21287a",
       "notice": null,
       "blocks": [
         {

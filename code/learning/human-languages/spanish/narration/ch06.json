@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Asking Someone's Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bfc00d0f356a7905",
+  "sourceHash": "fnv1a64:14051ab4d258ab05",
   "lessons": [
     {
       "id": "ES-C03-como",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9591e76278fc0c9",
+      "sourceHash": "fnv1a64:0dcd4cb7ba2b93b6",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18c0a7427760040f",
+      "sourceHash": "fnv1a64:129662e8bd74a7ee",
       "notice": null,
       "blocks": [
         {
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:703702b6f121e529",
+      "sourceHash": "fnv1a64:cfc9cb1dfa93c401",
       "notice": null,
       "blocks": [
         {
@@ -772,7 +772,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90d3dca5d6e4bf7b",
+      "sourceHash": "fnv1a64:e3783a9f88ef050e",
       "notice": null,
       "blocks": [
         {
@@ -894,7 +894,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c345f34f12f9fdc",
+      "sourceHash": "fnv1a64:bfca2550ebb5c9f2",
       "notice": null,
       "blocks": [
         {

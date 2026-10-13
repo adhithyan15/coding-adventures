@@ -11,6 +11,7 @@ concept_tag: GRAMMAR-THE
 prerequisites: [ES-C01-bien]
 sounds: [vowel-e, vowel-a]
 roots: [ille, illa]
+etymology_hook: "el, la ← Latin ille, illa 'that one': a pointing word worn down to 'the'"
 duration:
   max_seconds: 240
 requires:

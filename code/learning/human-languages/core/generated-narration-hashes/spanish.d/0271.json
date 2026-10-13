@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 271,
-  "sourceHash": "fnv1a64:dad3f16b8cc17679",
+  "sourceHash": "fnv1a64:1bb9f93e4bfb902b",
   "lessonIds": [
     "ES-C271-quizas",
     "ES-C271-supongo-que",
@@ -12,6 +12,6 @@
   "text": "spanish/narration/ch271.txt",
   "json": "spanish/narration/ch271.json",
   "textHash": "fnv1a64:52b5e9689b9a3449",
-  "jsonHash": "fnv1a64:dbf5b8b4cd8e1070",
+  "jsonHash": "fnv1a64:19b90b21b247cbf5",
   "findings": []
 }

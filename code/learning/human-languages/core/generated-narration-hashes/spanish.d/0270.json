@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 270,
-  "sourceHash": "fnv1a64:32ab11f82df8a055",
+  "sourceHash": "fnv1a64:772132ff7f59c25b",
   "lessonIds": [
     "ES-C270-en-mi-opinion",
     "ES-C270-por-ejemplo",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch270.txt",
   "json": "spanish/narration/ch270.json",
-  "textHash": "fnv1a64:49e671ea52c38aba",
-  "jsonHash": "fnv1a64:23b6737bff423f5d",
+  "textHash": "fnv1a64:2aa3b6aecdc00954",
+  "jsonHash": "fnv1a64:50cbb03ce7e04809",
   "findings": []
 }

@@ -11,6 +11,7 @@ concept_tag: PARAPHRASE
 prerequisites: [ES-C277-segun]
 sounds: [vowel-e, vowel-o]
 roots: [dicere]
+etymology_hook: "decir ← Latin dicere 'to say' — English diction, dictate, verdict"
 duration:
   max_seconds: 240
 requires:

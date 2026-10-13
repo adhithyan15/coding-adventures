@@ -10,7 +10,8 @@ gloss: "to insist"
 concept_tag: ES-VERB-INSISTIR
 prerequisites: [ES-C493-opinar, ES-C493-convencer]
 sounds: []
-roots: []
+roots: [sistere-latin]
+etymology_hook: "insistir ← Latin insistere 'to stand on, to press on' — English insist"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C493-convencer]
 > *He insists on paying.*
 
 It goes with *en*: *insistir en algo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insistir** ← Latin *insistere*, "to stand on, to press on" (EtymDB 2.1): *in-* and *sistere*, "to stand" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

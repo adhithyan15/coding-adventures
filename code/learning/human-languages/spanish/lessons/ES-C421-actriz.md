@@ -11,8 +11,9 @@ concept_tag: ES-THING-ACTRIZ
 prerequisites: [ES-C421-actor]
 sounds: [vowel-a, r-tap, stress-final]
 roots: [agere-latin]
+etymology_hook: "actriz ← Latin actrix, the feminine of actor: Latin -trix became Spanish -triz"
 duration:
-  max_seconds: 240
+  max_seconds: 297
 requires:
   knowledge: [ES-LEX-C421-ARTS-01, ES-LEX-C420-ARTS-01]
 introduces:
@@ -56,7 +57,7 @@ on, and expect to be wrong — the obvious guess is not what Spanish does here.
 Spanish habit of swapping **-o** for **-a** would have produced.
 
 Latin had its own feminine for *-tor* nouns: **-trix**. *Actor* / **actrix**.
-Spanish inherited that pair intact, turned the Latin **-x** into **-z**, and
+Spanish took that pair from Latin, turned the Latin **-x** into **-z**, and
 kept it.
 
 The ending is nearly extinct. Spanish has only a small handful of *-triz*
@@ -69,9 +70,9 @@ to hold in your head:
 | el emperador | la empera**triz** | the emperor |
 | el institutor | la institu**triz** | the governess |
 
-English kept the same Latin ending in **aviatrix** and **dominatrix**, and in
-the mathematical **matrix** — originally *mater* plus *-trix*, "the womb", the
-thing from which other things are produced.
+English kept the same Latin ending in **aviatrix** and **dominatrix**. The
+mathematical **matrix** only looks like one of them: it is built on *mater*,
+"mother", and first meant a breeding animal, then the womb.
 
 Everywhere else in Spanish, the feminine of a person-noun is the ordinary
 swap: *el camarero* / *la camarera*. **-triz** is the exception, and *actriz*

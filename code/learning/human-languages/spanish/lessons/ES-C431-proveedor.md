@@ -11,6 +11,7 @@ concept_tag: ES-REF-PROVEEDOR
 prerequisites: [ES-C431-retraso, ES-C311-tienda]
 sounds: []
 roots: []
+etymology_hook: "proveedor — proveer 'to provide' + -dor, the ending that makes a doer"
 duration:
   max_seconds: 225
 requires:

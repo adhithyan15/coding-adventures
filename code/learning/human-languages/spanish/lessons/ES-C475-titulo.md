@@ -10,7 +10,8 @@ gloss: "the qualification, the title"
 concept_tag: ES-REF-TITULO
 prerequisites: [ES-C475-profesional, ES-C475-iniciativa]
 sounds: []
-roots: []
+roots: [titulus-latin]
+etymology_hook: "título ← Latin titulus 'a label' — learned; worn down, the same word became tilde — English title"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C475-iniciativa]
 > *The secondary-school qualification is required.*
 
 On a job notice *el título* is a qualification; on a book it is the title.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**título** ← Latin *titulus*, "an inscription, a label" (EtymDB 2.1) — a learned borrowing: the stress stays on the first syllable and the *-t-* between vowels is kept. Worn down through Catalan or Occitan, the same Latin word gave *tilde*, the name of the accent mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

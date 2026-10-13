@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECOGER
 prerequisites: [ES-C436-prestar, ES-C431-pedido]
 sounds: []
 roots: []
+etymology_hook: "recoger — re- 'back' + coger 'to take': to take back up"
 duration:
   max_seconds: 255
 requires:

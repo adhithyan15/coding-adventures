@@ -11,6 +11,7 @@ concept_tag: ES-THING-VENDEDOR
 prerequisites: [ES-C386-vender, ES-C423-trabajador]
 sounds: [b-soft, r-tap, stress-final]
 roots: []
+etymology_hook: "vendedor — vender 'to sell' + -dor, the ending that makes a person of an action"
 duration:
   max_seconds: 240
 requires:

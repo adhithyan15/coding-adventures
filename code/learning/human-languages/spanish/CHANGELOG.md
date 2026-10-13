@@ -1,5 +1,46 @@
 # Changelog
 
+## Added — every word lesson says where its word comes from (486 / 209 → 0 / 0)
+
+HL24 §9's etymology gap for Spanish is closed: every word lesson now has an
+`etymology_hook` and a visible origin.
+
+- **Hooks for 287 lessons that already told the story.** Each hook agrees with
+  the lesson's own block, and every block was reread against EtymDB 2.1
+  (Fourrier & Sagot 2020, CC BY-SA 4.0) and Lewis & Short while writing it.
+- **New "taken apart" blocks for 199 lessons.** 185 are the generated wave
+  ES-C475-profesional through ES-C511-soler; the rest are hand-written lessons
+  (ES-C03-tu-usted-register, ES-C04-estar-estado, ES-W01-tilde-diacritica,
+  ES-C06-hablo-espanol, ES-C42-te, ES-C45-nos, the four ES-C267 lessons,
+  ES-C431-cobrar, ES-C433-junto, ES-C436-prestar, ES-C437-tardar). The ten
+  hook-only lessons gained a block, or for ES-C52-como-se-dice (299 s) one
+  origin sentence in place of a sentence that said less. Inherited and learned
+  are decided by Spanish sound change (*-ct-* → *-ch-*, *f-* → *h-*,
+  *pl-*/*cl-* → *ll-*, *-li-* → *j*, the *ie*/*ue* diphthongs), not by the
+  dataset's own label; reconstructions carry their star; Arabic loans name the
+  Arabic word (*alquiler*, *ahorrar*); about sixteen say the origin is
+  uncertain or only usually traced (*ganar*, *buzón*, *regalar*, *atasco*).
+- **Corrections to 41 older passages**, among them: *hablaré* is no longer
+  traced to a Latin *hablare habeo* (Latin had no such verb; the textbook form
+  is *cantare habeo*); *cerrado* no longer sits on *claudere* (ES-C37-cerrar
+  already says *serare*); *coincidir* is *cadere* "to fall", not the *caedere*
+  of *decidir*; English *counsel* and *council* are two Latin words
+  (ES-C321-consejo, ES-C473-aconsejar); *serio* is not "weighty" in Latin;
+  *planta* meant a cutting as well as a sole (ES-C444-plantar now agrees with
+  ES-C390-planta); *sofá* came through French; *batería* and *actriz* are
+  borrowed, not inherited; *lugar* is *localis*; *mira* is "to marvel at";
+  *mute*, *dilate*, the *-al* of *equal* and *Antarctic* are fixed; missing
+  reconstruction stars restored (*\*plovere*, *\*me-*, *\*tu-*,
+  *\*imbarricare*, *\*wardōn*, *\*captiare*, *\*abantiare*, *\*singellus*).
+  22 blocks that never named an origin (the ES-C424 to ES-C426 punctuation
+  words, *taller*, *máquina*, *pieza*, *cenar*) gained one sentence.
+- Eleven `max_seconds` rose to the computed length, all under 300 s:
+  ES-C01-buenos-dias 240→250, ES-C03-me 180→182, ES-C03-tu-usted 200→253,
+  ES-C03-tu-usted-register 240→263, ES-C04-estar-estado 220→237,
+  ES-C06-hablo-espanol 230→280, ES-C07-hablan 250→270,
+  ES-C10-futuro-simple 240→288, ES-C421-actriz 240→297,
+  ES-C422-pagina-web 240→266, ES-C462-reducir 275→281.
+
 ## Fixed — nosotros no longer teaches that -mos is a worn-down nos
 
 ES-C45-nosotros (and its chapter title, "the Word Inside -mos") taught that the

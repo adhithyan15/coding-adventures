@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-DOS-PUNTOS
 prerequisites: [ES-C424-coma]
 sounds: []
 roots: []
+etymology_hook: "dos puntos — 'two points', named for the shape of the colon"
 duration:
   max_seconds: 240
 requires:

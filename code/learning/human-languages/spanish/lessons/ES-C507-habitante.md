@@ -10,7 +10,8 @@ gloss: "the inhabitant"
 concept_tag: ES-REF-HABITANTE
 prerequisites: [ES-C507-impuesto, ES-C507-poblacion]
 sounds: []
-roots: []
+roots: [habitare]
+etymology_hook: "habitante ← Latin habitans 'dwelling', from habitare — kin to habitación; English inhabitant"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C507-poblacion]
 > La ciudad tiene un millón de habitantes.
 >
 > *The city has a million inhabitants.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**habitante** ← Latin *habitans*, *habitantis*, "dwelling", the participle of *habitare*, "to dwell" — the *habitare* inside *habitación*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

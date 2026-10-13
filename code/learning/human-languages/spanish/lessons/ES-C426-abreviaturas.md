@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-ABREVIATURAS
 prerequisites: [ES-C426-minuscula-inicial]
 sounds: []
 roots: []
+etymology_hook: "abreviatura ← Late Latin abbreviatura, from brevis 'short'"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,8 @@ The forms of address are the ones an A1 paper prints:
 
 The point is not decoration. **Sr** without it is an error, because the point is
 what marks the word as shortened.
+
+*Abreviatura* is Late Latin *abbreviatura*, from *brevis*, "short".
 
 ## Grammar Lens: don and señor are not the same word
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C426-03, ES-ORTH-C426-02] -->

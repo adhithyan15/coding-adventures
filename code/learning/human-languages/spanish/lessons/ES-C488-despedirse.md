@@ -10,7 +10,8 @@ gloss: "to say goodbye"
 concept_tag: ES-VERB-DESPEDIRSE
 prerequisites: [ES-C488-divorciarse, ES-C488-enamorarse]
 sounds: []
-roots: []
+roots: [petere-latin]
+etymology_hook: "despedirse — contains pedir 'to ask', Latin petere; traced to de + expetere 'to ask for'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C488-enamorarse]
 > *I say goodbye to everyone before leaving.*
 
 The e breaks into i: *me despido*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**despedirse** contains *pedir*, "to ask", from Latin *petere*; EtymDB 2.1 traces it to *de* and Latin *expetere*, "to ask for, to demand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

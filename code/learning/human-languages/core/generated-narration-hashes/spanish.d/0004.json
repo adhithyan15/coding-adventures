@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 4,
-  "sourceHash": "fnv1a64:77bc191daa544cc7",
+  "sourceHash": "fnv1a64:1e1917753d02586a",
   "lessonIds": [
     "ES-C03-me",
     "ES-C03-llamar",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch04.txt",
   "json": "spanish/narration/ch04.json",
   "textHash": "fnv1a64:1d259f4843d82277",
-  "jsonHash": "fnv1a64:5e9d9034f2c9fae7",
+  "jsonHash": "fnv1a64:88effc8dff88ce17",
   "findings": []
 }

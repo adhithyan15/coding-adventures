@@ -11,6 +11,7 @@ concept_tag: ES-TRAVEL-ANDEN
 prerequisites: [ES-C438-sintesis-cuerpo, ES-C400-tren, ES-C346-estacion, ES-C330-parada]
 sounds: [written-accent, stress-final]
 roots: []
+etymology_hook: "andén — origin uncertain; the guess from andar 'to walk' is not accepted"
 duration:
   max_seconds: 250
 requires:

@@ -11,8 +11,9 @@ concept_tag: ES-VERB-ESTAR-FORMS
 prerequisites: [ES-C04-estar, ES-C03-tu-usted-register]
 sounds: [vowel-e, accent-mark]
 roots: [stare-latin]
+etymology_hook: "estás, está ← Latin stas, stat 'you stand, it stands', from stare, with Spanish e- before st-"
 duration:
-  max_seconds: 220
+  max_seconds: 237
 requires:
   knowledge: [ES-LEX-ESTAR, ES-ETYMON-STARE, ES-LEX-TU, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]
 introduces:
@@ -66,6 +67,11 @@ keeping it out of today's drill lets one contrast settle at a time.
 Notice that **está** is also "he is / she is." That is not a coincidence and
 not something extra to learn — it is the *usted*-takes-he/she-forms rule you
 already met, showing up for the first time in a real verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estás** and **está** are forms of *estar*, Latin *stare*, "to stand": Latin *stas* and *stat*, "you stand" and "it stands", with the *e-* Spanish puts before *st-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-ETYMON-STARE, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-GUION-BAJO
 prerequisites: [ES-C428-arroba]
 sounds: [g-hard, stress-penultimate]
 roots: []
+etymology_hook: "guion bajo — guion 'hyphen' + bajo 'low': the low hyphen"
 duration:
   max_seconds: 240
 requires:

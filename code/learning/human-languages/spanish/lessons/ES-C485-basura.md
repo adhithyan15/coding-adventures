@@ -10,7 +10,8 @@ gloss: "the rubbish, the trash"
 concept_tag: ES-REF-BASURA
 prerequisites: [ES-C485-limpiar, ES-C485-secar]
 sounds: []
-roots: []
+roots: [verrere-latin]
+etymology_hook: "basura ← spoken Latin *versura 'a sweeping', from verrere 'to sweep', the verb behind barrer"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C485-secar]
 > *Who takes out the rubbish?*
 
 *Sacar la basura* — to take out the rubbish.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**basura** comes from spoken Latin *\*versura*, "a sweeping" (EtymDB 2.1), built on *verrere*, "to sweep" — the verb that gave *barrer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

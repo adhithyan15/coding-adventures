@@ -11,6 +11,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [ES-C03-mucho, ES-C03-como-se-llama]
 sounds: [vowel-o, stress-default-vowel-ns]
 roots: [gustus, multus]
+etymology_hook: "gusto ← Latin gustus 'a taste' — English gusto, disgust; mucho gusto is 'much pleasure'"
 duration:
   max_seconds: 180
 requires:

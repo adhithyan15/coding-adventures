@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-ABECEDARIO
 prerequisites: [ES-C424-sintesis-nota]
 sounds: []
 roots: []
+etymology_hook: "abecedario — a-be-ce-de, the first four letters said aloud; alfabeto is Greek alpha + beta"
 duration:
   max_seconds: 240
 requires:

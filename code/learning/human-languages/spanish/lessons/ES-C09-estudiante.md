@@ -74,6 +74,11 @@ all:
 The article moves instead — *el estudiante*, *la estudiante* — but the word
 itself stays put. Words ending in *-ante* almost never shift.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estudiante** is built from *estudiar*, "to study", with *-ante*, the Latin participle ending *-antem*: "one studying". *Estudiar* comes from Latin *studium*, "zeal, eagerness" (Lewis & Short).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTUDIANTE, ES-FRIEND-ANTE-ANT, ES-GRAMMAR-SER-PRESENT-1PL] -->
 

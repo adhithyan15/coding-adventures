@@ -11,6 +11,7 @@ concept_tag: ES-REF-ESTANTERIA
 prerequisites: [ES-C432-contador, ES-C43-casa]
 sounds: []
 roots: []
+etymology_hook: "estantería — estante 'shelf' + -ería, the ending for a place or collection"
 duration:
   max_seconds: 230
 requires:

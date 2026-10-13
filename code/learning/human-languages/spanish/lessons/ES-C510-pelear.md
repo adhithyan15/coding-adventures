@@ -10,7 +10,8 @@ gloss: "to fight, to argue"
 concept_tag: ES-VERB-PELEAR
 prerequisites: [ES-C510-disculparse, ES-C510-fiarse]
 sounds: []
-roots: []
+roots: [pilus]
+etymology_hook: "pelear — built on pelo 'hair': a fight was first a hair-pulling; pelo is Latin pilus"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C510-fiarse]
 > *The brothers fight about everything.*
 
 *Pelearse con alguien* — to fall out with someone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pelear** is built on *pelo*, "hair" (EtymDB 2.1): a fight was first a pulling of hair. *Pelo* is Latin *pilus*, "a hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

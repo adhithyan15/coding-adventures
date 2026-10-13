@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "The Rest of the Greetings",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6676bfa20f821a74",
+  "sourceHash": "fnv1a64:6ef886d6a6924766",
   "lessons": [
     {
       "id": "ES-C02-tarde",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:008ddf459005e85a",
+      "sourceHash": "fnv1a64:bcab409cf94d7e4e",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8075387db4da109",
+      "sourceHash": "fnv1a64:a9557af6a78ba448",
       "notice": null,
       "blocks": [
         {
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db422486bc275583",
+      "sourceHash": "fnv1a64:96afaa3da2df95e6",
       "notice": null,
       "blocks": [
         {
@@ -438,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56d585fec8b3ae29",
+      "sourceHash": "fnv1a64:a1370839cf61c039",
       "notice": null,
       "blocks": [
         {

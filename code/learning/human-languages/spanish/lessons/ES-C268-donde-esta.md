@@ -11,6 +11,7 @@ concept_tag: DIRECTION-ASK
 prerequisites: [ES-C07-donde]
 sounds: [vowel-a, vowel-e]
 roots: [ubi, stare]
+etymology_hook: "¿dónde está? — dónde is Latin de unde 'from where'; está is Latin stare 'to stand'"
 duration:
   max_seconds: 240
 requires:

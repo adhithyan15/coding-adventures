@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-HIERBA
 prerequisites: [ES-C450-patio, ES-C390-planta, ES-C33-verde]
 sounds: [silent-h, diphthong-ie, stress-penultimate]
 roots: [herba-latin]
+etymology_hook: "hierba ← Latin herba 'grass': stressed e became ie; herbívoro kept it — English herb"
 duration:
   max_seconds: 275
 requires:

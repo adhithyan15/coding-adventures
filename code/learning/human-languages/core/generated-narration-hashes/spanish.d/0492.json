@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 492,
-  "sourceHash": "fnv1a64:3f7f4143878b272e",
+  "sourceHash": "fnv1a64:80fd1dbf73279abe",
   "lessonIds": [
     "ES-C492-intentar",
     "ES-C492-lograr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch492.txt",
   "json": "spanish/narration/ch492.json",
-  "textHash": "fnv1a64:0106445b84d0a6a8",
-  "jsonHash": "fnv1a64:9552498d982549a4",
+  "textHash": "fnv1a64:c707f2e34e938e5b",
+  "jsonHash": "fnv1a64:b0e19f39cb847cc0",
   "findings": []
 }

@@ -18,7 +18,7 @@ en pri-MER lu-GAR. see reference.
 
 The word, taken apart.
 en primer lugar — "in the first place, firstly."
-Primer is Latin primarius, "of the first rank" — English primary, prime. Lugar is locus, "place" — English local, locate. Literally: in the first place, and English kept the phrase intact.
+Primer is Latin primarius, "of the first rank" — English primary, prime. Lugar is Latin localis, "of a place", from locus, "place" — English local, locate. Literally: in the first place, and English kept the phrase intact.
 Its partners are en segundo lugar and por último, "lastly."
 
 What you've built.
@@ -132,7 +132,7 @@ lo KUAL. see reference.
 
 The word, taken apart.
 lo cual — "which", where the which points at an entire preceding clause.
-Cual is Latin qualis, "of what kind" — English quality and the -al of equal. The neuter lo in front is what widens its target: not a noun, but everything just said.
+Cual is Latin qualis, "of what kind" — English quality. The neuter lo in front is what widens its target: not a noun, but everything just said.
 Llegó tarde, lo cual me sorprendió. — "He arrived late, which surprised me." What surprised me is not he, and not late. It is the whole fact.
 
 What you've built.

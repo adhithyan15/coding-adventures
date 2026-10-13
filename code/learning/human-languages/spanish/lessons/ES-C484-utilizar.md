@@ -10,7 +10,8 @@ gloss: "to use"
 concept_tag: ES-VERB-UTILIZAR
 prerequisites: [ES-C483-mejora, ES-C483-acudir]
 sounds: []
-roots: []
+roots: [utilis-latin]
+etymology_hook: "utilizar ← French utiliser, built on utile 'useful', Latin utilis — English utilise"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C483-acudir]
 > *Use the other door.*
 
 A formal twin of *usar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**utilizar** ← French *utiliser* (EtymDB 2.1), built on *utile*, "useful", Latin *utilis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

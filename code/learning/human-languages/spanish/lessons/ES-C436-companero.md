@@ -11,6 +11,7 @@ concept_tag: ES-REF-COMPANERO
 prerequisites: [ES-C435-jubilado, ES-C26-pan]
 sounds: [ny-palatal]
 roots: [panis-latin]
+etymology_hook: "compañero — com- 'with' + pan 'bread' + -ero: the one you share bread with"
 teaches_cells: []
 duration:
   max_seconds: 240

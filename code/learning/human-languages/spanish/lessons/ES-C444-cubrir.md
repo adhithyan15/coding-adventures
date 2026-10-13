@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CUBRIR
 prerequisites: [ES-C444-plantar, ES-C37-abrir, ES-C439-cerrado, ES-C438-descansar]
 sounds: [b-soft, stress-final]
 roots: [cooperire-latin]
+etymology_hook: "cubrir ← Latin cooperire 'to cover over'; its pair aperire gave abrir 'to open'"
 duration:
   max_seconds: 285
 requires:

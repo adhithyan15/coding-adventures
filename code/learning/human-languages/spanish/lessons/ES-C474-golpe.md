@@ -11,6 +11,7 @@ concept_tag: ES-ASK-GOLPE
 prerequisites: [ES-C474-descontar, ES-C474-importe, ES-C382-pagar]
 sounds: [g-hard, p-b-hard, stress-penultimate]
 roots: [latin-colaphus]
+etymology_hook: "golpe ← Latin colaphus 'a blow with the fist', from Greek kolaphos — English coup"
 duration:
   max_seconds: 270
 requires:

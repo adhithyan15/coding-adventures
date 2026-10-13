@@ -11,6 +11,7 @@ concept_tag: LODGING-ROOM
 prerequisites: [ES-C268-billete]
 sounds: [vowel-a, vowel-e]
 roots: [habitare]
+etymology_hook: "habitación — habitar 'to dwell' + -ción; Latin habitare — English inhabit, habitat"
 duration:
   max_seconds: 240
 requires:

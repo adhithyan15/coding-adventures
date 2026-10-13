@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "El reparto",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e81b501841a2af27",
+  "sourceHash": "fnv1a64:7455e4cb2ae20a2b",
   "lessons": [
     {
       "id": "ES-C452-almacen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebf783a6bbf6071f",
+      "sourceHash": "fnv1a64:a10ed98316295eb2",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d40ced1f96f9c2f",
+      "sourceHash": "fnv1a64:336443ba970bb222",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40681ee2e67ca511",
+      "sourceHash": "fnv1a64:542e44d78d66b2fe",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94eda3e92d9cf40e",
+      "sourceHash": "fnv1a64:54f53f3bcf044576",
       "notice": null,
       "blocks": [
         {

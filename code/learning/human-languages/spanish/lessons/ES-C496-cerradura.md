@@ -10,7 +10,8 @@ gloss: "the lock"
 concept_tag: ES-REF-CERRADURA
 prerequisites: [ES-C495-ladron, ES-C496-hogar]
 sounds: []
-roots: []
+roots: [serare-latin]
+etymology_hook: "cerradura — cerrar 'to close' + -dura; cerrar is Late Latin serare 'to bolt', from sera 'a bar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C496-hogar]
 > La llave no entra en la cerradura.
 >
 > *The key does not go into the lock.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerradura** is *cerrar*, "to close", with *-dura*, the ending for the thing that does the job. *Cerrar* is Late Latin *serare*, "to bolt", from *sera*, the bar across a door.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -155,6 +155,9 @@ You'll want to know: cobrar.
 cobrar — to charge somebody, to collect money, to get paid.
 One verb for all three, and which one it means depends on who is speaking.
 
+The word, taken apart.
+cobrar is a shortening of recobrar, "to recover", which is Latin recuperare, "to get back" (Lewis & Short) — inherited: the -p- became -b-. To be paid is to get your money back.
+
 Grammar Lens: who is on each end.
 pagar and cobrar are the same transaction from opposite sides:
 [a table of 2 rows, read aloud]

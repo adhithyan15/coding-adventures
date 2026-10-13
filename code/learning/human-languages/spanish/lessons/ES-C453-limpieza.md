@@ -11,6 +11,7 @@ concept_tag: ES-WORK-LIMPIEZA
 prerequisites: [ES-C452-sintesis-reparto, ES-C281-limpio, ES-C448-mudanza]
 sounds: [z-as-th-or-s, diphthong-ie, stress-penultimate]
 roots: [limpidus-latin]
+etymology_hook: "limpieza — limpio + -eza; limpio is Latin limpidus 'clear' — English limpid"
 duration:
   max_seconds: 275
 requires:
@@ -80,7 +81,7 @@ English took the same word as **limpid**, and kept it for water and for prose.
 Spanish let it drift from "clear" to "clean", which is a short walk: a clear
 stream is a clean one.
 
-There is an older Spanish word for clean, *neto*, from Latin *nitidus*, and it
+Another Latin word for gleaming, *nitidus*, gave Spanish *neto*, and it
 survives in *el peso neto* on a packet. Where Spanish kept two, it usually
 gave them separate jobs.
 

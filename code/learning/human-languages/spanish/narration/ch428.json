@@ -4,7 +4,7 @@
   "chapter": 428,
   "title": "Five Last Pieces",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a186ee4fe27ed816",
+  "sourceHash": "fnv1a64:be463a3c40e099aa",
   "lessons": [
     {
       "id": "ES-C428-arroba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a6dbf3d5aa12366",
+      "sourceHash": "fnv1a64:15a4114ad31daf86",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa526add2e6bf55e",
+      "sourceHash": "fnv1a64:92fc7d948982f48d",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12a9ff8729a0f601",
+      "sourceHash": "fnv1a64:081246eac85630ce",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6235b23145fc08c",
+      "sourceHash": "fnv1a64:4dda38de47919916",
       "notice": null,
       "blocks": [
         {
@@ -522,6 +522,10 @@
             {
               "kind": "speech",
               "text": "That is what almost every toast in Europe is. English cheers wishes cheerfulness; Irish sláinte is literally health; and ¡Salud! is the Spanish member of the same family. Raising a glass is wishing somebody well, and most languages say so plainly."
+            },
+            {
+              "kind": "speech",
+              "text": "Salud is Latin salus, salutem, \"health\"."
             }
           ]
         },
@@ -638,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b16eb2c41c263da8",
+      "sourceHash": "fnv1a64:a1a4848b51c4cd72",
       "notice": null,
       "blocks": [
         {

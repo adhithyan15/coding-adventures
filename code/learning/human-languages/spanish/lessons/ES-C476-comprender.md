@@ -10,7 +10,8 @@ gloss: "to understand"
 concept_tag: ES-VERB-COMPRENDER
 prerequisites: [ES-C476-alumno, ES-C476-practicar]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "comprender ← Latin comprehendere 'to grasp': com- + prehendere 'to seize' — English comprehend"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C476-practicar]
 > *I do not understand the question.*
 
 A close twin of *entender*, slightly more formal.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comprender** ← Latin *comprehendere*, "to grasp, to seize" (Lewis & Short): *com-*, "together", and *prehendere*, "to take hold of". To understand is to get a grip on a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

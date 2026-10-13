@@ -11,6 +11,7 @@ concept_tag: TIME-NIGHT
 prerequisites: [ES-C02-tarde]
 sounds: [soft-c, stress-default-vowel-ns]
 roots: [nox]
+etymology_hook: "noche ← Latin nox, noctem 'night': -ct- became -ch- — English nocturnal, equinox"
 duration:
   max_seconds: 180
 requires:

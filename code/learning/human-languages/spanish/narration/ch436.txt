@@ -115,6 +115,9 @@ You'll want to know: prestar.
 prestar — to lend.
 Te presto el cargador — I lend you the charger. And then, later, te lo devuelvo.
 
+The word, taken apart.
+prestar from Latin praestare, "to stand in front; to supply" (Lewis & Short): prae-, "in front", and stare, "to stand". To lend is to put a thing forward for someone.
+
 Grammar Lens: which way is it moving.
 English has one word doing two opposite jobs — people say borrow and lend and then muddle them. Spanish keeps the giver's side and marks the receiver's with a preposition:
 [a table of 2 rows, read aloud]

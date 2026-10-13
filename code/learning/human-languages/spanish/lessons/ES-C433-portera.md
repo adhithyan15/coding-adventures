@@ -11,6 +11,7 @@ concept_tag: ES-REF-PORTERA
 prerequisites: [ES-C433-portal, ES-C285-vecino]
 sounds: []
 roots: []
+etymology_hook: "portera — puerta 'door' + -era: the person who keeps the door"
 duration:
   max_seconds: 235
 requires:

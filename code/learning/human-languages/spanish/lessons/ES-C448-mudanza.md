@@ -11,6 +11,7 @@ concept_tag: ES-HOME-MUDANZA
 prerequisites: [ES-C448-mudarse, ES-C366-caja, ES-C40-esperar]
 sounds: [nasal-n, z-as-th-or-s, stress-penultimate]
 roots: [mutare-latin]
+etymology_hook: "mudanza — from mudar, Latin mutare 'to change', plus the ending -anza"
 duration:
   max_seconds: 275
 requires:

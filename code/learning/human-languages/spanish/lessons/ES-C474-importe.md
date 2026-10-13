@@ -11,6 +11,7 @@ concept_tag: ES-ASK-IMPORTE
 prerequisites: [ES-C474-invitar, ES-C463-importar, ES-C398-importante]
 sounds: [p-b-hard, r-tap, stress-penultimate]
 roots: [importare-latin]
+etymology_hook: "importe — noun of importar 'to amount to'; importar is built on portare 'to carry'"
 duration:
   max_seconds: 275
 requires:
@@ -71,7 +72,7 @@ to money.
 *Portare* is the carrying verb, and once you have it a great many words open at
 once. Spanish has already given you two of its children without saying so:
 
-- **el deporte** — *dis-* plus *portare*, carrying yourself away from work;
+- **el deporte** — *de-* plus *portare*, carrying yourself away from work;
 - **el comportamiento** — carrying yourself **with**, which is behaviour.
 
 English carries the same root in **port**, **portable**, **export**,
@@ -79,6 +80,9 @@ English carries the same root in **port**, **portable**, **export**,
 
 And *importante* is literally **carrying-in-ish**: something that brings weight
 with it.
+
+*El importe* is the noun of *importar* in its third sense, "to amount to": the
+sum a bill comes to.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C474-PAGO-02, ES-LEX-C463-GUIA-03] -->

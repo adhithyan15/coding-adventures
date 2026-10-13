@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 6,
-  "sourceHash": "fnv1a64:bfc00d0f356a7905",
+  "sourceHash": "fnv1a64:14051ab4d258ab05",
   "lessonIds": [
     "ES-C03-como",
     "ES-C03-como-acento",
@@ -17,6 +17,6 @@
   "text": "spanish/narration/ch06.txt",
   "json": "spanish/narration/ch06.json",
   "textHash": "fnv1a64:a2d34059750b1531",
-  "jsonHash": "fnv1a64:9c201fca13b43ef2",
+  "jsonHash": "fnv1a64:9d8a475d287c6d4a",
   "findings": []
 }

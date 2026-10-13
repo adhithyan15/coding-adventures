@@ -4,7 +4,7 @@
   "chapter": 465,
   "title": "El cuaderno de campo",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ef11fc13952c7570",
+  "sourceHash": "fnv1a64:b511374796d6e338",
   "lessons": [
     {
       "id": "ES-C465-cuaderno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd4473d00a51669e",
+      "sourceHash": "fnv1a64:65a4100135389066",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b01714d8d5429c0",
+      "sourceHash": "fnv1a64:4515e7ef7de8c34d",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad4581af34ad43f9",
+      "sourceHash": "fnv1a64:a029b90dbf599c87",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8ed4fdb458072371",
+      "sourceHash": "fnv1a64:625958e2a4940eee",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 496,
-  "sourceHash": "fnv1a64:b5484b8cd66e13c8",
+  "sourceHash": "fnv1a64:713574d4c4708c17",
   "lessonIds": [
     "ES-C496-hogar",
     "ES-C496-cerradura",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch496.txt",
   "json": "spanish/narration/ch496.json",
-  "textHash": "fnv1a64:be5f12e0450c14ec",
-  "jsonHash": "fnv1a64:76da48d92f87200a",
+  "textHash": "fnv1a64:a03836e26093f50a",
+  "jsonHash": "fnv1a64:5fbee64a0ad13c2e",
   "findings": []
 }

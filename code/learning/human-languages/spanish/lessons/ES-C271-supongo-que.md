@@ -11,6 +11,7 @@ concept_tag: HEDGE-SUPPOSE
 prerequisites: [ES-C271-quizas]
 sounds: [vowel-a, vowel-o]
 roots: [sub ponere]
+etymology_hook: "supongo ← Latin supponere: sub 'under' + ponere 'to place' — English suppose"
 duration:
   max_seconds: 240
 requires:

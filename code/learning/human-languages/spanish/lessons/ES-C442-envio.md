@@ -11,6 +11,7 @@ concept_tag: ES-THING-ENVIO
 prerequisites: [ES-C442-administracion, ES-C384-enviar, ES-C312-carta]
 sounds: [written-accent, hiatus-ia]
 roots: [inviare-latin]
+etymology_hook: "envío — from enviar, Late Latin inviare 'to put on the road', from via 'road'"
 duration:
   max_seconds: 265
 requires:

@@ -11,6 +11,7 @@ concept_tag: ES-REF-PREVIO
 prerequisites: [ES-C435-experiencia]
 sounds: []
 roots: []
+etymology_hook: "previo ← Latin praevius: prae 'before' + via 'way' — what lies on the way before"
 duration:
   max_seconds: 230
 requires:

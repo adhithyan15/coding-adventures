@@ -11,6 +11,7 @@ concept_tag: ES-WHERE-THEATRE
 prerequisites: [ES-C354-cine]
 sounds: [vowel-e, r-tap, stress-penultimate]
 roots: [theatron-greek]
+etymology_hook: "teatro ← Latin theatrum, Greek theatron 'a place for viewing' — English theory is kin"
 duration:
   max_seconds: 240
 requires:

@@ -11,6 +11,7 @@ concept_tag: ES-STATE-DURO
 prerequisites: [ES-C448-mudanza, ES-C269-durante, ES-C327-fuerte]
 sounds: [d-soft, r-tap, stress-penultimate]
 roots: [durare]
+etymology_hook: "duro ← Latin durus 'hard', the root of durare 'to last' — English durable, endure"
 duration:
   max_seconds: 275
 requires:

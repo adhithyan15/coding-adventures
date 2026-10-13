@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Saying Your Name",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77bc191daa544cc7",
+  "sourceHash": "fnv1a64:1e1917753d02586a",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99c6fa9663558809",
+      "sourceHash": "fnv1a64:6571eff0672b1e5c",
       "notice": null,
       "blocks": [
         {
@@ -139,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33a46fc5f8d8b456",
+      "sourceHash": "fnv1a64:a55bc0b64d998450",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e60154f0219a5658",
+      "sourceHash": "fnv1a64:a7a0cdabb96ca194",
       "notice": null,
       "blocks": [
         {

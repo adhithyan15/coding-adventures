@@ -11,6 +11,7 @@ concept_tag: ES-VERB-REGALAR
 prerequisites: [ES-C505-ensayar, ES-C505-exito]
 sounds: []
 roots: []
+etymology_hook: "regalar — probably French régaler 'to treat to a feast'; the French word's origin is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C505-exito]
 > *I am giving my mother a book.*
 
 The verb behind *el regalo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regalar** is probably from French *régaler*, "to treat to a feast"; where the French word itself came from is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

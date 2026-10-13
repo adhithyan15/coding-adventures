@@ -10,7 +10,8 @@ gloss: "current, present-day"
 concept_tag: ES-REF-ACTUAL
 prerequisites: [ES-C508-independiente, ES-C508-conocido]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "actual ← Late Latin actualis 'active', from actus 'a doing' — 'current', not English actual"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C508-conocido]
 > *The current price is ten euros.*
 
 A false friend: actual in English is *real*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**actual** ← Late Latin *actualis*, "active, practical" (EtymDB 2.1), from *actus*, "a doing" — a learned word. It means current, not English *actual*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

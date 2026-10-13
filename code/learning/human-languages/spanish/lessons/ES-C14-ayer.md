@@ -11,6 +11,7 @@ concept_tag: VERB-PAST
 prerequisites: [ES-C10-ir-a-futuro]
 sounds: [vowel-a, vowel-e]
 roots: [ad heri]
+etymology_hook: "ayer ← Latin ad heri 'to yesterday'; heri is a cousin of English yester-"
 duration:
   max_seconds: 240
 requires:

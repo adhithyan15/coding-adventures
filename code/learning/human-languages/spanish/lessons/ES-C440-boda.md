@@ -11,6 +11,7 @@ concept_tag: ES-EVENT-BODA
 prerequisites: [ES-C439-sintesis-via, ES-C349-fiesta, ES-C346-iglesia, ES-C309-familia]
 sounds: [b-soft, stress-penultimate]
 roots: [votum-latin]
+etymology_hook: "boda ← Latin vota 'the vows', the plural of votum — English vote, devotion"
 duration:
   max_seconds: 265
 requires:

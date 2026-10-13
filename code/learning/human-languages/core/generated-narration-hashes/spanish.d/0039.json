@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 39,
-  "sourceHash": "fnv1a64:7ad0557d441ae557",
+  "sourceHash": "fnv1a64:51592dbe10abed40",
   "lessonIds": [
     "ES-C07-hablan"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch39.txt",
   "json": "spanish/narration/ch39.json",
-  "textHash": "fnv1a64:73b8305b73c6d187",
-  "jsonHash": "fnv1a64:5079ba93e95a2ff6",
+  "textHash": "fnv1a64:684a109c73874564",
+  "jsonHash": "fnv1a64:bb160119125c2c24",
   "findings": []
 }

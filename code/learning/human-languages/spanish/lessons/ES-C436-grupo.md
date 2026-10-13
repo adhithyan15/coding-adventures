@@ -11,6 +11,7 @@ concept_tag: ES-REF-GRUPO
 prerequisites: [ES-C436-companero, ES-C358-clase]
 sounds: []
 roots: []
+etymology_hook: "grupo ← Italian gruppo, a short plain word that came in whole"
 duration:
   max_seconds: 225
 requires:

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECHAZAR
 prerequisites: [ES-C461-peligroso, ES-C456-aceptar, ES-C458-admitir]
 sounds: [rolled-rr, ch-digraph, z-as-th-or-s, stress-final]
 roots: [capere-latin]
+etymology_hook: "rechazar ← Old French, from spoken Latin *captiare 'to chase' — kin to cazar"
 duration:
   max_seconds: 280
 requires:
@@ -74,16 +75,16 @@ is why *empezar* gives *empecé*. A handful of borrowings keep the *z* — *zen*
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-03, ES-LEX-C461-DONAR-02] -->
 
 **re-** plus *chazar*, to drive back — a verb Spanish took from Old French
-*chacier*, and behind that Vulgar Latin **captiare**, to chase, built on
+*chacier*, and behind that Vulgar Latin **\*captiare**, to chase, built on
 **capere**, **to take**. That French leg is why this word has **ch**: Spanish's
-own inherited form of *captiare* is **cazar**, to hunt.
+own inherited form of *\*captiare* is **cazar**, to hunt.
 
 So *rechazar* and **aceptar** are cousins, and the pair is worth holding: *ad-*
-plus *capere* is taking a thing **towards** you, and *re-* plus *captiare* is
+plus *capere* is taking a thing **towards** you, and *re-* plus *\*captiare* is
 driving it **back**. One Latin verb of taking, pointed two ways by two
 prefixes.
 
-The same *captiare* gave Spanish **cazar**, to hunt, and French *chasser*,
+The same *\*captiare* gave Spanish **cazar**, to hunt, and French *chasser*,
 which English borrowed as **chase** — and, through a second borrowing, as
 **catch**. To reject something is to chase it back the way it came.
 

@@ -10,7 +10,8 @@ gloss: "to keep, to maintain"
 concept_tag: ES-VERB-MANTENER
 prerequisites: [ES-C510-sorprender, ES-C511-parecer]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "mantener ← Late Latin manutenere 'to hold in the hand' — kin to tener, English maintain"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C511-parecer]
 > *Keep your distance.*
 
 Conjugated like *tener*: *mantengo*, *mantiene*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mantener** ← Late Latin *manutenere*, "to hold in the hand" (EtymDB 2.1): *manu*, "with the hand", and *tenere*, "to hold" — the *tenere* of *tener*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

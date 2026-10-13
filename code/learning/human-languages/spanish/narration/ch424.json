@@ -4,7 +4,7 @@
   "chapter": 424,
   "title": "The Marks Themselves",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:635ea188176b7059",
+  "sourceHash": "fnv1a64:c77b4f7d39a41bda",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11d2f79c0819dbb0",
+      "sourceHash": "fnv1a64:88ccaf954c5918a1",
       "notice": null,
       "blocks": [
         {
@@ -70,6 +70,10 @@
             {
               "kind": "speech",
               "text": "The mark on the page is identical in all three. What changes is the size of the thing being finished — a sentence, a block, or a text. Seguido means \"continued,\" aparte means \"separate,\" and final means what it looks like."
+            },
+            {
+              "kind": "speech",
+              "text": "Punto is Latin punctum, \"a prick\", from pungere, \"to pierce\": a dot is a prick of the pen."
             }
           ]
         },
@@ -174,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3c397d640f102b",
+      "sourceHash": "fnv1a64:29639ceeb2e99a5c",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:940f3626ac746ca0",
+      "sourceHash": "fnv1a64:23379a89ed7f6dd4",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23ea9a41623d6759",
+      "sourceHash": "fnv1a64:5a9be8bb5d7649ab",
       "notice": null,
       "blocks": [
         {
@@ -522,6 +526,10 @@
             {
               "kind": "speech",
               "text": "Three turns, two speakers, no he said and no quotation marks. The reader tracks who is talking by alternation alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Raya is usually traced to Latin radius, \"a rod, a ray\"."
             }
           ]
         },
@@ -627,7 +635,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fe8f4ff766ce565",
+      "sourceHash": "fnv1a64:0e1931a4ffc650c8",
       "notice": null,
       "blocks": [
         {
@@ -678,6 +686,10 @@
             {
               "kind": "speech",
               "text": "The outermost pair is the angular one. Nesting works from the outside in, so the English-looking pair appears inside the Spanish-looking one, rather than first."
+            },
+            {
+              "kind": "speech",
+              "text": "Comillas is coma, \"comma\", with the small-ending -illa: little commas."
             }
           ]
         },
@@ -776,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7de0f1339e655c37",
+      "sourceHash": "fnv1a64:03a94dfe110733d7",
       "notice": null,
       "blocks": [
         {
@@ -916,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74658f4a7dffd967",
+      "sourceHash": "fnv1a64:e4f9b3fb64e4e9ef",
       "notice": null,
       "blocks": [
         {
@@ -978,6 +990,10 @@
             {
               "kind": "speech",
               "text": "A form asking for apellidos may come back with a hyphen in it, and the hyphen is telling you the two halves are one name rather than two."
+            },
+            {
+              "kind": "speech",
+              "text": "Guion is built on guía, \"a guide\", and it also names the banner carried at the head of a procession."
             }
           ]
         },
@@ -1081,7 +1097,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d845805c90da2ac",
+      "sourceHash": "fnv1a64:c83f1ce7c07592e9",
       "notice": null,
       "blocks": [
         {
@@ -1132,6 +1148,10 @@
             {
               "kind": "speech",
               "text": "The middle one is the useful surprise: c/ on a Spanish address is calle, the street. An envelope, a form or a shop sign will print it that way, and it is unreadable if nobody has told you."
+            },
+            {
+              "kind": "speech",
+              "text": "Barra goes back to a spoken Latin barra, \"a bar\", whose own origin is unknown — the same word as English bar."
             }
           ]
         },

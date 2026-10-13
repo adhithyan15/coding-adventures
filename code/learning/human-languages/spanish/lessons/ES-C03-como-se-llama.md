@@ -11,6 +11,7 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [ES-C03-como, ES-C03-familia-qu, ES-C03-se-llama, ES-C03-tu-usted]
 sounds: [inverted-marks, accent-mark]
 roots: []
+etymology_hook: "¿cómo se llama usted? — cómo 'how' + se llama 'calls oneself' + usted: how are you called"
 duration:
   max_seconds: 240
 requires:

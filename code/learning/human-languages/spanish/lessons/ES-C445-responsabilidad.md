@@ -11,6 +11,7 @@ concept_tag: ES-WORK-RESPONSABILIDAD
 prerequisites: [ES-C445-jubilarse, ES-C306-esposo, ES-C441-contrato]
 sounds: [written-accent, stress-final]
 roots: [spondere]
+etymology_hook: "responsabilidad — Latin re- 'back' + spondere 'to promise' — kin to esposo; English respond"
 duration:
   max_seconds: 280
 requires:

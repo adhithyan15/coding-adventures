@@ -11,6 +11,7 @@ concept_tag: ES-REF-TUBERIA
 prerequisites: [ES-C432-estanteria]
 sounds: []
 roots: []
+etymology_hook: "tubería — tubo 'tube, pipe' + -ería: the whole run of pipes"
 duration:
   max_seconds: 225
 requires:

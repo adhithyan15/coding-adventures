@@ -11,6 +11,7 @@ concept_tag: ES-TRADE-RUTA
 prerequisites: [ES-C452-almacen, ES-C448-roto, ES-C302-calle]
 sounds: [r-tap, t-dental, stress-penultimate]
 roots: [rumpere-latin]
+etymology_hook: "ruta ← Latin via rupta 'a broken way' — kin to roto; English route, rout"
 duration:
   max_seconds: 275
 requires:

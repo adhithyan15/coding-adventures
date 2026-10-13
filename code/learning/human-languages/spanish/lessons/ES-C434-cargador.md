@@ -11,6 +11,7 @@ concept_tag: ES-REF-CARGADOR
 prerequisites: [ES-C434-bateria, ES-C404-movil]
 sounds: []
 roots: []
+etymology_hook: "cargador — cargar 'to load' + -dor: the thing that loads"
 duration:
   max_seconds: 240
 requires:

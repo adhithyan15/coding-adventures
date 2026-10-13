@@ -11,6 +11,7 @@ concept_tag: ARGUMENT-CLAIM
 prerequisites: [ES-C269-durante, ES-C267-pregunta-si-no, ES-C267-verdad-no]
 sounds: [vowel-e, vowel-o]
 roots: [opinari]
+etymology_hook: "opinión — Latin opinari 'to suppose' + -ión: a supposing made a thing — English opinion"
 duration:
   max_seconds: 240
 requires:

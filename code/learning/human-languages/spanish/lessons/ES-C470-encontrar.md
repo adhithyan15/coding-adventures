@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENCONTRAR
 prerequisites: [ES-C470-mango, ES-C451-mostrar, ES-C383-buscar]
 sounds: [nasal-n, stress-final, r-tap]
 roots: [contra-latin]
+etymology_hook: "encontrar — en- + contra 'against': to come up against — English encounter"
 duration:
   max_seconds: 275
 requires:

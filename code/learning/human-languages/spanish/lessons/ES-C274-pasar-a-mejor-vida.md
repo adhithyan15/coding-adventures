@@ -11,6 +11,7 @@ concept_tag: EUPHEMISM-AND-TABOO
 prerequisites: [ES-C274-ser-un-quijote]
 sounds: [vowel-a, vowel-e]
 roots: [passus, vita]
+etymology_hook: "pasar ← spoken Latin *passare, from passus 'a step'; mejor ← melior; vida ← vita 'life'"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,9 @@ shelf of ways not to: *pasar a mejor vida*, *fallecer* (the formal one),
 English has exactly the same shelf — *pass away*, *pass on*, *depart*, *rest* —
 and for the same reason. A **euphemism** is not politeness for its own sake. It
 is a language routing around a subject its speakers find hard to name.
+
+*Pasar* comes from spoken Latin *\*passare*, built on *passus*, "a step";
+*mejor* is Latin *melior*, "better", and *vida* is Latin *vita*, "life".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[ES-SEMANTIC-EUPHEMISM]; assesses=[] -->

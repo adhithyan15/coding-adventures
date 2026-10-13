@@ -11,6 +11,7 @@ concept_tag: ES-DOC-FACTURA
 prerequisites: [ES-C441-fijo, ES-C382-pagar, ES-C311-cuenta, ES-C311-precio]
 sounds: [k-hard, stress-penultimate]
 roots: [facere-latin]
+etymology_hook: "factura ← Latin factura 'a making', from facere 'to make' — like escritura, lectura"
 duration:
   max_seconds: 275
 requires:

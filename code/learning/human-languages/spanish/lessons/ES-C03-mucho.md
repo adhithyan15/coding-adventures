@@ -11,6 +11,7 @@ concept_tag: ES-WORD-MUCHO
 prerequisites: [ES-C02-noche]
 sounds: [soft-c, vowel-o]
 roots: [multus]
+etymology_hook: "mucho ← Latin multum 'much': -lt- became -ch- — English multiple, multitude"
 duration:
   max_seconds: 180
 requires:

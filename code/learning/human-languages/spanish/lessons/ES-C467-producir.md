@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PRODUCIR
 prerequisites: [ES-C466-sintesis-informe, ES-C462-reducir, ES-C310-ducha]
 sounds: [soft-c, stress-final, r-tap]
 roots: [ducere-latin]
+etymology_hook: "producir ← Latin producere: pro- 'forward' + ducere 'to lead' — English produce"
 duration:
   max_seconds: 270
 requires:

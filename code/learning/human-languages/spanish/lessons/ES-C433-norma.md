@@ -11,6 +11,7 @@ concept_tag: ES-REF-NORMA
 prerequisites: [ES-C433-garaje]
 sounds: []
 roots: []
+etymology_hook: "norma ← Latin norma 'a carpenter's square' — English normal, enormous"
 duration:
   max_seconds: 225
 requires:

@@ -11,6 +11,7 @@ concept_tag: ES-THING-BOMBERO
 prerequisites: [ES-C427-policia]
 sounds: [m-b-cluster, b-soft, stress-penultimate]
 roots: []
+etymology_hook: "bombero — bomba 'a pump' + -ero: the person who works the pump"
 duration:
   max_seconds: 240
 requires:

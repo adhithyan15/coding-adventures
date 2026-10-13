@@ -11,6 +11,7 @@ concept_tag: ADJECTIVE-FEELING
 prerequisites: [ES-C268-problema]
 sounds: [vowel-a, vowel-e]
 roots: [felix]
+etymology_hook: "feliz ← Latin felix, first 'fruitful', then 'happy' — English felicity"
 duration:
   max_seconds: 240
 requires:

@@ -11,6 +11,7 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [ES-C01-bien, ES-C02-tarde]
 sounds: [diphthong-ue, stress-default-vowel-ns]
 roots: [bonus, tardus]
+etymology_hook: "buenas tardes — buena 'good' + tardes 'afternoons': literally 'good afternoons'"
 duration:
   max_seconds: 180
 requires:

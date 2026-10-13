@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECOMENDAR
 prerequisites: [ES-C473-aconsejar, ES-C34-pensar, ES-C321-consejo]
 sounds: [diphthong-ie, nasal-n, stress-final]
 roots: [mandare-latin]
+etymology_hook: "recomendar ← Latin re- + commendare 'to entrust', from mandare — English commend"
 duration:
   max_seconds: 275
 requires:

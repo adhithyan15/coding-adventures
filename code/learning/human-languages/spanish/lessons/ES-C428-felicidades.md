@@ -11,6 +11,7 @@ concept_tag: ES-SOCIAL-FELICIDADES
 prerequisites: [ES-C428-guion-bajo, ES-C269-feliz]
 sounds: [s-clear, stress-penultimate, inverted-marks]
 roots: []
+etymology_hook: "felicidades — felicidad 'happiness' in the plural, from feliz: happinesses"
 duration:
   max_seconds: 240
 requires:

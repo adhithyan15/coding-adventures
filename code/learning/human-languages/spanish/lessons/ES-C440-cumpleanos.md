@@ -11,6 +11,7 @@ concept_tag: ES-EVENT-CUMPLEANOS
 prerequisites: [ES-C440-boda, ES-C349-aniversario, ES-C08-cuantos-anos]
 sounds: [enye, stress-penultimate]
 roots: [annus-latin]
+etymology_hook: "cumpleaños — cumple 'completes' + años 'years': the day the years are completed"
 duration:
   max_seconds: 270
 requires:

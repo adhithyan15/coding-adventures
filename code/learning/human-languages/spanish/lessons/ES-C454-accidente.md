@@ -11,6 +11,7 @@ concept_tag: ES-ROAD-ACCIDENTE
 prerequisites: [ES-C454-via, ES-C356-ocasion, ES-C448-roto]
 sounds: [soft-c, k-hard, nasal-n, stress-penultimate]
 roots: [cadere-latin]
+etymology_hook: "accidente ← Latin accidere: ad- + cadere 'to fall' — kin to caer, ocasión"
 duration:
   max_seconds: 275
 requires:

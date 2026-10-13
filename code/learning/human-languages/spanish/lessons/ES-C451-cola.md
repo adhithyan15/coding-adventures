@@ -11,6 +11,7 @@ concept_tag: ES-TURN-COLA
 prerequisites: [ES-C450-sintesis-suelo, ES-C40-esperar, ES-C313-entrada]
 sounds: [l-clear, vowel-o, stress-penultimate]
 roots: [cauda-latin]
+etymology_hook: "cola ← Latin cauda 'tail', through spoken coda; French queue is the same word"
 duration:
   max_seconds: 275
 requires:

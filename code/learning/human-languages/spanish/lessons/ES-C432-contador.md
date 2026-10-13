@@ -11,6 +11,7 @@ concept_tag: ES-REF-CONTADOR
 prerequisites: [ES-C432-lavadora, ES-C38-contar]
 sounds: []
 roots: []
+etymology_hook: "contador — contar 'to count' + -dor: the meter is the counter"
 duration:
   max_seconds: 235
 requires:

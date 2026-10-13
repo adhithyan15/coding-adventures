@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 476,
-  "sourceHash": "fnv1a64:d6adc3e8b8d498c2",
+  "sourceHash": "fnv1a64:7f4d012135993054",
   "lessonIds": [
     "ES-C476-alumno",
     "ES-C476-practicar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch476.txt",
   "json": "spanish/narration/ch476.json",
-  "textHash": "fnv1a64:98b7e39edd954065",
-  "jsonHash": "fnv1a64:c69979480d357adc",
+  "textHash": "fnv1a64:1e24ed726e7d0698",
+  "jsonHash": "fnv1a64:ea6fb96caff41fd9",
   "findings": []
 }

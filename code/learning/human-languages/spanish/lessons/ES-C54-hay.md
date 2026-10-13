@@ -10,7 +10,7 @@ gloss: "there is" and "there are" — one word for both, which no other Spanish 
 concept_tag: ES-LEX-HAY
 prerequisites: [ES-C53-sintesis-frases-largas, ES-C49-haber-completo]
 sounds: [diphthong-ai]
-roots: [habere-latin]
+roots: [habere-latin, ibi-latin]
 teaches_cells: []
 etymology_hook: "hay is not one word but two fused: ha, from haber, plus an old y meaning 'there' — and French did the identical thing in il y a"
 duration:
@@ -62,6 +62,11 @@ thing — *se compran libros*.
 
 *Hay* does not. It is the one common Spanish verb form that counts nothing at
 all, and it is a small gift: no decision to make, ever.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hay** is two words fused: *ha*, from *haber*, Latin *habere*, "to have", and an old *y*, "there", from Latin *ibi*, "there". French *il y a* is built the same way.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-GRAMMAR-HAY-NO-AGREEMENT, ES-LEX-CASA, ES-LEX-LIBRO, ES-GRAMMAR-BARE-PLURAL-NOUN, ES-LEX-AQUI, ES-LEX-HABER, ES-GRAMMAR-NOUN-PLURAL-ES] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 191,
-  "sourceHash": "fnv1a64:6cb9534c05e94023",
+  "sourceHash": "fnv1a64:3a89a189f8645fcf",
   "lessonIds": [
     "ES-C54-hay"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch191.txt",
   "json": "spanish/narration/ch191.json",
-  "textHash": "fnv1a64:4e561dd93efe9051",
-  "jsonHash": "fnv1a64:44516f2d9aae672b",
+  "textHash": "fnv1a64:e21e609c3ac19de3",
+  "jsonHash": "fnv1a64:80f0619b4509584d",
   "findings": []
 }

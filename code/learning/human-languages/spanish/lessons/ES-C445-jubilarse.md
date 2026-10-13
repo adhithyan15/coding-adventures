@@ -11,6 +11,7 @@ concept_tag: ES-VERB-JUBILARSE
 prerequisites: [ES-C444-sintesis-casa, ES-C435-jubilado, ES-C394-trabajo]
 sounds: [j-jota, stress-final]
 roots: [iubilare-latin]
+etymology_hook: "jubilarse ← Latin iubilare 'to shout for joy' — English jubilant, jubilation"
 duration:
   max_seconds: 270
 requires:

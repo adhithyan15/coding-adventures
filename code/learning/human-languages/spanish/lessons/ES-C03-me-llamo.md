@@ -11,6 +11,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ES-C03-me, ES-C03-llamar]
 sounds: [ll-y]
 roots: [clamare]
+etymology_hook: "me llamo — me 'myself' + llamo 'I call': literally 'I call myself'"
 duration:
   max_seconds: 180
 requires:

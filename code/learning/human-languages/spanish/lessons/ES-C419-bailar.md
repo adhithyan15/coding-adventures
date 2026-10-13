@@ -11,6 +11,7 @@ concept_tag: ES-VERB-BAILAR
 prerequisites: [ES-C413-musica, ES-C35-gustar]
 sounds: [b-soft, diphthong-ai, l-clear, r-tap]
 roots: [ballare]
+etymology_hook: "bailar ← Late Latin ballare, from Greek — English ball, ballet, ballad (not a ball you throw)"
 duration:
   max_seconds: 240
 requires:

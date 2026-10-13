@@ -11,6 +11,7 @@ concept_tag: ES-VERB-IMPORTAR
 prerequisites: [ES-C463-guia, ES-C398-importante, ES-C443-interesar]
 sounds: [p-b-hard, r-tap, stress-final]
 roots: [importare-latin]
+etymology_hook: "importar ← Latin importare: in- + portare 'to carry' — English import, important"
 duration:
   max_seconds: 280
 requires:

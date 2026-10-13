@@ -11,6 +11,7 @@ concept_tag: ES-REF-BUZON
 prerequisites: [ES-C489-gasolina, ES-C489-ayuntamiento]
 sounds: []
 roots: []
+etymology_hook: "buzón — origin uncertain; the accounts dictionaries offer do not agree"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C489-ayuntamiento]
 > Deja la carta en el buzón.
 >
 > *Leave the letter in the postbox.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**buzón** has no settled origin. The accounts that dictionaries offer do not agree, and none has won.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

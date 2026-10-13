@@ -11,6 +11,7 @@ concept_tag: ES-REF-JUBILADO
 prerequisites: [ES-C435-previo, ES-C431-pedido]
 sounds: []
 roots: [iubilare-latin]
+etymology_hook: "jubilado ← jubilar, Latin iubilare 'to shout for joy' — English jubilant"
 duration:
   max_seconds: 250
 requires:
@@ -56,7 +57,7 @@ A Spanish participle can stand as an adjective *or* a noun with no further
 change, which is why *un jubilado* needs no word for *person* in it.
 
 **And the root is not what you would expect.** Latin *iubilare* meant to
-**shout for joy** — it is the same word under *jubilee* and *jubilant*. Retiring
+**shout for joy** — it is the same word under *jubilant*. Retiring
 in Spanish is, etymologically, letting out a cheer.
 
 Whether anybody feels that on the day is another matter, but the word was built

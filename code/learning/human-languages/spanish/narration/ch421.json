@@ -4,7 +4,7 @@
   "chapter": 421,
   "title": "The Actor and the Actress",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4a2bb0496c424224",
+  "sourceHash": "fnv1a64:6269f44a02f50600",
   "lessons": [
     {
       "id": "ES-C421-actor",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1e3180835414637",
+      "sourceHash": "fnv1a64:1a0e90aeb5419a1e",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +209,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d69f164d5d3a6610",
+      "sourceHash": "fnv1a64:babe047b860aca74",
       "notice": null,
       "blocks": [
         {
@@ -266,7 +266,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin had its own feminine for -tor nouns: -trix. Actor / actrix. Spanish inherited that pair intact, turned the Latin -x into -z, and kept it."
+              "text": "Latin had its own feminine for -tor nouns: -trix. Actor / actrix. Spanish took that pair from Latin, turned the Latin -x into -z, and kept it."
             },
             {
               "kind": "speech",
@@ -289,7 +289,7 @@
             },
             {
               "kind": "speech",
-              "text": "English kept the same Latin ending in aviatrix and dominatrix, and in the mathematical matrix — originally mater plus -trix, \"the womb\", the thing from which other things are produced."
+              "text": "English kept the same Latin ending in aviatrix and dominatrix. The mathematical matrix only looks like one of them: it is built on mater, \"mother\", and first meant a breeding animal, then the womb."
             },
             {
               "kind": "speech",

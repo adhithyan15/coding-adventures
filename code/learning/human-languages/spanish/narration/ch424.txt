@@ -17,6 +17,7 @@ what comes next: another sentence, same paragraph. name: punto y seguido. what i
 what comes next: a new paragraph. name: punto y aparte. what it closes: a paragraph.
 what comes next: nothing. name: punto final. what it closes: the whole text.
 The mark on the page is identical in all three. What changes is the size of the thing being finished — a sentence, a block, or a text. Seguido means "continued," aparte means "separate," and final means what it looks like.
+Punto is Latin punctum, "a prick", from pungere, "to pierce": a dot is a prick of the pen.
 
 Grammar Lens: spacing, and the one place the mark is left off.
 Two mechanical habits that a written paper is marked on:
@@ -124,6 +125,7 @@ la raya — "the dash." A raya is a line or a stripe, and it is longer than the 
 In printed Spanish dialogue, a raya opens each turn of speech, and nobody is named:
 — ¿Cómo estás? — Bien, gracias. ¿Y tú? — Muy bien.
 Three turns, two speakers, no he said and no quotation marks. The reader tracks who is talking by alternation alone.
+Raya is usually traced to Latin radius, "a rod, a ray".
 
 Grammar Lens: what replaces the quotation marks.
 Set the two traditions side by side, because a reading paper prints the Spanish one and an English-trained eye looks for the wrong thing:
@@ -162,6 +164,7 @@ shape: « ». name: comillas latinas, or angulares. when: preferred in printed S
 shape: " ". name: comillas inglesas. when: inside a quotation already in « ».
 shape: ' '. name: comillas simples. when: inside that again.
 The outermost pair is the angular one. Nesting works from the outside in, so the English-looking pair appears inside the Spanish-looking one, rather than first.
+Comillas is coma, "comma", with the small-ending -illa: little commas.
 
 Grammar Lens: what they are actually for.
 Since la raya already handles dialogue, the marks are free for other work, and the one an A1 paper shows is the foreign word:
@@ -233,6 +236,7 @@ Its everyday A1 use is in names:
 Ana-María — a compound forename.
 Sánchez-Pérez — a compound surname, often a married name or a double family name.
 A form asking for apellidos may come back with a hyphen in it, and the hyphen is telling you the two halves are one name rather than two.
+Guion is built on guía, "a guide", and it also names the banner carried at the head of a procession.
 
 Grammar Lens: the word changed its own spelling.
 This one is a small piece of history you will see both ways in print:
@@ -270,6 +274,7 @@ use: alternatives. example: y/o. reading: and, or both.
 use: abbreviation. example: c/ Mayor. reading: calle Mayor.
 use: per. example: km/h. reading: kilometres per hour.
 The middle one is the useful surprise: c/ on a Spanish address is calle, the street. An envelope, a form or a shop sign will print it that way, and it is unreadable if nobody has told you.
+Barra goes back to a spoken Latin barra, "a bar", whose own origin is unknown — the same word as English bar.
 
 Grammar Lens: the mark that means "per".
 In a measurement, la barra is read aloud as por:

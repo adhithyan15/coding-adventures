@@ -11,6 +11,7 @@ concept_tag: ES-VERB-OFRECER
 prerequisites: [ES-C436-grupo, ES-C431-cobrar]
 sounds: []
 roots: []
+etymology_hook: "ofrecer ← Latin ob- 'toward' + ferre 'to carry' — kin to transferir, referir"
 duration:
   max_seconds: 245
 requires:

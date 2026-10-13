@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Making a Case --- Claim, Example, However, Although",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:32ab11f82df8a055",
+  "sourceHash": "fnv1a64:772132ff7f59c25b",
   "lessons": [
     {
       "id": "ES-C270-en-mi-opinion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbc8525fb8eae807",
+      "sourceHash": "fnv1a64:530d94322d580209",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d54ebbfb842c3340",
+      "sourceHash": "fnv1a64:48c71a66c550f1fa",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9c0eff238e9e520",
+      "sourceHash": "fnv1a64:5893183622da34df",
       "notice": null,
       "blocks": [
         {
@@ -386,7 +386,7 @@
             },
             {
               "kind": "speech",
-              "text": "Literally \"without hindrance.\" Embargo is a hindrance, a seizure, an impediment — the same word English borrowed whole for a trade embargo, and it traces to a Latin-derived imbarricare, \"to bar in.\""
+              "text": "Literally \"without hindrance.\" Embargo is a hindrance, a seizure, an impediment — the same word English borrowed whole for a trade embargo, and it traces to a spoken-Latin imbarricare, \"to bar in.\""
             },
             {
               "kind": "speech",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26279816ca5ca32a",
+      "sourceHash": "fnv1a64:9b8daab332eeba22",
       "notice": null,
       "blocks": [
         {
@@ -542,7 +542,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have watched this fusion happen twice already: ayer out of ad heri, and hablaré out of hablar habeo. Spanish builds most of its small words this way, by saying two words often enough that they become one."
+              "text": "You have watched this fusion happen twice already: ayer out of ad heri, and hablaré out of hablar + he. Spanish builds most of its small words this way, by saying two words often enough that they become one."
             }
           ]
         },

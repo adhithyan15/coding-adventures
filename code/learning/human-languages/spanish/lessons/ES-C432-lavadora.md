@@ -11,6 +11,7 @@ concept_tag: ES-REF-LAVADORA
 prerequisites: [ES-C431-proveedor, ES-C381-lavar, ES-C43-casa]
 sounds: []
 roots: []
+etymology_hook: "lavadora — lavar 'to wash' + -dora: the machine that washes"
 teaches_cells: []
 duration:
   max_seconds: 230

@@ -10,7 +10,8 @@ gloss: "the business"
 concept_tag: ES-REF-NEGOCIO
 prerequisites: [ES-C490-entrevista, ES-C490-huelga]
 sounds: []
-roots: []
+roots: [negotium-latin]
+etymology_hook: "negocio ← Latin negotium 'business', nec 'not' + otium 'leisure' — kin to ocio; English negotiate"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C490-huelga]
 > *He has a clothing business.*
 
 *Los negocios* — business in general.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**negocio** ← Latin *negotium*, "business" (EtymDB 2.1), from *nec*, "not", and *otium*, "leisure" — a learned word. Business was the absence of leisure; *ocio*, "leisure", is still Spanish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

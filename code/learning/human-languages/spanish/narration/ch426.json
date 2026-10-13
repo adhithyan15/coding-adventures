@@ -4,7 +4,7 @@
   "chapter": 426,
   "title": "Capitals, Short Forms And Symbols",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:78e1b872e1a52642",
+  "sourceHash": "fnv1a64:a625ddc56415c37e",
   "lessons": [
     {
       "id": "ES-C426-mayusculas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31ebfe242c9ddb57",
+      "sourceHash": "fnv1a64:08cefe659edad83a",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7501ef6d4a404be",
+      "sourceHash": "fnv1a64:70a90ab67637c533",
       "notice": null,
       "blocks": [
         {
@@ -248,6 +248,10 @@
             {
               "kind": "speech",
               "text": "With the forename present, the small word is lower-case. Standing alone at the head of the name, it takes the capital."
+            },
+            {
+              "kind": "speech",
+              "text": "Inicial is Latin initialis, \"at the beginning\" (Lewis & Short), from initium, \"a beginning\"."
             }
           ]
         },
@@ -342,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f71d5d287159a6d",
+      "sourceHash": "fnv1a64:724917073e84d471",
       "notice": null,
       "blocks": [
         {
@@ -396,6 +400,10 @@
             {
               "kind": "speech",
               "text": "The point is not decoration. Sr without it is an error, because the point is what marks the word as shortened."
+            },
+            {
+              "kind": "speech",
+              "text": "Abreviatura is Late Latin abbreviatura, from brevis, \"short\"."
             }
           ]
         },
@@ -513,7 +521,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3b526eca96d08c68",
+      "sourceHash": "fnv1a64:99f92395069e9c3a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -571,6 +579,10 @@
             {
               "kind": "speech",
               "text": "English writes 1st and 2nd, changing the ending with the number. Spanish writes the same raised letter every time and changes it only for gender: º for a masculine word, ª for a feminine one."
+            },
+            {
+              "kind": "speech",
+              "text": "Voladita is built on volar, \"to fly\", Latin volare, with the small-ending -ita."
             }
           ]
         },
@@ -683,7 +695,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7f73ff34aad2df3",
+      "sourceHash": "fnv1a64:7728b3973da5f6fb",
       "notice": null,
       "blocks": [
         {
@@ -732,6 +744,10 @@
             {
               "kind": "speech",
               "text": "The two you will actually meet on a form are DNI — Documento Nacional de Identidad, the Spanish identity card — and UE, the European Union."
+            },
+            {
+              "kind": "speech",
+              "text": "Sigla is Late Latin sigla, \"abbreviations\" (Lewis & Short), a plural taken as one word."
             }
           ]
         },
@@ -849,7 +865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e18b566bab2b5795",
+      "sourceHash": "fnv1a64:76e3595b59a1a63b",
       "notice": null,
       "blocks": [
         {
@@ -900,6 +916,10 @@
             {
               "kind": "speech",
               "text": "You have already read one in use: km/h, which you learned to say aloud as kilómetros por hora."
+            },
+            {
+              "kind": "speech",
+              "text": "Símbolo is Latin symbolus, \"a sign, a token\" (Lewis & Short), from Greek symbolon."
             }
           ]
         },

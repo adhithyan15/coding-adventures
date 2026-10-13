@@ -11,6 +11,7 @@ concept_tag: ES-THING-COMPRADOR
 prerequisites: [ES-C427-vendedor, ES-C40-comprar]
 sounds: [pr-cluster, r-tap, stress-final]
 roots: []
+etymology_hook: "comprador — comprar 'to buy' + -dor: the buyer, built like vendedor"
 duration:
   max_seconds: 240
 requires:

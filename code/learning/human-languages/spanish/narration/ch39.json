@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Hablan --- They, and Ustedes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7ad0557d441ae557",
+  "sourceHash": "fnv1a64:51592dbe10abed40",
   "lessons": [
     {
       "id": "ES-C07-hablan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:407b6577cdf44bb8",
+      "sourceHash": "fnv1a64:10fcb91995e28a3f",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ustedes is vuestras mercedes, \"your graces\", worn down. Merced is Latin merces, mercedis, \"pay, reward\" (Lewis & Short), which came to mean favour, then grace. The -n of hablan is the Latin -nt of amant, \"they love\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -172,7 +183,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

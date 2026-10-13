@@ -10,7 +10,8 @@ gloss: to charge, to be paid — the other side of pagar, and the verb that deci
 concept_tag: ES-VERB-COBRAR
 prerequisites: [ES-C431-proveedor, ES-C382-pagar]
 sounds: []
-roots: []
+roots: [recuperare-latin]
+etymology_hook: "cobrar — short for recobrar 'to recover', Latin recuperare 'to get back' — English recover"
 duration:
   max_seconds: 245
 requires:
@@ -41,6 +42,11 @@ what the **shop** does, from its own side of the counter.
 **cobrar** — to charge somebody, to collect money, to get paid.
 
 One verb for all three, and which one it means depends on who is speaking.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cobrar** is a shortening of *recobrar*, "to recover", which is Latin *recuperare*, "to get back" (Lewis & Short) — inherited: the *-p-* became *-b-*. To be paid is to get your money back.
 
 ## Grammar Lens: who is on each end
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-05, ES-LEX-PAGAR] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-REPETIR
 prerequisites: [ES-C445-ensenar, ES-C303-otra-vez, ES-C431-pedido]
 sounds: [r-tap, stress-final]
 roots: [petere-latin]
+etymology_hook: "repetir ← Latin repetere: re- 'again' + petere 'to seek' — kin to pedir"
 duration:
   max_seconds: 270
 requires:

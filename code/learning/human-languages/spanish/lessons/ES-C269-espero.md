@@ -11,6 +11,7 @@ concept_tag: AMBITION-EXPRESS
 prerequisites: [ES-C269-feliz]
 sounds: [vowel-a, vowel-e]
 roots: [sperare]
+etymology_hook: "espero ← Latin sperare 'to hope' — English desperate, de-sperare: hope taken away"
 duration:
   max_seconds: 240
 requires:

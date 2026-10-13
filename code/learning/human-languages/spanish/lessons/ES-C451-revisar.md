@@ -11,6 +11,7 @@ concept_tag: ES-VERB-REVISAR
 prerequisites: [ES-C451-ticket, ES-C16-ver, ES-C332-aviso]
 sounds: [v-b, s-clear, stress-final]
 roots: [videre-latin]
+etymology_hook: "revisar — re- 'again' + vis-, from Latin videre 'to see' — English revise"
 duration:
   max_seconds: 280
 requires:

@@ -4,7 +4,7 @@
   "chapter": 434,
   "title": "El Taller Y La Máquina",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4c2598c548c42446",
+  "sourceHash": "fnv1a64:6cc4f77001a56a38",
   "lessons": [
     {
       "id": "ES-C434-taller",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad1be20ae90fd331",
+      "sourceHash": "fnv1a64:bc16ec18a0f14111",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "The two meanings share a core that English keeps as well: a place where people work with their hands, rather than sit and listen. If a notice offers you a taller, expect to do something, not to watch."
+            },
+            {
+              "kind": "speech",
+              "text": "Taller came from French atelier, \"a workshop\", in Old French a place where wood was worked."
             }
           ]
         },
@@ -154,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55b2ac82b2580d6b",
+      "sourceHash": "fnv1a64:22c45da87d0c33e9",
       "notice": null,
       "blocks": [
         {
@@ -214,6 +218,10 @@
             {
               "kind": "speech",
               "text": "la máquina sits above all of these as the general term, and it is the word you need for the ones with no special name: la máquina de hacer pan, la máquina del billete. When you do not know an appliance's name, la máquina de plus what it does will be understood every time."
+            },
+            {
+              "kind": "speech",
+              "text": "Máquina is Latin machina, from Greek mēchanē, \"a device\" (Lewis & Short) — a learned word, which is why it keeps its stress on the first syllable."
             }
           ]
         },
@@ -289,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d102e42762a7672",
+      "sourceHash": "fnv1a64:c2b3cc1282b4056e",
       "notice": null,
       "blocks": [
         {
@@ -349,6 +357,10 @@
             {
               "kind": "speech",
               "text": "A word that covers several English words is not being vague. It is naming something English happens to split: a discrete thing that belongs to a larger whole. Hold that idea and all three uses follow from it."
+            },
+            {
+              "kind": "speech",
+              "text": "Pieza goes back to Gaulish pettia, \"a piece\", taken into spoken Latin — the same word as French pièce and English piece."
             }
           ]
         },
@@ -424,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1684535a1b85efe",
+      "sourceHash": "fnv1a64:ad665d6879ba8374",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +500,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the resemblance is real but it is inherited, not made here. That is the honest shape of the rule you have been building for three chapters: look for the join, and accept that sometimes the join happened in another language and the pieces never entered this one."
+              "text": "So the resemblance is real but it is borrowed, not made here. That is the honest shape of the rule you have been building for three chapters: look for the join, and accept that sometimes the join happened in another language and the pieces never entered this one."
             },
             {
               "kind": "speech",
@@ -568,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee4532babaad89a6",
+      "sourceHash": "fnv1a64:f9c8767d27bf39c5",
       "notice": null,
       "blocks": [
         {

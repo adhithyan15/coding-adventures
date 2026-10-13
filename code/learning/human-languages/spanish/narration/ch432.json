@@ -4,7 +4,7 @@
   "chapter": 432,
   "title": "La Casa Por Dentro",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:66686b2b4dce6fb8",
+  "sourceHash": "fnv1a64:106bde075b7514f0",
   "lessons": [
     {
       "id": "ES-C432-lavadora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e14e9a3b88ff6d1",
+      "sourceHash": "fnv1a64:b3ed02967e0c9b2a",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6b8136e50698e33",
+      "sourceHash": "fnv1a64:efc7963f037b6835",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d8187428d2a0b0e",
+      "sourceHash": "fnv1a64:3cc44b1450852810",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3612c718207521ec",
+      "sourceHash": "fnv1a64:f7b1bc1bcefaa34b",
       "notice": null,
       "blocks": [
         {
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3abdd832666977f",
+      "sourceHash": "fnv1a64:b76917fb4c8b8883",
       "notice": null,
       "blocks": [
         {
@@ -615,7 +615,7 @@
             },
             {
               "kind": "speech",
-              "text": "It came into Spanish from Arabic, where the word named a raised, cushioned bench along a wall. Spanish took hundreds of words from Arabic over several centuries, and they tend to arrive whole like this rather than as pieces you can recombine."
+              "text": "It came into Spanish through French sofa, from Arabic ṣuffa, a raised, cushioned bench along a wall. A word taken from another language tends to arrive whole like this rather than as pieces you can recombine."
             },
             {
               "kind": "speech",
@@ -692,7 +692,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sofa? (el sofá.) Could you have built it from a piece you had? (No.) Where did it come from? (Arabic.)"
+              "text": "The sofa? (el sofá.) Could you have built it from a piece you had? (No.) Where did it come from? (Arabic, through French.)"
             }
           ]
         }

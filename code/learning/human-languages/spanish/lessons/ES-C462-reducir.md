@@ -11,8 +11,9 @@ concept_tag: ES-VERB-REDUCIR
 prerequisites: [ES-C461-sintesis-donar, ES-C310-ducha, ES-C456-coste]
 sounds: [d-soft, soft-c, stress-final]
 roots: [ducere-latin]
+etymology_hook: "reducir ← Latin reducere: re- 'back' + ducere 'to lead' — English reduce"
 duration:
-  max_seconds: 275
+  max_seconds: 281
 requires:
   knowledge: [ES-LEX-C310-ASK-02, ES-LEX-C456-CUENTA-04]
 introduces:
@@ -80,8 +81,9 @@ Latin **reducere**: **re-**, back, plus **ducere**, **to lead**. To reduce
 something is to **lead it back** — to a smaller size, to where it was.
 
 *Ducere* is everywhere once you see it. **La ducha** is the same root, and it
-travelled: Latin *ductia* gave Italian *doccia*, which gave French *douche*,
-which gave Spanish *ducha* — a pipe that **leads** water. English has
+travelled: Italian *doccia*, a water pipe, from Latin *ductio*, "a leading"
+(Lewis & Short), gave French *douche*, which gave Spanish *ducha* — a pipe that
+**leads** water. English has
 **conduct**, **produce**, **educate** (to lead out), **duke** — a leader — and
 **aqueduct**, which leads water exactly as a shower does.
 

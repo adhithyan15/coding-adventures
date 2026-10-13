@@ -11,6 +11,7 @@ concept_tag: ES-ASK-NIVEL
 prerequisites: [ES-C471-demasiado, ES-C359-litro, ES-C417-curso]
 sounds: [v-b, l-clear, stress-final]
 roots: [libra-latin]
+etymology_hook: "nivel ← Latin libella 'a little balance', with l turned to n — English level"
 duration:
   max_seconds: 270
 requires:
@@ -74,7 +75,7 @@ balance — hiding in *lb*, in **Libra** the scales in the sky, in
 
 *Nivel* is the same word, made small. Latin **libella** is a *little libra*, a
 builder's level: a tiny balance that tells you when a surface is true. It
-reached Spanish through French, and on the way the first **l** turned into an
+reached Spanish through Occitan or French, and on the way the first **l** turned into an
 **n** — *livel* became *nivel* — because two *l* sounds so close together pull
 apart.
 

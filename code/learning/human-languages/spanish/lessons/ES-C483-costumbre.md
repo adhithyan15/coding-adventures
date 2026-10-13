@@ -10,7 +10,8 @@ gloss: "the custom, the habit"
 concept_tag: ES-REF-COSTUMBRE
 prerequisites: [ES-C482-variedad, ES-C483-infancia]
 sounds: []
-roots: []
+roots: [consuetudo-latin]
+etymology_hook: "costumbre ← Latin consuetudo 'custom', worn down through Old Spanish costumne — English custom"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C483-infancia]
 > *It is the custom to eat late.*
 
 *Tener la costumbre de* — to be in the habit of.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**costumbre** ← Old Spanish *costumne* (EtymDB 2.1), from Latin *consuetudo*, *consuetudinis*, "custom, habit" (Lewis & Short) — inherited and much worn: the shortened ending became *-mbre*, as *hominem*, "man", became *hombre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-COPIAR
 prerequisites: [ES-C472-lectura, ES-C472-usuario, ES-C353-biblioteca]
 sounds: [k-hard, p-b-hard, stress-final, diphthong-ia]
 roots: [copia-latin]
+etymology_hook: "copiar ← Latin copia 'abundance': a copy made more of a text — English copious"
 duration:
   max_seconds: 270
 requires:

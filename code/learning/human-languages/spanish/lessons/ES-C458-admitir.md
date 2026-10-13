@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ADMITIR
 prerequisites: [ES-C458-entregar, ES-C455-meter, ES-C456-aceptar]
 sounds: [d-soft, t-dental, stress-final]
 roots: [mittere-latin]
+etymology_hook: "admitir ← Latin admittere: ad- + mittere 'to send' — kin to meter; English admit"
 duration:
   max_seconds: 280
 requires:

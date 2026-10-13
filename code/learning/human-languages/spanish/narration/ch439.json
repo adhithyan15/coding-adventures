@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5da34a4b0cd9092d",
+  "sourceHash": "fnv1a64:164728d0b4d099f4",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31056b30df4a2f64",
+      "sourceHash": "fnv1a64:8f51eff8121a306e",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4cf8092d0324a89",
+      "sourceHash": "fnv1a64:dfb2b4d371bd6f2b",
       "notice": null,
       "blocks": [
         {
@@ -212,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "Carried across. English has the same two pieces bolted together in translate, which is a text carried across into another language, and in relate, collate and dilate."
+              "text": "Carried across. English has the same two pieces bolted together in translate, which is a text carried across into another language, and in relate and collate."
             }
           ]
         },
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28918ed9358a067d",
+      "sourceHash": "fnv1a64:dce90b7cc8e3b252",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
             },
             {
               "kind": "speech",
-              "text": "Underneath sits Latin claudere, to shut, which you met under cerrar. It is still visible in la clausura, excluir and English closure, clause and claustrophobia — a fear named for a shut room."
+              "text": "Underneath sits Late Latin serare, to bolt, from sera, the bar across a door, as you met under cerrar — not Latin claudere, to shut, which is visible instead in la clausura, excluir and English closure, clause and claustrophobia."
             }
           ]
         },
@@ -461,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fcf19140ef97dd8",
+      "sourceHash": "fnv1a64:745ccb8452c1a891",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24d0be7ba7a17107",
+      "sourceHash": "fnv1a64:42e8b801df00ddd4",
       "notice": null,
       "blocks": [
         {

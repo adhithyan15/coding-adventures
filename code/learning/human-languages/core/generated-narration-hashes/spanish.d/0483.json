@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 483,
-  "sourceHash": "fnv1a64:9bc46d8e5771641f",
+  "sourceHash": "fnv1a64:eab83cfa1b3d66db",
   "lessonIds": [
     "ES-C483-infancia",
     "ES-C483-costumbre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch483.txt",
   "json": "spanish/narration/ch483.json",
-  "textHash": "fnv1a64:fcfe5987b685c853",
-  "jsonHash": "fnv1a64:abcaa5f6c5c1ccd4",
+  "textHash": "fnv1a64:d6fdd16e26e02d77",
+  "jsonHash": "fnv1a64:8ab19566d74e39ec",
   "findings": []
 }

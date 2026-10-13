@@ -11,6 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [ES-C02-buenas-tardes, ES-C02-noche]
 sounds: [diphthong-ue, soft-c]
 roots: [bonus, nox]
+etymology_hook: "buenas noches — buena 'good' + noches 'nights', from Latin nox: 'good nights'"
 duration:
   max_seconds: 180
 requires:

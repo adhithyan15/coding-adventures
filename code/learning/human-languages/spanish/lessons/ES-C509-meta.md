@@ -10,7 +10,8 @@ gloss: "the goal, the finish line"
 concept_tag: ES-REF-META
 prerequisites: [ES-C509-planear, ES-C509-desear]
 sounds: []
-roots: []
+roots: [meta-latin]
+etymology_hook: "meta ← Latin meta, the turning post of a Roman racecourse — then a finish line, then a goal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C509-desear]
 > Mi meta es hablar bien español.
 >
 > *My goal is to speak Spanish well.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meta** ← Latin *meta*, "the turning post of a racecourse" (EtymDB 2.1): the post the chariots raced round became a finish line, then any goal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

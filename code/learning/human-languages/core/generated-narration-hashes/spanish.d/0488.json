@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 488,
-  "sourceHash": "fnv1a64:9c75874f75eda45f",
+  "sourceHash": "fnv1a64:d602d3ce1b131bda",
   "lessonIds": [
     "ES-C488-casarse",
     "ES-C488-divorciarse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch488.txt",
   "json": "spanish/narration/ch488.json",
-  "textHash": "fnv1a64:748f09b496e344e5",
-  "jsonHash": "fnv1a64:c3c2456b8ec5413d",
+  "textHash": "fnv1a64:4b45514ca7997d3a",
+  "jsonHash": "fnv1a64:93b0959815a9c3d4",
   "findings": []
 }

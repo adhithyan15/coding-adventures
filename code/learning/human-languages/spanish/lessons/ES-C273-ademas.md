@@ -11,6 +11,7 @@ concept_tag: CONNECTIVE-FURTHERMORE
 prerequisites: [ES-C273-en-primer-lugar]
 sounds: [vowel-a, vowel-o]
 roots: [ad de magis]
+etymology_hook: "además — a + de + más: 'to, of, more'; más is Latin magis 'more'"
 duration:
   max_seconds: 240
 requires:

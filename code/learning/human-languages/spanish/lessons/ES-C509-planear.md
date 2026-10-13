@@ -10,7 +10,8 @@ gloss: "to plan"
 concept_tag: ES-VERB-PLANEAR
 prerequisites: [ES-C508-actual, ES-C508-aceptable]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "planear — plan + -ear; plan is French plan, a flat drawing, from Latin planus 'flat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C508-aceptable]
 > Planeamos un viaje a México.
 >
 > *We are planning a trip to Mexico.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**planear** is *plan*, "a plan", with *-ear*. *Plan* came from French *plan*, a drawing on a flat surface, from Latin *planus*, "flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 471,
   "title": "El curso de cocina",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:b718014ffb1a7463",
+  "sourceHash": "fnv1a64:a970af6c0fb70fd5",
   "lessons": [
     {
       "id": "ES-C471-demasiado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f99baf46d5ebfeb7",
+      "sourceHash": "fnv1a64:007ea0e5c6b5e850",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dfd6e5346b5fc85",
+      "sourceHash": "fnv1a64:e07a4cd20200bf51",
       "notice": null,
       "blocks": [
         {
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nivel is the same word, made small. Latin libella is a little libra, a builder's level: a tiny balance that tells you when a surface is true. It reached Spanish through French, and on the way the first l turned into an n — livel became nivel — because two l sounds so close together pull apart."
+              "text": "Nivel is the same word, made small. Latin libella is a little libra, a builder's level: a tiny balance that tells you when a surface is true. It reached Spanish through Occitan or French, and on the way the first l turned into an n — livel became nivel — because two l sounds so close together pull apart."
             },
             {
               "kind": "speech",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f757eed2a841a98e",
+      "sourceHash": "fnv1a64:e71063cdb17b1080",
       "notice": null,
       "blocks": [
         {
@@ -433,7 +433,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Avanzar is Latin ab ante — from in front — which became abantiare and then the Spanish verb. The ante in it is the same ante you already hold in antes."
+              "text": "Avanzar is Latin ab ante — from in front — which became spoken Latin abantiare and then the Spanish verb. The ante in it is the same ante you already hold in antes."
             },
             {
               "kind": "speech",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7261dabcb7626ce",
+      "sourceHash": "fnv1a64:8f4743d7f31f5da3",
       "notice": null,
       "blocks": [
         {
@@ -682,7 +682,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a89d8ae62244bc41",
+      "sourceHash": "fnv1a64:83f5e58a15f16bf2",
       "notice": null,
       "blocks": [
         {
@@ -760,7 +760,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin singulus, one at a time, single — through a late form singellus. English took the same root for single, singular and singly."
+              "text": "Latin singulus, one at a time, single — through a spoken form singellus. English took the same root for single, singular and singly."
             },
             {
               "kind": "speech",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c97366cebaf10125",
+      "sourceHash": "fnv1a64:f6269bb75649e27c",
       "notice": null,
       "blocks": [
         {

@@ -11,6 +11,7 @@ concept_tag: ES-STOCK-HABITUAL
 prerequisites: [ES-C459-inventario, ES-C49-he-hablado, ES-C316-siempre]
 sounds: [silent-h, diphthong-ua, stress-final]
 roots: [habere-latin]
+etymology_hook: "habitual ← Latin habitus 'the way one holds oneself', from habere 'to have, to hold'"
 duration:
   max_seconds: 280
 requires:

@@ -4,7 +4,7 @@
   "chapter": 459,
   "title": "El inventario",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dd08648d65010f91",
+  "sourceHash": "fnv1a64:10656c0dd95f1b2a",
   "lessons": [
     {
       "id": "ES-C459-seccion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e574e1a4159e9448",
+      "sourceHash": "fnv1a64:9d74c7a9cbe99605",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17017451b7825939",
+      "sourceHash": "fnv1a64:c267ec2015bc8e84",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b9fdfa77e47ff9c",
+      "sourceHash": "fnv1a64:439158120c84272d",
       "notice": null,
       "blocks": [
         {

@@ -10,7 +10,8 @@ gloss: "the saving; savings"
 concept_tag: ES-REF-AHORRO
 prerequisites: [ES-C476-error, ES-C476-aburrido]
 sounds: []
-roots: []
+roots: [hurr-arabic]
+etymology_hook: "ahorro — noun of ahorrar 'to save', built on horro 'freed', from Arabic ḥurr 'free'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C476-aburrido]
 > *I have some savings for the summer.*
 
 In the plural, *los ahorros* is the money you have put aside.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ahorro** is the noun of *ahorrar*, "to save". *Ahorrar* is built on *horro*, "freed", said of a slave set free, from Arabic *ḥurr*, "free" (EtymDB 2.1): to save was first to free, then to spare.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-MUDARSE
 prerequisites: [ES-C447-sintesis-juicio, ES-C43-casa, ES-C355-piso]
 sounds: [d-soft, stress-penultimate]
 roots: [mutare-latin]
+etymology_hook: "mudarse ← Latin mutare 'to change' — English mutation, moult"
 duration:
   max_seconds: 270
 requires:
@@ -70,7 +71,7 @@ the same **a** you already use for going anywhere.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C448-MUDA-01] -->
 
 Latin **mutare**, to change. It is a wide family and you can hear it in
-English: a **mutation** is a change, to **mute** a sound is to alter it, and a
+English: a **mutation** is a change, and a
 bird in **moult** is changing its feathers — the same picture as the snake.
 
 Spanish keeps the plain sense in *mudar de opinión* and the specialised one in

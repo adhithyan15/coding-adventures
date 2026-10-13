@@ -11,6 +11,7 @@ concept_tag: ES-VERB-EQUIVOCARSE
 prerequisites: [ES-C437-coincidir, ES-C431-pedido]
 sounds: []
 roots: []
+etymology_hook: "equivocarse — Latin aequus 'equal' + vox 'voice': two things sounding the same"
 duration:
   max_seconds: 250
 requires:

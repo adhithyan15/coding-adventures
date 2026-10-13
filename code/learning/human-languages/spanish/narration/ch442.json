@@ -4,7 +4,7 @@
   "chapter": 442,
   "title": "La Gestion",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:30ba771dc8b69229",
+  "sourceHash": "fnv1a64:951ca07d4ee4f88a",
   "lessons": [
     {
       "id": "ES-C442-administracion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b28aa3124123bb5",
+      "sourceHash": "fnv1a64:54eb84bbee939d80",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3671be4c4709badf",
+      "sourceHash": "fnv1a64:74cb8863b89269f1",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4f3a2781f288f49",
+      "sourceHash": "fnv1a64:f99fa1ad605837cc",
       "notice": null,
       "blocks": [
         {
@@ -514,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4629019fc32a8315",
+      "sourceHash": "fnv1a64:62c5426178bfb777",
       "notice": null,
       "blocks": [
         {
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c87fff9b65f69d9",
+      "sourceHash": "fnv1a64:fb78bc465be80358",
       "notice": null,
       "blocks": [
         {
