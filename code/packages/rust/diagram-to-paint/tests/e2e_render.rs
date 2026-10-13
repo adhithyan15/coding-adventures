@@ -3832,6 +3832,24 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
                 )).count() >= 12, "both endpoints of cross links must lower to paired paths");
             }
+            if fixture_name == "labeled-mixed-endpoint-markers" {
+                use diagram_ir::EdgeMarker::{Circle, Cross, None, Point};
+                assert_eq!(layout.edges.iter().map(|edge|
+                    (edge.start_marker, edge.end_marker)
+                ).collect::<Vec<_>>(), vec![
+                    (Circle, Cross), (Cross, Circle), (Point, Cross),
+                    (Circle, Point), (None, Circle), (Point, Cross),
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mixed marker links must lower circle endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )), "mixed marker links must lower cross endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )), "mixed marker links must lower point endpoints");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);

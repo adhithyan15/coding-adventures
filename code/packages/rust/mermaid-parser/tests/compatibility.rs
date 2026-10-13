@@ -2192,6 +2192,27 @@ fn swimlane_labeled_circle_and_cross_links_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_labeled_mixed_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::EdgeMarker;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- circle to cross --x b\nb x== cross to circle ==o c\nc <-. point to cross .-x d\nd o-. circle to point .-> e\ne -- none to circle --o f\nf <== point to cross ==x g",
+    ).expect("labeled mixed endpoint markers should parse");
+
+    let markers = diagram.edges.iter().map(|edge| (edge.start_marker, edge.end_marker))
+        .collect::<Vec<_>>();
+    assert_eq!(markers, vec![
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::Point, EdgeMarker::Cross),
+    ]);
+    assert!(diagram.edges.iter().all(|edge| edge.label.is_some()));
+}
+
+#[test]
 fn swimlane_edge_ids_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",

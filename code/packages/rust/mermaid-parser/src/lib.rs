@@ -7005,18 +7005,18 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
-        labeled_swimlane_operator(value, "o--", '-', 2, "o", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "x--", '-', 2, "x", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "o==", '=', 2, "o", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "x==", '=', 2, "x", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "o-.", '.', 1, "-o", SwimlaneEdgeKind::Dotted),
-        labeled_swimlane_operator(value, "x-.", '.', 1, "-x", SwimlaneEdgeKind::Dotted),
-        labeled_swimlane_operator(value, "<--", '-', 2, ">", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "<==", '=', 2, ">", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "<-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
-        labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
-        labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
-        labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
+        labeled_swimlane_operator_family(
+            value, &["<--", "o--", "x--", "--"], '-', 2, &[">", "o", "x"],
+            SwimlaneEdgeKind::Directed,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<==", "o==", "x==", "=="], '=', 2, &[">", "o", "x"],
+            SwimlaneEdgeKind::Thick,
+        ),
+        labeled_swimlane_operator_family(
+            value, &["<-.", "o-.", "x-.", "-."], '.', 1, &["->", "-o", "-x"],
+            SwimlaneEdgeKind::Dotted,
+        ),
     ].into_iter().flatten().min_by_key(|operator| operator.at);
     let operator = match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
@@ -7042,6 +7042,19 @@ fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> Swi
     operator.at = token_start;
     operator.id = Some(id.to_string());
     operator
+}
+
+fn labeled_swimlane_operator_family(
+    value: &str,
+    starts: &[&str],
+    repeated: char,
+    minimum_run: usize,
+    suffixes: &[&str],
+    kind: SwimlaneEdgeKind,
+) -> Option<SwimlaneOperator> {
+    starts.iter().flat_map(|start| suffixes.iter().filter_map(|suffix|
+        labeled_swimlane_operator(value, start, repeated, minimum_run, suffix, kind)
+    )).min_by_key(|operator| (operator.at, usize::MAX - operator.len))
 }
 
 fn labeled_swimlane_operator(
