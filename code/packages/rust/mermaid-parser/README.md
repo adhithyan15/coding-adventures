@@ -323,3 +323,8 @@ Two-point Swimlane Cardinal, CatmullRom and Natural controls are checked through
 authored LR/TB parsing, layout and paint: exact collinear cubic controls, mode
 metadata and visible marker triangles. CatmullRom aliases share the same semantic
 variant. This bounded route support does not claim a general multi-point solver.
+
+Line-hop/Qt integration controls assert exact public-layout sorted arc/gap routes
+and marker triangles, mode aliases/exclusions, and Qt native output equivalence
+with exact inset/unsupported shadow debt. Existing resource and geometry controls
+remain required. No general renderer/device acceptance is inferred.

@@ -86,3 +86,8 @@ Rounded Swimlane controls verify complete line/quadratic routes and both exact
 endpoint triangles for long and short LR/RL/TB/BT layout fixtures. Authored
 aligned LR/TB layouts and collapsed perpendicular/zero routes preserve the
 bounded marker-reference contract; genuine zero routes retain degenerate markers.
+
+Line-hop/Qt integration controls assert exact public-layout sorted arc/gap routes
+and marker triangles, mode aliases/exclusions, and Qt native output equivalence
+with exact inset/unsupported shadow debt. Existing resource and geometry controls
+remain required. No general renderer/device acceptance is inferred.

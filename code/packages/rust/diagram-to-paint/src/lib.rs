@@ -9181,6 +9181,90 @@ mod tests {
     }
 
     #[test]
+    fn line_hops_public_layout_has_exact_sorted_commands_and_markers() {
+        for (config, mode) in [("arc", Some(SwimlaneLineHops::Arc)), ("gap", Some(SwimlaneLineHops::Gap)), ("false", None)] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {config}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\ne[E]\nf[F]\nend\na first@<--> b\nc second@<--> d\ne last@<--> f");
+            let diagram = mermaid_parser::parse_swimlane(&source).expect("authored hop configuration parses");
+            assert_eq!(diagram.line_hops, mode);
+            let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+            assert_eq!(layout.line_hops, mode);
+            assert_eq!(layout.edges.len(), 3);
+            // Earlier edges deliberately arrive in reverse crossing order.
+            for (edge, (sx, sy, ex, ey)) in layout.edges.iter_mut().zip([
+                (60.0,-50.0,60.0,50.0), (20.0,-50.0,20.0,50.0), (0.0,0.0,100.0,0.0),
+            ]) {
+                edge.from = Point { x: sx, y: sy };
+                edge.to = Point { x: ex, y: ey };
+            }
+            let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            let metadata = scene.metadata.as_ref().expect("hop metadata");
+            assert_eq!(metadata.get("swimlane.lineHops").map(String::as_str), mode.map(|value| match value { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+            for (index, id) in ["first", "second", "last"].iter().enumerate() {
+                assert_eq!(metadata.get(&format!("swimlane.edge.{index}.id")).map(String::as_str), Some(*id));
+            }
+            let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+                if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+            }).collect();
+            assert_eq!(paths.len(), 9, "three complete routes and six point markers");
+            for (index, x) in [(0,60.0),(3,20.0)] {
+                assert_eq!(paths[index].commands, vec![PathCommand::MoveTo { x, y:-50.0 },PathCommand::LineTo { x,y:50.0 }]);
+            }
+            let mut expected=vec![PathCommand::MoveTo { x:0.0,y:0.0 }];
+            if let Some(mode)=mode {
+                // Fixed six-unit cuts around two independent golden crossings.
+                for (before, crossing, after) in [(14.0,20.0,26.0),(54.0,60.0,66.0)] {
+                    expected.push(PathCommand::LineTo { x:before,y:0.0 });
+                    expected.push(match mode {
+                        SwimlaneLineHops::Arc => PathCommand::QuadTo { cx:crossing,cy:12.0,x:after,y:0.0 },
+                        SwimlaneLineHops::Gap => PathCommand::MoveTo { x:after,y:0.0 },
+                    });
+                }
+            }
+            expected.push(PathCommand::LineTo { x:100.0,y:0.0 });
+            assert_eq!(paths[6].commands,expected,"{config}: crossing order and full commands");
+            let triangles=[
+                (1,[(60.0,-50.0),(65.0,-40.0),(55.0,-40.0)]),
+                (2,[(60.0,50.0),(55.0,40.0),(65.0,40.0)]),
+                (4,[(20.0,-50.0),(25.0,-40.0),(15.0,-40.0)]),
+                (5,[(20.0,50.0),(15.0,40.0),(25.0,40.0)]),
+                (7,[(0.0,0.0),(10.0,-5.0),(10.0,5.0)]),
+                (8,[(100.0,0.0),(90.0,5.0),(90.0,-5.0)]),
+            ];
+            for (index,[tip,left,right]) in triangles {
+                assert_eq!(paths[index].commands,vec![PathCommand::MoveTo { x:tip.0,y:tip.1 },PathCommand::LineTo { x:left.0,y:left.1 },PathCommand::LineTo { x:right.0,y:right.1 },PathCommand::Close]);
+                assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0,50.0);
+                assert_eq!(paths[index].fill.as_deref(),Some("#455a64"));
+                assert_eq!(paths[index].stroke,None);
+            }
+        }
+    }
+
+    #[test]
+    fn line_hops_crossing_filter_and_ineligible_edges_keep_exact_routes() {
+        let from=Point { x:0.0,y:0.0 };
+        let to=Point { x:100.0,y:0.0 };
+        assert_eq!(swimlane_line_crossing(&from,&to,&Point { x:50.0,y:-50.0 },&Point { x:50.0,y:50.0 }),Some((0.5,Point { x:50.0,y:0.0 })));
+        for (a,b) in [(Point { x:0.0,y:1.0 },Point { x:100.0,y:1.0 }), (Point { x:0.0,y:-50.0 },Point { x:0.0,y:50.0 }), (Point { x:150.0,y:-50.0 },Point { x:150.0,y:50.0 }), (Point { x:50.0,y:0.0 },Point { x:50.0,y:50.0 })] {
+            assert_eq!(swimlane_line_crossing(&from,&to,&a,&b),None);
+        }
+        assert_eq!(swimlane_line_crossing(&from,&from,&Point { x:50.0,y:-50.0 },&Point { x:50.0,y:50.0 }),None);
+        let source="---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b\nc last@--> d";
+        let parsed=mermaid_parser::parse_swimlane(source).expect("authored exclusion fixture");
+        for (invisible,curved_previous,curved_later) in [(true,false,false),(false,true,false),(false,false,true)] {
+            let mut layout=diagram_layout_hierarchy::layout_swimlane(&parsed);
+            layout.edges[0].from=Point { x:50.0,y:-50.0 }; layout.edges[0].to=Point { x:50.0,y:50.0 };
+            layout.edges[1].from=from.clone(); layout.edges[1].to=to.clone();
+            if invisible { layout.edges[0].kind=SwimlaneEdgeKind::Invisible; }
+            if curved_previous { layout.edges[0].curve=Some(SwimlaneEdgeCurve::Rounded); }
+            if curved_later { layout.edges[1].curve=Some(SwimlaneEdgeCurve::Rounded); }
+            let enabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            layout.line_hops=None;
+            let disabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            assert_eq!(enabled.instructions,disabled.instructions,"excluded crossings must not change routes or markers");
+        }
+    }
+
+    #[test]
     fn marker_reference_preserves_control_order_and_zero_length_routes() {
         let tip = Point { x: 3.0, y: 4.0 };
         let first = Point { x: 6.0, y: 4.0 };

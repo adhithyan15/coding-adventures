@@ -15,8 +15,7 @@ crossing coordinates, endpoint/parallel/noncrossing rejection and sorted multipl
 crossings using independent golden values. Preserve every earlier rounded/Step/
 Bump/spline/zero/Arc/control-order/parser-work/resource test and budget.
 
-Qt controls exercise public emission and drop reports across raised/overlay/
-sunken supported tiers, non-inset companions, inset drawing debt, unsupported
+Qt controls exercise public emission and drop reports across raised/overlay supported tiers, non-inset companions, inset drawing debt, unsupported
 tokens and absent elevation. Assert native shadow offsets/colors, exact report
 names/values/order and preservation of unsupported debt. Upstream TaskApp baseline
 Qt83 is accepted only after actual authored native/script validation, not by

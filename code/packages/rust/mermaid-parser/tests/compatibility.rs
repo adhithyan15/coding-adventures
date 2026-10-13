@@ -2342,3 +2342,18 @@ fn swimlane_spline_aliases_preserve_the_same_semantic_curve() {
         assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::CatmullRom));
     }
 }
+
+#[test]
+fn swimlane_line_hops_aliases_and_invalid_mode_keep_the_contract() {
+    use diagram_ir::SwimlaneLineHops;
+    let body="swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b";
+    for (name,expected) in [("true",Some(SwimlaneLineHops::Arc)),("'ARC'",Some(SwimlaneLineHops::Arc)),("\"gap\"",Some(SwimlaneLineHops::Gap)),("false",None)] {
+        let source=format!("---\nconfig:\n  swimlane:\n    lineHops: {name}\n---\n{body}");
+        assert_eq!(parse_swimlane(&source).expect("authored alias").line_hops,expected);
+    }
+    let invalid=format!("---\nconfig:\n  swimlane:\n    lineHops: unsupported\n---\n{body}");
+    let error=parse_swimlane(&invalid).expect_err("unknown mode remains rejected");
+    assert_eq!(error.line,1);
+    assert_eq!(error.col,1);
+    assert_eq!(error.message,"Swimlane lineHops must be true, false, arc, or gap");
+}

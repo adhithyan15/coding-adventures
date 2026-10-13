@@ -17983,6 +17983,36 @@ mod tests {
     }
 
     #[test]
+    fn elevation_shadow_reconciliation_preserves_output_and_exact_debt() {
+        let model=component("X",vec![],vec![]);
+        let layout=box_layout_with_part("card");
+        for tier in [Some("raised"),Some("overlay"),Some("sunken"),Some("floating"),None] {
+            for shadow in ["0 8px 20px rgba(0,0,0,.2)","5px -5px 0 0 #000 INSET"] {
+                let mut base=vec![sp("box-shadow",shadow)];
+                if let Some(tier)=tier { base.push(sp("elevation",tier)); }
+                base.push(sp("background","#ffffff"));
+                let style=StyleDef { component_name:"X".into(),parts:vec![PartStyle { name:"card".into(),base,transitions:vec![],states:vec![] }] };
+                let mut control=style.clone();
+                control.parts[0].base.retain(|prop| prop.name!="box-shadow");
+                let output=from_pipeline(&model,&layout,&style).expect("public Qt fixture emits").output;
+                assert_eq!(output,from_pipeline(&model,&layout,&control).expect("elevation-only fixture emits").output,"shadow companion must not alter native rendering");
+                let supported=matches!(tier,Some("raised"|"overlay"));
+                if let Some((offset,color))=match tier { Some("raised")=>Some(("4","#40000000")),Some("overlay")=>Some(("16","#60000000")),_=>None } {
+                    assert!(output.contains(&format!("shadowVerticalOffset: {offset}")));
+                    assert!(output.contains(&format!("shadowColor: \"{color}\"")));
+                } else { assert!(!output.contains("MultiEffect {")); }
+                let drops=dropped_style_properties(&model,&layout,&style);
+                let actual:Vec<_>=drops.iter().map(|drop|(drop.part.as_str(),drop.name.as_str(),drop.value.as_str())).collect();
+                let mut expected=Vec::new();
+                if !supported || shadow.contains("INSET") { expected.push(("card","box-shadow",shadow)); }
+                if let Some(tier)=tier.filter(|_|!supported) { expected.push(("card","elevation",tier)); }
+                assert_eq!(actual,expected,"tier={tier:?}, shadow={shadow:?}: exact ordered report debt");
+                assert!(drops.iter().all(|drop|!drop.reason.is_empty()));
+            }
+        }
+    }
+
+    #[test]
     fn unsupported_elevation_value_remains_a_drop() {
         // mosstyle validation rejects this before a production emit. Keeping
         // the reporter honest for a directly constructed StyleDef ensures a

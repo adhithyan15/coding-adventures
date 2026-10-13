@@ -492,3 +492,8 @@ cargo test -p mosaic-emit-qt
 - `mosmodel-compiler` — `MosmodelComponent`, `SlotDecl`, `SlotType`, `EmitDecl`
 - `moslayout-compiler` — `LayoutDef`, `LayoutNode`, `LayoutPropValue`
 - `mosstyle-compiler` — `StyleDef`
+
+Line-hop/Qt integration controls assert exact public-layout sorted arc/gap routes
+and marker triangles, mode aliases/exclusions, and Qt native output equivalence
+with exact inset/unsupported shadow debt. Existing resource and geometry controls
+remain required. No general renderer/device acceptance is inferred.

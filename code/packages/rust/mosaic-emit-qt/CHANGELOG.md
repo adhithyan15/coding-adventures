@@ -1603,3 +1603,10 @@ These items are accepted in the IR but not yet emitted:
   signature so downstream callers can build against the stable
   shape, but its properties are not yet inlined into element
   attributes.
+
+## [Unreleased]
+
+### Tests
+
+- Verify exact sorted Swimlane arc/gap paths, endpoint triangles and excluded crossings.
+- Preserve Qt native elevation output while checking exact paired-shadow and unsupported debt.
