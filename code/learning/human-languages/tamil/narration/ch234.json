@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Post office, City, Country, Capital city, Crossroads",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66b6a818dd0138a4",
+  "sourceHash": "fnv1a64:66b42e8a475fc6f8",
   "lessons": [
     {
       "id": "TA-C234-ancalakam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4418cc84d01e0060",
+      "sourceHash": "fnv1a64:2e5429b45708b43c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தலைநகரம் (talainakaram) is talai, \"head\" (DEDR 3103), and nakaram, \"city\" (DEDR 3568): \"the head city\"."
+              "text": "தலைநகரம் (talainakaram) is talai, \"head\" (DEDR 3103), and nakaram, \"city\" (DEDR 3568, which compares Sanskrit nagara): \"the head city\"."
             }
           ]
         },

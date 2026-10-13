@@ -14,7 +14,8 @@ romanization: "sambhavaṁ"
 concept_tag: ML-KARANAM282-SAMBHAVAM
 prerequisites: [ML-C281-pratyekiccu, ML-C282-pradhanyam]
 sounds: []
-roots: []
+roots: [sanskrit-sambhava]
+etymology_hook: "sambhavaṁ ← Sanskrit saṁbhava 'origin, possibility', a tatsama (CDIAL 12963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C282-pradhanyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C282-KARANAM282-02]; assesses=[] -->
 
 **സംഭവം** — *sambhavaṁ* — "an event, an incident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംഭവം** (*sambhavaṁ*) ← Sanskrit *saṁbhava*, "origin, possibility", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12963). It is built on the root *bhū*, "to become": an event is what comes to be.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

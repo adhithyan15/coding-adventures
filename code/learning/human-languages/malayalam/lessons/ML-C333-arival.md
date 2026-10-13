@@ -14,7 +14,8 @@ romanization: "arivāḷ"
 concept_tag: ML-VASTU333-ARIVAL
 prerequisites: [ML-C333-kasuvanti, ML-C333-karimpu]
 sounds: []
-roots: []
+roots: [dravidian-ari-cut, dravidian-val-saw]
+etymology_hook: "arivāḷ: native Dravidian; DEDR 212 lists Malayalam ari vāḷ 'sickle' under ariyuka 'to reap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C333-karimpu]
 <!-- hl-knowledge: introduces=[ML-LEX-C333-VASTU333-03]; assesses=[] -->
 
 **അരിവാൾ** — *arivāḷ* — "a sickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അരിവാൾ** (*arivāḷ*) is native Dravidian: DEDR 212 lists it, "sickle, reaping hook", under the verb "to reap, cut", with Tamil *ari*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

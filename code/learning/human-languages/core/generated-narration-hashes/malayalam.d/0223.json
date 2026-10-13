@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 223,
-  "sourceHash": "fnv1a64:3a6009090abdd400",
+  "sourceHash": "fnv1a64:0a427e6efc0e1a5d",
   "lessonIds": [
     "ML-C223-cumakkuka",
     "ML-C223-vaykkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch223.txt",
   "json": "malayalam/narration/ch223.json",
-  "textHash": "fnv1a64:bebea7478dc4bf15",
-  "jsonHash": "fnv1a64:9bcd514601516ef1",
+  "textHash": "fnv1a64:79b5c60062899bdf",
+  "jsonHash": "fnv1a64:f799def34312b823",
   "findings": []
 }

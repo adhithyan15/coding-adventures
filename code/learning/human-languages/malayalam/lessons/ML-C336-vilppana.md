@@ -14,7 +14,8 @@ romanization: "vilppana"
 concept_tag: ML-JOLI336-VILPPANA
 prerequisites: [ML-C335-grhapatham, ML-C335-aksaram]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "vilppana: native Dravidian; DEDR 5421 lists Malayalam vilpana 'sale'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C335-aksaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C336-JOLI336-01]; assesses=[] -->
 
 **വിൽപ്പന** — *vilppana* — "a sale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിൽപ്പന** (*vilppana*) is native Dravidian: DEDR 5421 lists it, "sale", under the verb "to sell", with Tamil *vil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

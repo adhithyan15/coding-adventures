@@ -70,6 +70,10 @@ host ends   ─▶ broker killed, reaped, relay stopped
 broker ends ─▶ host ended (inspect returns ProcessSupervisorError::Broker once)
 ```
 
+Non-channel requests (completions, tool calls) go to the host's own
+dispatch worker in the same way (P2.6d-4), so one slow request never holds
+the supervisor's thread, which every host shares.
+
 The broker's relay thread answers the host itself, through the shared
 `HostLink`. That way a channel operation does not wait for the next refresh.
 Encrypting and queueing a response happen under one lock, so frames reach

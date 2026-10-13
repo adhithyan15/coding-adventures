@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 175,
-  "sourceHash": "fnv1a64:975968e5284ff098",
+  "sourceHash": "fnv1a64:4f024052776e7b1a",
   "lessonIds": [
     "ML-C175-snehikkuka",
     "ML-C175-vilkkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch175.txt",
   "json": "malayalam/narration/ch175.json",
-  "textHash": "fnv1a64:797a12b02dcadcd0",
-  "jsonHash": "fnv1a64:d5b8b4ebf6372dee",
+  "textHash": "fnv1a64:1c27eb0dbafa0077",
+  "jsonHash": "fnv1a64:d0df2b4bfcc64f1a",
   "findings": []
 }

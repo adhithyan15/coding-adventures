@@ -14,7 +14,8 @@ romanization: "marubhūmi"
 concept_tag: ML-STHALAM279-MARUBHUMI
 prerequisites: [ML-C279-jim, ML-C279-talvara]
 sounds: []
-roots: []
+roots: [sanskrit-maru]
+etymology_hook: "marubhūmi: Sanskrit maru 'wilderness' (CDIAL 9876a) + bhūmi 'land'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C279-talvara]
 <!-- hl-knowledge: introduces=[ML-LEX-C279-STHALAM279-05]; assesses=[] -->
 
 **മരുഭൂമി** — *marubhūmi* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരുഭൂമി** (*marubhūmi*) is Sanskrit *maru*, "wilderness, desert" (CDIAL 9876a), joined to Sanskrit *bhūmi*, "land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

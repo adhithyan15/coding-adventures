@@ -14,7 +14,8 @@ romanization: "potu"
 concept_tag: ML-GUNAM244-POTU
 prerequisites: [ML-C244-murccayulla, ML-C244-svakarya]
 sounds: []
-roots: []
+roots: [dravidian-potu-common]
+etymology_hook: "potu: native Dravidian, one word with Tamil potu and Kannada pudu (DEDR 4507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C244-svakarya]
 <!-- hl-knowledge: introduces=[ML-LEX-C244-GUNAM244-05]; assesses=[] -->
 
 **പൊതു** — *potu* — "public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊതു** (*potu*) is native Dravidian, one word with Tamil *potu* and Kannada *pudu* (DEDR 4507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

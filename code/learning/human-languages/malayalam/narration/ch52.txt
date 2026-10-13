@@ -15,6 +15,9 @@ Tamil writes its door-word வாயில் (vāyil), and once you see it besi
 Malayalam's വാതിൽ (vātil) is the same word with a t where Tamil has a y, and the dictionaries connect the two. The mouth-word itself, വായ്, sits in this book's chapter on the face.
 Kannada says ಬಾಗಿಲು (bāgilu), which is a different word altogether. The chillu ൽ at the end here is the same one that closed the leg-word and the finger-word.
 
+The word, taken apart.
+വാതിൽ (vātil) is native Dravidian, one word with Tamil vāyil, Kannada bāgil and Telugu vākili (DEDR 5354).
+
 What you've built.
 The first of five things a guest meets at the door.
 
@@ -47,6 +50,9 @@ Portuguese cadeira, come ashore on the Malabar coast and settled. Kerala's Portu
 Furniture travels with the people who make it, and the vocabulary of a room records who was in it. This is one of the few places in this book where the trail is only five centuries long instead of five thousand.
 Kannada's ಕುರ್ಚಿ (kurci) is a chair too, and it arrived from the north along an entirely different road.
 
+The word, taken apart.
+കസേര (kasēra) from Portuguese cadeira, "chair", one of the household words Malayalam took from the Portuguese who traded on the Malabar coast from 1498.
+
 What you've built.
 Two: a door, and a chair.
 
@@ -77,6 +83,9 @@ You'll want to know: കോലം.
 Native Dravidian, and its plain sense is 'form, shape, guise'. The pattern chalked on the ground at a threshold is a shape laid down, and Tamil uses கோலம் for the same thing.
 The word keeps its wider life alongside the drawing: a person in costume, an animal's markings, anything that has taken on a form, can be a കോലം (kōlaṁ).
 Kannada names the same threshold drawing ರಂಗೋಲಿ (raṅgōli), a word built on Sanskrit colour. One sister named the practice for its shape and the other for its pigment.
+
+The word, taken apart.
+കോലം (kōlaṁ) is native Dravidian, one word with Tamil kōlam and Kannada kōla (DEDR 2240). Its first sense is "form, figure, guise".
 
 What you've built.
 Three. A door, a chair, the pattern at the threshold.
@@ -110,6 +119,9 @@ Proto-Dravidian pū, one of the shortest words the family has and one of the bes
 Kerala puts the word to work at the front of a compound: the flower-carpet laid out for the harvest festival is പൂക്കളം, the flower plus a word for a laid-out ground.
 Malayalam's own form adds a v and the half-vowel, which is why it looks longer than Tamil's bare two letters while saying the same thing.
 
+The word, taken apart.
+പൂവ് (pūvŭ) is native Dravidian, one word with Tamil pū, Kannada pũ and Telugu pū (DEDR 4345). DEDR 4345 compares Sanskrit puṣpa, with a query.
+
 What you've built.
 Four. A door, a chair, the pattern at the threshold, a flower.
 
@@ -140,6 +152,9 @@ You'll want to know: മാല.
 Sanskrit mālā, a garland or a string of things, borrowed all across the south. Kannada's ಹೂಮಾಲೆ (hūmāle) is this word with the flower-word stuck on the front of it, so the Kannada compound spells out what Malayalam leaves to context.
 The word is also a string in the abstract — a series, a row — which is why a rosary and a necklace and a list can all be one.
 And that closes the door: the way in, the seat, the pattern on the ground, the flower and the garland. A guest arriving at a Kerala house in the old way would meet all five before a word was exchanged.
+
+The word, taken apart.
+മാല (māla) has the same word beside it in Tamil mālai, Kannada māle and Telugu māla (DEDR 4827). Sanskrit has mālā, "garland", as well, and CDIAL 10092 takes the Sanskrit word from Dravidian; so the loan may have run from the south northward rather than the other way.
 
 What you've built.
 Five, and the run is closed: a door, a chair, the pattern at the threshold, a flower, a garland.

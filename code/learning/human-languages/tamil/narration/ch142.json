@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Camel, Duck, Cheek, Wrist, Elbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e68b413d24d4a891",
+  "sourceHash": "fnv1a64:3d5e064c9d5e8908",
   "lessons": [
     {
       "id": "TA-C142-ottakam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90cf462ac3f241e7",
+      "sourceHash": "fnv1a64:d50165f41c04da7f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மணிக்கட்டு (maṇikkaṭṭu) is native Dravidian. DEDR 4673 lists Malayalam maṇikkeṭṭu and Kannada maṇikaṭṭu."
+              "text": "மணிக்கட்டு (maṇikkaṭṭu) is native Dravidian. DEDR 4673 lists Malayalam maṇikkeṭṭu and Kannada maṇikaṭṭu. It notes Sanskrit maṇibandha, \"wrist\", whose bandha translates kaṭṭu."
             }
           ]
         },

@@ -11,7 +11,8 @@ romanization: "kāṇikkū"
 concept_tag: ML-REP-SHOW
 prerequisites: [ML-C119-meaning, ML-C119-wait]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see]
+etymology_hook: "kāṇikkū: native Dravidian, 'make see', the causative of kāṇuka; Tamil kāṇ (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C119-wait]
 <!-- hl-knowledge: introduces=[ML-LEX-C120-HELP-01]; assesses=[] -->
 
 **കാണിക്കൂ** (*kāṇikkū*) — "please show (me)", from **കാണുക** (*kāṇuka*), "to see".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാണിക്കൂ** (*kāṇikkū*) is native Dravidian, the causative of *kāṇuka*, "to see": "make see"; DEDR 1443 lists the root with Tamil *kāṇ* and Kannada *kāṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

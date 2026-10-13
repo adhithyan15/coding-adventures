@@ -14,7 +14,8 @@ romanization: "tuka"
 concept_tag: ML-VASTU288-TUKA
 prerequisites: [ML-C288-cekku, ML-C288-palisa]
 sounds: []
-roots: []
+roots: [dravidian-toku-collect]
+etymology_hook: "tuka: native Dravidian, one word with Tamil toku (DEDR 3476)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C288-palisa]
 <!-- hl-knowledge: introduces=[ML-LEX-C288-VASTU288-04]; assesses=[] -->
 
 **തുക** — *tuka* — "an amount, a sum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുക** (*tuka*) is native Dravidian, one word with Tamil *toku* (DEDR 3476). Its root means "to collect, put together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

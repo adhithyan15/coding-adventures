@@ -14,7 +14,8 @@ romanization: "niṟañña"
 concept_tag: ML-GUNAM244-NIRANNA
 prerequisites: [ML-C243-sadhyata, ML-C243-atisthanam]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "niṟañña: native Dravidian, 'filled'; Tamil niṟai (DEDR 3682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C243-atisthanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C244-GUNAM244-01]; assesses=[] -->
 
 **നിറഞ്ഞ** — *niṟañña* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിറഞ്ഞ** (*niṟañña*) is native Dravidian, a past form of the verb "to become full"; DEDR 3682 lists the root with Tamil *niṟai*, Kannada *neṟe* and Telugu *neṟayu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

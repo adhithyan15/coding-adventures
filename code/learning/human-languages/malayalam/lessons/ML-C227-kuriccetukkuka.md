@@ -14,7 +14,8 @@ romanization: "kuṟicceṭukkuka"
 concept_tag: ML-VERB-KURICCETUKKUKA
 prerequisites: [ML-C226-purttiyakkuka, ML-C226-parisodhikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark, dravidian-ezhu-rise]
+etymology_hook: "kuṟicceṭukkuka: native Dravidian, 'mark and take up': kuṟikka 'to note' (DEDR 1847) + eṭukkuka (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C226-parisodhikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C227-KRIYA227-01]; assesses=[] -->
 
 **കുറിച്ചെടുക്കുക** — *kuṟicceṭukkuka* — "to note down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറിച്ചെടുക്കുക** (*kuṟicceṭukkuka*) is native Dravidian, "take up having noted": the verb "to mark, note, write" (DEDR 1847, with Tamil *kuṟi*) and the verb "to take up" (DEDR 851).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

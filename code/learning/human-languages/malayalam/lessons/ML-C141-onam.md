@@ -11,7 +11,8 @@ romanization: "ōṇaṁ"
 concept_tag: ML-FEST-ONAM
 prerequisites: [ML-C140-class, ML-C140-answer]
 sounds: []
-roots: []
+roots: [sanskrit-shravana]
+etymology_hook: "ōṇaṁ: usually explained as a tadbhava of Sanskrit śravaṇa, the asterism the festival falls under"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C140-answer]
 
 **ഓണം** (*ōṇaṁ*) — Kerala's harvest festival, in **ചിങ്ങം**, with a **സദ്യ** and a
 flower **കോലം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓണം** (*ōṇaṁ*) is usually explained as a tadbhava of Sanskrit *śravaṇa*, the name of the lunar asterism under which the festival falls, worn down through Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

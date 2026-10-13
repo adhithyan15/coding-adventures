@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 275,
-  "sourceHash": "fnv1a64:2f4928430b57d08b",
+  "sourceHash": "fnv1a64:fcf9d5384ffb944f",
   "lessonIds": [
     "ML-C275-borati",
     "ML-C275-mula3",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch275.txt",
   "json": "malayalam/narration/ch275.json",
-  "textHash": "fnv1a64:23c126b9737e1bfd",
-  "jsonHash": "fnv1a64:c8cb3036afec1379",
+  "textHash": "fnv1a64:11308370d7118ff0",
+  "jsonHash": "fnv1a64:4d8da717b62f376c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vākyaṁ"
 concept_tag: ML-JOLI221-VAKYAM
 prerequisites: [ML-C220-vakkil, ML-C221-vakku]
 sounds: []
-roots: []
+roots: [sanskrit-vakya]
+etymology_hook: "vākyaṁ ← Sanskrit vākya 'speech, words', a tatsama (CDIAL 11468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C221-vakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C221-JOLI221-02]; assesses=[] -->
 
 **വാക്യം** — *vākyaṁ* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാക്യം** (*vākyaṁ*) ← Sanskrit *vākya*, "speech, words", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11468). It is built on the root *vac*, "to speak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

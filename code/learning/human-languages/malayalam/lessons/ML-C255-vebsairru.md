@@ -14,7 +14,8 @@ romanization: "vebsaiṟṟŭ"
 concept_tag: ML-VASTU255-VEBSAIRRU
 prerequisites: [ML-C255-laptoppu, ML-C255-skrin]
 sounds: []
-roots: []
+roots: [english-website]
+etymology_hook: "vebsaiṟṟŭ ← English website"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C255-skrin]
 <!-- hl-knowledge: introduces=[ML-LEX-C255-VASTU255-03]; assesses=[] -->
 
 **വെബ്സൈറ്റ്** — *vebsaiṟṟŭ* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെബ്സൈറ്റ്** (*vebsaiṟṟŭ*) ← English *website*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

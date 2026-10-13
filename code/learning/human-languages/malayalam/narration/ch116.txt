@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for dizziness, then the Malayalam for not 
 You'll want to know: സങ്കടം.
 സങ്കടം (saṅkaṭaṁ) — "sadness, sorrow". എനിക്ക് സങ്കടമുണ്ട് — "I am sad".
 
+The word, taken apart.
+സങ്കടം (saṅkaṭaṁ) from Sanskrit saṅkaṭa, "narrow; a strait, distress", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. A tight place became a sorrow.
+
 What you've built.
 A feeling, said with to-me.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for not well, then the Malayalam for sadne
 
 You'll want to know: പേടി.
 പേടി (pēṭi) — "fear". പേടിക്കേണ്ട (pēṭikkēṇṭa) — "don't be afraid".
+
+The word, taken apart.
+പേടി (pēṭi) is native Dravidian, one word with Tamil pēṭi and Kannada hēḍi (DEDR 4434). DEDR 4434 compares Sanskrit poṭā.
 
 What you've built.
 A feeling, and a kind word about it.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for sadness, then the Malayalam for fear.
 You'll want to know: ദേഷ്യം.
 ദേഷ്യം (dēṣyaṁ) — "anger". ദേഷ്യപ്പെടേണ്ട — "don't be angry".
 
+The word, taken apart.
+ദേഷ്യം (dēṣyaṁ) is Sanskrit dvēṣya, "hateful", from dvēṣa, "hatred" (CDIAL 6696), reshaped: the dv- lost its v, and hatred softened to anger.
+
 What you've built.
 A strong feeling, and how to calm it.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for fear, then the Malayalam for anger.
 You'll want to know: ചിരി.
 ചിരി (ciri) — "laughter, a smile". ചിരിക്കൂ (cirikkū) — "smile!".
 
+The word, taken apart.
+ചിരി (ciri) is native Dravidian, one word with Tamil ciri and Kannada kiri (DEDR 1562).
+
 What you've built.
 The lightest feeling in the chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for anger, then the Malayalam for laughter
 
 You'll want to know: ആശങ്ക.
 ആശങ്ക (āśaṅka) — "worry, anxiety". ആശങ്ക വേണ്ട (āśaṅka vēṇṭa) — "no need to worry".
+
+The word, taken apart.
+ആശങ്ക (āśaṅka) from Sanskrit āśaṅkā, "apprehension, doubt", taken over whole as a tatsama.
 
 What you've built.
 A feeling and a comfort.

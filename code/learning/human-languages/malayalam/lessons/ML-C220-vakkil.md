@@ -14,7 +14,8 @@ romanization: "vakkīl"
 concept_tag: ML-JOLI220-VAKKIL
 prerequisites: [ML-C220-gumastan, ML-C220-enciniyar]
 sounds: []
-roots: []
+roots: [arabic-wakil]
+etymology_hook: "vakkīl ← Arabic wakīl 'agent, representative', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C220-enciniyar]
 <!-- hl-knowledge: introduces=[ML-LEX-C220-JOLI220-05]; assesses=[] -->
 
 **വക്കീൽ** — *vakkīl* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വക്കീൽ** (*vakkīl*) ← Arabic *wakīl*, "agent, representative", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

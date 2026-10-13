@@ -11,7 +11,8 @@ romanization: "kalappa"
 concept_tag: ML-NOUN-PLOUGH
 prerequisites: [ML-C66-ear-of-grain, ML-C64-only, ML-C65-consent, ML-C65-manners]
 sounds: []
-roots: []
+roots: [dravidian-kalappai-plough]
+etymology_hook: "kalappa: native Dravidian, one word with Tamil kalappai (DEDR 1304)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, and it names the tool behind a word you already carry. *Karṣ
 Kerala's is a light wooden one, made for ground already under water, with a single iron-shod point and a beam for a pair of cattle.
 
 Which puts the *paśu* back to work: the animal of the first chapter in this run and the tool of the last one are yoked together.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കലപ്പ** (*kalappa*) is native Dravidian, one word with Tamil *kalappai* (DEDR 1304).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

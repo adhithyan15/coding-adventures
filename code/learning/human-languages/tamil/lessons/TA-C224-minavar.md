@@ -47,7 +47,7 @@ reviews_of: [TA-C223-vittuppatam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மீனவர்** (*mīṉavar*) is native Dravidian (DEDR 4885). It is *mīṉ*, "fish", with the respectful *-avar*: "fish people".
+**மீனவர்** (*mīṉavar*) is native Dravidian (DEDR 4885). It is *mīṉ*, "fish", with the respectful *-avar*: "fish people". DEDR compares Sanskrit *mīna*, "fish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

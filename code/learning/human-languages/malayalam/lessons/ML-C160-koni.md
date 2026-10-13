@@ -14,7 +14,8 @@ romanization: "kōṇi"
 concept_tag: ML-THINGS160-KONI
 prerequisites: [ML-C159-veli, ML-C159-gerru, ML-C14-kaalangal, ML-C14-kaalangal]
 sounds: []
-roots: []
+roots: [malayalam-koni]
+etymology_hook: "kōṇi 'ladder': of uncertain origin; DEDR's kōṇi is a gunny bag"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C159-gerru]
 <!-- hl-knowledge: introduces=[ML-LEX-C160-THINGS160-01]; assesses=[] -->
 
 **കോണി** — *kōṇi* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോണി** (*kōṇi*) is of uncertain origin. DEDR lists a Malayalam *kōṇi*, but meaning "gunny bag" (DEDR appendix 33), a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

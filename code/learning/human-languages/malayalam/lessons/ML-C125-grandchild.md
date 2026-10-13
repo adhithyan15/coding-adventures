@@ -11,7 +11,8 @@ romanization: "pērakkuṭṭi"
 concept_tag: ML-KIN-GRANDCHILD
 prerequisites: [ML-C124-welcome, ML-C124-wishes]
 sounds: []
-roots: []
+roots: [peer-dravidian, dravidian-kutti-young]
+etymology_hook: "pērakkuṭṭi: native Dravidian; Tamil peyaraṉ 'grandson, one who bears the name' (DEDR 4410) + kuṭṭi 'child' (DEDR 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C124-wishes]
 
 **പേരക്കുട്ടി** (*pērakkuṭṭi*) — "a grandchild". It ends in **കുട്ടി** (*kuṭṭi*),
 "child", which you already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പേരക്കുട്ടി** (*pērakkuṭṭi*) is native Dravidian: a grandchild word built on the word for "name" (DEDR 4410, where Tamil *peyaraṉ*, "grandson", is one who bears the grandfather's name), with *kuṭṭi*, "child" (DEDR 1670).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

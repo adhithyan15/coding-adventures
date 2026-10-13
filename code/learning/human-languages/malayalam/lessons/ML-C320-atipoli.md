@@ -14,7 +14,8 @@ romanization: "aṭipoḷi"
 concept_tag: ML-GUNAM320-ATIPOLI
 prerequisites: [ML-C320-priyappetta, ML-C320-bhayankaramaya]
 sounds: []
-roots: []
+roots: [dravidian-adi-beat, dravidian-poli-break]
+etymology_hook: "aṭipoḷi: slang from native aṭi 'a blow' (DEDR 77) + poḷi 'break open' (DEDR 4560): 'smashing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C320-bhayankaramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C320-GUNAM320-05]; assesses=[] -->
 
 **അടിപൊളി** — *aṭipoḷi* — "awesome, great (slang)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടിപൊളി** (*aṭipoḷi*) is slang built from native parts: *aṭi*, "a blow" (DEDR 77), and *poḷi*, from the verb "to break open" (DEDR 4560), much like English *smashing*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jīvanakkāran"
 concept_tag: ML-JOLI334-JIVANAKKARAN
 prerequisites: [ML-C333-pottu, ML-C333-helmerru]
 sounds: []
-roots: []
+roots: [sanskrit-jiva]
+etymology_hook: "jīvanakkāran: Sanskrit jīvana 'livelihood' (CDIAL 5243) + -kkāran 'one who has'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C333-helmerru]
 <!-- hl-knowledge: introduces=[ML-LEX-C334-JOLI334-01]; assesses=[] -->
 
 **ജീവനക്കാരൻ** — *jīvanakkāran* — "an employee, a staff member".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജീവനക്കാരൻ** (*jīvanakkāran*) is Sanskrit *jīvana*, "life, livelihood" (CDIAL 5243), with *-kkāran*, the ending for a person: one who earns a living.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

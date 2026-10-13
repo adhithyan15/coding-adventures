@@ -14,7 +14,8 @@ romanization: "pradēśaṁ"
 concept_tag: ML-STHALAM280-PRADESAM
 prerequisites: [ML-C279-talvara, ML-C279-marubhumi]
 sounds: []
-roots: []
+roots: [sanskrit-pradesha]
+etymology_hook: "pradēśaṁ ← Sanskrit pradēśa 'region, country', a tatsama (CDIAL 8668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C279-marubhumi]
 <!-- hl-knowledge: introduces=[ML-LEX-C280-STHALAM280-01]; assesses=[] -->
 
 **പ്രദേശം** — *pradēśaṁ* — "a region, an area".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രദേശം** (*pradēśaṁ*) ← Sanskrit *pradēśa*, "region, country", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

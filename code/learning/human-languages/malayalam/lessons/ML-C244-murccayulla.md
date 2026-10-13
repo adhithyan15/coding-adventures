@@ -14,7 +14,8 @@ romanization: "mūrccayuḷḷa"
 concept_tag: ML-GUNAM244-MURCCAYULLA
 prerequisites: [ML-C244-niranna, ML-C244-kiriya]
 sounds: []
-roots: []
+roots: [dravidian-murccai-edge, dravidian-ul-be]
+etymology_hook: "mūrccayuḷḷa: native Dravidian, 'having an edge': mūrcca (DEDR 5042) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C244-kiriya]
 <!-- hl-knowledge: introduces=[ML-LEX-C244-GUNAM244-03]; assesses=[] -->
 
 **മൂർച്ചയുള്ള** — *mūrccayuḷḷa* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂർച്ചയുള്ള** (*mūrccayuḷḷa*) is native Dravidian, "having an edge": *mūrcca*, "sharpness, edge" (DEDR 5042, with Tamil *mūrccai*), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

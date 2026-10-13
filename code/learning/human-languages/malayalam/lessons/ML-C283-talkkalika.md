@@ -14,7 +14,8 @@ romanization: "tālkkālika"
 concept_tag: ML-GUNAM283-TALKKALIKA
 prerequisites: [ML-C283-pradhanappetta, ML-C283-suraksitamaya]
 sounds: []
-roots: []
+roots: [sanskrit-tatkalika]
+etymology_hook: "tālkkālika ← Sanskrit tātkālika 'lasting for that time', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C283-suraksitamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C283-GUNAM283-04]; assesses=[] -->
 
 **താൽക്കാലിക** — *tālkkālika* — "temporary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താൽക്കാലിക** (*tālkkālika*) ← Sanskrit *tātkālika*, "lasting for that time", taken over whole as a tatsama. Its parts are *tat*, "that", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a sacred grove, then the Malayalam for
 You'll want to know: മാത്രമല്ല.
 മാത്രമല്ല — mātramalla — "moreover, not only that".
 
+The word, taken apart.
+മാത്രമല്ല (mātramalla) joins mātram, "only", from Sanskrit (CDIAL 10023), to native alla, "is not" (DEDR 234): "not only".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a lane, then the Malayalam for moreove
 
 You'll want to know: കൂടാതെ.
 കൂടാതെ — kūṭāte — "besides, in addition".
+
+The word, taken apart.
+കൂടാതെ (kūṭāte) is native Dravidian, a negative form of the verb "to come together, be added" (DEDR 1882, with Tamil kūṭu).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for moreover, then the Malayalam for besid
 You'll want to know: ഉദാഹരണത്തിന്.
 ഉദാഹരണത്തിന് — udāharaṇattinŭ — "for example".
 
+The word, taken apart.
+ഉദാഹരണത്തിന് (udāharaṇattinŭ) is Sanskrit udāharaṇa, "example, illustration", with the Malayalam dative ending: "for example".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for besides, then the Malayalam for for ex
 You'll want to know: അതായത്.
 അതായത് — atāyatŭ — "that is, in other words".
 
+The word, taken apart.
+അതായത് (atāyatŭ) is native Dravidian, "that is": atŭ, "that" (DEDR 1), and āyatŭ, "what has become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for for example, then the Malayalam for th
 
 You'll want to know: പ്രത്യേകിച്ച്.
 പ്രത്യേകിച്ച് — pratyēkiccŭ — "especially".
+
+The word, taken apart.
+പ്രത്യേകിച്ച് (pratyēkiccŭ) is a Malayalam verb form built on Sanskrit pratyēka, "each one singly": "singling out".
 
 What you've built.
 One more word for this chapter.

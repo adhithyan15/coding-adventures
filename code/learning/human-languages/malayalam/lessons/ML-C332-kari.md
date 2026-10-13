@@ -14,7 +14,8 @@ romanization: "kari"
 concept_tag: ML-VASTU332-KARI
 prerequisites: [ML-C332-ciratta, ML-C332-viraku]
 sounds: []
-roots: []
+roots: [dravidian-kar-black]
+etymology_hook: "kari: native Dravidian, one word with Tamil karu and Kannada kari (DEDR 1278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C332-viraku]
 <!-- hl-knowledge: introduces=[ML-LEX-C332-VASTU332-03]; assesses=[] -->
 
 **കരി** — *kari* — "charcoal, soot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരി** (*kari*) is native Dravidian, one word with Tamil *karu* and Kannada *kari* (DEDR 1278). Its root means "black".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C248-neruppu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**விளையாட்டு** (*viḷaiyāṭṭu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭṭu*, "play, sport". It is the noun of *viḷaiyāṭu*, "to play".
+**விளையாட்டு** (*viḷaiyāṭṭu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭṭu*, "play, sport". It is the noun of *viḷaiyāṭu*, "to play". DEDR compares, with a query, Sanskrit *vilāsa*, "play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

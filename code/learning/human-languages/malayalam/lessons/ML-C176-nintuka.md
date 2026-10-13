@@ -14,7 +14,8 @@ romanization: "nīntuka"
 concept_tag: ML-VERB-NINTUKA
 prerequisites: [ML-C175-kayaruka, ML-C176-irannuka]
 sounds: []
-roots: []
+roots: [dravidian-nintu-swim]
+etymology_hook: "nīntuka: native Dravidian, one word with Tamil nīntu and Kannada īsu (DEDR 3687)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C176-irannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-02]; assesses=[] -->
 
 **നീന്തുക** — *nīntuka* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നീന്തുക** (*nīntuka*) is native Dravidian, one word with Tamil *nīntu*, Kannada *īsu* and Telugu *īdu* (DEDR 3687).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

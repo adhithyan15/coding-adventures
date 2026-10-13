@@ -47,7 +47,7 @@ reviews_of: [TA-C204-unavakam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பல்பொருள் அங்காடி** (*palporuḷ aṅkāṭi*) is native: *pal*, "many" (DEDR 3987), *poruḷ*, "thing" (DEDR 4544), and *aṅkāṭi*, "bazaar" (DEDR 35; Malayalam *aṅṅāṭi*): "the many-things bazaar".
+**பல்பொருள் அங்காடி** (*palporuḷ aṅkāṭi*) is native: *pal*, "many" (DEDR 3987), *poruḷ*, "thing" (DEDR 4544), and *aṅkāṭi*, "bazaar" (DEDR 35; Malayalam *aṅṅāṭi*): "the many-things bazaar". DEDR compares *aṅkāṭi*, with a query, to Sanskrit *aṅgaṇa*, "courtyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

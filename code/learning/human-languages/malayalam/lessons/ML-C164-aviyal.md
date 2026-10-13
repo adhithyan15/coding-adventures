@@ -14,7 +14,8 @@ romanization: "aviyal"
 concept_tag: ML-THINGS164-AVIYAL
 prerequisites: [ML-C163-payaru, ML-C163-parippu, ML-C83-evide-ninnu]
 sounds: []
-roots: []
+roots: [dravidian-avi-boil]
+etymology_hook: "aviyal: native Dravidian, from the verb 'to boil, be cooked'; Tamil avi (DEDR 268)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C163-parippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C164-THINGS164-01]; assesses=[] -->
 
 **അവിയൽ** — *aviyal* — "aviyal, a mixed-vegetable dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവിയൽ** (*aviyal*) is native Dravidian, from the verb "to boil, to cook in steam"; DEDR 268 lists the root with Tamil *avi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kūṭutal"
 concept_tag: ML-WORD-MORE
 prerequisites: [ML-C57-bone, ML-C56-mat]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūṭutal: native Dravidian, from the verb 'to join, be added'; Tamil kūṭu (DEDR 1882)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Built on കൂടുക (*kūṭuka*), "to join, to gather, to increase", with 
 It answers the question at a Kerala meal, where a server comes round the leaf a second and a third time and the guest has to say something. കൂടുതൽ asks for more.
 
 The long *ū* at the front carries the word. Shorten it and you have said something else entirely, so it is worth stretching.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂടുതൽ** (*kūṭutal*) is native Dravidian, a noun from the verb "to come together, be added"; DEDR 1882 lists the root with Tamil *kūṭu* and Kannada *kūḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

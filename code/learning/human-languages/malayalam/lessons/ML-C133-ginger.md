@@ -11,7 +11,8 @@ romanization: "iñci"
 concept_tag: ML-FRUIT-GINGER
 prerequisites: [ML-C133-jackfruit, ML-C133-lemon]
 sounds: []
-roots: []
+roots: [dravidian-inci-ginger]
+etymology_hook: "iñci: native Dravidian, one word with Tamil iñci (DEDR 429)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C133-lemon]
 <!-- hl-knowledge: introduces=[ML-LEX-C133-SWEETSOUR-04]; assesses=[] -->
 
 **ഇഞ്ചി** (*iñci*) — "ginger", good in **ചായ** and for a **ചുമ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇഞ്ചി** (*iñci*) is native Dravidian, one word with Tamil *iñci* (DEDR 429). English *ginger* is usually traced to the same word, through Sanskrit, Greek and Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

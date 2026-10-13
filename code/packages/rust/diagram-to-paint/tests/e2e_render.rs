@@ -3498,6 +3498,17 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
+    fn any_paint_instruction(
+        instructions: &[PaintInstruction],
+        predicate: &impl Fn(&PaintInstruction) -> bool,
+    ) -> bool {
+        instructions.iter().any(|instruction| {
+            predicate(instruction)
+                || matches!(instruction, PaintInstruction::Group(group)
+                    if any_paint_instruction(&group.children, predicate))
+        })
+    }
+
     #[test]
     fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
         let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
@@ -3919,6 +3930,46 @@ line "Target" [35, 50, 68, 82]"##,
                     Some(&"true".to_string()));
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
                     Some(&"laneB,laneC,laneA,laneD".to_string()));
+            }
+            if fixture_name == "line-hops-step" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later step edge must contain an arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"step".to_string()));
+            }
+            if fixture_name == "line-hops-rounded" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later rounded edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"rounded".to_string()));
+            }
+            if fixture_name == "nested-subgraphs" {
+                assert_eq!(layout.groups.len(), 2);
+                let platform = layout.groups.iter().find(|group| group.id == "Platform").unwrap();
+                let runtime = layout.groups.iter().find(|group| group.id == "Runtime").unwrap();
+                assert!(runtime.x >= platform.x && runtime.y >= platform.y);
+                assert!(runtime.x + runtime.width <= platform.x + platform.width);
+                assert!(runtime.y + runtime.height <= platform.y + platform.height);
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_dash.as_deref() == Some(&[6.0, 4.0][..])
+                )).count(), 2);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
+                    Some(&"Platform".to_string()));
+            }
+            if fixture_name == "state-choice-note-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Diamond,
+                    &diagram_ir::DiagramShape::Note,
+                ]);
+                assert!(any_paint_instruction(&scene.instructions, &|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.iter().filter(|child|
+                        matches!(child, PaintInstruction::Path(_))).count() == 2
+                )), "the note must lower to an outline and interior fold path");
             }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");

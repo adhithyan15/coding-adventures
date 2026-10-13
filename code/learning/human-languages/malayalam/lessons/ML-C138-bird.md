@@ -11,7 +11,8 @@ romanization: "pakṣi"
 concept_tag: ML-ANIMAL-BIRD
 prerequisites: [ML-C137-plane, ML-C137-auto]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pakṣi ← Sanskrit pakṣin 'winged; bird', a tatsama (CDIAL 7636)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C137-auto]
 <!-- hl-knowledge: introduces=[ML-LEX-C138-ANIMALS-01]; assesses=[] -->
 
 **പക്ഷി** (*pakṣi*) — "a bird". A **കാക്ക** is one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പക്ഷി** (*pakṣi*) ← Sanskrit *pakṣin*, "winged; bird", taken over whole as a tatsama (CDIAL 7636). It is built on *pakṣa*, "wing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

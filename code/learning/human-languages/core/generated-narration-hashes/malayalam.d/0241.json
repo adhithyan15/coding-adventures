@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 241,
-  "sourceHash": "fnv1a64:b75681684ad0b511",
+  "sourceHash": "fnv1a64:0f1f621e0f3b19d5",
   "lessonIds": [
     "ML-C241-sambandhiccu",
     "ML-C241-enkilum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch241.txt",
   "json": "malayalam/narration/ch241.json",
-  "textHash": "fnv1a64:5499567d6005815f",
-  "jsonHash": "fnv1a64:13b4b62bcac4e565",
+  "textHash": "fnv1a64:c218058763605af2",
+  "jsonHash": "fnv1a64:16c0ac9f00c0e62f",
   "findings": []
 }

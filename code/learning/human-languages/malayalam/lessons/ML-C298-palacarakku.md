@@ -14,7 +14,8 @@ romanization: "palacarakkŭ"
 concept_tag: ML-JOLI298-PALACARAKKU
 prerequisites: [ML-C297-peraykka, ML-C297-nellikka]
 sounds: []
-roots: []
+roots: [dravidian-pala-many, dravidian-carakku-goods]
+etymology_hook: "palacarakkŭ: native Dravidian, 'many goods': pala (DEDR 3987) + carakku (DEDR 2353)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C297-nellikka]
 <!-- hl-knowledge: introduces=[ML-LEX-C298-JOLI298-01]; assesses=[] -->
 
 **പലചരക്ക്** — *palacarakkŭ* — "groceries".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പലചരക്ക്** (*palacarakkŭ*) is native Dravidian, "many goods": *pala*, "many" (DEDR 3987), and *carakku*, "merchandise, goods" (DEDR 2353, with Tamil *carakku*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -236,7 +236,13 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   japanese: { withoutHook: 601, withoutVisible: 688 },
   kannada: { withoutHook: 1330, withoutVisible: 1281 },
   latin: { withoutHook: 1095, withoutVisible: 1105 },
-  malayalam: { withoutHook: 1367, withoutVisible: 1275 },
+  // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
+  // and says where its word comes from, almost always in a "taken apart" block. Native words
+  // cite the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only
+  // cognates the full DEDR article lists and keeping its own "Cf. Skt." and "?" caveats;
+  // Sanskrit loans cite Turner's CDIAL where it has the form; English, Portuguese, Arabic and
+  // Persian loans name the donor. 47 say the origin is uncertain or only usually traced.
+  malayalam: { withoutHook: 0, withoutVisible: 0 },
   marathi: { withoutHook: 1163, withoutVisible: 1116 },
   marwadi: { withoutHook: 552, withoutVisible: 716 },
   persian: { withoutHook: 1300, withoutVisible: 1311 },
@@ -252,11 +258,12 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
   // but four have a "taken apart" block: native words cite the Dravidian Etymological
   // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read
-  // from the moli-mandala/data (Jambu) files; no source text is copied. The four left
-  // without a block (TA-C06-dative-subject, TA-C37-ivar, TA-C37-ivar-en-nanbar,
-  // TA-C39-evvalavu) already estimate at 294-299 s, so any visible block would cross the
-  // 300-second limit; their hooks carry the etymology.
-  tamil: { withoutHook: 0, withoutVisible: 4 },
+  // from the moli-mandala/data (Jambu) files; no source text is copied. 0 / 4 -> 0 / 0:
+  // the four that estimated at 294-299 s (TA-C06-dative-subject, TA-C37-ivar,
+  // TA-C37-ivar-en-nanbar, TA-C39-evvalavu) each gained one origin sentence in an existing
+  // section, paid for by trimming redundant prose; only TA-C39-evvalavu needed a raise
+  // (294 -> 298 s, still under 300).
+  tamil: { withoutHook: 0, withoutVisible: 0 },
   telugu: { withoutHook: 1376, withoutVisible: 1318 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
 };

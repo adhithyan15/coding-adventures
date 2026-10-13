@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 118,
-  "sourceHash": "fnv1a64:2a8a3061237fd5f7",
+  "sourceHash": "fnv1a64:24dc5f76636b3e2c",
   "lessonIds": [
     "ML-C118-coldweather",
     "ML-C118-heat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch118.txt",
   "json": "malayalam/narration/ch118.json",
-  "textHash": "fnv1a64:4c89172dd4fa82bc",
-  "jsonHash": "fnv1a64:453ff96860826e2d",
+  "textHash": "fnv1a64:73f08432e5a763e4",
+  "jsonHash": "fnv1a64:2b23ed903bf8a2e0",
   "findings": []
 }

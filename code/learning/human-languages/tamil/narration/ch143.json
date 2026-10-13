@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Thumb, Bad, Beautiful, Long, Short",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c076fa642cd9e49",
+  "sourceHash": "fnv1a64:00cbc6f24287fe83",
   "lessons": [
     {
       "id": "TA-C143-kattaiviral",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fc364159f22c7b8",
+      "sourceHash": "fnv1a64:33603a9fde421a18",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கட்டைவிரல் (kaṭṭaiviral) is native: kaṭṭai, \"shortness, short and thick\" (DEDR 1151), and viral, \"finger\" (DEDR 5409)."
+              "text": "கட்டைவிரல் (kaṭṭaiviral) is native: kaṭṭai, \"shortness, short and thick\" (DEDR 1151, which compares Indo-Aryan gāṭṭa, \"short\"), and viral, \"finger\" (DEDR 5409)."
             }
           ]
         },

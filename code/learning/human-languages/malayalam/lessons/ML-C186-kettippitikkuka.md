@@ -14,7 +14,8 @@ romanization: "keṭṭippiṭikkuka"
 concept_tag: ML-VERB-KETTIPPITIKKUKA
 prerequisites: [ML-C185-pintutaruka, ML-C186-pankuvekkuka]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind, dravidian-pidi-catch]
+etymology_hook: "keṭṭippiṭikkuka: native Dravidian, 'bind and hold': keṭṭuka (DEDR 1147) + piṭikka (DEDR 4148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C186-pankuvekkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C186-KRIYA186-02]; assesses=[] -->
 
 **കെട്ടിപ്പിടിക്കുക** — *keṭṭippiṭikkuka* — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കെട്ടിപ്പിടിക്കുക** (*keṭṭippiṭikkuka*) is native Dravidian, "bind and hold": the verb "to tie, clasp" (DEDR 1147, with Tamil *kaṭṭu*) and the verb "to seize, hold" (DEDR 4148, with Tamil *piṭi*). DEDR 1147 compares Sanskrit *ghaṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

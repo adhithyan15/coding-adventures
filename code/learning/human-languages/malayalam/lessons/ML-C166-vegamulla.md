@@ -14,7 +14,8 @@ romanization: "vēgamuḷḷa"
 concept_tag: ML-QUAL166-VEGAMULLA
 prerequisites: [ML-C165-puliyulla, ML-C166-bharamulla, ML-C68-eighth, ML-C68-ninth, ML-C68-tenth, ML-C68-eleventh, ML-C68-eleventh]
 sounds: []
-roots: []
+roots: [sanskrit-vega, dravidian-ul-be]
+etymology_hook: "vēgamuḷḷa: Sanskrit vēga 'speed' (CDIAL 12089) + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C166-bharamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C166-QUAL166-02]; assesses=[] -->
 
 **വേഗമുള്ള** — *vēgamuḷḷa* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേഗമുള്ള** (*vēgamuḷḷa*) joins Sanskrit *vēga*, "speed" (CDIAL 12089), to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

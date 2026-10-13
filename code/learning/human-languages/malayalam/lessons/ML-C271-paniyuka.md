@@ -14,7 +14,8 @@ romanization: "paṇiyuka"
 concept_tag: ML-VERB-PANIYUKA
 prerequisites: [ML-C271-katam-vannuka, ML-C271-katam-kotukkuka]
 sounds: []
-roots: []
+roots: [pani-work-dravidian]
+etymology_hook: "paṇiyuka: native Dravidian; DEDR 3884 lists Malayalam paṇiyuka 'to build' beside paṇi 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C271-katam-kotukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C271-KRIYA271-03]; assesses=[] -->
 
 **പണിയുക** — *paṇiyuka* — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പണിയുക** (*paṇiyuka*) is native Dravidian: DEDR 3884 lists it, "to build", beside *paṇi*, "work, labour, building", with Tamil *paṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

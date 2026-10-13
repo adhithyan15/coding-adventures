@@ -14,7 +14,8 @@ romanization: "iṟukiya"
 concept_tag: ML-GUNAM203-IRUKIYA
 prerequisites: [ML-C203-cinna, ML-C203-ayanna]
 sounds: []
-roots: []
+roots: [dravidian-iruku-tight]
+etymology_hook: "iṟukiya: native Dravidian, 'tightened'; Tamil iṟuku (DEDR 524)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C203-ayanna]
 <!-- hl-knowledge: introduces=[ML-LEX-C203-GUNAM203-04]; assesses=[] -->
 
 **ഇറുകിയ** — *iṟukiya* — "tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇറുകിയ** (*iṟukiya*) is native Dravidian, a past form of the verb "to become tight"; DEDR 524 lists the root with Tamil *iṟuku*, Kannada *iṟaku* and Telugu *iṟuku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

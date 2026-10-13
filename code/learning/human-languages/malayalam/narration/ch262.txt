@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for training, then the Malayalam for a rep
 You'll want to know: കുറിപ്പ്.
 കുറിപ്പ് — kuṟippŭ — "a note".
 
+The word, taken apart.
+കുറിപ്പ് (kuṟippŭ) is native Dravidian, a noun from the verb "to mark, note"; DEDR 1847 lists the root with Tamil kuṟi, Kannada kuṟi and Telugu guṟi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a report, then the Malayalam for a not
 
 You'll want to know: ഉദാഹരണം.
 ഉദാഹരണം — udāharaṇaṁ — "an example".
+
+The word, taken apart.
+ഉദാഹരണം (udāharaṇaṁ) from Sanskrit udāharaṇa, "example, illustration", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a note, then the Malayalam for an exam
 You'll want to know: കലാകാരൻ.
 കലാകാരൻ — kalākāran — "an artist".
 
+The word, taken apart.
+കലാകാരൻ (kalākāran) is Sanskrit kalā, "art" (CDIAL 2927), and kāra, "maker", with the masculine ending -n.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an example, then the Malayalam for an 
 You'll want to know: പൂജാരി.
 പൂജാരി — pūjāri — "a temple priest".
 
+The word, taken apart.
+പൂജാരി (pūjāri) is Sanskrit pūjā, "honour, worship" (CDIAL 8317), with an ending for a person: "one who does the worship".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for an artist, then the Malayalam for a te
 
 You'll want to know: ഗായകൻ.
 ഗായകൻ — gāyakan — "a singer".
+
+The word, taken apart.
+ഗായകൻ (gāyakan) from Sanskrit gāyaka, "singer", taken over whole as a tatsama, with the masculine ending -n. It is built on the root gai, "to sing".
 
 What you've built.
 One more word for this chapter.

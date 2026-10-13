@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for soft, then the Malayalam for hard.
 You'll want to know: നനവുള്ള.
 നനവുള്ള — nanavuḷḷa — "wet".
 
+The word, taken apart.
+നനവുള്ള (nanavuḷḷa) is native Dravidian, "having wetness": nanavŭ, "wetness" (DEDR 3630, with Tamil naṉai), with -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Say "I am going in order to read." (Ñān vāyikkāṉ pōkunnu.)
 You'll want to know: ഉണങ്ങിയ.
 ഉണങ്ങിയ — uṇaṅṅiya — "dry".
 
+The word, taken apart.
+ഉണങ്ങിയ (uṇaṅṅiya) is native Dravidian, a past form of the verb "to dry"; DEDR 601 lists the root with Tamil uṇaṅku and Kannada oṇagu.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for wet, then the Malayalam for dry.
 
 You'll want to know: ഇരുണ്ട.
 ഇരുണ്ട — iruṇṭa — "dark".
+
+The word, taken apart.
+ഇരുണ്ട (iruṇṭa) is native Dravidian, a form built on iruḷ, "darkness"; DEDR 2552 lists the root with Tamil iruḷ and Kannada iruḷ.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Where does vaḷare, "very," go? (In the one slot in front of the word it streng
 You'll want to know: തെളിഞ്ഞ.
 തെളിഞ്ഞ — teḷiñña — "clear, bright".
 
+The word, taken apart.
+തെളിഞ്ഞ (teḷiñña) is native Dravidian, a past form of the verb "to become clear"; DEDR 3433 lists the root with Tamil teḷ and Telugu teli.
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Malayalam for dark, then the Malayalam for clear.
 
 You'll want to know: ആഴമുള്ള.
 ആഴമുള്ള — āḻamuḷḷa — "deep".
+
+The word, taken apart.
+ആഴമുള്ള (āḻamuḷḷa) is native Dravidian, "having depth": the noun for depth (DEDR 396, with Tamil āḻ), with -uḷḷa, "that has" (DEDR 697).
 
 What you've built.
 One more word for this chapter.

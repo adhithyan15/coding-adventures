@@ -14,7 +14,8 @@ romanization: "nāṭakaṁ"
 concept_tag: ML-VASTU329-NATAKAM
 prerequisites: [ML-C329-lekhanam, ML-C329-kavita]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "nāṭakaṁ ← Sanskrit nāṭaka 'dancer, actor; a play', a tatsama (CDIAL 7045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C329-kavita]
 <!-- hl-knowledge: introduces=[ML-LEX-C329-VASTU329-03]; assesses=[] -->
 
 **നാടകം** — *nāṭakaṁ* — "a play, a drama".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാടകം** (*nāṭakaṁ*) ← Sanskrit *nāṭaka*, "dancer, actor; a play", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7045). It is built on *naṭa*, "actor, dancer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C243-vacanai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**வெள்ளரிக்காய்** (*veḷḷarikkāy*) is native: *veḷḷari*, "cucumber" (DEDR 5504, which lists Malayalam veḷḷari), and *kāy*, "unripe fruit, vegetable" (DEDR 1459).
+**வெள்ளரிக்காய்** (*veḷḷarikkāy*) is native: *veḷḷari*, "cucumber" (DEDR 5504, which lists Malayalam veḷḷari), and *kāy*, "unripe fruit, vegetable" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

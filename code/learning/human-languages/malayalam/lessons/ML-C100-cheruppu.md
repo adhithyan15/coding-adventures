@@ -11,7 +11,8 @@ romanization: "ceruppŭ"
 concept_tag: ML-SANDAL
 prerequisites: [ML-C100-saari, ML-C42-old]
 sounds: []
-roots: []
+roots: [dravidian-ceruppu-sandal]
+etymology_hook: "ceruppŭ: native Dravidian, one word with Tamil ceruppu (DEDR 1963)"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,8 @@ half-u, so **ആണ്** lands straight on it: **ചെരുപ്പാണ്*
 |---|---|
 | **മുണ്ട്** | **മുണ്ടാണ്** (*muṇṭāṇŭ*) |
 | **ചെരുപ്പ്** | **ചെരുപ്പാണ്** (*ceruppāṇŭ*) |
+
+**Where the word comes from.** It is native Dravidian, one word with Tamil *ceruppu* (DEDR 1963).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-SANDAL-01, ML-LEX-C42-ADJ-05, ML-LEX-C41-DEIXIS-01] -->

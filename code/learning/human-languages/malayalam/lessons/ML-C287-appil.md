@@ -14,7 +14,8 @@ romanization: "āppiḷ"
 concept_tag: ML-VASTU287-APPIL
 prerequisites: [ML-C287-pappaya, ML-C287-orancu]
 sounds: []
-roots: []
+roots: [english-apple]
+etymology_hook: "āppiḷ ← English apple"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C287-orancu]
 <!-- hl-knowledge: introduces=[ML-LEX-C287-VASTU287-05]; assesses=[] -->
 
 **ആപ്പിൾ** — *āppiḷ* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആപ്പിൾ** (*āppiḷ*) ← English *apple*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

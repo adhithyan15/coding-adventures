@@ -11,7 +11,8 @@ romanization: "sundaraṁ"
 concept_tag: ML-BEAUTIFUL
 prerequisites: [ML-R96-ease-recall, ML-C41-this, ML-C96-prayaasam]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundaraṁ ← Sanskrit sundara 'beautiful', a tatsama (CDIAL 13474)"
 duration:
   max_seconds: 240
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C96-eluppam]
 **സുന്ദരം** — *sundaraṁ* — **beautiful.**
 
 > **ഇത് സുന്ദരമാണ്.** — *itŭ sundaramāṇŭ* — "**This is beautiful.**"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സുന്ദരം** (*sundaraṁ*) ← Sanskrit *sundara*, "beautiful", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13474).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-AANU-01] -->

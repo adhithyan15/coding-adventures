@@ -14,7 +14,8 @@ romanization: "bhitti"
 concept_tag: ML-THINGS147-BHITTI
 prerequisites: [ML-C147-torttu, ML-C147-bagu, ML-C26-raavile]
 sounds: []
-roots: []
+roots: [sanskrit-bhitti]
+etymology_hook: "bhitti ← Sanskrit bhitti 'partition, wall', a tatsama (CDIAL 9494)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C147-bagu]
 <!-- hl-knowledge: introduces=[ML-LEX-C147-THINGS147-04]; assesses=[] -->
 
 **ഭിത്തി** — *bhitti* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭിത്തി** (*bhitti*) ← Sanskrit *bhitti*, "partition, wall", taken over whole as a tatsama (CDIAL 9494). Its first sense is a screen of split reeds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

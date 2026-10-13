@@ -11,7 +11,8 @@ romanization: "kayaṟ"
 concept_tag: ML-NOUN-ROPE
 prerequisites: [ML-C61-chilli, ML-C60-cow]
 sounds: []
-roots: []
+roots: [dravidian-kayaru-rope]
+etymology_hook: "kayaṟ: native Dravidian, one word with Tamil kayiṟu (DEDR 1254)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, from a root about twisting, and it names both the fibre and th
 The fibre comes off the husk of the coconut you met on the shelf, soaked in backwater until it softens and then beaten out by hand. Kerala has made rope this way for as long as anyone has written about it.
 
 English borrowed the word along with the trade: *coir* is this word, carried out of Malabar on Portuguese and Dutch ships.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കയർ** (*kayaṟ*) is native Dravidian, one word with Tamil *kayiṟu* (DEDR 1254).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṭisthānaṁ"
 concept_tag: ML-KARANAM243-ATISTHANAM
 prerequisites: [ML-C243-uttaravadittam, ML-C243-sadhyata]
 sounds: []
-roots: []
+roots: [dravidian-adi-foot, sanskrit-sthana]
+etymology_hook: "aṭisthānaṁ: native aṭi 'bottom, foot' (DEDR 72) + Sanskrit sthāna 'place' (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C243-sadhyata]
 <!-- hl-knowledge: introduces=[ML-LEX-C243-KARANAM243-05]; assesses=[] -->
 
 **അടിസ്ഥാനം** — *aṭisthānaṁ* — "a basis, a foundation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടിസ്ഥാനം** (*aṭisthānaṁ*) joins native *aṭi*, "sole, bottom" (DEDR 72, with Tamil *aṭi*), to Sanskrit *sthāna*, "place, stance" (CDIAL 13753): "the bottom place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

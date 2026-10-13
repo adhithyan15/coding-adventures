@@ -11,7 +11,8 @@ romanization: "eṭṭāṁ"
 concept_tag: ML-ORDINAL-EIGHTH
 prerequisites: [ML-C68-seventh, ML-C67-third, ML-C64-sometimes, ML-C52-kolam, ML-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "eṭṭāṁ: native Dravidian, 'eight' + -āṁ; Tamil eṭṭu 'eight' (DEDR 784)"
 duration:
   max_seconds: 200
 requires:
@@ -49,6 +50,11 @@ virama between them. The ending lands after all of that, so the stack is
 untouched: **എട്ടാം**.
 
 **എട്ടാം ദിവസം** (*eṭṭāṁ divasaṁ*), the eighth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എട്ടാം** (*eṭṭāṁ*) is native Dravidian: "eight" (DEDR 784, with Tamil *eṭṭu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-03, ML-LEX-C68-ORDINAL-02] -->

@@ -14,7 +14,8 @@ romanization: "prārtthikkuka"
 concept_tag: ML-VERB-PRARTTHIKKUKA
 prerequisites: [ML-C268-ettikkuka, ML-C269-asvasippikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-prarthana]
+etymology_hook: "prārtthikkuka ← Sanskrit prārthanā 'request, prayer' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C269-asvasippikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C269-KRIYA269-02]; assesses=[] -->
 
 **പ്രാർത്ഥിക്കുക** — *prārtthikkuka* — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രാർത്ഥിക്കുക** (*prārtthikkuka*) is built on Sanskrit *prārthanā*, "a request, a prayer", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

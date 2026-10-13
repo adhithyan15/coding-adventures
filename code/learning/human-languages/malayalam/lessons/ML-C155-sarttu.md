@@ -14,7 +14,8 @@ romanization: "ṣarṭṭŭ"
 concept_tag: ML-THINGS155-SARTTU
 prerequisites: [ML-C155-teruvu, ML-C155-granthasala]
 sounds: []
-roots: []
+roots: [english-shirt]
+etymology_hook: "ṣarṭṭŭ ← English shirt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C155-granthasala]
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-05]; assesses=[] -->
 
 **ഷർട്ട്** — *ṣarṭṭŭ* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഷർട്ട്** (*ṣarṭṭŭ*) ← English *shirt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

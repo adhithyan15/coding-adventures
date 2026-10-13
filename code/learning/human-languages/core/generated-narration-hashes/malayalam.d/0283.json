@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 283,
-  "sourceHash": "fnv1a64:9151549824782d9c",
+  "sourceHash": "fnv1a64:8e1e7907f999aa6c",
   "lessonIds": [
     "ML-C283-atiyantara",
     "ML-C283-pradhanappetta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch283.txt",
   "json": "malayalam/narration/ch283.json",
-  "textHash": "fnv1a64:d2b269cce3ff44d8",
-  "jsonHash": "fnv1a64:77f7bc1bb4583ed5",
+  "textHash": "fnv1a64:2cbeabf41c4bffb4",
+  "jsonHash": "fnv1a64:eddee0a56d0d9ad3",
   "findings": []
 }

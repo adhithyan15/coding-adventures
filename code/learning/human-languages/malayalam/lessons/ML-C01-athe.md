@@ -12,8 +12,9 @@ concept_tag: RESPONSE-YES
 prerequisites: [ML-C01-namaskaram]
 sounds: [independent-vowel-a, the-syllable]
 roots: [athu]
+etymology_hook: "athe: native Dravidian, literally 'that (is so)', built on the old word for 'that' (DEDR 1)"
 duration:
-  max_seconds: 210
+  max_seconds: 216
 requires:
   knowledge: [ML-LEX-NAMASKARAM-01]
 introduces:
@@ -57,6 +58,8 @@ Left to right: **അ · തെ** = *a-the* →
 "that." To say "yes," Malayalam essentially says **"that [is so]"** — you
 affirm by pointing at the truth of what was said. Its natural partner is the
 negative *alla*, "[it is] not that" — the next lesson.
+
+That pointing word is Proto-Dravidian: DEDR 1 lists it with Tamil *atu* and Kannada *adu*.
 
 ## Grammar Lens: yes and no as "that is" / "not that"
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C01-ANSWER-BY-POINTING-01]; assesses=[ML-LEX-ATHE-01] -->

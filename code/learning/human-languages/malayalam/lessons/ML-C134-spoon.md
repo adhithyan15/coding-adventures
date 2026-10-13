@@ -11,7 +11,8 @@ romanization: "spūṇ"
 concept_tag: ML-TABLE-SPOON
 prerequisites: [ML-C134-bottle, ML-C134-cup]
 sounds: []
-roots: []
+roots: [english-spoon]
+etymology_hook: "spūṇ ← English spoon"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C134-cup]
 
 **സ്പൂൺ** (*spūṇ*) — "a spoon", from English. Much Kerala food is eaten with the hand;
 ask for this if you need it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്പൂൺ** (*spūṇ*) ← English *spoon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

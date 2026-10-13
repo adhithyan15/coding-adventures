@@ -14,7 +14,8 @@ romanization: "tuṇikkaṭa"
 concept_tag: ML-STHALAM197-TUNIKKATA
 prerequisites: [ML-C196-olivusamayam, ML-C197-marunnukata]
 sounds: []
-roots: []
+roots: [dravidian-tuni-cloth, dravidian-katai-shop]
+etymology_hook: "tuṇikkaṭa: native Dravidian, 'cloth shop': tuṇi (DEDR 3307) + kaṭa (DEDR 1142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C197-marunnukata]
 <!-- hl-knowledge: introduces=[ML-LEX-C197-STHALAM197-02]; assesses=[] -->
 
 **തുണിക്കട** — *tuṇikkaṭa* — "a clothes shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുണിക്കട** (*tuṇikkaṭa*) is native Dravidian, "cloth shop": *tuṇi*, "cloth" (DEDR 3307), and *kaṭa*, "shop" (DEDR 1142, with Tamil *kaṭai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

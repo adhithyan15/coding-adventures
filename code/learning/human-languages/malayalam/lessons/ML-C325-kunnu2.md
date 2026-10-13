@@ -14,7 +14,8 @@ romanization: "kuññŭ"
 concept_tag: ML-VASTU325-KUNNU2
 prerequisites: [ML-C324-visa, ML-C324-insuransu]
 sounds: []
-roots: []
+roots: [dravidian-kunju-young]
+etymology_hook: "kuññŭ: native Dravidian, one word with Tamil kuñci and Kannada kunni (DEDR 1646)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C324-insuransu]
 <!-- hl-knowledge: introduces=[ML-LEX-C325-VASTU325-01]; assesses=[] -->
 
 **കുഞ്ഞ്** — *kuññŭ* — "a baby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുഞ്ഞ്** (*kuññŭ*) is native Dravidian, one word with Tamil *kuñci*, Kannada *kunni* and Telugu *gunna* (DEDR 1646). DEDR's sense is "young, small, infant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

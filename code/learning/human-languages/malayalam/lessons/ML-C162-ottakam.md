@@ -14,7 +14,8 @@ romanization: "oṭṭakaṁ"
 concept_tag: ML-THINGS162-OTTAKAM
 prerequisites: [ML-C162-karati, ML-C162-kurukkan]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "oṭṭakaṁ ← Sanskrit uṣṭra 'camel' (CDIAL 2387), through Prakrit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C162-kurukkan]
 <!-- hl-knowledge: introduces=[ML-LEX-C162-THINGS162-03]; assesses=[] -->
 
 **ഒട്ടകം** — *oṭṭakaṁ* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒട്ടകം** (*oṭṭakaṁ*) goes back to Sanskrit *uṣṭra*, "camel" (CDIAL 2387), through a Prakrit form with *ṭṭ*, with Malayalam's noun ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

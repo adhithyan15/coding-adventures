@@ -14,7 +14,8 @@ romanization: "phākṭaṟi"
 concept_tag: ML-JOLI299-PHAKTARI
 prerequisites: [ML-C298-kuli, ML-C298-tolilali]
 sounds: []
-roots: []
+roots: [english-factory]
+etymology_hook: "phākṭaṟi ← English factory"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C298-tolilali]
 <!-- hl-knowledge: introduces=[ML-LEX-C299-JOLI299-01]; assesses=[] -->
 
 **ഫാക്ടറി** — *phākṭaṟi* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫാക്ടറി** (*phākṭaṟi*) ← English *factory*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

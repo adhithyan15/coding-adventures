@@ -14,7 +14,8 @@ romanization: "oḻivusamayaṁ"
 concept_tag: ML-SAMAYAM196-OLIVUSAMAYAM
 prerequisites: [ML-C196-otuvil, ML-C196-krtyasamayattu]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-quit, sanskrit-samaya]
+etymology_hook: "oḻivusamayaṁ: native oḻivu 'vacancy' (DEDR 1009) + Sanskrit samaya 'time' (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C196-krtyasamayattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C196-SAMAYAM196-05]; assesses=[] -->
 
 **ഒഴിവുസമയം** — *oḻivusamayaṁ* — "free time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴിവുസമയം** (*oḻivusamayaṁ*) joins native *oḻivu*, "vacancy, being free" (DEDR 1009, with Tamil *oḻi*), to Sanskrit *samaya*, "time" (CDIAL 13185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

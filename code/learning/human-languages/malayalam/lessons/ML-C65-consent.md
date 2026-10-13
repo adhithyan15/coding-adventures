@@ -11,7 +11,8 @@ romanization: "sammataṁ"
 concept_tag: ML-NOUN-CONSENT
 prerequisites: [ML-C65-permission, ML-C63-pain]
 sounds: []
-roots: []
+roots: [sanskrit-sammata]
+etymology_hook: "sammataṁ ← Sanskrit saṁmata 'agreed, approved', a tatsama (CDIAL 12973)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *sammata*: a piece meaning together, and *mata*, a thought held. Consen
 That *mata* piece stands behind the Sanskrit word for an opinion and for a doctrine, so what a household calls agreement and what a school of thought calls its position are the same word wearing different clothes.
 
 Between the two you now have, *anuvādaṁ* comes down from somebody with the standing to grant it and സമ്മതം passes sideways between equals.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമ്മതം** (*sammataṁ*) ← Sanskrit *saṁmata*, "agreed, approved", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

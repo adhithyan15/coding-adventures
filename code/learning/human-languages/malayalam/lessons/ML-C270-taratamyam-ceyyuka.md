@@ -14,7 +14,8 @@ romanization: "tāratamyaṁ ceyyuka"
 concept_tag: ML-VERB-TARATAMYAM-CEYYUKA
 prerequisites: [ML-C270-etirkkuka, ML-C270-uhikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-taratamya, cey-do-dravidian]
+etymology_hook: "tāratamyaṁ ceyyuka: Sanskrit tāratamya 'gradation' + native ceyyuka (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C270-uhikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C270-KRIYA270-03]; assesses=[] -->
 
 **താരതമ്യം ചെയ്യുക** — *tāratamyaṁ ceyyuka* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താരതമ്യം ചെയ്യുക** (*tāratamyaṁ ceyyuka*) joins Sanskrit *tāratamya*, "gradation, more-and-less", from *tara*, "more", and *tama*, "most", to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

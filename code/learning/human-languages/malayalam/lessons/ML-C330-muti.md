@@ -14,7 +14,8 @@ romanization: "mūṭi"
 concept_tag: ML-VASTU330-MUTI
 prerequisites: [ML-C329-phutbol, ML-C329-krikkarru]
 sounds: []
-roots: []
+roots: [dravidian-mudu-cover]
+etymology_hook: "mūṭi: native Dravidian, 'the cover', from the verb to cover; Tamil mūṭu (DEDR 5034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C329-krikkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C330-VASTU330-01]; assesses=[] -->
 
 **മൂടി** — *mūṭi* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂടി** (*mūṭi*) is native Dravidian, the noun of the verb "to cover"; DEDR 5034 lists the root with Tamil *mūṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Grapes, Pomegranate, Pickle, Waterfall, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d05b7d0836120cca",
+  "sourceHash": "fnv1a64:02e74eb9c01d5254",
   "lessons": [
     {
       "id": "TA-C140-tiratcai",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73e30e8844c3196f",
+      "sourceHash": "fnv1a64:0dcfdfa5b8d18b09",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஊறுகாய் (ūṟukāy) is native: ūṟu, \"to soak, to be steeped\" (DEDR 761), and kāy, \"unripe fruit\" (DEDR 1459): fruit left to steep."
+              "text": "ஊறுகாய் (ūṟukāy) is native: ūṟu, \"to soak, to be steeped\" (DEDR 761), and kāy, \"unripe fruit\" (DEDR 1459, which compares Indo-Aryan kacca, \"raw\"): fruit left to steep."
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee04afe41ee90ec0",
+      "sourceHash": "fnv1a64:8b6a96e34fc72466",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குன்று (kuṉṟu) is native Dravidian. DEDR 1864 lists Malayalam kunnu and Kannada koṇḍa."
+              "text": "குன்று (kuṉṟu) is native Dravidian. DEDR 1864 lists Malayalam kunnu and Telugu koṇḍa, which Kannada borrowed."
             }
           ]
         },

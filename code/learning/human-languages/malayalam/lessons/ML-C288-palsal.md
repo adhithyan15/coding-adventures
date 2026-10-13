@@ -14,7 +14,8 @@ romanization: "pāḻsal"
 concept_tag: ML-VASTU288-PALSAL
 prerequisites: [ML-C287-orancu, ML-C287-appil]
 sounds: []
-roots: []
+roots: [english-parcel]
+etymology_hook: "pāḻsal ← English parcel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C287-appil]
 <!-- hl-knowledge: introduces=[ML-LEX-C288-VASTU288-01]; assesses=[] -->
 
 **പാഴ്സൽ** — *pāḻsal* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാഴ്സൽ** (*pāḻsal*) ← English *parcel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "mōśaṁ"
 concept_tag: ML-WORD-BAD
 prerequisites: [ML-C89-nallathu, ML-C02-aanu]
 sounds: []
-roots: []
+roots: [sanskrit-mosha]
+etymology_hook: "mōśaṁ: usually traced to Sanskrit mōṣa 'theft, robbery' (CDIAL 10358): a loss became 'bad'"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +58,11 @@ follows.
 
 The partner sentence is built the same way, from the word you learned a moment
 ago: **നല്ലതാണ്** — *nallatāṇŭ* — it is good.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മോശം** (*mōśaṁ*) is usually traced to Sanskrit *mōṣa*, "theft, robbery" (CDIAL 10358): what was stolen from you became simply bad. The path is not certain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C89-EVAL-01, ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-AANU-01] -->

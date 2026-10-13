@@ -14,7 +14,8 @@ romanization: "tuppuka"
 concept_tag: ML-VERB-TUPPUKA
 prerequisites: [ML-C188-prasiddhikarikkuka, ML-C188-nannakkuka]
 sounds: []
-roots: []
+roots: [dravidian-tuppu-spit]
+etymology_hook: "tuppuka: native Dravidian, one word with Tamil tuppu (DEDR 3323)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C188-nannakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C189-KRIYA189-01]; assesses=[] -->
 
 **തുപ്പുക** — *tuppuka* — "to spit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുപ്പുക** (*tuppuka*) is native Dravidian, one word with Tamil *tuppu* (DEDR 3323).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

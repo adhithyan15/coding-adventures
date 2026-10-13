@@ -47,7 +47,7 @@ reviews_of: [TA-C211-ilancivappu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பழுப்பு** (*paḻuppu*) is native Dravidian (DEDR 4004). The entry gives *paḻuppu*, "ripeness, the yellowness of ripe fruit": brown is the colour of ripening.
+**பழுப்பு** (*paḻuppu*) is native Dravidian (DEDR 4004). The entry gives *paḻuppu*, "ripeness, the yellowness of ripe fruit": brown is the colour of ripening. The entry compares Sanskrit *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

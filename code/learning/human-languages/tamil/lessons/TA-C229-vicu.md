@@ -47,7 +47,7 @@ reviews_of: [TA-C229-piri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**வீசு** (*vīcu*) is native Dravidian. DEDR 5450 lists Malayalam *vīcuka*, "to fan, cast".
+**வீசு** (*vīcu*) is native Dravidian. DEDR 5450 lists Malayalam *vīcuka*, "to fan, cast", and compares Sanskrit *vīj-*, "to fan" (CDIAL 12043).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

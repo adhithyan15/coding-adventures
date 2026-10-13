@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to fall, then the Malayalam for to liv
 You'll want to know: ആരും.
 ആരും — āruṁ — "nobody (with a negative verb)". Malayalam negates a verb by joining ഇല്ല (illa) onto it: ആരും വന്നില്ല — āruṁ vannilla — "Nobody came." To say something is not a thing, it uses അല്ല (alla): ഇത് എന്റെ വീട് അല്ല — itŭ enṟe vīṭŭ alla — "This is not my house."
 
+The word, taken apart.
+ആരും (āruṁ) is native Dravidian: ārŭ, "who" (DEDR 5151, with Tamil yār), with -uṁ, "even, any": with a negative verb, "not anyone".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to live, then the Malayalam for nobody
 
 You'll want to know: ഒരിക്കലും.
 ഒരിക്കലും — orikkaluṁ — "never (with a negative verb)". ഞാൻ ഒരിക്കലും ഇറച്ചി കഴിക്കില്ല — ñān orikkaluṁ iṟacci kaḻikkilla — "I will never eat meat."
+
+The word, taken apart.
+ഒരിക്കലും (orikkaluṁ) is native Dravidian: a word for "once", built on oru, "one" (DEDR 990), with -uṁ, "even": with a negative verb, "not even once".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for nobody, then the Malayalam for never.
 You'll want to know: എവിടെയും.
 എവിടെയും — eviṭeyuṁ — "nowhere, not anywhere (with a negative verb)". അവൻ എവിടെയും പോയില്ല — avan eviṭeyuṁ pōyilla — "He didn't go anywhere."
 
+The word, taken apart.
+എവിടെയും (eviṭeyuṁ) is native Dravidian: eviṭe, "where" (DEDR 5151), with -uṁ, "even, any": with a negative verb, "not anywhere".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for never, then the Malayalam for nowhere.
 You'll want to know: ആരെങ്കിലും.
 ആരെങ്കിലും — āreṅkiluṁ — "anyone, someone". A yes-or-no question ends in -ഓ (-ō): ഉണ്ട് becomes ഉണ്ടോ. അവിടെ ആരെങ്കിലും ഉണ്ടോ? — aviṭe āreṅkiluṁ uṇṭō? — "Is anyone there?"
 
+The word, taken apart.
+ആരെങ്കിലും (āreṅkiluṁ) is native Dravidian: ārŭ, "who" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868, with Tamil eṉ), and -uṁ: "whoever it may be".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for nowhere, then the Malayalam for anyone
 
 You'll want to know: എന്തെങ്കിലും.
 എന്തെങ്കിലും — enteṅkiluṁ — "anything, something". നിങ്ങൾക്ക് എന്തെങ്കിലും വേണോ? — niṅṅaḷkkŭ enteṅkiluṁ vēṇō? — "Do you need anything?"
+
+The word, taken apart.
+എന്തെങ്കിലും (enteṅkiluṁ) is native Dravidian: entŭ, "what" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868, with Tamil eṉ), and -uṁ: "whatever it may be".
 
 What you've built.
 One more word for this chapter.

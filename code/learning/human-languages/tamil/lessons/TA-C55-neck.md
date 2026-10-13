@@ -48,7 +48,7 @@ It is the neck outside and the throat inside, both in one word. A garland goes r
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கழுத்து** (*kaḻuttu*) is native Dravidian. DEDR 1366 lists Malayalam *kaḻuttu* and Kannada *kattu*.
+**கழுத்து** (*kaḻuttu*) is native Dravidian. DEDR 1366 lists Malayalam *kaḻuttu* and Kannada *kattu*. The entry compares Sanskrit *kaṇṭha*, "neck" (CDIAL 2680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

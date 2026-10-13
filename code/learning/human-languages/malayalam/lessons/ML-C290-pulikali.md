@@ -14,7 +14,8 @@ romanization: "pulikaḷi"
 concept_tag: ML-VASTU290-PULIKALI
 prerequisites: [ML-C290-onakkoti, ML-C290-kathakali]
 sounds: []
-roots: []
+roots: [dravidian-puli-tiger, dravidian-kali-play]
+etymology_hook: "pulikaḷi: native Dravidian, 'tiger play': puli (DEDR 4307) + kaḷi (DEDR 1374)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C290-kathakali]
 <!-- hl-knowledge: introduces=[ML-LEX-C290-VASTU290-03]; assesses=[] -->
 
 **പുലികളി** — *pulikaḷi* — "the tiger dance of Onam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുലികളി** (*pulikaḷi*) is native Dravidian, "tiger play": *puli*, "tiger" (DEDR 4307), and *kaḷi*, "play" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

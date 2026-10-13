@@ -14,7 +14,8 @@ romanization: "kuyil"
 concept_tag: ML-VASTU213-KUYIL
 prerequisites: [ML-C213-pulu, ML-C213-vavval]
 sounds: []
-roots: []
+roots: [dravidian-kuyil-cuckoo]
+etymology_hook: "kuyil: native Dravidian, one word with Tamil kuyil and Kannada kukil (DEDR 1764)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C213-vavval]
 <!-- hl-knowledge: introduces=[ML-LEX-C213-VASTU213-03]; assesses=[] -->
 
 **കുയിൽ** — *kuyil* — "a koel, an Indian cuckoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുയിൽ** (*kuyil*) is native Dravidian, one word with Tamil *kuyil* and Kannada *kukil* (DEDR 1764). DEDR 1764 compares Sanskrit *kokila*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

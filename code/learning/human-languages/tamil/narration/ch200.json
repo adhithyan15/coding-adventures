@@ -4,7 +4,7 @@
   "chapter": 200,
   "title": "To pinch, To bend, To paint, To collect, To suck",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0e969f1830aa474b",
+  "sourceHash": "fnv1a64:3e81992bb23aefdd",
   "lessons": [
     {
       "id": "TA-C200-killu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a770df57db4c0832",
+      "sourceHash": "fnv1a64:4d6629805555403e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "உறிஞ்சு (uṟiñcu) is native Dravidian. DEDR 709 lists Malayalam uṛiñcuka, \"to sip, suck\"."
+              "text": "உறிஞ்சு (uṟiñcu) is native Dravidian. DEDR 709 lists Malayalam uṟiñcuka, \"to sip, suck\"."
             }
           ]
         },

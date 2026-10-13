@@ -14,7 +14,8 @@ romanization: "paricayaṁ"
 concept_tag: ML-CAN143-PARICAYAM
 prerequisites: [ML-C143-sampattu, ML-C143-utamastan]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya]
+etymology_hook: "paricayaṁ ← Sanskrit paricaya 'acquaintance, practice', a tatsama (CDIAL 7807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C143-utamastan]
 <!-- hl-knowledge: introduces=[ML-LEX-C143-CAN143-03]; assesses=[] -->
 
 **പരിചയം** — *paricayaṁ* — "experience, familiarity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിചയം** (*paricayaṁ*) ← Sanskrit *paricaya*, "acquaintance, practice", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7807).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

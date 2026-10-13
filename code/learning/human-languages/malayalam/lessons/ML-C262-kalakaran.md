@@ -14,7 +14,8 @@ romanization: "kalākāran"
 concept_tag: ML-JOLI262-KALAKARAN
 prerequisites: [ML-C262-kurippu, ML-C262-udaharanam]
 sounds: []
-roots: []
+roots: [sanskrit-kala]
+etymology_hook: "kalākāran: Sanskrit kalā 'art' (CDIAL 2927) + kāra 'maker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C262-udaharanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C262-JOLI262-03]; assesses=[] -->
 
 **കലാകാരൻ** — *kalākāran* — "an artist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കലാകാരൻ** (*kalākāran*) is Sanskrit *kalā*, "art" (CDIAL 2927), and *kāra*, "maker", with the masculine ending *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

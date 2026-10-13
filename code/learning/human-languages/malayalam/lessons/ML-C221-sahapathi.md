@@ -14,7 +14,8 @@ romanization: "sahapāṭhi"
 concept_tag: ML-JOLI221-SAHAPATHI
 prerequisites: [ML-C221-vakyam, ML-C221-phisu]
 sounds: []
-roots: []
+roots: [sanskrit-saha, sanskrit-patha-recitation]
+etymology_hook: "sahapāṭhi ← Sanskrit sahapāṭhin 'fellow student': saha 'with' + pāṭha 'study' (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C221-phisu]
 <!-- hl-knowledge: introduces=[ML-LEX-C221-JOLI221-04]; assesses=[] -->
 
 **സഹപാഠി** — *sahapāṭhi* — "a classmate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സഹപാഠി** (*sahapāṭhi*) ← Sanskrit *sahapāṭhin*, "fellow student": *saha*, "with", and *pāṭha*, "recitation, study" (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

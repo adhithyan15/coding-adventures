@@ -11,7 +11,8 @@ romanization: "teṟṟŭ"
 concept_tag: ML-RESP-WRONG
 prerequisites: [ML-C123-maybe, ML-C123-other]
 sounds: []
-roots: []
+roots: [dravidian-terru-slip]
+etymology_hook: "teṟṟŭ: native Dravidian, one word with Tamil teṟṟu (DEDR 3445)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C123-other]
 
 **തെറ്റ്** (*teṟṟŭ*) — "wrong", and also "a mistake". It is the honest partner of
 **ശരി**, "right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെറ്റ്** (*teṟṟŭ*) is native Dravidian, one word with Tamil *teṟṟu* (DEDR 3445). Its first sense is a slip or stumble.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

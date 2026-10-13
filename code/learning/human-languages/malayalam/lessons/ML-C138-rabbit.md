@@ -11,7 +11,8 @@ romanization: "muyal"
 concept_tag: ML-ANIMAL-RABBIT
 prerequisites: [ML-C138-monkey, ML-C138-tiger]
 sounds: []
-roots: []
+roots: [dravidian-muyal-hare]
+etymology_hook: "muyal: native Dravidian, one word with Tamil muyal and Kannada mola (DEDR 4968)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C138-tiger]
 <!-- hl-knowledge: introduces=[ML-LEX-C138-ANIMALS-05]; assesses=[] -->
 
 **മുയൽ** (*muyal*) — "a rabbit" or "a hare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുയൽ** (*muyal*) is native Dravidian, one word with Tamil *muyal* and Kannada *mola* (DEDR 4968).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

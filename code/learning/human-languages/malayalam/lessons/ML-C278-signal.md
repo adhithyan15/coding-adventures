@@ -14,7 +14,8 @@ romanization: "signal"
 concept_tag: ML-STHALAM278-SIGNAL
 prerequisites: [ML-C277-itinite, ML-C278-valavu]
 sounds: []
-roots: []
+roots: [english-signal]
+etymology_hook: "signal ← English signal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C278-valavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C278-STHALAM278-02]; assesses=[] -->
 
 **സിഗ്നൽ** — *signal* — "a traffic signal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സിഗ്നൽ** (*signal*) ← English *signal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

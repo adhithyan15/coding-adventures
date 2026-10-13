@@ -11,7 +11,8 @@ romanization: "viśvāsaṁ"
 concept_tag: ML-NOUN-TRUST
 prerequisites: [ML-C65-manners, ML-C63-fever]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasa]
+etymology_hook: "viśvāsaṁ ← Sanskrit viśvāsa 'trust, confidence', a tatsama (CDIAL 11966)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *viśvāsa*, from a root about breathing. Trust is drawn there as breat
 The same root sits behind the Sanskrit word for a sigh, which is the same picture again, and the metaphor survives whole into everyday Malayalam.
 
 It also carries belief in the religious sense, so the everyday and the weightier senses share a word and the situation says which is meant.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിശ്വാസം** (*viśvāsaṁ*) ← Sanskrit *viśvāsa*, "trust, confidence", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

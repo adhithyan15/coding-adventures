@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2644d7047cfe6616",
+  "sourceHash": "fnv1a64:4e0dd05ac10aa643",
   "lessons": [
     {
       "id": "TA-C60-needle",
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4971e390f1a09050",
+      "sourceHash": "fnv1a64:29b827c7dab18c60",
       "notice": null,
       "blocks": [
         {
@@ -367,7 +367,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குடை (kuṭai) is native Dravidian. DEDR 1663 lists Malayalam kuṭa, Kannada koḍe and Telugu goḍugu."
+              "text": "குடை (kuṭai) is native Dravidian. DEDR 1663 lists Malayalam kuṭa, Kannada koḍe and Telugu goḍugu. The entry compares Sanskrit (lexicons) utkūṭa, \"umbrella\"."
             }
           ]
         },

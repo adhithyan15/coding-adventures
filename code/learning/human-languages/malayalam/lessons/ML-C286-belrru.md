@@ -14,7 +14,8 @@ romanization: "belṟṟŭ"
 concept_tag: ML-VASTU286-BELRRU
 prerequisites: [ML-C286-soks, ML-C286-sus]
 sounds: []
-roots: []
+roots: [english-belt]
+etymology_hook: "belṟṟŭ ← English belt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C286-sus]
 <!-- hl-knowledge: introduces=[ML-LEX-C286-VASTU286-03]; assesses=[] -->
 
 **ബെൽറ്റ്** — *belṟṟŭ* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബെൽറ്റ്** (*belṟṟŭ*) ← English *belt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

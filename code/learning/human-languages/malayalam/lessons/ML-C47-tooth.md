@@ -11,7 +11,8 @@ romanization: "pallŭ"
 concept_tag: ML-NOUN-TOOTH
 prerequisites: [ML-C47-leg, ML-C45-grandfather]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth]
+etymology_hook: "pallŭ: native Dravidian, one word with Tamil pal and Kannada pal (DEDR 3986)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Proto-Dravidian **\*pal**, another word the family barely touched: Tamil பல�
 Kannada is the odd one again, and for the reason already met with the fruit — an opening *p* that became *h*. Set ಹಲ್ಲು beside പല്ല് and the only real difference is that first letter. Telugu did something else altogether, turning the *l* into an *n*.
 
 Malayalam doubles the *l* and then lets the word go with the half-vowel, the same ending as the salt-word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പല്ല്** (*pallŭ*) is native Dravidian, one word with Tamil *pal*, Kannada *pal* and Telugu *palu* (DEDR 3986).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

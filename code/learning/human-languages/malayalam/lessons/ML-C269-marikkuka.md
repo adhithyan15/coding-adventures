@@ -14,7 +14,8 @@ romanization: "marikkuka"
 concept_tag: ML-VERB-MARIKKUKA
 prerequisites: [ML-C269-alankarikkuka, ML-C269-janikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-marana]
+etymology_hook: "marikkuka ← Sanskrit maraṇa 'dying' (CDIAL 9869) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C269-janikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C269-KRIYA269-05]; assesses=[] -->
 
 **മരിക്കുക** — *marikkuka* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരിക്കുക** (*marikkuka*) is built on Sanskrit *maraṇa*, "dying" (CDIAL 9869), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

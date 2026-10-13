@@ -11,7 +11,8 @@ romanization: "iṁglīṣ"
 concept_tag: ML-YOU-ENGLISH
 prerequisites: [ML-C126-wedding, ML-C126-language]
 sounds: []
-roots: []
+roots: [english-english]
+etymology_hook: "iṁglīṣ ← English English, the language named for the Angles"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C126-language]
 
 **ഇംഗ്ലീഷ്** (*iṁglīṣ*) — "English". **എനിക്ക് ഇംഗ്ലീഷ് അറിയാം** — "I know English", built
 like **എനിക്ക് മലയാളം അറിയാം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇംഗ്ലീഷ്** (*iṁglīṣ*) ← English *English*, the language named for the Angles, one of the peoples who brought it to Britain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

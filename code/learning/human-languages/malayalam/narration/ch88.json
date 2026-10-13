@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Counting Past Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c29937df711513e2",
+  "sourceHash": "fnv1a64:7044eb4ed2310003",
   "lessons": [
     {
       "id": "ML-C88-tens",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82638a2dcb99eb56",
+      "sourceHash": "fnv1a64:ae84e8fb7a76496d",
       "notice": null,
       "blocks": [
         {
@@ -82,6 +82,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) are native Dravidian, each a small number joined to -patŭ, the combining form of \"ten\": DEDR 3918 lists Tamil muppatu, \"thirty\", and nāṟpatu, \"forty\", built the same way, and DEDR 784 lists Tamil eṇ-patu, \"eighty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: the digits are worn, some more than others",
           "segments": [
@@ -113,7 +124,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -162,7 +173,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -193,7 +204,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a65cf50941cb3419",
+      "sourceHash": "fnv1a64:d3196771868d7549",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -271,6 +282,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൊണ്ണൂറ് നൂറ് (toṇṇūṟŭ nūṟŭ): nūṟŭ, \"a hundred\", is native Dravidian, one word with Tamil nūṟu, Kannada nūṟu and Telugu nūṟu (DEDR 3729). toṇṇūṟŭ, \"ninety\", ends in the same hundred-word; its first part is an old element whose meaning is disputed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -319,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

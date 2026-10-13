@@ -14,7 +14,8 @@ romanization: "nāṟunna"
 concept_tag: ML-GUNAM321-NARUNNA
 prerequisites: [ML-C321-pulliyulla, ML-C321-sugandhamulla]
 sounds: []
-roots: []
+roots: [dravidian-naru-smell]
+etymology_hook: "nāṟunna: native Dravidian, 'stinking', from the verb to smell; Tamil ñāṟu (DEDR 2918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C321-sugandhamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C321-GUNAM321-03]; assesses=[] -->
 
 **നാറുന്ന** — *nāṟunna* — "smelly, stinking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാറുന്ന** (*nāṟunna*) is native Dravidian, a form of the verb "to give off a smell, stink"; DEDR 2918 lists the root with Tamil *ñāṟu* and Kannada *nāṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

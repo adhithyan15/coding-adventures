@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Doing, and Undoing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:51c958b309553bf0",
+  "sourceHash": "fnv1a64:d16fca3896de3d33",
   "lessons": [
     {
       "id": "TA-C65-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a04925de8e2928e",
+      "sourceHash": "fnv1a64:e9032f7747961560",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குடி (kuḍi) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi."
+              "text": "குடி (kuḍi) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi, and compares Sanskrit kuṭī, \"liquor\"."
             }
           ]
         },

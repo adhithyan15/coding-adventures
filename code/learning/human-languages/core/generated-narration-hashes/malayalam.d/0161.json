@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 161,
-  "sourceHash": "fnv1a64:5130a804d3bbabf2",
+  "sourceHash": "fnv1a64:b94393175b9c643c",
   "lessonIds": [
     "ML-C161-mannu",
     "ML-C161-tennu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch161.txt",
   "json": "malayalam/narration/ch161.json",
-  "textHash": "fnv1a64:0515f152c14b1e7d",
-  "jsonHash": "fnv1a64:1878b2b013682108",
+  "textHash": "fnv1a64:111e61c612a59626",
+  "jsonHash": "fnv1a64:03f45ac2c0124f2b",
   "findings": []
 }

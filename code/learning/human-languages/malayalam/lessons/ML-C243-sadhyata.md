@@ -14,7 +14,8 @@ romanization: "sādhyata"
 concept_tag: ML-KARANAM243-SADHYATA
 prerequisites: [ML-C243-kurram, ML-C243-uttaravadittam]
 sounds: []
-roots: []
+roots: [sanskrit-sadhya]
+etymology_hook: "sādhyata ← Sanskrit sādhyatā 'feasibility', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C243-uttaravadittam]
 <!-- hl-knowledge: introduces=[ML-LEX-C243-KARANAM243-04]; assesses=[] -->
 
 **സാധ്യത** — *sādhyata* — "a possibility, a likelihood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാധ്യത** (*sādhyata*) ← Sanskrit *sādhyatā*, "feasibility", taken over whole as a tatsama. It is built on *sādhya*, "to be accomplished".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

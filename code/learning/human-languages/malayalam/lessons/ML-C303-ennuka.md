@@ -14,7 +14,8 @@ romanization: "eṇṇuka"
 concept_tag: ML-VERB-ENNUKA
 prerequisites: [ML-C302-araykkuka, ML-C303-tukkuka]
 sounds: []
-roots: []
+roots: [dravidian-en-number]
+etymology_hook: "eṇṇuka: native Dravidian, one word with Tamil eṇ and Telugu ennu (DEDR 793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C303-tukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C303-KRIYA303-02]; assesses=[] -->
 
 **എണ്ണുക** — *eṇṇuka* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എണ്ണുക** (*eṇṇuka*) is native Dravidian, one word with Tamil *eṇ* and Telugu *ennu* (DEDR 793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

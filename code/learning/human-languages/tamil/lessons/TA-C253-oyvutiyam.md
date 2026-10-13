@@ -15,7 +15,7 @@ concept_tag: TA-VELAI253-OYVUTIYAM
 prerequisites: [TA-C253-atikari, TA-C253-nitipati]
 sounds: []
 roots: [dravidian-oy-cease, dravidian-utavu-help]
-etymology_hook: "ஓய்வூதியம் — a coinage: native ōyvu 'rest' (DEDR 1057) + ūtiyam 'pay, benefit' (DEDR 609)"
+etymology_hook: "ஓய்வூதியம் — a coinage: native ōyvu 'rest' (DEDR 1057) + ūtiyam 'pay' (DEDR 609, queried)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C253-nitipati]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ஓய்வூதியம்** (*ōyvūtiyam*) is a modern coinage: native *ōyvu*, "rest" (DEDR 1057), and *ūtiyam*, "pay, benefit", which DEDR 609 lists, with a query, beside a verb meaning "to help": "rest pay".
+**ஓய்வூதியம்** (*ōyvūtiyam*) is a modern coinage: native *ōyvu*, "rest" (DEDR 1057), and *ūtiyam*, "pay", which DEDR 609 lists, with a query, as "profit, benefit", beside a verb meaning "to help": "rest pay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

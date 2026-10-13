@@ -14,7 +14,8 @@ romanization: "pārṭṭi"
 concept_tag: ML-VASTU211-PARTTI
 prerequisites: [ML-C211-vadhu, ML-C211-aparicitan]
 sounds: []
-roots: []
+roots: [english-party]
+etymology_hook: "pārṭṭi ← English party"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C211-aparicitan]
 <!-- hl-knowledge: introduces=[ML-LEX-C211-VASTU211-05]; assesses=[] -->
 
 **പാർട്ടി** — *pārṭṭi* — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാർട്ടി** (*pārṭṭi*) ← English *party*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

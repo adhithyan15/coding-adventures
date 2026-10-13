@@ -14,7 +14,8 @@ romanization: "vārtta"
 concept_tag: ML-VASTU250-VARTTA
 prerequisites: [ML-C250-nampar, ML-C250-appu]
 sounds: []
-roots: []
+roots: [sanskrit-varta]
+etymology_hook: "vārtta ← Sanskrit vārttā 'news, tidings' (CDIAL 11564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C250-appu]
 <!-- hl-knowledge: introduces=[ML-LEX-C250-VASTU250-03]; assesses=[] -->
 
 **വാർത്ത** — *vārtta* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാർത്ത** (*vārtta*) ← Sanskrit *vārttā*, "news, tidings" (CDIAL 11564), a tatsama with the final long vowel shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

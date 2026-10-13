@@ -14,7 +14,8 @@ romanization: "maṇveṭṭi"
 concept_tag: ML-VASTU328-MANVETTI
 prerequisites: [ML-C328-karttan, ML-C328-kotali]
 sounds: []
-roots: []
+roots: [dravidian-man-earth, dravidian-vettu-cut]
+etymology_hook: "maṇveṭṭi: native Dravidian, 'earth cutter': maṇ (DEDR 4666) + veṭṭi (DEDR 5478)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C328-kotali]
 <!-- hl-knowledge: introduces=[ML-LEX-C328-VASTU328-05]; assesses=[] -->
 
 **മൺവെട്ടി** — *maṇveṭṭi* — "a spade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൺവെട്ടി** (*maṇveṭṭi*) is native Dravidian, "the earth cutter": *maṇ*, "earth" (DEDR 4666), and *veṭṭi*, from the verb "to cut, dig" (DEDR 5478, with Tamil *veṭṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

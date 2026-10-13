@@ -47,7 +47,7 @@ reviews_of: [TA-C148-kurukiya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**காய்ந்த** (*kāynta*) is native Dravidian. DEDR 1458 lists Malayalam *kāyuka*, "to grow dry". It comes from *kāy*, "to grow hot, to dry up".
+**காய்ந்த** (*kāynta*) is native Dravidian. DEDR 1458 lists Malayalam *kāyuka*, "to grow dry". It comes from *kāy*, "to grow hot, to dry up". The entry compares Sanskrit (lexicons) *kāhala*, "dry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

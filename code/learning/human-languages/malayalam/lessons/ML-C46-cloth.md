@@ -11,7 +11,8 @@ romanization: "tuṇi"
 concept_tag: ML-NOUN-CLOTH
 prerequisites: [ML-C46-fruit, ML-C43-give]
 sounds: []
-roots: []
+roots: [dravidian-tuni-cloth]
+etymology_hook: "tuṇi: native Dravidian, one word with Tamil tuṇi and Kodagu tuṇi (DEDR 3307)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C46-fruit]
 Malayalam holds a dressier word for the same stuff — വസ്ത്രം (*vastraṁ*), out of Sanskrit — and it turns up on a wedding invitation rather than over a washing line. The native word does the daily work; the borrowed one does the ceremony.
 
 That division of labour is worth watching for, because it repeats through this book: two words, one meaning, and the register telling them apart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുണി** (*tuṇi*) is native Dravidian, one word with Tamil *tuṇi* and Kodagu *tuṇi* (DEDR 3307).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

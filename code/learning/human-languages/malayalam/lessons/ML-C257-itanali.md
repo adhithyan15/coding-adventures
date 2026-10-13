@@ -14,7 +14,8 @@ romanization: "iṭanāḻi"
 concept_tag: ML-VASTU257-ITANALI
 prerequisites: [ML-C257-otu, ML-C257-tunu]
 sounds: []
-roots: []
+roots: [dravidian-idai-interval]
+etymology_hook: "iṭanāḻi: native Dravidian, iṭa 'between' (DEDR 448) + nāḻi 'a tube, a passage'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C257-tunu]
 <!-- hl-knowledge: introduces=[ML-LEX-C257-VASTU257-03]; assesses=[] -->
 
 **ഇടനാഴി** — *iṭanāḻi* — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടനാഴി** (*iṭanāḻi*) is native Dravidian: *iṭa*, "the place between" (DEDR 448), and *nāḻi*, "a tube, a passage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

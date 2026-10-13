@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Elders and In-Laws",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e809fe973aa033d",
+  "sourceHash": "fnv1a64:0348859b46af32d2",
   "lessons": [
     {
       "id": "TA-C102-fatherselderbrother",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e7cd14daf60d1e7",
+      "sourceHash": "fnv1a64:f34db02a8c789147",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பெரியம்மா (periyammā) is native: periya, \"big\" (DEDR 4411), and ammā, \"mother\" (DEDR 183): \"the big mother\"."
+              "text": "பெரியம்மா (periyammā) is native: periya, \"big\" (DEDR 4411), and ammā, \"mother\" (DEDR 183, which compares Sanskrit ambā, \"mother\"): \"the big mother\"."
             }
           ]
         },
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:626d49326631a97c",
+      "sourceHash": "fnv1a64:f791d7ed3bf52cca",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மாமியார் (māmiyār) is native Dravidian (DEDR 4813). The entry lists māmi, \"mother-in-law\", beside māmā, \"uncle\"; -yār is the respectful ending."
+              "text": "மாமியார் (māmiyār) is native Dravidian (DEDR 4813). The entry lists māmi, \"mother-in-law\", beside māmā, \"uncle\", which it compares with Sanskrit māma; -yār is the respectful ending."
             }
           ]
         },

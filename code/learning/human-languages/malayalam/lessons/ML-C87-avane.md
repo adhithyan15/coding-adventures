@@ -11,7 +11,8 @@ romanization: "avane"
 concept_tag: ML-OBJECT-PRONOUN
 prerequisites: [ML-C87-animacy, ML-C71-avan-aval]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "avane: native Dravidian, avan 'he' (DEDR 1) + the object ending -e"
 duration:
   max_seconds: 250
 requires:
@@ -50,6 +51,11 @@ it changes in the same way — the standalone **ൻ** opening back into a plain
 | **അവൻ** → **അവനെ** | him |
 
 **ഞാൻ അവനെ കാണുന്നു** — *ñān avane kāṇunnu* — I see him.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവനെ** (*avane*) is native Dravidian: *avan*, "he" (DEDR 1, with Tamil *avaṉ*), with the object ending *-e*.
 
 ## Why it's said this way: a full word, not a shrunken one
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C87-OBJECT-PRONOUN-01, ML-GRAMMAR-C87-ANIMACY-01] -->

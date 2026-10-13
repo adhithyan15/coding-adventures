@@ -14,7 +14,8 @@ romanization: "toḻilāḷi"
 concept_tag: ML-JOLI298-TOLILALI
 prerequisites: [ML-C298-sambalam, ML-C298-kuli]
 sounds: []
-roots: []
+roots: [dravidian-tozhil-work, dravidian-al-male]
+etymology_hook: "toḻilāḷi: native Dravidian, toḻil 'work' (DEDR 3524) + a word for 'person' (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C298-kuli]
 <!-- hl-knowledge: introduces=[ML-LEX-C298-JOLI298-05]; assesses=[] -->
 
 **തൊഴിലാളി** — *toḻilāḷi* — "a worker, a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊഴിലാളി** (*toḻilāḷi*) is native Dravidian: *toḻil*, "work, occupation" (DEDR 3524, with Tamil *toḻil*), and the word for "person" (DEDR 399, with Tamil *āḷ*), with the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -54,7 +54,7 @@ after it to lean on.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கட்டில்** (*kaṭṭil*) is native Dravidian. DEDR 1145 lists Malayalam *kaṭṭil* and Telugu *kaṭli*, "litter".
+**கட்டில்** (*kaṭṭil*) is native Dravidian. DEDR 1145 lists Malayalam *kaṭṭil* and Telugu *kaṭli*, "litter". The entry compares Sanskrit *khaṭvā*, "cot" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

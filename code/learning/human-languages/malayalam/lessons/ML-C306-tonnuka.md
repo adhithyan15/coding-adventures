@@ -14,7 +14,8 @@ romanization: "tōnnuka"
 concept_tag: ML-VERB-TONNUKA
 prerequisites: [ML-C306-raddakkuka, ML-C306-marrivaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-tonru-appear]
+etymology_hook: "tōnnuka: native Dravidian, one word with Tamil tōṉṟu and Kannada tōṟ (DEDR 3566)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C306-marrivaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C306-KRIYA306-05]; assesses=[] -->
 
 **തോന്നുക** — *tōnnuka* — "to feel, to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോന്നുക** (*tōnnuka*) is native Dravidian, one word with Tamil *tōṉṟu*, Kannada *tōṟ* and Telugu *tōcu* (DEDR 3566). Its first sense is "to appear, to come into the mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a7e6da5ff3c5600",
+  "sourceHash": "fnv1a64:853e3ecc8b7076b3",
   "lessons": [
     {
       "id": "TA-C47-true",
@@ -461,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0b5e162f576506d",
+      "sourceHash": "fnv1a64:d82269bcf1b1ec67",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஒருவேளை (oruvēḷai) is \"one time, at one moment\": oru, \"one\", native (DEDR 990), and vēḷai, \"time\", a loan from Sanskrit velā, \"limit, time\" (CDIAL 12115)."
+              "text": "ஒருவேளை (oruvēḷai) is \"one time, at one moment\": oru, \"one\", native (DEDR 990), and vēḷai, \"time\", a loan from Sanskrit velā, \"limit, time\" (CDIAL 12115). CDIAL adds that velā itself probably came from Dravidian."
             }
           ]
         },

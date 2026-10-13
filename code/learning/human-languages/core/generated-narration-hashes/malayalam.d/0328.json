@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 328,
-  "sourceHash": "fnv1a64:e2d49d36259377f3",
+  "sourceHash": "fnv1a64:4124497beaeb8837",
   "lessonIds": [
     "ML-C328-bencu",
     "ML-C328-selphu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch328.txt",
   "json": "malayalam/narration/ch328.json",
-  "textHash": "fnv1a64:c60809348a3addf5",
-  "jsonHash": "fnv1a64:39b5bc8a57bbdd79",
+  "textHash": "fnv1a64:d2ed30bbe5fc8fdd",
+  "jsonHash": "fnv1a64:c1a3a63da19ee61b",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pañcāyattŭ"
 concept_tag: ML-STHALAM316-PANCAYATTU
 prerequisites: [ML-C316-prakrti, ML-C316-atirtti]
 sounds: []
-roots: []
+roots: [sanskrit-panca]
+etymology_hook: "pañcāyattŭ ← Hindustani pañcāyat 'council', from Sanskrit pañca 'five'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C316-atirtti]
 <!-- hl-knowledge: introduces=[ML-LEX-C316-STHALAM316-04]; assesses=[] -->
 
 **പഞ്ചായത്ത്** — *pañcāyattŭ* — "a village council".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഞ്ചായത്ത്** (*pañcāyattŭ*) ← Hindustani *pañcāyat*, a village council, originally of five elders, from Sanskrit *pañca*, "five" (CDIAL 7655).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "maṇal"
 concept_tag: ML-NOUN-SAND
 prerequisites: [ML-C59-wind, ML-C57-back]
 sounds: []
-roots: []
+roots: [dravidian-man-earth]
+etymology_hook: "maṇal: native Dravidian, one word with Tamil maṇal (DEDR 4666)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *maṇal*. The ണ is retroflex, made with the tongue 
 Kerala's sand is a river business as much as a beach one. Sand is dredged from the beds of the rivers that this book has already given you a word for, and the trade is argued about constantly.
 
 The retroflex *ṇ* is what separates this from a different word altogether, so the tongue position is carrying meaning rather than decorating it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മണൽ** (*maṇal*) is native Dravidian, one word with Tamil *maṇal* (DEDR 4666). It shares its root with the word for "earth, soil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

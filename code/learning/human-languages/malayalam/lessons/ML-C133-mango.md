@@ -11,7 +11,8 @@ romanization: "māṅṅa"
 concept_tag: ML-FRUIT-MANGO
 prerequisites: [ML-C132-puttu, ML-C132-curry]
 sounds: []
-roots: []
+roots: [dravidian-ma-mango]
+etymology_hook: "māṅṅa: native Dravidian, mā 'mango tree' + 'fruit'; Tamil mā (DEDR 4782)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C132-curry]
 <!-- hl-knowledge: introduces=[ML-LEX-C133-SWEETSOUR-01]; assesses=[] -->
 
 **മാങ്ങ** (*māṅṅa*) — "a mango", a **പഴം** from the tree in the **മുറ്റം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാങ്ങ** (*māṅṅa*) is native Dravidian, the mango tree's name *mā* with the word for "fruit" fused on; DEDR 4782 lists Malayalam *māṅṅa* itself, beside Tamil *mā*, Kannada *mā* and Telugu *māvi*. DEDR 4782 compares Sanskrit *mākanda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vandanaṁ"
 concept_tag: ML-NOUN-SALUTATION
 prerequisites: [ML-C51-blessing, ML-C49-just-so]
 sounds: []
-roots: []
+roots: [sanskrit-vandana]
+etymology_hook: "vandanaṁ ← Sanskrit vandana 'praising, reverence', a tatsama (CDIAL 11271)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Off a Sanskrit root about praising and saluting. വന്ദനം is the act o
 The doorway word this book taught first was നമസ്കാരം, and its own sense is a making of a bow. So Malayalam holds two Sanskrit nouns for what is nearly one physical act: the bend of the body, and the honour paid by it.
 
 Kannada has ವಂದನೆ (*vandane*), and its own everyday greeting is built on that first word as well. The sisters furnished their doorways from the same shop.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വന്ദനം** (*vandanaṁ*) ← Sanskrit *vandana*, "praising, reverence", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11271).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

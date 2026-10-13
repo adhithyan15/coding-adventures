@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for vegetables, then the Malayalam for an 
 You'll want to know: ദോശ.
 ദോശ (dōśa) — a thin rice pancake, often eaten at പ്രാതൽ.
 
+The word, taken apart.
+ദോശ (dōśa) is native Dravidian, one word with Tamil tōcai, Kannada dōse and Telugu dōse (DEDR 3542). DEDR 3542 compares Sanskrit dhosaka.
+
 What you've built.
 A breakfast favourite.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an onion, then the Malayalam for dosa.
 
 You'll want to know: സാമ്പാർ.
 സാമ്പാർ (sāmpār) — a lentil and പച്ചക്കറി stew, poured over rice or eaten with ദോശ (dōśa).
+
+The word, taken apart.
+സാമ്പാർ (sāmpār) is of uncertain origin. Stories that tie it to a royal kitchen are told, but no dictionary source settles where the word comes from.
 
 What you've built.
 What goes with dosa.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for dosa, then the Malayalam for sambar.
 You'll want to know: അപ്പം.
 അപ്പം (appaṁ) — a soft rice pancake with lacy edges, made with തേങ്ങ.
 
+The word, taken apart.
+അപ്പം (appaṁ) is native Dravidian, one word with Tamil appam, Kannada appa and Telugu appamu (DEDR 155). DEDR 155 compares Sanskrit apūpá.
+
 What you've built.
 Another rice pancake.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for sambar, then the Malayalam for appam.
 You'll want to know: പുട്ട്.
 പുട്ട് (puṭṭŭ) — steamed rice and തേങ്ങ in a tube, a breakfast of Kerala.
 
+The word, taken apart.
+പുട്ട് (puṭṭŭ) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
+
 What you've built.
 Breakfast in a tube.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for appam, then the Malayalam for puttu.
 
 You'll want to know: കറി.
 കറി (kaṟi) — "a curry", any dish that goes on rice. മീൻ കറി — "fish curry".
+
+The word, taken apart.
+കറി (kaṟi) is native Dravidian, one word with Tamil kaṟi and Kannada kaṟi (DEDR 1391). English curry comes from this South Indian word.
 
 What you've built.
 The word for what goes on rice.

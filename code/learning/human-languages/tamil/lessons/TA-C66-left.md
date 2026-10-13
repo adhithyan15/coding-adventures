@@ -48,7 +48,7 @@ Both hands, in two words you can now hold up and check against each other.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**இடது** (*iḍadu*) is native Dravidian. DEDR 449 lists Malayalam *iṭam* and Kannada *eḍa*. The entry gives *iṭam*, "left side".
+**இடது** (*iḍadu*) is native Dravidian. DEDR 449 lists Malayalam *iṭam* and Kannada *eḍa*. The entry gives *iṭam*, "left side", and compares Indo-Aryan *\*ḍāva*, "left" (CDIAL 5539), which CDIAL counts as non-Aryan.
 
 ## Why it's said this way: the ட you have to place
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06] -->

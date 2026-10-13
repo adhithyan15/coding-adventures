@@ -14,7 +14,8 @@ romanization: "onnukil"
 concept_tag: ML-KARANAM242-ONNUKIL
 prerequisites: [ML-C241-enkil, ML-C242-kurannatu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "onnukil: native Dravidian, onnŭ 'one' (DEDR 990) + the conditional -kil 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C242-kurannatu]
 <!-- hl-knowledge: introduces=[ML-LEX-C242-KARANAM242-02]; assesses=[] -->
 
 **ഒന്നുകിൽ** — *onnukil* — "either (… or)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒന്നുകിൽ** (*onnukil*) is native Dravidian: *onnŭ*, "one" (DEDR 990), with the conditional *-kil*, "if": "if one (thing)…".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

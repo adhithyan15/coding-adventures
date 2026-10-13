@@ -14,7 +14,8 @@ romanization: "bhāramuḷḷa"
 concept_tag: ML-QUAL166-BHARAMULLA
 prerequisites: [ML-C165-erivulla, ML-C165-puliyulla]
 sounds: []
-roots: []
+roots: [sanskrit-bhara, dravidian-ul-be]
+etymology_hook: "bhāramuḷḷa: Sanskrit bhāra 'burden, weight' (CDIAL 9459) + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C165-puliyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C166-QUAL166-01]; assesses=[] -->
 
 **ഭാരമുള്ള** — *bhāramuḷḷa* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭാരമുള്ള** (*bhāramuḷḷa*) joins Sanskrit *bhāra*, "burden, weight" (CDIAL 9459), to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

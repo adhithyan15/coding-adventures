@@ -68,7 +68,7 @@ something else entirely and drinks with త్రాగు (*trāgu*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குடி** (*kuḍi*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*.
+**குடி** (*kuḍi*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*, and compares Sanskrit *kuṭī*, "liquor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

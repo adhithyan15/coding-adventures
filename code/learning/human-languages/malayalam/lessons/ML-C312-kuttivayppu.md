@@ -14,7 +14,8 @@ romanization: "kuttivayppŭ"
 concept_tag: ML-AROGYAM312-KUTTIVAYPPU
 prerequisites: [ML-C312-rogi, ML-C312-nalsu]
 sounds: []
-roots: []
+roots: [dravidian-kuttu-pierce, dravidian-vai-place]
+etymology_hook: "kuttivayppŭ: native Dravidian, 'pierce and put in': kutti (DEDR 1719) + vayppu (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C312-nalsu]
 <!-- hl-knowledge: introduces=[ML-LEX-C312-AROGYAM312-04]; assesses=[] -->
 
 **കുത്തിവയ്പ്പ്** — *kuttivayppŭ* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുത്തിവയ്പ്പ്** (*kuttivayppŭ*) is native Dravidian, "a piercing-in": *kutti*, from the verb "to pierce, prick" (DEDR 1719, with Tamil *kuttu*), and *vayppu*, "a putting", from the verb "to place" (DEDR 5549).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

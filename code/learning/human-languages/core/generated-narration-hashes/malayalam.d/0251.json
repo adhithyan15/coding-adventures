@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 251,
-  "sourceHash": "fnv1a64:ed35a31545742394",
+  "sourceHash": "fnv1a64:f53868fb82964de8",
   "lessonIds": [
     "ML-C251-kampyuttar",
     "ML-C251-phayal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch251.txt",
   "json": "malayalam/narration/ch251.json",
-  "textHash": "fnv1a64:1393b94a6a4e8a77",
-  "jsonHash": "fnv1a64:4503bcae080bb26b",
+  "textHash": "fnv1a64:835062ab282bda2a",
+  "jsonHash": "fnv1a64:20778b6ad5fb63d6",
   "findings": []
 }

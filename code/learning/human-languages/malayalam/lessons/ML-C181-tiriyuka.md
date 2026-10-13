@@ -14,7 +14,8 @@ romanization: "tiriyuka"
 concept_tag: ML-VERB-TIRIYUKA
 prerequisites: [ML-C180-rasitu, ML-C181-kitakkuka]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn]
+etymology_hook: "tiriyuka: native Dravidian, one word with Tamil tiri and Kannada tiri (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C181-kitakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C181-KRIYA181-02]; assesses=[] -->
 
 **തിരിയുക** — *tiriyuka* — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരിയുക** (*tiriyuka*) is native Dravidian, one word with Tamil *tiri*, Kannada *tiri* and Telugu *tiri* (DEDR 3246).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

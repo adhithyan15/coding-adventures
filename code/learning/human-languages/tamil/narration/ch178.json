@@ -4,7 +4,7 @@
   "chapter": 178,
   "title": "Tasty, Cheap, Expensive, Free of charge, Ripe",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b1c9754596e6b9d1",
+  "sourceHash": "fnv1a64:fe23eb2c934a5c2b",
   "lessons": [
     {
       "id": "TA-C178-cuvaiyana",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62a995fda5611fe3",
+      "sourceHash": "fnv1a64:912607f66bef80a7",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பழுத்த (paḻutta) is native Dravidian. DEDR 4004 lists Malayalam paḻukka, \"to grow ripe\". It is paḻu, \"to ripen\", in the form \"that has ripened\"."
+              "text": "பழுத்த (paḻutta) is native Dravidian. DEDR 4004 lists Malayalam paḻukka, \"to grow ripe\". It is paḻu, \"to ripen\", in the form \"that has ripened\". The entry compares Sanskrit phala, \"fruit\" (CDIAL 9051)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 144,
-  "sourceHash": "fnv1a64:adfcecdc5d385d3b",
+  "sourceHash": "fnv1a64:db08e8d84975a7dd",
   "lessonIds": [
     "ML-C144-atukontu",
     "ML-C144-uddesyam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch144.txt",
   "json": "malayalam/narration/ch144.json",
-  "textHash": "fnv1a64:4cab4043069fc1b6",
-  "jsonHash": "fnv1a64:ab92bff96bed499f",
+  "textHash": "fnv1a64:990c28678e12a261",
+  "jsonHash": "fnv1a64:dcb876b42e776fe8",
   "findings": []
 }

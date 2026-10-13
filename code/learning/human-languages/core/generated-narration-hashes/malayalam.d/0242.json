@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 242,
-  "sourceHash": "fnv1a64:2ad00150eedb6ee1",
+  "sourceHash": "fnv1a64:9da15cd9d6bcc4c1",
   "lessonIds": [
     "ML-C242-kurannatu",
     "ML-C242-onnukil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch242.txt",
   "json": "malayalam/narration/ch242.json",
-  "textHash": "fnv1a64:53f3aa92caf54a54",
-  "jsonHash": "fnv1a64:304049eb7f71fc55",
+  "textHash": "fnv1a64:52c0a7b667d825e2",
+  "jsonHash": "fnv1a64:1877eddc0f4c9c10",
   "findings": []
 }

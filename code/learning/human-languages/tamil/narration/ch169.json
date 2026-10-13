@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Ankle, Waist, Throat, Heart, Blood",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8544382fa2bc9f3e",
+  "sourceHash": "fnv1a64:f8aa7a2dc68a9539",
   "lessons": [
     {
       "id": "TA-C169-kanukkal",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec505a3dfe346597",
+      "sourceHash": "fnv1a64:ded8bc537ce1d7f3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இதயம் (itayam) is a loan from Sanskrit hṛdaya, \"heart\" (CDIAL 14152). Tamil dropped the h and the ṛ."
+              "text": "இதயம் (itayam) is a loan from Sanskrit hṛdaya, \"heart\" (CDIAL 14152). Tamil dropped the h, and ṛ became i."
             }
           ]
         },

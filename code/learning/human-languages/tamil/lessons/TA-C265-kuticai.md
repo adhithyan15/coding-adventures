@@ -47,7 +47,7 @@ reviews_of: [TA-C265-mavattam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குடிசை** (*kuṭicai*) is native Dravidian. DEDR 1655 lists Malayalam *kuṭi*, "house, hut" and Telugu *guḍise*. It is built on *kuṭi*, "dwelling".
+**குடிசை** (*kuṭicai*) is native Dravidian. DEDR 1655 lists Malayalam *kuṭi*, "house, hut" and Telugu *guḍise*. It is built on *kuṭi*, "dwelling". The entry compares Sanskrit *kuṭi*, "hut" (CDIAL 3232).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

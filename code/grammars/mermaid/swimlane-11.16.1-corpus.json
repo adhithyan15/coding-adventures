@@ -285,6 +285,22 @@
     {
       "name": "automatic-lane-ordering",
       "source": "---\nconfig:\n  swimlane:\n    automaticLaneOrdering: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\na --> d\na --> d\na --> d"
+    },
+    {
+      "name": "line-hops-step",
+      "source": "---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review[\"\"]\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond stepped@--> third\nstepped@{ curve: step }"
+    },
+    {
+      "name": "line-hops-rounded",
+      "source": "---\nconfig:\n  swimlane:\n    lineHops: gap\n---\nswimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review[\"\"]\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond rounded@--> third\nrounded@{ curve: rounded }"
+    },
+    {
+      "name": "nested-subgraphs",
+      "source": "swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe"
+    },
+    {
+      "name": "state-choice-note-shapes",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\nend\nsubgraph Records\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo"
     }
   ]
 }

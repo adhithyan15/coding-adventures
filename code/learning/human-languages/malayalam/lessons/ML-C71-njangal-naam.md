@@ -11,9 +11,10 @@ romanization: "ñaṅṅaḷ / nāṁ"
 concept_tag: ML-WE-INCLUSIVE-EXCLUSIVE
 prerequisites: [ML-C71-avar, ML-C03-njaan]
 sounds: []
-roots: []
+roots: [njaan-dravidian, dravidian-nam-we]
+etymology_hook: "ñaṅṅaḷ and nām: both native Dravidian; Tamil yām and nām (DEDR 5154, 3647)"
 duration:
-  max_seconds: 240
+  max_seconds: 245
 requires:
   knowledge: [ML-LEX-C71-AVAR-01, ML-LEX-NJAAN-01]
 introduces:
@@ -69,6 +70,8 @@ one that gathers everybody in, which is a useful thing to hold on to.
 Tamil draws the same line with *nāṅgaḷ* against *nām*, and the two languages
 land on nearly the same pair of sounds — so a reader who has met one has most of
 the other.
+
+**Where the words come from.** Both are native Dravidian: *ñaṅṅaḷ* belongs with Tamil *yām*, "we" (DEDR 5154), and *nām* with Tamil *nām* and Kannada *nāvu* (DEDR 3647).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C71-NJANGAL-NAAM-01] -->

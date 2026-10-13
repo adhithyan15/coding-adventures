@@ -14,7 +14,8 @@ romanization: "mālinyaṁ"
 concept_tag: ML-STHALAM199-MALINYAM
 prerequisites: [ML-C198-etire, ML-C198-currum]
 sounds: []
-roots: []
+roots: [sanskrit-malinya]
+etymology_hook: "mālinyaṁ ← Sanskrit mālinya 'dirtiness', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C198-currum]
 <!-- hl-knowledge: introduces=[ML-LEX-C199-STHALAM199-01]; assesses=[] -->
 
 **മാലിന്യം** — *mālinyaṁ* — "rubbish, waste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാലിന്യം** (*mālinyaṁ*) ← Sanskrit *mālinya*, "dirtiness", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. It is built on *malina*, "dirty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

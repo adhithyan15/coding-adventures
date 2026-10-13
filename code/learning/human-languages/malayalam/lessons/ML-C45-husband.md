@@ -11,7 +11,8 @@ romanization: "bharttāvŭ"
 concept_tag: ML-NOUN-HUSBAND
 prerequisites: [ML-C45-grandmother, ML-C43-run]
 sounds: []
-roots: []
+roots: [sanskrit-bhartr]
+etymology_hook: "bharttāvŭ ← Sanskrit bhartṛ 'husband, the one who bears or supports' (CDIAL 9402)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C45-grandmother]
 **ഭർത്താവ്** (*bharttāvŭ*) — "husband".
 
 Sanskrit *bhartṛ* with a Malayalam ending, *-āvŭ*, fitted onto it. Inside sits the root *bhṛ*, 'to bear, to carry, to support', so the word says 'the one who supports'. The root is old enough to have relatives well outside India: Latin *fero*, 'I carry', and English *bear* both continue it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭർത്താവ്** (*bharttāvŭ*) ← Sanskrit *bhartṛ*, "husband, bearer" (CDIAL 9402), with a Malayalam ending. The long *ā* comes from the Sanskrit stem *bhartār-*, as in the accusative *bhartāram*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

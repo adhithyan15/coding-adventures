@@ -14,7 +14,8 @@ romanization: "kaḻukuka"
 concept_tag: ML-VERB-KALUKUKA
 prerequisites: [ML-C171-unaruka, ML-C171-kulikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kazhuvu-wash]
+etymology_hook: "kaḻukuka: native Dravidian, one word with Tamil kaḻuvu and Kannada karcu (DEDR 1369)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C171-kulikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C171-ACT171-05]; assesses=[] -->
 
 **കഴുകുക** — *kaḻukuka* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴുകുക** (*kaḻukuka*) is native Dravidian, one word with Tamil *kaḻuvu*, Kannada *karcu* and Telugu *kaḍugu* (DEDR 1369).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

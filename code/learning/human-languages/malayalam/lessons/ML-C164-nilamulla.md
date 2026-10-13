@@ -14,7 +14,8 @@ romanization: "nīḷamuḷḷa"
 concept_tag: ML-THINGS164-NILAMULLA
 prerequisites: [ML-C164-cutulla, ML-C164-tanuppulla]
 sounds: []
-roots: []
+roots: [dravidian-nil-long, dravidian-ul-be]
+etymology_hook: "nīḷamuḷḷa: native Dravidian, 'having length': a noun for length (DEDR 3692) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C164-tanuppulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C164-THINGS164-05]; assesses=[] -->
 
 **നീളമുള്ള** — *nīḷamuḷḷa* — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നീളമുള്ള** (*nīḷamuḷḷa*) is native Dravidian, "having length": the noun for "length, distance" (DEDR 3692, with Tamil *nīḷ*, "to grow long"), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

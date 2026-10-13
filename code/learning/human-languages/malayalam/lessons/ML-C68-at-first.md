@@ -12,7 +12,7 @@ concept_tag: ML-ORDER-AT-FIRST
 prerequisites: [ML-C68-eleventh, ML-C68-seventh, ML-C67-first, ML-C65-permission, ML-C53-sun, ML-C64-then]
 sounds: []
 roots: [sanskrit-adya-first]
-etymology_hook: "Malayalam's ordinal machine is native and exceptionless, but for 'at first' as an adverb it borrowed Sanskrit adya"
+etymology_hook: "Malayalam's ordinal machine is native and exceptionless, but for 'at first' as an adverb it borrowed Sanskrit ādya"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +50,11 @@ door, the first way. **ആദ്യം** puts an *action* first in time, and it 
 **പിന്നെ**, which you already have:
 
 > **ആദ്യം ഊണ്, പിന്നെ ചായ.** — *Ādyaṁ ūṇŭ, pinne cāya.* "Lunch first, then tea."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആദ്യം** (*ādyaṁ*) ← Sanskrit *ādya*, "first, earliest", built on *ādi*, "beginning" (CDIAL 1152), with Malayalam's noun ending *-ṁ*.
 
 ## Why it's said this way — the one word Malayalam borrowed here
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-08, ML-LEX-C67-ORDINAL-01, ML-GRAMMAR-C67-ORDINAL-02] -->

@@ -14,7 +14,8 @@ romanization: "iraṭṭa"
 concept_tag: ML-GUNAM247-IRATTA
 prerequisites: [ML-C246-urappulla, ML-C246-ketaya]
 sounds: []
-roots: []
+roots: [dravidian-iru-two]
+etymology_hook: "iraṭṭa: native Dravidian; DEDR 474 lists it with Tamil iraṭṭai 'pair, twins'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C246-ketaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C247-GUNAM247-01]; assesses=[] -->
 
 **ഇരട്ട** — *iraṭṭa* — "double, twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇരട്ട** (*iraṭṭa*) is native Dravidian, from the root for "two": DEDR 474 lists it with Tamil *iraṭṭai*, "pair, twins".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

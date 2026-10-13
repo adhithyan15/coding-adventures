@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5e2489e8a5d1b79f",
+  "sourceHash": "fnv1a64:e142fe8e66d96224",
   "lessons": [
     {
       "id": "ML-C18-oru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e6a700371476a1",
+      "sourceHash": "fnv1a64:d1548590d8080569",
       "notice": null,
       "blocks": [
         {
@@ -87,6 +87,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒരു (oru) is native Dravidian, the shape \"one\" takes in front of a noun. DEDR 990 lists Tamil oru before a consonant and ōr before a vowel, with Kannada ondu, \"one thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same word does the work of \"a\"",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -162,7 +173,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

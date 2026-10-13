@@ -18,6 +18,9 @@ You'll want to know: അടുത്ത്.
 അടുത്ത് (aṭuttŭ). does: measure — not much space.
 That is a real division, and it is the reason a learner can have owned here and there for forty chapters and still be unable to say that the shop is close.
 
+The word, taken apart.
+അടുത്ത് (aṭuttŭ) is native Dravidian, a form of the verb "to come near, approach"; DEDR 79 lists the root with Tamil aṭu.
+
 What you've built.
 The near end of a scale you could previously only point along.
 
@@ -51,6 +54,9 @@ The scale now has both ends:
 അടുത്ത് aṭuttŭ, near.
 അകലെ akale, far.
 Between them you can place anything, and അവിടെ stops having to do a job it was never built for.
+
+The word, taken apart.
+അകലെ (akale) is native Dravidian, from the verb "to spread out, go away"; DEDR 8 lists the root with Tamil akal and Kannada agal.
 
 Why it's said this way: a shape that is not the pattern.
 Look at അകലെ (akale) and അവിടെ side by side. Both open with അ, and the pointing pattern you learned says that അ- is the away one — aviṭe, that place, over there.
@@ -93,6 +99,9 @@ That is the whole question, and it is two words you were given separately. Lifti
 അകലെ (akale), far — a setting.
 എത്ര ദൂരം (etra dūraṁ)?, how far — a question with a number for an answer.
 dūraṁ is a borrowing from Sanskrit, where akale is inherited. Both are ordinary and neither is grander than the other; Malayalam keeps pairs like this all over, and having both is not a redundancy but a choice of texture.
+
+The word, taken apart.
+എത്ര ദൂരം (etra dūraṁ) joins native etra, "how much" (DEDR 5151), to Sanskrit dūra, "distant; distance" (CDIAL 6495), with Malayalam's noun ending -ṁ.
 
 Guided Practice.
 [pause 1 second]

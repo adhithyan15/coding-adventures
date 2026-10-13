@@ -12,7 +12,7 @@ concept_tag: RESPONSE-YES
 prerequisites: [TA-C01-vanakkam]
 sounds: [independent-vowel-aa, matra-vs-independent]
 roots: [ām]
-etymology_hook: "ஆம் — worn down from ākum 'it will be', of the native verb 'to become' (DEDR 333); Malayalam ām is the same yes"
+etymology_hook: "ஆம் — worn down from native ākum 'it will be' (DEDR 333); DEDR compares Sanskrit ām 'yes' (CDIAL 1235)"
 reviews_of: [TA-C01-vanakkam]
 duration:
   max_seconds: 176

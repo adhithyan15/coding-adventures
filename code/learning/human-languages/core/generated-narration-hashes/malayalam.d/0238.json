@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 238,
-  "sourceHash": "fnv1a64:dd2ad4de8740f24d",
+  "sourceHash": "fnv1a64:59e651dc176e03f8",
   "lessonIds": [
     "ML-C238-natuvil",
     "ML-C238-vimanattavalam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch238.txt",
   "json": "malayalam/narration/ch238.json",
-  "textHash": "fnv1a64:408ea4c5aec33c99",
-  "jsonHash": "fnv1a64:f600cb6c6ff3d2e6",
+  "textHash": "fnv1a64:6b8f396052d6f149",
+  "jsonHash": "fnv1a64:bbc1c9843b9c78e3",
   "findings": []
 }

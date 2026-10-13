@@ -14,7 +14,8 @@ romanization: "kūli"
 concept_tag: ML-JOLI298-KULI
 prerequisites: [ML-C298-pakkarru, ML-C298-sambalam]
 sounds: []
-roots: []
+roots: [dravidian-kuli-wage]
+etymology_hook: "kūli: native Dravidian, one word with Tamil kūli and Kannada kūli (DEDR 1905)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C298-sambalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C298-JOLI298-04]; assesses=[] -->
 
 **കൂലി** — *kūli* — "wages".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂലി** (*kūli*) is native Dravidian, one word with Tamil *kūli*, Kannada *kūli* and Telugu *kūli* (DEDR 1905). English *coolie* goes back to this word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "koṇṭuvaruka"
 concept_tag: ML-VERB-KONTUVARUKA
 prerequisites: [ML-C172-vevikkuka, ML-C172-kotukkuka, ML-C86-koode]
 sounds: []
-roots: []
+roots: [dravidian-kolu-take, va-come-dravidian]
+etymology_hook: "koṇṭuvaruka: native Dravidian, 'having taken, come': koṇṭu (DEDR 2151) + varuka (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C172-kotukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C172-ACT172-03]; assesses=[] -->
 
 **കൊണ്ടുവരുക** — *koṇṭuvaruka* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊണ്ടുവരുക** (*koṇṭuvaruka*) is native Dravidian, "come having taken": *koṇṭu*, the past form of the verb "to take" (DEDR 2151, with Tamil *koḷ*), and *varuka*, "to come" (DEDR 5270).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

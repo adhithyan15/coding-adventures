@@ -47,7 +47,7 @@ reviews_of: [TA-C194-pori]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பிசை** (*picai*) is native Dravidian. DEDR 4135 lists Kannada *pisuku*, "to knead".
+**பிசை** (*picai*) is native Dravidian. DEDR 4135 lists Kannada *pisuku*, "to knead", and compares Sanskrit *picc-*, "to press" (CDIAL 8149).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

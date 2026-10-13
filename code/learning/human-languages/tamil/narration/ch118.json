@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Stove, Vessel, Plate, Cup, Spoon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:148906f7570a18da",
+  "sourceHash": "fnv1a64:84f85c948bd1a56d",
   "lessons": [
     {
       "id": "TA-C118-atuppu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd9d4ddd07d10987",
+      "sourceHash": "fnv1a64:507832cfeb70204f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அடுப்பு (aṭuppu) is native Dravidian. DEDR 76 lists Malayalam aṭuppu. It comes from aṭu, \"to cook\": the stove is the cooking place."
+              "text": "அடுப்பு (aṭuppu) is native Dravidian. DEDR 76 lists Malayalam aṭuppu. It comes from aṭu, \"to cook\": the stove is the cooking place. The entry compares Sanskrit aṭṭa, \"dried\"."
             }
           ]
         },

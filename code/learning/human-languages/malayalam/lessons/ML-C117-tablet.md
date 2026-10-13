@@ -11,7 +11,8 @@ romanization: "guḷika"
 concept_tag: ML-BODY-TABLET
 prerequisites: [ML-C117-thirst, ML-C117-sweat]
 sounds: []
-roots: []
+roots: [sanskrit-gudika]
+etymology_hook: "guḷika ← Sanskrit guḍikā 'a little ball, a pill', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C117-sweat]
 <!-- hl-knowledge: introduces=[ML-LEX-C117-BODY-03]; assesses=[] -->
 
 **ഗുളിക** (*guḷika*) — "a tablet, a pill". **ഒരു ഗുളിക** — "one tablet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗുളിക** (*guḷika*) ← Sanskrit *guḍikā*, "a little ball, a pill", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

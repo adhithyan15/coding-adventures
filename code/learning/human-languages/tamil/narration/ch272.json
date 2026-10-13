@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "Identity card, Tax, Application, Photograph, Copy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:18b837c3169eb1ed",
+  "sourceHash": "fnv1a64:640b6cb3535b986b",
   "lessons": [
     {
       "id": "TA-C272-ataiyala-attai",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b02829e199d4892",
+      "sourceHash": "fnv1a64:a864c03efea637d8",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வரி (vari) is native Dravidian. DEDR 5263 lists Malayalam vara, \"line\" and Kannada bare, \"writing, lines\". The entry glosses \"line\" and \"to write\"; the sense \"tax\" is the line in a register."
+              "text": "வரி (vari) is native Dravidian. DEDR 5263 lists Malayalam vara, \"line\" and Kannada bare, \"writing, lines\". The entry glosses \"line\" and \"to write\"; the sense \"tax\" is probably the line in a register."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "kavala"
 concept_tag: ML-STHALAM238-KAVALA
 prerequisites: [ML-C238-reyilve, ML-C238-yatrakkaran]
 sounds: []
-roots: []
+roots: [dravidian-kavar-fork]
+etymology_hook: "kavala: native Dravidian, one word with Tamil kavar and Kannada kaval (DEDR 1325)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C238-yatrakkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C238-STHALAM238-05]; assesses=[] -->
 
 **കവല** — *kavala* — "a junction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവല** (*kavala*) is native Dravidian, one word with Tamil *kavar* and Kannada *kaval* (DEDR 1325). Its first sense is a forked branch: a junction is a fork in the road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

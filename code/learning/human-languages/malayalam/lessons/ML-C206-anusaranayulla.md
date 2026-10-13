@@ -14,7 +14,8 @@ romanization: "anusaraṇayuḷḷa"
 concept_tag: ML-GUNAM206-ANUSARANAYULLA
 prerequisites: [ML-C205-adhunika, ML-C206-kusrtiyulla]
 sounds: []
-roots: []
+roots: [sanskrit-anusarana, dravidian-ul-be]
+etymology_hook: "anusaraṇayuḷḷa: Sanskrit anusaraṇa 'following' + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C206-kusrtiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C206-GUNAM206-02]; assesses=[] -->
 
 **അനുസരണയുള്ള** — *anusaraṇayuḷḷa* — "obedient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അനുസരണയുള്ള** (*anusaraṇayuḷḷa*) joins Sanskrit *anusaraṇa*, "following", to native *-uḷḷa*, "that has" (DEDR 697): "having following" is obedience.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

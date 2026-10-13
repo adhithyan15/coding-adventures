@@ -11,7 +11,8 @@ romanization: "sūkṣikkaṇē"
 concept_tag: ML-LEAVE-CARE
 prerequisites: [ML-C126-english, ML-C126-office]
 sounds: []
-roots: []
+roots: [sanskrit-sukshma]
+etymology_hook: "sūkṣikkaṇē: from Sanskrit sūkṣma 'fine, minute' (CDIAL 13546): to watch with fine attention"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C126-office]
 <!-- hl-knowledge: introduces=[ML-LEX-C127-CARE-01]; assesses=[] -->
 
 **സൂക്ഷിക്കണേ** (*sūkṣikkaṇē*) — "take care", a warm word at the door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സൂക്ഷിക്കണേ** (*sūkṣikkaṇē*) is built on Sanskrit *sūkṣma*, "fine, minute" (CDIAL 13546): to take care is to watch closely. The ending *-aṇē* makes it a warm request.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 107,
-  "sourceHash": "fnv1a64:efc9a00d6e8417a0",
+  "sourceHash": "fnv1a64:1a81df840418bcbb",
   "lessonIds": [
     "ML-C107-marunnu",
     "ML-C107-chikitsa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch107.txt",
   "json": "malayalam/narration/ch107.json",
-  "textHash": "fnv1a64:587e1c2b58b8a66b",
-  "jsonHash": "fnv1a64:33f55f7dca14d521",
+  "textHash": "fnv1a64:aa8b73fb8018c4b4",
+  "jsonHash": "fnv1a64:bd041eba79be4325",
   "findings": []
 }

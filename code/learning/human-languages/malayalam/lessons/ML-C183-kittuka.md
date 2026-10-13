@@ -14,7 +14,8 @@ romanization: "kiṭṭuka"
 concept_tag: ML-VERB-KITTUKA
 prerequisites: [ML-C183-upayogikkuka, ML-C183-sramikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kittu-reach]
+etymology_hook: "kiṭṭuka: native Dravidian, one word with Tamil kiṭṭu and Kannada kiṭṭu (DEDR 1538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C183-sramikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C183-KRIYA183-04]; assesses=[] -->
 
 **കിട്ടുക** — *kiṭṭuka* — "to get, to receive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിട്ടുക** (*kiṭṭuka*) is native Dravidian, one word with Tamil *kiṭṭu*, Kannada *kiṭṭu* and Telugu *kiṭṭu* (DEDR 1538). Its first sense is "to come to hand, to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

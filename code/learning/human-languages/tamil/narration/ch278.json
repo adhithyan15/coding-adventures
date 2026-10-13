@@ -4,7 +4,7 @@
   "chapter": 278,
   "title": "Sugarcane, Okra, Peanut, Watermelon, Murukku",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04ab66105db94ec6",
+  "sourceHash": "fnv1a64:c038d41784f0922b",
   "lessons": [
     {
       "id": "TA-C278-karumpu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6010a27be7d125f",
+      "sourceHash": "fnv1a64:1019f0c97b3d2acf",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of கரும்பு (karumpu) is uncertain. DEDR has no entry for it."
+              "text": "கரும்பு (karumpu) is native Dravidian. DEDR 1288 lists Malayalam karimpu, Kannada kabbu and Tulu karmbu, all \"sugarcane\"."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55324a9c6ffb7be6",
+      "sourceHash": "fnv1a64:c0da55da304c7e68",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வெண்டைக்காய் (veṇṭaikkāy) is veṇṭai, the name of the plant, and native kāy, \"unripe fruit, vegetable\" (DEDR 1459). The origin of veṇṭai is uncertain; DEDR has no entry for it."
+              "text": "வெண்டைக்காய் (veṇṭaikkāy) is veṇṭai, the name of the plant, and native kāy, \"unripe fruit, vegetable\" (DEDR 1459, which compares Indo-Aryan kacca, \"raw\"). The origin of veṇṭai is uncertain; DEDR has no entry for it."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b050d8b796c6257f",
+      "sourceHash": "fnv1a64:eda7f832983be17f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "முறுக்கு (muṟukku) is native Dravidian. DEDR 5012 lists Malayalam muṟukuka, \"to be twisted\" and Kannada muṟuku. The entry glosses muṟukku as \"a twisted cake\", from \"to twist\"."
+              "text": "முறுக்கு (muṟukku) is native Dravidian. DEDR 5012 lists Malayalam muṟukuka, \"to be twisted\" and Kannada muṟuku. Its Malayalam muṟukku is glossed \"a twisted cake\", from \"to twist\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "eḻunnēlkkuka"
 concept_tag: ML-VERB-ELUNNELKKUKA
 prerequisites: [ML-C170-otuka, ML-C170-natakkuka]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "eḻunnēlkkuka: native Dravidian, from the verb 'to rise' (DEDR 851), with a second verb fused on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C170-natakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C171-ACT171-01]; assesses=[] -->
 
 **എഴുന്നേൽക്കുക** — *eḻunnēlkkuka* — "to get up, to stand up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എഴുന്നേൽക്കുക** (*eḻunnēlkkuka*) is native Dravidian, built on the verb "to rise" (DEDR 851, with Tamil *eḻu*), with a second verb fused onto it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

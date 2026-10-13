@@ -14,7 +14,8 @@ romanization: "pūrttiyākkuka"
 concept_tag: ML-VERB-PURTTIYAKKUKA
 prerequisites: [ML-C226-visadikarikkuka, ML-C226-tayyarakkuka]
 sounds: []
-roots: []
+roots: [sanskrit-purna, aaka-dravidian]
+etymology_hook: "pūrttiyākkuka: Sanskrit pūrti 'completion' + native ākkuka 'to make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C226-tayyarakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C226-KRIYA226-04]; assesses=[] -->
 
 **പൂർത്തിയാക്കുക** — *pūrttiyākkuka* — "to finish, to complete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂർത്തിയാക്കുക** (*pūrttiyākkuka*) joins Sanskrit *pūrti*, "completion, fulfilment", to native *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

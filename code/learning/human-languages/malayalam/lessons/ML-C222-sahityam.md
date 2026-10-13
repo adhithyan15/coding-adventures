@@ -14,7 +14,8 @@ romanization: "sāhityaṁ"
 concept_tag: ML-JOLI222-SAHITYAM
 prerequisites: [ML-C221-vidyabhyasam, ML-C222-bhumisastram]
 sounds: []
-roots: []
+roots: [sanskrit-sahitya]
+etymology_hook: "sāhityaṁ ← Sanskrit sāhitya 'association; literary composition', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C222-bhumisastram]
 <!-- hl-knowledge: introduces=[ML-LEX-C222-JOLI222-02]; assesses=[] -->
 
 **സാഹിത്യം** — *sāhityaṁ* — "literature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാഹിത്യം** (*sāhityaṁ*) ← Sanskrit *sāhitya*, "association; literary composition", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. It is built on *sahita*, "joined together": literature is words put together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

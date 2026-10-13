@@ -14,7 +14,8 @@ romanization: "udāharaṇattinŭ"
 concept_tag: ML-KARANAM281-UDAHARANATTINU
 prerequisites: [ML-C281-matramalla, ML-C281-kutate]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "udāharaṇattinŭ: Sanskrit udāharaṇa 'example' + the Malayalam dative ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C281-kutate]
 <!-- hl-knowledge: introduces=[ML-LEX-C281-KARANAM281-03]; assesses=[] -->
 
 **ഉദാഹരണത്തിന്** — *udāharaṇattinŭ* — "for example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉദാഹരണത്തിന്** (*udāharaṇattinŭ*) is Sanskrit *udāharaṇa*, "example, illustration", with the Malayalam dative ending: "for example".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

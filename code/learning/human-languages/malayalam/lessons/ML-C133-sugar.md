@@ -11,7 +11,8 @@ romanization: "pañcasāra"
 concept_tag: ML-FRUIT-SUGAR
 prerequisites: [ML-C133-lemon, ML-C133-ginger]
 sounds: []
-roots: []
+roots: [malayalam-panchasara]
+etymology_hook: "pañcasāra: of uncertain origin; often explained as Sanskrit pañca 'five' + sāra 'essence'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C133-ginger]
 <!-- hl-knowledge: introduces=[ML-LEX-C133-SWEETSOUR-05]; assesses=[] -->
 
 **പഞ്ചസാര** (*pañcasāra*) — "sugar". **പഞ്ചസാര വേണോ?** — "do you want sugar?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഞ്ചസാര** (*pañcasāra*) is of uncertain origin. It is often explained as Sanskrit *pañca*, "five", + *sāra*, "essence", but that may be a story told after the fact.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

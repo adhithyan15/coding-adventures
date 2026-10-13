@@ -12,8 +12,9 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]
 roots: [namas, kṛ]
+etymology_hook: "namaskāraṁ ← Sanskrit namaskāra 'homage': namas 'a bow' + kāra 'a making' (CDIAL 6960)"
 duration:
-  max_seconds: 210
+  max_seconds: 233
 requires:
   knowledge: []
 introduces:
@@ -69,6 +70,8 @@ The same idea, five ways:
 Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its
 own. Hold that beside the next lesson, where the word for "thanks" splits the
 family the other way round.
+
+Sanskrit *namaskāra*, "adoration, homage", is CDIAL 6960.
 
 ## Writing — let your finger meet one shape
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01] -->

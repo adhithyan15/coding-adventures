@@ -4,7 +4,7 @@
   "chapter": 184,
   "title": "Ice, Breakfast, Lunch, Dinner, Notebook",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:39445d142626d840",
+  "sourceHash": "fnv1a64:acc0069124bf5581",
   "lessons": [
     {
       "id": "TA-C184-panikkatti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2232a2673b2305f",
+      "sourceHash": "fnv1a64:3458658550074635",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பனிக்கட்டி (paṉikkaṭṭi) is native: paṉi, \"dew, frost\" (DEDR 4035), and kaṭṭi, \"lump\", from kaṭṭu, \"to harden, to congeal\" (DEDR 1148): \"a lump of frost\"."
+              "text": "பனிக்கட்டி (paṉikkaṭṭi) is native: paṉi, \"dew, frost\" (DEDR 4035), and kaṭṭi, \"lump\", from kaṭṭu, \"to harden, to congeal\" (DEDR 1148, which compares Sanskrit kaṭhina, \"hard\"): \"a lump of frost\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "neṟṟi"
 concept_tag: ML-THINGS154-NERRI
 prerequisites: [ML-C154-navu, ML-C154-toli, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [dravidian-nerri-forehead]
+etymology_hook: "neṟṟi: native Dravidian, one word with Tamil neṟṟi and Kannada netti (DEDR 3759)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C154-toli]
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-05]; assesses=[] -->
 
 **നെറ്റി** — *neṟṟi* — "a forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നെറ്റി** (*neṟṟi*) is native Dravidian, one word with Tamil *neṟṟi*, Kannada *netti* and Telugu *netti* (DEDR 3759).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

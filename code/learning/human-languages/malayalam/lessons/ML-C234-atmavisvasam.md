@@ -14,7 +14,8 @@ romanization: "ātmaviśvāsaṁ"
 concept_tag: ML-AROGYAM234-ATMAVISVASAM
 prerequisites: [ML-C234-utsaham, ML-C234-nirasa]
 sounds: []
-roots: []
+roots: [sanskrit-atman, sanskrit-vishvasa]
+etymology_hook: "ātmaviśvāsaṁ: Sanskrit ātman 'self' (CDIAL 1135) + viśvāsa 'trust' (CDIAL 11966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C234-nirasa]
 <!-- hl-knowledge: introduces=[ML-LEX-C234-AROGYAM234-03]; assesses=[] -->
 
 **ആത്മവിശ്വാസം** — *ātmaviśvāsaṁ* — "self-confidence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആത്മവിശ്വാസം** (*ātmaviśvāsaṁ*) is Sanskrit: *ātman*, "self" (CDIAL 1135), and *viśvāsa*, "trust" (CDIAL 11966): trust in oneself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

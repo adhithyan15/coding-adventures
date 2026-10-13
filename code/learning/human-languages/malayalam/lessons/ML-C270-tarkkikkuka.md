@@ -14,7 +14,8 @@ romanization: "tarkkikkuka"
 concept_tag: ML-VERB-TARKKIKKUKA
 prerequisites: [ML-C270-uhikkuka, ML-C270-taratamyam-ceyyuka]
 sounds: []
-roots: []
+roots: [sanskrit-tarka]
+etymology_hook: "tarkkikkuka ← Sanskrit tarka 'inquiry, reasoning' (CDIAL 5714) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C270-taratamyam-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C270-KRIYA270-04]; assesses=[] -->
 
 **തർക്കിക്കുക** — *tarkkikkuka* — "to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തർക്കിക്കുക** (*tarkkikkuka*) is built on Sanskrit *tarka*, "inquiry, reasoning" (CDIAL 5714), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kēṭāya"
 concept_tag: ML-GUNAM246-KETAYA
 prerequisites: [ML-C246-avesakaramaya, ML-C246-urappulla]
 sounds: []
-roots: []
+roots: [dravidian-kedu-ruin, aaka-dravidian]
+etymology_hook: "kēṭāya: native Dravidian, kēṭu 'damage' (DEDR 1942) + āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C246-urappulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C246-GUNAM246-05]; assesses=[] -->
 
 **കേടായ** — *kēṭāya* — "broken, spoiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേടായ** (*kēṭāya*) is native Dravidian: *kēṭu*, "destruction, damage" (DEDR 1942, with Tamil *keṭu*), and *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

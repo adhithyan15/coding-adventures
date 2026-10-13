@@ -14,7 +14,8 @@ romanization: "citaṟuka"
 concept_tag: ML-VERB-CITARUKA
 prerequisites: [ML-C190-kulaykkuka, ML-C190-arruka]
 sounds: []
-roots: []
+roots: [dravidian-citar-scatter]
+etymology_hook: "citaṟuka: native Dravidian, one word with Tamil citar and Kannada kedaṟ (DEDR 1546)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C190-arruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C191-KRIYA191-01]; assesses=[] -->
 
 **ചിതറുക** — *citaṟuka* — "to scatter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിതറുക** (*citaṟuka*) is native Dravidian, one word with Tamil *citar*, Kannada *kedaṟ* and Telugu *cedaru* (DEDR 1546).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

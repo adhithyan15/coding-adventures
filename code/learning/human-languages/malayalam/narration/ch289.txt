@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for an amount, then the Malayalam for a fo
 You'll want to know: ആൺകുട്ടി.
 ആൺകുട്ടി — āṇkuṭṭi — "a boy".
 
+The word, taken apart.
+ആൺകുട്ടി (āṇkuṭṭi) is native Dravidian, "male child": āṇ, "male" (DEDR 399, with Tamil āṇ), and kuṭṭi, "child" (DEDR 1670).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a form, then the Malayalam for a boy.
 
 You'll want to know: അമ്മായി.
 അമ്മായി — ammāyi — "an aunt (father's sister)".
+
+The word, taken apart.
+അമ്മായി (ammāyi) is native Dravidian: DEDR 183 lists it, "aunt, uncle's wife, mother-in-law", under amma, "mother". DEDR 183 compares Sanskrit ambā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a boy, then the Malayalam for an aunt.
 You'll want to know: മരുമകൾ.
 മരുമകൾ — marumakaḷ — "a niece; a daughter-in-law".
 
+The word, taken apart.
+മരുമകൾ (marumakaḷ) is native Dravidian, the feminine partner of marumakan, "nephew, son-in-law", which DEDR 4715 lists with Tamil marukaṉ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an aunt, then the Malayalam for a niec
 You'll want to know: അമ്മായിയമ്മ.
 അമ്മായിയമ്മ — ammāyiyamma — "a mother-in-law".
 
+The word, taken apart.
+അമ്മായിയമ്മ (ammāyiyamma) is native Dravidian: ammāyi, "aunt; mother-in-law" (DEDR 183), and amma, "mother". DEDR 183 compares Sanskrit ambā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a niece, then the Malayalam for a moth
 
 You'll want to know: അമ്മായിയപ്പൻ.
 അമ്മായിയപ്പൻ — ammāyiyappan — "a father-in-law".
+
+The word, taken apart.
+അമ്മായിയപ്പൻ (ammāyiyappan) is native Dravidian: ammāyi (DEDR 183) and appan, "father" (DEDR 156, with Tamil appaṉ). DEDR 183 compares Sanskrit ambā.
 
 What you've built.
 One more word for this chapter.

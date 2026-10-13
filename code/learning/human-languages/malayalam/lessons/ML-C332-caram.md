@@ -14,7 +14,8 @@ romanization: "cāraṁ"
 concept_tag: ML-VASTU332-CARAM
 prerequisites: [ML-C332-viraku, ML-C332-kari]
 sounds: []
-roots: []
+roots: [sanskrit-kshara]
+etymology_hook: "cāraṁ: from Sanskrit kṣāra 'alkali', whose descendants often mean 'ashes' (CDIAL 3674)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C332-kari]
 <!-- hl-knowledge: introduces=[ML-LEX-C332-VASTU332-04]; assesses=[] -->
 
 **ചാരം** — *cāraṁ* — "ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാരം** (*cāraṁ*) comes from Sanskrit *kṣāra*, "corrosive, alkali", whose descendants often mean "ashes" (CDIAL 3674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

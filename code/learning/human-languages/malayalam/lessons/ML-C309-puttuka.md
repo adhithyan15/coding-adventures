@@ -14,7 +14,8 @@ romanization: "pūṭṭuka"
 concept_tag: ML-VERB-PUTTUKA
 prerequisites: [ML-C309-kuraykkuka2, ML-C309-tiriccariyuka]
 sounds: []
-roots: []
+roots: [dravidian-pun-close]
+etymology_hook: "pūṭṭuka: native Dravidian, 'make closed', from the verb to be closed, yoked; Tamil pūṇ (DEDR 4361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C309-tiriccariyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C309-KRIYA309-03]; assesses=[] -->
 
 **പൂട്ടുക** — *pūṭṭuka* — "to lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂട്ടുക** (*pūṭṭuka*) is native Dravidian, the causative of the verb "to be closed, be yoked"; DEDR 4361 lists the root with Tamil *pūṇ*, Kannada *pūṇ* and Telugu *pūnu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

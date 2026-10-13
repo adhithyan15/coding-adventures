@@ -14,7 +14,8 @@ romanization: "jīns"
 concept_tag: ML-VASTU248-JINS
 prerequisites: [ML-C248-kavar, ML-C248-pavata]
 sounds: []
-roots: []
+roots: [english-jeans]
+etymology_hook: "jīns ← English jeans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C248-pavata]
 <!-- hl-knowledge: introduces=[ML-LEX-C248-VASTU248-05]; assesses=[] -->
 
 **ജീൻസ്** — *jīns* — "jeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജീൻസ്** (*jīns*) ← English *jeans*, named for the cloth of Genoa.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

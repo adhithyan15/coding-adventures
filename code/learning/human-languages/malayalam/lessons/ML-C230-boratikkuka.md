@@ -14,7 +14,8 @@ romanization: "bōraṭikkuka"
 concept_tag: ML-VERB-BORATIKKUKA
 prerequisites: [ML-C230-sankalppikkuka, ML-C230-pariharikkuka]
 sounds: []
-roots: []
+roots: [english-bore, dravidian-adi-beat]
+etymology_hook: "bōraṭikkuka: English bore + a native verb 'to beat, strike' (DEDR 77)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C230-pariharikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C230-KRIYA230-05]; assesses=[] -->
 
 **ബോറടിക്കുക** — *bōraṭikkuka* — "to be bored".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബോറടിക്കുക** (*bōraṭikkuka*) joins English *bore* to the native verb "to beat, strike" (DEDR 77, with Tamil *aṭu*): boredom strikes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

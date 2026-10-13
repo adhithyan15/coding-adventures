@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [ML-C02-enre, ML-C02-entu]
 sounds: [nya-initial, long-aa]
 roots: [njaan-dravidian]
+etymology_hook: "ñān 'I': native Dravidian, one word with Tamil yāṉ, nāṉ and Telugu nēnu (DEDR 5160)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,8 @@ Hindi's *maiṁ*, cousin of English *me*) **not** related to the European "I/me"
 family. Its possessive is the **എന്റെ** (*enṟe*, "my") you already met: *ñān*
 "I," *enṟe* "my." Malayalam layered a great deal of Sanskrit over its vocabulary,
 but the pronoun for "I" is bedrock Dravidian.
+
+DEDR 5160 lists Malayalam *ñān* with Tamil *yāṉ*, *nāṉ*, Kannada *ān* and Telugu *nēnu*.
 
 ## Grammar Lens: Malayalam does *not* drop "I"
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01]; assesses=[ML-LEX-NJAAN-01] -->

@@ -11,9 +11,10 @@ romanization: "onnāṁ"
 concept_tag: ML-ORDINAL-FIRST
 prerequisites: [ML-C66-harvest, ML-C66-paddy, ML-C63-hunger, ML-C51-gratitude, ML-C07-numbers-1-5]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "onnāṁ: native Dravidian, 'one' + the ordinal ending -āṁ (DEDR 990)"
 duration:
-  max_seconds: 220
+  max_seconds: 236
 requires:
   knowledge: [ML-LEX-C66-PADDY-05, ML-LEX-C66-PADDY-01, ML-LEX-C63-FEEL-01, ML-LEX-C51-COURTESY-01, ML-CONCEPT-C07-NUMBERS-1-5-01]
 introduces:
@@ -52,6 +53,11 @@ the line**, and Malayalam keeps a second set of words for that job.
 It goes straight in front of what it counts, and nothing on the noun changes:
 **ഒന്നാം വഴി** (*onnāṁ vaḻi*), the first way; **ഒന്നാം പുസ്തകം** (*onnāṁ
 pustakaṁ*), the first book.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒന്നാം** (*onnāṁ*) is native Dravidian: the number "one" (DEDR 990, with Tamil *oṉṟu* and Kannada *ondu*) with the ordinal ending *-āṁ*. Tamil builds its ordinals with a matching ending, as in *iraṇṭām*, "second" (DEDR 474).
 
 ## Grammar Lens: one ending, and no exceptions to it
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C67-ORDINAL-02]; assesses=[ML-LEX-C67-ORDINAL-01] -->

@@ -14,7 +14,7 @@ sounds: [malayalam-anusvara, malayalam-chillu-rr]
 roots: [malayalam-solar-calendar-zodiac, kollam-era]
 etymology_hook: "Malayalam's Kollam Era calendar is ALSO solar, like Tamil's — but its months are named for the ZODIAC SIGN the sun occupies (Chingam = Leo, Kanni = Virgo...), not nakshatras — a genuinely different naming logic from its closest cousin"
 duration:
-  max_seconds: 240
+  max_seconds: 287
 requires:
   knowledge: []
 introduces:
@@ -48,6 +48,11 @@ Kumbham, Mīnam, Mēḍam, Iḍavam, Mithunam, Karkiḍakam*).
 This is the **Kollam Era** calendar (also called the Malayalam calendar),
 Kerala's own solar civil calendar — genuinely separate from the Gregorian,
 the pan-Indian Hindu lunisolar calendar, **and** Tamil's solar calendar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Each month is named for the zodiac sign the sun stands in, and each sign-name is Sanskrit, some taken whole and some reshaped: *ciṅṅaṁ* ← *siṁha*, "lion" (CDIAL 13384); *kanni* ← *kanyā*, "maiden" (CDIAL 2737); *tulāṁ* ← *tulā*, "balance" (CDIAL 5886); *vṛścikaṁ* ← *vṛścika*, "scorpion" (CDIAL 12081); *dhanu* ← *dhanus*, "bow" (CDIAL 6726); *makaraṁ* ← *makara*, "sea-monster" (CDIAL 9692); *kuṁbhaṁ* ← *kumbha*, "pot" (CDIAL 3308); *mīnaṁ* ← *mīna*, "fish" (CDIAL 10140a, which traces the Sanskrit word itself to Dravidian, Tamil *mīṉ*, DEDR 4885); *mēṭaṁ* ← *mēṣa*, "ram" (CDIAL 10334); *iṭavaṁ* ← *vṛṣabha*, "bull" (CDIAL 12085); *mithunaṁ* ← *mithuna*, "pair"; *karkkaṭakaṁ* ← *karkaṭaka*, "crab" (CDIAL 2816).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "teṅṅŭ"
 concept_tag: ML-THINGS161-TENNU
 prerequisites: [ML-C160-kallu, ML-C161-mannu]
 sounds: []
-roots: []
+roots: [dravidian-tengu-coconut]
+etymology_hook: "teṅṅŭ: native Dravidian, one word with Tamil teṅku and Kannada teṅgu (DEDR 3408)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C161-mannu]
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-02]; assesses=[] -->
 
 **തെങ്ങ്** — *teṅṅŭ* — "a coconut palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെങ്ങ്** (*teṅṅŭ*) is native Dravidian, one word with Tamil *teṅku* and Kannada *teṅgu* (DEDR 3408).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

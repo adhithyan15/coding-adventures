@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a man, then the Malayalam for a young 
 You'll want to know: വെടിക്കെട്ട്.
 വെടിക്കെട്ട് — veṭikkeṭṭŭ — "a fireworks display".
 
+The word, taken apart.
+വെടിക്കെട്ട് (veṭikkeṭṭŭ) is native Dravidian, "a tying-together of bangs": veṭi, "explosion, shot" (DEDR 5473, with Tamil veṭi), and keṭṭu, "tie, bundle" (DEDR 1147). DEDR 1147 compares Sanskrit ghaṭṭa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a young man, then the Malayalam for a 
 
 You'll want to know: ദീപാവലി.
 ദീപാവലി — dīpāvali — "Diwali".
+
+The word, taken apart.
+ദീപാവലി (dīpāvali) from Sanskrit dīpāvali, "row of lamps", taken over whole as a tatsama (CDIAL 6358). Its parts are dīpa, "lamp", and āvali, "row".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a fireworks display, then the Malayala
 You'll want to know: പൂജ.
 പൂജ — pūja — "a puja, worship".
 
+The word, taken apart.
+പൂജ (pūja) from Sanskrit pūjā, "honour, worship", taken over whole as a tatsama (CDIAL 8317).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for Diwali, then the Malayalam for a puja.
 You'll want to know: പാരമ്പര്യം.
 പാരമ്പര്യം — pāramparyaṁ — "tradition".
 
+The word, taken apart.
+പാരമ്പര്യം (pāramparyaṁ) from Sanskrit pāramparya, "succession, tradition", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. It is built on paramparā, "an unbroken series".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a puja, then the Malayalam for traditi
 
 You'll want to know: സംസ്കാരം.
 സംസ്കാരം — saṁskāraṁ — "culture".
+
+The word, taken apart.
+സംസ്കാരം (saṁskāraṁ) from Sanskrit saṁskāra, "preparation, refinement", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13038). Culture is what refines a people.
 
 What you've built.
 One more word for this chapter.

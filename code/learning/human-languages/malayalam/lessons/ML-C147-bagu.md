@@ -14,7 +14,8 @@ romanization: "bāgŭ"
 concept_tag: ML-THINGS147-BAGU
 prerequisites: [ML-C147-soppu, ML-C147-torttu]
 sounds: []
-roots: []
+roots: [english-bag]
+etymology_hook: "bāgŭ ← English bag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C147-torttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C147-THINGS147-03]; assesses=[] -->
 
 **ബാഗ്** — *bāgŭ* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബാഗ്** (*bāgŭ*) ← English *bag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

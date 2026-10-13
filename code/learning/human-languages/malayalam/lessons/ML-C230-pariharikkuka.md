@@ -14,7 +14,8 @@ romanization: "pariharikkuka"
 concept_tag: ML-VERB-PARIHARIKKUKA
 prerequisites: [ML-C230-vimarsikkuka, ML-C230-sankalppikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-parihara]
+etymology_hook: "pariharikkuka ← Sanskrit parihāra 'avoiding, a way round' (CDIAL 7901) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C230-sankalppikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C230-KRIYA230-04]; assesses=[] -->
 
 **പരിഹരിക്കുക** — *pariharikkuka* — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിഹരിക്കുക** (*pariharikkuka*) is built on Sanskrit *parihāra*, "a leading round, avoiding" (CDIAL 7901), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

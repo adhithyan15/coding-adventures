@@ -12,6 +12,7 @@ concept_tag: ML-VERB-CEYYUKA
 prerequisites: [ML-C05-samsaarikkuka, ML-C05-hamsam]
 sounds: [double-yy]
 roots: [cey-do-dravidian, joli-work]
+etymology_hook: "jōli ceyyuka: native ceyyuka 'do' (DEDR 1957) after jōli 'work', a word of uncertain origin"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,8 @@ compound verbs by putting a noun in front of it:
 So "I work" is **ഞാൻ ജോലി ചെയ്യുന്നു** (*ñān jōli ceyyunnu*) — same *-unnu*
 present, pronoun kept. *Ceyyuka* and Tamil's *sey* are, at root, one word — the
 Dravidian "do" that these languages all lean on.
+
+DEDR 1957 lists Malayalam *ceyka* with Tamil *cey* and Telugu *cēyu*. *jōli*, "work", is of uncertain origin; it has no entry in DEDR.
 
 ## Grammar Lens: noun + ചെയ്യുക = a new verb
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01]; assesses=[ML-LEX-JOLI-CEYYUKA-01] -->

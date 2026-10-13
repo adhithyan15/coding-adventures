@@ -14,7 +14,8 @@ romanization: "paṇṭŭ"
 concept_tag: ML-SAMAYAM314-PANTU2
 prerequisites: [ML-C314-patirrantu, ML-C314-kalantar]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "paṇṭŭ: native Dravidian; DEDR 3999 lists Malayalam paṇṭu 'antiquity' beside paḻa 'old'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C314-kalantar]
 <!-- hl-knowledge: introduces=[ML-LEX-C314-SAMAYAM314-04]; assesses=[] -->
 
 **പണ്ട്** — *paṇṭŭ* — "long ago".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പണ്ട്** (*paṇṭŭ*) is native Dravidian: DEDR 3999 lists it, "antiquity", beside *paḻa*, "old", with Tamil *paḻa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

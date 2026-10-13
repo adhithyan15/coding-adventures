@@ -14,7 +14,8 @@ romanization: "vilapēśuka"
 concept_tag: ML-VERB-VILAPESUKA
 prerequisites: [ML-C303-kuttuka, ML-C303-labhikkuka]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell, pesu-speak-dravidian]
+etymology_hook: "vilapēśuka: native Dravidian, 'talk price': vila (DEDR 5421) + pēśuka 'speak' (DEDR 4430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C303-labhikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C303-KRIYA303-05]; assesses=[] -->
 
 **വിലപേശുക** — *vilapēśuka* — "to bargain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിലപേശുക** (*vilapēśuka*) is native Dravidian, "to talk price": *vila*, "price" (DEDR 5421), and the verb "to speak, chatter" (DEDR 4430, with Tamil *pēcu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vaḷavŭ"
 concept_tag: ML-STHALAM278-VALAVU
 prerequisites: [ML-C277-annu, ML-C277-itinite]
 sounds: []
-roots: []
+roots: [dravidian-valai-bend]
+etymology_hook: "vaḷavŭ: native Dravidian, the noun of the verb 'to bend'; Tamil vaḷai (DEDR 5314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C277-itinite]
 <!-- hl-knowledge: introduces=[ML-LEX-C278-STHALAM278-01]; assesses=[] -->
 
 **വളവ്** — *vaḷavŭ* — "a bend, a curve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വളവ്** (*vaḷavŭ*) is native Dravidian, the noun of the verb "to bend, be curved"; DEDR 5314 lists Malayalam *vaḷavu*, "bend", itself, beside Tamil *vaḷai* and Kannada *baḷaṅku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

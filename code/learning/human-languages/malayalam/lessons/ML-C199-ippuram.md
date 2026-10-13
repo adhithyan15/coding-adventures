@@ -14,7 +14,8 @@ romanization: "ippuṟaṁ"
 concept_tag: ML-STHALAM199-IPPURAM
 prerequisites: [ML-C199-itayil, ML-C199-appuram]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-puram-outside]
+etymology_hook: "ippuṟaṁ: native Dravidian, 'this side'; DEDR 410 lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C199-appuram]
 <!-- hl-knowledge: introduces=[ML-LEX-C199-STHALAM199-04]; assesses=[] -->
 
 **ഇപ്പുറം** — *ippuṟaṁ* — "on this side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇപ്പുറം** (*ippuṟaṁ*) is native Dravidian, "this side": DEDR 410 lists it among the near-pointing words, with Tamil *i-ppuṟam*, "this side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

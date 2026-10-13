@@ -14,7 +14,8 @@ romanization: "arippa"
 concept_tag: ML-VASTU207-ARIPPA
 prerequisites: [ML-C207-catti, ML-C207-tavi]
 sounds: []
-roots: []
+roots: [dravidian-ari-sift]
+etymology_hook: "arippa: native Dravidian, from the verb 'to sift'; Tamil ari- (DEDR 213)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C207-tavi]
 <!-- hl-knowledge: introduces=[ML-LEX-C207-VASTU207-05]; assesses=[] -->
 
 **അരിപ്പ** — *arippa* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അരിപ്പ** (*arippa*) is native Dravidian, from the verb "to sift, to filter"; DEDR 213 lists the root with Tamil *ari-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

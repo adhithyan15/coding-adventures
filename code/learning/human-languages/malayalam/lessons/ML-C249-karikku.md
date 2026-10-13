@@ -14,7 +14,8 @@ romanization: "karikkŭ"
 concept_tag: ML-VASTU249-KARIKKU
 prerequisites: [ML-C249-rotti, ML-C249-jyus]
 sounds: []
-roots: []
+roots: [dravidian-karikku-tender-coconut]
+etymology_hook: "karikkŭ: native Dravidian, one word with Tamil karukkāy (DEDR 1281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C249-jyus]
 <!-- hl-knowledge: introduces=[ML-LEX-C249-VASTU249-05]; assesses=[] -->
 
 **കരിക്ക്** — *karikkŭ* — "a tender coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരിക്ക്** (*karikkŭ*) is native Dravidian, one word with Tamil *karukkāy* (DEDR 1281). DEDR 1281 lists Malayalam *karikku*, "an unripe coconut", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

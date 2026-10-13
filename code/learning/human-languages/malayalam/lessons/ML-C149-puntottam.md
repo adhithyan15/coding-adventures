@@ -14,7 +14,8 @@ romanization: "pūntōṭṭaṁ"
 concept_tag: ML-THINGS149-PUNTOTTAM
 prerequisites: [ML-C148-dvipu, ML-C148-tiram, ML-C27-vaikunneram]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower, dravidian-tottam-garden]
+etymology_hook: "pūntōṭṭaṁ: native Dravidian, 'flower garden': pū (DEDR 4345) + tōṭṭam 'garden' (DEDR 3549)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C148-tiram]
 <!-- hl-knowledge: introduces=[ML-LEX-C149-THINGS149-01]; assesses=[] -->
 
 **പൂന്തോട്ടം** — *pūntōṭṭaṁ* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂന്തോട്ടം** (*pūntōṭṭaṁ*) is native Dravidian, "the flower garden": *pū*, "flower" (DEDR 4345), and *tōṭṭam*, "garden" (DEDR 3549, with Tamil *tōṭṭam*). DEDR 4345 compares Sanskrit *puṣpa*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

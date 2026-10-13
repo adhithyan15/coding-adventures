@@ -11,7 +11,8 @@ romanization: "cēcci"
 concept_tag: ML-WORD-ADDRESS-WOMAN
 prerequisites: [ML-C82-chettaa]
 sounds: []
-roots: []
+roots: [sanskrit-jyeshtha]
+etymology_hook: "cēcci 'elder sister': usually taken as the feminine partner of cēṭṭan, from Sanskrit jyēṣṭha (CDIAL 5286)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +60,11 @@ little, which is a matter of voice rather than of spelling.
 **A rule that applies to one word of a pair and not the other is normal**, and
 it is worth getting used to early. Nothing is broken here: this word carries no
 **-ൻ** for the ending to take.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചേച്ചി** (*cēcci*), "elder sister", is usually taken as the feminine partner of *cēṭṭan*, and so from the same Sanskrit *jyēṣṭha*, "eldest" (CDIAL 5286); its exact path is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C82-ADDRESS-02, ML-LEX-C82-ADDRESS-01, ML-CONCEPT-C82-VOCATIVE-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

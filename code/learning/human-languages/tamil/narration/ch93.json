@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "How Do You Say It?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fc39c69b147f0407",
+  "sourceHash": "fnv1a64:5bd3422c357654da",
   "lessons": [
     {
       "id": "TA-C93-meaning",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:338fb11dac52afc1",
+      "sourceHash": "fnv1a64:1e1d9f7ca62668bf",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தமிழில் (tamiḻil) is tamiḻ, native (DEDR 3080), with the locative -il, \"in\"."
+              "text": "தமிழில் (tamiḻil) is tamiḻ, native (DEDR 3080, which compares Sanskrit draviḍa), with the locative -il, \"in\"."
             }
           ]
         },

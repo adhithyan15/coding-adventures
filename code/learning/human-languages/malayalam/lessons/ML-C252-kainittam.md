@@ -14,7 +14,8 @@ romanization: "kainīṭṭaṁ"
 concept_tag: ML-VASTU252-KAINITTAM
 prerequisites: [ML-C252-vallamkali, ML-C252-kani]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-nil-long]
+etymology_hook: "kainīṭṭaṁ: native Dravidian, 'hand-stretching': kai (DEDR 2023) + a noun from nīṭṭuka 'to stretch out' (DEDR 3692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C252-kani]
 <!-- hl-knowledge: introduces=[ML-LEX-C252-VASTU252-04]; assesses=[] -->
 
 **കൈനീട്ടം** — *kainīṭṭaṁ* — "a Vishu gift of money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൈനീട്ടം** (*kainīṭṭaṁ*) is native Dravidian, "the stretching out of the hand": *kai*, "hand" (DEDR 2023), and a noun from the verb "to stretch out, hold out" (DEDR 3692, with Tamil *nīḷ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

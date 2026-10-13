@@ -14,7 +14,8 @@ romanization: "tiriccaṟiyuka"
 concept_tag: ML-VERB-TIRICCARIYUKA
 prerequisites: [ML-C308-taippu-ceyyuka, ML-C309-kuraykkuka2]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn, dravidian-ari-know]
+etymology_hook: "tiriccaṟiyuka: native Dravidian, 'know back': tiriccu 'turning back' (DEDR 3246) + aṟiyuka 'know' (DEDR 314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C309-kuraykkuka2]
 <!-- hl-knowledge: introduces=[ML-LEX-C309-KRIYA309-02]; assesses=[] -->
 
 **തിരിച്ചറിയുക** — *tiriccaṟiyuka* — "to recognize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരിച്ചറിയുക** (*tiriccaṟiyuka*) is native Dravidian, "to know again": *tiriccu*, "turning back" (DEDR 3246, with Tamil *tiri*), and *aṟiyuka*, "to know" (DEDR 314).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

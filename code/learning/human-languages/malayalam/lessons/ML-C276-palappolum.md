@@ -14,7 +14,8 @@ romanization: "palappōḻuṁ"
 concept_tag: ML-SAMAYAM276-PALAPPOLUM
 prerequisites: [ML-C276-eppolum, ML-C276-pativayi]
 sounds: []
-roots: []
+roots: [dravidian-pala-many, dravidian-pozhutu-time]
+etymology_hook: "palappōḻuṁ: native Dravidian, pala 'many' (DEDR 3987) + 'time' (DEDR 4559) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C276-pativayi]
 <!-- hl-knowledge: introduces=[ML-LEX-C276-SAMAYAM276-03]; assesses=[] -->
 
 **പലപ്പോഴും** — *palappōḻuṁ* — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പലപ്പോഴും** (*palappōḻuṁ*) is native Dravidian, "many times": *pala*, "many" (DEDR 3987, with Tamil *pala*), the word for "time" (DEDR 4559), and *-uṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

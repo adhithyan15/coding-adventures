@@ -14,7 +14,8 @@ romanization: "vaḷḷi"
 concept_tag: ML-VASTU291-VALLI
 prerequisites: [ML-C290-centa, ML-C290-puram]
 sounds: []
-roots: []
+roots: [dravidian-valli-creeper]
+etymology_hook: "vaḷḷi: native Dravidian, one word with Tamil vaḷḷi and Kannada baḷḷi (DEDR 5316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C290-puram]
 <!-- hl-knowledge: introduces=[ML-LEX-C291-VASTU291-01]; assesses=[] -->
 
 **വള്ളി** — *vaḷḷi* — "a creeper, a vine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വള്ളി** (*vaḷḷi*) is native Dravidian, one word with Tamil *vaḷḷi*, Kannada *baḷḷi* and Telugu *valli* (DEDR 5316). DEDR 5316 compares Sanskrit *vallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

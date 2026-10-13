@@ -12,6 +12,7 @@ concept_tag: ML-VERB-SAMSARIKKUKA
 prerequisites: [ML-C03-njaan, ML-C04-pokuka]
 sounds: [anusvara, double-kk]
 roots: [samsaara-sanskrit]
+etymology_hook: "saṁsārikkuka ← Sanskrit saṁsāra 'the world, worldly life' + the verb ending -ikkuka (CDIAL 13036)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,8 @@ speak," Malayalam adds the present ending **-ഉന്നു** (*-unnu*) to the 
 
 > *saṁsārikk-* (speak) + *-unnu* (present) → **സംസാരിക്കുന്നു**
 > (*saṁsārikkunnu*), "speak / am speaking."
+
+Sanskrit *saṁsāra*, "the world, secular life", is CDIAL 13036; speaking is what people do in the world.
 
 ## Grammar Lens: the verb never changes for person
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C05-VERB-NEVER-AGREES-01]; assesses=[ML-LEX-SAMSAARIKKUKA-01] -->

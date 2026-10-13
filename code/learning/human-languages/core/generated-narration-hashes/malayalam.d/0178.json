@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 178,
-  "sourceHash": "fnv1a64:58927e04d6faa9d1",
+  "sourceHash": "fnv1a64:e6151ed643d4d843",
   "lessonIds": [
     "ML-C178-atuttite",
     "ML-C178-itinakam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch178.txt",
   "json": "malayalam/narration/ch178.json",
-  "textHash": "fnv1a64:9c097153e21c11a3",
-  "jsonHash": "fnv1a64:e35cd1e628ab6439",
+  "textHash": "fnv1a64:02313b10c23548c1",
+  "jsonHash": "fnv1a64:24e6d4fe029cb4fb",
   "findings": []
 }

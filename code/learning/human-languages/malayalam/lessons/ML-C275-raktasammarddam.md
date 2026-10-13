@@ -14,7 +14,8 @@ romanization: "raktasammarddaṁ"
 concept_tag: ML-AROGYAM275-RAKTASAMMARDDAM
 prerequisites: [ML-C275-catavu, ML-C275-mannappittam]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "raktasammarddaṁ: Sanskrit rakta 'blood' (CDIAL 10539) + sammarda 'pressing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C275-mannappittam]
 <!-- hl-knowledge: introduces=[ML-LEX-C275-AROGYAM275-05]; assesses=[] -->
 
 **രക്തസമ്മർദ്ദം** — *raktasammarddaṁ* — "blood pressure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രക്തസമ്മർദ്ദം** (*raktasammarddaṁ*) is Sanskrit: *rakta*, "red; blood" (CDIAL 10539), and *sammarda*, "pressing, crushing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

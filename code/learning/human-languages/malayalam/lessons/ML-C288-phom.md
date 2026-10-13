@@ -14,7 +14,8 @@ romanization: "phōṁ"
 concept_tag: ML-VASTU288-PHOM
 prerequisites: [ML-C288-palisa, ML-C288-tuka]
 sounds: []
-roots: []
+roots: [english-form]
+etymology_hook: "phōṁ ← English form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C288-tuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C288-VASTU288-05]; assesses=[] -->
 
 **ഫോം** — *phōṁ* — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫോം** (*phōṁ*) ← English *form*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

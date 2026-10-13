@@ -14,7 +14,8 @@ romanization: "kēḷvi"
 concept_tag: ML-AROGYAM194-KELVI
 prerequisites: [ML-C194-prasavam, ML-C194-opparesan]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask]
+etymology_hook: "kēḷvi: native Dravidian, the noun of the hearing verb; Tamil kēḷ, Kannada kēḷ (DEDR 2017)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C194-opparesan]
 <!-- hl-knowledge: introduces=[ML-LEX-C194-AROGYAM194-03]; assesses=[] -->
 
 **കേൾവി** — *kēḷvi* — "hearing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേൾവി** (*kēḷvi*) is native Dravidian, the noun of the verb "to hear"; DEDR 2017 lists Malayalam *kēḷvi*, "hearing", itself, beside Tamil *kēḷ* and Kannada *kēḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

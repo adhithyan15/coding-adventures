@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for private, then the Malayalam for public
 You'll want to know: നിറം.
 നിറം — niṟaṁ — "a colour".
 
+The word, taken apart.
+നിറം (niṟaṁ) is native Dravidian, one word with Tamil niṟa (DEDR 3680). Its older senses are "light, splendour".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for public, then the Malayalam for a colou
 
 You'll want to know: തവിട്ട്.
 തവിട്ട് — taviṭṭŭ — "brown".
+
+The word, taken apart.
+തവിട്ട് (taviṭṭŭ) is native Dravidian, from taviṭu, "bran": brown is the colour of rice bran; DEDR 3111 lists the root with Tamil taviṭu, Kannada tavuḍu and Telugu tavuḍu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a colour, then the Malayalam for brown
 You'll want to know: ചാരനിറം.
 ചാരനിറം — cāraniṟaṁ — "grey (ash-coloured)".
 
+The word, taken apart.
+ചാരനിറം (cāraniṟaṁ) is "ash colour": cāram, "ash", from Sanskrit kṣāra, "alkali", whose descendants often mean "ashes" (CDIAL 3674), with native niṟam, "colour" (DEDR 3680).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for brown, then the Malayalam for grey.
 You'll want to know: പിങ്ക്.
 പിങ്ക് — piṅkŭ — "pink".
 
+The word, taken apart.
+പിങ്ക് (piṅkŭ) from English pink.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for grey, then the Malayalam for pink.
 
 You'll want to know: വയലറ്റ്.
 വയലറ്റ് — vayalaṟṟŭ — "violet, purple".
+
+The word, taken apart.
+വയലറ്റ് (vayalaṟṟŭ) from English violet.
 
 What you've built.
 One more word for this chapter.

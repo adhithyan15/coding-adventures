@@ -11,7 +11,8 @@ romanization: "nakhaṁ"
 concept_tag: ML-NOUN-NAIL
 prerequisites: [ML-C57-lip, ML-C55-path]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nakhaṁ ← Sanskrit nakha 'nail, claw', a tatsama (CDIAL 6914)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *nakha* — and this one has relatives much further west. It shares an 
 A word for a fingernail surviving intact across that distance is worth noticing. Body-part words are among the slowest things in any language to be replaced, because everybody has one and everybody learns the word early.
 
 നഖം covers the fingernail, the toenail and the claw of an animal alike.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നഖം** (*nakhaṁ*) ← Sanskrit *nakha*, "nail, claw", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 6914). It is related far to the west: Latin *unguis* and English *nail* go back to the same Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

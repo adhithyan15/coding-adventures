@@ -14,7 +14,8 @@ romanization: "appuṟaṁ"
 concept_tag: ML-STHALAM199-APPURAM
 prerequisites: [ML-C199-malinyam, ML-C199-itayil]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-puram-outside]
+etymology_hook: "appuṟaṁ: native Dravidian, 'that side': the far-pointing base (DEDR 1) + puṟam 'side' (DEDR 4333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C199-itayil]
 <!-- hl-knowledge: introduces=[ML-LEX-C199-STHALAM199-03]; assesses=[] -->
 
 **അപ്പുറം** — *appuṟaṁ* — "beyond, on the far side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപ്പുറം** (*appuṟaṁ*) is native Dravidian, "that side": the far-pointing base (DEDR 1, which lists it) with *puṟam*, "side, outside" (DEDR 4333, with Tamil *puṟam*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

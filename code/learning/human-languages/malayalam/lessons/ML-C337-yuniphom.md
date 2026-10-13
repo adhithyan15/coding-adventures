@@ -14,7 +14,8 @@ romanization: "yūṇiphōṁ"
 concept_tag: ML-JOLI337-YUNIPHOM
 prerequisites: [ML-C336-caritram, ML-C337-cokku]
 sounds: []
-roots: []
+roots: [english-uniform]
+etymology_hook: "yūṇiphōṁ ← English uniform"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C337-cokku]
 <!-- hl-knowledge: introduces=[ML-LEX-C337-JOLI337-02]; assesses=[] -->
 
 **യൂണിഫോം** — *yūṇiphōṁ* — "a uniform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യൂണിഫോം** (*yūṇiphōṁ*) ← English *uniform*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

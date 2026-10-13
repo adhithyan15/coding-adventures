@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Gifts, Welcomes, Apologies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ec0dda59e149ee9a",
+  "sourceHash": "fnv1a64:84e0279410d2ad6f",
   "lessons": [
     {
       "id": "TA-C99-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e70363624ca76e8",
+      "sourceHash": "fnv1a64:ae00d544fd75a3ac",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குடியுங்கள் (kuṭiyuṅkaḷ) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi. It is kuḍi, \"drink\", with the polite ending."
+              "text": "குடியுங்கள் (kuṭiyuṅkaḷ) is native Dravidian. DEDR 1654 lists Malayalam kuṭi and Kannada kuḍi. It is kuḍi, \"drink\", with the polite ending. DEDR compares Sanskrit kuṭī, \"liquor\"."
             }
           ]
         },

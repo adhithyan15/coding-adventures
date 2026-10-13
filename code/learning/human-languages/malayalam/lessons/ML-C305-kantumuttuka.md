@@ -14,7 +14,8 @@ romanization: "kaṇṭumuṭṭuka"
 concept_tag: ML-VERB-KANTUMUTTUKA
 prerequisites: [ML-C305-pinvalikkuka, ML-C305-ceruka]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see, dravidian-muttu-touch]
+etymology_hook: "kaṇṭumuṭṭuka: native Dravidian, 'meet having seen': kāṇ (DEDR 1443) + muṭṭuka 'touch, meet' (DEDR 4934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C305-ceruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C305-KRIYA305-04]; assesses=[] -->
 
 **കണ്ടുമുട്ടുക** — *kaṇṭumuṭṭuka* — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണ്ടുമുട്ടുക** (*kaṇṭumuṭṭuka*) is native Dravidian: the past of the seeing verb (DEDR 1443) and the verb "to touch, come against" (DEDR 4934, with Kannada *muṭṭu*, "to touch").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

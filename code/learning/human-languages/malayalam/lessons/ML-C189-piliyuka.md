@@ -14,7 +14,8 @@ romanization: "piḻiyuka"
 concept_tag: ML-VERB-PILIYUKA
 prerequisites: [ML-C188-nannakkuka, ML-C189-tuppuka]
 sounds: []
-roots: []
+roots: [dravidian-pizhi-wring]
+etymology_hook: "piḻiyuka: native Dravidian, one word with Tamil piḻi and Kannada piḻi (DEDR 4183)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C189-tuppuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C189-KRIYA189-02]; assesses=[] -->
 
 **പിഴിയുക** — *piḻiyuka* — "to wring, to squeeze out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിഴിയുക** (*piḻiyuka*) is native Dravidian, one word with Tamil *piḻi*, Kannada *piḻi* and Telugu *piḍucu* (DEDR 4183). DEDR 4183 compares Sanskrit *piṇyāka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

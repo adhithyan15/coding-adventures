@@ -11,7 +11,8 @@ romanization: "samayaṁ"
 concept_tag: ML-SPAN-TIME
 prerequisites: [ML-C138-tiger, ML-C138-rabbit]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samayaṁ ← Sanskrit samaya 'meeting, agreement; time', a tatsama (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C138-rabbit]
 <!-- hl-knowledge: introduces=[ML-LEX-C139-TIME-01]; assesses=[] -->
 
 **സമയം** (*samayaṁ*) — "time". **സമയം എത്ര?** — "what time is it?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമയം** (*samayaṁ*) ← Sanskrit *samaya*, "meeting, agreement; time", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13185). A meeting at an agreed point became a time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

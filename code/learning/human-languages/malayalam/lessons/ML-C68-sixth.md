@@ -11,7 +11,8 @@ romanization: "āṟāṁ"
 concept_tag: ML-ORDINAL-SIXTH
 prerequisites: [ML-C67-fifth, ML-C67-first, ML-C64-then, ML-C52-door, ML-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "āṟāṁ: native Dravidian, 'six' + -āṁ; Tamil āṟu 'six' (DEDR 2485)"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ nothing else to notice.
 That "nothing else to notice" is the point of the whole chapter. Six to ten were
 a separate lesson from one to five when you learned to count, because the words
 themselves had to be learned. For **ordering** they are not a separate anything.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആറാം** (*āṟāṁ*) is native Dravidian: "six" (DEDR 2485, with Tamil *āṟu* and Kannada *āṟu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-01, ML-LEX-C67-ORDINAL-07] -->

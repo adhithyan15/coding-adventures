@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [ML-C02-entu, ML-C02-nii-ningal]
 sounds: [double-ng]
 roots: [e-interrogative-dravidian]
+etymology_hook: "eṅṅane 'how': native Dravidian; DEDR 5151 lists it under the question stem yā- / e-"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,8 @@ you met in *entŭ*. Malayalam gathers its questions here: *entŭ* (what), *eṅ�
 (how), *ārŭ* (who), *eviṭe* (where), *eppōḷ* (when), *entinŭ* (why). It is the
 same Dravidian question-root heading Tamil's *eppaḍi* — the deepest, most native
 layer of a language otherwise rich in Sanskrit.
+
+DEDR 5151 lists Malayalam *eṅṅanē*, "how", under that question stem, beside Tamil *yāṅku*, "how".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENGANE-01, ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a direction, then the Malayalam for no
 You'll want to know: ഭൂമി.
 ഭൂമി — bhūmi — "the earth, land".
 
+The word, taken apart.
+ഭൂമി (bhūmi) from Sanskrit bhūmi, "earth, ground", taken over whole as a tatsama (CDIAL 9557).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for north, then the Malayalam for the eart
 
 You'll want to know: പ്രകൃതി.
 പ്രകൃതി — prakṛti — "nature".
+
+The word, taken apart.
+പ്രകൃതി (prakṛti) from Sanskrit prakṛti, "cause, source, nature", taken over whole as a tatsama (CDIAL 8446).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the earth, then the Malayalam for natu
 You'll want to know: അതിർത്തി.
 അതിർത്തി — atirtti — "a border".
 
+The word, taken apart.
+അതിർത്തി (atirtti) is native Dravidian, built on atir, "boundary, limit", which DEDR 2325 lists with Tamil catir and Kannada adiri.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for nature, then the Malayalam for a borde
 You'll want to know: പഞ്ചായത്ത്.
 പഞ്ചായത്ത് — pañcāyattŭ — "a village council".
 
+The word, taken apart.
+പഞ്ചായത്ത് (pañcāyattŭ) from Hindustani pañcāyat, a village council, originally of five elders, from Sanskrit pañca, "five" (CDIAL 7655).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a border, then the Malayalam for a vil
 
 You'll want to know: നാട്ടിൻപുറം.
 നാട്ടിൻപുറം — nāṭṭinpuṟaṁ — "the countryside".
+
+The word, taken apart.
+നാട്ടിൻപുറം (nāṭṭinpuṟaṁ) is native Dravidian, "the country side": nāṭu, "cultivated land, country" (DEDR 3638), and puṟam, "side, outside" (DEDR 4333).
 
 What you've built.
 One more word for this chapter.

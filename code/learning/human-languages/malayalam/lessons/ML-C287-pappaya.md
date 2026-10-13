@@ -14,7 +14,8 @@ romanization: "pappāya"
 concept_tag: ML-VASTU287-PAPPAYA
 prerequisites: [ML-C287-palaharam, ML-C287-palampori]
 sounds: []
-roots: []
+roots: [portuguese-papaya]
+etymology_hook: "pappāya ← papaya, a word from the Caribbean that came with the fruit through Spanish and Portuguese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C287-palampori]
 <!-- hl-knowledge: introduces=[ML-LEX-C287-VASTU287-03]; assesses=[] -->
 
 **പപ്പായ** — *pappāya* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പപ്പായ** (*pappāya*) is *papaya*, a word from a language of the Caribbean that travelled with the fruit through Spanish and Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

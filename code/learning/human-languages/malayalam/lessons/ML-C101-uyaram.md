@@ -11,7 +11,8 @@ romanization: "uyaraṁ"
 concept_tag: ML-HEIGHT
 prerequisites: [ML-C101-thadicha, ML-C32-undu, ML-C06-dative-subject]
 sounds: []
-roots: []
+roots: [dravidian-uyar-high]
+etymology_hook: "uyaraṁ: native Dravidian, from the verb 'to rise'; Tamil uyar (DEDR 646)"
 duration:
   max_seconds: 260
 requires:
@@ -66,6 +67,8 @@ And the **ം** does here what it does **before ആണ്** — it takes the ful
 **Do not read that as a rule about every ending.** The chapter on easy and hard
 told you the **ം** does different things for different endings, and this
 chapter's own title proves it: **ഉയരം** + **ഉം** is **ഉയരവും**, with a **വ**.
+
+**Where the word comes from.** It is native Dravidian, a noun from the verb "to rise, be high": DEDR 646 lists it with Tamil *uyar*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-HEIGHT-01, ML-CONCEPT-C32-UNDU-01, ML-LEX-C101-SHORT-01] -->

@@ -14,7 +14,8 @@ gloss: "a swing"
 concept_tag: ML-ANCHOR-OONJAAL
 prerequisites: [ML-S129-letter-bha]
 sounds: []
-roots: []
+roots: [dravidian-unjal-swing]
+etymology_hook: "ūññāl: native Dravidian, one word with Tamil ūñcal and Kannada uyyal(u) (DEDR 731)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ūññāl*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഊ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഊഞ്ഞാൽ** (*ūññāl*) is native Dravidian, one word with Tamil *ūñcal* and Kannada *uyyal(u)* (DEDR 731).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-OONJAAL] -->

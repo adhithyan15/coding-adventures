@@ -14,7 +14,8 @@ romanization: "ṟeyilvē"
 concept_tag: ML-STHALAM238-REYILVE
 prerequisites: [ML-C238-natuvil, ML-C238-vimanattavalam]
 sounds: []
-roots: []
+roots: [english-railway]
+etymology_hook: "ṟeyilvē ← English railway"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C238-vimanattavalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C238-STHALAM238-03]; assesses=[] -->
 
 **റെയിൽവേ** — *ṟeyilvē* — "the railway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**റെയിൽവേ** (*ṟeyilvē*) ← English *railway*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

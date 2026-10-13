@@ -14,7 +14,8 @@ romanization: "ṭīṁ"
 concept_tag: ML-VASTU215-TIM
 prerequisites: [ML-C215-pantu, ML-C215-kalikkaran]
 sounds: []
-roots: []
+roots: [english-team]
+etymology_hook: "ṭīṁ ← English team"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C215-kalikkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C215-VASTU215-03]; assesses=[] -->
 
 **ടീം** — *ṭīṁ* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടീം** (*ṭīṁ*) ← English *team*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

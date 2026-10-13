@@ -14,7 +14,8 @@ romanization: "parukkan"
 concept_tag: ML-GUNAM204-PARUKKAN
 prerequisites: [ML-C204-alukkulla, ML-C204-minusamulla]
 sounds: []
-roots: []
+roots: [dravidian-paru-rough]
+etymology_hook: "parukkan: native Dravidian, built on parukku 'rough surface'; Tamil paru (DEDR 3973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C204-minusamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C204-GUNAM204-04]; assesses=[] -->
 
 **പരുക്കൻ** — *parukkan* — "rough, coarse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരുക്കൻ** (*parukkan*) is native Dravidian, built on *parukku*, "rough surface"; DEDR 3973 lists it, beside Tamil *paru* and Kannada *parige*. DEDR 3973 compares Sanskrit *paruṣa*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "maññŭ"
 concept_tag: ML-WX-MIST
 prerequisites: [ML-C118-heat, ML-C118-sleep]
 sounds: []
-roots: []
+roots: [dravidian-manju-mist]
+etymology_hook: "maññŭ: native Dravidian, one word with Tamil mañcu and Kannada mañju (DEDR 4641)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C118-sleep]
 
 **മഞ്ഞ്** (*maññŭ*) — "mist, dew", and the word for snow too. Kerala's hills have
 the mist.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മഞ്ഞ്** (*maññŭ*) is native Dravidian, one word with Tamil *mañcu*, Kannada *mañju* and Telugu *mancu* (DEDR 4641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

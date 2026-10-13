@@ -46,7 +46,7 @@ The same *maka-* stem as the last lesson, with *-aḷ* where that word had *-a�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மகள்** (*makaḷ*) is native Dravidian. DEDR 4616 lists Malayalam *mōḷ*. It is the feminine of the same word as *makaṉ*, "son".
+**மகள்** (*makaḷ*) is native Dravidian. DEDR 4616 lists Malayalam *mōḷ*. It is the feminine of the same word as *makaṉ*, "son". The entry compares Sanskrit (lexicons) *mālikā*, "daughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

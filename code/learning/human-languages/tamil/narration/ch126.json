@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Lake, Pond, Forest, Leaf, Soil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5c6a89fb91bb4366",
+  "sourceHash": "fnv1a64:b6f1c5c1a0484292",
   "lessons": [
     {
       "id": "TA-C126-eri",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2605449ddc929d8e",
+      "sourceHash": "fnv1a64:58c728f78792b18e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குளம் (kuḷam) is native Dravidian. DEDR 1828 lists Malayalam kuḷam, Kannada koḷa and Telugu kolanu."
+              "text": "குளம் (kuḷam) is native Dravidian. DEDR 1828 lists Malayalam kuḷam, Kannada koḷa and Telugu kolanu. The entry compares Sanskrit kūla, \"pond\"."
             }
           ]
         },

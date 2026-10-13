@@ -14,7 +14,8 @@ romanization: "bhāgyavaśāl"
 concept_tag: ML-KARANAM201-BHAGYAVASAL
 prerequisites: [ML-C201-atupole, ML-C201-olike]
 sounds: []
-roots: []
+roots: [sanskrit-bhagya, sanskrit-vasha]
+etymology_hook: "bhāgyavaśāl: Sanskrit bhāgya 'fortune' (CDIAL 9434) + vaśāt 'by force of' (CDIAL 11430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C201-olike]
 <!-- hl-knowledge: introduces=[ML-LEX-C201-KARANAM201-03]; assesses=[] -->
 
 **ഭാഗ്യവശാൽ** — *bhāgyavaśāl* — "fortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭാഗ്യവശാൽ** (*bhāgyavaśāl*) is Sanskrit: *bhāgya*, "fortune" (CDIAL 9434), and *vaśāt*, "by the power of", from *vaśa*, "will, power" (CDIAL 11430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

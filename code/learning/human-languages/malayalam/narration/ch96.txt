@@ -28,6 +28,7 @@ Say the two words one after the other, quickly. You will not hear anything chang
 മോശമാണ്, (it) is bad.
 Every one of those is a word ending in ം with ആണ് welded on.
 You were shown this once, at മോശം. Here it is again — and this time it is not a fact about one word you were given. It is something you do, to a word you met a minute ago.
+Where the word comes from. It is native Dravidian: DEDR 855 lists it with Tamil eḷi, "easy".
 
 Guided Practice.
 [pause 1 second]
@@ -59,6 +60,9 @@ It ends in ം as well, so it behaves the way the last one did, and you did not 
 ഇത് എളുപ്പമാണ്, this is easy.
 ഇത് പ്രയാസമാണ്, this is difficult.
 One word apart, and the sentence is the opposite. Everything around it holds still.
+
+The word, taken apart.
+പ്രയാസം (prayāsaṁ) from Sanskrit prayāsa, "effort, exertion", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. What costs effort is difficult.
 
 What you've built.
 This is a pair you can say about anything you can point at — a word, a letter, a road, a lesson. It is also the first thing most learners want to say about the language itself, and you can now say it in the language, which is a better place to complain from.

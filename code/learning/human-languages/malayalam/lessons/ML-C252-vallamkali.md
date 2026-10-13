@@ -14,7 +14,8 @@ romanization: "vaḷḷaṁkaḷi"
 concept_tag: ML-VASTU252-VALLAMKALI
 prerequisites: [ML-C251-vivaram, ML-C252-tamasa]
 sounds: []
-roots: []
+roots: [dravidian-vallam-boat, dravidian-kali-play]
+etymology_hook: "vaḷḷaṁkaḷi: native Dravidian, 'boat play': vaḷḷam 'canoe, boat' (DEDR 5315) + kaḷi 'play' (DEDR 1374)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C252-tamasa]
 <!-- hl-knowledge: introduces=[ML-LEX-C252-VASTU252-02]; assesses=[] -->
 
 **വള്ളംകളി** — *vaḷḷaṁkaḷi* — "a snake-boat race".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വള്ളംകളി** (*vaḷḷaṁkaḷi*) is native Dravidian, "boat play": *vaḷḷam*, "canoe, boat" (DEDR 5315, with Tamil *vaḷḷam*), and *kaḷi*, "play, game" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

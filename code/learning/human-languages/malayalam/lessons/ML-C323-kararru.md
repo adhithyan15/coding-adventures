@@ -14,7 +14,8 @@ romanization: "kāraṟṟŭ"
 concept_tag: ML-VASTU323-KARARRU
 prerequisites: [ML-C323-tannimattan, ML-C323-cira]
 sounds: []
-roots: []
+roots: [english-carrot]
+etymology_hook: "kāraṟṟŭ ← English carrot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C323-cira]
 <!-- hl-knowledge: introduces=[ML-LEX-C323-VASTU323-03]; assesses=[] -->
 
 **കാരറ്റ്** — *kāraṟṟŭ* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാരറ്റ്** (*kāraṟṟŭ*) ← English *carrot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

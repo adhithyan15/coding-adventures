@@ -14,7 +14,8 @@ romanization: "mattaṅṅa"
 concept_tag: ML-VASTU218-MATTANNA
 prerequisites: [ML-C218-kala2, ML-C218-cena]
 sounds: []
-roots: []
+roots: [malayalam-mattanna]
+etymology_hook: "mattaṅṅa 'pumpkin': of uncertain origin; DEDR does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C218-cena]
 <!-- hl-knowledge: introduces=[ML-LEX-C218-VASTU218-05]; assesses=[] -->
 
 **മത്തങ്ങ** — *mattaṅṅa* — "a pumpkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മത്തങ്ങ** (*mattaṅṅa*) is of uncertain origin; DEDR does not list it. Its ending looks like the fruit-ending of *tēṅṅa* and *māṅṅa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

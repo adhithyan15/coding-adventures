@@ -48,6 +48,11 @@ stretch from a home region all the way up to a country.
 country, and the situation decides which — so it can name the thing without
 fixing its size. **രാജ്യം** fixes it. That is the whole of what this word adds.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രാജ്യം** (*rājyaṁ*) ← Sanskrit *rājya*, "kingship, kingdom" (CDIAL 10694), a tatsama built on *rājan*, "king".
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-COUNTRY-01] -->
 

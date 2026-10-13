@@ -11,7 +11,8 @@ romanization: "bahumānaṁ"
 concept_tag: ML-NOUN-RESPECT
 prerequisites: [ML-C51-favour, ML-C49-certainly]
 sounds: []
-roots: []
+roots: [sanskrit-bahumana]
+etymology_hook: "bahumānaṁ ← Sanskrit bahumāna 'high esteem', a tatsama (CDIAL 9192)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C51-favour]
 That *māna* runs back to a root about thinking, and the same root gives Sanskrit its word for the mind. Malayalam took that mind-word too: it is sitting inside മനസ്സിലാക്കുക, the 'put it in the mind' this book used for understanding. Respect and understanding share an ancestor.
 
 Kannada does not use this word for respect; it says ಗೌರವ (*gaurava*), which is built on 'heavy'. Regarding much, or weighing much — the two sisters chose different metaphors off the same shelf.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബഹുമാനം** (*bahumānaṁ*) ← Sanskrit *bahumāna*, "high esteem", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 9192). Its parts are *bahu*, "much", and *māna*, "regard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

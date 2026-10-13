@@ -46,7 +46,7 @@ reviews_of: [TA-C93-meaning]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தமிழில்** (*tamiḻil*) is *tamiḻ*, native (DEDR 3080), with the locative *-il*, "in".
+**தமிழில்** (*tamiḻil*) is *tamiḻ*, native (DEDR 3080, which compares Sanskrit *draviḍa*), with the locative *-il*, "in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

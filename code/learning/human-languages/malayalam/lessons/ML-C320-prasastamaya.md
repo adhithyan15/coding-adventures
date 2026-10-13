@@ -14,7 +14,8 @@ romanization: "praśastamāya"
 concept_tag: ML-GUNAM320-PRASASTAMAYA
 prerequisites: [ML-C319-ahankaram, ML-C319-karsanamaya]
 sounds: []
-roots: []
+roots: [sanskrit-prashasta, aaka-dravidian]
+etymology_hook: "praśastamāya: Sanskrit praśasta 'praised' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C319-karsanamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C320-GUNAM320-01]; assesses=[] -->
 
 **പ്രശസ്തമായ** — *praśastamāya* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രശസ്തമായ** (*praśastamāya*) joins Sanskrit *praśasta*, "praised, celebrated", to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

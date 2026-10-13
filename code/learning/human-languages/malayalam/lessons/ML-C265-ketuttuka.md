@@ -14,7 +14,8 @@ romanization: "keṭuttuka"
 concept_tag: ML-VERB-KETUTTUKA
 prerequisites: [ML-C265-potiyuka, ML-C265-kattikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kedu-ruin]
+etymology_hook: "keṭuttuka: native Dravidian, 'make go out'; Tamil keṭu (DEDR 1942)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C265-kattikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C265-KRIYA265-03]; assesses=[] -->
 
 **കെടുത്തുക** — *keṭuttuka* — "to put out, to switch off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കെടുത്തുക** (*keṭuttuka*) is native Dravidian, the causative of the verb "to be extinguished, be spoilt"; DEDR 1942 lists the root with Tamil *keṭu* and Kannada *keḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

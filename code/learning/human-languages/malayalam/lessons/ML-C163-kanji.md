@@ -14,7 +14,8 @@ romanization: "kañji"
 concept_tag: ML-THINGS163-KANJI
 prerequisites: [ML-C163-purikam, ML-C163-kaivella]
 sounds: []
-roots: []
+roots: [dravidian-kanci-gruel]
+etymology_hook: "kañji: native Dravidian, one word with Tamil kañci and Kannada gañji (DEDR 1107)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C163-kaivella]
 <!-- hl-knowledge: introduces=[ML-LEX-C163-THINGS163-03]; assesses=[] -->
 
 **കഞ്ഞി** — *kañji* — "rice gruel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഞ്ഞി** (*kañji*) is native Dravidian, one word with Tamil *kañci*, Kannada *gañji* and Telugu *ganji* (DEDR 1107). English *congee* comes from this word. DEDR 1107 compares Sanskrit *kāñjīka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

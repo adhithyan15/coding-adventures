@@ -11,7 +11,8 @@ romanization: "attāḻaṁ"
 concept_tag: ML-MEALS-DINNER
 prerequisites: [ML-C130-breakfast, ML-C130-lunch]
 sounds: []
-roots: []
+roots: [dravidian-attazham-supper]
+etymology_hook: "attāḻaṁ: native Dravidian, one word with Tamil attāḷam (DEDR 143)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C130-lunch]
 <!-- hl-knowledge: introduces=[ML-LEX-C130-MEALS-03]; assesses=[] -->
 
 **അത്താഴം** (*attāḻaṁ*) — "dinner", the meal of **രാത്രി**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അത്താഴം** (*attāḻaṁ*) is native Dravidian, one word with Tamil *attāḷam* (DEDR 143).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

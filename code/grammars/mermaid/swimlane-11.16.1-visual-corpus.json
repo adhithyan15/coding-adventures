@@ -68,6 +68,10 @@
     "edge-rounded-curve",
     "line-hops-arc",
     "line-hops-gap",
-    "automatic-lane-ordering"
+    "automatic-lane-ordering",
+    "line-hops-step",
+    "line-hops-rounded",
+    "nested-subgraphs",
+    "state-choice-note-shapes"
   ]
 }

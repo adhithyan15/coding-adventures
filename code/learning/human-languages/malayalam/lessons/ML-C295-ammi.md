@@ -14,7 +14,8 @@ romanization: "ammi"
 concept_tag: ML-VASTU295-AMMI
 prerequisites: [ML-C295-kukkar, ML-C295-miksi]
 sounds: []
-roots: []
+roots: [dravidian-ammi-grindstone]
+etymology_hook: "ammi: native Dravidian, one word with Tamil ammi and Kannada ammi (DEDR 184)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C295-miksi]
 <!-- hl-knowledge: introduces=[ML-LEX-C295-VASTU295-03]; assesses=[] -->
 
 **അമ്മി** — *ammi* — "a grinding stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അമ്മി** (*ammi*) is native Dravidian, one word with Tamil *ammi* and Kannada *ammi* (DEDR 184).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

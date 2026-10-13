@@ -11,7 +11,8 @@ romanization: "taṇuppŭ"
 concept_tag: ML-WX-COLD
 prerequisites: [ML-C117-vomiting, ML-C117-wound]
 sounds: []
-roots: []
+roots: [dravidian-tan-cool]
+etymology_hook: "taṇuppŭ: native Dravidian, from taṇ 'cold'; Tamil taṇ, Kannada taṇ (DEDR 3045)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C117-wound]
 
 **തണുപ്പ്** (*taṇuppŭ*) — "cold", the cold of the weather rather than the illness
 **ജലദോഷം**. **നല്ല തണുപ്പ്** — "it's really cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തണുപ്പ്** (*taṇuppŭ*) is native Dravidian, a noun from *taṇ*, "cold, cool"; DEDR 3045 lists the root with Tamil *taṇ* and Kannada *taṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "piccaḷa"
 concept_tag: ML-VASTU217-PICCALA
 prerequisites: [ML-C217-pattu, ML-C217-tukal]
 sounds: []
-roots: []
+roots: [malayalam-piccala]
+etymology_hook: "piccaḷa 'brass': usually traced to Sanskrit pittala 'brass' (CDIAL 8184), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C217-tukal]
 <!-- hl-knowledge: introduces=[ML-LEX-C217-VASTU217-04]; assesses=[] -->
 
 **പിച്ചള** — *piccaḷa* — "brass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിച്ചള** (*piccaḷa*) is usually traced to Sanskrit *pittala*, "brass" (CDIAL 8184), reshaped; CDIAL does not record the Malayalam form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vṛttaṁ"
 concept_tag: ML-VASTU258-VRTTAM
 prerequisites: [ML-C258-cayam, ML-C258-akrti]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "vṛttaṁ ← Sanskrit vṛtta 'turned, rounded', a tatsama (CDIAL 12069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C258-akrti]
 <!-- hl-knowledge: introduces=[ML-LEX-C258-VASTU258-03]; assesses=[] -->
 
 **വൃത്തം** — *vṛttaṁ* — "a circle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൃത്തം** (*vṛttaṁ*) ← Sanskrit *vṛtta*, "turned, rounded", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12069).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

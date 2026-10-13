@@ -11,7 +11,8 @@ romanization: "hōṭṭal"
 concept_tag: ML-NOUN-EATERY
 prerequisites: [ML-C92-bhakshanam, ML-C91-kada]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hōṭṭal ← English hotel, which in Kerala came to mean a place that serves meals"
 duration:
   max_seconds: 260
 requires:
@@ -48,6 +49,11 @@ bed is not what the word promises.**
 
 **ഹോട്ടലിൽ** — *hōṭṭalil* — at the eating place. The in-ending attaches the
 ordinary way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹോട്ടൽ** (*hōṭṭal*) ← English *hotel*, from French *hôtel*. In Kerala it came to mean a place that serves meals rather than one that offers rooms.
 
 ## Why it's said this way: a borrowed word with its own life
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C92-FALSE-FRIEND-01]; assesses=[] -->

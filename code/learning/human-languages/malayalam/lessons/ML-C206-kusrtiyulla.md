@@ -14,7 +14,8 @@ romanization: "kusṛtiyuḷḷa"
 concept_tag: ML-GUNAM206-KUSRTIYULLA
 prerequisites: [ML-C205-vicitramaya, ML-C205-adhunika]
 sounds: []
-roots: []
+roots: [sanskrit-kusrti, dravidian-ul-be]
+etymology_hook: "kusṛtiyuḷḷa: Sanskrit kusṛti 'trickery' + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C205-adhunika]
 <!-- hl-knowledge: introduces=[ML-LEX-C206-GUNAM206-01]; assesses=[] -->
 
 **കുസൃതിയുള്ള** — *kusṛtiyuḷḷa* — "naughty, mischievous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുസൃതിയുള്ള** (*kusṛtiyuḷḷa*) joins Sanskrit *kusṛti*, "trickery, a crooked way", to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

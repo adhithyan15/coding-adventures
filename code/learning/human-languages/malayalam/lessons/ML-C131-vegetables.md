@@ -11,7 +11,8 @@ romanization: "paccakkaṟi"
 concept_tag: ML-KITCHEN-VEGETABLES
 prerequisites: [ML-C131-meat, ML-C131-egg]
 sounds: []
-roots: []
+roots: [proto-dravidian-pac-green, dravidian-kari-curry]
+etymology_hook: "paccakkaṟi: native Dravidian, pacca 'green' (DEDR 3821) + a word for 'vegetables, curry' (DEDR 1391)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C131-egg]
 <!-- hl-knowledge: introduces=[ML-LEX-C131-KITCHEN-04]; assesses=[] -->
 
 **പച്ചക്കറി** (*paccakkaṟi*) — "vegetables". It begins with **പച്ച**, "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പച്ചക്കറി** (*paccakkaṟi*) is native Dravidian: *pacca*, "green, fresh" (DEDR 3821, with Tamil *paca*, "to be green"), with the word for "vegetables, curry" (DEDR 1391, with Tamil *kaṟi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

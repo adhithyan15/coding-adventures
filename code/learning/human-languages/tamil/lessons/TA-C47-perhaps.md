@@ -12,7 +12,7 @@ concept_tag: TA-REPLY-PERHAPS
 prerequisites: [TA-C47-certainly, TA-C45-tooth, TA-C46-farmer]
 sounds: []
 roots: [proto-dravidian-numbers, sanskrit-vela]
-etymology_hook: "ஒருவேளை — 'at one time': native oru 'one' (DEDR 990) + vēḷai ← Sanskrit velā 'time' (CDIAL 12115)"
+etymology_hook: "ஒருவேளை — native oru 'one' (DEDR 990) + vēḷai ← Sanskrit velā 'time' (CDIAL 12115, itself prob. from Dravidian)"
 duration:
   max_seconds: 210
 requires:
@@ -48,7 +48,7 @@ Tamil builds its hedge out of counting. English does the same trick with "maybe"
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ஒருவேளை** (*oruvēḷai*) is "one time, at one moment": *oru*, "one", native (DEDR 990), and *vēḷai*, "time", a loan from Sanskrit *velā*, "limit, time" (CDIAL 12115).
+**ஒருவேளை** (*oruvēḷai*) is "one time, at one moment": *oru*, "one", native (DEDR 990), and *vēḷai*, "time", a loan from Sanskrit *velā*, "limit, time" (CDIAL 12115). CDIAL adds that *velā* itself probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

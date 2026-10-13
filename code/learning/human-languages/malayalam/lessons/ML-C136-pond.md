@@ -11,7 +11,8 @@ romanization: "kuḷaṁ"
 concept_tag: ML-WATER-POND
 prerequisites: [ML-C136-sea, ML-C136-beach]
 sounds: []
-roots: []
+roots: [dravidian-kulam-tank]
+etymology_hook: "kuḷaṁ: native Dravidian, one word with Tamil kuḷam and Kannada koḷa (DEDR 1828)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C136-beach]
 <!-- hl-knowledge: introduces=[ML-LEX-C136-WATER-03]; assesses=[] -->
 
 **കുളം** (*kuḷaṁ*) — "a pond", often with steps down to it for a **കുളി**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുളം** (*kuḷaṁ*) is native Dravidian, one word with Tamil *kuḷam*, Kannada *koḷa* and Telugu *kolanu* (DEDR 1828). DEDR 1828 compares Sanskrit *kūla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

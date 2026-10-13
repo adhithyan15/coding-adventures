@@ -14,7 +14,8 @@ romanization: "krikkaṟṟŭ"
 concept_tag: ML-VASTU329-KRIKKARRU
 prerequisites: [ML-C329-natakam, ML-C329-phutbol]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "krikkaṟṟŭ ← English cricket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C329-phutbol]
 <!-- hl-knowledge: introduces=[ML-LEX-C329-VASTU329-05]; assesses=[] -->
 
 **ക്രിക്കറ്റ്** — *krikkaṟṟŭ* — "cricket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്രിക്കറ്റ്** (*krikkaṟṟŭ*) ← English *cricket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

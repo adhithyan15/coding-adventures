@@ -14,7 +14,8 @@ romanization: "lābhaṁ"
 concept_tag: ML-JOLI300-LABHAM
 prerequisites: [ML-C300-kavi, ML-C300-tukkam]
 sounds: []
-roots: []
+roots: [sanskrit-labha]
+etymology_hook: "lābhaṁ ← Sanskrit lābha 'finding, profit', a tatsama (CDIAL 11018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C300-tukkam]
 <!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-04]; assesses=[] -->
 
 **ലാഭം** — *lābhaṁ* — "profit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലാഭം** (*lābhaṁ*) ← Sanskrit *lābha*, "finding, profit", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11018).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

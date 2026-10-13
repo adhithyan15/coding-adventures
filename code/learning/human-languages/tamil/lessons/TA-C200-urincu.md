@@ -15,7 +15,7 @@ concept_tag: TA-VERB-URINCU
 prerequisites: [TA-C200-pucu, TA-C200-cekari]
 sounds: []
 roots: [dravidian-uri-sip]
-etymology_hook: "உறிஞ்சு — native Dravidian (DEDR 709); Malayalam uṛiñcuka 'to sip, suck'"
+etymology_hook: "உறிஞ்சு — native Dravidian (DEDR 709); Malayalam uṟiñcuka 'to sip, suck'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C200-cekari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**உறிஞ்சு** (*uṟiñcu*) is native Dravidian. DEDR 709 lists Malayalam *uṛiñcuka*, "to sip, suck".
+**உறிஞ்சு** (*uṟiñcu*) is native Dravidian. DEDR 709 lists Malayalam *uṟiñcuka*, "to sip, suck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lagējŭ"
 concept_tag: ML-VASTU210-LAGEJU
 prerequisites: [ML-C209-cemmin, ML-C209-sandesam]
 sounds: []
-roots: []
+roots: [english-luggage]
+etymology_hook: "lagējŭ ← English luggage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C209-sandesam]
 <!-- hl-knowledge: introduces=[ML-LEX-C210-VASTU210-01]; assesses=[] -->
 
 **ലഗേജ്** — *lagējŭ* — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലഗേജ്** (*lagējŭ*) ← English *luggage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

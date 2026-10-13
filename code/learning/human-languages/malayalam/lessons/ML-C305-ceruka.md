@@ -14,7 +14,8 @@ romanization: "cēruka"
 concept_tag: ML-VERB-CERUKA
 prerequisites: [ML-C305-niksepikkuka, ML-C305-pinvalikkuka]
 sounds: []
-roots: []
+roots: [dravidian-cer-join]
+etymology_hook: "cēruka: native Dravidian, one word with Tamil cēr and Kannada sēr (DEDR 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C305-pinvalikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C305-KRIYA305-03]; assesses=[] -->
 
 **ചേരുക** — *cēruka* — "to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചേരുക** (*cēruka*) is native Dravidian, one word with Tamil *cēr*, Kannada *sēr* and Telugu *cēru* (DEDR 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vinōdaṁ"
 concept_tag: ML-VASTU256-VINODAM
 prerequisites: [ML-C255-kyamara, ML-C255-prinrar]
 sounds: []
-roots: []
+roots: [sanskrit-vinoda]
+etymology_hook: "vinōdaṁ ← Sanskrit vinōda 'diversion, pastime', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C255-prinrar]
 <!-- hl-knowledge: introduces=[ML-LEX-C256-VASTU256-01]; assesses=[] -->
 
 **വിനോദം** — *vinōdaṁ* — "entertainment, a pastime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിനോദം** (*vinōdaṁ*) ← Sanskrit *vinōda*, "diversion, pastime", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

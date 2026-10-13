@@ -14,7 +14,8 @@ romanization: "kuruvi"
 concept_tag: ML-VASTU254-KURUVI
 prerequisites: [ML-C253-cemparatti, ML-C253-tulasi]
 sounds: []
-roots: []
+roots: [dravidian-kuruvi-sparrow]
+etymology_hook: "kuruvi: native Dravidian, one word with Tamil kuruvi and Kannada gubbi (DEDR 1793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C253-tulasi]
 <!-- hl-knowledge: introduces=[ML-LEX-C254-VASTU254-01]; assesses=[] -->
 
 **കുരുവി** — *kuruvi* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുരുവി** (*kuruvi*) is native Dravidian, one word with Tamil *kuruvi* and Kannada *gubbi* (DEDR 1793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

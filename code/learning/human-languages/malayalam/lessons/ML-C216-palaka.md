@@ -14,7 +14,8 @@ romanization: "palaka"
 concept_tag: ML-VASTU216-PALAKA
 prerequisites: [ML-C216-cempu, ML-C216-plasrriku]
 sounds: []
-roots: []
+roots: [sanskrit-phalaka]
+etymology_hook: "palaka ← Sanskrit phalaka 'board, plank', a tadbhava (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C216-plasrriku]
 <!-- hl-knowledge: introduces=[ML-LEX-C216-VASTU216-03]; assesses=[] -->
 
 **പലക** — *palaka* — "a plank, a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പലക** (*palaka*) ← Sanskrit *phalaka*, "board, plank" (CDIAL 9053), reshaped as a tadbhava: Malayalam softened the *ph* to *p*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

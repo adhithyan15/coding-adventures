@@ -14,7 +14,8 @@ romanization: "ennirunnāluṁ"
 concept_tag: ML-KARANAM241-ENNIRUNNALUM
 prerequisites: [ML-C241-enkilum, ML-C241-ennittum]
 sounds: []
-roots: []
+roots: [dravidian-en-say, dravidian-iru-be]
+etymology_hook: "ennirunnāluṁ: native Dravidian, 'even if it is so': the saying verb (DEDR 868) + iru 'be' (DEDR 480) + -āl + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C241-ennittum]
 <!-- hl-knowledge: introduces=[ML-LEX-C241-KARANAM241-04]; assesses=[] -->
 
 **എന്നിരുന്നാലും** — *ennirunnāluṁ* — "however, nevertheless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്നിരുന്നാലും** (*ennirunnāluṁ*) is native Dravidian, "even if it were so": the verb "to say" (DEDR 868), the verb "to be" (DEDR 480, with Tamil *iru*), the conditional *-āl*, and *-uṁ*, "even".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

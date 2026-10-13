@@ -12,7 +12,7 @@ concept_tag: TA-NOUN-FRUIT
 prerequisites: [TA-C43-family, TA-C42-come]
 sounds: []
 roots: [dravidian-pazhu-ripen]
-etymology_hook: "பழம் — native, from paḻu 'to ripen' (DEDR 4004); Malayalam paḻam 'ripe fruit', Kannada paṇ"
+etymology_hook: "பழம் — native, from paḻu 'to ripen' (DEDR 4004, which compares Sanskrit phala 'fruit'); Malayalam paḻam"
 duration:
   max_seconds: 210
 requires:

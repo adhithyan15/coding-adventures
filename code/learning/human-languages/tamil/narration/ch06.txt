@@ -164,7 +164,8 @@ Word by word:
 piece: எனக்கு(த்) enakku(t), "to me" — the dative from the last lesson.
 piece: தமிழ் tamiḻ, Tamil (Ch. 5).
 piece: தெரியும் teriyum, "is known / is apparent".
-That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet, but worth noticing, because you will see it constantly.
+Enakku and teriyum are Dravidian (DEDR 5160, 3419).
+That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet; you will see it constantly.
 You are not the subject. Nāṉ is gone — the person has been moved into the dative. What's left in the plain, unmarked form is tamiḻ: the sentence is now about the language, and you are merely the one it is known to.
 (Grammarians call enakku the dative subject, because it behaves like the subject even though it isn't in the subject case. The odd feeling of the sentence is exactly that split.)
 

@@ -14,7 +14,8 @@ romanization: "cōḷaṁ"
 concept_tag: ML-VASTU259-COLAM
 prerequisites: [ML-C259-ventaykka, ML-C259-murinnakka]
 sounds: []
-roots: []
+roots: [dravidian-colam-millet]
+etymology_hook: "cōḷaṁ: native Dravidian, one word with Tamil cōḷam and Kannada jōḷa (DEDR 2896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C259-murinnakka]
 <!-- hl-knowledge: introduces=[ML-LEX-C259-VASTU259-04]; assesses=[] -->
 
 **ചോളം** — *cōḷaṁ* — "maize, corn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചോളം** (*cōḷaṁ*) is native Dravidian, one word with Tamil *cōḷam*, Kannada *jōḷa* and Telugu *jonna* (DEDR 2896). It first named sorghum and millet; maize took the name later. DEDR 2896 notes similar words in Indo-Aryan (CDIAL 10434).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

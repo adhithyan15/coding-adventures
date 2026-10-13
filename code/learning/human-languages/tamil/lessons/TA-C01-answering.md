@@ -59,7 +59,7 @@ its own lesson, and the letters arrive later, one at a time.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-In **ஆம் / இல்லை / சரி** (*ām / illai / sari*), *ām* is worn down from *ākum*, "it will be", a form of the native verb "to become" (DEDR 333), and *illai* is native "not being" (DEDR 2559); Malayalam has *ām* and *illa*. The origin of *sari* is uncertain, and its own lesson gives the usual guess.
+In **ஆம் / இல்லை / சரி** (*ām / illai / sari*), *ām* is worn down from *ākum*, "it will be", a form of the native verb "to become" (DEDR 333), and *illai* is native "not being" (DEDR 2559). DEDR compares Sanskrit *ām*, "yes". The origin of *sari* is uncertain, and its own lesson gives the usual guess.
 
 ## Grammar Lens: two habits behind the answers
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

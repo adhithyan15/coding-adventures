@@ -11,7 +11,8 @@ romanization: "muṟi"
 concept_tag: ML-HOME-ROOM
 prerequisites: [ML-C127-illcall, ML-C128-house]
 sounds: []
-roots: []
+roots: [dravidian-muri-break]
+etymology_hook: "muṟi: native Dravidian, one word with Tamil muṟi and Kannada muṟi (DEDR 5008)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C128-house]
 <!-- hl-knowledge: introduces=[ML-LEX-C128-HOME-02]; assesses=[] -->
 
 **മുറി** (*muṟi*) — "a room". **ഇത് എന്റെ മുറി** — "this is my room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുറി** (*muṟi*) is native Dravidian, one word with Tamil *muṟi* and Kannada *muṟi* (DEDR 5008). Its first sense is "a piece, a fragment": a room is a part cut off from a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

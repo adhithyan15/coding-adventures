@@ -11,7 +11,8 @@ romanization: "cēṭṭā"
 concept_tag: ML-WORD-ADDRESS-MAN
 prerequisites: [ML-R81-distance-recall, ML-C12-kudumbam]
 sounds: []
-roots: []
+roots: [sanskrit-jyeshtha]
+etymology_hook: "cēṭṭā ← cēṭṭan, a tadbhava of Sanskrit jyēṣṭha 'eldest' (CDIAL 5286), + the calling -ā"
 duration:
   max_seconds: 260
 requires:
@@ -49,6 +50,11 @@ the family: a shopkeeper, a driver, somebody a little older than you in a queue.
 **You address a stranger as kin**, and doing so is ordinary politeness rather
 than a familiarity you have to earn. English has nothing that works this way —
 *excuse me* is the nearest thing and it names no relationship at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചേട്ടാ** (*cēṭṭā*) is *cēṭṭan*, "elder brother", in its calling form. *cēṭṭan* is a tadbhava of Sanskrit *jyēṣṭha*, "eldest" (CDIAL 5286), worn down through Prakrit.
 
 ## Grammar Lens: the calling form
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C82-VOCATIVE-01]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vaḷaruka"
 concept_tag: ML-VERB-VALARUKA
 prerequisites: [ML-C306-tonnuka, ML-C307-valarttuka]
 sounds: []
-roots: []
+roots: [dravidian-valar-grow]
+etymology_hook: "vaḷaruka: native Dravidian, one word with Tamil vaḷ and Kannada baḷe (DEDR 5304)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C307-valarttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C307-KRIYA307-02]; assesses=[] -->
 
 **വളരുക** — *vaḷaruka* — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വളരുക** (*vaḷaruka*) is native Dravidian, one word with Tamil *vaḷ* and Kannada *baḷe* (DEDR 5304).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

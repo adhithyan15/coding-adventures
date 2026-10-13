@@ -14,7 +14,8 @@ romanization: "paṭakkaṁ"
 concept_tag: ML-VASTU252-PATAKKAM
 prerequisites: [ML-C252-kani, ML-C252-kainittam]
 sounds: []
-roots: []
+roots: [dravidian-pata-crack]
+etymology_hook: "paṭakkaṁ: native Dravidian, one word with Tamil paṭapaṭa (DEDR 3841)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C252-kainittam]
 <!-- hl-knowledge: introduces=[ML-LEX-C252-VASTU252-05]; assesses=[] -->
 
 **പടക്കം** — *paṭakkaṁ* — "a firecracker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പടക്കം** (*paṭakkaṁ*) is native Dravidian, one word with Tamil *paṭapaṭa* (DEDR 3841). DEDR 3841 lists Malayalam *paṭakkam*, "a cracker", itself; the root imitates the crack.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

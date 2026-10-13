@@ -14,7 +14,8 @@ romanization: "maṭakkuka"
 concept_tag: ML-VERB-MATAKKUKA
 prerequisites: [ML-C264-tutaykkuka, ML-C264-aticcuvaruka]
 sounds: []
-roots: []
+roots: [dravidian-madangu-fold]
+etymology_hook: "maṭakkuka: native Dravidian, 'make folded'; Tamil maṭaṅku (DEDR 4645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C264-aticcuvaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C264-KRIYA264-05]; assesses=[] -->
 
 **മടക്കുക** — *maṭakkuka* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മടക്കുക** (*maṭakkuka*) is native Dravidian, the causative of the verb "to be bent, folded"; DEDR 4645 lists the root with Tamil *maṭaṅku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

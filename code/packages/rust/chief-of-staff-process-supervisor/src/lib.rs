@@ -89,6 +89,9 @@ pub enum ProcessSupervisorError {
     BrokerLaunch,
     /// The agent's previous broker has not finished yet; try again later.
     BrokerBusy,
+    /// The host's previous incarnation still has a dispatch running; try
+    /// again later (D18S P2.6d-4).
+    DispatchBusy,
     /// The agent's broker ended or misbehaved; its host was ended with it.
     Broker,
 }
@@ -112,6 +115,7 @@ impl Display for ProcessSupervisorError {
             Self::HostNotFound => "process-supervisor: host not found",
             Self::BrokerLaunch => "process-supervisor: broker launch failed",
             Self::BrokerBusy => "process-supervisor: previous broker still finishing",
+            Self::DispatchBusy => "process-supervisor: previous dispatch still finishing",
             Self::Broker => "process-supervisor: broker ended",
         })
     }
@@ -391,10 +395,14 @@ struct HostLink {
     control: Option<OrchestratorControl>,
     writer: Option<RecordWriter>,
     pending: Option<DataPlaneRequest>,
-    /// The pending request is with the agent's broker, whose relay answers
-    /// it. It is not offered to `pending_data_plane_request`, and
+    /// The pending request is being answered elsewhere: by the agent's
+    /// broker's relay (P2.6d-2b), or by the host's dispatch worker
+    /// (P2.6d-4). It is not offered to `pending_data_plane_request`, and
     /// `respond_data_plane` may not answer it (P2.6d-2b review round 1).
-    relayed: bool,
+    delegated: bool,
+    /// Why the dispatch worker could not answer, if it could not. The next
+    /// refresh ends the host with it (P2.6d-4).
+    fault: Option<ProcessSupervisorError>,
 }
 
 type SharedLink = Arc<Mutex<HostLink>>;
@@ -420,8 +428,93 @@ fn respond_on(
         .ok_or(ProcessSupervisorError::ProcessIo)?
         .send(frame)?;
     link.pending = None;
-    link.relayed = false;
+    link.delegated = false;
     Ok(())
+}
+
+/// One host's dispatch worker (D18S P2.6d-4).
+///
+/// Completions and tool calls can take seconds or minutes. Served on the
+/// supervisor's thread, one slow request held every other host's requests
+/// and heartbeats behind it. The worker takes the host's admitted
+/// non-channel requests one at a time (the control protocol allows only
+/// one outstanding request per host, so the queue holds one) and answers
+/// through the shared link, as a broker's relay does.
+struct DispatchWorker {
+    /// `None` once the host has ended: nothing more is handed over.
+    requests: Option<mpsc::SyncSender<DataPlaneRequest>>,
+    /// Kept so a restart can wait for a dispatch still running (review
+    /// round 1, L3): one host never has two workers at once.
+    thread: JoinHandle<()>,
+}
+
+impl DispatchWorker {
+    fn start(
+        dispatcher: Arc<dyn HostDataPlaneDispatcher>,
+        registration: HostRegistration,
+        link: SharedLink,
+    ) -> Result<Self, ProcessSupervisorError> {
+        let (requests, queue) = mpsc::sync_channel::<DataPlaneRequest>(1);
+        let thread = thread::Builder::new()
+            .name("host-dispatch".into())
+            .spawn(move || {
+                let fail = |error| {
+                    // The supervisor's thread ends the host on its next
+                    // refresh, as the synchronous path did.
+                    if let Ok(mut link) = link.lock() {
+                        link.fault.get_or_insert(error);
+                    }
+                };
+                // Ends when the host's end drops the sender. A dispatch
+                // already running finishes first, bounded by the
+                // dispatcher's own timeouts, and then finds the link closed.
+                for request in queue {
+                    // A request queued just before its host ended is not
+                    // run for a host that is gone (review round 1, L4).
+                    if link.lock().map_or(true, |link| link.control.is_none()) {
+                        break;
+                    }
+                    // A dispatcher that panics must not leave the host
+                    // waiting forever for an answer (review round 1, M1).
+                    let response = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        dispatcher.dispatch(&registration, &request)
+                    }));
+                    let Ok(response) = response else {
+                        fail(ProcessSupervisorError::Control);
+                        break;
+                    };
+                    if let Err(error) = respond_on(&link, response) {
+                        fail(error);
+                        break;
+                    }
+                }
+            })
+            .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+        Ok(Self {
+            requests: Some(requests),
+            thread,
+        })
+    }
+
+    /// Stop handing over requests. A dispatch already running finishes.
+    fn close(&mut self) {
+        self.requests = None;
+    }
+
+    /// Whether a dispatch may still be running.
+    fn is_busy(&self) -> bool {
+        !self.thread.is_finished()
+    }
+
+    /// Hand over one request. Refused only if the worker has stopped: the
+    /// queue cannot be full while the protocol allows one request at a time.
+    fn dispatch(&self, request: DataPlaneRequest) -> Result<(), ProcessSupervisorError> {
+        self.requests
+            .as_ref()
+            .ok_or(ProcessSupervisorError::ProcessIo)?
+            .try_send(request)
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
 }
 
 /// Where a broker's relay delivers: the host's link.
@@ -477,13 +570,14 @@ impl OwnedBroker {
 }
 
 struct OwnedInstance {
-    registration: HostRegistration,
     package_hash: [u8; 32],
     child: Option<Child>,
     reader: Option<JoinHandle<()>>,
     records: Receiver<ReaderEvent>,
     link: SharedLink,
     broker: Option<OwnedBroker>,
+    /// Serves the host's non-channel requests, when a dispatcher is set.
+    worker: Option<DispatchWorker>,
     phase: InstancePhase,
     process_id: u32,
     started_at_ns: u64,
@@ -543,11 +637,16 @@ impl OwnedInstance {
         if let Ok(mut link) = self.link.lock() {
             link.control.take();
             link.pending = None;
-            link.relayed = false;
+            link.delegated = false;
         }
-        // The host's end ends its broker.
+        // The host's end ends its broker, and closes its dispatch worker's
+        // queue. A dispatch already running is left to finish: it then
+        // finds the link closed.
         if let Some(broker) = self.broker.as_mut() {
             broker.end();
+        }
+        if let Some(worker) = self.worker.as_mut() {
+            worker.close();
         }
         self.phase = InstancePhase::Exited {
             exit_code: status.code(),
@@ -579,10 +678,7 @@ impl OwnedInstance {
         Ok(())
     }
 
-    fn refresh(
-        &mut self,
-        dispatcher: Option<&dyn HostDataPlaneDispatcher>,
-    ) -> Result<(), ProcessSupervisorError> {
+    fn refresh(&mut self) -> Result<(), ProcessSupervisorError> {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
@@ -590,7 +686,9 @@ impl OwnedInstance {
         // supervisor decrypts would otherwise keep this loop running, and
         // with it the one thread that drives every host. The rest waits for
         // the next refresh.
-        self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
+        self.end_on_fault()?;
+        self.drain_records(Some(MAX_RECORDS_PER_DRAIN))?;
+        self.end_on_fault()?;
 
         // The broker's end, or misbehaviour, ends its host.
         // The broker is ended here, whatever happens to the host: if
@@ -632,7 +730,7 @@ impl OwnedInstance {
             }
             // Uncapped: the reader is joined, so the queue is final, and
             // bounded by the reader channel's capacity.
-            self.drain_records(dispatcher, None)?;
+            self.drain_records(None)?;
             self.finish_exit(status);
             return Ok(());
         }
@@ -647,11 +745,7 @@ impl OwnedInstance {
 
     /// Apply every event the reader thread has queued so far, failing closed
     /// (hard kill + reap) on the first framing, control, or dispatch error.
-    fn drain_records(
-        &mut self,
-        dispatcher: Option<&dyn HostDataPlaneDispatcher>,
-        limit: Option<usize>,
-    ) -> Result<(), ProcessSupervisorError> {
+    fn drain_records(&mut self, limit: Option<usize>) -> Result<(), ProcessSupervisorError> {
         let mut handled = 0usize;
         loop {
             if limit.is_some_and(|limit| handled >= limit) {
@@ -697,9 +791,12 @@ impl OwnedInstance {
                             // host itself (D18S P2.6d-2b).
                             let relayed =
                                 self.broker.is_some() && InFlight::for_request(&request).is_some();
+                            // Everything else goes to the dispatch worker,
+                            // also never waited on here (D18S P2.6d-4).
+                            let delegated = relayed || self.worker.is_some();
                             let stored = lock(&self.link).map(|mut link| {
                                 link.pending = Some(request.clone());
-                                link.relayed = relayed;
+                                link.delegated = delegated;
                             });
                             if let Err(error) = stored {
                                 let _ = self.hard_kill_and_reap();
@@ -712,9 +809,8 @@ impl OwnedInstance {
                                 }
                                 continue;
                             }
-                            if let Some(dispatcher) = dispatcher {
-                                let response = dispatcher.dispatch(&self.registration, &request);
-                                if let Err(error) = self.send_data_plane_response(response) {
+                            if let Some(worker) = self.worker.as_ref() {
+                                if let Err(error) = worker.dispatch(request) {
                                     let _ = self.hard_kill_and_reap();
                                     return Err(error);
                                 }
@@ -735,6 +831,22 @@ impl OwnedInstance {
         }
 
         Ok(())
+    }
+
+    /// A response the dispatch worker could not deliver ends the host, as
+    /// it did when dispatch ran here (D18S P2.6d-4). The fault stays latched
+    /// on the link, so if ending the host fails now, the next refresh tries
+    /// again (review round 1, L2); once the host has exited, refresh no
+    /// longer looks.
+    fn end_on_fault(&mut self) -> Result<(), ProcessSupervisorError> {
+        let fault = lock(&self.link)?.fault;
+        match fault {
+            Some(fault) => {
+                let _ = self.hard_kill_and_reap();
+                Err(fault)
+            }
+            None => Ok(()),
+        }
     }
 
     fn send_data_plane_response(
@@ -1017,6 +1129,7 @@ impl ProcessHostSupervisor {
     ) -> Result<OwnedInstance, ProcessSupervisorError> {
         let request_budget = self.request_budget;
         let ready_timeout = self.config.bootstrap_timeout;
+        let dispatcher = self.data_plane_dispatcher.clone();
         let session = self.sessions.next_session()?;
         let host = HostId::new(registration.host_name().as_str().to_owned())
             .map_err(|_| ProcessSupervisorError::Bootstrap)?;
@@ -1130,28 +1243,53 @@ impl ProcessHostSupervisor {
         })();
 
         match startup {
-            Ok(control) => Ok(OwnedInstance {
-                registration: registration.clone(),
-                package_hash: *registration.package_hash(),
-                child: Some(child),
-                reader: Some(reader),
-                records,
-                channel_id: ChannelId(control.session_id().as_bytes()),
-                link: Arc::new(Mutex::new(HostLink {
+            Ok(control) => {
+                let channel_id = ChannelId(control.session_id().as_bytes());
+                let link = Arc::new(Mutex::new(HostLink {
                     control: Some(control),
                     writer: Some(stdin),
                     pending: None,
-                    relayed: false,
-                })),
-                broker: None,
-                phase: InstancePhase::Starting,
-                process_id,
-                started_at_ns,
-                last_heartbeat_ns: None,
-                requests: TokenBucket::new(request_budget),
-                ready_deadline: Instant::now() + ready_timeout,
-                rate_limited: 0,
-            }),
+                    delegated: false,
+                    fault: None,
+                }));
+                // D18S P2.6d-4: the host's non-channel requests are served
+                // off the supervisor's thread.
+                let worker = match dispatcher
+                    .map(|dispatcher| {
+                        DispatchWorker::start(dispatcher, registration.clone(), Arc::clone(&link))
+                    })
+                    .transpose()
+                {
+                    Ok(worker) => worker,
+                    Err(error) => {
+                        if let Ok(mut link) = link.lock() {
+                            link.writer.take();
+                        }
+                        let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+                        let _ = child.kill();
+                        let _ = child.wait();
+                        join_bounded(reader);
+                        return Err(error);
+                    }
+                };
+                Ok(OwnedInstance {
+                    package_hash: *registration.package_hash(),
+                    child: Some(child),
+                    reader: Some(reader),
+                    records,
+                    channel_id,
+                    link,
+                    broker: None,
+                    worker,
+                    phase: InstancePhase::Starting,
+                    process_id,
+                    started_at_ns,
+                    last_heartbeat_ns: None,
+                    requests: TokenBucket::new(request_budget),
+                    ready_deadline: Instant::now() + ready_timeout,
+                    rate_limited: 0,
+                })
+            }
             Err(error) => {
                 drop(stdin);
                 let _ = chief_of_staff_spawn_isolation::kill_session(&child);
@@ -1180,14 +1318,28 @@ impl ProcessHostSupervisor {
         &mut self,
         host_name: &HostName,
     ) -> Result<Option<DataPlaneRequest>, ProcessSupervisorError> {
-        let dispatcher = self.data_plane_dispatcher.as_deref();
         let instance = self
             .instances
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
-        instance.refresh(dispatcher)?;
+        instance.refresh()?;
         let link = lock(&instance.link)?;
-        Ok(link.pending.clone().filter(|_| !link.relayed))
+        Ok(link.pending.clone().filter(|_| !link.delegated))
+    }
+
+    /// Whether a host has a request awaiting its answer, wherever it is being
+    /// answered: for the audit record and for tests.
+    pub fn data_plane_request_in_flight(
+        &mut self,
+        host_name: &HostName,
+    ) -> Result<bool, ProcessSupervisorError> {
+        let instance = self
+            .instances
+            .get_mut(host_name.as_str())
+            .ok_or(ProcessSupervisorError::HostNotFound)?;
+        instance.refresh()?;
+        let in_flight = lock(&instance.link)?.pending.is_some();
+        Ok(in_flight)
     }
 
     /// Send the exact correlated response for a host's pending request.
@@ -1196,15 +1348,14 @@ impl ProcessHostSupervisor {
         host_name: &HostName,
         response: DataPlaneResponse,
     ) -> Result<(), ProcessSupervisorError> {
-        let dispatcher = self.data_plane_dispatcher.as_deref();
         let instance = self
             .instances
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
-        instance.refresh(dispatcher)?;
+        instance.refresh()?;
         // A request with the broker is the broker's to answer. Refused
         // without ending the host: the host did nothing wrong.
-        if lock(&instance.link)?.relayed {
+        if lock(&instance.link)?.delegated {
             return Err(ProcessSupervisorError::Control);
         }
         if let Err(error) = instance.send_data_plane_response(response) {
@@ -1222,24 +1373,32 @@ impl HostSupervisor for ProcessHostSupervisor {
         &mut self,
         registration: &HostRegistration,
     ) -> Result<SupervisorObservation, Self::Error> {
-        let dispatcher = self.data_plane_dispatcher.as_deref();
         let Some(instance) = self.instances.get_mut(registration.host_name().as_str()) else {
             return Ok(SupervisorObservation::absent());
         };
-        instance.refresh(dispatcher)?;
+        instance.refresh()?;
         instance.observation()
     }
 
     fn start(&mut self, registration: &HostRegistration) -> Result<(), Self::Error> {
-        let dispatcher = self.data_plane_dispatcher.as_deref();
         if let Some(instance) = self.instances.get_mut(registration.host_name().as_str()) {
-            instance.refresh(dispatcher)?;
+            instance.refresh()?;
             if instance.is_active() {
                 return if instance.package_hash == *registration.package_hash() {
                     Ok(())
                 } else {
                     Err(ProcessSupervisorError::ActivePackageMismatch)
                 };
+            }
+            // One worker per host at a time: a restart waits until the
+            // previous incarnation's dispatch has finished (review round 1,
+            // L3). The reconciler retries.
+            if instance
+                .worker
+                .as_ref()
+                .is_some_and(DispatchWorker::is_busy)
+            {
+                return Err(ProcessSupervisorError::DispatchBusy);
             }
         }
         let instance = self.spawn_verified(registration)?;
@@ -1249,11 +1408,10 @@ impl HostSupervisor for ProcessHostSupervisor {
     }
 
     fn stop(&mut self, host_name: &HostName) -> Result<(), Self::Error> {
-        let dispatcher = self.data_plane_dispatcher.as_deref();
         let Some(instance) = self.instances.get_mut(host_name.as_str()) else {
             return Ok(());
         };
-        instance.refresh(dispatcher)?;
+        instance.refresh()?;
         if matches!(
             instance.phase,
             InstancePhase::Stopping | InstancePhase::Exited { .. }
@@ -1914,6 +2072,10 @@ mod tests {
             (
                 ProcessSupervisorError::BrokerBusy,
                 "previous broker still finishing",
+            ),
+            (
+                ProcessSupervisorError::DispatchBusy,
+                "previous dispatch still finishing",
             ),
             (ProcessSupervisorError::Broker, "broker ended"),
         ];

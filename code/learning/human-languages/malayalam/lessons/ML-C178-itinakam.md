@@ -14,7 +14,8 @@ romanization: "itinakaṁ"
 concept_tag: ML-BHUTAM178-ITINAKAM
 prerequisites: [ML-C177-entenkilum, ML-C178-atuttite]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-akam-inside]
+etymology_hook: "itinakaṁ: native Dravidian, 'within this': itŭ (DEDR 410) + akam 'inside' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C178-atuttite]
 <!-- hl-knowledge: introduces=[ML-LEX-C178-BHUTAM178-02]; assesses=[] -->
 
 **ഇതിനകം** — *itinakaṁ* — "already". **ഞാൻ ഇതിനകം ഭക്ഷണം കഴിച്ചു** — *ñān itinakaṁ bhakṣaṇaṁ kaḻiccu* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇതിനകം** (*itinakaṁ*) is native Dravidian, "within this (time)": *itŭ*, "this" (DEDR 410), and *akam*, "inside" (DEDR 7, with Tamil *akam*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

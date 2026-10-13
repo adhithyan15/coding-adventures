@@ -14,7 +14,8 @@ romanization: "oḷikkuka"
 concept_tag: ML-VERB-OLIKKUKA2
 prerequisites: [ML-C189-ilayuka, ML-C190-pakarttuka]
 sounds: []
-roots: []
+roots: [dravidian-oli-hide]
+etymology_hook: "oḷikkuka: native Dravidian, one word with Tamil oḷi and Kannada uḷi (DEDR 1015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C190-pakarttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C190-KRIYA190-02]; assesses=[] -->
 
 **ഒളിക്കുക** — *oḷikkuka* — "to hide (oneself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒളിക്കുക** (*oḷikkuka*) is native Dravidian, one word with Tamil *oḷi* and Kannada *uḷi* (DEDR 1015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

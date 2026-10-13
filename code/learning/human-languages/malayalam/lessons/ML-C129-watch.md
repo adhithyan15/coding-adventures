@@ -11,7 +11,8 @@ romanization: "vāccŭ"
 concept_tag: ML-THINGS-WATCH
 prerequisites: [ML-C129-umbrella, ML-C129-glasses]
 sounds: []
-roots: []
+roots: [english-watch]
+etymology_hook: "vāccŭ ← English watch"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C129-glasses]
 <!-- hl-knowledge: introduces=[ML-LEX-C129-THINGS-05]; assesses=[] -->
 
 **വാച്ച്** (*vāccŭ*) — "a watch", borrowed from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാച്ച്** (*vāccŭ*) ← English *watch*, the timepiece one keeps watch by.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

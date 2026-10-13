@@ -14,7 +14,8 @@ romanization: "kaimāṟuka"
 concept_tag: ML-VERB-KAIMARUKA
 prerequisites: [ML-C267-jayikkuka, ML-C267-tolkkuka]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-maru-change]
+etymology_hook: "kaimāṟuka: native Dravidian, 'change hands': kai (DEDR 2023) + māṟuka (DEDR 4834)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C267-tolkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C267-KRIYA267-04]; assesses=[] -->
 
 **കൈമാറുക** — *kaimāṟuka* — "to hand over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൈമാറുക** (*kaimāṟuka*) is native Dravidian, "change hands": *kai*, "hand" (DEDR 2023), and the verb "to change, pass over" (DEDR 4834, with Tamil *māṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

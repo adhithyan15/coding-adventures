@@ -14,7 +14,8 @@ romanization: "vinayaṁ"
 concept_tag: ML-GUNAM319-VINAYAM
 prerequisites: [ML-C318-nirddesam, ML-C319-onlain]
 sounds: []
-roots: []
+roots: [sanskrit-vinaya]
+etymology_hook: "vinayaṁ ← Sanskrit vinaya 'guidance, good breeding', a tatsama (CDIAL 11767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C319-onlain]
 <!-- hl-knowledge: introduces=[ML-LEX-C319-GUNAM319-02]; assesses=[] -->
 
 **വിനയം** — *vinayaṁ* — "humility, modesty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിനയം** (*vinayaṁ*) ← Sanskrit *vinaya*, "guidance, good breeding", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: TA-VERB-ACCITU
 prerequisites: [TA-C256-tavaravitu, TA-C256-ali]
 sounds: []
 roots: [dravidian-accu-mould, dravidian-idu-put]
-etymology_hook: "அச்சிடு — accu 'mould, type' (DEDR 47; compared with Sanskrit sañcaka) + native iṭu 'to put' (DEDR 442)"
+etymology_hook: "அச்சிடு — accu 'mould, type' (DEDR 47; queried link with Sanskrit sañcaka) + native iṭu 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
