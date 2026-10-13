@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
+import { boundedRawMarkdownPlugin } from "./bounded-raw-markdown-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 import { isBookLedgerModuleId } from "./chunk-routing.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
@@ -25,6 +26,9 @@ export default defineConfig({
   plugins: [
     humanLanguageLedgerPlugin({ curriculumRoot }),
     scriptInventoryPlugin({ curriculumRoot }),
+    // Serves the ~29k `?raw` lesson imports a bounded number at a time; Vite's
+    // own loader opens them all at once and ran out of file handles on Windows.
+    boundedRawMarkdownPlugin({ curriculumRoot }),
   ],
   // Relative base → the built index.html works when opened from any path
   // (local file, GitHub Pages sub-path, etc.) without a deploy-specific prefix.
