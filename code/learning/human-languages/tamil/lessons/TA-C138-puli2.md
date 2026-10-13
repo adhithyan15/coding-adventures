@@ -15,7 +15,7 @@ concept_tag: TA-THINGS138-PULI2
 prerequisites: [TA-C138-tervu, TA-C138-patil]
 sounds: []
 roots: [dravidian-puli-sour]
-etymology_hook: "புளி — native Dravidian (DEDR 4322); Kannada puḷy 'sour', Telugu puli 'sour'"
+etymology_hook: "புளி — native Dravidian (DEDR 4322); Kannada puḷi, huḷi and Telugu puli 'sour'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C138-patil]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**புளி** (*puḷi*) is native Dravidian. DEDR 4322 lists Kannada *puḷy*, "sour" and Telugu *puli*, "sour". The tree is named for its sourness.
+**புளி** (*puḷi*) is native Dravidian. DEDR 4322 lists Kannada *puḷi*, *huḷi* and Telugu *puli*, "sour". The tree is named for its sourness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

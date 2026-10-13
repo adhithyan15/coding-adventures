@@ -15,7 +15,7 @@ roots: [nal]
 etymology_hook: "நன்றி — native 'goodness', built on nal 'good' (DEDR 3610), as in Malayalam nal and Kannada nal"
 reviews_of: [TA-C01-illai]
 duration:
-  max_seconds: 120
+  max_seconds: 275
 requires:
   knowledge: []
 introduces:

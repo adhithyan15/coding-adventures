@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:14044529a416f81d",
+  "sourceHash": "fnv1a64:18ab879b9c5324e4",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cabbab21e71266b0",
+      "sourceHash": "fnv1a64:6bd8c9e96b667b01",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -957,7 +957,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0a243bd9a0a82d93",
+      "sourceHash": "fnv1a64:09dc11ac10efeb62",
       "notice": {
         "modality": "sight",
         "needs": [

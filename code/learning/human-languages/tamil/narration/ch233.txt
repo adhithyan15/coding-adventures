@@ -109,7 +109,7 @@ You'll want to know: நேற்று முன்தினம்.
 நேற்று முன்தினம் — nēṟṟu muṉtiṉam — "the day before yesterday".
 
 The word, taken apart.
-நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, "yesterday" (DEDR 3758), and muṉtiṉam, "the day before", from native muṉ, "before" (DEDR 5020), and tiṉam, "day", from Sanskrit dina (CDIAL 6328).
+நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, "yesterday", and muṉtiṉam, "the day before", from native muṉ, "before" (DEDR 5020), and tiṉam, "day", from Sanskrit dina (CDIAL 6328). DEDR 3758 gives the older Tamil forms nerunal and nerunaṟṟu, "yesterday"; modern nēṟṟu is most likely the shortened form.
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "To type, To translate, To cancel, To hurry, To love",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:84ba48b23670220f",
+  "sourceHash": "fnv1a64:8c04bc30eae8a099",
   "lessons": [
     {
       "id": "TA-C228-tattaccu-cey",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b184e3c8ebd1c69",
+      "sourceHash": "fnv1a64:27c1f07307d24e90",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தட்டச்சு செய் (taṭṭaccu cey) is a modern coinage from native words: taṭṭu, \"to tap, to strike\", accu, \"mould, type\" (DEDR 47, which lists Malayalam accu and Telugu accu 'print'), and sey, \"to do\" (DEDR 1957)."
+              "text": "தட்டச்சு செய் (taṭṭaccu cey) is a modern coinage from native words: taṭṭu, \"to tap, to strike\", accu, \"mould, type\" (DEDR 47, which lists Malayalam accu and Telugu accu 'print'), and sey, \"to do\" (DEDR 1957). DEDR itself compares accu, with a query, to Sanskrit sañcaka, \"mould\", so a link with Indo-Aryan is possible."
             }
           ]
         },

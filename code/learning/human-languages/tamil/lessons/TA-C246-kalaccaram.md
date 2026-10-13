@@ -47,7 +47,7 @@ reviews_of: [TA-C246-pattacu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கலாச்சாரம்** (*kalāccāram*) is a modern coinage from Sanskrit *kalā*, "art" (CDIAL 2927), and *ācāra*, "conduct, custom" (CDIAL 1071). CDIAL itself takes *kalā* in this sense as a borrowing from Dravidian.
+**கலாச்சாரம்** (*kalāccāram*) is a modern coinage from Sanskrit *kalā*, "art" (CDIAL 2927), and *ācāra*, "conduct, custom" (CDIAL 1071). Which way *kalā* travelled is debated: CDIAL takes it from Dravidian, while DEDR files the native Tamil word for "art" under the verb "to learn" (DEDR 1297) and only compares *kalā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

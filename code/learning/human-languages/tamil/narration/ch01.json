@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e7090faa9be183bc",
+  "sourceHash": "fnv1a64:57acd2523d37dd16",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0652b1d5107d4aa8",
+      "sourceHash": "fnv1a64:0f4041d1979a8c2a",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61454495219673c1",
+      "sourceHash": "fnv1a64:3bf96e78dad9d9da",
       "notice": null,
       "blocks": [
         {
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:924a370f10f329af",
+      "sourceHash": "fnv1a64:797fd7fff2fc9a63",
       "notice": null,
       "blocks": [
         {
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45cd4b798b6e562e",
+      "sourceHash": "fnv1a64:619f107885a0994d",
       "notice": null,
       "blocks": [
         {

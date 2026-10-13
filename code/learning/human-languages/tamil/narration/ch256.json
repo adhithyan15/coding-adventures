@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "To accept, To follow, To miss, To erase, To print",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2884b8efb1123954",
+  "sourceHash": "fnv1a64:7486392a843ed34a",
   "lessons": [
     {
       "id": "TA-C256-errukkol",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cd29958ac8c6469",
+      "sourceHash": "fnv1a64:131dd810ae9dc2a4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அச்சிடு (acciṭu) is native: accu, \"mould, type\" (DEDR 47, which lists Malayalam accu and Kannada accu), and iṭu, \"to put\" (DEDR 442): \"put into type\"."
+              "text": "அச்சிடு (acciṭu) is native: accu, \"mould, type\" (DEDR 47, which lists Malayalam accu and Kannada accu), and iṭu, \"to put\" (DEDR 442): \"put into type\". DEDR itself compares accu, with a query, to Sanskrit sañcaka, \"mould\", so a link with Indo-Aryan is possible."
             }
           ]
         },

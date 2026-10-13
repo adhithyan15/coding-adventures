@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 37,
-  "sourceHash": "fnv1a64:14044529a416f81d",
+  "sourceHash": "fnv1a64:18ab879b9c5324e4",
   "lessonIds": [
     "TA-C37-uur",
     "TA-C37-nanban",
@@ -15,6 +15,6 @@
   "text": "tamil/narration/ch37.txt",
   "json": "tamil/narration/ch37.json",
   "textHash": "fnv1a64:6c79f4aff4ccf6c7",
-  "jsonHash": "fnv1a64:a02a0042abd5d644",
+  "jsonHash": "fnv1a64:ef73470128b95f34",
   "findings": []
 }

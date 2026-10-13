@@ -15,7 +15,7 @@ roots: [ām]
 etymology_hook: "ஆம் — worn down from ākum 'it will be', of the native verb 'to become' (DEDR 333); Malayalam ām is the same yes"
 reviews_of: [TA-C01-vanakkam]
 duration:
-  max_seconds: 120
+  max_seconds: 176
 requires:
   knowledge: []
 introduces:

@@ -15,7 +15,7 @@ roots: [iru-be]
 etymology_hook: "இருக்கிறீர்கள் — native iru 'to be' (DEDR 480; Malayalam irikkuka, Kannada iru) + present + 'you'"
 reviews_of: [TA-C02-nii-niingal, TA-C03-eppadi]
 duration:
-  max_seconds: 240
+  max_seconds: 257
 requires:
   knowledge: []
 introduces:

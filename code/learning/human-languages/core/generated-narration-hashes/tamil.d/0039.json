@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 39,
-  "sourceHash": "fnv1a64:392be555165de4b8",
+  "sourceHash": "fnv1a64:7f1dc8302036ee51",
   "lessonIds": [
     "TA-C39-vendum",
     "TA-C39-evvalavu",
@@ -13,6 +13,6 @@
   "text": "tamil/narration/ch39.txt",
   "json": "tamil/narration/ch39.json",
   "textHash": "fnv1a64:27e72a46e89bf36a",
-  "jsonHash": "fnv1a64:c778d2a8f6518b48",
+  "jsonHash": "fnv1a64:a9c1048f3eec050f",
   "findings": []
 }

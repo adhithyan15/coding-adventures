@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Asking for What You Want",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:392be555165de4b8",
+  "sourceHash": "fnv1a64:7f1dc8302036ee51",
   "lessons": [
     {
       "id": "TA-C39-vendum",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e84069fbb36cb809",
+      "sourceHash": "fnv1a64:bba3257d9a4b1a0b",
       "notice": {
         "modality": "sight",
         "needs": [

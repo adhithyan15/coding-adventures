@@ -15,7 +15,7 @@ roots: [il]
 etymology_hook: "இல்லை — native Dravidian il 'not being' (DEDR 2559); Malayalam illa, Kannada illa"
 reviews_of: [TA-C01-aam]
 duration:
-  max_seconds: 120
+  max_seconds: 191
 requires:
   knowledge: []
 introduces:

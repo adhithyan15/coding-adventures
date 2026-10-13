@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Exam, Answer, Tamarind, Pepper, Mustard seed",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:406d910bf5b82cc9",
+  "sourceHash": "fnv1a64:f8da8f1d37387369",
   "lessons": [
     {
       "id": "TA-C138-tervu",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8d60b72c26adf70",
+      "sourceHash": "fnv1a64:4f78e15c65adcd7c",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "புளி (puḷi) is native Dravidian. DEDR 4322 lists Kannada puḷy, \"sour\" and Telugu puli, \"sour\". The tree is named for its sourness."
+              "text": "புளி (puḷi) is native Dravidian. DEDR 4322 lists Kannada puḷi, huḷi and Telugu puli, \"sour\". The tree is named for its sourness."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: TA-VERB-ACCITU
 prerequisites: [TA-C256-tavaravitu, TA-C256-ali]
 sounds: []
 roots: [dravidian-accu-mould, dravidian-idu-put]
-etymology_hook: "அச்சிடு — native: accu 'mould, type' (DEDR 47) + iṭu 'to put' (DEDR 442)"
+etymology_hook: "அச்சிடு — accu 'mould, type' (DEDR 47; compared with Sanskrit sañcaka) + native iṭu 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C256-ali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**அச்சிடு** (*acciṭu*) is native: *accu*, "mould, type" (DEDR 47, which lists Malayalam accu and Kannada accu), and *iṭu*, "to put" (DEDR 442): "put into type".
+**அச்சிடு** (*acciṭu*) is native: *accu*, "mould, type" (DEDR 47, which lists Malayalam accu and Kannada accu), and *iṭu*, "to put" (DEDR 442): "put into type". DEDR itself compares *accu*, with a query, to Sanskrit *sañcaka*, "mould", so a link with Indo-Aryan is possible.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Every year, Dawn, Day after tomorrow, Day before yesterday, Second",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:adc16d7cb612ea71",
+  "sourceHash": "fnv1a64:e3c3d664d1d317bc",
   "lessons": [
     {
       "id": "TA-C233-antutorum",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd6edd2281b190d0",
+      "sourceHash": "fnv1a64:42514e8f1b83c22c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, \"yesterday\" (DEDR 3758), and muṉtiṉam, \"the day before\", from native muṉ, \"before\" (DEDR 5020), and tiṉam, \"day\", from Sanskrit dina (CDIAL 6328)."
+              "text": "நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, \"yesterday\", and muṉtiṉam, \"the day before\", from native muṉ, \"before\" (DEDR 5020), and tiṉam, \"day\", from Sanskrit dina (CDIAL 6328). DEDR 3758 gives the older Tamil forms nerunal and nerunaṟṟu, \"yesterday\"; modern nēṟṟu is most likely the shortened form."
             }
           ]
         },

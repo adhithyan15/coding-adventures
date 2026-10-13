@@ -141,7 +141,7 @@ You'll want to know: அச்சிடு.
 அச்சிடு — acciṭu — "to print".
 
 The word, taken apart.
-அச்சிடு (acciṭu) is native: accu, "mould, type" (DEDR 47, which lists Malayalam accu and Kannada accu), and iṭu, "to put" (DEDR 442): "put into type".
+அச்சிடு (acciṭu) is native: accu, "mould, type" (DEDR 47, which lists Malayalam accu and Kannada accu), and iṭu, "to put" (DEDR 442): "put into type". DEDR itself compares accu, with a query, to Sanskrit sañcaka, "mould", so a link with Indo-Aryan is possible.
 
 What you've built.
 One more word for this chapter.

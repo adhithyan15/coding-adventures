@@ -4,7 +4,7 @@
   "chapter": 246,
   "title": "Celebration, Firecrackers, Culture, Habit, Tradition",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3b69a557a2428d9",
+  "sourceHash": "fnv1a64:57232da742e06e27",
   "lessons": [
     {
       "id": "TA-C246-kontattam",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e9026071b3be54a",
+      "sourceHash": "fnv1a64:fa27bb55b6a60838",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கலாச்சாரம் (kalāccāram) is a modern coinage from Sanskrit kalā, \"art\" (CDIAL 2927), and ācāra, \"conduct, custom\" (CDIAL 1071). CDIAL itself takes kalā in this sense as a borrowing from Dravidian."
+              "text": "கலாச்சாரம் (kalāccāram) is a modern coinage from Sanskrit kalā, \"art\" (CDIAL 2927), and ācāra, \"conduct, custom\" (CDIAL 1071). Which way kalā travelled is debated: CDIAL takes it from Dravidian, while DEDR files the native Tamil word for \"art\" under the verb \"to learn\" (DEDR 1297) and only compares kalā."
             }
           ]
         },

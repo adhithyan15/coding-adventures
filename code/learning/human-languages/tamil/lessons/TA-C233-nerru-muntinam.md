@@ -15,7 +15,7 @@ concept_tag: TA-NERAM233-NERRU-MUNTINAM
 prerequisites: [TA-C233-vitiyal, TA-C233-nalai-marunal]
 sounds: []
 roots: [dravidian-nerunal-yesterday, sanskrit-dina]
-etymology_hook: "நேற்று முன்தினம் — native nēṟṟu (DEDR 3758) + muṉ 'before' (DEDR 5020) + tiṉam ← Sanskrit dina"
+etymology_hook: "நேற்று முன்தினம் — nēṟṟu, short for nerunaṟṟu (DEDR 3758), + muṉ 'before' (DEDR 5020) + tiṉam ← Sanskrit dina"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C233-nalai-marunal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**நேற்று முன்தினம்** (*nēṟṟu muṉtiṉam*) is native *nēṟṟu*, "yesterday" (DEDR 3758), and *muṉtiṉam*, "the day before", from native *muṉ*, "before" (DEDR 5020), and *tiṉam*, "day", from Sanskrit *dina* (CDIAL 6328).
+**நேற்று முன்தினம்** (*nēṟṟu muṉtiṉam*) is native *nēṟṟu*, "yesterday", and *muṉtiṉam*, "the day before", from native *muṉ*, "before" (DEDR 5020), and *tiṉam*, "day", from Sanskrit *dina* (CDIAL 6328). DEDR 3758 gives the older Tamil forms *nerunal* and *nerunaṟṟu*, "yesterday"; modern *nēṟṟu* is most likely the shortened form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 138,
-  "sourceHash": "fnv1a64:406d910bf5b82cc9",
+  "sourceHash": "fnv1a64:f8da8f1d37387369",
   "lessonIds": [
     "TA-C138-tervu",
     "TA-C138-patil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch138.txt",
   "json": "tamil/narration/ch138.json",
-  "textHash": "fnv1a64:61b02db913f139db",
-  "jsonHash": "fnv1a64:5a26c093d01bbda0",
+  "textHash": "fnv1a64:9d9c82074787892a",
+  "jsonHash": "fnv1a64:daeb992f02ffcfed",
   "findings": []
 }

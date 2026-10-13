@@ -41,7 +41,7 @@ reply, and it hides one of the most Tamil words there is.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பரவாயில்லை** literally means "**there is no harm**" — *paravāy* ("harm, trouble")
+**பரவாயில்லை** literally means "**there is no concern**" — *paravāy* ("care, concern")
 + *illai* ("is-not, there-is-not"). It serves as "it's okay / no worries
 / never mind / you're welcome." *Paravāy* is a loan: Persian *parvā*, "care,
 concern," which reached Tamil through Hindustani. The key atom, *illai*, you already

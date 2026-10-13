@@ -4,7 +4,7 @@
   "chapter": 253,
   "title": "Artist, Officer, Judge, Pension, Certificate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5e5a17ab8dc1a648",
+  "sourceHash": "fnv1a64:9eb6b81ae900d9d5",
   "lessons": [
     {
       "id": "TA-C253-kalainar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd39b0232eddcec8",
+      "sourceHash": "fnv1a64:60eeaf419df2cd63",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கலைஞர் (kalaiñar) is native: kalai, \"arts and learning\" (DEDR 1297, under kal, \"to learn\"), with the respectful ending -ñar, \"one who\"."
+              "text": "கலைஞர் (kalaiñar) is kalai, \"arts and learning\", with the respectful ending -ñar, \"one who\". DEDR files kalai under kal, \"to learn\" (DEDR 1297), but compares Sanskrit kalā, \"art\"; many treat it as a loan."
             }
           ]
         },

@@ -14,7 +14,7 @@ sounds: [tamil-standing-vowel-i, pulli-virama]
 roots: [dravidian-i-proximal-deictic]
 etymology_hook: "இவர் — native: the near base i- + respectful -ar (DEDR 410); Malayalam and Kannada say ivar too"
 duration:
-  max_seconds: 245
+  max_seconds: 299
 requires:
   knowledge: [TA-LEX-NANBAN-01, TA-ETYMON-NANBAN-02, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-CURVES-VA-KA-01, TA-LEX-UUR-01]
 introduces:
