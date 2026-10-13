@@ -15,7 +15,7 @@ exposure: 3 native-script headwords carry no romanization, so they are load-bear
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29963 atoms never revisited (0%); missed windows R1 1553, R2 19839, R3 15983, R4 24355
 forward references: 788 uses of material a later lesson teaches
-etymology: 15888 of 25682 word-introducing lessons carry no etymology_hook; 15563 show the reader no origin in the body (per track below)
+etymology: 14558 of 25682 word-introducing lessons carry no etymology_hook; 14282 show the reader no origin in the body (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 921 evidence blocks, 0 invalid; 139 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
@@ -106,7 +106,7 @@ Chapters that cannot be started by ear (drivable prefix 0): 186
 Modality findings (report-only): 0
 
 Etymology coverage (HL24 §9) — every lesson that introduces a word says where it comes from:
-  25682 word-introducing lessons; 15888 carry no etymology_hook (38% covered), 15563 show the reader no origin in the body (39% covered), 15038 have neither
+  25682 word-introducing lessons; 14558 carry no etymology_hook (43% covered), 14282 show the reader no origin in the body (44% covered), 13772 have neither
   the hook is read by the app only; the book and narration print the body, so both are counted
   arabic: 1262 word lessons; 1187 no hook, 1195 no visible etymology, 1174 neither
   bengali: 1219 word lessons; 1136 no hook, 1144 no visible etymology, 1113 neither
@@ -117,7 +117,7 @@ Etymology coverage (HL24 §9) — every lesson that introduces a word says where
   hindi: 1200 word lessons; 1126 no hook, 967 no visible etymology, 952 neither
   italian: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither
   japanese: 695 word lessons; 601 no hook, 688 no visible etymology, 600 neither
-  kannada: 1396 word lessons; 1330 no hook, 1281 no visible etymology, 1266 neither
+  kannada: 1396 word lessons; 0 no hook, 0 no visible etymology, 0 neither
   latin: 1238 word lessons; 1095 no hook, 1105 no visible etymology, 1090 neither
   malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither
   marathi: 1217 word lessons; 1163 no hook, 1116 no visible etymology, 1105 neither
@@ -147,7 +147,7 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 8297 roots, 7595 spent fewer than 3 times (92%), 5370 never spent at all
+root ledger: 9415 roots, 8682 spent fewer than 3 times (92%), 6338 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: aaka-dravidian with 43 payoffs
 
@@ -157,7 +157,7 @@ info dump (report-only): 120 of 29572 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25180 of 29572 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25180, senses 25181, culture claims 25180
 
-metalanguage: 54 of 54 grammar terms appear in 28844 lessons; 49171 uses come before introduction, of which 7800 are technical terms across 4804 lessons
-  most-used-before-introduction: verb (2839 lessons), noun (1539 lessons), adjective (391 lessons), participle (294 lessons), case (285 lessons), voice (282 lessons)
+metalanguage: 54 of 54 grammar terms appear in 28922 lessons; 49446 uses come before introduction, of which 7858 are technical terms across 4857 lessons
+  most-used-before-introduction: verb (2885 lessons), noun (1549 lessons), adjective (391 lessons), participle (294 lessons), case (285 lessons), voice (282 lessons)
 literal markup: none in 29572 lessons or any generated book
-glyph coverage: every character renders -- 139 main-font and 829 script characters across 5916 generated files
+glyph coverage: every character renders -- 140 main-font and 829 script characters across 5916 generated files
