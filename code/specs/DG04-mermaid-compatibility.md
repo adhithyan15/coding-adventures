@@ -1050,7 +1050,7 @@ minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
-or absent start and point, circle, or cross end markers, titles, and accessibility
+or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
 decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class

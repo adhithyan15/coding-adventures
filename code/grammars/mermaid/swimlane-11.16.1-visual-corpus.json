@@ -60,6 +60,7 @@
     "labeled-bidirectional-links",
     "labeled-circle-cross-links",
     "labeled-mixed-endpoint-markers",
+    "labeled-open-links",
     "edge-identifiers",
     "edge-class-styles",
     "edge-animation-config",
