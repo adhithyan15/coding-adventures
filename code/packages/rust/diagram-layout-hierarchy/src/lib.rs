@@ -628,7 +628,7 @@ mod tests {
         SwimlaneDiagram {
             direction, title: None, accessibility_title: None, accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: ids }],
-            nodes, edges, links: Vec::new(), callbacks: Vec::new(),
+            nodes, edges, links: Vec::new(), callbacks: Vec::new(), line_hops: None,
         }
     }
 
