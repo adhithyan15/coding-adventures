@@ -119,7 +119,7 @@ loops, and the stalled products had none.
    - VE-2, Venture's release pipeline, and cutting 0.10.0;
    - JO-1, Journal's first release.
 5. **Emitter correctness.**
-   - EM-2, `align`: land #16297, then #16293;
+   - EM-2, `align`: #16297 landed (2026-10-07); #16293 remains;
    - EM-4, SwiftUI layout;
    - TR-2 and TR-3, the native progress ring and elevation;
    - EM-6, Compose fixtures (also unblocks MB-5, and is the first step of
@@ -268,7 +268,7 @@ exist.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | EM-1 | An authored XAML literal starting with `{` became a markup extension | **fixed on main** by #16883, with the style allow-list in #16948. This branch's parallel fix was dropped in favour of main's, and X-4 then emptied the allow-list. #15487 | security | S |
-| EM-2 | `align` is never read on Qt and Flutter; main-axis and Text `align` semantics are undefined | **real**. #15258 has an open fix, #16297. #16293 needs a design | bug | S/M + M |
+| EM-2 | `align` is never read on Qt and Flutter; main-axis and Text `align` semantics are undefined | **partly** (checked 2026-10-13): cross-axis alignment landed in #16297 on 2026-10-07, and #15258 is closed. What remains is #16293: main-axis `align` and `align` on `Text` still need a design. | bug | S/M + M |
 | EM-3 | `HostInput` ignores `multiline` on react, html, webcomponent, Qt and SwiftUI, with no degradation reported | **real**. A probe emits `<input type="text">`, a Qt `TextInput` and a SwiftUI `TextField`. #15930 | bug | S–M |
 | EM-4 | SwiftUI drops `align`, `align-items`, `justify-content`, `flex-grow` and `flex-wrap` | **partly**. Pinned at `engram-app/tests/native_complete_gate.rs:154-161`. #14728 | bug | M |
 | EM-5 | html emits state hooks (`data-disabled`) with no CSS to consume them | **partly**. #14824 | bug | S–M |
