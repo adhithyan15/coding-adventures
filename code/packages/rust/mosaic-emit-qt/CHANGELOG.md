@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-13 (Path geometry binds to slots and For items)
+
+- `Path` coordinates (`cx`, `cy`, `r`, `x1` … `y2`) may now be bound to a
+  number slot or an expression (#16926). QML bindings are JavaScript, so a
+  bound coordinate is written as `Number(expr)` where the literal went, and
+  re-evaluates as its inputs change. SpiceWorkbench's schematic and waveform
+  now compile on Qt; they were refused before with "only supports a literal
+  number".
+- A bound circle's position is the binding `Number(cx) - r`. A bound line's
+  `Shape` size is `Math.max(0, …)`, floored at 0 as the literal size is.
+- All-literal geometry lowers byte-identically to before. An unsafe slot name
+  is refused.
+- `tests/spice_workbench_compiles_to_qt.rs` compiles the real package and pins
+  the bound geometry.
+
 ## 2026-10-12 (elevation shadows leave the degradation report)
 
 - A non-inset CSS `box-shadow` paired with a supported Mosaic `elevation`

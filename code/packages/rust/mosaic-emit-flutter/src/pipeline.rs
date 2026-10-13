@@ -9817,24 +9817,93 @@ fn path_bounding_size(xs: &[f64], ys: &[f64]) -> (f64, f64) {
     (w, h)
 }
 
-/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
-/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
-/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
-/// kernel-level capability); wiring it through to a real Dart
-/// field/`setState` binding is future work, the same not-yet-landed gap
-/// the XAML and Qt lowerings both note — a bound coordinate is
-/// therefore a clear compile error here, not a silent 0.
-fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+/// One `Path` geometry coordinate: a literal number, or a Dart expression
+/// for a bound one.
+///
+/// Bound coordinates are how a `For` draws data — SpiceWorkbench's waveform
+/// is `For ( each: slot: waveform-segments , as: segment ) { Path (kind:
+/// line, x1: ( segment[0] ), …) }` — so a literal-only `Path` cannot render
+/// any plot (#16926). The widget tree is rebuilt from its fields, so a bound
+/// coordinate is simply an expression where the literal would go:
+///
+/// | Authored            | Dart                       |
+/// |---------------------|----------------------------|
+/// | `x1: 28`            | `28`                       |
+/// | `x1: slot: start-x` | `(startX).toDouble()`      |
+/// | `x1: ( seg[0] )`    | `(seg[0]).toDouble()`      |
+///
+/// `.toDouble()` is defined on `num`, so it accepts an `int` or `double`
+/// element, and a `dynamic` one at run time.
+#[derive(Debug, Clone)]
+enum PathCoord {
+    Literal(f64),
+    Bound(String),
+}
+
+impl PathCoord {
+    /// The value as Dart source.
+    fn dart(&self) -> String {
+        match self {
+            PathCoord::Literal(n) => n.to_string(),
+            PathCoord::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// Every coordinate's literal value, or `None` if any is bound.
+    fn all_literal(coords: &[PathCoord]) -> Option<Vec<f64>> {
+        coords
+            .iter()
+            .map(|c| match c {
+                PathCoord::Literal(n) => Some(*n),
+                PathCoord::Bound(_) => None,
+            })
+            .collect()
+    }
+}
+
+/// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
+/// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
+/// compile error, never a silent `0`.
+fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, PipelineEmitError> {
     match find_prop_value(node, prop_name) {
-        Some(LayoutPropValue::Number(n)) => Ok(*n),
-        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
-            Err(PipelineEmitError::UnknownPrimitive(format!(
-                "Path prop '{prop_name}' is bound to a slot or expression, but the Flutter emitter only supports a literal number for Path geometry props today"
-            )))
+        Some(LayoutPropValue::Number(n)) => Ok(PathCoord::Literal(*n)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            Ok(PathCoord::Bound(format!("({field}).toDouble()")))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(PathCoord::Bound(format!("({}).toDouble()", expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
         ))),
+    }
+}
+
+/// A `Size(width, height)` bounding the given coordinates, as Dart source.
+///
+/// All-literal geometry keeps [`path_bounding_size`]'s `const Size(w, h)`, so
+/// it lowers byte-identically to before bindings existed. A bound coordinate
+/// drops the `const` and folds the extent at run time, from `0` as the
+/// literal helper does, without needing a `dart:math` import.
+fn path_bounding_size_dart(xs: &[PathCoord], ys: &[PathCoord]) -> String {
+    if let (Some(xs), Some(ys)) = (PathCoord::all_literal(xs), PathCoord::all_literal(ys)) {
+        let (w, h) = path_bounding_size(&xs, &ys);
+        return format!("const Size({w}, {h})");
+    }
+    let extent = |coords: &[PathCoord]| {
+        let parts: Vec<String> = coords.iter().map(PathCoord::dart).collect();
+        format!("<double>[{}].fold(0.0, (a, b) => b > a ? b : a)", parts.join(", "))
+    };
+    format!("Size({}, {})", extent(xs), extent(ys))
+}
+
+/// An `Offset(x, y)` as Dart source: `const` only when both are literal.
+fn path_offset_dart(x: &PathCoord, y: &PathCoord) -> String {
+    match (x, y) {
+        (PathCoord::Literal(x), PathCoord::Literal(y)) => format!("const Offset({x}, {y})"),
+        _ => format!("Offset({}, {})", x.dart(), y.dart()),
     }
 }
 
@@ -9889,10 +9958,22 @@ fn emit_path(
 
     match kind {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let r = required_path_number(node, "r")?;
-            let d = 2.0 * r;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let r = required_path_coord(node, "r")?;
+            // All-literal geometry keeps its computed numbers; any binding
+            // writes the same arithmetic as a Dart expression.
+            let (left, top) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
+                Some(v) => ((v[0] - v[2]).to_string(), (v[1] - v[2]).to_string()),
+                None => (
+                    format!("{} - {}", cx.dart(), r.dart()),
+                    format!("{} - {}", cy.dart(), r.dart()),
+                ),
+            };
+            let d = match &r {
+                PathCoord::Literal(r) => (2.0 * r).to_string(),
+                PathCoord::Bound(_) => format!("2 * {}", r.dart()),
+            };
             let fill = paint.fill.as_deref().unwrap_or("null");
             let border = match &paint.stroke {
                 Some(stroke) => format!(
@@ -9906,39 +9987,45 @@ fn emit_path(
             );
             if direct_stack_child {
                 Ok(format!(
-                    "{pad}Positioned(left: {left}, top: {top}, child: {container})\n",
-                    left = cx - r,
-                    top = cy - r,
+                    "{pad}Positioned(left: {left}, top: {top}, child: {container})\n"
                 ))
             } else {
                 Ok(format!("{pad}{container}\n"))
             }
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, x2], &[y1, y2]);
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
+            let size = path_bounding_size_dart(&[x1.clone(), x2.clone()], &[y1.clone(), y2.clone()]);
+            let start = path_offset_dart(&x1, &y1);
+            let end = path_offset_dart(&x2, &y2);
             let fill = paint.fill.as_deref().unwrap_or("null");
             let stroke = paint.stroke.as_deref().unwrap_or("null");
             Ok(format!(
-                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicLinePainter(start: const Offset({x1}, {y1}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                "{pad}CustomPaint(size: {size}, painter: _MosaicLinePainter(start: {start}, end: {end}, fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
                 sw = paint.stroke_width,
             ))
         }
         "curve" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, cx, x2], &[y1, cy, y2]);
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
+            let size = path_bounding_size_dart(
+                &[x1.clone(), cx.clone(), x2.clone()],
+                &[y1.clone(), cy.clone(), y2.clone()],
+            );
+            let start = path_offset_dart(&x1, &y1);
+            let control = path_offset_dart(&cx, &cy);
+            let end = path_offset_dart(&x2, &y2);
             let fill = paint.fill.as_deref().unwrap_or("null");
             let stroke = paint.stroke.as_deref().unwrap_or("null");
             Ok(format!(
-                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicCurvePainter(start: const Offset({x1}, {y1}), control: const Offset({cx}, {cy}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                "{pad}CustomPaint(size: {size}, painter: _MosaicCurvePainter(start: {start}, control: {control}, end: {end}, fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
                 sw = paint.stroke_width,
             ))
         }
@@ -18336,37 +18423,61 @@ mod tests {
     }
 
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+    fn path_slot_bound_circle_centre_becomes_a_dart_expression() {
+        // #16926: a bound centre was a compile error, so no data-driven
+        // circle could render. The authored `cx - r` is now Dart source.
         let m = component("X", vec![], vec![]);
-        let l = layout(
-            "X",
-            node_with(
-                "Path",
-                vec![
-                    LayoutProp {
-                        name: "kind".to_string(),
-                        value: LayoutPropValue::Keyword("circle".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cx".to_string(),
-                        value: LayoutPropValue::SlotRef("radius".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cy".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                    LayoutProp {
-                        name: "r".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                ],
-                vec![],
-            ),
-        );
-        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        let mut circle = path_node("dot", "circle", &[("cy", 5.0), ("r", 5.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("dot-x".to_string()),
+        });
+        let l = layout("X", node_with("Stack", vec![], vec![circle]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
         assert!(
-            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("bound to a slot"))
+            out.contains("Positioned(left: (dotX).toDouble() - 5, top: 5 - 5,"),
+            "{out}"
         );
+        assert!(out.contains("Container(width: 10, height: 10,"), "{out}");
+    }
+
+    #[test]
+    fn path_line_binds_for_item_coordinates_without_const() {
+        // SpiceWorkbench's waveform shape: each segment is a list element.
+        let m = component("X", vec![], vec![]);
+        let mut line = path_node("segment", "line", &[("y2", 188.0)]);
+        for (name, expr) in [("x1", "segment[0]"), ("y1", "segment[1]"), ("x2", "segment[2]")] {
+            line.props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            });
+        }
+        let l = layout("X", line);
+        let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
+        assert!(
+            out.contains("start: Offset((segment[0]).toDouble(), (segment[1]).toDouble())"),
+            "{out}"
+        );
+        assert!(out.contains("end: Offset((segment[2]).toDouble(), 188)"), "{out}");
+        assert!(
+            out.contains(
+                "size: Size(<double>[(segment[0]).toDouble(), (segment[2]).toDouble()].fold(0.0, (a, b) => b > a ? b : a), <double>[(segment[1]).toDouble(), 188].fold(0.0, (a, b) => b > a ? b : a))"
+            ),
+            "{out}"
+        );
+        assert!(!out.contains("const Offset((segment"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_coordinate_with_an_unsafe_slot_name_is_refused() {
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cy", 1.0), ("r", 1.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("x); evil(".to_string()),
+        });
+        let l = layout("X", circle);
+        assert!(from_pipeline(&m, &l, &empty_style("X")).is_err());
     }
 
     #[test]

@@ -2847,20 +2847,83 @@ fn qml_shape_bounding_box_lines(xs: &[f64], ys: &[f64]) -> Vec<String> {
     vec![format!("width: {width}"), format!("height: {height}")]
 }
 
-/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
-/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
-/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
-/// kernel-level capability; wiring it through to a real QML property binding
-/// is future work, tracked separately, matching XAML's own not-yet-landed
-/// UI36 dependency for the same gap) — a bound coordinate is therefore a
-/// clear compile error here, not a silent 0.
-fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+/// The QML bounding-box lines for coordinates that may be bound.
+///
+/// With every coordinate literal this is exactly
+/// [`qml_shape_bounding_box_lines`], so literal geometry lowers
+/// byte-identically to before bindings existed. With any coordinate bound
+/// the size becomes a QML binding, `Math.max(0, …)`, which re-evaluates as
+/// the bound values change. The `0` floor matches the literal helper's
+/// fold from `0.0`.
+fn qml_path_bounding_box_lines(xs: &[PathCoord], ys: &[PathCoord]) -> Vec<String> {
+    if let (Some(xs), Some(ys)) = (PathCoord::all_literal(xs), PathCoord::all_literal(ys)) {
+        return qml_shape_bounding_box_lines(&xs, &ys);
+    }
+    let extent = |coords: &[PathCoord]| {
+        let parts: Vec<String> = coords.iter().map(PathCoord::qml).collect();
+        format!("Math.max(0, {})", parts.join(", "))
+    };
+    vec![format!("width: {}", extent(xs)), format!("height: {}", extent(ys))]
+}
+
+/// One `Path` geometry coordinate: a literal number, or a QML expression
+/// for a bound one.
+///
+/// Bound coordinates are how a `For` draws data — SpiceWorkbench's waveform
+/// is `For ( each: slot: waveform-segments , as: segment ) { Path (kind:
+/// line, x1: ( segment[0] ), …) }` — so a literal-only `Path` cannot render
+/// any plot (#16926). QML property bindings are JavaScript expressions that
+/// re-evaluate when their inputs change, so a bound coordinate is simply
+/// written where the literal would go:
+///
+/// | Authored            | QML                          |
+/// |---------------------|------------------------------|
+/// | `x1: 28`            | `28`                         |
+/// | `x1: slot: start-x` | `Number(mosaicRoot.startX)`  |
+/// | `x1: ( seg[0] )`    | `Number(seg[0])`             |
+///
+/// `Number(…)` coerces whatever the slot or list element holds to a JS
+/// number, the same coercion the Web Components lowering applies.
+#[derive(Debug, Clone)]
+enum PathCoord {
+    Literal(f64),
+    Bound(String),
+}
+
+impl PathCoord {
+    /// The value as QML source.
+    fn qml(&self) -> String {
+        match self {
+            PathCoord::Literal(n) => n.to_string(),
+            PathCoord::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// Every coordinate's literal value, or `None` if any is bound.
+    fn all_literal(coords: &[PathCoord]) -> Option<Vec<f64>> {
+        coords
+            .iter()
+            .map(|c| match c {
+                PathCoord::Literal(n) => Some(*n),
+                PathCoord::Bound(_) => None,
+            })
+            .collect()
+    }
+}
+
+/// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
+/// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
+/// compile error, never a silent `0`.
+fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, PipelineEmitError> {
     match node.props.iter().find(|p| p.name == prop_name).map(|p| &p.value) {
-        Some(LayoutPropValue::Number(n)) => Ok(*n),
-        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
-            Err(PipelineEmitError::UnknownPrimitive(format!(
-                "Path prop '{prop_name}' is bound to a slot or expression, but the Qt/QML emitter only supports a literal number for Path geometry props today"
-            )))
+        Some(LayoutPropValue::Number(n)) => Ok(PathCoord::Literal(*n)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(PathCoord::Bound(format!("Number(mosaicRoot.{field})")))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(PathCoord::Bound(format!("Number({})", expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
@@ -2905,11 +2968,25 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
 
     match kind {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let r = required_path_number(node, "r")?;
-            let d = 2.0 * r;
-            let (x, y) = (cx - r, cy - r);
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let r = required_path_coord(node, "r")?;
+            // All-literal geometry keeps its computed numbers; any binding
+            // turns the same arithmetic into a QML binding expression.
+            let (x, y, d) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
+                Some(v) => {
+                    let (cx, cy, r) = (v[0], v[1], v[2]);
+                    ((cx - r).to_string(), (cy - r).to_string(), (2.0 * r).to_string())
+                }
+                None => (
+                    format!("{} - {}", cx.qml(), r.qml()),
+                    format!("{} - {}", cy.qml(), r.qml()),
+                    match &r {
+                        PathCoord::Literal(r) => (2.0 * r).to_string(),
+                        PathCoord::Bound(_) => format!("2 * {}", r.qml()),
+                    },
+                ),
+            };
             let mut out = String::new();
             writeln!(out, "{pad}Rectangle {{").unwrap();
             writeln!(out, "{pad}    x: {x}").unwrap();
@@ -2924,47 +3001,54 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
             Ok(out)
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
             let mut out = String::new();
             writeln!(out, "{pad}Shape {{").unwrap();
-            for line in qml_shape_bounding_box_lines(&[x1, x2], &[y1, y2]) {
+            for line in qml_path_bounding_box_lines(&[x1.clone(), x2.clone()], &[y1.clone(), y2.clone()]) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
             writeln!(out, "{pad}    ShapePath {{").unwrap();
             for line in qml_shape_path_paint_lines(props) {
                 writeln!(out, "{pad}        {line}").unwrap();
             }
-            writeln!(out, "{pad}        startX: {x1}").unwrap();
-            writeln!(out, "{pad}        startY: {y1}").unwrap();
-            writeln!(out, "{pad}        PathLine {{ x: {x2}; y: {y2} }}").unwrap();
+            writeln!(out, "{pad}        startX: {}", x1.qml()).unwrap();
+            writeln!(out, "{pad}        startY: {}", y1.qml()).unwrap();
+            writeln!(out, "{pad}        PathLine {{ x: {}; y: {} }}", x2.qml(), y2.qml()).unwrap();
             writeln!(out, "{pad}    }}").unwrap();
             writeln!(out, "{pad}}}").unwrap();
             Ok(out)
         }
         "curve" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
             let mut out = String::new();
             writeln!(out, "{pad}Shape {{").unwrap();
-            for line in qml_shape_bounding_box_lines(&[x1, cx, x2], &[y1, cy, y2]) {
+            for line in qml_path_bounding_box_lines(
+                &[x1.clone(), cx.clone(), x2.clone()],
+                &[y1.clone(), cy.clone(), y2.clone()],
+            ) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
             writeln!(out, "{pad}    ShapePath {{").unwrap();
             for line in qml_shape_path_paint_lines(props) {
                 writeln!(out, "{pad}        {line}").unwrap();
             }
-            writeln!(out, "{pad}        startX: {x1}").unwrap();
-            writeln!(out, "{pad}        startY: {y1}").unwrap();
+            writeln!(out, "{pad}        startX: {}", x1.qml()).unwrap();
+            writeln!(out, "{pad}        startY: {}", y1.qml()).unwrap();
             writeln!(
                 out,
-                "{pad}        PathQuad {{ x: {x2}; y: {y2}; controlX: {cx}; controlY: {cy} }}"
+                "{pad}        PathQuad {{ x: {}; y: {}; controlX: {}; controlY: {} }}",
+                x2.qml(),
+                y2.qml(),
+                cx.qml(),
+                cy.qml()
             )
             .unwrap();
             writeln!(out, "{pad}    }}").unwrap();
@@ -11062,39 +11146,54 @@ mod tests {
     }
 
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+    fn path_slot_bound_circle_centre_becomes_a_qml_binding() {
+        // #16926: a bound centre was a compile error, so no data-driven
+        // circle could render. QML bindings are JavaScript, so the authored
+        // `cx - r` is written as a binding over the slot.
+        let m = component("Foo", vec![slot("moon-x", SlotType::Number, true)], vec![]);
+        let mut node = path_node("moon", "circle", &[("cy", 17.0), ("r", 17.0)]);
+        node.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("moon-x".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Foo")).unwrap().output;
+        assert!(out.contains("x: Number(mosaicRoot.moonX) - 17"), "{out}");
+        assert!(out.contains("y: 17 - 17"), "{out}");
+        assert!(out.contains("width: 34"), "a literal radius keeps a literal size: {out}");
+    }
+
+    #[test]
+    fn path_line_binds_for_item_coordinates_and_sizes_with_math_max() {
+        // SpiceWorkbench's waveform shape: each segment is a list element.
+        let mut node = path_node("segment", "line", &[("y2", 188.0)]);
+        for (name, expr) in [("x1", "segment[0]"), ("y1", " segment[1] "), ("x2", "segment[2]")] {
+            node.props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            });
+        }
+        let m = component("Plot", vec![], vec![]);
+        let l = LayoutDef { component_name: "Plot".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Plot")).unwrap().output;
+        assert!(out.contains("startX: Number(segment[0])"), "{out}");
+        assert!(out.contains("startY: Number(segment[1])"), "{out}");
+        assert!(out.contains("PathLine { x: Number(segment[2]); y: 188 }"), "{out}");
+        assert!(out.contains("width: Math.max(0, Number(segment[0]), Number(segment[2]))"), "{out}");
+        assert!(out.contains("height: Math.max(0, Number(segment[1]), 188)"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_coordinate_with_an_unsafe_slot_name_is_refused() {
         let m = component("Foo", vec![], vec![]);
-        let l = LayoutDef {
-            component_name: "Foo".to_string(),
-            root: LayoutNode {
-                tag: "Path".to_string(),
-                part_name: None,
-                props: vec![
-                    LayoutProp {
-                        name: "kind".to_string(),
-                        value: LayoutPropValue::Keyword("circle".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cx".to_string(),
-                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cy".to_string(),
-                        value: LayoutPropValue::Number(17.0),
-                    },
-                    LayoutProp {
-                        name: "r".to_string(),
-                        value: LayoutPropValue::Number(17.0),
-                    },
-                ],
-                children: Vec::new(),
-            },
-        };
+        let mut node = path_node("moon", "circle", &[("cy", 1.0), ("r", 1.0)]);
+        node.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("x); evil(".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
         let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
-        assert!(
-            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
-            "{err:?}"
-        );
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "{err:?}");
     }
 
     #[test]
