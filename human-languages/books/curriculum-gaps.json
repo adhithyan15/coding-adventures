@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 17255,
-    "wordLessonsWithoutVisibleEtymology": 16842,
+    "wordLessonsWithoutEtymologyHook": 15888,
+    "wordLessonsWithoutVisibleEtymology": 15567,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341518,9 +341518,9 @@
       {
         "language": "malayalam",
         "wordLessons": 1445,
-        "wordLessonsWithoutEtymologyHook": 1367,
-        "wordLessonsWithoutVisibleEtymology": 1275,
-        "wordLessonsWithoutAnyEtymology": 1258
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "marathi",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 17255,
-      "wordLessonsWithoutVisibleEtymology": 16842,
-      "wordLessonsWithoutAnyEtymology": 16296,
-      "hookPercent": 32,
-      "visiblePercent": 34
+      "wordLessonsWithoutEtymologyHook": 15888,
+      "wordLessonsWithoutVisibleEtymology": 15567,
+      "wordLessonsWithoutAnyEtymology": 15038,
+      "hookPercent": 38,
+      "visiblePercent": 39
     }
   },
   "writingStages": {
@@ -454012,28 +454012,32 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 7243,
-    "underspent": 6589,
-    "neverSpent": 4556,
+    "roots": 8297,
+    "underspent": 7595,
+    "neverSpent": 5370,
     "payoffDistribution": {
-      "0": 4556,
-      "1": 1339,
-      "2": 694,
-      "3": 338,
-      "4": 164,
-      "5": 74,
-      "6": 26,
-      "7": 25,
-      "8": 9,
-      "9": 5,
-      "10": 4,
-      "12": 3,
-      "13": 1,
+      "0": 5370,
+      "1": 1498,
+      "2": 727,
+      "3": 357,
+      "4": 174,
+      "5": 79,
+      "6": 28,
+      "7": 27,
+      "8": 10,
+      "9": 6,
+      "10": 5,
+      "11": 1,
+      "12": 4,
+      "13": 2,
       "15": 2,
-      "16": 1,
-      "21": 2
+      "16": 2,
+      "21": 2,
+      "25": 1,
+      "30": 1,
+      "43": 1
     },
-    "underspentPercent": 91
+    "underspentPercent": 92
   },
   "infoDump": {
     "lessons": 29572,
@@ -454057,18 +454061,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 28736,
-    "usesBeforeIntroduction": 48353,
-    "technicalUsesBeforeIntroduction": 7398,
-    "technicalLessons": 4462,
+    "lessonsUsingTerms": 28844,
+    "usesBeforeIntroduction": 49170,
+    "technicalUsesBeforeIntroduction": 7799,
+    "technicalLessons": 4803,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2620
+        "lessons": 2838
       },
       {
         "term": "noun",
-        "lessons": 1370
+        "lessons": 1539
       },
       {
         "term": "adjective",
@@ -454084,7 +454088,7 @@
       },
       {
         "term": "voice",
-        "lessons": 281
+        "lessons": 282
       }
     ]
   },
