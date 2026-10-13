@@ -2,6 +2,52 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a BEAM heap native continuation -->
+CV04a source `282193e9b1911fb3846b4a107d5d11fb8bec02f0`, integrated main
+`160b1b4e0e8c52bf7dc8b02119e666611fd6001f`: native continuation session97289
+returned **actual EXIT0** on October13. The 29-package reverse-dependency cone
+and unchanged 11 LANG production selections plus 48 exact native regressions
+pass **3,347 tests/docs across 211 targets**, zero failures/1 existing archive
+ignore; strict all-target Clippy for all29, doc-shards, lessons1101 and whitespace
+checks pass. These counts retain IIR174/3 and 98 successful unchanged targets
+from actual source d5 by nonempty mode/type/blob equality; they do not fabricate
+an exit-zero for the original failed validator. Twig now passes88/2, including
+all seven prior Windows self-compilation failures and the new OS path-identity
+control. Its fixture-only helper preserves the production source prefix.
+
+The BEAM string-constant repair reserves exactly two heap words per list cell
+before construction; exact bytecode and real Erlang long-string red controls
+precede the repair. Original published Linux heap-overrun log and d5 validator
+EXIT1 remain preserved. Stopped session73885 was a read-only preflight EXIT1;
+batched mode/type/blob inventories replace its thousands of Git processes.
+Focused repetitions are excluded from the totals above. No hosted Linux
+acceptance, final security PASS, unfiltered LANG acceptance or current-main
+acceptance is inferred from these Windows results.
+
+The independent crossing-work finding has a spec-first repair: counted duplicate
+and unique same-axis controls first fail, then actual geometry/axis indexing
+passes six focused controls and the full paint suite102/3 plus strict lint at5b.
+Exact duplicate crossing order and drawing multiplicity are preserved. Arbitrary
+unique oblique candidate work remains unaccepted; the reviewer reached its usage
+limit before final acceptance. Existing historical blocks retain their original
+source frames and withholding decisions.
+
+Fresh full-file PR/backlog/epic audit sees main
+`894bde600d2c8693f127e09542b76678fc5169db`, including powered ALGOL selectors,
+automatic lane ordering and source/spec imports. These need bounded reconciliation.
+The external adjacent-swap arithmetic proposal passes52,818 exhaustive checks;
+it is not production validation. Separately owned open orthogonal-hop/ALGOL/Qt
+work is recorded for overlap review. Sole Closure/shared PR17288 remains published
+at822; hosted run38323457119 is terminal LinuxFAILURE/macOS+WindowsSUCCESS.
+Auto-mergeOFF; no new publication, merge, cleanup or CV04b selection.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen checkout,
+497 inputs, existing run, receipts and Cargo target stay untouched and unpolled.
+Base ESTree/own types/no new crates.io dependencies remain the owner boundary.
+Full parity, source/output joins, all transformation lineage and the full goal
+remain OPEN; heartbeat ACTIVE.
+<!-- /CV04a BEAM heap native continuation -->
+
 <!-- CV04 line-hop Qt security withheld -->
 CV04a native source4bd5520/main160 completed actual31902 EXIT0: full23package
 cone1463/62/1existingGDIignore, nativeTaskApp9/1, total1472/63; strict23,
