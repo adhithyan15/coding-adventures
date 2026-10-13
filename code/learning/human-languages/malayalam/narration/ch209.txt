@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for butter, then the Malayalam for honey.
 You'll want to know: കറിവേപ്പില.
 കറിവേപ്പില — kaṟivēppila — "curry leaves".
 
+The word, taken apart.
+കറിവേപ്പില (kaṟivēppila) is native Dravidian, "curry-neem leaf": kaṟi, "curry" (DEDR 1391), the word for the neem tree (DEDR 5531, with Tamil vēmpu), and ila, "leaf" (DEDR 497).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for honey, then the Malayalam for curry le
 
 You'll want to know: കടുക്.
 കടുക് — kaṭukŭ — "mustard seeds".
+
+The word, taken apart.
+കടുക് (kaṭukŭ) is native Dravidian, one word with Tamil kaṭuku (DEDR 1137).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for curry leaves, then the Malayalam for m
 You'll want to know: മസാല.
 മസാല — masāla — "spice mix, masala".
 
+The word, taken apart.
+മസാല (masāla) from Hindustani masālā, "spices", from Arabic maṣāliḥ, "necessary things, ingredients".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for mustard seeds, then the Malayalam for 
 You'll want to know: ചെമ്മീൻ.
 ചെമ്മീൻ — cemmīn — "a prawn".
 
+The word, taken apart.
+ചെമ്മീൻ (cemmīn) is native Dravidian, "red fish": cem-, "red" (DEDR 1931, with Tamil ce-), and mīn, "fish" (DEDR 4885). DEDR 4885 compares Sanskrit mīna.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for spice mix, then the Malayalam for a pr
 
 You'll want to know: സന്ദേശം.
 സന്ദേശം — sandēśaṁ — "a message".
+
+The word, taken apart.
+സന്ദേശം (sandēśaṁ) from Sanskrit saṁdēśa, "message, information", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12904).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "parihāraṁ"
 concept_tag: ML-KARANAM200-PARIHARAM
 prerequisites: [ML-C200-pakaram, ML-C200-prasnam]
 sounds: []
-roots: []
+roots: [sanskrit-parihara]
+etymology_hook: "parihāraṁ ← Sanskrit parihāra 'a leading round, avoiding', a tatsama (CDIAL 7901)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C200-prasnam]
 <!-- hl-knowledge: introduces=[ML-LEX-C200-KARANAM200-04]; assesses=[] -->
 
 **പരിഹാരം** — *parihāraṁ* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിഹാരം** (*parihāraṁ*) ← Sanskrit *parihāra*, "a leading round, avoiding", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7901). A way round a difficulty became its solution.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

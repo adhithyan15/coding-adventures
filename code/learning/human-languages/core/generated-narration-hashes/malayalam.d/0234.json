@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 234,
-  "sourceHash": "fnv1a64:99ca687983d1477a",
+  "sourceHash": "fnv1a64:d53c1e74f036fcb4",
   "lessonIds": [
     "ML-C234-utsaham",
     "ML-C234-nirasa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch234.txt",
   "json": "malayalam/narration/ch234.json",
-  "textHash": "fnv1a64:4ac53c9b2b530366",
-  "jsonHash": "fnv1a64:87d0d9cfd4747b03",
+  "textHash": "fnv1a64:ba5ce7f7cd360ce4",
+  "jsonHash": "fnv1a64:e7873de6fafacf51",
   "findings": []
 }

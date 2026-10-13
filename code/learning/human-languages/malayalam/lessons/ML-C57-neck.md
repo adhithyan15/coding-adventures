@@ -11,7 +11,8 @@ romanization: "kaḻuttŭ"
 concept_tag: ML-NOUN-NECK
 prerequisites: [ML-C56-box, ML-C55-river]
 sounds: []
-roots: []
+roots: [dravidian-kazhuttu-neck]
+etymology_hook: "kaḻuttŭ: native Dravidian, one word with Tamil kaḻuttu and Kannada kattu (DEDR 1366)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *kaḻuttu*, and carrying ഴ again — the third run 
 It is the neck and the throat together, outside and in. A garland goes round the കഴുത്ത്, and so does the thin gold chain a Kerala woman is given at her wedding.
 
 The held *tt* and the closing ŭ are both here as well, which makes this word a short review of three things at once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴുത്ത്** (*kaḻuttŭ*) is native Dravidian, one word with Tamil *kaḻuttu* and Kannada *kattu* (DEDR 1366). DEDR 1366 compares Sanskrit *kaṇṭha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

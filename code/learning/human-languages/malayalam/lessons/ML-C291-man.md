@@ -14,7 +14,8 @@ romanization: "mān"
 concept_tag: ML-VASTU291-MAN
 prerequisites: [ML-C291-valli, ML-C291-jantu]
 sounds: []
-roots: []
+roots: [dravidian-ma-deer]
+etymology_hook: "mān: native Dravidian, one word with Tamil mā and Telugu māvu (DEDR 4780)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C291-jantu]
 <!-- hl-knowledge: introduces=[ML-LEX-C291-VASTU291-03]; assesses=[] -->
 
 **മാൻ** — *mān* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാൻ** (*mān*) is native Dravidian, one word with Tamil *mā* and Telugu *māvu* (DEDR 4780).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

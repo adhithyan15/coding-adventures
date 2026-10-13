@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 313,
-  "sourceHash": "fnv1a64:018a0cd0239642db",
+  "sourceHash": "fnv1a64:fb229d292769c6c3",
   "lessonIds": [
     "ML-C313-ekkil",
     "ML-C313-kottuva",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch313.txt",
   "json": "malayalam/narration/ch313.json",
-  "textHash": "fnv1a64:98f523ce8f722a29",
-  "jsonHash": "fnv1a64:ab61f6081b80e017",
+  "textHash": "fnv1a64:47dbdfdbb3e27bc1",
+  "jsonHash": "fnv1a64:1ddf1039fe41f0d0",
   "findings": []
 }

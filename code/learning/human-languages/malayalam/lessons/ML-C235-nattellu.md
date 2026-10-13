@@ -14,7 +14,8 @@ romanization: "naṭṭellŭ"
 concept_tag: ML-AROGYAM235-NATTELLU
 prerequisites: [ML-C235-kanankai, ML-C235-uppurri]
 sounds: []
-roots: []
+roots: [dravidian-natu-middle, dravidian-elumpu-bone]
+etymology_hook: "naṭṭellŭ: native Dravidian, 'the middle bone': naṭu 'middle' (DEDR 3584) + ellŭ 'bone' (DEDR 839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C235-uppurri]
 <!-- hl-knowledge: introduces=[ML-LEX-C235-AROGYAM235-03]; assesses=[] -->
 
 **നട്ടെല്ല്** — *naṭṭellŭ* — "the spine, the backbone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നട്ടെല്ല്** (*naṭṭellŭ*) is native Dravidian, "the middle bone": *naṭu*, "middle" (DEDR 3584, with Tamil *naṭu*), and *ellŭ*, "bone" (DEDR 839). DEDR 839 compares Sanskrit *eḍū˘ka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: വീട്.
 വീട് (vīṭŭ) — "a house", and also "home".
 എന്റെ വീട് (enṟe vīṭŭ) — "my house", with എന്റെ, "my", which you already know.
 
+The word, taken apart.
+വീട് (vīṭŭ) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil viṭu. DEDR 5393 compares Sanskrit avamocana.
+
 What you've built.
 The place every visit starts.
 
@@ -41,6 +44,9 @@ Before the new one: say the Malayalam for I'll call, then the Malayalam for a ho
 
 You'll want to know: മുറി.
 മുറി (muṟi) — "a room". ഇത് എന്റെ മുറി — "this is my room".
+
+The word, taken apart.
+മുറി (muṟi) is native Dravidian, one word with Tamil muṟi and Kannada muṟi (DEDR 5008). Its first sense is "a piece, a fragment": a room is a part cut off from a house.
 
 What you've built.
 One part of the house.
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for a house, then the Malayalam for a room
 You'll want to know: അടുക്കള.
 അടുക്കള (aṭukkaḷa) — "the kitchen", where the ചോറ് is cooked.
 
+The word, taken apart.
+അടുക്കള (aṭukkaḷa) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam aṭukkaḷa itself, beside Tamil aṭu and Kannada aḍu.
+
 What you've built.
 The room with the fire.
 
@@ -100,6 +109,9 @@ Before the new one: say the Malayalam for a room, then the Malayalam for the kit
 You'll want to know: കുളിമുറി.
 കുളിമുറി (kuḷimuṟi) — "the bathroom": കുളി (kuḷi), "a bath", with മുറി (muṟi), "room".
 
+The word, taken apart.
+കുളിമുറി (kuḷimuṟi) is native Dravidian: kuḷi, "bathing" (DEDR 1832, with Tamil kuḷi), with muṟi, "room" (DEDR 5008).
+
 What you've built.
 A room word you can take apart.
 
@@ -128,6 +140,9 @@ Before the new one: say the Malayalam for the kitchen, then the Malayalam for th
 
 You'll want to know: മുറ്റം.
 മുറ്റം (muṟṟaṁ) — "the yard", the swept ground in front of a Kerala house where the കോലം is drawn.
+
+The word, taken apart.
+മുറ്റം (muṟṟaṁ) is native Dravidian, one word with Tamil muṟṟam (DEDR 5016).
 
 What you've built.
 Outside, but still home.

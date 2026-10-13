@@ -14,7 +14,8 @@ romanization: "sampādikkuka"
 concept_tag: ML-VERB-SAMPADIKKUKA
 prerequisites: [ML-C267-tolkkuka, ML-C267-kaimaruka]
 sounds: []
-roots: []
+roots: [sanskrit-sampadana]
+etymology_hook: "sampādikkuka ← Sanskrit sampādana 'procuring, acquiring' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C267-kaimaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C267-KRIYA267-05]; assesses=[] -->
 
 **സമ്പാദിക്കുക** — *sampādikkuka* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമ്പാദിക്കുക** (*sampādikkuka*) is built on Sanskrit *sampādana*, "procuring, bringing about", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

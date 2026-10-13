@@ -14,7 +14,8 @@ romanization: "orikkal"
 concept_tag: ML-BHUTAM178-ORIKKAL
 prerequisites: [ML-C178-itinakam, ML-C178-kazhinja]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "orikkal: native Dravidian, built on oru 'one' (DEDR 990) with a word for 'a time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C178-kazhinja]
 <!-- hl-knowledge: introduces=[ML-LEX-C178-BHUTAM178-04]; assesses=[] -->
 
 **ഒരിക്കൽ** — *orikkal* — "once, one time". **ഞാൻ ഒരിക്കൽ ചെന്നൈയിൽ പോയിട്ടുണ്ട്** — *ñān orikkal cennaiyil pōyiṭṭuṇṭŭ* — "I have been to Chennai once."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരിക്കൽ** (*orikkal*) is native Dravidian, built on *oru*, "one" (DEDR 990), with a word for "a time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

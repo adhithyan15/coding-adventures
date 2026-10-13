@@ -14,7 +14,8 @@ romanization: "kaḷikkāran"
 concept_tag: ML-VASTU215-KALIKKARAN
 prerequisites: [ML-C214-arakkaval, ML-C215-pantu]
 sounds: []
-roots: []
+roots: [dravidian-kali-play, persian-kar]
+etymology_hook: "kaḷikkāran: native kaḷi 'play' (DEDR 1374) + -kkāran 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C215-pantu]
 <!-- hl-knowledge: introduces=[ML-LEX-C215-VASTU215-02]; assesses=[] -->
 
 **കളിക്കാരൻ** — *kaḷikkāran* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കളിക്കാരൻ** (*kaḷikkāran*) is *kaḷi*, "play" (DEDR 1374), with *-kkāran*, the ending for a person who does something: "one who plays". DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

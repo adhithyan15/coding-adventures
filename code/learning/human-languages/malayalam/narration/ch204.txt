@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for tight, then the Malayalam for empty.
 You'll want to know: പാവം.
 പാവം — pāvaṁ — "poor, innocent, harmless (of a person)".
 
+The word, taken apart.
+പാവം (pāvaṁ) is usually traced to Sanskrit pāpa, "wicked; wretched" (CDIAL 8092); in Malayalam the sense softened to "poor, harmless".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for empty, then the Malayalam for poor.
 
 You'll want to know: അഴുക്കുള്ള.
 അഴുക്കുള്ള — aḻukkuḷḷa — "dirty".
+
+The word, taken apart.
+അഴുക്കുള്ള (aḻukkuḷḷa) is native Dravidian, "having dirt": aḻukku, "dirt, filth" (DEDR 283, with Tamil aḻukku), with -uḷḷa, "that has" (DEDR 697).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for poor, then the Malayalam for dirty.
 You'll want to know: മിനുസമുള്ള.
 മിനുസമുള്ള — minusamuḷḷa — "smooth".
 
+The word, taken apart.
+മിനുസമുള്ള (minusamuḷḷa) is "having gloss": minusam, "smoothness", most likely from the verb "to glitter, be polished"; DEDR 4876 lists Malayalam minukkam, "shining, polish", with Tamil miṉ, though not minusam itself. Then comes -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for dirty, then the Malayalam for smooth.
 You'll want to know: പരുക്കൻ.
 പരുക്കൻ — parukkan — "rough, coarse".
 
+The word, taken apart.
+പരുക്കൻ (parukkan) is native Dravidian, built on parukku, "rough surface"; DEDR 3973 lists it, beside Tamil paru and Kannada parige. DEDR 3973 compares Sanskrit paruṣa, with a query.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for smooth, then the Malayalam for rough.
 
 You'll want to know: ഉരുണ്ട.
 ഉരുണ്ട — uruṇṭa — "round".
+
+The word, taken apart.
+ഉരുണ്ട (uruṇṭa) is native Dravidian, a past form of the verb "to roll": "rolled round"; DEDR 664 lists the root with Tamil uruḷ and Kannada uruḷ. DEDR 664 compares Sanskrit uṇḍeraka.
 
 What you've built.
 One more word for this chapter.

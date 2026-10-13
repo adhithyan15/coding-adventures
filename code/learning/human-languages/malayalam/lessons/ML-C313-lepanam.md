@@ -14,7 +14,8 @@ romanization: "lēpanaṁ"
 concept_tag: ML-AROGYAM313-LEPANAM
 prerequisites: [ML-C313-ekkil, ML-C313-kottuva]
 sounds: []
-roots: []
+roots: [sanskrit-lepana]
+etymology_hook: "lēpanaṁ ← Sanskrit lēpana 'the act of smearing', a tatsama (CDIAL 11111)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C313-kottuva]
 <!-- hl-knowledge: introduces=[ML-LEX-C313-AROGYAM313-03]; assesses=[] -->
 
 **ലേപനം** — *lēpanaṁ* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലേപനം** (*lēpanaṁ*) ← Sanskrit *lēpana*, "the act of smearing", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11111).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

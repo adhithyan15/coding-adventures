@@ -11,7 +11,8 @@ romanization: "kākka"
 concept_tag: ML-NOUN-CROW
 prerequisites: [ML-C60-hen, ML-C58-no-need]
 sounds: []
-roots: []
+roots: [dravidian-kakka-crow]
+etymology_hook: "kākka: native Dravidian, one word with Tamil kākkai and Kannada kāke (DEDR 1425)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ An imitation word: the bird is named for the noise it makes, and the same trick 
 Of all the birds around a house this is the one a household deals with daily. Cooked rice — *cōṟŭ* — set out on a step at the back is put there for the കാക്ക, and it arrives within the minute.
 
 Kerala also gives the bird a job at a funeral rite, where a ball of rice is set out for the ancestors and the crow that takes it is the sign the offering landed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാക്ക** (*kākka*) is native Dravidian, one word with Tamil *kākkai*, Kannada *kāke* and Telugu *kāki* (DEDR 1425). The name echoes the bird's call. DEDR 1425 compares Sanskrit *kāka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āma"
 concept_tag: ML-THINGS152-AMA
 prerequisites: [ML-C152-eli, ML-C152-tavala]
 sounds: []
-roots: []
+roots: [dravidian-yamai-tortoise]
+etymology_hook: "āma: native Dravidian, one word with Tamil yāmai and Kannada āme (DEDR 5155)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C152-tavala]
 <!-- hl-knowledge: introduces=[ML-LEX-C152-THINGS152-03]; assesses=[] -->
 
 **ആമ** — *āma* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആമ** (*āma*) is native Dravidian, one word with Tamil *yāmai* and Kannada *āme* (DEDR 5155). Malayalam dropped the opening *y-* that Tamil keeps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṁgīkarikkuka"
 concept_tag: ML-VERB-AMGIKARIKKUKA
 prerequisites: [ML-C267-sampadikkuka, ML-C268-nirasikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-angikara]
+etymology_hook: "aṁgīkarikkuka ← Sanskrit aṅgīkaraṇa 'taking to one's body, accepting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C268-nirasikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C268-KRIYA268-02]; assesses=[] -->
 
 **അംഗീകരിക്കുക** — *aṁgīkarikkuka* — "to approve, to accept".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അംഗീകരിക്കുക** (*aṁgīkarikkuka*) is built on Sanskrit *aṅgīkaraṇa*, "making part of oneself, accepting", from *aṅga*, "limb, body", and the root *kṛ*, "to make".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

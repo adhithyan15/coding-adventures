@@ -11,7 +11,8 @@ romanization: "vēṇō"
 concept_tag: ML-WORD-WANT-ASK
 prerequisites: [ML-C58-venam, ML-C58-no-need, ML-C70-o]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "vēṇō: native Dravidian, vēṇaṁ (DEDR 5528) + the asking ending -ō"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +49,11 @@ something to turn it into a question.
 If you built **വേണോ** in the warm-up, this lesson taught you nothing, which is
 the point. **വേണം** loses its ending and takes the question letter you already
 had, and that is the whole derivation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേണോ** (*vēṇō*) is native Dravidian: the wanting word *vēṇaṁ* (DEDR 5528, with Tamil *vēṇṭu*) with the asking ending *-ō*.
 
 ## Grammar Lens: a three-way set you now own
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C76-VENO-01, ML-LEX-C58-WANT-01, ML-LEX-C58-ANSWER-04] -->

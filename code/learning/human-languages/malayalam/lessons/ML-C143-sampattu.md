@@ -14,7 +14,8 @@ romanization: "sampattŭ"
 concept_tag: ML-CAN143-SAMPATTU
 prerequisites: [ML-C142-avasaram, ML-C142-upakaranam]
 sounds: []
-roots: []
+roots: [sanskrit-sampatti]
+etymology_hook: "sampattŭ ← Sanskrit sampatti 'prosperity, wealth', reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C142-upakaranam]
 <!-- hl-knowledge: introduces=[ML-LEX-C143-CAN143-01]; assesses=[] -->
 
 **സമ്പത്ത്** — *sampattŭ* — "wealth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമ്പത്ത്** (*sampattŭ*) ← Sanskrit *sampatti*, "prosperity, wealth": a tadbhava, the word reshaped to Malayalam sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

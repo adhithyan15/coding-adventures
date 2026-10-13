@@ -14,7 +14,8 @@ romanization: "enteṅkiluṁ"
 concept_tag: ML-NISHEDHAM177-ENTENKILUM
 prerequisites: [ML-C177-eviteyum, ML-C177-arenkilum]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-en-say]
+etymology_hook: "enteṅkiluṁ: native Dravidian, entŭ 'what' (DEDR 5151) + a form of 'to say' meaning 'if' (DEDR 868) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C177-arenkilum]
 <!-- hl-knowledge: introduces=[ML-LEX-C177-NISHEDHAM177-05]; assesses=[] -->
 
 **എന്തെങ്കിലും** — *enteṅkiluṁ* — "anything, something". **നിങ്ങൾക്ക് എന്തെങ്കിലും വേണോ?** — *niṅṅaḷkkŭ enteṅkiluṁ vēṇō?* — "Do you need anything?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്തെങ്കിലും** (*enteṅkiluṁ*) is native Dravidian: *entŭ*, "what" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868, with Tamil *eṉ*), and *-uṁ*: "whatever it may be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

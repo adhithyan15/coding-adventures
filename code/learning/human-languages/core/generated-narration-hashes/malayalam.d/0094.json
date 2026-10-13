@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 94,
-  "sourceHash": "fnv1a64:fe5c9484ce4a703d",
+  "sourceHash": "fnv1a64:d1dc49726206e867",
   "lessonIds": [
     "ML-C94-innu",
     "ML-C94-innale",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch94.txt",
   "json": "malayalam/narration/ch94.json",
-  "textHash": "fnv1a64:334ef3be41dd814d",
-  "jsonHash": "fnv1a64:88dcd726127cff4b",
+  "textHash": "fnv1a64:4a972b8106abd3ec",
+  "jsonHash": "fnv1a64:3686e7f08894b859",
   "findings": []
 }

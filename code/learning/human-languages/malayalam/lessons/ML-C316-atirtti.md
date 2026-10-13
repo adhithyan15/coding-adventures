@@ -14,7 +14,8 @@ romanization: "atirtti"
 concept_tag: ML-STHALAM316-ATIRTTI
 prerequisites: [ML-C316-bhumi, ML-C316-prakrti]
 sounds: []
-roots: []
+roots: [dravidian-atir-border]
+etymology_hook: "atirtti: native Dravidian; DEDR 2325 lists Malayalam atir 'boundary' with Tamil catir"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C316-prakrti]
 <!-- hl-knowledge: introduces=[ML-LEX-C316-STHALAM316-03]; assesses=[] -->
 
 **അതിർത്തി** — *atirtti* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതിർത്തി** (*atirtti*) is native Dravidian, built on *atir*, "boundary, limit", which DEDR 2325 lists with Tamil *catir* and Kannada *adiri*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

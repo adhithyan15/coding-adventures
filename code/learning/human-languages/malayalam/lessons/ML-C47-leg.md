@@ -11,7 +11,8 @@ romanization: "kāl"
 concept_tag: ML-NOUN-LEG
 prerequisites: [ML-C46-book, ML-C44-write]
 sounds: []
-roots: []
+roots: [dravidian-kal-leg]
+etymology_hook: "kāl: native Dravidian, one word with Tamil kāl and Kannada kāl (DEDR 1479)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Proto-Dravidian **\*kāl**, and every sister kept it nearly whole: Tamil கா�
 That final ൽ is a chillu — a consonant written with no vowel after it and no virama under it, given a letter of its own. This book has already taught one of them, the ൾ inside നിങ്ങൾ. ൽ is its plainer neighbour.
 
 കാൽ covers the whole limb, foot and leg together. It also names a quarter — a fourth of anything — so a quarter of a rupee and the leg you stand on are written the same way. Nothing joins them but an accident of sound, and context is the only fix, which is what context is for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാൽ** (*kāl*) is native Dravidian, one word with Tamil *kāl*, Kannada *kāl* and Telugu *kālu* (DEDR 1479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

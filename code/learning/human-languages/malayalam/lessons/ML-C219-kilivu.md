@@ -14,7 +14,8 @@ romanization: "kiḻivŭ"
 concept_tag: ML-JOLI219-KILIVU
 prerequisites: [ML-C219-cillara, ML-C219-bakki]
 sounds: []
-roots: []
+roots: [dravidian-kizh-below]
+etymology_hook: "kiḻivŭ: native Dravidian, from the verb 'to make low, lower' (DEDR 1619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C219-bakki]
 <!-- hl-knowledge: introduces=[ML-LEX-C219-JOLI219-05]; assesses=[] -->
 
 **കിഴിവ്** — *kiḻivŭ* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിഴിവ്** (*kiḻivŭ*) is native Dravidian, a noun from the verb "to make descend, lower" (DEDR 1619, with Tamil *kīḻ*, "below"): a discount lowers the price.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āvaśyaṁ"
 concept_tag: ML-WANT146-AVASYAM
 prerequisites: [ML-C145-laksyam, ML-C145-paddhati]
 sounds: []
-roots: []
+roots: [sanskrit-avashyaka]
+etymology_hook: "āvaśyaṁ ← Sanskrit āvaśyaka 'necessary', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C145-paddhati]
 <!-- hl-knowledge: introduces=[ML-LEX-C146-WANT146-01]; assesses=[] -->
 
 **ആവശ്യം** — *āvaśyaṁ* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആവശ്യം** (*āvaśyaṁ*) ← Sanskrit *āvaśyaka*, "necessary", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

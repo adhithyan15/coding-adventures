@@ -58,6 +58,11 @@ didn't highlight it, teaching **ഉച്ച** ("peak, high") instead.
 And this greeting is **not** built on ML-C28's **ഉച്ചകഴിഞ്ഞ്**
 compound (the actual TIME-AFTERNOON phrase already taught) at all.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are Sanskrit, taken whole: *śubha*, "bright, auspicious, good" (CDIAL 12532), and *madhyāhna*, "midday" (CDIAL 9818), which is *madhya*, "middle", joined to *ahar*, "day".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01] -->
 

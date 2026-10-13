@@ -14,7 +14,8 @@ romanization: "palahāraṁ"
 concept_tag: ML-VASTU287-PALAHARAM
 prerequisites: [ML-C286-pelsu, ML-C286-pokkarru]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "palahāraṁ ← Sanskrit phalāhāra 'eating fruit', a tatsama (CDIAL 9060)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C286-pokkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C287-VASTU287-01]; assesses=[] -->
 
 **പലഹാരം** — *palahāraṁ* — "a snack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പലഹാരം** (*palahāraṁ*) ← Sanskrit *phalāhāra*, "eating fruit", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 9060). Its parts are *phala*, "fruit", and *āhāra*, "food"; Malayalam softened the *ph* and widened the sense to any light snack.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

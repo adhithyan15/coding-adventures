@@ -14,7 +14,8 @@ romanization: "veṟute"
 concept_tag: ML-KARANAM317-VERUTE
 prerequisites: [ML-C317-taniye, ML-C317-entayalum]
 sounds: []
-roots: []
+roots: [dravidian-veru-empty]
+etymology_hook: "veṟute: native Dravidian; DEDR 5513 lists Malayalam veṟutē 'for nothing, idly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C317-entayalum]
 <!-- hl-knowledge: introduces=[ML-LEX-C317-KARANAM317-03]; assesses=[] -->
 
 **വെറുതെ** — *veṟute* — "for no reason, idly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെറുതെ** (*veṟute*) is native Dravidian: DEDR 5513 lists it, "for nothing, idly", under *veṟu*, "empty, bare", with Tamil *veṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

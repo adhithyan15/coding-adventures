@@ -14,7 +14,8 @@ romanization: "māvŭ"
 concept_tag: ML-VASTU249-MAVU
 prerequisites: [ML-C248-pavata, ML-C248-jins]
 sounds: []
-roots: []
+roots: [dravidian-ma-flour]
+etymology_hook: "māvŭ: native Dravidian, one word with Tamil mā (DEDR 4784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C248-jins]
 <!-- hl-knowledge: introduces=[ML-LEX-C249-VASTU249-01]; assesses=[] -->
 
 **മാവ്** — *māvŭ* — "flour, batter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാവ്** (*māvŭ*) is native Dravidian, one word with Tamil *mā* (DEDR 4784).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

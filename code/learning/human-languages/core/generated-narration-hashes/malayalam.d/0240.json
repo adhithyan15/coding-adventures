@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 240,
-  "sourceHash": "fnv1a64:8b2945cd64818d1d",
+  "sourceHash": "fnv1a64:2293b1e87179a2f4",
   "lessonIds": [
     "ML-C240-arram",
     "ML-C240-kuruke",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch240.txt",
   "json": "malayalam/narration/ch240.json",
-  "textHash": "fnv1a64:f5aeacca6651c0bf",
-  "jsonHash": "fnv1a64:24ff268f14eebca5",
+  "textHash": "fnv1a64:7f4eae2128a4af2f",
+  "jsonHash": "fnv1a64:b30e1474ff84e113",
   "findings": []
 }

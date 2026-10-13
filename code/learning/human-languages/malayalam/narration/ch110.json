@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Reaching Somebody",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b4cf7cacc1c9d35b",
+  "sourceHash": "fnv1a64:e5466beb8654d82f",
   "lessons": [
     {
       "id": "ML-S148-letter-pha",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e540ecbb2b836980",
+      "sourceHash": "fnv1a64:c449ecfeb5b1500d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -229,6 +229,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഫോൺ (phōṇ) from English phone, short for telephone, built from Greek tēle, \"far\", and phōnē, \"voice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "script",
           "title": "Script Lens: three pieces",
           "segments": [
@@ -257,7 +268,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -297,7 +308,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -328,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf51999044f4a776",
+      "sourceHash": "fnv1a64:e8b0393b0709e932",
       "notice": null,
       "blocks": [
         {
@@ -380,6 +391,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കത്ത് (kattŭ) came into Malayalam through Hindustani khat, \"a letter\", from Arabic khaṭṭ, \"line, writing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: a shape that hides inside a word you know",
           "segments": [
@@ -411,7 +433,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -451,7 +473,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -482,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9828632007cac608",
+      "sourceHash": "fnv1a64:21e2db2353d5b68a",
       "notice": null,
       "blocks": [
         {
@@ -542,6 +564,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തപാൽ (tapāl) came in through Hindustani and Marathi ṭapāl, \"the post\", with the postal service itself. Its earlier history is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -581,7 +614,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -612,7 +645,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d791c6933068b1f",
+      "sourceHash": "fnv1a64:64e823838ea39610",
       "notice": null,
       "blocks": [
         {
@@ -676,6 +709,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇമെയിൽ — ഇന്റർനെറ്റ് (imeyil — inṟarneṟṟŭ) are English e-mail and internet, borrowed whole and written in Malayalam letters."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: you can already say an address out loud",
           "segments": [
@@ -690,7 +734,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -730,7 +774,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

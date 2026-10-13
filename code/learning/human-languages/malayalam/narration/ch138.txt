@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for an aeroplane, then the Malayalam for a
 You'll want to know: പക്ഷി.
 പക്ഷി (pakṣi) — "a bird". A കാക്ക is one.
 
+The word, taken apart.
+പക്ഷി (pakṣi) from Sanskrit pakṣin, "winged; bird", taken over whole as a tatsama (CDIAL 7636). It is built on pakṣa, "wing".
+
 What you've built.
 The general word for anything with wings.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an auto, then the Malayalam for a bird
 
 You'll want to know: പാമ്പ്.
 പാമ്പ് (pāmpŭ) — "a snake". പാമ്പ്! is the one word to shout.
+
+The word, taken apart.
+പാമ്പ് (pāmpŭ) is native Dravidian, one word with Tamil pāmpu, Kannada pāvu and Telugu pāmu (DEDR 4085).
 
 What you've built.
 Watch your step.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a bird, then the Malayalam for a snake
 You'll want to know: കുരങ്ങ്.
 കുരങ്ങ് (kuraṅṅŭ) — "a monkey", found near temples and in the മരം.
 
+The word, taken apart.
+കുരങ്ങ് (kuraṅṅŭ) is native Dravidian, one word with Tamil kuraṅku, Kannada koraṅgi and Telugu k(r)ō̃ti (DEDR 1769).
+
 What you've built.
 Up in the trees.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a snake, then the Malayalam for a monk
 You'll want to know: കടുവ.
 കടുവ (kaṭuva) — "a tiger", in the forests of the hills.
 
+The word, taken apart.
+കടുവ (kaṭuva) is of uncertain origin. DEDR 1140 lists Malayalam kaṭuvan, "the male of cats, pigs", with Tamil kaṭuvaṉ, "tom-cat", and the tiger's name may be the same word, but that is not certain.
+
 What you've built.
 The big cat.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a monkey, then the Malayalam for a tig
 
 You'll want to know: മുയൽ.
 മുയൽ (muyal) — "a rabbit" or "a hare".
+
+The word, taken apart.
+മുയൽ (muyal) is native Dravidian, one word with Tamil muyal and Kannada mola (DEDR 4968).
 
 What you've built.
 Small and quick.

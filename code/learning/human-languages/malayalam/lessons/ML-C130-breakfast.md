@@ -11,7 +11,8 @@ romanization: "prātal"
 concept_tag: ML-MEALS-BREAKFAST
 prerequisites: [ML-C129-glasses, ML-C129-watch]
 sounds: []
-roots: []
+roots: [sanskrit-pratar]
+etymology_hook: "prātal: from Sanskrit prātar 'early morning', with a Malayalam ending"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C129-watch]
 <!-- hl-knowledge: introduces=[ML-LEX-C130-MEALS-01]; assesses=[] -->
 
 **പ്രാതൽ** (*prātal*) — "breakfast", the meal of **രാവിലെ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രാതൽ** (*prātal*) is built on Sanskrit *prātar*, "early in the morning", with a Malayalam noun ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

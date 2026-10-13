@@ -14,7 +14,8 @@ romanization: "malli"
 concept_tag: ML-VASTU323-MALLI
 prerequisites: [ML-C323-kararru, ML-C323-vellarikka]
 sounds: []
-roots: []
+roots: [malayalam-malli-coriander]
+etymology_hook: "malli 'coriander': of uncertain origin; DEDR does not list it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C323-vellarikka]
 <!-- hl-knowledge: introduces=[ML-LEX-C323-VASTU323-05]; assesses=[] -->
 
 **മല്ലി** — *malli* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മല്ലി** (*malli*) is of uncertain origin; DEDR does not list it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

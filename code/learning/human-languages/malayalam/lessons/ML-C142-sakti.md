@@ -14,7 +14,8 @@ romanization: "śakti"
 concept_tag: ML-CAN142-SAKTI
 prerequisites: [ML-C141-utsavam, ML-C142-kalivu]
 sounds: []
-roots: []
+roots: [sanskrit-shakti]
+etymology_hook: "śakti ← Sanskrit śakti 'power', a tatsama (CDIAL 12250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C142-kalivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C142-CAN142-02]; assesses=[] -->
 
 **ശക്തി** — *śakti* — "strength, power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശക്തി** (*śakti*) ← Sanskrit *śakti*, "power", taken over whole as a tatsama (CDIAL 12250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

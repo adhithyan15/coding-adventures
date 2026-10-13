@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 176,
-  "sourceHash": "fnv1a64:0b109d5477a72c1a",
+  "sourceHash": "fnv1a64:6789a069ef72344a",
   "lessonIds": [
     "ML-C176-irannuka",
     "ML-C176-nintuka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch176.txt",
   "json": "malayalam/narration/ch176.json",
-  "textHash": "fnv1a64:77dda13d3e9db8a2",
-  "jsonHash": "fnv1a64:c11cda63317ebcfa",
+  "textHash": "fnv1a64:4d695e17211d594f",
+  "jsonHash": "fnv1a64:6f25fbb378429832",
   "findings": []
 }

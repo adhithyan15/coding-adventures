@@ -14,7 +14,8 @@ romanization: "cānal"
 concept_tag: ML-VASTU293-CANAL
 prerequisites: [ML-C293-sanketikavidya, ML-C293-masika]
 sounds: []
-roots: []
+roots: [english-channel]
+etymology_hook: "cānal ← English channel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C293-masika]
 <!-- hl-knowledge: introduces=[ML-LEX-C293-VASTU293-04]; assesses=[] -->
 
 **ചാനൽ** — *cānal* — "a channel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാനൽ** (*cānal*) ← English *channel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

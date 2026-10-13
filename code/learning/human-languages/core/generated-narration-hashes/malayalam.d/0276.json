@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 276,
-  "sourceHash": "fnv1a64:84711f401a032100",
+  "sourceHash": "fnv1a64:eced7b541b9d65c3",
   "lessonIds": [
     "ML-C276-eppolum",
     "ML-C276-pativayi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch276.txt",
   "json": "malayalam/narration/ch276.json",
-  "textHash": "fnv1a64:524e9e146e64ca20",
-  "jsonHash": "fnv1a64:61c8506241a2b5df",
+  "textHash": "fnv1a64:f1318e7e346476fb",
+  "jsonHash": "fnv1a64:5f676a30c3582a5b",
   "findings": []
 }

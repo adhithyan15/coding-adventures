@@ -14,7 +14,8 @@ romanization: "oṟṟa"
 concept_tag: ML-GUNAM206-ORRA
 prerequisites: [ML-C206-svartthamaya, ML-C206-sthiramaya]
 sounds: []
-roots: []
+roots: [malayalam-orra]
+etymology_hook: "oṟṟa 'single': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C206-sthiramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C206-GUNAM206-05]; assesses=[] -->
 
 **ഒറ്റ** — *oṟṟa* — "single, lone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒറ്റ** (*oṟṟa*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "āśaṁsakaḷ"
 concept_tag: ML-COUR-WISHES
 prerequisites: [ML-C124-gift, ML-C124-welcome]
 sounds: []
-roots: []
+roots: [sanskrit-ashamsa]
+etymology_hook: "āśaṁsakaḷ ← Sanskrit āśaṁsā 'hope, wish', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C124-welcome]
 <!-- hl-knowledge: introduces=[ML-LEX-C124-WELCOME-05]; assesses=[] -->
 
 **ആശംസകൾ** (*āśaṁsakaḷ*) — "good wishes". Like **അഭിനന്ദനങ്ങൾ**, it is said in the plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശംസകൾ** (*āśaṁsakaḷ*) ← Sanskrit *āśaṁsā*, "hope, wish", taken over whole as a tatsama, with the feminine ending *-ḷ*. Malayalam uses it in the plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

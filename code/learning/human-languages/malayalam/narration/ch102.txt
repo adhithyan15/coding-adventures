@@ -93,6 +93,7 @@ You'll want to know.
 എത്ര മണി, etra maṇi, what time is it.
 എത്ര മണിക്ക്, etra maṇikkŭ, at what time.
 The first asks somebody to name the hour. The second asks at which hour a thing will happen. That is the whole distance between them, and it is the same ക്ക് you put on the hour at the start of this chapter.
+maṇi, "bell, hour", from Sanskrit maṇi, "jewel" (CDIAL 9731); etra is native (DEDR 5151).
 
 Grammar Lens: which word wears the ending.
 എത്ര never changes. Every time you have used it, it has stood in front of a bare noun — എത്ര ദൂരം (etra dūraṁ, how far), എത്ര രൂപ (etra rūpa, how many rupees).

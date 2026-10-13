@@ -14,7 +14,8 @@ romanization: "nannākkuka"
 concept_tag: ML-VERB-NANNAKKUKA
 prerequisites: [ML-C188-ophakkuka, ML-C188-prasiddhikarikkuka]
 sounds: []
-roots: []
+roots: [nal-good-dravidian, aaka-dravidian]
+etymology_hook: "nannākkuka: native Dravidian, 'make good': nannu (DEDR 3610) + ākkuka (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C188-prasiddhikarikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C188-KRIYA188-05]; assesses=[] -->
 
 **നന്നാക്കുക** — *nannākkuka* — "to repair, to fix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നന്നാക്കുക** (*nannākkuka*) is native Dravidian, "make good": *nannu*, "good" (DEDR 3610, with Tamil *nal*), and *ākkuka*, "to make" (DEDR 333). DEDR 3610 compares Sanskrit *Nala*. DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cemmīn"
 concept_tag: ML-VASTU209-CEMMIN
 prerequisites: [ML-C209-katuku, ML-C209-masala]
 sounds: []
-roots: []
+roots: [dravidian-cem-red, dravidian-min-fish]
+etymology_hook: "cemmīn: native Dravidian, 'red fish': cem 'red' (DEDR 1931) + mīn 'fish' (DEDR 4885)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C209-masala]
 <!-- hl-knowledge: introduces=[ML-LEX-C209-VASTU209-04]; assesses=[] -->
 
 **ചെമ്മീൻ** — *cemmīn* — "a prawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെമ്മീൻ** (*cemmīn*) is native Dravidian, "red fish": *cem-*, "red" (DEDR 1931, with Tamil *ce-*), and *mīn*, "fish" (DEDR 4885). DEDR 4885 compares Sanskrit *mīna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

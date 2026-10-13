@@ -14,7 +14,8 @@ romanization: "iṭavaḻi"
 concept_tag: ML-STHALAM280-ITAVALI
 prerequisites: [ML-C280-carivu, ML-C280-kavu]
 sounds: []
-roots: []
+roots: [dravidian-idai-interval, dravidian-vazhi-way]
+etymology_hook: "iṭavaḻi: native Dravidian, 'the way between': iṭa (DEDR 448) + vaḻi (DEDR 5297)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C280-kavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C280-STHALAM280-05]; assesses=[] -->
 
 **ഇടവഴി** — *iṭavaḻi* — "a lane, an alley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടവഴി** (*iṭavaḻi*) is native Dravidian, "the in-between way": *iṭa*, "the place between" (DEDR 448), and *vaḻi*, "way" (DEDR 5297).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

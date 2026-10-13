@@ -14,7 +14,8 @@ romanization: "niyamaṁ"
 concept_tag: ML-JOLI299-NIYAMAM
 prerequisites: [ML-C299-phaktari, ML-C299-sarkkar]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyamaṁ ← Sanskrit niyama 'restraint; fixed law', a tatsama (CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C299-sarkkar]
 <!-- hl-knowledge: introduces=[ML-LEX-C299-JOLI299-03]; assesses=[] -->
 
 **നിയമം** — *niyamaṁ* — "a law, a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിയമം** (*niyamaṁ*) ← Sanskrit *niyama*, "restraint; fixed law", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

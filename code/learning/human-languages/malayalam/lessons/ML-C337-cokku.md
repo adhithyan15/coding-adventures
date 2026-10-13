@@ -14,7 +14,8 @@ romanization: "cōkkŭ"
 concept_tag: ML-JOLI337-COKKU
 prerequisites: [ML-C336-sastram, ML-C336-caritram]
 sounds: []
-roots: []
+roots: [english-chalk]
+etymology_hook: "cōkkŭ ← English chalk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C336-caritram]
 <!-- hl-knowledge: introduces=[ML-LEX-C337-JOLI337-01]; assesses=[] -->
 
 **ചോക്ക്** — *cōkkŭ* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചോക്ക്** (*cōkkŭ*) ← English *chalk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

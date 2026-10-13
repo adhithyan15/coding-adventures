@@ -14,7 +14,8 @@ romanization: "nirasikkuka"
 concept_tag: ML-VERB-NIRASIKKUKA
 prerequisites: [ML-C267-kaimaruka, ML-C267-sampadikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-nirasana]
+etymology_hook: "nirasikkuka ← Sanskrit nirasana 'casting out, rejection' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C267-sampadikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C268-KRIYA268-01]; assesses=[] -->
 
 **നിരസിക്കുക** — *nirasikkuka* — "to refuse, to reject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിരസിക്കുക** (*nirasikkuka*) is built on Sanskrit *nirasana*, "throwing out, rejection", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "eviṭe ninnŭ"
 concept_tag: ML-WHERE-FROM
 prerequisites: [ML-C83-ninnu, ML-C41-where]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-nil-stand]
+etymology_hook: "eviṭe ninnŭ: native Dravidian, 'having stood where': ninnŭ is the past of 'to stand' (DEDR 5151, 3675)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,11 @@ well-built system spends its second question for free.
 Answer it with any place you have:
 
 **ഊരിൽ നിന്ന്** — *ūril ninnŭ* — from the town.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എവിടെ നിന്ന്** (*eviṭe ninnŭ*) is native Dravidian: *eviṭe*, "where" (DEDR 5151), with *ninnŭ*, the past form of the verb "to stand" (DEDR 3675, with Tamil *nil*). "From where" is "having stood where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C83-WHERE-FROM-01, ML-LEX-C80-ORIGIN-01] -->

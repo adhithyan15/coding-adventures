@@ -11,7 +11,8 @@ romanization: "kuppi"
 concept_tag: ML-TABLE-BOTTLE
 prerequisites: [ML-C133-sugar, ML-C134-glass]
 sounds: []
-roots: []
+roots: [malayalam-kuppi]
+etymology_hook: "kuppi 'bottle': of uncertain origin; DEDR's kuppi is a different word, a knob on a bullock's horn"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C134-glass]
 <!-- hl-knowledge: introduces=[ML-LEX-C134-TABLE-02]; assesses=[] -->
 
 **കുപ്പി** (*kuppi*) — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുപ്പി** (*kuppi*) is of uncertain origin. DEDR 1743 lists a Malayalam *kuppi* meaning "a brass knob on a bullock's horn", a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nēre"
 concept_tag: ML-STHALAM197-NERE
 prerequisites: [ML-C197-itattu, ML-C197-valattu]
 sounds: []
-roots: []
+roots: [dravidian-ner-straight]
+etymology_hook: "nēre: native Dravidian, built on nēr 'straight, even'; Tamil nēr (DEDR 3770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C197-valattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C197-STHALAM197-05]; assesses=[] -->
 
 **നേരെ** — *nēre* — "straight ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നേരെ** (*nēre*) is native Dravidian, built on *nēr*, "what is straight, even"; DEDR 3770 lists the root with Tamil *nēr* and Kannada *nēr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

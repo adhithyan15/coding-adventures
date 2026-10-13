@@ -14,7 +14,8 @@ romanization: "vyatyāsaṁ"
 concept_tag: ML-KARANAM242-VYATYASAM
 prerequisites: [ML-C242-kurannatu, ML-C242-onnukil]
 sounds: []
-roots: []
+roots: [sanskrit-vyatyasa]
+etymology_hook: "vyatyāsaṁ ← Sanskrit vyatyāsa 'inversion, contrariety', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C242-onnukil]
 <!-- hl-knowledge: introduces=[ML-LEX-C242-KARANAM242-03]; assesses=[] -->
 
 **വ്യത്യാസം** — *vyatyāsaṁ* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വ്യത്യാസം** (*vyatyāsaṁ*) ← Sanskrit *vyatyāsa*, "inversion, contrariety", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

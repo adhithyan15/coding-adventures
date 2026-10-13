@@ -11,7 +11,8 @@ romanization: "saṁsārikkū"
 concept_tag: ML-VERB-SPEAK
 prerequisites: [ML-C44-listen, ML-C42-good]
 sounds: []
-roots: []
+roots: [samsaara-sanskrit]
+etymology_hook: "saṁsārikkū ← Sanskrit saṁsāra 'the world, worldly life' + the verb ending -ikkuka (CDIAL 13036)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C44-listen]
 **സംസാരിക്കൂ** (*saṁsārikkū*) — "speak".
 
 From Sanskrit *saṁsāra* — literally 'going around together'. The everyday Malayalam word for conversing is a Sanskrit compound, which is how much of the language's formal vocabulary arrived.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംസാരിക്കൂ** (*saṁsārikkū*) is built on Sanskrit *saṁsāra*, "the world, secular life" (CDIAL 13036), with the ending that turns a borrowed noun into a Malayalam verb, here in its request form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "puruṣan"
 concept_tag: ML-VASTU325-PURUSAN
 prerequisites: [ML-C325-al, ML-C325-stri]
 sounds: []
-roots: []
+roots: [sanskrit-purusha]
+etymology_hook: "puruṣan ← Sanskrit puruṣa 'man, male', a tatsama (CDIAL 8289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C325-stri]
 <!-- hl-knowledge: introduces=[ML-LEX-C325-VASTU325-04]; assesses=[] -->
 
 **പുരുഷൻ** — *puruṣan* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുരുഷൻ** (*puruṣan*) ← Sanskrit *puruṣa*, "man, male", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 8289).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

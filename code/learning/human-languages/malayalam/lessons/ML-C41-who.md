@@ -11,7 +11,8 @@ romanization: "ārŭ"
 concept_tag: ML-DEIXIS-WHO
 prerequisites: [ML-C41-there, ML-C38-nenchu]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "ārŭ: native Dravidian, the question stem yā- worn down; Tamil yār, ār (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ name the person.
 **അത്** *atŭ* and **അവിടെ** *aviṭe* share: it has nothing to do with distance.
 Tamil, next door, says *yār*; Malayalam's word is the same one with its first
 *y-* worn away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആര്** (*ārŭ*) is native Dravidian, the question stem *yā-* worn down to *ā-*. DEDR 5151 lists it with Tamil *yār*, *ār* and Kannada *yār*, *ār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->

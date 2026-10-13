@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 232,
-  "sourceHash": "fnv1a64:e549af96ee946a64",
+  "sourceHash": "fnv1a64:9d588e36bc8dc90f",
   "lessonIds": [
     "ML-C232-kutirkkuka",
     "ML-C232-mukkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch232.txt",
   "json": "malayalam/narration/ch232.json",
-  "textHash": "fnv1a64:6ff648204af29ace",
-  "jsonHash": "fnv1a64:13d66831fadb23be",
+  "textHash": "fnv1a64:007ff58090d11210",
+  "jsonHash": "fnv1a64:7690b71ef9bfd640",
   "findings": []
 }

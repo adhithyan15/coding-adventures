@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 208,
-  "sourceHash": "fnv1a64:e3cd9d313f32b37c",
+  "sourceHash": "fnv1a64:94fe975d3d09dce2",
   "lessonIds": [
     "ML-C208-accar",
     "ML-C208-moru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch208.txt",
   "json": "malayalam/narration/ch208.json",
-  "textHash": "fnv1a64:15e6e47a874a88ea",
-  "jsonHash": "fnv1a64:9359c1094b90afb6",
+  "textHash": "fnv1a64:645f62efa8a592b7",
+  "jsonHash": "fnv1a64:9cf5747c44c6a7b8",
   "findings": []
 }

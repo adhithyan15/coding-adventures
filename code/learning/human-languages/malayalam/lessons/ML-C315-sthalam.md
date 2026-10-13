@@ -14,7 +14,8 @@ romanization: "sthalaṁ"
 concept_tag: ML-STHALAM315-STHALAM
 prerequisites: [ML-C315-samsthanam, ML-C315-videsam]
 sounds: []
-roots: []
+roots: [sanskrit-sthala]
+etymology_hook: "sthalaṁ ← Sanskrit sthala 'dry land, ground, place', a tatsama (CDIAL 13744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C315-videsam]
 <!-- hl-knowledge: introduces=[ML-LEX-C315-STHALAM315-03]; assesses=[] -->
 
 **സ്ഥലം** — *sthalaṁ* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്ഥലം** (*sthalaṁ*) ← Sanskrit *sthala*, "dry land, ground, place", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13744).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [ML-C04-poyi-varaam]
 sounds: [long-aa, retroflex-l]
 roots: [naal-day-dravidian, dravidian-kaan-see]
+etymology_hook: "nāḷe kāṇāṁ: native Dravidian 'tomorrow, let's see', one with Tamil nāḷai and kāṇ (DEDR 3656, 1443)"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,8 @@ the very same *nāḷ* behind Tamil's *nāḷai* and Kannada's *nāḷe*. **ക�
 (*kāṇāṁ*, "let's see") is from **കാണുക** (*kāṇuka*, "to see") + *-āṁ* — so the
 phrase is "**tomorrow, let's see [each other]**." One family, one word for "day,"
 one habit of parting until the next.
+
+DEDR 3656 lists the day-word with Tamil *nāḷai* and Kannada *nāḷe*, "tomorrow"; DEDR 1443 lists the seeing verb with Tamil *kāṇ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C04-NAALE-KAANAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01] -->

@@ -11,7 +11,8 @@ romanization: "ellŭ"
 concept_tag: ML-NOUN-BONE
 prerequisites: [ML-C57-nail, ML-C55-field]
 sounds: []
-roots: []
+roots: [dravidian-elumpu-bone]
+etymology_hook: "ellŭ: native Dravidian, one word with Kannada elu and Telugu emmu (DEDR 839)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and Tamil says *elumpu* for the same thing — close enough to hear t
 Malayalam shortened where Tamil kept the extra piece, which is the direction these two usually run. Set the two side by side often enough and the pattern starts to predict itself.
 
 The doubled *ll* is held, and the ŭ closes it, so the whole word is over in about the time it takes to say the English one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എല്ല്** (*ellŭ*) is native Dravidian, one word with Kannada *elu* and Telugu *emmu* (DEDR 839). DEDR 839 compares Sanskrit *eḍū˘ka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

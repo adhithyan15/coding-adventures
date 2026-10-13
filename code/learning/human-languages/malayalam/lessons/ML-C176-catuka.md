@@ -14,7 +14,8 @@ romanization: "cāṭuka"
 concept_tag: ML-VERB-CATUKA
 prerequisites: [ML-C176-irannuka, ML-C176-nintuka, ML-C69-lines]
 sounds: []
-roots: []
+roots: [dravidian-cattam-leap]
+etymology_hook: "cāṭuka: native Dravidian, one word with Tamil cāṭṭam (DEDR 2440)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C176-nintuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-03]; assesses=[] -->
 
 **ചാടുക** — *cāṭuka* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാടുക** (*cāṭuka*) is native Dravidian, one word with Tamil *cāṭṭam* (DEDR 2440).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

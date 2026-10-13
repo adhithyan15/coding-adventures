@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "One Ending, Two Sentences",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:22bdf037a9b45a43",
+  "sourceHash": "fnv1a64:e84014ecb3a66be6",
   "lessons": [
     {
       "id": "ML-C74-aan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:513e20b16c3fc34e",
+      "sourceHash": "fnv1a64:ccf84155efd67f38",
       "notice": null,
       "blocks": [
         {
@@ -88,6 +88,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ആൻ (-āṉ) is a native Dravidian verb ending, part of Malayalam's own grammar rather than a loan. DEDR is a dictionary of roots and does not list endings, so no entry number goes with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,7 +147,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -167,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4767c9d9a71c5d4f",
+      "sourceHash": "fnv1a64:d5d2daac3f3f6ada",
       "notice": null,
       "blocks": [
         {
@@ -231,6 +242,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വായിക്കാൻ പോകുന്നു (vāyikkāṉ pōkunnu) joins two verbs. vāyikkuka, \"to read\", is built on Sanskrit vācayati, \"makes to speak, reads\" (CDIAL 11471), with the Sanskrit c softened to y; pōkuka, \"to go\", is native Dravidian (DEDR 4572, with Tamil pō)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the order is the meaning",
           "segments": [
@@ -245,7 +267,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -303,7 +325,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -334,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa72c20d45938262",
+      "sourceHash": "fnv1a64:4c60034676e117de",
       "notice": null,
       "blocks": [
         {
@@ -402,6 +424,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കഴിയും (kaḻiyuṁ) is native Dravidian, a form of the verb \"to be possible, able\"; DEDR 1357 lists the root with Tamil kaḻi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one ending, two jobs",
           "segments": [
@@ -429,7 +462,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,7 +511,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

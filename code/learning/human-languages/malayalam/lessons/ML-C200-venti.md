@@ -14,7 +14,8 @@ romanization: "vēṇṭi"
 concept_tag: ML-KARANAM200-VENTI
 prerequisites: [ML-C199-ippuram, ML-C199-cuvattil]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "vēṇṭi: native Dravidian, a form of the wanting verb; Tamil vēṇṭu (DEDR 5528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C199-cuvattil]
 <!-- hl-knowledge: introduces=[ML-LEX-C200-KARANAM200-01]; assesses=[] -->
 
 **വേണ്ടി** — *vēṇṭi* — "for the sake of, on behalf of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേണ്ടി** (*vēṇṭi*) is native Dravidian, a form of the wanting verb: "having been wanted"; DEDR 5528 lists the root with Tamil *vēṇṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: ML-NOUN-PHONE
 prerequisites: [ML-S148-letter-pha]
 sounds: []
 roots: [english-phone]
+etymology_hook: "phōṇ ← English phone, short for telephone, from Greek tēle 'far' + phōnē 'voice'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: []
 **Say it out loud and you will hear English.** It is *phone*, borrowed whole,
 with the ending settled into Malayalam sounds: the *n* at the close is made with
 the tongue curled back, not at the teeth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫോൺ** (*phōṇ*) ← English *phone*, short for *telephone*, built from Greek *tēle*, "far", and *phōnē*, "voice".
 
 ## Script Lens: three pieces
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01, ML-SCRIPT-RECOG-148, ML-SCRIPT-RECOG-131] -->

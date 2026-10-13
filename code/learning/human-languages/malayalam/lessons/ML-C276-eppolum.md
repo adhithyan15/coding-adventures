@@ -14,7 +14,8 @@ romanization: "eppōḻuṁ"
 concept_tag: ML-SAMAYAM276-EPPOLUM
 prerequisites: [ML-C275-mannappittam, ML-C275-raktasammarddam]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-pozhutu-time]
+etymology_hook: "eppōḻuṁ: native Dravidian; DEDR 5151 lists e-ppōḷ 'when', + -uṁ 'even, any'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C275-raktasammarddam]
 <!-- hl-knowledge: introduces=[ML-LEX-C276-SAMAYAM276-01]; assesses=[] -->
 
 **എപ്പോഴും** — *eppōḻuṁ* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എപ്പോഴും** (*eppōḻuṁ*) is native Dravidian: *eppōḷ*, "when", which DEDR 5151 lists, built on the word for "time" (DEDR 4559), with *-uṁ*: "at any time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

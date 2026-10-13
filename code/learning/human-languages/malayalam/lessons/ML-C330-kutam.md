@@ -14,7 +14,8 @@ romanization: "kuṭaṁ"
 concept_tag: ML-VASTU330-KUTAM
 prerequisites: [ML-C330-muti, ML-C330-bharani]
 sounds: []
-roots: []
+roots: [dravidian-kudam-pot]
+etymology_hook: "kuṭaṁ: native Dravidian, one word with Tamil kuṭam and Kannada koḍa (DEDR 1651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C330-bharani]
 <!-- hl-knowledge: introduces=[ML-LEX-C330-VASTU330-03]; assesses=[] -->
 
 **കുടം** — *kuṭaṁ* — "a water pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുടം** (*kuṭaṁ*) is native Dravidian, one word with Tamil *kuṭam*, Kannada *koḍa* and Telugu *kuḍaka* (DEDR 1651). DEDR 1651 compares Sanskrit *kūṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

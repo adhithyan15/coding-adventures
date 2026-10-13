@@ -14,7 +14,8 @@ romanization: "kaṇṇāṭi"
 concept_tag: ML-WANT146-KANNATI
 prerequisites: [ML-C146-tirumanam, ML-C146-kattil]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye]
+etymology_hook: "kaṇṇāṭi: native Dravidian, one word with Tamil kaṇṇāṭi and Kannada kannaḍi (DEDR 1182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C146-kattil]
 <!-- hl-knowledge: introduces=[ML-LEX-C146-WANT146-04]; assesses=[] -->
 
 **കണ്ണാടി** — *kaṇṇāṭi* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണ്ണാടി** (*kaṇṇāṭi*) is native Dravidian, built on *kaṇṇŭ*, "eye"; DEDR 1182 lists the root with Tamil *kaṇṇāṭi* and Kannada *kannaḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

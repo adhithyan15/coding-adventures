@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a well, then the Malayalam for a harbo
 You'll want to know: വണ്ടി.
 വണ്ടി (vaṇṭi) — "a vehicle", any cart, car or bus.
 
+The word, taken apart.
+വണ്ടി (vaṇṭi) is listed in DEDR appendix 50, among Dravidian words taken from Indo-Aryan, with Tamil vaṇṭi and Kannada baṇḍi, "cart". DEDR traces the word ultimately to Sanskrit bhāṇḍa, "goods, wares" (CDIAL 9440): the cart was named for what it carried.
+
 What you've built.
 The general word.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a harbour, then the Malayalam for a ve
 
 You'll want to know: കാർ.
 കാർ (kār) — "a car", from English.
+
+The word, taken apart.
+കാർ (kār) from English car, which goes back to Latin carrus, "a wagon".
 
 What you've built.
 A private vehicle.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a vehicle, then the Malayalam for a ca
 You'll want to know: തീവണ്ടി.
 തീവണ്ടി (tīvaṇṭi) — "a train", literally "fire-vehicle": തീ (tī), "fire", with വണ്ടി (vaṇṭi).
 
+The word, taken apart.
+തീവണ്ടി (tīvaṇṭi) is "the fire-cart": native tī, "fire" (DEDR 3266, with Tamil tī), joined to vaṇṭi, "cart" (DEDR appendix 50, with Tamil vaṇṭi).
+
 What you've built.
 A vehicle word you can take apart.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a car, then the Malayalam for a train.
 You'll want to know: വിമാനം.
 വിമാനം (vimānaṁ) — "an aeroplane".
 
+The word, taken apart.
+വിമാനം (vimānaṁ) from Sanskrit vimāna, "measure; a car of the gods", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11823). The flying chariot of the old stories gave its name to the aeroplane.
+
 What you've built.
 The way to Kerala from far away.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a train, then the Malayalam for an aer
 
 You'll want to know: ഓട്ടോ.
 ഓട്ടോ (ōṭṭō) — "an autorickshaw", the three-wheeled taxi.
+
+The word, taken apart.
+ഓട്ടോ (ōṭṭō) from English auto, short for autorickshaw; auto- is Greek for "self", and rickshaw is from Japanese jinrikisha, "man-power vehicle".
 
 What you've built.
 The short ride across town.

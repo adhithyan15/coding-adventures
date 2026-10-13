@@ -11,7 +11,8 @@ romanization: "ṭikkaṟṟŭ"
 concept_tag: ML-TRAVEL-TICKET
 prerequisites: [ML-C120-stop, ML-C121-call]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikkaṟṟŭ ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C121-call]
 <!-- hl-knowledge: introduces=[ML-LEX-C121-TRAVEL-02]; assesses=[] -->
 
 **ടിക്കറ്റ്** (*ṭikkaṟṟŭ*) — "a ticket", from English. **ഒരു ടിക്കറ്റ്** — "one ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടിക്കറ്റ്** (*ṭikkaṟṟŭ*) ← English *ticket*, which came into English from French *étiquette*, "label".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

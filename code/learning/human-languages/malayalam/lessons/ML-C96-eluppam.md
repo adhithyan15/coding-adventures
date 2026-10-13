@@ -11,9 +11,10 @@ romanization: "eḷuppaṁ"
 concept_tag: ML-EASY
 prerequisites: [ML-R95-open-closed-recall, ML-C41-this, ML-C02-aanu, ML-C83-keralathil, ML-C70-um, ML-C03-saaramilla, ML-C93-angal]
 sounds: []
-roots: []
+roots: [dravidian-eli-easy]
+etymology_hook: "eḷuppaṁ: native Dravidian; DEDR 855 lists it with Tamil eḷi 'easy'"
 duration:
-  max_seconds: 295
+  max_seconds: 298
 requires:
   knowledge: [ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-CONCEPT-C70-UM-01, ML-LEX-SAARAMILLA-01, ML-GRAMMAR-C93-ANGAL-01]
 introduces:
@@ -82,6 +83,8 @@ Every one of those is a word ending in **ം** with **ആണ്** welded on.
 **You were shown this once, at മോശം.** Here it is again — and this time it is
 not a fact about one word you were given. **It is something you do**, to a word
 you met a minute ago.
+
+**Where the word comes from.** It is native Dravidian: DEDR 855 lists it with Tamil *eḷi*, "easy".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C41-DEIXIS-01] -->

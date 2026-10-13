@@ -62,6 +62,7 @@ step: written, വരുമ്പോൾ varumpōḷ.
 The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ombatŭ), "nine".
 So the ending is not new material. It is a future form you have had since the tense lesson, with the time-piece from the last lesson stuck on the back.
 Tamil builds it the same way, from the same two parts: வரும்போது (varumpōtu).
+Where the word comes from. Both parts are native Dravidian: varuka, "to come" (DEDR 5270, with Tamil varu), and pōḷ, "time" (DEDR 4559, with Tamil pōtu).
 
 Grammar Lens: it is not a question any more.
 എപ്പോൾ (eppōḷ) asks. വരുമ്പോൾ (varumpōḷ) does not.
@@ -108,6 +109,7 @@ Take the past form and swap its last vowel for ആൽ:
 past: വന്നു vannu. conditional: വന്നാൽ vannāl.
 past: പോയി pōyi. conditional: പോയാൽ pōyāl.
 Both rows lose a vowel and gain the same ending, and whatever the past did to the stem of to come, the conditional keeps.
+Both parts are native Dravidian (DEDR 5270).
 
 Grammar Lens: the past form is not about the past.
 Say avan vannāl ñān pōkuṁ again. He has not come. He may never come. Yet the form it is built on is the one that means came.

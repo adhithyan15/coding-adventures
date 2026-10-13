@@ -11,7 +11,8 @@ romanization: "muttacchan"
 concept_tag: ML-NOUN-GRANDFATHER
 prerequisites: [ML-C44-write, ML-C42-old]
 sounds: []
-roots: []
+roots: [dravidian-mutu-old, dravidian-accan-father]
+etymology_hook: "muttacchan: native Dravidian, 'old' + 'father'; Tamil mutu 'old' and accaṉ 'father' (DEDR 4954, 50)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C44-write]
 **മുത്തച്ഛൻ** (*muttacchan*) — "grandfather".
 
 Two pieces, both audible: *mutta-*, 'elder, senior', and *acchan*, the 'father' from the family lesson. Literally, an elder father. Where Sanskrit would reach for a compound of its own, Malayalam assembles this one out of words the learner already owns.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുത്തച്ഛൻ** (*muttacchan*) is native Dravidian, "the old father": the word for "old" (DEDR 4954, with Tamil *mutu* and Kannada *muttu*) joined to the word for "father" (DEDR 50, with Tamil *accaṉ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

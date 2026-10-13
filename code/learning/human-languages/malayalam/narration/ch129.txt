@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for the bathroom, then the Malayalam for t
 You'll want to know: കിടക്ക.
 കിടക്ക (kiṭakka) — "a bed", the first thing in a മുറി.
 
+The word, taken apart.
+കിടക്ക (kiṭakka) is native Dravidian, from the verb "to lie down, rest"; DEDR 1524 lists the root with Tamil kiṭa and Kannada keḍe.
+
 What you've built.
 Where the sleeping happens.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for the front yard, then the Malayalam for
 
 You'll want to know: താക്കോൽ.
 താക്കോൽ (tākkōl) — "a key". താക്കോൽ എവിടെ? — "where is the key?", the question every house hears.
+
+The word, taken apart.
+താക്കോൽ (tākkōl) is native Dravidian, built on tāḻ, "bolt, bar, lock"; DEDR 3179 lists the root with Tamil tāḻ and Kannada tāḻ. DEDR 3179 compares Sanskrit tāḍa(ka).
 
 What you've built.
 The thing that is always lost.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a bed, then the Malayalam for a key.
 You'll want to know: കുട.
 കുട (kuṭa) — "an umbrella", which in മഴക്കാലം nobody leaves home without.
 
+The word, taken apart.
+കുട (kuṭa) is native Dravidian, one word with Tamil kuṭai, Kannada koḍe and Telugu goḍugu (DEDR 1663). DEDR 1663 compares Sanskrit utkūṭa.
+
 What you've built.
 Kerala's most needed object.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a key, then the Malayalam for an umbre
 You'll want to know: കണ്ണട.
 കണ്ണട (kaṇṇaṭa) — "spectacles". It begins with കണ്ണ്, "eye".
 
+The word, taken apart.
+കണ്ണട (kaṇṇaṭa) is native Dravidian, built on kaṇṇŭ, "eye"; DEDR 1182 lists Malayalam kaṇṇaṭa, "spectacles", itself, beside Tamil kaṇṇāṭi.
+
 What you've built.
 An eye word you can spot.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for an umbrella, then the Malayalam for gl
 
 You'll want to know: വാച്ച്.
 വാച്ച് (vāccŭ) — "a watch", borrowed from English.
+
+The word, taken apart.
+വാച്ച് (vāccŭ) from English watch, the timepiece one keeps watch by.
 
 What you've built.
 The thing that tells you the hour.

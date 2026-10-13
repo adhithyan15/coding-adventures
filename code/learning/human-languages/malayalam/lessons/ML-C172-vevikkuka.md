@@ -14,7 +14,8 @@ romanization: "vēvikkuka"
 concept_tag: ML-VERB-VEVIKKUKA
 prerequisites: [ML-C171-kulikkuka, ML-C171-kalukuka, ML-C84-munnil-pinnil, ML-C84-munnil-pinnil]
 sounds: []
-roots: []
+roots: [dravidian-ve-burn]
+etymology_hook: "vēvikkuka: native Dravidian, 'make boil', from the verb 'to be hot, boil'; Tamil vē (DEDR 5517)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C171-kalukuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C172-ACT172-01]; assesses=[] -->
 
 **വേവിക്കുക** — *vēvikkuka* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേവിക്കുക** (*vēvikkuka*) is native Dravidian, the causative of the verb "to be hot, to boil": "make boil"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vē̃gu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

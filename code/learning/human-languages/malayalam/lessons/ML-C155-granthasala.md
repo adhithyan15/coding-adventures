@@ -14,7 +14,8 @@ romanization: "granthaśāla"
 concept_tag: ML-THINGS155-GRANTHASALA
 prerequisites: [ML-C155-tati, ML-C155-teruvu, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [sanskrit-grantha, sanskrit-shala]
+etymology_hook: "granthaśāla: Sanskrit grantha 'book' (CDIAL 4350) + śālā 'house, hall' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C155-teruvu]
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-04]; assesses=[] -->
 
 **ഗ്രന്ഥശാല** — *granthaśāla* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗ്രന്ഥശാല** (*granthaśāla*) is built from Sanskrit parts: *grantha*, "a book", first "a knot" of bound leaves (CDIAL 4350), and *śālā*, "house, hall" (CDIAL 12414).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

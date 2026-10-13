@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 128,
-  "sourceHash": "fnv1a64:a09181fae285beb9",
+  "sourceHash": "fnv1a64:cc14d86efeaac9e7",
   "lessonIds": [
     "ML-C128-house",
     "ML-C128-room",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch128.txt",
   "json": "malayalam/narration/ch128.json",
-  "textHash": "fnv1a64:39b56d10a18141f2",
-  "jsonHash": "fnv1a64:89b744c08ad511ae",
+  "textHash": "fnv1a64:fe36acf328628559",
+  "jsonHash": "fnv1a64:970712cb6e51dc74",
   "findings": []
 }

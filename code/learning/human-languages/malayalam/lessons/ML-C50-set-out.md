@@ -11,7 +11,8 @@ romanization: "puṟappeṭuka"
 concept_tag: ML-VERB-SET-OUT
 prerequisites: [ML-C50-journey, ML-C48-farmer]
 sounds: []
-roots: []
+roots: [dravidian-puram-outside, dravidian-padu-happen]
+etymology_hook: "puṟappeṭuka: native Dravidian, 'to get outside': puṟam 'outside' + a verb of falling, happening (DEDR 4333, 3853)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A compound with its seam showing. പുറം (*puṟaṁ*) is 'the outside, th
 Malayalam builds a great many verbs this way, a noun and a light verb sitting next to each other, and this book has already shown one: the work-verb made of 'work' plus 'do'.
 
 Kannada says ಹೊರಡು (*horaḍu*), built on its own outside-word, and that word begins with the *h* where ours begins with a *p*. The shift turns up again.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുറപ്പെടുക** (*puṟappeṭuka*) is native Dravidian, "to come to be outside": a word for "the outside" (DEDR 4333, with Tamil *puṟam*) joined to the verb "to happen, fall into" (DEDR 3853, with Tamil *paṭu* and Kannada *paḍu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

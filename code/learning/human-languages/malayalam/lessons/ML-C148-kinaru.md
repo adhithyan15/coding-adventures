@@ -14,7 +14,8 @@ romanization: "kiṇaṟŭ"
 concept_tag: ML-THINGS148-KINARU
 prerequisites: [ML-C147-melkkura, ML-C148-pati, ML-C27-vaikunneram]
 sounds: []
-roots: []
+roots: [dravidian-kinaru-well]
+etymology_hook: "kiṇaṟŭ: native Dravidian, one word with Tamil kēṇi and Kannada kēṇi (DEDR 1998)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C148-pati]
 <!-- hl-knowledge: introduces=[ML-LEX-C148-THINGS148-02]; assesses=[] -->
 
 **കിണറ്** — *kiṇaṟŭ* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിണറ്** (*kiṇaṟŭ*) is native Dravidian, one word with Tamil *kēṇi* and Kannada *kēṇi* (DEDR 1998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

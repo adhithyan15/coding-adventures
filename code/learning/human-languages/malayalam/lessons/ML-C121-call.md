@@ -11,7 +11,8 @@ romanization: "viḷikkū"
 concept_tag: ML-TRAVEL-CALL
 prerequisites: [ML-C120-help, ML-C120-stop]
 sounds: []
-roots: []
+roots: [dravidian-vil-call]
+etymology_hook: "viḷikkū: native Dravidian, from the root 'to cry out, call'; Tamil viḷ (DEDR 5433)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C120-stop]
 <!-- hl-knowledge: introduces=[ML-LEX-C121-TRAVEL-01]; assesses=[] -->
 
 **വിളിക്കൂ** (*viḷikkū*) — "please call (someone)", or "please phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളിക്കൂ** (*viḷikkū*) is native Dravidian, from the root "to say, cry out, call"; DEDR 5433 lists the root with Tamil *viḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

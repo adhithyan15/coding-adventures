@@ -14,7 +14,8 @@ romanization: "prasavaṁ"
 concept_tag: ML-AROGYAM194-PRASAVAM
 prerequisites: [ML-C193-abhimanam, ML-C193-atbhutam]
 sounds: []
-roots: []
+roots: [sanskrit-prasava]
+etymology_hook: "prasavaṁ ← Sanskrit prasava 'procreation, bringing forth', a tatsama (CDIAL 8827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C193-atbhutam]
 <!-- hl-knowledge: introduces=[ML-LEX-C194-AROGYAM194-01]; assesses=[] -->
 
 **പ്രസവം** — *prasavaṁ* — "childbirth, delivery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രസവം** (*prasavaṁ*) ← Sanskrit *prasava*, "procreation, bringing forth", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

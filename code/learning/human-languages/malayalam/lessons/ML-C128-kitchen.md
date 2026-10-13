@@ -11,7 +11,8 @@ romanization: "aṭukkaḷa"
 concept_tag: ML-HOME-KITCHEN
 prerequisites: [ML-C128-house, ML-C128-room]
 sounds: []
-roots: []
+roots: [dravidian-atu-cook]
+etymology_hook: "aṭukkaḷa: native Dravidian, built on the verb 'to cook'; Tamil aṭu (DEDR 76)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C128-room]
 <!-- hl-knowledge: introduces=[ML-LEX-C128-HOME-03]; assesses=[] -->
 
 **അടുക്കള** (*aṭukkaḷa*) — "the kitchen", where the **ചോറ്** is cooked.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടുക്കള** (*aṭukkaḷa*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭukkaḷa* itself, beside Tamil *aṭu* and Kannada *aḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

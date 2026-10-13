@@ -14,7 +14,8 @@ romanization: "tōṇi"
 concept_tag: ML-THINGS158-TONI
 prerequisites: [ML-C157-phan, ML-C157-saikkil]
 sounds: []
-roots: []
+roots: [sanskrit-drona]
+etymology_hook: "tōṇi ← Sanskrit drōṇī 'wooden trough', whose Prakrit form dōṇī already meant 'boat' (CDIAL 6641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C157-saikkil]
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-01]; assesses=[] -->
 
 **തോണി** — *tōṇi* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോണി** (*tōṇi*) goes back to Sanskrit *drōṇī*, "a wooden trough" (CDIAL 6641); its Prakrit form *dōṇī* already meant "boat", a hollowed-out trough on the water.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "peṟukkuka"
 concept_tag: ML-VERB-PERUKKUKA
 prerequisites: [ML-C272-tulaykkuka, ML-C272-coruka]
 sounds: []
-roots: []
+roots: [dravidian-perukku-pick]
+etymology_hook: "peṟukkuka: native Dravidian, one word with Tamil peṟukku and Kannada hekku (DEDR 4423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C272-coruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C273-KRIYA273-01]; assesses=[] -->
 
 **പെറുക്കുക** — *peṟukkuka* — "to pick up (from the ground)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെറുക്കുക** (*peṟukkuka*) is native Dravidian, one word with Tamil *peṟukku*, Kannada *hekku* and Telugu *peṟuku* (DEDR 4423).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kṣaṇaṁ"
 concept_tag: ML-COUR-INVITE
 prerequisites: [ML-C123-wrong, ML-C124-congratulations]
 sounds: []
-roots: []
+roots: [sanskrit-kshana]
+etymology_hook: "kṣaṇaṁ: probably Sanskrit kṣaṇa 'moment, leisure, festival' (CDIAL 3642); the sense 'invitation' is Malayalam's own"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C124-congratulations]
 <!-- hl-knowledge: introduces=[ML-LEX-C124-WELCOME-02]; assesses=[] -->
 
 **ക്ഷണം** (*kṣaṇaṁ*) — "an invitation". The **ക്ഷ** is *k* and *ṣ* joined into one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്ഷണം** (*kṣaṇaṁ*) is probably Sanskrit *kṣaṇa*, "a moment; leisure; a festival" (CDIAL 3642); the sense "invitation" grew up in Malayalam, and how is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

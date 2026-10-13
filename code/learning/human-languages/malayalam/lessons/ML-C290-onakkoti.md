@@ -14,7 +14,8 @@ romanization: "ōṇakkōṭi"
 concept_tag: ML-VASTU290-ONAKKOTI
 prerequisites: [ML-C289-ammayiyamma, ML-C289-ammayiyappan]
 sounds: []
-roots: []
+roots: [sanskrit-shravana, dravidian-koti-cloth]
+etymology_hook: "ōṇakkōṭi: ōṇam + native kōṭi 'new unbleached cloth' (DEDR 2198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C289-ammayiyappan]
 <!-- hl-knowledge: introduces=[ML-LEX-C290-VASTU290-01]; assesses=[] -->
 
 **ഓണക്കോടി** — *ōṇakkōṭi* — "new clothes given for Onam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓണക്കോടി** (*ōṇakkōṭi*) is *ōṇam* with native *kōṭi*, "new unbleached cloth" (DEDR 2198, with Tamil *kōṭi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 324,
-  "sourceHash": "fnv1a64:dd1f32fa6deff189",
+  "sourceHash": "fnv1a64:2c5a9fc2c4aa7ca7",
   "lessonIds": [
     "ML-C324-rekha",
     "ML-C324-sarttiphikkarru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch324.txt",
   "json": "malayalam/narration/ch324.json",
-  "textHash": "fnv1a64:3c6a145f111850ac",
-  "jsonHash": "fnv1a64:610f0bd57c297dc2",
+  "textHash": "fnv1a64:5295fb7734cf2c4b",
+  "jsonHash": "fnv1a64:35df1a491fd8280c",
   "findings": []
 }

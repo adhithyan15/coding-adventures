@@ -14,7 +14,8 @@ romanization: "udyōgasthan"
 concept_tag: ML-JOLI220-UDYOGASTHAN
 prerequisites: [ML-C219-kilivu, ML-C220-sahapravarttakan]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga, stha-sanskrit]
+etymology_hook: "udyōgasthan: Sanskrit udyōga 'exertion, office' (CDIAL 2055) + -stha 'standing in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C220-sahapravarttakan]
 <!-- hl-knowledge: introduces=[ML-LEX-C220-JOLI220-02]; assesses=[] -->
 
 **ഉദ്യോഗസ്ഥൻ** — *udyōgasthan* — "an official, an officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉദ്യോഗസ്ഥൻ** (*udyōgasthan*) is built from Sanskrit *udyōga*, "exertion; employment" (CDIAL 2055), and *-stha*, "standing in", with the masculine ending *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

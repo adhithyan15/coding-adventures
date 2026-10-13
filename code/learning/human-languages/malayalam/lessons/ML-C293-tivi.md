@@ -14,7 +14,8 @@ romanization: "ṭivi"
 concept_tag: ML-VASTU293-TIVI
 prerequisites: [ML-C292-vellappokkam, ML-C292-sopha]
 sounds: []
-roots: []
+roots: [english-tv]
+etymology_hook: "ṭivi ← English TV, short for television"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C292-sopha]
 <!-- hl-knowledge: introduces=[ML-LEX-C293-VASTU293-01]; assesses=[] -->
 
 **ടിവി** — *ṭivi* — "a television, TV".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടിവി** (*ṭivi*) ← English *TV*, the initials of *television*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

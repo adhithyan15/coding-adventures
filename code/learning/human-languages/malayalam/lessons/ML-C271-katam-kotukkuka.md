@@ -14,7 +14,8 @@ romanization: "kaṭaṁ koṭukkuka"
 concept_tag: ML-VERB-KATAM-KOTUKKUKA
 prerequisites: [ML-C270-sraddhikkuka, ML-C271-katam-vannuka]
 sounds: []
-roots: []
+roots: [dravidian-katam-debt, dravidian-kodu-give]
+etymology_hook: "kaṭaṁ koṭukkuka: native Dravidian, 'give a debt': kaṭam (DEDR 1113) + koṭukkuka (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C271-katam-vannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C271-KRIYA271-02]; assesses=[] -->
 
 **കടം കൊടുക്കുക** — *kaṭaṁ koṭukkuka* — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടം കൊടുക്കുക** (*kaṭaṁ koṭukkuka*) is native Dravidian, "give a debt": *kaṭam*, "debt" (DEDR 1113), and *koṭukkuka*, "to give" (DEDR 2053, with Tamil *koṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 249,
-  "sourceHash": "fnv1a64:f0c8ed4d0fe58ae4",
+  "sourceHash": "fnv1a64:082d92687024488d",
   "lessonIds": [
     "ML-C249-mavu",
     "ML-C249-gotambu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch249.txt",
   "json": "malayalam/narration/ch249.json",
-  "textHash": "fnv1a64:787e7253a56c1440",
-  "jsonHash": "fnv1a64:f19e3c353f6e0ebe",
+  "textHash": "fnv1a64:739f2186c863b92b",
+  "jsonHash": "fnv1a64:02a86a4f62ede279",
   "findings": []
 }

@@ -14,7 +14,7 @@ sounds: [alveolar-rra, ya-letter]
 roots: [dravidian-ari-know]
 etymology_hook: "അറിയുക is native Dravidian *aṟi-, shared with Tamil அறி and Kannada ಅರಿ, though those two prefer தெரியும் and ಗೊತ್ತು day to day; it takes no nominative subject at all — the knower moves into the dative, so Chapter 6's എനിക്ക് മലയാളം അറിയാം is the verb's normal shape, not an idiom"
 duration:
-  max_seconds: 290
+  max_seconds: 296
 requires:
   knowledge: [ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-02, ML-CONCEPT-C32-KAANUKA-02]
 introduces:
@@ -45,7 +45,7 @@ The last one will not — and Chapter 6 already handed you the sentence it makes
 Present *aṟiyunnu*, past **അറിഞ്ഞു** (*aṟiññu*), and the form you have met:
 **അറിയാം** (*aṟiyāṁ*), with the *-āṁ* ending of the last lesson.
 
-Native Dravidian, and the sisters kept the root — Tamil **அறி** (*aṟi*), Kannada
+Native Dravidian (DEDR 314), cognate with Tamil and Kannada; the sisters kept the root — Tamil **அறி** (*aṟi*), Kannada
 **ಅರಿ** (*ari*) — though for everyday knowing each reached elsewhere: Tamil
 **தெரியும்** (*teriyum*), Telugu **తెలుసు** (*telusu*). Malayalam stayed with
 *aṟi-*.

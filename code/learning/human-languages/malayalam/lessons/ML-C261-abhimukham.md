@@ -14,7 +14,8 @@ romanization: "abhimukhaṁ"
 concept_tag: ML-JOLI261-ABHIMUKHAM
 prerequisites: [ML-C260-sadhanam, ML-C261-posrrman]
 sounds: []
-roots: []
+roots: [sanskrit-abhimukha]
+etymology_hook: "abhimukhaṁ ← Sanskrit abhimukha 'turned towards, facing', a tatsama (CDIAL 525)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C261-posrrman]
 <!-- hl-knowledge: introduces=[ML-LEX-C261-JOLI261-02]; assesses=[] -->
 
 **അഭിമുഖം** — *abhimukhaṁ* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഭിമുഖം** (*abhimukhaṁ*) ← Sanskrit *abhimukha*, "turned towards, facing", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 525). An interview is a sitting face to face.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

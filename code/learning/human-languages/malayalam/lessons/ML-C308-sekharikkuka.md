@@ -14,7 +14,8 @@ romanization: "śēkharikkuka"
 concept_tag: ML-VERB-SEKHARIKKUKA
 prerequisites: [ML-C308-atikkuka, ML-C308-cavittuka]
 sounds: []
-roots: []
+roots: [sanskrit-shekhara]
+etymology_hook: "śēkharikkuka: a verb from śēkharam 'heap, store', usually linked to Sanskrit śēkhara 'peak, crest' (CDIAL 12604)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C308-cavittuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C308-KRIYA308-03]; assesses=[] -->
 
 **ശേഖരിക്കുക** — *śēkharikkuka* — "to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശേഖരിക്കുക** (*śēkharikkuka*) is a verb from *śēkharaṁ*, "a heap, a store", which is usually linked to Sanskrit *śēkhara*, "peak, crest" (CDIAL 12604); the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

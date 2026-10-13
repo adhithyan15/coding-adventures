@@ -11,7 +11,8 @@ romanization: "tīvaṇṭi"
 concept_tag: ML-RIDE-TRAIN
 prerequisites: [ML-C137-vehicle, ML-C137-car]
 sounds: []
-roots: []
+roots: [dravidian-ti-fire, sanskrit-bhanda-cart]
+etymology_hook: "tīvaṇṭi: 'fire-cart': native tī 'fire' (DEDR 3266) + vaṇṭi 'cart' (DEDR appendix 50)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C137-car]
 
 **തീവണ്ടി** (*tīvaṇṭi*) — "a train", literally "fire-vehicle": **തീ** (*tī*), "fire",
 with **വണ്ടി**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീവണ്ടി** (*tīvaṇṭi*) is "the fire-cart": native *tī*, "fire" (DEDR 3266, with Tamil *tī*), joined to *vaṇṭi*, "cart" (DEDR appendix 50, with Tamil *vaṇṭi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a spoon, then the Malayalam for a plat
 You'll want to know: ചന്ത.
 ചന്ത (canta) — "a market", where മീൻ and പച്ചക്കറി are sold.
 
+The word, taken apart.
+ചന്ത (canta) is of uncertain origin; neither DEDR nor CDIAL lists it.
+
 What you've built.
 Where the shopping happens.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a plate, then the Malayalam for a mark
 
 You'll want to know: ക്ഷേത്രം.
 ക്ഷേത്രം (kṣētraṁ) — "a temple".
+
+The word, taken apart.
+ക്ഷേത്രം (kṣētraṁ) from Sanskrit kṣētra, "land, field; a sacred place", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 3735). Its first sense is "land, a field"; the holy ground became the temple.
 
 What you've built.
 A place of worship.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a market, then the Malayalam for a tem
 You'll want to know: പള്ളി.
 പള്ളി (paḷḷi) — both "a church" and "a mosque"; the word is older than the difference. It is also in പള്ളിക്കൂടം, "school".
 
+The word, taken apart.
+പള്ളി (paḷḷi) is native Dravidian, one word with Tamil paḷḷi, Kannada paḷḷi and Telugu palli (DEDR 4018). Its first senses are "hamlet, a public building"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit pallī̆.
+
 What you've built.
 One word, two buildings.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a temple, then the Malayalam for a chu
 You'll want to know: പാലം.
 പാലം (pālaṁ) — "a bridge", over a പുഴ.
 
+The word, taken apart.
+പാലം (pālaṁ) is native Dravidian, one word with Tamil pālam and Kannada pāla (DEDR 4099).
+
 What you've built.
 A way across the river.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a church or mosque, then the Malayalam
 
 You'll want to know: ഗ്രാമം.
 ഗ്രാമം (grāmaṁ) — "a village", the other side of a നഗരം.
+
+The word, taken apart.
+ഗ്രാമം (grāmaṁ) from Sanskrit grāma, "troop, village", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4368).
 
 What you've built.
 Smaller than a town.

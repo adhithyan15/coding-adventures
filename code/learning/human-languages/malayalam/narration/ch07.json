@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7d98679edd5dda0e",
+  "sourceHash": "fnv1a64:21d9bf091f5abf34",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8bd5ba68695fb68",
+      "sourceHash": "fnv1a64:9c9c20f6aab8f191",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All five are native Dravidian, and Tamil keeps the same five: onnŭ with Tamil oru (DEDR 990), raṇṭŭ with Tamil iraṇṭu (DEDR 474), mūnnŭ with Tamil mūṉṟu (DEDR 5052), nālŭ with Tamil nālu (DEDR 3655) and añcŭ with Tamil añcu (DEDR 2826)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -83,7 +94,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way — one sound change",
           "segments": [
@@ -94,7 +105,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +148,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

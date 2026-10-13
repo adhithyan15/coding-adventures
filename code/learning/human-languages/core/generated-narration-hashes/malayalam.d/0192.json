@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 192,
-  "sourceHash": "fnv1a64:f1192bec8d7c43a3",
+  "sourceHash": "fnv1a64:694f6c517216db36",
   "lessonIds": [
     "ML-C192-mukham",
     "ML-C192-sariram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch192.txt",
   "json": "malayalam/narration/ch192.json",
-  "textHash": "fnv1a64:5c3fe4397b54db2b",
-  "jsonHash": "fnv1a64:aeaeb5e1b4752e4b",
+  "textHash": "fnv1a64:51d4da9bc30a00e0",
+  "jsonHash": "fnv1a64:32f3bb2f7d50e78b",
   "findings": []
 }

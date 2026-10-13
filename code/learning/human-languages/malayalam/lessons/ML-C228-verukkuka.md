@@ -14,7 +14,8 @@ romanization: "veṟukkuka"
 concept_tag: ML-VERB-VERUKKUKA
 prerequisites: [ML-C228-vagdanam-ceyyuka, ML-C228-asvadikkuka]
 sounds: []
-roots: []
+roots: [dravidian-veru-loathe]
+etymology_hook: "veṟukkuka: native Dravidian, one word with Tamil veṟu (DEDR 5512)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C228-asvadikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C228-KRIYA228-05]; assesses=[] -->
 
 **വെറുക്കുക** — *veṟukkuka* — "to hate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെറുക്കുക** (*veṟukkuka*) is native Dravidian, one word with Tamil *veṟu* (DEDR 5512).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bārbar"
 concept_tag: ML-JOLI222-BARBAR
 prerequisites: [ML-C222-sahityam, ML-C222-vyakaranam]
 sounds: []
-roots: []
+roots: [english-barber]
+etymology_hook: "bārbar ← English barber, from Latin barba 'beard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C222-vyakaranam]
 <!-- hl-knowledge: introduces=[ML-LEX-C222-JOLI222-04]; assesses=[] -->
 
 **ബാർബർ** — *bārbar* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബാർബർ** (*bārbar*) ← English *barber*, from Latin *barba*, "beard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

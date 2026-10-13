@@ -14,7 +14,8 @@ romanization: "ādhunika"
 concept_tag: ML-GUNAM205-ADHUNIKA
 prerequisites: [ML-C205-mikacca, ML-C205-vicitramaya]
 sounds: []
-roots: []
+roots: [sanskrit-adhunika]
+etymology_hook: "ādhunika ← Sanskrit ādhunika 'recent, new', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C205-vicitramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C205-GUNAM205-05]; assesses=[] -->
 
 **ആധുനിക** — *ādhunika* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആധുനിക** (*ādhunika*) ← Sanskrit *ādhunika*, "recent, new", taken over whole as a tatsama. It is built on *adhunā*, "now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

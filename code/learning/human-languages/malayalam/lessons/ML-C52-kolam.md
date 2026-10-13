@@ -11,7 +11,8 @@ romanization: "kōlaṁ"
 concept_tag: ML-NOUN-KOLAM
 prerequisites: [ML-C52-chair, ML-C50-journey]
 sounds: []
-roots: []
+roots: [dravidian-kolam-form]
+etymology_hook: "kōlaṁ: native Dravidian, one word with Tamil kōlam and Kannada kōla (DEDR 2240)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, and its plain sense is 'form, shape, guise'. The pattern chalk
 The word keeps its wider life alongside the drawing: a person in costume, an animal's markings, anything that has taken on a form, can be a കോലം.
 
 Kannada names the same threshold drawing ರಂಗೋಲಿ (*raṅgōli*), a word built on Sanskrit colour. One sister named the practice for its shape and the other for its pigment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോലം** (*kōlaṁ*) is native Dravidian, one word with Tamil *kōlam* and Kannada *kōla* (DEDR 2240). Its first sense is "form, figure, guise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

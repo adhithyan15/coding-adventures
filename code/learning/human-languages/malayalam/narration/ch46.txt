@@ -15,6 +15,9 @@ Behind the fruit sits a verb of ripening. Proto-Dravidian paḻ, 'to ripen, to g
 Tamil says பழம் (paḻam), which is very nearly the identical word — the ordinary state of affairs between these two closest sisters. Telugu went to పండు (paṇḍu) and Kannada to ಹಣ್ಣು (haṇṇu), and the Kannada form has lost its opening p- to a shift Malayalam sat out entirely.
 The ഴ in the middle is the letter this book has already called Malayalam's own oddity, the one only these two sisters still write.
 
+The word, taken apart.
+പഴം (paḻaṁ) is native Dravidian, a noun from the verb "to ripen"; DEDR 4004 lists the root with Tamil paḻu, Kannada paṇ and Telugu paṇḍu. DEDR 4004 compares Sanskrit phala.
+
 What you've built.
 The first of five things you might ask someone for.
 
@@ -47,6 +50,9 @@ You'll want to know: തുണി.
 Malayalam holds a dressier word for the same stuff — വസ്ത്രം (vastraṁ), out of Sanskrit — and it turns up on a wedding invitation rather than over a washing line. The native word does the daily work; the borrowed one does the ceremony.
 That division of labour is worth watching for, because it repeats through this book: two words, one meaning, and the register telling them apart.
 
+The word, taken apart.
+തുണി (tuṇi) is native Dravidian, one word with Tamil tuṇi and Kodagu tuṇi (DEDR 3307).
+
 What you've built.
 Two: a fruit and a cloth.
 
@@ -77,6 +83,9 @@ You'll want to know: വിളക്ക്.
 A native word, built on a root about shining. Tamil விளக்கு (viḷakku) is the same word, and in both languages a related sense — making something clear, shining a light on it — sits alongside the object.
 The object itself has a particular shape in Kerala: the നിലവിളക്ക് (nilaviḷakkŭ), the tall standing brass lamp lit at a doorway on an occasion. Its first piece is നില (nila), the ground it stands on.
 Kannada reached for a borrowed word here, ದೀಪ (dīpa) from Sanskrit, where Malayalam kept its own. Malayalam has ദീപം (dīpaṁ) as well, in temple and festival senses, which leaves the everyday lamp to the older resident.
+
+The word, taken apart.
+വിളക്ക് (viḷakkŭ) is native Dravidian, built on the verb "to shine"; DEDR 5496 lists the root with Tamil viḷakku, Kannada beḷaku and Telugu velũgu.
 
 What you've built.
 Three. A fruit, a cloth, a lamp.
@@ -110,6 +119,9 @@ Proto-Dravidian uppu, and the whole family kept it very nearly untouched: Tamil 
 There is a p sitting inside this word, and in Kannada it did not turn into an h the way the p of its fruit-word did. The shift that separated ಹಣ್ಣು from പഴം (paḻaṁ) reached only the FIRST sound of a word. Inside one, the p stays where it was put — which is why salt looks so alike on all four sides of the family.
 The final ് here is the half-vowel this book romanizes -ŭ: a consonant let go of rather than cut off.
 
+The word, taken apart.
+ഉപ്പ് (uppŭ) is native Dravidian, one word with Tamil uppu, Kannada uppu and Telugu uppu (DEDR 2674).
+
 What you've built.
 Four. Salt, and the fruit, and the cloth, and the lamp.
 
@@ -140,6 +152,9 @@ You'll want to know: പുസ്തകം.
 Sanskrit pustaka, taken whole. Tamil புத்தகம், Telugu పుస్తకం and Kannada ಪುಸ್ತಕ are the same borrowing, so the four sisters agree here for a different reason than they agree about salt: not descent, but a shared debt.
 Sanskrit itself seems to have taken it from further west. The usual trail runs to Persian post, a hide or a skin — the material a book was, before it was paper. A word for the animal became a word for the page.
 Malayalam also says granthaṁ for a book of weight and age, another Sanskrit word, and that one is built on a root about knotting: palm leaves tied into a bundle. Two borrowings, two different pictures of what a book physically was.
+
+The word, taken apart.
+പുസ്തകം (pustakaṁ) from Sanskrit pustaka, "book, manuscript", a tatsama with Malayalam's noun ending -ṁ. Sanskrit itself probably took the word from Iranian, where Persian pōst means "skin, hide".
 
 What you've built.
 Five, and the run is closed: a fruit, a cloth, a lamp, salt, a book.

@@ -19,6 +19,7 @@ Listen to the join and you will hear nothing arrive. പാട്ട് (pāṭ�
 word: നല്ലത്. joined to ആണ്: നല്ലതാണ് (nallatāṇŭ).
 word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ).
 You have done this before without a new word to do it on. നല്ലതാണ് has been in the book since the opinion chapter. പാട്ടാണ് is the same event on a word you met a moment ago — no യ, no വ, nothing inserted.
+Where the word comes from. It is native Dravidian: DEDR 4065 lists pāṭṭu, "song", with Tamil pāṭu, "to sing", and Kannada pāḍu.
 
 Guided Practice.
 [pause 1 second]
@@ -52,6 +53,7 @@ noun: കളി. verb: കളിക്കുക — the noun is there whole.
 noun: പാട്ട് (pāṭṭŭ). verb: പാടുക (pāṭuka) — the ട്ട thins to a single ട.
 Say them one after the other and you will hear it: പാട്ട് (pāṭṭŭ) holds the ṭ long, പാടുക (pāṭuka) does not.
 Two words, one pattern between them — and that is all it is. The book has put other nouns beside their verbs — വായന beside വായിക്കുക, ചോദ്യം beside ചോദിക്കുക — and not one of them does this. പാട്ട് (pāṭṭŭ)/പാടുക (pāṭuka) is the only pair in the book where the consonant itself changes weight.
+Where the word comes from. It is native Dravidian, one word with Tamil pāṭu, Kannada pāḍu and Telugu pāḍu (DEDR 4065).
 
 Guided Practice.
 [pause 1 second]
@@ -84,6 +86,7 @@ This is the third join, and the one the book explained to you first. നൃത�
 word ends in: the half-u. joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ).
 word ends in: ം. joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ).
 Two words, two different endings, and neither one gains a sound. The first gives one up; the second only changes how its m is written.
+Where the word comes from. It is Sanskrit nṛtta, "dancing" (CDIAL 7580), with Malayalam's noun ending.
 
 Guided Practice.
 [pause 1 second]
@@ -116,6 +119,7 @@ You have a word that ends exactly as this one does. കഥ (katha)'s last letter
 ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: അ. word: കഥ (katha). joined to ആണ്: കഥയാണ് (kathayāṇŭ).
 That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛttaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on.
+Where the word comes from. It is Sanskrit kathā, "conversation; story" (CDIAL 2704), built on katham, "how".
 
 Guided Practice.
 [pause 1 second]

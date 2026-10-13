@@ -14,7 +14,8 @@ romanization: "laḷitamāya"
 concept_tag: ML-GUNAM205-LALITAMAYA
 prerequisites: [ML-C204-parukkan, ML-C204-urunta]
 sounds: []
-roots: []
+roots: [sanskrit-lalita, aaka-dravidian]
+etymology_hook: "laḷitamāya: Sanskrit lalita 'graceful, easy' + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C204-urunta]
 <!-- hl-knowledge: introduces=[ML-LEX-C205-GUNAM205-01]; assesses=[] -->
 
 **ലളിതമായ** — *laḷitamāya* — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലളിതമായ** (*laḷitamāya*) joins Sanskrit *lalita*, "graceful, easy", to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

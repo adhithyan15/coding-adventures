@@ -14,7 +14,8 @@ romanization: "bakkaṟṟŭ"
 concept_tag: ML-THINGS158-BAKKARRU
 prerequisites: [ML-C158-talayana, ML-C158-putappu, ML-C69-adyathe-vaayana]
 sounds: []
-roots: []
+roots: [english-bucket]
+etymology_hook: "bakkaṟṟŭ ← English bucket"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C158-putappu]
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-05]; assesses=[] -->
 
 **ബക്കറ്റ്** — *bakkaṟṟŭ* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബക്കറ്റ്** (*bakkaṟṟŭ*) ← English *bucket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

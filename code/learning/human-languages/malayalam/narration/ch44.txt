@@ -13,6 +13,9 @@ You'll want to know: നോക്കൂ.
 നോക്കൂ (nōkkū) — "look".
 The same nōkk- stem as Kannada's nōḍu, with Malayalam's courteous long ū on the end.
 
+The word, taken apart.
+നോക്കൂ (nōkkū) is native Dravidian, one word with Tamil nōkku and Kannada nōḍu (DEDR 3794).
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -40,6 +43,9 @@ Before the new one: what did nōkkū mean?
 You'll want to know: കേൾക്കൂ.
 കേൾക്കൂ (kēḷkkū) — "listen".
 And Kannada's kēḷu again. Malayalam separated from Tamil later than the others, but this stem is older than any of the splits.
+
+The word, taken apart.
+കേൾക്കൂ (kēḷkkū) is native Dravidian, one word with Tamil kēḷ and Kannada kēḷ (DEDR 2017). The same verb also means "to ask": hearing and asking are one root in this family.
 
 What you've built.
 One more. Three follow, and each reuses the ones before.
@@ -70,6 +76,9 @@ You'll want to know: സംസാരിക്കൂ.
 സംസാരിക്കൂ (saṁsārikkū) — "speak".
 From Sanskrit saṁsāra — literally 'going around together'. The everyday Malayalam word for conversing is a Sanskrit compound, which is how much of the language's formal vocabulary arrived.
 
+The word, taken apart.
+സംസാരിക്കൂ (saṁsārikkū) is built on Sanskrit saṁsāra, "the world, secular life" (CDIAL 13036), with the ending that turns a borrowed noun into a Malayalam verb, here in its request form.
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -99,6 +108,9 @@ Before the new one: what did saṁsārikkū mean?
 You'll want to know: എഴുതൂ.
 എഴുതൂ (eḻutū) — "write".
 From eḻuttu, 'letter' — the writing verb is built from the thing written, which is the reverse of how Kannada does it.
+
+The word, taken apart.
+എഴുതൂ (eḻutū) is native Dravidian, one word with Tamil eḻutu (DEDR 853). Its older senses are "to paint" and "to draw": writing began as drawing lines.
 
 What you've built.
 That closes the run: look, listen, speak, write.

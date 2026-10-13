@@ -11,7 +11,8 @@ romanization: "prayāsaṁ"
 concept_tag: ML-DIFFICULT
 prerequisites: [ML-C96-eluppam]
 sounds: []
-roots: []
+roots: [sanskrit-prayasa]
+etymology_hook: "prayāsaṁ ← Sanskrit prayāsa 'effort, exertion', a tatsama"
 duration:
   max_seconds: 250
 requires:
@@ -52,6 +53,11 @@ not have to be told a second time.
 
 **One word apart, and the sentence is the opposite.** Everything around it holds
 still.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രയാസം** (*prayāsaṁ*) ← Sanskrit *prayāsa*, "effort, exertion", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. What costs effort is difficult.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-DIFFICULT-01, ML-LEX-C96-EASY-01, ML-LEX-AANU-01] -->

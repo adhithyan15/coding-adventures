@@ -11,7 +11,8 @@ romanization: "āṭŭ"
 concept_tag: ML-NOUN-GOAT
 prerequisites: [ML-C60-cow, ML-C58-less]
 sounds: []
-roots: []
+roots: [dravidian-adu-goat]
+etymology_hook: "āṭŭ: native Dravidian, one word with Tamil yāṭu and Kannada āḍu (DEDR 5152)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *āṭu*, and it covers the animal at any age or eithe
 It sits one letter away from *nāṭŭ*, the home-country word. Take the *n* off the front of that one and you have this one, so the ear has to catch the very start of the word rather than the end of it.
 
 A goat is what a household keeps when it has no room for the larger animal: it eats what it finds and it climbs what it likes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആട്** (*āṭŭ*) is native Dravidian, one word with Tamil *yāṭu*, Kannada *āḍu* and Telugu *ēḍika* (DEDR 5152). DEDR 5152 compares Sanskrit *eḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

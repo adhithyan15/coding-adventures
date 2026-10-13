@@ -11,7 +11,8 @@ romanization: "paṟṟilla"
 concept_tag: ML-RESP-NOT-POSSIBLE
 prerequisites: [ML-C122-thesame, ML-C122-ohisee]
 sounds: []
-roots: []
+roots: [dravidian-parru-hold, illa-not-dravidian]
+etymology_hook: "paṟṟilla: native Dravidian, paṟṟuka 'to catch, suit' (DEDR 4034) + illa 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C122-ohisee]
 <!-- hl-knowledge: introduces=[ML-LEX-C123-MAYBE-01]; assesses=[] -->
 
 **പറ്റില്ല** (*paṟṟilla*) — "it's not possible, (I) can't". A firm, everyday no.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പറ്റില്ല** (*paṟṟilla*) is native Dravidian: the verb "to catch, stick to, suit" (DEDR 4034, with Tamil *paṟṟu*), with *illa*, "not" (DEDR 2559): "it does not catch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

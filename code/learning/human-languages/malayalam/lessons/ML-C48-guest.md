@@ -11,7 +11,8 @@ romanization: "atithi"
 concept_tag: ML-NOUN-GUEST
 prerequisites: [ML-C48-farmer, ML-C46-book]
 sounds: []
-roots: []
+roots: [sanskrit-atithi]
+etymology_hook: "atithi ← Sanskrit atithi 'guest', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *atithi*, and Kannada ಅತಿಥಿ is the identical word — the sam
 The traditional analysis inside Sanskrit takes it apart as *a-* plus *tithi*, a lunar day: the one who has no appointed day, who turns up unannounced. Whether the etymology is historically right is argued over; what matters is that Sanskrit itself understood the word that way, and built a whole ethic of hospitality on it.
 
 This word takes no masculine ending. It sits on the other side of the chapter from the four before it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതിഥി** (*atithi*) ← Sanskrit *atithi*, "guest", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

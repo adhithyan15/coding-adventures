@@ -14,7 +14,8 @@ romanization: "svarṇṇaṁ"
 concept_tag: ML-VASTU330-SVARNNAM
 prerequisites: [ML-C330-kutam, ML-C330-cakku]
 sounds: []
-roots: []
+roots: [sanskrit-svarna]
+etymology_hook: "svarṇṇaṁ ← Sanskrit svarṇa 'gold', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C330-cakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C330-VASTU330-05]; assesses=[] -->
 
 **സ്വർണ്ണം** — *svarṇṇaṁ* — "gold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വർണ്ണം** (*svarṇṇaṁ*) ← Sanskrit *svarṇa*, "gold", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

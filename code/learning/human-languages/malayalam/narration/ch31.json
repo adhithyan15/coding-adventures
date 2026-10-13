@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:956a89768da57d17",
+  "sourceHash": "fnv1a64:f947c2453e8c736d",
   "lessons": [
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b5aa444c68d059b",
+      "sourceHash": "fnv1a64:98606228e00e4cfe",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both words are Sanskrit, taken whole: śubha, \"bright, auspicious, good\" (CDIAL 12532), and madhyāhna, \"midday\" (CDIAL 9818), which is madhya, \"middle\", joined to ahar, \"day\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -82,7 +93,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -113,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:571fa534c9605564",
+      "sourceHash": "fnv1a64:609d27971a9e4cb7",
       "notice": null,
       "blocks": [
         {
@@ -163,6 +174,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊഞ്ഞാൽ (ūññāl) is native Dravidian, one word with Tamil ūñcal and Kannada uyyal(u) (DEDR 731)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

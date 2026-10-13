@@ -14,7 +14,8 @@ romanization: "curuṇṭa"
 concept_tag: ML-GUNAM247-CURUNTA
 prerequisites: [ML-C247-prayamaya, ML-C247-kasantiyulla]
 sounds: []
-roots: []
+roots: [dravidian-curul-roll]
+etymology_hook: "curuṇṭa: native Dravidian, from the verb 'to be rolled up, curl' (DEDR 2684)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C247-kasantiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C247-GUNAM247-04]; assesses=[] -->
 
 **ചുരുണ്ട** — *curuṇṭa* — "curly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുരുണ്ട** (*curuṇṭa*) is native Dravidian, a past form of the verb "to be rolled up, to curl" (DEDR 2684, with Kannada *suruḷi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

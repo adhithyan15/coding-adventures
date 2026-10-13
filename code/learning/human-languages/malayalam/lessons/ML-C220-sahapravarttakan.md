@@ -14,7 +14,8 @@ romanization: "sahapravarttakan"
 concept_tag: ML-JOLI220-SAHAPRAVARTTAKAN
 prerequisites: [ML-C219-bakki, ML-C219-kilivu]
 sounds: []
-roots: []
+roots: [sanskrit-saha, sanskrit-pravartaka]
+etymology_hook: "sahapravarttakan: Sanskrit saha 'with' + pravartaka 'one who carries on work'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C219-kilivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C220-JOLI220-01]; assesses=[] -->
 
 **സഹപ്രവർത്തകൻ** — *sahapravarttakan* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സഹപ്രവർത്തകൻ** (*sahapravarttakan*) is built from Sanskrit: *saha*, "with", and *pravartaka*, "one who sets going, who carries on", with the masculine ending *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

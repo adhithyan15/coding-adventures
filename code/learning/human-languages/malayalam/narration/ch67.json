@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Which One in the Line",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8ca56d5e2ab6eb16",
+  "sourceHash": "fnv1a64:1b4f447af5888f88",
   "lessons": [
     {
       "id": "ML-C67-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c67b0c6172376343",
+      "sourceHash": "fnv1a64:f425351089607761",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒന്നാം (onnāṁ) is native Dravidian: the number \"one\" (DEDR 990, with Tamil oru and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, \"second\" (DEDR 474)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one ending, and no exceptions to it",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -166,7 +177,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -197,7 +208,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8fd2348605f70e7e",
+      "sourceHash": "fnv1a64:283d339e2d065ccf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -286,6 +297,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ടാം (raṇṭāṁ) is native Dravidian: DEDR 474 lists it, \"second\", with Tamil iraṇṭām, built on the number \"two\" (Tamil iraṇṭu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "cognates",
           "title": "Across the family: the word Malayalam did not use",
           "segments": [
@@ -316,7 +338,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -356,7 +378,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -387,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27424b1c4ec09525",
+      "sourceHash": "fnv1a64:9c5a46f1ed9cbbb3",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +494,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂന്നാം (mūnnāṁ) is native Dravidian: DEDR 5052 lists it with Tamil mūṉṟām, \"third\", built on mūṉṟu, \"three\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -542,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c572d378ee667acb",
+      "sourceHash": "fnv1a64:677a19e3bef500d7",
       "notice": null,
       "blocks": [
         {
@@ -627,6 +660,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാലാം (nālāṁ) is native Dravidian: DEDR 3655 lists it with Tamil nāṉkām, \"fourth\", built on nālu, \"four\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -666,7 +710,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -697,7 +741,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac330afc232dfc22",
+      "sourceHash": "fnv1a64:c5348e855b7df86a",
       "notice": null,
       "blocks": [
         {
@@ -762,6 +806,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഞ്ചാം (añcāṁ) is native Dravidian: añcŭ, \"five\" (DEDR 2826, with Tamil aintu, añcu and Kannada ay(i)du), with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -793,7 +848,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -833,7 +888,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

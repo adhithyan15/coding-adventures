@@ -14,7 +14,8 @@ romanization: "peṭṭennŭ"
 concept_tag: ML-SAMAYAM195-PETTENNU
 prerequisites: [ML-C195-tiyati, ML-C195-varantyam]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "peṭṭennŭ: an expressive word for suddenness + ennŭ 'saying' (DEDR 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C195-varantyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C195-SAMAYAM195-04]; assesses=[] -->
 
 **പെട്ടെന്ന്** — *peṭṭennŭ* — "quickly, suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെട്ടെന്ന്** (*peṭṭennŭ*) is an expressive sound for suddenness followed by *ennŭ*, "saying" (DEDR 868): "with a *peṭṭ*".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

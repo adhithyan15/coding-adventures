@@ -14,7 +14,8 @@ romanization: "vavvāl"
 concept_tag: ML-VASTU213-VAVVAL
 prerequisites: [ML-C212-mula, ML-C213-pulu]
 sounds: []
-roots: []
+roots: [dravidian-vaval-bat]
+etymology_hook: "vavvāl: native Dravidian, one word with Tamil vāval and Kannada bāval (DEDR 5370)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C213-pulu]
 <!-- hl-knowledge: introduces=[ML-LEX-C213-VASTU213-02]; assesses=[] -->
 
 **വവ്വാൽ** — *vavvāl* — "a bat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വവ്വാൽ** (*vavvāl*) is native Dravidian, one word with Tamil *vāval* and Kannada *bāval* (DEDR 5370).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

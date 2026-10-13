@@ -14,7 +14,8 @@ romanization: "kāykkuka"
 concept_tag: ML-VERB-KAYKKUKA
 prerequisites: [ML-C311-otukkuka, ML-C311-polikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kay-fruit]
+etymology_hook: "kāykkuka: native Dravidian, one word with Tamil kāy and Kannada kāy (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C311-polikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C311-KRIYA311-04]; assesses=[] -->
 
 **കായ്ക്കുക** — *kāykkuka* — "to bear fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കായ്ക്കുക** (*kāykkuka*) is native Dravidian, one word with Tamil *kāy*, Kannada *kāy* and Telugu *kācu* (DEDR 1459). It is the verb of *kāy*, "unripe fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

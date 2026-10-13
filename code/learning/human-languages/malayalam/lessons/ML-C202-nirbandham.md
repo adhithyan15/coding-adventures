@@ -14,7 +14,8 @@ romanization: "nirbandhaṁ"
 concept_tag: ML-KARANAM202-NIRBANDHAM
 prerequisites: [ML-C201-ennaneyenkilum, ML-C202-prerana]
 sounds: []
-roots: []
+roots: [sanskrit-nirbandha]
+etymology_hook: "nirbandhaṁ ← Sanskrit nirbandha 'perseverance, insistence', a tatsama (CDIAL 7355)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C202-prerana]
 <!-- hl-knowledge: introduces=[ML-LEX-C202-KARANAM202-02]; assesses=[] -->
 
 **നിർബന്ധം** — *nirbandhaṁ* — "insistence, compulsion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർബന്ധം** (*nirbandhaṁ*) ← Sanskrit *nirbandha*, "perseverance, insistence", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7355). It is built on the root *bandh*, "to bind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

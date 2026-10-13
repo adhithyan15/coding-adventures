@@ -14,7 +14,8 @@ romanization: "upanyāsaṁ"
 concept_tag: ML-JOLI337-UPANYASAM
 prerequisites: [ML-C337-cokku, ML-C337-yuniphom]
 sounds: []
-roots: []
+roots: [sanskrit-upanyasa]
+etymology_hook: "upanyāsaṁ ← Sanskrit upanyāsa 'placing near; a statement', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C337-yuniphom]
 <!-- hl-knowledge: introduces=[ML-LEX-C337-JOLI337-03]; assesses=[] -->
 
 **ഉപന്യാസം** — *upanyāsaṁ* — "an essay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപന്യാസം** (*upanyāsaṁ*) ← Sanskrit *upanyāsa*, "placing near; a statement", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

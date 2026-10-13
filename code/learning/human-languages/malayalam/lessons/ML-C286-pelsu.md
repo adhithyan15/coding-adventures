@@ -14,7 +14,8 @@ romanization: "pēḻsŭ"
 concept_tag: ML-VASTU286-PELSU
 prerequisites: [ML-C286-sus, ML-C286-belrru]
 sounds: []
-roots: []
+roots: [english-purse]
+etymology_hook: "pēḻsŭ ← English purse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C286-belrru]
 <!-- hl-knowledge: introduces=[ML-LEX-C286-VASTU286-04]; assesses=[] -->
 
 **പേഴ്സ്** — *pēḻsŭ* — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പേഴ്സ്** (*pēḻsŭ*) ← English *purse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

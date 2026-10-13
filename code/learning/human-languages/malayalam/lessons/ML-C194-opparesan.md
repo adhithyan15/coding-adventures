@@ -14,7 +14,8 @@ romanization: "ōppaṟēṣan"
 concept_tag: ML-AROGYAM194-OPPARESAN
 prerequisites: [ML-C193-atbhutam, ML-C194-prasavam]
 sounds: []
-roots: []
+roots: [english-operation]
+etymology_hook: "ōppaṟēṣan ← English operation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C194-prasavam]
 <!-- hl-knowledge: introduces=[ML-LEX-C194-AROGYAM194-02]; assesses=[] -->
 
 **ഓപ്പറേഷൻ** — *ōppaṟēṣan* — "a surgical operation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓപ്പറേഷൻ** (*ōppaṟēṣan*) ← English *operation*, from Latin *operātiō*, "a working".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

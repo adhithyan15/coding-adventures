@@ -14,7 +14,8 @@ romanization: "oṭiyuka"
 concept_tag: ML-VERB-OTIYUKA
 prerequisites: [ML-C183-kittuka, ML-C183-nastappetuka]
 sounds: []
-roots: []
+roots: [dravidian-odi-break]
+etymology_hook: "oṭiyuka: native Dravidian, one word with Tamil oṭi and Kannada oḍi (DEDR 946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C183-nastappetuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C184-KRIYA184-01]; assesses=[] -->
 
 **ഒടിയുക** — *oṭiyuka* — "to break (a bone, a stick)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒടിയുക** (*oṭiyuka*) is native Dravidian, one word with Tamil *oṭi* and Kannada *oḍi* (DEDR 946).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

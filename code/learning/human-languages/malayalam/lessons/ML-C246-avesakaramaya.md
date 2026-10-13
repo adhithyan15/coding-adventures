@@ -14,7 +14,8 @@ romanization: "āvēśakaramāya"
 concept_tag: ML-GUNAM246-AVESAKARAMAYA
 prerequisites: [ML-C246-paramparagata, ML-C246-janapriyamaya]
 sounds: []
-roots: []
+roots: [sanskrit-avesha, aaka-dravidian]
+etymology_hook: "āvēśakaramāya: Sanskrit āvēśa 'possession, excitement' + -kara 'making' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C246-janapriyamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C246-GUNAM246-03]; assesses=[] -->
 
 **ആവേശകരമായ** — *āvēśakaramāya* — "exciting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആവേശകരമായ** (*āvēśakaramāya*) is Sanskrit *āvēśa*, "possession, excitement", and *-kara*, "making", with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

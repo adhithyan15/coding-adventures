@@ -11,7 +11,8 @@ romanization: "dāhaṁ"
 concept_tag: ML-BODY-THIRST
 prerequisites: [ML-C116-laughter, ML-C116-worry]
 sounds: []
-roots: []
+roots: [sanskrit-daha]
+etymology_hook: "dāhaṁ ← Sanskrit dāha 'burning', a tatsama (CDIAL 6321)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C116-worry]
 
 **ദാഹം** (*dāhaṁ*) — "thirst". **എനിക്ക് ദാഹമുണ്ട്** — "I am thirsty", built like
 **എനിക്ക് വിശപ്പുണ്ട്**, "I am hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദാഹം** (*dāhaṁ*) ← Sanskrit *dāha*, "burning", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 6321). Thirst is named as a burning, from the root *dah*, "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

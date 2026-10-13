@@ -14,7 +14,8 @@ romanization: "vivaraṁ"
 concept_tag: ML-VASTU251-VIVARAM
 prerequisites: [ML-C251-nottubukku, ML-C251-rabbar]
 sounds: []
-roots: []
+roots: [sanskrit-vivara]
+etymology_hook: "vivaraṁ: usually traced to Sanskrit vivaraṇa 'opening up, explanation', from vivara 'opening' (CDIAL 11915)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C251-rabbar]
 <!-- hl-knowledge: introduces=[ML-LEX-C251-VASTU251-05]; assesses=[] -->
 
 **വിവരം** — *vivaraṁ* — "information, details".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിവരം** (*vivaraṁ*) is usually traced to Sanskrit *vivaraṇa*, "opening up, explanation", from *vivara*, "an opening" (CDIAL 11915): information is a thing laid open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

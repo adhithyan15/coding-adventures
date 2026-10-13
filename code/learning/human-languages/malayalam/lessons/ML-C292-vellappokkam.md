@@ -14,7 +14,8 @@ romanization: "veḷḷappokkaṁ"
 concept_tag: ML-VASTU292-VELLAPPOKKAM
 prerequisites: [ML-C292-nilavu, ML-C292-kotunkarru]
 sounds: []
-roots: []
+roots: [vellam-flood-white, dravidian-pongu-boil]
+etymology_hook: "veḷḷappokkaṁ: native Dravidian, 'rising of water': veḷḷam (DEDR 5503) + pokkam (DEDR 4469)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C292-kotunkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C292-VASTU292-04]; assesses=[] -->
 
 **വെള്ളപ്പൊക്കം** — *veḷḷappokkaṁ* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെള്ളപ്പൊക്കം** (*veḷḷappokkaṁ*) is native Dravidian, "the water's rising": *veḷḷam*, "water" (DEDR 5503), and *pokkam*, "height, boiling over" (DEDR 4469, with Tamil *poṅku*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

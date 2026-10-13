@@ -14,7 +14,8 @@ romanization: "āḻamuḷḷa"
 concept_tag: ML-QUAL167-ALAMULLA
 prerequisites: [ML-C167-irunta, ML-C167-telinna]
 sounds: []
-roots: []
+roots: [dravidian-azham-deep, dravidian-ul-be]
+etymology_hook: "āḻamuḷḷa: native Dravidian, 'having depth': āḻam (DEDR 396) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C167-telinna]
 <!-- hl-knowledge: introduces=[ML-LEX-C167-QUAL167-05]; assesses=[] -->
 
 **ആഴമുള്ള** — *āḻamuḷḷa* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആഴമുള്ള** (*āḻamuḷḷa*) is native Dravidian, "having depth": the noun for depth (DEDR 396, with Tamil *āḻ*), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

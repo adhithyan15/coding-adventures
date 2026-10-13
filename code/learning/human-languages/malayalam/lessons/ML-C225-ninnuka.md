@@ -14,7 +14,8 @@ romanization: "nīṅṅuka"
 concept_tag: ML-VERB-NINNUKA
 prerequisites: [ML-C224-mutuka, ML-C225-otikkuka]
 sounds: []
-roots: []
+roots: [dravidian-ni-separate]
+etymology_hook: "nīṅṅuka: native Dravidian, one word with Tamil nī and Kannada nīgu (DEDR 3685)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C225-otikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C225-KRIYA225-02]; assesses=[] -->
 
 **നീങ്ങുക** — *nīṅṅuka* — "to move".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നീങ്ങുക** (*nīṅṅuka*) is native Dravidian, one word with Tamil *nī* and Kannada *nīgu* (DEDR 3685).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

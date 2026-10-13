@@ -14,7 +14,8 @@ romanization: "āruṁ"
 concept_tag: ML-NISHEDHAM177-ARUM
 prerequisites: [ML-C176-viluka, ML-C176-jivikkuka]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "āruṁ: native Dravidian, ār 'who' (DEDR 5151) + -uṁ 'even, any'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C176-jivikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C177-NISHEDHAM177-01]; assesses=[] -->
 
 **ആരും** — *āruṁ* — "nobody (with a negative verb)". Malayalam negates a verb by joining **ഇല്ല** (*illa*) onto it: **ആരും വന്നില്ല** — *āruṁ vannilla* — "Nobody came." To say something is not a thing, it uses **അല്ല** (*alla*): **ഇത് എന്റെ വീട് അല്ല** — *itŭ enṟe vīṭŭ alla* — "This is not my house."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആരും** (*āruṁ*) is native Dravidian: *ārŭ*, "who" (DEDR 5151, with Tamil *yār*), with *-uṁ*, "even, any": with a negative verb, "not anyone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

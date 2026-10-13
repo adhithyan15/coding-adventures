@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:72307dd123e8ea2e",
+  "sourceHash": "fnv1a64:607737c2efea5736",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79787722b91fcffa",
+      "sourceHash": "fnv1a64:c0770303f40c41d4",
       "notice": null,
       "blocks": [
         {
@@ -261,6 +261,10 @@
             {
               "kind": "speech",
               "text": "Tamil builds it the same way, from the same two parts: வரும்போது (varumpōtu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. Both parts are native Dravidian: varuka, \"to come\" (DEDR 5270, with Tamil varu), and pōḷ, \"time\" (DEDR 4559, with Tamil pōtu)."
             }
           ]
         },
@@ -382,7 +386,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0ac576663db9f2f",
+      "sourceHash": "fnv1a64:e552973f8e77a9df",
       "notice": null,
       "blocks": [
         {
@@ -459,6 +463,10 @@
             {
               "kind": "speech",
               "text": "Both rows lose a vowel and gain the same ending, and whatever the past did to the stem of to come, the conditional keeps."
+            },
+            {
+              "kind": "speech",
+              "text": "Both parts are native Dravidian (DEDR 5270)."
             }
           ]
         },

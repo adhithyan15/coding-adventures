@@ -14,7 +14,8 @@ romanization: "erivuḷḷa"
 concept_tag: ML-QUAL165-ERIVULLA
 prerequisites: [ML-C165-madhuramulla, ML-C165-kaypulla]
 sounds: []
-roots: []
+roots: [dravidian-eri-burn, dravidian-ul-be]
+etymology_hook: "erivuḷḷa: native Dravidian, 'having pungency': erivŭ (DEDR 811) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C165-kaypulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C165-QUAL165-04]; assesses=[] -->
 
 **എരിവുള്ള** — *erivuḷḷa* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എരിവുള്ള** (*erivuḷḷa*) is native Dravidian, "having pungency": the noun for burning, pungency (DEDR 811, with Tamil *eri*, "to burn"), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

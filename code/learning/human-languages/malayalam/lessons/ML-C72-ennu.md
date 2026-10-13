@@ -11,9 +11,10 @@ romanization: ennŭ
 concept_tag: ML-QUOTATIVE
 prerequisites: [ML-C50-parayuka]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "ennŭ: native Dravidian, a form of the verb 'to say'; Tamil eṉ (DEDR 868)"
 duration:
-  max_seconds: 240
+  max_seconds: 264
 requires:
   knowledge: [ML-CONCEPT-C50-PARAYUKA-01, ML-CONCEPT-C32-ARIYUKA-01]
 introduces:
@@ -55,6 +56,11 @@ That is the whole of it, and it is worth more than the one word costs. English
 rebuilds a reported sentence — *I know Malayalam* becomes *that I know
 Malayalam*, and a different person or tense forces more changes still.
 **Malayalam leaves the sentence alone and puts a marker after it.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്ന്** (*ennŭ*) is native Dravidian, a form of the verb "to say, to sound"; DEDR 868 lists the root with Tamil *eṉ* and Kannada *en*.
 
 ## Grammar Lens: where it sits
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C50-PARAYUKA-01] -->

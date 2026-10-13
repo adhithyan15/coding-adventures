@@ -14,7 +14,8 @@ romanization: "uruḷi"
 concept_tag: ML-VASTU257-URULI
 prerequisites: [ML-C257-itanali, ML-C257-kitappumuri]
 sounds: []
-roots: []
+roots: [dravidian-urul-round]
+etymology_hook: "uruḷi: native Dravidian, 'the round one', from uruḷ 'round' (DEDR 664)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C257-kitappumuri]
 <!-- hl-knowledge: introduces=[ML-LEX-C257-VASTU257-05]; assesses=[] -->
 
 **ഉരുളി** — *uruḷi* — "a wide bronze cooking vessel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരുളി** (*uruḷi*) is native Dravidian, "the round one", from *uruḷ*, "circular, round" (DEDR 664, with Tamil *uruḷ*). DEDR 664 compares Sanskrit *uṇḍeraka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nirttuka"
 concept_tag: ML-VERB-NIRTTUKA
 prerequisites: [ML-C173-pathippikkuka, ML-C173-tutannuka]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nirttuka: native Dravidian, 'make stand', the causative of the standing verb; Tamil nil (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C173-tutannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C174-ACT174-01]; assesses=[] -->
 
 **നിർത്തുക** — *nirttuka* — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർത്തുക** (*nirttuka*) is native Dravidian, the causative of the verb "to stand": "make stand"; DEDR 3675 lists the root with Tamil *nil* and Kannada *nil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

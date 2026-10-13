@@ -14,7 +14,8 @@ romanization: "veṇṇa"
 concept_tag: ML-VASTU208-VENNA
 prerequisites: [ML-C208-moru, ML-C208-neyyu]
 sounds: []
-roots: []
+roots: [dravidian-vel-white, dravidian-ney-ghee]
+etymology_hook: "veṇṇa: native Dravidian, 'white fat'; DEDR 5496 lists Tamil veṇ-ṇey, veṇṇai 'butter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C208-neyyu]
 <!-- hl-knowledge: introduces=[ML-LEX-C208-VASTU208-04]; assesses=[] -->
 
 **വെണ്ണ** — *veṇṇa* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെണ്ണ** (*veṇṇa*) is native Dravidian, "white fat": DEDR 5496 lists Tamil *veṇ-ṇey*, *veṇṇai*, "butter", the word for "white" joined to the word for fat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

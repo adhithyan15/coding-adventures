@@ -11,7 +11,8 @@ romanization: "uppŭ"
 concept_tag: ML-NOUN-SALT
 prerequisites: [ML-C46-lamp, ML-C44-listen]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt]
+etymology_hook: "uppŭ: native Dravidian, one word with Tamil uppu and Kannada uppu (DEDR 2674)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Proto-Dravidian **\*uppu**, and the whole family kept it very nearly untouched: 
 There is a *p* sitting inside this word, and in Kannada it did not turn into an *h* the way the *p* of its fruit-word did. The shift that separated ಹಣ್ಣು from പഴം reached only the FIRST sound of a word. Inside one, the *p* stays where it was put — which is why salt looks so alike on all four sides of the family.
 
 The final ് here is the half-vowel this book romanizes *-ŭ*: a consonant let go of rather than cut off.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപ്പ്** (*uppŭ*) is native Dravidian, one word with Tamil *uppu*, Kannada *uppu* and Telugu *uppu* (DEDR 2674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

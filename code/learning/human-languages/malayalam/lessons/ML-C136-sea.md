@@ -11,7 +11,8 @@ romanization: "kaṭal"
 concept_tag: ML-WATER-SEA
 prerequisites: [ML-C135-bridge, ML-C135-village]
 sounds: []
-roots: []
+roots: [dravidian-katal-sea]
+etymology_hook: "kaṭal: native Dravidian, one word with Tamil kaṭal and Kannada kaḍal (DEDR 1118)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C135-village]
 <!-- hl-knowledge: introduces=[ML-LEX-C136-WATER-01]; assesses=[] -->
 
 **കടൽ** (*kaṭal*) — "the sea". Kerala's whole west side is on it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടൽ** (*kaṭal*) is native Dravidian, one word with Tamil *kaṭal*, Kannada *kaḍal* and Telugu *kaḍali* (DEDR 1118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

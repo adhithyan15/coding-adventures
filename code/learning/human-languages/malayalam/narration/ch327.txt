@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for tradition, then the Malayalam for cult
 You'll want to know: ചെമ്മരിയാട്.
 ചെമ്മരിയാട് — cemmariyāṭŭ — "a sheep".
 
+The word, taken apart.
+ചെമ്മരിയാട് (cemmariyāṭŭ) is native Dravidian: cem-, "red" (DEDR 1931), and āṭŭ, "goat, sheep" (DEDR 5152, with Tamil āṭu), with a middle part of uncertain origin. DEDR 5152 compares Sanskrit eḍa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for culture, then the Malayalam for a shee
 
 You'll want to know: മുതല.
 മുതല — mutala — "a crocodile".
+
+The word, taken apart.
+മുതല (mutala) is native Dravidian, one word with Tamil mutalai, Kannada mosaḷe and Telugu mosali (DEDR 4952). DEDR 4952 compares Sanskrit mācala.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a sheep, then the Malayalam for a croc
 You'll want to know: പല്ലി.
 പല്ലി — palli — "a house lizard".
 
+The word, taken apart.
+പല്ലി (palli) is native Dravidian, one word with Tamil palli, Kannada palli and Telugu palli (DEDR 3994). DEDR 3994 compares Sanskrit pallī.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a crocodile, then the Malayalam for a 
 You'll want to know: തേനീച്ച.
 തേനീച്ച — tēnīcca — "a bee".
 
+The word, taken apart.
+തേനീച്ച (tēnīcca) is native Dravidian, "the honey fly": tēn, "honey" (DEDR 3268), and īcca, "fly" (DEDR 533, with Tamil ī). DEDR 3268 marks the entry with a query.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a house lizard, then the Malayalam for
 
 You'll want to know: ചിലന്തി.
 ചിലന്തി — cilanti — "a spider".
+
+The word, taken apart.
+ചിലന്തി (cilanti) is native Dravidian: DEDR 2562 lists Malayalam cilanni with Tamil cilanti, "spider". DEDR 2562 compares Sanskrit śalaka.
 
 What you've built.
 One more word for this chapter.

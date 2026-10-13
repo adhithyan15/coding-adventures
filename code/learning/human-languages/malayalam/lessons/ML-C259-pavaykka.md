@@ -14,7 +14,8 @@ romanization: "pāvaykka"
 concept_tag: ML-VASTU259-PAVAYKKA
 prerequisites: [ML-C258-caturam, ML-C258-trikonam]
 sounds: []
-roots: []
+roots: [dravidian-pakal-bittergourd]
+etymology_hook: "pāvaykka: native Dravidian, pāval 'bitter gourd' (DEDR 4045) + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C258-trikonam]
 <!-- hl-knowledge: introduces=[ML-LEX-C259-VASTU259-01]; assesses=[] -->
 
 **പാവയ്ക്ക** — *pāvaykka* — "a bitter gourd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാവയ്ക്ക** (*pāvaykka*) is native Dravidian: *pāval*, "bitter gourd" (DEDR 4045, with Tamil *pākal*), with the ending for an unripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

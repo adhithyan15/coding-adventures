@@ -14,7 +14,8 @@ romanization: "varānta"
 concept_tag: ML-THINGS160-VARANTA
 prerequisites: [ML-C159-gerru, ML-C160-koni]
 sounds: []
-roots: []
+roots: [portuguese-varanda]
+etymology_hook: "varānta ← Portuguese varanda 'balcony, verandah'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C160-koni]
 <!-- hl-knowledge: introduces=[ML-LEX-C160-THINGS160-02]; assesses=[] -->
 
 **വരാന്ത** — *varānta* — "a verandah".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വരാന്ത** (*varānta*) ← Portuguese *varanda*, "balcony, verandah"; English *verandah* came by the same road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

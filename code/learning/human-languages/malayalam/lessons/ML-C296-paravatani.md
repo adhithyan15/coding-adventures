@@ -14,7 +14,8 @@ romanization: "paravatāni"
 concept_tag: ML-VASTU296-PARAVATANI
 prerequisites: [ML-C296-toluttu, ML-C296-balbu]
 sounds: []
-roots: []
+roots: [malayalam-paravatani]
+etymology_hook: "paravatāni 'carpet': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C296-balbu]
 <!-- hl-knowledge: introduces=[ML-LEX-C296-VASTU296-04]; assesses=[] -->
 
 **പരവതാനി** — *paravatāni* — "a carpet, a rug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരവതാനി** (*paravatāni*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "cūlŭ"
 concept_tag: ML-NOUN-BROOM
 prerequisites: [ML-C62-needle, ML-C60-crow]
 sounds: []
-roots: []
+roots: [dravidian-ci-sweep]
+etymology_hook: "cūlŭ: native Dravidian, from the verb 'to sweep'; Tamil cī (DEDR 2599)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, and a Kerala ചൂല് is a bundle of coconut-leaf ribs bou
 Sweeping the yard at first light is the opening work of a Kerala day, done before the kitchen is lit, and it leaves the ground marked in long strokes that stay until somebody walks on them.
 
 There is a second broom for indoors, softer, made of grass rather than leaf-rib, and the same word covers it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചൂല്** (*cūlŭ*) is native Dravidian, from the verb "to sweep"; DEDR 2599 lists the root with Tamil *cī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

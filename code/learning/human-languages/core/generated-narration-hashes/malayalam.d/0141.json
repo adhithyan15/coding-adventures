@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 141,
-  "sourceHash": "fnv1a64:c8e74ed1897491a7",
+  "sourceHash": "fnv1a64:df2e9ba752c9f685",
   "lessonIds": [
     "ML-C141-onam",
     "ML-C141-vishu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch141.txt",
   "json": "malayalam/narration/ch141.json",
-  "textHash": "fnv1a64:43543552936a1170",
-  "jsonHash": "fnv1a64:0c3544f9df0d31ad",
+  "textHash": "fnv1a64:5c714f42ae67d750",
+  "jsonHash": "fnv1a64:f935fa864517a93f",
   "findings": []
 }

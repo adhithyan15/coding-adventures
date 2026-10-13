@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 311,
-  "sourceHash": "fnv1a64:db691b227650db72",
+  "sourceHash": "fnv1a64:808ae4ccf5538964",
   "lessonIds": [
     "ML-C311-talotuka",
     "ML-C311-otukkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch311.txt",
   "json": "malayalam/narration/ch311.json",
-  "textHash": "fnv1a64:28f42118a9db97a5",
-  "jsonHash": "fnv1a64:ee5b247f705c22c1",
+  "textHash": "fnv1a64:556d37287605649f",
+  "jsonHash": "fnv1a64:e5d96b85eb0e42b5",
   "findings": []
 }

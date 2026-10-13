@@ -14,7 +14,8 @@ romanization: "carivŭ"
 concept_tag: ML-STHALAM280-CARIVU
 prerequisites: [ML-C280-pradesam, ML-C280-parampu]
 sounds: []
-roots: []
+roots: [dravidian-cari-slope]
+etymology_hook: "carivŭ: native Dravidian, the noun of the verb 'to slide, lean'; Tamil cari (DEDR 2360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C280-parampu]
 <!-- hl-knowledge: introduces=[ML-LEX-C280-STHALAM280-03]; assesses=[] -->
 
 **ചരിവ്** — *carivŭ* — "a slope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചരിവ്** (*carivŭ*) is native Dravidian, the noun of the verb "to slide, lean"; DEDR 2360 lists the root with Tamil *cari*, Kannada *sari* and Telugu *jaragu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

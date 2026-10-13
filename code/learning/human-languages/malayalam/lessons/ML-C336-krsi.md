@@ -14,7 +14,8 @@ romanization: "kṛṣi"
 concept_tag: ML-JOLI336-KRSI
 prerequisites: [ML-C336-vilppana, ML-C336-yantram]
 sounds: []
-roots: []
+roots: [sanskrit-krshi]
+etymology_hook: "kṛṣi ← Sanskrit kṛṣi 'ploughing', a tatsama (CDIAL 3448)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C336-yantram]
 <!-- hl-knowledge: introduces=[ML-LEX-C336-JOLI336-03]; assesses=[] -->
 
 **കൃഷി** — *kṛṣi* — "farming, agriculture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൃഷി** (*kṛṣi*) ← Sanskrit *kṛṣi*, "ploughing", taken over whole as a tatsama (CDIAL 3448). It is built on the root *kṛṣ*, "to drag, plough", like *karṣakan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

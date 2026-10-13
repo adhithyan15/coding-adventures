@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34f426d9556cb3bd",
+  "sourceHash": "fnv1a64:a6793f9ad2e1b3fa",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c62206c7dab31ab",
+      "sourceHash": "fnv1a64:ece3eb9bff2841e4",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തല (tala) and കൈ (kai) are both native Dravidian. DEDR 3103 lists tala with Tamil talai, Kannada tale and Telugu tala; DEDR 2023 lists kai with Tamil kai and Kannada kay."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -108,7 +119,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

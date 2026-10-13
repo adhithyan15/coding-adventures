@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for health, then the Malayalam for an eyel
 You'll want to know: എന്നും.
 എന്നും — ennuṁ — "every day, always".
 
+The word, taken apart.
+എന്നും (ennuṁ) is native Dravidian: DEDR 5151 lists it, "always", under the old question stem, with Tamil yā: "on whatever day".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an eyelid, then the Malayalam for ever
 
 You'll want to know: തീയതി.
 തീയതി — tīyati — "a date".
+
+The word, taken apart.
+തീയതി (tīyati) is a tadbhava of Sanskrit tithi, "a lunar day" (CDIAL 5810), reshaped in the mouth.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for every day, then the Malayalam for a da
 You'll want to know: വാരാന്ത്യം.
 വാരാന്ത്യം — vārāntyaṁ — "the weekend".
 
+The word, taken apart.
+വാരാന്ത്യം (vārāntyaṁ) is built from Sanskrit parts: vāra, "day of the week" (CDIAL 11547), and anta, "end" (CDIAL 347): the week's end.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a date, then the Malayalam for the wee
 You'll want to know: പെട്ടെന്ന്.
 പെട്ടെന്ന് — peṭṭennŭ — "quickly, suddenly".
 
+The word, taken apart.
+പെട്ടെന്ന് (peṭṭennŭ) is an expressive sound for suddenness followed by ennŭ, "saying" (DEDR 868): "with a peṭṭ".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the weekend, then the Malayalam for qu
 
 You'll want to know: മുൻകൂട്ടി.
 മുൻകൂട്ടി — munkūṭṭi — "in advance".
+
+The word, taken apart.
+മുൻകൂട്ടി (munkūṭṭi) is native Dravidian, "put together beforehand": mun, "before" (DEDR 5020), and kūṭṭi, from the verb "to bring together" (DEDR 1882, with Tamil kūṭu).
 
 What you've built.
 One more word for this chapter.

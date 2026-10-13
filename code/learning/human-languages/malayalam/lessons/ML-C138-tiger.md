@@ -11,7 +11,8 @@ romanization: "kaṭuva"
 concept_tag: ML-ANIMAL-TIGER
 prerequisites: [ML-C138-snake, ML-C138-monkey]
 sounds: []
-roots: []
+roots: [dravidian-katuva]
+etymology_hook: "kaṭuva: origin uncertain; DEDR 1140 lists Malayalam kaṭuvan 'male of cats, pigs', perhaps the same word"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C138-monkey]
 <!-- hl-knowledge: introduces=[ML-LEX-C138-ANIMALS-04]; assesses=[] -->
 
 **കടുവ** (*kaṭuva*) — "a tiger", in the forests of the hills.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടുവ** (*kaṭuva*) is of uncertain origin. DEDR 1140 lists Malayalam *kaṭuvan*, "the male of cats, pigs", with Tamil *kaṭuvaṉ*, "tom-cat", and the tiger's name may be the same word, but that is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -48,6 +48,11 @@ word for hygiene as a subject — the kind printed on a public notice — is
 *śucitvaṁ*, given here in sound only, because this book has not taught it. **വൃത്തി**
 is the one people say.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൃത്തി** (*vṛtti*) ← Sanskrit *vṛtti*, "mode of life, conduct" (CDIAL 12070), from the root *vṛt*, "to turn, to proceed".
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01] -->
 

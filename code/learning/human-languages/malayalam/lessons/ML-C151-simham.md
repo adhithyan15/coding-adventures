@@ -14,7 +14,8 @@ romanization: "simhaṁ"
 concept_tag: ML-THINGS151-SIMHAM
 prerequisites: [ML-C151-pottu, ML-C151-panni]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "simhaṁ ← Sanskrit siṁha 'lion', a tatsama (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C151-panni]
 <!-- hl-knowledge: introduces=[ML-LEX-C151-THINGS151-05]; assesses=[] -->
 
 **സിംഹം** — *simhaṁ* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സിംഹം** (*simhaṁ*) ← Sanskrit *siṁha*, "lion", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

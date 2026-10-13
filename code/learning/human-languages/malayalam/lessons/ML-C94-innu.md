@@ -11,7 +11,8 @@ romanization: "innŭ"
 concept_tag: ML-TIME-TODAY
 prerequisites: [ML-R93-plural-recall, ML-C23-divasam]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "innŭ 'today': native Dravidian, one word with Tamil iṉṟu and Kannada indu (DEDR 410)"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ never had a word for **this** one.
 The word goes **in front**, before the person and the verb. That is where a
 time word sits in this language, and you have been putting things there since
 you learned to say *now*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇന്ന്** (*innŭ*) is native Dravidian, built on the near-pointing base, "this (day)": DEDR 410 lists it with Tamil *iṉṟu* and Kannada *indu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C94-TODAY-01] -->

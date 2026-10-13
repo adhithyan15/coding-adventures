@@ -14,7 +14,8 @@ romanization: "āṟṟuka"
 concept_tag: ML-VERB-ARRUKA
 prerequisites: [ML-C190-nekkuka, ML-C190-kulaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-aru-cool]
+etymology_hook: "āṟṟuka: native Dravidian, one word with Tamil āṟu and Kannada āṟ (DEDR 404)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C190-kulaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C190-KRIYA190-05]; assesses=[] -->
 
 **ആറ്റുക** — *āṟṟuka* — "to cool (a hot drink) by pouring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആറ്റുക** (*āṟṟuka*) is native Dravidian, one word with Tamil *āṟu*, Kannada *āṟ* and Telugu *āṟu* (DEDR 404). It is the causative of the verb "to grow cool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "śāntamāya"
 concept_tag: ML-QUAL169-SANTAMAYA
 prerequisites: [ML-C169-buddhiyulla, ML-C169-matiyulla, ML-C101-uyaram, ML-C101-thadicha]
 sounds: []
-roots: []
+roots: [sanskrit-shanta, aaka-dravidian]
+etymology_hook: "śāntamāya: Sanskrit śānta 'calm' (CDIAL 12390) + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C169-matiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C169-QUAL169-03]; assesses=[] -->
 
 **ശാന്തമായ** — *śāntamāya* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശാന്തമായ** (*śāntamāya*) joins Sanskrit *śānta*, "abated, calm" (CDIAL 12390), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

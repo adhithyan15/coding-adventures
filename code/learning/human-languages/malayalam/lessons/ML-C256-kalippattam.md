@@ -14,7 +14,8 @@ romanization: "kaḷippāṭṭaṁ"
 concept_tag: ML-VASTU256-KALIPPATTAM
 prerequisites: [ML-C255-prinrar, ML-C256-vinodam]
 sounds: []
-roots: []
+roots: [dravidian-kali-play]
+etymology_hook: "kaḷippāṭṭaṁ: native kaḷi 'play' (DEDR 1374) + a second part of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C256-vinodam]
 <!-- hl-knowledge: introduces=[ML-LEX-C256-VASTU256-02]; assesses=[] -->
 
 **കളിപ്പാട്ടം** — *kaḷippāṭṭaṁ* — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കളിപ്പാട്ടം** (*kaḷippāṭṭaṁ*) begins with native *kaḷi*, "play" (DEDR 1374); the second part's origin is uncertain. DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

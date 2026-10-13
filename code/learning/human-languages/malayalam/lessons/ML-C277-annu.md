@@ -14,7 +14,8 @@ romanization: "annŭ"
 concept_tag: ML-SAMAYAM277-ANNU
 prerequisites: [ML-C277-varsikam, ML-C277-ikkalattu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "annŭ: native Dravidian; DEDR 1 lists Malayalam annu 'that day, then'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C277-ikkalattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C277-SAMAYAM277-04]; assesses=[] -->
 
 **അന്ന്** — *annŭ* — "on that day, back then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അന്ന്** (*annŭ*) is native Dravidian: DEDR 1 lists it, "that day, then", among the far-pointing words, with Tamil *aṉṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

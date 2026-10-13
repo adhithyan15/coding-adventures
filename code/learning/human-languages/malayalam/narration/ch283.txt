@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for an attempt, then the Malayalam for suc
 You'll want to know: അടിയന്തര.
 അടിയന്തര — aṭiyantara — "urgent, emergency".
 
+The word, taken apart.
+അടിയന്തര (aṭiyantara) is of uncertain origin; neither DEDR nor CDIAL lists it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for success, then the Malayalam for urgent
 
 You'll want to know: പ്രധാനപ്പെട്ട.
 പ്രധാനപ്പെട്ട — pradhānappeṭṭa — "important".
+
+The word, taken apart.
+പ്രധാനപ്പെട്ട (pradhānappeṭṭa) joins Sanskrit pradhāna, "chief, principal", to native peṭṭa, a form of the verb "to fall into, happen" (DEDR 3853).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for urgent, then the Malayalam for importa
 You'll want to know: സുരക്ഷിതമായ.
 സുരക്ഷിതമായ — surakṣitamāya — "safe".
 
+The word, taken apart.
+സുരക്ഷിതമായ (surakṣitamāya) joins Sanskrit surakṣita, "well protected" (CDIAL 13499), to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for important, then the Malayalam for safe
 You'll want to know: താൽക്കാലിക.
 താൽക്കാലിക — tālkkālika — "temporary".
 
+The word, taken apart.
+താൽക്കാലിക (tālkkālika) from Sanskrit tātkālika, "lasting for that time", taken over whole as a tatsama. Its parts are tat, "that", and kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for safe, then the Malayalam for temporary
 
 You'll want to know: നേരിട്ട്.
 നേരിട്ട് — nēriṭṭŭ — "directly, in person".
+
+The word, taken apart.
+നേരിട്ട് (nēriṭṭŭ) is native Dravidian: nēr, "straight, direct" (DEDR 3770, with Tamil nēr), and iṭṭu, "having put" (DEDR 442).
 
 What you've built.
 One more word for this chapter.

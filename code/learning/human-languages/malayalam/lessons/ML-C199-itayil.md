@@ -14,7 +14,8 @@ romanization: "iṭayil"
 concept_tag: ML-STHALAM199-ITAYIL
 prerequisites: [ML-C198-currum, ML-C199-malinyam]
 sounds: []
-roots: []
+roots: [dravidian-idai-interval]
+etymology_hook: "iṭayil: native Dravidian, iṭa 'interval, the place between' (DEDR 448) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C199-malinyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C199-STHALAM199-02]; assesses=[] -->
 
 **ഇടയിൽ** — *iṭayil* — "between, among".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടയിൽ** (*iṭayil*) is native Dravidian: *iṭa*, "interval, the place between" (DEDR 448, with Tamil *iṭai*), with the place ending *-il*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

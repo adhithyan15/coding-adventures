@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 189,
-  "sourceHash": "fnv1a64:deea379ea97c0575",
+  "sourceHash": "fnv1a64:f62806acc5520a91",
   "lessonIds": [
     "ML-C189-tuppuka",
     "ML-C189-piliyuka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch189.txt",
   "json": "malayalam/narration/ch189.json",
-  "textHash": "fnv1a64:92f4fe125f12d865",
-  "jsonHash": "fnv1a64:43c34ab6d2441a0f",
+  "textHash": "fnv1a64:1f915a564684a22a",
+  "jsonHash": "fnv1a64:87cf3e80fba3ea77",
   "findings": []
 }

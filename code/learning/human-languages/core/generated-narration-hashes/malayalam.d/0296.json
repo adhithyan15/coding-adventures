@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 296,
-  "sourceHash": "fnv1a64:00c9530ad6d6a564",
+  "sourceHash": "fnv1a64:1e9e064b5404a0e3",
   "lessonIds": [
     "ML-C296-kattila",
     "ML-C296-toluttu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch296.txt",
   "json": "malayalam/narration/ch296.json",
-  "textHash": "fnv1a64:9cff7df5adc05e98",
-  "jsonHash": "fnv1a64:8cd17a6920901e93",
+  "textHash": "fnv1a64:04ca06d7e8a294ad",
+  "jsonHash": "fnv1a64:7aebd0f6ad826cbf",
   "findings": []
 }

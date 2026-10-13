@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for other, then the Malayalam for wrong.
 You'll want to know: അഭിനന്ദനങ്ങൾ.
 അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ) — "congratulations". The ending ‑ങ്ങൾ is the plural: many good wishes.
 
+The word, taken apart.
+അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ) from Sanskrit abhinandana, "rejoicing, congratulation", taken over whole as a tatsama, with the feminine ending -ḷ. Malayalam uses it in the plural, many congratulations.
+
 What you've built.
 Good news deserves a word of its own.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for wrong, then the Malayalam for congratu
 
 You'll want to know: ക്ഷണം.
 ക്ഷണം (kṣaṇaṁ) — "an invitation". The ക്ഷ is k and ṣ joined into one.
+
+The word, taken apart.
+ക്ഷണം (kṣaṇaṁ) is probably Sanskrit kṣaṇa, "a moment; leisure; a festival" (CDIAL 3642); the sense "invitation" grew up in Malayalam, and how is not certain.
 
 What you've built.
 How a celebration begins.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for congratulations, then the Malayalam fo
 You'll want to know: സമ്മാനം.
 സമ്മാനം (sammānaṁ) — "a gift", and also "a prize".
 
+The word, taken apart.
+സമ്മാനം (sammānaṁ) from Sanskrit sammāna, "honour, respect", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. A gift is an honour shown.
+
 What you've built.
 What you bring to the celebration.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an invitation, then the Malayalam for 
 You'll want to know: സ്വാഗതം.
 സ്വാഗതം (svāgataṁ) — "welcome", the formal greeting on a signboard or at a door.
 
+The word, taken apart.
+സ്വാഗതം (svāgataṁ) from Sanskrit svāgata, "welcome", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13920). Its parts are su, "well", and āgata, "come".
+
 What you've built.
 The formal greeting for a guest.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a gift, then the Malayalam for welcome
 
 You'll want to know: ആശംസകൾ.
 ആശംസകൾ (āśaṁsakaḷ) — "good wishes". Like അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ), it is said in the plural.
+
+The word, taken apart.
+ആശംസകൾ (āśaṁsakaḷ) from Sanskrit āśaṁsā, "hope, wish", taken over whole as a tatsama, with the feminine ending -ḷ. Malayalam uses it in the plural.
 
 What you've built.
 Wishes, many of them.

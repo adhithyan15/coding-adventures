@@ -11,7 +11,8 @@ romanization: "māla"
 concept_tag: ML-NOUN-GARLAND
 prerequisites: [ML-C52-flower, ML-C50-farewell]
 sounds: []
-roots: []
+roots: [dravidian-malai-garland]
+etymology_hook: "māla: Tamil mālai, Kannada māle (DEDR 4827); CDIAL 10092 takes Sanskrit mālā itself from Dravidian"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *mālā*, a garland or a string of things, borrowed all across the sout
 The word is also a string in the abstract — a series, a row — which is why a rosary and a necklace and a list can all be one.
 
 And that closes the door: the way in, the seat, the pattern on the ground, the flower and the garland. A guest arriving at a Kerala house in the old way would meet all five before a word was exchanged.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാല** (*māla*) has the same word beside it in Tamil *mālai*, Kannada *māle* and Telugu *māla* (DEDR 4827). Sanskrit has *mālā*, "garland", as well, and CDIAL 10092 takes the Sanskrit word from Dravidian; so the loan may have run from the south northward rather than the other way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

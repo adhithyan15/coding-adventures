@@ -11,7 +11,8 @@ gloss: the post — what carries the letter, and the word on the red box
 concept_tag: ML-NOUN-POST
 prerequisites: [ML-C110-kattu]
 sounds: []
-roots: []
+roots: [hindustani-tapal]
+etymology_hook: "tapāl came in through Hindustani and Marathi ṭapāl 'the post'; its earlier history is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +51,11 @@ you drop a letter into.
 
 **The ending is one you can already read.** **ൽ** is the chillu you have met
 closing other words — a bare *l* with no vowel after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തപാൽ** (*tapāl*) came in through Hindustani and Marathi *ṭapāl*, "the post", with the postal service itself. Its earlier history is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-POST-01, ML-LEX-C110-LETTER-01] -->

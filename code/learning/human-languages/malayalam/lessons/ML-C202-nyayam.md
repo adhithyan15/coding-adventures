@@ -14,7 +14,8 @@ romanization: "nyāyaṁ"
 concept_tag: ML-KARANAM202-NYAYAM
 prerequisites: [ML-C202-gunam, ML-C202-dosam]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya]
+etymology_hook: "nyāyaṁ ← Sanskrit nyāya 'rule, method', a tatsama (CDIAL 7614)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C202-dosam]
 <!-- hl-knowledge: introduces=[ML-LEX-C202-KARANAM202-05]; assesses=[] -->
 
 **ന്യായം** — *nyāyaṁ* — "fairness, a justification".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ന്യായം** (*nyāyaṁ*) ← Sanskrit *nyāya*, "rule, method", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7614).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

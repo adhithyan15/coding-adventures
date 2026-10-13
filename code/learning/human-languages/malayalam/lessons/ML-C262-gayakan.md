@@ -14,7 +14,8 @@ romanization: "gāyakan"
 concept_tag: ML-JOLI262-GAYAKAN
 prerequisites: [ML-C262-kalakaran, ML-C262-pujari]
 sounds: []
-roots: []
+roots: [sanskrit-gayaka]
+etymology_hook: "gāyakan ← Sanskrit gāyaka 'singer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C262-pujari]
 <!-- hl-knowledge: introduces=[ML-LEX-C262-JOLI262-05]; assesses=[] -->
 
 **ഗായകൻ** — *gāyakan* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗായകൻ** (*gāyakan*) ← Sanskrit *gāyaka*, "singer", taken over whole as a tatsama, with the masculine ending *-n*. It is built on the root *gai*, "to sing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

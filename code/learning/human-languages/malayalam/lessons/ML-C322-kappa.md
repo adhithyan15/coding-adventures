@@ -14,7 +14,8 @@ romanization: "kappa"
 concept_tag: ML-VASTU322-KAPPA
 prerequisites: [ML-C322-cappatti, ML-C322-porotta]
 sounds: []
-roots: []
+roots: [malayalam-kappa]
+etymology_hook: "kappa 'tapioca': of uncertain origin; tapioca came to Kerala from South America by sea"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C322-porotta]
 <!-- hl-knowledge: introduces=[ML-LEX-C322-VASTU322-04]; assesses=[] -->
 
 **കപ്പ** — *kappa* — "tapioca".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കപ്പ** (*kappa*) is of uncertain origin. Tapioca came to Kerala from South America by sea, and its Malayalam name has no secure source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

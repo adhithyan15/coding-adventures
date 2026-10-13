@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for an injection, then the Malayalam for a
 You'll want to know: എക്കിൾ.
 എക്കിൾ — ekkiḷ — "a hiccup".
 
+The word, taken apart.
+എക്കിൾ (ekkiḷ) is native Dravidian, one word with Kannada ekku and Telugu ekkili (DEDR 772). The word imitates the sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an ambulance, then the Malayalam for a
 
 You'll want to know: കോട്ടുവാ.
 കോട്ടുവാ — kōṭṭuvā — "a yawn".
+
+The word, taken apart.
+കോട്ടുവാ (kōṭṭuvā) is a Dravidian word. DEDR 2172 lists it as kōṭṭāvi, "yawn, gaping", with Tamil koṭṭāvi, "yawn", and compares them, with a query, to Kui and Kuwi words for drowsiness and dozing.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a hiccup, then the Malayalam for a yaw
 You'll want to know: ലേപനം.
 ലേപനം — lēpanaṁ — "an ointment".
 
+The word, taken apart.
+ലേപനം (lēpanaṁ) from Sanskrit lēpana, "the act of smearing", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11111).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a yawn, then the Malayalam for an oint
 You'll want to know: കഷായം.
 കഷായം — kaṣāyaṁ — "a herbal decoction".
 
+The word, taken apart.
+കഷായം (kaṣāyaṁ) from Sanskrit kaṣāya, "astringent; an astringent juice", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 2974).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for an ointment, then the Malayalam for a 
 
 You'll want to know: ഗർഭിണി.
 ഗർഭിണി — garbhiṇi — "a pregnant woman".
+
+The word, taken apart.
+ഗർഭിണി (garbhiṇi) from Sanskrit garbhiṇī, "pregnant", taken over whole as a tatsama (CDIAL 4062). It is built on garbha, "womb".
 
 What you've built.
 One more word for this chapter.

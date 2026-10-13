@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a herbal decoction, then the Malayalam
 You'll want to know: നൂറ്റാണ്ട്.
 നൂറ്റാണ്ട് — nūṟṟāṇṭŭ — "a century".
 
+The word, taken apart.
+നൂറ്റാണ്ട് (nūṟṟāṇṭŭ) is native Dravidian, "a hundred years": DEDR 3729 lists it, nūṟṟ-āṇṭu, from nūṟu, "hundred", and āṇṭu, "year" (DEDR 5153, with Tamil yāṇṭu).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a pregnant woman, then the Malayalam f
 
 You'll want to know: പതിറ്റാണ്ട്.
 പതിറ്റാണ്ട് — patiṟṟāṇṭŭ — "a decade".
+
+The word, taken apart.
+പതിറ്റാണ്ട് (patiṟṟāṇṭŭ) is native Dravidian, "ten years": the joining form of "ten" (DEDR 3918) and āṇṭu, "year" (DEDR 5153, with Tamil yāṇṭu).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a century, then the Malayalam for a de
 You'll want to know: കലണ്ടർ.
 കലണ്ടർ — kalaṇṭar — "a calendar".
 
+The word, taken apart.
+കലണ്ടർ (kalaṇṭar) from English calendar, from Latin calendae, the first day of the month.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a decade, then the Malayalam for a cal
 You'll want to know: പണ്ട്.
 പണ്ട് — paṇṭŭ — "long ago".
 
+The word, taken apart.
+പണ്ട് (paṇṭŭ) is native Dravidian: DEDR 3999 lists it, "antiquity", beside paḻa, "old", with Tamil paḻa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a calendar, then the Malayalam for lon
 
 You'll want to know: പുലർച്ചെ.
 പുലർച്ചെ — pularcce — "at dawn, very early".
+
+The word, taken apart.
+പുലർച്ചെ (pularcce) is native Dravidian, from pular, "dawn"; DEDR 4305 lists Malayalam pularcca, "daybreak", beside Tamil pular.
 
 What you've built.
 One more word for this chapter.

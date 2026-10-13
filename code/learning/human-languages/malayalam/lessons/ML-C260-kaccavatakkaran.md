@@ -14,7 +14,8 @@ romanization: "kaccavaṭakkāran"
 concept_tag: ML-JOLI260-KACCAVATAKKARAN
 prerequisites: [ML-C259-katala, ML-C260-kaccavatam]
 sounds: []
-roots: []
+roots: [malayalam-kaccavatam]
+etymology_hook: "kaccavaṭakkāran: kaccavaṭam 'trade' (uncertain origin) + -kkāran 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C260-kaccavatam]
 <!-- hl-knowledge: introduces=[ML-LEX-C260-JOLI260-02]; assesses=[] -->
 
 **കച്ചവടക്കാരൻ** — *kaccavaṭakkāran* — "a shopkeeper, a trader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കച്ചവടക്കാരൻ** (*kaccavaṭakkāran*) is *kaccavaṭam*, "trade", a word of uncertain origin, with *-kkāran*, the ending for a person who does something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kōḻi"
 concept_tag: ML-NOUN-HEN
 prerequisites: [ML-C60-goat, ML-C58-a-little]
 sounds: []
-roots: []
+roots: [dravidian-kozhi-fowl]
+etymology_hook: "kōḻi: native Dravidian, one word with Tamil kōḻi and Kannada kōḻi (DEDR 2248)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *kōḻi*, and carrying the ഴ that Malayalam 
 One word does for hen and cock alike. Where a speaker needs to separate them, a second word goes in front.
 
 It is also the clock of a Kerala house: a കോഴി wakes the yard well before anyone has thought about the hour.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോഴി** (*kōḻi*) is native Dravidian, one word with Tamil *kōḻi*, Kannada *kōḻi* and Telugu *kōḍi* (DEDR 2248).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

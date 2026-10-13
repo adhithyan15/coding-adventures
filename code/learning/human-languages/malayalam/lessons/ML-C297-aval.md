@@ -14,7 +14,8 @@ romanization: "aval"
 concept_tag: ML-VASTU297-AVAL
 prerequisites: [ML-C296-virippu, ML-C297-maida]
 sounds: []
-roots: []
+roots: [dravidian-aval-flatrice]
+etymology_hook: "aval: native Dravidian, one word with Tamil aval and Kannada aval (DEDR 2391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C297-maida]
 <!-- hl-knowledge: introduces=[ML-LEX-C297-VASTU297-02]; assesses=[] -->
 
 **അവൽ** — *aval* — "flattened rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവൽ** (*aval*) is native Dravidian, one word with Tamil *aval* and Kannada *aval* (DEDR 2391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

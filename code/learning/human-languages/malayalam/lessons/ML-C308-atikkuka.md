@@ -14,7 +14,8 @@ romanization: "aṭikkuka"
 concept_tag: ML-VERB-ATIKKUKA
 prerequisites: [ML-C307-pottikkuka, ML-C307-pukalttuka]
 sounds: []
-roots: []
+roots: [dravidian-adi-beat]
+etymology_hook: "aṭikkuka: native Dravidian, one word with Tamil aṭu and Kannada aḍacu (DEDR 77)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C307-pukalttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C308-KRIYA308-01]; assesses=[] -->
 
 **അടിക്കുക** — *aṭikkuka* — "to hit, to strike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടിക്കുക** (*aṭikkuka*) is native Dravidian, one word with Tamil *aṭu*, Kannada *aḍacu* and Telugu *aḍucu* (DEDR 77).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

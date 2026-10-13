@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 327,
-  "sourceHash": "fnv1a64:157455cb10f11320",
+  "sourceHash": "fnv1a64:1068cf48d49164a0",
   "lessonIds": [
     "ML-C327-cemmariyatu",
     "ML-C327-mutala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch327.txt",
   "json": "malayalam/narration/ch327.json",
-  "textHash": "fnv1a64:a4ae7ab0601f5597",
-  "jsonHash": "fnv1a64:3b286cb5c9caef1f",
+  "textHash": "fnv1a64:431c01853d2ce3b6",
+  "jsonHash": "fnv1a64:53cf701deeaef1c4",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pakal"
 concept_tag: ML-SAMAYAM237-PAKAL
 prerequisites: [ML-C236-sandhya, ML-C236-nimisam]
 sounds: []
-roots: []
+roots: [dravidian-pakal-day]
+etymology_hook: "pakal: native Dravidian, one word with Tamil pakal and Kannada pagal (DEDR 3805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C236-nimisam]
 <!-- hl-knowledge: introduces=[ML-LEX-C237-SAMAYAM237-01]; assesses=[] -->
 
 **പകൽ** — *pakal* — "daytime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പകൽ** (*pakal*) is native Dravidian, one word with Tamil *pakal*, Kannada *pagal* and Telugu *pagalu* (DEDR 3805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

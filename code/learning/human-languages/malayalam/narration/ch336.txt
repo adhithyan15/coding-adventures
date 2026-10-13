@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for homework, then the Malayalam for a let
 You'll want to know: വിൽപ്പന.
 വിൽപ്പന — vilppana — "a sale".
 
+The word, taken apart.
+വിൽപ്പന (vilppana) is native Dravidian: DEDR 5421 lists it, "sale", under the verb "to sell", with Tamil vil.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a letter, then the Malayalam for a sal
 
 You'll want to know: യന്ത്രം.
 യന്ത്രം — yantraṁ — "a machine".
+
+The word, taken apart.
+യന്ത്രം (yantraṁ) from Sanskrit yantra, "controlling device; any implement", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 10412).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a sale, then the Malayalam for a machi
 You'll want to know: കൃഷി.
 കൃഷി — kṛṣi — "farming, agriculture".
 
+The word, taken apart.
+കൃഷി (kṛṣi) from Sanskrit kṛṣi, "ploughing", taken over whole as a tatsama (CDIAL 3448). It is built on the root kṛṣ, "to drag, plough", like karṣakan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a machine, then the Malayalam for farm
 You'll want to know: ശാസ്ത്രം.
 ശാസ്ത്രം — śāstraṁ — "science".
 
+The word, taken apart.
+ശാസ്ത്രം (śāstraṁ) from Sanskrit śāstra, "command, treatise", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12422).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for farming, then the Malayalam for scienc
 
 You'll want to know: ചരിത്രം.
 ചരിത്രം — caritraṁ — "history".
+
+The word, taken apart.
+ചരിത്രം (caritraṁ) from Sanskrit caritra, "going; behaviour", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4691). Conduct over time became history.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "uttaravādittaṁ"
 concept_tag: ML-KARANAM243-UTTARAVADITTAM
 prerequisites: [ML-C243-olikalivu, ML-C243-kurram]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttaravādittaṁ: Sanskrit uttara 'answer' (CDIAL 1767) + vāditva 'being one who speaks'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C243-kurram]
 <!-- hl-knowledge: introduces=[ML-LEX-C243-KARANAM243-03]; assesses=[] -->
 
 **ഉത്തരവാദിത്തം** — *uttaravādittaṁ* — "responsibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉത്തരവാദിത്തം** (*uttaravādittaṁ*) is built from Sanskrit *uttara*, "answer" (CDIAL 1767), and *vāditva*, "being a speaker": responsibility is being the one who must answer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sōppŭ"
 concept_tag: ML-THINGS147-SOPPU
 prerequisites: [ML-C146-kannati, ML-C146-cippu]
 sounds: []
-roots: []
+roots: [english-soap]
+etymology_hook: "sōppŭ ← English soap"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C146-cippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C147-THINGS147-01]; assesses=[] -->
 
 **സോപ്പ്** — *sōppŭ* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സോപ്പ്** (*sōppŭ*) ← English *soap*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

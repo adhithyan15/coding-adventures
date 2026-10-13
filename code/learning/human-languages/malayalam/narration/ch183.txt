@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to roast, then the Malayalam for to po
 You'll want to know: തിരഞ്ഞെടുക്കുക.
 തിരഞ്ഞെടുക്കുക — tiraññeṭukkuka — "to choose".
 
+The word, taken apart.
+തിരഞ്ഞെടുക്കുക (tiraññeṭukkuka) is native Dravidian, "take up having searched": the past of the searching verb (DEDR 3242, with Tamil tirakku) and the verb "to lift, take up" (DEDR 851, with Tamil eḻu, "to rise").
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to pour, then the Malayalam for to cho
 
 You'll want to know: ഉപയോഗിക്കുക.
 ഉപയോഗിക്കുക — upayōgikkuka — "to use".
+
+The word, taken apart.
+ഉപയോഗിക്കുക (upayōgikkuka) is built on Sanskrit upayōga, "use, application", with the ending that makes a Malayalam verb.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to choose, then the Malayalam for to u
 You'll want to know: ശ്രമിക്കുക.
 ശ്രമിക്കുക — śramikkuka — "to try".
 
+The word, taken apart.
+ശ്രമിക്കുക (śramikkuka) is built on Sanskrit śrama, "labour, effort" (CDIAL 12682), with the ending that makes a Malayalam verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to use, then the Malayalam for to try.
 You'll want to know: കിട്ടുക.
 കിട്ടുക — kiṭṭuka — "to get, to receive".
 
+The word, taken apart.
+കിട്ടുക (kiṭṭuka) is native Dravidian, one word with Tamil kiṭṭu, Kannada kiṭṭu and Telugu kiṭṭu (DEDR 1538). Its first sense is "to come to hand, to reach".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to try, then the Malayalam for to get.
 
 You'll want to know: നഷ്ടപ്പെടുക.
 നഷ്ടപ്പെടുക — naṣṭappeṭuka — "to lose".
+
+The word, taken apart.
+നഷ്ടപ്പെടുക (naṣṭappeṭuka) joins Sanskrit naṣṭa, "lost, destroyed" (CDIAL 7027), to native peṭuka, "to fall into, to happen" (DEDR 3853, with Tamil paṭu): "to fall into loss".
 
 What you've built.
 One more word for this chapter.

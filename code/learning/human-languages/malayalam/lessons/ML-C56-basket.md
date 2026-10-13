@@ -11,7 +11,8 @@ romanization: "koṭṭa"
 concept_tag: ML-NOUN-BASKET
 prerequisites: [ML-C56-mat, ML-C54-branch]
 sounds: []
-roots: []
+roots: [dravidian-kotta-basket]
+etymology_hook: "koṭṭa: native Dravidian, one word with Tamil koṭṭam (DEDR 2060)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and plaited from bamboo or palm strip like the mat before it. A ക�
 Kerala sizes them by trade rather than by measure, so a fish കൊട്ട and a grain കൊട്ട are different objects under one word, and the market knows which is meant.
 
 The doubled ട in the middle is held, the way the doubled sound in the seed-word was. Malayalam does a great deal of work with the length of a consonant.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊട്ട** (*koṭṭa*) is native Dravidian, one word with Tamil *koṭṭam* (DEDR 2060).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

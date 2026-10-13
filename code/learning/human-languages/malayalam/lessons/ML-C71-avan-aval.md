@@ -11,7 +11,8 @@ romanization: "avan / avaḷ"
 concept_tag: ML-THIRD-PERSON-FAMILIAR
 prerequisites: [ML-C41-that, ML-C41-this]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "avan, avaḷ: native Dravidian, 'that man', 'that woman'; Tamil avaṉ, avaḷ (DEDR 1)"
 duration:
   max_seconds: 240
 requires:
@@ -68,6 +69,8 @@ worth noticing because the two languages have been agreeing on the small
 grammatical words far more often than on the everyday nouns.
 
 A step up in respect needs a different word, and it arrives in the next lesson.
+
+**Where the words come from.** Both are native Dravidian, the far-pointing base with a masculine or feminine ending: DEDR 1 lists them with Tamil *avaṉ*, *avaḷ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C71-AVAN-AVAL-01, ML-LEX-C41-DEIXIS-02] -->

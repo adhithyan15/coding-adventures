@@ -14,7 +14,8 @@ romanization: "ciṭṭayuḷḷa"
 concept_tag: ML-GUNAM247-CITTAYULLA
 prerequisites: [ML-C247-kasantiyulla, ML-C247-curunta]
 sounds: []
-roots: []
+roots: [malayalam-citta, dravidian-ul-be]
+etymology_hook: "ciṭṭayuḷḷa: ciṭṭa 'order', of uncertain origin, + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C247-curunta]
 <!-- hl-knowledge: introduces=[ML-LEX-C247-GUNAM247-05]; assesses=[] -->
 
 **ചിട്ടയുള്ള** — *ciṭṭayuḷḷa* — "orderly, disciplined".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിട്ടയുള്ള** (*ciṭṭayuḷḷa*) is "having order": *ciṭṭa*, a word of uncertain origin, with the native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

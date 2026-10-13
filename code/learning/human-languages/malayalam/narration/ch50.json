@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Leave",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1c90435d2ea171b5",
+  "sourceHash": "fnv1a64:f14e9ae694536488",
   "lessons": [
     {
       "id": "ML-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6ef0773b8b46c44",
+      "sourceHash": "fnv1a64:4818a39a5220f338",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇപ്പോൾ (ippōḷ) is native Dravidian, \"this time\": the near-pointing base of itŭ (DEDR 410) joined to a word for \"time\" (DEDR 4559, with Tamil poḻutu, pōtu and Kannada pottu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:002afe91b891e15d",
+      "sourceHash": "fnv1a64:9d05f2c036103ed7",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മറ്റന്നാൾ (maṟṟannāḷ) is native Dravidian, built from a word for \"other\" (DEDR 4766, with Tamil maṟṟu), a short pointing piece, and nāḷ, \"day\" (DEDR 3656, with Tamil nāḷ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e3425cd8b14f176",
+      "sourceHash": "fnv1a64:641412a0f46c187c",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +384,10 @@
             {
               "kind": "speech",
               "text": "-ഉക (-uka) is the dictionary ending you have seen on every verb in this book: aṟiyuka, cintikkuka, cōdikkuka, cērkkuka."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4031 lists paṟayuka with Tamil paṟai and Kannada paṟe."
             }
           ]
         },
@@ -446,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a9b3e3853847f7e",
+      "sourceHash": "fnv1a64:97ffcaa3241a8214",
       "notice": null,
       "blocks": [
         {
@@ -491,6 +517,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യാത്ര (yātra) from Sanskrit yātrā, \"journey\", taken over whole as a tatsama (CDIAL 10456). It is built on the Sanskrit root yā, \"to go\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -501,7 +538,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -550,7 +587,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -581,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4a52212435d92b8",
+      "sourceHash": "fnv1a64:9f72f63f852654b3",
       "notice": null,
       "blocks": [
         {
@@ -626,6 +663,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുറപ്പെടുക (puṟappeṭuka) is native Dravidian, \"to come to be outside\": a word for \"the outside\" (DEDR 4333, with Tamil puṟam) joined to the verb \"to happen, fall into\" (DEDR 3853, with Tamil paṭu and Kannada paḍu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -636,7 +684,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -685,7 +733,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -716,7 +764,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a90d2563583653ed",
+      "sourceHash": "fnv1a64:f50281b6ef7c911d",
       "notice": null,
       "blocks": [
         {
@@ -761,6 +809,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിട (viṭa) is native Dravidian, the noun of the verb \"to let go, to release\"; DEDR 5393 lists the root with Tamil viṭu, Kannada biḍu and Telugu viḍu. DEDR 5393 compares Sanskrit avamocana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -771,7 +830,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -820,7 +879,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

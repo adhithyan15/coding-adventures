@@ -14,7 +14,8 @@ romanization: "nikuti"
 concept_tag: ML-JOLI301-NIKUTI
 prerequisites: [ML-C300-nastam, ML-C301-karar]
 sounds: []
-roots: []
+roots: [malayalam-nikuti]
+etymology_hook: "nikuti 'tax': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C301-karar]
 <!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-02]; assesses=[] -->
 
 **നികുതി** — *nikuti* — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നികുതി** (*nikuti*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

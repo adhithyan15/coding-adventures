@@ -11,7 +11,8 @@ romanization: "dōśa"
 concept_tag: ML-DISH-DOSA
 prerequisites: [ML-C131-vegetables, ML-C131-onion]
 sounds: []
-roots: []
+roots: [dravidian-tosai-dosa]
+etymology_hook: "dōśa: native Dravidian, one word with Tamil tōcai and Kannada dōse (DEDR 3542)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C131-onion]
 <!-- hl-knowledge: introduces=[ML-LEX-C132-DISHES-01]; assesses=[] -->
 
 **ദോശ** (*dōśa*) — a thin rice pancake, often eaten at **പ്രാതൽ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദോശ** (*dōśa*) is native Dravidian, one word with Tamil *tōcai*, Kannada *dōse* and Telugu *dōse* (DEDR 3542). DEDR 3542 compares Sanskrit *dhosaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

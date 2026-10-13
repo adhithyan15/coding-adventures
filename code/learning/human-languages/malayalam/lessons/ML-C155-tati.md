@@ -14,7 +14,8 @@ romanization: "tāṭi"
 concept_tag: ML-THINGS155-TATI
 prerequisites: [ML-C154-nerri, ML-C155-kavil, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [malayalam-tadi-chin]
+etymology_hook: "tāṭi 'chin, beard': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C155-kavil]
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-02]; assesses=[] -->
 
 **താടി** — *tāṭi* — "a chin, a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താടി** (*tāṭi*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

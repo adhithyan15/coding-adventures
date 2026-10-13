@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 335,
-  "sourceHash": "fnv1a64:237a8169458b86c4",
+  "sourceHash": "fnv1a64:4836ca90ce58c8ef",
   "lessonIds": [
     "ML-C335-birudam",
     "ML-C335-visayam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch335.txt",
   "json": "malayalam/narration/ch335.json",
-  "textHash": "fnv1a64:7861db53d452c372",
-  "jsonHash": "fnv1a64:84ff397f63fda690",
+  "textHash": "fnv1a64:4f7e3d228d3e7a8a",
+  "jsonHash": "fnv1a64:b5b8789c8cb669ee",
   "findings": []
 }

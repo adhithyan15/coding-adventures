@@ -14,7 +14,8 @@ romanization: "meḻukutiri"
 concept_tag: ML-VASTU207-MELUKUTIRI
 prerequisites: [ML-C206-orra, ML-C207-tara]
 sounds: []
-roots: []
+roots: [dravidian-mezhuku-wax, dravidian-tiri-turn]
+etymology_hook: "meḻukutiri: native Dravidian, 'wax wick': meḻuku (DEDR 5082) + tiri 'wick' (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C207-tara]
 <!-- hl-knowledge: introduces=[ML-LEX-C207-VASTU207-02]; assesses=[] -->
 
 **മെഴുകുതിരി** — *meḻukutiri* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മെഴുകുതിരി** (*meḻukutiri*) is native Dravidian, "wax wick": *meḻuku*, "wax" (DEDR 5082, with Tamil *meḻuku*), and *tiri*, "a twist, a wick" (DEDR 3246, with Tamil *tiri*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

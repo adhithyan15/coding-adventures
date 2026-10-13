@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 220,
-  "sourceHash": "fnv1a64:e1b2dbcc7fd98a93",
+  "sourceHash": "fnv1a64:18f7e816eb2c3d4d",
   "lessonIds": [
     "ML-C220-sahapravarttakan",
     "ML-C220-udyogasthan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch220.txt",
   "json": "malayalam/narration/ch220.json",
-  "textHash": "fnv1a64:965148a3d37df94e",
-  "jsonHash": "fnv1a64:183a52584b2a0efc",
+  "textHash": "fnv1a64:ac8d8c7effdb0561",
+  "jsonHash": "fnv1a64:500c92f414b17ef8",
   "findings": []
 }

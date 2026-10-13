@@ -14,7 +14,8 @@ romanization: "naṭuvil"
 concept_tag: ML-STHALAM238-NATUVIL
 prerequisites: [ML-C237-pirrennu, ML-C237-mininnannu]
 sounds: []
-roots: []
+roots: [dravidian-natu-middle]
+etymology_hook: "naṭuvil: native Dravidian, naṭu 'middle' + the place ending; Tamil naṭu (DEDR 3584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C237-mininnannu]
 <!-- hl-knowledge: introduces=[ML-LEX-C238-STHALAM238-01]; assesses=[] -->
 
 **നടുവിൽ** — *naṭuvil* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നടുവിൽ** (*naṭuvil*) is native Dravidian, *naṭu*, "middle", with the place ending *-il*; DEDR 3584 lists the root with Tamil *naṭu*, Kannada *naḍu* and Telugu *naḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

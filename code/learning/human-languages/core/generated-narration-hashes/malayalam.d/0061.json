@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 61,
-  "sourceHash": "fnv1a64:dea1a884505d1d66",
+  "sourceHash": "fnv1a64:5013b58b564e91cb",
   "lessonIds": [
     "ML-C61-coconut",
     "ML-C61-oil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch61.txt",
   "json": "malayalam/narration/ch61.json",
-  "textHash": "fnv1a64:93241102b85f87c7",
-  "jsonHash": "fnv1a64:2c52399256aff6a9",
+  "textHash": "fnv1a64:5a4cc2752b48cc5b",
+  "jsonHash": "fnv1a64:2871681f8ab13525",
   "findings": []
 }

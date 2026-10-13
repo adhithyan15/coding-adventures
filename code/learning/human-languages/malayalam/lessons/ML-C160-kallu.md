@@ -14,7 +14,8 @@ romanization: "kallŭ"
 concept_tag: ML-THINGS160-KALLU
 prerequisites: [ML-C160-malavillu, ML-C160-vellaccattam]
 sounds: []
-roots: []
+roots: [dravidian-kal-stone]
+etymology_hook: "kallŭ: native Dravidian, one word with Tamil kal and Kannada kal (DEDR 1298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C160-vellaccattam]
 <!-- hl-knowledge: introduces=[ML-LEX-C160-THINGS160-05]; assesses=[] -->
 
 **കല്ല്** — *kallŭ* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കല്ല്** (*kallŭ*) is native Dravidian, one word with Tamil *kal*, Kannada *kal* and Telugu *kallu* (DEDR 1298).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

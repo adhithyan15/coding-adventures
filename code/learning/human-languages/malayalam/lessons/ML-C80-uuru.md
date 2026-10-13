@@ -11,7 +11,8 @@ romanization: "ūrŭ"
 concept_tag: ML-NOUN-TOWN
 prerequisites: [ML-R79-degree-recall, ML-C55-homeland]
 sounds: []
-roots: []
+roots: [dravidian-ur-town]
+etymology_hook: "ūrŭ: native Dravidian, one word with Tamil ūr and Kannada ūr (DEDR 752)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +59,11 @@ category and no word for a place.
 It is an old word and a shared one. Tamil says *ūr* for the same thing, and it
 is buried in place-names the length of the south — so a name you cannot read yet
 may still end in a piece you now know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഊര്** (*ūrŭ*) is native Dravidian, one word with Tamil *ūr*, Kannada *ūr* and Telugu *ūru* (DEDR 752).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-01, ML-LEX-C55-GROUND-03] -->

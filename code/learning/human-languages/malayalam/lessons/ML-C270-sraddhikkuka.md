@@ -14,7 +14,8 @@ romanization: "śraddhikkuka"
 concept_tag: ML-VERB-SRADDHIKKUKA
 prerequisites: [ML-C270-taratamyam-ceyyuka, ML-C270-tarkkikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-shraddha]
+etymology_hook: "śraddhikkuka ← Sanskrit śraddhā 'trust, faith' (CDIAL 12678) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C270-tarkkikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C270-KRIYA270-05]; assesses=[] -->
 
 **ശ്രദ്ധിക്കുക** — *śraddhikkuka* — "to pay attention, to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശ്രദ്ധിക്കുക** (*śraddhikkuka*) is built on Sanskrit *śraddhā*, "trust, faith" (CDIAL 12678), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

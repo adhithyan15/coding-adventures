@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4b61536296ee175e",
+  "sourceHash": "fnv1a64:b6c8ba7a8693dea7",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -468,7 +468,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f8a0c826725c2df",
+      "sourceHash": "fnv1a64:3bf05d8869413b92",
       "notice": null,
       "blocks": [
         {
@@ -518,6 +518,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗാനം (gānam) from Sanskrit gāna, \"singing, song\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4130)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -548,7 +559,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

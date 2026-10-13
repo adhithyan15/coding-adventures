@@ -14,7 +14,8 @@ romanization: "jīvikkuka"
 concept_tag: ML-VERB-JIVIKKUKA
 prerequisites: [ML-C176-catuka, ML-C176-viluka]
 sounds: []
-roots: []
+roots: [sanskrit-jiva]
+etymology_hook: "jīvikkuka ← Sanskrit jīvati 'is alive' (CDIAL 5241) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C176-viluka]
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-05]; assesses=[] -->
 
 **ജീവിക്കുക** — *jīvikkuka* — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജീവിക്കുക** (*jīvikkuka*) is built on Sanskrit *jīva*, "life" (CDIAL 5239), from *jīvati*, "is alive" (CDIAL 5241), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āṇkuṭṭi"
 concept_tag: ML-VASTU289-ANKUTTI
 prerequisites: [ML-C288-tuka, ML-C288-phom]
 sounds: []
-roots: []
+roots: [dravidian-al-male, dravidian-kutti-young]
+etymology_hook: "āṇkuṭṭi: native Dravidian, 'male child': āṇ (DEDR 399) + kuṭṭi (DEDR 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C288-phom]
 <!-- hl-knowledge: introduces=[ML-LEX-C289-VASTU289-01]; assesses=[] -->
 
 **ആൺകുട്ടി** — *āṇkuṭṭi* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആൺകുട്ടി** (*āṇkuṭṭi*) is native Dravidian, "male child": *āṇ*, "male" (DEDR 399, with Tamil *āḷ*), and *kuṭṭi*, "child" (DEDR 1670).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

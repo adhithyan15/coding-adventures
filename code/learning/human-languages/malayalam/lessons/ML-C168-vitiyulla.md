@@ -14,7 +14,8 @@ romanization: "vītiyuḷḷa"
 concept_tag: ML-QUAL168-VITIYULLA
 prerequisites: [ML-C167-telinna, ML-C167-alamulla, ML-C86-aal-instrumental]
 sounds: []
-roots: []
+roots: [malayalam-viti, dravidian-ul-be]
+etymology_hook: "vītiyuḷḷa: vīti 'width', of uncertain origin, + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C167-alamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C168-QUAL168-01]; assesses=[] -->
 
 **വീതിയുള്ള** — *vītiyuḷḷa* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വീതിയുള്ള** (*vītiyuḷḷa*) is "having width": a noun for width whose origin is uncertain, with the native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

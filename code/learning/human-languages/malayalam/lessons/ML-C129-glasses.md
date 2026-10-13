@@ -11,7 +11,8 @@ romanization: "kaṇṇaṭa"
 concept_tag: ML-THINGS-GLASSES
 prerequisites: [ML-C129-key, ML-C129-umbrella]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye]
+etymology_hook: "kaṇṇaṭa: native Dravidian, built on kaṇṇŭ 'eye'; DEDR 1182 lists it with Tamil kaṇṇāṭi 'mirror'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C129-umbrella]
 <!-- hl-knowledge: introduces=[ML-LEX-C129-THINGS-04]; assesses=[] -->
 
 **കണ്ണട** (*kaṇṇaṭa*) — "spectacles". It begins with **കണ്ണ്**, "eye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണ്ണട** (*kaṇṇaṭa*) is native Dravidian, built on *kaṇṇŭ*, "eye"; DEDR 1182 lists Malayalam *kaṇṇaṭa*, "spectacles", itself, beside Tamil *kaṇṇāṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

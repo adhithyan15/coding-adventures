@@ -13,6 +13,9 @@ You'll want to know: മുത്തച്ഛൻ.
 മുത്തച്ഛൻ (muttacchan) — "grandfather".
 Two pieces, both audible: mutta-, 'elder, senior', and acchan, the 'father' from the family lesson. Literally, an elder father. Where Sanskrit would reach for a compound of its own, Malayalam assembles this one out of words the learner already owns.
 
+The word, taken apart.
+മുത്തച്ഛൻ (muttacchan) is native Dravidian, "the old father": the word for "old" (DEDR 4954, with Tamil mutu and Kannada muttu) joined to the word for "father" (DEDR 50, with Tamil accaṉ).
+
 What you've built.
 The first of four family words. Three follow, and each reuses the ones before.
 
@@ -43,6 +46,9 @@ You'll want to know: മുത്തശ്ശി.
 മുത്തശ്ശി (muttaśśi) — "grandmother".
 The same mutta- opens it, so half the word is already yours. The second half is not as transparent as the grandfather word's: -aśśi is an old term of address for an elder woman rather than the everyday amma you already know, and dictionaries stop short of a confident breakdown. Better to flag that than to pretend the two halves match.
 
+The word, taken apart.
+മുത്തശ്ശി (muttaśśi) is native Dravidian, "the old mother": the word for "old" (DEDR 4954, with Tamil mutu) joined to an old word for "mother" that DEDR 50 lists beside the word for "father", with Kannada acci, "mother".
+
 What you've built.
 Two of four, and one honest gap in the analysis.
 
@@ -70,6 +76,9 @@ Before the new one: what did muttaśśi mean?
 You'll want to know: ഭർത്താവ്.
 ഭർത്താവ് (bharttāvŭ) — "husband".
 Sanskrit bhartṛ with a Malayalam ending, -āvŭ, fitted onto it. Inside sits the root bhṛ, 'to bear, to carry, to support', so the word says 'the one who supports'. The root is old enough to have relatives well outside India: Latin fero, 'I carry', and English bear both continue it.
+
+The word, taken apart.
+ഭർത്താവ് (bharttāvŭ) from Sanskrit bhartṛ, "husband, bearer" (CDIAL 9402), with a Malayalam ending. The long ā comes from the Sanskrit stem bhartār-, as in the accusative bhartāram.
 
 What you've built.
 Three of four. The last word grows from the same root.
@@ -100,6 +109,9 @@ Before the new one: what did bharttāvŭ mean?
 You'll want to know: ഭാര്യ.
 ഭാര്യ (bhārya) — "wife".
 The same root bhṛ as the last word, ending differently: 'she who is to be supported'. Telugu borrowed the identical pair from Sanskrit, so bharta and bhārya there are these two words again, wearing local endings. What the pair records is Sanskrit's older picture of a household, not a modern one — worth saying out loud rather than smoothing over.
+
+The word, taken apart.
+ഭാര്യ (bhārya) from Sanskrit bhāryā, "wife", taken over whole as a tatsama (CDIAL 9471).
 
 What you've built.
 That closes the run: grandfather, grandmother, husband, wife.

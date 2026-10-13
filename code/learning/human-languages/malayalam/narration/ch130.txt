@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for glasses, then the Malayalam for a wris
 You'll want to know: പ്രാതൽ.
 പ്രാതൽ (prātal) — "breakfast", the meal of രാവിലെ.
 
+The word, taken apart.
+പ്രാതൽ (prātal) is built on Sanskrit prātar, "early in the morning", with a Malayalam noun ending.
+
 What you've built.
 The morning meal.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a wristwatch, then the Malayalam for b
 
 You'll want to know: ഉച്ചഭക്ഷണം.
 ഉച്ചഭക്ഷണം (uccabhakṣaṇaṁ) — "lunch": ഉച്ച (ucca), "noon", with ഭക്ഷണം (bhakṣaṇaṁ), "food". Both halves are words you know.
+
+The word, taken apart.
+ഉച്ചഭക്ഷണം (uccabhakṣaṇaṁ) joins ucca, "noon", from Sanskrit ucca, "high" (CDIAL 1634), the sun at its height, to Sanskrit bhakṣaṇa, "food".
 
 What you've built.
 Noon plus food.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for breakfast, then the Malayalam for lunc
 You'll want to know: അത്താഴം.
 അത്താഴം (attāḻaṁ) — "dinner", the meal of രാത്രി.
 
+The word, taken apart.
+അത്താഴം (attāḻaṁ) is native Dravidian, one word with Tamil attāḷam (DEDR 143).
+
 What you've built.
 The evening meal.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for lunch, then the Malayalam for dinner.
 You'll want to know: സദ്യ.
 സദ്യ (sadya) — "a feast", served on a banana leaf with rice and many dishes.
 
+The word, taken apart.
+സദ്യ (sadya) is of uncertain origin; neither DEDR nor CDIAL has an entry for it.
+
 What you've built.
 The meal for a big day.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for dinner, then the Malayalam for a feast
 
 You'll want to know: പായസം.
 പായസം (pāyasaṁ) — a sweet made with പാൽ or ശർക്കര, the last dish of a സദ്യ (sadya).
+
+The word, taken apart.
+പായസം (pāyasaṁ) from Sanskrit pāyasa, "food made with milk, rice boiled in milk", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 8099). It is built on Sanskrit payas, "milk".
 
 What you've built.
 The sweet end of a feast.

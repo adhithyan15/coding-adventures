@@ -14,7 +14,8 @@ romanization: "tiruttuka"
 concept_tag: ML-VERB-TIRUTTUKA
 prerequisites: [ML-C305-kantumuttuka, ML-C305-sandarsikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tiruttu-correct]
+etymology_hook: "tiruttuka: native Dravidian, one word with Tamil tiruntu and Kannada tirdu (DEDR 3251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C305-sandarsikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C306-KRIYA306-01]; assesses=[] -->
 
 **തിരുത്തുക** — *tiruttuka* — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരുത്തുക** (*tiruttuka*) is native Dravidian, one word with Tamil *tiruntu*, Kannada *tirdu* and Telugu *diddu* (DEDR 3251).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

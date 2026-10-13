@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a square, then the Malayalam for a tri
 You'll want to know: പാവയ്ക്ക.
 പാവയ്ക്ക — pāvaykka — "a bitter gourd".
 
+The word, taken apart.
+പാവയ്ക്ക (pāvaykka) is native Dravidian: pāval, "bitter gourd" (DEDR 4045, with Tamil pākal), with the ending for an unripe fruit.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a triangle, then the Malayalam for a b
 
 You'll want to know: വെണ്ടയ്ക്ക.
 വെണ്ടയ്ക്ക — veṇṭaykka — "okra, lady's finger".
+
+The word, taken apart.
+വെണ്ടയ്ക്ക (veṇṭaykka) is a plant name of uncertain origin with the ending for an unripe fruit.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a bitter gourd, then the Malayalam for
 You'll want to know: മുരിങ്ങക്ക.
 മുരിങ്ങക്ക — muriṅṅakka — "a drumstick (the vegetable)".
 
+The word, taken apart.
+മുരിങ്ങക്ക (muriṅṅakka) is native Dravidian: muriṅṅa, the moringa tree (DEDR 4982, with Tamil muruṅkai), with the ending for an unripe fruit. DEDR 4982 compares Sanskrit muraṅgī.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for okra, then the Malayalam for a drumsti
 You'll want to know: ചോളം.
 ചോളം — cōḷaṁ — "maize, corn".
 
+The word, taken apart.
+ചോളം (cōḷaṁ) is native Dravidian, one word with Tamil cōḷam, Kannada jōḷa and Telugu jonna (DEDR 2896). It first named sorghum and millet; maize took the name later.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a drumstick, then the Malayalam for ma
 
 You'll want to know: കടല.
 കടല — kaṭala — "chickpeas".
+
+The word, taken apart.
+കടല (kaṭala) is set by DEDR 1120 beside Tamil kaṭalai and Kannada kaḍale, but DEDR marks the Malayalam word with a query.
 
 What you've built.
 One more word for this chapter.

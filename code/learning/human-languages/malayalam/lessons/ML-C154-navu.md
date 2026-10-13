@@ -14,7 +14,8 @@ romanization: "nāvŭ"
 concept_tag: ML-THINGS154-NAVU
 prerequisites: [ML-C154-kaimuttu, ML-C154-kalmuttu, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [dravidian-na-tongue]
+etymology_hook: "nāvŭ: native Dravidian, one word with Tamil nā and Kannada nālage (DEDR 3633)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C154-kalmuttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-03]; assesses=[] -->
 
 **നാവ്** — *nāvŭ* — "a tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാവ്** (*nāvŭ*) is native Dravidian, one word with Tamil *nā*, Kannada *nālage* and Telugu *nālika* (DEDR 3633).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "ōphīs"
 concept_tag: ML-YOU-OFFICE
 prerequisites: [ML-C126-language, ML-C126-english]
 sounds: []
-roots: []
+roots: [english-office]
+etymology_hook: "ōphīs ← English office, from Latin officium 'duty'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C126-english]
 <!-- hl-knowledge: introduces=[ML-LEX-C126-ABOUTYOU-05]; assesses=[] -->
 
 **ഓഫീസ്** (*ōphīs*) — "office", from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓഫീസ്** (*ōphīs*) ← English *office*, from Latin *officium*, "duty, service".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

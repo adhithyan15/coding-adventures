@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 184,
-  "sourceHash": "fnv1a64:32b180d0114be377",
+  "sourceHash": "fnv1a64:0ef11b915835ad48",
   "lessonIds": [
     "ML-C184-otiyuka",
     "ML-C184-bhedamakuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch184.txt",
   "json": "malayalam/narration/ch184.json",
-  "textHash": "fnv1a64:ac7706ed09876675",
-  "jsonHash": "fnv1a64:eb7e11077105ba18",
+  "textHash": "fnv1a64:b7c5d9316df73324",
+  "jsonHash": "fnv1a64:43c36eb34ca15c28",
   "findings": []
 }

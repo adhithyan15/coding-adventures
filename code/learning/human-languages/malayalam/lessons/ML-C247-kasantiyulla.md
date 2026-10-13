@@ -14,7 +14,8 @@ romanization: "kaṣaṇṭiyuḷḷa"
 concept_tag: ML-GUNAM247-KASANTIYULLA
 prerequisites: [ML-C247-iratta, ML-C247-prayamaya]
 sounds: []
-roots: []
+roots: [malayalam-kasandi, dravidian-ul-be]
+etymology_hook: "kaṣaṇṭiyuḷḷa: kaṣaṇṭi 'baldness', of uncertain origin, + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C247-prayamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C247-GUNAM247-03]; assesses=[] -->
 
 **കഷണ്ടിയുള്ള** — *kaṣaṇṭiyuḷḷa* — "bald".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഷണ്ടിയുള്ള** (*kaṣaṇṭiyuḷḷa*) is "having baldness": *kaṣaṇṭi*, a word of uncertain origin, with the native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

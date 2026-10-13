@@ -14,7 +14,8 @@ romanization: "tūṇŭ"
 concept_tag: ML-VASTU257-TUNU
 prerequisites: [ML-C256-upadesam, ML-C257-otu]
 sounds: []
-roots: []
+roots: [sanskrit-sthuna]
+etymology_hook: "tūṇŭ ← Sanskrit sthūṇā 'post, pillar' (CDIAL 13774); DEDR appendix 44 lists it among Indo-Aryan loans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C257-otu]
 <!-- hl-knowledge: introduces=[ML-LEX-C257-VASTU257-02]; assesses=[] -->
 
 **തൂണ്** — *tūṇŭ* — "a pillar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൂണ്** (*tūṇŭ*) ← Sanskrit *sthūṇā*, "post, pillar" (CDIAL 13774), worn down. DEDR appendix 44, which gathers Dravidian words taken from Indo-Aryan, lists it with Tamil *tūṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

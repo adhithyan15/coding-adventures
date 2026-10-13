@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Yesterday, Today, Tomorrow",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fe5c9484ce4a703d",
+  "sourceHash": "fnv1a64:d1dc49726206e867",
   "lessons": [
     {
       "id": "ML-C94-innu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2eb1e24d51defa0e",
+      "sourceHash": "fnv1a64:a551a24a543c80c5",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇന്ന് (innŭ) is native Dravidian, built on the near-pointing base, \"this (day)\": DEDR 410 lists it with Tamil iṉṟu and Kannada indu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -78,7 +89,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05297f5bf0ae6f06",
+      "sourceHash": "fnv1a64:087e1a334d300ecb",
       "notice": null,
       "blocks": [
         {
@@ -213,6 +224,10 @@
             {
               "kind": "speech",
               "text": "You do not have to take it apart to use it, and you should not force a story onto the tail. What is worth seeing is the shared front, because it is what will make the pair easy to keep apart from tomorrow, which begins somewhere else entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian: DEDR 3758 lists Malayalam innalē, \"yesterday\", in the same entry as Tamil nerunal, \"yesterday\"."
             }
           ]
         },

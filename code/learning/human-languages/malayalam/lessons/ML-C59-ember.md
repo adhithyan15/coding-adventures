@@ -11,7 +11,8 @@ romanization: "kanal"
 concept_tag: ML-NOUN-EMBER
 prerequisites: [ML-C59-smoke, ML-C57-bone]
 sounds: []
-roots: []
+roots: [dravidian-kanal-ember]
+etymology_hook: "kanal: native Dravidian, one word with Tamil kaṉal (DEDR 1406)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *kanal*, and it names the live coal rather than the fl
 That is a distinction the language keeps carefully. The flame is one thing, the smoke you have just had is another, and the കനൽ is the third: the part that holds the heat after the rest has gone.
 
 The chillu ൽ closes it, the same bare *l* that closed the sand-word and the field-word before that.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കനൽ** (*kanal*) is native Dravidian, one word with Tamil *kaṉal* (DEDR 1406). DEDR 1406 compares Sanskrit *kanala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a month, then the Malayalam for a year
 You'll want to know: പേന.
 പേന (pēna) — "a pen". ഒരു പേന തരൂ — "please give me a pen".
 
+The word, taken apart.
+പേന (pēna) from Portuguese pena, "feather, quill", the pen it once was.
+
 What you've built.
 The first thing you ask to borrow.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a year, then the Malayalam for a pen.
 
 You'll want to know: പെൻസിൽ.
 പെൻസിൽ (pensil) — "a pencil", from English.
+
+The word, taken apart.
+പെൻസിൽ (pensil) from English pencil, from Latin pēnicillus, "a small brush".
 
 What you've built.
 The one you can rub out.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a pen, then the Malayalam for a pencil
 You'll want to know: കടലാസ്.
 കടലാസ് (kaṭalās) — "paper", a sheet for എഴുതുക.
 
+The word, taken apart.
+കടലാസ് (kaṭalās) comes from Arabic qirṭās, "paper, a sheet", which Arabic took from Greek chartēs; it reached Malayalam through the trade of the coast.
+
 What you've built.
 What you write on.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a pencil, then the Malayalam for paper
 You'll want to know: ക്ലാസ്.
 ക്ലാസ് (klās) — "a class", a lesson or a classroom, from English.
 
+The word, taken apart.
+ക്ലാസ് (klās) from English class, from Latin classis, "a division of the people".
+
 What you've built.
 Where the lessons happen.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for paper, then the Malayalam for a class.
 
 You'll want to know: ഉത്തരം.
 ഉത്തരം (uttaraṁ) — "an answer", what follows a question.
+
+The word, taken apart.
+ഉത്തരം (uttaraṁ) from Sanskrit uttara, "upper, following; an answer", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 1767). An answer is what follows the question.
 
 What you've built.
 The other half of a question.

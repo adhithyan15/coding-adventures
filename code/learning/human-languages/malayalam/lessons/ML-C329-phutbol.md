@@ -14,7 +14,8 @@ romanization: "phuṭbōḷ"
 concept_tag: ML-VASTU329-PHUTBOL
 prerequisites: [ML-C329-kavita, ML-C329-natakam]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "phuṭbōḷ ← English football"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C329-natakam]
 <!-- hl-knowledge: introduces=[ML-LEX-C329-VASTU329-04]; assesses=[] -->
 
 **ഫുട്ബോൾ** — *phuṭbōḷ* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫുട്ബോൾ** (*phuṭbōḷ*) ← English *football*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

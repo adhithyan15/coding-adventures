@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for anyone, then the Malayalam for anythin
 You'll want to know: അടുത്തിടെ.
 അടുത്തിടെ — aṭuttiṭe — "recently". Malayalam's past does not change for "I", "you" or "he": ഞാൻ അടുത്തിടെ ഒരു പുസ്തകം വായിച്ചു — ñān aṭuttiṭe oru pustakaṁ vāyiccu — "I recently read a book."
 
+The word, taken apart.
+അടുത്തിടെ (aṭuttiṭe) is native Dravidian: aṭuttŭ, "near" (DEDR 79, with Tamil aṭu), with a tail meaning "place": "in the near place" of time.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for anything, then the Malayalam for recen
 
 You'll want to know: ഇതിനകം.
 ഇതിനകം — itinakaṁ — "already". ഞാൻ ഇതിനകം ഭക്ഷണം കഴിച്ചു — ñān itinakaṁ bhakṣaṇaṁ kaḻiccu — "I have already eaten."
+
+The word, taken apart.
+ഇതിനകം (itinakaṁ) is native Dravidian, "within this (time)": itŭ, "this" (DEDR 410), and akam, "inside" (DEDR 7, with Tamil akam).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for recently, then the Malayalam for alrea
 You'll want to know: കഴിഞ്ഞ.
 കഴിഞ്ഞ — kaḻiñña — "last, previous". കഴിഞ്ഞ വർഷം ഞാൻ കൊച്ചിയിൽ പോയി — kaḻiñña varṣaṁ ñān kocciyil pōyi — "Last year I went to Kochi."
 
+The word, taken apart.
+കഴിഞ്ഞ (kaḻiñña) is native Dravidian, a past form of the verb "to pass, be over"; DEDR 1356 lists the root with Tamil kaḻi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for already, then the Malayalam for last.
 You'll want to know: ഒരിക്കൽ.
 ഒരിക്കൽ — orikkal — "once, one time". ഞാൻ ഒരിക്കൽ ചെന്നൈയിൽ പോയിട്ടുണ്ട് — ñān orikkal cennaiyil pōyiṭṭuṇṭŭ — "I have been to Chennai once."
 
+The word, taken apart.
+ഒരിക്കൽ (orikkal) is native Dravidian, built on oru, "one" (DEDR 990), with a word for "a time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for last, then the Malayalam for once.
 
 You'll want to know: ചെലവഴിക്കുക.
 ചെലവഴിക്കുക — celavaḻikkuka — "to spend (time, money)". ഞാൻ അവധിക്കാലം ഗ്രാമത്തിൽ ചെലവഴിച്ചു — ñān avadhikkālaṁ grāmattil celavaḻiccu — "I spent the holidays in the village."
+
+The word, taken apart.
+ചെലവഴിക്കുക (celavaḻikkuka) is native Dravidian: celavŭ, "expense" (DEDR 2781, with Tamil cel, "to go"), and the verb "to loosen, spend" (DEDR 277, with Tamil aḻi).
 
 What you've built.
 One more word for this chapter.

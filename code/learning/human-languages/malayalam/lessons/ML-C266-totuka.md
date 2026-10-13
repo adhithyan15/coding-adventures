@@ -14,7 +14,8 @@ romanization: "toṭuka"
 concept_tag: ML-VERB-TOTUKA
 prerequisites: [ML-C265-kettuka, ML-C265-alakkuka]
 sounds: []
-roots: []
+roots: [dravidian-todu-touch]
+etymology_hook: "toṭuka: native Dravidian, one word with Tamil toṭu (DEDR 3480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C265-alakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C266-KRIYA266-01]; assesses=[] -->
 
 **തൊടുക** — *toṭuka* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊടുക** (*toṭuka*) is native Dravidian, one word with Tamil *toṭu* (DEDR 3480).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

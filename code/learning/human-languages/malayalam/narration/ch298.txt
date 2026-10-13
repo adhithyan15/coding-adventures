@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a guava, then the Malayalam for an Ind
 You'll want to know: പലചരക്ക്.
 പലചരക്ക് — palacarakkŭ — "groceries".
 
+The word, taken apart.
+പലചരക്ക് (palacarakkŭ) is native Dravidian, "many goods": pala, "many" (DEDR 3987), and carakku, "merchandise, goods" (DEDR 2353, with Tamil carakku).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an Indian gooseberry, then the Malayal
 
 You'll want to know: പാക്കറ്റ്.
 പാക്കറ്റ് — pākkaṟṟŭ — "a packet".
+
+The word, taken apart.
+പാക്കറ്റ് (pākkaṟṟŭ) from English packet.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for groceries, then the Malayalam for a pa
 You'll want to know: ശമ്പളം.
 ശമ്പളം — śambaḷaṁ — "a salary".
 
+The word, taken apart.
+ശമ്പളം (śambaḷaṁ) from Sanskrit śambala, "provisions for a journey", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12315). Provisions for the road became regular pay.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a packet, then the Malayalam for a sal
 You'll want to know: കൂലി.
 കൂലി — kūli — "wages".
 
+The word, taken apart.
+കൂലി (kūli) is native Dravidian, one word with Tamil kūli, Kannada kūli and Telugu kūli (DEDR 1905). English coolie goes back to this word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a salary, then the Malayalam for wages
 
 You'll want to know: തൊഴിലാളി.
 തൊഴിലാളി — toḻilāḷi — "a worker, a labourer".
+
+The word, taken apart.
+തൊഴിലാളി (toḻilāḷi) is native Dravidian: toḻil, "work, occupation" (DEDR 3524, with Tamil toḻil), and the word for "person" (DEDR 399, with Tamil āḷ), with the ending -i.
 
 What you've built.
 One more word for this chapter.

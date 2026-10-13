@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a703c3fb8d077c1f",
+  "sourceHash": "fnv1a64:a9f2ff5bee208f81",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3947661f9110e5ac",
+      "sourceHash": "fnv1a64:2a19e2b11a603c59",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലിയ (valiya) is native Dravidian, one word with Tamil val, Kannada bal and Telugu valanu (DEDR 5276). Its first sense is \"strong\": bigness grew out of strength."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc28a4253822ef78",
+      "sourceHash": "fnv1a64:c249889958e37dad",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെറിയ (ceṟiya) is native Dravidian, one word with Tamil ciṟu, Kannada kiṟu and Telugu ciṟu, all \"small\" (DEDR 1594)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -205,7 +227,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -236,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b12e727ec3f9b3d7",
+      "sourceHash": "fnv1a64:1d76a836f5590d47",
       "notice": null,
       "blocks": [
         {
@@ -281,6 +303,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നല്ല (nalla) is native Dravidian, one word with Tamil nalla, Kannada nal and Telugu naluvu (DEDR 3610). The same root gives the Malayalam word for \"thanks\". DEDR 3610 compares Sanskrit Nala."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -351,7 +384,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54425c5600984af7",
+      "sourceHash": "fnv1a64:b6d74abcb5664a29",
       "notice": null,
       "blocks": [
         {
@@ -396,6 +429,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുതിയ (putiya) is native Dravidian, one word with Tamil putiya and Kannada posa (DEDR 4275). Kannada turned the old p- into h- in its modern form hosa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,7 +479,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -466,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6d2232a46638118",
+      "sourceHash": "fnv1a64:1ac9ba9f5caf40e4",
       "notice": null,
       "blocks": [
         {
@@ -511,6 +555,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പഴയ (paḻaya) is native Dravidian, one word with Tamil paḻa, Kannada paḻa and Telugu prā- (DEDR 3999)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -559,7 +614,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

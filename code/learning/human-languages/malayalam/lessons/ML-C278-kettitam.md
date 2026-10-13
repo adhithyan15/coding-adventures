@@ -14,7 +14,8 @@ romanization: "keṭṭiṭaṁ"
 concept_tag: ML-STHALAM278-KETTITAM
 prerequisites: [ML-C278-signal, ML-C278-traphiku]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind, dravidian-idam-place]
+etymology_hook: "keṭṭiṭaṁ: native Dravidian, 'built place': keṭṭu 'build' (DEDR 1147) + iṭam 'place' (DEDR 434)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C278-traphiku]
 <!-- hl-knowledge: introduces=[ML-LEX-C278-STHALAM278-04]; assesses=[] -->
 
 **കെട്ടിടം** — *keṭṭiṭaṁ* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കെട്ടിടം** (*keṭṭiṭaṁ*) is native Dravidian, "a built place": the verb "to tie, build" (DEDR 1147, with Tamil *kaṭṭu*), and *iṭam*, "place" (DEDR 434, with Tamil *iṭam*). DEDR 1147 compares Sanskrit *ghaṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

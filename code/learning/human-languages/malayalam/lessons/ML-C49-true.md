@@ -11,7 +11,8 @@ romanization: "satyaṁ"
 concept_tag: ML-WORD-TRUE
 prerequisites: [ML-C48-guest, ML-C47-leg]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "satyaṁ ← Sanskrit satya 'true; truth', a tatsama (CDIAL 13112)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *satya*, built on *sat*, 'being, that which is'. Truth, in that word's 
 Malayalam already has ശരി (*śari*) for the everyday "right, okay" of a conversation. സത്യം is the heavier one: not 'that will do' but 'that is so'.
 
 Kannada answers with ನಿಜ (*nija*), a different Sanskrit word, whose older sense is 'one's own, innate'. Two languages, two borrowings, and each picked a different picture of what being true is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സത്യം** (*satyaṁ*) ← Sanskrit *satya*, "true; truth", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

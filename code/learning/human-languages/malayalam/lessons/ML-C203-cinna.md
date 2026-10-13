@@ -14,7 +14,8 @@ romanization: "cīñña"
 concept_tag: ML-GUNAM203-CINNA
 prerequisites: [ML-C202-nyayam, ML-C203-ruciyulla]
 sounds: []
-roots: []
+roots: [dravidian-ci-pus]
+etymology_hook: "cīñña: native Dravidian, from the verb 'to rot'; DEDR 1606 lists it with Tamil cī 'pus'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C203-ruciyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C203-GUNAM203-02]; assesses=[] -->
 
 **ചീഞ്ഞ** — *cīñña* — "rotten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചീഞ്ഞ** (*cīñña*) is native Dravidian, a past form of the verb "to rot, be spoiled": DEDR 1606 lists that verb with Tamil *cī*, "pus", and Kannada *kī*, "to become pus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

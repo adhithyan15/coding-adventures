@@ -16,6 +16,9 @@ It takes the in-ending exactly as you would expect, joining with a -യ- because
 കടയിൽ — kaṭayil — in the shop, at the shop.
 Nothing about that join is new. It is the same choice the owner-ending makes, decided by the same thing — the last sound of the noun.
 
+The word, taken apart.
+കട (kaṭa) is native Dravidian, one word with Tamil kaṭai (DEDR 1142). Its first sense is "market".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: kaṭa]
@@ -48,6 +51,9 @@ English keeps them apart the same way, so there is nothing to untangle.
 പണം ends in the ം, which means you already know what it will do when a case ending attaches to it: the ം gives way, exactly as it did on the state name and on the book. A word that ends this way tells you in advance how it will behave.
 പുസ്തകത്തിന്റെ വില — pustakattinṟe vila — the price of the book.
 Every piece of that is old but one. പുസ്തകം changed shape before its ending, took the owner-ending, and വില followed it — the arrangement the place-words chapter established, carrying a new word.
+
+The word, taken apart.
+വില പണം (vila paṇaṁ): vila, "price", is native Dravidian, from the verb "to sell" (DEDR 5421, with Tamil vil and Kannada bil). paṇaṁ, "money", is Sanskrit paṇa, "a coin" (CDIAL 7715), which CDIAL itself thinks came into Sanskrit from Austroasiatic.
 
 Guided Practice.
 [pause 1 second]
@@ -84,6 +90,9 @@ The answer was out of reach until very recently:
 Before the counting chapter you could not have said either. The count stopped at twenty, so every price above it was unsayable — which is exactly what that chapter's exam point warned about.
 So this page is where three separate chapters meet: the word that asks, the numbers that answer, and the unit they are counted in.
 
+The phrase, taken apart.
+എത്ര രൂപ (etra rūpa): etra, "how many", is native Dravidian (DEDR 5151). rūpa, "rupee", goes back through Hindustani rupayā to Sanskrit rūpya, "stamped; silver" (CDIAL 10805).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: rūpa]
@@ -117,6 +126,9 @@ It is built the way your verbs are built, on the -ഉക ending you have had sin
 ഞാൻ പുസ്തകം വാങ്ങുന്നു — ñān pustakaṁ vāṅṅunnu — I buy the book.
 Look at the object. പുസ്തകം is bare — no ending on it — because it is a thing and not a person, which is the rule the object chapter gave you. The verb changed and the rule did not.
 With this word the chapter closes a circle. You can name the place, ask the price, hear a number back, and say what you are doing there — and of those four, only the place, the price and this verb were new.
+
+The word, taken apart.
+വാങ്ങുക (vāṅṅuka) is native Dravidian, one word with Tamil vāṅku (DEDR 5336). Its older senses are "to take, receive, choose".
 
 Guided Practice.
 [pause 1 second]

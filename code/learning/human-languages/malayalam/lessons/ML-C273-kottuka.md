@@ -14,7 +14,8 @@ romanization: "kottuka"
 concept_tag: ML-VERB-KOTTUKA
 prerequisites: [ML-C273-perukkuka, ML-C273-vitaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-kottu-peck]
+etymology_hook: "kottuka: native Dravidian, one word with Tamil kottu and Kannada kottu (DEDR 2091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C273-vitaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C273-KRIYA273-03]; assesses=[] -->
 
 **കൊത്തുക** — *kottuka* — "to peck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊത്തുക** (*kottuka*) is native Dravidian, one word with Tamil *kottu* and Kannada *kottu* (DEDR 2091).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

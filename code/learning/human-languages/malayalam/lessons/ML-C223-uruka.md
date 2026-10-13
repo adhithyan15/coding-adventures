@@ -14,7 +14,8 @@ romanization: "ūruka"
 concept_tag: ML-VERB-URUKA
 prerequisites: [ML-C223-vaykkuka, ML-C223-dharikkuka]
 sounds: []
-roots: []
+roots: [dravidian-ur-slip]
+etymology_hook: "ūruka: native Dravidian, one word with Tamil ūr (DEDR 750)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C223-dharikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C223-KRIYA223-04]; assesses=[] -->
 
 **ഊരുക** — *ūruka* — "to take off (clothes, shoes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഊരുക** (*ūruka*) is native Dravidian, one word with Tamil *ūr* (DEDR 750). Its first sense is "to slip off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

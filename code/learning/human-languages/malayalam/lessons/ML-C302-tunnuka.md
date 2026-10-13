@@ -14,7 +14,8 @@ romanization: "tunnuka"
 concept_tag: ML-VERB-TUNNUKA
 prerequisites: [ML-C301-srraplar, ML-C301-skeyil]
 sounds: []
-roots: []
+roots: [malayalam-tunnu]
+etymology_hook: "tunnuka 'to sew': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C301-skeyil]
 <!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-01]; assesses=[] -->
 
 **തുന്നുക** — *tunnuka* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുന്നുക** (*tunnuka*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

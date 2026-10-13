@@ -14,7 +14,8 @@ romanization: "enneṅkiluṁ"
 concept_tag: ML-SAMAYAM237-ENNENKILUM
 prerequisites: [ML-C236-nimisam, ML-C237-pakal]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-en-say]
+etymology_hook: "enneṅkiluṁ: native Dravidian, ennu 'what day' (DEDR 5151) + a form of 'to say' meaning 'if' (DEDR 868) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C237-pakal]
 <!-- hl-knowledge: introduces=[ML-LEX-C237-SAMAYAM237-02]; assesses=[] -->
 
 **എന്നെങ്കിലും** — *enneṅkiluṁ* — "someday, ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്നെങ്കിലും** (*enneṅkiluṁ*) is native Dravidian: *ennu*, "what day", from the question stem (DEDR 5151), then a conditional form of the verb "to say" meaning "if" (DEDR 868), and *-uṁ*: "on whatever day it may be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

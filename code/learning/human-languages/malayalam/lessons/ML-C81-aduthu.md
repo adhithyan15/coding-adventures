@@ -11,7 +11,8 @@ romanization: "aṭuttŭ"
 concept_tag: ML-WORD-NEAR
 prerequisites: [ML-R80-origin-recall, ML-C41-here, ML-C41-there]
 sounds: []
-roots: []
+roots: [dravidian-atu-near]
+etymology_hook: "aṭuttŭ: native Dravidian, from the verb 'to come near'; Tamil aṭu (DEDR 79)"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,11 @@ space is involved** rather than which side of you it is on.
 That is a real division, and it is the reason a learner can have owned *here*
 and *there* for forty chapters and still be unable to say that the shop is
 close.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടുത്ത്** (*aṭuttŭ*) is native Dravidian, a form of the verb "to come near, approach"; DEDR 79 lists the root with Tamil *aṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-01] -->

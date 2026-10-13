@@ -14,7 +14,8 @@ romanization: "paripāṭi"
 concept_tag: ML-VASTU293-PARIPATI
 prerequisites: [ML-C293-masika, ML-C293-canal]
 sounds: []
-roots: []
+roots: [sanskrit-paripati]
+etymology_hook: "paripāṭi ← Sanskrit paripāṭī 'succession, order, method'; 'programme' is a Malayalam sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C293-canal]
 <!-- hl-knowledge: introduces=[ML-LEX-C293-VASTU293-05]; assesses=[] -->
 
 **പരിപാടി** — *paripāṭi* — "a programme, a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിപാടി** (*paripāṭi*) ← Sanskrit *paripāṭī*, "succession, order, method"; the sense "programme", an ordered run of events, is Malayalam's own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

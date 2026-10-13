@@ -22,6 +22,9 @@ Now put a thing on the end of it and you have a three-word chain, each piece sta
 വളരെ നല്ല പുസ്തകം — vaḷare nalla pustakaṁ — a very good book.
 Read that right to left and it unpacks cleanly: a book; a good book; a very good book. Each new word reaches forward over everything after it.
 
+The word, taken apart.
+വളരെ (vaḷare) is native Dravidian, built on the verb "to grow, increase"; DEDR 5304 lists the root with Tamil vaḷ and Kannada baḷe.
+
 What you've built.
 Five qualities, each of them now with a volume knob.
 One word multiplied what five lessons gave you, which is what the small function words in a language tend to do.
@@ -61,6 +64,9 @@ There is one thing orupāṭŭ can do that a pure degree word cannot, and it is 
 a quality word means very — orupāṭŭ nalla.
 a thing word means a lot of — orupāṭŭ veḷḷaṁ.
 ഒരുപാട് (orupāṭŭ) വെള്ളം is a lot of water. English needs an extra word there — a lot OF water — and Malayalam needs nothing, because the word already sits in front of what it measures and that is the whole relationship.
+
+The word, taken apart.
+ഒരുപാട് (orupāṭŭ) begins with native oru, "one" (DEDR 990). The second part, pāṭŭ, is a noun of state or measure whose history is uncertain; the whole means "one big lot".
 
 What you've built.
 Two ways up, one for the page and one for the room.

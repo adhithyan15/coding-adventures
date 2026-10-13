@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 259,
-  "sourceHash": "fnv1a64:827f3a79c285a35e",
+  "sourceHash": "fnv1a64:bd8b60eaf4ee5de9",
   "lessonIds": [
     "ML-C259-pavaykka",
     "ML-C259-ventaykka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch259.txt",
   "json": "malayalam/narration/ch259.json",
-  "textHash": "fnv1a64:552619bae293aa95",
-  "jsonHash": "fnv1a64:8c101c64327ce195",
+  "textHash": "fnv1a64:6e5b8bece519aa62",
+  "jsonHash": "fnv1a64:7237b5ba47078988",
   "findings": []
 }

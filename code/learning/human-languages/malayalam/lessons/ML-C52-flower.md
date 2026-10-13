@@ -11,7 +11,8 @@ romanization: "pūvŭ"
 concept_tag: ML-NOUN-FLOWER
 prerequisites: [ML-C52-kolam, ML-C50-set-out]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower]
+etymology_hook: "pūvŭ: native Dravidian, one word with Tamil pū and Kannada pũ (DEDR 4345)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Proto-Dravidian **\*pū**, one of the shortest words the family has and one of t
 Kerala puts the word to work at the front of a compound: the flower-carpet laid out for the harvest festival is പൂക്കളം, the flower plus a word for a laid-out ground.
 
 Malayalam's own form adds a *v* and the half-vowel, which is why it looks longer than Tamil's bare two letters while saying the same thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂവ്** (*pūvŭ*) is native Dravidian, one word with Tamil *pū*, Kannada *pũ* and Telugu *pū* (DEDR 4345). DEDR 4345 compares Sanskrit *puṣpa*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

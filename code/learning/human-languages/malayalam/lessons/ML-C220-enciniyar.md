@@ -14,7 +14,8 @@ romanization: "eñcinīyar"
 concept_tag: ML-JOLI220-ENCINIYAR
 prerequisites: [ML-C220-udyogasthan, ML-C220-gumastan]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "eñcinīyar ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C220-gumastan]
 <!-- hl-knowledge: introduces=[ML-LEX-C220-JOLI220-04]; assesses=[] -->
 
 **എഞ്ചിനീയർ** — *eñcinīyar* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എഞ്ചിനീയർ** (*eñcinīyar*) ← English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

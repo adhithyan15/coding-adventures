@@ -14,7 +14,8 @@ romanization: "itiniṭe"
 concept_tag: ML-SAMAYAM277-ITINITE
 prerequisites: [ML-C277-ikkalattu, ML-C277-annu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-idai-interval]
+etymology_hook: "itiniṭe: native Dravidian, 'in the interval of this': itŭ (DEDR 410) + iṭa 'interval' (DEDR 448)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C277-annu]
 <!-- hl-knowledge: introduces=[ML-LEX-C277-SAMAYAM277-05]; assesses=[] -->
 
 **ഇതിനിടെ** — *itiniṭe* — "meanwhile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇതിനിടെ** (*itiniṭe*) is native Dravidian: *itŭ*, "this" (DEDR 410), and *iṭa*, "interval" (DEDR 448, with Tamil *iṭai*): "in the meantime of this".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

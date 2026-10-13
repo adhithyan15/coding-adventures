@@ -14,7 +14,8 @@ romanization: "nellikka"
 concept_tag: ML-VASTU297-NELLIKKA
 prerequisites: [ML-C297-kun, ML-C297-peraykka]
 sounds: []
-roots: []
+roots: [dravidian-nelli-gooseberry]
+etymology_hook: "nellikka: native Dravidian, nelli (DEDR 3755) + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C297-peraykka]
 <!-- hl-knowledge: introduces=[ML-LEX-C297-VASTU297-05]; assesses=[] -->
 
 **നെല്ലിക്ക** — *nellikka* — "an Indian gooseberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നെല്ലിക്ക** (*nellikka*) is native Dravidian: *nelli*, the gooseberry tree (DEDR 3755, with Tamil *nelli* and Kannada *nelli*), with the ending for an unripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

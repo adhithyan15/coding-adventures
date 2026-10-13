@@ -11,7 +11,8 @@ romanization: "nāraṅṅa"
 concept_tag: ML-FRUIT-LEMON
 prerequisites: [ML-C133-mango, ML-C133-jackfruit]
 sounds: []
-roots: []
+roots: [sanskrit-naranga]
+etymology_hook: "nāraṅṅa ← Sanskrit nāraṅga 'orange tree', a tatsama (CDIAL 7073)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C133-jackfruit]
 <!-- hl-knowledge: introduces=[ML-LEX-C133-SWEETSOUR-03]; assesses=[] -->
 
 **നാരങ്ങ** (*nāraṅṅa*) — "a lemon", or a lime. **നാരങ്ങ വെള്ളം** — lemon water.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാരങ്ങ** (*nāraṅṅa*) ← Sanskrit *nāraṅga*, "orange tree", taken over whole as a tatsama (CDIAL 7073). The same word travelled west through Persian and Arabic and became English *orange*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

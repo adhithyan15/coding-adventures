@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 172,
-  "sourceHash": "fnv1a64:cdb7d5424a0382e2",
+  "sourceHash": "fnv1a64:e0307ac7b3f81944",
   "lessonIds": [
     "ML-C172-vevikkuka",
     "ML-C172-kotukkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch172.txt",
   "json": "malayalam/narration/ch172.json",
-  "textHash": "fnv1a64:18a8a3047e015cfd",
-  "jsonHash": "fnv1a64:9652dcf70bd48b7c",
+  "textHash": "fnv1a64:38c0901d659cd82c",
+  "jsonHash": "fnv1a64:4bd4bf0c086d01f3",
   "findings": []
 }

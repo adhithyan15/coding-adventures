@@ -11,7 +11,8 @@ romanization: "paḷḷi"
 concept_tag: ML-TOWN-CHURCH
 prerequisites: [ML-C135-market, ML-C135-temple]
 sounds: []
-roots: []
+roots: [dravidian-palli-hamlet]
+etymology_hook: "paḷḷi: native Dravidian, one word with Tamil paḷḷi and Kannada paḷḷi (DEDR 4018)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C135-temple]
 
 **പള്ളി** (*paḷḷi*) — both "a church" and "a mosque"; the word is older than the
 difference. It is also in **പള്ളിക്കൂടം**, "school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പള്ളി** (*paḷḷi*) is native Dravidian, one word with Tamil *paḷḷi*, Kannada *paḷḷi* and Telugu *palli* (DEDR 4018). Its first senses are "hamlet, a public building"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit *pallī̆*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tēn"
 concept_tag: ML-VASTU208-TEN
 prerequisites: [ML-C208-neyyu, ML-C208-venna]
 sounds: []
-roots: []
+roots: [dravidian-tem-sweet]
+etymology_hook: "tēn: native Dravidian, one word with Tamil tēṉ 'honey' (DEDR 3268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C208-venna]
 <!-- hl-knowledge: introduces=[ML-LEX-C208-VASTU208-05]; assesses=[] -->
 
 **തേൻ** — *tēn* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തേൻ** (*tēn*) is native Dravidian, one word with Tamil *tēṉ* and Kannada *jēnu*, "honey" (DEDR 3268). DEDR 3268 marks the entry with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

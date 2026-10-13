@@ -14,7 +14,8 @@ romanization: "śramaṁ"
 concept_tag: ML-KARANAM282-SRAMAM
 prerequisites: [ML-C282-sambhavam, ML-C282-suraksa]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śramaṁ ← Sanskrit śrama 'labour, fatigue', a tatsama (CDIAL 12682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C282-suraksa]
 <!-- hl-knowledge: introduces=[ML-LEX-C282-KARANAM282-04]; assesses=[] -->
 
 **ശ്രമം** — *śramaṁ* — "an attempt, an effort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശ്രമം** (*śramaṁ*) ← Sanskrit *śrama*, "labour, fatigue", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

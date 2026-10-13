@@ -14,7 +14,8 @@ romanization: "tuṭa"
 concept_tag: ML-AROGYAM192-TUTA
 prerequisites: [ML-C192-sariram, ML-C192-tonta]
 sounds: []
-roots: []
+roots: [dravidian-tudai-thigh]
+etymology_hook: "tuṭa: native Dravidian, one word with Tamil tuṭai and Kannada toḍe (DEDR 3302)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C192-tonta]
 <!-- hl-knowledge: introduces=[ML-LEX-C192-AROGYAM192-04]; assesses=[] -->
 
 **തുട** — *tuṭa* — "the thigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുട** (*tuṭa*) is native Dravidian, one word with Tamil *tuṭai*, Kannada *toḍe* and Telugu *toḍa* (DEDR 3302).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

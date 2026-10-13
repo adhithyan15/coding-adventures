@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 42,
-  "sourceHash": "fnv1a64:a703c3fb8d077c1f",
+  "sourceHash": "fnv1a64:a9f2ff5bee208f81",
   "lessonIds": [
     "ML-C42-big",
     "ML-C42-small",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "malayalam/narration/ch42.txt",
   "json": "malayalam/narration/ch42.json",
-  "textHash": "fnv1a64:07f3e1487667e8fc",
-  "jsonHash": "fnv1a64:c7e08435765a33b9",
+  "textHash": "fnv1a64:c222e69c6e10a6d4",
+  "jsonHash": "fnv1a64:6e40cede71a61fa2",
   "findings": []
 }

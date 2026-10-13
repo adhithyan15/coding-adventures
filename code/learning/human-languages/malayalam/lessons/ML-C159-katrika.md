@@ -14,7 +14,8 @@ romanization: "katrika"
 concept_tag: ML-THINGS159-KATRIKA
 prerequisites: [ML-C158-putappu, ML-C158-bakkarru]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "katrika ← Sanskrit kartarī 'scissors, knife', a tatsama (CDIAL 2858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C158-bakkarru]
 <!-- hl-knowledge: introduces=[ML-LEX-C159-THINGS159-01]; assesses=[] -->
 
 **കത്രിക** — *katrika* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കത്രിക** (*katrika*) ← Sanskrit *kartarī*, "scissors, knife", taken over whole as a tatsama (CDIAL 2858). Malayalam lets the *r* before the *t* drop away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

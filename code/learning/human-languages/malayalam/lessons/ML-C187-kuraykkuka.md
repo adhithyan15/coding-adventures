@@ -14,7 +14,8 @@ romanization: "kuraykkuka"
 concept_tag: ML-VERB-KURAYKKUKA
 prerequisites: [ML-C187-viriyuka, ML-C187-natuka]
 sounds: []
-roots: []
+roots: [dravidian-kurai-bark]
+etymology_hook: "kuraykkuka: native Dravidian, one word with Tamil kurai and Kannada kure (DEDR 1796)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C187-natuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C187-KRIYA187-04]; assesses=[] -->
 
 **കുരയ്ക്കുക** — *kuraykkuka* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുരയ്ക്കുക** (*kuraykkuka*) is native Dravidian, one word with Tamil *kurai* and Kannada *kure* (DEDR 1796). DEDR 1796 compares Sanskrit *kurkura*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

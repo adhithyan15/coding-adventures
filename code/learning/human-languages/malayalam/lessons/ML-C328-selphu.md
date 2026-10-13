@@ -14,7 +14,8 @@ romanization: "ṣelphŭ"
 concept_tag: ML-VASTU328-SELPHU
 prerequisites: [ML-C327-cilanti, ML-C328-bencu]
 sounds: []
-roots: []
+roots: [english-shelf]
+etymology_hook: "ṣelphŭ ← English shelf"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C328-bencu]
 <!-- hl-knowledge: introduces=[ML-LEX-C328-VASTU328-02]; assesses=[] -->
 
 **ഷെൽഫ്** — *ṣelphŭ* — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഷെൽഫ്** (*ṣelphŭ*) ← English *shelf*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

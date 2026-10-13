@@ -14,7 +14,8 @@ romanization: "vimarśikkuka"
 concept_tag: ML-VERB-VIMARSIKKUKA
 prerequisites: [ML-C229-yojikkuka, ML-C230-nirddesikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-vimarsha]
+etymology_hook: "vimarśikkuka ← Sanskrit vimarśa 'examination, reflection' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C230-nirddesikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C230-KRIYA230-02]; assesses=[] -->
 
 **വിമർശിക്കുക** — *vimarśikkuka* — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിമർശിക്കുക** (*vimarśikkuka*) is built on Sanskrit *vimarśa*, "examination, reflection", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

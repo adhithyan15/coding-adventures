@@ -14,7 +14,8 @@ romanization: "sandhya"
 concept_tag: ML-SAMAYAM236-SANDHYA
 prerequisites: [ML-C236-attam, ML-C236-tiruvonam]
 sounds: []
-roots: []
+roots: [sanskrit-sandhya-junction]
+etymology_hook: "sandhya ← Sanskrit saṁdhyā 'twilight', a tatsama (CDIAL 12918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C236-tiruvonam]
 <!-- hl-knowledge: introduces=[ML-LEX-C236-SAMAYAM236-04]; assesses=[] -->
 
 **സന്ധ്യ** — *sandhya* — "dusk, twilight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സന്ധ്യ** (*sandhya*) ← Sanskrit *saṁdhyā*, "twilight", taken over whole as a tatsama (CDIAL 12918). It first meant the joining of day and night.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

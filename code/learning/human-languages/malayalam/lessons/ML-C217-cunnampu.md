@@ -14,7 +14,8 @@ romanization: "cuṇṇāmpŭ"
 concept_tag: ML-VASTU217-CUNNAMPU
 prerequisites: [ML-C217-tukal, ML-C217-piccala]
 sounds: []
-roots: []
+roots: [sanskrit-curna]
+etymology_hook: "cuṇṇāmpŭ: from Sanskrit cūrṇa 'powder; lime' (CDIAL 4889), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C217-piccala]
 <!-- hl-knowledge: introduces=[ML-LEX-C217-VASTU217-05]; assesses=[] -->
 
 **ചുണ്ണാമ്പ്** — *cuṇṇāmpŭ* — "lime (for whitewash)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുണ്ണാമ്പ്** (*cuṇṇāmpŭ*) comes from Sanskrit *cūrṇa*, "powder", especially "lime" (CDIAL 4889), reshaped with a Dravidian ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

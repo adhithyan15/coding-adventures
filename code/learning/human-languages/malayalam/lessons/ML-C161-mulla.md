@@ -14,7 +14,8 @@ romanization: "mulla"
 concept_tag: ML-THINGS161-MULLA
 prerequisites: [ML-C161-tennu, ML-C161-vala2]
 sounds: []
-roots: []
+roots: [dravidian-mullai-jasmine]
+etymology_hook: "mulla: native Dravidian, one word with Tamil mullai and Kannada molle (DEDR 4987)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C161-vala2]
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-04]; assesses=[] -->
 
 **മുല്ല** — *mulla* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുല്ല** (*mulla*) is native Dravidian, one word with Tamil *mullai*, Kannada *molle* and Telugu *molla* (DEDR 4987). DEDR 4987 compares Sanskrit *mallikā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

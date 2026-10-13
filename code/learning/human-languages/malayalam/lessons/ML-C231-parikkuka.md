@@ -14,7 +14,8 @@ romanization: "paṟikkuka"
 concept_tag: ML-VERB-PARIKKUKA
 prerequisites: [ML-C231-muttuka, ML-C231-kuniyuka]
 sounds: []
-roots: []
+roots: [dravidian-pari-pluck]
+etymology_hook: "paṟikkuka: native Dravidian, one word with Tamil paṟi and Kannada paṟi (DEDR 4027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C231-kuniyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C231-KRIYA231-04]; assesses=[] -->
 
 **പറിക്കുക** — *paṟikkuka* — "to pluck, to pick (fruit, flowers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പറിക്കുക** (*paṟikkuka*) is native Dravidian, one word with Tamil *paṟi* and Kannada *paṟi* (DEDR 4027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

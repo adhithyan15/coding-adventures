@@ -14,7 +14,8 @@ romanization: "masāla"
 concept_tag: ML-VASTU209-MASALA
 prerequisites: [ML-C209-kariveppila, ML-C209-katuku]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masāla ← Hindustani masālā, from Arabic maṣāliḥ 'things needed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C209-katuku]
 <!-- hl-knowledge: introduces=[ML-LEX-C209-VASTU209-03]; assesses=[] -->
 
 **മസാല** — *masāla* — "spice mix, masala".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മസാല** (*masāla*) ← Hindustani *masālā*, "spices", from Arabic *maṣāliḥ*, "necessary things, ingredients".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

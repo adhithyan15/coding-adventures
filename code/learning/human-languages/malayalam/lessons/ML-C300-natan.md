@@ -14,7 +14,8 @@ romanization: "naṭan"
 concept_tag: ML-JOLI300-NATAN
 prerequisites: [ML-C299-koleju, ML-C299-sarvakalasala]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "naṭan ← Sanskrit naṭa 'dancer, actor', a tatsama (CDIAL 6933)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C299-sarvakalasala]
 <!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-01]; assesses=[] -->
 
 **നടൻ** — *naṭan* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നടൻ** (*naṭan*) ← Sanskrit *naṭa*, "dancer, actor", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 6933).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

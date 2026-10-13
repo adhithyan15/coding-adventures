@@ -14,7 +14,8 @@ romanization: "talōṭuka"
 concept_tag: ML-VERB-TALOTUKA
 prerequisites: [ML-C310-upeksikkuka, ML-C310-avarttikkuka]
 sounds: []
-roots: []
+roots: [malayalam-talotu]
+etymology_hook: "talōṭuka 'to stroke': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C310-avarttikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C311-KRIYA311-01]; assesses=[] -->
 
 **തലോടുക** — *talōṭuka* — "to stroke, to pat gently".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തലോടുക** (*talōṭuka*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuḻaykkuka"
 concept_tag: ML-VERB-KULAYKKUKA
 prerequisites: [ML-C190-olikkuka2, ML-C190-nekkuka]
 sounds: []
-roots: []
+roots: [dravidian-kuzhai-knead]
+etymology_hook: "kuḻaykkuka: native Dravidian, one word with Tamil kuḻai (DEDR 1822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C190-nekkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C190-KRIYA190-04]; assesses=[] -->
 
 **കുഴയ്ക്കുക** — *kuḻaykkuka* — "to knead (dough)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുഴയ്ക്കുക** (*kuḻaykkuka*) is native Dravidian, one word with Tamil *kuḻai* (DEDR 1822). DEDR 1822 compares Sanskrit *kuṇapa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

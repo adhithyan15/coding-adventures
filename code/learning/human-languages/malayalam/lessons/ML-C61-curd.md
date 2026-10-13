@@ -11,7 +11,8 @@ romanization: "tairŭ"
 concept_tag: ML-NOUN-CURD
 prerequisites: [ML-C61-oil, ML-C59-mud]
 sounds: []
-roots: []
+roots: [dravidian-tayir-curd]
+etymology_hook: "tairŭ: native Dravidian, one word with Tamil tayir (DEDR 3088)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *tayir*. Milk is warmed, cooled to the hand, gi
 It closes on the same bare *r* that closes *vērŭ*, the root-word — a consonant with the vowel taken off it rather than a syllable of its own.
 
 On a Kerala plate it is the last course, spooned over rice to cool everything the chilli did earlier.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൈര്** (*tairŭ*) is native Dravidian, one word with Tamil *tayir* (DEDR 3088). DEDR 3088 notes a possible source in Sanskrit *takra*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

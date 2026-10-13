@@ -14,7 +14,8 @@ romanization: "tīraṁ"
 concept_tag: ML-THINGS148-TIRAM
 prerequisites: [ML-C148-tatakam, ML-C148-dvipu]
 sounds: []
-roots: []
+roots: [sanskrit-tira]
+etymology_hook: "tīraṁ ← Sanskrit tīra 'shore, bank', a tatsama (CDIAL 5842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C148-dvipu]
 <!-- hl-knowledge: introduces=[ML-LEX-C148-THINGS148-05]; assesses=[] -->
 
 **തീരം** — *tīraṁ* — "a shore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീരം** (*tīraṁ*) ← Sanskrit *tīra*, "shore, bank", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 5842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

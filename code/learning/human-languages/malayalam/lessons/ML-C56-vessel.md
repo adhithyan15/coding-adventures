@@ -11,7 +11,8 @@ romanization: "pātraṁ"
 concept_tag: ML-NOUN-VESSEL
 prerequisites: [ML-C56-knife, ML-C54-root]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "pātraṁ ← Sanskrit pātra 'drinking vessel, dish', a tatsama (CDIAL 8055)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *pātra*, "a receptacle" — the first borrowed word in this run, and i
 A പാത്രം is a cooking vessel, a pot, a dish. It is also a character in a story or a part in a play: the person is a vessel that a role is poured into. Malayalam film writing uses the word constantly in that second sense, and a reader meets both without difficulty.
 
 One shape holding the pot and the person is the kind of figure a language borrows whole rather than builds, and Malayalam took it as it stood.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാത്രം** (*pātraṁ*) ← Sanskrit *pātra*, "drinking vessel, dish", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

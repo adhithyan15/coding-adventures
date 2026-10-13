@@ -14,7 +14,8 @@ romanization: "piṟṟēnnŭ"
 concept_tag: ML-SAMAYAM237-PIRRENNU
 prerequisites: [ML-C237-ennenkilum, ML-C237-talennu]
 sounds: []
-roots: []
+roots: [dravidian-pin-behind]
+etymology_hook: "piṟṟēnnŭ: native Dravidian, 'the day after', with a word for 'day'; its first part is related to pin 'after' (DEDR 4205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C237-talennu]
 <!-- hl-knowledge: introduces=[ML-LEX-C237-SAMAYAM237-04]; assesses=[] -->
 
 **പിറ്റേന്ന്** — *piṟṟēnnŭ* — "the following day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിറ്റേന്ന്** (*piṟṟēnnŭ*) is native Dravidian, "the day after": its first part belongs with *pin*, "after" (DEDR 4205, with Tamil *piṉ*), and its end is a word for "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

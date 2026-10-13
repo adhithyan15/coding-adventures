@@ -14,7 +14,8 @@ romanization: "prēraṇa"
 concept_tag: ML-KARANAM202-PRERANA
 prerequisites: [ML-C201-nirbhagyavasal, ML-C201-ennaneyenkilum]
 sounds: []
-roots: []
+roots: [sanskrit-prerana]
+etymology_hook: "prēraṇa ← Sanskrit prēraṇa 'driving on, urging', a tatsama (CDIAL 9000)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C201-ennaneyenkilum]
 <!-- hl-knowledge: introduces=[ML-LEX-C202-KARANAM202-01]; assesses=[] -->
 
 **പ്രേരണ** — *prēraṇa* — "a motivation, an urging".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രേരണ** (*prēraṇa*) ← Sanskrit *prēraṇa*, "driving on, urging", taken over whole as a tatsama (CDIAL 9000).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

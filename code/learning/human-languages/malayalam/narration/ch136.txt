@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a bridge, then the Malayalam for a vil
 You'll want to know: കടൽ.
 കടൽ (kaṭal) — "the sea". Kerala's whole west side is on it.
 
+The word, taken apart.
+കടൽ (kaṭal) is native Dravidian, one word with Tamil kaṭal, Kannada kaḍal and Telugu kaḍali (DEDR 1118).
+
 What you've built.
 Where the fish come from.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a village, then the Malayalam for the 
 
 You'll want to know: കടപ്പുറം.
 കടപ്പുറം (kaṭappuṟaṁ) — "the beach", the edge of the കടൽ (kaṭal).
+
+The word, taken apart.
+കടപ്പുറം (kaṭappuṟaṁ) is native Dravidian: kaṭal, "sea" (DEDR 1118, with Tamil kaṭal), with puṟam, "the outer side" (DEDR 4333).
 
 What you've built.
 Where the sea meets the sand.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the sea, then the Malayalam for the be
 You'll want to know: കുളം.
 കുളം (kuḷaṁ) — "a pond", often with steps down to it for a കുളി.
 
+The word, taken apart.
+കുളം (kuḷaṁ) is native Dravidian, one word with Tamil kuḷam, Kannada koḷa and Telugu kolanu (DEDR 1828). DEDR 1828 compares Sanskrit kūla.
+
 What you've built.
 Still water, close to home.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for the beach, then the Malayalam for a po
 You'll want to know: കിണർ.
 കിണർ (kiṇar) — "a well", where the house's വെള്ളം comes from.
 
+The word, taken apart.
+കിണർ (kiṇar) is native Dravidian, one word with Tamil kēṇi and Kannada kēṇi (DEDR 1998).
+
 What you've built.
 Water from under the yard.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a pond, then the Malayalam for a well.
 
 You'll want to know: തുറമുഖം.
 തുറമുഖം (tuṟamukhaṁ) — "a harbour", where the boats come in from the കടൽ (kaṭal).
+
+The word, taken apart.
+തുറമുഖം (tuṟamukhaṁ) joins native tuṟa, "landing place, harbour" (DEDR 3370, with Tamil tuṟai), to Sanskrit mukha, "mouth, entrance" (CDIAL 10158).
 
 What you've built.
 Where the boats rest.

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 257,
-  "sourceHash": "fnv1a64:b956899428fe8428",
+  "sourceHash": "fnv1a64:0bb54e8a67815801",
   "lessonIds": [
     "ML-C257-otu",
     "ML-C257-tunu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch257.txt",
   "json": "malayalam/narration/ch257.json",
-  "textHash": "fnv1a64:cba991bd810e280c",
-  "jsonHash": "fnv1a64:9c2a7362d1ed9b24",
+  "textHash": "fnv1a64:4eb9e226dfeca8c6",
+  "jsonHash": "fnv1a64:74af396cefeecf4e",
   "findings": []
 }

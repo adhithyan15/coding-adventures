@@ -14,7 +14,8 @@ romanization: "nuḷḷuka"
 concept_tag: ML-VERB-NULLUKA
 prerequisites: [ML-C273-kottuka, ML-C273-karannuka]
 sounds: []
-roots: []
+roots: [dravidian-nullu-pinch]
+etymology_hook: "nuḷḷuka: native Dravidian, one word with Tamil nuḷḷu and Kannada nuḷḷu (DEDR 3717)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C273-karannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C273-KRIYA273-05]; assesses=[] -->
 
 **നുള്ളുക** — *nuḷḷuka* — "to pinch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നുള്ളുക** (*nuḷḷuka*) is native Dravidian, one word with Tamil *nuḷḷu*, Kannada *nuḷḷu* and Telugu *nul(u)cu* (DEDR 3717).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

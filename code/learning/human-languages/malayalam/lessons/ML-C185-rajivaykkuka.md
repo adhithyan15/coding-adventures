@@ -14,7 +14,8 @@ romanization: "rājivaykkuka"
 concept_tag: ML-VERB-RAJIVAYKKUKA
 prerequisites: [ML-C184-purippikkuka, ML-C184-oppituka]
 sounds: []
-roots: []
+roots: [persian-razi, dravidian-vai-place]
+etymology_hook: "rājivaykkuka: rāji, from Persian rāzī 'consenting' through Hindustani, + a native verb 'to place' (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C184-oppituka]
 <!-- hl-knowledge: introduces=[ML-LEX-C185-KRIYA185-01]; assesses=[] -->
 
 **രാജിവയ്ക്കുക** — *rājivaykkuka* — "to resign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രാജിവയ്ക്കുക** (*rājivaykkuka*) joins *rāji*, "resignation", from Persian *rāzī*, "content, consenting", which came through Hindustani, to the native verb "to put down, place" (DEDR 5549, with Tamil *vai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

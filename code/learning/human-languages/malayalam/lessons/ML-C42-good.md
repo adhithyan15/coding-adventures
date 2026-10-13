@@ -11,7 +11,8 @@ romanization: "nalla"
 concept_tag: ML-ADJ-GOOD
 prerequisites: [ML-C42-small, ML-C40-oon]
 sounds: []
-roots: []
+roots: [nal-good-dravidian]
+etymology_hook: "nalla: native Dravidian, one word with Tamil nalla and Kannada nal (DEDR 3610)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **ചെറിയ** *ceṟiya* a moment ago. Put them side by side and n
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നല്ല** (*nalla*) is native Dravidian, one word with Tamil *nalla*, Kannada *nal* and Telugu *naluvu* (DEDR 3610). The same root gives the Malayalam word for "thanks". DEDR 3610 compares Sanskrit *Nala*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03] -->

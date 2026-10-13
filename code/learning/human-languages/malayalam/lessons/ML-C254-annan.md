@@ -14,7 +14,8 @@ romanization: "aṇṇān"
 concept_tag: ML-VASTU254-ANNAN
 prerequisites: [ML-C253-tulasi, ML-C254-kuruvi]
 sounds: []
-roots: []
+roots: [dravidian-anil-squirrel]
+etymology_hook: "aṇṇān: native Dravidian, one word with Tamil aṇil and Kannada aṇal (DEDR 2315)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C254-kuruvi]
 <!-- hl-knowledge: introduces=[ML-LEX-C254-VASTU254-02]; assesses=[] -->
 
 **അണ്ണാൻ** — *aṇṇān* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അണ്ണാൻ** (*aṇṇān*) is native Dravidian, one word with Tamil *aṇil* and Kannada *aṇal* (DEDR 2315).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

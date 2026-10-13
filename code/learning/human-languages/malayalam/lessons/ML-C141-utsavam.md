@@ -11,7 +11,8 @@ romanization: "utsavaṁ"
 concept_tag: ML-FEST-UTSAVAM
 prerequisites: [ML-C141-christmas, ML-C141-eid]
 sounds: []
-roots: []
+roots: [sanskrit-utsava]
+etymology_hook: "utsavaṁ ← Sanskrit utsava 'enterprise; festival', a tatsama (CDIAL 1876)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C141-eid]
 <!-- hl-knowledge: introduces=[ML-LEX-C141-FESTIVALS-05]; assesses=[] -->
 
 **ഉത്സവം** (*utsavaṁ*) — "a festival", above all a **ക്ഷേത്രം** festival with elephants.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉത്സവം** (*utsavaṁ*) ← Sanskrit *utsava*, "enterprise; festival", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1876).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

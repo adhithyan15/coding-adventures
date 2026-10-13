@@ -14,7 +14,8 @@ romanization: "svapnaṁ"
 concept_tag: ML-WANT145-SVAPNAM
 prerequisites: [ML-C144-nimittam, ML-C145-agraham]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "svapnaṁ ← Sanskrit svapna 'sleep, dream', a tatsama (CDIAL 13904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C145-agraham]
 <!-- hl-knowledge: introduces=[ML-LEX-C145-WANT145-02]; assesses=[] -->
 
 **സ്വപ്നം** — *svapnaṁ* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വപ്നം** (*svapnaṁ*) ← Sanskrit *svapna*, "sleep, dream", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13904).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

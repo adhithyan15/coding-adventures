@@ -14,7 +14,8 @@ romanization: "tiruvōṇaṁ"
 concept_tag: ML-SAMAYAM236-TIRUVONAM
 prerequisites: [ML-C236-kuttikkalam, ML-C236-attam]
 sounds: []
-roots: []
+roots: [sanskrit-shri, sanskrit-shravana]
+etymology_hook: "tiruvōṇaṁ: tiru 'holy', usually traced to Sanskrit śrī (CDIAL 12708), + ōṇaṁ (from śravaṇa)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C236-attam]
 <!-- hl-knowledge: introduces=[ML-LEX-C236-SAMAYAM236-03]; assesses=[] -->
 
 **തിരുവോണം** — *tiruvōṇaṁ* — "Thiruvonam, the main day of Onam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിരുവോണം** (*tiruvōṇaṁ*) is the honorific *tiru*, "holy, auspicious", usually traced to Sanskrit *śrī* (CDIAL 12708), joined to *ōṇaṁ*, itself from the asterism *śravaṇa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

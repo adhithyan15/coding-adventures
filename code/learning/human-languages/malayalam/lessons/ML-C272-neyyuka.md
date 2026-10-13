@@ -14,7 +14,8 @@ romanization: "neyyuka"
 concept_tag: ML-VERB-NEYYUKA
 prerequisites: [ML-C272-tirruka, ML-C272-meyuka]
 sounds: []
-roots: []
+roots: [dravidian-ney-weave]
+etymology_hook: "neyyuka: native Dravidian, one word with Tamil ney and Kannada nē̆y (DEDR 3745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C272-meyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C272-KRIYA272-03]; assesses=[] -->
 
 **നെയ്യുക** — *neyyuka* — "to weave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നെയ്യുക** (*neyyuka*) is native Dravidian, one word with Tamil *ney*, Kannada *nē̆y* and Telugu *nēyu* (DEDR 3745).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

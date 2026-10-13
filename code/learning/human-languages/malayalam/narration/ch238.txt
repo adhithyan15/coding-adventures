@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for the following day, then the Malayalam 
 You'll want to know: നടുവിൽ.
 നടുവിൽ — naṭuvil — "in the middle".
 
+The word, taken apart.
+നടുവിൽ (naṭuvil) is native Dravidian, naṭu, "middle", with the place ending -il; DEDR 3584 lists the root with Tamil naṭu, Kannada naḍu and Telugu naḍu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for the day before yesterday, then the Mal
 
 You'll want to know: വിമാനത്താവളം.
 വിമാനത്താവളം — vimānattāvaḷaṁ — "an airport".
+
+The word, taken apart.
+വിമാനത്താവളം (vimānattāvaḷaṁ) joins Sanskrit vimāna, "a car of the gods", now "aircraft" (CDIAL 11823), to tāvaḷam, "a halting place, a station".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for in the middle, then the Malayalam for 
 You'll want to know: റെയിൽവേ.
 റെയിൽവേ — ṟeyilvē — "the railway".
 
+The word, taken apart.
+റെയിൽവേ (ṟeyilvē) from English railway.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an airport, then the Malayalam for the
 You'll want to know: യാത്രക്കാരൻ.
 യാത്രക്കാരൻ — yātrakkāran — "a passenger, a traveller".
 
+The word, taken apart.
+യാത്രക്കാരൻ (yātrakkāran) is yātra, "journey", from Sanskrit yātrā (CDIAL 10456), with -kkāran, the ending for a person who does something.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the railway, then the Malayalam for a 
 
 You'll want to know: കവല.
 കവല — kavala — "a junction".
+
+The word, taken apart.
+കവല (kavala) is native Dravidian, one word with Tamil kavar and Kannada kaval (DEDR 1325). Its first sense is a forked branch: a junction is a fork in the road.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "upayōgapradamāya"
 concept_tag: ML-GUNAM205-UPAYOGAPRADAMAYA
 prerequisites: [ML-C204-urunta, ML-C205-lalitamaya]
 sounds: []
-roots: []
+roots: [sanskrit-upayoga, aaka-dravidian]
+etymology_hook: "upayōgapradamāya: Sanskrit upayōga 'use' + prada 'giving' + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C205-lalitamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C205-GUNAM205-02]; assesses=[] -->
 
 **ഉപയോഗപ്രദമായ** — *upayōgapradamāya* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപയോഗപ്രദമായ** (*upayōgapradamāya*) is Sanskrit *upayōga*, "use", and *prada*, "giving", with native *āya*, "having become" (DEDR 333): "use-giving". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

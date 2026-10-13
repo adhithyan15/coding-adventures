@@ -14,7 +14,8 @@ romanization: "munkūṭṭi"
 concept_tag: ML-SAMAYAM195-MUNKUTTI
 prerequisites: [ML-C195-varantyam, ML-C195-pettennu]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-kudu-join]
+etymology_hook: "munkūṭṭi: native Dravidian, 'joined beforehand': mun (DEDR 5020) + kūṭṭi (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C195-pettennu]
 <!-- hl-knowledge: introduces=[ML-LEX-C195-SAMAYAM195-05]; assesses=[] -->
 
 **മുൻകൂട്ടി** — *munkūṭṭi* — "in advance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുൻകൂട്ടി** (*munkūṭṭi*) is native Dravidian, "put together beforehand": *mun*, "before" (DEDR 5020), and *kūṭṭi*, from the verb "to bring together" (DEDR 1882, with Tamil *kūṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

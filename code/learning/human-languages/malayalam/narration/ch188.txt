@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to bark, then the Malayalam for to ris
 You'll want to know: മായ്ക്കുക.
 മായ്ക്കുക — māykkuka — "to erase, to delete".
 
+The word, taken apart.
+മായ്ക്കുക (māykkuka) is native Dravidian, one word with Tamil māy, Kannada māy and Telugu māyu (DEDR 4814). It is the causative of the verb "to vanish": "make vanish".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to rise, then the Malayalam for to era
 
 You'll want to know: ഓണാക്കുക.
 ഓണാക്കുക — ōṇākkuka — "to switch on".
+
+The word, taken apart.
+ഓണാക്കുക (ōṇākkuka) joins English on to native ākkuka, "to make" (DEDR 333): "make it on". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to erase, then the Malayalam for to sw
 You'll want to know: ഓഫാക്കുക.
 ഓഫാക്കുക — ōphākkuka — "to switch off".
 
+The word, taken apart.
+ഓഫാക്കുക (ōphākkuka) joins English off to native ākkuka, "to make" (DEDR 333): "make it off". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to switch on, then the Malayalam for t
 You'll want to know: പ്രസിദ്ധീകരിക്കുക.
 പ്രസിദ്ധീകരിക്കുക — prasiddhīkarikkuka — "to publish".
 
+The word, taken apart.
+പ്രസിദ്ധീകരിക്കുക (prasiddhīkarikkuka) is built on Sanskrit prasiddha, "celebrated, made known" (CDIAL 8842), with -karikkuka, "to make", on the Sanskrit root kṛ: "to make known".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to switch off, then the Malayalam for 
 
 You'll want to know: നന്നാക്കുക.
 നന്നാക്കുക — nannākkuka — "to repair, to fix".
+
+The word, taken apart.
+നന്നാക്കുക (nannākkuka) is native Dravidian, "make good": nannu, "good" (DEDR 3610, with Tamil nal), and ākkuka, "to make" (DEDR 333). DEDR 3610 compares Sanskrit Nala. DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

@@ -48,6 +48,11 @@ somebody is from.
 | **നഗരം** | *nagaraṁ* | a city |
 | **ഊര്** | *ūrŭ* | a town, a settled place — **yours already** |
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നഗരം** (*nagaraṁ*) ← Sanskrit *nagara*, "town" (CDIAL 6924), a tatsama with Malayalam's noun ending *-ṁ*.
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-CITY-01, ML-LEX-C80-ORIGIN-01] -->
 

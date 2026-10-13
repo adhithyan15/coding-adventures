@@ -11,7 +11,8 @@ romanization: "tuṟamukhaṁ"
 concept_tag: ML-WATER-HARBOUR
 prerequisites: [ML-C136-pond, ML-C136-well]
 sounds: []
-roots: []
+roots: [dravidian-turai-landing, sanskrit-mukha]
+etymology_hook: "tuṟamukhaṁ: native tuṟa 'landing place, harbour' (DEDR 3370) + Sanskrit mukha 'mouth, entrance' (CDIAL 10158)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C136-well]
 <!-- hl-knowledge: introduces=[ML-LEX-C136-WATER-05]; assesses=[] -->
 
 **തുറമുഖം** (*tuṟamukhaṁ*) — "a harbour", where the boats come in from the **കടൽ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുറമുഖം** (*tuṟamukhaṁ*) joins native *tuṟa*, "landing place, harbour" (DEDR 3370, with Tamil *tuṟai*), to Sanskrit *mukha*, "mouth, entrance" (CDIAL 10158).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

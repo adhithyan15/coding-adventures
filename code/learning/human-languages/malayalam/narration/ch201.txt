@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a solution, then the Malayalam for acc
 You'll want to know: അതുപോലെ.
 അതുപോലെ — atupōle — "likewise, in the same way".
 
+The word, taken apart.
+അതുപോലെ (atupōle) is native Dravidian, "like that": atu, "that" (DEDR 1), and pōle, "like" (DEDR 4597, with Tamil pōl).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for according to, then the Malayalam for l
 
 You'll want to know: ഒഴികെ.
 ഒഴികെ — oḻike — "except".
+
+The word, taken apart.
+ഒഴികെ (oḻike) is native Dravidian, a form of the verb "to quit, leave aside" (DEDR 1009, with Tamil oḻi): "leaving that aside".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for likewise, then the Malayalam for excep
 You'll want to know: ഭാഗ്യവശാൽ.
 ഭാഗ്യവശാൽ — bhāgyavaśāl — "fortunately".
 
+The word, taken apart.
+ഭാഗ്യവശാൽ (bhāgyavaśāl) is Sanskrit: bhāgya, "fortune" (CDIAL 9434), and vaśāt, "by the power of", from vaśa, "will, power" (CDIAL 11430).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for except, then the Malayalam for fortuna
 You'll want to know: നിർഭാഗ്യവശാൽ.
 നിർഭാഗ്യവശാൽ — nirbhāgyavaśāl — "unfortunately".
 
+The word, taken apart.
+നിർഭാഗ്യവശാൽ (nirbhāgyavaśāl) is Sanskrit: nir-, "without", bhāgya, "fortune" (CDIAL 9434), and vaśāt, "by the power of" (CDIAL 11430).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for fortunately, then the Malayalam for un
 
 You'll want to know: എങ്ങനെയെങ്കിലും.
 എങ്ങനെയെങ്കിലും — eṅṅaneyeṅkiluṁ — "somehow".
+
+The word, taken apart.
+എങ്ങനെയെങ്കിലും (eṅṅaneyeṅkiluṁ) is native Dravidian: eṅṅane, "how" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868), and -uṁ: "however it may be".
 
 What you've built.
 One more word for this chapter.

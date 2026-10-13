@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 171,
-  "sourceHash": "fnv1a64:f0b1f1e128cbc4f2",
+  "sourceHash": "fnv1a64:a72507cf805f2d84",
   "lessonIds": [
     "ML-C171-elunnelkkuka",
     "ML-C171-urannuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch171.txt",
   "json": "malayalam/narration/ch171.json",
-  "textHash": "fnv1a64:c957fca71c785b1a",
-  "jsonHash": "fnv1a64:7db177763f187179",
+  "textHash": "fnv1a64:63cecb4ba4c1dd98",
+  "jsonHash": "fnv1a64:84526b0d8af1ab98",
   "findings": []
 }

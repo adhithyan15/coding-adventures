@@ -14,7 +14,8 @@ romanization: "viśari"
 concept_tag: ML-THINGS157-VISARI
 prerequisites: [ML-C157-kalam, ML-C157-atuppu, ML-C18-oru]
 sounds: []
-roots: []
+roots: [dravidian-vicu-fan]
+etymology_hook: "viśari: native Dravidian, from the verb 'to fan'; Tamil vīcu, Kannada bīsu (DEDR 5450)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C157-atuppu]
 <!-- hl-knowledge: introduces=[ML-LEX-C157-THINGS157-03]; assesses=[] -->
 
 **വിശറി** — *viśari* — "a hand fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിശറി** (*viśari*) is native Dravidian, from the verb "to fan, to wave"; DEDR 5450 lists the root with Tamil *vīcu*, Kannada *bīsu* and Telugu *vīcu*. DEDR 5450 compares Sanskrit *vīj*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kiṭakka"
 concept_tag: ML-THINGS-BED
 prerequisites: [ML-C128-bathroom, ML-C128-yard]
 sounds: []
-roots: []
+roots: [dravidian-kida-lie]
+etymology_hook: "kiṭakka: native Dravidian, from the verb 'to lie down'; Tamil kiṭa (DEDR 1524)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C128-yard]
 <!-- hl-knowledge: introduces=[ML-LEX-C129-THINGS-01]; assesses=[] -->
 
 **കിടക്ക** (*kiṭakka*) — "a bed", the first thing in a **മുറി**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിടക്ക** (*kiṭakka*) is native Dravidian, from the verb "to lie down, rest"; DEDR 1524 lists the root with Tamil *kiṭa* and Kannada *keḍe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

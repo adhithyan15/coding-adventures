@@ -11,7 +11,8 @@ romanization: "katha"
 concept_tag: ML-STORY
 prerequisites: [ML-C99-nrttham, ML-C98-sinima]
 sounds: []
-roots: []
+roots: [sanskrit-katha]
+etymology_hook: "katha ← Sanskrit kathā 'talk, story' (CDIAL 2704)"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +58,8 @@ reviews_of: [ML-C98-sinima, ML-C99-nrttham]
 **That is the whole chapter in three words.** **പാട്ട്** gives a sound up,
 **നൃത്തം** re-spells one, and **കഥ** takes a letter in — three endings, three
 outcomes, and you were told each one before you met the word it lands on.
+
+**Where the word comes from.** It is Sanskrit *kathā*, "conversation; story" (CDIAL 2704), built on *katham*, "how".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-STORY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C41-DEIXIS-01] -->

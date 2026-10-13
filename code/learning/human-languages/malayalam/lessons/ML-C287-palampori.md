@@ -14,7 +14,8 @@ romanization: "paḻampori"
 concept_tag: ML-VASTU287-PALAMPORI
 prerequisites: [ML-C286-pokkarru, ML-C287-palaharam]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen, dravidian-pori-fry]
+etymology_hook: "paḻampori: native Dravidian, 'fried fruit': paḻam (DEDR 4004) + pori 'fry' (DEDR 4537)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C287-palaharam]
 <!-- hl-knowledge: introduces=[ML-LEX-C287-VASTU287-02]; assesses=[] -->
 
 **പഴംപൊരി** — *paḻampori* — "a banana fritter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഴംപൊരി** (*paḻampori*) is native Dravidian, "fried fruit": *paḻam*, "ripe fruit" (DEDR 4004), and *pori*, from the verb "to fry, parch" (DEDR 4537, with Tamil *pori*). DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

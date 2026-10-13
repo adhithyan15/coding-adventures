@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 216,
-  "sourceHash": "fnv1a64:c22e1b5abd632ee6",
+  "sourceHash": "fnv1a64:86a60c98af43f38a",
   "lessonIds": [
     "ML-C216-cempu",
     "ML-C216-plasrriku",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch216.txt",
   "json": "malayalam/narration/ch216.json",
-  "textHash": "fnv1a64:55b86e8f7ec9ad31",
-  "jsonHash": "fnv1a64:d6e20c6a8f169b0a",
+  "textHash": "fnv1a64:ff54a8cde2852767",
+  "jsonHash": "fnv1a64:e076ea7a9c23f82e",
   "findings": []
 }

@@ -47,6 +47,11 @@ The Sanskrit it comes from means **a recitation** — a saying-aloud. The lesson
 was named for the **saying**, not for the page it is written on, which is worth
 knowing about a word you are about to say aloud.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാഠം** (*pāṭhaṁ*) ← Sanskrit *pāṭha*, "recitation, the text of a book, study" (CDIAL 8035), with Malayalam's noun ending *-ṁ*.
+
 ## Grammar Lens: you already know what it will do
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-LESSON-01, ML-GRAMMAR-C83-OBLIQUE-AM-01] -->
 

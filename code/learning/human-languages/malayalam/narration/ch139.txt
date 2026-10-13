@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a tiger, then the Malayalam for a rabb
 You'll want to know: സമയം.
 സമയം (samayaṁ) — "time". സമയം എത്ര? — "what time is it?"
 
+The word, taken apart.
+സമയം (samayaṁ) from Sanskrit samaya, "meeting, agreement; time", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13185). A meeting at an agreed point became a time.
+
 What you've built.
 The question on every street.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a rabbit, then the Malayalam for time.
 
 You'll want to know: മിനിറ്റ്.
 മിനിറ്റ് (miniṟṟŭ) — "a minute", from English. ഒരു മിനിറ്റ് — "one minute", said with a raised hand.
+
+The word, taken apart.
+മിനിറ്റ് (miniṟṟŭ) from English minute, from Latin minūta, "a small part" of the hour.
 
 What you've built.
 The polite way to ask for a moment.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for time, then the Malayalam for a minute.
 You'll want to know: മണിക്കൂർ.
 മണിക്കൂർ (maṇikkūr) — "an hour". It begins with മണി, the word in ഒരു മണി, "one o'clock".
 
+The word, taken apart.
+മണിക്കൂർ (maṇikkūr) joins maṇi, "hour, bell", from Sanskrit maṇi, "jewel" (CDIAL 9731), to native kūr, "part, share, a division of time" (DEDR 1924, with Tamil kūṟu).
+
 What you've built.
 Sixty minutes.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a minute, then the Malayalam for an ho
 You'll want to know: മാസം.
 മാസം (māsaṁ) — "a month". ചിങ്ങം and കന്നി are months.
 
+The word, taken apart.
+മാസം (māsaṁ) from Sanskrit māsa, "moon, month", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 10104). English month and moon are distant relatives of the same Indo-European word.
+
 What you've built.
 The frame for the months you know.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for an hour, then the Malayalam for a mont
 
 You'll want to know: വർഷം.
 വർഷം (varṣaṁ) — "a year", twelve മാസം (māsaṁ).
+
+The word, taken apart.
+വർഷം (varṣaṁ) from Sanskrit varṣa, "rain; year", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11392). Its first sense is "rain": the year was counted in rainy seasons.
 
 What you've built.
 The biggest frame.

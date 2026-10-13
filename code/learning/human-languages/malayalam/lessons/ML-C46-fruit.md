@@ -11,7 +11,8 @@ romanization: "paḻaṁ"
 concept_tag: ML-NOUN-FRUIT
 prerequisites: [ML-C45-wife, ML-C43-stand]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "paḻaṁ: native Dravidian, 'the ripened thing', from the verb to ripen, Tamil paḻu (DEDR 4004)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Behind the fruit sits a verb of ripening. Proto-Dravidian **\*paḻ**, 'to ripen
 Tamil says பழம் (*paḻam*), which is very nearly the identical word — the ordinary state of affairs between these two closest sisters. Telugu went to పండు (*paṇḍu*) and Kannada to ಹಣ್ಣು (*haṇṇu*), and the Kannada form has lost its opening *p-* to a shift Malayalam sat out entirely.
 
 The ഴ in the middle is the letter this book has already called Malayalam's own oddity, the one only these two sisters still write.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഴം** (*paḻaṁ*) is native Dravidian, a noun from the verb "to ripen"; DEDR 4004 lists the root with Tamil *paḻu*, Kannada *paṇ* and Telugu *paṇḍu*. DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

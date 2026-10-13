@@ -14,7 +14,8 @@ romanization: "muṟikkuka"
 concept_tag: ML-VERB-MURIKKUKA
 prerequisites: [ML-C302-tunnuka, ML-C302-istiriyituka]
 sounds: []
-roots: []
+roots: [dravidian-muri-break]
+etymology_hook: "muṟikkuka: native Dravidian, 'make break, cut'; Tamil muṟi (DEDR 5008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C302-istiriyituka]
 <!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-03]; assesses=[] -->
 
 **മുറിക്കുക** — *muṟikkuka* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുറിക്കുക** (*muṟikkuka*) is native Dravidian, the causative of the verb "to break, be cut"; DEDR 5008 lists the root with Tamil *muṟi* and Kannada *muṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

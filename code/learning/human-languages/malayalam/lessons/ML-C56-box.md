@@ -11,7 +11,8 @@ romanization: "peṭṭi"
 concept_tag: ML-NOUN-BOX
 prerequisites: [ML-C56-vessel, ML-C54-seed]
 sounds: []
-roots: []
+roots: [dravidian-petti-box]
+etymology_hook: "peṭṭi: native Dravidian, one word with Tamil peṭṭi and Kannada peṭṭi (DEDR 4388)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Matching Tamil *peṭṭi*, and it covers the whole family of closed containers:
 It is one of those words that quietly absorbs new objects. Malayalam has built the matchbox, the ballot box and the letter box on it since, each one a compound with പെട്ടി sitting on the end and an older word in front.
 
 A word that keeps accepting new referents without changing shape is a sign of a healthy one, and പെട്ടി has been accepting them for a long time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെട്ടി** (*peṭṭi*) is native Dravidian, one word with Tamil *peṭṭi*, Kannada *peṭṭi* and Telugu *peṭṭe* (DEDR 4388). DEDR 4388 compares Sanskrit *peṭaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

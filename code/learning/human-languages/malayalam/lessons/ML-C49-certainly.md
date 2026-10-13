@@ -11,7 +11,8 @@ romanization: "tīrccayāyuṁ"
 concept_tag: ML-WORD-CERTAINLY
 prerequisites: [ML-C49-enough, ML-C47-hair]
 sounds: []
-roots: []
+roots: [dravidian-tir-finish]
+etymology_hook: "tīrccayāyuṁ: native Dravidian, 'as a certainty', from the verb 'to be finished', Tamil tīr (DEDR 3278)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A long word, and every piece of it is Malayalam's own. തീർച്ച (*tīr
 Kannada reaches for ಖಂಡಿತ (*khaṇḍita*) here, Sanskrit for 'cut, broken off'. The two languages arrived at the same idea from the same direction — a matter is certain once it has been finished off — but one built the word at home and one imported it.
 
 There is a chillu ർ inside, the third chapter running to end up leaning on one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീർച്ചയായും** (*tīrccayāyuṁ*) is native Dravidian: a noun meaning "completion, finality", from the verb "to be finished, settled" (DEDR 3278, with Tamil *tīr* and Kannada *tīr*), followed by an ending meaning "as". What is settled is certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

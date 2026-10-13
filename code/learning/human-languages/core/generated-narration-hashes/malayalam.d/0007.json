@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 7,
-  "sourceHash": "fnv1a64:7d98679edd5dda0e",
+  "sourceHash": "fnv1a64:21d9bf091f5abf34",
   "lessonIds": [
     "ML-C07-numbers-1-5",
     "ML-W07-digits-1-3",
@@ -24,7 +24,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch07.txt",
   "json": "malayalam/narration/ch07.json",
-  "textHash": "fnv1a64:4605721583f6d9c7",
-  "jsonHash": "fnv1a64:31a77d318b8d9c94",
+  "textHash": "fnv1a64:93cfc47721b5392a",
+  "jsonHash": "fnv1a64:76a1bf1e8908caa0",
   "findings": []
 }

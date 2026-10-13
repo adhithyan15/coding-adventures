@@ -11,7 +11,8 @@ romanization: "ippōḷ"
 concept_tag: ML-WORD-NOW
 prerequisites: [ML-C49-just-so, ML-C48-teacher]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-pozhutu-time]
+etymology_hook: "ippōḷ 'now': native Dravidian, 'this' + a word for 'time'; Tamil pōtu (DEDR 410, 4559)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The pointing pattern again, and this time on time rather than manner. *i-* is th
 Tamil says இப்போது (*ippōtu*) — the same two pieces, put together the same way.
 
 The word ends on ൾ, the chillu already met at the end of നിങ്ങൾ. Kannada's word for now, ಈಗ (*īga*), is built from its own near-pointer and shares nothing else with this one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇപ്പോൾ** (*ippōḷ*) is native Dravidian, "this time": the near-pointing base of *itŭ* (DEDR 410) joined to a word for "time" (DEDR 4559, with Tamil *poḻutu*, *pōtu* and Kannada *pottu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

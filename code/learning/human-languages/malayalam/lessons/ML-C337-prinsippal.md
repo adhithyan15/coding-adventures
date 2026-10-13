@@ -14,7 +14,8 @@ romanization: "prinsippal"
 concept_tag: ML-JOLI337-PRINSIPPAL
 prerequisites: [ML-C337-yuniphom, ML-C337-upanyasam]
 sounds: []
-roots: []
+roots: [english-principal]
+etymology_hook: "prinsippal ← English principal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C337-upanyasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C337-JOLI337-04]; assesses=[] -->
 
 **പ്രിൻസിപ്പൽ** — *prinsippal* — "a principal (of a school)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രിൻസിപ്പൽ** (*prinsippal*) ← English *principal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

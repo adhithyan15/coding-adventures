@@ -14,7 +14,8 @@ romanization: "pariśīlanaṁ"
 concept_tag: ML-JOLI261-PARISILANAM
 prerequisites: [ML-C261-abhimukham, ML-C261-olivu]
 sounds: []
-roots: []
+roots: [sanskrit-parishilana]
+etymology_hook: "pariśīlanaṁ ← Sanskrit pariśīlana 'practice, exercise', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C261-olivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C261-JOLI261-04]; assesses=[] -->
 
 **പരിശീലനം** — *pariśīlanaṁ* — "training".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിശീലനം** (*pariśīlanaṁ*) ← Sanskrit *pariśīlana*, "practice, exercise", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

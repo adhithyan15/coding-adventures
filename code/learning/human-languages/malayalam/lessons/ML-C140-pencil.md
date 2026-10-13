@@ -11,7 +11,8 @@ romanization: "pensil"
 concept_tag: ML-CLASS-PENCIL
 prerequisites: [ML-C139-year, ML-C140-pen]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil, from Latin pēnicillus 'little tail, brush'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C140-pen]
 <!-- hl-knowledge: introduces=[ML-LEX-C140-SCHOOL-02]; assesses=[] -->
 
 **പെൻസിൽ** (*pensil*) — "a pencil", from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെൻസിൽ** (*pensil*) ← English *pencil*, from Latin *pēnicillus*, "a small brush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

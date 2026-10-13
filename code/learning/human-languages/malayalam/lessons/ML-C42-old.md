@@ -11,7 +11,8 @@ romanization: "paḻaya"
 concept_tag: ML-ADJ-OLD
 prerequisites: [ML-C42-new, ML-C41-that, ML-C41-here]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "paḻaya: native Dravidian, one word with Tamil paḻa and Kannada paḻa (DEDR 3999)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **പുതിയ** *putiya* a moment ago. Put them side by side and not
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഴയ** (*paḻaya*) is native Dravidian, one word with Tamil *paḻa*, Kannada *paḻa* and Telugu *prā-* (DEDR 3999).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05, ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03] -->

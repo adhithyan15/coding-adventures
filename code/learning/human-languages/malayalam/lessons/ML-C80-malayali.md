@@ -11,9 +11,10 @@ romanization: "malayāḷi"
 concept_tag: ML-NOUN-GENTILIC
 prerequisites: [ML-C80-keralam, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C42-adjective-system]
 sounds: []
-roots: []
+roots: [mala-mountain-dravidian]
+etymology_hook: "malayāḷi: built on mala 'mountain', cognate with Tamil malai (DEDR 4742)"
 duration:
-  max_seconds: 260
+  max_seconds: 297
 requires:
   knowledge: [ML-LEX-C80-ORIGIN-02, ML-PHRASE-C05-I-SPEAK-MALAYALAM-01, ML-GRAMMAR-C42-ADJ-SYSTEM]
 introduces:
@@ -57,7 +58,7 @@ person**, and you can see the join without being told where it is.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-04] -->
 
 The language word is itself built out of two older pieces — **മല** *mala*, a
-hill, and a second piece meaning a place. **The language is named after the
+hill (cognate with Tamil *malai*, DEDR 4742; compare Sanskrit *malaya*), and a second piece meaning a place. **The language is named after the
 country it grew in**, and the person is then named after the language rather
 than after the state.
 

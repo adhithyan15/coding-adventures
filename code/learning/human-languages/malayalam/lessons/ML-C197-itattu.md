@@ -14,7 +14,8 @@ romanization: "iṭattŭ"
 concept_tag: ML-STHALAM197-ITATTU
 prerequisites: [ML-C197-marunnukata, ML-C197-tunikkata]
 sounds: []
-roots: []
+roots: [dravidian-idam-left]
+etymology_hook: "iṭattŭ: native Dravidian, iṭam 'left side' (DEDR 449) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C197-tunikkata]
 <!-- hl-knowledge: introduces=[ML-LEX-C197-STHALAM197-03]; assesses=[] -->
 
 **ഇടത്ത്** — *iṭattŭ* — "on the left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടത്ത്** (*iṭattŭ*) is native Dravidian: *iṭam*, "the left side" (DEDR 449, with Tamil *iṭai*), with the place ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

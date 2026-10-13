@@ -11,7 +11,8 @@ romanization: "sadya"
 concept_tag: ML-MEALS-FEAST
 prerequisites: [ML-C130-lunch, ML-C130-dinner]
 sounds: []
-roots: []
+roots: [malayalam-sadya]
+etymology_hook: "sadya: of uncertain origin; it has no entry in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C130-dinner]
 <!-- hl-knowledge: introduces=[ML-LEX-C130-MEALS-04]; assesses=[] -->
 
 **സദ്യ** (*sadya*) — "a feast", served on a banana leaf with rice and many dishes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സദ്യ** (*sadya*) is of uncertain origin; neither DEDR nor CDIAL has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

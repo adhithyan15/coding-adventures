@@ -14,7 +14,8 @@ romanization: "viḻuṅṅuka"
 concept_tag: ML-VERB-VILUNNUKA
 prerequisites: [ML-C266-katikkuka, ML-C266-cavaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-mizhungu-swallow]
+etymology_hook: "viḻuṅṅuka: native Dravidian, one word with Tamil miḻuṅku and Kannada miṅgu (DEDR 4866)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C266-cavaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C266-KRIYA266-04]; assesses=[] -->
 
 **വിഴുങ്ങുക** — *viḻuṅṅuka* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിഴുങ്ങുക** (*viḻuṅṅuka*) is native Dravidian, one word with Tamil *miḻuṅku*, Kannada *miṅgu* and Telugu *m(r)iṅgu* (DEDR 4866).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

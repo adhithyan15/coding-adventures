@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a class, then the Malayalam for an ans
 You'll want to know: ഓണം.
 ഓണം (ōṇaṁ) — Kerala's harvest festival, in ചിങ്ങം, with a സദ്യ and a flower കോലം.
 
+The word, taken apart.
+ഓണം (ōṇaṁ) is a tadbhava of Sanskrit śravaṇa, the name of the lunar asterism under which the festival falls, worn down through Prakrit.
+
 What you've built.
 The biggest day of the year.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for an answer, then the Malayalam for Onam
 
 You'll want to know: വിഷു.
 വിഷു (viṣu) — the new-year festival of മേടം.
+
+The word, taken apart.
+വിഷു (viṣu) comes from Sanskrit viṣuva, "the equinox", the day split into equal halves.
 
 What you've built.
 The start of the year.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for Onam, then the Malayalam for Vishu.
 You'll want to know: ക്രിസ്മസ്.
 ക്രിസ്മസ് (krismas) — "Christmas", kept at the പള്ളി.
 
+The word, taken apart.
+ക്രിസ്മസ് (krismas) from English Christmas, "Christ's Mass".
+
 What you've built.
 A winter festival.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for Vishu, then the Malayalam for Christma
 You'll want to know: പെരുന്നാൾ.
 പെരുന്നാൾ (perunnāḷ) — "Eid", and also a church feast day: "the great day", with നാൾ, "day", at its end.
 
+The word, taken apart.
+പെരുന്നാൾ (perunnāḷ) is native Dravidian, "the great day": peru, "great" (DEDR 4411, with Tamil peru), with nāḷ, "day" (DEDR 3656).
+
 What you've built.
 The great day.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for Christmas, then the Malayalam for Eid.
 
 You'll want to know: ഉത്സവം.
 ഉത്സവം (utsavaṁ) — "a festival", above all a ക്ഷേത്രം festival with elephants.
+
+The word, taken apart.
+ഉത്സവം (utsavaṁ) from Sanskrit utsava, "enterprise; festival", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 1876).
 
 What you've built.
 The general word.

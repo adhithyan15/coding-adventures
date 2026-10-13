@@ -14,7 +14,8 @@ romanization: "atupōle"
 concept_tag: ML-KARANAM201-ATUPOLE
 prerequisites: [ML-C200-pariharam, ML-C200-anusariccu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-pol-like]
+etymology_hook: "atupōle: native Dravidian, atu 'that' (DEDR 1) + pōle 'like' (DEDR 4597)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C200-anusariccu]
 <!-- hl-knowledge: introduces=[ML-LEX-C201-KARANAM201-01]; assesses=[] -->
 
 **അതുപോലെ** — *atupōle* — "likewise, in the same way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതുപോലെ** (*atupōle*) is native Dravidian, "like that": *atu*, "that" (DEDR 1), and *pōle*, "like" (DEDR 4597, with Tamil *pōl*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

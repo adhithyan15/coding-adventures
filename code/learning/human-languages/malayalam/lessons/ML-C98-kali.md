@@ -11,7 +11,8 @@ romanization: "kaḷi"
 concept_tag: ML-GAME
 prerequisites: [ML-R97-beauty-recall, ML-C41-this, ML-C36-kutti]
 sounds: []
-roots: []
+roots: [dravidian-kali-play]
+etymology_hook: "kaḷi: native Dravidian, 'play, game'; DEDR 1374 sets it with Tamil kaḷi 'to rejoice' and Kodagu kaḷi 'play'"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ reviews_of: [ML-C97-bhangi]
 been taking the same **യ** since **ഇത് എന്റെ കുട്ടിയാണ്**, and for the same
 reason: it ends in **ഇ** too, **ആണ്** begins with a vowel, and something has to
 stand between them.
+
+**Where the word comes from.** It is native Dravidian: DEDR 1374 lists Malayalam *kaḷi*, "play, game", with Tamil *kaḷi*, "to exult, rejoice", and Kodagu *kaḷi*, "play", in an entry that also holds the words for toddy and intoxication. DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01] -->
