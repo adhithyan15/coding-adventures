@@ -8,13 +8,14 @@
 //   files.save { suggestedName, accept: [MIME...], bytes }
 //     -> ok { name } | cancelled {} | failed { message }
 //
-// `file.open` / `file.save`, the names this executor answered first, stay as
-// aliases until VisiCalc migrates (UI87 §7.3), and their `mimeType` +
-// `extension` pair is still accepted.
+// `file.open` / `file.save`, the names this executor answered first, were
+// retired once VisiCalc and SpiceWorkbench migrated (UI87 §3.2, #16927). A
+// payload that still carries their `mimeType` + `extension` pair is refused
+// with a clear message, never silently answered with an unfiltered picker.
 export const MAX_FILE_BYTES = 16 * 1024 * 1024;
 
-const OPEN_KINDS = new Set(['files.open', 'file.open']);
-const SAVE_KINDS = new Set(['files.save', 'file.save']);
+const OPEN_KINDS = new Set(['files.open']);
+const SAVE_KINDS = new Set(['files.save']);
 
 // MIME types an app names, and the extensions a picker filters on. Unknown
 // types are dropped rather than failing the request (UI59 §3). The same table
@@ -195,16 +196,7 @@ function pickerOptions(payload) {
   const accept = acceptedTypes(payload);
   if (Object.keys(accept).length > 0) options.types = [{ accept }];
   if (payload.mimeType !== undefined || payload.extension !== undefined) {
-    if (typeof payload.mimeType !== 'string' || !/^[\w.+-]+\/[\w.+-]+$/.test(payload.mimeType)
-        || typeof payload.extension !== 'string' || !/^\.[A-Za-z0-9.]{1,15}$/.test(payload.extension)) {
-      throw new Error('File type requires a MIME type and extension');
-    }
-    // The legacy pair becomes the picker's filter, and a dialog may append its
-    // extension to the chosen name: it may not name a launcher either.
-    if (payload.extension.endsWith('.') || hasExecutableExtension(payload.extension)) {
-      throw new Error('File type must not be an executable extension');
-    }
-    options.types = [{ accept: { [payload.mimeType]: [payload.extension] } }];
+    throw new Error('mimeType and extension were retired; name the type in accept (UI87 §3.2)');
   }
   return options;
 }
@@ -271,13 +263,14 @@ export function createBrowserFileEffects(host, environment = globalThis) {
         //  - the Blob is typed as the accepted MIME type.
         // A download cannot claim the file was durably saved where the person
         // chose, so the result says `download: true`, and `name` is the name
-        // requested (the browser may rename or block it). The older `file.save`
-        // alias keeps degrading explicitly, as before.
+        // requested (the browser may rename or block it).
         const accepted = Object.entries(acceptedTypes(effect.payload));
         const match = accepted.find(([, extensions]) =>
           extensions.some(extension => options.suggestedName?.toLowerCase().endsWith(extension)));
         const now = typeof environment.performance?.now === 'function' ? environment.performance.now() : Date.now();
-        if (effect.kind === 'files.save' && match
+        // `saving` is explicit: an open must never become a download, even if
+        // a later change gives the open picker a suggested name.
+        if (saving && match
             && typeof environment.document?.createElement === 'function'
             && typeof environment.URL?.createObjectURL === 'function') {
           if (now - lastFallbackDownload < DOWNLOAD_FALLBACK_INTERVAL_MS) {
@@ -323,11 +316,8 @@ export function createBrowserFileEffects(host, environment = globalThis) {
       const buffer = await file.arrayBuffer();
       if (disposed) return;
       if (buffer.byteLength > MAX_FILE_BYTES) throw new Error('File exceeds 16 MiB');
-      // UI59's result carries `mimeType`; the older `file.open` alias keeps its
-      // original shape exactly, so VisiCalc sees no change.
-      return effect.kind === 'files.open'
-        ? { ok: { name: file.name, mimeType: mimeTypeFor(file), bytes: encode(new Uint8Array(buffer)) } }
-        : { ok: { name: file.name, bytes: encode(new Uint8Array(buffer)) } };
+      // UI59's result carries `mimeType`.
+      return { ok: { name: file.name, mimeType: mimeTypeFor(file), bytes: encode(new Uint8Array(buffer)) } };
     } catch (error) {
       if (disposed) return;
       if (picking && error?.name === 'AbortError') return { cancelled: {} };
