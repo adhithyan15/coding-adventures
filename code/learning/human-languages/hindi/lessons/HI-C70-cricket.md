@@ -14,7 +14,8 @@ romanization: "krikeṭ"
 concept_tag: HI-NOUN-CRICKET
 prerequisites: [HI-C70-play, HI-C68-city, HI-C69-station]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "krikeṭ ← English cricket"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ first met in a name.
 
 If you learn one game word in Hindi, learn this one. **मैं क्रिकेट खेलता हूँ**
 puts three of this chapter's ideas into a single sentence.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्रिकेट** (*krikeṭ*) is a loan from English *cricket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

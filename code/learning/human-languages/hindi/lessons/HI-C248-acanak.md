@@ -15,6 +15,7 @@ concept_tag: HI-THG248-ACANAK
 prerequisites: [HI-C248-badme, HI-C248-jaldhi]
 sounds: []
 roots: []
+etymology_hook: "acānak: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C248-jaldhi]
 <!-- hl-knowledge: introduces=[HI-LEX-C248-THG248-05]; assesses=[] -->
 
 **अचानक** — *acānak* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **अचानक** (*acānak*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

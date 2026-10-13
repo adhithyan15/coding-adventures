@@ -14,7 +14,8 @@ romanization: "abhyās"
 concept_tag: HI-THG197-ABHYAS
 prerequisites: [HI-C197-pariksa, HI-C197-path]
 sounds: []
-roots: []
+roots: [sanskrit-abhyasa]
+etymology_hook: "abhyās ← Sanskrit abhyāsa 'repetition, practice', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C197-path]
 <!-- hl-knowledge: introduces=[HI-LEX-C197-THG197-04]; assesses=[] -->
 
 **अभ्यास** — *abhyās* — "practice, an exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभ्यास** (*abhyās*) is Sanskrit *abhyāsa*, "repetition, practice", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

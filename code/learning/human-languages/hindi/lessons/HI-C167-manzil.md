@@ -14,7 +14,8 @@ romanization: "manzil"
 concept_tag: HI-READ167-MANZIL
 prerequisites: [HI-C167-tarikh, HI-C167-nambar]
 sounds: []
-roots: []
+roots: [arabic-manzil]
+etymology_hook: "manzil ← Arabic manzil 'a stopping place, a dwelling', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C167-nambar]
 
 The sign says **कमरा नंबर बीस, दूसरी मंज़िल।** (*kamrā nambar bīs, dūsrī
 manzil.*) Room twenty is on the second floor: go up.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंज़िल** (*manzil*) is a loan from Arabic *manzil*, "a stopping place, a dwelling", which reached Hindi through Persian. Its Arabic root is *n-z-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

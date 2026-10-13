@@ -14,7 +14,8 @@ romanization: "lākh"
 concept_tag: HI-THG244-LAKH
 prerequisites: [HI-C243-jhagralu, HI-C244-hazar]
 sounds: []
-roots: []
+roots: [sanskrit-laksha]
+etymology_hook: "lākh ← Sanskrit lakṣa 'stake; mark; 100,000', a tadbhava (CDIAL 10881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C244-hazar]
 <!-- hl-knowledge: introduces=[HI-LEX-C244-THG244-02]; assesses=[] -->
 
 **लाख** — *lākh* — "a hundred thousand (lakh)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाख** (*lākh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lakṣa*, "stake; mark; 100,000" (CDIAL 10881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

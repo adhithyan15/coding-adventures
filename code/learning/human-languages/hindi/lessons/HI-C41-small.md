@@ -14,7 +14,8 @@ romanization: "choṭā"
 concept_tag: HI-ADJ-SMALL
 prerequisites: [HI-C41-big, HI-C39-baccha, HI-C40-here]
 sounds: []
-roots: []
+roots: [indo-aryan-chotta]
+etymology_hook: "choṭā ← *choṭṭa 'small', a reconstructed form; a tadbhava (CDIAL 5071)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ You met **बड़ा** *baṛā* a moment ago. Put them side by side and nothi
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोटा** (*choṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*choṭṭa*, "small", a form CDIAL reconstructs from its descendants (CDIAL 5071).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02, HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-LEX-C40-DEIXIS-03] -->

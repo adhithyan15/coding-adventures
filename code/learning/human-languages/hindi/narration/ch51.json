@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fcfbf1106018c3a5",
+  "sourceHash": "fnv1a64:0a834888cf4ea37e",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a22be7b38899f6df",
+      "sourceHash": "fnv1a64:ea9080b1ddc512f3",
       "notice": null,
       "blocks": [
         {
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6aaa8622d476d76",
+      "sourceHash": "fnv1a64:ada0cf41c25707a4",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3d6117420678e80",
+      "sourceHash": "fnv1a64:dae7ac92f1cfda83",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4220c6f77b28db33",
+      "sourceHash": "fnv1a64:d33027b3b61c3674",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Persian mez, and behind the Persian sits Portuguese mesa, out of Latin mēnsa. Portuguese ships carried the object and its name into the Indian Ocean, which is the same route that brought कमरा in from camera."
+              "text": "Persian mez, and behind the Persian, on the usual account, Portuguese mesa, out of Latin mēnsa. Portuguese ships carried the object and its name into the Indian Ocean, which is the same route that brought कमरा in from camera."
             },
             {
               "kind": "speech",
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7179cb9e6c962bd4",
+      "sourceHash": "fnv1a64:fad173f8c2c7f377",
       "notice": null,
       "blocks": [
         {

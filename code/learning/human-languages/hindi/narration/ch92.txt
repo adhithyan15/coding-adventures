@@ -13,6 +13,9 @@ You'll want to know: uskā.
 uskā — "his," "her," or "its."
 Hindi does not choose between those three, and the reason is the point of the lesson: the possessive agrees with the thing owned, not with the owner.
 
+The word, taken apart.
+उसका (uskā) is us, the form वह, "that", takes before an ending, with the possessive -kā. CDIAL lists us under Sanskrit asau, "that" (CDIAL 972).
+
 Grammar Lens: English agrees with the owner, Hindi with the thing.
 This is the single biggest difference between the two systems, and it runs the opposite way from what an English speaker expects:
 [a table of 2 rows, read aloud]
@@ -48,6 +51,9 @@ You'll want to know: हमारा.
 हमारा (hamārā) — "our."
 Built on the pronoun for we: हम (ham) + a possessive ending becomes हमारा (hamārā). The pronoun gets its own lesson soon. Before a feminine noun it is hamārī; before a plural or an oblique it is hamāre, exactly as merā behaves.
 
+The word, taken apart.
+हमारा (hamārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from asmāka, "ours" (CDIAL 988). CDIAL notes an added -r- element.
+
 Grammar Lens: where Hindi says "our" and English says "my".
 The grammar is easy; the usage is the thing worth carrying:
 [a table of 3 rows, read aloud]
@@ -82,6 +88,9 @@ Say hamārā. You have had āpkā for your since early on. This lesson gives you
 You'll want to know: तुम्हारा.
 तुम्हारा (tumhārā) — "your," said to someone you are familiar with.
 Built on तुम (tum), the middle of Hindi's three yous.
+
+The word, taken apart.
+तुम्हारा (tumhārā) is inherited. It comes from yuṣmāka, the possessive of the Sanskrit plural "you", with its t- taken from tuvam, the singular "you" (CDIAL 10511).
 
 Grammar Lens: three levels, and the possessive that goes with each.
 [a table of 3 rows, read aloud]
@@ -122,6 +131,9 @@ wrong, maiṅ merā kām kartā hūṅ.
 right, maiṅ apnā kām kartā hūṅ.
 Both would be "I do my work." The first is what an English speaker builds, and a Hindi ear hears it as a mistake straight away.
 
+The word, taken apart.
+अपना (apnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ātmanaka, "own", a form CDIAL reconstructs from its descendants (CDIAL 1135). It is built on ātman, "self", the word behind the respectful āp, "you".
+
 Grammar Lens: one word covering every person.
 The saving is large, because apnā does not care who the subject is:
 [a table of 4 rows, read aloud]
@@ -160,6 +172,9 @@ You'll want to know: मेरे पास.
 पास (pās) means "near, at hand." Hindi has no verb meaning to have, so possession is built out of location:
 मेरे पास एक किताब है। mere pās ek kitāb hai — "Near me there is a book" = I have a book.
 The thing owned is the subject of that sentence, which is why hai agrees with kitāb and not with the speaker.
+
+The word, taken apart.
+pās, "near", comes from Sanskrit pārśva, "side", whose form pārśve already meant "near" (CDIAL 8118).
 
 Grammar Lens: mere is not the plural here.
 This is the part that repays attention. You learned mere as the plural of merā. It is also the oblique — the form a word takes in front of a postposition — and the two happen to look identical:
@@ -201,6 +216,9 @@ Three phrases, one shape. The possessive goes oblique and the postposition follo
 mere pās means near me — I have.
 mere liye means for me.
 mere sāth means with me.
+
+The word, taken apart.
+मेरे लिए (mere liye) is mere, "my", with liye, "for". liye is usually explained as a form of lenā, "to take", which CDIAL lists under Sanskrit labhate, "catches, takes" (CDIAL 10948).
 
 Grammar Lens: the pattern generalises to every person.
 Once the bend is automatic, the whole grid follows without memorising a single new form:

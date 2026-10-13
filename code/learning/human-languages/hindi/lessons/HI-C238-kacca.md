@@ -14,7 +14,8 @@ romanization: "kaccā"
 concept_tag: HI-QUAL238-KACCA
 prerequisites: [HI-C237-uthla, HI-C237-basi]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kaccā ← *kacca 'raw, unripe'; CDIAL marks this form as taken from Punjabi (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C237-basi]
 <!-- hl-knowledge: introduces=[HI-LEX-C238-QUAL238-01]; assesses=[] -->
 
 **कच्चा** — *kaccā* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कच्चा** (*kaccā*) goes back to a reconstructed *\*kacca*, "raw, unripe" (CDIAL 2613). CDIAL lists Hindi *kācā* and marks *kaccā* as taken over from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

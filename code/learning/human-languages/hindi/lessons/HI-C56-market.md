@@ -14,7 +14,8 @@ romanization: "bāzār"
 concept_tag: HI-NOUN-MARKET
 prerequisites: [HI-C56-village, HI-C54-fish, HI-C55-star]
 sounds: []
-roots: []
+roots: [persian-bazar]
+etymology_hook: "bāzār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 210
 requires:

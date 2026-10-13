@@ -14,7 +14,8 @@ romanization: "nīnd ā rahī hai"
 concept_tag: HI-BODY-SLEEPY
 prerequisites: [HI-C124-bhukha, HI-C124-pyasa]
 sounds: []
-roots: []
+roots: [sanskrit-nidra]
+etymology_hook: "nīnd ← Sanskrit nidrā 'sleep' (CDIAL 7200)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C124-pyasa]
 **नींद आ रही है** (*nīnd ā rahī hai*) — "I'm sleepy", literally "sleep is coming".
 
 **नींद** is the sleep you know. Sleep *comes* to you, the way anger and laughter do.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नींद आ रही है** (*nīnd ā rahī hai*) is "sleep is coming". *nīnd* comes from Sanskrit *nidrā*, "sleep" (CDIAL 7200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

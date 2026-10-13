@@ -14,7 +14,8 @@ romanization: "guṛiyā"
 concept_tag: HI-THG264-GURIYA
 prerequisites: [HI-C264-ghanti, HI-C264-khilauna]
 sounds: []
-roots: []
+roots: [indo-aryan-gudda]
+etymology_hook: "guṛiyā ← *guḍḍa 'doll, effigy', a reconstructed form; a tadbhava (CDIAL 4189)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C264-khilauna]
 <!-- hl-knowledge: introduces=[HI-LEX-C264-THG264-05]; assesses=[] -->
 
 **गुड़िया** — *guṛiyā* — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुड़िया** (*guṛiyā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*guḍḍa*, "doll, effigy", a form CDIAL reconstructs from its descendants (CDIAL 4189).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

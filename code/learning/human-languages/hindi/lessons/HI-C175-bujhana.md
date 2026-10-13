@@ -14,7 +14,8 @@ romanization: "bujhānā"
 concept_tag: HI-VERB-BUJHANA
 prerequisites: [HI-C175-jalana, HI-C175-jalna]
 sounds: []
-roots: []
+roots: [indo-aryan-vijjhapayati]
+etymology_hook: "bujhānā ← *vijjhāpayati 'extinguishes', a reconstructed form; a tadbhava (CDIAL 11703)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C175-jalna]
 <!-- hl-knowledge: introduces=[HI-LEX-C175-ACT175-05]; assesses=[] -->
 
 **बुझाना** — *bujhānā* — "to put out (a fire or light)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुझाना** (*bujhānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vijjhāpayati*, "extinguishes", a form CDIAL reconstructs from its descendants (CDIAL 11703). It is the causing form of *\*vijjhāyati*, "is burnt out"; it is a different word from *būjhnā*, "to understand" (CDIAL 9279).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

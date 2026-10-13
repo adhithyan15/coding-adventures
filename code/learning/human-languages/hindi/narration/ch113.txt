@@ -13,6 +13,9 @@ You'll want to know: कुछ नहीं.
 कुछ नहीं (kuch nahīṁ) — "nothing".
 क्या हुआ? — कुछ नहीं (kuch nahīṁ). — "what happened? — nothing". It ends on the नहीं you know.
 
+The word, taken apart.
+कुछ नहीं (kuch nahīṁ) is two tadbhavas. kuch, "something", comes from Sanskrit kiṁcid, "anything", taking its -ch- from the masculine kaścid (CDIAL 3144); nahīṁ comes from nahi, "surely not" (CDIAL 7035).
+
 What you've built.
 An answer that closes a question kindly.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for oh, then the Hindi for nothing.
 You'll want to know: अभी नहीं.
 अभी नहीं (abhī nahīṁ) — "not yet", "not now".
 Two words you own: अभी, "right now", and नहीं.
+
+The word, taken apart.
+अभी नहीं (abhī nahīṁ) is abhī, "right now", with nahīṁ, "not". CDIAL lists ab and abhī under Sanskrit evam eva, "exactly so", crossed with the pronoun stem a- (CDIAL 2528); nahīṁ comes from nahi, "surely not" (CDIAL 7035).
 
 What you've built.
 An answer from two old words.
@@ -73,6 +79,9 @@ You'll want to know: काफ़ी.
 काफ़ी (kāfī) — "enough", and before an adjective, "quite".
 बस, काफ़ी (kāfī) है — "that's enough", with the बस you know. काफ़ी (kāfī) अच्छा — "quite good".
 
+The word, taken apart.
+काफ़ी (kāfī) is a loan from Arabic kāfī, "sufficient", which reached Hindi through Persian. Its Arabic root is k-f-y (Lane).
+
 What you've built.
 Enough, and quite.
 
@@ -103,6 +112,9 @@ You'll want to know: वही.
 वही (vahī) — "that very one", "the same".
 It is वह, "that", with ही, "exactly". When someone names what you meant: हाँ, वही (vahī)!
 
+The word, taken apart.
+वही (vahī) is वह, "that", with the emphatic -hī: "that one and no other". CDIAL lists vah under Sanskrit asau, "that" (CDIAL 972).
+
 What you've built.
 That one, exactly.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for enough, then the Hindi for that very one.
 You'll want to know: हो सकता है.
 हो सकता है (ho saktā hai) — "maybe", literally "it can be".
 It is होना, "to be", and the सकना of "can". Compare शायद, "perhaps".
+
+The word, taken apart.
+हो सकता है (ho saktā hai) is "it can be". ho is a form of honā, "to be", from Sanskrit bhavati (CDIAL 9416), and saknā, "to be able", comes from śaknoti, "is able" (CDIAL 12252).
 
 What you've built.
 Nothing, not yet, enough, that one, maybe.

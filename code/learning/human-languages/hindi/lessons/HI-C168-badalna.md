@@ -14,7 +14,8 @@ romanization: "badalnā"
 concept_tag: HI-VERB-BADALNA
 prerequisites: [HI-C168-manna, HI-C168-milana]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalnā ← Arabic badal 'a substitute, an exchange', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C168-milana]
 <!-- hl-knowledge: introduces=[HI-LEX-C168-ACT168-03]; assesses=[] -->
 
 **बदलना** — *badalnā* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बदलना** (*badalnā*) is a loan from Arabic *badal*, "a substitute, an exchange", which reached Hindi through Persian. Its Arabic root is *b-d-l* (Lane). Hindi made a verb of it with *-nā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

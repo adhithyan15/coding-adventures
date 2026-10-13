@@ -14,7 +14,8 @@ romanization: "ghabrāhaṭ"
 concept_tag: HI-CALM-NERVOUS
 prerequisites: [HI-C124-sirdard, HI-C125-shant]
 sounds: []
-roots: []
+roots: [indo-aryan-ghabbhara]
+etymology_hook: "ghabrāhaṭ, from ghabrānā 'to panic'; CDIAL lists ghābrā 'startled' under *ghabbhara 'confused' (CDIAL 4427)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C125-shant]
 **घबराहट** (*ghabrāhaṭ*) — "nervousness", a flutter of panic.
 
 **मुझे घबराहट हो रही है** — "I'm feeling nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घबराहट** (*ghabrāhaṭ*) is the noun of *ghabrānā*, "to panic". CDIAL lists Hindi *ghābrā*, "startled", under a reconstructed *\*ghabbhara*, "confused" (CDIAL 4427).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

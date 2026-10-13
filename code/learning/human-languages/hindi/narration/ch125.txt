@@ -13,6 +13,9 @@ You'll want to know: शांत.
 शांत (śānt) — "calm, peaceful", of a person or a place.
 शांत (śānt) रहिए — "please stay calm".
 
+The word, taken apart.
+शांत (śānt) is Sanskrit śānta, "calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
+
 What you've built.
 Calm.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for a headache, then the Hindi for calm.
 You'll want to know: घबराहट.
 घबराहट (ghabrāhaṭ) — "nervousness", a flutter of panic.
 मुझे घबराहट (ghabrāhaṭ) हो रही है — "I'm feeling nervous".
+
+The word, taken apart.
+घबराहट (ghabrāhaṭ) is the noun of ghabrānā, "to panic". CDIAL lists Hindi ghābrā, "startled", under a reconstructed ghabbhara, "confused" (CDIAL 4427).
 
 What you've built.
 The opposite of calm.
@@ -73,6 +79,9 @@ You'll want to know: बेचैन.
 बेचैन (becain) — "restless, uneasy".
 बे- is "without", and चैन is "peace": restless is without peace.
 
+The word, taken apart.
+बेचैन (becain) is "without ease". be- is the Persian "without"; cain, "ease, rest", is of uncertain origin, and CDIAL has no entry for it.
+
 What you've built.
 A word that shows its parts.
 
@@ -103,6 +112,9 @@ You'll want to know: मन नहीं है.
 मन नहीं है (man nahīṁ hai) — "I don't feel like it", literally "there is no mind for it".
 मन is "mind, heart". आज खाने का मन नहीं है (man nahīṁ hai) — "I don't feel like eating today".
 
+The word, taken apart.
+मन नहीं है (man nahīṁ hai) is "the mind is not there". man, "mind, heart", comes from Sanskrit manas, "mind" (CDIAL 9822).
+
 What you've built.
 A gentle refusal.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for restless, then the Hindi for I don't feel 
 You'll want to know: मज़ा.
 मज़ा (mazā) — "fun, enjoyment".
 मज़ा (mazā) आया — "I enjoyed it", literally "fun came". It comes to you, like laughter.
+
+The word, taken apart.
+मज़ा (mazā) is a loan, usually traced to Persian maza, "taste, relish".
 
 What you've built.
 Calm, nervous, restless, not in the mood, and fun.

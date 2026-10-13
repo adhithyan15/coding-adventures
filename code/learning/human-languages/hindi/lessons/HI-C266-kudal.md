@@ -14,7 +14,8 @@ romanization: "kudāl"
 concept_tag: HI-THG266-KUDAL
 prerequisites: [HI-C266-citkani, HI-C266-ari]
 sounds: []
-roots: []
+roots: [sanskrit-kuddala]
+etymology_hook: "kudāl ← Sanskrit kuddāla 'a kind of spade or mattock', a tadbhava (CDIAL 3286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C266-ari]
 <!-- hl-knowledge: introduces=[HI-LEX-C266-THG266-03]; assesses=[] -->
 
 **कुदाल** — *kudāl* — "a pickaxe, a hoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुदाल** (*kudāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kuddāla*, "a kind of spade or mattock" (CDIAL 3286). CDIAL takes the Sanskrit word, probably, from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

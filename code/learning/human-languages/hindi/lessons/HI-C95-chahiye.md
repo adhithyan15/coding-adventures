@@ -14,7 +14,8 @@ romanization: "cāhiye"
 concept_tag: HI-VERB-NEED
 prerequisites: [HI-C95-jaante-hain, HI-C70-chahna, HI-S131-letter-e]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "cāhiye ← *cāh 'see, look for, desire', a root CDIAL reconstructs; its source is uncertain (CDIAL 4775)"
 duration:
   max_seconds: 240
 requires:
@@ -66,6 +67,8 @@ The other difference is that **चाहिए does not change**. It has no masc
 feminine, no singular and plural — the same five letters whoever is speaking
 and whatever is wanted. After a chapter of endings that agree with everything
 in sight, that is a relief worth noticing.
+
+**चाहिए** comes from a reconstructed *\*cāh*, "desire", whose source CDIAL calls uncertain (CDIAL 4775).
 
 ## Grammar Lens: the ए on the end
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-NEED-01, HI-SCRIPT-RECOG-131] -->

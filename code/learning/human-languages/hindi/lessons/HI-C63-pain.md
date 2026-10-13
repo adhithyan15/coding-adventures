@@ -14,7 +14,8 @@ romanization: "dard"
 concept_tag: HI-NOUN-PAIN
 prerequisites: [HI-C63-fever, HI-C61-stove, HI-C62-wood]
 sounds: []
-roots: []
+roots: [persian-dard]
+etymology_hook: "dard: usually traced to Persian dard 'pain'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C63-fever]
 A Persian word, *dard*, and it is usually traced to a very old root meaning 'to split, to tear' — the same root that surfaces in English *tear*, in the sense of ripping cloth.
 
 दर्द covers the ache in a घुटना and the grief in a chest with one word, and Urdu poetry leans on that double reach so hard that the word now sounds a little literary even when it is plainly medical.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दर्द** (*dard*) is a loan, usually traced to Persian *dard*, "pain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

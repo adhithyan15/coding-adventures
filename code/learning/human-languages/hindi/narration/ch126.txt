@@ -13,6 +13,9 @@ You'll want to know: फिर से.
 फिर से (phir se) — "once more", "from the start again".
 फिर से (phir se) बोलिए — "please say it again", a softer cousin of दोबारा.
 
+The word, taken apart.
+फिर से (phir se) is phir, "again", with se. CDIAL lists phir under a reconstructed phirati, "turns" (CDIAL 9078).
+
 What you've built.
 A second way to ask again.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for fun, then the Hindi for once more.
 You'll want to know: समझ नहीं आया.
 समझ नहीं आया (samajh nahīṁ āyā) — "I didn't understand", literally "understanding did not come".
 समझ is "understanding", from समझना. It comes, or it doesn't.
+
+The word, taken apart.
+समझ नहीं आया (samajh nahīṁ āyā) is "understanding did not come". samajh comes from Sanskrit saṁbudhyate, "wakes up, understands" (CDIAL 12959).
 
 What you've built.
 The honest sentence every learner needs.
@@ -73,6 +79,9 @@ You'll want to know: क्या कहा?
 क्या कहा? (kyā kahā?) — "what did you say?".
 कहा is the past of कहना, "to say". Short, and fine among friends; with a stranger, add जी.
 
+The word, taken apart.
+क्या कहा? (kyā kahā?) is "what was said?". kahnā, "to say", comes from Sanskrit kathayati, "converses with, describes" (CDIAL 2703).
+
 What you've built.
 A quick request to hear it again.
 
@@ -103,6 +112,9 @@ You'll want to know: मुझे नहीं पता.
 मुझे नहीं पता (mujhe nahīṁ patā) — "I don't know", literally "to me there is no knowing".
 The person sits in मुझे, the way it does for wanting and liking.
 
+The word, taken apart.
+मुझे नहीं पता (mujhe nahīṁ patā) is "to me no knowledge". The origin of patā, "knowledge, address", is uncertain; CDIAL does not list it, though it lists patyānā, "to trust", under Sanskrit pratyaya, "belief" (CDIAL 8640).
+
 What you've built.
 An honest answer to a question you cannot answer.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for what did you say, then the Hindi for I don
 You'll want to know: एक बार और.
 एक बार और (ek bār aur) — "one more time".
 एक, "one", बार, "time", और, "more". एक बार और (ek bār aur) बोलिए — "say it one more time".
+
+The word, taken apart.
+एक बार और (ek bār aur) is "one time more". bār comes from Sanskrit vāra, "one's turn" (CDIAL 11547), and aur, "more", from apara, "other" (CDIAL 434).
 
 What you've built.
 Once more, didn't understand, what did you say, don't know, one more time.

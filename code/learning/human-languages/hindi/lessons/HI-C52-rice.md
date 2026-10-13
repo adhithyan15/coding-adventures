@@ -14,7 +14,8 @@ romanization: "chāval"
 concept_tag: HI-NOUN-RICE
 prerequisites: [HI-C51-sweet, HI-C50-gratitude, HI-C51-flower]
 sounds: []
-roots: []
+roots: [indo-aryan-cavala]
+etymology_hook: "chāval ← *cāvala 'husked rice', a reconstructed form; a tadbhava (CDIAL 4749)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C51-sweet]
 Sanskrit's own word for rice is तण्डुल (*taṇḍula*), and it is not the ancestor of this one. Where *chāval* came from is genuinely unsettled — the dictionaries record the Prakrit forms behind it without agreeing on what stands behind those.
 
 That makes it the fourth everyday Hindi word you have met whose origin is honestly unknown, after बिल्ली, कुत्ता and पेट. It is worth noticing the pattern: the words a language uses most are not always the words whose history it kept.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चावल** (*chāval*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāvala*, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL suggests, with a "possibly", that it shares a non-Aryan origin with Sanskrit *taṇḍula*, "rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

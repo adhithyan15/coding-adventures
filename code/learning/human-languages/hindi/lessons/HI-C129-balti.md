@@ -14,7 +14,8 @@ romanization: "bālṭī"
 concept_tag: HI-THINGS129-BALTI
 prerequisites: [HI-C129-kambal, HI-C129-parda]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bālṭī: usually traced to Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C129-parda]
 <!-- hl-knowledge: introduces=[HI-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **बाल्टी** — *bālṭī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाल्टी** (*bālṭī*) is usually traced to Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

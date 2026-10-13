@@ -14,7 +14,8 @@ romanization: "vijñān"
 concept_tag: HI-THG198-VIJNAN
 prerequisites: [HI-C198-arth, HI-C198-jnan]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana]
+etymology_hook: "vijñān ← Sanskrit vijñāna 'discernment, understanding', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C198-jnan]
 <!-- hl-knowledge: introduces=[HI-LEX-C198-THG198-05]; assesses=[] -->
 
 **विज्ञान** — *vijñān* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विज्ञान** (*vijñān*) is Sanskrit *vijñāna*, "discernment, understanding", taken over whole as a learned loan, a tatsama. It is *jñāna*, "knowledge", with *vi-*, "apart": knowledge that tells things apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

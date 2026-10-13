@@ -14,7 +14,8 @@ romanization: "ḍar"
 concept_tag: HI-FEEL-FEAR
 prerequisites: [HI-C107-kamzori, HI-C107-sehat]
 sounds: []
-roots: []
+roots: [sanskrit-dara]
+etymology_hook: "ḍar ← Sanskrit dara 'fear', a tadbhava (CDIAL 6186)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C107-sehat]
 
 **मुझे डर लग रहा है** — "I am scared", literally "fear is striking me". Feelings take the
 **मुझे** frame.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डर** (*ḍar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dara*, "fear" (CDIAL 6186).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

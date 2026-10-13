@@ -14,7 +14,8 @@ romanization: "kuā̃"
 concept_tag: HI-NOUN-WELL
 prerequisites: [HI-C66-grass, HI-C64-more, HI-C65-manners]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kuāṁ ← Sanskrit kūpa 'hole, pit, well', a tadbhava (CDIAL 3400)"
 duration:
   max_seconds: 210
 requires:

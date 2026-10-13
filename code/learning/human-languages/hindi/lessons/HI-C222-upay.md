@@ -14,7 +14,8 @@ romanization: "upāy"
 concept_tag: HI-THG222-UPAY
 prerequisites: [HI-C222-natija, HI-C222-samasya]
 sounds: []
-roots: []
+roots: [sanskrit-upaya]
+etymology_hook: "upāy ← Sanskrit upāya 'approach; means', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C222-samasya]
 <!-- hl-knowledge: introduces=[HI-LEX-C222-THG222-05]; assesses=[] -->
 
 **उपाय** — *upāy* — "a remedy, a way out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उपाय** (*upāy*) is Sanskrit *upāya*, "approach; means", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

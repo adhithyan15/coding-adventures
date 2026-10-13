@@ -14,7 +14,8 @@ romanization: "noṭ"
 concept_tag: HI-THG208-NOT
 prerequisites: [HI-C208-kimat, HI-C208-sikka]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "noṭ ← English note"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C208-sikka]
 <!-- hl-knowledge: introduces=[HI-LEX-C208-THG208-05]; assesses=[] -->
 
 **नोट** — *noṭ* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नोट** (*noṭ*) is a loan from English *note*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

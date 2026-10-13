@@ -14,7 +14,8 @@ romanization: "khā̃snā"
 concept_tag: HI-VERB-KHASNA
 prerequisites: [HI-C231-chinkna, HI-C231-jamhailena]
 sounds: []
-roots: []
+roots: [sanskrit-kasa]
+etymology_hook: "khāṁsnā: the verb of khāṁsī 'cough', from Sanskrit kāsa 'cough' (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C231-jamhailena]
 <!-- hl-knowledge: introduces=[HI-LEX-C231-ACT231-05]; assesses=[] -->
 
 **खाँसना** — *khā̃snā* — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाँसना** (*khāṁsnā*) is the verb belonging to *khāṁsī*, "a cough", which comes from Sanskrit *kāsa*, "cough" (CDIAL 3138). CDIAL notes the *kh-* as imitating the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

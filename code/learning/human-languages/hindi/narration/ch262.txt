@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a blacksmith, then the Hindi for a goldsmi
 You'll want to know: बढ़ई.
 बढ़ई — baṛhaī — "a carpenter".
 
+The word, taken apart.
+बढ़ई (baṛhaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhaki, "carpenter" (CDIAL 11375).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a goldsmith, then the Hindi for a carpente
 
 You'll want to know: मोची.
 मोची — mochī — "a cobbler".
+
+The word, taken apart.
+मोची (mochī) goes back to Sanskrit mocika, "tanner and cobbler", recorded in Buddhist Sanskrit and built on moca, "shoe" (CDIAL 10349). CDIAL takes moca from an Iranian source, comparing Pahlavi (Middle Persian) mōč, "shoe".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a carpenter, then the Hindi for a cobbler.
 You'll want to know: पुजारी.
 पुजारी — pujārī — "a priest".
 
+The word, taken apart.
+पुजारी (pujārī) is pūjā, "worship", from Sanskrit pūjā (CDIAL 8317), with the ending -ārī, "one who does it".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a cobbler, then the Hindi for a priest.
 You'll want to know: गहना.
 गहना — gahnā — "a piece of jewellery".
 
+The word, taken apart.
+गहना (gahnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from grahaṇa, "seizing; putting on (clothes)" (CDIAL 4364). CDIAL glosses the Hindi word "jewel": a thing put on.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a priest, then the Hindi for a piece of je
 
 You'll want to know: कंगन.
 कंगन — kaṅgan — "a bangle, a bracelet".
+
+The word, taken apart.
+कंगन (kaṅgan) goes back to Sanskrit kaṅkaṇa, "bracelet" (CDIAL 2597). CDIAL lists Hindi kaknā and kaknī under it, but not kaṅgan itself.
 
 What you've built.
 One more word for this chapter.

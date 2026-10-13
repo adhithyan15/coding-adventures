@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "What Is Going On Right Now",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:277c35c6ae0676ab",
+  "sourceHash": "fnv1a64:fa9a616c3704ec5a",
   "lessons": [
     {
       "id": "HI-C89-kar-raha-hun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75b836dd8cda2603",
+      "sourceHash": "fnv1a64:34c6201ecc652be9",
       "notice": null,
       "blocks": [
         {
@@ -80,6 +80,10 @@
             {
               "kind": "speech",
               "text": "English does the same thing from a different angle: I am doing uses a participle too, and I remain at work is the same metaphor spelled out."
+            },
+            {
+              "kind": "speech",
+              "text": "रहना comes from a reconstructed rahati, \"remains\" (CDIAL 10666)."
             }
           ]
         },
@@ -196,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f277d99165d6db6",
+      "sourceHash": "fnv1a64:e628555ba2babc7a",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +260,10 @@
             {
               "kind": "speech",
               "text": "That is the tidiest arrangement you have seen yet: one word per job, and only the one that describes the action listens to gender."
+            },
+            {
+              "kind": "speech",
+              "text": "रही is a form of रहना, from a reconstructed rahati, \"remains\" (CDIAL 10666)."
             }
           ]
         },
@@ -366,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b464997cc5042e3c",
+      "sourceHash": "fnv1a64:9e8e1e95e824df0a",
       "notice": null,
       "blocks": [
         {
@@ -423,6 +431,10 @@
             {
               "kind": "speech",
               "text": "Two independent dials. The middle word answers what is the subject like and the last word answers which person is it. Turning one does nothing to the other, which is why you can build any combination without a table to memorise."
+            },
+            {
+              "kind": "speech",
+              "text": "रहा is a form of रहना, from a reconstructed rahati, \"remains\" (CDIAL 10666)."
             }
           ]
         },
@@ -531,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfe255d456eb68e8",
+      "sourceHash": "fnv1a64:faae3477971a1ed0",
       "notice": null,
       "blocks": [
         {
@@ -593,6 +605,10 @@
             {
               "kind": "speech",
               "text": "At the तुम level the last word is हो: तुम क्या कर रहे हो?"
+            },
+            {
+              "kind": "speech",
+              "text": "रहे is a form of रहना, from a reconstructed rahati, \"remains\" (CDIAL 10666)."
             }
           ]
         },
@@ -701,7 +717,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:338827e00ca852ba",
+      "sourceHash": "fnv1a64:7ec82fb61d8f98d5",
       "notice": null,
       "blocks": [
         {
@@ -761,6 +777,10 @@
             {
               "kind": "speech",
               "text": "One caution. Hindi leans on the habit form in a place English does not: for something happening in the near future that is already arranged, Hindi is happy with the habitual, where English reaches for I am."
+            },
+            {
+              "kind": "speech",
+              "text": "वर्तमान is Sanskrit vartamāna, \"existing, present\", a tatsama."
             }
           ]
         },

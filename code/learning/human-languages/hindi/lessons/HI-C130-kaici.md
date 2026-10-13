@@ -14,7 +14,8 @@ romanization: "kaĩcī"
 concept_tag: HI-THINGS130-KAICI
 prerequisites: [HI-C130-hathaura, HI-C130-kil]
 sounds: []
-roots: []
+roots: [turkish-qaychi]
+etymology_hook: "kaĩcī: usually traced, through Persian qaichī, to Turkish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C130-kil]
 <!-- hl-knowledge: introduces=[HI-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **कैंची** — *kaĩcī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कैंची** (*kaĩcī*) is usually traced, through Persian *qaichī*, "scissors", to Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

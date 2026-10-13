@@ -14,7 +14,8 @@ romanization: "gāyak"
 concept_tag: HI-THG195-GAYAK
 prerequisites: [HI-C195-kavi, HI-C195-citrakar]
 sounds: []
-roots: []
+roots: [sanskrit-gayaka]
+etymology_hook: "gāyak ← Sanskrit gāyaka 'singer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C195-citrakar]
 <!-- hl-knowledge: introduces=[HI-LEX-C195-THG195-03]; assesses=[] -->
 
 **गायक** — *gāyak* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गायक** (*gāyak*) is Sanskrit *gāyaka*, "singer", taken over whole as a learned loan, a tatsama. It is built on *gai-*, "to sing", the root of **गाना**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

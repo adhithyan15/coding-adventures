@@ -14,7 +14,8 @@ romanization: "bas"
 concept_tag: HI-WORD-ENOUGH
 prerequisites: [HI-C48-true, HI-C46-finger, HI-C47-student]
 sounds: []
-roots: []
+roots: [persian-bas]
+etymology_hook: "bas: usually traced to Persian bas 'enough'"
 duration:
   max_seconds: 210
 requires:

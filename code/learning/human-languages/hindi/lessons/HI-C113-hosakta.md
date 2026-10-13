@@ -14,7 +14,8 @@ romanization: "ho saktā hai"
 concept_tag: HI-NOTHING-MAYBE
 prerequisites: [HI-C113-kafi, HI-C113-vahi]
 sounds: []
-roots: []
+roots: [sanskrit-bhavati, sanskrit-shaknoti]
+etymology_hook: "ho ← bhavati 'is' (CDIAL 9416); saknā ← Sanskrit śaknoti 'is able' (CDIAL 12252)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C113-vahi]
 **हो सकता है** (*ho saktā hai*) — "maybe", literally "it can be".
 
 It is **होना**, "to be", and the **सकना** of "can". Compare **शायद**, "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हो सकता है** (*ho saktā hai*) is "it can be". *ho* is a form of *honā*, "to be", from Sanskrit *bhavati* (CDIAL 9416), and *saknā*, "to be able", comes from *śaknoti*, "is able" (CDIAL 12252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

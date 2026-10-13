@@ -14,7 +14,8 @@ romanization: "nabz"
 concept_tag: HI-THG257-NABZ
 prerequisites: [HI-C256-tika, HI-C256-goli]
 sounds: []
-roots: []
+roots: [arabic-nabd]
+etymology_hook: "nabz ← Arabic nabḍ 'pulse, a throbbing', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C256-goli]
 <!-- hl-knowledge: introduces=[HI-LEX-C257-THG257-01]; assesses=[] -->
 
 **नब्ज़** — *nabz* — "the pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नब्ज़** (*nabz*) is a loan from Arabic *nabḍ*, "pulse, a throbbing", which reached Hindi through Persian. Its Arabic root is *n-b-ḍ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

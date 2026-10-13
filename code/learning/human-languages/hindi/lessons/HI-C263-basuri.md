@@ -14,7 +14,8 @@ romanization: "bā̃surī"
 concept_tag: HI-THG263-BASURI
 prerequisites: [HI-C263-curi, HI-C263-payal]
 sounds: []
-roots: []
+roots: [sanskrit-vamshi]
+etymology_hook: "bāṁsurī: CDIAL lists bãsī 'flute' under vaṁśī 'flute, pipe' (CDIAL 11180), not bāṁsurī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C263-payal]
 <!-- hl-knowledge: introduces=[HI-LEX-C263-THG263-05]; assesses=[] -->
 
 **बाँसुरी** — *bā̃surī* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाँसुरी** (*bāṁsurī*) belongs with Hindi *bãsī*, "flute", which CDIAL lists under Sanskrit *vaṁśī*, "flute, pipe", built on *vaṁśa*, "bamboo" (CDIAL 11180). CDIAL does not list *bāṁsurī* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aksar"
 concept_tag: HI-FREQ192-AKSAR
 prerequisites: [HI-C192-kabhi, HI-C192-hamesa]
 sounds: []
-roots: []
+roots: [arabic-akthar]
+etymology_hook: "aksar ← Arabic akthar 'more, most', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C192-hamesa]
 <!-- hl-knowledge: introduces=[HI-LEX-C192-FREQ192-04]; assesses=[] -->
 
 **अक्सर** — *aksar* — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अक्सर** (*aksar*) is a loan from Arabic *akthar*, "more, most", which reached Hindi through Persian. Its Arabic root is *k-th-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhũdhlā"
 concept_tag: HI-QUAL239-DHUDHLA
 prerequisites: [HI-C238-khurdura, HI-C239-camakdar]
 sounds: []
-roots: []
+roots: [indo-aryan-dhumandha]
+etymology_hook: "dhũdhlā ← *dhūmāndha 'dim-sighted', a reconstructed form; a tadbhava (CDIAL 6858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C239-camakdar]
 <!-- hl-knowledge: introduces=[HI-LEX-C239-QUAL239-02]; assesses=[] -->
 
 **धुंधला** — *dhũdhlā* — "hazy, blurred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धुंधला** (*dhũdhlā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhūmāndha*, "dim-sighted", a form CDIAL reconstructs from its descendants (CDIAL 6858). It is built from *dhūma*, "smoke", and *andha*, "blind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bād mẽ"
 concept_tag: HI-THG248-BADME
 prerequisites: [HI-C248-sirf, HI-C248-lagbhag]
 sounds: []
-roots: []
+roots: [arabic-bad, sanskrit-madhya]
+etymology_hook: "bād ← Arabic baʿd 'after' (Lane); meṁ ← madhye 'in' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C248-lagbhag]
 <!-- hl-knowledge: introduces=[HI-LEX-C248-THG248-03]; assesses=[] -->
 
 **बाद में** — *bād mẽ* — "later, afterwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाद में** (*bād mẽ*) is *bād*, "after", from Arabic *baʿd* through Persian (Lane, root *b-ʿ-d*), with *meṁ*, "in", from Sanskrit *madhye* (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

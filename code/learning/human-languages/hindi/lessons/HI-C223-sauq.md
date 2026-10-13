@@ -14,7 +14,8 @@ romanization: "śauq"
 concept_tag: HI-THG223-SAUQ
 prerequisites: [HI-C222-upay, HI-C223-adat]
 sounds: []
-roots: []
+roots: [arabic-shawq]
+etymology_hook: "śauq ← Arabic shawq 'longing, desire', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C223-adat]
 <!-- hl-knowledge: introduces=[HI-LEX-C223-THG223-02]; assesses=[] -->
 
 **शौक़** — *śauq* — "a hobby, a liking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शौक़** (*śauq*) is a loan from Arabic *shawq*, "longing, desire", which reached Hindi through Persian. Its Arabic root is *sh-w-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

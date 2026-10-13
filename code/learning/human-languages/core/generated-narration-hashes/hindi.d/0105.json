@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 105,
-  "sourceHash": "fnv1a64:41808b4cf6206d4d",
+  "sourceHash": "fnv1a64:418a1179c8ca6ce4",
   "lessonIds": [
     "HI-C97-naam-ji",
     "HI-C97-priya",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch105.txt",
   "json": "hindi/narration/ch105.json",
-  "textHash": "fnv1a64:3a3872967557546e",
-  "jsonHash": "fnv1a64:c426ba547424a2bb",
+  "textHash": "fnv1a64:effd23767f654389",
+  "jsonHash": "fnv1a64:accf15576bfefd80",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bas se"
 concept_tag: HI-THING-BUS
 prerequisites: [HI-C90-se, HI-C48-enough, HI-C81-skool]
 sounds: []
-roots: []
+roots: [english-bus, persian-bas]
+etymology_hook: "bas 'bus' ← English bus, short for omnibus; bas 'enough' is usually traced to Persian bas"
 duration:
   max_seconds: 240
 requires:

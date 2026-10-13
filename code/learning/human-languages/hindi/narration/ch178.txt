@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to boil, then the Hindi for to fry.
 You'll want to know: बुनना.
 बुनना — bunnā — "to weave, to knit".
 
+The word, taken apart.
+बुनना (bunnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vunāti, "weaves", a form CDIAL reconstructs from its descendants (CDIAL 11773). CDIAL explains the u as taken from other forms of Sanskrit vayati, "weaves".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to fry, then the Hindi for to weave.
 
 You'll want to know: मारना.
 मारना — mārnā — "to hit".
+
+The word, taken apart.
+मारना (mārnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārayati, "kills" (CDIAL 10066). It is the causing form of the verb "to die": to strike was "to make die".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to weave, then the Hindi for to hit.
 You'll want to know: लड़ना.
 लड़ना — laṛnā — "to fight".
 
+The word, taken apart.
+लड़ना (laṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍ, "fight", a form CDIAL reconstructs from its descendants (CDIAL 10920).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to hit, then the Hindi for to fight.
 You'll want to know: डरना.
 डरना — ḍarnā — "to be afraid".
 
+The word, taken apart.
+डरना (ḍarnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from darati, "is frightened" (CDIAL 6190). The Sanskrit verb is known only from a list of verb roots.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to fight, then the Hindi for to be afraid.
 
 You'll want to know: चिल्लाना.
 चिल्लाना — cillānā — "to shout".
+
+The word, taken apart.
+The origin of चिल्लाना (cillānā) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "vahā̃"
 concept_tag: HI-DEIXIS-THERE
 prerequisites: [HI-C40-here, HI-C38-pair]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "vahāṁ: the stem of vah 'that' with the place ending -hāṁ of yahāṁ 'here'; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **यहाँ** *yahā̃*, which you met in the last lesson. The two of them
 differ by one sound at the front — **v-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वहाँ** (*vahāṁ*) pairs the stem of **वह**, "that", with the same place ending *-hāṁ* that **यहाँ**, "here", has. CDIAL has no entry for it, so its older history is left open here.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02] -->

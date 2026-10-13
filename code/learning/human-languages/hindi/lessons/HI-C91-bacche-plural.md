@@ -14,7 +14,8 @@ romanization: "bacce"
 concept_tag: HI-NOUN-PLURAL-AA
 prerequisites: [HI-C90-sintesis-dincharya, HI-C39-baccha, HI-C41-adjective-system, HI-C82-lambaa]
 sounds: []
-roots: []
+roots: [persian-bacca]
+etymology_hook: "baccā: usually traced to Persian bacca 'child'"
 duration:
   max_seconds: 240
 requires:
@@ -66,6 +67,8 @@ is not a new system — it is the one system arriving at a new place.
 
 This applies to **masculine nouns ending in -आ** and to those only. A noun
 shaped otherwise does something else, and the next lessons take those in turn.
+
+**बच्चा** itself is the loan usually traced to Persian *bacca*, "child".
 
 ## Grammar Lens: what changes with it
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-01, HI-CONCEPT-C39-BACCHA-01] -->

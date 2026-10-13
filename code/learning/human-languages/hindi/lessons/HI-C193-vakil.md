@@ -14,7 +14,8 @@ romanization: "vakīl"
 concept_tag: HI-THG193-VAKIL
 prerequisites: [HI-C192-kabhinahi, HI-C193-adhyapak]
 sounds: []
-roots: []
+roots: [arabic-wakil]
+etymology_hook: "vakīl ← Arabic wakīl 'an agent, a representative', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C193-adhyapak]
 <!-- hl-knowledge: introduces=[HI-LEX-C193-THG193-02]; assesses=[] -->
 
 **वकील** — *vakīl* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वकील** (*vakīl*) is a loan from Arabic *wakīl*, "an agent, a representative", which reached Hindi through Persian. Its Arabic root is *w-k-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

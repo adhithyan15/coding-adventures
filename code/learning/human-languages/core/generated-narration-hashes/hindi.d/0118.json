@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 118,
-  "sourceHash": "fnv1a64:22b8c6db8f23b253",
+  "sourceHash": "fnv1a64:0fb82f87f6415c73",
   "lessonIds": [
     "HI-C118-larka",
     "HI-C118-larki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch118.txt",
   "json": "hindi/narration/ch118.json",
-  "textHash": "fnv1a64:e485023796a6f76f",
-  "jsonHash": "fnv1a64:36c587bb5038f70e",
+  "textHash": "fnv1a64:8f20b2441344ee4a",
+  "jsonHash": "fnv1a64:3114f1848667e846",
   "findings": []
 }

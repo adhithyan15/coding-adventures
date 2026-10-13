@@ -14,7 +14,8 @@ romanization: "sahī"
 concept_tag: HI-RIGHT-CORRECT
 prerequisites: [HI-C111-sunai, HI-C111-likhdijie]
 sounds: []
-roots: []
+roots: [arabic-sahih]
+etymology_hook: "sahī ← Arabic ṣaḥīḥ 'sound, correct', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C111-likhdijie]
 **सही** (*sahī*) — "right, correct".
 
 **सही दाम** — "the right price". Said alone, **सही!** agrees: "right!".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सही** (*sahī*) is a loan from Arabic *ṣaḥīḥ*, "sound, correct", which reached Hindi through Persian. Its Arabic root is *ṣ-ḥ-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sambandhī"
 concept_tag: HI-THG254-SAMBANDHI
 prerequisites: [HI-C254-saheli, HI-C254-sathi]
 sounds: []
-roots: []
+roots: [sanskrit-sambandhin]
+etymology_hook: "sambandhī ← Sanskrit sambandhin 'connected, related', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C254-sathi]
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-03]; assesses=[] -->
 
 **संबंधी** — *sambandhī* — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संबंधी** (*sambandhī*) is Sanskrit *sambandhin*, "connected, related", taken over whole as a learned loan, a tatsama. Hindi took its nominative, *sambandhī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

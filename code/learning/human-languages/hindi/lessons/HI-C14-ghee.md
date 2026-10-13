@@ -14,7 +14,8 @@ gloss: "ghee, clarified butter"
 concept_tag: HI-ANCHOR-GHEE
 prerequisites: [HI-S117-letter-ca]
 sounds: []
-roots: []
+roots: [sanskrit-ghrta]
+etymology_hook: "ghī ← Sanskrit ghṛta 'clarified butter, ghee', a tadbhava (CDIAL 4501)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ghī*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **घ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घी** (*ghī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛta*, "clarified butter, ghee" (CDIAL 4501).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-GHEE] -->

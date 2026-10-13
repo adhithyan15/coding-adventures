@@ -14,7 +14,8 @@ romanization: "dikhānā"
 concept_tag: HI-VERB-DIKHANA
 prerequisites: [HI-C170-uthana, HI-C170-sunana]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati]
+etymology_hook: "dikhānā: the causing form of the 'see' verb, from a reconstructed *dṛkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C170-sunana]
 <!-- hl-knowledge: introduces=[HI-LEX-C171-ACT171-01]; assesses=[] -->
 
 **दिखाना** — *dikhānā* — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिखाना** (*dikhānā*) is the causing form of **देखना**, "to see": to show is to make someone see. CDIAL traces the verb to a reconstructed *\*dṛkṣati*, "sees" (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

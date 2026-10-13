@@ -14,7 +14,8 @@ romanization: "dhakelnā"
 concept_tag: HI-VERB-DHAKELNA
 prerequisites: [HI-C176-hilana, HI-C176-khicna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhakk-push]
+etymology_hook: "dhakelnā ← *dhakk 'push, strike', a reconstructed form; a tadbhava (CDIAL 6701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C176-khicna]
 <!-- hl-knowledge: introduces=[HI-LEX-C176-ACT176-03]; assesses=[] -->
 
 **धकेलना** — *dhakelnā* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धकेलना** (*dhakelnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhakk*, "push, strike", a form CDIAL reconstructs from its descendants (CDIAL 6701).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 122,
-  "sourceHash": "fnv1a64:65dac95b649c45b0",
+  "sourceHash": "fnv1a64:b875856599d23e6d",
   "lessonIds": [
     "HI-C122-chhutti",
     "HI-C122-derhogai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch122.txt",
   "json": "hindi/narration/ch122.json",
-  "textHash": "fnv1a64:b83a6adf3c38095e",
-  "jsonHash": "fnv1a64:fe71cf4e6d13dd5b",
+  "textHash": "fnv1a64:3ae3ee87bd4f060a",
+  "jsonHash": "fnv1a64:1b4f5fd16b2c0911",
   "findings": []
 }

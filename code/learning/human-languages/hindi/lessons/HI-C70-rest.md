@@ -14,7 +14,8 @@ romanization: "ārām"
 concept_tag: HI-NOUN-REST
 prerequisites: [HI-C70-song, HI-C68-english, HI-C69-go]
 sounds: []
-roots: []
+roots: [persian-aram]
+etymology_hook: "ārām: usually traced to Persian ārām 'rest, ease'"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,11 @@ hour. **आराम करना** is what you say for taking that hour.
 
 It is also an answer. When somebody asks **आप कैसे हैं?**, one ordinary reply is
 that you are at आराम, and it says more warmly than **ठीक** does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आराम** (*ārām*) is a loan, usually traced to Persian *ārām*, "rest, ease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

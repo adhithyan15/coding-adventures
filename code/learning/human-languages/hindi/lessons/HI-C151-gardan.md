@@ -14,7 +14,8 @@ romanization: "gardan"
 concept_tag: HI-THINGS151-GARDAN
 prerequisites: [HI-C151-thori, HI-C151-jibh]
 sounds: []
-roots: []
+roots: [persian-gardan]
+etymology_hook: "gardan: usually traced to Persian gardan 'neck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C151-jibh]
 <!-- hl-knowledge: introduces=[HI-LEX-C151-THINGS151-03]; assesses=[] -->
 
 **गर्दन** — *gardan* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गर्दन** (*gardan*) is a loan, usually traced to Persian *gardan*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "davā"
 concept_tag: HI-THG180-DAVA
 prerequisites: [HI-C179-hatna, HI-C179-guzarna]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davā ← Arabic dawāʾ 'remedy, medicine', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C179-guzarna]
 <!-- hl-knowledge: introduces=[HI-LEX-C180-THG180-01]; assesses=[] -->
 
 **दवा** — *davā* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दवा** (*davā*) is a loan from Arabic *dawāʾ*, "remedy, medicine", which reached Hindi through Persian. Its Arabic root is *d-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

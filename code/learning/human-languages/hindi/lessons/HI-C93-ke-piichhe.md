@@ -14,9 +14,10 @@ romanization: "ke pīche"
 concept_tag: HI-POST-COMPOUND-PIICHHE
 prerequisites: [HI-C93-ke-saamne, HI-C51-table]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pīche ← *paśca 'hinder part', a reconstructed form; a tadbhava (CDIAL 7990)"
 duration:
-  max_seconds: 210
+  max_seconds: 232
 requires:
   knowledge: [HI-LEX-C93-REL-04, HI-LEX-C51-WELCOME-04, HI-LEX-C93-REL-03]
 introduces:
@@ -43,6 +44,11 @@ you have had since the chapter on furniture.
 <!-- hl-knowledge: introduces=[HI-LEX-C93-REL-05]; assesses=[] -->
 
 **कुर्सी मेज़ के पीछे है।** — The chair is behind the table.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pīche*, "behind", is a tadbhava: CDIAL lists it under a reconstructed *\*paśca*, "hinder part", as an old case form that replaced Sanskrit *paścāt* (CDIAL 7990).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-05, HI-LEX-C93-REL-04] -->

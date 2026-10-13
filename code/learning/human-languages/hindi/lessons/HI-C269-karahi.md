@@ -14,7 +14,8 @@ romanization: "kaṛāhī"
 concept_tag: HI-THG269-KARAHI
 prerequisites: [HI-C269-koyla, HI-C269-gais]
 sounds: []
-roots: []
+roots: [sanskrit-kataha]
+etymology_hook: "kaṛāhī ← Sanskrit kaṭāha 'boiler, saucepan', a tadbhava (CDIAL 2638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C269-gais]
 <!-- hl-knowledge: introduces=[HI-LEX-C269-THG269-03]; assesses=[] -->
 
 **कड़ाही** — *kaṛāhī* — "a wok".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़ाही** (*kaṛāhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭāha*, "boiler, saucepan" (CDIAL 2638).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

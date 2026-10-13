@@ -14,7 +14,8 @@ romanization: "hamẽ / tumhẽ"
 concept_tag: HI-PRON-OBLIQUE-US-YOU
 prerequisites: [HI-C86-ve, HI-C35-pasand, HI-C84-tumhara]
 sounds: []
-roots: []
+roots: [sanskrit-asmad, sanskrit-yushmad]
+etymology_hook: "hamẽ, tumhẽ: ham 'we' (CDIAL 986) and tum 'you' (CDIAL 10511) with the ending -ẽ"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +49,11 @@ you like. Say the first word on its own and ask what it actually is.
 *Mujhe* is the same kind of word: **मैं** in its oblique form, meaning *to me*.
 The liking frame was never a lump — it was a pronoun in a case, and now the
 rest of the set arrives with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हमें / तुम्हें** (*hamẽ / tumhẽ*) is *ham*, "we", and *tum*, "you", with an ending *-ẽ*, "to". CDIAL lists *ham* under the Sanskrit plural base *asmad-* (CDIAL 986) and *tum* under *yuṣmad-* (CDIAL 10511).
 
 ## Grammar Lens: the same bend, a third time
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-03, HI-LEX-C86-PRON-01] -->

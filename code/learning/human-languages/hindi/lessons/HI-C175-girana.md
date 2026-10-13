@@ -14,7 +14,8 @@ romanization: "girānā"
 concept_tag: HI-VERB-GIRANA
 prerequisites: [HI-C174-tolna, HI-C175-napna]
 sounds: []
-roots: []
+roots: [indo-aryan-girati]
+etymology_hook: "girānā: the causing form of girnā 'to fall', from a reconstructed *girati 'drips, falls' (CDIAL 4159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C175-napna]
 <!-- hl-knowledge: introduces=[HI-LEX-C175-ACT175-02]; assesses=[] -->
 
 **गिराना** — *girānā* — "to drop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिराना** (*girānā*) is the causing form of *girnā*, "to fall": to drop is to make something fall. CDIAL lists *girnā* under a reconstructed *\*girati*, "drips, falls" (CDIAL 4159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

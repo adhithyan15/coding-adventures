@@ -14,7 +14,8 @@ romanization: "calie"
 concept_tag: HI-CARE-LETS-GO
 prerequisites: [HI-C121-shubhyatra, HI-C121-phiraiega]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "calie: calnā 'to move, go', from Sanskrit calati 'goes away' (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C121-phiraiega]
 **चलिए** (*calie*) — "let's go", "shall we".
 
 It is **चलना** with the respectful ending of **बोलिए**, the verb inside **चलता हूँ**, "I'll be off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चलिए** (*calie*) is the respectful command of *calnā*, "to move, go", which comes from Sanskrit *calati*, "goes away" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

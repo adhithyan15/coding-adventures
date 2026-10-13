@@ -14,7 +14,8 @@ romanization: "suvidhā"
 concept_tag: HI-THG260-SUVIDHA
 prerequisites: [HI-C259-durghatna, HI-C259-khatra]
 sounds: []
-roots: []
+roots: [sanskrit-suvidha]
+etymology_hook: "suvidhā ← Sanskrit suvidhā 'good arrangement', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C259-khatra]
 <!-- hl-knowledge: introduces=[HI-LEX-C260-THG260-01]; assesses=[] -->
 
 **सुविधा** — *suvidhā* — "a convenience, a facility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुविधा** (*suvidhā*) is Sanskrit *suvidhā*, "good arrangement", taken over whole as a learned loan, a tatsama. It is built from *su-*, "well", and *vidhā*, "arrangement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sehat"
 concept_tag: HI-DOCTOR-HEALTH
 prerequisites: [HI-C107-chot, HI-C107-kamzori]
 sounds: []
-roots: []
+roots: [arabic-sihha]
+etymology_hook: "sehat ← Arabic ṣiḥḥa 'health, soundness', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C107-kamzori]
 
 **तबीयत** is how you feel today; **सेहत** is how healthy you are. **सेहत अच्छी है** — "the health
 is good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सेहत** (*sehat*) is a loan from Arabic *ṣiḥḥa*, "health, soundness", which reached Hindi through Persian. Its Arabic root is *ṣ-ḥ-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

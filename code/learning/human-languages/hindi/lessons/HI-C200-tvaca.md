@@ -14,7 +14,8 @@ romanization: "tvacā"
 concept_tag: HI-THG200-TVACA
 prerequisites: [HI-C199-dil, HI-C199-haddi]
 sounds: []
-roots: []
+roots: [sanskrit-tvaca]
+etymology_hook: "tvacā ← Sanskrit tvacā 'skin', a tatsama (CDIAL 6087)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C199-haddi]
 <!-- hl-knowledge: introduces=[HI-LEX-C200-THG200-01]; assesses=[] -->
 
 **त्वचा** — *tvacā* — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**त्वचा** (*tvacā*) is Sanskrit *tvacā*, "skin", taken over whole as a learned loan, a tatsama (CDIAL 6087).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

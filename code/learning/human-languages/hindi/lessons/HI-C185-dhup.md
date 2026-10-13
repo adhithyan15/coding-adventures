@@ -14,7 +14,8 @@ romanization: "dhūp"
 concept_tag: HI-THG185-DHUP
 prerequisites: [HI-C184-aina, HI-C184-baris]
 sounds: []
-roots: []
+roots: [indo-aryan-dhuppa]
+etymology_hook: "dhūp ← *dhuppā 'sunshine', a reconstructed form; a tadbhava (CDIAL 6825)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C184-baris]
 <!-- hl-knowledge: introduces=[HI-LEX-C185-THG185-01]; assesses=[] -->
 
 **धूप** — *dhūp* — "sunshine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धूप** (*dhūp*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhuppā*, "sunshine", a form CDIAL reconstructs from its descendants (CDIAL 6825).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

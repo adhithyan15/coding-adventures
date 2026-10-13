@@ -14,7 +14,8 @@ romanization: "kānūn"
 concept_tag: HI-THG218-KANUN
 prerequisites: [HI-C218-samaj, HI-C218-sarkar]
 sounds: []
-roots: []
+roots: [arabic-qanun]
+etymology_hook: "qānūn: usually traced, through Persian, to Arabic qānūn 'rule', itself from Greek kanōn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C218-sarkar]
 <!-- hl-knowledge: introduces=[HI-LEX-C218-THG218-03]; assesses=[] -->
 
 **क़ानून** — *kānūn* — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़ानून** (*kānūn*) is usually traced, through Persian, to Arabic *qānūn*, "rule, canon", a word Arabic itself took from Greek *kanōn*, "rule".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

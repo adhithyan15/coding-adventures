@@ -14,9 +14,10 @@ romanization: "uṭhnā"
 concept_tag: HI-ACTION-RISE
 prerequisites: [HI-C90-bas, HI-C28-subah, HI-S127-letter-u]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthati]
+etymology_hook: "uṭhnā ← *ut-sthāti 'stands up', a form CDIAL reconstructs (CDIAL 1900)"
 duration:
-  max_seconds: 240
+  max_seconds: 249
 requires:
   knowledge: [HI-LEX-C90-ROUT-02, HI-CONCEPT-C28-SUBAH-01, HI-SCRIPT-RECOG-127, HI-CONCEPT-C05-BOLTAHUN-01]
 introduces:
@@ -60,6 +61,8 @@ those share is **movement away from the ground**, and Hindi treats that as one
 action.
 
 Its opposite, **बैठना**, is *to sit* — the same idea in the other direction.
+
+**उठना** comes from a reconstructed *\*ut-sthāti*, "stands up" (CDIAL 1900).
 
 ## Grammar Lens: it takes the endings you already have
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C90-ROUT-03, HI-CONCEPT-C05-BOLTAHUN-01] -->

@@ -15,6 +15,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [HI-C02-kya]
 sounds: [matra-ai, matra-e]
 roots: [ka-interrogative]
+etymology_hook: "kaisā ← Sanskrit kīdṛśa 'of what kind?', with ka- in place of kī- (CDIAL 3197)"
 duration:
   max_seconds: 240
 requires:

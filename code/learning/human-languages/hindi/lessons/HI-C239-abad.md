@@ -14,7 +14,8 @@ romanization: "ābād"
 concept_tag: HI-QUAL239-ABAD
 prerequisites: [HI-C239-sunsan, HI-C239-bhirbhar]
 sounds: []
-roots: []
+roots: [persian-abad]
+etymology_hook: "ābād: usually traced to Persian ābād 'inhabited, flourishing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C239-bhirbhar]
 <!-- hl-knowledge: introduces=[HI-LEX-C239-QUAL239-05]; assesses=[] -->
 
 **आबाद** — *ābād* — "inhabited, lively".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आबाद** (*ābād*) is a loan, usually traced to Persian *ābād*, "inhabited, flourishing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

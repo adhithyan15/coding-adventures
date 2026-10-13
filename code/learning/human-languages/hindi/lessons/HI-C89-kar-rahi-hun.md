@@ -14,7 +14,8 @@ romanization: "kar rahī hū̃"
 concept_tag: HI-CONTINUOUS-FEMININE
 prerequisites: [HI-C89-kar-raha-hun, HI-C41-adjective-system]
 sounds: []
-roots: []
+roots: [rah-remain, kr-do]
+etymology_hook: "rahī: from rahnā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +61,8 @@ the way every **-आ** word you have met bends.
 
 That is the tidiest arrangement you have seen yet: **one word per job, and only
 the one that describes the action listens to gender.**
+
+**रही** is a form of **रहना**, from a reconstructed *\*rahati*, "remains" (CDIAL 10666).
 
 ## Grammar Lens: the same ending, a fourth time
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-02, HI-LEX-C89-CONT-01] -->

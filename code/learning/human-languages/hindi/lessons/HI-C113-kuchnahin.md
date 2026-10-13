@@ -14,7 +14,8 @@ romanization: "kuch nahīṁ"
 concept_tag: HI-NOTHING-NOTHING
 prerequisites: [HI-C112-sachme, HI-C112-are]
 sounds: []
-roots: []
+roots: [sanskrit-kimcid, sanskrit-nahi]
+etymology_hook: "kuch ← Sanskrit kiṁcid 'anything' (CDIAL 3144); nahīṁ ← nahi 'surely not' (CDIAL 7035)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C112-are]
 **कुछ नहीं** (*kuch nahīṁ*) — "nothing".
 
 **क्या हुआ? — कुछ नहीं.** — "what happened? — nothing". It ends on the **नहीं** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुछ नहीं** (*kuch nahīṁ*) is two tadbhavas. *kuch*, "something", comes from Sanskrit *kiṁcid*, "anything", taking its *-ch-* from the masculine *kaścid* (CDIAL 3144); *nahīṁ* comes from *nahi*, "surely not" (CDIAL 7035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

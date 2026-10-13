@@ -14,7 +14,8 @@ romanization: "nahīṃ thā"
 concept_tag: HI-PAST-NEGATIVE
 prerequisites: [HI-C87-the, HI-C07-nahin]
 sounds: []
-roots: []
+roots: [sanskrit-nahi, sanskrit-sthita]
+etymology_hook: "nahīṁ ← Sanskrit nahi 'surely not' (CDIAL 7035); thā ← sthita 'standing' (CDIAL 13768)"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +62,8 @@ go*, with a helper verb appearing out of nowhere.
 
 Hindi asks for none of that. One word, one seat, every tense. Learning the past
 costs you nothing extra here, because there was nothing extra to learn.
+
+**नहीं** comes from Sanskrit *nahi*, "surely not" (CDIAL 7035), and **था** from *sthita*, "standing" (CDIAL 13768).
 
 ## Grammar Lens: the seat in front of the verb
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-PAST-04, HI-LEX-C87-PAST-02, HI-LEX-C87-PAST-03, HI-LEX-C87-POST-01] -->

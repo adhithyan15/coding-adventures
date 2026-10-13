@@ -14,7 +14,8 @@ romanization: "chipnā"
 concept_tag: HI-VERB-CHIPNA
 prerequisites: [HI-C171-dikhna, HI-C171-chipana]
 sounds: []
-roots: []
+roots: [indo-aryan-chipp]
+etymology_hook: "chipnā ← *chipp 'press, cover, hide', a reconstructed form; a tadbhava (CDIAL 4994)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C171-chipana]
 <!-- hl-knowledge: introduces=[HI-LEX-C171-ACT171-04]; assesses=[] -->
 
 **छिपना** — *chipnā* — "to hide (oneself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छिपना** (*chipnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chipp*, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

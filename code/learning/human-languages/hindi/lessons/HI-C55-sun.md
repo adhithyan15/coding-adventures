@@ -14,7 +14,8 @@ romanization: "sūraj"
 concept_tag: HI-NOUN-SUN
 prerequisites: [HI-C54-goat, HI-C53-shoulder, HI-C54-cow]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūraj: usually traced to Sanskrit sūrya 'sun' (CDIAL 13574 lists no Hindi form)"
 duration:
   max_seconds: 210
 requires:

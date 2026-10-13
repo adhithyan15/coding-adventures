@@ -14,7 +14,8 @@ romanization: "ruknā"
 concept_tag: HI-VERB-RUKNA
 prerequisites: [HI-C171-chipana, HI-C171-chipna]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "ruknā: listed by CDIAL beside roknā 'to stop' under a reconstructed *rokk 'stop' (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C171-chipna]
 <!-- hl-knowledge: introduces=[HI-LEX-C171-ACT171-05]; assesses=[] -->
 
 **रुकना** — *ruknā* — "to stop, to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुकना** (*ruknā*) is listed by CDIAL beside *roknā*, "to stop someone", under a reconstructed *\*rokk*, "stop"; CDIAL calls its link with Sanskrit *rudh-*, "to obstruct", not clear (CDIAL 10827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

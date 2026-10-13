@@ -14,7 +14,8 @@ romanization: "jalnā"
 concept_tag: HI-VERB-JALNA
 prerequisites: [HI-C175-girana, HI-C175-jalana]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati]
+etymology_hook: "jalnā ← Sanskrit jvalati 'burns brightly', a tadbhava (CDIAL 5306)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C175-jalana]
 <!-- hl-knowledge: introduces=[HI-LEX-C175-ACT175-04]; assesses=[] -->
 
 **जलना** — *jalnā* — "to burn (by itself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जलना** (*jalnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jvalati*, "burns brightly" (CDIAL 5306).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

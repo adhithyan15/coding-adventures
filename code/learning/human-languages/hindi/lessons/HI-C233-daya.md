@@ -14,7 +14,8 @@ romanization: "dāyā̃"
 concept_tag: HI-LOC233-DAYA
 prerequisites: [HI-C233-purv, HI-C233-pascim]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dāyāṁ ← Sanskrit dākṣiṇa 'relating to the right; southern', a tadbhava (CDIAL 6251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C233-pascim]
 <!-- hl-knowledge: introduces=[HI-LEX-C233-LOC233-05]; assesses=[] -->
 
 **दायाँ** — *dāyā̃* — "right (side)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दायाँ** (*dāyāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dākṣiṇa*, "relating to the right; southern" (CDIAL 6251). CDIAL notes that its form was crossed with *vāma*, "left".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

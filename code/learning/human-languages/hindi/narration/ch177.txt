@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to throw, then the Hindi for to taste.
 You'll want to know: सूँघना.
 सूँघना — sū̃ghnā — "to smell".
 
+The word, taken apart.
+सूँघना (sū̃ghnā) (sūṁghnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śiṅghati, "smells" (CDIAL 12579). The Sanskrit verb is known only from a list of verb roots.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to taste, then the Hindi for to smell.
 
 You'll want to know: मनाना.
 मनाना — manānā — "to celebrate, to persuade".
+
+The word, taken apart.
+मनाना (manānā) is the causing form of mānnā, "to accept, honour": to persuade is to make someone accept, and to celebrate is to honour a day. CDIAL lists both under Sanskrit manyate, "thinks, honours" (CDIAL 9857).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to smell, then the Hindi for to celebrate.
 You'll want to know: पीसना.
 पीसना — pīsnā — "to grind".
 
+The word, taken apart.
+पीसना (pīsnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from piṁṣati, "grinds" (CDIAL 8142).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to celebrate, then the Hindi for to grind.
 You'll want to know: उबालना.
 उबालना — ubālnā — "to boil".
 
+The word, taken apart.
+उबालना (ubālnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ubbāl, "make boil", a form CDIAL reconstructs from its descendants (CDIAL 2339). Morgenstierne traced it to ud-, "up", and an Indo-European root "to boil"; CDIAL finds the forms hard to fit and notes other possible sources.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to grind, then the Hindi for to boil.
 
 You'll want to know: तलना.
 तलना — talnā — "to fry".
+
+The word, taken apart.
+तलना (talnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from talati, "fries", a form CDIAL reconstructs from its descendants (CDIAL 5736).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 165,
-  "sourceHash": "fnv1a64:881b1de711fd927e",
+  "sourceHash": "fnv1a64:84b21ea0cf223c51",
   "lessonIds": [
     "HI-C165-pakarna",
     "HI-C165-chuna",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch165.txt",
   "json": "hindi/narration/ch165.json",
-  "textHash": "fnv1a64:3c7db8f26fff418f",
-  "jsonHash": "fnv1a64:ff8371dbaac74b00",
+  "textHash": "fnv1a64:96105ee424ef6c5b",
+  "jsonHash": "fnv1a64:99f2f8ada3ae3f0b",
   "findings": []
 }

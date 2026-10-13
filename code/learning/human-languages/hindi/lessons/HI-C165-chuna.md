@@ -14,7 +14,8 @@ romanization: "chūnā"
 concept_tag: HI-VERB-CHUNA
 prerequisites: [HI-C164-lautna, HI-C165-pakarna]
 sounds: []
-roots: []
+roots: [sanskrit-chupati]
+etymology_hook: "chūnā ← Sanskrit chupati 'touches', a tadbhava (CDIAL 5055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C165-pakarna]
 <!-- hl-knowledge: introduces=[HI-LEX-C165-ACT165-02]; assesses=[] -->
 
 **छूना** — *chūnā* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छूना** (*chūnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chupati*, "touches" (CDIAL 5055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāk"
 concept_tag: HI-NOUN-NOSE
 prerequisites: [HI-C46-ear, HI-C44-people, HI-C45-salt]
 sounds: []
-roots: []
+roots: [indo-aryan-nakka]
+etymology_hook: "nāk ← Prakrit ṇakka 'nose', which CDIAL traces, possibly, to the old word nas- 'nose' (CDIAL 6909)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [HI-C46-ear]
 
 **नाक** (*nāk*) — "a nose".
 
-From Sanskrit *nāsikā*, 'nostril', by way of Prakrit — and *nāsikā* is a cousin of Latin *nāsus* and of English "nose", which makes this one of the clearest family resemblances anywhere on the body.
+From Prakrit *ṇakka*, 'nose', which CDIAL traces, with a "possibly", to the old word *nas-*, 'nose' (CDIAL 6909) — and *nas-* is a cousin of Latin *nāsus* and of English "nose", so the family resemblance is probably real.
 
 Hindi puts the nose where English puts the face: to have your नाक cut is to be humiliated, and to keep it high is to keep your honour. The idiom is old enough that the literal sense has stopped showing through.
 

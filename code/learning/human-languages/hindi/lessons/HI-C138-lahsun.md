@@ -14,7 +14,8 @@ romanization: "lahsun"
 concept_tag: HI-THINGS138-LAHSUN
 prerequisites: [HI-C137-alu, HI-C137-pyaz]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "lahsun ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C137-pyaz]
 <!-- hl-knowledge: introduces=[HI-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **लहसुन** — *lahsun* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लहसुन** (*lahsun*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic" (CDIAL 10990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

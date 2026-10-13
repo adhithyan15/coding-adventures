@@ -14,7 +14,8 @@ romanization: "adālat"
 concept_tag: HI-THG218-ADALAT
 prerequisites: [HI-C218-sarkar, HI-C218-kanun]
 sounds: []
-roots: []
+roots: [arabic-adala]
+etymology_hook: "adālat ← Arabic ʿadāla 'justice, equity', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C218-kanun]
 <!-- hl-knowledge: introduces=[HI-LEX-C218-THG218-04]; assesses=[] -->
 
 **अदालत** — *adālat* — "a court".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अदालत** (*adālat*) is a loan from Arabic *ʿadāla*, "justice, equity", which reached Hindi through Persian. Its Arabic root is *ʿ-d-l* (Lane). Hindi uses it for the court that gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhaĩs"
 concept_tag: HI-NOUN-BUFFALO
 prerequisites: [HI-C60-hen]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "bhaĩs ← Sanskrit mahiṣī 'buffalo cow', a tadbhava (CDIAL 9964)"
 duration:
   max_seconds: 210
 requires:

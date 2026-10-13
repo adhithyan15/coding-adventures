@@ -14,7 +14,8 @@ romanization: "jag"
 concept_tag: HI-THG270-JAG
 prerequisites: [HI-C270-kaddukas, HI-C270-dhakkan]
 sounds: []
-roots: []
+roots: [english-jug]
+etymology_hook: "jag ← English jug"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C270-dhakkan]
 <!-- hl-knowledge: introduces=[HI-LEX-C270-THG270-03]; assesses=[] -->
 
 **जग** — *jag* — "a jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जग** (*jag*) is a loan from English *jug*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

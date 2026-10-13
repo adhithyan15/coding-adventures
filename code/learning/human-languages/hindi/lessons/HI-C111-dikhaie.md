@@ -14,7 +14,8 @@ romanization: "dikhāie"
 concept_tag: HI-ASK-SHOW
 prerequisites: [HI-C111-hindime, HI-C111-kaisekahte]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati]
+etymology_hook: "dikhāie: the 'show' verb of dekhnā 'to see', from *dṛkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C111-kaisekahte]
 **दिखाइए** (*dikhāie*) — "please show me".
 
 It is built on **देखना**, "to see": to show is to *make someone see*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिखाइए** (*dikhāie*) is *dikhānā*, "to show", the causing form of **देखना**, "to see", with the respectful ending *-ie*. CDIAL traces the "see" verbs to a reconstructed *\*dṛkṣati*, "sees" (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

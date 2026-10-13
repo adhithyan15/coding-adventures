@@ -14,7 +14,8 @@ romanization: "fasal"
 concept_tag: HI-NOUN-CROP
 prerequisites: [HI-C66-seed, HI-C64-quickly, HI-C65-entreaty]
 sounds: []
-roots: []
+roots: [arabic-fasl]
+etymology_hook: "fasal ← Arabic faṣl 'a division; a season', through Persian (Lane, root f-ṣ-l)"
 duration:
   max_seconds: 210
 requires:

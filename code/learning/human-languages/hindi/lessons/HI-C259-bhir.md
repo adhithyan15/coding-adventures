@@ -14,7 +14,8 @@ romanization: "bhīṛ"
 concept_tag: HI-THG259-BHIR
 prerequisites: [HI-C258-akelapan, HI-C259-becaini]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit]
+etymology_hook: "bhīṛ ← *bhiṭ 'meet, throng', a reconstructed form; a tadbhava (CDIAL 9490)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C259-becaini]
 <!-- hl-knowledge: introduces=[HI-LEX-C259-THG259-02]; assesses=[] -->
 
 **भीड़** — *bhīṛ* — "a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भीड़** (*bhīṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiṭ*, "meet, throng", a form CDIAL reconstructs from its descendants (CDIAL 9490).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

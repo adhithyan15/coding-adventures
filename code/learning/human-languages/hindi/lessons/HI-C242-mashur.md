@@ -14,7 +14,8 @@ romanization: "maśhūr"
 concept_tag: HI-QUAL242-MASHUR
 prerequisites: [HI-C242-sadharan, HI-C242-khas]
 sounds: []
-roots: []
+roots: [arabic-mashhur]
+etymology_hook: "maśhūr ← Arabic mashhūr 'well known', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C242-khas]
 <!-- hl-knowledge: introduces=[HI-LEX-C242-QUAL242-03]; assesses=[] -->
 
 **मशहूर** — *maśhūr* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मशहूर** (*maśhūr*) is a loan from Arabic *mashhūr*, "well known", which reached Hindi through Persian. Its Arabic root is *sh-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

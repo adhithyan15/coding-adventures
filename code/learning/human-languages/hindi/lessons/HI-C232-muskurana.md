@@ -14,7 +14,8 @@ romanization: "muskurānā"
 concept_tag: HI-VERB-MUSKURANA
 prerequisites: [HI-C231-khasna, HI-C232-kapna]
 sounds: []
-roots: []
+roots: [indo-aryan-muss]
+etymology_hook: "muskurānā ← *muss 'smile, sob', a reconstructed form; a tadbhava (CDIAL 10227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C232-kapna]
 <!-- hl-knowledge: introduces=[HI-LEX-C232-ACT232-02]; assesses=[] -->
 
 **मुस्कुराना** — *muskurānā* — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुस्कुराना** (*muskurānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*muss*, "smile, sob", a form CDIAL reconstructs from its descendants (CDIAL 10227). CDIAL notes an added *-k-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

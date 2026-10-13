@@ -14,7 +14,8 @@ romanization: "ṭamāṭar"
 concept_tag: HI-THINGS138-TAMATAR
 prerequisites: [HI-C138-lahsun, HI-C138-adrak]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "ṭamāṭar ← English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C138-adrak]
 <!-- hl-knowledge: introduces=[HI-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **टमाटर** — *ṭamāṭar* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टमाटर** (*ṭamāṭar*) is a loan from English *tomato*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

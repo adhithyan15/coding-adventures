@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 169,
-  "sourceHash": "fnv1a64:e2500c8cb80feab1",
+  "sourceHash": "fnv1a64:b847cfdca18754c3",
   "lessonIds": [
     "HI-C169-jorna",
     "HI-C169-ghatana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch169.txt",
   "json": "hindi/narration/ch169.json",
-  "textHash": "fnv1a64:70edc0e60e78b71f",
-  "jsonHash": "fnv1a64:bd6a8664059385c6",
+  "textHash": "fnv1a64:1e444a47c077f2b3",
+  "jsonHash": "fnv1a64:238994c289f06ef3",
   "findings": []
 }

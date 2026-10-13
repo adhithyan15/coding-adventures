@@ -14,7 +14,8 @@ romanization: "sṭeshan"
 concept_tag: HI-NOUN-STATION
 prerequisites: [HI-C69-railway]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṭeshan ← English station"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ English *t*, it hears the English tongue as curled back, so *station* becomes
 
 The word is painted on every platform board in the country, in Devanagari and in
 Latin letters side by side.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्टेशन** (*sṭeshan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

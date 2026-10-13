@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 170,
-  "sourceHash": "fnv1a64:e74a8e8d1bc6171c",
+  "sourceHash": "fnv1a64:3892401305400e9d",
   "lessonIds": [
     "HI-C170-marna",
     "HI-C170-jina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch170.txt",
   "json": "hindi/narration/ch170.json",
-  "textHash": "fnv1a64:0dead11178ef0150",
-  "jsonHash": "fnv1a64:0c9eb3bea237e7c1",
+  "textHash": "fnv1a64:a61786301d0e7a5b",
+  "jsonHash": "fnv1a64:b7a4bb13b1d8f491",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "rākh"
 concept_tag: HI-THG268-RAKH
 prerequisites: [HI-C268-dhua, HI-C268-ag]
 sounds: []
-roots: []
+roots: [sanskrit-raksha]
+etymology_hook: "rākh ← Sanskrit rakṣā 'ashes', a tadbhava (CDIAL 10552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C268-ag]
 <!-- hl-knowledge: introduces=[HI-LEX-C268-THG268-05]; assesses=[] -->
 
 **राख** — *rākh* — "ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राख** (*rākh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣā*, "ashes" (CDIAL 10552). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: हँसी.
 हँसी (hãsī) — "laughter". It is feminine.
 मुझे हँसी (hãsī) आ गई — "I burst out laughing", literally "laughter came to me", like anger.
 
+The word, taken apart.
+हँसी (hãsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasita, "laughter" (CDIAL 14023).
+
 What you've built.
 Laughter, which comes to you like anger does.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for worry, then the Hindi for laughter.
 You'll want to know: आँसू.
 आँसू (ā̃sū) — "tears", a teardrop.
 आँख is the eye you know; आँसू (ā̃sū) is what it sheds. Both open on the same nasal आँ.
+
+The word, taken apart.
+आँसू (ā̃sū) (āṁsū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśru, "tear" (CDIAL 919). CDIAL notes that the word took a nasal vowel early, as the word for "eye" did.
 
 What you've built.
 Tears, beside the eye.
@@ -73,6 +79,9 @@ You'll want to know: दुख.
 दुख (dukh) — "sorrow, grief".
 मुझे दुख (dukh) है — "I am sorry", said in sympathy, when someone tells you bad news. It is not the माफ़ कीजिए of an apology.
 
+The word, taken apart.
+दुख (dukh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from duḥkha, "difficulty, pain" (CDIAL 6375). CDIAL notes that duḥkha was formed after sukha, "ease".
+
 What you've built.
 The sympathy sorry, apart from the apology sorry.
 
@@ -103,6 +112,9 @@ You'll want to know: अकेला.
 अकेला (akelā) — "alone". A woman says अकेली.
 मैं अकेला (akelā) हूँ — "I am alone". It opens on एक, "one", worn down.
 
+The word, taken apart.
+अकेला (akelā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ekkala, "alone", a form CDIAL reconstructs from its descendants (CDIAL 2506). It is built on eka, "one".
+
 What you've built.
 Alone, from the word for one.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for sorrow, then the Hindi for alone.
 You'll want to know: ठंडा.
 ठंडा (ṭhaṇḍā) — "cold, cool", of a thing.
 ठंडा (ṭhaṇḍā) पानी — "cold water", the first comfort offered to a guest on a hot day.
+
+The word, taken apart.
+ठंडा (ṭhaṇḍā) comes from a reconstructed ṭhaṇḍha, "cold", which CDIAL lists under Sanskrit stabdha, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676). DEDR compares Dravidian words for "cool", such as Tamil taṇ (DEDR 3045).
 
 What you've built.
 Laughter, tears, sorrow, alone, and something cold to drink.

@@ -14,7 +14,8 @@ romanization: "ciṭṭhī"
 concept_tag: HI-THG189-CITTHI
 prerequisites: [HI-C188-caci, HI-C188-bhatija]
 sounds: []
-roots: []
+roots: [indo-aryan-cishta]
+etymology_hook: "ciṭṭhī ← *ciṣṭa 'message', a reconstructed form; a tadbhava (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C188-bhatija]
 <!-- hl-knowledge: introduces=[HI-LEX-C189-THG189-01]; assesses=[] -->
 
 **चिट्ठी** — *ciṭṭhī* — "a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिट्ठी** (*ciṭṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ciṣṭa*, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832). CDIAL compares Avestan *činasti*, "makes known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

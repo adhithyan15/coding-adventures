@@ -14,7 +14,8 @@ romanization: "bhāshā"
 concept_tag: HI-NOUN-LANGUAGE
 prerequisites: [HI-C68-city]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāshā ← Sanskrit bhāṣā 'speech', a tatsama (CDIAL 9479)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ turned into a noun.
 You have been saying **मैं हिंदी बोलता हूँ** for a long time. भाषा is the word
 that lets you talk about हिंदी rather than only in it — and it is a printed line
 on both of the writing papers you will one day sit, right under देश and शहर.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाषा** (*bhāshā*) is Sanskrit *bhāṣā*, "speech", taken over whole as a learned loan, a tatsama (CDIAL 9479). Prakrit *bhāsā* already meant "speech, language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

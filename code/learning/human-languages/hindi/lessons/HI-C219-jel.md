@@ -14,7 +14,8 @@ romanization: "jel"
 concept_tag: HI-THG219-JEL
 prerequisites: [HI-C218-adalat, HI-C218-cunav]
 sounds: []
-roots: []
+roots: [english-jail]
+etymology_hook: "jel ← English jail"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C218-cunav]
 <!-- hl-knowledge: introduces=[HI-LEX-C219-THG219-01]; assesses=[] -->
 
 **जेल** — *jel* — "a prison".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जेल** (*jel*) is a loan from English *jail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

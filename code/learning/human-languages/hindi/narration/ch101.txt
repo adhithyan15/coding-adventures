@@ -13,6 +13,9 @@ You'll want to know: के साथ.
 मैं दोस्त के साथ (ke sāth) हूँ। — I am with a friend.
 English spends one word on this. Hindi spends two, and only the second one is new.
 
+The phrase, taken apart.
+sāth, "with", comes from Sanskrit sārtha, "caravan, company", whose form sārthena meant "in company with" (CDIAL 13364).
+
 The two words.
 Take the phrase apart and something familiar falls out:
 [a table of 3 rows, read aloud]
@@ -58,6 +61,9 @@ You'll want to know: के बिना.
 चाय के बिना (ke binā) — without tea.
 One word changed. The shape did not move.
 
+The phrase, taken apart.
+binā comes from Sanskrit vinā, "without" (CDIAL 11772).
+
 The two words.
 [a table of 2 rows, read aloud]
 slot 3: साथ. the whole phrase: दोस्त के साथ (ke sāth). English: with a friend.
@@ -97,6 +103,9 @@ Say I have in Hindi. Now look at the two words you said and ask what the second 
 You'll want to know: के पास.
 दुकान घर के पास (ghar ke pās) है। — The shop is near the house.
 पास means near. It has meant near the whole time.
+
+The phrase, taken apart.
+ghar comes from ghara, "house", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās, "near", from pārśva, "side", whose form pārśve meant "near" (CDIAL 8118).
 
 The two words.
 [a table of 2 rows, read aloud]
@@ -139,6 +148,9 @@ Say near the house. Now say the word for a railway station. You are one word awa
 You'll want to know: के सामने.
 दुकान स्टेशन के सामने (ke sāmne) है। — The shop is in front of the station.
 
+The phrase, taken apart.
+sāmne is a form of sāmnā, "the front", a tadbhava of Sanskrit saṁmukha, "facing" (CDIAL 12982).
+
 The two words.
 [a table of 2 rows, read aloud]
 स्टेशन के पास means near the station.
@@ -178,6 +190,9 @@ Say in front of the station. Then say the word for a table, which you have had s
 You'll want to know: के पीछे.
 कुर्सी मेज़ के पीछे (ke pīche) है। — The chair is behind the table.
 
+The phrase, taken apart.
+pīche, "behind", is a tadbhava: CDIAL lists it under a reconstructed paśca, "hinder part", as an old case form that replaced Sanskrit paścāt (CDIAL 7990).
+
 The two words.
 Three place words, and they do not all do the same kind of job:
 [a table of 3 rows, read aloud]
@@ -215,6 +230,9 @@ Say for me in Hindi — you have had it since the possessive chapter. Then say t
 
 You'll want to know: के लिए.
 यह परिवार के लिए (parivār ke liye) है। — This is for the family.
+
+The phrase, taken apart.
+liye, "for", is usually explained as a form of lenā, "to take", which CDIAL lists under Sanskrit labhate, "takes" (CDIAL 10948).
 
 The two words.
 मेरे लिए was taught as a phrase to memorise. It was never a phrase. It was this shape with a possessive in slot 1:
@@ -270,6 +288,7 @@ kind of word: noun. plain: बच्चा. before a postposition: बच्च�
 kind of word: infinitive. plain: करना. before a postposition: करने.
 Five kinds of word, one ending, one trigger. The infinitive is the last of the five, and it needs no new rule at all: -ना ends in -आ, so it bends exactly as बच्चा does.
 The reason it can bend like a noun is that in Hindi it is one. करना is both to do and the doing, which is why it could already sit where a noun sits. A word that behaves like a noun bends like a noun.
+लिए is usually explained as a form of लेना, "to take".
 
 Grammar Lens: where the purpose goes.
 [a table of 3 rows, read aloud]

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to float, then the Hindi for to sink.
 You'll want to know: बहना.
 बहना — bahnā — "to flow".
 
+The word, taken apart.
+बहना (bahnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vahati, "carries, bears along" (CDIAL 11453).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to sink, then the Hindi for to flow.
 
 You'll want to know: टपकना.
 टपकना — ṭapaknā — "to drip".
+
+The word, taken apart.
+टपकना (ṭapaknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭapp, "drip, drop", a form CDIAL reconstructs from its descendants (CDIAL 5444). CDIAL calls it imitative of the sound.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to flow, then the Hindi for to drip.
 You'll want to know: छींकना.
 छींकना — chīṅknā — "to sneeze".
 
+The word, taken apart.
+छींकना (chīṅknā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chikkā, "sneeze" (CDIAL 5032). CDIAL calls it imitative of the sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to drip, then the Hindi for to sneeze.
 You'll want to know: जम्हाई लेना.
 जम्हाई लेना — jamhāī lenā — "to yawn".
 
+The word, taken apart.
+जम्हाई लेना (jamhāī lenā) is "to take a yawn". jamhāī, "a yawn", comes from a reconstructed jṛmbhāyita, "yawning" (CDIAL 5266), and lenā, "to take", from Sanskrit labhate (CDIAL 10948).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to sneeze, then the Hindi for to yawn.
 
 You'll want to know: खाँसना.
 खाँसना — khā̃snā — "to cough".
+
+The word, taken apart.
+खाँसना (khā̃snā) (khāṁsnā) is the verb belonging to khāṁsī, "a cough", which comes from Sanskrit kāsa, "cough" (CDIAL 3138). CDIAL notes the kh- as imitating the sound.
 
 What you've built.
 One more word for this chapter.

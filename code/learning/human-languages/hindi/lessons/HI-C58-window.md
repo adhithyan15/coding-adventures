@@ -14,7 +14,8 @@ romanization: "khiṛkī"
 concept_tag: HI-NOUN-WINDOW
 prerequisites: [HI-C58-roof, HI-C56-market, HI-C57-platter]
 sounds: []
-roots: []
+roots: [sanskrit-khatakkika]
+etymology_hook: "khiṛkī ← Sanskrit khaṭakkikā 'side door', a tadbhava (CDIAL 3770)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C58-roof]
 The origin of खिड़की is not settled, and the derivations offered for it are guesses of varying quality rather than an agreed line.
 
 This is the second time this book has had to say that about a piece of an ordinary house, and it will not be the last. A word being everywhere is no guarantee that its history was written down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिड़की** (*khiṛkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭakkikā*, "side door" (CDIAL 3770). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

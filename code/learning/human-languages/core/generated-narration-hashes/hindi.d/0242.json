@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 242,
-  "sourceHash": "fnv1a64:16da12a2537af8df",
+  "sourceHash": "fnv1a64:c9547d68d58d54de",
   "lessonIds": [
     "HI-C242-sadharan",
     "HI-C242-khas",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch242.txt",
   "json": "hindi/narration/ch242.json",
-  "textHash": "fnv1a64:d96c069b55622730",
-  "jsonHash": "fnv1a64:b52a512f27b18c28",
+  "textHash": "fnv1a64:25ccedf82e570c33",
+  "jsonHash": "fnv1a64:705db6460d44541e",
   "findings": []
 }

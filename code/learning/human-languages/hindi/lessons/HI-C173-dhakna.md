@@ -14,7 +14,8 @@ romanization: "ḍhaknā"
 concept_tag: HI-VERB-DHAKNA
 prerequisites: [HI-C172-utarna, HI-C172-ghumna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhakk]
+etymology_hook: "ḍhaknā ← *ḍhakk 'cover', a reconstructed form; a tadbhava (CDIAL 5574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C172-ghumna]
 <!-- hl-knowledge: introduces=[HI-LEX-C173-ACT173-01]; assesses=[] -->
 
 **ढकना** — *ḍhaknā* — "to cover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढकना** (*ḍhaknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍhakk*, "cover", a form CDIAL reconstructs from its descendants (CDIAL 5574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pahāṛ"
 concept_tag: HI-THINGS142-PAHAR
 prerequisites: [HI-C142-lassi, HI-C142-jus]
 sounds: []
-roots: []
+roots: [indo-aryan-pahada]
+etymology_hook: "pahāṛ ← *pāhāḍa 'rock, hill', a reconstructed form; a tadbhava (CDIAL 8141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C142-jus]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-04]; assesses=[] -->
 
 **पहाड़** — *pahāṛ* — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पहाड़** (*pahāṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pāhāḍa*, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL connects it, probably, with Sanskrit *pāṣāṇa*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

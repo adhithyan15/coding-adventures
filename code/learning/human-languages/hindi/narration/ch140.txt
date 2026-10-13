@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a banana, then the Hindi for an apple.
 You'll want to know: अंगूर.
 अंगूर — aṅgūr — "grapes".
 
+The word, taken apart.
+अंगूर (aṅgūr) is a loan, usually traced to Persian angūr, "grape".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Count छह to दस, then ग्यारह to बीस, and by tens सत
 You'll want to know: संतरा.
 संतरा — santarā — "an orange".
 
+The word, taken apart.
+The origin of संतरा (santarā) is uncertain. It is often linked with the Portuguese town of Sintra, once written Cintra, but no source settles it, and CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Hindi for grapes, then the Hindi for an orange.
 
 You'll want to know: तरबूज़.
 तरबूज़ — tarbūz — "a watermelon".
+
+The word, taken apart.
+तरबूज़ (tarbūz) is a loan, usually traced to Persian tarbuz, "watermelon".
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for an orange, then the Hindi for a watermelon
 You'll want to know: नारियल.
 नारियल — nāriyal — "a coconut".
 
+The word, taken apart.
+नारियल (nāriyal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nārikela, "coconut palm and fruit" (CDIAL 7075). CDIAL, after Bloch, takes the Sanskrit word from a Dravidian compound, comparing Tamil nāri, "fibre", and kēḷi, "coconut palm".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for a watermelon, then the Hindi for a coconut
 
 You'll want to know: दही.
 दही — dahī — "yoghurt".
+
+The word, taken apart.
+दही (dahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, "thick sour milk" (CDIAL 6146).
 
 What you've built.
 One more word for this chapter.

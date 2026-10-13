@@ -14,7 +14,8 @@ romanization: "tīkhā"
 concept_tag: HI-QUAL156-TIKHA
 prerequisites: [HI-C156-karva, HI-C156-namkin]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tīkhā ← Sanskrit tīkṣṇa 'sharp; hot, pungent', a tadbhava (CDIAL 5839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C156-namkin]
 <!-- hl-knowledge: introduces=[HI-LEX-C156-QUAL156-05]; assesses=[] -->
 
 **तीखा** — *tīkhā* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीखा** (*tīkhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tīkṣṇa*, "sharp; hot, pungent" (CDIAL 5839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭren"
 concept_tag: HI-NOUN-TRAIN
 prerequisites: [HI-C94-se-tak-samay, HI-C90-bas, HI-C69-station]
 sounds: []
-roots: []
+roots: [english-train]
+etymology_hook: "ṭren ← English train"
 duration:
   max_seconds: 210
 requires:

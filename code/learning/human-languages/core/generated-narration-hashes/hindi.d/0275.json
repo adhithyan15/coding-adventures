@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 275,
-  "sourceHash": "fnv1a64:0d15e86583623bcc",
+  "sourceHash": "fnv1a64:8adad59f8d7ce64b",
   "lessonIds": [
     "HI-C275-moc",
     "HI-C275-hicki",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch275.txt",
   "json": "hindi/narration/ch275.json",
-  "textHash": "fnv1a64:a2ffe07ee45badf6",
-  "jsonHash": "fnv1a64:465cba6a0929323c",
+  "textHash": "fnv1a64:01ef5a6e0e2fb13b",
+  "jsonHash": "fnv1a64:504b218524e5e46a",
   "findings": []
 }

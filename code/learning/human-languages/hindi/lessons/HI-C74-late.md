@@ -14,7 +14,8 @@ romanization: "der"
 concept_tag: HI-NOUN-DELAY
 prerequisites: [HI-C74-exit, HI-C64-quickly, HI-C72-buy, HI-C73-drink]
 sounds: []
-roots: []
+roots: [persian-der]
+etymology_hook: "der: usually traced to Persian der 'late; a long time'"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ one or the other of them about your train.
 That is where this chapter lands. Listen for **देर** in an announcement about
 **गाड़ी**, your train: it is the single most useful word a traveller can catch
 on a platform.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देर** (*der*) is a loan, usually traced to Persian *der*, "late; a long time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

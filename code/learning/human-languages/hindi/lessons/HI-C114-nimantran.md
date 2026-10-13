@@ -14,7 +14,8 @@ romanization: "nimantraṇ"
 concept_tag: HI-SORRY-INVITATION
 prerequisites: [HI-C114-badhai, HI-C114-shubhkamnaen, HI-C97-sandesh]
 sounds: []
-roots: []
+roots: [sanskrit-nimantrana]
+etymology_hook: "nimantraṇ ← Sanskrit nimantraṇa 'invitation', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C114-shubhkamnaen]
 
 A written invitation has the three parts of the short message you learned to write: the line
 that names the reader, **प्रिय मीरा,**; the sentences under it; and the writer's name at the foot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निमंत्रण** (*nimantraṇ*) is Sanskrit *nimantraṇa*, "invitation", taken over whole as a learned loan, a tatsama. CDIAL lists its verb, *nimantrayate*, "invites", whose inherited forms survive as *nyotnā*, "to invite" (CDIAL 7235).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

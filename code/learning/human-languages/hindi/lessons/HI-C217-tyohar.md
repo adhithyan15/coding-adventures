@@ -14,7 +14,8 @@ romanization: "tyohār"
 concept_tag: HI-THG217-TYOHAR
 prerequisites: [HI-C217-anar, HI-C217-amrud]
 sounds: []
-roots: []
+roots: [indo-aryan-tithivara]
+etymology_hook: "tyohār ← *tithivāra 'a festival', a reconstructed form; a tadbhava (CDIAL 5811)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C217-amrud]
 <!-- hl-knowledge: introduces=[HI-LEX-C217-THG217-03]; assesses=[] -->
 
 **त्योहार** — *tyohār* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**त्योहार** (*tyohār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tithivāra*, "a festival", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is built from *tithi*, "lunar day", and *vāra*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

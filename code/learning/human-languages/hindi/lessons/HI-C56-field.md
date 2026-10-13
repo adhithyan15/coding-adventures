@@ -14,7 +14,8 @@ romanization: "khet"
 concept_tag: HI-NOUN-FIELD
 prerequisites: [HI-C56-shop, HI-C54-goat, HI-C55-sky]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "khet ← Sanskrit kṣetra 'land, field', a tadbhava (CDIAL 3735)"
 duration:
   max_seconds: 210
 requires:

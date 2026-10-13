@@ -14,9 +14,10 @@ romanization: "mujhe cāy cāhiye"
 concept_tag: HI-DATIVE-WANTER
 prerequisites: [HI-C95-chahiye, HI-C35-pasand, HI-C37-chai, HI-S133-letter-jha]
 sounds: []
-roots: []
+roots: [ma, indo-aryan-cah]
+etymology_hook: "mujhe: mujh, the 'me' base (CDIAL 9691), + -e; cāhiye ← *cāh 'desire', of uncertain source (CDIAL 4775)"
 duration:
-  max_seconds: 250
+  max_seconds: 262
 requires:
   knowledge: [HI-LEX-C95-NEED-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-SCRIPT-RECOG-133]
 introduces:
@@ -45,6 +46,11 @@ it in mind.
 **मुझे चाय चाहिए।** — I want tea.
 
 Not **मैं**. **मुझे** — *to me*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists *mujh*, "me", under the Sanskrit first-person base *ma-* (CDIAL 9691), and *cāh*, "wish", under a reconstructed *\*cāh*, "see, desire", of uncertain source (CDIAL 4775).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-NEED-02, HI-CONCEPT-C35-PASAND-01] -->

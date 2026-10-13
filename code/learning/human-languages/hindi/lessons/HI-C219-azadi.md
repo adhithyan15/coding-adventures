@@ -14,7 +14,8 @@ romanization: "āzādī"
 concept_tag: HI-THG219-AZADI
 prerequisites: [HI-C218-cunav, HI-C219-jel]
 sounds: []
-roots: []
+roots: [persian-azadi]
+etymology_hook: "āzādī: usually traced to Persian āzādī 'freedom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C219-jel]
 <!-- hl-knowledge: introduces=[HI-LEX-C219-THG219-02]; assesses=[] -->
 
 **आज़ादी** — *āzādī* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आज़ादी** (*āzādī*) is a loan, usually traced to Persian *āzādī*, "freedom". It is built on *āzād*, "free".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

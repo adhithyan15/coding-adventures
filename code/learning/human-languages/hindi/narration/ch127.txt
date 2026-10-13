@@ -13,6 +13,9 @@ You'll want to know: मालूम नहीं.
 मालूम नहीं (mālūm nahīṁ) — "don't know", "no idea".
 मालूम is "known". It says what मुझे नहीं पता says, with a different word for knowing.
 
+The word, taken apart.
+मालूम नहीं (mālūm nahīṁ) is "not known". mālūm comes from Arabic maʿlūm, "known", which reached Hindi through Persian; its root is ʿ-l-m (Lane).
+
 What you've built.
 A second I don't know.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for one more time, then the Hindi for don't kn
 You'll want to know: बिलकुल नहीं.
 बिलकुल नहीं (bilkul nahīṁ) — "not at all", "absolutely not".
 बिलकुल is the "absolutely" you know; with नहीं it turns a no all the way down.
+
+The word, taken apart.
+बिलकुल नहीं (bilkul nahīṁ) is bilkul, "absolutely", with nahīṁ, "not". bilkul is Arabic bi-l-kull, "with the whole"; kull, "all", is on the root k-l-l (Lane).
 
 What you've built.
 The strongest no.
@@ -73,6 +79,9 @@ You'll want to know: सचमुच.
 सचमुच (sacmuc) — "truly, really".
 It opens on the सच you know. सचमुच (sacmuc)? — "really?", a stronger सच में?.
 
+The word, taken apart.
+सचमुच (sacmuc) is sac, "true", from Sanskrit satya (CDIAL 13112), followed by a rhyming muc. CDIAL does not list the pair, and muc has no clear source.
+
 What you've built.
 Truly.
 
@@ -103,6 +112,9 @@ You'll want to know: अच्छा जी.
 अच्छा जी (acchā jī) — "is that so?", or "all right then", by tone.
 अच्छा is the "good" you know; alone it already means "oh, I see". जी makes it polite.
 
+The word, taken apart.
+अच्छा जी (acchā jī) is acchā, "good", which goes back to Sanskrit accha, "clear", and reached Hindi through Punjabi (CDIAL 142), with the respectful jī, from jīva, "long live!" (CDIAL 5240).
+
 What you've built.
 A polite way to show you are listening.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for truly, then the Hindi for is that so.
 You'll want to know: चलेगा.
 चलेगा (calegā) — "that'll do", "that works", literally "it will go".
 It is चलना, "to go", in the future. Offered a choice, चलेगा (calegā) accepts it without fuss.
+
+The word, taken apart.
+चलेगा (calegā) is the future of calnā, "to move, go", which comes from Sanskrit calati, "goes away" (CDIAL 4715). "It will go" means "it will do".
 
 What you've built.
 Don't know, not at all, truly, is that so, that'll do.

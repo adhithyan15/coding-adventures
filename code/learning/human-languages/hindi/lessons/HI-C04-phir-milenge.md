@@ -14,7 +14,8 @@ romanization: "phir milenge"
 concept_tag: FAREWELL-LATER
 prerequisites: [HI-C04-phir, HI-C04-milenge, HI-C01-alvida]
 sounds: []
-roots: [mil-meet]
+roots: [mil-meet, indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns' (CDIAL 9078); milenge ← milnā, Sanskrit milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 180
 requires:

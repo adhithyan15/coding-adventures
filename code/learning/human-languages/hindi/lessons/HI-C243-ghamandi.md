@@ -15,6 +15,7 @@ concept_tag: HI-QUAL243-GHAMANDI
 prerequisites: [HI-C242-kamyab, HI-C243-nakam]
 sounds: []
 roots: []
+etymology_hook: "ghamaṇḍī: ghamaṇḍ 'pride' + -ī; ghamaṇḍ is of uncertain origin, not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C243-nakam]
 <!-- hl-knowledge: introduces=[HI-LEX-C243-QUAL243-02]; assesses=[] -->
 
 **घमंडी** — *ghamaṇḍī* — "proud, arrogant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घमंडी** (*ghamaṇḍī*) is *ghamaṇḍ*, "pride", with the ending *-ī*. The origin of *ghamaṇḍ* is uncertain, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

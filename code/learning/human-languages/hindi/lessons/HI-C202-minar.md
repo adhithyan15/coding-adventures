@@ -14,7 +14,8 @@ romanization: "mīnār"
 concept_tag: HI-THG202-MINAR
 prerequisites: [HI-C202-mahal, HI-C202-qila]
 sounds: []
-roots: []
+roots: [arabic-manar]
+etymology_hook: "mīnār ← Arabic manār 'a lighthouse, a minaret', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C202-qila]
 <!-- hl-knowledge: introduces=[HI-LEX-C202-THG202-04]; assesses=[] -->
 
 **मीनार** — *mīnār* — "a tower, a minaret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मीनार** (*mīnār*) is a loan from Arabic *manār*, "a lighthouse, a minaret", which reached Hindi through Persian. Its Arabic root is *n-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

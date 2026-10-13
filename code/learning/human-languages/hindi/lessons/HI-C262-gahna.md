@@ -14,7 +14,8 @@ romanization: "gahnā"
 concept_tag: HI-THG262-GAHNA
 prerequisites: [HI-C262-mochi, HI-C262-pujari]
 sounds: []
-roots: []
+roots: [sanskrit-grahana]
+etymology_hook: "gahnā ← Sanskrit grahaṇa 'seizing; putting on (clothes)', a tadbhava (CDIAL 4364)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C262-pujari]
 <!-- hl-knowledge: introduces=[HI-LEX-C262-THG262-04]; assesses=[] -->
 
 **गहना** — *gahnā* — "a piece of jewellery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गहना** (*gahnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *grahaṇa*, "seizing; putting on (clothes)" (CDIAL 4364). CDIAL glosses the Hindi word "jewel": a thing put on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

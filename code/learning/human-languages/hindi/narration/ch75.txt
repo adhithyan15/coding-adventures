@@ -116,6 +116,9 @@ You'll want to know: भाषा.
 Sanskrit भाषा (bhāshā) (bhāṣā), "speech, what is spoken", from भाष् (bhāṣ-), "to speak". The word names the act before it names the thing: a भाषा (bhāshā) is speaking, turned into a noun.
 You have been saying मैं हिंदी बोलता हूँ for a long time. भाषा (bhāshā) is the word that lets you talk about हिंदी rather than only in it — and it is a printed line on both of the writing papers you will one day sit, right under देश (desh) and शहर (shahar).
 
+The word, taken apart.
+भाषा (bhāshā) is Sanskrit bhāṣā, "speech", taken over whole as a learned loan, a tatsama (CDIAL 9479). Prakrit bhāsā already meant "speech, language".
+
 What you've built.
 Four of the five lines a form asks for: देश (desh), भारत (Bhārat), शहर (shahar), भाषा (bhāshā).
 
@@ -144,6 +147,9 @@ You'll want to know: अंग्रेज़ी.
 The route is long and worth following. Portuguese traders said inglês; Persian took it as انگریز (angrez), "an Englishman"; Hindi added the ending -ी that turns a people into their language, and अंग्रेज़ी (angrezī) came out. The nuqta under ज़ is the z you learnt with the letters.
 Set it beside हिंदी, which is built the same way: हिंद, the land, plus the same ending. भाषा (bhāshā) is the word for the class of thing; हिंदी and अंग्रेज़ी (angrezī) are two members of it.
 Both listening papers you will one day sit key on somebody speaking two of these, so the pair matters more than either word alone.
+
+The word, taken apart.
+अंग्रेज़ी (angrezī) is usually traced, through Persian angrez, "an Englishman", to Portuguese inglês, "English". The -ī makes it "the language of the English".
 
 What you've built.
 Five: देश (desh), भारत (Bhārat), शहर (shahar), भाषा (bhāshā), अंग्रेज़ी (angrezī). Enough to say what country you are in, what city you live in, and what you speak.

@@ -14,7 +14,8 @@ romanization: "andar"
 concept_tag: HI-LOC235-ANDAR
 prerequisites: [HI-C235-age, HI-C235-piche]
 sounds: []
-roots: []
+roots: [persian-andar]
+etymology_hook: "andar: usually traced to Persian andar 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C235-piche]
 <!-- hl-knowledge: introduces=[HI-LEX-C235-LOC235-05]; assesses=[] -->
 
 **अंदर** — *andar* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंदर** (*andar*) is a loan, usually traced to Persian *andar*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

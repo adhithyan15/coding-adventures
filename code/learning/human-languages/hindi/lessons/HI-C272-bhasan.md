@@ -14,7 +14,8 @@ romanization: "bhāṣaṇ"
 concept_tag: HI-THG272-BHASAN
 prerequisites: [HI-C272-mela, HI-C272-jalus]
 sounds: []
-roots: []
+roots: [sanskrit-bhashana]
+etymology_hook: "bhāṣaṇ ← Sanskrit bhāṣaṇa 'speaking, speech', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C272-jalus]
 <!-- hl-knowledge: introduces=[HI-LEX-C272-THG272-05]; assesses=[] -->
 
 **भाषण** — *bhāṣaṇ* — "a speech".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाषण** (*bhāṣaṇ*) is Sanskrit *bhāṣaṇa*, "speaking, speech", taken over whole as a learned loan, a tatsama. It is built on *bhāṣ-*, "to speak", the root of **भाषा**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

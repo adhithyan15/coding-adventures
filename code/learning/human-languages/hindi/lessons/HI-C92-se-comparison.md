@@ -14,7 +14,8 @@ romanization: "se baṛā"
 concept_tag: HI-COMPARISON
 prerequisites: [HI-C92-achchha-buraa, HI-C41-big, HI-C41-small, HI-C90-se]
 sounds: []
-roots: []
+roots: [sanskrit-sahita, sanskrit-sama]
+etymology_hook: "se ← Sanskrit sahita 'together with' (CDIAL 13310), or perhaps sama 'equal' (CDIAL 13173)"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ Measured **from** that book, this one is big.
 
 So there is no comparative form to learn in this language. **There is one more
 use of a word you already have.**
+
+**से** comes from Sanskrit *sahita*, "together with" (CDIAL 13310), or perhaps *sama* (CDIAL 13173).
 
 ## Grammar Lens: word order, and the reason the note was wrong
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-03, HI-LEX-C41-ADJ-01] -->

@@ -14,7 +14,8 @@ romanization: "bharā"
 concept_tag: HI-QUAL159-BHARA
 prerequisites: [HI-C158-nica, HI-C158-khali]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharā ← Sanskrit bharati 'bears, fills', a tadbhava (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C158-khali]
 <!-- hl-knowledge: introduces=[HI-LEX-C159-QUAL159-01]; assesses=[] -->
 
 **भरा** — *bharā* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भरा** (*bharā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears, fills" (CDIAL 9397). *bharā*, "full", is the past form of *bharnā*, "to fill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

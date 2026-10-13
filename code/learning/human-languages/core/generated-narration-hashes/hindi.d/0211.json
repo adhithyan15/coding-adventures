@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 211,
-  "sourceHash": "fnv1a64:ea45cccd08dffc6d",
+  "sourceHash": "fnv1a64:3d5a6a1f899dfe49",
   "lessonIds": [
     "HI-C211-catni",
     "HI-C211-masala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch211.txt",
   "json": "hindi/narration/ch211.json",
-  "textHash": "fnv1a64:bf4a174ee19f4873",
-  "jsonHash": "fnv1a64:101d86935a6cb20d",
+  "textHash": "fnv1a64:4f0ef2216247533d",
+  "jsonHash": "fnv1a64:df31bb4ce0cbdeac",
   "findings": []
 }

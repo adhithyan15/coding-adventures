@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 215,
-  "sourceHash": "fnv1a64:2205bb33bd9736a0",
+  "sourceHash": "fnv1a64:1be9b0ba572b844b",
   "lessonIds": [
     "HI-C215-jhutha",
     "HI-C215-buddhiman",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch215.txt",
   "json": "hindi/narration/ch215.json",
-  "textHash": "fnv1a64:84fba79d17e99723",
-  "jsonHash": "fnv1a64:39eabdd935f2419d",
+  "textHash": "fnv1a64:b76a3c449dcb1471",
+  "jsonHash": "fnv1a64:42f83d1ef855d564",
   "findings": []
 }

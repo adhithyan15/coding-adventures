@@ -14,7 +14,8 @@ romanization: "bolo"
 concept_tag: HI-VERB-IMPERATIVE-TUM
 prerequisites: [HI-C05-bolna, HI-C84-tumhara]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolo: the verb bolnā 'to speak', from a reconstructed *boll- 'speak' (CDIAL 9321), with the tum command ending -o"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,11 @@ Take the verb, drop the **-ना**, add **-o**:
 
 The same operation on any verb: *karnā* → *karo*, *sunnā* → *suno*, *calnā* →
 *calo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलो** (*bolo*) is the verb **बोलना**, "to speak", with the command ending *-o*. CDIAL traces the verb to a reconstructed *\*boll-*, "speak" (CDIAL 9321).
 
 ## Grammar Lens: the command carries the level, and nothing else has to
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-01, HI-LEX-C84-POSS-03] -->

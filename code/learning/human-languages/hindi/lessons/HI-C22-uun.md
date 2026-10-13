@@ -14,7 +14,8 @@ gloss: "wool"
 concept_tag: HI-ANCHOR-UUN
 prerequisites: [HI-S127-letter-u]
 sounds: []
-roots: []
+roots: [sanskrit-urna]
+etymology_hook: "ūn ← Sanskrit ūrṇā 'wool', a tadbhava (CDIAL 2424)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ūn*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ऊ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऊन** (*ūn*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ūrṇā*, "wool" (CDIAL 2424).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-UUN] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 258,
-  "sourceHash": "fnv1a64:7766a0ba3eff9b84",
+  "sourceHash": "fnv1a64:4276d4d9a1394227",
   "lessonIds": [
     "HI-C258-ahankar",
     "HI-C258-dhiraj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch258.txt",
   "json": "hindi/narration/ch258.json",
-  "textHash": "fnv1a64:0ca40aea998de2c5",
-  "jsonHash": "fnv1a64:fec7de3434fa5cb3",
+  "textHash": "fnv1a64:025ed3d8d1e09437",
+  "jsonHash": "fnv1a64:497ac8643c8e0cc1",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "jhuknā"
 concept_tag: HI-VERB-JHUKNA
 prerequisites: [HI-C229-phailna, HI-C229-chutna]
 sounds: []
-roots: []
+roots: [indo-aryan-jhukkati]
+etymology_hook: "jhuknā ← *jhukkati 'stoops, breaks', a reconstructed form; a tadbhava (CDIAL 5399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C229-chutna]
 <!-- hl-knowledge: introduces=[HI-LEX-C230-ACT230-01]; assesses=[] -->
 
 **झुकना** — *jhuknā* — "to bend down, to bow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झुकना** (*jhuknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhukkati*, "stoops, breaks", a form CDIAL reconstructs from its descendants (CDIAL 5399).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

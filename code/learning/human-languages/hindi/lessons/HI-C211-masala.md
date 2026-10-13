@@ -14,7 +14,8 @@ romanization: "masālā"
 concept_tag: HI-THG211-MASALA
 prerequisites: [HI-C210-achar, HI-C211-catni]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masālā ← Arabic maṣāliḥ 'things that are needful', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C211-catni]
 <!-- hl-knowledge: introduces=[HI-LEX-C211-THG211-02]; assesses=[] -->
 
 **मसाला** — *masālā* — "spice, a spice mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मसाला** (*masālā*) is a loan from Arabic *maṣāliḥ*, "things that are needful", which reached Hindi through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane). Hindi took the plural through Persian and narrowed it to cooking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

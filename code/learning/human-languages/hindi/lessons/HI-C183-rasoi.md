@@ -14,7 +14,8 @@ romanization: "rasoī"
 concept_tag: HI-THG183-RASOI
 prerequisites: [HI-C183-grahak, HI-C183-baithak]
 sounds: []
-roots: []
+roots: [sanskrit-rasavati]
+etymology_hook: "rasoī ← Sanskrit rasavatī 'kitchen', a tadbhava (CDIAL 10656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C183-baithak]
 <!-- hl-knowledge: introduces=[HI-LEX-C183-THG183-05]; assesses=[] -->
 
 **रसोई** — *rasoī* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रसोई** (*rasoī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rasavatī*, "kitchen" (CDIAL 10656). It is built on *rasa*, "juice, flavour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

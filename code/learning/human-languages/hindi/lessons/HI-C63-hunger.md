@@ -14,7 +14,8 @@ romanization: "bhūkh"
 concept_tag: HI-NOUN-HUNGER
 prerequisites: [HI-C62-wood, HI-C61-vessel, HI-C62-rope]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhūkh ← Sanskrit bubhukṣā 'the wish to eat', a tadbhava (CDIAL 9286)"
 duration:
   max_seconds: 210
 requires:

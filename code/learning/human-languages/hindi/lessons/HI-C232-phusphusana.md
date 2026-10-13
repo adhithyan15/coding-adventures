@@ -14,7 +14,8 @@ romanization: "phusphusānā"
 concept_tag: HI-VERB-PHUSPHUSANA
 prerequisites: [HI-C232-muskurana, HI-C232-cikhna]
 sounds: []
-roots: []
+roots: [indo-aryan-phuss]
+etymology_hook: "phusphusānā ← *phuss 'hissing, whispering', a reconstructed form; a tadbhava (CDIAL 9099)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C232-cikhna]
 <!-- hl-knowledge: introduces=[HI-LEX-C232-ACT232-04]; assesses=[] -->
 
 **फुसफुसाना** — *phusphusānā* — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फुसफुसाना** (*phusphusānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phuss*, "hissing, whispering", a form CDIAL reconstructs from its descendants (CDIAL 9099). CDIAL lists Hindi *phusphus*, "hissing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

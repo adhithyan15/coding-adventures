@@ -14,7 +14,8 @@ romanization: "madad"
 concept_tag: HI-THG190-MADAD
 prerequisites: [HI-C189-javab, HI-C189-galti]
 sounds: []
-roots: []
+roots: [arabic-madad-extend]
+etymology_hook: "madad ← Arabic madad 'help, reinforcement', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C189-galti]
 <!-- hl-knowledge: introduces=[HI-LEX-C190-THG190-01]; assesses=[] -->
 
 **मदद** — *madad* — "help".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मदद** (*madad*) is a loan from Arabic *madad*, "help, reinforcement", which reached Hindi through Persian. Its Arabic root is *m-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

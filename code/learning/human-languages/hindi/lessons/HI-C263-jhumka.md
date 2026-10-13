@@ -14,7 +14,8 @@ romanization: "jhumkā"
 concept_tag: HI-THG263-JHUMKA
 prerequisites: [HI-C262-gahna, HI-C262-kangan]
 sounds: []
-roots: []
+roots: [indo-aryan-jhumma]
+etymology_hook: "jhumkā ← *jhumma 'crowd, cluster', a reconstructed form; a tadbhava (CDIAL 5404)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C262-kangan]
 <!-- hl-knowledge: introduces=[HI-LEX-C263-THG263-01]; assesses=[] -->
 
 **झुमका** — *jhumkā* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झुमका** (*jhumkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhumma*, "crowd, cluster", a form CDIAL reconstructs from its descendants (CDIAL 5404). CDIAL notes an added *-k-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

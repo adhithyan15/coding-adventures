@@ -14,7 +14,8 @@ romanization: "sīdhāsādā"
 concept_tag: HI-QUAL243-SIDHASADA
 prerequisites: [HI-C243-nakam, HI-C243-ghamandi]
 sounds: []
-roots: []
+roots: [sanskrit-siddha, persian-sada]
+etymology_hook: "sīdhā (CDIAL 13401) + sādā, usually traced to Persian sāda 'plain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C243-ghamandi]
 <!-- hl-knowledge: introduces=[HI-LEX-C243-QUAL243-03]; assesses=[] -->
 
 **सीधासादा** — *sīdhāsādā* — "simple, unpretentious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीधासादा** (*sīdhāsādā*) pairs *sīdhā*, "straight", from Sanskrit *siddha* (CDIAL 13401), with *sādā*, "plain", usually traced to Persian *sāda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

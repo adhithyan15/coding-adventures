@@ -14,7 +14,8 @@ romanization: "sūī"
 concept_tag: HI-NOUN-NEEDLE
 prerequisites: [HI-C62-rope, HI-C60-snake, HI-C61-spoon]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūī ← Sanskrit sūcī 'needle', a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "sarkārī"
 concept_tag: HI-QUAL241-SARKARI
 prerequisites: [HI-C240-videsi, HI-C240-desi]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sarkārī: sarkār 'government', usually traced to Persian sarkār, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C240-desi]
 <!-- hl-knowledge: introduces=[HI-LEX-C241-QUAL241-01]; assesses=[] -->
 
 **सरकारी** — *sarkārī* — "government, official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सरकारी** (*sarkārī*) is *sarkār*, "government", usually traced to Persian *sarkār*, with the ending *-ī*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mālūm nahīṁ"
 concept_tag: HI-NOTATALL-DONT-KNOW
 prerequisites: [HI-C126-nahinpata, HI-C126-ekbaraur]
 sounds: []
-roots: []
+roots: [arabic-malum]
+etymology_hook: "mālūm ← Arabic maʿlūm 'known', through Persian (Lane, root ʿ-l-m)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C126-ekbaraur]
 **मालूम नहीं** (*mālūm nahīṁ*) — "don't know", "no idea".
 
 **मालूम** is "known". It says what **मुझे नहीं पता** says, with a different word for knowing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मालूम नहीं** (*mālūm nahīṁ*) is "not known". *mālūm* comes from Arabic *maʿlūm*, "known", which reached Hindi through Persian; its root is *ʿ-l-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

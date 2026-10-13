@@ -14,7 +14,8 @@ romanization: "mat"
 concept_tag: HI-VERB-NEGATIVE-IMPERATIVE
 prerequisites: [HI-C85-tum-ho]
 sounds: []
-roots: []
+roots: [sanskrit-ma-prohibitive]
+etymology_hook: "mat ← Sanskrit mā 'don't (forbidding)', a tadbhava (CDIAL 9981)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,11 @@ Hindi has a negative for statements, which you already have, and a **separate
 one reserved for commands**. Using the statement negative to tell somebody not
 to do something is the mistake an English speaker makes, because English uses
 *not* for both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मत** (*mat*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mā*, "don't (forbidding)" (CDIAL 9981). CDIAL notes that *mā* went with commands and wishes, which is the job *mat* still does.
 
 ## Grammar Lens: the sign you will actually meet it on
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-04, HI-LEX-C85-IMP-02] -->

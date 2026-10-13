@@ -224,7 +224,15 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // with no supporting row carry no source tag, and 12 genuinely uncertain origins say so.
   german: { withoutHook: 0, withoutVisible: 0 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
-  hindi: { withoutHook: 1126, withoutVisible: 967 },
+  // hindi: 1126 / 967 -> 0 / 0. Every Hindi word lesson now has an etymology_hook and says
+  // where its word comes from: 962 new "taken apart" blocks, plus one origin sentence in 43
+  // lessons whose block or section had none. Inherited words and Sanskrit loans cite Turner's
+  // CDIAL (read from the moli-mandala files), keeping its "prob.", "?", Dravidian, Munda and
+  // Austroasiatic notes; Arabic loans name their root in Lane's Lexicon; Persian, English and
+  // Portuguese loans name the donor, Persian ones as "usually traced to". About 48 say the
+  // origin is uncertain or only partly known. 15 older blocks that contradicted CDIAL were
+  // corrected. 41 max_seconds rose to the computed length, all still under 300 s.
+  hindi: { withoutHook: 0, withoutVisible: 0 },
   // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
   // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
   // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --

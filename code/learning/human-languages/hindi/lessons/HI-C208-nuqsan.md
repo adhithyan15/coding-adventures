@@ -14,7 +14,8 @@ romanization: "nuqsān"
 concept_tag: HI-THG208-NUQSAN
 prerequisites: [HI-C207-bacat, HI-C207-kharc]
 sounds: []
-roots: []
+roots: [arabic-nuqsan]
+etymology_hook: "nuqsān ← Arabic nuqṣān 'a decrease, a loss', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C207-kharc]
 <!-- hl-knowledge: introduces=[HI-LEX-C208-THG208-01]; assesses=[] -->
 
 **नुक़सान** — *nuqsān* — "a loss, harm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नुक़सान** (*nuqsān*) is a loan from Arabic *nuqṣān*, "a decrease, a loss", which reached Hindi through Persian. Its Arabic root is *n-q-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

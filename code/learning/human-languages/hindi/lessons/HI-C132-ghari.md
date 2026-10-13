@@ -14,7 +14,8 @@ romanization: "ghaṛī"
 concept_tag: HI-THINGS132-GHARI
 prerequisites: [HI-C132-churi, HI-C132-pankha, HI-C10-somavaar-shukravaar, HI-C10-somavaar-shukravaar, HI-C10-shanivaar-ravivaar, HI-C10-shanivaar-ravivaar]
 sounds: []
-roots: []
+roots: [sanskrit-ghati]
+etymology_hook: "ghaṛī ← Sanskrit ghaṭī 'pot, water-clock', a tadbhava (CDIAL 4406)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C132-pankha]
 <!-- hl-knowledge: introduces=[HI-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **घड़ी** — *ghaṛī* — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घड़ी** (*ghaṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭī*, "pot, water-clock" (CDIAL 4406). A *ghaṭī* was a small pot that sank as it filled, timing a short period.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

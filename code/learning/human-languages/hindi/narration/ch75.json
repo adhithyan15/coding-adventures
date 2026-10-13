@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8036989254566ee",
+  "sourceHash": "fnv1a64:b45011bc52e7c496",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a587204937838883",
+      "sourceHash": "fnv1a64:3556f3e1375755d2",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44a81e544906ba8e",
+      "sourceHash": "fnv1a64:79b0f2d495c06ff9",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c7f4b8d27a06e22",
+      "sourceHash": "fnv1a64:5a687362d8d5c599",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3bf5ad91b01618",
+      "sourceHash": "fnv1a64:770e60ee7e7eac0d",
       "notice": null,
       "blocks": [
         {
@@ -528,6 +528,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाषा (bhāshā) is Sanskrit bhāṣā, \"speech\", taken over whole as a learned loan, a tatsama (CDIAL 9479). Prakrit bhāsā already meant \"speech, language\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -538,7 +549,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -578,7 +589,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -609,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:241c224e0de9a687",
+      "sourceHash": "fnv1a64:9ac3805adda2b8c3",
       "notice": null,
       "blocks": [
         {
@@ -654,6 +665,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंग्रेज़ी (angrezī) is usually traced, through Persian angrez, \"an Englishman\", to Portuguese inglês, \"English\". The -ī makes it \"the language of the English\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -664,7 +686,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -713,7 +735,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

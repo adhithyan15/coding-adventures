@@ -14,7 +14,8 @@ romanization: "khā̃sī"
 concept_tag: HI-UNWELL-COUGH
 prerequisites: [HI-C106-thakan, HI-C106-zukam]
 sounds: []
-roots: []
+roots: [sanskrit-kasa]
+etymology_hook: "khāṁsī ← Sanskrit kāsa 'cough', a tadbhava (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C106-zukam]
 **खाँसी** (*khā̃sī*) — "a cough". It is feminine.
 
 **मुझे खाँसी है** — "I have a cough". Same frame, new word in the middle.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाँसी** (*khāṁsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāsa*, "cough" (CDIAL 3138). CDIAL notes the *kh-* as imitating the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

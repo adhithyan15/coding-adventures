@@ -14,7 +14,8 @@ romanization: "khadān"
 concept_tag: HI-THG201-KHADAN
 prerequisites: [HI-C201-jharna, HI-C201-talab]
 sounds: []
-roots: []
+roots: [sanskrit-khani]
+etymology_hook: "khadān: origin uncertain; CDIAL lists khān 'mine' under khāni 'mine' (CDIAL 3873)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C201-talab]
 <!-- hl-knowledge: introduces=[HI-LEX-C201-THG201-05]; assesses=[] -->
 
 **खदान** — *khadān* — "a mine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **खदान** (*khadān*) is uncertain. CDIAL does not list it, though it lists Hindi *khān*, "mine, quarry", under Sanskrit *khāni*, "mine" (CDIAL 3873).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

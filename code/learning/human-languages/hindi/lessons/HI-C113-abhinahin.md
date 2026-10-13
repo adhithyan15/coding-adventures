@@ -14,7 +14,8 @@ romanization: "abhī nahīṁ"
 concept_tag: HI-NOTHING-NOT-YET
 prerequisites: [HI-C112-are, HI-C113-kuchnahin]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-nahi]
+etymology_hook: "abhī: listed by CDIAL under evam eva 'exactly so', crossed with the stem a- (CDIAL 2528); nahīṁ ← nahi (CDIAL 7035)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C113-kuchnahin]
 **अभी नहीं** (*abhī nahīṁ*) — "not yet", "not now".
 
 Two words you own: **अभी**, "right now", and **नहीं**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभी नहीं** (*abhī nahīṁ*) is *abhī*, "right now", with *nahīṁ*, "not". CDIAL lists *ab* and *abhī* under Sanskrit *evam eva*, "exactly so", crossed with the pronoun stem *a-* (CDIAL 2528); *nahīṁ* comes from *nahi*, "surely not" (CDIAL 7035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

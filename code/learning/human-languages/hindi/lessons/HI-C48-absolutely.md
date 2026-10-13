@@ -14,7 +14,8 @@ romanization: "bilkul"
 concept_tag: HI-WORD-ABSOLUTELY
 prerequisites: [HI-C48-perhaps, HI-C46-throat, HI-C47-neighbour]
 sounds: []
-roots: []
+roots: [arabic-kull]
+etymology_hook: "bilkul ← Arabic bi-l-kull 'with the whole' (Lane, root k-l-l)"
 duration:
   max_seconds: 210
 requires:

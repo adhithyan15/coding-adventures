@@ -14,7 +14,8 @@ romanization: "sāmān"
 concept_tag: HI-THG180-SAMAN
 prerequisites: [HI-C180-ilaj, HI-C180-yatra]
 sounds: []
-roots: []
+roots: [persian-saman]
+etymology_hook: "sāmān: usually traced to Persian sāmān 'goods, equipment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C180-yatra]
 <!-- hl-knowledge: introduces=[HI-LEX-C180-THG180-05]; assesses=[] -->
 
 **सामान** — *sāmān* — "luggage, things".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सामान** (*sāmān*) is a loan, usually traced to Persian *sāmān*, "goods, equipment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

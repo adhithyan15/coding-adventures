@@ -14,7 +14,8 @@ romanization: "sū̃ghnā"
 concept_tag: HI-VERB-SUGHNA
 prerequisites: [HI-C176-phekna, HI-C176-cakhna]
 sounds: []
-roots: []
+roots: [sanskrit-shinghati]
+etymology_hook: "sūṁghnā ← Sanskrit śiṅghati 'smells', a tadbhava (CDIAL 12579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C176-cakhna]
 <!-- hl-knowledge: introduces=[HI-LEX-C177-ACT177-01]; assesses=[] -->
 
 **सूँघना** — *sū̃ghnā* — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूँघना** (*sūṁghnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śiṅghati*, "smells" (CDIAL 12579). The Sanskrit verb is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

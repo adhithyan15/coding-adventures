@@ -14,7 +14,8 @@ romanization: "duśman"
 concept_tag: HI-THG188-DUSMAN
 prerequisites: [HI-C188-batan, HI-C188-jeb]
 sounds: []
-roots: []
+roots: [persian-dushman]
+etymology_hook: "duśman: usually traced to Persian dushman 'enemy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C188-jeb]
 <!-- hl-knowledge: introduces=[HI-LEX-C188-THG188-03]; assesses=[] -->
 
 **दुश्मन** — *duśman* — "an enemy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुश्मन** (*duśman*) is a loan, usually traced to Persian *dushman*, "enemy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

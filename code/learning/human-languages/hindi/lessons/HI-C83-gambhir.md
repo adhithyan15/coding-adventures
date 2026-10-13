@@ -14,7 +14,8 @@ romanization: "gambhīr"
 concept_tag: HI-ADJ-SERIOUS
 prerequisites: [HI-C83-milansaar]
 sounds: []
-roots: []
+roots: [sanskrit-gambhira]
+etymology_hook: "gambhīr ← Sanskrit gambhīra 'deep', a tatsama; CDIAL lists inherited gahirā under gabhīra (CDIAL 4024)"
 duration:
   max_seconds: 240
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 216,
-  "sourceHash": "fnv1a64:c3861b6fdbd00183",
+  "sourceHash": "fnv1a64:ba090c71c1c45fa6",
   "lessonIds": [
     "HI-C216-mugphali",
     "HI-C216-muli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch216.txt",
   "json": "hindi/narration/ch216.json",
-  "textHash": "fnv1a64:29d5a75239bbcdbb",
-  "jsonHash": "fnv1a64:441bbb8d967102d5",
+  "textHash": "fnv1a64:1c73e95fe1563ecc",
+  "jsonHash": "fnv1a64:60a3663cabcf14af",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 274,
-  "sourceHash": "fnv1a64:67542ccf4a94ba15",
+  "sourceHash": "fnv1a64:1bce22f86986f60c",
   "lessonIds": [
     "HI-C274-dharkan",
     "HI-C274-saas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch274.txt",
   "json": "hindi/narration/ch274.json",
-  "textHash": "fnv1a64:8e977ad371cf9c53",
-  "jsonHash": "fnv1a64:ae6ea28379b27268",
+  "textHash": "fnv1a64:aade6f85158f7e98",
+  "jsonHash": "fnv1a64:1441148675bbde9d",
   "findings": []
 }

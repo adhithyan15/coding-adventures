@@ -14,7 +14,8 @@ romanization: "cunnā"
 concept_tag: HI-VERB-CUNNA
 prerequisites: [HI-C173-bharna, HI-C173-batna]
 sounds: []
-roots: []
+roots: [sanskrit-cinoti]
+etymology_hook: "cunnā ← Sanskrit cinoti 'heaps up, collects', a tadbhava (CDIAL 4814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C173-batna]
 <!-- hl-knowledge: introduces=[HI-LEX-C173-ACT173-04]; assesses=[] -->
 
 **चुनना** — *cunnā* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चुनना** (*cunnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cinoti*, "heaps up, collects" (CDIAL 4814). CDIAL explains the *u* as taken from other verbs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

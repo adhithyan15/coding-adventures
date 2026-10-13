@@ -14,7 +14,8 @@ romanization: "karoṛ"
 concept_tag: HI-THG244-KAROR
 prerequisites: [HI-C244-hazar, HI-C244-lakh]
 sounds: []
-roots: []
+roots: [sanskrit-koti]
+etymology_hook: "karoṛ ← Sanskrit koṭi 'ten million', itself from Austroasiatic; a tadbhava (CDIAL 3498)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C244-lakh]
 <!-- hl-knowledge: introduces=[HI-LEX-C244-THG244-03]; assesses=[] -->
 
 **करोड़** — *karoṛ* — "ten million (crore)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**करोड़** (*karoṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *koṭi*, "ten million" (CDIAL 3498). CDIAL takes the word from an Austroasiatic language, and explains the *kr-* of some forms as an over-correction towards Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

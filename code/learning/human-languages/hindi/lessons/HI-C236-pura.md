@@ -14,7 +14,8 @@ romanization: "pūrā"
 concept_tag: HI-QUAL236-PURA
 prerequisites: [HI-C235-andar, HI-C236-adha]
 sounds: []
-roots: []
+roots: [sanskrit-pura]
+etymology_hook: "pūrā ← Sanskrit pūra 'filling', a tadbhava (CDIAL 8330)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C236-adha]
 <!-- hl-knowledge: introduces=[HI-LEX-C236-QUAL236-02]; assesses=[] -->
 
 **पूरा** — *pūrā* — "whole, complete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूरा** (*pūrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūra*, "filling" (CDIAL 8330). It is built on *pṛ-*, "to fill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

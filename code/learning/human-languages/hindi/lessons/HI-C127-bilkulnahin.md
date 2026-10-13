@@ -14,7 +14,8 @@ romanization: "bilkul nahīṁ"
 concept_tag: HI-NOTATALL-NOT-AT-ALL
 prerequisites: [HI-C126-ekbaraur, HI-C127-malumnahin]
 sounds: []
-roots: []
+roots: [arabic-kull]
+etymology_hook: "bilkul ← Arabic bi-l-kull 'with the whole' (Lane, root k-l-l)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C127-malumnahin]
 **बिलकुल नहीं** (*bilkul nahīṁ*) — "not at all", "absolutely not".
 
 **बिलकुल** is the "absolutely" you know; with **नहीं** it turns a no all the way down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिलकुल नहीं** (*bilkul nahīṁ*) is *bilkul*, "absolutely", with *nahīṁ*, "not". *bilkul* is Arabic *bi-l-kull*, "with the whole"; *kull*, "all", is on the root *k-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

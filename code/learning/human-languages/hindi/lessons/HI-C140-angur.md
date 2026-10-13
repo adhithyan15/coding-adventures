@@ -14,7 +14,8 @@ romanization: "aṅgūr"
 concept_tag: HI-THINGS140-ANGUR
 prerequisites: [HI-C139-kela, HI-C139-seb]
 sounds: []
-roots: []
+roots: [persian-angur]
+etymology_hook: "aṅgūr: usually traced to Persian angūr 'grape'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C139-seb]
 <!-- hl-knowledge: introduces=[HI-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **अंगूर** — *aṅgūr* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगूर** (*aṅgūr*) is a loan, usually traced to Persian *angūr*, "grape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

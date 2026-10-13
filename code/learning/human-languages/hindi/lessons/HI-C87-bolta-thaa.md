@@ -14,7 +14,8 @@ romanization: "boltā thā"
 concept_tag: HI-PAST-HABITUAL
 prerequisites: [HI-C87-nahin-thaa, HI-C05-bolta-hun]
 sounds: []
-roots: [bol-speak]
+roots: [bol-speak, sanskrit-sthita]
+etymology_hook: "boltā ← *bōll 'speak' (CDIAL 9321); thā ← Sanskrit sthita 'standing' (CDIAL 13768)"
 duration:
   max_seconds: 240
 requires:
@@ -66,6 +67,8 @@ swap rather than a new conjugation.
 
 English needs a whole phrase for this — *used to* — and Hindi needs one letter's
 worth of change.
+
+**था** comes from Sanskrit *sthita*, "standing" (CDIAL 13768).
 
 ## Grammar Lens: both halves bend
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-PAST-05, HI-LEX-C87-PAST-02, HI-LEX-C87-PAST-01] -->

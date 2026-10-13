@@ -14,10 +14,10 @@ gloss: to be able to / can — infinitive / masculine singular
 concept_tag: VERB-CAN
 prerequisites: [HI-R69-reported, HI-C42-come, HI-C05-bolna, HI-C68-aur, HI-C68-ya]
 sounds: [dental-na, matra-aa]
-roots: []
-etymology_hook: "सकना is Sanskrit शक्नोति (śaknoti, 'is able'), root शक् (śak-) — the same root that gave Marathi शिकणे 'to learn', which is literally 'to want to be able', and Sanskrit शक्ति (śakti) 'power'; where English can is a Germanic word that once meant 'to know', Hindi's is a word that always meant 'to be strong enough'"
+roots: [sanskrit-shak-be-able]
+etymology_hook: "saknā ← Sanskrit śaknoti 'is able', root śak (CDIAL 12252)"
 duration:
-  max_seconds: 240
+  max_seconds: 265
 requires:
   knowledge: [HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C07-NAHIN-01, HI-GRAMMAR-VERB-FINAL-01, HI-LEX-COME]
 introduces:
@@ -51,6 +51,8 @@ whole examiner's question — *can you come tomorrow?* — has no answer.
 
 Hindi has no separate words for *can*, *could*, *may* and *be able to*. All four
 run through this one verb, which is why it is worth more than its size.
+
+**सकना** comes from Sanskrit *śaknoti*, "is able" (CDIAL 12252).
 
 ## Grammar Lens: सकना never stands alone
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-SAKNA-STEM-01]; assesses=[HI-LEX-COME, HI-CONCEPT-C07-NAHIN-01, HI-GRAMMAR-VERB-FINAL-01] -->

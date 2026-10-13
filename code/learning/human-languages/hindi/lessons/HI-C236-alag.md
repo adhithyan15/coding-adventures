@@ -14,7 +14,8 @@ romanization: "alag"
 concept_tag: HI-QUAL236-ALAG
 prerequisites: [HI-C236-pura, HI-C236-dugna]
 sounds: []
-roots: []
+roots: [sanskrit-alagna]
+etymology_hook: "alag ← Sanskrit alagna 'unconnected', a tadbhava (CDIAL 700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C236-dugna]
 <!-- hl-knowledge: introduces=[HI-LEX-C236-QUAL236-04]; assesses=[] -->
 
 **अलग** — *alag* — "separate, different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अलग** (*alag*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *alagna*, "unconnected" (CDIAL 700). It is *lagna*, "attached", with *a-*, "not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māchis"
 concept_tag: HI-THINGS132-MACHIS
 prerequisites: [HI-C131-thaila, HI-C131-mombatti]
 sounds: []
-roots: []
+roots: [english-matches]
+etymology_hook: "māchis ← English matches"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C131-mombatti]
 <!-- hl-knowledge: introduces=[HI-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **माचिस** — *māchis* — "matches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माचिस** (*māchis*) is a loan from English *matches*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

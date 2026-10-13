@@ -15,6 +15,7 @@ concept_tag: HI-THG187-DAKIYA
 prerequisites: [HI-C187-girjaghar, HI-C187-thana]
 sounds: []
 roots: []
+etymology_hook: "ḍākiyā: ḍāk 'the post', from *ḍakka 'relay, post' (CDIAL 5519), with -iyā 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C187-thana]
 <!-- hl-knowledge: introduces=[HI-LEX-C187-THG187-03]; assesses=[] -->
 
 **डाकिया** — *ḍākiyā* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाकिया** (*ḍākiyā*) is *ḍāk*, "the post", with the ending *-iyā*, "one who deals with it". CDIAL lists *ḍāk*, "relay, post", under a reconstructed *\*ḍakka* (CDIAL 5519).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

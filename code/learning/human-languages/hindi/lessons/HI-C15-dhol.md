@@ -14,7 +14,8 @@ gloss: "a drum"
 concept_tag: HI-ANCHOR-DHOL
 prerequisites: [HI-S136-letter-gha]
 sounds: []
-roots: []
+roots: [sanskrit-dhola]
+etymology_hook: "ḍhol ← Sanskrit ḍhola 'large drum', a tadbhava (CDIAL 5608)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ḍhol*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ढ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढोल** (*ḍhol*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ḍhola*, "large drum" (CDIAL 5608).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-DHOL] -->

@@ -14,7 +14,8 @@ romanization: "śarmīlā"
 concept_tag: HI-ADJ-SHY
 prerequisites: [HI-C83-mehnati]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "śarmīlā: sharm 'shame', usually traced to Persian sharm, + the ending -īlā"
 duration:
   max_seconds: 240
 requires:

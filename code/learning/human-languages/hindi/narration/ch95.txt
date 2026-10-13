@@ -20,6 +20,7 @@ English: at home. Hindi: घर पर (par).
 English: at the station. Hindi: स्टेशन पर (par).
 That ordering is why these words are called postpositions. Every one of them trails its noun, so once you have the noun you know exactly where the small word goes.
 What पर (par) wants is a point rather than an interior — a house you are at, a platform you are standing on. A place you are inside reaches for a different small word, which arrives later.
+पर (par) is usually traced to Sanskrit upari, "above, upon".
 
 Grammar Lens: where the pieces land.
 [a table of 2 rows, read aloud]
@@ -104,6 +105,7 @@ masculine: काला. feminine: काली.
 masculine: बोलता. feminine: बोलती.
 masculine: था (thā). feminine: थी (thī).
 A word ending in -आ swaps that ending for -ई. You learned it on adjectives, met it again on the habitual verb, and here it is a third time. The past copula behaves like an adjective because, historically, it once was one — a participle meaning situated, agreeing with whoever was situated.
+था (thā) comes from Sanskrit sthita, "standing, settled" (CDIAL 13768).
 
 Grammar Lens: what each tense listens to.
 [a table of 2 rows, read aloud]
@@ -145,6 +147,7 @@ The word, taken apart.
 -ए is the plural ending on the same family of words as -आ and -ई, so थे sits beside था (thā) and थी (thī) without being a new thing to learn.
 The row worth pausing on is the last one. आप takes थे even when you are speaking to exactly one person, for the same reason it takes हैं for one person: the polite level in Hindi is built out of plural forms. Asking a single guest आप कहाँ थे? (āp kahā̃ the?) is grammatically a question to a crowd, and that is the courtesy.
 For a group of women, थे (the) adds a nasal and becomes थीं — worth recognising on a page now, and not worth drilling yet.
+था (thā) comes from Sanskrit sthita, "standing, settled" (CDIAL 13768).
 
 Grammar Lens: the level decision, once more.
 [a table of 3 rows, read aloud]
@@ -186,6 +189,7 @@ present: वह स्टेशन पर (par) नहीं है।. past: �
 The word, taken apart.
 English rebuilds the sentence to negate it: I am at home becomes I am not at home, and I was becomes I was not — but I go has to become I do not go, with a helper verb appearing out of nowhere.
 Hindi asks for none of that. One word, one seat, every tense. Learning the past costs you nothing extra here, because there was nothing extra to learn.
+नहीं comes from Sanskrit nahi, "surely not" (CDIAL 7035), and था (thā) from sthita, "standing" (CDIAL 13768).
 
 Grammar Lens: the seat in front of the verb.
 [a table of 3 rows, read aloud]
@@ -232,6 +236,7 @@ piece: बोलता. its job: this happens repeatedly.
 piece: हूँ / था (thā). its job: and it happens now / it happened then.
 -ता carries the habit. The word after it carries the time. They were never welded together, which is why moving the sentence into the past costs a single swap rather than a new conjugation.
 English needs a whole phrase for this — used to — and Hindi needs one letter's worth of change.
+था (thā) comes from Sanskrit sthita, "standing" (CDIAL 13768).
 
 Grammar Lens: both halves bend.
 [a table of 2 rows, read aloud]

@@ -14,7 +14,8 @@ romanization: "amīr"
 concept_tag: HI-QUAL157-AMIR
 prerequisites: [HI-C156-tikha, HI-C157-taza]
 sounds: []
-roots: []
+roots: [arabic-amir]
+etymology_hook: "amīr ← Arabic amīr 'commander, prince', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C157-taza]
 <!-- hl-knowledge: introduces=[HI-LEX-C157-QUAL157-02]; assesses=[] -->
 
 **अमीर** — *amīr* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अमीर** (*amīr*) is a loan from Arabic *amīr*, "commander, prince", which reached Hindi through Persian. Its Arabic root is *ʾ-m-r* (Lane). Hindi uses it for someone rich.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

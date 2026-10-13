@@ -14,7 +14,8 @@ romanization: "sasurāl"
 concept_tag: HI-AUNT-SASURAL
 prerequisites: [HI-C117-mama, HI-C117-bhabhi]
 sounds: []
-roots: []
+roots: [sanskrit-shvashura]
+etymology_hook: "sasurāl: sasur 'father-in-law', from Sanskrit śvaśura (CDIAL 12753), with -āl"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C117-bhabhi]
 **ससुराल** (*sasurāl*) — "the in-laws' home", the family a person marries into.
 
 **वह ससुराल गई है** — "she has gone to her in-laws' home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ससुराल** (*sasurāl*) is built on *sasur*, "father-in-law", which comes from Sanskrit *śvaśura* (CDIAL 12753), with the place ending *-āl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

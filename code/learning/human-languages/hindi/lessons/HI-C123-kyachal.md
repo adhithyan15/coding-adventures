@@ -14,7 +14,8 @@ romanization: "kyā cal rahā hai?"
 concept_tag: HI-HAAL-WHATS-UP
 prerequisites: [HI-C123-sabthik, HI-C123-bahutdin]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "cal ← Sanskrit calati 'goes away' (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C123-bahutdin]
 **क्या चल रहा है?** (*kyā cal rahā hai?*) — "what's going on?", "what's up?".
 
 It is **चलना**, "to go, to move", in the right-now form: what is moving in your life?
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*calnā*, "to move, go", comes from Sanskrit *calati*, "goes away" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

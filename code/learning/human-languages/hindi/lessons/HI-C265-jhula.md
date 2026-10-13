@@ -14,7 +14,8 @@ romanization: "jhūlā"
 concept_tag: HI-THG265-JHULA
 prerequisites: [HI-C264-guriya, HI-C265-patang]
 sounds: []
-roots: []
+roots: [indo-aryan-jhulyati]
+etymology_hook: "jhūlā ← *jhulyati 'swings', a reconstructed form; a tadbhava (CDIAL 5406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C265-patang]
 <!-- hl-knowledge: introduces=[HI-LEX-C265-THG265-02]; assesses=[] -->
 
 **झूला** — *jhūlā* — "a swing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झूला** (*jhūlā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhulyati*, "swings", a form CDIAL reconstructs from its descendants (CDIAL 5406). *jhūlā* is the noun of *jhūlnā*, "to swing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

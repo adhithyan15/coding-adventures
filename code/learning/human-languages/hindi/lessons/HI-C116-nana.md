@@ -14,7 +14,8 @@ romanization: "nānā"
 concept_tag: HI-GRAND-NANA
 prerequisites: [HI-C116-dada, HI-C116-dadi]
 sounds: []
-roots: []
+roots: [indo-aryan-nanna]
+etymology_hook: "nānā ← *nānna 'a term of respect for an older relative', a reconstructed form; a tadbhava (CDIAL 7059)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C116-dadi]
 **नाना** (*nānā*) — "grandfather", your MOTHER's father.
 
 So **दादा** and **नाना** are both "grandfather" in English, and never the same man in Hindi.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाना** (*nānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL compares Sanskrit *nanā*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

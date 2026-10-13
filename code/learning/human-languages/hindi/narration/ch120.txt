@@ -13,6 +13,9 @@ You'll want to know: हस्ताक्षर.
 हस्ताक्षर (hastākṣar) — "a signature", literally "hand-letters".
 हाथ and this word's हस्त- are the same old word for hand. यहाँ हस्ताक्षर (hastākṣar) कीजिए — "please sign here".
 
+The word, taken apart.
+हस्ताक्षर (hastākṣar) is a tatsama compound, taken over whole from Sanskrit: hasta, "hand", and akṣara, "letter, syllable". A signature is "the hand's letters".
+
 What you've built.
 A signature, built on the word for hand.
 
@@ -44,6 +47,9 @@ You'll want to know: पहचान.
 पहचान (pahcān) + पत्र (patra, "a paper, a document") becomes पहचान (pahcān) पत्र, "an identity card".
 The same word is the knowing-again of a familiar face.
 
+The word, taken apart.
+पहचान (pahcān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pratyabhijānāti, "recognizes" (CDIAL 8637). pahcān is the noun of the verb pahcānnā, "to recognize".
+
 What you've built.
 What a form asks you to prove.
 
@@ -73,6 +79,9 @@ Before the new one: say the Hindi for a signature, then the Hindi for identity.
 You'll want to know: परिचय.
 परिचय (paricay) — "an introduction".
 अपना परिचय (paricay) दीजिए — "please introduce yourself", with the अपना you know.
+
+The word, taken apart.
+परिचय (paricay) is Sanskrit paricaya, "acquaintance with", taken over whole as a learned loan, a tatsama (CDIAL 7807).
 
 What you've built.
 A request to hear who someone is.
@@ -104,6 +113,9 @@ You'll want to know: इंसान.
 इंसान (insān) — "a human being, a person".
 अच्छा इंसान (insān) — "a good person", with अच्छा. आदमी is a man; इंसान (insān) is anyone.
 
+The word, taken apart.
+इंसान (insān) is a loan from Arabic insān, "human being", which reached Hindi through Persian. Its Arabic root is ʾ-n-s (Lane).
+
 What you've built.
 A word for anyone at all.
 
@@ -133,6 +145,9 @@ Before the new one: say the Hindi for an introduction, then the Hindi for a pers
 You'll want to know: मिलकर अच्छा लगा.
 मिलकर अच्छा लगा (milkar acchā lagā) — "nice to meet you", literally "having met, it felt good".
 It is the everyday cousin of आपसे मिलकर ख़ुशी हुई, built on the same मिलना, "to meet".
+
+The word, taken apart.
+मिलकर अच्छा लगा (milkar acchā lagā) is "having met, it felt good". milnā, "to meet", comes from Sanskrit milati, "meets" (CDIAL 10133), and lagnā, "to strike one as", from lagyati, "adheres to" (CDIAL 10895).
 
 What you've built.
 A signature, an identity, an introduction, a person, and the goodbye after meeting.
