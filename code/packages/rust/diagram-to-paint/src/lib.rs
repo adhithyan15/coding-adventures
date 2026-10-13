@@ -1463,6 +1463,11 @@ where
             SwimlaneLineHops::Gap => "gap",
         }.into());
     }
+    if diagram.automatic_lane_ordering {
+        metadata.insert("swimlane.automaticLaneOrdering".into(), "true".into());
+        metadata.insert("swimlane.laneOrder".into(), diagram.lanes.iter()
+            .map(|lane| lane.id.as_str()).collect::<Vec<_>>().join(","));
+    }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
             metadata.insert(format!("swimlane.edge.{index}.id"), id.clone());
