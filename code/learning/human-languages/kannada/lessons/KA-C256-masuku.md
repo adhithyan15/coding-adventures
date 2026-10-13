@@ -14,7 +14,8 @@ romanization: "masuku"
 concept_tag: KA-GUNA256-MASUKU
 prerequisites: [KA-C256-cappate, KA-C256-donku]
 sounds: []
-roots: []
+roots: [dravidian-macaku-dim]
+etymology_hook: "masuku: native Dravidian, one word with Tamil macaṅku and Telugu masaka (DEDR 4627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C256-donku]
 <!-- hl-knowledge: introduces=[KA-LEX-C256-GUNA256-04]; assesses=[] -->
 
 **ಮಸುಕು** — *masuku* — "blurred, dim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಸುಕು** (*masuku*) is native Dravidian, one word with Tamil *macaṅku* and Telugu *masaka* (DEDR 4627). DEDR lists *masaku*, "dimness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

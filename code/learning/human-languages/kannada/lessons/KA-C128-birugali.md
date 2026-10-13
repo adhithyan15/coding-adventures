@@ -14,7 +14,8 @@ romanization: "birugāḷi"
 concept_tag: KA-THINGS128-BIRUGALI
 prerequisites: [KA-C127-gudugu, KA-C128-mimcu]
 sounds: []
-roots: []
+roots: [dravidian-viru-hard, dravidian-gaali-wind]
+etymology_hook: "birugāḷi: native biru 'violence, swiftness' (DEDR 5439) + gāḷi 'wind' (DEDR 1499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C128-mimcu]
 <!-- hl-knowledge: introduces=[KA-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **ಬಿರುಗಾಳಿ** — *birugāḷi* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿರುಗಾಳಿ** (*birugāḷi*) is native Dravidian: *biru*, "vehemence, swiftness", which DEDR 5439 lists as *biṟu*, and *gāḷi*, "wind" (DEDR 1499). A storm is a violent wind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

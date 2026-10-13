@@ -14,7 +14,8 @@ romanization: "oṇṭe"
 concept_tag: KA-THINGS133-ONTE
 prerequisites: [KA-C133-handi, KA-C133-katte]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "oṇṭe: usually traced to Sanskrit uṣṭra 'camel' through Prakrit uṭṭa (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C133-katte]
 <!-- hl-knowledge: introduces=[KA-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **ಒಂಟೆ** — *oṇṭe* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂಟೆ** (*oṇṭe*) is usually traced to Sanskrit *uṣṭra*, "camel", through Prakrit *uṭṭa* (CDIAL 2387): a tadbhava, a loan reshaped by speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

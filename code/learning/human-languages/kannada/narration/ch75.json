@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "All the Way Up, and On a Sign",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:6cdd7e2279a4bb4b",
+  "sourceHash": "fnv1a64:947655963c09dc70",
   "lessons": [
     {
       "id": "KA-C75-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e3e6dba9082139f",
+      "sourceHash": "fnv1a64:f5d301d6554aea8b",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರನೆಯ (āraneya) is built from āru, \"six\", native Dravidian (DEDR 2485, with Tamil āṟu), and the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33cd7b737f5508b4",
+      "sourceHash": "fnv1a64:c0335ee77bbdf30e",
       "notice": null,
       "blocks": [
         {
@@ -239,6 +250,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಳನೆಯ (ēḷaneya) is built from ēḷu, \"seven\", native Dravidian (DEDR 910, with Tamil ēḻu), and the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -278,7 +300,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -309,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e27745a83d3312fe",
+      "sourceHash": "fnv1a64:b87cd71151bc61f7",
       "notice": null,
       "blocks": [
         {
@@ -382,6 +404,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಂಟನೆಯ (eṇṭaneya) is built from eṇṭu, \"eight\", native Dravidian (DEDR 784, with Tamil eṭṭu), and the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -421,7 +454,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -452,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b31e5be12d8ed30",
+      "sourceHash": "fnv1a64:d48014f614d2fe37",
       "notice": null,
       "blocks": [
         {
@@ -525,6 +558,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂಬತ್ತನೆಯ (ombattaneya) is built from ombattu, \"nine\", native Dravidian (DEDR 1025, with Tamil oṉpatu), and the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47e9a4d4f9c7ee4e",
+      "sourceHash": "fnv1a64:c2211a31018aca8d",
       "notice": null,
       "blocks": [
         {
@@ -668,6 +712,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹತ್ತನೆಯ (hattaneya) is built from hattu, \"ten\", native Dravidian (DEDR 3918, with Tamil pattu), and the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -707,7 +762,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -738,7 +793,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d27e7837f31ac91e",
+      "sourceHash": "fnv1a64:2af2f7ea1f7865ae",
       "notice": null,
       "blocks": [
         {
@@ -811,6 +866,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹನ್ನೊಂದನೆಯ (hannondaneya) is built from hannondu, \"eleven\", and the ordinal ending -aneya. Hannondu is native: DEDR 3918 lists pann-, \"ten\", as the form used in eleven and twelve, and ondu, \"one\", is in DEDR 990."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending is a fact about numbers, not about ten",
           "segments": [
@@ -825,7 +891,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -865,7 +931,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -896,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:707708463cc67ad4",
+      "sourceHash": "fnv1a64:83aa9026095fcbbe",
       "notice": null,
       "blocks": [
         {
@@ -983,6 +1049,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊದಲನೇ (modalanē) is built from modalu, \"beginning, the first thing\", native Dravidian (DEDR 4950), with -anē, the everyday short form of the ordinal ending -aneya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1022,7 +1099,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

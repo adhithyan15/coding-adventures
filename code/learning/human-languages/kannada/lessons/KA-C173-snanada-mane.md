@@ -14,7 +14,8 @@ romanization: "snānada mane"
 concept_tag: KA-STHALA173-SNANADA-MANE
 prerequisites: [KA-C172-ksana, KA-C173-adugemane]
 sounds: []
-roots: []
+roots: [sanskrit-snana, dravidian-manai-house]
+etymology_hook: "snānada mane: Sanskrit snāna 'bathing' (CDIAL 13789) + native mane 'room' (DEDR 4776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-adugemane]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-02]; assesses=[] -->
 
 **ಸ್ನಾನದ ಮನೆ** — *snānada mane* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ನಾನದ ಮನೆ** (*snānada mane*) is *snānada*, "of bathing", from Sanskrit *snāna* (CDIAL 13789), and *mane*, "house, room", native Dravidian (DEDR 4776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

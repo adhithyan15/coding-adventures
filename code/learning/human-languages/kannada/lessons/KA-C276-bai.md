@@ -14,7 +14,8 @@ romanization: "bai"
 concept_tag: KA-VERB-BAI
 prerequisites: [KA-C275-arji-haku, KA-C275-holisu]
 sounds: []
-roots: []
+roots: [dravidian-vai-abuse]
+etymology_hook: "bai: native Dravidian, one word with Tamil vai (DEDR 5550)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C275-holisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C276-KRIYE276-01]; assesses=[] -->
 
 **ಬೈ** — *bai* — "to scold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೈ** (*bai*) is native Dravidian, one word with Tamil *vai* (DEDR 5550). DEDR lists *bay(i)*, *bayyu*, "to abuse, revile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

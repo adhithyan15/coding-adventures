@@ -14,7 +14,8 @@ romanization: "kūgu"
 concept_tag: KA-VERB-KUGU
 prerequisites: [KA-C239-appiko, KA-C240-bogalu]
 sounds: []
-roots: []
+roots: [dravidian-kuu-cry]
+etymology_hook: "kūgu: native Dravidian, one word with Tamil kū (DEDR 1868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C240-bogalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C240-KRIYE240-02]; assesses=[] -->
 
 **ಕೂಗು** — *kūgu* — "to shout, to cry out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೂಗು** (*kūgu*) is native Dravidian, one word with Tamil *kū* (DEDR 1868). DEDR lists *kūgu* itself, "to cry aloud". DEDR 1868 compares Sanskrit *kū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sṭūlu"
 concept_tag: KA-VASTU190-STULU
 prerequisites: [KA-C190-sopha, KA-C190-bencu]
 sounds: []
-roots: []
+roots: [english-stool]
+etymology_hook: "sṭūlu ← English stool"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C190-bencu]
 <!-- hl-knowledge: introduces=[KA-LEX-C190-VASTU190-03]; assesses=[] -->
 
 **ಸ್ಟೂಲು** — *sṭūlu* — "a stool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಟೂಲು** (*sṭūlu*) is a loan from English *stool*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

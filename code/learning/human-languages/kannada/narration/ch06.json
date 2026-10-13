@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ac0c748afc9730a0",
+  "sourceHash": "fnv1a64:2ac62cd55333e260",
   "lessons": [
     {
       "id": "KA-C06-dative-ge",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8cc3026c8a31a665",
+      "sourceHash": "fnv1a64:60de1a4e570a8d39",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -576,7 +576,7 @@
             },
             {
               "kind": "speech",
-              "text": "You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is \"[is] known.\" Nothing here is doing anything."
+              "text": "You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is \"[is] known.\" Nothing here is doing anything. Gottu is the same root as Tamil kuṟi, \"a mark\" (DEDR 1847)."
             }
           ]
         },

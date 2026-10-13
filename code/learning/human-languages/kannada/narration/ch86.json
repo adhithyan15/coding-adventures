@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "One Minute, Please",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7f3d5c5c9d39be9",
+  "sourceHash": "fnv1a64:744f9df5e362c2d7",
   "lessons": [
     {
       "id": "KA-C86-oneminute",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43faa8d00163d9a8",
+      "sourceHash": "fnv1a64:c3e854e2b124b646",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದು ನಿಮಿಷ (ondu nimiṣa) is ondu, \"one\" (DEDR 990), native, and nimiṣa, \"minute\", from Sanskrit nimeṣa, \"a wink, a moment\" (CDIAL 7243). A minute is \"a blink\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffd1baf8be6bc135",
+      "sourceHash": "fnv1a64:c93ba83668f30a31",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಯಿರಿ (kāyiri) is native Dravidian: the polite command of kāyu, \"to guard, keep watch, wait\", which DEDR 1416 lists with Tamil kā, \"to guard\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcbec3b58302610b",
+      "sourceHash": "fnv1a64:735895256b015283",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೋರಿಸಿ (tōrisi) is native Dravidian: the polite command of tōrisu, \"to show\", literally \"to make appear\", from tōru, \"to appear\", which DEDR 3566 lists as Kannada tōṟu with Tamil tōṉṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e71fc9579397d30",
+      "sourceHash": "fnv1a64:0a3c40d9a8347abf",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೇಳಿಸಲಿಲ್ಲ (kēḷisalilla) is native Dravidian: kēḷisu, \"to be heard\", from kēḷu, \"to hear\" (DEDR 2017), and illa, \"not\" (DEDR 2559). It is \"it was not heard\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -443,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +536,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:269407dac982bb9a",
+      "sourceHash": "fnv1a64:08456cd4d458b95b",
       "notice": null,
       "blocks": [
         {
@@ -556,6 +600,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರ್ಥವಾಗಲಿಲ್ಲ (arthavāgalilla) is artha, \"meaning\", from Sanskrit artha (CDIAL 638), with native āgu, \"to become\" (DEDR 333), and illa, \"not\" (DEDR 2559): \"it did not become meaning\". DEDR 333 compares Sanskrit ām."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -566,7 +621,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -615,7 +670,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

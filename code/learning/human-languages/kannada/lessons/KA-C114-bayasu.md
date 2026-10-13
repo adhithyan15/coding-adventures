@@ -14,7 +14,8 @@ romanization: "bayasu"
 concept_tag: KA-VERB-BAYASU
 prerequisites: [KA-C114-agatya, KA-C114-nirdhara]
 sounds: []
-roots: []
+roots: [dravidian-vay-desire]
+etymology_hook: "bayasu: native Dravidian, one word with Tamil vayam (DEDR 5257)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C114-nirdhara]
 <!-- hl-knowledge: introduces=[KA-LEX-C114-WANT114-05]; assesses=[] -->
 
 **ಬಯಸು** — *bayasu* — "to wish for, to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಯಸು** (*bayasu*) is native Dravidian, one word with Tamil *vayam* (DEDR 5257). DEDR lists *bayasu* itself, "to desire, wish": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

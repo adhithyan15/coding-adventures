@@ -14,7 +14,8 @@ romanization: "sāmarthya"
 concept_tag: KA-CAN112-SAMARTHYA
 prerequisites: [KA-C111-karu, KA-C111-saikal]
 sounds: []
-roots: []
+roots: [sanskrit-samarthya]
+etymology_hook: "sāmarthya ← Sanskrit sāmarthya 'ability, power', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C111-saikal]
 <!-- hl-knowledge: introduces=[KA-LEX-C112-CAN112-01]; assesses=[] -->
 
 **ಸಾಮರ್ಥ್ಯ** — *sāmarthya* — "ability".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಮರ್ಥ್ಯ** (*sāmarthya*) is Sanskrit *sāmarthya*, "ability, power", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

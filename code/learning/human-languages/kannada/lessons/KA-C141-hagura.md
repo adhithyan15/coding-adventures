@@ -14,7 +14,8 @@ romanization: "hagura"
 concept_tag: KA-QUAL141-HAGURA
 prerequisites: [KA-C140-gidda, KA-C140-bhara]
 sounds: []
-roots: []
+roots: [kannada-hagura-light]
+etymology_hook: "hagura: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C140-bhara]
 <!-- hl-knowledge: introduces=[KA-LEX-C141-QUAL141-01]; assesses=[] -->
 
 **ಹಗುರ** — *hagura* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಹಗುರ** (*hagura*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

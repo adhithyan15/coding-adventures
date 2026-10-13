@@ -14,7 +14,8 @@ romanization: "sahisu"
 concept_tag: KA-VERB-SAHISU
 prerequisites: [KA-C162-vargayisu, KA-C163-anumanapadu]
 sounds: []
-roots: []
+roots: [sanskrit-sah]
+etymology_hook: "sahisu: Sanskrit sah 'to bear, endure' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C163-anumanapadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C163-KRIYE163-02]; assesses=[] -->
 
 **ಸಹಿಸು** — *sahisu* — "to put up with, to tolerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಹಿಸು** (*sahisu*) is the Sanskrit verb *sah*, "to bear, endure", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

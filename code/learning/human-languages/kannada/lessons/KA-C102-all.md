@@ -11,7 +11,8 @@ romanization: "ellā"
 concept_tag: KA-RESP-ALL
 prerequisites: [KA-C102-other, KA-C102-wrong]
 sounds: []
-roots: []
+roots: [dravidian-ella-all]
+etymology_hook: "ellā: native Dravidian, one word with Tamil ellām and Telugu ella (DEDR 844)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C102-wrong]
 **ಎಲ್ಲಾ** (*ellā*) — "all, everything, everyone".
 
 **ಎಲ್ಲಾ ಸರಿ** (*ellā sari*) — "everything is fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಲ್ಲಾ** (*ellā*) is native Dravidian, one word with Tamil *ellām* and Telugu *ella* (DEDR 844).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

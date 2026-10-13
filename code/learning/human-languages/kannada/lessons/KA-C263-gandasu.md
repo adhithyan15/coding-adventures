@@ -14,7 +14,8 @@ romanization: "gaṇḍasu"
 concept_tag: KA-VASTU263-GANDASU
 prerequisites: [KA-C263-huduga, KA-C263-hudugi]
 sounds: []
-roots: []
+roots: [dravidian-kanavan-husband]
+etymology_hook: "gaṇḍasu: native Dravidian, one word with Tamil kaṇṭaṉ and Telugu gaṇḍu (DEDR 1173)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C263-hudugi]
 <!-- hl-knowledge: introduces=[KA-LEX-C263-VASTU263-03]; assesses=[] -->
 
 **ಗಂಡಸು** — *gaṇḍasu* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಂಡಸು** (*gaṇḍasu*) is native Dravidian, one word with Tamil *kaṇṭaṉ*, Telugu *gaṇḍu* and Malayalam *kaṇṭan* (DEDR 1173). DEDR lists *gaṇḍasu*, "male person", beside *gaṇḍu*, "a male, a man". DEDR 1173 compares Sanskrit *gaṇḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

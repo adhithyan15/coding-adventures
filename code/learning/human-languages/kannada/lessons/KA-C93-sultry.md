@@ -11,7 +11,8 @@ romanization: "seke"
 concept_tag: KA-WX-SULTRY
 prerequisites: [KA-C92-english, KA-C93-dizzy]
 sounds: []
-roots: []
+roots: [kannada-seke-heat]
+etymology_hook: "seke: origin uncertain; compare the northern verb *sēkk 'heat, foment' (CDIAL 13581)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C93-dizzy]
 **ಸೆಕೆ** (*seke*) — "sultry, sticky heat", the heat that makes you **ಬೆವರು**, "sweat".
 
 **ತುಂಬಾ ಸೆಕೆ** (*tumbā seke*) — "it's very hot and sticky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಸೆಕೆ** (*seke*) comes from is uncertain: DEDR does not record it. It looks like the northern verb for "to heat, foment", which CDIAL 13581 reconstructs as *\*sēkk*, "heat, foment", but no source records the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

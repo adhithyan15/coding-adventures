@@ -12,6 +12,9 @@ Before the new one: say the Kannada for housework, then the Kannada for a boss.
 You'll want to know: ಶುಲ್ಕ.
 ಶುಲ್ಕ — śulka — "a fee".
 
+The word, taken apart.
+ಶುಲ್ಕ (śulka) is Sanskrit śulka, "price, value; tax, toll", taken over whole as a learned loan, a tatsama (CDIAL 12543).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a boss, then the Kannada for a fee.
 
 You'll want to know: ಖಾತೆ.
 ಖಾತೆ — khāte — "an account (at a bank)".
+
+The word, taken apart.
+ಖಾತೆ (khāte) came from Hindustani khātā, "an account, a ledger". Its deeper origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a fee, then the Kannada for an account.
 You'll want to know: ಬಡ್ಡಿ.
 ಬಡ್ಡಿ — baḍḍi — "interest (on money)".
 
+The word, taken apart.
+ಬಡ್ಡಿ (baḍḍi) comes from Sanskrit vṛddhi, "increase, prosperity", reshaped to Kannada sounds: a tadbhava (CDIAL 12076). Prakrit vaḍḍhi shows the step between: interest is the increase on money.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an account, then the Kannada for interes
 You'll want to know: ತೆರಿಗೆ.
 ತೆರಿಗೆ — terige — "tax".
 
+The word, taken apart.
+ತೆರಿಗೆ (terige) is native Dravidian, from teṟu, "to pay", and DEDR 3441 lists teṟige, "tribute, tax", itself; the entry also has Telugu teṟe and Malayalam tiṟa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for interest, then the Kannada for tax.
 
 You'll want to know: ಬಿಲ್.
 ಬಿಲ್ — bil — "a bill".
+
+The word, taken apart.
+ಬಿಲ್ (bil) is a loan from English bill.
 
 What you've built.
 One more word for this chapter.

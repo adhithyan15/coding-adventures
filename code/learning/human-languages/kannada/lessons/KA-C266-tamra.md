@@ -14,7 +14,8 @@ romanization: "tāmra"
 concept_tag: KA-VASTU266-TAMRA
 prerequisites: [KA-C266-madake, KA-C266-karpura]
 sounds: []
-roots: []
+roots: [sanskrit-tamra]
+etymology_hook: "tāmra ← Sanskrit tāmra 'copper', a tatsama (CDIAL 5779)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C266-karpura]
 <!-- hl-knowledge: introduces=[KA-LEX-C266-VASTU266-05]; assesses=[] -->
 
 **ತಾಮ್ರ** — *tāmra* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಾಮ್ರ** (*tāmra*) is Sanskrit *tāmra*, "copper", taken over whole as a learned loan, a tatsama (CDIAL 5779).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

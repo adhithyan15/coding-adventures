@@ -14,7 +14,8 @@ romanization: "kyāmarā"
 concept_tag: KA-VASTU300-KYAMARA
 prerequisites: [KA-C299-hiriyaru, KA-C300-photo]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kyāmarā ← English camera"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C300-photo]
 <!-- hl-knowledge: introduces=[KA-LEX-C300-VASTU300-02]; assesses=[] -->
 
 **ಕ್ಯಾಮರಾ** — *kyāmarā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಯಾಮರಾ** (*kyāmarā*) is a loan from English *camera*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

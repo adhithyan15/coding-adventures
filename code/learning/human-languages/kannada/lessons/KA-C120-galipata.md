@@ -14,7 +14,8 @@ romanization: "gāḷipaṭa"
 concept_tag: KA-THINGS120-GALIPATA
 prerequisites: [KA-C119-bombe, KA-C119-cendu]
 sounds: []
-roots: []
+roots: [dravidian-gaali-wind, sanskrit-pata]
+etymology_hook: "gāḷipaṭa: native gāḷi 'wind' (DEDR 1499) + paṭa 'cloth' ← Sanskrit (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C119-cendu]
 <!-- hl-knowledge: introduces=[KA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **ಗಾಳಿಪಟ** — *gāḷipaṭa* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಳಿಪಟ** (*gāḷipaṭa*) is *gāḷi*, "wind", native Dravidian (DEDR 1499), and *paṭa*, "cloth", from Sanskrit *paṭa*, "woven cloth" (CDIAL 7692). A kite is a cloth for the wind. CDIAL thinks *paṭa* probably came into Sanskrit from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

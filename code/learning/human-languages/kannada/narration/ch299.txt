@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a competition, then the Kannada for a pr
 You'll want to know: ಮುದುಕಿ.
 ಮುದುಕಿ — muduki — "an old woman".
 
+The word, taken apart.
+ಮುದುಕಿ (muduki) is native Dravidian, one word with Tamil mutu, Telugu mudara and Malayalam mutu (DEDR 4954). DEDR lists mudaki, muduki, "old woman".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a prize, then the Kannada for an old wom
 
 You'll want to know: ಜನ.
 ಜನ — jana — "people".
+
+The word, taken apart.
+ಜನ (jana) is Sanskrit jana, "race, person", taken over whole as a learned loan, a tatsama (CDIAL 5098).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for an old woman, then the Kannada for peopl
 You'll want to know: ಮನುಷ್ಯ.
 ಮನುಷ್ಯ — manuṣya — "a human being".
 
+The word, taken apart.
+ಮನುಷ್ಯ (manuṣya) is Sanskrit manuṣya, "human being", taken over whole as a learned loan, a tatsama (CDIAL 9828).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for people, then the Kannada for a human bei
 You'll want to know: ಅಪರಿಚಿತ.
 ಅಪರಿಚಿತ — aparicita — "a stranger".
 
+The word, taken apart.
+ಅಪರಿಚಿತ (aparicita) is Sanskrit a-, "not", with paricita, "known, acquainted": "someone not known".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a human being, then the Kannada for a st
 
 You'll want to know: ಹಿರಿಯರು.
 ಹಿರಿಯರು — hiriyaru — "elders".
+
+The word, taken apart.
+ಹಿರಿಯರು (hiriyaru) is native Dravidian, from hiri, "great, older", which DEDR 4411 lists as older piri, "greatness, advanced age", with the plural ending -aru: "the older ones".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "vāhana"
 concept_tag: KA-VASTU260-VAHANA
 prerequisites: [KA-C260-kili, KA-C260-patrike]
 sounds: []
-roots: []
+roots: [sanskrit-vahana]
+etymology_hook: "vāhana ← Sanskrit vāhana 'any vehicle or draught animal', a tatsama (CDIAL 11610)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C260-patrike]
 <!-- hl-knowledge: introduces=[KA-LEX-C260-VASTU260-04]; assesses=[] -->
 
 **ವಾಹನ** — *vāhana* — "a vehicle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾಹನ** (*vāhana*) is Sanskrit *vāhana*, "any vehicle or draught animal", taken over whole as a learned loan, a tatsama (CDIAL 11610).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

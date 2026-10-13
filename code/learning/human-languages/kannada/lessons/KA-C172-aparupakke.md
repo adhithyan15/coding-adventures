@@ -14,7 +14,8 @@ romanization: "aparūpakke"
 concept_tag: KA-KALA172-APARUPAKKE
 prerequisites: [KA-C171-varantya, KA-C171-munce]
 sounds: []
-roots: []
+roots: [sanskrit-apurva]
+etymology_hook: "aparūpakke: aparūpa 'rare' + -kke 'for'; aparūpa is usually traced to Sanskrit apūrva 'unprecedented' (CDIAL 494)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C171-munce]
 <!-- hl-knowledge: introduces=[KA-LEX-C172-KALA172-01]; assesses=[] -->
 
 **ಅಪರೂಪಕ್ಕೆ** — *aparūpakke* — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪರೂಪಕ್ಕೆ** (*aparūpakke*) is *aparūpa*, "rare", with *-kke*, "for": "rarely". *Aparūpa* is usually traced to Sanskrit *apūrva*, "unprecedented" (CDIAL 494), but no source settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

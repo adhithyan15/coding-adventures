@@ -14,7 +14,8 @@ romanization: "dādi"
 concept_tag: KA-AROGYA282-DADI
 prerequisites: [KA-C282-ambyulens, KA-C282-ottada]
 sounds: []
-roots: []
+roots: [kannada-dadi-nurse]
+etymology_hook: "dādi: origin uncertain; compare Sanskrit dhātrī 'nurse' (CDIAL 6774)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C282-ottada]
 <!-- hl-knowledge: introduces=[KA-LEX-C282-AROGYA282-04]; assesses=[] -->
 
 **ದಾದಿ** — *dādi* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ದಾದಿ** (*dādi*) comes from is uncertain. It may belong with Sanskrit *dhātrī*, "nurse" (CDIAL 6774), but no source records the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

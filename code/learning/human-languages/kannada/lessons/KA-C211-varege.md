@@ -14,7 +14,8 @@ romanization: "varege"
 concept_tag: KA-KALA211-VAREGE
 prerequisites: [KA-C211-niyamitavagi, KA-C211-illiyavarege]
 sounds: []
-roots: []
+roots: [dravidian-varai-limit]
+etymology_hook: "varege: native Dravidian, one word with Tamil varampu and Telugu varuju (DEDR 5261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C211-illiyavarege]
 <!-- hl-knowledge: introduces=[KA-LEX-C211-KALA211-03]; assesses=[] -->
 
 **ವರೆಗೆ** — *varege* — "until, up to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವರೆಗೆ** (*varege*) is native Dravidian, one word with Tamil *varampu*, Telugu *varuju* and Malayalam *varampu* (DEDR 5261). DEDR lists Kannada *bara*, *vare*, "limit; up to, till".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 186,
-  "sourceHash": "fnv1a64:d656bba21aee4df4",
+  "sourceHash": "fnv1a64:7ac8031311d5c765",
   "lessonIds": [
     "KA-C186-sandesa",
     "KA-C186-imel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch186.txt",
   "json": "kannada/narration/ch186.json",
-  "textHash": "fnv1a64:155d365cc93492b2",
-  "jsonHash": "fnv1a64:929a6851a2604d26",
+  "textHash": "fnv1a64:182f89160abacbe5",
+  "jsonHash": "fnv1a64:510dfe04a727ae91",
   "findings": []
 }

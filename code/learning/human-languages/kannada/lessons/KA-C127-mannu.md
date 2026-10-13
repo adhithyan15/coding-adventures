@@ -14,7 +14,8 @@ romanization: "maṇṇu"
 concept_tag: KA-THINGS127-MANNU
 prerequisites: [KA-C127-samudra, KA-C127-kadu]
 sounds: []
-roots: []
+roots: [dravidian-manal-sand]
+etymology_hook: "maṇṇu: native Dravidian, one word with Tamil maṇ (DEDR 4666)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C127-kadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **ಮಣ್ಣು** — *maṇṇu* — "soil, earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಣ್ಣು** (*maṇṇu*) is native Dravidian, one word with Tamil *maṇ* (DEDR 4666). DEDR lists *maṇṇu* itself, "earth, clay, soil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

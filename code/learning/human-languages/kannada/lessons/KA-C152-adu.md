@@ -14,7 +14,8 @@ romanization: "āḍu"
 concept_tag: KA-VERB-ADU
 prerequisites: [KA-C151-sudu, KA-C152-arisu]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move]
+etymology_hook: "āḍu: native Dravidian, one word with Tamil āṭu and Telugu āḍu (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C152-arisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C152-ACT152-02]; assesses=[] -->
 
 **ಆಡು** — *āḍu* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಡು** (*āḍu*) is native Dravidian, one word with Tamil *āṭu* and Telugu *āḍu* (DEDR 347). DEDR lists *āḍu* itself, "to move, play, dance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

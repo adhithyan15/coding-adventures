@@ -11,7 +11,8 @@ romanization: "talenōvu"
 concept_tag: KA-UNWELL-HEADACHE
 prerequisites: [KA-C82-cold, KA-C82-cough]
 sounds: []
-roots: []
+roots: [dravidian-talai-head, dravidian-noo-pain]
+etymology_hook: "talenōvu: native tale 'head' (DEDR 3103) + nōvu 'pain' (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C82-cough]
 **ತಲೆ** (*tale*), "head", and **ನೋವು** (*nōvu*), "pain".
 
 **ನನಗೆ ತಲೆನೋವು** (*nanage talenōvu*) — "I have a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಲೆನೋವು** (*talenōvu*) is native Dravidian: *tale*, "head" (DEDR 3103, with Tamil *talai*), and *nōvu*, "pain" (DEDR 3793, with Tamil *nō*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

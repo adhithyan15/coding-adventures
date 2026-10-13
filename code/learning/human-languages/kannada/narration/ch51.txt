@@ -14,6 +14,9 @@ You'll want to know: ಕೃತಜ್ಞತೆ.
 Two Sanskrit pieces once more: kṛta, 'done', and jña, 'knowing'. Gratitude is knowing-what-was-done — the condition of a person who has not forgotten the favour.
 jña is a very old root, and English holds it too. The know of English, the nōscere of Latin, the gnosis of Greek and this jña all come down from one ancestor. Saying ಕೃತಜ್ಞತೆ (kṛtajñate) is saying know with three thousand years of Indian weather on it.
 
+The word, taken apart.
+ಕೃತಜ್ಞತೆ (kṛtajñate) is Sanskrit kṛtajñatā, "gratitude", with Kannada's -e for the Sanskrit -ā: kṛta, "what was done", and jña, "knowing", so the grateful person is the one who knows what was done for them.
+
 What you've built.
 The first of five courtesies.
 
@@ -45,6 +48,9 @@ You'll want to know: ಉಪಕಾರ.
 upa, 'near, toward', and kāra, 'a doing' — a doing-toward-someone. Its mirror image exists and is just as plain: ಅಪಕಾರ (apakāra), a harm done.
 And the kāra here rests on kṛ, 'to do', which is the same kṛ inside the kṛta of the word before. Sanskrit builds like this constantly, from a small stock of roots and a small stock of prefixes, and the compounds explain themselves the moment the seams are visible.
 
+The word, taken apart.
+ಉಪಕಾರ (upakāra) is Sanskrit upakāra, "help, use", taken over whole as a learned loan, a tatsama (CDIAL 2141).
+
 What you've built.
 Two: gratitude, and a good turn.
 
@@ -74,6 +80,7 @@ You'll want to know: ಗೌರವ.
 ಗೌರವ (gaurava) — "respect".
 Sanskrit guru means 'heavy'. Stretch its first vowel, which is a standard Sanskrit way of making an abstract noun, and you have gaurava: heaviness, and so weight, consequence, dignity, respect.
 The teacher is called guru by the same logic — the weighty one. And guru is a true relative of Latin gravis, so the English grave and gravity are this word arriving by another road. Kannada had already given it to you once, sitting quietly in the name of a weekday.
+CDIAL 4346 lists Sanskrit gaurava, "weight, venerableness", and CDIAL 4209 guru, "heavy".
 
 What you've built.
 Three: gratitude, a good turn, respect.
@@ -106,6 +113,9 @@ You'll want to know: ಆಶೀರ್ವಾದ.
 āśis, 'a wish, a prayer', and vāda, 'a speaking'. A blessing is the speaking-out of a wish.
 Now look hard at the second half. ವಾದ is the same -vāda this book handed you on its very first page, inside ಧನ್ಯವಾದ — the speaking of 'worthy'. Thanks and a blessing come from one carpenter: take a good word, set 'speaking' behind it, and you have named the act of saying it aloud.
 
+The word, taken apart.
+ಆಶೀರ್ವಾದ (āśīrvāda) is Sanskrit āśīrvāda, taken over whole: āśīs, "a wish, a blessing", and vāda, "a saying" (CDIAL 11507).
+
 What you've built.
 Four, and the fourth one is built exactly like the first word of this book.
 
@@ -136,6 +146,7 @@ You'll want to know: ವಂದನೆ.
 vand- is a Sanskrit root meaning to praise, to salute, to bow to. ವಂದನೆ (vandane) is the act itself, and ವಂದನೆಗಳು — the plural — is how a speaker closes a speech from a platform.
 Set it beside ನಮಸ್ಕಾರ, the first word this book taught. That one stands on nam-, which also means to bow. Sanskrit kept two separate roots for bending toward another person and Kannada kept them both: one became the everyday hello, the other stayed the formal thanks-and-farewell.
 Five courtesies: gratitude, a good turn, respect, a blessing, a salutation.
+CDIAL 11271 lists Sanskrit vandana, "praising".
 
 What you've built.
 Five courtesies, and two words for one gesture.

@@ -14,7 +14,8 @@ romanization: "nōṭu"
 concept_tag: KA-VASTU185-NOTU
 prerequisites: [KA-C184-soppu, KA-C184-elaniru]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "nōṭu ← English note"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C184-elaniru]
 <!-- hl-knowledge: introduces=[KA-LEX-C185-VASTU185-01]; assesses=[] -->
 
 **ನೋಟು** — *nōṭu* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೋಟು** (*nōṭu*) is a loan from English *note*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āḷa"
 concept_tag: KA-QUAL142-ALA
 prerequisites: [KA-C141-vega, KA-C142-sundara]
 sounds: []
-roots: []
+roots: [dravidian-aazh-deep]
+etymology_hook: "āḷa: native Dravidian; DEDR 396 lists older āḻa 'depth' under āḻ 'to sink'; Tamil āḻ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C142-sundara]
 <!-- hl-knowledge: introduces=[KA-LEX-C142-QUAL142-02]; assesses=[] -->
 
 **ಆಳ** — *āḷa* — "deep; depth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಳ** (*āḷa*) is native Dravidian, from *āḻ*, "to sink, be deep", and DEDR 396 lists *āḻa*, "depth", itself; the entry also has Tamil *āḻ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bandaru"
 concept_tag: KA-STHALA212-BANDARU
 prerequisites: [KA-C211-sadyakke, KA-C211-avadhi]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bandaru ← Persian bandar 'port', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C211-avadhi]
 <!-- hl-knowledge: introduces=[KA-LEX-C212-STHALA212-01]; assesses=[] -->
 
 **ಬಂದರು** — *bandaru* — "a port, a harbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಂದರು** (*bandaru*) is a loan from Persian *bandar*, "port, harbour", which came through Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

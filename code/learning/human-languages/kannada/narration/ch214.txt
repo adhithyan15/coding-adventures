@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a stadium, then the Kannada for a museum
 You'll want to know: ಅಂಚು.
 ಅಂಚು — añcu — "an edge; the border of a sari".
 
+The word, taken apart.
+ಅಂಚು (añcu) is native Dravidian, one word with Telugu ancu, "border, edge" (DEDR 57); Tamil aṉsu is a loan from Telugu. DEDR lists añcu itself, "edge, border, selvage". DEDR 57 compares Sanskrit añcala.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a museum, then the Kannada for an edge.
 
 You'll want to know: ತುದಿ.
 ತುದಿ — tudi — "a tip, the far end".
+
+The word, taken apart.
+ತುದಿ (tudi) is native Dravidian, one word with Tamil tuti (DEDR 3314). DEDR lists tudi itself, "extremity, point, tip".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for an edge, then the Kannada for a tip.
 You'll want to know: ತಳ.
 ತಳ — taḷa — "the bottom".
 
+The word, taken apart.
+ತಳ (taḷa) is usually traced to Sanskrit tala, "base, bottom, surface" (CDIAL 5731), with Kannada's ḷ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a tip, then the Kannada for the bottom.
 You'll want to know: ಅಡ್ಡರಸ್ತೆ.
 ಅಡ್ಡರಸ್ತೆ — aḍḍaraste — "a cross street".
 
+The word, taken apart.
+ಅಡ್ಡರಸ್ತೆ (aḍḍaraste) is aḍḍa, "across, crosswise", native Dravidian (DEDR 83), and raste, "road", from Persian rāsta through Hindustani. CDIAL 189 takes the northern aḍḍa, "transverse", from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for the bottom, then the Kannada for a cross
 
 You'll want to know: ಕವಲು.
 ಕವಲು — kavalu — "a fork (in a road)".
+
+The word, taken apart.
+ಕವಲು (kavalu) is native Dravidian, one word with Tamil kavar, Telugu kava and Malayalam kava (DEDR 1325). DEDR lists kaval, "bifurcation, fork".
 
 What you've built.
 One more word for this chapter.

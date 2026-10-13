@@ -14,7 +14,8 @@ romanization: "dīpāvaḷi"
 concept_tag: KA-KALA247-DIPAVALI
 prerequisites: [KA-C246-madhumeha, KA-C247-dasara]
 sounds: []
-roots: []
+roots: [sanskrit-dipavali]
+etymology_hook: "dīpāvaḷi ← Sanskrit dīpāvali 'row of lamps, festival', reshaped as a tadbhava (CDIAL 6358)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C247-dasara]
 <!-- hl-knowledge: introduces=[KA-LEX-C247-KALA247-02]; assesses=[] -->
 
 **ದೀಪಾವಳಿ** — *dīpāvaḷi* — "Deepavali, the festival of lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೀಪಾವಳಿ** (*dīpāvaḷi*) comes from Sanskrit *dīpāvali*, "row of lamps, festival", reshaped to Kannada sounds: a tadbhava (CDIAL 6358). *Dīpa*, "lamp", and *āvali*, "row"; Kannada writes the last *l* as *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

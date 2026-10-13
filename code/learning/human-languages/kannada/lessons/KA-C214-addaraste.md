@@ -14,7 +14,8 @@ romanization: "aḍḍaraste"
 concept_tag: KA-STHALA214-ADDARASTE
 prerequisites: [KA-C214-tudi, KA-C214-tala]
 sounds: []
-roots: []
+roots: [dravidian-adai-obstruct, persian-rasta]
+etymology_hook: "aḍḍaraste: native aḍḍa 'across' (DEDR 83) + raste 'road' ← Persian rāsta through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C214-tala]
 <!-- hl-knowledge: introduces=[KA-LEX-C214-STHALA214-04]; assesses=[] -->
 
 **ಅಡ್ಡರಸ್ತೆ** — *aḍḍaraste* — "a cross street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಡ್ಡರಸ್ತೆ** (*aḍḍaraste*) is *aḍḍa*, "across, crosswise", native Dravidian (DEDR 83), and *raste*, "road", from Persian *rāsta* through Hindustani. CDIAL 189 takes the northern *\*aḍḍa*, "transverse", from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

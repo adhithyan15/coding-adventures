@@ -14,7 +14,8 @@ romanization: "halli"
 concept_tag: KA-VASTU261-HALLI
 prerequisites: [KA-C261-karu, KA-C261-alilu]
 sounds: []
-roots: []
+roots: [dravidian-palli-lizard]
+etymology_hook: "halli: native Dravidian, one word with Tamil palli and Telugu palli (DEDR 3994)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C261-alilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C261-VASTU261-04]; assesses=[] -->
 
 **ಹಲ್ಲಿ** — *halli* — "a lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಲ್ಲಿ** (*halli*) is native Dravidian, one word with Tamil *palli*, Telugu *palli* and Malayalam *palli* (DEDR 3994). DEDR lists older *palli*, "house lizard": the *p-* has become *h-*. DEDR 3994 compares Sanskrit *pallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

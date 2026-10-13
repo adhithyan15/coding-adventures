@@ -14,7 +14,8 @@ romanization: "breḍ"
 concept_tag: KA-VASTU258-BRED
 prerequisites: [KA-C258-payasa, KA-C258-biskattu]
 sounds: []
-roots: []
+roots: [english-bread]
+etymology_hook: "breḍ ← English bread"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C258-biskattu]
 <!-- hl-knowledge: introduces=[KA-LEX-C258-VASTU258-05]; assesses=[] -->
 
 **ಬ್ರೆಡ್** — *breḍ* — "bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬ್ರೆಡ್** (*breḍ*) is a loan from English *bread*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rastē"
 concept_tag: KA-LOC108-RASTE
 prerequisites: [KA-C108-munde, KA-C108-naduve]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rastē ← Persian rāsta 'road', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C108-naduve]
 <!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-05]; assesses=[] -->
 
 **ರಸ್ತೆ** — *rastē* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಸ್ತೆ** (*rastē*) is a loan from Persian *rāsta*, "road, way", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

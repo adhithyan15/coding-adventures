@@ -14,7 +14,8 @@ romanization: "nirdhāra"
 concept_tag: KA-WANT114-NIRDHARA
 prerequisites: [KA-C114-yojane, KA-C114-agatya]
 sounds: []
-roots: []
+roots: [sanskrit-nirdhara]
+etymology_hook: "nirdhāra ← Sanskrit nirdhāra 'determination, settling', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C114-agatya]
 <!-- hl-knowledge: introduces=[KA-LEX-C114-WANT114-04]; assesses=[] -->
 
 **ನಿರ್ಧಾರ** — *nirdhāra* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರ್ಧಾರ** (*nirdhāra*) is Sanskrit *nirdhāra*, "settling, determination", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

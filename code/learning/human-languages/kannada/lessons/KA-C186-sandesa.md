@@ -14,7 +14,8 @@ romanization: "sandēśa"
 concept_tag: KA-VASTU186-SANDESA
 prerequisites: [KA-C185-kilo, KA-C185-pars]
 sounds: []
-roots: []
+roots: [sanskrit-sandesha]
+etymology_hook: "sandēśa ← Sanskrit sandeśa 'message, information', a tatsama (CDIAL 12904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C185-pars]
 <!-- hl-knowledge: introduces=[KA-LEX-C186-VASTU186-01]; assesses=[] -->
 
 **ಸಂದೇಶ** — *sandēśa* — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂದೇಶ** (*sandēśa*) is Sanskrit *sandeśa*, "message, information", taken over whole as a learned loan, a tatsama (CDIAL 12904).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

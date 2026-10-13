@@ -11,7 +11,8 @@ romanization: "saṅkōca"
 concept_tag: KA-NOUN-HESITANCY
 prerequisites: [KA-C65-permission, KA-C63-fever]
 sounds: []
-roots: []
+roots: [sanskrit-sankoca]
+etymology_hook: "saṅkōca ← Sanskrit saṅkoca 'contraction, shrinking', a tatsama"
 duration:
   max_seconds: 210
 requires:

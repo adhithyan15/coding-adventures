@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "In Order To, and Being Able",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:472f94c426b9bedf",
+  "sourceHash": "fnv1a64:2a0064230adc8b38",
   "lessons": [
     {
       "id": "KA-C73-very",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dca63edd852fb588",
+      "sourceHash": "fnv1a64:adff782470e7b1c2",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತುಂಬಾ (tumbā) is native Dravidian, usually explained as a form of tumbu, \"to become full\", which DEDR 3331 lists, along with Irula thumba, \"much\". \"Fully\" became \"very\". DEDR does not list tumbā itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -168,7 +179,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -199,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:729bb06083afa4f4",
+      "sourceHash": "fnv1a64:a5de8ec227052247",
       "notice": null,
       "blocks": [
         {
@@ -240,6 +251,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓದಲು (ōdalu) is native Dravidian: ōdu, \"to read, recite\" (DEDR 1052, with Tamil ōtu), with -alu, the ending that means \"to, in order to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: three endings, three ways to join two actions",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -265,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -368,7 +390,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -596,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df8cb139855c3b22",
+      "sourceHash": "fnv1a64:3ec1ba816007c9c9",
       "notice": null,
       "blocks": [
         {
@@ -637,6 +659,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಕನ್ನಡ ಬರುತ್ತದೆ (nanage kannaḍa baruttade) is native Dravidian throughout: nanage, \"to me\" (DEDR 5160), kannaḍa (DEDR 1284), and baruttade, \"it comes\", from baru, \"to come\" (DEDR 5270). A language you can speak is one that \"comes to you\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the fourth thing the dative frame carries",
           "segments": [
@@ -651,7 +684,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -662,7 +695,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -756,7 +789,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -787,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da7a11f7d742caae",
+      "sourceHash": "fnv1a64:0a742a8db9e28710",
       "notice": null,
       "blocks": [
         {
@@ -832,6 +865,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದು ಹೂವು (ondu hūvu) is native Dravidian: ondu, \"one\" (DEDR 990), and hūvu, \"flower\" (DEDR 4345). DEDR 4345 compares, with a query, Sanskrit puṣpa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -842,7 +886,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -927,7 +971,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

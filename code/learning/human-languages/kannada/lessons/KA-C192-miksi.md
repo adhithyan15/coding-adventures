@@ -14,7 +14,8 @@ romanization: "miksi"
 concept_tag: KA-VASTU192-MIKSI
 prerequisites: [KA-C192-oralu, KA-C192-onake]
 sounds: []
-roots: []
+roots: [english-mixie]
+etymology_hook: "miksi ← Indian English mixie, from mixer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C192-onake]
 <!-- hl-knowledge: introduces=[KA-LEX-C192-VASTU192-03]; assesses=[] -->
 
 **ಮಿಕ್ಸಿ** — *miksi* — "a mixer-grinder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಿಕ್ಸಿ** (*miksi*) is a loan from Indian English *mixie*, a shortening of *mixer*, the kitchen mixer-grinder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

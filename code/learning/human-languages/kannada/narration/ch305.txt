@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a subject, then the Kannada for mathemat
 You'll want to know: ಅರ್ಚಕ.
 ಅರ್ಚಕ — arcaka — "a temple priest".
 
+The word, taken apart.
+ಅರ್ಚಕ (arcaka) is Sanskrit arcaka, "worshipper", from the verb for "to praise, worship".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for mathematics, then the Kannada for a temp
 
 You'll want to know: ಕಲಾವಿದ.
 ಕಲಾವಿದ — kalāvida — "an artist".
+
+The word, taken apart.
+ಕಲಾವಿದ (kalāvida) is Sanskrit kalā, "any practical art" (CDIAL 2927), with -vid, "knowing": "one who knows an art". CDIAL 2927 takes the Sanskrit kalā itself from Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a temple priest, then the Kannada for an
 You'll want to know: ಗಾಯಕ.
 ಗಾಯಕ — gāyaka — "a singer".
 
+The word, taken apart.
+ಗಾಯಕ (gāyaka) is Sanskrit gāyaka, "singer", built on gāyati, "sings" (CDIAL 4135).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an artist, then the Kannada for a singer
 You'll want to know: ನಟ.
 ನಟ — naṭa — "an actor".
 
+The word, taken apart.
+ನಟ (naṭa) is Sanskrit naṭa, "dancer, actor", taken over whole as a learned loan, a tatsama (CDIAL 6933). CDIAL 6933 thinks the Sanskrit word itself probably came from a Middle Indo-Aryan form. DEDR 2936 has a Kannada naṭike, "the cracking of joints", but that is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a singer, then the Kannada for an actor.
 
 You'll want to know: ಪತ್ರಕರ್ತ.
 ಪತ್ರಕರ್ತ — patrakarta — "a journalist".
+
+The word, taken apart.
+ಪತ್ರಕರ್ತ (patrakarta) is Sanskrit patra, "leaf, letter" (CDIAL 7733), and kartṛ, "maker": "a maker of papers".
 
 What you've built.
 One more word for this chapter.

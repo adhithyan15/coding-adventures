@@ -11,9 +11,10 @@ romanization: "ondu hūvu"
 concept_tag: KA-DET-INDEFINITE
 prerequisites: [KA-C73-can, KA-C52-flower, KA-C07-ondu, KA-C57-bone]
 sounds: []
-roots: []
+roots: [dravidian-puu-flower]
+etymology_hook: "ondu hūvu: native ondu 'one' (DEDR 990) + hūvu 'flower' (DEDR 4345)"
 duration:
-  max_seconds: 210
+  max_seconds: 227
 requires:
   knowledge: [KA-LEX-C73-ABLE-04, KA-LEX-C52-WELCOME-04, KA-LEX-C07-ONDU-01, KA-LEX-C71-MORE-01]
 introduces:
@@ -51,6 +52,11 @@ put it in when you would say *a* in English and want the difference heard.
 
 You have already used the same word for the opposite job in ಇನ್ನೊಂದು, "one
 more" — the counting sense still alive inside it.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದು ಹೂವು** (*ondu hūvu*) is native Dravidian: *ondu*, "one" (DEDR 990), and *hūvu*, "flower" (DEDR 4345). DEDR 4345 compares, with a query, Sanskrit *puṣpa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

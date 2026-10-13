@@ -14,7 +14,8 @@ romanization: "avakāśa"
 concept_tag: KA-CAN112-AVAKASA
 prerequisites: [KA-C112-kausalya, KA-C112-hakku]
 sounds: []
-roots: []
+roots: [sanskrit-avakasha]
+etymology_hook: "avakāśa ← Sanskrit avakāśa 'space, room; opportunity', a tatsama (CDIAL 728)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C112-hakku]
 <!-- hl-knowledge: introduces=[KA-LEX-C112-CAN112-04]; assesses=[] -->
 
 **ಅವಕಾಶ** — *avakāśa* — "a chance, an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅವಕಾಶ** (*avakāśa*) is Sanskrit *avakāśa*, "space, room; opportunity", taken over whole as a learned loan, a tatsama (CDIAL 728).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

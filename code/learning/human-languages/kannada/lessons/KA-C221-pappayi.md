@@ -14,7 +14,8 @@ romanization: "pappāyi"
 concept_tag: KA-VASTU221-PAPPAYI
 prerequisites: [KA-C221-sebu, KA-C221-kittale]
 sounds: []
-roots: []
+roots: [portuguese-papaya]
+etymology_hook: "pappāyi: from papaya, a Caribbean word carried to India by the Portuguese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C221-kittale]
 <!-- hl-knowledge: introduces=[KA-LEX-C221-VASTU221-03]; assesses=[] -->
 
 **ಪಪ್ಪಾಯಿ** — *pappāyi* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಪ್ಪಾಯಿ** (*pappāyi*) comes from *papaya*, a word from the Caribbean that the Portuguese and Spanish carried, with the fruit, around the world.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

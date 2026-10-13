@@ -14,7 +14,8 @@ romanization: "āme"
 concept_tag: KA-THINGS131-AME
 prerequisites: [KA-C130-nari, KA-C131-havu]
 sounds: []
-roots: []
+roots: [dravidian-yamai-tortoise]
+etymology_hook: "āme: native Dravidian, one word with Tamil yāmai (DEDR 5155)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C131-havu]
 <!-- hl-knowledge: introduces=[KA-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **ಆಮೆ** — *āme* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಮೆ** (*āme*) is native Dravidian, one word with Tamil *yāmai* (DEDR 5155). DEDR lists *āme* itself: Kannada lost the *y-* that Tamil *yāmai* keeps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

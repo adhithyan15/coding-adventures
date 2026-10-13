@@ -14,7 +14,8 @@ romanization: "baḍa"
 concept_tag: KA-QUAL143-BADA
 prerequisites: [KA-C142-odde, KA-C143-ona]
 sounds: []
-roots: []
+roots: [dravidian-vata-thin]
+etymology_hook: "baḍa: native Dravidian, one word with Tamil vaṭi and Telugu baḍugu (DEDR 5222)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C143-ona]
 <!-- hl-knowledge: introduces=[KA-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **ಬಡ** — *baḍa* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಡ** (*baḍa*) is native Dravidian, one word with Tamil *vaṭi*, Telugu *baḍugu* and Malayalam *vaṭu* (DEDR 5222). DEDR lists *baḍa* itself, "poor, weak": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

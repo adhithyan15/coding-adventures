@@ -14,7 +14,8 @@ romanization: "māvinahaṇṇu"
 concept_tag: KA-THINGS123-MAVINAHANNU
 prerequisites: [KA-C123-tarakari, KA-C123-balehannu]
 sounds: []
-roots: []
+roots: [dravidian-ma-mango, dravidian-pazhu-ripen]
+etymology_hook: "māvinahaṇṇu: native māvu 'mango tree' (DEDR 4782) + haṇṇu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C123-balehannu]
 <!-- hl-knowledge: introduces=[KA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **ಮಾವಿನಹಣ್ಣು** — *māvinahaṇṇu* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾವಿನಹಣ್ಣು** (*māvinahaṇṇu*) is native Dravidian: *māvina*, "of the mango tree", from *māvu*, "mango tree" (DEDR 4782, with Tamil *mā*), and *haṇṇu*, "fruit" (DEDR 4004). DEDR 4782 compares Sanskrit *mākanda*. DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

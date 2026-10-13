@@ -14,7 +14,8 @@ romanization: "jana"
 concept_tag: KA-VASTU299-JANA
 prerequisites: [KA-C298-bahumana, KA-C299-muduki]
 sounds: []
-roots: []
+roots: [sanskrit-jana]
+etymology_hook: "jana ← Sanskrit jana 'race, person', a tatsama (CDIAL 5098)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C299-muduki]
 <!-- hl-knowledge: introduces=[KA-LEX-C299-VASTU299-02]; assesses=[] -->
 
 **ಜನ** — *jana* — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜನ** (*jana*) is Sanskrit *jana*, "race, person", taken over whole as a learned loan, a tatsama (CDIAL 5098).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaḷacu"
 concept_tag: KA-VERB-KALACU
 prerequisites: [KA-C281-mayavagu, KA-C281-pyak-madu]
 sounds: []
-roots: []
+roots: [dravidian-kalai-remove]
+etymology_hook: "kaḷacu: native Dravidian, one word with Tamil kaḷ and Telugu kalupu (DEDR 1373)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C281-pyak-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C281-KRIYE281-03]; assesses=[] -->
 
 **ಕಳಚು** — *kaḷacu* — "to take off (clothes), to detach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಳಚು** (*kaḷacu*) is native Dravidian, one word with Tamil *kaḷ*, Telugu *kalupu* and Malayalam *kaḷa* (DEDR 1373). DEDR lists *kaḷacu*, "to remove, pull off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

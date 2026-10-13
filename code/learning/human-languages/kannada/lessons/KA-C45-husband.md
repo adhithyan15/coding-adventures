@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-HUSBAND
 prerequisites: [KA-C45-grandmother, KA-C43-come]
 sounds: []
 roots: []
+etymology_hook: "gaṇḍa: native Dravidian; DEDR 1173 lists gaṇḍu 'male' and gaṇḍa 'husband', comparing Sanskrit gaṇḍa 'hero'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,8 @@ reviews_of: [KA-C45-grandmother]
 **ಗಂಡ** (*gaṇḍa*) — "husband".
 
 The everyday word, and a native one. Its own stem also gives ಗಂಡು (*gaṇḍu*), 'male', so what it names is a man of the house rather than anything about the wedding. Formal Kannada keeps the Sanskrit *pati* alongside it for writing and ceremony.
+
+DEDR 1173 lists Kannada *gaṇḍu*, "male", and *gaṇḍa*, "husband", with Tamil *kaṇṭaṉ*, "warrior, husband". DEDR 1173 compares Sanskrit *gaṇḍa*, "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

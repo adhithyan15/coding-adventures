@@ -11,7 +11,8 @@ romanization: "aṣṭē"
 concept_tag: KA-WORD-THATS-ALL
 prerequisites: [KA-C58-no-thanks, KA-C56-box]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "aṣṭē: native aṣṭu 'that much' (DEDR 1) + the emphatic -ē 'only'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two pieces. ಅಷ್ಟು (*aṣṭu*) is "that much", and it belongs to the p
 So ಅಷ್ಟೇ is "that much, and no more". It closes a list, ends an order, and stops a question. Asked what else you would like: ಅಷ್ಟೇ.
 
 That closing *-ē* is worth keeping. Put it on almost anything and you get "only that one": ಇಲ್ಲಿಯೇ, right here and nowhere else. One small sound doing the work English needs a whole separate word for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಷ್ಟೇ** (*aṣṭē*) is native Dravidian: *aṣṭu*, "that much", which DEDR 1 lists on the far-pointing base *a-*, with *-ē*, "only".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

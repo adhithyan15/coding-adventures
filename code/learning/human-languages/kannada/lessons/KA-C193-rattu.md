@@ -14,7 +14,8 @@ romanization: "raṭṭu"
 concept_tag: KA-VASTU193-RATTU
 prerequisites: [KA-C192-jaradi, KA-C192-turimane]
 sounds: []
-roots: []
+roots: [kannada-rattu-cardboard]
+etymology_hook: "raṭṭu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C192-turimane]
 <!-- hl-knowledge: introduces=[KA-LEX-C193-VASTU193-01]; assesses=[] -->
 
 **ರಟ್ಟು** — *raṭṭu* — "cardboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ರಟ್ಟು** (*raṭṭu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

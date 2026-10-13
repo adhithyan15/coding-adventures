@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 254,
-  "sourceHash": "fnv1a64:d13b2c94858f4bfd",
+  "sourceHash": "fnv1a64:212e5cf6ffa2f54c",
   "lessonIds": [
     "KA-C254-telu2",
     "KA-C254-asvastha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch254.txt",
   "json": "kannada/narration/ch254.json",
-  "textHash": "fnv1a64:8711c4a167d55b17",
-  "jsonHash": "fnv1a64:bc3f8c189b44321e",
+  "textHash": "fnv1a64:51cb27ff2d337a97",
+  "jsonHash": "fnv1a64:5ce3f078016fdbc0",
   "findings": []
 }

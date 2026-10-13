@@ -14,7 +14,8 @@ romanization: "aḷisu"
 concept_tag: KA-VERB-ALISU
 prerequisites: [KA-C164-aplod-madu, KA-C164-klik-madu]
 sounds: []
-roots: []
+roots: [dravidian-azhi-perish]
+etymology_hook: "aḷisu: native Dravidian, 'make disappear', from aḻi 'to perish' (DEDR 277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C164-klik-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C164-KRIYE164-03]; assesses=[] -->
 
 **ಅಳಿಸು** — *aḷisu* — "to delete, to erase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಳಿಸು** (*aḷisu*) is native Dravidian, from *aḻi*, "to be destroyed, disappear", with *-isu*, "to make": to delete is "to make disappear"; DEDR 277 lists the root with Tamil *aḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

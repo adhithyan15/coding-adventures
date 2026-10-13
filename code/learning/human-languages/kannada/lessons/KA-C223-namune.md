@@ -14,7 +14,8 @@ romanization: "namūne"
 concept_tag: KA-VASTU223-NAMUNE
 prerequisites: [KA-C222-baniyan, KA-C222-butu]
 sounds: []
-roots: []
+roots: [persian-namuna]
+etymology_hook: "namūne ← Persian namūna 'sample, pattern', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C222-butu]
 <!-- hl-knowledge: introduces=[KA-LEX-C223-VASTU223-01]; assesses=[] -->
 
 **ನಮೂನೆ** — *namūne* — "a form (to fill in)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಮೂನೆ** (*namūne*) is a loan from Persian *namūna*, "a sample, a pattern", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

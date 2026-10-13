@@ -14,7 +14,8 @@ romanization: "tudi"
 concept_tag: KA-STHALA214-TUDI
 prerequisites: [KA-C213-vastusangrahalaya, KA-C214-ancu]
 sounds: []
-roots: []
+roots: [dravidian-tuti-tip]
+etymology_hook: "tudi: native Dravidian, one word with Tamil tuti (DEDR 3314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C214-ancu]
 <!-- hl-knowledge: introduces=[KA-LEX-C214-STHALA214-02]; assesses=[] -->
 
 **ತುದಿ** — *tudi* — "a tip, the far end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುದಿ** (*tudi*) is native Dravidian, one word with Tamil *tuti* (DEDR 3314). DEDR lists *tudi* itself, "extremity, point, tip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

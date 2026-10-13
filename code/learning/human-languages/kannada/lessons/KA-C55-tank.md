@@ -11,7 +11,8 @@ romanization: "kere"
 concept_tag: KA-NOUN-TANK
 prerequisites: [KA-C55-river, KA-C53-sunshine]
 sounds: []
-roots: []
+roots: [dravidian-kiru-enclose]
+etymology_hook: "kere: native Dravidian; DEDR 1980 lists keṟe 'tank' under kiṟ 'to confine, block up'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ English has no comfortable word for this, which is why the Indian English one is
 The Deccan is dry and the rain arrives all at once, so this is the thing the land needed most, and Karnataka has thousands of them, many of them eight or nine hundred years old and still in use. Bengaluru's own neighbourhoods are named after the ones it has built over.
 
 ಕೆರೆ is inherited, and it is one of those words that tells you what its speakers were doing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆರೆ** (*kere*) is native Dravidian, of the root *kiṟ*, "to confine, block up, fence", and DEDR 1980 lists *keṟe*, "tank", under it: water penned in; the entry also has Tamil *ceṟi* and Telugu *ceṟa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -9,6 +9,7 @@
 // supposed to make impossible.
 
 import {
+  existsSync,
   lstatSync,
   mkdirSync,
   mkdtempSync,
@@ -50,11 +51,6 @@ import {
   unshardDocument,
 } from "../src/doc-shard-cli.js";
 import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
-import {
-  assertSafeDocShardDigestOwnerNames,
-  docShardDigestOwnerName,
-  readDocShardDigestOwners,
-} from "./doc-shard-digest-owners.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
@@ -97,11 +93,6 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
-const DOC_SHARD_DIGEST_DIR = join(
-  defaultRepoRoot(),
-  "code/packages/typescript/human-language-data/tests/doc-shard-digests",
-);
-
 describe("concurrency-safe backlog ids", () => {
   it("keeps the sequence readable while deriving identity from the NFC subject", () => {
     expect(backlogIdForSubject(412, "A new finding")).toMatch(/^HL-C412-[0-9a-f]{8}$/);
@@ -445,46 +436,25 @@ describe("the Indian planning-document migration", () => {
   const plans = DOC_SHARD_PLANS.filter((plan) =>
     /^code\/learning\/human-languages\/[^/]+\/(?:roadmap|session-map)\.md$/.test(plan.path)
   );
-  const owners = readDocShardDigestOwners(DOC_SHARD_DIGEST_DIR);
 
-  it("gives every planned roadmap and session map exactly one direct digest owner", () => {
-    expect([...owners.keys()].sort()).toEqual(plans.map((plan) => plan.path).sort());
-    expect(new Set([...owners.values()].map((owner) => docShardDigestOwnerName(owner.path))).size)
-      .toBe(plans.length);
+  it("gives every planned roadmap and session map one unique plan", () => {
+    expect(new Set(plans.map((plan) => plan.path)).size).toBe(plans.length);
+  });
+
+  it("does not reintroduce mutable whole-document digest snapshots", () => {
+    expect(existsSync(join(
+      defaultRepoRoot(),
+      "code/packages/typescript/human-language-data/tests/doc-shard-digests",
+    ))).toBe(false);
   });
 
   for (const plan of plans) {
-    it(`${plan.path} reconstructs the exact pre-migration bytes`, () => {
-      const rendered = unshardDocContents(defaultRepoRoot(), plan);
-      expect(createHash("sha256").update(rendered, "utf8").digest("hex"))
-        .toBe(owners.get(plan.path)?.sha256);
+    it(`${plan.path} reconstructs deterministically from its direct shards`, () => {
+      const first = unshardDocContents(defaultRepoRoot(), plan);
+      expect(first.length).toBeGreaterThan(0);
+      expect(unshardDocContents(defaultRepoRoot(), plan)).toBe(first);
     });
   }
-
-  it("fails closed on unsafe, duplicate, case-colliding, and symlink owners", () => {
-    const fixture = mkdtempSync(join(tmpdir(), "doc-digest-owners-"));
-    const writeOwner = (name: string, path: string) => writeFileSync(
-      join(fixture, name),
-      `${JSON.stringify({ version: 1, path, sha256: "0".repeat(64) }, null, 2)}\n`,
-    );
-    try {
-      expect(() => assertSafeDocShardDigestOwnerNames(["unsafe.json"])).toThrow(/unsafe/);
-      expect(() => assertSafeDocShardDigestOwnerNames([
-        "bengali--roadmap.json",
-        "Bengali--roadmap.json",
-      ])).toThrow(/case-colliding/);
-
-      writeOwner("bengali--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
-      writeOwner("gujarati--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
-      expect(() => readDocShardDigestOwners(fixture)).toThrow(/duplicate/);
-      rmSync(join(fixture, "gujarati--roadmap.json"));
-
-      symlinkSync(join(fixture, "bengali--roadmap.json"), join(fixture, "gujarati--roadmap.json"));
-      expect(() => readDocShardDigestOwners(fixture)).toThrow(/regular file/);
-    } finally {
-      rmSync(fixture, { recursive: true, force: true });
-    }
-  });
 });
 
 describe("isDocSharded — absent versus UNKNOWN", () => {

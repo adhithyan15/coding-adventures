@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 142,
-  "sourceHash": "fnv1a64:cce17db5bed5dac7",
+  "sourceHash": "fnv1a64:907f7fc603e6874e",
   "lessonIds": [
     "KA-C142-sundara",
     "KA-C142-ala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch142.txt",
   "json": "kannada/narration/ch142.json",
-  "textHash": "fnv1a64:bf67466ecc1a787e",
-  "jsonHash": "fnv1a64:5c14233e0af4b770",
+  "textHash": "fnv1a64:288e60a406a27e80",
+  "jsonHash": "fnv1a64:e8e57f67358d3f3d",
   "findings": []
 }

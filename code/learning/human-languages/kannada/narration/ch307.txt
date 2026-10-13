@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a plumber, then the Kannada for a garden
 You'll want to know: ಗೋದಾಮು.
 ಗೋದಾಮು — gōdāmu — "a warehouse, a godown".
 
+The word, taken apart.
+ಗೋದಾಮು (gōdāmu) is English godown, "a warehouse", in the shape Hindustani gives it, godām. English took the word from Malay gudang, "storehouse". That word may itself be South Indian: DEDR 1525 lists Kannada gaḍaṅga, giḍḍaṅgi, "storeroom", with Telugu giḍḍaṅgi and Tamil kiṭaṅku, and points to godown.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a gardener, then the Kannada for a wareh
 
 You'll want to know: ಫಲಕ.
 ಫಲಕ — phalaka — "a signboard, a nameplate".
+
+The word, taken apart.
+ಫಲಕ (phalaka) is Sanskrit phalaka, "board, lath, bench", taken over whole as a learned loan, a tatsama (CDIAL 9053). CDIAL 9054 has another phalaka, "shield", which may be the same word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a warehouse, then the Kannada for a sign
 You'll want to know: ಶಾಯಿ.
 ಶಾಯಿ — śāyi — "ink".
 
+The word, taken apart.
+ಶಾಯಿ (śāyi) is Persian siyāhī, "blackness, ink", which came into Kannada through Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a signboard, then the Kannada for ink.
 You'll want to know: ಸೀಮೆಸುಣ್ಣ.
 ಸೀಮೆಸುಣ್ಣ — sīmesuṇṇa — "chalk".
 
+The word, taken apart.
+ಸೀಮೆಸುಣ್ಣ (sīmesuṇṇa) is sīme, "a land, a foreign country", from Sanskrit sīmā, "boundary" (CDIAL 13435), and suṇṇa, "lime", a tadbhava of Sanskrit cūrṇa, "powder, lime" (CDIAL 4889): "foreign lime".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for ink, then the Kannada for chalk.
 
 You'll want to know: ಸ್ಕೇಲು.
 ಸ್ಕೇಲು — skēlu — "a ruler (for drawing lines)".
+
+The word, taken apart.
+ಸ್ಕೇಲು (skēlu) is a loan from English scale. Kannada adds a final -u.
 
 What you've built.
 One more word for this chapter.

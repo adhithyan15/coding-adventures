@@ -11,9 +11,10 @@ romanization: "ēkendare"
 concept_tag: KA-CONJ-BECAUSE
 prerequisites: [KA-S138-vowel-sign-ee, KA-C70-quotative, KA-C67-but, KA-C54-root, KA-C54-leaf, KA-C40-oota, KA-C38-hrudaya, KA-C68-dont-know, KA-C68-me-neither]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-en-say]
+etymology_hook: "ēkendare: native ēke 'why' (DEDR 5151) + endare 'if one says' (DEDR 868)"
 duration:
-  max_seconds: 210
+  max_seconds: 272
 requires:
   knowledge: [KA-SCRIPT-RECOG-138, KA-LEX-C70-TELL-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C69-ASK-05, KA-LEX-C67-LINK-03, KA-GRAMMAR-C67-LINK-04]
 introduces:
@@ -51,6 +52,11 @@ no coffee, because there is no milk."
 
 A reason can now be asked for and given. Neither was possible in this book an
 hour ago.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏಕೆಂದರೆ** (*ēkendare*) is native Dravidian: *ēke*, "why" (DEDR 5151), and *endare*, "if one says", from *en-*, "to say" (DEDR 868). "If you ask why" opens the reason.
 
 ## Grammar Lens: the same ending, for the third time
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C70-TELL-05]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "doḍḍa"
 concept_tag: KA-ADJ-BIG
 prerequisites: [KA-C39-kaapi]
 sounds: []
-roots: []
+roots: [dravidian-dodda-big]
+etymology_hook: "doḍḍa: native Dravidian, one word with Tamil toṭṭa and Telugu doḍḍa (DEDR 3491)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ That is all an adjective does in this language.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೊಡ್ಡ** (*doḍḍa*) is native Dravidian, one word with Tamil *toṭṭa* and Telugu *doḍḍa* (DEDR 3491).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02] -->

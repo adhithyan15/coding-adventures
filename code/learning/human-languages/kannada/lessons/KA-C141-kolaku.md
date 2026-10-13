@@ -14,7 +14,8 @@ romanization: "koḷaku"
 concept_tag: KA-QUAL141-KOLAKU
 prerequisites: [KA-C141-mrdu, KA-C141-gatti]
 sounds: []
-roots: []
+roots: [dravidian-kuzhai-rot]
+etymology_hook: "koḷaku: native Dravidian; DEDR 1822 lists older Kannada koḻaku 'decay, dirt' under koḻe 'to rot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C141-gatti]
 <!-- hl-knowledge: introduces=[KA-LEX-C141-QUAL141-04]; assesses=[] -->
 
 **ಕೊಳಕು** — *koḷaku* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಳಕು** (*koḷaku*) is native Dravidian. DEDR 1822 lists the older Kannada *koḻaku*, "a decayed, putrid state", under *koḻe*, "to rot", and Tulu *koḷaků*, "filthy, dirty". DEDR 1822 compares Sanskrit *kuṇapa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

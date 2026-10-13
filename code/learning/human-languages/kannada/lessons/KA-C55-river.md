@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-RIVER
 prerequisites: [KA-C54-seed, KA-C53-sky]
 sounds: []
 roots: []
+etymology_hook: "nadi ← Sanskrit nadī 'river', from nad 'to roar' (CDIAL 6943)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C54-seed]
 Sanskrit *nadī*, and under it a root *nad-* meaning "to roar, to sound". A river is named for the noise it makes. That is a word coined by somebody who heard one before they ever saw one, in the dark, in the rain.
 
 Kannada's own river-word is ಹೊಳೆ (*hoḷe*), and it opens with the *h* you have learned to read as an old *p*. ಹೊಳೆ is the water you can walk to — the stream behind the village. ನದಿ is the ಕಾವೇರಿ. The borrowed word took the big rivers and left the small ones to the inherited one, which is the opposite of what usually happens.
+
+CDIAL 6943 lists Sanskrit *nadī*, "river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

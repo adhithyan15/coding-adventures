@@ -11,7 +11,8 @@ romanization: "beṭṭa"
 concept_tag: KA-NOUN-HILL
 prerequisites: [KA-C55-tank, KA-C53-moon]
 sounds: []
-roots: []
+roots: [dravidian-vitam-hill]
+etymology_hook: "beṭṭa: native Dravidian, one word with Tamil viṭam (DEDR 5474)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it opens with the *b* the previous chapter set beside everybody e
 Kannada distinguishes sizes here where English shrugs. ಗುಡ್ಡ (*guḍḍa*) is the small rise you would walk up without planning to; ಬೆಟ್ಟ is the one that has a temple on top and a name on the map. ನಂದಿ ಬೆಟ್ಟ north of Bengaluru and ಚಾಮುಂಡಿ ಬೆಟ್ಟ above Mysuru are both ಬೆಟ್ಟ, and nobody would call either a ಗುಡ್ಡ.
 
 A hill with a name is a hill people climb for a reason, and in Karnataka the reason is usually at the summit.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಟ್ಟ** (*beṭṭa*) is native Dravidian, one word with Tamil *viṭam* (DEDR 5474). DEDR gives Kannada *beṭṭa*, *beṭṭu*, "big hill, mountain": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

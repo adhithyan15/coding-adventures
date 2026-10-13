@@ -14,7 +14,8 @@ romanization: "beṇḍekāyi"
 concept_tag: KA-VASTU184-BENDEKAYI
 prerequisites: [KA-C183-baket, KA-C184-sautekayi]
 sounds: []
-roots: []
+roots: [sanskrit-bhinda, dravidian-kaay-unripe]
+etymology_hook: "beṇḍekāyi: beṇḍe 'okra', usually traced to Sanskrit bhiṇḍā (CDIAL 9492), + native kāyi 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C184-sautekayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C184-VASTU184-02]; assesses=[] -->
 
 **ಬೆಂಡೆಕಾಯಿ** — *beṇḍekāyi* — "okra, lady's finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಂಡೆಕಾಯಿ** (*beṇḍekāyi*) is *beṇḍe*, "okra", usually traced to Sanskrit *bhiṇḍā*, "okra" (CDIAL 9492), and native *kāyi*, "unripe fruit" (DEDR 1459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

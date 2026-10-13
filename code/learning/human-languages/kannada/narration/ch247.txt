@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a bandage, then the Kannada for diabetes
 You'll want to know: ದಸರಾ.
 ದಸರಾ — dasarā — "Dasara, the autumn festival".
 
+The word, taken apart.
+ದಸರಾ (dasarā) is a tadbhava of Sanskrit daśaharā, "the (festival) that takes away ten", built on daśa, "ten" (CDIAL 6227): ś became s and the h dropped out.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for diabetes, then the Kannada for Dasara.
 
 You'll want to know: ದೀಪಾವಳಿ.
 ದೀಪಾವಳಿ — dīpāvaḷi — "Deepavali, the festival of lights".
+
+The word, taken apart.
+ದೀಪಾವಳಿ (dīpāvaḷi) comes from Sanskrit dīpāvali, "row of lamps, festival", reshaped to Kannada sounds: a tadbhava (CDIAL 6358). Dīpa, "lamp", and āvali, "row"; Kannada writes the last l as ḷ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for Dasara, then the Kannada for Deepavali.
 You'll want to know: ಸಂಕ್ರಾಂತಿ.
 ಸಂಕ್ರಾಂತಿ — saṅkrānti — "Sankranti, the January harvest festival".
 
+The word, taken apart.
+ಸಂಕ್ರಾಂತಿ (saṅkrānti) is Sanskrit saṁkrānti, "passage of a heavenly body", taken over whole as a learned loan, a tatsama (CDIAL 12835). Kannada writes the nasal before k as ṅ. The festival marks the sun's passage into a new sign.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for Deepavali, then the Kannada for Sankrant
 You'll want to know: ಗಣೇಶ ಚತುರ್ಥಿ.
 ಗಣೇಶ ಚತುರ್ಥಿ — gaṇēśa caturthi — "Ganesha Chaturthi".
 
+The word, taken apart.
+ಗಣೇಶ ಚತುರ್ಥಿ (gaṇēśa caturthi) is Sanskrit gaṇa, "host" (CDIAL 3988), and īśa, "lord" (CDIAL 1617), joined as gaṇeśa, "lord of the hosts", the god Ganesha, with caturthī, "the fourth" (CDIAL 4600), the fourth day of the lunar fortnight. Kannada shortens its last vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for Sankranti, then the Kannada for Ganesha 
 
 You'll want to know: ರಾಜ್ಯೋತ್ಸವ.
 ರಾಜ್ಯೋತ್ಸವ — rājyōtsava — "Rajyotsava, Karnataka Formation Day".
+
+The word, taken apart.
+ರಾಜ್ಯೋತ್ಸವ (rājyōtsava) is Sanskrit rājya, "kingdom, state" (CDIAL 10694), and utsava, "festival" (CDIAL 1876): "the festival of the state".
 
 What you've built.
 One more word for this chapter.

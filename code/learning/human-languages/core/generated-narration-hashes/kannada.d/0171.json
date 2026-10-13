@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 171,
-  "sourceHash": "fnv1a64:0f1acc6eb605d715",
+  "sourceHash": "fnv1a64:be642ddce996cd62",
   "lessonIds": [
     "KA-C171-yavagalu",
     "KA-C171-agaga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch171.txt",
   "json": "kannada/narration/ch171.json",
-  "textHash": "fnv1a64:a00cc0b96d9df4db",
-  "jsonHash": "fnv1a64:c8c1415c610a1625",
+  "textHash": "fnv1a64:95dc0bdd9d6c70da",
+  "jsonHash": "fnv1a64:2169b2a7ecb1bfdf",
   "findings": []
 }

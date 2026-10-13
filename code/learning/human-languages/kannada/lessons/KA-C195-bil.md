@@ -14,7 +14,8 @@ romanization: "bil"
 concept_tag: KA-KELASA195-BIL
 prerequisites: [KA-C195-baddi, KA-C195-terige]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "bil ← English bill"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C195-terige]
 <!-- hl-knowledge: introduces=[KA-LEX-C195-KELASA195-05]; assesses=[] -->
 
 **ಬಿಲ್** — *bil* — "a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿಲ್** (*bil*) is a loan from English *bill*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

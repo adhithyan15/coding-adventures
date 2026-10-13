@@ -14,7 +14,8 @@ romanization: "śānta"
 concept_tag: KA-GUNA255-SANTA
 prerequisites: [KA-C254-gulabi, KA-C255-tunta]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śānta ← Sanskrit śānta 'abated, calm', a tatsama (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C255-tunta]
 <!-- hl-knowledge: introduces=[KA-LEX-C255-GUNA255-02]; assesses=[] -->
 
 **ಶಾಂತ** — *śānta* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಾಂತ** (*śānta*) is Sanskrit *śānta*, "abated, calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

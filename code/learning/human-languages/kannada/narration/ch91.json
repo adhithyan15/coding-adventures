@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "About You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2404c495d92d87d8",
+  "sourceHash": "fnv1a64:736ede0be6a64981",
   "lessons": [
     {
       "id": "KA-C91-address",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2eb0e6d94b32b8f",
+      "sourceHash": "fnv1a64:2b44f2c3ceea3f72",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಳಾಸ (viḷāsa) is usually traced to Sanskrit vilāsa, glossed \"sport, coquetry\" in CDIAL 11900. How it came to mean a postal address is not recorded."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33f5e3ce3c6f64a7",
+      "sourceHash": "fnv1a64:dbd1e00a161b8fd7",
       "notice": null,
       "blocks": [
         {
@@ -179,6 +190,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಟ್ಟುಹಬ್ಬ (huṭṭuhabba) is huṭṭu, \"birth\", native Dravidian (DEDR 4264, older Kannada puṭṭu), and habba, \"festival\", usually traced to Sanskrit parvan, \"a joint\" (CDIAL 7947), which also named the joints of the lunar month and the feasts held on them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -189,7 +211,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -238,7 +260,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -269,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bb6ad00663582db",
+      "sourceHash": "fnv1a64:0f48084a242e156f",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +328,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮದುವೆ (maduve) is native Dravidian, one word with Tamil vatuvai (DEDR 4694). DEDR lists maduve itself, with mada, \"joining, wedding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -316,7 +349,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38ef66412394c03d",
+      "sourceHash": "fnv1a64:b10ade071ddba55f",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊರು (ūru) is native Dravidian, one word with Tamil ūr and Telugu ūru (DEDR 752). DEDR 752 notes a Prakrit ūra, \"village\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -443,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +536,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7843fd5a6ced30e6",
+      "sourceHash": "fnv1a64:7b6481bbdce58067",
       "notice": null,
       "blocks": [
         {
@@ -560,6 +604,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭಾಷೆ (bhāṣe) is Sanskrit bhāṣā, \"speech\", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 9479)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -570,7 +625,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -619,7 +674,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

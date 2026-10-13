@@ -14,7 +14,8 @@ romanization: "turi"
 concept_tag: KA-VERB-TURI
 prerequisites: [KA-C204-spardhisu, KA-C205-kilu]
 sounds: []
-roots: []
+roots: [dravidian-turi-bore]
+etymology_hook: "turi: native Dravidian, one word with Tamil tura and Telugu tuṟumu (DEDR 3339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C205-kilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C205-KRIYE205-02]; assesses=[] -->
 
 **ತುರಿ** — *turi* — "to grate (coconut)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುರಿ** (*turi*) is native Dravidian, one word with Tamil *tura* and Telugu *tuṟumu* (DEDR 3339). DEDR lists *turi* itself, "to bore, grate, scrape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

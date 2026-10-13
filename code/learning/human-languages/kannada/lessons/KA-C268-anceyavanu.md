@@ -14,7 +14,8 @@ romanization: "añceyavanu"
 concept_tag: KA-KELASA268-ANCEYAVANU
 prerequisites: [KA-C268-vakila, KA-C268-enjiniyar]
 sounds: []
-roots: []
+roots: [dravidian-ance-post, dravidian-a-distal-deictic]
+etymology_hook: "añceyavanu: native añce 'the post' (DEDR 54) + avanu 'that man' (DEDR 1)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C268-enjiniyar]
 <!-- hl-knowledge: introduces=[KA-LEX-C268-KELASA268-03]; assesses=[] -->
 
 **ಅಂಚೆಯವನು** — *añceyavanu* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಚೆಯವನು** (*añceyavanu*) is native Dravidian: *añce*, "the post, a relay", one word with Tamil *añcal* (DEDR 54), and *avanu*, "that man" (DEDR 1): "the post's man".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

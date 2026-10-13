@@ -11,7 +11,8 @@ romanization: "ūru"
 concept_tag: KA-YOU-HOMETOWN
 prerequisites: [KA-C91-birthday, KA-C91-wedding]
 sounds: []
-roots: []
+roots: [dravidian-uur-settlement]
+etymology_hook: "ūru: native Dravidian, one word with Tamil ūr and Telugu ūru (DEDR 752)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C91-wedding]
 at the end of place names across the south: Bengaluru, Mysuru.
 
 **ನಿಮ್ಮ ಊರು ಯಾವುದು?** (*nimma ūru yāvudu?*) — "where is your home town?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಊರು** (*ūru*) is native Dravidian, one word with Tamil *ūr* and Telugu *ūru* (DEDR 752). DEDR 752 notes a Prakrit *ūra*, "village".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

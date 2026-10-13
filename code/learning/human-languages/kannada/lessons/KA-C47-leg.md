@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-LEG
 prerequisites: [KA-C46-book, KA-C44-write]
 sounds: []
 roots: []
+etymology_hook: "kālu: native Dravidian, one word with Tamil kāl and Telugu kālu (DEDR 1479)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Proto-Dravidian **\*kāl**, and every sister kept it nearly whole: Tamil கா�
 Set that beside ಕೈ, the hand-word, which wore down so far that the family resemblance is hard to see at all. Two body words of the same age; one held its shape and one did not, and nothing about the meaning predicts which.
 
 ಕಾಲು covers the whole limb, foot and leg together. It also names a quarter — a fourth of anything — so ಕಾಲು ಗಂಟೆ is a quarter of an hour. Nothing joins the leg to the fraction but an accident of sound, and context is the only fix, which is what context is for.
+
+DEDR 1479 lists Kannada *kāl*, "foot, leg, quarter", with Tamil *kāl* and Telugu *kālu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

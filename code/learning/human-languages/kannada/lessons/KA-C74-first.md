@@ -58,6 +58,11 @@ to be.
 **ಮೊದಲನೆಯ ದಿನ** (*modalaneya dina*), the first day. **ಮೊದಲನೆಯ ದಾರಿ**
 (*modalaneya dāri*), the first road.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊದಲನೆಯ** (*modalaneya*) is built from *modalu*, "beginning, the first thing", native Dravidian (DEDR 4950), and the ordinal ending *-aneya*.
+
 ## Across the family: ಮೊದಲು, "a beginning"
 <!-- hl-knowledge: introduces=[KA-ETYMON-C74-ORDINAL-05]; assesses=[] -->
 

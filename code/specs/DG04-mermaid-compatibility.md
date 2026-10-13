@@ -1071,6 +1071,9 @@ route trades its corner smoothing for unambiguous crossing hops; true smoothing 
 Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
 weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
 undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
+`swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
+to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
+resolved non-default setting survives as scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
@@ -1082,6 +1085,6 @@ parent identities survive semantic IR, layout resolves bounds bottom-up around d
 clusters, and paint emits dashed labeled containers behind edge and node geometry.
 
 This is intentionally partial. The complete Flowchart shape
-and link catalog beyond the documented marker forms, the remaining lane layering configuration,
+and link catalog beyond the documented marker forms, `optimizeRanksByCrossings`,
 and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

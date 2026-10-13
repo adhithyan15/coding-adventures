@@ -12,6 +12,9 @@ Before the new one: say the Kannada for narrow, then the Kannada for wet.
 You'll want to know: ಒಣ.
 ಒಣ — oṇa — "dry".
 
+The word, taken apart.
+ಒಣ (oṇa) is native Dravidian, from oṇagu, "to dry", and DEDR 601 lists oṇa, "dryness", itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for wet, then the Kannada for dry.
 
 You'll want to know: ಬಡ.
 ಬಡ — baḍa — "poor".
+
+The word, taken apart.
+ಬಡ (baḍa) is native Dravidian, one word with Tamil vaṭi, Telugu baḍugu and Malayalam vaṭu (DEDR 5222). DEDR lists baḍa itself, "poor, weak": the old v- has become b-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for dry, then the Kannada for poor.
 You'll want to know: ಶ್ರೀಮಂತ.
 ಶ್ರೀಮಂತ — śrīmanta — "rich".
 
+The word, taken apart.
+ಶ್ರೀಮಂತ (śrīmanta) is Sanskrit śrīmat, "rich, fortunate", from śrī, "wealth, prosperity", in the form śrīmant- that Sanskrit uses before an ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for poor, then the Kannada for rich.
 You'll want to know: ಪ್ರಸಿದ್ಧ.
 ಪ್ರಸಿದ್ಧ — prasiddha — "famous".
 
+The word, taken apart.
+ಪ್ರಸಿದ್ಧ (prasiddha) is Sanskrit prasiddha, "celebrated", taken over whole as a learned loan, a tatsama (CDIAL 8842).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for rich, then the Kannada for famous.
 
 You'll want to know: ಸುರಕ್ಷಿತ.
 ಸುರಕ್ಷಿತ — surakṣita — "safe".
+
+The word, taken apart.
+ಸುರಕ್ಷಿತ (surakṣita) is Sanskrit surakṣita, "well protected", taken over whole as a learned loan, a tatsama (CDIAL 13499).
 
 What you've built.
 One more word for this chapter.

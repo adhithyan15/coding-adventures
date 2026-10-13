@@ -14,7 +14,8 @@ romanization: "nibhāyisu"
 concept_tag: KA-VERB-NIBHAYISU
 prerequisites: [KA-C243-uccarisu, KA-C243-kudisu]
 sounds: []
-roots: []
+roots: [sanskrit-nirvaha]
+etymology_hook: "nibhāyisu: probably a northern loan (cf. Hindi nibāhnā 'to accomplish') from Sanskrit nirvāha (CDIAL 7397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-kudisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-04]; assesses=[] -->
 
 **ನಿಭಾಯಿಸು** — *nibhāyisu* — "to manage, to cope with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಭಾಯಿಸು** (*nibhāyisu*) is probably a northern loan made into a verb with *-isu*. CDIAL 7397 traces Punjabi *nibhāuṇā* and Hindi *nibāhnā*, "to accomplish, carry through", to Sanskrit *nirvāha*, "accomplishing"; Kannada took a form like these, not one handed down within the south.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

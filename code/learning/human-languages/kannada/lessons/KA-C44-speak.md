@@ -11,7 +11,8 @@ romanization: "mātāḍu"
 concept_tag: KA-VERB-SPEAK
 prerequisites: [KA-C44-listen, KA-C42-new]
 sounds: []
-roots: []
+roots: [maatu-word-dravidian]
+etymology_hook: "mātāḍu: native māta 'word' (DEDR 4834; Telugu māṭa) + āḍu 'to move, play' (DEDR 347)"
 duration:
   max_seconds: 210
 requires:
@@ -40,7 +41,9 @@ reviews_of: [KA-C44-listen]
 
 **ಮಾತಾಡು** (*mātāḍu*) — "speak".
 
-Built from *māta*, 'word' — itself from Sanskrit — plus *āḍu*, 'to play'. To speak is to play with words.
+Built from *māta*, 'word' — a native Dravidian word, not a Sanskrit one — plus *āḍu*, 'to play'. To speak is to play with words.
+
+DEDR 4834 lists Kannada *mātu*, *māta*, "word, saying", cognate with Telugu *māṭa*; *āḍu* is in DEDR 347.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

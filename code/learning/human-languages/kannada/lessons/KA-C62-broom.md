@@ -11,7 +11,8 @@ romanization: "porake"
 concept_tag: KA-NOUN-BROOM
 prerequisites: [KA-C62-rope, KA-C60-crow]
 sounds: []
-roots: []
+roots: [dravidian-perukku-sweep]
+etymology_hook: "porake: native Dravidian, one word with Tamil perukku and Telugu poraka (DEDR 4415)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C62-rope]
 ಪೊರಕೆ is a bundle of stiff ribs tied at one end — no handle, so it is used bent over, in short strokes.
 
 It is the first object of the day. The ground outside the ಬಾಗಿಲು is swept with a ಪೊರಕೆ before the ರಂಗೋಲಿ is set out on it, because the pattern needs clean ground to sit on. Sweeping, then drawing: that order is fixed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೊರಕೆ** (*porake*) is native Dravidian, one word with Tamil *perukku* and Telugu *poraka* (DEDR 4415).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

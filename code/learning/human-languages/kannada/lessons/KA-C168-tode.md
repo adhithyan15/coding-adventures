@@ -14,7 +14,8 @@ romanization: "toḍe"
 concept_tag: KA-AROGYA168-TODE
 prerequisites: [KA-C168-gantalu, KA-C168-himmadi]
 sounds: []
-roots: []
+roots: [dravidian-tutai-thigh]
+etymology_hook: "toḍe: native Dravidian, one word with Tamil tuṭai and Telugu toḍa (DEDR 3302)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C168-himmadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C168-AROGYA168-04]; assesses=[] -->
 
 **ತೊಡೆ** — *toḍe* — "the thigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಡೆ** (*toḍe*) is native Dravidian, one word with Tamil *tuṭai* and Telugu *toḍa* (DEDR 3302).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "carma"
 concept_tag: KA-BODY2-SKIN
 prerequisites: [KA-C98-peace, KA-C99-breath]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "carma ← Sanskrit carman 'hide, skin', a tatsama (CDIAL 4701)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C99-breath]
 <!-- hl-knowledge: introduces=[KA-LEX-C99-BODY2-02]; assesses=[] -->
 
 **ಚರ್ಮ** (*carma*) — "skin". The **ರ್** sits on top of **ಮ** as a small hook.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚರ್ಮ** (*carma*) is Sanskrit *carman*, "hide, skin", taken over whole as a learned loan, a tatsama (CDIAL 4701). Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

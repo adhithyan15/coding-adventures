@@ -14,7 +14,8 @@ romanization: "jim"
 concept_tag: KA-STHALA213-JIM
 prerequisites: [KA-C213-kote, KA-C213-kalyana-mantapa]
 sounds: []
-roots: []
+roots: [english-gym]
+etymology_hook: "jim ← English gym"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C213-kalyana-mantapa]
 <!-- hl-knowledge: introduces=[KA-LEX-C213-STHALA213-03]; assesses=[] -->
 
 **ಜಿಮ್** — *jim* — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿಮ್** (*jim*) is a loan from English *gym*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

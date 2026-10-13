@@ -14,7 +14,8 @@ romanization: "kaḷeduhōgu"
 concept_tag: KA-VERB-KALEDUHOGU
 prerequisites: [KA-C237-prayatnisu, KA-C238-taip-madu]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass, hoogu-go-dravidian]
+etymology_hook: "kaḷeduhōgu: native kaḷedu 'having been lost' (DEDR 1356) + hōgu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C238-taip-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C238-KRIYE238-02]; assesses=[] -->
 
 **ಕಳೆದುಹೋಗು** — *kaḷeduhōgu* — "to get lost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಳೆದುಹೋಗು** (*kaḷeduhōgu*) is native Dravidian: *kaḷedu*, from *kaḷe*, "to send forth, lose" (DEDR 1356), and *hōgu*, "to go" (DEDR 4572): "to go lost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

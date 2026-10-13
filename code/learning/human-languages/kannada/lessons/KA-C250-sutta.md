@@ -14,7 +14,8 @@ romanization: "sutta"
 concept_tag: KA-STHALA250-SUTTA
 prerequisites: [KA-C249-eduru, KA-C249-jille]
 sounds: []
-roots: []
+roots: [dravidian-suttu-surround]
+etymology_hook: "sutta: native Dravidian, 'round about', from suttu 'to surround' (DEDR 2715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C249-jille]
 <!-- hl-knowledge: introduces=[KA-LEX-C250-STHALA250-01]; assesses=[] -->
 
 **ಸುತ್ತ** — *sutta* — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುತ್ತ** (*sutta*) is native Dravidian, from *suttu*, "to surround, go round", which DEDR 2715 lists; the entry also has Tamil *cuṟṟu* and Telugu *cuṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

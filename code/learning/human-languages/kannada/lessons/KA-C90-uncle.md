@@ -11,7 +11,8 @@ romanization: "māva"
 concept_tag: KA-KIN-UNCLE
 prerequisites: [KA-C90-relative, KA-C90-neighbours]
 sounds: []
-roots: []
+roots: [dravidian-maama-uncle]
+etymology_hook: "māva: native Dravidian, one word with Tamil māmaṉ and Telugu māma (DEDR 4813)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C90-neighbours]
 
 **ಮಾವ** (*māva*) — "uncle", in particular the mother's brother. The same word also
 means "father-in-law": in the south the two roles were often the same person.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾವ** (*māva*) is native Dravidian, one word with Tamil *māmaṉ* and Telugu *māma* (DEDR 4813). DEDR lists *māva* itself, "mother's brother; spouse's father". DEDR 4813 compares Sanskrit *māma(ka)*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "eṇṇe"
 concept_tag: KA-NOUN-OIL
 prerequisites: [KA-C61-ghee, KA-C59-sand]
 sounds: []
-roots: []
+roots: [dravidian-el-sesame]
+etymology_hook: "eṇṇe: native Dravidian, 'sesame oil', from eḷ 'sesame' (DEDR 854); Tamil eṇṇey"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C61-ghee]
 ಎಣ್ಣೆ is Kannada's own oil-word, and it owes ತುಪ್ಪ nothing at all. ತುಪ್ಪ comes out of an animal; ಎಣ್ಣೆ is pressed out of a ಬೀಜ, and the two sit in different jars on the same shelf.
 
 There is a small joke in this for you. The friend-word ಸ್ನೇಹಿತ was built on a Sanskrit word whose first sense was oil — smoothness, the thing that makes two surfaces run easily on each other. That is the borrowed, figurative oil. This is the one in the jar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಣ್ಣೆ** (*eṇṇe*) is native Dravidian. DEDR 854 lists it under *eḷ*, "sesame", with Tamil *eṇ ṇey*, "sesame oil": the first oil was pressed from sesame.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

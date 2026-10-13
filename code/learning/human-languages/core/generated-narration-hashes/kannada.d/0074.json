@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 74,
-  "sourceHash": "fnv1a64:1fb8ca309a6a99fc",
+  "sourceHash": "fnv1a64:af78d2b59442cb5c",
   "lessonIds": [
     "KA-C74-second",
     "KA-C74-third",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch74.txt",
   "json": "kannada/narration/ch74.json",
-  "textHash": "fnv1a64:0edccbb7c69ba31b",
-  "jsonHash": "fnv1a64:94b417653e703f9a",
+  "textHash": "fnv1a64:65aeff8bf913feda",
+  "jsonHash": "fnv1a64:16c32a884df54533",
   "findings": []
 }

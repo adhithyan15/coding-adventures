@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to knead, then the Kannada for to roll o
 You'll want to know: ಎಡವು.
 ಎಡವು — eḍavu — "to trip, to stumble".
 
+The word, taken apart.
+ಎಡವು (eḍavu) is native Dravidian (DEDR 437). DEDR lists eḍavu itself, "to strike the foot so as to fall".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to roll out, then the Kannada for to tri
 
 You'll want to know: ತೆವಳು.
 ತೆವಳು — tevaḷu — "to crawl".
+
+The word, taken apart.
+ತೆವಳು (tevaḷu) is native Dravidian, one word with Tamil tavaḻ and Telugu temalu (DEDR 3109). DEDR lists tevaḷu itself, "to creep along".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to trip, then the Kannada for to crawl.
 You'll want to know: ಹಿಂಬಾಲಿಸು.
 ಹಿಂಬಾಲಿಸು — himbālisu — "to follow (someone)".
 
+The word, taken apart.
+ಹಿಂಬಾಲಿಸು (himbālisu) begins with him-, "behind", which DEDR 4205 lists as Kannada pin, pim, him, with Tamil piṉ. DEDR does not explain the rest of the word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to crawl, then the Kannada for to follow
 You'll want to know: ತಪ್ಪಿಸಿಕೊಳ್ಳು.
 ತಪ್ಪಿಸಿಕೊಳ್ಳು — tappisikoḷḷu — "to escape, to dodge".
 
+The word, taken apart.
+ತಪ್ಪಿಸಿಕೊಳ್ಳು (tappisikoḷḷu) is native Dravidian: tappisu, "to make slip, avoid", from tappu, "to slip, miss" (DEDR 3071), with koḷḷu, "to take" (DEDR 2151): "to slip oneself away".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to follow, then the Kannada for to escap
 
 You'll want to know: ಆತುರಪಡು.
 ಆತುರಪಡು — āturapaḍu — "to hurry, to be in a rush".
+
+The word, taken apart.
+ಆತುರಪಡು (āturapaḍu) is ātura, "haste", from Sanskrit ātura, "eager, suffering", with native paḍu, "to undergo, feel" (DEDR 3853): "to feel haste".
 
 What you've built.
 One more word for this chapter.

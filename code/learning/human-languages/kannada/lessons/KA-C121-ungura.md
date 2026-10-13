@@ -14,7 +14,8 @@ romanization: "uṅgura"
 concept_tag: KA-THINGS121-UNGURA
 prerequisites: [KA-C120-cappali, KA-C121-topi]
 sounds: []
-roots: []
+roots: [dravidian-ungura-ring]
+etymology_hook: "uṅgura: native Dravidian, one word with Telugu uṅgaramu (DEDR 572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C121-topi]
 <!-- hl-knowledge: introduces=[KA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **ಉಂಗುರ** — *uṅgura* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಂಗುರ** (*uṅgura*) is native Dravidian, one word with Telugu *uṅgaramu* (DEDR 572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

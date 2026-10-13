@@ -12,6 +12,9 @@ Before the new one: say the Kannada for modern, then the Kannada for traditional
 You'll want to know: ಜಿಪುಣ.
 ಜಿಪುಣ — jipuṇa — "stingy, miserly".
 
+The word, taken apart.
+The origin of ಜಿಪುಣ (jipuṇa) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for traditional, then the Kannada for stingy
 
 You'll want to know: ಹಠಮಾರಿ.
 ಹಠಮಾರಿ — haṭhamāri — "stubborn".
+
+The word, taken apart.
+ಹಠಮಾರಿ (haṭhamāri) is haṭha, "obstinacy", from Sanskrit haṭha, "force, violence", with an ending -māri whose origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for stingy, then the Kannada for stubborn.
 You'll want to know: ಕೊಳೆತ.
 ಕೊಳೆತ — koḷeta — "rotten".
 
+The word, taken apart.
+ಕೊಳೆತ (koḷeta) is native Dravidian, from koḷe, "to rot", which DEDR 1822 lists as older Kannada koḻe; koḷeta is "rotted"; the entry also has Tamil kuḻai and Telugu kuḷḷu. DEDR 1822 compares Sanskrit kuṇapa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for stubborn, then the Kannada for rotten.
 You'll want to know: ಮಾಗಿದ.
 ಮಾಗಿದ — māgida — "ripe".
 
+The word, taken apart.
+ಮಾಗಿದ (māgida) is native Dravidian, from māgu, "to ripen fully", which DEDR 4789 lists itself; māgida is "ripened".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for rotten, then the Kannada for ripe.
 
 You'll want to know: ಸ್ವಂತ.
 ಸ್ವಂತ — svanta — "one's own".
+
+The word, taken apart.
+ಸ್ವಂತ (svanta) is usually traced to Sanskrit sva, "one's own" (CDIAL 13893), but no source settles the form.
 
 What you've built.
 One more word for this chapter.

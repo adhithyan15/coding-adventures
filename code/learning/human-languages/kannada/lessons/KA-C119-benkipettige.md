@@ -14,7 +14,8 @@ romanization: "beṅkipeṭṭige"
 concept_tag: KA-THINGS119-BENKIPETTIGE
 prerequisites: [KA-C119-ole, KA-C119-menabatti]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn, dravidian-petti-box]
+etymology_hook: "beṅkipeṭṭige: native beṅki 'fire' (DEDR 5517) + peṭṭige 'box' (DEDR 4388)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C119-menabatti]
 <!-- hl-knowledge: introduces=[KA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **ಬೆಂಕಿಪೆಟ್ಟಿಗೆ** — *beṅkipeṭṭige* — "a matchbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಂಕಿಪೆಟ್ಟಿಗೆ** (*beṅkipeṭṭige*) is native Dravidian: *beṅki*, "fire" (DEDR 5517), and *peṭṭige*, "box" (DEDR 4388). DEDR 4388 compares Sanskrit *peṭaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

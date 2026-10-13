@@ -14,7 +14,8 @@ romanization: "sōṅku"
 concept_tag: KA-AROGYA170-SONKU
 prerequisites: [KA-C170-herige, KA-C170-drsti]
 sounds: []
-roots: []
+roots: [dravidian-coku-touch]
+etymology_hook: "sōṅku: native Dravidian, one word with Tamil cōku and Malayalam cōku (DEDR 2870)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C170-drsti]
 <!-- hl-knowledge: introduces=[KA-LEX-C170-AROGYA170-03]; assesses=[] -->
 
 **ಸೋಂಕು** — *sōṅku* — "an infection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೋಂಕು** (*sōṅku*) is native Dravidian, one word with Tamil *cōku* and Malayalam *cōku* (DEDR 2870). DEDR lists *sōku*, *soṅku*, "to touch, catch, infect".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "raṅgōli"
 concept_tag: KA-NOUN-RANGOLI
 prerequisites: [KA-C52-chair, KA-C50-journey]
 sounds: []
-roots: []
+roots: [sanskrit-ranga-colour, sanskrit-avali-row]
+etymology_hook: "raṅgōli: usually explained as Sanskrit raṅga 'colour' (CDIAL 10560) + āvali 'row' (CDIAL 1423)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C52-chair]
 White rice-flour, drawn freehand on swept ground in front of the door, at first light, before anyone has arrived.
 
 The name is *raṅga*, 'colour', and *āvalī*, 'a row': a row of colour. That *āvalī* is the same one behind the festival of lamps whose name came apart a few chapters back — a row of lamps there, a row of colour here. Kannada also calls the thing ರಂಗವಲ್ಲಿ (*raṅgavalli*), which is the same compound less worn down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಂಗೋಲಿ** (*raṅgōli*) is usually explained as a compound of two Sanskrit words, *raṅga*, "dye, colour" (CDIAL 10560), and *āvali*, "row, line" (CDIAL 1423): a row of colour. The explanation is the usual one rather than a recorded history.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

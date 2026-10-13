@@ -14,7 +14,8 @@ romanization: "nirāse"
 concept_tag: KA-AROGYA209-NIRASE
 prerequisites: [KA-C208-rogi, KA-C209-manassu]
 sounds: []
-roots: []
+roots: [sanskrit-nirasha]
+etymology_hook: "nirāse ← Sanskrit nirāśa 'hopeless', reshaped as a tadbhava (CDIAL 7278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C209-manassu]
 <!-- hl-knowledge: introduces=[KA-LEX-C209-AROGYA209-02]; assesses=[] -->
 
 **ನಿರಾಸೆ** — *nirāse* — "disappointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರಾಸೆ** (*nirāse*) comes from Sanskrit *nirāśa*, "hopeless", reshaped to Kannada sounds: a tadbhava (CDIAL 7278). The *ś* became *s*, and the word ends in Kannada's *-e*: "hopelessness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

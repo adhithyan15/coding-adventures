@@ -14,7 +14,8 @@ romanization: "ṭīkisu"
 concept_tag: KA-VERB-TIKISU
 prerequisites: [KA-C240-vadisu, KA-C240-kalpisiko]
 sounds: []
-roots: []
+roots: [sanskrit-tika]
+etymology_hook: "ṭīkisu: Sanskrit ṭīkā 'commentary' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C240-kalpisiko]
 <!-- hl-knowledge: introduces=[KA-LEX-C241-KRIYE241-01]; assesses=[] -->
 
 **ಟೀಕಿಸು** — *ṭīkisu* — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೀಕಿಸು** (*ṭīkisu*) is Sanskrit *ṭīkā*, "a commentary", made into a Kannada verb with *-isu*: to criticise is to comment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

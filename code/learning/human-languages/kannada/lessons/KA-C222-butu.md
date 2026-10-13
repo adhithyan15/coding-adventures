@@ -14,7 +14,8 @@ romanization: "būṭu"
 concept_tag: KA-VASTU222-BUTU
 prerequisites: [KA-C222-ravike, KA-C222-baniyan]
 sounds: []
-roots: []
+roots: [english-boot]
+etymology_hook: "būṭu ← English boot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C222-baniyan]
 <!-- hl-knowledge: introduces=[KA-LEX-C222-VASTU222-05]; assesses=[] -->
 
 **ಬೂಟು** — *būṭu* — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೂಟು** (*būṭu*) is a loan from English *boot*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

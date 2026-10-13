@@ -14,7 +14,8 @@ romanization: "hāḍu"
 concept_tag: KA-VERB-HADU
 prerequisites: [KA-C152-arisu, KA-C152-adu]
 sounds: []
-roots: []
+roots: [dravidian-paatu-sing]
+etymology_hook: "hāḍu: native Dravidian, one word with Tamil pāṭu (DEDR 4065)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C152-adu]
 <!-- hl-knowledge: introduces=[KA-LEX-C152-ACT152-03]; assesses=[] -->
 
 **ಹಾಡು** — *hāḍu* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಡು** (*hāḍu*) is native Dravidian, one word with Tamil *pāṭu* (DEDR 4065). DEDR gives the older Kannada *pāḍu*, "to sing": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

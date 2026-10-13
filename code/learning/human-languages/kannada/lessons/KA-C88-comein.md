@@ -11,7 +11,8 @@ romanization: "oḷage banni"
 concept_tag: KA-COUR-COME-IN
 prerequisites: [KA-C88-invitation, KA-C88-gift]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside, baa-come-dravidian]
+etymology_hook: "oḷage banni: native oḷage 'inside' (DEDR 698) + banni 'please come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C88-gift]
 
 **ಒಳಗೆ ಬನ್ನಿ** (*oḷage banni*) — "please come in". **ಒಳಗೆ** is "inside", and
 **ಬನ್ನಿ** is the polite form of **ಬಾ**, "come".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಳಗೆ ಬನ್ನಿ** (*oḷage banni*) is native Dravidian: *oḷage*, "inside", which DEDR 698 lists itself (Tamil *uḷ*), and *banni*, the polite command of *baru*, "to come" (DEDR 5270).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

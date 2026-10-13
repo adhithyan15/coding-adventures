@@ -14,7 +14,8 @@ romanization: "māgida"
 concept_tag: KA-GUNA182-MAGIDA
 prerequisites: [KA-C182-hathamari, KA-C182-koleta]
 sounds: []
-roots: []
+roots: [dravidian-maagu-ripen]
+etymology_hook: "māgida: native Dravidian, 'ripened', from māgu 'to ripen fully' (DEDR 4789)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C182-koleta]
 <!-- hl-knowledge: introduces=[KA-LEX-C182-GUNA182-04]; assesses=[] -->
 
 **ಮಾಗಿದ** — *māgida* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾಗಿದ** (*māgida*) is native Dravidian, from *māgu*, "to ripen fully", which DEDR 4789 lists itself; *māgida* is "ripened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

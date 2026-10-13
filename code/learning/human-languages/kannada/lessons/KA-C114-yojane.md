@@ -14,7 +14,8 @@ romanization: "yōjane"
 concept_tag: KA-WANT114-YOJANE
 prerequisites: [KA-C113-kanasu, KA-C114-uddesa]
 sounds: []
-roots: []
+roots: [sanskrit-yojana]
+etymology_hook: "yōjane ← Sanskrit yojanā 'a joining, an arrangement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C114-uddesa]
 <!-- hl-knowledge: introduces=[KA-LEX-C114-WANT114-02]; assesses=[] -->
 
 **ಯೋಜನೆ** — *yōjane* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯೋಜನೆ** (*yōjane*) is Sanskrit *yojanā*, "a joining, an arrangement", with Kannada's *-e* for the Sanskrit *-ā*: a plan is things joined together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

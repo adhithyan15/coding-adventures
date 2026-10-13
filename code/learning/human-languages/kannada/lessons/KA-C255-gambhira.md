@@ -14,7 +14,8 @@ romanization: "gambhīra"
 concept_tag: KA-GUNA255-GAMBHIRA
 prerequisites: [KA-C255-santa, KA-C255-svarthi]
 sounds: []
-roots: []
+roots: [sanskrit-gambhira]
+etymology_hook: "gambhīra ← Sanskrit gambhīra 'deep', a tatsama (CDIAL 4031)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C255-svarthi]
 <!-- hl-knowledge: introduces=[KA-LEX-C255-GUNA255-04]; assesses=[] -->
 
 **ಗಂಭೀರ** — *gambhīra* — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಂಭೀರ** (*gambhīra*) is Sanskrit *gambhīra*, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4031). Depth became seriousness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

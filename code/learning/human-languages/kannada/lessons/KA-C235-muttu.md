@@ -14,7 +14,8 @@ romanization: "muṭṭu"
 concept_tag: KA-VERB-MUTTU
 prerequisites: [KA-C235-bilu, KA-C235-hindirugu]
 sounds: []
-roots: []
+roots: [dravidian-muttu-touch]
+etymology_hook: "muṭṭu: native Dravidian, one word with Tamil muṭṭu and Telugu muṭṭu (DEDR 4934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C235-hindirugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C235-KRIYE235-03]; assesses=[] -->
 
 **ಮುಟ್ಟು** — *muṭṭu* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಟ್ಟು** (*muṭṭu*) is native Dravidian, one word with Tamil *muṭṭu*, Telugu *muṭṭu* and Malayalam *muṭṭuka* (DEDR 4934). DEDR lists *muṭṭu* itself, "to touch, reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "phalaka"
 concept_tag: KA-KELASA307-PHALAKA
 prerequisites: [KA-C306-totagara, KA-C307-godamu]
 sounds: []
-roots: []
+roots: [sanskrit-phalaka]
+etymology_hook: "phalaka ← Sanskrit phalaka 'board, lath, bench', a tatsama (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C307-godamu]
 <!-- hl-knowledge: introduces=[KA-LEX-C307-KELASA307-02]; assesses=[] -->
 
 **ಫಲಕ** — *phalaka* — "a signboard, a nameplate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫಲಕ** (*phalaka*) is Sanskrit *phalaka*, "board, lath, bench", taken over whole as a learned loan, a tatsama (CDIAL 9053). CDIAL 9054 has another *phalaka*, "shield", which may be the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

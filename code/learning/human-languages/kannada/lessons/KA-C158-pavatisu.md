@@ -14,7 +14,8 @@ romanization: "pāvatisu"
 concept_tag: KA-VERB-PAVATISU
 prerequisites: [KA-C158-aduge-madu, KA-C158-kharidisu]
 sounds: []
-roots: []
+roots: [kannada-pavati]
+etymology_hook: "pāvatisu: pāvati 'payment, receipt' + -isu; the origin of pāvati is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C158-kharidisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C158-KRIYE158-04]; assesses=[] -->
 
 **ಪಾವತಿಸು** — *pāvatisu* — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾವತಿಸು** (*pāvatisu*) is *pāvati*, "payment, a receipt", made into a verb with *-isu*. The origin of *pāvati* is uncertain; neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ceṇḍu"
 concept_tag: KA-THINGS119-CENDU
 prerequisites: [KA-C119-benkipettige, KA-C119-bombe]
 sounds: []
-roots: []
+roots: [dravidian-centu-ball]
+etymology_hook: "ceṇḍu: native Dravidian, one word with Tamil ceṇṭu and Telugu ceṇḍu (DEDR 2766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C119-bombe]
 <!-- hl-knowledge: introduces=[KA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **ಚೆಂಡು** — *ceṇḍu* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೆಂಡು** (*ceṇḍu*) is native Dravidian, one word with Tamil *ceṇṭu* and Telugu *ceṇḍu* (DEDR 2766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

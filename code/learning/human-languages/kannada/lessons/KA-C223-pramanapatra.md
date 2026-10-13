@@ -14,7 +14,8 @@ romanization: "pramāṇapatra"
 concept_tag: KA-VASTU223-PRAMANAPATRA
 prerequisites: [KA-C222-butu, KA-C223-namune]
 sounds: []
-roots: []
+roots: [sanskrit-pramana, sanskrit-patra]
+etymology_hook: "pramāṇapatra ← Sanskrit pramāṇa 'proof' (CDIAL 8723) + patra 'leaf, document'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C223-namune]
 <!-- hl-knowledge: introduces=[KA-LEX-C223-VASTU223-02]; assesses=[] -->
 
 **ಪ್ರಮಾಣಪತ್ರ** — *pramāṇapatra* — "a certificate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಮಾಣಪತ್ರ** (*pramāṇapatra*) is Sanskrit *pramāṇa*, "measure; proof" (CDIAL 8723), and *patra*, "leaf, letter": "a letter of proof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

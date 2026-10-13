@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 88,
-  "sourceHash": "fnv1a64:59e711d1ee64ecb5",
+  "sourceHash": "fnv1a64:0aea4e62de7a82cf",
   "lessonIds": [
     "KA-C88-congratulations",
     "KA-C88-invitation",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch88.txt",
   "json": "kannada/narration/ch88.json",
-  "textHash": "fnv1a64:1ee3c7300fefcde9",
-  "jsonHash": "fnv1a64:f1a525399d3cd48b",
+  "textHash": "fnv1a64:1458780c4c393a75",
+  "jsonHash": "fnv1a64:c0391ad8ab21ec86",
   "findings": []
 }

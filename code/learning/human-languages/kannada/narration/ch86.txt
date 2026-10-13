@@ -13,6 +13,9 @@ You'll want to know: ಒಂದು ನಿಮಿಷ.
 ಒಂದು ನಿಮಿಷ (ondu nimiṣa) — "one minute". ಒಂದು is "one", from the numbers chapter; ನಿಮಿಷ (nimiṣa) is "minute".
 Say it with a raised hand when you need a moment.
 
+The word, taken apart.
+ಒಂದು ನಿಮಿಷ (ondu nimiṣa) is ondu, "one" (DEDR 990), native, and nimiṣa, "minute", from Sanskrit nimeṣa, "a wink, a moment" (CDIAL 7243). A minute is "a blink".
+
 What you've built.
 A number you know and a new word for time.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for please write it, then the Kannada for on
 You'll want to know: ಕಾಯಿರಿ.
 ಕಾಯಿರಿ (kāyiri) — "please wait", the polite form of ಕಾಯು (kāyu), "to wait".
 ಒಂದು ನಿಮಿಷ ಕಾಯಿರಿ (ondu nimiṣa kāyiri) — "please wait a minute".
+
+The word, taken apart.
+ಕಾಯಿರಿ (kāyiri) is native Dravidian: the polite command of kāyu, "to guard, keep watch, wait", which DEDR 1416 lists with Tamil kā, "to guard".
 
 What you've built.
 The polite ending ‑ಇರಿ asks gently.
@@ -73,6 +79,9 @@ You'll want to know: ತೋರಿಸಿ.
 ತೋರಿಸಿ (tōrisi) — "please show (me)".
 ದಾರಿ ತೋರಿಸಿ (dāri tōrisi) — "please show me the way", with ದಾರಿ, "way, road".
 
+The word, taken apart.
+ತೋರಿಸಿ (tōrisi) is native Dravidian: the polite command of tōrisu, "to show", literally "to make appear", from tōru, "to appear", which DEDR 3566 lists as Kannada tōṟu with Tamil tōṉṟu.
+
 What you've built.
 When words fail, ask to be shown.
 
@@ -102,6 +111,9 @@ Before the new one: say the Kannada for please wait, then the Kannada for please
 You'll want to know: ಕೇಳಿಸಲಿಲ್ಲ.
 ಕೇಳಿಸಲಿಲ್ಲ (kēḷisalilla) — "(it) was not heard", the way to say "I didn't hear". It is built on ಕೇಳು, "hear, listen", with ‑ಇಲ್ಲ, "not".
 
+The word, taken apart.
+ಕೇಳಿಸಲಿಲ್ಲ (kēḷisalilla) is native Dravidian: kēḷisu, "to be heard", from kēḷu, "to hear" (DEDR 2017), and illa, "not" (DEDR 2559). It is "it was not heard".
+
 What you've built.
 A known verb with a known no.
 
@@ -130,6 +142,9 @@ Before the new one: say the Kannada for please show, then the Kannada for I didn
 
 You'll want to know: ಅರ್ಥವಾಗಲಿಲ್ಲ.
 ಅರ್ಥವಾಗಲಿಲ್ಲ (arthavāgalilla) — "I didn't understand", literally "the meaning did not happen". It starts with ಅರ್ಥ, "meaning", from the last chapter.
+
+The word, taken apart.
+ಅರ್ಥವಾಗಲಿಲ್ಲ (arthavāgalilla) is artha, "meaning", from Sanskrit artha (CDIAL 638), with native āgu, "to become" (DEDR 333), and illa, "not" (DEDR 2559): "it did not become meaning". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 Meaning, and the no that says it did not arrive.

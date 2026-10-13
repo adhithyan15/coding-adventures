@@ -11,7 +11,8 @@ romanization: "kṣame"
 concept_tag: KA-COUR-PARDON
 prerequisites: [KA-C96-hello, KA-C96-wellbeing]
 sounds: []
-roots: []
+roots: [kshama-sanskrit]
+etymology_hook: "kṣame ← Sanskrit kṣamā 'patience', a tatsama (CDIAL 3659)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C96-wellbeing]
 (*kṣamisi*), "excuse me".
 
 **ಕ್ಷಮೆ ಇರಲಿ** (*kṣame irali*) — "please forgive me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಷಮೆ** (*kṣame*) is Sanskrit *kṣamā*, "patience", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 3659). Patience with someone became pardon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

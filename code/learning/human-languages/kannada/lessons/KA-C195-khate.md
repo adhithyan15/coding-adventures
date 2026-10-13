@@ -14,7 +14,8 @@ romanization: "khāte"
 concept_tag: KA-KELASA195-KHATE
 prerequisites: [KA-C194-meladhikari, KA-C195-sulka]
 sounds: []
-roots: []
+roots: [hindustani-khata]
+etymology_hook: "khāte ← Hindustani khātā 'an account, a ledger'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C195-sulka]
 <!-- hl-knowledge: introduces=[KA-LEX-C195-KELASA195-02]; assesses=[] -->
 
 **ಖಾತೆ** — *khāte* — "an account (at a bank)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖಾತೆ** (*khāte*) came from Hindustani *khātā*, "an account, a ledger". Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

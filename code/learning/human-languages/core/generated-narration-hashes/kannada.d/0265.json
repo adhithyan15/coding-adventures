@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 265,
-  "sourceHash": "fnv1a64:310b3f2f7c53b8c1",
+  "sourceHash": "fnv1a64:f0b0f35f5aad33c4",
   "lessonIds": [
     "KA-C265-dabbi",
     "KA-C265-bindige",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch265.txt",
   "json": "kannada/narration/ch265.json",
-  "textHash": "fnv1a64:d4b7f6e4675bf5f8",
-  "jsonHash": "fnv1a64:80751fc549088946",
+  "textHash": "fnv1a64:28fe37bd82f95b4b",
+  "jsonHash": "fnv1a64:65dcb2eab1648128",
   "findings": []
 }

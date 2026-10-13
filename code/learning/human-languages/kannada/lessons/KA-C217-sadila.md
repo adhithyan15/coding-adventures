@@ -14,7 +14,8 @@ romanization: "saḍila"
 concept_tag: KA-GUNA217-SADILA
 prerequisites: [KA-C217-khali, KA-C217-bigi]
 sounds: []
-roots: []
+roots: [kannada-sadila-loose]
+etymology_hook: "saḍila: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C217-bigi]
 <!-- hl-knowledge: introduces=[KA-LEX-C217-GUNA217-04]; assesses=[] -->
 
 **ಸಡಿಲ** — *saḍila* — "loose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸಡಿಲ** (*saḍila*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

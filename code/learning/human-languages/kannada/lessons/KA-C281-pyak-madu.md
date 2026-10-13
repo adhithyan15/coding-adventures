@@ -14,7 +14,8 @@ romanization: "pyāk māḍu"
 concept_tag: KA-VERB-PYAK-MADU
 prerequisites: [KA-C280-hindikku, KA-C281-mayavagu]
 sounds: []
-roots: []
+roots: [english-pack, maadu-do-dravidian]
+etymology_hook: "pyāk māḍu: English pack + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C281-mayavagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C281-KRIYE281-02]; assesses=[] -->
 
 **ಪ್ಯಾಕ್ ಮಾಡು** — *pyāk māḍu* — "to pack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ಯಾಕ್ ಮಾಡು** (*pyāk māḍu*) is English *pack* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 296,
-  "sourceHash": "fnv1a64:0ca2332064ba3c9b",
+  "sourceHash": "fnv1a64:abbd03814da5fad2",
   "lessonIds": [
     "KA-C296-skutar",
     "KA-C296-metro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch296.txt",
   "json": "kannada/narration/ch296.json",
-  "textHash": "fnv1a64:262f9f73dd445e95",
-  "jsonHash": "fnv1a64:19bb315c16928d36",
+  "textHash": "fnv1a64:8db53da1d989eef1",
+  "jsonHash": "fnv1a64:b3ef17382f8cecfc",
   "findings": []
 }

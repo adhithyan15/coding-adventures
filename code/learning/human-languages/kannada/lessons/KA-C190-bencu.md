@@ -14,7 +14,8 @@ romanization: "beñcu"
 concept_tag: KA-VASTU190-BENCU
 prerequisites: [KA-C189-upavasa, KA-C190-sopha]
 sounds: []
-roots: []
+roots: [english-bench]
+etymology_hook: "beñcu ← English bench"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C190-sopha]
 <!-- hl-knowledge: introduces=[KA-LEX-C190-VASTU190-02]; assesses=[] -->
 
 **ಬೆಂಚು** — *beñcu* — "a bench".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಂಚು** (*beñcu*) is a loan from English *bench*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

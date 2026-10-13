@@ -11,7 +11,8 @@ romanization: "bāgilu"
 concept_tag: KA-NOUN-DOOR
 prerequisites: [KA-C51-salutation, KA-C50-now]
 sounds: []
-roots: []
+roots: [dravidian-vaayil-door]
+etymology_hook: "bāgilu: native Dravidian, one word with Tamil vāyil and Telugu vākili (DEDR 5354)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C51-salutation]
 ಬಾಗಿಲು is the door and the doorway at once — the opening quite as much as the plank that shuts it.
 
 Beside it sits Tamil வாயில் (*vāyil*), a gateway, and that word is transparently built on வாய், 'mouth', which is ಬಾಯಿ here with the *b* standing in for the *v*. Whether ಬಾಗಿಲು is that same word with a consonant grown in its middle, or a separate formation on ಬಾಗು, 'to bend', is not settled. What is beyond doubt is that a Dravidian house has been known to name its opening after a face.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಗಿಲು** (*bāgilu*) is native Dravidian, one word with Tamil *vāyil* and Telugu *vākili* (DEDR 5354). DEDR gives Kannada *bāgil* and an inscription form *vākkil*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uppiṭṭu"
 concept_tag: KA-THINGS125-UPPITTU
 prerequisites: [KA-C125-dose, KA-C125-vade]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt, dravidian-pittu-flour]
+etymology_hook: "uppiṭṭu: native uppu 'salt' (DEDR 2674) + hiṭṭu 'flour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C125-vade]
 <!-- hl-knowledge: introduces=[KA-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **ಉಪ್ಪಿಟ್ಟು** — *uppiṭṭu* — "upma".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಪ್ಪಿಟ್ಟು** (*uppiṭṭu*) is native Dravidian: *uppu*, "salt" (DEDR 2674), and *hiṭṭu*, "flour", whose older form *piṭṭu*, "flour, food", DEDR 3084 cites: salted flour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

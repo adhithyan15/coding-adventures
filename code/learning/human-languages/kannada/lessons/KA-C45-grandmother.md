@@ -11,7 +11,8 @@ romanization: "ajji"
 concept_tag: KA-NOUN-GRANDMOTHER
 prerequisites: [KA-C45-grandfather]
 sounds: []
-roots: []
+roots: [dravidian-acca-elder]
+etymology_hook: "ajji: probably an Indo-Aryan loan, says DEDR 50, from Prakrit ajja (Sanskrit ārya); CDIAL 1347"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C45-grandfather]
 **ಅಜ್ಜಿ** (*ajji*) — "grandmother".
 
 The same stem as the last word, with the ending swapped: *-i* where *ajja* had *-a*. The son-and-daughter pair built ಮಗಳು out of ಮಗ by that same trick, one stem carrying two endings, and this pair is tidier still — only the final vowel moves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 50 lists Kannada *ajji*, "grandmother", beside *ajja*, "grandfather", and notes that the group is probably a loan from Indo-Aryan: Prakrit *ajja*, from Sanskrit *ārya*, "noble, honoured" (CDIAL 1347). So **ಅಜ್ಜಿ** (*ajji*) is most likely an old loan, not a native Dravidian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

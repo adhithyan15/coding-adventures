@@ -14,7 +14,8 @@ romanization: "gōdhi"
 concept_tag: KA-THINGS139-GODHI
 prerequisites: [KA-C138-kotu, KA-C139-kamala]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "gōdhi: usually traced to Sanskrit godhūma 'wheat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C139-kamala]
 <!-- hl-knowledge: introduces=[KA-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **ಗೋಧಿ** — *gōdhi* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೋಧಿ** (*gōdhi*) is usually traced to Sanskrit *godhūma*, "wheat": a tadbhava, a loan worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

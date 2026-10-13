@@ -14,7 +14,8 @@ gloss: "a walking stick"
 concept_tag: KA-ANCHOR-UURUGOOLU
 prerequisites: [KA-S126-letter-u]
 sounds: []
-roots: []
+roots: [dravidian-unru-plant, dravidian-kol-stick]
+etymology_hook: "ūrugōlu: native Dravidian, ūru 'to lean on' + kōl 'stick'; DEDR 763 lists ūṟu-gōlu 'walking-stick'"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ūrugōlu*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಊ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಊರುಗೋಲು** (*ūrugōlu*) is native Dravidian. DEDR 763 lists it whole as Kannada *ūṟu-gōlu*, "walking-stick": *ūṟu*, "to set firmly, lean on", the same root as Tamil *ūṉṟu*; then *kōlu*, "stick" (DEDR 2237, with Tamil *kōl*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-UURUGOOLU] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 82,
-  "sourceHash": "fnv1a64:f52966de0f656874",
+  "sourceHash": "fnv1a64:519d08b036b73386",
   "lessonIds": [
     "KA-C82-tiredness",
     "KA-C82-cold",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch82.txt",
   "json": "kannada/narration/ch82.json",
-  "textHash": "fnv1a64:770c2733f180e475",
-  "jsonHash": "fnv1a64:7056b19b3d01a468",
+  "textHash": "fnv1a64:b651a680b95bf14e",
+  "jsonHash": "fnv1a64:dbf110bf1e230bcc",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "viśrānti"
 concept_tag: KA-UNWELL-REST
 prerequisites: [KA-C82-cough, KA-C82-headache]
 sounds: []
-roots: []
+roots: [sanskrit-vishranti]
+etymology_hook: "viśrānti ← Sanskrit viśrānti 'rest, repose', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C82-headache]
 **ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ** (*viśrānti tegedukoḷḷi*) — "please take rest", what
 you say to a friend who is unwell. The verb is **ತೆಗೆದುಕೊ**, "take", which you
 already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಶ್ರಾಂತಿ** (*viśrānti*) is Sanskrit *viśrānti*, "rest, repose", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

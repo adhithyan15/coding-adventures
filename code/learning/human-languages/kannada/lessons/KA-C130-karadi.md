@@ -14,7 +14,8 @@ romanization: "karaḍi"
 concept_tag: KA-THINGS130-KARADI
 prerequisites: [KA-C129-huli, KA-C129-simha]
 sounds: []
-roots: []
+roots: [dravidian-karadi-bear]
+etymology_hook: "karaḍi: native Dravidian, one word with Tamil karaṭi (DEDR 1263)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C129-simha]
 <!-- hl-knowledge: introduces=[KA-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **ಕರಡಿ** — *karaḍi* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರಡಿ** (*karaḍi*) is native Dravidian, one word with Tamil *karaṭi* (DEDR 1263).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

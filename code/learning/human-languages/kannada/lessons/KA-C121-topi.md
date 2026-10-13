@@ -14,7 +14,8 @@ romanization: "ṭōpi"
 concept_tag: KA-THINGS121-TOPI
 prerequisites: [KA-C120-pamce, KA-C120-cappali]
 sounds: []
-roots: []
+roots: [hindustani-topi]
+etymology_hook: "ṭōpi ← Hindustani ṭōpī 'cap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C120-cappali]
 <!-- hl-knowledge: introduces=[KA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **ಟೋಪಿ** — *ṭōpi* — "a cap, a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೋಪಿ** (*ṭōpi*) came from Hindustani *ṭōpī*, "cap". Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

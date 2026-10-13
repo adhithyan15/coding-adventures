@@ -11,7 +11,8 @@ romanization: "nemmadi"
 concept_tag: KA-MOOD-PEACE
 prerequisites: [KA-C98-shyness, KA-C98-alarm]
 sounds: []
-roots: []
+roots: [dravidian-nampu-trust]
+etymology_hook: "nemmadi: origin uncertain; often linked to nemmu 'to trust', which DEDR 3600 lists as a form of nambu"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C98-alarm]
 <!-- hl-knowledge: introduces=[KA-LEX-C98-MOODS-05]; assesses=[] -->
 
 **ನೆಮ್ಮದಿ** (*nemmadi*) — "peace of mind, contentment", the calm after worry.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ನೆಮ್ಮದಿ** (*nemmadi*) is uncertain. It is often linked to *nemmu*, "to trust, rely on", which DEDR 3600 lists as a form of *nambu*, "to trust", but DEDR does not list *nemmadi* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

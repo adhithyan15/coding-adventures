@@ -14,7 +14,8 @@ romanization: "herige"
 concept_tag: KA-AROGYA170-HERIGE
 prerequisites: [KA-C169-kutuhala, KA-C169-bhavane]
 sounds: []
-roots: []
+roots: [dravidian-peru-bear]
+etymology_hook: "herige: native, built on the verb DEDR 4422 lists as older Kannada peṟ 'to bear, beget'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C169-bhavane]
 <!-- hl-knowledge: introduces=[KA-LEX-C170-AROGYA170-01]; assesses=[] -->
 
 **ಹೆರಿಗೆ** — *herige* — "childbirth, delivery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೆರಿಗೆ** (*herige*) is native Dravidian, built on the verb that DEDR 4422 lists as older Kannada *peṟ*, "to get, beget, bear", with Tamil *peṟu*: the *p-* has become *h-*, with the noun ending *-ige*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

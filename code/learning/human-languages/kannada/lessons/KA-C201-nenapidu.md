@@ -14,7 +14,8 @@ romanization: "nenapiḍu"
 concept_tag: KA-VERB-NENAPIDU
 prerequisites: [KA-C201-vivarisu, KA-C201-pasagu]
 sounds: []
-roots: []
+roots: [dravidian-ninai-think, dravidian-idu-put]
+etymology_hook: "nenapiḍu: native nenapu 'memory' (DEDR 3683) + iḍu 'to put, keep' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C201-pasagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C201-KRIYE201-04]; assesses=[] -->
 
 **ನೆನಪಿಡು** — *nenapiḍu* — "to remember, to keep in mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆನಪಿಡು** (*nenapiḍu*) is native Dravidian: *nenapu*, "remembrance" (DEDR 3683), and *iḍu*, "to put, keep" (DEDR 442): "to keep in memory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

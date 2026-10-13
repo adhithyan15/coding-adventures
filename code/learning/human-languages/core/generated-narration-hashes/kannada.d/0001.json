@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 1,
-  "sourceHash": "fnv1a64:69da6c1d1d13745d",
+  "sourceHash": "fnv1a64:c7d66b3b1d4fa3e0",
   "lessonIds": [
     "KA-C01-namaskara",
     "KA-C01-dhanyavada",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch01.txt",
   "json": "kannada/narration/ch01.json",
-  "textHash": "fnv1a64:2f8bc14a2a9ee621",
-  "jsonHash": "fnv1a64:a060ebfa54da05f0",
+  "textHash": "fnv1a64:8d6928807702695d",
+  "jsonHash": "fnv1a64:3b473a4892c8fbc0",
   "findings": []
 }

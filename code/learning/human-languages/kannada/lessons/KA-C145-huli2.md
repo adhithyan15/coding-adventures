@@ -14,7 +14,8 @@ romanization: "huḷi"
 concept_tag: KA-QUAL145-HULI2
 prerequisites: [KA-C144-khara, KA-C145-kahi]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour]
+etymology_hook: "huḷi: native Dravidian, one word with Tamil puḷi and Telugu puli (DEDR 4322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C145-kahi]
 <!-- hl-knowledge: introduces=[KA-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **ಹುಳಿ** — *huḷi* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಳಿ** (*huḷi*) is native Dravidian, one word with Tamil *puḷi* and Telugu *puli* (DEDR 4322). DEDR lists Kannada *puḷi*, "sourness", and *huḷi*, "to turn sour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

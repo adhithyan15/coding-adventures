@@ -14,7 +14,8 @@ romanization: "pada"
 concept_tag: KA-KELASA270-PADA
 prerequisites: [KA-C269-anka, KA-C270-bhugola]
 sounds: []
-roots: []
+roots: [sanskrit-pada]
+etymology_hook: "pada ← Sanskrit pada 'footstep, track, place', a tatsama (CDIAL 7747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C270-bhugola]
 <!-- hl-knowledge: introduces=[KA-LEX-C270-KELASA270-02]; assesses=[] -->
 
 **ಪದ** — *pada* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪದ** (*pada*) is Sanskrit *pada*, "footstep, track, place", taken over whole as a learned loan, a tatsama (CDIAL 7747). In Sanskrit grammar the same word names a word, a single step of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a pump, then the Kannada for a gate.
 You'll want to know: ವಕೀಲ.
 ವಕೀಲ — vakīla — "a lawyer".
 
+The word, taken apart.
+ವಕೀಲ (vakīla) is Arabic wakīl, "agent, one who acts for another", which came into Kannada through Persian and Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a gate, then the Kannada for a lawyer.
 
 You'll want to know: ಎಂಜಿನಿಯರ್.
 ಎಂಜಿನಿಯರ್ — eñjiniyar — "an engineer".
+
+The word, taken apart.
+ಎಂಜಿನಿಯರ್ (eñjiniyar) is a loan from English engineer.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a lawyer, then the Kannada for an engine
 You'll want to know: ಅಂಚೆಯವನು.
 ಅಂಚೆಯವನು — añceyavanu — "a postman".
 
+The word, taken apart.
+ಅಂಚೆಯವನು (añceyavanu) is native Dravidian: añce, "the post, a relay", one word with Tamil añcal (DEDR 54), and avanu, "that man" (DEDR 1): "the post's man".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an engineer, then the Kannada for a post
 You'll want to know: ಕಂಪನಿ.
 ಕಂಪನಿ — kampani — "a company".
 
+The word, taken apart.
+ಕಂಪನಿ (kampani) is a loan from English company.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a postman, then the Kannada for a compan
 
 You'll want to know: ತರಗತಿ.
 ತರಗತಿ — taragati — "a class, a classroom".
+
+The word, taken apart.
+Where ತರಗತಿ (taragati) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "class".
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [KA-C02-hesaru]
 sounds: [nna-conjunct]
 roots: [naanu-dravidian]
+etymology_hook: "nanna: native Dravidian, the 'my' form of nān 'I' (DEDR 5160); Tamil eṉ, Telugu nā"
 duration:
   max_seconds: 180
 requires:
@@ -49,6 +50,8 @@ first-person family, not to the Indo-European family behind English *I/my*.
 The stem underneath is Dravidian \*nān — the same one behind Tamil *nāṉ* /
 *eṉ*. You will meet the related word for "I" in its own lesson; today you
 only need *nanna*.
+
+DEDR 5160 lists Kannada *nān*, "I", with the stem *nan-* that *nanna* is built on, beside Tamil *nāṉ* and Telugu *nēnu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-NANNA-01, KA-ETYMON-C02-NANNA-02] -->

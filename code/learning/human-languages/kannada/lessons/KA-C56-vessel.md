@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-VESSEL
 prerequisites: [KA-C56-knife, KA-C54-root]
 sounds: []
 roots: []
+etymology_hook: "pātre ← Sanskrit pātra 'drinking vessel, dish' (CDIAL 8055), with Kannada's -e"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *pātra*, and it began by meaning a drinking or eating vessel. Then it 
 From there it took one more step, and the *pātra* of a play is a character, a part, a role. The same word holds the pot, the deserving person and the actor's part, because all three are shapes that something is poured into.
 
 Kannada carries the whole set. ಪಾತ್ರೆ in the kitchen is the vessel; ಪಾತ್ರ on the stage is the role. One Sanskrit word, and the ending tells you which of its lives is being lived.
+
+CDIAL 8055 lists Sanskrit *pātra*, "drinking vessel, dish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

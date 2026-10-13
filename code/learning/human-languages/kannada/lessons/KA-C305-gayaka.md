@@ -14,7 +14,8 @@ romanization: "gāyaka"
 concept_tag: KA-KELASA305-GAYAKA
 prerequisites: [KA-C305-arcaka, KA-C305-kalavida]
 sounds: []
-roots: []
+roots: [sanskrit-gayana]
+etymology_hook: "gāyaka ← Sanskrit gāyaka 'singer', from gāyati 'sings' (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C305-kalavida]
 <!-- hl-knowledge: introduces=[KA-LEX-C305-KELASA305-03]; assesses=[] -->
 
 **ಗಾಯಕ** — *gāyaka* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಯಕ** (*gāyaka*) is Sanskrit *gāyaka*, "singer", built on *gāyati*, "sings" (CDIAL 4135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

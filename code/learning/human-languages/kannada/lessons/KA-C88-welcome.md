@@ -11,7 +11,8 @@ romanization: "svāgata"
 concept_tag: KA-COUR-WELCOME
 prerequisites: [KA-C88-gift, KA-C88-comein]
 sounds: []
-roots: []
+roots: [sanskrit-svagata]
+etymology_hook: "svāgata ← Sanskrit svāgata 'welcome', a tatsama (CDIAL 13920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C88-comein]
 
 **ನಿಮಗೆ ಸ್ವಾಗತ** (*nimage svāgata*) — "welcome to you", the formal greeting on a
 signboard or at a door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವಾಗತ** (*svāgata*) is Sanskrit *svāgata*, "welcome", taken over whole as a learned loan, a tatsama (CDIAL 13920). The Sanskrit word is *su-*, "well", and *āgata*, "come": "well come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

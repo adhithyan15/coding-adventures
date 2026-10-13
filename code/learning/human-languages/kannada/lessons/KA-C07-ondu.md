@@ -6,13 +6,13 @@ sequence: 335
 chapter: 7
 type: word
 headword: ಒಂದು
-gloss: one — the Dravidian number Telugu will not share
+gloss: one — the Dravidian number whose Telugu form wanders furthest
 romanization: "ondu"
 concept_tag: KA-NUMBER-ONE
 prerequisites: [KA-C06-dative-subject, KA-S06-letter-da, KA-S115-letter-i, KA-C05-maatanaadu]
 sounds: [kannada-anusvara-o, u-vowel-sign]
 roots: [proto-dravidian-numbers]
-etymology_hook: "Tamil onru and Kannada ondu are cousins from an older on-, but Telugu breaks rank with okati"
+etymology_hook: "ondu: native Dravidian, one word with Tamil oṉṟu (DEDR 990), which also files Telugu oka 'one'"
 reviews_of: [KA-C06-dative-subject]
 duration:
   max_seconds: 180
@@ -46,11 +46,16 @@ than recognise.
 Tamil says *oṉṟu*. Both come down from an older *oṉ-*, and the family
 resemblance is easy to hear once you know to listen for it.
 
-Telugu will not join in: its "one" is *okaṭi*, from somewhere else entirely.
-Of the ten numbers you are about to learn, this is the one that wanders.
+Telugu's "one", *okaṭi*, looks like a stranger beside them.
+Of the ten numbers you are about to learn, this is the one that wanders furthest.
 
 The small circle **ಂ** sitting on ಒ is the **anusvara** — a nasal with no fixed
 sound of its own. Here it borrows *n* from the **ದ** that follows.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದು** (*ondu*) is native Dravidian (DEDR 990). The entry gathers Tamil *oṉṟu* and Telugu *oṇḍu*, "one thing", and also Telugu *oka*, "one": the Telugu word that looks least alike is filed in the same family.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-06, KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->
@@ -64,6 +69,6 @@ sound of its own. Here it borrows *n* from the **ದ** that follows.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ONDU-01] -->
 
-[PAUSE 3s] What is "one" in Kannada? (***Ondu***.) Which sister language
-leaves the family here? (**Telugu** — *okaṭi*.) What sound is the ಂ carrying
+[PAUSE 3s] What is "one" in Kannada? (***Ondu***.) Which sister language's
+"one" looks least like it? (**Telugu** — *okaṭi*.) What sound is the ಂ carrying
 in ಒಂದು? (An *n*, borrowed from the ದ after it.)

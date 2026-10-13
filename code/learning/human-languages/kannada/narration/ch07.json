@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1fb82ee0f1fc694c",
+  "sourceHash": "fnv1a64:368f8b5306a760cb",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -12,14 +12,14 @@
       "title": "ಒಂದು (ondu) — one, and the nasal that borrows its sound",
       "headword": "ಒಂದು",
       "romanization": "ondu",
-      "gloss": "one — the Dravidian number Telugu will not share",
+      "gloss": "one — the Dravidian number whose Telugu form wanders furthest",
       "script": "kannada",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60cc72b82b726c0c",
+      "sourceHash": "fnv1a64:61e5a6ee5b43aa4e",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telugu will not join in: its \"one\" is okaṭi, from somewhere else entirely. Of the ten numbers you are about to learn, this is the one that wanders."
+              "text": "Telugu's \"one\", okaṭi, looks like a stranger beside them. Of the ten numbers you are about to learn, this is the one that wanders furthest."
             },
             {
               "kind": "speech",
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದು (ondu) is native Dravidian (DEDR 990). The entry gathers Tamil oṉṟu and Telugu oṇḍu, \"one thing\", and also Telugu oka, \"one\": the Telugu word that looks least alike is filed in the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -112,7 +123,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -124,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"one\" in Kannada? (Ondu.) Which sister language leaves the family here? (Telugu — okaṭi.) What sound is the ಂ carrying in ಒಂದು (ondu)? (An n, borrowed from the ದ after it.)"
+              "text": "What is \"one\" in Kannada? (Ondu.) Which sister language's \"one\" looks least like it? (Telugu — okaṭi.) What sound is the ಂ carrying in ಒಂದು (ondu)? (An n, borrowed from the ದ after it.)"
             }
           ]
         }
@@ -263,7 +274,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fca84c5aaf9bcb80",
+      "sourceHash": "fnv1a64:f6d88f7a0b85c9e1",
       "notice": null,
       "blocks": [
         {
@@ -304,6 +315,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂರು (mūru) is native Dravidian, one word with Tamil mūṉṟu and Telugu mūḍu (DEDR 5052). The entry gives the older Kannada spelling mūṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -352,7 +374,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -568,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b19890abb98fd317",
+      "sourceHash": "fnv1a64:81729f2124a1ae6a",
       "notice": null,
       "blocks": [
         {
@@ -622,6 +644,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಲ್ಕು (nālku) is native Dravidian, one word with Tamil nālku and Telugu nālugu (DEDR 3655). The entry gives Kannada nāl(u)ku and nāku."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -670,7 +703,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -701,7 +734,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04ccfb2c820f9438",
+      "sourceHash": "fnv1a64:4c0c4cf7a5c6d297",
       "notice": null,
       "blocks": [
         {
@@ -746,6 +779,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಐದು (aidu) is native Dravidian, one word with Tamil aintu and Telugu ayidu (DEDR 2826). The entry spells the Kannada word ay(i)du."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -785,7 +829,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -816,7 +860,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:372f24d19cb1ca30",
+      "sourceHash": "fnv1a64:2f49ad1b3ce07fb3",
       "notice": null,
       "blocks": [
         {
@@ -857,6 +901,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರು (āru) is native Dravidian, one word with Tamil āṟu and Telugu āṟu (DEDR 2485). The entry gives the older Kannada spelling āṟu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -896,7 +951,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1116,7 +1171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9cb48bca8d71848",
+      "sourceHash": "fnv1a64:a8d81adf206aaad5",
       "notice": null,
       "blocks": [
         {
@@ -1161,6 +1216,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಳು (ēḷu) is native Dravidian, one word with Tamil ēḻu and Telugu ēḍu (DEDR 910). The entry gives the older Kannada spelling ēḻu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1200,7 +1266,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1231,7 +1297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae949c9cb115240e",
+      "sourceHash": "fnv1a64:bdde4daec16d9825",
       "notice": null,
       "blocks": [
         {
@@ -1262,7 +1328,7 @@
             },
             {
               "kind": "speech",
-              "text": "Kannada eṇṭu and Tamil eṭṭu are still relatives — near enough to guess at. But Telugu walks away here: its \"eight\" is enimidi, and its \"nine\" will be tommidi. Neither is recognisable from the other two."
+              "text": "Kannada eṇṭu and Tamil eṭṭu are still relatives — near enough to guess at. But Telugu drifts furthest here: its \"eight\" is enimidi, and its \"nine\" will be tommidi. Neither is easy to recognise from the other two."
             },
             {
               "kind": "speech",
@@ -1276,6 +1342,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಂಟು (eṇṭu) is native Dravidian, one word with Tamil eṭṭu and Telugu enimidi (DEDR 784): the Telugu word has drifted far, but it is filed in the same entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1315,7 +1392,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1327,7 +1404,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two numbers should you trust least as family cousins? (Eight and nine — Telugu leaves with enimidi and tommidi.) What nasal is the ಂ carrying in ಎಂಟು (eṇṭu)? (An ṇ, taken from the ಟ.)"
+              "text": "Which two numbers should you trust least as family cousins? (Eight and nine — Telugu drifts furthest, to enimidi and tommidi.) What nasal is the ಂ carrying in ಎಂಟು (eṇṭu)? (An ṇ, taken from the ಟ.)"
             }
           ]
         }
@@ -1346,7 +1423,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:284c9f2d81059df8",
+      "sourceHash": "fnv1a64:8ca01896f9076740",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1396,6 +1473,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂಬತ್ತು (ombattu) is native Dravidian, one word with Tamil oṉpatu and Malayalam ompatu (DEDR 1025)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need: a doubled letter stacks",
           "segments": [
@@ -1406,7 +1494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1464,7 +1552,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1495,7 +1583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d04dcfa19342017",
+      "sourceHash": "fnv1a64:1aaee41908fd6146",
       "notice": null,
       "blocks": [
         {
@@ -1540,6 +1628,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹತ್ತು (hattu) is native Dravidian, one word with Tamil pattu (DEDR 3918). The entry gives the older Kannada form pattu, with the p- that modern Kannada turns into h-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1588,7 +1687,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

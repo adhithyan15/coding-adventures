@@ -14,7 +14,8 @@ romanization: "soḷḷe"
 concept_tag: KA-THINGS132-SOLLE
 prerequisites: [KA-C132-citte, KA-C132-iruve]
 sounds: []
-roots: []
+roots: [dravidian-sulle-mosquito]
+etymology_hook: "soḷḷe: native Dravidian, one word with Tamil cuḷḷāṉ (DEDR 2705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C132-iruve]
 <!-- hl-knowledge: introduces=[KA-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **ಸೊಳ್ಳೆ** — *soḷḷe* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೊಳ್ಳೆ** (*soḷḷe*) is native Dravidian, one word with Tamil *cuḷḷāṉ* (DEDR 2705). DEDR lists *soḷḷe* itself, "mosquito".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

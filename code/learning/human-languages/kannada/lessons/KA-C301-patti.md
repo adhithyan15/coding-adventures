@@ -14,7 +14,8 @@ romanization: "paṭṭi"
 concept_tag: KA-VASTU301-PATTI
 prerequisites: [KA-C301-plastik, KA-C301-ittige]
 sounds: []
-roots: []
+roots: [dravidian-pattai-stripe]
+etymology_hook: "paṭṭi: compare native paṭṭi 'stripe' (DEDR 3877) and Sanskrit paṭṭikā 'tablet' (CDIAL 7699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C301-ittige]
 <!-- hl-knowledge: introduces=[KA-LEX-C301-VASTU301-04]; assesses=[] -->
 
 **ಪಟ್ಟಿ** — *paṭṭi* — "a list".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಪಟ್ಟಿ** (*paṭṭi*), "a list", comes from is not settled. DEDR 3877 lists Kannada *paṭṭe*, *paṭṭi*, "a stripe", as native, and Sanskrit has *paṭṭikā*, "a slab, a tablet" (CDIAL 7699); a list is a strip of writing, and either could have given the sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

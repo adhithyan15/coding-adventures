@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to pull, then the Kannada for to cry.
 You'll want to know: ಯಾರೂ.
 ಯಾರೂ — yārū — "nobody (with a negative verb)". Kannada negates a verb by joining ಇಲ್ಲ (illa) onto it: ಯಾರೂ ಬರಲಿಲ್ಲ — yārū baralilla — "Nobody came." ಇಲ್ಲ also means "is not there"; to say something is not a thing, it uses ಅಲ್ಲ (alla): ಇದು ನನ್ನ ಮನೆ ಅಲ್ಲ — idu nanna mane alla — "This is not my house."
 
+The word, taken apart.
+ಯಾರೂ (yārū) is native Dravidian: yāru, "who" (DEDR 5151), with -ū, "even": with a "not" verb, "not even anyone".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to cry, then the Kannada for nobody.
 
 You'll want to know: ಎಂದಿಗೂ.
 ಎಂದಿಗೂ — endigū — "never (with a negative verb)". ನಾನು ಎಂದಿಗೂ ಮಾಂಸ ತಿನ್ನುವುದಿಲ್ಲ — nānu endigū māṃsa tinnuvudilla — "I never eat meat."
+
+The word, taken apart.
+ಎಂದಿಗೂ (endigū) is native Dravidian: endu, "when", which DEDR 5151 lists on the question base e-, with -igū, "even at": with a "not" verb, "not even at any time".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for nobody, then the Kannada for never.
 You'll want to know: ಎಲ್ಲಿಯೂ.
 ಎಲ್ಲಿಯೂ — elliyū — "nowhere, not anywhere (with a negative verb)". ಅವನು ಎಲ್ಲಿಯೂ ಹೋಗಲಿಲ್ಲ — avanu elliyū hōgalilla — "He didn't go anywhere."
 
+The word, taken apart.
+ಎಲ್ಲಿಯೂ (elliyū) is native Dravidian: elli, "where" (DEDR 5151), with -ū, "even": with a "not" verb, "not even anywhere".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for never, then the Kannada for nowhere.
 You'll want to know: ಯಾರಾದರೂ.
 ಯಾರಾದರೂ — yārādarū — "anyone, someone". A yes-or-no question changes the last vowel of the sentence's final word to -ಆ (-ā): ಇದ್ದಾರೆ becomes ಯಾರಾದರೂ ಇದ್ದಾರಾ? — yārādarū iddārā? — "Is anyone there?"
 
+The word, taken apart.
+ಯಾರಾದರೂ (yārādarū) is native Dravidian: yāru, "who" (DEDR 5151), and ādarū, "even if it is", from āgu, "to become" (DEDR 333): "whoever it may be". DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for nowhere, then the Kannada for anyone.
 
 You'll want to know: ಏನಾದರೂ.
 ಏನಾದರೂ — ēnādarū — "anything, something". ನಿಮಗೆ ಏನಾದರೂ ಬೇಕಾ? — nimage ēnādarū bēkā? — "Do you need anything?"
+
+The word, taken apart.
+ಏನಾದರೂ (ēnādarū) is native Dravidian: ēnu, "what" (DEDR 5151), and ādarū, "even if it is", from āgu, "to become" (DEDR 333): "whatever it may be". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

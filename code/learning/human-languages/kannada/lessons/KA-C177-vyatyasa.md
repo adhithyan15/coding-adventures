@@ -14,7 +14,8 @@ romanization: "vyatyāsa"
 concept_tag: KA-KARANA177-VYATYASA
 prerequisites: [KA-C177-phalitamsa, KA-C177-parinama]
 sounds: []
-roots: []
+roots: [sanskrit-vyatyasa]
+etymology_hook: "vyatyāsa ← Sanskrit vyatyāsa 'inversion, contrariety', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C177-parinama]
 <!-- hl-knowledge: introduces=[KA-LEX-C177-KARANA177-05]; assesses=[] -->
 
 **ವ್ಯತ್ಯಾಸ** — *vyatyāsa* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವ್ಯತ್ಯಾಸ** (*vyatyāsa*) is Sanskrit *vyatyāsa*, "inversion, contrariety", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

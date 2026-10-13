@@ -11,9 +11,10 @@ romanization: "alvā"
 concept_tag: KA-Q-TAG
 prerequisites: [KA-C69-is-it, KA-C42-good, KA-C53-moon, KA-C44-listen, KA-C44-look, KA-C43-give, KA-C67-or]
 sounds: []
-roots: []
+roots: [dravidian-al-not]
+etymology_hook: "alvā: native alla 'is not' (DEDR 234) + the question ending -ā"
 duration:
-  max_seconds: 210
+  max_seconds: 272
 requires:
   knowledge: [KA-GRAMMAR-C69-ASK-02, KA-LEX-C68-DENY-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C41-DEIXIS-01]
 introduces:
@@ -50,6 +51,11 @@ book, isn't it?"
 Register, plainly: ಅಲ್ವಾ is spoken Kannada. Written Kannada says ಅಲ್ಲವೇ. This
 book teaches the everyday spoken variety throughout, so ಅಲ್ವಾ is what you get
 here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲ್ವಾ** (*alvā*) is native Dravidian: *alla*, "is not" (DEDR 234), worn down to *al-*, with *-ā*, the ending that makes a question.
 
 ## Grammar Lens: asking for agreement, not information
 <!-- hl-knowledge: introduces=[KA-PRAGMATICS-C69-ASK-04]; assesses=[] -->

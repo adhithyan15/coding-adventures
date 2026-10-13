@@ -11,7 +11,8 @@ romanization: "yāvāga"
 concept_tag: KA-Q-WHEN
 prerequisites: [KA-C71-say-again, KA-C50-now, KA-C55-hill, KA-C34-sahaya-maadu, KA-C34-keelu, KA-C34-tegeduko, KA-C69-isnt-it, KA-C69-why]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-a-distal-deictic]
+etymology_hook: "yāvāga: native yāva 'which' (DEDR 5151) + āga 'time' (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ question ending on the end of it, doing the same job it did on ಗೊತ್ತ�
 The answers are already yours: ಈಗ (*īga*, "now"), ನಾಳೆ, ನಾಡಿದ್ದು
 (*nāḍiddu*, "the day after tomorrow"). Ask ಯಾವಾಗ and you can understand what
 comes back.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾವಾಗ** (*yāvāga*) is native Dravidian: *yāva*, "which" (DEDR 5151), and *āga*, "time, then" (DEDR 1). It is "at which time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

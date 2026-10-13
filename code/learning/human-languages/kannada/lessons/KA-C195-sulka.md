@@ -14,7 +14,8 @@ romanization: "śulka"
 concept_tag: KA-KELASA195-SULKA
 prerequisites: [KA-C194-manegelasa, KA-C194-meladhikari]
 sounds: []
-roots: []
+roots: [sanskrit-shulka]
+etymology_hook: "śulka ← Sanskrit śulka 'price, value; tax, toll', a tatsama (CDIAL 12543)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C194-meladhikari]
 <!-- hl-knowledge: introduces=[KA-LEX-C195-KELASA195-01]; assesses=[] -->
 
 **ಶುಲ್ಕ** — *śulka* — "a fee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶುಲ್ಕ** (*śulka*) is Sanskrit *śulka*, "price, value; tax, toll", taken over whole as a learned loan, a tatsama (CDIAL 12543).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

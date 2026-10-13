@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an advertisement, then the Kannada for a
 You'll want to know: ಬೇಯಿಸು.
 ಬೇಯಿಸು — bēyisu — "to boil, to cook (in water or steam)".
 
+The word, taken apart.
+ಬೇಯಿಸು (bēyisu) is native Dravidian, from bē, "to be cooked, be burnt", with -isu, "to make"; DEDR 5517 lists bēyisu itself; the entry also has Tamil vē.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a receipt, then the Kannada for to boil.
 
 You'll want to know: ಅಡುಗೆ ಮಾಡು.
 ಅಡುಗೆ ಮಾಡು — aḍuge māḍu — "to cook".
+
+The word, taken apart.
+ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) is native Dravidian: aḍuge, "cooking", which DEDR 76 lists under aḍu, "to cook" (Tamil aṭu), and māḍu, "to do" (DEDR 4797). DEDR 76 compares Sanskrit aṭṭa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to boil, then the Kannada for to cook.
 You'll want to know: ಖರೀದಿಸು.
 ಖರೀದಿಸು — kharīdisu — "to buy".
 
+The word, taken apart.
+ಖರೀದಿಸು (kharīdisu) is Persian kharīd, "purchase", which came through Hindustani, made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to cook, then the Kannada for to buy.
 You'll want to know: ಪಾವತಿಸು.
 ಪಾವತಿಸು — pāvatisu — "to pay".
 
+The word, taken apart.
+ಪಾವತಿಸು (pāvatisu) is pāvati, "payment, a receipt", made into a verb with -isu. The origin of pāvati is uncertain; neither DEDR nor CDIAL records it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to buy, then the Kannada for to pay.
 
 You'll want to know: ಸ್ನಾನ ಮಾಡು.
 ಸ್ನಾನ ಮಾಡು — snāna māḍu — "to bathe".
+
+The word, taken apart.
+ಸ್ನಾನ ಮಾಡು (snāna māḍu) is snāna, "bathing", from Sanskrit snāna (CDIAL 13789), with native māḍu, "to do" (DEDR 4797).
 
 What you've built.
 One more word for this chapter.

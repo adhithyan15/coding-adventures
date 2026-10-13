@@ -14,7 +14,8 @@ romanization: "hoḍe"
 concept_tag: KA-VERB-HODE
 prerequisites: [KA-C237-balasu, KA-C237-saripadisu]
 sounds: []
-roots: []
+roots: [dravidian-putai-beat]
+etymology_hook: "hoḍe: native Dravidian (DEDR 4252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C237-saripadisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C237-KRIYE237-04]; assesses=[] -->
 
 **ಹೊಡೆ** — *hoḍe* — "to hit, to beat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಡೆ** (*hoḍe*) is native Dravidian (DEDR 4252). DEDR gives the older Kannada *poḍe*, "to strike, beat": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

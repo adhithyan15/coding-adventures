@@ -14,7 +14,8 @@ romanization: "araḷu"
 concept_tag: KA-VERB-ARALU
 prerequisites: [KA-C202-carcisu, KA-C203-belesu]
 sounds: []
-roots: []
+roots: [dravidian-alar-blossom]
+etymology_hook: "araḷu: native Dravidian, one word with Tamil alar and Telugu alaru (DEDR 247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C203-belesu]
 <!-- hl-knowledge: introduces=[KA-LEX-C203-KRIYE203-02]; assesses=[] -->
 
 **ಅರಳು** — *araḷu* — "to bloom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅರಳು** (*araḷu*) is native Dravidian, one word with Tamil *alar*, Telugu *alaru* and Malayalam *alar* (DEDR 247). DEDR lists *alar*, *araḷ*, "to open, blossom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

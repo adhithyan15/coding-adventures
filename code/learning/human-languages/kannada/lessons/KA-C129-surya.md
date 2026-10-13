@@ -14,7 +14,8 @@ romanization: "sūrya"
 concept_tag: KA-THINGS129-SURYA
 prerequisites: [KA-C128-jalapata, KA-C128-dvipa]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūrya ← Sanskrit sūrya 'sun', a tatsama (CDIAL 13574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C128-dvipa]
 <!-- hl-knowledge: introduces=[KA-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **ಸೂರ್ಯ** — *sūrya* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂರ್ಯ** (*sūrya*) is Sanskrit *sūrya*, "sun", taken over whole as a learned loan, a tatsama (CDIAL 13574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

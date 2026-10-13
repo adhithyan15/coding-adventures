@@ -14,7 +14,8 @@ romanization: "jīrige"
 concept_tag: KA-THINGS126-JIRIGE
 prerequisites: [KA-C126-halasu, KA-C126-menasu]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīrige ← Sanskrit jīraka 'cummin-seed', reshaped as a tadbhava (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C126-menasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **ಜೀರಿಗೆ** — *jīrige* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೀರಿಗೆ** (*jīrige*) comes from Sanskrit *jīraka*, "cummin-seed", reshaped to Kannada sounds: a tadbhava (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

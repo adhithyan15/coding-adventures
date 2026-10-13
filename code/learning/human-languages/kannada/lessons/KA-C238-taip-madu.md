@@ -14,7 +14,8 @@ romanization: "ṭaip māḍu"
 concept_tag: KA-VERB-TAIP-MADU
 prerequisites: [KA-C237-hode, KA-C237-prayatnisu]
 sounds: []
-roots: []
+roots: [english-type, maadu-do-dravidian]
+etymology_hook: "ṭaip māḍu: English type + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C237-prayatnisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C238-KRIYE238-01]; assesses=[] -->
 
 **ಟೈಪ್ ಮಾಡು** — *ṭaip māḍu* — "to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೈಪ್ ಮಾಡು** (*ṭaip māḍu*) is English *type* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

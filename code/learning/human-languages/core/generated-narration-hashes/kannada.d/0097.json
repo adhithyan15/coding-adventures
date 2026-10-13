@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 97,
-  "sourceHash": "fnv1a64:534b1b745f73d802",
+  "sourceHash": "fnv1a64:e497bb4863accb36",
   "lessonIds": [
     "KA-C97-pardon",
     "KA-C97-introduction",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch97.txt",
   "json": "kannada/narration/ch97.json",
-  "textHash": "fnv1a64:7a68bbf9a45e7291",
-  "jsonHash": "fnv1a64:95a2d3b792f37a14",
+  "textHash": "fnv1a64:294bd9fc6f58a24c",
+  "jsonHash": "fnv1a64:96b745a94f6a73ff",
   "findings": []
 }

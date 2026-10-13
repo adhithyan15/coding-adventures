@@ -14,7 +14,8 @@ romanization: "garagasa"
 concept_tag: KA-VASTU227-GARAGASA
 prerequisites: [KA-C226-aliya, KA-C226-attige]
 sounds: []
-roots: []
+roots: [dravidian-garasu-notch]
+etymology_hook: "garagasa: usually linked to garasu 'toothed part of a saw' (DEDR 1265)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C226-attige]
 <!-- hl-knowledge: introduces=[KA-LEX-C227-VASTU227-01]; assesses=[] -->
 
 **ಗರಗಸ** — *garagasa* — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗರಗಸ** (*garagasa*) is usually linked to *garasu*, "a jag, the toothed part of a file or saw", which DEDR 1265 lists. DEDR does not list *garagasa* itself. DEDR 1265 compares Sanskrit *karaṭa* and *karavāla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

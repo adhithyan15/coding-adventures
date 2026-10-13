@@ -14,7 +14,8 @@ romanization: "bāla"
 concept_tag: KA-VASTU297-BALA
 prerequisites: [KA-C297-mosale, KA-C297-cirate]
 sounds: []
-roots: []
+roots: [dravidian-app-57-vaal]
+etymology_hook: "bāla: an Indo-Aryan loan (DEDR App. 57), from Sanskrit vāla 'tail, hair'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C297-cirate]
 <!-- hl-knowledge: introduces=[KA-LEX-C297-VASTU297-05]; assesses=[] -->
 
 **ಬಾಲ** — *bāla* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಲ** (*bāla*) is one of the words DEDR lists among Indo-Aryan loans (DEDR App. 57), beside Tamil *vāl*, "tail": it goes back to Sanskrit *vāla*, "tail, hair" (CDIAL 11572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

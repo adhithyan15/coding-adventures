@@ -14,7 +14,8 @@ romanization: "āmbyulens"
 concept_tag: KA-AROGYA282-AMBYULENS
 prerequisites: [KA-C281-sikkihakikollu, KA-C282-apaghata]
 sounds: []
-roots: []
+roots: [english-ambulance]
+etymology_hook: "āmbyulens ← English ambulance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C282-apaghata]
 <!-- hl-knowledge: introduces=[KA-LEX-C282-AROGYA282-02]; assesses=[] -->
 
 **ಆಂಬ್ಯುಲೆನ್ಸ್** — *āmbyulens* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಂಬ್ಯುಲೆನ್ಸ್** (*āmbyulens*) is a loan from English *ambulance*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

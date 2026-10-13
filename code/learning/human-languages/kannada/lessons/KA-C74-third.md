@@ -11,7 +11,8 @@ romanization: "mūraneya"
 concept_tag: KA-ORDINAL-THIRD
 prerequisites: [KA-C74-second, KA-C73-in-order-to, KA-C70-quotative, KA-C58-more, KA-C07-muuru]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "mūraneya: native mūru 'three' (DEDR 5052) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -57,6 +58,11 @@ the third tree.
 
 This is the second word and it needed nothing new. That is what an exceptionless
 ending buys you: from here on, a number you can say is a position you can say.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂರನೆಯ** (*mūraneya*) is built from *mūru*, "three", native Dravidian (DEDR 5052, with Tamil *mūṉṟu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C74-ORDINAL-03, KA-LEX-C74-ORDINAL-01] -->

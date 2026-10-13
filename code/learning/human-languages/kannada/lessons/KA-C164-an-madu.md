@@ -14,7 +14,8 @@ romanization: "ān māḍu"
 concept_tag: KA-VERB-AN-MADU
 prerequisites: [KA-C164-klik-madu, KA-C164-alisu]
 sounds: []
-roots: []
+roots: [english-on, maadu-do-dravidian]
+etymology_hook: "ān māḍu: English on + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C164-alisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C164-KRIYE164-04]; assesses=[] -->
 
 **ಆನ್ ಮಾಡು** — *ān māḍu* — "to switch on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆನ್ ಮಾಡು** (*ān māḍu*) is English *on* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

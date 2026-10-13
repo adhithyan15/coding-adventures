@@ -14,7 +14,8 @@ romanization: "kauśalya"
 concept_tag: KA-CAN112-KAUSALYA
 prerequisites: [KA-C111-saikal, KA-C112-samarthya]
 sounds: []
-roots: []
+roots: [sanskrit-kaushalya]
+etymology_hook: "kauśalya ← Sanskrit kauśalya 'skill', from kuśala 'skilful', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C112-samarthya]
 <!-- hl-knowledge: introduces=[KA-LEX-C112-CAN112-02]; assesses=[] -->
 
 **ಕೌಶಲ್ಯ** — *kauśalya* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೌಶಲ್ಯ** (*kauśalya*) is Sanskrit *kauśalya*, "skill", the noun of *kuśala*, "skilful", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

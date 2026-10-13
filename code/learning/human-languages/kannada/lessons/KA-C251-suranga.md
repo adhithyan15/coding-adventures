@@ -14,7 +14,8 @@ romanization: "suraṅga"
 concept_tag: KA-STHALA251-SURANGA
 prerequisites: [KA-C251-gadi, KA-C251-kaluve]
 sounds: []
-roots: []
+roots: [sanskrit-surunga]
+etymology_hook: "suraṅga: usually traced to Sanskrit suruṅgā 'underground passage', itself thought to be borrowed from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C251-kaluve]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-03]; assesses=[] -->
 
 **ಸುರಂಗ** — *suraṅga* — "a tunnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುರಂಗ** (*suraṅga*) is usually traced to Sanskrit *suruṅgā*, "an underground passage" (CDIAL 13506), a word often thought to be borrowed from Greek *syrinx*, "pipe, channel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

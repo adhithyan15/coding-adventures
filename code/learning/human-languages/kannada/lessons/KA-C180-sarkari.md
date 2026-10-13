@@ -14,7 +14,8 @@ romanization: "sarkāri"
 concept_tag: KA-GUNA180-SARKARI
 prerequisites: [KA-C179-dubari, KA-C180-ucita]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sarkāri: sarkār 'government' ← Persian, through Hindustani, + -i 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C180-ucita]
 <!-- hl-knowledge: introduces=[KA-LEX-C180-GUNA180-02]; assesses=[] -->
 
 **ಸರ್ಕಾರಿ** — *sarkāri* — "government, governmental".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸರ್ಕಾರಿ** (*sarkāri*) is *sarkār*, "government", a Persian word, "head of affairs", which came through Hindustani, with *-i*, "of": "of the government".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

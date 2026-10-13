@@ -14,6 +14,9 @@ You'll want to know: Three native colors.
 ಬಿಳಿ (biḷi) = "white" — native Dravidian.
 ಕೆಂಪು (kempu) = "red" — native Dravidian.
 
+The word, taken apart.
+ಕಪ್ಪು (kappu) is native Dravidian (DEDR 1395, with Tamil kaṟuppu), ಬಿಳಿ (biḷi) is native too (DEDR 5496, with Tamil veḷ), and so is ಕೆಂಪು (kempu) (DEDR 1931, with Telugu kempu). ನೀಲಿ (nīli) comes from Sanskrit nīla, "dark blue" (CDIAL 7563). DEDR 1395 compares Sanskrit karparī.
+
 You'll want to know: The familiar borrowed blue.
 ನೀಲಿ (nīli) = "blue" — from the same Sanskrit ನೀಲ (nīla) that Tamil, Malayalam, and Hindi all reach for. Even Kannada, whose week went fully Sanskritic, still keeps its everyday black/white/red native — it's specifically blue that pulls in the Sanskrit word, across all four Dravidian languages and Hindi alike.
 

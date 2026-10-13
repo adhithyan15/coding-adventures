@@ -12,6 +12,9 @@ Before the new one: say the Kannada for curiosity, then the Kannada for a feelin
 You'll want to know: ಹೆರಿಗೆ.
 ಹೆರಿಗೆ — herige — "childbirth, delivery".
 
+The word, taken apart.
+ಹೆರಿಗೆ (herige) is native Dravidian, built on the verb that DEDR 4422 lists as older Kannada peṟ, "to get, beget, bear", with Tamil peṟu: the p- has become h-, with the noun ending -ige.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a feeling, then the Kannada for childbir
 
 You'll want to know: ದೃಷ್ಟಿ.
 ದೃಷ್ಟಿ — dṛṣṭi — "eyesight".
+
+The word, taken apart.
+ದೃಷ್ಟಿ (dṛṣṭi) is Sanskrit dṛṣṭi, "seeing, sight", taken over whole as a learned loan, a tatsama (CDIAL 6520).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for childbirth, then the Kannada for eyesigh
 You'll want to know: ಸೋಂಕು.
 ಸೋಂಕು — sōṅku — "an infection".
 
+The word, taken apart.
+ಸೋಂಕು (sōṅku) is native Dravidian, one word with Tamil cōku and Malayalam cōku (DEDR 2870). DEDR lists sōku, soṅku, "to touch, catch, infect".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for eyesight, then the Kannada for an infect
 You'll want to know: ಬೊಕ್ಕೆ.
 ಬೊಕ್ಕೆ — bokke — "a blister".
 
+The word, taken apart.
+ಬೊಕ್ಕೆ (bokke) is native Dravidian, one word with Telugu pokku and Malayalam pokkuḷa (DEDR 4455). DEDR lists bokke, "blister", and compares Nepali phoko, "blister, boil" (CDIAL 8391).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an infection, then the Kannada for a bli
 
 You'll want to know: ಪೌಷ್ಟಿಕ.
 ಪೌಷ್ಟಿಕ — pauṣṭika — "nutritious".
+
+The word, taken apart.
+ಪೌಷ್ಟಿಕ (pauṣṭika) is Sanskrit pauṣṭika, "nourishing, promoting growth", from puṣṭi, "growth", taken over whole: a tatsama.
 
 What you've built.
 One more word for this chapter.

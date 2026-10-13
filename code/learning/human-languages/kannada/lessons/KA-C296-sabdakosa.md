@@ -14,7 +14,8 @@ romanization: "śabdakōśa"
 concept_tag: KA-VASTU296-SABDAKOSA
 prerequisites: [KA-C296-petrol, KA-C296-helmet]
 sounds: []
-roots: []
+roots: [sanskrit-shabda, sanskrit-kosha]
+etymology_hook: "śabdakōśa ← Sanskrit śabda 'word, sound' + kōśa 'treasury'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C296-helmet]
 <!-- hl-knowledge: introduces=[KA-LEX-C296-VASTU296-05]; assesses=[] -->
 
 **ಶಬ್ದಕೋಶ** — *śabdakōśa* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಬ್ದಕೋಶ** (*śabdakōśa*) is Sanskrit *śabda*, "sound, word" (CDIAL 12298), and *kōśa*, "a store, a treasury" (CDIAL 3539): "a treasury of words".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kappe"
 concept_tag: KA-THINGS133-KAPPE
 prerequisites: [KA-C132-solle, KA-C132-jeda]
 sounds: []
-roots: []
+roots: [dravidian-kappe-frog]
+etymology_hook: "kappe: native Dravidian, one word with Telugu kappa (DEDR 1224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C132-jeda]
 <!-- hl-knowledge: introduces=[KA-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **ಕಪ್ಪೆ** — *kappe* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಪ್ಪೆ** (*kappe*) is native Dravidian, one word with Telugu *kappa* (DEDR 1224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

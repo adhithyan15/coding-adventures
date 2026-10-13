@@ -14,7 +14,8 @@ romanization: "pāspōrṭ"
 concept_tag: KA-VASTU223-PASPORT
 prerequisites: [KA-C223-namune, KA-C223-pramanapatra]
 sounds: []
-roots: []
+roots: [english-passport]
+etymology_hook: "pāspōrṭ ← English passport"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C223-pramanapatra]
 <!-- hl-knowledge: introduces=[KA-LEX-C223-VASTU223-03]; assesses=[] -->
 
 **ಪಾಸ್ಪೋರ್ಟ್** — *pāspōrṭ* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಸ್ಪೋರ್ಟ್** (*pāspōrṭ*) is a loan from English *passport*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ittīcege"
 concept_tag: KA-HINDE155-ITTICHEGE
 prerequisites: [KA-C154-yaradaru, KA-C154-enadaru]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "ittīcege: native, on the near-pointing base i- (DEDR 410), which lists īce 'this side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C154-enadaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C155-HINDE155-01]; assesses=[] -->
 
 **ಇತ್ತೀಚೆಗೆ** — *ittīcege* — "recently". Kannada's past for "I" ends in **-ಎ** (*-e*) after the past stem: **ನಾನು ಇತ್ತೀಚೆಗೆ ಒಂದು ಪುಸ್ತಕ ಓದಿದೆ** — *nānu ittīcege ondu pustaka ōdide* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇತ್ತೀಚೆಗೆ** (*ittīcege*) is native Dravidian, built on the near-pointing base *i-*, "this". DEDR 410 lists *īce*, "this side", and *itta*, "on this side": recently is "on this side" of now.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

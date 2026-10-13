@@ -14,7 +14,8 @@ romanization: "kilō"
 concept_tag: KA-VASTU185-KILO
 prerequisites: [KA-C185-nanya, KA-C185-riyayiti]
 sounds: []
-roots: []
+roots: [english-kilo]
+etymology_hook: "kilō ← English kilo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C185-riyayiti]
 <!-- hl-knowledge: introduces=[KA-LEX-C185-VASTU185-04]; assesses=[] -->
 
 **ಕಿಲೋ** — *kilō* — "a kilogram".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಿಲೋ** (*kilō*) is a loan from English *kilo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

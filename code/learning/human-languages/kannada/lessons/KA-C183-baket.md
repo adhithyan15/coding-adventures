@@ -14,7 +14,8 @@ romanization: "bakeṭ"
 concept_tag: KA-VASTU183-BAKET
 prerequisites: [KA-C183-battalu, KA-C183-sautu]
 sounds: []
-roots: []
+roots: [english-bucket]
+etymology_hook: "bakeṭ ← English bucket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C183-sautu]
 <!-- hl-knowledge: introduces=[KA-LEX-C183-VASTU183-05]; assesses=[] -->
 
 **ಬಕೆಟ್** — *bakeṭ* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಕೆಟ್** (*bakeṭ*) is a loan from English *bucket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-BOOK
 prerequisites: [KA-C46-salt, KA-C44-speak]
 sounds: []
 roots: []
+etymology_hook: "pustaka ← Sanskrit pustaka 'book', itself usually traced to Iranian (Middle Persian post 'skin')"
 duration:
   max_seconds: 210
 requires:

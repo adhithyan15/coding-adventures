@@ -11,9 +11,10 @@ romanization: "alla"
 concept_tag: KA-NEG-ALLA
 prerequisites: [KA-C67-and-too, KA-S135-letter-a, KA-C01-illa, KA-C41-deixis-system, KA-C49-true, KA-C52-chair, KA-C52-door, KA-C47-stomach, KA-C47-finger, KA-C66-grass]
 sounds: []
-roots: []
+roots: [dravidian-al-not]
+etymology_hook: "alla: native Dravidian, one word with Tamil al- and Malayalam alla (DEDR 234)"
 duration:
-  max_seconds: 210
+  max_seconds: 266
 requires:
   knowledge: [KA-SCRIPT-RECOG-135, KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C49-REPLY-01]
 introduces:
@@ -48,6 +49,11 @@ here.
 
 **ಇದು ಪುಸ್ತಕ ಅಲ್ಲ** (*idu pustaka alla*) — "this is not a book." The thing is
 here; the description is wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲ್ಲ** (*alla*) is native Dravidian, one word with Tamil *al-* and Malayalam *alla* (DEDR 234). DEDR lists *alla* itself, "to be not so-and-so".
 
 ## Grammar Lens: two negatives, and which one to reach for
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C68-DENY-02]; assesses=[] -->

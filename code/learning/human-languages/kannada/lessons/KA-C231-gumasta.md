@@ -14,7 +14,8 @@ romanization: "gumāsta"
 concept_tag: KA-KELASA231-GUMASTA
 prerequisites: [KA-C231-sabhe, KA-C231-sandarsana]
 sounds: []
-roots: []
+roots: [persian-gumashta]
+etymology_hook: "gumāsta ← Persian gumāšta 'an agent', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C231-sandarsana]
 <!-- hl-knowledge: introduces=[KA-LEX-C231-KELASA231-04]; assesses=[] -->
 
 **ಗುಮಾಸ್ತ** — *gumāsta* — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಮಾಸ್ತ** (*gumāsta*) is a loan from Persian *gumāšta*, "an appointed agent", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

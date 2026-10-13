@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [KA-C01-namaskara]
 sounds: [e-sign]
 roots: [pesar-dravidian]
+etymology_hook: "hesaru: native Dravidian, older Kannada pesar (DEDR 4410), one word with Tamil peyar and Telugu pēru"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,7 @@ like *peyar*, *not* related to Sanskrit *nāma* (Hindi *nām*, English *name*).
 Across the family: Kannada *hesaru*, Tamil *peyar*, Telugu *pēru*, Malayalam
 *pēr* — one Dravidian word; only Hindi *nām* / English *name* are Indo-European.
 
+DEDR 4410 gives the older Kannada spelling *pesar(u)*, with the *p-* still in place.
 
 ## Across the family — the same idea, five ways
 <!-- hl-knowledge: introduces=[KA-ETYMON-C02-HESARU-03]; assesses=[] -->

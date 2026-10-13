@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 238,
-  "sourceHash": "fnv1a64:4a15ec8697b48439",
+  "sourceHash": "fnv1a64:d419c233e3710aaf",
   "lessonIds": [
     "KA-C238-taip-madu",
     "KA-C238-kaleduhogu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch238.txt",
   "json": "kannada/narration/ch238.json",
-  "textHash": "fnv1a64:7c1ec337b756cde0",
-  "jsonHash": "fnv1a64:18939a7c724bdc1f",
+  "textHash": "fnv1a64:54f0f42e5fd96ff0",
+  "jsonHash": "fnv1a64:ee4e8440bdca699a",
   "findings": []
 }

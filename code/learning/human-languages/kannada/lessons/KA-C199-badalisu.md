@@ -14,7 +14,8 @@ romanization: "badalisu"
 concept_tag: KA-VERB-BADALISU
 prerequisites: [KA-C199-madacu, KA-C199-istri-madu]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalisu: badal 'change' ← Arabic, through Hindustani, + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C199-istri-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C199-KRIYE199-05]; assesses=[] -->
 
 **ಬದಲಿಸು** — *badalisu* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬದಲಿಸು** (*badalisu*) is *badal*, "exchange, change", from Arabic *badal*, which came through Persian and Hindustani, made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

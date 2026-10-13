@@ -14,7 +14,8 @@ romanization: "piñcaṇi"
 concept_tag: KA-KELASA271-PINCANI
 prerequisites: [KA-C270-ksaurika, KA-C270-dhobi]
 sounds: []
-roots: []
+roots: [english-pension]
+etymology_hook: "piñcaṇi ← English pension"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C270-dhobi]
 <!-- hl-knowledge: introduces=[KA-LEX-C271-KELASA271-01]; assesses=[] -->
 
 **ಪಿಂಚಣಿ** — *piñcaṇi* — "a pension".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಿಂಚಣಿ** (*piñcaṇi*) is a loan from English *pension*. Kannada reshaped it to *piñcaṇi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

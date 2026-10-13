@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 243,
-  "sourceHash": "fnv1a64:67a5dc684a32ef35",
+  "sourceHash": "fnv1a64:0ce6fe60d972afc0",
   "lessonIds": [
     "KA-C243-gurutisu",
     "KA-C243-uccarisu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch243.txt",
   "json": "kannada/narration/ch243.json",
-  "textHash": "fnv1a64:54911fa45cc409a3",
-  "jsonHash": "fnv1a64:662fb4907a61b6ef",
+  "textHash": "fnv1a64:fe24a68d34bf248a",
+  "jsonHash": "fnv1a64:49730e004ea00f96",
   "findings": []
 }

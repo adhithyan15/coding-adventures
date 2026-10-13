@@ -6196,6 +6196,7 @@ fn is_treeview_metadata_line(line: &str) -> bool {
 pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let line_hops = parse_swimlane_line_hops(source)?;
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
+    let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6226,6 +6227,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         callbacks: Vec::new(),
         line_hops,
         automatic_lane_ordering,
+        ignore_cross_lane_edges,
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -6499,6 +6501,24 @@ fn parse_swimlane_automatic_lane_ordering(source: &str) -> Result<bool, ParseErr
         "true" => Ok(true),
         "false" => Ok(false),
         _ => Err(swimlane_error(1, "Swimlane automaticLaneOrdering must be true or false")),
+    }
+}
+
+fn parse_swimlane_ignore_cross_lane_edges(source: &str) -> Result<bool, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(true);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("ignoreCrossLaneEdges").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(true);
+    };
+    match value.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(swimlane_error(1, "Swimlane ignoreCrossLaneEdges must be true or false")),
     }
 }
 

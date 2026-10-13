@@ -14,7 +14,8 @@ romanization: "ḍoṅku"
 concept_tag: KA-GUNA256-DONKU
 prerequisites: [KA-C256-tollu, KA-C256-cappate]
 sounds: []
-roots: []
+roots: [dravidian-kudu-crooked]
+etymology_hook: "ḍoṅku: native Dravidian, one word with Tamil koṭu (DEDR 2054)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C256-cappate]
 <!-- hl-knowledge: introduces=[KA-LEX-C256-GUNA256-03]; assesses=[] -->
 
 **ಡೊಂಕು** — *ḍoṅku* — "crooked, bent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಡೊಂಕು** (*ḍoṅku*) is native Dravidian, one word with Tamil *koṭu* (DEDR 2054). DEDR lists *ḍoṅku*, "to bend, be crooked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

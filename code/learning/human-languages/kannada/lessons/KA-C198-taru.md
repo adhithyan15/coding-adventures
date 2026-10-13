@@ -14,7 +14,8 @@ romanization: "taru"
 concept_tag: KA-VERB-TARU
 prerequisites: [KA-C197-karyadarsi, KA-C198-ujju]
 sounds: []
-roots: []
+roots: [dravidian-taa-give]
+etymology_hook: "taru: native Dravidian, one word with Tamil taru and Malayalam taruka (DEDR 3098)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C198-ujju]
 <!-- hl-knowledge: introduces=[KA-LEX-C198-KRIYE198-02]; assesses=[] -->
 
 **ತರು** — *taru* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತರು** (*taru*) is native Dravidian, one word with Tamil *taru* and Malayalam *taruka* (DEDR 3098). DEDR lists *tar*, *tā*, "to bring, give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ūta"
 concept_tag: KA-AROGYA245-UTA
 prerequisites: [KA-C245-bhedi, KA-C245-alarji]
 sounds: []
-roots: []
+roots: [dravidian-uutu-blow]
+etymology_hook: "ūta: native Dravidian, from ūdu 'to swell' (DEDR 741)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C245-alarji]
 <!-- hl-knowledge: introduces=[KA-LEX-C245-AROGYA245-03]; assesses=[] -->
 
 **ಊತ** — *ūta* — "a swelling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಊತ** (*ūta*) is native Dravidian, from *ūdu*, "to blow, become inflated, swell", which DEDR 741 lists; the entry also has Tamil *ūtu*, Telugu *ūdu* and Malayalam *ūtuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

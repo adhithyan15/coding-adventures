@@ -11,7 +11,8 @@ romanization: "cinte"
 concept_tag: KA-FEEL-WORRY
 prerequisites: [KA-C82-rest, KA-C83-sadness]
 sounds: []
-roots: []
+roots: [sanskrit-cinta]
+etymology_hook: "cinte ← Sanskrit cintā 'thought, care', a tatsama (CDIAL 4816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C83-sadness]
 
 **ಚಿಂತೆ ಮಾಡಬೇಡಿ** (*cinte māḍabēḍi*) — "don't worry". The ending **‑ಬೇಡಿ**
 is **ಬೇಡ**, "don't want", said politely.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಂತೆ** (*cinte*) is Sanskrit *cintā*, "thought, care", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 4816). The Sanskrit word meant thought in general; Kannada narrowed it to anxious thought.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

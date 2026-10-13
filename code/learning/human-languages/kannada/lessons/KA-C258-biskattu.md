@@ -14,7 +14,8 @@ romanization: "biskattu"
 concept_tag: KA-VASTU258-BISKATTU
 prerequisites: [KA-C258-benne, KA-C258-payasa]
 sounds: []
-roots: []
+roots: [english-biscuit]
+etymology_hook: "biskattu ← English biscuit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C258-payasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C258-VASTU258-04]; assesses=[] -->
 
 **ಬಿಸ್ಕತ್ತು** — *biskattu* — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿಸ್ಕತ್ತು** (*biskattu*) is a loan from English *biscuit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

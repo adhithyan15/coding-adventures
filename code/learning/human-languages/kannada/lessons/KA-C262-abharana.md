@@ -14,7 +14,8 @@ romanization: "ābharaṇa"
 concept_tag: KA-VASTU262-ABHARANA
 prerequisites: [KA-C262-holige, KA-C262-prasada]
 sounds: []
-roots: []
+roots: [sanskrit-abharana]
+etymology_hook: "ābharaṇa ← Sanskrit ābharaṇa 'decorating, ornament', a tatsama (CDIAL 1224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C262-prasada]
 <!-- hl-knowledge: introduces=[KA-LEX-C262-VASTU262-05]; assesses=[] -->
 
 **ಆಭರಣ** — *ābharaṇa* — "jewellery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಭರಣ** (*ābharaṇa*) is Sanskrit *ābharaṇa*, "decorating, ornament", taken over whole as a learned loan, a tatsama (CDIAL 1224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

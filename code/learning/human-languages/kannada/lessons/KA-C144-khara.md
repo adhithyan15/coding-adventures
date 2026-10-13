@@ -14,7 +14,8 @@ romanization: "khāra"
 concept_tag: KA-QUAL144-KHARA
 prerequisites: [KA-C144-nerale, KA-C144-budu]
 sounds: []
-roots: []
+roots: [sanskrit-kshara]
+etymology_hook: "khāra ← Sanskrit kṣāra 'corrosive; alkali', reshaped as a tadbhava (CDIAL 3674)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C144-budu]
 <!-- hl-knowledge: introduces=[KA-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **ಖಾರ** — *khāra* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖಾರ** (*khāra*) comes from Sanskrit *kṣāra*, "corrosive; alkali", reshaped to Kannada sounds: a tadbhava (CDIAL 3674). Prakrit *khāra* shows the change of *kṣ-* to *kh-*; the sharp taste became "hot, spicy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

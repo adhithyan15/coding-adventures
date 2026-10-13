@@ -14,7 +14,8 @@ romanization: "kāgada"
 concept_tag: KA-THINGS118-KAGADA
 prerequisites: [KA-C118-cila, KA-C118-lekhani, KA-C76-modala-oduvike, KA-C76-lines, KA-C76-words]
 sounds: []
-roots: []
+roots: [persian-kaghaz]
+etymology_hook: "kāgada ← Persian kāghaz 'paper', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C118-lekhani]
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **ಕಾಗದ** — *kāgada* — "paper; a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಗದ** (*kāgada*) is a loan from Persian *kāghaz*, "paper", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dināṅka"
 concept_tag: KA-KALA171-DINANKA
 prerequisites: [KA-C171-yavagalu, KA-C171-agaga]
 sounds: []
-roots: []
+roots: [sanskrit-dina, sanskrit-anka]
+etymology_hook: "dināṅka: Sanskrit dina 'day' (CDIAL 6328) + aṅka 'mark' (CDIAL 100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C171-agaga]
 <!-- hl-knowledge: introduces=[KA-LEX-C171-KALA171-03]; assesses=[] -->
 
 **ದಿನಾಂಕ** — *dināṅka* — "a date (on the calendar)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಿನಾಂಕ** (*dināṅka*) is Sanskrit *dina*, "day" (CDIAL 6328), and *aṅka*, "mark, sign" (CDIAL 100): "the day's mark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

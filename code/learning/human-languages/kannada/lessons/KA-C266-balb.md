@@ -14,7 +14,8 @@ romanization: "balb"
 concept_tag: KA-VASTU266-BALB
 prerequisites: [KA-C265-pottana, KA-C265-ukku]
 sounds: []
-roots: []
+roots: [english-bulb]
+etymology_hook: "balb ← English bulb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C265-ukku]
 <!-- hl-knowledge: introduces=[KA-LEX-C266-VASTU266-01]; assesses=[] -->
 
 **ಬಲ್ಬ್** — *balb* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಲ್ಬ್** (*balb*) is a loan from English *bulb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

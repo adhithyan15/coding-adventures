@@ -11,7 +11,8 @@ romanization: "kaḍime"
 concept_tag: KA-WORD-LESS
 prerequisites: [KA-C58-more, KA-C56-knife]
 sounds: []
-roots: []
+roots: [dravidian-kata-pass]
+etymology_hook: "kaḍime: native Dravidian; DEDR 1109 lists kaḍime 'deficiency' under kaḍe 'end, last'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Underneath sits ಕಡಿ (*kaḍi*), to cut, to reduce. ಕಡಿಮೆ is the 
 ಹೆಚ್ಚು and ಕಡಿಮೆ travel together as a pair, and the pair has its own life. ಹೆಚ್ಚು ಕಡಿಮೆ, said as one phrase, means "more or less, roughly" — two opposites put side by side to make a hedge. English builds "more or less" out of exactly the same two pieces, and Kannada leaves out the "or".
 
 That is three of the five now, and none of them names a thing. This chapter is about the words that adjust everything else.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಡಿಮೆ** (*kaḍime*) is native Dravidian, of the root *kaḍe*, "to pass over; end, last", and DEDR 1109 lists *kaḍime*, "deficiency", under it; the entry also has Tamil *kaṭa* and Telugu *kaḍacu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

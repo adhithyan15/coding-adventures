@@ -11,7 +11,8 @@ romanization: "ondē"
 concept_tag: KA-RESP-ONLY-ONE
 prerequisites: [KA-C102-wrong, KA-C102-all]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ondē: native ondu 'one' (DEDR 990) + the emphatic -ē 'only'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C102-all]
 
 **ಒಂದೇ** (*ondē*) — "only one", or "one and the same". It is **ಒಂದು**, "one",
 with the emphatic **‑ಏ** of **ಅದೇ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದೇ** (*ondē*) is native Dravidian: *ondu*, "one" (DEDR 990), with *-ē*, "only": "only one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

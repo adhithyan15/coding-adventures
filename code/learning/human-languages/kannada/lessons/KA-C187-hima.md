@@ -14,7 +14,8 @@ romanization: "hima"
 concept_tag: KA-VASTU187-HIMA
 prerequisites: [KA-C187-sankhye, KA-C187-kamanabillu]
 sounds: []
-roots: []
+roots: [sanskrit-hima]
+etymology_hook: "hima ← Sanskrit hima 'cold, frost, snow', a tatsama (CDIAL 14096)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C187-kamanabillu]
 <!-- hl-knowledge: introduces=[KA-LEX-C187-VASTU187-03]; assesses=[] -->
 
 **ಹಿಮ** — *hima* — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಮ** (*hima*) is Sanskrit *hima*, "cold, frost, snow", taken over whole as a learned loan, a tatsama (CDIAL 14096).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

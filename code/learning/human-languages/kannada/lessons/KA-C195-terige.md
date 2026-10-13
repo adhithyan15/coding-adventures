@@ -14,7 +14,8 @@ romanization: "terige"
 concept_tag: KA-KELASA195-TERIGE
 prerequisites: [KA-C195-khate, KA-C195-baddi]
 sounds: []
-roots: []
+roots: [dravidian-teru-pay]
+etymology_hook: "terige: native Dravidian; DEDR 3441 lists teṟige 'tax' under teṟu 'to pay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C195-baddi]
 <!-- hl-knowledge: introduces=[KA-LEX-C195-KELASA195-04]; assesses=[] -->
 
 **ತೆರಿಗೆ** — *terige* — "tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆರಿಗೆ** (*terige*) is native Dravidian, from *teṟu*, "to pay", and DEDR 3441 lists *teṟige*, "tribute, tax", itself; the entry also has Telugu *teṟe* and Malayalam *tiṟa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

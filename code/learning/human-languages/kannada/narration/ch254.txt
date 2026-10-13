@@ -12,6 +12,9 @@ Before the new one: say the Kannada for life, then the Kannada for a rule.
 You'll want to know: ತೆಳು.
 ತೆಳು — teḷu — "thin".
 
+The word, taken apart.
+ತೆಳು (teḷu) is native Dravidian (DEDR 3434). DEDR lists teḷ, teḷu, "thinness, fineness". DEDR 3434 compares Sanskrit talina.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a rule, then the Kannada for thin.
 
 You'll want to know: ಅಸ್ವಸ್ಥ.
 ಅಸ್ವಸ್ಥ — asvastha — "unwell, sick".
+
+The word, taken apart.
+ಅಸ್ವಸ್ಥ (asvastha) is Sanskrit asvastha, "unwell": a-, "not", and svastha, "well, at ease". A tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for thin, then the Kannada for unwell.
 You'll want to know: ಚೂಪಾದ.
 ಚೂಪಾದ — cūpāda — "sharp".
 
+The word, taken apart.
+ಚೂಪಾದ (cūpāda) is cūpu, "a point", with āda, "having become": "pointed". Where that word for "point" comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for unwell, then the Kannada for sharp.
 You'll want to know: ಕಂದು.
 ಕಂದು — kandu — "brown".
 
+The word, taken apart.
+ಕಂದು (kandu) is probably the native kandu, "discoloration by scorching, dark hue", which DEDR 1410 lists under kandu, "to be scorched", one word with Tamil kaṉṟu, "to be scorched".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for sharp, then the Kannada for brown.
 
 You'll want to know: ಗುಲಾಬಿ.
 ಗುಲಾಬಿ — gulābi — "pink".
+
+The word, taken apart.
+ಗುಲಾಬಿ (gulābi) is a loan from Persian gulābī, "rose-coloured", from gulāb, "rose", which came through Hindustani.
 
 What you've built.
 One more word for this chapter.

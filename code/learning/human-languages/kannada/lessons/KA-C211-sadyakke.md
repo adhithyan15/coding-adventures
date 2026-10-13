@@ -14,7 +14,8 @@ romanization: "sadyakke"
 concept_tag: KA-KALA211-SADYAKKE
 prerequisites: [KA-C211-illiyavarege, KA-C211-varege]
 sounds: []
-roots: []
+roots: [sanskrit-sadyas]
+etymology_hook: "sadyakke: Sanskrit sadyas 'at once, on the same day' (CDIAL 13123) + -kke 'for'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C211-varege]
 <!-- hl-knowledge: introduces=[KA-LEX-C211-KALA211-04]; assesses=[] -->
 
 **ಸದ್ಯಕ್ಕೆ** — *sadyakke* — "for now, for the time being".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸದ್ಯಕ್ಕೆ** (*sadyakke*) is *sadya*, "the present", from Sanskrit *sadyas*, "on the same day, at the very moment" (CDIAL 13123), with *-kke*, "for": "for the present".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

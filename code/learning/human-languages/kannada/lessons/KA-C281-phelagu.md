@@ -14,7 +14,8 @@ romanization: "phēlāgu"
 concept_tag: KA-VERB-PHELAGU
 prerequisites: [KA-C281-pyak-madu, KA-C281-kalacu]
 sounds: []
-roots: []
+roots: [english-fail, tamil-aaku-become]
+etymology_hook: "phēlāgu: English fail + native āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C281-kalacu]
 <!-- hl-knowledge: introduces=[KA-LEX-C281-KRIYE281-04]; assesses=[] -->
 
 **ಫೇಲಾಗು** — *phēlāgu* — "to fail (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫೇಲಾಗು** (*phēlāgu*) is English *fail* with native *āgu*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

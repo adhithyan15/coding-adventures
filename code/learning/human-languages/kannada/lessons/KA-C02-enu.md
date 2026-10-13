@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [KA-C02-niinu-niivu, KA-C01-dhanyavada, KA-C01-haudu, KA-C01-illa]
 sounds: [independent-ee]
 roots: [yaa-dravidian]
+etymology_hook: "ēnu: native Dravidian, on the question base ē-/yā- (DEDR 5151); Tamil ētu, Telugu ēdi"
 duration:
   max_seconds: 180
 requires:
@@ -47,6 +48,8 @@ reviews_of: [KA-C02-niinu-niivu, KA-C02-nanna-hesaru]
 **ಏನು** (*ēnu*, "what") is native Dravidian, on the interrogative stem **\*yā- /
 \*e-** — the same Dravidian question-root as Tamil *eṉṉa*, heading Kannada's
 question family: *ēnu* (what), *yāru* (who), *elli* (where), *yāke* (why).
+
+DEDR 5151 lists Kannada *ēn*, "what", with Tamil *ētu* and Telugu *ēdi*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02, KA-LEX-C01-DHANYAVADA-01, KA-ETYMON-C01-DHANYAVADA-02, KA-ETYMON-C01-DHANYAVADA-03, KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02, KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-ETYMON-C01-ILLA-03] -->

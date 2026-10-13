@@ -14,7 +14,8 @@ romanization: "kāvali"
 concept_tag: KA-VASTU301-KAVALI
 prerequisites: [KA-C301-ittige, KA-C301-patti]
 sounds: []
-roots: []
+roots: [dravidian-kaavali-pan]
+etymology_hook: "kāvali: native Dravidian, one word with Tulu kāvali 'frying pan' (DEDR 1488)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C301-patti]
 <!-- hl-knowledge: introduces=[KA-LEX-C301-VASTU301-05]; assesses=[] -->
 
 **ಕಾವಲಿ** — *kāvali* — "a griddle, a dosa pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾವಲಿ** (*kāvali*) is native Dravidian, one word with Tulu *kāvali* (DEDR 1488). DEDR lists *kāvali*, "a pan for frying or baking", and points to Tamil *kāy*, "to grow hot" (DEDR 1458).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

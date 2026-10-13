@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to sell, then the Kannada for to walk.
 You'll want to know: ತೆರೆ.
 ತೆರೆ — tere — "to open".
 
+The word, taken apart.
+ತೆರೆ (tere) is native Dravidian, one word with Tamil tiṟa and Telugu teṟa (DEDR 3259). DEDR lists teṟe, "to open, uncover".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to walk, then the Kannada for to open.
 
 You'll want to know: ತುಂಬು.
 ತುಂಬು — tumbu — "to fill".
+
+The word, taken apart.
+ತುಂಬು (tumbu) is native Dravidian, one word with Irula thumba (DEDR 3331). DEDR lists tumbu itself, "to become full", and tumbisu, "to fill".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to open, then the Kannada for to fill.
 You'll want to know: ತಳ್ಳು.
 ತಳ್ಳು — taḷḷu — "to push".
 
+The word, taken apart.
+ತಳ್ಳು (taḷḷu) is native Dravidian, one word with Tamil taḷḷu (DEDR 3135). DEDR lists taḷḷu itself, "to push".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to fill, then the Kannada for to push.
 You'll want to know: ಎಳೆ.
 ಎಳೆ — eḷe — "to pull".
 
+The word, taken apart.
+ಎಳೆ (eḷe) is native Dravidian, one word with Tamil iḻu (DEDR 504). DEDR lists the older Kannada eḻe, "to pull, drag".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to push, then the Kannada for to pull.
 
 You'll want to know: ಅಳು.
 ಅಳು — aḷu — "to cry".
+
+The word, taken apart.
+ಅಳು (aḷu) is native Dravidian, one word with Tamil aḻu and Malayalam aḻuka (DEDR 282). DEDR lists the older Kannada aḻu, "to weep, cry".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "saikal"
 concept_tag: KA-LOC111-SAIKAL
 prerequisites: [KA-C111-vimana, KA-C111-karu]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "saikal ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C111-karu]
 <!-- hl-knowledge: introduces=[KA-LEX-C111-LOC111-05]; assesses=[] -->
 
 **ಸೈಕಲ್** — *saikal* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೈಕಲ್** (*saikal*) is a loan from English *cycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

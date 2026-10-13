@@ -14,7 +14,8 @@ romanization: "suḷḷu"
 concept_tag: KA-QUAL144-SULLU
 prerequisites: [KA-C143-suraksita, KA-C144-apayakari]
 sounds: []
-roots: []
+roots: [dravidian-sullu-lie]
+etymology_hook: "suḷḷu: native Dravidian (DEDR 2708)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C144-apayakari]
 <!-- hl-knowledge: introduces=[KA-LEX-C144-QUAL144-02]; assesses=[] -->
 
 **ಸುಳ್ಳು** — *suḷḷu* — "a lie; false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಳ್ಳು** (*suḷḷu*) is native Dravidian (DEDR 2708). DEDR lists Kannada *suḷḷu*, "a lie".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

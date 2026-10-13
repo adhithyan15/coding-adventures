@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a file, then the Kannada for a document.
 You'll want to know: ಸಂಖ್ಯೆ.
 ಸಂಖ್ಯೆ — saṅkhye — "a number".
 
+The word, taken apart.
+ಸಂಖ್ಯೆ (saṅkhye) is Sanskrit saṅkhyā, "number, counting", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 12841).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a document, then the Kannada for a numbe
 
 You'll want to know: ಕಾಮನಬಿಲ್ಲು.
 ಕಾಮನಬಿಲ್ಲು — kāmanabillu — "a rainbow".
+
+The word, taken apart.
+ಕಾಮನಬಿಲ್ಲು (kāmanabillu) is "Kāma's bow": kāmana, "of Kāma", the god of love, from Sanskrit kāma, "love" (CDIAL 3042), and native billu, "bow" (DEDR 5422, with Tamil vil).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a number, then the Kannada for a rainbow
 You'll want to know: ಹಿಮ.
 ಹಿಮ — hima — "snow".
 
+The word, taken apart.
+ಹಿಮ (hima) is Sanskrit hima, "cold, frost, snow", taken over whole as a learned loan, a tatsama (CDIAL 14096).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a rainbow, then the Kannada for snow.
 You'll want to know: ನೆರಳು.
 ನೆರಳು — neraḷu — "shade, a shadow".
 
+The word, taken apart.
+ನೆರಳು (neraḷu) is native Dravidian, one word with Tamil niḻal, Telugu nīḍa and Malayalam niḻal (DEDR 3679). DEDR lists Kannada neraḷ, "shade, shadow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for snow, then the Kannada for shade.
 
 You'll want to know: ಕತ್ತಲೆ.
 ಕತ್ತಲೆ — kattale — "darkness".
+
+The word, taken apart.
+ಕತ್ತಲೆ (kattale) is native Dravidian, of the root for "black, dark", and DEDR 1278 lists kattale, "darkness", itself; the entry also has Tamil karu, Telugu kaggu and Malayalam kari.
 
 What you've built.
 One more word for this chapter.

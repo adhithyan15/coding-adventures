@@ -14,7 +14,8 @@ romanization: "himmaḍi"
 concept_tag: KA-AROGYA168-HIMMADI
 prerequisites: [KA-C168-hane, KA-C168-gantalu]
 sounds: []
-roots: []
+roots: [dravidian-mada-heel]
+etymology_hook: "himmaḍi: native Dravidian; DEDR 4649 lists himmaḍi 'heel', him- 'behind' + maḍi 'heel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C168-gantalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C168-AROGYA168-03]; assesses=[] -->
 
 **ಹಿಮ್ಮಡಿ** — *himmaḍi* — "the heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಮ್ಮಡಿ** (*himmaḍi*) is native Dravidian, of *maḍa*, *maḍi*, "heel", and DEDR 4649 lists *himmaḍi* itself, with *him-*, "behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

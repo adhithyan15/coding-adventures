@@ -14,7 +14,8 @@ romanization: "paṁce"
 concept_tag: KA-THINGS120-PAMCE
 prerequisites: [KA-C120-angi, KA-C120-sire]
 sounds: []
-roots: []
+roots: [kannada-pance-dhoti]
+etymology_hook: "paṁce: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C120-sire]
 <!-- hl-knowledge: introduces=[KA-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **ಪಂಚೆ** — *paṁce* — "a dhoti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಪಂಚೆ** (*paṁce*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 114,
-  "sourceHash": "fnv1a64:e0c2e0f5144abdf8",
+  "sourceHash": "fnv1a64:c0a4daef0f11e7e3",
   "lessonIds": [
     "KA-C114-uddesa",
     "KA-C114-yojane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch114.txt",
   "json": "kannada/narration/ch114.json",
-  "textHash": "fnv1a64:7f6eb2d5abdeb5ad",
-  "jsonHash": "fnv1a64:a2ca75b10ea0366e",
+  "textHash": "fnv1a64:64ad74028a06362d",
+  "jsonHash": "fnv1a64:28890e042e974f8c",
   "findings": []
 }

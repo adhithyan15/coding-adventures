@@ -14,7 +14,8 @@ romanization: "pyāṇṭ"
 concept_tag: KA-VASTU222-PYANT
 prerequisites: [KA-C221-kallangadi, KA-C221-capati]
 sounds: []
-roots: []
+roots: [english-pants]
+etymology_hook: "pyāṇṭ ← English pants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C221-capati]
 <!-- hl-knowledge: introduces=[KA-LEX-C222-VASTU222-01]; assesses=[] -->
 
 **ಪ್ಯಾಂಟ್** — *pyāṇṭ* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ಯಾಂಟ್** (*pyāṇṭ*) is a loan from English *pants*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

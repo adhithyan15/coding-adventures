@@ -14,7 +14,8 @@ romanization: "kampani"
 concept_tag: KA-KELASA268-KAMPANI
 prerequisites: [KA-C268-enjiniyar, KA-C268-anceyavanu]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kampani ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C268-anceyavanu]
 <!-- hl-knowledge: introduces=[KA-LEX-C268-KELASA268-04]; assesses=[] -->
 
 **ಕಂಪನಿ** — *kampani* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂಪನಿ** (*kampani*) is a loan from English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

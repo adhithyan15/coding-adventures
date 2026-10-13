@@ -11,7 +11,8 @@ romanization: "suggi"
 concept_tag: KA-NOUN-HARVEST
 prerequisites: [KA-C66-crop, KA-C64-in-that-case]
 sounds: []
-roots: []
+roots: [dravidian-suggi-harvest]
+etymology_hook: "suggi: native Dravidian (DEDR 2647)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C66-crop]
 So these five words end where a farming year does. It opened with ಮಳೆಗಾಲ in the seasons chapter, ran through the ಬೀಜ and the ಬೆಳೆ, and arrives at the ಸುಗ್ಗಿ with the ಹೊಲ empty and the house full.
 
 Which makes this the right place to take your leave of the ಹಳ್ಳಿ. You can name what it grows now, and thank the people who grew it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಗ್ಗಿ** (*suggi*) is native Dravidian (DEDR 2647). DEDR lists Kannada *suggi*, "harvest season", and compares Marathi *sugī*, "season of plenty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

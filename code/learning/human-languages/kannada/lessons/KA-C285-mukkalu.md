@@ -14,7 +14,8 @@ romanization: "mukkālu"
 concept_tag: KA-KALA285-MUKKALU
 prerequisites: [KA-C284-samaya, KA-C284-kelavomme]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-kaal-leg]
+etymology_hook: "mukkālu: native mu- 'three' (DEDR 5052) + kālu 'quarter' (DEDR 1479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C284-kelavomme]
 <!-- hl-knowledge: introduces=[KA-LEX-C285-KALA285-01]; assesses=[] -->
 
 **ಮುಕ್ಕಾಲು** — *mukkālu* — "three quarters".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಕ್ಕಾಲು** (*mukkālu*) is native Dravidian: *muk-*, the form of "three" before a consonant (DEDR 5052), and *kālu*, "leg, quarter" (DEDR 1479): "three quarters".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

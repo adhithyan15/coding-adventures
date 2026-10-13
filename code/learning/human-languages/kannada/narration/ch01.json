@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:69da6c1d1d13745d",
+  "sourceHash": "fnv1a64:c7d66b3b1d4fa3e0",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c34f45371934dd65",
+      "sourceHash": "fnv1a64:568aee2ea085b38a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,6 +77,10 @@
             {
               "kind": "speech",
               "text": "Namaskāra came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit namaskāra is listed in CDIAL 6960, and namas, \"a bow, adoration\", in CDIAL 6958."
             }
           ]
         },
@@ -220,7 +224,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c62174dc29c4b763",
+      "sourceHash": "fnv1a64:6cbc9ab2bb83cceb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -289,6 +293,10 @@
             {
               "kind": "speech",
               "text": "Dhanyavāda is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying, an utterance,\" from the root vad, \"to speak\"). Literally \"an utterance of '[you are] worthy'\" — a formal, dignified thanks. It is the same word as Hindi dhanyavād and Telugu dhanyavādamulu."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit dhanya is in CDIAL 6727a, glossed \"rich; fortunate, happy\", and vāda, \"speech\", in CDIAL 11507."
             }
           ]
         },
@@ -403,7 +411,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1b2ced84873c7998",
+      "sourceHash": "fnv1a64:7dceb67c3e5bc5d0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -468,6 +476,10 @@
             {
               "kind": "speech",
               "text": "ಹೌದು (haudu) is the everyday \"yes / that's so,\" a genuinely native Kannada word (not a Sanskrit loan). Its polite-agreement cousins — audu, houdu in speech — all circle the same \"it is so.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is usually explained as ahudu, \"it becomes, it is so\", a form of the native verb āgu, \"to become\" (DEDR 333). Telugu avunu, \"yes\", comes from the same verb in that entry. DEDR 333 compares Sanskrit ām."
             }
           ]
         },
@@ -563,7 +575,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:56967cec60dcee93",
+      "sourceHash": "fnv1a64:fd41c5f1034b3849",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -628,6 +640,10 @@
             {
               "kind": "speech",
               "text": "ಇಲ್ಲ (illa) is built on the old Dravidian root il, \"not-being, absence\" — so, like Tamil illai, it is really the statement \"[it] is not, [there] is not,\" doing duty as the everyday \"no.\" Its positive twin is ide, \"there is.\""
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 2559 lists Kannada illa with Tamil illai, Malayalam illa and Telugu lē-, lēdu."
             }
           ]
         },
@@ -672,13 +688,13 @@
                 "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: native Dravidian (root il).",
                 "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: the same root.",
                 "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: the same root.",
-                "Language: Telugu. \"No / isn't\": lēdu (లేదు). Note: native Dravidian, a different root.",
+                "Language: Telugu. \"No / isn't\": lēdu (లేదు). Note: native Dravidian, the same entry (DEDR 2559).",
                 "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three of the four Dravidian languages share il-; only Telugu picked a different native root. Hindi, from the other family entirely, is unrelated."
+              "text": "Telugu's lē- has lost the i-, but DEDR 2559 files it with il- all the same. Hindi, from the other family entirely, is unrelated."
             }
           ]
         },
@@ -763,7 +779,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:922767fbaffaf547",
+      "sourceHash": "fnv1a64:79d23f2485ce0546",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -831,7 +847,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಸರಿ (sari) is native Dravidian for \"correct, even, right,\" and by an easy step, \"okay, agreed.\" It is the verbal nod of Kannada, just as it is of Tamil (சரி, sari) — the same word across the family. Doubled, sari sari, it means \"yes, yes, alright.\""
+              "text": "ಸರಿ (sari) means \"correct, even, right,\" and by an easy step, \"okay, agreed.\" It is the verbal nod of Kannada, just as it is of Tamil (சரி, sari) — the same word across the family. Doubled, sari sari, it means \"yes, yes, alright.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Its origin is uncertain. DEDR has no entry for sari in this sense, and the usual account traces it to Sanskrit sadṛśa, \"like, equal\", through a Prakrit form sarisa (CDIAL 13120)."
             }
           ]
         },

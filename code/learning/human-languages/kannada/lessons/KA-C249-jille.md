@@ -14,7 +14,8 @@ romanization: "jille"
 concept_tag: KA-STHALA249-JILLE
 prerequisites: [KA-C249-daksina, KA-C249-eduru]
 sounds: []
-roots: []
+roots: [arabic-zila]
+etymology_hook: "jille ← Hindustani zilā 'district', from Arabic ḍilʿ 'side, part'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C249-eduru]
 <!-- hl-knowledge: introduces=[KA-LEX-C249-STHALA249-05]; assesses=[] -->
 
 **ಜಿಲ್ಲೆ** — *jille* — "a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿಲ್ಲೆ** (*jille*) came through Hindustani *zilā*, "district", from Arabic *ḍilʿ*, "side, part".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

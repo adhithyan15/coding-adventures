@@ -11,7 +11,8 @@ romanization: "ātithya"
 concept_tag: KA-WISH-HOSPITALITY
 prerequisites: [KA-C105-wishes, KA-C105-festival]
 sounds: []
-roots: []
+roots: [sanskrit-atithi]
+etymology_hook: "ātithya ← Sanskrit ātithya 'hospitality', from atithi 'guest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C105-festival]
 
 **ನಿಮ್ಮ ಆತಿಥ್ಯಕ್ಕೆ ಧನ್ಯವಾದ** (*nimma ātithyakke dhanyavāda*) — "thank you for your
 hospitality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆತಿಥ್ಯ** (*ātithya*) is Sanskrit *ātithya*, "hospitality", the noun of *atithi*, "guest", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
