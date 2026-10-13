@@ -37,7 +37,7 @@
       "id": "fixtures",
       "long": "fixtures",
       "short": "f",
-      "description": "Path to a JSON object of slot values. Applied by the html backend in both legacy single-file and three-file pipeline modes, and by every other pipeline backend except compose to its --emit-project shell (compose refuses or warns until #14704).",
+      "description": "Path to a JSON object of slot values. Applied by the html backend in both legacy single-file and three-file pipeline modes, and by every other pipeline backend (qt, flutter, compose, swiftui, xaml, react, webcomponent) to its --emit-project shell.",
       "type": "string",
       "required": false
     },
@@ -80,7 +80,7 @@
     {
       "id": "emit-project",
       "long": "emit-project",
-      "description": "For --backend xaml: also emit a full WinUI 3 host shell (csproj + App + MainWindow + manifest + build.ps1 + README) next to the component triple. Resulting directory is buildable as-is.",
+      "description": "Also emit a runnable project shell next to the component, for every pipeline backend (UI32 §2.2). For --backend xaml this is a full WinUI 3 host (csproj + App + MainWindow + manifest + build.ps1 + README); for compose a Compose Desktop Gradle project. The resulting directory is buildable as-is.",
       "type": "boolean",
       "required": false
     },
