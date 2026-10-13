@@ -1065,7 +1065,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()] }],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -1135,6 +1135,8 @@ mod tests {
                     shape: DiagramShape::LinedDocument, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "data-store".into(), label: "Data store".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::DataStore, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "titled".into(), label: "Details".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TitledRect, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
@@ -1199,6 +1201,8 @@ mod tests {
         assert_eq!((layout.nodes[32].width, layout.nodes[32].height), (132.0, 54.0));
         assert_eq!(layout.nodes[33].shape, DiagramShape::DataStore);
         assert_eq!((layout.nodes[33].width, layout.nodes[33].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[34].shape, DiagramShape::TitledRect);
+        assert_eq!((layout.nodes[34].width, layout.nodes[34].height), (132.0, 54.0));
     }
 
     #[test]

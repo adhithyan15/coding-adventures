@@ -1,11 +1,11 @@
 // watcher.go — polling file-system watcher for hot-reload
 //
-// MosaicBook reloads the browser preview whenever a .mosaic or .stories.json
-// file changes.  Rather than depending on OS-specific inotify/kqueue/FSEvents
+// MosaicBook reloads the browser preview whenever a component source (.mil,
+// .mll, .msl, or a legacy .mosaic) or a .stories.json file changes.  Rather than depending on OS-specific inotify/kqueue/FSEvents
 // APIs (which require third-party packages or CGO), Phase 1 uses a simple
 // polling strategy:
 //
-//   1. Every second, stat all known .mosaic and .stories.json files.
+//   1. Every second, stat every watched file under --root.
 //   2. Compare the modification time (mtime) against the last-seen value.
 //   3. If any file changed (or a new file appeared), re-discover all
 //      components and broadcast a reload SSE event to all connected clients.
