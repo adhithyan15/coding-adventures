@@ -3806,6 +3806,16 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
                 )), "labeled dotted links must lower to dashed paths");
             }
+            if fixture_name == "labeled-bidirectional-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Point
+                        && edge.end_marker == diagram_ir::EdgeMarker::Point));
+                assert_eq!(layout.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("approve"), Some("release")]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )).count() >= 6, "both endpoints of each labeled link must lower to arrowheads");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);

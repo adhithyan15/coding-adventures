@@ -7005,6 +7005,9 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
+        labeled_swimlane_operator(value, "<--", '-', 2, ">", SwimlaneEdgeKind::Directed),
+        labeled_swimlane_operator(value, "<==", '=', 2, ">", SwimlaneEdgeKind::Thick),
+        labeled_swimlane_operator(value, "<-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
         labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
         labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
         labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
@@ -7058,7 +7061,7 @@ fn labeled_swimlane_operator(
             at,
             len: start.len() + end_at + run + suffix.len(),
             kind,
-            start_marker: EdgeMarker::None,
+            start_marker: if start.starts_with('<') { EdgeMarker::Point } else { EdgeMarker::None },
             end_marker: EdgeMarker::Point,
             label: Some(label.to_string()),
             min_length: run - minimum_run + 1,
