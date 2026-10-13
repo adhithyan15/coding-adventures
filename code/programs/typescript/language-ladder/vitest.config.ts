@@ -1,5 +1,6 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
+import { boundedRawMarkdownPlugin } from "./bounded-raw-markdown-plugin.ts";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 
@@ -17,6 +18,11 @@ export default defineConfig({
   plugins: [
     humanLanguageLedgerPlugin({ curriculumRoot }),
     scriptInventoryPlugin({ curriculumRoot }),
+    // Same reason as in vite.config.ts, and vitest does not inherit that file's
+    // plugins: loadBundledLessons() awaits every `?raw` lesson import at once,
+    // and Vite's raw loader opens each file with no cap. On Windows that ran
+    // out of file handles (EMFILE at src/lessons.ts) in three test files.
+    boundedRawMarkdownPlugin({ curriculumRoot }),
   ],
   server: {
     fs: { allow: [repoRoot] },

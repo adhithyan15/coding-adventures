@@ -16,3 +16,10 @@
   the same 2,729 lesson batches. `tests/bounded-raw-markdown-plugin.test.ts`
   covers the limiter's cap and slot release, the id filter, and the emitted
   module. The full suite passes (485 tests).
+- **Fixed:** `npx vitest run` then hit the same `EMFILE` on Windows. Three test
+  files errored at `src/lessons.ts:211`, where `loadBundledLessons()` awaits
+  every `?raw` lesson import at once. `vitest.config.ts` does not inherit
+  `vite.config.ts`'s plugins, so the test pipeline still used Vite's unbounded
+  raw loader. It now registers `boundedRawMarkdownPlugin` too. The failure
+  reproduces under `ulimit -n 1024` without the plugin, and all 41 test files
+  (485 tests) pass with it.

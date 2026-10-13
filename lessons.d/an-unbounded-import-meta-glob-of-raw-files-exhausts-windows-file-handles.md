@@ -20,7 +20,15 @@ same `export default <text>` module Vite would, after waiting for one of 64
 read slots. Its `dist/` is byte-identical to the unbounded build, and it passes
 under `ulimit -n 1024`.
 
+**It came back in the tests:** the next Windows run built fine, then
+`npx vitest run` failed with the same `EMFILE` in three test files. Vitest
+reads `vitest.config.ts`, which keeps its own `plugins` list and does not
+inherit `vite.config.ts`. The plugin went into the build config only. Adding it
+to `vitest.config.ts` fixed it, and that also reproduces under `ulimit -n 1024`.
+
 **Do differently:** a glob that grows with content will eventually outgrow the
 OS file-handle limit. Reproduce on Linux with a low `ulimit -n` before blaming
 the runner, and cap concurrency in a plugin rather than raising limits.
 Rolldown 1.1.5 has no `maxParallelFileOps` option to do this for you.
+When a fix lives in a Vite plugin, register it in every config that loads the
+same modules: `vite.config.ts`, `vitest.config.ts`, and any other entry point.
