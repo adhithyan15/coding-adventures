@@ -73,6 +73,7 @@
     "line-hops-rounded",
     "nested-subgraphs",
     "state-choice-note-shapes",
+    "label-rect-shape",
     "legacy-internal-shape-aliases",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"

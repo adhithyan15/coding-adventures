@@ -1036,6 +1036,8 @@ diamond-decision, and folded-corner note geometry respectively; notes include an
 The registry's legacy internal ShapeIDs `squareRect`, `roundedRect`, `stateStart`, `stateEnd`,
 `forkJoin`, `inv_trapezoid`, `doublecircle`, and `rect_left_inv_arrow` remain accepted and lower
 through their corresponding shared semantic, layout, and backend-neutral paint shapes.
+The internal `labelRect` ShapeID lowers through label-only semantic geometry and emits no visible
+container fill or stroke.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
