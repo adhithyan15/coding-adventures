@@ -1578,9 +1578,16 @@ fn swimlane_endpoint_marker(
     }
 }
 
+#[cfg(test)]
+std::thread_local! {
+    static SWIMLANE_LINE_CROSSING_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
 fn swimlane_line_crossing(
     from: &Point, to: &Point, other_from: &Point, other_to: &Point,
 ) -> Option<(f64, Point)> {
+    #[cfg(test)]
+    SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(count.get() + 1));
     let dx = to.x - from.x;
     let dy = to.y - from.y;
     let other_dx = other_to.x - other_from.x;
@@ -9235,6 +9242,60 @@ mod tests {
                 assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0,50.0);
                 assert_eq!(paths[index].fill.as_deref(),Some("#455a64"));
                 assert_eq!(paths[index].stroke,None);
+            }
+        }
+    }
+
+    fn assert_authored_parallel_hop_work(source: &str, edge_count: usize, direction: &str) {
+        let parsed = mermaid_parser::parse_swimlane(source).expect("authored parallel workload");
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+        assert_eq!(layout.edges.len(), edge_count);
+        assert!(layout.edges.iter().all(|edge| if direction == "LR" {
+            edge.from.y == edge.to.y && edge.from.x != edge.to.x
+        } else {
+            edge.from.x == edge.to.x && edge.from.y != edge.to.y
+        }));
+        SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+        let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let visits = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+        let mode = layout.line_hops.expect("enabled authored mode");
+        assert_eq!(enabled.metadata.as_ref().unwrap().get("swimlane.lineHops").map(String::as_str),
+            Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+        layout.line_hops = None;
+        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(enabled.instructions, disabled.instructions, "all original routes, markers and styles survive");
+        assert_eq!(visits, 0, "same-axis authored edges require no crossing predicates; {edge_count} retained edges");
+    }
+
+    #[test]
+    fn line_hop_work_duplicate_parallel_edges_preserve_all_output() {
+        for direction in ["LR", "TB"] {
+            for mode in ["arc", "gap"] {
+                for count in [64, 128] {
+                    let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\n{}end\n", "a --> b\n".repeat(count));
+                    assert_authored_parallel_hop_work(&source, count, direction);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_work_unique_cartesian_parallel_edges_preserve_all_output() {
+        for direction in ["LR", "TB"] {
+            for mode in ["arc", "gap"] {
+                for size in [8, 16] {
+                    let mut source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta {direction}\nsubgraph L\n");
+                    for prefix in ["a", "b"] {
+                        for index in 0..size { source.push_str(&format!("{prefix}{index}[{prefix}{index}]\n")); }
+                    }
+                    let group = |prefix| (0..size).map(|index| format!("{prefix}{index}")).collect::<Vec<_>>().join(" & ");
+                    source.push_str(&format!("{} --> {}\nend\n", group('a'), group('b')));
+                    let diagram = mermaid_parser::parse_swimlane(&source).unwrap();
+                    let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                    let geometries = layout.edges.iter().map(|edge| [edge.from.x.to_bits(), edge.from.y.to_bits(), edge.to.x.to_bits(), edge.to.y.to_bits()]).collect::<std::collections::BTreeSet<_>>();
+                    assert_eq!(geometries.len(), size * size, "every Cartesian geometry is distinct");
+                    assert_authored_parallel_hop_work(&source, size * size, direction);
+                }
             }
         }
     }
