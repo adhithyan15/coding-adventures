@@ -14,7 +14,8 @@ romanization: "sobat jāṇe"
 concept_tag: MR-VERB-SOBAT-JANE
 prerequisites: [MR-C252-kalji-karne, MR-C252-dhumrapan-karne]
 sounds: []
-roots: []
+roots: [arabic-suhba, sanskrit-yati]
+etymology_hook: "sobat: usually traced, through Persian, to Arabic ṣuḥba 'companionship'; jāṇe ← yāti (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C252-dhumrapan-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C252-ACT252-05]; assesses=[] -->
 
 **सोबत जाणे** — *sobat jāṇe* — "to go with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोबत**, "company", is usually traced through Persian to Arabic *ṣuḥba*, "companionship", whose root is *ṣ-ḥ-b* (Lane). **जाणे** comes from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

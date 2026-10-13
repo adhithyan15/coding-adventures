@@ -14,7 +14,8 @@ romanization: "ādhunik"
 concept_tag: MR-GUN205-ADHUNIK
 prerequisites: [MR-C204-utsuk, MR-C205-mophat]
 sounds: []
-roots: []
+roots: [sanskrit-adhunika]
+etymology_hook: "ādhunik: Sanskrit ādhunika 'recent', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C205-mophat]
 <!-- hl-knowledge: introduces=[MR-LEX-C205-GUN205-02]; assesses=[] -->
 
 **आधुनिक** — *ādhunik* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आधुनिक** (*ādhunik*) is Sanskrit *ādhunika*, "recent", a tatsama built on *adhunā*, "now". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

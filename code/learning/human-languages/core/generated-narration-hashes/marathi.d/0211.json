@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 211,
-  "sourceHash": "fnv1a64:f7a60ea0edea658d",
+  "sourceHash": "fnv1a64:2c60e35f344cc8e4",
   "lessonIds": [
     "MR-C211-apayas",
     "MR-C211-anubhav",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch211.txt",
   "json": "marathi/narration/ch211.json",
-  "textHash": "fnv1a64:2d7851ebc3d4b816",
-  "jsonHash": "fnv1a64:828e15aa2df93f26",
+  "textHash": "fnv1a64:a7efcbb072627df2",
+  "jsonHash": "fnv1a64:3567c8430749a2a8",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for after, then the Marathi for time.
 You'll want to know: दूर.
 दूर — dūr — "far".
 
+The word, taken apart.
+दूर (dūr) is Sanskrit dūra, "distant", which has lost only its final vowel (CDIAL 6495).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for time, then the Marathi for far.
 
 You'll want to know: आत.
 आत — āt — "inside".
+
+The word, taken apart.
+आत (āt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from antar, "inside" (CDIAL 356).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for far, then the Marathi for inside.
 You'll want to know: बाहेर.
 बाहेर — bāher — "outside".
 
+The word, taken apart.
+बाहेर (bāher) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). CDIAL builds it on Sanskrit bahis, "outside".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for inside, then the Marathi for outside.
 You'll want to know: मागे.
 मागे — māge — "behind".
 
+The word, taken apart.
+The origin of मागे (māge) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for outside, then the Marathi for behind.
 
 You'll want to know: पुढे.
 पुढे — puḍhe — "ahead, in front".
+
+The word, taken apart.
+The origin of पुढे (puḍhe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

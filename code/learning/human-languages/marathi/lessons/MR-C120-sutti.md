@@ -14,7 +14,8 @@ romanization: "suṭṭī"
 concept_tag: MR-WORLD120-SUTTI
 prerequisites: [MR-C119-rang, MR-C119-pravas]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "suṭṭī: CDIAL lists Marathi suṭī 'remission' under *kṣuṭyate 'is released' (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C119-pravas]
 <!-- hl-knowledge: introduces=[MR-LEX-C120-WORLD120-01]; assesses=[] -->
 
 **सुट्टी** — *suṭṭī* — "a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुट्टी** (*suṭṭī*) is inherited. CDIAL lists Marathi *suṭī*, "remission", under a reconstructed *\*kṣuṭyate*, "is released" (CDIAL 3707). A holiday is a release.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

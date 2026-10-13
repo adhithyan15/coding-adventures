@@ -11,7 +11,8 @@ gloss: no problem / you're welcome (kāhī harkat nāhī)
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [MR-C03-mi-bara-aahe, MR-C01-nahi]
 sounds: []
-roots: [na-negative]
+roots: [na-negative, arabic-haraka]
+etymology_hook: "harkat ← Arabic ḥaraka 'movement', root ḥ-r-k, through Persian; nāhī on the old negative na"
 reviews_of: [MR-C01-nahi, MR-C01-dhanyavad]
 duration:
   max_seconds: 240

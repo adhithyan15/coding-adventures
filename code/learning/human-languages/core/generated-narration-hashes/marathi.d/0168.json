@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 168,
-  "sourceHash": "fnv1a64:434cc9ee43ea2fa0",
+  "sourceHash": "fnv1a64:f1305a96f0bd815f",
   "lessonIds": [
     "MR-C168-avarne",
     "MR-C168-laksat-yene",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch168.txt",
   "json": "marathi/narration/ch168.json",
-  "textHash": "fnv1a64:ebfd5f2f610ef7d3",
-  "jsonHash": "fnv1a64:5856fd63fe5dbd0c",
+  "textHash": "fnv1a64:06f560ae46d2dda7",
+  "jsonHash": "fnv1a64:143869de29705c77",
   "findings": []
 }

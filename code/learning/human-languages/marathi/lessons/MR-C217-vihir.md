@@ -15,6 +15,7 @@ concept_tag: MR-VASTU217-VIHIR
 prerequisites: [MR-C217-bajarpeth, MR-C217-bandar]
 sounds: []
 roots: []
+etymology_hook: "vihīr 'well': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C217-bandar]
 <!-- hl-knowledge: introduces=[MR-LEX-C217-VASTU217-05]; assesses=[] -->
 
 **विहीर** — *vihīr* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **विहीर** (*vihīr*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

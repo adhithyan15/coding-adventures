@@ -14,7 +14,8 @@ romanization: "sadhyā"
 concept_tag: MR-TIME126-SADHYA
 prerequisites: [MR-C126-ravivar, MR-C126-tarikh]
 sounds: []
-roots: []
+roots: [sanskrit-sadyas]
+etymology_hook: "sadhyā: perhaps from Sanskrit sadyas 'at the very moment' (CDIAL 13123); CDIAL lists no Marathi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C126-tarikh]
 <!-- hl-knowledge: introduces=[MR-LEX-C126-TIME126-03]; assesses=[] -->
 
 **सध्या** — *sadhyā* — "at present, these days".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सध्या** (*sadhyā*) is not settled. It may come from Sanskrit *sadyas*, "on the same day, at the very moment" (CDIAL 13123), but CDIAL lists no Marathi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

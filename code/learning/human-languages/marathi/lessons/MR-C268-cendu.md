@@ -14,7 +14,8 @@ romanization: "ceṇḍū"
 concept_tag: MR-VASTU268-CENDU
 prerequisites: [MR-C268-basri, MR-C268-satar]
 sounds: []
-roots: []
+roots: [dravidian-cendu-ball]
+etymology_hook: "ceṇḍū: as Kannada ceṇḍu 'ball' (DEDR 2766); CDIAL lists it under kanduka, from Dravidian (CDIAL 2727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C268-satar]
 <!-- hl-knowledge: introduces=[MR-LEX-C268-VASTU268-05]; assesses=[] -->
 
 **चेंडू** — *ceṇḍū* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चेंडू** (*ceṇḍū*) matches Dravidian words for a ball, such as Kannada *ceṇḍu* (DEDR 2766). CDIAL lists it under Sanskrit *kanduka*, "ball", which it also takes from Dravidian (CDIAL 2727).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

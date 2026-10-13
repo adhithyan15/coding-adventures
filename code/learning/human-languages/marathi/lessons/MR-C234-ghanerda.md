@@ -14,7 +14,8 @@ romanization: "ghāṇerḍā"
 concept_tag: MR-GUN234-GHANERDA
 prerequisites: [MR-C234-mahattvaca, MR-C234-manoranjak]
 sounds: []
-roots: []
+roots: [sanskrit-ghrana]
+etymology_hook: "ghāṇerḍā: built on ghāṇ 'stink' ← Sanskrit ghrāṇa 'smell' (CDIAL 4531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-manoranjak]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-03]; assesses=[] -->
 
 **घाणेरडा** — *ghāṇerḍā* — "filthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाणेरडा** (*ghāṇerḍā*) is built on *ghāṇ*, "stink", which comes from Sanskrit *ghrāṇa*, "smelling, smell" (CDIAL 4531).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

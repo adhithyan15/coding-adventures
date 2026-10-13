@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Three Greetings, One Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5c68af7310cf4b0c",
+  "sourceHash": "fnv1a64:b476efd9528a9bd0",
   "lessons": [
     {
       "id": "MR-C68-shubh-sakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b6678f69b05c8fa",
+      "sourceHash": "fnv1a64:6af344d0aacd2013",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुभ is Sanskrit śubha, \"bright, auspicious\", a tatsama (CDIAL 12532). The origin of सकाळ is not settled: CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -86,7 +97,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -156,7 +167,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -187,7 +198,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a0c9310fb92059b1",
+      "sourceHash": "fnv1a64:7a37f4ed06ff8e39",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -244,6 +255,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुभ is Sanskrit śubha, \"bright, auspicious\", a tatsama (CDIAL 12532). दुपार is usually explained as \"two watches\", with pahār, \"a watch of three hours\" (CDIAL 8900)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: a pattern you can finish alone",
           "segments": [
@@ -262,7 +284,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -322,7 +344,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -353,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eadbf94b765aaa6",
+      "sourceHash": "fnv1a64:8f427ee6e3f974de",
       "notice": null,
       "blocks": [
         {
@@ -404,6 +426,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुभ is Sanskrit śubha, \"auspicious\", a tatsama (CDIAL 12532). संध्याकाळ is sandhyā, \"twilight\", and kāḷ, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -422,7 +455,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: where the pattern stops",
           "segments": [
@@ -432,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its greeting is built on रात्री — the at-that-time form from the parts of the day — rather than on the bare रात्र these three use. This book is not teaching that phrase here, and it is naming the exception so that you do not build it yourself and get it wrong."
+              "text": "Its greeting is built on रात्री — the at-that-time form from the parts of the day — rather than on the bare रात्र these three use. This book is not teaching that phrase here; it names the exception so that you do not build it wrongly."
             },
             {
               "kind": "speech",
@@ -441,7 +474,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

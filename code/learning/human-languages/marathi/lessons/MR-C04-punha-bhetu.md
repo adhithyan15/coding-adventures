@@ -11,7 +11,8 @@ gloss: see you again (punhā bheṭū)
 concept_tag: FAREWELL-LATER
 prerequisites: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]
 sounds: []
-roots: [punar, bhet-meet]
+roots: [punar, bhet-meet, indo-aryan-bhit]
+etymology_hook: "punhā: usually traced to Sanskrit punar 'again'; bheṭū ← *bhēṭ- 'meet' (CDIAL 9490)"
 reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]
 duration:
   max_seconds: 200
@@ -48,6 +49,11 @@ This is the fuller, explicit twin of Chapter 4's **येतो** (*yeto*, "I'll
 [again]"). Both refuse a final "farewell": one says *I'll come back*, the other
 *we'll meet again* — the subcontinent's shared goodbye-as-promise (Hindi *phir
 milenge*, Bengali *āshi*, Tamil *pōy varugiṟēṉ*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुन्हा** is usually traced to Sanskrit *punar*, "again, back". **भेटू** is a form of **भेटणे**, "to meet", which CDIAL lists under a reconstructed *\*bhēṭ-*, "meet, throng" (CDIAL 9490).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-YETO-YETE-01] -->

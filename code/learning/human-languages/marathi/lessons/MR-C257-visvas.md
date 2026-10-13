@@ -14,7 +14,8 @@ romanization: "viśvās"
 concept_tag: MR-AAROGYA257-VISVAS
 prerequisites: [MR-C257-cinta, MR-C257-maitri]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasa]
+etymology_hook: "viśvās: Sanskrit viśvāsa 'trust, confidence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C257-maitri]
 <!-- hl-knowledge: introduces=[MR-LEX-C257-AAROGYA257-04]; assesses=[] -->
 
 **विश्वास** — *viśvās* — "trust, faith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विश्वास** (*viśvās*) is Sanskrit *viśvāsa*, "trust, confidence", a tatsama built on *śvas*, "to breathe". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

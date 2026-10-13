@@ -14,7 +14,8 @@ romanization: "cādar"
 concept_tag: MR-LOC130-CADAR
 prerequisites: [MR-C130-darvaja, MR-C130-usi]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "cādar: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C130-usi]
 <!-- hl-knowledge: introduces=[MR-LEX-C130-LOC130-04]; assesses=[] -->
 
 **चादर** — *cādar* — "a bedsheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चादर** (*cādar*) is a loan, usually traced to Persian *chādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Standing Vowels",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d1f52dbd93adcb48",
+  "sourceHash": "fnv1a64:ef9220f176c3e532",
   "lessons": [
     {
       "id": "MR-C65-iishvar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab4f0db63f1874b4",
+      "sourceHash": "fnv1a64:0b6fa2f6674d5780",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ईश्वर (īśvar) is Sanskrit īśvara, \"master; god\", taken over whole as a learned loan, a tatsama (CDIAL 1619). It is built on īś, \"to be master of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85eaae270becf3ea",
+      "sourceHash": "fnv1a64:c3f1295c407f58d9",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओला (olā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from olla, \"wet\" (CDIAL 2554). CDIAL gives ōlla as a word-list form beside a reconstructed ōdra, \"wet\", from the root ud, \"to wet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +381,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -541,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc485b868481ebd2",
+      "sourceHash": "fnv1a64:704996a3946a86c8",
       "notice": null,
       "blocks": [
         {
@@ -591,6 +613,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऐवज (aivaj) is a loan, usually traced through Persian to Arabic ʿiwaḍ, \"exchange, equivalent\". Its Arabic root is ʿ-w-ḍ (Lane). In Marathi it came to mean money and valuables."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -621,7 +654,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

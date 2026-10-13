@@ -14,7 +14,8 @@ romanization: "hiśeb"
 concept_tag: MR-VASTU191-HISEB
 prerequisites: [MR-C191-vyavasthapak, MR-C191-saciv]
 sounds: []
-roots: []
+roots: [arabic-hisab]
+etymology_hook: "hiśeb ← Arabic ḥisāb 'reckoning, account', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C191-saciv]
 <!-- hl-knowledge: introduces=[MR-LEX-C191-VASTU191-03]; assesses=[] -->
 
 **हिशेब** — *hiśeb* — "accounts, a reckoning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिशेब** (*hiśeb*) is a loan from Arabic *ḥisāb*, "reckoning, account", which reached Marathi through Persian. Its Arabic root is *ḥ-s-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

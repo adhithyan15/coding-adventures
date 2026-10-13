@@ -14,7 +14,8 @@ romanization: "sandhī"
 concept_tag: MR-VASTU272-SANDHI
 prerequisites: [MR-C272-kartavya, MR-C272-jababdari]
 sounds: []
-roots: []
+roots: [sandhi-sanskrit]
+etymology_hook: "sandhī ← Sanskrit saṁdhi 'joint; point of union', a tatsama (CDIAL 12913)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C272-jababdari]
 <!-- hl-knowledge: introduces=[MR-LEX-C272-VASTU272-05]; assesses=[] -->
 
 **संधी** — *sandhī* — "an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संधी** (*sandhī*) is Sanskrit *saṁdhi*, "joint; point of union", taken over whole as a learned loan, a tatsama (CDIAL 12913). CDIAL lists the inherited Marathi form as *sāṁdhī*, "joint, chink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

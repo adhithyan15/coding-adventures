@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the day after tomorrow, then the Marathi
 You'll want to know: मंगळवार.
 मंगळवार — maṅgaḷvār — "Tuesday".
 
+The word, taken apart.
+मंगळवार (maṅgaḷvār) is a Sanskrit compound: maṅgala, "auspicious", the name of the planet Mars, with Marathi ळ, and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for Monday, then the Marathi for Tuesday.
 
 You'll want to know: बुधवार.
 बुधवार — budhvār — "Wednesday".
+
+The word, taken apart.
+बुधवार (budhvār) is a Sanskrit compound, a tatsama: budha, "the wise one", the name of the planet Mercury, and vāra, "day of the week" (CDIAL 11547).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for Tuesday, then the Marathi for Wednesday.
 You'll want to know: गुरुवार.
 गुरुवार — guruvār — "Thursday".
 
+The word, taken apart.
+गुरुवार (guruvār) is a Sanskrit compound, a tatsama: guru, "teacher", the name of the planet Jupiter, and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for Wednesday, then the Marathi for Thursday
 You'll want to know: शुक्रवार.
 शुक्रवार — śukravār — "Friday".
 
+The word, taken apart.
+शुक्रवार (śukravār) is a Sanskrit compound, a tatsama: śukra, "bright", the name of the planet Venus, and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for Thursday, then the Marathi for Friday.
 
 You'll want to know: शनिवार.
 शनिवार — śanivār — "Saturday".
+
+The word, taken apart.
+शनिवार (śanivār) is a Sanskrit compound, a tatsama: śani, "Saturn", and vāra, "day of the week" (CDIAL 11547). Saturday is Saturn's day, as in English.
 
 What you've built.
 One more word for this chapter.

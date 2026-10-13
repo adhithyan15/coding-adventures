@@ -14,7 +14,8 @@ romanization: "nivaḍ"
 concept_tag: MR-VASTU211-NIVAD
 prerequisites: [MR-C211-apayas, MR-C211-anubhav]
 sounds: []
-roots: []
+roots: [indo-aryan-nirvarayati]
+etymology_hook: "nivaḍ ← *nirvṛta 'chosen', under *nirvarayati 'chooses' (CDIAL 7393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C211-anubhav]
 <!-- hl-knowledge: introduces=[MR-LEX-C211-VASTU211-03]; assesses=[] -->
 
 **निवड** — *nivaḍ* — "a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निवड** (*nivaḍ*) comes from a reconstructed *\*nirvṛta-*, "chosen", which CDIAL lists under *\*nirvarayati*, "chooses" (CDIAL 7393). CDIAL glosses the Marathi word "choice, picked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

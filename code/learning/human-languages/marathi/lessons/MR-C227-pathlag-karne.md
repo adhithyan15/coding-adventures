@@ -14,7 +14,8 @@ romanization: "pāṭhlāg karṇe"
 concept_tag: MR-VERB-PATHLAG-KARNE
 prerequisites: [MR-C227-sajra-karne, MR-C227-tarangne]
 sounds: []
-roots: []
+roots: [sanskrit-prshti, sanskrit-lagyati, sanskrit-karoti]
+etymology_hook: "pāṭhlāg: pāṭh 'back' ← pṛṣṭi (CDIAL 8370) + lāg 'touch' as lāgṇe ← lagyati (CDIAL 10895)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C227-tarangne]
 <!-- hl-knowledge: introduces=[MR-LEX-C227-ACT227-05]; assesses=[] -->
 
 **पाठलाग करणे** — *pāṭhlāg karṇe* — "to chase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाठलाग** is "back-touching": *pāṭh*, "back", from Sanskrit *pṛṣṭi*, "back" (CDIAL 8370), and *lāg*, as in *lāgṇẽ*, "to touch", from Sanskrit *lagyati*, "adheres to" (CDIAL 10895). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

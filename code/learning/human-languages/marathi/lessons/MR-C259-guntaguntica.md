@@ -14,7 +14,8 @@ romanization: "guntāguntīcā"
 concept_tag: MR-GUN259-GUNTAGUNTICA
 prerequisites: [MR-C259-anolkhi, MR-C259-sadha]
 sounds: []
-roots: []
+roots: [sanskrit-guphati]
+etymology_hook: "guntāguntīcā: built on gũtṇe 'to tangle', listed under guphati 'strings together' (CDIAL 4205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C259-sadha]
 <!-- hl-knowledge: introduces=[MR-LEX-C259-GUN259-03]; assesses=[] -->
 
 **गुंतागुंतीचा** — *guntāguntīcā* — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुंतागुंतीचा** (*guntāguntīcā*) is built on *gũtṇẽ*, "to tangle", which CDIAL lists under Sanskrit *guphati*, "strings together", crossed with another verb (CDIAL 4205).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 168,
   "title": "To tidy up, To notice, To be shy, To be defeated, To take cover",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:434cc9ee43ea2fa0",
+  "sourceHash": "fnv1a64:f1305a96f0bd815f",
   "lessons": [
     {
       "id": "MR-C168-avarne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f0be59b1af7b09a",
+      "sourceHash": "fnv1a64:f23f0a69b4e353ca",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवरणे (āvarṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from āvarati, \"covers\", a form CDIAL reconstructs from its descendants (CDIAL 1414). CDIAL glosses the Marathi verb \"to cover, restrain, gather together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77a255dde45c938b",
+      "sourceHash": "fnv1a64:673cd297b37c4124",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लक्षात is \"into the mark\": Sanskrit lakṣa, \"mark, aim\", with -त, \"in\". येणे comes from Sanskrit aiti, \"comes near\" (CDIAL 2534)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41ff0f03757c2bd0",
+      "sourceHash": "fnv1a64:9ac96e8f77c876b2",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाजणे (lājṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lajjate, \"is ashamed\" (CDIAL 10909)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bff8998f48c6c2d0",
+      "sourceHash": "fnv1a64:d44340466d83a947",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हरणे (harṇe) is inherited. CDIAL lists it, \"to lose, fail, be conquered\", as formed from Marathi hārṇẽ, \"to take away, win\", which comes from Sanskrit hārayati, \"causes to be taken; loses\" (CDIAL 14061)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1459e8076e7df4a",
+      "sourceHash": "fnv1a64:9e9967de78a9364a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of लपणे (lapṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

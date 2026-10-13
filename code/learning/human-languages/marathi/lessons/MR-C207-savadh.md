@@ -14,7 +14,8 @@ romanization: "sāvadh"
 concept_tag: MR-GUN207-SAVADH
 prerequisites: [MR-C206-khas, MR-C207-dhit]
 sounds: []
-roots: []
+roots: [sanskrit-savadhana]
+etymology_hook: "sāvadh: Sanskrit sāvadhāna 'attentive', shortened"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C207-dhit]
 <!-- hl-knowledge: introduces=[MR-LEX-C207-GUN207-02]; assesses=[] -->
 
 **सावध** — *sāvadh* — "careful, alert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सावध** (*sāvadh*) is Sanskrit *sāvadhāna*, "attentive": *sa-*, "with", and *avadhāna*, "attention", shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "daptar"
 concept_tag: MR-THINGS135-DAPTAR
 prerequisites: [MR-C134-pensil, MR-C134-rabar]
 sounds: []
-roots: []
+roots: [arabic-daftar]
+etymology_hook: "daptar: usually traced, through Persian, to Arabic daftar 'register' (Lane), itself taken from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C134-rabar]
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **दप्तर** — *daptar* — "a school bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दप्तर** (*daptar*) is a loan, usually traced through Persian to Arabic *daftar*, "register, account book" (Lane), which Arabic itself took from Greek. Marathi uses it for a school bag, the bag that holds the books.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

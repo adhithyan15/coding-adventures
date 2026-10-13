@@ -14,7 +14,8 @@ romanization: "gādī"
 concept_tag: MR-LOC130-GADI
 prerequisites: [MR-C130-usi, MR-C130-cadar]
 sounds: []
-roots: []
+roots: [indo-aryan-garda]
+etymology_hook: "gādī ← *garda 'seat', which CDIAL takes, after Burrow, as probably from Dravidian (CDIAL 4053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C130-cadar]
 <!-- hl-knowledge: introduces=[MR-LEX-C130-LOC130-05]; assesses=[] -->
 
 **गादी** — *gādī* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गादी** (*gādī*) comes from a reconstructed *\*garda*, "seat" (CDIAL 4053). CDIAL compares Sanskrit *garta*, "high seat", and takes the word, with Burrow, as probably from Dravidian, comparing Kannada *gaddige*, "throne".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

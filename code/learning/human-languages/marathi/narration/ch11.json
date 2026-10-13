@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9dbdac61e89a479e",
+  "sourceHash": "fnv1a64:8d8ad70ed179f1a9",
   "lessons": [
     {
       "id": "MR-C04-punha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf47e128ec6c17e0",
+      "sourceHash": "fnv1a64:6f59a2abb4ae2e68",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā, \"again\") comes from Sanskrit पुनर् (punar, \"again, back\"). That punar is a genuine Indo-European cousin of Latin re- in the sense of \"back/again,\" and it echoes in Hindi phir and the puna- of punarjanma (\"rebirth\"). To say a thing punhā is to send it round once more."
+              "text": "पुन्हा (punhā, \"again\") is usually traced to Sanskrit पुनर् (punar, \"again, back\"), the puna- of punarjanma (\"rebirth\"). CDIAL lists Marathi paṇ, \"also, but\", under punar, but not punhā (CDIAL 8273). To say a thing punhā is to send it round once more."
             }
           ]
         },
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d462f59856ddb0bd",
+      "sourceHash": "fnv1a64:5e2c3d259f51bfda",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, \"to meet\"). As भेटू it means \"let's meet / (we) will meet\" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, \"a meeting, a visit\")."
+              "text": "भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, \"to meet\"). As भेटू it means \"let's meet / (we) will meet\" — the hopeful, forward-looking mood you want in a goodbye. CDIAL lists भेटणे under a reconstructed bhēṭ-, \"meet, throng\", from bhiṭ- (CDIAL 9490); the stem also gives bheṭ, \"a meeting, a visit\"."
             }
           ]
         },
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39a4aea2eb2dea71",
+      "sourceHash": "fnv1a64:b1c90ec5112f5286",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +306,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुन्हा (punhā) is usually traced to Sanskrit punar, \"again, back\". भेटू (bheṭū) is a form of भेटणे, \"to meet\", which CDIAL lists under a reconstructed bhēṭ-, \"meet, throng\" (CDIAL 9490)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -316,7 +327,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -347,7 +358,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -378,7 +389,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d868c70ec291aa4",
+      "sourceHash": "fnv1a64:9f48b965423588d6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -429,12 +440,23 @@
             },
             {
               "kind": "speech",
-              "text": "उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing."
+              "text": "Unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्या has no entry in CDIAL, and its origin is not settled. भेटू (bheṭū) is a form of भेटणे, \"to meet\", which CDIAL lists under a reconstructed bhēṭ-, \"meet, throng\" (CDIAL 9490)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -445,7 +467,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -476,7 +498,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -507,7 +529,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6a891c0412e9568",
+      "sourceHash": "fnv1a64:d7b5b64a92e93c0e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -560,6 +582,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काळजी matches Gujarati kāḷjī, \"care, anxiety\", which CDIAL lists beside Marathi kāḷīj, \"liver, heart\", under Sanskrit kālēyaka, \"liver\" (CDIAL 3103). घ्या is a form of घेणे, \"to take\", which CDIAL lists under Sanskrit gṛbhāyati, \"takes, seizes\" (CDIAL 4236)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -570,7 +603,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -601,7 +634,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

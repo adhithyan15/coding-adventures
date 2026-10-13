@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Right and Left",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:26c15bfbdd297773",
+  "sourceHash": "fnv1a64:d192989c569d28ef",
   "lessons": [
     {
       "id": "MR-C44-ujva",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c970bf29121f0b1",
+      "sourceHash": "fnv1a64:6825531e62019c66",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:452023e7e846a02d",
+      "sourceHash": "fnv1a64:bc940fa719766f1f",
       "notice": null,
       "blocks": [
         {
@@ -220,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डावा (ḍāvā) goes back to ḍāva-, \"lefthand, crosswise\", a form CDIAL reconstructs and calls non-Aryan, from Dravidian according to A. Master (CDIAL 5539). DEDR compares the Dravidian words for \"left\", such as Kannada eḍa and Telugu ḍā (DEDR 449)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -279,7 +290,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "prācīn"
 concept_tag: MR-GUN205-PRACIN
 prerequisites: [MR-C205-mophat, MR-C205-adhunik]
 sounds: []
-roots: []
+roots: [sanskrit-pracina]
+etymology_hook: "prācīn: Sanskrit prācīna 'turned east; former, old', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C205-adhunik]
 <!-- hl-knowledge: introduces=[MR-LEX-C205-GUN205-03]; assesses=[] -->
 
 **प्राचीन** — *prācīn* — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्राचीन** (*prācīn*) is Sanskrit *prācīna*, "turned east; former, old", a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

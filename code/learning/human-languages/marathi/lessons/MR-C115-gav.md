@@ -14,7 +14,8 @@ romanization: "gāv"
 concept_tag: MR-TOWN115-GAV
 prerequisites: [MR-C115-saykal, MR-C115-bajar]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "gāv ← Sanskrit grāma 'troop, village', a tadbhava (CDIAL 4368)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C115-bajar]
 <!-- hl-knowledge: introduces=[MR-LEX-C115-TOWN115-04]; assesses=[] -->
 
 **गाव** — *gāv* — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाव** (*gāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *grāma*, "troop, village" (CDIAL 4368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "surekh"
 concept_tag: MR-GUN235-SUREKH
 prerequisites: [MR-C234-bharlela, MR-C234-mand]
 sounds: []
-roots: []
+roots: [sanskrit-rekha]
+etymology_hook: "surekh: Sanskrit su- 'well' + rekhā 'line' (CDIAL 10810)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-mand]
 <!-- hl-knowledge: introduces=[MR-LEX-C235-GUN235-01]; assesses=[] -->
 
 **सुरेख** — *surekh* — "lovely, neat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरेख** (*surekh*) is Sanskrit *su-*, "well", and *rekhā*, "line" (CDIAL 10810): "well-lined".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

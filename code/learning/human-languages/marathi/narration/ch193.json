@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "To spend, To put money by, To order, To dry, To iron",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:152a69cf651abe24",
+  "sourceHash": "fnv1a64:40f5a40f2d241d95",
   "lessons": [
     {
       "id": "MR-C193-kharc-karne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c046fe87b21ed4c",
+      "sourceHash": "fnv1a64:2bdc4d3aedbede79",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खर्च is a loan, usually traced to Persian kharj, kharch, \"expense\", which Persian took from Arabic. करणे is \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfa37f17a4eb351c",
+      "sourceHash": "fnv1a64:e177134861b3a2e4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बचत, \"savings\", is built on the verb stem bac-, \"to escape, be saved\", which CDIAL lists under Sanskrit vañcati, a verb whose forms meant \"escapes from\" (CDIAL 11208). करणे is \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04a042cbf7e46925",
+      "sourceHash": "fnv1a64:6bd3e50ab29e4013",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मागवणे (māgavṇe) is the \"make\" form of मागणे, \"to ask for\", which comes from Sanskrit mārgati, \"seeks, requests\" (CDIAL 10074)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3439d0a266526a91",
+      "sourceHash": "fnv1a64:f5d2650454da2a3e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of वाळवणे (vāḷavṇe) is not settled. CDIAL has a Marathi vāḷṇẽ only as \"to give a twist to\" (CDIAL 11405), and no entry for the verb \"to dry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8f58adef3b7447e",
+      "sourceHash": "fnv1a64:933c0da6036fd412",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इस्त्री, \"an iron\", is usually traced to Portuguese estirar, \"to stretch out\". करणे is \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

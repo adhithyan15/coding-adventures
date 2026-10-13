@@ -14,7 +14,8 @@ romanization: "svātantrya"
 concept_tag: MR-VASTU246-SVATANTRYA
 prerequisites: [MR-C246-vasant, MR-C246-grah]
 sounds: []
-roots: []
+roots: [sanskrit-svatantrya]
+etymology_hook: "svātantrya: Sanskrit svātantrya 'independence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C246-grah]
 <!-- hl-knowledge: introduces=[MR-LEX-C246-VASTU246-05]; assesses=[] -->
 
 **स्वातंत्र्य** — *svātantrya* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वातंत्र्य** (*svātantrya*) is Sanskrit *svātantrya*, "independence", a tatsama built on *svatantra*: *sva*, "own", and *tantra*, "rule". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

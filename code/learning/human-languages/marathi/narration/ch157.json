@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "To taste, To sow, To grow, To get tired, To stay awake",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7399203eb293d7e",
+  "sourceHash": "fnv1a64:b0ee96db90dee4fa",
   "lessons": [
     {
       "id": "MR-C157-cakhne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f83969f83a78e6",
+      "sourceHash": "fnv1a64:618b12a5b8c4069e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाखणे (cākhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, \"tastes\", a form CDIAL reconstructs from its descendants (CDIAL 4557)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4fcafabb97be953",
+      "sourceHash": "fnv1a64:8f0cb15bbac2e677",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेरणे (perṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prakirati, \"scatters\" (CDIAL 8443). CDIAL glosses the Marathi verb \"to scatter, strew, sow\", and calls Bloch's source pradara wrong."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea2985a6c400e317",
+      "sourceHash": "fnv1a64:50ee1841195015a6",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाढणे (vāḍhṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhate, \"grows, increases\" (CDIAL 11376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45d8ecfb8d02ba2b",
+      "sourceHash": "fnv1a64:62a856c4d511ca8e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थकणे (thakṇe) comes from a reconstructed sthakk-, \"stop, halt\" (CDIAL 13737). CDIAL thinks a link with sthā, \"to stand\", probable, but not clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b072413ad5b52afb",
+      "sourceHash": "fnv1a64:0af8a9c5a624c827",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जागणे (jāgṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, \"are awake\" (CDIAL 5175)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

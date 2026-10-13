@@ -14,7 +14,8 @@ romanization: "mukhya"
 concept_tag: MR-GUN176-MUKHYA
 prerequisites: [MR-C176-sakya, MR-C176-asakya]
 sounds: []
-roots: []
+roots: [sanskrit-mukhya]
+etymology_hook: "mukhya ← Sanskrit mukhya 'pertaining to the face; chief', a tatsama (CDIAL 10174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C176-asakya]
 <!-- hl-knowledge: introduces=[MR-LEX-C176-GUN176-05]; assesses=[] -->
 
 **मुख्य** — *mukhya* — "main, chief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुख्य** (*mukhya*) is Sanskrit *mukhya*, "pertaining to the face; chief", taken over whole as a learned loan, a tatsama (CDIAL 10174). It is built on *mukha*, "face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

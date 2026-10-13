@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to bear, then the Marathi for to dream.
 You'll want to know: आग्रह करणे.
 आग्रह करणे — āgrah karṇe — "to insist".
 
+The word, taken apart.
+आग्रह is Sanskrit āgraha, "seizing; insistence", a tatsama built on grah, "to seize". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to dream, then the Marathi for to insist
 
 You'll want to know: मध्ये बोलणे.
 मध्ये बोलणे — madhye bolṇe — "to interrupt".
+
+The word, taken apart.
+मध्ये is Sanskrit madhye, "in the middle, among" (CDIAL 9804). बोलणे comes from a reconstructed bōll-, "speak" (CDIAL 9321).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to insist, then the Marathi for to inter
 You'll want to know: मिसळणे.
 मिसळणे — misaḷṇe — "to mix".
 
+The word, taken apart.
+मिसळणे (misaḷṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from miśrala, "mixed", a form CDIAL reconstructs from its descendants (CDIAL 10138). It is built on Sanskrit miśra, "mixed".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to interrupt, then the Marathi for to mi
 You'll want to know: प्रार्थना करणे.
 प्रार्थना करणे — prārthanā karṇe — "to pray".
 
+The word, taken apart.
+प्रार्थना is Sanskrit prārthanā, "request, prayer", a tatsama. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to mix, then the Marathi for to pray.
 
 You'll want to know: शिफारस करणे.
 शिफारस करणे — śiphāras karṇe — "to recommend".
+
+The word, taken apart.
+शिफारस is usually traced to Persian sifārish, "recommendation". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

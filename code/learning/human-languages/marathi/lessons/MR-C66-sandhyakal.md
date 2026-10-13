@@ -11,9 +11,10 @@ gloss: evening — the longest of the day's parts to write, and the one that sha
 concept_tag: TIME-EVENING
 prerequisites: [MR-C66-dupar]
 sounds: [anusvara-nasal, retroflex-la]
-roots: []
+roots: [sanskrit-sandhya, sanskrit-kaala-time]
+etymology_hook: "sandhyākāḷ: Sanskrit sandhyā 'twilight' (CDIAL 12918) + kāḷ 'time' ← kāla (CDIAL 3084)"
 duration:
-  max_seconds: 210
+  max_seconds: 250
 requires:
   knowledge: [MR-LEX-DUPAR, MR-LEX-SAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -58,6 +59,11 @@ that, संध्याकाळ stops being a long new word and becomes a shor
 
 That is worth doing to any long word in this language before deciding it is
 hard: look for the part of it you have met.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संध्याकाळ** (*sandhyākāḷ*) joins Sanskrit *sandhyā*, "twilight" (CDIAL 12918), whose inherited Marathi form is *sāṁj*, "evening", to *kāḷ*, "time", from Sanskrit *kāla*, "time" (CDIAL 3084).
 
 ## Grammar Lens: third time, same ending
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-LEX-SANDHYAKAL] -->

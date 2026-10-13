@@ -15,6 +15,7 @@ concept_tag: MR-ADJ109-TAS
 prerequisites: [MR-C109-mahina, MR-C109-varsa]
 sounds: []
 roots: []
+etymology_hook: "tās 'hour': usually traced to Persian tās, a metal bowl struck as a gong; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C109-varsa]
 <!-- hl-knowledge: introduces=[MR-LEX-C109-ADJ109-05]; assesses=[] -->
 
 **तास** — *tās* — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तास** (*tās*) is usually traced to Persian *tās*, a metal bowl or gong: the gong struck to mark the hours gave its name to the hour. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

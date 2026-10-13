@@ -14,7 +14,8 @@ romanization: "jaṅgal"
 concept_tag: MR-NATURE96-JANGAL
 prerequisites: [MR-C96-pan, MR-C96-dongar]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jaṅgal ← Sanskrit jāṅgala 'arid, sparse in trees'; CDIAL sees a possible non-Aryan source (CDIAL 5177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C96-dongar]
 <!-- hl-knowledge: introduces=[MR-LEX-C96-NATURE96-04]; assesses=[] -->
 
 **जंगल** — *jaṅgal* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जंगल** (*jaṅgal*) goes back to Sanskrit *jāṅgala*, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL says the noun spread everywhere in the shape it has in the Hindi area, and that a Sindhi variant supports a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

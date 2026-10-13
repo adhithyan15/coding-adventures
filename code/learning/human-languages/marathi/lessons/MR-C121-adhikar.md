@@ -14,7 +14,8 @@ romanization: "adhikār"
 concept_tag: MR-CAN121-ADHIKAR
 prerequisites: [MR-C121-kausalya, MR-C121-ksamata]
 sounds: []
-roots: []
+roots: [sanskrit-adhikara]
+etymology_hook: "adhikār: Sanskrit adhikāra 'authority, a right', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C121-ksamata]
 <!-- hl-knowledge: introduces=[MR-LEX-C121-CAN121-05]; assesses=[] -->
 
 **अधिकार** — *adhikār* — "a right, authority".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अधिकार** (*adhikār*) is Sanskrit *adhikāra*, "authority, a right", taken over whole, a tatsama. It is built on *kṛ*, "to do", with *adhi*, "over". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

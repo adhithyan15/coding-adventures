@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Here, and the Asking Column",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b9eb4339968e3661",
+  "sourceHash": "fnv1a64:169a6314d98028f4",
   "lessons": [
     {
       "id": "MR-W40-i-independent",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e020773e4336a466",
+      "sourceHash": "fnv1a64:d11726822c76e32f",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +208,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इथे (ithe) is inherited. CDIAL lists it, as ethẽ, \"here\", under Sanskrit ittham, \"thus\", whose Prakrit form ittha already meant \"here\" (CDIAL 1564)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -277,7 +288,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

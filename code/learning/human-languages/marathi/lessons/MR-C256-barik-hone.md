@@ -14,7 +14,8 @@ romanization: "bārīk hoṇe"
 concept_tag: MR-VERB-BARIK-HONE
 prerequisites: [MR-C256-japne, MR-C256-vyakta-karne]
 sounds: []
-roots: []
+roots: [persian-barik, sanskrit-bhavati]
+etymology_hook: "bārīk: usually traced to Persian bārīk 'thin, fine'; hoṇe ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C256-vyakta-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C256-ACT256-04]; assesses=[] -->
 
 **बारीक होणे** — *bārīk hoṇe* — "to get thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बारीक** is usually traced to Persian *bārīk*, "thin, fine". **होणे** comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

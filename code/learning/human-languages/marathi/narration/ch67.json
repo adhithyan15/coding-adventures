@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The Clock",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a4cda3f4019e9090",
+  "sourceHash": "fnv1a64:67731b67d9a13d04",
   "lessons": [
     {
       "id": "MR-C67-vajle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b71d346e39adbd",
+      "sourceHash": "fnv1a64:40d0e65dd81ef2fd",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजले is a form of वाजणे, \"to sound\", from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the verb counts with you",
           "segments": [
@@ -100,7 +111,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -170,7 +181,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb64be554cfa5de",
+      "sourceHash": "fnv1a64:df7e4358fa36c9cb",
       "notice": null,
       "blocks": [
         {
@@ -251,6 +262,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजता (vājtā) is a form of वाजणे, \"to sound\", which comes from Sanskrit vādyate, \"is made to sound\", the passive of vādayati, \"makes sound\" (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the one that never moves",
           "segments": [
@@ -283,7 +305,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -353,7 +375,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "reśīm"
 concept_tag: MR-VASTU214-RESIM
 prerequisites: [MR-C214-kapus, MR-C214-lokar]
 sounds: []
-roots: []
+roots: [persian-abresham]
+etymology_hook: "reśīm: usually traced to Persian abrēsham 'silk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C214-lokar]
 <!-- hl-knowledge: introduces=[MR-LEX-C214-VASTU214-05]; assesses=[] -->
 
 **रेशीम** — *reśīm* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेशीम** (*reśīm*) is a loan, usually traced to Persian *abrēsham*, "silk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

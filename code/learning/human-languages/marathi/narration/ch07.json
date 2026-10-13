@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Curled Row, and One Letter from the Lips",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1fbadfb0ff8fae9d",
+  "sourceHash": "fnv1a64:1f1e88612e2b7ee6",
   "lessons": [
     {
       "id": "MR-C07-taali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfdec029de5d779a",
+      "sourceHash": "fnv1a64:1a6444d83a767fc0",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टाळी (ṭāḷī) is a tadbhava, a word inherited and reshaped by sound change. CDIAL lists Marathi ṭāḷī, \"clapping\", under Sanskrit tāḍa, \"blow\", whose form tāla meant \"clap, rhythm\" (CDIAL 5748)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c190400385ed51a",
+      "sourceHash": "fnv1a64:70e287767af81608",
       "notice": null,
       "blocks": [
         {
@@ -180,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठाम (ṭhām) is a tadbhava, a word inherited and reshaped by sound change. It comes from sthāmya, \"placed\", a form CDIAL reconstructs from its descendants (CDIAL 13761). CDIAL builds it on Sanskrit sthāman, \"station, place\", and glosses the Marathi word \"fixed, firm, settled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -241,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e69e4d026110eed",
+      "sourceHash": "fnv1a64:aabadefa795b274c",
       "notice": null,
       "blocks": [
         {
@@ -291,6 +313,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डबा (ḍabā) goes back to a reconstructed ḍabba, \"box\"; CDIAL lists Marathi ḍabbā, \"box\". It says the word is of non-Aryan origin, from Dravidian according to A. Master (CDIAL 5528)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

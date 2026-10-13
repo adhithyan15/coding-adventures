@@ -14,7 +14,8 @@ romanization: "magar"
 concept_tag: MR-THINGS143-MAGAR
 prerequisites: [MR-C142-beduk, MR-C143-kasav]
 sounds: []
-roots: []
+roots: [sanskrit-makara]
+etymology_hook: "magar: Sanskrit makara 'crocodile', lightly reshaped; CDIAL lists no Marathi form (CDIAL 9692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C143-kasav]
 <!-- hl-knowledge: introduces=[MR-LEX-C143-THINGS143-02]; assesses=[] -->
 
 **मगर** — *magar* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मगर** (*magar*) goes back to Sanskrit *makara*, "crocodile" (CDIAL 9692). CDIAL lists no Marathi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

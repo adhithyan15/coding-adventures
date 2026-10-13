@@ -12,6 +12,9 @@ Before the new one: say the Marathi for fire, then the Marathi for snow; ice.
 You'll want to know: पाऊस.
 पाऊस — pāūs — "rain".
 
+The word, taken apart.
+पाऊस (pāūs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prāvṛṣ, "the rainy season" (CDIAL 8964). It is built on vṛṣ, "to rain".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for snow; ice, then the Marathi for rain.
 
 You'll want to know: वारा.
 वारा — vārā — "wind".
+
+The word, taken apart.
+वारा (vārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātara, "windy, stormy" (CDIAL 11497). CDIAL builds it on Sanskrit vāta, "wind".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for rain, then the Marathi for wind.
 You'll want to know: आकाश.
 आकाश — ākāsh — "the sky".
 
+The word, taken apart.
+आकाश (ākāsh) is Sanskrit ākāśa, "sky", taken over whole as a learned loan, a tatsama (CDIAL 1008).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for wind, then the Marathi for the sky.
 You'll want to know: कुत्रा.
 कुत्रा — kutrā — "a dog".
 
+The word, taken apart.
+कुत्रा (kutrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kuttira, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word kutta, "dog", behind it as imitative.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the sky, then the Marathi for a dog.
 
 You'll want to know: मांजर.
 मांजर — māñjar — "a cat".
+
+The word, taken apart.
+मांजर (māñjar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārjāra, "cat" (CDIAL 10082).
 
 What you've built.
 One more word for this chapter.

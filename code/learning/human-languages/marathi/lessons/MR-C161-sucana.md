@@ -14,7 +14,8 @@ romanization: "sūcanā"
 concept_tag: MR-VACH161-SUCANA
 prerequisites: [MR-C160-akhne, MR-C161-velapatrak]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcanā ← Sanskrit sūcanā 'pointing out, information', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [MR-C161-velapatrak]
 
 The notice says **दुकान रविवारी बंद.** The shop is closed on Sundays, so come on
 another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूचना** (*sūcanā*) is Sanskrit *sūcanā*, "pointing out, information", taken over whole as a learned loan, a tatsama. It is built on *sūc*, "to point out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "To show, To play, To shout, To bite, To swallow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:deaf201e19679227",
+  "sourceHash": "fnv1a64:0849b99ff13753e6",
   "lessons": [
     {
       "id": "MR-C156-dakhavne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:874189f18fd76e96",
+      "sourceHash": "fnv1a64:bd64f4cdf7cdf044",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाखवणे (dākhavṇe) is the \"make someone see\" form of an old verb for \"see\": CDIAL lists it, in its addenda, under a reconstructed dṛkṣati, \"sees\" (CDIAL 6507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6fb93a4c2b4306e",
+      "sourceHash": "fnv1a64:3abd3df9c58e47c2",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजवणे (vājavṇe) is the \"make\" form of वाजणे, \"to sound\", from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b43caab75247c65",
+      "sourceHash": "fnv1a64:215a27b9ee700a5f",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओरडणे (oraḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from uparaṭati, \"shouts to\", a form CDIAL reconstructs from its descendants (CDIAL 2211). It is upa, \"to\", and raṭ, \"to cry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e889bab4d0ef74a1",
+      "sourceHash": "fnv1a64:366b1d0c5ac85b65",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चावणे (cāvṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from carvati, \"chews\" (CDIAL 4711)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:656606eaf51d280d",
+      "sourceHash": "fnv1a64:c1b4409905b6e654",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिळणे (giḷṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gilati, \"swallows\" (CDIAL 4075)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

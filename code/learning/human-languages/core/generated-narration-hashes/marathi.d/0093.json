@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 93,
-  "sourceHash": "fnv1a64:5d146ea806712723",
+  "sourceHash": "fnv1a64:6740e3e863ffa92f",
   "lessonIds": [
     "MR-C93-dar",
     "MR-C93-svayampakghar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch93.txt",
   "json": "marathi/narration/ch93.json",
-  "textHash": "fnv1a64:9158597311b7fa33",
-  "jsonHash": "fnv1a64:fe8294c58ea64875",
+  "textHash": "fnv1a64:928c62028dee1fcf",
+  "jsonHash": "fnv1a64:4a3c06085efad57d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sāsū"
 concept_tag: MR-VASTU264-SASU
 prerequisites: [MR-C264-vrddha, MR-C264-jule]
 sounds: []
-roots: []
+roots: [sanskrit-shvashru]
+etymology_hook: "sāsū ← Sanskrit śvaśrū 'husband's or wife's mother', a tadbhava (CDIAL 12759)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C264-jule]
 <!-- hl-knowledge: introduces=[MR-LEX-C264-VASTU264-03]; assesses=[] -->
 
 **सासू** — *sāsū* — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सासू** (*sāsū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvaśrū*, "husband's or wife's mother" (CDIAL 12759).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

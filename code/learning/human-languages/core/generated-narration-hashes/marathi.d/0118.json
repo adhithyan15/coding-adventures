@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 118,
-  "sourceHash": "fnv1a64:70ddd21f106dc3bc",
+  "sourceHash": "fnv1a64:308617108b10b7ef",
   "lessonIds": [
     "MR-C118-chalis",
     "MR-C118-pannas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch118.txt",
   "json": "marathi/narration/ch118.json",
-  "textHash": "fnv1a64:9d271fc2555b167c",
-  "jsonHash": "fnv1a64:54aea46ceb3fa0fa",
+  "textHash": "fnv1a64:a1e4c52b8f5dc46b",
+  "jsonHash": "fnv1a64:ac51db52cd36a9e6",
   "findings": []
 }

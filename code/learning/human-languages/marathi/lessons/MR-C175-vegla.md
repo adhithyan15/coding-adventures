@@ -14,7 +14,8 @@ romanization: "vegḷā / vegḷī"
 concept_tag: MR-GUN175-VEGLA
 prerequisites: [MR-C174-utsahi, MR-C175-vicitra]
 sounds: []
-roots: []
+roots: [indo-aryan-viyagna]
+etymology_hook: "vegḷā ← *viyagna 'separate', a reconstructed form; a tadbhava (CDIAL 11826)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C175-vicitra]
 <!-- hl-knowledge: introduces=[MR-LEX-C175-GUN175-02]; assesses=[] -->
 
 **वेगळा / वेगळी** — *vegḷā / vegḷī* — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वेगळा** (*vegḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*viyagna*, "separate", a form CDIAL reconstructs from its descendants (CDIAL 11826). CDIAL notes the added *-la-* of the Marathi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

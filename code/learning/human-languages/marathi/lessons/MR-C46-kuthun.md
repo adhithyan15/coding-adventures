@@ -12,8 +12,9 @@ concept_tag: MR-QUESTION-KUTHUN
 prerequisites: [MR-C46-paasun, MR-C38-kuthe, MR-C38-wh-order]
 sounds: [matra-u, retroflex-tha, matra-oo]
 roots: [ka-interrogative]
+etymology_hook: "kuṭhūn: kuṭhe, usually traced to Sanskrit kutra 'where', + -hūn 'from', whose origin is not settled"
 duration:
-  max_seconds: 210
+  max_seconds: 257
 requires:
   knowledge: [MR-POSTP-PAASUN, MR-POSTP-HUUN, MR-QUESTION-KUTHE, MR-GRAMMAR-WH-ORDER, MR-GRAMMAR-OBLIQUE, MR-GRAMMAR-PRON-OBLIQUE, MR-LEX-YENE]
 introduces:
@@ -61,6 +62,11 @@ Now put the whole family beside each other, because they are one shape with
 three stems and you have owned two of them since chapter forty:
 
 > **कुठून** from where · **इथून** from here · **तिथून** from there.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुठून** (*kuṭhūn*) is **कुठे**, usually traced to Sanskrit *kutra*, "where", with the ending **-हून**, "from", whose own origin is not settled. CDIAL has no entry for either.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-QUESTION-KUTHUN, MR-GRAMMAR-WH-ORDER, MR-POSTP-HUUN, MR-POSTP-PAASUN, MR-GRAMMAR-PRON-OBLIQUE, MR-GRAMMAR-OBLIQUE] -->

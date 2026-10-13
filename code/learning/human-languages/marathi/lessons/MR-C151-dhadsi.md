@@ -15,6 +15,7 @@ concept_tag: MR-QUAL151-DHADSI
 prerequisites: [MR-C150-mehanti, MR-C151-pramanik]
 sounds: []
 roots: []
+etymology_hook: "dhāḍsī 'brave': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C151-pramanik]
 <!-- hl-knowledge: introduces=[MR-LEX-C151-QUAL151-02]; assesses=[] -->
 
 **धाडसी** — *dhāḍsī* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **धाडसी** (*dhāḍsī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

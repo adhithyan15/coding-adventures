@@ -14,7 +14,8 @@ romanization: "nāṇe"
 concept_tag: MR-VASTU182-NANE
 prerequisites: [MR-C181-yas, MR-C182-savlat]
 sounds: []
-roots: []
+roots: [sanskrit-nanaka]
+etymology_hook: "nāṇe ← Sanskrit nāṇaka 'coin, anything stamped', a tadbhava (CDIAL 7050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C182-savlat]
 <!-- hl-knowledge: introduces=[MR-LEX-C182-VASTU182-02]; assesses=[] -->
 
 **नाणे** — *nāṇe* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाणे** (*nāṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāṇaka*, "coin, anything stamped" (CDIAL 7050).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

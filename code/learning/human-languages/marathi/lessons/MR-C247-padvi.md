@@ -14,7 +14,8 @@ romanization: "padvī"
 concept_tag: MR-VASTU247-PADVI
 prerequisites: [MR-C246-svatantrya, MR-C247-nokri]
 sounds: []
-roots: []
+roots: [sanskrit-padavi]
+etymology_hook: "padvī: Sanskrit padavī 'road, path; position', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C247-nokri]
 <!-- hl-knowledge: introduces=[MR-LEX-C247-VASTU247-02]; assesses=[] -->
 
 **पदवी** — *padvī* — "a degree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पदवी** (*padvī*) is Sanskrit *padavī*, "road, path; position", a tatsama built on *pada*, "step". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

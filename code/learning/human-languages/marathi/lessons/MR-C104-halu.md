@@ -14,7 +14,8 @@ romanization: "haḷū"
 concept_tag: MR-ADJ104-HALU
 prerequisites: [MR-C104-garam, MR-C104-thand]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "haḷū ← Sanskrit laghu 'light, quick', with its sounds swapped; a tadbhava (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C104-thand]
 <!-- hl-knowledge: introduces=[MR-LEX-C104-ADJ104-03]; assesses=[] -->
 
 **हळू** — *haḷū* — "slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हळू** (*haḷū*) is a tadbhava of Sanskrit *laghu*, "light; slight, quick", with its consonants swapped round (CDIAL 10896).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhuṇe"
 concept_tag: MR-VERB-DHUNE
 prerequisites: [MR-C78-ughadne, MR-C78-shijavne]
 sounds: []
-roots: []
+roots: [indo-aryan-dhuvati]
+etymology_hook: "dhuṇe ← *dhuvati 'washes', which CDIAL asks may be the same as dhuvati 'shakes' (CDIAL 6833)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C78-shijavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C79-VERBS79-01]; assesses=[] -->
 
 **धुणे** — *dhuṇe* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धुणे** (*dhuṇe*) comes from *\*dhuvati*, "washes", a form CDIAL reconstructs beside Sanskrit *dhuta*, "cleansed". CDIAL asks whether it is the same verb as *dhuvati*, "shakes" (CDIAL 6833).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

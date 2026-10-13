@@ -14,7 +14,8 @@ romanization: "ṭāḷṇe"
 concept_tag: MR-VERB-TALNE
 prerequisites: [MR-C225-siddha-karne, MR-C225-avlambun-asne]
 sounds: []
-roots: []
+roots: [indo-aryan-talati-move]
+etymology_hook: "ṭāḷṇe ← ṭālayati, the 'make' form of ṭalati '*moves aside' (CDIAL 5450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C225-avlambun-asne]
 <!-- hl-knowledge: introduces=[MR-LEX-C225-ACT225-05]; assesses=[] -->
 
 **टाळणे** — *ṭāḷṇe* — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टाळणे** (*ṭāḷṇe*) comes from Sanskrit *ṭālayati*, the "make" form of *ṭalati*, a verb CDIAL glosses "*moves aside" (CDIAL 5450): to avoid is to make a thing move aside.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

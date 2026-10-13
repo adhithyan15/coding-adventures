@@ -15,6 +15,7 @@ concept_tag: MR-TIME127-KOPRA
 prerequisites: [MR-C127-saral, MR-C127-valan]
 sounds: []
 roots: []
+etymology_hook: "koprā 'corner': origin not settled; perhaps with kopar 'elbow' ← kūrpara (CDIAL 3413), but no source says so"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C127-valan]
 <!-- hl-knowledge: introduces=[MR-LEX-C127-TIME127-05]; assesses=[] -->
 
 **कोपरा** — *koprā* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कोपरा** (*koprā*) is not settled. CDIAL has no entry for it in this sense; it may belong with Marathi *kopar*, "elbow", from Sanskrit *kūrpara* (CDIAL 3413), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

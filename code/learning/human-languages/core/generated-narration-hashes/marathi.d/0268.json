@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 268,
-  "sourceHash": "fnv1a64:91b0d1aa33f1d29d",
+  "sourceHash": "fnv1a64:1d2365c0162f277c",
   "lessonIds": [
     "MR-C268-avjar",
     "MR-C268-tabla",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch268.txt",
   "json": "marathi/narration/ch268.json",
-  "textHash": "fnv1a64:fbdd4878e4356807",
-  "jsonHash": "fnv1a64:0e9cfe9d40fd8a8f",
+  "textHash": "fnv1a64:6bc8fedb232b8781",
+  "jsonHash": "fnv1a64:b7cd3c0d403f8b74",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "phāydā"
 concept_tag: MR-VASTU189-PHAYDA
 prerequisites: [MR-C189-upkar, MR-C189-kasta]
 sounds: []
-roots: []
+roots: [arabic-faida]
+etymology_hook: "phāydā ← Arabic fāʾida 'a benefit, a gain', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C189-kasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C189-VASTU189-04]; assesses=[] -->
 
 **फायदा** — *phāydā* — "a benefit, a profit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फायदा** (*phāydā*) is a loan from Arabic *fāʾida*, "a benefit, a gain", which reached Marathi through Persian. Its Arabic root is *f-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

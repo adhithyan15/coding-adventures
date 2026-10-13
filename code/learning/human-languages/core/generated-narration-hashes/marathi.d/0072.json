@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 72,
-  "sourceHash": "fnv1a64:7da70d69487d2157",
+  "sourceHash": "fnv1a64:b51c383df9628513",
   "lessonIds": [
     "MR-C72-rakta",
     "MR-C72-gudgha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch72.txt",
   "json": "marathi/narration/ch72.json",
-  "textHash": "fnv1a64:9bed4341eb96c364",
-  "jsonHash": "fnv1a64:f82b018c317ad106",
+  "textHash": "fnv1a64:17fc2ffb7eab1c2e",
+  "jsonHash": "fnv1a64:bf47392c65b3d2fe",
   "findings": []
 }

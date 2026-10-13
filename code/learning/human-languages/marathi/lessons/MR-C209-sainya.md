@@ -14,7 +14,8 @@ romanization: "sainya"
 concept_tag: MR-VASTU209-SAINYA
 prerequisites: [MR-C209-yuddha, MR-C209-santata]
 sounds: []
-roots: []
+roots: [sanskrit-sainya]
+etymology_hook: "sainya: Sanskrit sainya 'army', from senā 'army', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C209-santata]
 <!-- hl-knowledge: introduces=[MR-LEX-C209-VASTU209-04]; assesses=[] -->
 
 **सैन्य** — *sainya* — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सैन्य** (*sainya*) is Sanskrit *sainya*, "army", a tatsama built on *senā*, "army". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

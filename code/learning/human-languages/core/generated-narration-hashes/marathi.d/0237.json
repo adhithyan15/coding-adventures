@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 237,
-  "sourceHash": "fnv1a64:ce86139a092aa2e8",
+  "sourceHash": "fnv1a64:b5e4b96c9b98b99a",
   "lessonIds": [
     "MR-C237-parampara",
     "MR-C237-boli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch237.txt",
   "json": "marathi/narration/ch237.json",
-  "textHash": "fnv1a64:ec3a422039701f2b",
-  "jsonHash": "fnv1a64:bc481f439a6eadd8",
+  "textHash": "fnv1a64:f937c8740a5b6597",
+  "jsonHash": "fnv1a64:f4ece7a53792e1fe",
   "findings": []
 }

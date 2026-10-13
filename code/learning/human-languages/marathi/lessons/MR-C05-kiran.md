@@ -14,7 +14,8 @@ gloss: "a ray of light"
 concept_tag: MR-ANCHOR-KIRAN
 prerequisites: [MR-C05-amrut]
 sounds: []
-roots: []
+roots: [sanskrit-kirana]
+etymology_hook: "kiraṇ ← Sanskrit kiraṇa 'ray of light', unchanged but for the final vowel (CDIAL 3171)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **किरण** — *kiraṇ* — "a ray of light".
 
 Say it: *kiraṇ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ि** and **ण**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किरण** (*kiraṇ*) is Sanskrit *kiraṇa*, "ray of light", which has lost only its final vowel; CDIAL lists it among the inherited Marathi words (CDIAL 3171). In the Rigveda the same word meant "dust".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-KIRAN] -->

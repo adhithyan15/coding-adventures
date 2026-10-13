@@ -53,6 +53,9 @@ You'll want to know: दुपार.
 It is the stretch after the morning and before the evening — the middle of the day, when the sun is highest.
 मी दुपारी येतो. — mī dupārī yeto. — I come in the afternoon.
 
+The word, taken apart.
+दुपार (dupār) is usually explained as "two watches": du-, "two", and pahār, "a watch of three hours", which CDIAL lists under prahara, "watch". CDIAL asks whether prahara is itself a Sanskritization of Persian pahra, "watch" (CDIAL 8900).
+
 Grammar Lens: the ending holds.
 You were shown -ी on one word. Here it is on a second, doing the same job:
 [a table of 2 rows, read aloud]
@@ -96,6 +99,9 @@ It is the longest word in this chapter, and you have already read half of it. Lo
 The morning and the evening end in the same piece — काळ. Once you see that, संध्याकाळ (sandhyākāḷ) stops being a long new word and becomes a short new piece — संध्या — in front of one you can already read.
 That is worth doing to any long word in this language before deciding it is hard: look for the part of it you have met.
 
+The word, taken apart.
+संध्याकाळ (sandhyākāḷ) joins Sanskrit sandhyā, "twilight" (CDIAL 12918), whose inherited Marathi form is sāṁj, "evening", to kāḷ, "time", from Sanskrit kāla, "time" (CDIAL 3084).
+
 Grammar Lens: third time, same ending.
 मी संध्याकाळी येतो. — mī sandhyākāḷī yeto. — I come in the evening.
 [a table of 3 rows, read aloud]
@@ -136,6 +142,9 @@ You'll want to know: रात्र.
 The word ends on त्र, a त and a र written as one joined shape. You have read that join before; here it closes the word rather than opening it, so give it its full value — rā-tra, not rāt.
 मी रात्री येतो. — mī rātrī yeto. — I come at night.
 
+The word, taken apart.
+रात्र (rātra) is Sanskrit rātri, "night", lightly reshaped. CDIAL lists the inherited Marathi form as rāt, "night" (CDIAL 10702).
+
 Grammar Lens: four for four, and what English does instead.
 [a table of 4 rows, read aloud]
 the part of the day: सकाळ (sakāḷ). at that time: सकाळी.
@@ -175,6 +184,9 @@ Four parts, four at-that-time words. Say them. Then ask yourself what the four o
 You'll want to know: दिवस.
 दिवस — divas — day.
 Not a fifth part. The whole that holds the other four — the morning, the afternoon, the evening and the night are stretches of a दिवस (divas).
+
+The word, taken apart.
+दिवस (divas) is inherited from Sanskrit divasa, which meant "heaven" in the Brahmanas and "day" later; it has come down with almost no change (CDIAL 6333).
 
 Grammar Lens: the one that will not take -ी.
 Four words took -ी without complaint. This one does not:

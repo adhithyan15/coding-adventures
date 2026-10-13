@@ -23,6 +23,9 @@ Before you read the word, work it out. You have सहा and you have -वा.
 सहा + वा = सहावा (sahāvā). Nothing was worn down. Nothing was replaced.
 This is the first time in this book that a new word has been handed to you already known. It will happen four more times in this chapter.
 
+The word, taken apart.
+सहावा (sahāvā) is सहा, "six", with the ordinal ending -वा. CDIAL has no entry for the whole word; the ending is the one that, in सातवा (sātvā), "seventh", continues Sanskrit saptama (CDIAL 13151).
+
 Grammar Lens: what a rule buys.
 सहावं घर — sahāvaṁ ghar — the sixth house.
 Chapter sixty cost you four separate words to reach fourth. This chapter costs you one ending, already paid for, to reach tenth — and then twentieth, and hundredth, and every ordinal Marathi will ever need.
@@ -65,6 +68,9 @@ You'll want to know: सातवा.
 सात + वा. Say it before you read it.
 One small thing in the sound. सहा ends in a vowel, so सहावा (sahāvā) comes out in three beats — sa-hā-vā. सात ends in a consonant, so सातवा (sātvā) comes out in two — sāt-vā. The ending did not change; the number it landed on did.
 
+The word, taken apart.
+CDIAL lists सातवा (sātvā) under Sanskrit saptama, "seventh" (CDIAL 13151): the -वा is what the old ordinal ending -ma became.
+
 Grammar Lens: the dictionaries agree with you.
 Look up पहिला in Molesworth's 1857 dictionary and it is there, with its own definition. Look up तिसरा, and चौथा — both there, each with its own entry.
 Look up सातवा (sātvā) and there is nothing. The dictionary has no such word.
@@ -106,6 +112,9 @@ You'll want to know: आठवा.
 आठवा — āṭhvā — eighth.
 आठवी खोली — āṭhvī khoolī — the eighth room.
 आठ + वा, with the retroflex ठ carried through untouched.
+
+The word, taken apart.
+CDIAL lists आठवा (āṭhvā) under Sanskrit aṣṭama, "eighth" (CDIAL 937).
 
 Grammar Lens: the pair to keep apart.
 Two words in this set both end in a -था/-वा you might blur together:
@@ -195,6 +204,9 @@ Four recalls, at four distances.
 You'll want to know: दहावा.
 दहावा — dahāvā — tenth.
 दहा + वा, with the number whole and the ending behind it, exactly as sixth, seventh and eighth were.
+
+The word, taken apart.
+CDIAL lists दहावा (dahāvā) under Sanskrit daśama, "tenth" (CDIAL 6233).
 
 Grammar Lens: this is where the set stops, and the ending does not.
 Tenth is where this book's ordinal list ends. It is not where Marathi's ends.

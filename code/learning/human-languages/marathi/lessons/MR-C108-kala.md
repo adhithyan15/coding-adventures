@@ -14,7 +14,8 @@ romanization: "kāḷā"
 concept_tag: MR-ADJ108-KALA
 prerequisites: [MR-C107-lal, MR-C107-nila]
 sounds: []
-roots: []
+roots: [sanskrit-kala-black]
+etymology_hook: "kāḷā ← Sanskrit kāla 'black, dark-blue', which CDIAL derives from Dravidian (CDIAL 3083)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C107-nila]
 <!-- hl-knowledge: introduces=[MR-LEX-C108-ADJ108-01]; assesses=[] -->
 
 **काळा** — *kāḷā* — "black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काळा** (*kāḷā*) is a tadbhava of Sanskrit *kāla*, "black, dark-blue" (CDIAL 3083). CDIAL derives the Sanskrit word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

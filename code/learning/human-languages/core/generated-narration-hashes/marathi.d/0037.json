@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 37,
-  "sourceHash": "fnv1a64:c8ad87715f630f6a",
+  "sourceHash": "fnv1a64:c7dbc78d28ac4fe2",
   "lessonIds": [
     "MR-C37-kon",
     "MR-C37-kiti",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch37.txt",
   "json": "marathi/narration/ch37.json",
-  "textHash": "fnv1a64:d702f916d5775cf3",
-  "jsonHash": "fnv1a64:c289f7a23486b879",
+  "textHash": "fnv1a64:0520b06030238739",
+  "jsonHash": "fnv1a64:1b6f59c42a13a41a",
   "findings": []
 }

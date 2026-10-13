@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 234,
-  "sourceHash": "fnv1a64:294d4c36fe68cc6d",
+  "sourceHash": "fnv1a64:1dd549dc945cdbda",
   "lessonIds": [
     "MR-C234-mahattvaca",
     "MR-C234-manoranjak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch234.txt",
   "json": "marathi/narration/ch234.json",
-  "textHash": "fnv1a64:a1172e4af5a67902",
-  "jsonHash": "fnv1a64:5b7d73201db3a31f",
+  "textHash": "fnv1a64:517bd2b303862957",
+  "jsonHash": "fnv1a64:a922c5183da4765c",
   "findings": []
 }

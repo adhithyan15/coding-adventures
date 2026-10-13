@@ -14,7 +14,8 @@ romanization: "harṇe"
 concept_tag: MR-VERB-HARNE
 prerequisites: [MR-C168-laksat-yene, MR-C168-lajne]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "harṇe: CDIAL lists it as the 'lose' verb formed from hārṇe 'to take away, win' ← hārayati (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C168-lajne]
 <!-- hl-knowledge: introduces=[MR-LEX-C168-ACT168-04]; assesses=[] -->
 
 **हरणे** — *harṇe* — "to be defeated, to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हरणे** (*harṇe*) is inherited. CDIAL lists it, "to lose, fail, be conquered", as formed from Marathi *hārṇẽ*, "to take away, win", which comes from Sanskrit *hārayati*, "causes to be taken; loses" (CDIAL 14061).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

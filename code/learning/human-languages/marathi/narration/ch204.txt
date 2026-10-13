@@ -12,6 +12,9 @@ Before the new one: say the Marathi for about, then the Marathi for only.
 You'll want to know: गंभीर.
 गंभीर — gambhīr — "serious".
 
+The word, taken apart.
+गंभीर (gambhīr) is Sanskrit gambhīra, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4031). CDIAL lists the Marathi word as gãbhīr, "deep (of water), serious".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for only, then the Marathi for serious.
 
 You'll want to know: लाजाळू.
 लाजाळू — lājāḷū — "shy".
+
+The word, taken apart.
+लाजाळू (lājāḷū) is लाज, "shame", from Sanskrit lajjā, "shame, modesty" (CDIAL 10910), with the ending -āḷū, "given to".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for serious, then the Marathi for shy.
 You'll want to know: शूर.
 शूर — śūr — "valiant, brave".
 
+The word, taken apart.
+शूर (śūr) is Sanskrit śūra, "strong, valiant; hero", a tatsama (CDIAL 12569).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for shy, then the Marathi for valiant.
 You'll want to know: भित्रा / भित्री.
 भित्रा / भित्री — bhitrā / bhitrī — "fearful, cowardly".
 
+The word, taken apart.
+The origin of भित्रा (bhitrā) is not settled. CDIAL has no entry for it; under Sanskrit bhīta, "frightened", it lists only Old Marathi bheḍa, "timid" (CDIAL 9511).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for valiant, then the Marathi for fearful.
 
 You'll want to know: उत्सुक.
 उत्सुक — utsuk — "curious, eager".
+
+The word, taken apart.
+उत्सुक (utsuk) is Sanskrit utsuka, "eager, anxious", a tatsama. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

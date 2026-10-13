@@ -11,9 +11,10 @@ gloss: afternoon — the middle of the day, and the same time-ending a second ti
 concept_tag: TIME-AFTERNOON
 prerequisites: [MR-C66-sakal]
 sounds: [matra-u, matra-aa]
-roots: []
+roots: [sanskrit-prahara]
+etymology_hook: "dupār: usually explained as two + pahār 'watch of 3 hours' (CDIAL 8900 prahara)"
 duration:
-  max_seconds: 210
+  max_seconds: 220
 requires:
   knowledge: [MR-LEX-SAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -49,6 +50,11 @@ day, when the sun is highest.
 
 > **मी दुपारी येतो.**
 > — *mī dupārī yeto.* — **I come in the afternoon.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुपार** (*dupār*) is usually explained as "two watches": *du-*, "two", and *pahār*, "a watch of three hours", which CDIAL lists under *prahara*, "watch". CDIAL asks whether *prahara* is itself a Sanskritization of Persian *pahra*, "watch" (CDIAL 8900).
 
 ## Grammar Lens: the ending holds
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB] -->

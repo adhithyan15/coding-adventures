@@ -14,7 +14,8 @@ romanization: "kacerī"
 concept_tag: MR-VASTU271-KACERI
 prerequisites: [MR-C270-dhotar, MR-C270-kurta]
 sounds: []
-roots: []
+roots: [hindustani-kacahri]
+etymology_hook: "kacerī ← Hindustani kacahrī 'office, court'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C270-kurta]
 <!-- hl-knowledge: introduces=[MR-LEX-C271-VASTU271-01]; assesses=[] -->
 
 **कचेरी** — *kacerī* — "a government office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कचेरी** (*kacerī*) is a loan from Hindustani *kacahrī*, "office, court".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

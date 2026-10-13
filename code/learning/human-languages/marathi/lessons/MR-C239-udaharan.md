@@ -14,7 +14,8 @@ romanization: "udāharaṇ"
 concept_tag: MR-VASTU239-UDAHARAN
 prerequisites: [MR-C239-nikal, MR-C239-pharak]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "udāharaṇ: Sanskrit udāharaṇa 'example', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C239-pharak]
 <!-- hl-knowledge: introduces=[MR-LEX-C239-VASTU239-03]; assesses=[] -->
 
 **उदाहरण** — *udāharaṇ* — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उदाहरण** (*udāharaṇ*) is Sanskrit *udāharaṇa*, "example, illustration", a tatsama built on *hṛ*, "to bring". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

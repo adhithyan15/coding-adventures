@@ -14,7 +14,8 @@ romanization: "cintā"
 concept_tag: MR-AAROGYA257-CINTA
 prerequisites: [MR-C256-khau-ghalne, MR-C257-visranti]
 sounds: []
-roots: []
+roots: [sanskrit-cinta]
+etymology_hook: "cintā ← Sanskrit cintā 'thought, care', a tatsama (CDIAL 4816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C257-visranti]
 <!-- hl-knowledge: introduces=[MR-LEX-C257-AAROGYA257-02]; assesses=[] -->
 
 **चिंता** — *cintā* — "anxiety, worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिंता** (*cintā*) is Sanskrit *cintā*, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816). It is built on *cit*, "to perceive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

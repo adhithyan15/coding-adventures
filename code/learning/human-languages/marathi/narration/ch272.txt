@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a veranda, then the Marathi for a broom.
 You'll want to know: न्याय.
 न्याय — nyāy — "justice".
 
+The word, taken apart.
+न्याय (nyāy) is Sanskrit nyāya, "rule, manner, method", taken over whole as a learned loan, a tatsama (CDIAL 7614). CDIAL lists the inherited Marathi form as nyāv, "justice".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a broom, then the Marathi for justice.
 
 You'll want to know: हक्क.
 हक्क — hakka — "an entitlement, a right".
+
+The word, taken apart.
+हक्क (hakka) is a loan from Arabic ḥaqq, "truth, a right", which reached Marathi through Persian. Its Arabic root is ḥ-q-q (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for justice, then the Marathi for an entitle
 You'll want to know: कर्तव्य.
 कर्तव्य — kartavya — "a duty".
 
+The word, taken apart.
+कर्तव्य (kartavya) is Sanskrit kartavya, "to be done; duty", taken over whole as a learned loan, a tatsama (CDIAL 2859).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an entitlement, then the Marathi for a d
 You'll want to know: जबाबदारी.
 जबाबदारी — jabābdārī — "responsibility".
 
+The word, taken apart.
+जबाबदारी (jabābdārī) is jabāb, "answer", from Arabic jawāb, through Persian (Lane, root j-w-b), with Persian -dār, "holder", and -ī: "answer-holding".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a duty, then the Marathi for responsibil
 
 You'll want to know: संधी.
 संधी — sandhī — "an opportunity".
+
+The word, taken apart.
+संधी (sandhī) is Sanskrit saṁdhi, "joint; point of union", taken over whole as a learned loan, a tatsama (CDIAL 12913). CDIAL lists the inherited Marathi form as sāṁdhī, "joint, chink".
 
 What you've built.
 One more word for this chapter.

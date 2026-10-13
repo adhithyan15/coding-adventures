@@ -14,7 +14,8 @@ romanization: "madhyabhāgī"
 concept_tag: MR-JAGA172-MADHYABHAGI
 prerequisites: [MR-C172-itaratra, MR-C172-tikade]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-bhaga]
+etymology_hook: "madhyabhāgī: Sanskrit madhya 'middle' (CDIAL 9804) + bhāga 'part' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C172-tikade]
 <!-- hl-knowledge: introduces=[MR-LEX-C172-JAGA172-05]; assesses=[] -->
 
 **मध्यभागी** — *madhyabhāgī* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मध्यभागी** (*madhyabhāgī*) is Sanskrit *madhya*, "middle" (CDIAL 9804), and *bhāga*, "part", with the ending *-ī*, "in": "in the middle part".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

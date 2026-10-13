@@ -14,7 +14,8 @@ romanization: "bolkā / bolkī"
 concept_tag: MR-GUN260-BOLKA
 prerequisites: [MR-C259-nirupyogi, MR-C260-udar]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolkā: built on bol- 'speak' ← *bōll (CDIAL 9321) + -kā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C260-udar]
 <!-- hl-knowledge: introduces=[MR-LEX-C260-GUN260-02]; assesses=[] -->
 
 **बोलका / बोलकी** — *bolkā / bolkī* — "talkative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलका** (*bolkā*) is built on the stem of **बोलणे**, "to speak", which comes from a reconstructed *\*bōll-*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

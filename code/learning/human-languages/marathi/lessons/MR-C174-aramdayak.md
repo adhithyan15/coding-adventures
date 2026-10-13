@@ -14,7 +14,8 @@ romanization: "ārāmdāyak"
 concept_tag: MR-GUN174-ARAMDAYAK
 prerequisites: [MR-C173-durdaivane, MR-C173-sudaivane]
 sounds: []
-roots: []
+roots: [persian-aram, sanskrit-dayaka]
+etymology_hook: "ārāmdāyak: Persian ārām 'rest, ease' + Sanskrit dāyaka 'giving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C173-sudaivane]
 <!-- hl-knowledge: introduces=[MR-LEX-C174-GUN174-01]; assesses=[] -->
 
 **आरामदायक** — *ārāmdāyak* — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरामदायक** (*ārāmdāyak*) is "giving ease": *ārām*, "rest, ease", usually traced to Persian *ārām*, and Sanskrit *dāyaka*, "giving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

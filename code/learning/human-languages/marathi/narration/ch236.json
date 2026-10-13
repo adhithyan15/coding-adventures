@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "Platform, Passport, Octroi, Booking, River valley",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d24afcd78d96fc2d",
+  "sourceHash": "fnv1a64:bbc9d6529d26dd1e",
   "lessons": [
     {
       "id": "MR-C236-phalat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:886c422e40184b12",
+      "sourceHash": "fnv1a64:b35c5ee79a839b23",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फलाट (phalāṭ) is usually traced to English platform."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:632f2297e99d0cd6",
+      "sourceHash": "fnv1a64:a03761bfb3e953cc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पारपत्र (pārpatra) is a modern coinage of Sanskrit parts: pāra, \"the far side\", and pattra, \"leaf, document\" (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9353b529fe9938a2",
+      "sourceHash": "fnv1a64:4bad92c0498db0ce",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जकात (jakāt) is a loan from Arabic zakāt, \"alms, a tax on wealth\", which reached Marathi through Persian. Its Arabic root is z-k-w (Lane). Marathi writes the z as ज."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:836d36a73dace385",
+      "sourceHash": "fnv1a64:c2109228cf77452e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरक्षण (ārakṣaṇ) is Sanskrit ārakṣaṇa, \"guarding, protection\", a tatsama put to a modern use."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c19fb01a01c8a2f",
+      "sourceHash": "fnv1a64:77595cafda45ee69",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of खोरे (khore) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

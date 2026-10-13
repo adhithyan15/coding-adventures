@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 231,
-  "sourceHash": "fnv1a64:ac6e29e2b0aaa34a",
+  "sourceHash": "fnv1a64:96f0d235e18e8277",
   "lessonIds": [
     "MR-C231-ekatra",
     "MR-C231-kadacit",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch231.txt",
   "json": "marathi/narration/ch231.json",
-  "textHash": "fnv1a64:f4954b30da891d41",
-  "jsonHash": "fnv1a64:e120cd5322da753c",
+  "textHash": "fnv1a64:25df70242005c979",
+  "jsonHash": "fnv1a64:a6cf8e816314153a",
   "findings": []
 }

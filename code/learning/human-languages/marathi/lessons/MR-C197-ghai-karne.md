@@ -15,6 +15,7 @@ concept_tag: MR-VERB-GHAI-KARNE
 prerequisites: [MR-C196-usne-dene, MR-C197-savay-hone]
 sounds: []
 roots: []
+etymology_hook: "ghāī 'hurry': origin not settled; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C197-savay-hone]
 <!-- hl-knowledge: introduces=[MR-LEX-C197-ACT197-02]; assesses=[] -->
 
 **घाई करणे** — *ghāī karṇe* — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **घाई**, "hurry", is not settled: neither CDIAL nor DEDR has an entry for it. **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

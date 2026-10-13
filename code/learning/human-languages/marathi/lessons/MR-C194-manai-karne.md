@@ -14,7 +14,8 @@ romanization: "manāī karṇe"
 concept_tag: MR-VERB-MANAI-KARNE
 prerequisites: [MR-C194-phon-karne, MR-C194-carca-karne]
 sounds: []
-roots: []
+roots: [arabic-manahi]
+etymology_hook: "manāī: usually traced, through Persian, to Arabic manāhī 'forbidden things'; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C194-carca-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C194-ACT194-03]; assesses=[] -->
 
 **मनाई करणे** — *manāī karṇe* — "to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मनाई** is a loan, usually traced through Persian to Arabic *manāhī*, "forbidden things", whose root is *n-h-y*, "to forbid" (Lane). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

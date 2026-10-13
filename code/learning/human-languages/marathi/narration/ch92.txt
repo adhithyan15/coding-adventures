@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a fan, then the Marathi for a key.
 You'll want to know: कप.
 कप — kap — "a cup".
 
+The word, taken apart.
+कप (kap) is a loan from English cup.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a key, then the Marathi for a cup.
 
 You'll want to know: ताट.
 ताट — tāṭ — "a plate".
+
+The word, taken apart.
+ताट (tāṭ) goes back to taṭṭa, "pot", a form CDIAL reconstructs; it glosses Marathi tāṭ "rimmed metal dining plate" (CDIAL 5631). DEDR sets Marathi tāṭ beside Dravidian words for a flat plate, such as Tamil taṭṭam, "eating plate" (DEDR 3035).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a cup, then the Marathi for a plate.
 You'll want to know: चमचा.
 चमचा — chamchā — "a spoon".
 
+The word, taken apart.
+चमचा (chamchā) is a loan, usually traced to Persian chamcha, "spoon, ladle". Persian took it from Turkic.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a plate, then the Marathi for a spoon.
 You'll want to know: सुरी.
 सुरी — surī — "a knife".
 
+The word, taken apart.
+सुरी (surī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣurī, "knife, dagger" (CDIAL 3727). It is built on kṣura, "razor".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a spoon, then the Marathi for a knife.
 
 You'll want to know: बाटली.
 बाटली — bāṭlī — "a bottle".
+
+The word, taken apart.
+बाटली (bāṭlī) is a loan, usually traced to English bottle, or to Portuguese botelha. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

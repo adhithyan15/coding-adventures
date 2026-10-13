@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a sandal, then the Marathi for thirty.
 You'll want to know: चाळीस.
 चाळीस — chāḷīs — "forty".
 
+The word, taken apart.
+चाळीस (chāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṁśat, "forty" (CDIAL 4656).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for thirty, then the Marathi for forty.
 
 You'll want to know: पन्नास.
 पन्नास — pannās — "fifty".
+
+The word, taken apart.
+पन्नास (pannās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcāśat, "fifty" (CDIAL 7682).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for forty, then the Marathi for fifty.
 You'll want to know: साठ.
 साठ — sāṭh — "sixty".
 
+The word, taken apart.
+साठ (sāṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣṭi, "sixty" (CDIAL 12804).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for fifty, then the Marathi for sixty.
 You'll want to know: सत्तर.
 सत्तर — sattar — "seventy".
 
+The word, taken apart.
+सत्तर (sattar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptati, "seventy" (CDIAL 13143).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for sixty, then the Marathi for seventy.
 
 You'll want to know: नव्वद.
 नव्वद — navvad — "ninety".
+
+The word, taken apart.
+CDIAL lists नव्वद (navvad) under Sanskrit navati, "ninety", and marks the Marathi form as a borrowing (CDIAL 6995).
 
 What you've built.
 One more word for this chapter.

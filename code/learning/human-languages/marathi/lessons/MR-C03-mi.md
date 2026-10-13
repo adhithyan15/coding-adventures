@@ -11,7 +11,8 @@ gloss: I (mī)
 concept_tag: PRONOUN-I
 prerequisites: [MR-C03-tumhi-kase-aahat, MR-C01-baram]
 sounds: [matra-i]
-roots: [aham]
+roots: [ma]
+etymology_hook: "mī ← Sanskrit mayā 'by me', the first-person base ma- standing in for the old aham (CDIAL 9691)"
 reviews_of: [MR-C02-majhe, MR-C01-baram]
 duration:
   max_seconds: 220
@@ -48,9 +49,7 @@ single bright syllable: **मी** (*mī*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-MI, MR-ETYMON-MI-AHAM-EGO]; assesses=[MR-LEX-MAJHE] -->
 
-**मी** (*mī*, "I") descends from Sanskrit **अहम्** (*aham*, "I"), which wore down
-over centuries to the short *mī*. That *aham* comes from PIE
-**\*h₁eǵ(H)om** — the ancestor of Latin **ego** and English **I**. And notice its
+**मी** (*mī*, "I") does not come from Sanskrit **अहम्** (*aham*, "I"), the cousin of Latin **ego** and English **I**. CDIAL lists it under the first-person base *ma-* of *mayā*, "by me": the "by me" form took the place of *aham* (CDIAL 9691). Notice its
 family tie to last chapter's **माझं** (*mājhaṁ*, "my"): the same first-person
 **m-** thread runs through "I" and "my," just as English pairs **I** with
 **me/my**.

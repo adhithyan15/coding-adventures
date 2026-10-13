@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Peas, Pomegranate, Watermelon, Coconut, Flour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:438021d4906cc5f7",
+  "sourceHash": "fnv1a64:565a658204a0facd",
   "lessons": [
     {
       "id": "MR-C138-matar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcf88ed644410a35",
+      "sourceHash": "fnv1a64:42f5b41bfed1d769",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मटार (maṭār) matches Hindi maṭar, \"pea\", which CDIAL traces to a reconstructed maṭṭara, \"pea\". CDIAL lists Marathi's own form as maṭh, \"pea\" (CDIAL 9724)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a597e401936cf649",
+      "sourceHash": "fnv1a64:30d7c26406b24d13",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डाळिंब (ḍāḷimb) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāḍimba, \"pomegranate\" (CDIAL 6254). CDIAL gives dāḍimba as a variant of Sanskrit dāḍima."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:281acf5223270931",
+      "sourceHash": "fnv1a64:7a2f919dae7e8577",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कलिंगड (kaliṅgaḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāliṅga, \"watermelon\" (CDIAL 3100). CDIAL gives kāliṅga as a variant of Sanskrit kālinda, \"watermelon\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3759754972298ca",
+      "sourceHash": "fnv1a64:13eb018ea42aa8b3",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नारळ (nāraḷ) is a tadbhava of Sanskrit nārikela, \"coconut palm and fruit\" (CDIAL 7075). CDIAL follows Bloch in taking the Sanskrit word from a Dravidian compound, comparing Tamil nāri, \"fibre\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7399205ffedccdd",
+      "sourceHash": "fnv1a64:5b2a8dc7f092d16e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीठ (pīṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from piṣṭa, \"crushed, ground; flour\" (CDIAL 8218). It is built on piṣ, \"to grind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

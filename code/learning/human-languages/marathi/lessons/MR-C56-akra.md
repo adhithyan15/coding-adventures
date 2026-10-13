@@ -11,7 +11,8 @@ gloss: eleven — one-and-ten, with both halves still audible if you know what t
 concept_tag: MR-LEX-AKRA
 prerequisites: [MR-C55-nau, MR-R55-six-to-nine, MR-C56-daha]
 sounds: [standalone-vowel-a, matra-aa]
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "akrā ← Sanskrit ekādaśa 'eleven': eka 'one' + daśa 'ten'; a tadbhava (CDIAL 2485)"
 duration:
   max_seconds: 210
 requires:

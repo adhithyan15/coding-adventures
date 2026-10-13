@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a rabbit, then the Marathi for a wolf.
 You'll want to know: कोल्हा.
 कोल्हा — kolhā — "a fox".
 
+The word, taken apart.
+कोल्हा (kolhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kroṣṭṛ, "crying; jackal" (CDIAL 3615). It is built on kruś, "to cry out". CDIAL glosses the Marathi word "jackal".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a wolf, then the Marathi for a fox.
 
 You'll want to know: गाढव.
 गाढव — gāḍhav — "a donkey".
+
+The word, taken apart.
+गाढव (gāḍhav) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gardabha, "ass" (CDIAL 4054).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a fox, then the Marathi for a donkey.
 You'll want to know: बैल.
 बैल — bail — "an ox".
 
+The word, taken apart.
+बैल (bail) is a tadbhava, a word inherited and reshaped by sound change. It comes from balilla, "ox", a form CDIAL reconstructs from its descendants (CDIAL 9175). CDIAL builds it on Sanskrit balin, "strong".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a donkey, then the Marathi for an ox.
 You'll want to know: डास.
 डास — ḍās — "a mosquito".
 
+The word, taken apart.
+डास (ḍās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from daṁśa, "stinging insect" (CDIAL 6110). It is built on daṁś, "to bite".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an ox, then the Marathi for a mosquito.
 
 You'll want to know: कपाळ.
 कपाळ — kapāḷ — "the forehead".
+
+The word, taken apart.
+कपाळ (kapāḷ) is a tadbhava of Sanskrit kapāla, "skull, cranium" (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic.
 
 What you've built.
 One more word for this chapter.

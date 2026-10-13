@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 204,
-  "sourceHash": "fnv1a64:b14a41744c23259a",
+  "sourceHash": "fnv1a64:4ddac5e85757f0b0",
   "lessonIds": [
     "MR-C204-gambhir",
     "MR-C204-lajalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch204.txt",
   "json": "marathi/narration/ch204.json",
-  "textHash": "fnv1a64:ff1a7ae8fed25a6b",
-  "jsonHash": "fnv1a64:5265651374b9d86f",
+  "textHash": "fnv1a64:3abf570713605e62",
+  "jsonHash": "fnv1a64:1a3df3289e20c980",
   "findings": []
 }

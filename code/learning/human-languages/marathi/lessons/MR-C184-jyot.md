@@ -14,7 +14,8 @@ romanization: "jyot"
 concept_tag: MR-VASTU184-JYOT
 prerequisites: [MR-C183-putala, MR-C184-dhur]
 sounds: []
-roots: []
+roots: [sanskrit-jyotis]
+etymology_hook: "jyot: Sanskrit jyotis 'light', lightly reshaped; CDIAL lists inherited Marathi jov 'lightning' (CDIAL 5300)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C184-dhur]
 <!-- hl-knowledge: introduces=[MR-LEX-C184-VASTU184-02]; assesses=[] -->
 
 **ज्योत** — *jyot* — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज्योत** (*jyot*) is Sanskrit *jyotis*, "light", lightly reshaped. CDIAL lists the inherited Marathi form as *jov*, "lightning" (CDIAL 5300).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

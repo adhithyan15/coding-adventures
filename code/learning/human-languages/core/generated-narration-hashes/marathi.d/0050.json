@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 50,
-  "sourceHash": "fnv1a64:b856f98b04778ec2",
+  "sourceHash": "fnv1a64:7474efe91ded8789",
   "lessonIds": [
     "MR-C50-lahaan",
     "MR-C50-adj-invariable",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch50.txt",
   "json": "marathi/narration/ch50.json",
-  "textHash": "fnv1a64:4c1752c032d2fe0d",
-  "jsonHash": "fnv1a64:a5b8ff1227c73b9d",
+  "textHash": "fnv1a64:96b5e2f5f89f5731",
+  "jsonHash": "fnv1a64:a3cdd57599adb90f",
   "findings": []
 }

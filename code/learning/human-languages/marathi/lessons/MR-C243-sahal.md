@@ -15,6 +15,7 @@ concept_tag: MR-VASTU243-SAHAL
 prerequisites: [MR-C243-thikan, MR-C243-dekhava]
 sounds: []
 roots: []
+etymology_hook: "sahal 'outing': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C243-dekhava]
 <!-- hl-knowledge: introduces=[MR-LEX-C243-VASTU243-03]; assesses=[] -->
 
 **सहल** — *sahal* — "an outing, a trip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सहल** (*sahal*), "an outing", is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

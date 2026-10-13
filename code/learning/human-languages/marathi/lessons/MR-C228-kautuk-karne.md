@@ -14,7 +14,8 @@ romanization: "kautuk karṇe"
 concept_tag: MR-VERB-KAUTUK-KARNE
 prerequisites: [MR-C227-tarangne, MR-C227-pathlag-karne]
 sounds: []
-roots: []
+roots: [sanskrit-kautuka, sanskrit-karoti]
+etymology_hook: "kautuk: Sanskrit kautuka 'curiosity, festivity', a tatsama (CDIAL 3562); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C227-pathlag-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C228-ACT228-01]; assesses=[] -->
 
 **कौतुक करणे** — *kautuk karṇe* — "to praise, to admire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कौतुक** is Sanskrit *kautuka*, "curiosity, festivity", a tatsama (CDIAL 3562). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

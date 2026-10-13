@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Wall, Roof, Bed, Cupboard, Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d9c32771587f65a8",
+  "sourceHash": "fnv1a64:e8b4aee879317ada",
   "lessons": [
     {
       "id": "MR-C90-bhint",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48e1586f36b85c20",
+      "sourceHash": "fnv1a64:afd358fb8b7039d3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भिंत (bhint) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhitti, \"mat of split reeds; wall\" (CDIAL 9494). It is built on bhid, \"to split\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c0defc96ce4513e",
+      "sourceHash": "fnv1a64:31879ed2a6025ae9",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of छप्पर (chhappar) is not settled. CDIAL has no entry for it; it may belong with a reconstructed chapp-, \"press, cover, hide\" (CDIAL 4994), but no source says so."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5892fc48853dd97",
+      "sourceHash": "fnv1a64:89dd85819adafb87",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पलंग (palaṅg) goes back to Sanskrit palyaṅka, \"bed\" (CDIAL 7964). CDIAL says the north-western form with -ṅg was borrowed widely as the word for \"bed\"; Marathi's own inherited forms are pālak, \"cradle\", and pālkhī, \"litter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5144eb9c7dce64d8",
+      "sourceHash": "fnv1a64:0f9c8fcd8941ece2",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कपाट (kapāṭ) is Sanskrit kapāṭa, \"leaf of a door\", a tatsama; CDIAL lists it as a variant of kavāṭa, whose inherited Marathi form is kavāḍ, \"door\" (CDIAL 2963). CDIAL notes the view that the word is perhaps from Dravidian. In Marathi it names a cupboard."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f74ff9d93fa60243",
+      "sourceHash": "fnv1a64:56c6f424b3906f0d",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमीन (jamīn) is a loan, usually traced to Persian zamīn, \"earth, ground\". Marathi writes the z as ज."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

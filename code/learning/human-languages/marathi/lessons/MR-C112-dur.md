@@ -14,7 +14,8 @@ romanization: "dūr"
 concept_tag: MR-PLACE112-DUR
 prerequisites: [MR-C111-nantar, MR-C111-vel]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūr ← Sanskrit dūra 'distant', with only its final vowel lost (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C111-vel]
 <!-- hl-knowledge: introduces=[MR-LEX-C112-PLACE112-01]; assesses=[] -->
 
 **दूर** — *dūr* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दूर** (*dūr*) is Sanskrit *dūra*, "distant", which has lost only its final vowel (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

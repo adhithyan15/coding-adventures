@@ -14,7 +14,8 @@ romanization: "madhmāśī"
 concept_tag: MR-VASTU188-MADHMASI
 prerequisites: [MR-C188-garud, MR-C188-kokila]
 sounds: []
-roots: []
+roots: [sanskrit-madhu, sanskrit-makshika]
+etymology_hook: "madhmāśī: madh 'honey' ← madhu (CDIAL 9784) + māśī 'fly' ← makṣikā (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C188-kokila]
 <!-- hl-knowledge: introduces=[MR-LEX-C188-VASTU188-05]; assesses=[] -->
 
 **मधमाशी** — *madhmāśī* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मधमाशी** (*madhmāśī*) is "honey-fly": *madh*, "honey", from Sanskrit *madhu* (CDIAL 9784), and *māśī*, "fly", from Sanskrit *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

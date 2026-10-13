@@ -14,7 +14,8 @@ romanization: "madhyarātra"
 concept_tag: MR-WANT124-MADHYARATRA
 prerequisites: [MR-C124-yojana, MR-C124-pahat, MR-C66-divas, MR-C68-shubh-sandhyakal]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-ratri]
+etymology_hook: "madhyarātra: Sanskrit madhya 'middle' (CDIAL 9804) + rātra 'night'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MR-C124-pahat]
 <!-- hl-knowledge: introduces=[MR-LEX-C124-WANT124-03]; assesses=[] -->
 
 **मध्यरात्र** — *madhyarātra* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मध्यरात्र** (*madhyarātra*) is a Sanskrit compound, a tatsama: *madhya*, "middle" (CDIAL 9804), and *rātra*, "night".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

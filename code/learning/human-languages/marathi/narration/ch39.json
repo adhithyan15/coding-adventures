@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "There",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ff865861890828e0",
+  "sourceHash": "fnv1a64:d9256da09ef26873",
   "lessons": [
     {
       "id": "MR-W39-tha",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bb90ce69e821e659",
+      "sourceHash": "fnv1a64:c8f53cf49edb8640",
       "notice": {
         "modality": "sight",
         "needs": [

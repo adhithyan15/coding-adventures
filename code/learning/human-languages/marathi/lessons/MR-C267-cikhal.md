@@ -14,7 +14,8 @@ romanization: "cikhal"
 concept_tag: MR-VASTU267-CIKHAL
 prerequisites: [MR-C267-pathar, MR-C267-gota]
 sounds: []
-roots: []
+roots: [sanskrit-cikhalla]
+etymology_hook: "cikhal ← Sanskrit cikhalla 'mud, mire', a tadbhava (CDIAL 4784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C267-gota]
 <!-- hl-knowledge: introduces=[MR-LEX-C267-VASTU267-04]; assesses=[] -->
 
 **चिखल** — *cikhal* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिखल** (*cikhal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cikhalla*, "mud, mire" (CDIAL 4784). CDIAL lists the Marathi word under the form *\*cikkhalla-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

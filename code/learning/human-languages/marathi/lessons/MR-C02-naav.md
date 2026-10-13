@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [MR-C01-namaskar]
 sounds: [inherent-a, matra-aa]
 roots: [naaman]
+etymology_hook: "nāv ← Sanskrit nāman 'name', the same ancient word as English name; a tadbhava (CDIAL 7067)"
 reviews_of: [MR-C01-namaskar]
 duration:
   max_seconds: 240

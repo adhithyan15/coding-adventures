@@ -14,7 +14,8 @@ romanization: "shāḷā"
 concept_tag: MR-SCHOOL94-SHALA
 prerequisites: [MR-C93-vahi, MR-C93-pen]
 sounds: []
-roots: []
+roots: [sanskrit-shala]
+etymology_hook: "śāḷā: Sanskrit śālā 'shed, house', with Marathi ḷ; CDIAL lists inherited sāḷ 'workshop, school' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C93-pen]
 <!-- hl-knowledge: introduces=[MR-LEX-C94-SCHOOL94-01]; assesses=[] -->
 
 **शाळा** — *shāḷā* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शाळा** (*shāḷā*) is Sanskrit *śālā*, "shed, house", lightly reshaped with Marathi **ळ**. CDIAL lists the inherited Marathi form as *sāḷ*, "workshop, school" (CDIAL 12414).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Very, a Little, and Saying It Twice",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c0699664373ecfa0",
+  "sourceHash": "fnv1a64:58ea4ea09f4840c1",
   "lessons": [
     {
       "id": "MR-C53-khuup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:821a782d4f89255c",
+      "sourceHash": "fnv1a64:5a51c04a6074f1e8",
       "notice": null,
       "blocks": [
         {
@@ -81,6 +81,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of खूप (khūp) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -140,7 +151,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -175,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:053cd704978cb6a8",
+      "sourceHash": "fnv1a64:70c07bc7f2e49259",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +239,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जरा (jarā) is a loan, usually traced to Persian zarra, from Arabic dharra, \"a tiny particle, a mote\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -287,7 +309,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5fc672619e30023",
+      "sourceHash": "fnv1a64:81b869339224d3a2",
       "notice": null,
       "blocks": [
         {
@@ -375,6 +397,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of खूप (khūp) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -434,7 +467,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

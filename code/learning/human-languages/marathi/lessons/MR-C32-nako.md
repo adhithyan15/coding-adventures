@@ -11,10 +11,10 @@ gloss: no thank you, I don't want it — the refusal that is not नाही
 concept_tag: MR-LEX-NAKO
 prerequisites: [MR-C32-nahi-verb, MR-C01-dhanyavad, MR-C23-chalne]
 sounds: [matra-o]
-roots: []
-etymology_hook: "नको is the same ancient negative na- as नाही with the old Marathi verb 'to be wanted' worn into it, so it is not a general 'no' but a specific 'let it not be wanted' — which is why it answers an offer and never a question of fact"
+roots: [na-pie]
+etymology_hook: "nako: it opens with the old negative na 'not'; CDIAL has no entry for the whole word"
 duration:
-  max_seconds: 190
+  max_seconds: 245
 requires:
   knowledge: [MR-GRAMMAR-NEGATE-NAHI, MR-LEX-CHAHA, MR-LEX-DHANYAVAD-01, MR-SENSE-CHALEL-OKAY]
 introduces:
@@ -53,13 +53,16 @@ Between them sits a gap: how do you turn down something you are being
 offer with **नाही** and you have said something slightly odd — that the tea does
 not exist. Marathi keeps the two apart, and so should you.
 
-The word carries the same ancient **na-** as **नाही**, with an old *be wanted*
-verb worn into its second syllable. That history is exactly its meaning: **नको**
-is *let it not be wanted*, which is why it can refuse an offer and can never
+The word carries the same ancient **na-** as **नाही**, and its meaning is *I do not want it*, which is why it can refuse an offer and can never
 answer a question of fact.
 
 Its polite partner is the one you already have. **चालेल** accepts, **नको**
 declines, and **धन्यवाद** goes on the end of either.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नको** (*nako*) opens with the old negative *na*, "not". CDIAL has no entry for the whole word, so the history of its second syllable is left open.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAKO, MR-SENSE-CHALEL-OKAY, MR-GRAMMAR-NEGATE-NAHI] -->

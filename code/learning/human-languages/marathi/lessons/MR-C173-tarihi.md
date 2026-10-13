@@ -14,7 +14,8 @@ romanization: "tarīhī"
 concept_tag: MR-KARAN173-TARIHI
 prerequisites: [MR-C172-tikade, MR-C172-madhyabhagi]
 sounds: []
-roots: []
+roots: [sanskrit-tarhi]
+etymology_hook: "tarīhī: tarī 'still' ← Sanskrit tarhi 'then' (CDIAL 5730) + hī 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C172-madhyabhagi]
 <!-- hl-knowledge: introduces=[MR-LEX-C173-KARAN173-01]; assesses=[] -->
 
 **तरीही** — *tarīhī* — "even so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तरीही** (*tarīhī*) is *tarī*, which CDIAL lists, as "then", under Sanskrit *tarhi*, "then" (CDIAL 5730), with *hī*, "even".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

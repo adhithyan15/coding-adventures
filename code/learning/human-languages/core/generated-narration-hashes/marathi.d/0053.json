@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 53,
-  "sourceHash": "fnv1a64:c0699664373ecfa0",
+  "sourceHash": "fnv1a64:58ea4ea09f4840c1",
   "lessonIds": [
     "MR-C53-khuup",
     "MR-C53-jara",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch53.txt",
   "json": "marathi/narration/ch53.json",
-  "textHash": "fnv1a64:6bbb435ecfb1e607",
-  "jsonHash": "fnv1a64:dae48382d3876c41",
+  "textHash": "fnv1a64:8c69cb1f9f724cf5",
+  "jsonHash": "fnv1a64:cc64de15c083b651",
   "findings": []
 }

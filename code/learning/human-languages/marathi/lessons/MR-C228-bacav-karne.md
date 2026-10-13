@@ -14,7 +14,8 @@ romanization: "bacāv karṇe"
 concept_tag: MR-VERB-BACAV-KARNE
 prerequisites: [MR-C228-pudhe-jane, MR-C228-mage-jane]
 sounds: []
-roots: []
+roots: [sanskrit-vancati, sanskrit-karoti]
+etymology_hook: "bacāv: from bac- 'escape, be saved', listed under vañcati (CDIAL 11208); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C228-mage-jane]
 <!-- hl-knowledge: introduces=[MR-LEX-C228-ACT228-04]; assesses=[] -->
 
 **बचाव करणे** — *bacāv karṇe* — "to defend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचाव**, "defence", is built on the verb stem *bac-*, "to escape, be saved", which CDIAL lists under Sanskrit *vañcati* (CDIAL 11208). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

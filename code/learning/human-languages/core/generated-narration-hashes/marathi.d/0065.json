@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:d1f52dbd93adcb48",
+  "sourceHash": "fnv1a64:ef9220f176c3e532",
   "lessonIds": [
     "MR-C65-iishvar",
     "MR-W65-ii-independent",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "marathi/narration/ch65.txt",
   "json": "marathi/narration/ch65.json",
-  "textHash": "fnv1a64:b0f7d00a8a53d27f",
-  "jsonHash": "fnv1a64:b305870306ee335b",
+  "textHash": "fnv1a64:673f44fb4ce4939e",
+  "jsonHash": "fnv1a64:80d9ccbde04ed0d3",
   "findings": []
 }

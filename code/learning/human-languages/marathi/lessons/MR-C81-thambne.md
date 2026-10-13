@@ -14,7 +14,8 @@ romanization: "thāmbṇe"
 concept_tag: MR-VERB-THAMBNE
 prerequisites: [MR-C80-pakadne, MR-C80-kapne]
 sounds: []
-roots: []
+roots: [sanskrit-stambhate]
+etymology_hook: "thāmbṇe ← Sanskrit stambhate 'supports, arrests', a tadbhava (CDIAL 13683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C80-kapne]
 <!-- hl-knowledge: introduces=[MR-LEX-C81-VERBS81-01]; assesses=[] -->
 
 **थांबणे** — *thāmbṇe* — "to stop, to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थांबणे** (*thāmbṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stambhate*, "supports, arrests" (CDIAL 13683). CDIAL glosses the Marathi verb "to stop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "To announce, To clap, To cross, To increase, To reduce",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:de7c9dedeb0c2b85",
+  "sourceHash": "fnv1a64:16fe9cc89a4a55d9",
   "lessons": [
     {
       "id": "MR-C164-jahir-karne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fd689ce33d58bae",
+      "sourceHash": "fnv1a64:f7629b5a225ffc04",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाहीर is a loan, usually traced through Persian to Arabic ẓāhir, \"evident, manifest\", whose root is ẓ-h-r (Lane). करणे comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81cf34d5147b49d3",
+      "sourceHash": "fnv1a64:b92d3ec66634d8c2",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टाळ्या is the plural of टाळी, \"a clap\", which CDIAL lists under Sanskrit tāḍa, \"blow\", whose form tāla meant \"clap, rhythm\" (CDIAL 5748). वाजवणे is the \"make\" form of वाजणे, \"to sound\", from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de9352e02dbac320",
+      "sourceHash": "fnv1a64:98df219c542960c5",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओलांडणे (olāṇḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from avalaṇḍayati, \"crosses\", a form CDIAL reconstructs from its descendants (CDIAL 825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca087c19f42eef3d",
+      "sourceHash": "fnv1a64:651f5cf0f2db645d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाढवणे (vāḍhavṇe) is the \"make\" form of वाढणे, \"to grow\", from Sanskrit vardhate, \"grows, increases\" (CDIAL 11376); Sanskrit had its own \"make\" form, vardhayati, \"makes grow\" (CDIAL 11382)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a594960634553b91",
+      "sourceHash": "fnv1a64:5fa620ab2de1ae5c",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमी is a loan, usually traced to Persian kam, \"little, less\", with the ending -ī. करणे comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

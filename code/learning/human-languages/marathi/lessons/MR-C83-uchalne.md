@@ -14,7 +14,8 @@ romanization: "uchalṇe"
 concept_tag: MR-VERB-UCHALNE
 prerequisites: [MR-C82-shikavne, MR-C82-banavne]
 sounds: []
-roots: []
+roots: [indo-aryan-uccalyati]
+etymology_hook: "uchalṇe ← *uccalyati 'goes up', a reconstructed form; a tadbhava (CDIAL 1642)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C82-banavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C83-VERBS83-01]; assesses=[] -->
 
 **उचलणे** — *uchalṇe* — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उचलणे** (*uchalṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*uccalyati*, "goes up", a form CDIAL reconstructs from its descendants (CDIAL 1642). CDIAL builds it on Sanskrit *uccalati*, "springs up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

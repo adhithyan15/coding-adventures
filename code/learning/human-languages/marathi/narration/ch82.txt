@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to put on, then the Marathi for to leave
 You'll want to know: फेकणे.
 फेकणे — phekṇe — "to throw".
 
+The word, taken apart.
+फेकणे (phekṇe) comes from phēṅk-, "throw", a form CDIAL reconstructs beside phēkk- (CDIAL 9106).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to leave, then the Marathi for to throw.
 
 You'll want to know: उडणे.
 उडणे — uḍṇe — "to fly".
+
+The word, taken apart.
+उडणे (uḍṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍayate, "flies up" (CDIAL 1697).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to throw, then the Marathi for to fly.
 You'll want to know: पोहणे.
 पोहणे — pohṇe — "to swim".
 
+The word, taken apart.
+पोहणे (pohṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pravahati, "carries forward; drives on" (CDIAL 8792). CDIAL glosses the Marathi verb "to swim, float".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to fly, then the Marathi for to swim.
 You'll want to know: शिकवणे.
 शिकवणे — shikavṇe — "to teach".
 
+The word, taken apart.
+शिकवणे (shikavṇe) is the "make" form of शिकणे, "to learn": teaching is making someone learn. CDIAL lists both under Sanskrit śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to swim, then the Marathi for to teach.
 
 You'll want to know: बनवणे.
 बनवणे — banavṇe — "to make".
+
+The word, taken apart.
+बनवणे (banavṇe) is the "make" form of Marathi banṇẽ, "to suit, be made". CDIAL lists that verb under Sanskrit vanati, "desires, makes ready", and marks it as taken from Hindi (CDIAL 11260).
 
 What you've built.
 One more word for this chapter.

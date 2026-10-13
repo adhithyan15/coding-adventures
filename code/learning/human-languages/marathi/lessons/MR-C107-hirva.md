@@ -14,7 +14,8 @@ romanization: "hirvā"
 concept_tag: MR-ADJ107-HIRVA
 prerequisites: [MR-C106-halka, MR-C107-khare]
 sounds: []
-roots: []
+roots: [indo-aryan-hiru]
+etymology_hook: "hirvā ← *hiru 'yellow, green', a reconstructed form; a tadbhava (CDIAL 14114)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C107-khare]
 <!-- hl-knowledge: introduces=[MR-LEX-C107-ADJ107-02]; assesses=[] -->
 
 **हिरवा** — *hirvā* — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिरवा** (*hirvā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hiru*, "yellow, green", a form CDIAL reconstructs from its descendants (CDIAL 14114). CDIAL builds it on Sanskrit *hari*, "yellow, green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

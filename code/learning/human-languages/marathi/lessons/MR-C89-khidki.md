@@ -14,7 +14,8 @@ romanization: "khiḍkī"
 concept_tag: MR-FOOD89-KHIDKI
 prerequisites: [MR-C89-kanda, MR-C89-amba]
 sounds: []
-roots: []
+roots: [sanskrit-khatakkika]
+etymology_hook: "khiḍkī ← Sanskrit khaṭakkikā 'side door', a tadbhava (CDIAL 3770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C89-amba]
 <!-- hl-knowledge: introduces=[MR-LEX-C89-FOOD89-03]; assesses=[] -->
 
 **खिडकी** — *khiḍkī* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिडकी** (*khiḍkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭakkikā*, "side door" (CDIAL 3770). CDIAL glosses the Marathi word "back door, window", and suggests the word first named something made of matting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 83,
-  "sourceHash": "fnv1a64:19c8bcdc35f174b2",
+  "sourceHash": "fnv1a64:fa655e1ac35f8387",
   "lessonIds": [
     "MR-C83-uchalne",
     "MR-C83-odhne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch83.txt",
   "json": "marathi/narration/ch83.json",
-  "textHash": "fnv1a64:658c5e360f8448ea",
-  "jsonHash": "fnv1a64:aa80b4b1f1831c45",
+  "textHash": "fnv1a64:730f5c6e96d423a5",
+  "jsonHash": "fnv1a64:a32b935a089e8b46",
   "findings": []
 }

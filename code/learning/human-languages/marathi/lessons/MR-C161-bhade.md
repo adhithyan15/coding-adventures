@@ -14,7 +14,8 @@ romanization: "bhāḍe"
 concept_tag: MR-VACH161-BHADE
 prerequisites: [MR-C161-velapatrak, MR-C161-sucana]
 sounds: []
-roots: []
+roots: [indo-aryan-bharta]
+etymology_hook: "bhāḍe ← MIA bhāṭa 'wages', from *bhārta 'pertaining to servants' (CDIAL 9468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C161-sucana]
 <!-- hl-knowledge: introduces=[MR-LEX-C161-VACH161-03]; assesses=[] -->
 
 **भाडे** — *bhāḍe* — "rent; a fare". The money for a room, or for a ride: **खोलीचे भाडे** — *kholīce bhāḍe* — "the rent for the room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाडे** (*bhāḍe*) comes, through Middle Indo-Aryan *bhāṭa*, "wages", from a reconstructed *\*bhārta*, "pertaining to servants" (CDIAL 9468).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

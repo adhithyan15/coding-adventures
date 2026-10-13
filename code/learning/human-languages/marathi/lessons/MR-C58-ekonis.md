@@ -11,7 +11,8 @@ gloss: nineteen — one LESS than twenty, which is why it is taught after twenty
 concept_tag: MR-LEX-EKONIS
 prerequisites: [MR-C58-satra, MR-C58-athra, MR-C58-vis]
 sounds: [standalone-vowel-e, retroflex-na]
-roots: []
+roots: [sanskrit-ekonavimshati]
+etymology_hook: "ekoṇīs ← Sanskrit ekonaviṁśati '19', 'twenty less one'; a tadbhava (CDIAL 2499)"
 duration:
   max_seconds: 220
 requires:
@@ -53,6 +54,11 @@ Latin does the same thing with *undeviginti*, and so does the clock face when
 somebody says *quarter to*. Marathi uses this **एकोण-** trick at every
 nineteen — twenty-nine, thirty-nine and the rest are all built this way — so
 learning it once buys every one of them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एकोणीस** (*ekoṇīs*) is a tadbhava of Sanskrit *ekonaviṁśati*, "nineteen": *eka*, "one", *ūna*, "less", and *viṁśati*, "twenty" (CDIAL 2499).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PANDHRA, MR-EXCLAM-KITI, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-EKONIS, MR-LEX-NUMBERS-ONE-TO-FIVE] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a chair, then the Marathi for a table.
 You'll want to know: भिंत.
 भिंत — bhint — "a wall".
 
+The word, taken apart.
+भिंत (bhint) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhitti, "mat of split reeds; wall" (CDIAL 9494). It is built on bhid, "to split".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a table, then the Marathi for a wall.
 
 You'll want to know: छप्पर.
 छप्पर — chhappar — "a roof".
+
+The word, taken apart.
+The origin of छप्पर (chhappar) is not settled. CDIAL has no entry for it; it may belong with a reconstructed chapp-, "press, cover, hide" (CDIAL 4994), but no source says so.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a wall, then the Marathi for a roof.
 You'll want to know: पलंग.
 पलंग — palaṅg — "a bed".
 
+The word, taken apart.
+पलंग (palaṅg) goes back to Sanskrit palyaṅka, "bed" (CDIAL 7964). CDIAL says the north-western form with -ṅg was borrowed widely as the word for "bed"; Marathi's own inherited forms are pālak, "cradle", and pālkhī, "litter".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a roof, then the Marathi for a bed.
 You'll want to know: कपाट.
 कपाट — kapāṭ — "a cupboard".
 
+The word, taken apart.
+कपाट (kapāṭ) is Sanskrit kapāṭa, "leaf of a door", a tatsama; CDIAL lists it as a variant of kavāṭa, whose inherited Marathi form is kavāḍ, "door" (CDIAL 2963). CDIAL notes the view that the word is perhaps from Dravidian. In Marathi it names a cupboard.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bed, then the Marathi for a cupboard.
 
 You'll want to know: जमीन.
 जमीन — jamīn — "the ground, the floor".
+
+The word, taken apart.
+जमीन (jamīn) is a loan, usually traced to Persian zamīn, "earth, ground". Marathi writes the z as ज.
 
 What you've built.
 One more word for this chapter.

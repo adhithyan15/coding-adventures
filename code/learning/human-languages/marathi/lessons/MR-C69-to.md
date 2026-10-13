@@ -11,9 +11,10 @@ gloss: that — the far row, built on त- where this was built on ह-
 concept_tag: MR-DEM-FAR
 prerequisites: [MR-C69-ha]
 sounds: [matra-aa, matra-ii, matra-e]
-roots: []
+roots: [sanskrit-sa]
+etymology_hook: "to: usually traced to the old pronoun sa 'he, that', stem ta-; CDIAL lists no Marathi form (CDIAL 12815)"
 duration:
-  max_seconds: 210
+  max_seconds: 257
 requires:
   knowledge: [MR-LEX-HA-HI-HE, MR-GRAMMAR-DEM-PRENOMINAL, MR-LEX-KHOLI, MR-LEX-GHAR]
 introduces:
@@ -54,6 +55,11 @@ in your ear; only their front is about to change.
 budge, because they were never about distance — they were about the noun.
 
 That is the whole of the second lesson. You learned six words by learning four.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तो** (*to*) is usually traced to the old Indo-Aryan pronoun *sa*, "he, that", whose other forms are built on the stem *ta-*. CDIAL lists Hindi *so*, "that", under it, but no Marathi form (CDIAL 12815).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TO-TI-TE] -->

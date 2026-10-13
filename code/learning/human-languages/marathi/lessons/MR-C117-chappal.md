@@ -15,6 +15,7 @@ concept_tag: MR-CLOTHES117-CHAPPAL
 prerequisites: [MR-C117-topi, MR-C117-but]
 sounds: []
 roots: []
+etymology_hook: "cappal: not in CDIAL; DEDR 1963 compares Hindi cappal, with a Cf., to Dravidian 'sandal' words such as Telugu ceppu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C117-but]
 <!-- hl-knowledge: introduces=[MR-LEX-C117-CLOTHES117-04]; assesses=[] -->
 
 **चप्पल** — *chappal* — "a sandal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **चप्पल** (*chappal*). DEDR compares Hindi *cappal*, with a "Cf.", to Dravidian words for "sandal", such as Tamil *ceruppu* and Telugu *ceppu* (DEDR 1963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

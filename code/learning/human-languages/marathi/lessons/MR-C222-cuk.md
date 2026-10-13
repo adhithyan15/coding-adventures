@@ -15,6 +15,7 @@ concept_tag: MR-KAAM222-CUK
 prerequisites: [MR-C222-sabdakos, MR-C222-vidyapith]
 sounds: []
 roots: []
+etymology_hook: "cūk 'mistake': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-vidyapith]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-05]; assesses=[] -->
 
 **चूक** — *cūk* — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चूक** (*cūk*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

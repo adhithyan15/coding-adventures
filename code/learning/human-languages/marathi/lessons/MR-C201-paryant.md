@@ -14,7 +14,8 @@ romanization: "paryant"
 concept_tag: MR-VEL201-PARYANT
 prerequisites: [MR-C200-sardi, MR-C200-citthi]
 sounds: []
-roots: []
+roots: [sanskrit-paryanta]
+etymology_hook: "paryant: Sanskrit paryanta 'circuit, limit', a tatsama (CDIAL 7936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C200-citthi]
 <!-- hl-knowledge: introduces=[MR-LEX-C201-VEL201-01]; assesses=[] -->
 
 **पर्यंत** — *paryant* — "until, up to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पर्यंत** (*paryant*) is Sanskrit *paryanta*, "circuit, limit", a tatsama: *pari*, "around", and *anta*, "end" (CDIAL 7936).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

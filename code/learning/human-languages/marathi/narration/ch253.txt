@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to smoke, then the Marathi for to go wit
 You'll want to know: वळणे.
 वळणे — vaḷṇe — "to turn".
 
+The word, taken apart.
+वळणे (vaḷṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from valati, "turns" (CDIAL 11405). CDIAL glosses the Marathi verb "to turn, turn round, bend".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to go with, then the Marathi for to turn
 
 You'll want to know: आनंद घेणे.
 आनंद घेणे — ānand gheṇe — "to enjoy".
+
+The word, taken apart.
+आनंद is Sanskrit ānanda, "happiness", a tatsama (CDIAL 1172). घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to turn, then the Marathi for to enjoy.
 You'll want to know: कल्पना करणे.
 कल्पना करणे — kalpanā karṇe — "to imagine".
 
+The word, taken apart.
+कल्पना is Sanskrit kalpanā, "arranging, making; fancy", a tatsama (CDIAL 2943). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to enjoy, then the Marathi for to imagin
 You'll want to know: कळवणे.
 कळवणे — kaḷavṇe — "to inform, to let know".
 
+The word, taken apart.
+कळवणे (kaḷavṇe) is the "make" form of kaḷṇẽ, "to be clear to, be understood", which comes from Sanskrit kalayati, "counts, thinks" (CDIAL 2918). CDIAL takes the Sanskrit verb from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to imagine, then the Marathi for to info
 
 You'll want to know: तक्रार करणे.
 तक्रार करणे — takrār karṇe — "to complain".
+
+The word, taken apart.
+तक्रार, "a complaint", is usually traced through Persian to Arabic takrār, "repetition", whose root is k-r-r (Lane). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

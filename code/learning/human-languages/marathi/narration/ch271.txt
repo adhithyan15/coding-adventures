@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a dhoti, then the Marathi for a kurta.
 You'll want to know: कचेरी.
 कचेरी — kacerī — "a government office".
 
+The word, taken apart.
+कचेरी (kacerī) is a loan from Hindustani kacahrī, "office, court".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a kurta, then the Marathi for a governme
 
 You'll want to know: बसस्थानक.
 बसस्थानक — basasthānak — "a bus station".
+
+The word, taken apart.
+बसस्थानक (basasthānak) is a modern compound: English bus, and Sanskrit sthānaka, "position, place" (CDIAL 13753).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a government office, then the Marathi fo
 You'll want to know: पांघरूण.
 पांघरूण — pāṅgharūṇ — "a blanket".
 
+The word, taken apart.
+The origin of पांघरूण (pāṅgharūṇ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a bus station, then the Marathi for a bl
 You'll want to know: ओसरी.
 ओसरी — osrī — "a veranda".
 
+The word, taken apart.
+ओसरी (osrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from avaśara, "protection, shelter", a form CDIAL reconstructs from its descendants (CDIAL 848). CDIAL compares the sense change in śaraṇa, "shelter", toward "roof, veranda".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a blanket, then the Marathi for a verand
 
 You'll want to know: झाडू.
 झाडू — jhāḍū — "a broom".
+
+The word, taken apart.
+झाडू (jhāḍū) is built on jhāḍṇẽ, "to shake, sweep", which comes from a reconstructed jhāṭayati, "shakes down" (CDIAL 5328).
 
 What you've built.
 One more word for this chapter.

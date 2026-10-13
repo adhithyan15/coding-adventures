@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 244,
-  "sourceHash": "fnv1a64:a2d820c677589098",
+  "sourceHash": "fnv1a64:9f0d8b1bcf73d4ea",
   "lessonIds": [
     "MR-C244-mohari",
     "MR-C244-kothimbir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch244.txt",
   "json": "marathi/narration/ch244.json",
-  "textHash": "fnv1a64:2b5b820f4a243107",
-  "jsonHash": "fnv1a64:9ad09e983e579580",
+  "textHash": "fnv1a64:4eb3dcfe5370b268",
+  "jsonHash": "fnv1a64:55899760fba578fc",
   "findings": []
 }

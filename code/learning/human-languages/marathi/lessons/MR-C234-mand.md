@@ -14,7 +14,8 @@ romanization: "mand"
 concept_tag: MR-GUN234-MAND
 prerequisites: [MR-C234-ghanerda, MR-C234-bharlela]
 sounds: []
-roots: []
+roots: [sanskrit-manda]
+etymology_hook: "mand: Sanskrit manda 'slow, weak', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-bharlela]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-05]; assesses=[] -->
 
 **मंद** — *mand* — "slow, dim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंद** (*mand*) is Sanskrit *manda*, "slow, weak, dull", taken over whole, a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

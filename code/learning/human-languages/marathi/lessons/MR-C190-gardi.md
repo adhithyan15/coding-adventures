@@ -15,6 +15,7 @@ concept_tag: MR-VASTU190-GARDI
 prerequisites: [MR-C190-pravasi, MR-C190-rang]
 sounds: []
 roots: []
+etymology_hook: "gardī 'crowd': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C190-rang]
 <!-- hl-knowledge: introduces=[MR-LEX-C190-VASTU190-05]; assesses=[] -->
 
 **गर्दी** — *gardī* — "a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गर्दी** (*gardī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

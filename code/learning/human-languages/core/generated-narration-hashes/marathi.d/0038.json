@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 38,
-  "sourceHash": "fnv1a64:86157b38615e4fe1",
+  "sourceHash": "fnv1a64:bd960d3a15f9ad06",
   "lessonIds": [
     "MR-C38-kuthe",
     "MR-C38-kadhi",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch38.txt",
   "json": "marathi/narration/ch38.json",
-  "textHash": "fnv1a64:70f6c03ea5afd7f3",
-  "jsonHash": "fnv1a64:7a3ce657087a0106",
+  "textHash": "fnv1a64:371931648e20d2a1",
+  "jsonHash": "fnv1a64:a8bec4058f9950c9",
   "findings": []
 }

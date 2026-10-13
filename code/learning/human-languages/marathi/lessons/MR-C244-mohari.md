@@ -15,6 +15,7 @@ concept_tag: MR-VASTU244-MOHARI
 prerequisites: [MR-C243-tava, MR-C243-kadhai]
 sounds: []
 roots: []
+etymology_hook: "moharī 'mustard seed': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C243-kadhai]
 <!-- hl-knowledge: introduces=[MR-LEX-C244-VASTU244-01]; assesses=[] -->
 
 **मोहरी** — *moharī* — "mustard seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोहरी** (*moharī*) is not settled. CDIAL has no entry for it; its Marathi words for mustard come from other roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suruvāt"
 concept_tag: MR-VEL230-SURUVAT
 prerequisites: [MR-C229-rugnavahika, MR-C229-ahar]
 sounds: []
-roots: []
+roots: [arabic-shuru]
+etymology_hook: "suruvāt: usually traced, through Persian, to Arabic shurūʿ 'beginning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C229-ahar]
 <!-- hl-knowledge: introduces=[MR-LEX-C230-VEL230-01]; assesses=[] -->
 
 **सुरुवात** — *suruvāt* — "the beginning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरुवात** (*suruvāt*) is a loan, usually traced through Persian to Arabic *shurūʿ*, "beginning", whose root is *sh-r-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

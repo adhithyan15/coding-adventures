@@ -14,7 +14,8 @@ romanization: "kauśalya"
 concept_tag: MR-CAN121-KAUSALYA
 prerequisites: [MR-C121-sakne, MR-C121-jamne, MR-C05-kaam-karne]
 sounds: []
-roots: []
+roots: [kushala-sanskrit]
+etymology_hook: "kauśalya: Sanskrit kauśalya 'skill', built on kuśala 'competent, clever' (CDIAL 3365); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MR-C121-jamne]
 <!-- hl-knowledge: introduces=[MR-LEX-C121-CAN121-03]; assesses=[] -->
 
 **कौशल्य** — *kauśalya* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कौशल्य** (*kauśalya*) is Sanskrit *kauśalya*, "skill", a tatsama built on *kuśala*, "competent, clever" (CDIAL 3365).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

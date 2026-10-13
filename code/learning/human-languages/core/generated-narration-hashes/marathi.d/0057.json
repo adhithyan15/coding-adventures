@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 57,
-  "sourceHash": "fnv1a64:a308462df33e106f",
+  "sourceHash": "fnv1a64:f41808404de832e2",
   "lessonIds": [
     "MR-C57-tera",
     "MR-C57-chauda",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch57.txt",
   "json": "marathi/narration/ch57.json",
   "textHash": "fnv1a64:98c6b83b4cbbd974",
-  "jsonHash": "fnv1a64:614078621be0f2c8",
+  "jsonHash": "fnv1a64:66cb45cabd619c39",
   "findings": []
 }

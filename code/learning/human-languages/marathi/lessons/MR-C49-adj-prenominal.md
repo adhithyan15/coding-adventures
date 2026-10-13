@@ -11,9 +11,10 @@ gloss: where a Marathi adjective stands — always before its noun, which is the
 concept_tag: MR-GRAMMAR-ADJ-PRENOMINAL
 prerequisites: [MR-C49-adj-agreement, MR-C48-kade]
 sounds: []
-roots: []
+roots: [asti]
+etymology_hook: "moṭhaṁ: origin of moṭhā not settled (CDIAL 10187 has moṭā only); āhe listed under asti (CDIAL 977)"
 duration:
-  max_seconds: 210
+  max_seconds: 221
 requires:
   knowledge: [MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-UJVA, MR-LEX-GHAR, MR-POSTP-KADE, MR-LEX-AAHE-COPULA]
 introduces:
@@ -59,6 +60,11 @@ than a label on a noun, it goes at the END, in front of **आहे**:
 
 Two positions, two jobs: **in front** describes a thing you are naming, **at
 the end before आहे** makes the description the claim. The ending agrees in both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोठा** is not settled: CDIAL has no entry for it. **आहे** CDIAL lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-GHAR, MR-POSTP-KADE] -->

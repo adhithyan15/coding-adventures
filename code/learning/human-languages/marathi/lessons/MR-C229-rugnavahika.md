@@ -14,7 +14,8 @@ romanization: "rugṇavāhikā"
 concept_tag: MR-AAROGYA229-RUGNAVAHIKA
 prerequisites: [MR-C229-malam, MR-C229-patti]
 sounds: []
-roots: []
+roots: [sanskrit-rugna, sanskrit-vahika]
+etymology_hook: "rugṇavāhikā: Sanskrit rugṇa 'sick' + vāhikā 'carrier'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C229-patti]
 <!-- hl-knowledge: introduces=[MR-LEX-C229-AAROGYA229-04]; assesses=[] -->
 
 **रुग्णवाहिका** — *rugṇavāhikā* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुग्णवाहिका** (*rugṇavāhikā*) is a modern compound of Sanskrit parts: *rugṇa*, "broken, sick", and *vāhikā*, "one that carries".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

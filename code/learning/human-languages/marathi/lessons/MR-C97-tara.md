@@ -14,7 +14,8 @@ romanization: "tārā"
 concept_tag: MR-NATURE97-TARA
 prerequisites: [MR-C97-valu, MR-C97-shet]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tārā ← Sanskrit tārā 'fixed star', a tadbhava (CDIAL 5798)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C97-shet]
 <!-- hl-knowledge: introduces=[MR-LEX-C97-NATURE97-05]; assesses=[] -->
 
 **तारा** — *tārā* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तारा** (*tārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tārā*, "fixed star" (CDIAL 5798).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

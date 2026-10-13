@@ -14,7 +14,8 @@ romanization: "khurchī"
 concept_tag: MR-FOOD89-KHURCHI
 prerequisites: [MR-C89-amba, MR-C89-khidki]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "khurchī ← Arabic kursī 'chair, throne', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C89-khidki]
 <!-- hl-knowledge: introduces=[MR-LEX-C89-FOOD89-04]; assesses=[] -->
 
 **खुर्ची** — *khurchī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खुर्ची** (*khurchī*) is a loan from Arabic *kursī*, "chair, throne", which reached Marathi through Persian. Its Arabic root is *k-r-s* (Lane). Marathi writes it with *kh-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 238,
-  "sourceHash": "fnv1a64:101716e8d16e1592",
+  "sourceHash": "fnv1a64:8fd31e6f135d33ce",
   "lessonIds": [
     "MR-C238-vaimanik",
     "MR-C238-samsodhak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch238.txt",
   "json": "marathi/narration/ch238.json",
-  "textHash": "fnv1a64:89cceb996fdaaa04",
-  "jsonHash": "fnv1a64:a457778dcaa28e0e",
+  "textHash": "fnv1a64:2c44d1313fc0c053",
+  "jsonHash": "fnv1a64:bc162dd6816d45fe",
   "findings": []
 }

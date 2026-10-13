@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:02493e3f4fdd678d",
+  "sourceHash": "fnv1a64:5a24e34b1dca11c1",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:faf0a8e2ed3b2472",
+      "sourceHash": "fnv1a64:286ec770411a703c",
       "notice": {
         "modality": "pen",
         "needs": [],

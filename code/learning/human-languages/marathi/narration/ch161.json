@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7afa32e37bf19e6b",
+  "sourceHash": "fnv1a64:712cfdcdde6e8e4b",
   "lessons": [
     {
       "id": "MR-C161-velapatrak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:378559d5d8f40be7",
+      "sourceHash": "fnv1a64:9531359299890978",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वेळापत्रक (veḷāpatrak) is \"time-sheet\": veḷā, \"time\", from Sanskrit velā, \"limit, time\" (CDIAL 12115), and patrak, \"sheet\", from Sanskrit pattraka, \"leaf\" (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:207b61ee649865c0",
+      "sourceHash": "fnv1a64:cc49f9be72271274",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूचना (sūcanā) is Sanskrit sūcanā, \"pointing out, information\", taken over whole as a learned loan, a tatsama. It is built on sūc, \"to point out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a81313ad37d863b4",
+      "sourceHash": "fnv1a64:c4e89396d04f8d01",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +346,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाडे (bhāḍe) comes, through Middle Indo-Aryan bhāṭa, \"wages\", from a reconstructed bhārta, \"pertaining to servants\" (CDIAL 9468)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -334,7 +367,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -383,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:471cb98ba6fcc2d9",
+      "sourceHash": "fnv1a64:03bd3201ad4d1d3d",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाहिरात (jāhirāt) is built on jāhīr, \"public, evident\", which is usually traced, through Persian, to Arabic ẓāhir, \"evident, manifest\", whose root is ẓ-h-r (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -470,7 +514,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c0c197d8b838dae",
+      "sourceHash": "fnv1a64:3e220fee37ac8121",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +627,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पावती (pāvtī) probably belongs with Marathi pāvṇẽ, \"to obtain, reach\", which CDIAL lists under Sanskrit prāpayati, \"causes to be obtained\" (CDIAL 8943)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -593,7 +648,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -642,7 +697,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

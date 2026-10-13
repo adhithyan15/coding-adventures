@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 130,
-  "sourceHash": "fnv1a64:46c713b45ad6516b",
+  "sourceHash": "fnv1a64:cb5bbce96274627f",
   "lessonIds": [
     "MR-C130-angan",
     "MR-C130-darvaja",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch130.txt",
   "json": "marathi/narration/ch130.json",
-  "textHash": "fnv1a64:4d76c47ea3bc97de",
-  "jsonHash": "fnv1a64:d25d9b221274b171",
+  "textHash": "fnv1a64:ce1e07b3459ac59f",
+  "jsonHash": "fnv1a64:a781dbdbe24f50c6",
   "findings": []
 }

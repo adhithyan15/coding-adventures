@@ -14,7 +14,8 @@ romanization: "śabdakoś"
 concept_tag: MR-KAAM222-SABDAKOS
 prerequisites: [MR-C222-karkirda, MR-C222-masik]
 sounds: []
-roots: []
+roots: [sanskrit-shabda, sanskrit-kosha]
+etymology_hook: "śabdakoś: Sanskrit śabda 'word' (CDIAL 12298) + kośa 'store' (CDIAL 3539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-masik]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-03]; assesses=[] -->
 
 **शब्दकोश** — *śabdakoś* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शब्दकोश** (*śabdakoś*) is a compound of Sanskrit parts: *śabda*, "sound, word" (CDIAL 12298), and *kośa*, "case, storeroom" (CDIAL 3539).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

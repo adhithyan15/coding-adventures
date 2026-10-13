@@ -15,6 +15,7 @@ concept_tag: MR-VASTU214-LOKAR
 prerequisites: [MR-C214-plastik, MR-C214-kapus]
 sounds: []
 roots: []
+etymology_hook: "lokar 'wool': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C214-kapus]
 <!-- hl-knowledge: introduces=[MR-LEX-C214-VASTU214-04]; assesses=[] -->
 
 **लोकर** — *lokar* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लोकर** (*lokar*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

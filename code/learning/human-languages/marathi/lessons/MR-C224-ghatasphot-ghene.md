@@ -14,7 +14,8 @@ romanization: "ghaṭasphoṭ gheṇe"
 concept_tag: MR-VERB-GHATASPHOT-GHENE
 prerequisites: [MR-C223-nirnay-ghene, MR-C224-mhatare-hone]
 sounds: []
-roots: []
+roots: [sanskrit-ghata-pot, sanskrit-sphota, sanskrit-grbhayati]
+etymology_hook: "ghaṭasphoṭ: Sanskrit ghaṭa 'pot' + sphoṭa 'bursting'; gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C224-mhatare-hone]
 <!-- hl-knowledge: introduces=[MR-LEX-C224-ACT224-02]; assesses=[] -->
 
 **घटस्फोट घेणे** — *ghaṭasphoṭ gheṇe* — "to get divorced".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घटस्फोट** is a modern compound of Sanskrit parts: *ghaṭa*, "pot", and *sphoṭa*, "bursting". **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 59,
-  "sourceHash": "fnv1a64:651df1e7b88151be",
+  "sourceHash": "fnv1a64:822c2a5e71597f29",
   "lessonIds": [
     "MR-W59-ai-matra",
     "MR-C59-paise",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch59.txt",
   "json": "marathi/narration/ch59.json",
-  "textHash": "fnv1a64:f70f72010c91ec45",
-  "jsonHash": "fnv1a64:3abd33459c8c76e3",
+  "textHash": "fnv1a64:cf4f2ae005374932",
+  "jsonHash": "fnv1a64:84ce96735c5651d6",
   "findings": []
 }

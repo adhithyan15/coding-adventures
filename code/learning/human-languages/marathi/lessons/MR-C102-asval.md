@@ -14,7 +14,8 @@ romanization: "asval"
 concept_tag: MR-ANIMALS102-ASVAL
 prerequisites: [MR-C102-sap, MR-C102-mor]
 sounds: []
-roots: []
+roots: [indo-aryan-rkshabhalla]
+etymology_hook: "asval ← *ṛkṣabhalla 'bear', a reconstructed form; a tadbhava (CDIAL 2446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C102-mor]
 <!-- hl-knowledge: introduces=[MR-LEX-C102-ANIMALS102-03]; assesses=[] -->
 
 **अस्वल** — *asval* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अस्वल** (*asval*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṛkṣabhalla*, "bear", a form CDIAL reconstructs from its descendants (CDIAL 2446). It joins two words for "bear", *ṛkṣa* and *bhalla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "With Whom, and With What",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6467e3c94d84d69d",
+  "sourceHash": "fnv1a64:a7cc1609d59cf37e",
   "lessons": [
     {
       "id": "MR-C45-barobar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea94014f6ea371ea",
+      "sourceHash": "fnv1a64:57266984c77e52d3",
       "notice": null,
       "blocks": [
         {
@@ -81,6 +81,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बरोबर (barobar) is a loan, usually traced to Persian barābar, \"equal, level\". Marathi uses it for \"with\" and, said alone, for \"that's right\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -149,7 +160,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -184,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b35140cd91fdc0e0",
+      "sourceHash": "fnv1a64:21c1acda34010e27",
       "notice": null,
       "blocks": [
         {
@@ -229,6 +240,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझ्या- is the oblique of माझा, which CDIAL lists under the Sanskrit first-person base ma- (CDIAL 9691). बरोबर (barobar) is a loan, usually traced to Persian barābar, \"equal, level\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +310,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -319,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d14ae24d99442c4",
+      "sourceHash": "fnv1a64:29d7d8eea6b17580",
       "notice": null,
       "blocks": [
         {
@@ -372,6 +394,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-शी (-śī) is inherited. CDIAL lists it, as Marathi śīṁ, \"with\", under Sanskrit sama, \"equal, alike\", which already meant \"together with\" in the Brahmanas. CDIAL calls Bloch's derivation from sahitam wrong (CDIAL 13173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -431,7 +464,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -466,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a23935bf1530c0f4",
+      "sourceHash": "fnv1a64:f5144ea191c5bf8f",
       "notice": null,
       "blocks": [
         {
@@ -515,6 +548,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, \"by, with\", as in hastena, \"by hand\". CDIAL has no entry for the ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -583,7 +627,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

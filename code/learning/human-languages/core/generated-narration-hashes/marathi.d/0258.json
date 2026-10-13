@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 258,
-  "sourceHash": "fnv1a64:94fe17d4dc26aa7f",
+  "sourceHash": "fnv1a64:edc853a9462ba783",
   "lessonIds": [
     "MR-C258-halli",
     "MR-C258-satak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch258.txt",
   "json": "marathi/narration/ch258.json",
-  "textHash": "fnv1a64:3b166f335334efa7",
-  "jsonHash": "fnv1a64:6dfcbcd973dd2ce6",
+  "textHash": "fnv1a64:4db9cbb40d845735",
+  "jsonHash": "fnv1a64:977a5435eeb26e28",
   "findings": []
 }

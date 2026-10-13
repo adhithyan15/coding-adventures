@@ -14,7 +14,8 @@ romanization: "kāryakram"
 concept_tag: MR-VASTU263-KARYAKRAM
 prerequisites: [MR-C262-kayda, MR-C263-gayak]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-krama]
+etymology_hook: "kāryakram: Sanskrit kārya 'work' + krama 'step, order'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C263-gayak]
 <!-- hl-knowledge: introduces=[MR-LEX-C263-VASTU263-02]; assesses=[] -->
 
 **कार्यक्रम** — *kāryakram* — "a programme, a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कार्यक्रम** (*kāryakram*) is a modern compound of Sanskrit parts: *kārya*, "work, business", and *krama*, "step, order".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

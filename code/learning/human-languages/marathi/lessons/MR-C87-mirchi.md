@@ -14,7 +14,8 @@ romanization: "mirchī"
 concept_tag: MR-FOOD87-MIRCHI
 prerequisites: [MR-C86-sakhar, MR-C86-mith]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "mirchī ← Sanskrit marīca 'peppercorn', itself from Austroasiatic (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C86-mith]
 <!-- hl-knowledge: introduces=[MR-LEX-C87-FOOD87-01]; assesses=[] -->
 
 **मिरची** — *mirchī* — "a chilli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिरची** (*mirchī*) goes back, like Marathi *mirī*, "a peppercorn", to Sanskrit *marīca*, "peppercorn" (CDIAL 9875). CDIAL notes the view that the Sanskrit word comes from Austroasiatic. The chilli came later, from the Americas, and took over the pepper's name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

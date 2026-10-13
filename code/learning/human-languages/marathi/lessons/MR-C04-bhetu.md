@@ -11,7 +11,8 @@ gloss: (we'll) meet (bheṭū)
 concept_tag: MR-VERB-BHETNE
 prerequisites: [MR-C04-punha, MR-C02-anand]
 sounds: [matra-e, matra-u]
-roots: [bhet-meet]
+roots: [bhet-meet, indo-aryan-bhit]
+etymology_hook: "bheṭū ← bheṭṇe 'to meet', from a reconstructed *bhēṭ- 'meet, throng' (CDIAL 9490)"
 reviews_of: [MR-C02-anand]
 duration:
   max_seconds: 240
@@ -51,8 +52,7 @@ in *bheṭūn ānand jhālā* ("pleased to meet you").
 
 **भेटू** (*bheṭū*) is a form of the verb **भेटणे** (*bheṭṇe*, "to meet"). As
 **भेटू** it means "let's meet / (we) will meet" — the hopeful, forward-looking
-mood you want in a goodbye. It is a native Marathi verb (the *bheṭ-* stem also
-gives *bheṭ*, "a meeting, a visit").
+mood you want in a goodbye. CDIAL lists **भेटणे** under a reconstructed *\*bhēṭ-*, "meet, throng", from *\*bhiṭ-* (CDIAL 9490); the stem also gives *bheṭ*, "a meeting, a visit".
 
 ## Grammar Lens: one verb, first-person-plural wish
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-WE-LIVES-IN-THE-VERB]; assesses=[] -->

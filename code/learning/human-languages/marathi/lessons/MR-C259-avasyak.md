@@ -14,7 +14,8 @@ romanization: "āvaśyak"
 concept_tag: MR-GUN259-AVASYAK
 prerequisites: [MR-C259-sadha, MR-C259-guntaguntica]
 sounds: []
-roots: []
+roots: [sanskrit-avashyaka]
+etymology_hook: "āvaśyak: Sanskrit āvaśyaka 'necessary', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C259-guntaguntica]
 <!-- hl-knowledge: introduces=[MR-LEX-C259-GUN259-04]; assesses=[] -->
 
 **आवश्यक** — *āvaśyak* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आवश्यक** (*āvaśyak*) is Sanskrit *āvaśyaka*, "necessary, inevitable", a tatsama built on *avaśya*, "not to be resisted". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

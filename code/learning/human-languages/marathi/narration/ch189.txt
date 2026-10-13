@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a cuckoo, then the Marathi for a bee.
 You'll want to know: धोका.
 धोका — dhokā — "danger, a risk".
 
+The word, taken apart.
+धोका (dhokā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhrokṣa, "deceit", a form CDIAL reconstructs from its descendants (CDIAL 6894). CDIAL glosses the Marathi word "fear".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a bee, then the Marathi for danger.
 
 You'll want to know: उपकार.
 उपकार — upkār — "a favour, a kindness".
+
+The word, taken apart.
+उपकार (upkār) is Sanskrit upakāra, "help, use", taken over whole as a learned loan, a tatsama (CDIAL 2141). It is built on kṛ, "to do".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for danger, then the Marathi for a favour.
 You'll want to know: कष्ट.
 कष्ट — kaṣṭa — "hard work, toil".
 
+The word, taken apart.
+कष्ट (kaṣṭa) is Sanskrit kaṣṭa, "bad, painful; hardship", a tatsama. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a favour, then the Marathi for hard work
 You'll want to know: फायदा.
 फायदा — phāydā — "a benefit, a profit".
 
+The word, taken apart.
+फायदा (phāydā) is a loan from Arabic fāʾida, "a benefit, a gain", which reached Marathi through Persian. Its Arabic root is f-y-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for hard work, then the Marathi for a benefi
 
 You'll want to know: तोटा.
 तोटा — toṭā — "a loss".
+
+The word, taken apart.
+The origin of तोटा (toṭā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a storm, then the Marathi for a crow.
 You'll want to know: चिमणी.
 चिमणी — cimṇī — "a sparrow".
 
+The word, taken apart.
+The origin of चिमणी (cimṇī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a crow, then the Marathi for a sparrow.
 
 You'll want to know: पोपट.
 पोपट — popaṭ — "a parrot".
+
+The word, taken apart.
+The origin of पोपट (popaṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a sparrow, then the Marathi for a parrot
 You'll want to know: कबूतर.
 कबूतर — kabūtar — "a pigeon".
 
+The word, taken apart.
+कबूतर (kabūtar) is a loan, usually traced to Persian kabūtar, "pigeon".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a parrot, then the Marathi for a pigeon.
 You'll want to know: घुबड.
 घुबड — ghubaḍ — "an owl".
 
+The word, taken apart.
+CDIAL lists घुबड (ghubaḍ) under Sanskrit ghūka, "owl", a word it takes, after Burrow, from Dravidian, comparing Tamil kūkai (CDIAL 4494). DEDR sets Marathi ghubaḍ beside Dravidian owl words such as Kannada gūbe and Telugu gūba (DEDR 1871).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a pigeon, then the Marathi for an owl.
 
 You'll want to know: बेडूक.
 बेडूक — beḍūk — "a frog".
+
+The word, taken apart.
+CDIAL lists बेडूक (beḍūk), "frog", in its "defective" word group headed biḍḍa, as perhaps from the variant bēḍḍa (CDIAL 9238). Its origin is not otherwise settled.
 
 What you've built.
 One more word for this chapter.

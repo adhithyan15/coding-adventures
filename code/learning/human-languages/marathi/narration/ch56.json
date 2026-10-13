@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Ten, Eleven, Twelve, and the au Sign",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:52d52073fa023fce",
+  "sourceHash": "fnv1a64:925e0969f28d4605",
   "lessons": [
     {
       "id": "MR-C56-daha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6308365b0c6c856b",
+      "sourceHash": "fnv1a64:ef54a874c969915f",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c9f7f71496776c1",
+      "sourceHash": "fnv1a64:2c16c389e3b10485",
       "notice": null,
       "blocks": [
         {
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a77d3cd7aeec1576",
+      "sourceHash": "fnv1a64:f32b0323229ca595",
       "notice": null,
       "blocks": [
         {
@@ -425,7 +425,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1a74380331584a2",
+      "sourceHash": "fnv1a64:19ede5f886bc0356",
       "notice": null,
       "blocks": [
         {
@@ -475,6 +475,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौज (mauj) is a loan from Arabic mawj, \"a wave, a surge\", which reached Marathi through Persian. Its Arabic root is m-w-j (Lane). In Hindustani and Marathi it came to mean a surge of pleasure: fun, enjoyment."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -505,7 +516,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

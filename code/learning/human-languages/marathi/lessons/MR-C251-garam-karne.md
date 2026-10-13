@@ -14,7 +14,8 @@ romanization: "garam karṇe"
 concept_tag: MR-VERB-GARAM-KARNE
 prerequisites: [MR-C251-thambavne, MR-C251-halavne]
 sounds: []
-roots: []
+roots: [persian-garm, sanskrit-karoti]
+etymology_hook: "garam: usually traced to Persian garm 'warm, hot'; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C251-halavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C251-ACT251-05]; assesses=[] -->
 
 **गरम करणे** — *garam karṇe* — "to heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरम** is usually traced to Persian *garm*, "warm, hot". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

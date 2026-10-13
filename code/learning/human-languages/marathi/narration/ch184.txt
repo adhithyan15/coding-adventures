@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a monument, then the Marathi for a statu
 You'll want to know: धूर.
 धूर — dhūr — "smoke".
 
+The word, taken apart.
+धूर (dhūr) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhūmara, "smoky", a form CDIAL reconstructs from its descendants (CDIAL 6852). CDIAL builds it on Sanskrit dhūma, "smoke".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a statue, then the Marathi for smoke.
 
 You'll want to know: ज्योत.
 ज्योत — jyot — "a flame".
+
+The word, taken apart.
+ज्योत (jyot) is Sanskrit jyotis, "light", lightly reshaped. CDIAL lists the inherited Marathi form as jov, "lightning" (CDIAL 5300).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for smoke, then the Marathi for a flame.
 You'll want to know: हवामान.
 हवामान — havāmān — "the climate, the weather".
 
+The word, taken apart.
+हवामान (havāmān) is a modern compound: havā, "air", a loan from Arabic hawāʾ, "air", through Persian, and Sanskrit māna, "measure".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a flame, then the Marathi for the climat
 You'll want to know: पर्यावरण.
 पर्यावरण — paryāvaraṇ — "the environment".
 
+The word, taken apart.
+पर्यावरण (paryāvaraṇ) is a modern coinage of Sanskrit parts: pari, "around", and āvaraṇa, "covering": what surrounds us.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the climate, then the Marathi for the en
 
 You'll want to know: प्रदूषण.
 प्रदूषण — pradūṣaṇ — "pollution".
+
+The word, taken apart.
+प्रदूषण (pradūṣaṇ) is Sanskrit pradūṣaṇa, "spoiling, defiling", a tatsama built on duṣ, "to spoil". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ gloss: easy — an agreeing adjective again, and the thing a learner most wants 
 concept_tag: MR-LEX-SOPA
 prerequisites: [MR-R51-good-and-bad, MR-C46-kuthun, MR-C30-aani]
 sounds: [matra-o, matra-aa]
-roots: []
+roots: [sanskrit-sukalpa]
+etymology_hook: "sopā ← Sanskrit sukalpa 'easy to correct', a tadbhava (CDIAL 13446)"
 duration:
   max_seconds: 210
 requires:
@@ -60,6 +61,11 @@ The sentence to keep is the one about the language itself:
 
 **मराठी** is feminine, so the adjective ends in **-ी**. Say it out loud; you
 have earned it, and it is true more often than a beginner expects.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोपा** (*sopā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sukalpa*, "easy to correct" (CDIAL 13446). It is built with *su-*, "well, easily". CDIAL prefers this source to a *\*suvalpaka-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SOPA, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-KHOLI, MR-LEX-LAHAAN, MR-JOIN-AANI, MR-QUESTION-KUTHUN] -->

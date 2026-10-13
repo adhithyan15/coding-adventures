@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a camel, then the Marathi for a butterfl
 You'll want to know: मुंगी.
 मुंगी — muṅgī — "an ant".
 
+The word, taken apart.
+The origin of मुंगी (muṅgī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a butterfly, then the Marathi for an ant
 
 You'll want to know: बदक.
 बदक — badak — "a duck".
+
+The word, taken apart.
+The origin of बदक (badak) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an ant, then the Marathi for a duck.
 You'll want to know: नवा.
 नवा — navā — "new".
 
+The word, taken apart.
+नवा (navā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, "new, young" (CDIAL 6983). The same ancient word as English new.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a duck, then the Marathi for new.
 You'll want to know: जुना.
 जुना — junā — "old (things)".
 
+The word, taken apart.
+जुना (junā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jūrṇa, "old, decayed" (CDIAL 5260).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for new, then the Marathi for old.
 
 You'll want to know: वाईट.
 वाईट — vāīṭ — "bad".
+
+The word, taken apart.
+The origin of वाईट (vāīṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

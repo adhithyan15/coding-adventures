@@ -11,9 +11,10 @@ gloss: good evening — the third greeting, and where the pattern stops
 concept_tag: GREETING-EVENING
 prerequisites: [MR-C68-shubh-dupar, MR-C66-sandhyakal]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-sandhya]
+etymology_hook: "śubh ← Sanskrit śubha 'auspicious' (CDIAL 12532); sandhyākāḷ: sandhyā 'twilight' + kāḷ 'time'"
 duration:
-  max_seconds: 210
+  max_seconds: 294
 requires:
   knowledge: [MR-PHRASE-SHUBH-DUPAR, MR-LEX-SHUBH, MR-LEX-SANDHYAKAL, MR-LEX-NAMASKAR-01]
 introduces:
@@ -55,6 +56,11 @@ behind, nothing changed in either.
 | **शुभ दुपार** | good afternoon |
 | **शुभ संध्याकाळ** | good evening |
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुभ** is Sanskrit *śubha*, "auspicious", a tatsama (CDIAL 12532). **संध्याकाळ** is *sandhyā*, "twilight", and *kāḷ*, "time".
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-SHUBH-SANDHYAKAL, MR-LEX-NAMASKAR-01] -->
 
@@ -77,9 +83,7 @@ You have four parts of the day and three greetings. **The night is the one that
 does not follow.**
 
 Its greeting is built on **रात्री** — the at-that-time form from the parts of
-the day — rather than on the bare **रात्र** these three use. This book is not
-teaching that phrase here, and it is naming the exception so that you do not
-build it yourself and get it wrong.
+the day — rather than on the bare **रात्र** these three use. This book is not teaching that phrase here; it names the exception so that you do not build it wrongly.
 
 **A pattern worth trusting is one you also know the edge of.**
 

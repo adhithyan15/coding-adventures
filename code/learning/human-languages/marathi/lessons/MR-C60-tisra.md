@@ -11,10 +11,10 @@ gloss: "third — the same ending as दुसरा, on the number you can stil
 concept_tag: MR-ORDINAL-THIRD
 prerequisites: [MR-C60-dusra-ordinal, MR-W59-ai-matra, MR-C56-daha, MR-C41-ghar]
 sounds: []
-roots: []
-etymology_hook: "Molesworth gives तिसरा its own headword, 'Third', on page 381 -- one of only four ordinals in the whole dictionary that needed one"
+roots: [indo-aryan-trihsara]
+etymology_hook: "tisrā ← *triḥsara 'triple', built on Sanskrit triḥ 'thrice'; a tadbhava (CDIAL 6018)"
 duration:
-  max_seconds: 210
+  max_seconds: 248
 requires:
   knowledge: [MR-GRAMMAR-ORDINAL-SET, MR-LEX-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-AI-MATRA-01, MR-LEX-DAHA, MR-LEX-GHAR]
 introduces:
@@ -60,6 +60,11 @@ Put the two words you now have side by side against the numbers under them:
 
 The number is still visible in both. **दोन** leaves **दु-**, **तीन** leaves
 **ति-**, and the same **-सरा** sits on the end of each.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तिसरा** (*tisrā*) comes from *\*triḥsara*, "triple", a form CDIAL reconstructs on Sanskrit *triḥ*, "thrice", as **दुसरा** comes from *\*dviḥsara* (CDIAL 6018).
 
 ## Grammar Lens: two is not yet a rule
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TISRA, MR-GRAMMAR-ORDINAL-SET] -->

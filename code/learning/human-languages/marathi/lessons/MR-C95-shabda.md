@@ -14,7 +14,8 @@ romanization: "shabda"
 concept_tag: MR-SCHOOL95-SHABDA
 prerequisites: [MR-C94-prashna, MR-C94-uttar]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "shabda ← Sanskrit śabda 'articulate sound, noise', a tatsama (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C94-uttar]
 <!-- hl-knowledge: introduces=[MR-LEX-C95-SCHOOL95-01]; assesses=[] -->
 
 **शब्द** — *shabda* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शब्द** (*shabda*) is Sanskrit *śabda*, "articulate sound, noise", taken over whole as a learned loan, a tatsama (CDIAL 12298). Marathi uses it for "a word".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

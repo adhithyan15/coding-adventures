@@ -14,7 +14,8 @@ romanization: "sallā"
 concept_tag: MR-VASTU265-SALLA
 prerequisites: [MR-C265-bandi, MR-C265-suraksa]
 sounds: []
-roots: []
+roots: [arabic-salah]
+etymology_hook: "sallā: usually traced, through Persian, to Arabic ṣalāḥ 'soundness, what is right'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C265-suraksa]
 <!-- hl-knowledge: introduces=[MR-LEX-C265-VASTU265-04]; assesses=[] -->
 
 **सल्ला** — *sallā* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सल्ला** (*sallā*) is a loan, usually traced through Persian to Arabic *ṣalāḥ*, "soundness, what is right", whose root is *ṣ-l-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

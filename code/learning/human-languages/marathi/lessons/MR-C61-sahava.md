@@ -11,9 +11,10 @@ gloss: "sixth — the first ordinal you could have said before you were taught i
 concept_tag: MR-ORDINAL-SIXTH
 prerequisites: [MR-R60-first-to-fifth, MR-C60-pachva, MR-C60-tisra, MR-C57-tera, MR-C42-var]
 sounds: []
-roots: []
+roots: [sanskrit-saptama]
+etymology_hook: "sahāvā: sahā 'six' + the ordinal -vā, the ending of sātvā ← saptama (CDIAL 13151)"
 duration:
-  max_seconds: 210
+  max_seconds: 212
 requires:
   knowledge: [MR-GRAMMAR-ORDINAL-VA, MR-LEX-PACHVA, MR-LEX-TISRA, MR-LEX-SAHA, MR-LEX-TERA, MR-POSTP-VAR, MR-LEX-GHAR]
 introduces:
@@ -54,6 +55,11 @@ Before you read the word, work it out. You have **सहा** and you have **-�
 
 This is the first time in this book that a new word has been handed to you
 already known. It will happen four more times in this chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहावा** (*sahāvā*) is **सहा**, "six", with the ordinal ending **-वा**. CDIAL has no entry for the whole word; the ending is the one that, in **सातवा**, "seventh", continues Sanskrit *saptama* (CDIAL 13151).
 
 ## Grammar Lens: what a rule buys
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-GHAR] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 122,
-  "sourceHash": "fnv1a64:02280edfb566b6a8",
+  "sourceHash": "fnv1a64:a7b6940391060f92",
   "lessonIds": [
     "MR-C122-sadhan",
     "MR-C122-malak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch122.txt",
   "json": "marathi/narration/ch122.json",
-  "textHash": "fnv1a64:cf98f07a6dd928d5",
-  "jsonHash": "fnv1a64:81c0df8f542291f4",
+  "textHash": "fnv1a64:3e633fb20bceb122",
+  "jsonHash": "fnv1a64:5ca4da173956b446",
   "findings": []
 }

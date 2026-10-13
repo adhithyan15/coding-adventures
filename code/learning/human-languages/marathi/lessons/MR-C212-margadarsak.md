@@ -14,7 +14,8 @@ romanization: "mārgadarśak"
 concept_tag: MR-VASTU212-MARGADARSAK
 prerequisites: [MR-C212-patta, MR-C212-pagar]
 sounds: []
-roots: []
+roots: [sanskrit-marga, sanskrit-darshaka]
+etymology_hook: "mārgadarśak: Sanskrit mārga 'road' (CDIAL 10071) + darśaka 'one who shows'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C212-pagar]
 <!-- hl-knowledge: introduces=[MR-LEX-C212-VASTU212-05]; assesses=[] -->
 
 **मार्गदर्शक** — *mārgadarśak* — "a guide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मार्गदर्शक** (*mārgadarśak*) is a compound of Sanskrit parts: *mārga*, "track, road" (CDIAL 10071), and *darśaka*, "one who shows", from *dṛś*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

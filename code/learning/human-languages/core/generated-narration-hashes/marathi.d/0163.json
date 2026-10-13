@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 163,
-  "sourceHash": "fnv1a64:8bd077ac4b2d0558",
+  "sourceHash": "fnv1a64:6639ab1a01f458e2",
   "lessonIds": [
     "MR-C163-thand-karne",
     "MR-C163-rikame-karne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch163.txt",
   "json": "marathi/narration/ch163.json",
-  "textHash": "fnv1a64:0523e4480faf7002",
-  "jsonHash": "fnv1a64:213175d1e71f02fa",
+  "textHash": "fnv1a64:13cf7f098614b856",
+  "jsonHash": "fnv1a64:64c0ee548c3334d7",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vaḷaṇ"
 concept_tag: MR-TIME127-VALAN
 prerequisites: [MR-C127-pavsala, MR-C127-saral]
 sounds: []
-roots: []
+roots: [sanskrit-valana]
+etymology_hook: "vaḷaṇ ← Sanskrit valana 'moving in a circle, turning', a tadbhava (CDIAL 11406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C127-saral]
 <!-- hl-knowledge: introduces=[MR-LEX-C127-TIME127-04]; assesses=[] -->
 
 **वळण** — *vaḷaṇ* — "a turn, a bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वळण** (*vaḷaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *valana*, "moving in a circle, turning" (CDIAL 11406). It is built on *val*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

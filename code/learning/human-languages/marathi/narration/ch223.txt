@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a university, then the Marathi for a mis
 You'll want to know: दुरुस्त करणे.
 दुरुस्त करणे — durust karṇe — "to repair".
 
+The word, taken apart.
+दुरुस्त, "in order, mended", is usually traced to Persian durust, "right, sound". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a mistake, then the Marathi for to repai
 
 You'll want to know: फोटो काढणे.
 फोटो काढणे — phoṭo kāḍhṇe — "to take a photo".
+
+The word, taken apart.
+फोटो is English photo. काढणे, "to take out", comes from a reconstructed kaḍḍhati, "pulls, draws" (CDIAL 2660).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to repair, then the Marathi for to take 
 You'll want to know: समजावणे.
 समजावणे — samjāvṇe — "to explain".
 
+The word, taken apart.
+समजावणे (samjāvṇe) is the "make" form of samajṇẽ, "to understand", which comes from Sanskrit saṁbudhyate, "wakes up, understands" (CDIAL 12959).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to take a photo, then the Marathi for to
 You'll want to know: भाषांतर करणे.
 भाषांतर करणे — bhāṣāntar karṇe — "to translate".
 
+The word, taken apart.
+भाषांतर is a compound of Sanskrit parts: bhāṣā, "speech" (CDIAL 9479), and antara, "other": speech made other. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to explain, then the Marathi for to tran
 
 You'll want to know: निर्णय घेणे.
 निर्णय घेणे — nirṇay gheṇe — "to make a decision".
+
+The word, taken apart.
+निर्णय is Sanskrit nirṇaya, "settling, decision", a tatsama. घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
 
 What you've built.
 One more word for this chapter.

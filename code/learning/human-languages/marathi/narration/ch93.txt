@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a knife, then the Marathi for a bottle.
 You'll want to know: दार.
 दार — dār — "a door".
 
+The word, taken apart.
+दार (dār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dvāra, "door" (CDIAL 6663). The same ancient word as English door.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a bottle, then the Marathi for a door.
 
 You'll want to know: स्वयंपाकघर.
 स्वयंपाकघर — svayampākghar — "a kitchen".
+
+The word, taken apart.
+स्वयंपाकघर (svayampākghar) is Sanskrit svayampāka, "cooking for oneself": svayam, "self", and pāka, "cooking", with घर, "house". घर is usually taken from Sanskrit gṛha, "house" (CDIAL 4428).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a door, then the Marathi for a kitchen.
 You'll want to know: पुस्तक.
 पुस्तक — pustak — "a book".
 
+The word, taken apart.
+पुस्तक (pustak) is Sanskrit pustaka, "book", a tatsama. CDIAL traces the Sanskrit word itself to Iranian, comparing Sogdian pwstk, "book", and Persian pōst, "skin" (CDIAL 8413). The inherited Marathi word is pothī, "book".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a kitchen, then the Marathi for a book.
 You'll want to know: वही.
 वही — vahī — "an exercise book".
 
+The word, taken apart.
+वही (vahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vahikā, "diary, in rājavahikā 'king's diary'" (CDIAL 11460). CDIAL glosses the Marathi word "account-book, ledger".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a book, then the Marathi for an exercise
 
 You'll want to know: पेन.
 पेन — pen — "a pen".
+
+The word, taken apart.
+पेन (pen) is a loan from English pen.
 
 What you've built.
 One more word for this chapter.

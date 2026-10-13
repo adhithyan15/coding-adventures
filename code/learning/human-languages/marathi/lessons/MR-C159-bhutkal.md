@@ -14,7 +14,8 @@ romanization: "bhūtkāḷ"
 concept_tag: MR-PAS159-BHUTKAL
 prerequisites: [MR-C159-purvi, MR-C159-adhic]
 sounds: []
-roots: []
+roots: [sanskrit-bhuta, sanskrit-kaala-time]
+etymology_hook: "bhūtkāḷ: Sanskrit bhūta 'been, past' (CDIAL 9552) + kāla 'time' (CDIAL 3084); a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C159-adhic]
 <!-- hl-knowledge: introduces=[MR-LEX-C159-PAS159-04]; assesses=[] -->
 
 **भूतकाळ** — *bhūtkāḷ* — "the past". It is **भूत**, "what has been", with **काळ**, "time". Grammar books use it for the past tense too.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूतकाळ** (*bhūtkāḷ*) is a Sanskrit compound, a tatsama: *bhūta*, "become, been, past" (CDIAL 9552), and *kāla*, "time" (CDIAL 3084), with Marathi **ळ**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

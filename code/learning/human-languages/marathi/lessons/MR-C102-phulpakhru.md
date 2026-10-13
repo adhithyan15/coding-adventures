@@ -14,7 +14,8 @@ romanization: "phulpākhrū"
 concept_tag: MR-ANIMALS102-PHULPAKHRU
 prerequisites: [MR-C102-asval, MR-C102-unt]
 sounds: []
-roots: []
+roots: [sanskrit-phulla, indo-aryan-pakshirupa]
+etymology_hook: "phulpākhrū: phūl 'flower' (CDIAL 9092) + pākhrū 'bird' ← *pakṣirūpa (CDIAL 7637)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C102-unt]
 <!-- hl-knowledge: introduces=[MR-LEX-C102-ANIMALS102-05]; assesses=[] -->
 
 **फुलपाखरू** — *phulpākhrū* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फुलपाखरू** (*phulpākhrū*) is "flower-bird": **फूल**, "flower", from Sanskrit *phulla* (CDIAL 9092), and *pākhrū*, "bird", from a reconstructed *\*pakṣirūpa*, "bird-shape" (CDIAL 7637).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

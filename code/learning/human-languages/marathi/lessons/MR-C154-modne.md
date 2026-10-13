@@ -14,7 +14,8 @@ romanization: "moḍṇe"
 concept_tag: MR-VERB-MODNE
 prerequisites: [MR-C154-palne, MR-C154-todne]
 sounds: []
-roots: []
+roots: [sanskrit-mutati]
+etymology_hook: "moḍṇe ← mōṭati, a form beside Sanskrit muṭati 'twists' (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C154-todne]
 <!-- hl-knowledge: introduces=[MR-LEX-C154-ACT154-05]; assesses=[] -->
 
 **मोडणे** — *moḍṇe* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोडणे** (*moḍṇe*) comes from *mōṭati*, a form beside Sanskrit *muṭati*, "twists" (CDIAL 10186). CDIAL notes that the verb partly collides with another *muṭati*, "crushes", which it takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

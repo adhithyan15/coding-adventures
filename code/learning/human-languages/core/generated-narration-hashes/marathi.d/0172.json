@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 172,
-  "sourceHash": "fnv1a64:6ceabc8a41df911e",
+  "sourceHash": "fnv1a64:e096cdb346c11db2",
   "lessonIds": [
     "MR-C172-bhovti",
     "MR-C172-saglikade",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch172.txt",
   "json": "marathi/narration/ch172.json",
-  "textHash": "fnv1a64:61136eb2cf199dc5",
-  "jsonHash": "fnv1a64:b04175ebc40967d7",
+  "textHash": "fnv1a64:d456bf0b4e571585",
+  "jsonHash": "fnv1a64:c1fb4aa30cde2bab",
   "findings": []
 }

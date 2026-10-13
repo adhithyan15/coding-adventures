@@ -14,7 +14,8 @@ romanization: "sahī karṇe"
 concept_tag: MR-VERB-SAHI-KARNE
 prerequisites: [MR-C163-vajan-karne, MR-C163-tapasne]
 sounds: []
-roots: []
+roots: [arabic-sahih, sanskrit-karoti]
+etymology_hook: "sahī ← Arabic ṣaḥīḥ 'sound, correct', through Persian; karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C163-tapasne]
 <!-- hl-knowledge: introduces=[MR-LEX-C163-ACT163-05]; assesses=[] -->
 
 **सही करणे** — *sahī karṇe* — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सही** is a loan from Arabic *ṣaḥīḥ*, "sound, correct", which reached Marathi through Persian; its root is *ṣ-ḥ-ḥ* (Lane). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

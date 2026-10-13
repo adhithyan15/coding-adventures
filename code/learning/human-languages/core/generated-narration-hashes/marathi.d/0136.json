@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 136,
-  "sourceHash": "fnv1a64:e01f7ce4b542ce54",
+  "sourceHash": "fnv1a64:159ca50107192585",
   "lessonIds": [
     "MR-C136-kot",
     "MR-C136-svetar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch136.txt",
   "json": "marathi/narration/ch136.json",
-  "textHash": "fnv1a64:f2e0886427c64781",
-  "jsonHash": "fnv1a64:aea62de199bfa05c",
+  "textHash": "fnv1a64:e886768c8ec5415c",
+  "jsonHash": "fnv1a64:84839e2d9b0ee42a",
   "findings": []
 }

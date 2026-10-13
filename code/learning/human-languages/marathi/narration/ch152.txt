@@ -12,6 +12,9 @@ Before the new one: say the Marathi for foolish, then the Marathi for famous.
 You'll want to know: सुरक्षित.
 सुरक्षित — surakṣit — "safe".
 
+The word, taken apart.
+सुरक्षित (surakṣit) is Sanskrit surakṣita, "well protected", taken over whole as a learned loan, a tatsama (CDIAL 13499). It is su-, "well", and rakṣita, "guarded".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for famous, then the Marathi for safe.
 
 You'll want to know: धोकादायक.
 धोकादायक — dhokādāyak — "dangerous".
+
+The word, taken apart.
+धोकादायक (dhokādāyak) is dhokā, "danger", with Sanskrit dāyaka, "giving". CDIAL lists Marathi dhokā, "fear", under a reconstructed dhrōkṣa, "deceit" (CDIAL 6894).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for safe, then the Marathi for dangerous.
 You'll want to know: खोटे.
 खोटे — khoṭe — "false, untrue".
 
+The word, taken apart.
+खोटे (khoṭe) is a form of Marathi khoṭā, "false, alloyed", which CDIAL lists under a reconstructed khōṭṭa, "blemish" (CDIAL 3931).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for dangerous, then the Marathi for false.
 You'll want to know: जांभळा.
 जांभळा — jāmbhaḷā — "purple".
 
+The word, taken apart.
+The origin of जांभळा (jāmbhaḷā) is not settled. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for false, then the Marathi for purple.
 
 You'll want to know: नारिंगी.
 नारिंगी — nāriṅgī — "orange (the colour)".
+
+The word, taken apart.
+नारिंगी (nāriṅgī) goes back to Sanskrit nāraṅga, "orange tree"; CDIAL lists Marathi nārãg and nārãgī (CDIAL 7073). The colour is named after the fruit.
 
 What you've built.
 One more word for this chapter.

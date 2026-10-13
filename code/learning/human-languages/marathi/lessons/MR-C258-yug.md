@@ -14,7 +14,8 @@ romanization: "yug"
 concept_tag: MR-VEL258-YUG
 prerequisites: [MR-C258-halli, MR-C258-satak]
 sounds: []
-roots: []
+roots: [sanskrit-yuga]
+etymology_hook: "yug ← Sanskrit yuga 'yoke; couple', a tatsama (CDIAL 10482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C258-satak]
 <!-- hl-knowledge: introduces=[MR-LEX-C258-VEL258-03]; assesses=[] -->
 
 **युग** — *yug* — "an era, an age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**युग** (*yug*) is Sanskrit *yuga*, "yoke; couple", taken over whole as a learned loan, a tatsama (CDIAL 10482). Sanskrit *yuga* also meant "an age of the world". CDIAL lists the inherited Marathi form as *jūṁ*, "yoke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

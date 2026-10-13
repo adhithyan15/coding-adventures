@@ -14,7 +14,8 @@ romanization: "kurtā"
 concept_tag: MR-VASTU270-KURTA
 prerequisites: [MR-C270-gul, MR-C270-dhotar]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kurtā: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C270-dhotar]
 <!-- hl-knowledge: introduces=[MR-LEX-C270-VASTU270-05]; assesses=[] -->
 
 **कुर्ता** — *kurtā* — "a kurta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुर्ता** (*kurtā*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

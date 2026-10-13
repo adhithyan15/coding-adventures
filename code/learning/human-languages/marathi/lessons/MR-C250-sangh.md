@@ -14,7 +14,8 @@ romanization: "saṅgh"
 concept_tag: MR-KAAM250-SANGH
 prerequisites: [MR-C250-ganit, MR-C250-kala]
 sounds: []
-roots: []
+roots: [sanskrit-sangha]
+etymology_hook: "saṅgh: Sanskrit saṅgha 'multitude, association', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C250-kala]
 <!-- hl-knowledge: introduces=[MR-LEX-C250-KAAM250-05]; assesses=[] -->
 
 **संघ** — *saṅgh* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संघ** (*saṅgh*) is Sanskrit *saṅgha*, "multitude, association", a tatsama: *sam*, "together", and *han*, "to strike". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

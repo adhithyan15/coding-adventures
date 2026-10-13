@@ -14,7 +14,8 @@ romanization: "meṇbattī"
 concept_tag: MR-THINGS133-MENBATTI
 prerequisites: [MR-C133-pisvi, MR-C133-topli]
 sounds: []
-roots: []
+roots: [sanskrit-madana-wax, sanskrit-varti]
+etymology_hook: "meṇbattī: meṇ 'beeswax' ← madana (CDIAL 9778) + battī ← varti 'wick' (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C133-topli]
 <!-- hl-knowledge: introduces=[MR-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **मेणबत्ती** — *meṇbattī* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेणबत्ती** (*meṇbattī*) is "wax-lamp": *meṇ*, "beeswax", from Sanskrit *madana*, "beeswax" (CDIAL 9778), and *battī*, "wick, lamp", from Sanskrit *varti*, "wick" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

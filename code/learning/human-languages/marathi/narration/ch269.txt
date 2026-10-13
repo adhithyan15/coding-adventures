@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a sitar, then the Marathi for a ball.
 You'll want to know: झाकण.
 झाकण — jhākaṇ — "a lid".
 
+The word, taken apart.
+झाकण (jhākaṇ) is built on jhākṇẽ, "to cover", which comes from a reconstructed jhakk-, "cover" (CDIAL 5317).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a ball, then the Marathi for a lid.
 
 You'll want to know: बरणी.
 बरणी — barṇī — "a jar".
+
+The word, taken apart.
+The origin of बरणी (barṇī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a lid, then the Marathi for a jar.
 You'll want to know: आमटी.
 आमटी — āmṭī — "a spiced lentil curry".
 
+The word, taken apart.
+The origin of आमटी (āmṭī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a jar, then the Marathi for a spiced len
 You'll want to know: उसळ.
 उसळ — usaḷ — "a sprouted-bean curry".
 
+The word, taken apart.
+The origin of उसळ (usaḷ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a spiced lentil curry, then the Marathi 
 
 You'll want to know: लोणचे.
 लोणचे — loṇce — "a pickle".
+
+The word, taken apart.
+The origin of लोणचे (loṇce) is not settled. CDIAL has no entry for it. It lists Marathi loṇ, "salinity of soil", under Sanskrit lavaṇa, "salt" (CDIAL 10978), but no source here ties the two.
 
 What you've built.
 One more word for this chapter.

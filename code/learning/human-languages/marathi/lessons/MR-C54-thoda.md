@@ -12,6 +12,7 @@ concept_tag: MR-LEX-THODA
 prerequisites: [MR-R53-very, MR-C49-motha, MR-C32-nahi-verb]
 sounds: [aspirated-th, matra-o, matra-aa]
 roots: [sanskrit-stoka]
+etymology_hook: "thoḍā ← Sanskrit stoka 'a drop; a little', with an added -ḍ-; a tadbhava (CDIAL 13720)"
 duration:
   max_seconds: 220
 requires:

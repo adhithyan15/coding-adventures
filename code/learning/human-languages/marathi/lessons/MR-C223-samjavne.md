@@ -14,7 +14,8 @@ romanization: "samjāvṇe"
 concept_tag: MR-VERB-SAMJAVNE
 prerequisites: [MR-C223-durust-karne, MR-C223-photo-kadhne]
 sounds: []
-roots: []
+roots: [sanskrit-sambudhyate]
+etymology_hook: "samjāvṇe: the 'make' form of samajṇe 'to understand' ← saṁbudhyate (CDIAL 12959)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C223-photo-kadhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C223-ACT223-03]; assesses=[] -->
 
 **समजावणे** — *samjāvṇe* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समजावणे** (*samjāvṇe*) is the "make" form of *samajṇẽ*, "to understand", which comes from Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

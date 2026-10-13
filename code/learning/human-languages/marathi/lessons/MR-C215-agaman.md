@@ -14,7 +14,8 @@ romanization: "āgaman"
 concept_tag: MR-VASTU215-AGAMAN
 prerequisites: [MR-C215-prasiksak, MR-C215-cahta]
 sounds: []
-roots: []
+roots: [sanskrit-agamana]
+etymology_hook: "āgaman: Sanskrit āgamana 'coming, arrival', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C215-cahta]
 <!-- hl-knowledge: introduces=[MR-LEX-C215-VASTU215-04]; assesses=[] -->
 
 **आगमन** — *āgaman* — "arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आगमन** (*āgaman*) is Sanskrit *āgamana*, "coming, arrival", a tatsama: *ā*, "toward", and *gam*, "to go". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

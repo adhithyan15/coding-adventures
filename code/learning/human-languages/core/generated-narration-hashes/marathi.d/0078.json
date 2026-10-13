@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 78,
-  "sourceHash": "fnv1a64:992b2fee31e5208d",
+  "sourceHash": "fnv1a64:5102c252b3c5bc9c",
   "lessonIds": [
     "MR-C78-dhavne",
     "MR-C78-khelne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch78.txt",
   "json": "marathi/narration/ch78.json",
-  "textHash": "fnv1a64:e98a338c74ba76c5",
-  "jsonHash": "fnv1a64:8b0e573e0ba40a53",
+  "textHash": "fnv1a64:3c9be7cb12c282f3",
+  "jsonHash": "fnv1a64:12583f0f662f7703",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "giḷṇe"
 concept_tag: MR-VERB-GILNE
 prerequisites: [MR-C156-oradne, MR-C156-cavne]
 sounds: []
-roots: []
+roots: [sanskrit-gilati]
+etymology_hook: "giḷṇe ← Sanskrit gilati 'swallows', a tadbhava (CDIAL 4075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C156-cavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C156-ACT156-05]; assesses=[] -->
 
 **गिळणे** — *giḷṇe* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिळणे** (*giḷṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gilati*, "swallows" (CDIAL 4075).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

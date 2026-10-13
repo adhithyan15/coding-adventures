@@ -14,7 +14,8 @@ romanization: "pakṣī"
 concept_tag: MR-ANIMALS100-PAKSI
 prerequisites: [MR-C100-sheli, MR-C100-mendhi]
 sounds: []
-roots: []
+roots: [sanskrit-pakshin]
+etymology_hook: "pakṣī ← Sanskrit pakṣin 'winged; bird', a tatsama (CDIAL 7636)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C100-mendhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C100-ANIMALS100-05]; assesses=[] -->
 
 **पक्षी** — *pakṣī* — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पक्षी** (*pakṣī*) is Sanskrit *pakṣin*, "winged; bird", taken over whole as a learned loan, a tatsama (CDIAL 7636). It is built on *pakṣa*, "wing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

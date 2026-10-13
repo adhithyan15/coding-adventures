@@ -11,7 +11,8 @@ gloss: "I'll be going" (yeto m. / yete f.)
 concept_tag: FAREWELL
 prerequisites: [MR-C01-nahi]
 sounds: []
-roots: []
+roots: [sanskrit-aiti]
+etymology_hook: "yeto is a form of yeṇe 'to come', which CDIAL lists under Sanskrit aiti 'comes near' (CDIAL 2534)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,8 @@ Marathi, like the Dravidian languages to its south, will not say a bare "I'm
 leaving." The everyday goodbye is **येतो** (*yeto*) — literally "I **come**
 [again]," a promise of return, never a final departure. (Fuller: *yeto,
 namaskār*.)
+
+**येतो** is a form of *yeṇẽ*, "to come", which CDIAL lists under Sanskrit *aiti*, "comes near" (CDIAL 2534).
 
 ## Grammar Lens: Marathi verbs carry gender
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-YETO-YETE-01] -->

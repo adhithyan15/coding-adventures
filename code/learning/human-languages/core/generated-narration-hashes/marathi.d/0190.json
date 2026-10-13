@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 190,
-  "sourceHash": "fnv1a64:7497d9a26ac39eda",
+  "sourceHash": "fnv1a64:c12388379fda47ea",
   "lessonIds": [
     "MR-C190-sejar",
     "MR-C190-vahtuk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch190.txt",
   "json": "marathi/narration/ch190.json",
-  "textHash": "fnv1a64:50f752812667f7af",
-  "jsonHash": "fnv1a64:f004be6b48fdd366",
+  "textHash": "fnv1a64:af71c12082403f88",
+  "jsonHash": "fnv1a64:3ebd6dad01aa1dc7",
   "findings": []
 }

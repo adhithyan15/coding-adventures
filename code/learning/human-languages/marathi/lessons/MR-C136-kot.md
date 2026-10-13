@@ -14,7 +14,8 @@ romanization: "koṭ"
 concept_tag: MR-THINGS136-KOT
 prerequisites: [MR-C135-abhyas, MR-C135-sart]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "koṭ ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C135-sart]
 <!-- hl-knowledge: introduces=[MR-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **कोट** — *koṭ* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोट** (*koṭ*) is a loan from English *coat*. It is not the inherited Marathi *koṭ*, "fort".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

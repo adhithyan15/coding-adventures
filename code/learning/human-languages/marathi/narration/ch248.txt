@@ -12,6 +12,9 @@ Before the new one: say the Marathi for education, then the Marathi for a feelin
 You'll want to know: सण.
 सण — saṇ — "a festival".
 
+The word, taken apart.
+सण (saṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣaṇa, "moment; festival" (CDIAL 3642). CDIAL glosses the Marathi word "festival, holiday".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a feeling, then the Marathi for a festiv
 
 You'll want to know: मिरवणूक.
 मिरवणूक — miravṇūk — "a procession".
+
+The word, taken apart.
+The origin of मिरवणूक (miravṇūk) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a festival, then the Marathi for a proce
 You'll want to know: जत्रा.
 जत्रा — jatrā — "a village fair".
 
+The word, taken apart.
+जत्रा (jatrā) is Sanskrit yātrā, "journey; festival" (CDIAL 10456), with Marathi ज for the y.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a procession, then the Marathi for a vil
 You'll want to know: मेजवानी.
 मेजवानी — mejvānī — "a feast".
 
+The word, taken apart.
+मेजवानी (mejvānī) is a loan, usually traced to Persian mēzbānī, "hospitality", built on mēzbān, "host".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a village fair, then the Marathi for a f
 
 You'll want to know: भेटवस्तू.
 भेटवस्तू — bheṭvastū — "a gift".
+
+The word, taken apart.
+भेटवस्तू (bheṭvastū) is भेट, "a present", from a reconstructed bhēṭṭ-, "meet" (CDIAL 9490), and Sanskrit vastu, "thing" (CDIAL 11449).
 
 What you've built.
 One more word for this chapter.

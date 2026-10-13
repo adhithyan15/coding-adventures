@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 265,
-  "sourceHash": "fnv1a64:19d52acaabb813af",
+  "sourceHash": "fnv1a64:d1a02a42115dece1",
   "lessonIds": [
     "MR-C265-parvangi",
     "MR-C265-bandi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch265.txt",
   "json": "marathi/narration/ch265.json",
-  "textHash": "fnv1a64:9db91850a2ff59d0",
-  "jsonHash": "fnv1a64:fe3e78902ed08dac",
+  "textHash": "fnv1a64:1af295ee9136bf9b",
+  "jsonHash": "fnv1a64:f0dca09e4f5133f2",
   "findings": []
 }

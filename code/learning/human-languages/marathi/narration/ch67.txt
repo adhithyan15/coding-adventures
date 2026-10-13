@@ -15,6 +15,9 @@ You'll want to know: किती वाजले.
 The question word is किती, the one you ask how many with. Marathi does not ask what time it is — it asks how many have sounded.
 वाजणे is to sound, to ring, to strike. English kept that picture when clocks had bells — the clock struck three.
 
+The word, taken apart.
+वाजले is a form of वाजणे, "to sound", from Sanskrit vādyate, "is made to sound" (CDIAL 11513).
+
 Grammar Lens: the verb counts with you.
 Answer it with a number, and the verb changes for one:
 [a table of 3 rows, read aloud]
@@ -56,6 +59,9 @@ Telling the time and putting something at a time are two different jobs, and Mar
 [a table of 2 rows, read aloud]
 दोन वाजले, it is two o'clock.
 दोन वाजता (vājtā), at two o'clock.
+
+The word, taken apart.
+वाजता (vājtā) is a form of वाजणे, "to sound", which comes from Sanskrit vādyate, "is made to sound", the passive of vādayati, "makes sound" (CDIAL 11513).
 
 Grammar Lens: the one that never moves.
 वाजले counted with you — वाजला after one, वाजले after the rest.

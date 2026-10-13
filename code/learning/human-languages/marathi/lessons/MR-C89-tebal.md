@@ -14,7 +14,8 @@ romanization: "ṭebal"
 concept_tag: MR-FOOD89-TEBAL
 prerequisites: [MR-C89-khidki, MR-C89-khurchi]
 sounds: []
-roots: []
+roots: [english-table]
+etymology_hook: "ṭebal ← English table"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C89-khurchi]
 <!-- hl-knowledge: introduces=[MR-LEX-C89-FOOD89-05]; assesses=[] -->
 
 **टेबल** — *ṭebal* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टेबल** (*ṭebal*) is a loan from English *table*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 104,
-  "sourceHash": "fnv1a64:f88849e3d0461c94",
+  "sourceHash": "fnv1a64:e67f886233d564ed",
   "lessonIds": [
     "MR-C104-garam",
     "MR-C104-thand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch104.txt",
   "json": "marathi/narration/ch104.json",
-  "textHash": "fnv1a64:0808c47a3739f7ad",
-  "jsonHash": "fnv1a64:57f47b66129d38f8",
+  "textHash": "fnv1a64:7cf521bd0f4f5249",
+  "jsonHash": "fnv1a64:3eda7b1fcdfce29c",
   "findings": []
 }

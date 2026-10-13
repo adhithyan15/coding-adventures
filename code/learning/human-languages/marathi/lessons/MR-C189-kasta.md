@@ -14,7 +14,8 @@ romanization: "kaṣṭa"
 concept_tag: MR-VASTU189-KASTA
 prerequisites: [MR-C189-dhoka, MR-C189-upkar]
 sounds: []
-roots: []
+roots: [sanskrit-kashta]
+etymology_hook: "kaṣṭa: Sanskrit kaṣṭa 'pain, hardship', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C189-upkar]
 <!-- hl-knowledge: introduces=[MR-LEX-C189-VASTU189-03]; assesses=[] -->
 
 **कष्ट** — *kaṣṭa* — "hard work, toil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कष्ट** (*kaṣṭa*) is Sanskrit *kaṣṭa*, "bad, painful; hardship", a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

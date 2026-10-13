@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to rest, then the Marathi for to get bor
 You'll want to know: पटवणे.
 पटवणे — paṭavṇe — "to convince".
 
+The word, taken apart.
+The origin of पटवणे (paṭavṇe) is not settled. CDIAL has no entry for it in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to get bored, then the Marathi for to co
 
 You'll want to know: टीका करणे.
 टीका करणे — ṭīkā karṇe — "to criticise".
+
+The word, taken apart.
+टीका is Sanskrit ṭīkā, "commentary", a tatsama. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to convince, then the Marathi for to cri
 You'll want to know: सिद्ध करणे.
 सिद्ध करणे — siddha karṇe — "to prove".
 
+The word, taken apart.
+सिद्ध, "proven", is Sanskrit siddha, "accomplished, perfected", a tatsama (CDIAL 13401). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to criticise, then the Marathi for to pr
 You'll want to know: अवलंबून असणे.
 अवलंबून असणे — avlambūn asṇe — "to depend".
 
+The word, taken apart.
+अवलंबून is "hanging on", from Sanskrit avalamba, "hanging down; support". CDIAL lists असणे under Sanskrit āste, "sits, exists, remains" (CDIAL 1480), or perhaps ākṣeti, "abides" (CDIAL 1031).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to prove, then the Marathi for to depend
 
 You'll want to know: टाळणे.
 टाळणे — ṭāḷṇe — "to avoid".
+
+The word, taken apart.
+टाळणे (ṭāḷṇe) comes from Sanskrit ṭālayati, the "make" form of ṭalati, a verb CDIAL glosses "moves aside" (CDIAL 5450): to avoid is to make a thing move aside.
 
 What you've built.
 One more word for this chapter.

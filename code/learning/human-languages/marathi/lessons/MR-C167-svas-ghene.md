@@ -14,7 +14,8 @@ romanization: "śvās gheṇe"
 concept_tag: MR-VERB-SVAS-GHENE
 prerequisites: [MR-C166-vahun-nene, MR-C166-marne]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa, sanskrit-grbhayati]
+etymology_hook: "śvās: Sanskrit śvāsa 'breath', a tatsama (CDIAL 12769); gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C166-marne]
 <!-- hl-knowledge: introduces=[MR-LEX-C167-ACT167-01]; assesses=[] -->
 
 **श्वास घेणे** — *śvās gheṇe* — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**श्वास** is Sanskrit *śvāsa*, "breath, breathing", a tatsama (CDIAL 12769). **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

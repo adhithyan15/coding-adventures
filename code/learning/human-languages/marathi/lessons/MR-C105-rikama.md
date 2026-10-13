@@ -14,7 +14,8 @@ romanization: "rikāmā"
 concept_tag: MR-ADJ105-RIKAMA
 prerequisites: [MR-C104-mahag, MR-C105-svasta]
 sounds: []
-roots: []
+roots: [indo-aryan-riknakarman]
+etymology_hook: "rikāmā ← *rikṇakarman 'doing empty work', a reconstructed form; a tadbhava (CDIAL 10728)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C105-svasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C105-ADJ105-02]; assesses=[] -->
 
 **रिकामा** — *rikāmā* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रिकामा** (*rikāmā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rikṇakarman*, "doing empty work", a form CDIAL reconstructs from its descendants (CDIAL 10728). It joins a reconstructed *\*rikṇa-* to *karman*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

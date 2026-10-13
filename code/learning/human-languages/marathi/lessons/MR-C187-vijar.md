@@ -14,7 +14,8 @@ romanization: "vijār"
 concept_tag: MR-VASTU187-VIJAR
 prerequisites: [MR-C186-sira, MR-C186-modak]
 sounds: []
-roots: []
+roots: [persian-izar]
+etymology_hook: "vijār: usually traced to Persian izār 'drawers, trousers'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C186-modak]
 <!-- hl-knowledge: introduces=[MR-LEX-C187-VASTU187-01]; assesses=[] -->
 
 **विजार** — *vijār* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विजार** (*vijār*) is a loan, usually traced to Persian *izār*, "drawers, trousers", which Persian took from Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

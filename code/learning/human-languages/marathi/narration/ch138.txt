@@ -12,6 +12,9 @@ Before the new one: say the Marathi for garlic, then the Marathi for ginger.
 You'll want to know: मटार.
 मटार — maṭār — "peas".
 
+The word, taken apart.
+मटार (maṭār) matches Hindi maṭar, "pea", which CDIAL traces to a reconstructed maṭṭara, "pea". CDIAL lists Marathi's own form as maṭh, "pea" (CDIAL 9724).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for ginger, then the Marathi for peas.
 
 You'll want to know: डाळिंब.
 डाळिंब — ḍāḷimb — "a pomegranate".
+
+The word, taken apart.
+डाळिंब (ḍāḷimb) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāḍimba, "pomegranate" (CDIAL 6254). CDIAL gives dāḍimba as a variant of Sanskrit dāḍima.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for peas, then the Marathi for a pomegranate
 You'll want to know: कलिंगड.
 कलिंगड — kaliṅgaḍ — "a watermelon".
 
+The word, taken apart.
+कलिंगड (kaliṅgaḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāliṅga, "watermelon" (CDIAL 3100). CDIAL gives kāliṅga as a variant of Sanskrit kālinda, "watermelon".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a pomegranate, then the Marathi for a wa
 You'll want to know: नारळ.
 नारळ — nāraḷ — "a coconut".
 
+The word, taken apart.
+नारळ (nāraḷ) is a tadbhava of Sanskrit nārikela, "coconut palm and fruit" (CDIAL 7075). CDIAL follows Bloch in taking the Sanskrit word from a Dravidian compound, comparing Tamil nāri, "fibre".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a watermelon, then the Marathi for a coc
 
 You'll want to know: पीठ.
 पीठ — pīṭh — "flour".
+
+The word, taken apart.
+पीठ (pīṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from piṣṭa, "crushed, ground; flour" (CDIAL 8218). It is built on piṣ, "to grind".
 
 What you've built.
 One more word for this chapter.

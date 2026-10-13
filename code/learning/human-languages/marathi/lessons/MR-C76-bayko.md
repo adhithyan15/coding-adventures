@@ -15,6 +15,7 @@ concept_tag: MR-FAMILY76-BAYKO
 prerequisites: [MR-C75-mama, MR-C76-navra]
 sounds: []
 roots: []
+etymology_hook: "bāyko 'wife': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C76-navra]
 <!-- hl-knowledge: introduces=[MR-LEX-C76-FAMILY76-02]; assesses=[] -->
 
 **बायको** — *bāyko* — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बायको** (*bāyko*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhīṭ"
 concept_tag: MR-GUN207-DHIT
 prerequisites: [MR-C206-samanya, MR-C206-khas]
 sounds: []
-roots: []
+roots: [sanskrit-dhrshta]
+etymology_hook: "dhīṭ ← Sanskrit dhṛṣṭa 'bold, impudent', a tadbhava (CDIAL 6875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C206-khas]
 <!-- hl-knowledge: introduces=[MR-LEX-C207-GUN207-01]; assesses=[] -->
 
 **धीट** — *dhīṭ* — "bold, daring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धीट** (*dhīṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhṛṣṭa*, "bold, impudent" (CDIAL 6875).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

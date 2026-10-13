@@ -14,7 +14,8 @@ romanization: "snāyū"
 concept_tag: MR-AAROGYA200-SNAYU
 prerequisites: [MR-C199-vinne, MR-C199-kapni-karne]
 sounds: []
-roots: []
+roots: [sanskrit-snayu]
+etymology_hook: "snāyū: Sanskrit snāyu 'sinew, muscle', a tatsama; the inherited Marathi form is sāv (CDIAL 13793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C199-kapni-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C200-AAROGYA200-01]; assesses=[] -->
 
 **स्नायू** — *snāyū* — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्नायू** (*snāyū*) is Sanskrit *snāyu*, "tendon, muscle, sinew", a tatsama. CDIAL lists the inherited Marathi form as *sāv*, "muscle, sinew, catgut" (CDIAL 13793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

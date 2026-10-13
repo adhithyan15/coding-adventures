@@ -14,7 +14,8 @@ romanization: "upahārgṛh"
 concept_tag: MR-LOC129-UPAHARGRH
 prerequisites: [MR-C128-rugnalay, MR-C129-granthalay]
 sounds: []
-roots: []
+roots: [sanskrit-upahara, grha-sanskrit]
+etymology_hook: "upahārgṛh: Sanskrit upahāra 'offering, gift of food' + gṛha 'house'; a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C129-granthalay]
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-02]; assesses=[] -->
 
 **उपहारगृह** — *upahārgṛh* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उपहारगृह** (*upahārgṛh*) is a compound of Sanskrit parts, a tatsama: *upahāra*, "offering, gift of food", and *gṛha*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "limbū"
 concept_tag: MR-FOOD88-LIMBU
 prerequisites: [MR-C87-drakse, MR-C88-santre]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "limbū ← Sanskrit nimbū 'lime', from Austroasiatic; CDIAL lists Marathi nīṁbūṁ (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C88-santre]
 <!-- hl-knowledge: introduces=[MR-LEX-C88-FOOD88-02]; assesses=[] -->
 
 **लिंबू** — *limbū* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लिंबू** (*limbū*) goes back to Sanskrit *nimbū*, "lime", which CDIAL takes from Austroasiatic (CDIAL 7247). CDIAL lists Marathi *nīṁbūṁ*; the form with *l-* matches Gujarati *lĩbu*, "lime, lemon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

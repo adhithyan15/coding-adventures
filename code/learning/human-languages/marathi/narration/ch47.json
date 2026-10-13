@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who You Give It To",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5dd5355eed8ccbeb",
+  "sourceHash": "fnv1a64:e57befbb297459b9",
   "lessons": [
     {
       "id": "MR-C47-laa-object",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c4f2c475ee7679e",
+      "sourceHash": "fnv1a64:1429f6c53ca05821",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मित्र is Sanskrit mitra, \"friend\", a tatsama (CDIAL 10124). The history of the ending -ला is not settled: CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -133,7 +144,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -164,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62d52d58b632fef5",
+      "sourceHash": "fnv1a64:ea2b80adf435d06c",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मित्र is Sanskrit mitra, \"friend\", a tatsama (CDIAL 10124), and देतो is a form of देणे, \"to give\", from Sanskrit dadāti, \"gives\" (CDIAL 6141). The history of the ending -ला is not settled: CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -269,7 +291,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

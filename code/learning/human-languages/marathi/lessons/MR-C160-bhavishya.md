@@ -14,7 +14,8 @@ romanization: "bhaviṣya"
 concept_tag: MR-BHAV160-BHAVISHYA
 prerequisites: [MR-C159-bhutkal, MR-C159-ghadne]
 sounds: []
-roots: []
+roots: [sanskrit-bhavishya]
+etymology_hook: "bhaviṣya ← Sanskrit bhaviṣya 'about to be, future', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C159-ghadne]
 <!-- hl-knowledge: introduces=[MR-LEX-C160-BHAV160-01]; assesses=[] -->
 
 **भविष्य** — *bhaviṣya* — "the future". Marathi's future adds endings to the verb: **मी जाईन** — *mī jāīn* — "I will go"; **तो जाईल** — *to jāīl* — "he will go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भविष्य** (*bhaviṣya*) is Sanskrit *bhaviṣya*, "about to be, future", taken over whole as a learned loan, a tatsama. It is built on *bhū*, "to be, become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

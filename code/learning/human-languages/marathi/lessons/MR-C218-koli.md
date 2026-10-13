@@ -14,7 +14,8 @@ romanization: "koḷī"
 concept_tag: MR-VASTU218-KOLI
 prerequisites: [MR-C217-bandar, MR-C217-vihir]
 sounds: []
-roots: []
+roots: [sanskrit-kolika]
+etymology_hook: "koḷī ← Sanskrit kolika 'weaver', a tadbhava (CDIAL 3535)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C217-vihir]
 <!-- hl-knowledge: introduces=[MR-LEX-C218-VASTU218-01]; assesses=[] -->
 
 **कोळी** — *koḷī* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोळी** (*koḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kolika*, "weaver" (CDIAL 3535). CDIAL glosses the Marathi word "a caste of watercarriers, a sort of spider". It cites a view linking the Sanskrit word with Tamil *kōṭikar*, "weaver", and a Munda word for "spider".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

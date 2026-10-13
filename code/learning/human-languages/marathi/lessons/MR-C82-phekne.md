@@ -14,7 +14,8 @@ romanization: "phekṇe"
 concept_tag: MR-VERB-PHEKNE
 prerequisites: [MR-C81-ghalne, MR-C81-sodne]
 sounds: []
-roots: []
+roots: [indo-aryan-phekk]
+etymology_hook: "phekṇe ← *phēṅk- 'throw', a form CDIAL reconstructs under *phēkk (CDIAL 9106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C81-sodne]
 <!-- hl-knowledge: introduces=[MR-LEX-C82-VERBS82-01]; assesses=[] -->
 
 **फेकणे** — *phekṇe* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फेकणे** (*phekṇe*) comes from *\*phēṅk-*, "throw", a form CDIAL reconstructs beside *\*phēkk-* (CDIAL 9106).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

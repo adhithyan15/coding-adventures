@@ -14,7 +14,8 @@ romanization: "māgavṇe"
 concept_tag: MR-VERB-MAGAVNE
 prerequisites: [MR-C193-kharc-karne, MR-C193-bacat-karne]
 sounds: []
-roots: []
+roots: [sanskrit-margati]
+etymology_hook: "māgavṇe: the 'make' form of māgṇe 'to ask for', from Sanskrit mārgati 'seeks, requests' (CDIAL 10074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C193-bacat-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C193-ACT193-03]; assesses=[] -->
 
 **मागवणे** — *māgavṇe* — "to order (food, goods)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मागवणे** (*māgavṇe*) is the "make" form of **मागणे**, "to ask for", which comes from Sanskrit *mārgati*, "seeks, requests" (CDIAL 10074).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

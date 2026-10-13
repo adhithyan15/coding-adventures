@@ -14,7 +14,8 @@ romanization: "kāpṇe"
 concept_tag: MR-VERB-KAPNE
 prerequisites: [MR-C80-mojne, MR-C80-pakadne]
 sounds: []
-roots: []
+roots: [sanskrit-kalpayati]
+etymology_hook: "kāpṇe ← Sanskrit kalpayati 'sets in order; trims, cuts', a tadbhava (CDIAL 2944)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C80-pakadne]
 <!-- hl-knowledge: introduces=[MR-LEX-C80-VERBS80-05]; assesses=[] -->
 
 **कापणे** — *kāpṇe* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कापणे** (*kāpṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kalpayati*, "sets in order; trims, cuts" (CDIAL 2944).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

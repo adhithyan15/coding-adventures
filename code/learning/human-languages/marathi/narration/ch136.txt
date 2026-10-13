@@ -12,6 +12,9 @@ Before the new one: say the Marathi for study, then the Marathi for a shirt.
 You'll want to know: कोट.
 कोट — koṭ — "a coat".
 
+The word, taken apart.
+कोट (koṭ) is a loan from English coat. It is not the inherited Marathi koṭ, "fort".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a shirt, then the Marathi for a coat.
 
 You'll want to know: स्वेटर.
 स्वेटर — sveṭar — "a jumper".
+
+The word, taken apart.
+स्वेटर (sveṭar) is a loan from English sweater.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a coat, then the Marathi for a jumper.
 You'll want to know: पोळी.
 पोळी — poḷī — "a chapati".
 
+The word, taken apart.
+पोळी (poḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauli, "a cake of scorched grain and ghee" (CDIAL 8423). CDIAL glosses the Marathi word "wheaten cake", and suggests, with a "perhaps", a link with Prakrit paülaï, "cooks".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a jumper, then the Marathi for a chapati
 You'll want to know: भाजी.
 भाजी — bhājī — "a vegetable dish".
 
+The word, taken apart.
+भाजी (bhājī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharjita, "fried, parched" (CDIAL 9401).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a chapati, then the Marathi for a vegeta
 
 You'll want to know: वरण.
 वरण — varaṇ — "plain dal".
+
+The word, taken apart.
+CDIAL lists Marathi varaṇ, "tasty dish of pulse", under a reconstructed aparānna, built from Sanskrit apara, "other, later", and anna, "food" (CDIAL 442).
 
 What you've built.
 One more word for this chapter.

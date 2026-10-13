@@ -14,7 +14,8 @@ romanization: "paryāvaraṇ"
 concept_tag: MR-VASTU184-PARYAVARAN
 prerequisites: [MR-C184-jyot, MR-C184-havaman]
 sounds: []
-roots: []
+roots: [sanskrit-paryavarana]
+etymology_hook: "paryāvaraṇ: Sanskrit pari 'around' + āvaraṇa 'covering'; a modern tatsama coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C184-havaman]
 <!-- hl-knowledge: introduces=[MR-LEX-C184-VASTU184-04]; assesses=[] -->
 
 **पर्यावरण** — *paryāvaraṇ* — "the environment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पर्यावरण** (*paryāvaraṇ*) is a modern coinage of Sanskrit parts: *pari*, "around", and *āvaraṇa*, "covering": what surrounds us.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

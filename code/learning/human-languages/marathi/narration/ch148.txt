@@ -12,6 +12,9 @@ Before the new one: say the Marathi for narrow, then the Marathi for thin.
 You'll want to know: जड.
 जड — jaḍ — "heavy".
 
+The word, taken apart.
+जड (jaḍ) is probably the word CDIAL lists as Marathi jaḍ, "cold, stupid", under Sanskrit jaḍa, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090). CDIAL does not give the sense "heavy".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for thin, then the Marathi for heavy.
 
 You'll want to know: मऊ.
 मऊ — maū — "soft".
+
+The word, taken apart.
+मऊ (maū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛdu, "soft" (CDIAL 10292).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for heavy, then the Marathi for soft.
 You'll want to know: कडक.
 कडक — kaḍak — "hard, strict".
 
+The word, taken apart.
+The origin of कडक (kaḍak) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for soft, then the Marathi for hard.
 You'll want to know: कोमट.
 कोमट — komaṭ — "lukewarm".
 
+The word, taken apart.
+कोमट (komaṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from koṣma, "warm", a form CDIAL reconstructs from its descendants (CDIAL 3552). CDIAL compares Sanskrit koṣṇa, "warm".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for hard, then the Marathi for lukewarm.
 
 You'll want to know: सुका.
 सुका — sukā — "dry".
+
+The word, taken apart.
+सुका (sukā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried" (CDIAL 12548).
 
 What you've built.
 One more word for this chapter.

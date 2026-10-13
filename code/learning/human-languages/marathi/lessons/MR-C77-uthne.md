@@ -14,7 +14,8 @@ romanization: "uṭhṇe"
 concept_tag: MR-VERB-UTHNE
 prerequisites: [MR-C77-shiksak, MR-C77-aikne]
 sounds: []
-roots: []
+roots: [indo-aryan-utsthati]
+etymology_hook: "uṭhṇe ← *utsthāti 'stands up', a reconstructed form; a tadbhava (CDIAL 1900)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C77-aikne]
 <!-- hl-knowledge: introduces=[MR-LEX-C77-FAMILY77-05]; assesses=[] -->
 
 **उठणे** — *uṭhṇe* — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उठणे** (*uṭhṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*utsthāti*, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900). It is *ud*, "up", and *sthā*, "to stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

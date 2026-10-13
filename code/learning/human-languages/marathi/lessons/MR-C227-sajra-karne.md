@@ -14,7 +14,8 @@ romanization: "sājrā karṇe"
 concept_tag: MR-VERB-SAJRA-KARNE
 prerequisites: [MR-C227-nasta-karne, MR-C227-atisayokti-karne]
 sounds: []
-roots: []
+roots: [sanskrit-karoti]
+etymology_hook: "sājrā: origin not settled; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C227-atisayokti-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C227-ACT227-03]; assesses=[] -->
 
 **साजरा करणे** — *sājrā karṇe* — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **साजरा**, "celebrated", is not settled: CDIAL has no entry for it in this sense. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

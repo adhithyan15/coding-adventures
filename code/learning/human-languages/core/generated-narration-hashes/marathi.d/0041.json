@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 41,
-  "sourceHash": "fnv1a64:5fb9dec4c29f5b41",
+  "sourceHash": "fnv1a64:4a0acaa9ad58b620",
   "lessonIds": [
     "MR-C41-ghar",
     "MR-C41-kholi",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch41.txt",
   "json": "marathi/narration/ch41.json",
-  "textHash": "fnv1a64:b40b5cbd4eaa36b1",
-  "jsonHash": "fnv1a64:a929d1b83b9aa42d",
+  "textHash": "fnv1a64:23dd9ba275df3c06",
+  "jsonHash": "fnv1a64:07f3ab153ba7feef",
   "findings": []
 }

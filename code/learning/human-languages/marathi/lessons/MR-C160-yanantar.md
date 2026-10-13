@@ -14,7 +14,8 @@ romanization: "yānantar"
 concept_tag: MR-BHAV160-YANANTAR
 prerequisites: [MR-C160-lavkarac, MR-C160-pudhca]
 sounds: []
-roots: []
+roots: [sanskrit-anantara]
+etymology_hook: "yānantar: yā- 'this' + nantar 'after' ← Sanskrit anantaram 'immediately after' (CDIAL 287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C160-pudhca]
 <!-- hl-knowledge: introduces=[MR-LEX-C160-BHAV160-04]; assesses=[] -->
 
 **यानंतर** — *yānantar* — "from now on, after this". It is **या**, "this", with **नंतर**, "after": **यानंतर मी रोज चालेन.** — *yānantar mī roj cālen* — "From now on I will walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यानंतर** (*yānantar*) is *yā-*, "this", with **नंतर**, "after", which comes from Sanskrit *anantaram*, "immediately after" (CDIAL 287).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saṅgrahālay"
 concept_tag: MR-VASTU245-SANGRAHALAY
 prerequisites: [MR-C245-masid, MR-C245-mahavidyalay]
 sounds: []
-roots: []
+roots: [sanskrit-sangraha, sanskrit-alaya]
+etymology_hook: "saṅgrahālay: Sanskrit saṅgraha 'collection' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C245-mahavidyalay]
 <!-- hl-knowledge: introduces=[MR-LEX-C245-VASTU245-05]; assesses=[] -->
 
 **संग्रहालय** — *saṅgrahālay* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संग्रहालय** (*saṅgrahālay*) is a compound of Sanskrit parts: *saṅgraha*, "collection", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

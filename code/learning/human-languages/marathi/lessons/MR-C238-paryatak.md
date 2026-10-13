@@ -14,7 +14,8 @@ romanization: "paryaṭak"
 concept_tag: MR-VASTU238-PARYATAK
 prerequisites: [MR-C238-samsodhak, MR-C238-pardesi]
 sounds: []
-roots: []
+roots: [sanskrit-paryataka]
+etymology_hook: "paryaṭak: Sanskrit paryaṭaka 'wanderer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C238-pardesi]
 <!-- hl-knowledge: introduces=[MR-LEX-C238-VASTU238-04]; assesses=[] -->
 
 **पर्यटक** — *paryaṭak* — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पर्यटक** (*paryaṭak*) is Sanskrit *paryaṭaka*, "one who wanders about", a tatsama: *pari*, "around", and *aṭ*, "to roam". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

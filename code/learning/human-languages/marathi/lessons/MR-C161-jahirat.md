@@ -14,7 +14,8 @@ romanization: "jāhirāt"
 concept_tag: MR-VACH161-JAHIRAT
 prerequisites: [MR-C161-sucana, MR-C161-bhade]
 sounds: []
-roots: []
+roots: [arabic-zahir]
+etymology_hook: "jāhirāt: built on jāhīr 'public, evident', usually traced, through Persian, to Arabic ẓāhir 'evident'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [MR-C161-bhade]
 
 The advert says **खोली भाड्याने देणे आहे.** — "Room to let." A room is free to
 rent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाहिरात** (*jāhirāt*) is built on *jāhīr*, "public, evident", which is usually traced, through Persian, to Arabic *ẓāhir*, "evident, manifest", whose root is *ẓ-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

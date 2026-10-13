@@ -14,7 +14,8 @@ romanization: "kartavya"
 concept_tag: MR-VASTU272-KARTAVYA
 prerequisites: [MR-C272-nyay, MR-C272-hakka]
 sounds: []
-roots: []
+roots: [sanskrit-kartavya]
+etymology_hook: "kartavya ← Sanskrit kartavya 'to be done; duty', a tatsama (CDIAL 2859)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C272-hakka]
 <!-- hl-knowledge: introduces=[MR-LEX-C272-VASTU272-03]; assesses=[] -->
 
 **कर्तव्य** — *kartavya* — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कर्तव्य** (*kartavya*) is Sanskrit *kartavya*, "to be done; duty", taken over whole as a learned loan, a tatsama (CDIAL 2859).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

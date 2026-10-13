@@ -14,7 +14,8 @@ romanization: "krūr"
 concept_tag: MR-GUN177-KRUR
 prerequisites: [MR-C177-premal, MR-C177-dayalu]
 sounds: []
-roots: []
+roots: [sanskrit-krura]
+etymology_hook: "krūr ← Sanskrit krūra 'bloody, cruel', a tatsama (CDIAL 3602)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C177-dayalu]
 <!-- hl-knowledge: introduces=[MR-LEX-C177-GUN177-03]; assesses=[] -->
 
 **क्रूर** — *krūr* — "cruel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्रूर** (*krūr*) is Sanskrit *krūra*, "bloody, cruel", taken over whole as a learned loan, a tatsama (CDIAL 3602).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

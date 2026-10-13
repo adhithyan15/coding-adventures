@@ -14,7 +14,8 @@ romanization: "māvshī"
 concept_tag: MR-FAMILY75-MAVSHI
 prerequisites: [MR-C75-aji, MR-C75-kaka]
 sounds: []
-roots: []
+roots: [sanskrit-matuhshvasr]
+etymology_hook: "māvshī ← Sanskrit mātuḥṣvasṛ 'mother's sister', a tadbhava (CDIAL 10001)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C75-kaka]
 <!-- hl-knowledge: introduces=[MR-LEX-C75-FAMILY75-04]; assesses=[] -->
 
 **मावशी** — *māvshī* — "an aunt (mother's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मावशी** (*māvshī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mātuḥṣvasṛ*, "mother's sister" (CDIAL 10001). It is *mātṛ*, "mother", and *svasṛ*, "sister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

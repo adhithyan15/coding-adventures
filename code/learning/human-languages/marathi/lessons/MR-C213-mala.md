@@ -14,7 +14,8 @@ romanization: "māḷā"
 concept_tag: MR-VASTU213-MALA
 prerequisites: [MR-C213-kumpan, MR-C213-talghar]
 sounds: []
-roots: []
+roots: [indo-aryan-mada]
+etymology_hook: "māḷā ← *māḍa 'upper storey of a house', a reconstructed form; a tadbhava (CDIAL 9996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C213-talghar]
 <!-- hl-knowledge: introduces=[MR-LEX-C213-VASTU213-05]; assesses=[] -->
 
 **माळा** — *māḷā* — "a loft, an attic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माळा** (*māḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*māḍa*, "upper storey of a house", a form CDIAL reconstructs from its descendants (CDIAL 9996). CDIAL glosses the Marathi word "loft, granary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ gloss: what time is it — a question you can already ask, and a verb that count
 concept_tag: MR-CLOCK-ASKING
 prerequisites: [MR-R66-day-recall, MR-C37-kiti, MR-C06-number-differences]
 sounds: [retroflex-la, matra-ii]
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "vājle ← vājṇe 'to sound', from Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
-  max_seconds: 210
+  max_seconds: 290
 requires:
   knowledge: [MR-QUESTION-KITI, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-TIME-II]
 introduces:
@@ -51,6 +52,11 @@ not ask *what* time it is — it asks **how many have sounded.**
 
 **वाजणे** is to sound, to ring, to strike. English kept that picture when clocks
 had bells — *the clock struck three*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाजले** is a form of **वाजणे**, "to sound", from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## Grammar Lens: the verb counts with you
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT]; assesses=[MR-LEX-VAJLE, MR-LEX-NUMBERS-ONE-TO-FIVE] -->

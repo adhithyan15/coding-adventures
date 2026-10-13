@@ -11,9 +11,10 @@ gloss: left (the side) — the other half of the pair, agreeing exactly as its p
 concept_tag: MR-LEX-DAAVA
 prerequisites: [MR-C44-ujva, MR-C12-kaan]
 sounds: [retroflex-da, matra-aa]
-roots: []
+roots: [indo-aryan-davva]
+etymology_hook: "ḍāvā ← *ḍāva- 'left hand', which CDIAL calls non-Aryan, from Dravidian after A. Master (CDIAL 5539)"
 duration:
-  max_seconds: 200
+  max_seconds: 218
 requires:
   knowledge: [MR-LEX-UJVA, MR-LEX-LAAMB, MR-POSTP-JAVAL, MR-LEX-KAAN]
 introduces:
@@ -58,6 +59,11 @@ to an English ear and Marathi treats them as different letters entirely.
 
 Now you can take somebody through a door: **उजवा** or **डावा**, then a landmark
 with **समोर** or **जवळ**, and the direction is complete.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डावा** (*ḍāvā*) goes back to *\*ḍāva-*, "lefthand, crosswise", a form CDIAL reconstructs and calls non-Aryan, from Dravidian according to A. Master (CDIAL 5539). DEDR compares the Dravidian words for "left", such as Kannada *eḍa* and Telugu *ḍā* (DEDR 449).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DAAVA, MR-LEX-UJVA, MR-LEX-KAAN, MR-POSTP-JAVAL, MR-LEX-LAAMB] -->

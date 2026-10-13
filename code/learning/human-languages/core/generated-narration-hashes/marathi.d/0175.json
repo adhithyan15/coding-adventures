@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 175,
-  "sourceHash": "fnv1a64:769bbe753a4f90e9",
+  "sourceHash": "fnv1a64:6b5ee5e8983949fc",
   "lessonIds": [
     "MR-C175-vicitra",
     "MR-C175-vegla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch175.txt",
   "json": "marathi/narration/ch175.json",
-  "textHash": "fnv1a64:317e8a7bda9659c1",
-  "jsonHash": "fnv1a64:a1efb31548375d26",
+  "textHash": "fnv1a64:652fc95fe9a9862e",
+  "jsonHash": "fnv1a64:39862b0e033e344b",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "shijavṇe"
 concept_tag: MR-VERB-SHIJAVNE
 prerequisites: [MR-C78-vikne, MR-C78-ughadne]
 sounds: []
-roots: []
+roots: [sanskrit-sidhyati]
+etymology_hook: "śijavṇe: the 'make' form of śijṇe 'to be cooked', which CDIAL lists under sidhyati 'is well cooked' (CDIAL 13408)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C78-ughadne]
 <!-- hl-knowledge: introduces=[MR-LEX-C78-VERBS78-05]; assesses=[] -->
 
 **शिजवणे** — *shijavṇe* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिजवणे** (*shijavṇe*) is the "make" form of Marathi *śijṇẽ*, "to be cooked by boiling". CDIAL lists that verb under Sanskrit *sidhyati*, "succeeds, is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed *\*śrīyate*, "is cooked" (CDIAL 12712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "banavṇe"
 concept_tag: MR-VERB-BANAVNE
 prerequisites: [MR-C82-pohne, MR-C82-shikavne]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "banavṇe: the 'make' form of banṇe 'to be made', which CDIAL lists under vanati and marks as from Hindi (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C82-shikavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C82-VERBS82-05]; assesses=[] -->
 
 **बनवणे** — *banavṇe* — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बनवणे** (*banavṇe*) is the "make" form of Marathi *banṇẽ*, "to suit, be made". CDIAL lists that verb under Sanskrit *vanati*, "desires, makes ready", and marks it as taken from Hindi (CDIAL 11260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

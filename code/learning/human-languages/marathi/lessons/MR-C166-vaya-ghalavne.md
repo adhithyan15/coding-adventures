@@ -14,7 +14,8 @@ romanization: "vāyā ghālavṇe"
 concept_tag: MR-VERB-VAYA-GHALAVNE
 prerequisites: [MR-C165-niriksan-karne, MR-C165-bhag-ghene]
 sounds: []
-roots: []
+roots: [indo-aryan-ghalyati]
+etymology_hook: "vāyā: origin not settled; ghālavṇe, the 'make' form of ghālṇe ← *ghalyati 'pours' (CDIAL 4457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C165-bhag-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C166-ACT166-01]; assesses=[] -->
 
 **वाया घालवणे** — *vāyā ghālavṇe* — "to waste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **वाया**, "in vain", is not settled: CDIAL has no entry for it. **घालवणे** is the "make" form of **घालणे**, which CDIAL lists, as "to pour", under a reconstructed *\*ghalyati*, "pours" (CDIAL 4457).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fb5684cb758997b9",
+  "sourceHash": "fnv1a64:a6d60ac3af7eef6d",
   "lessons": [
     {
       "id": "MR-C60-dusra-ordinal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ed79c5c6cdbfa7d",
+      "sourceHash": "fnv1a64:e520c3caa8a14fdf",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it is दोन wearing an ending."
+              "text": "Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it is दोन wearing an ending: it comes from dviḥsara, \"twofold\", built from Sanskrit dviḥ, \"twice\" (CDIAL 6676)."
             },
             {
               "kind": "speech",
@@ -123,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "An ordinal is an ordinary adjective in -आ, so it takes the three endings chapter forty-nine taught on मोठा: दुसरा (dusrā), दुसरी, दुसरं. Every word in this chapter and the next behaves this way, and it will not be repeated for each one."
+              "text": "An ordinal is an ordinary adjective in -आ, so it takes the three endings chapter forty-nine taught on मोठा: दुसरा (dusrā), दुसरी, दुसरं. Every word in this chapter and the next behaves this way."
             }
           ]
         },
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c5dde2a7bbb9f9e",
+      "sourceHash": "fnv1a64:95141d82203f5e68",
       "notice": null,
       "blocks": [
         {
@@ -309,6 +309,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिसरा (tisrā) comes from triḥsara, \"triple\", a form CDIAL reconstructs on Sanskrit triḥ, \"thrice\", as दुसरा (dusrā) comes from dviḥsara (CDIAL 6018)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: two is not yet a rule",
           "segments": [
@@ -323,7 +334,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -385,7 +396,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -420,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a141e2ef581fed4",
+      "sourceHash": "fnv1a64:c74cf444700091e1",
       "notice": null,
       "blocks": [
         {
@@ -493,6 +504,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहिला (pahilā) comes from prathilla, \"first\", a form CDIAL reconstructs from Sanskrit prathama, \"first\" (CDIAL 8652)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: why first arrives third",
           "segments": [
@@ -526,7 +548,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: what this book claims about पहिला, and what it does not",
           "segments": [
@@ -541,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -602,7 +624,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -843,7 +865,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:69bf2f128e5cfe75",
+      "sourceHash": "fnv1a64:ed90a0b4104d40fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -930,6 +952,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists पाचवा (pāchvā) under Sanskrit pañcama, \"fifth\" (CDIAL 7669). The ending -वा that Marathi now adds to any number is what the old ordinal ending -ma became."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: -वा, and where the language changes its mind",
           "segments": [
@@ -970,7 +1003,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1031,7 +1064,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

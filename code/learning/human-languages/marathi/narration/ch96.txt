@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a picture, then the Marathi for a tree.
 You'll want to know: फूल.
 फूल — phūl — "a flower".
 
+The word, taken apart.
+फूल (phūl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phulla, "expanded, blown (of flowers)" (CDIAL 9092).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a tree, then the Marathi for a flower.
 
 You'll want to know: पान.
 पान — pān — "a leaf".
+
+The word, taken apart.
+पान (pān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from parṇa, "plumage, foliage; leaf" (CDIAL 7918).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a flower, then the Marathi for a leaf.
 You'll want to know: डोंगर.
 डोंगर — ḍoṅgar — "a mountain".
 
+The word, taken apart.
+डोंगर (ḍoṅgar) goes back to ḍōṅga-, "hill", one of a group of forms CDIAL reconstructs under ṭakka, "hill" (CDIAL 5423). CDIAL says the variety of forms points to a non-Aryan, perhaps Munda, origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a leaf, then the Marathi for a mountain.
 You'll want to know: जंगल.
 जंगल — jaṅgal — "a forest".
 
+The word, taken apart.
+जंगल (jaṅgal) goes back to Sanskrit jāṅgala, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL says the noun spread everywhere in the shape it has in the Hindi area, and that a Sindhi variant supports a non-Aryan origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a mountain, then the Marathi for a fores
 
 You'll want to know: नदी.
 नदी — nadī — "a river".
+
+The word, taken apart.
+नदी (nadī) is Sanskrit nadī, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943). CDIAL lists the inherited Marathi form nahī, "small river".
 
 What you've built.
 One more word for this chapter.

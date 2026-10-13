@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a rock, then the Marathi for a wave.
 You'll want to know: किनारा.
 किनारा — kinārā — "a shore, a bank".
 
+The word, taken apart.
+किनारा (kinārā) is a loan, usually traced to Persian kinār, "edge, shore".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a wave, then the Marathi for a shore.
 
 You'll want to know: बेट.
 बेट — beṭ — "an island".
+
+The word, taken apart.
+The origin of बेट (beṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a shore, then the Marathi for an island.
 You'll want to know: वीज.
 वीज — vīj — "lightning; electricity".
 
+The word, taken apart.
+वीज (vīj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vidyut, "flashing; lightning" (CDIAL 11742).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an island, then the Marathi for lightnin
 You'll want to know: वादळ.
 वादळ — vādaḷ — "a storm".
 
+The word, taken apart.
+वादळ (vādaḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, "rainy day, bad weather" (CDIAL 11567). CDIAL glosses the Marathi word "cloud, bad weather".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for lightning; electricity, then the Marathi
 
 You'll want to know: कावळा.
 कावळा — kāvḷā — "a crow".
+
+The word, taken apart.
+कावळा (kāvḷā) is a tadbhava of Sanskrit kāka, "crow", with an added -la- (CDIAL 2993). CDIAL notes that the word imitates the bird's call.
 
 What you've built.
 One more word for this chapter.

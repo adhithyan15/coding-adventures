@@ -14,7 +14,8 @@ romanization: "modak"
 concept_tag: MR-VASTU186-MODAK
 prerequisites: [MR-C186-kosimbir, MR-C186-sira]
 sounds: []
-roots: []
+roots: [sanskrit-modaka]
+etymology_hook: "modak ← Sanskrit modaka 'small round sweetmeat', a tatsama (CDIAL 10354)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C186-sira]
 <!-- hl-knowledge: introduces=[MR-LEX-C186-VASTU186-05]; assesses=[] -->
 
 **मोदक** — *modak* — "a modak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोदक** (*modak*) is Sanskrit *modaka*, "small round sweetmeat", taken over whole as a learned loan, a tatsama (CDIAL 10354). It is built on *mud*, "to rejoice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

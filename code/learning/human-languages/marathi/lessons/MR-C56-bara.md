@@ -11,7 +11,8 @@ gloss: twelve — two-and-ten, and the pattern from eleven repeating exactly
 concept_tag: MR-LEX-BARA
 prerequisites: [MR-R55-six-to-nine, MR-C56-daha, MR-C56-akra]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "bārā ← Sanskrit dvādaśa 'twelve': dvā 'two' + daśa 'ten'; a tadbhava (CDIAL 6658)"
 duration:
   max_seconds: 210
 requires:

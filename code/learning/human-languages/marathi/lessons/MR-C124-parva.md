@@ -14,7 +14,8 @@ romanization: "parvā"
 concept_tag: MR-WANT124-PARVA
 prerequisites: [MR-C124-pahat, MR-C124-madhyaratra]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "parvā ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C124-madhyaratra]
 <!-- hl-knowledge: introduces=[MR-LEX-C124-WANT124-04]; assesses=[] -->
 
 **परवा** — *parvā* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परवा** (*parvā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paraśvas*, "the day after tomorrow" (CDIAL 7799j). It is *para*, "beyond", and *śvas*, "tomorrow". CDIAL glosses the Marathi word "the day after tomorrow or before yesterday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 86,
-  "sourceHash": "fnv1a64:fd8d5dc53dd522eb",
+  "sourceHash": "fnv1a64:c7a0a7f201a452e5",
   "lessonIds": [
     "MR-C86-kele",
     "MR-C86-batata",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch86.txt",
   "json": "marathi/narration/ch86.json",
-  "textHash": "fnv1a64:4495491aeabdc8e2",
-  "jsonHash": "fnv1a64:9a85b29272a0fd29",
+  "textHash": "fnv1a64:4a5c908c19431405",
+  "jsonHash": "fnv1a64:adbe413b7916c2fd",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kapāḷ"
 concept_tag: MR-THINGS144-KAPAL
 prerequisites: [MR-C144-bail, MR-C144-das]
 sounds: []
-roots: []
+roots: [sanskrit-kapala]
+etymology_hook: "kapāḷ ← Sanskrit kapāla 'skull, cranium', a tadbhava (CDIAL 2744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C144-das]
 <!-- hl-knowledge: introduces=[MR-LEX-C144-THINGS144-05]; assesses=[] -->
 
 **कपाळ** — *kapāḷ* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कपाळ** (*kapāḷ*) is a tadbhava of Sanskrit *kapāla*, "skull, cranium" (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

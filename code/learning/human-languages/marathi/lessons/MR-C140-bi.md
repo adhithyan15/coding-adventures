@@ -14,7 +14,8 @@ romanization: "bī"
 concept_tag: MR-THINGS140-BI
 prerequisites: [MR-C139-phandi, MR-C140-mul]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bī ← Sanskrit bīja 'seed, semen', a tadbhava (CDIAL 9250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C140-mul]
 <!-- hl-knowledge: introduces=[MR-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **बी** — *bī* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बी** (*bī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bīja*, "seed, semen" (CDIAL 9250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

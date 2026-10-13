@@ -12,8 +12,9 @@ concept_tag: GREETING-MORNING
 prerequisites: [MR-R67-clock-recall, MR-C66-sakal, MR-C01-namaskar]
 sounds: [halant-conjunct]
 roots: [sanskrit-shubha]
+etymology_hook: "śubh ← Sanskrit śubha 'bright, auspicious', a tatsama (CDIAL 12532); sakāḷ: origin not settled"
 duration:
-  max_seconds: 210
+  max_seconds: 263
 requires:
   knowledge: [MR-LEX-SAKAL, MR-LEX-NAMASKAR-01]
 introduces:
@@ -54,6 +55,11 @@ The second word is not new. **सकाळ** is yours already, and so are the ot
 parts of the day — which means **one new word buys you a greeting for each of
 them.** That is the cheapest chapter you have had in a while, and it is cheap
 because of work you already did.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुभ** is Sanskrit *śubha*, "bright, auspicious", a tatsama (CDIAL 12532). The origin of **सकाळ** is not settled: CDIAL has no entry for it.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[MR-PHRASE-SHUBH-SAKAL]; assesses=[MR-LEX-NAMASKAR-01] -->

@@ -14,7 +14,8 @@ romanization: "yojanā"
 concept_tag: MR-WANT124-YOJANA
 prerequisites: [MR-C123-magne, MR-C123-tharavne]
 sounds: []
-roots: []
+roots: [sanskrit-yojana]
+etymology_hook: "yojanā: Sanskrit yojanā 'joining, arrangement', built on yuj 'to yoke'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C123-tharavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C124-WANT124-01]; assesses=[] -->
 
 **योजना** — *yojanā* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**योजना** (*yojanā*) is Sanskrit *yojanā*, "joining, arrangement", a tatsama built on *yuj*, "to yoke, join". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

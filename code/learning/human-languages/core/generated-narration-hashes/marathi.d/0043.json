@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 43,
-  "sourceHash": "fnv1a64:df5492f3149b53bc",
+  "sourceHash": "fnv1a64:f7df562be741cb95",
   "lessonIds": [
     "MR-C43-javal",
     "MR-C43-samor",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch43.txt",
   "json": "marathi/narration/ch43.json",
-  "textHash": "fnv1a64:dd97b904258b0166",
-  "jsonHash": "fnv1a64:40d097ab0fd15688",
+  "textHash": "fnv1a64:3f60575ce80ba441",
+  "jsonHash": "fnv1a64:0eddeda243ed38b8",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "prasthān"
 concept_tag: MR-VASTU215-PRASTHAN
 prerequisites: [MR-C215-cahta, MR-C215-agaman]
 sounds: []
-roots: []
+roots: [sanskrit-prasthana]
+etymology_hook: "prasthān: Sanskrit prasthāna 'setting out', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C215-agaman]
 <!-- hl-knowledge: introduces=[MR-LEX-C215-VASTU215-05]; assesses=[] -->
 
 **प्रस्थान** — *prasthān* — "departure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रस्थान** (*prasthān*) is Sanskrit *prasthāna*, "setting out, departure", a tatsama: *pra*, "forth", and *sthā*, "to stand". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

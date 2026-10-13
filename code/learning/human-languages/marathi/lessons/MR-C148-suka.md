@@ -14,7 +14,8 @@ romanization: "sukā"
 concept_tag: MR-QUAL148-SUKA
 prerequisites: [MR-C148-kadak, MR-C148-komat]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "sukā ← Sanskrit śuṣka 'dried', a tadbhava (CDIAL 12548)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C148-komat]
 <!-- hl-knowledge: introduces=[MR-LEX-C148-QUAL148-05]; assesses=[] -->
 
 **सुका** — *sukā* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुका** (*sukā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried" (CDIAL 12548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

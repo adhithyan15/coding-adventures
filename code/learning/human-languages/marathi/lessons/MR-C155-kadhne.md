@@ -14,7 +14,8 @@ romanization: "kāḍhṇe"
 concept_tag: MR-VERB-KADHNE
 prerequisites: [MR-C155-sivne, MR-C155-rangavne]
 sounds: []
-roots: []
+roots: [indo-aryan-kaddhati]
+etymology_hook: "kāḍhṇe ← *kaḍḍhati 'pulls, draws', a reconstructed form; a tadbhava (CDIAL 2660)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C155-rangavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C155-ACT155-05]; assesses=[] -->
 
 **काढणे** — *kāḍhṇe* — "to take out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काढणे** (*kāḍhṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kaḍḍhati*, "pulls, draws", a form CDIAL reconstructs from its descendants (CDIAL 2660).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

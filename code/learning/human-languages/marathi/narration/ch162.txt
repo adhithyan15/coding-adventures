@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an advert, then the Marathi for a receip
 You'll want to know: पेटवणे.
 पेटवणे — petavṇe — "to light, to set alight".
 
+The word, taken apart.
+The origin of पेटवणे (petavṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a receipt, then the Marathi for to light
 
 You'll want to know: विझवणे.
 विझवणे — vijhavṇe — "to put out".
+
+The word, taken apart.
+विझवणे (vijhavṇe) comes from a reconstructed vijjhāpayati, "extinguishes", the "make" form of vijjhāyati, "is extinguished", under which CDIAL lists Marathi vijhṇẽ (CDIAL 11703).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to light, then the Marathi for to put ou
 You'll want to know: उडी मारणे.
 उडी मारणे — uḍī mārṇe — "to jump".
 
+The word, taken apart.
+उडी मारणे (uḍī mārṇe) is "to strike a jump": uḍī, "a jump", belongs with उडणे, "to fly" (CDIAL 1697), and मारणे comes from Sanskrit mārayati, "kills", whose Marathi form CDIAL glosses "to strike, kill" (CDIAL 10066).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to put out, then the Marathi for to jump
 You'll want to know: बोलावणे.
 बोलावणे — bolāvṇe — "to call over, to invite".
 
+The word, taken apart.
+बोलावणे (bolāvṇe) is the "make" form of बोलणे, "to speak", which comes from a reconstructed bōll-, "speak" (CDIAL 9321).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to jump, then the Marathi for to call ov
 
 You'll want to know: आभार मानणे.
 आभार मानणे — ābhār mānṇe — "to thank".
+
+The word, taken apart.
+आभार is Sanskrit ābhāra, "a load, a burden", a tatsama. मानणे comes from Sanskrit manyate, "thinks, honours" (CDIAL 9857).
 
 What you've built.
 One more word for this chapter.

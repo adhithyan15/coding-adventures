@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "A Little, Enough, Quite a Lot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07bce70c46719fd4",
+  "sourceHash": "fnv1a64:c69ba0f0eb66d165",
   "lessons": [
     {
       "id": "MR-C54-thoda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f514be41161fef4",
+      "sourceHash": "fnv1a64:01c2231051b0b6c5",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eebce7361e39030",
+      "sourceHash": "fnv1a64:462255048d373d7a",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a4f96280c8a776e",
+      "sourceHash": "fnv1a64:01fcdfe25073c291",
       "notice": null,
       "blocks": [
         {
@@ -372,6 +372,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बराच (barāch) is बरा with the emphatic -च. The origin of बरा is not settled: neither CDIAL nor DEDR has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -433,7 +444,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -468,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:819d714ab039928e",
+      "sourceHash": "fnv1a64:6fd701f3409995e5",
       "notice": null,
       "blocks": [
         {
@@ -517,6 +528,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किती goes back to kiyatta, \"how great\", a form CDIAL builds like Sanskrit kiyant, \"how much\" (CDIAL 3167). The origin of मोठा is not settled: CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -576,7 +598,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

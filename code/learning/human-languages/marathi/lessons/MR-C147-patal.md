@@ -14,7 +14,8 @@ romanization: "pātaḷ"
 concept_tag: MR-THINGS147-PATAL
 prerequisites: [MR-C147-rund, MR-C147-arund]
 sounds: []
-roots: []
+roots: [sanskrit-pattrala]
+etymology_hook: "pātaḷ ← Sanskrit pattrala 'leafy; leaf-like, thin', a tadbhava (CDIAL 7736)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C147-arund]
 <!-- hl-knowledge: introduces=[MR-LEX-C147-THINGS147-05]; assesses=[] -->
 
 **पातळ** — *pātaḷ* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पातळ** (*pātaḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pattrala*, "leafy; leaf-like, thin" (CDIAL 7736). It is built on *pattra*, "leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

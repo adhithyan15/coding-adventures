@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a planet, then the Marathi for freedom.
 You'll want to know: नोकरी.
 नोकरी — nokrī — "a job".
 
+The word, taken apart.
+नोकरी (nokrī) is nokar, "servant", with the ending -ī. Nokar is usually traced to Persian naukar, which Persian took from Mongolic nökör, "companion".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for freedom, then the Marathi for a job.
 
 You'll want to know: पदवी.
 पदवी — padvī — "a degree".
+
+The word, taken apart.
+पदवी (padvī) is Sanskrit padavī, "road, path; position", a tatsama built on pada, "step". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a job, then the Marathi for a degree.
 You'll want to know: गृहपाठ.
 गृहपाठ — gṛhapāṭh — "homework".
 
+The word, taken apart.
+गृहपाठ (gṛhapāṭh) is a modern compound of Sanskrit parts: gṛha, "house", and pāṭha, "reading, lesson".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a degree, then the Marathi for homework.
 You'll want to know: शिक्षण.
 शिक्षण — śikṣaṇ — "education".
 
+The word, taken apart.
+शिक्षण (śikṣaṇ) is Sanskrit śikṣaṇa, "teaching, instruction", a tatsama built on śikṣ, "to learn". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for homework, then the Marathi for education
 
 You'll want to know: भावना.
 भावना — bhāvanā — "a feeling".
+
+The word, taken apart.
+भावना (bhāvanā) is Sanskrit bhāvanā, "imagining, feeling", a tatsama built on bhū, "to be". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

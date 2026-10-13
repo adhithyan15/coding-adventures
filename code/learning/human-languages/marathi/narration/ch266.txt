@@ -12,6 +12,9 @@ Before the new one: say the Marathi for advice, then the Marathi for a promise.
 You'll want to know: इंजिन.
 इंजिन — iñjin — "an engine".
 
+The word, taken apart.
+इंजिन (iñjin) is a loan from English engine.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a promise, then the Marathi for an engin
 
 You'll want to know: महामार्ग.
 महामार्ग — mahāmārg — "a highway".
+
+The word, taken apart.
+महामार्ग (mahāmārg) is a modern compound of Sanskrit parts: mahā, "great", and mārga, "track, road" (CDIAL 10071).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an engine, then the Marathi for a highwa
 You'll want to know: दंड.
 दंड — daṇḍ — "a fine".
 
+The word, taken apart.
+दंड (daṇḍ) is Sanskrit daṇḍa, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128). CDIAL thinks the Sanskrit word probably non-Aryan. It lists the inherited Marathi form as dāṁḍ, "stick".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a highway, then the Marathi for a fine.
 You'll want to know: परवाना.
 परवाना — parvānā — "a licence".
 
+The word, taken apart.
+परवाना (parvānā) is a loan, usually traced to Persian parwāna, "an order, a licence".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a fine, then the Marathi for a licence.
 
 You'll want to know: शिरस्त्राण.
 शिरस्त्राण — śirastrāṇ — "a helmet".
+
+The word, taken apart.
+शिरस्त्राण (śirastrāṇ) is Sanskrit śirastrāṇa, "head-guard, helmet", a tatsama: śiras, "head", and trāṇa, "protection".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nivaḍṇūk"
 concept_tag: MR-VASTU179-NIVADNUK
 prerequisites: [MR-C179-nyayadhis, MR-C179-mahapaur]
 sounds: []
-roots: []
+roots: [indo-aryan-nirvarayati]
+etymology_hook: "nivaḍṇūk: built on nivaḍṇe 'to choose, pick', which CDIAL lists under *nirvarayati 'chooses' (CDIAL 7393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C179-mahapaur]
 <!-- hl-knowledge: introduces=[MR-LEX-C179-VASTU179-04]; assesses=[] -->
 
 **निवडणूक** — *nivaḍṇūk* — "an election".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निवडणूक** (*nivaḍṇūk*) is built on Marathi *nivaḍṇẽ*, "to choose, pick", which CDIAL lists under a reconstructed *\*nirvarayati*, "chooses" (CDIAL 7393).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

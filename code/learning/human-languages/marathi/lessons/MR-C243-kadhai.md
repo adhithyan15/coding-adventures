@@ -14,7 +14,8 @@ romanization: "kaḍhaī"
 concept_tag: MR-VASTU243-KADHAI
 prerequisites: [MR-C243-sahal, MR-C243-tava]
 sounds: []
-roots: []
+roots: [sanskrit-kataha]
+etymology_hook: "kaḍhaī ← Sanskrit kaṭāha 'boiler, saucepan with handles', a tadbhava (CDIAL 2638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C243-tava]
 <!-- hl-knowledge: introduces=[MR-LEX-C243-VASTU243-05]; assesses=[] -->
 
 **कढई** — *kaḍhaī* — "a wok".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कढई** (*kaḍhaī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭāha*, "boiler, saucepan with handles" (CDIAL 2638). CDIAL glosses the Marathi word "cauldron for boiling sugarcane juice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "budhvār"
 concept_tag: MR-TIME125-BUDHVAR
 prerequisites: [MR-C124-somvar, MR-C125-mangalvar]
 sounds: []
-roots: []
+roots: [sanskrit-budha, sanskrit-vara-day]
+etymology_hook: "budhvār: Sanskrit budha 'Mercury' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C125-mangalvar]
 <!-- hl-knowledge: introduces=[MR-LEX-C125-TIME125-02]; assesses=[] -->
 
 **बुधवार** — *budhvār* — "Wednesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुधवार** (*budhvār*) is a Sanskrit compound, a tatsama: *budha*, "the wise one", the name of the planet Mercury, and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

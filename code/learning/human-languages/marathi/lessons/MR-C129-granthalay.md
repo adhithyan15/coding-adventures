@@ -14,7 +14,8 @@ romanization: "granthālay"
 concept_tag: MR-LOC129-GRANTHALAY
 prerequisites: [MR-C128-vimantal, MR-C128-rugnalay, MR-C62-labels, MR-C62-pahila-paath]
 sounds: []
-roots: []
+roots: [sanskrit-grantha, sanskrit-alaya]
+etymology_hook: "granthālay: Sanskrit grantha 'book' (CDIAL 4350) + ālaya 'abode'; a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [MR-C128-rugnalay]
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-01]; assesses=[] -->
 
 **ग्रंथालय** — *granthālay* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग्रंथालय** (*granthālay*) is a compound of Sanskrit parts, a tatsama: *grantha*, "knot", later "book" (CDIAL 4350), and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

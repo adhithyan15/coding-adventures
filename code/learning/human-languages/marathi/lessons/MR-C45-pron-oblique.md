@@ -11,9 +11,10 @@ gloss: the oblique of a pronoun — because मी and माझं bend too, an
 concept_tag: MR-GRAMMAR-PRON-OBLIQUE
 prerequisites: [MR-C45-barobar, MR-C03-mi, MR-C02-majhe, MR-C02-tu-tumhi]
 sounds: [halant-conjunct, matra-aa]
-roots: []
+roots: [ma, persian-barabar]
+etymology_hook: "mājhyā-: oblique of mājhā, from the first-person base ma- (CDIAL 9691); barobar usually traced to Persian"
 duration:
-  max_seconds: 220
+  max_seconds: 237
 requires:
   knowledge: [MR-POSTP-BAROBAR, MR-LEX-MI, MR-LEX-MAJHE, MR-LEX-TU-TUMHI, MR-GRAMMAR-OBLIQUE, MR-LEX-DAAVA]
 introduces:
@@ -60,6 +61,11 @@ different, and the starting form is the possessive.
 That is the rule worth holding, because it saves you from guessing every time:
 **to put a pronoun in front of a postposition, take its possessive and bend
 that.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माझ्या-** is the oblique of **माझा**, which CDIAL lists under the Sanskrit first-person base *ma-* (CDIAL 9691). **बरोबर** is a loan, usually traced to Persian *barābar*, "equal, level".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-PRON-OBLIQUE, MR-POSTP-BAROBAR, MR-LEX-MAJHE, MR-LEX-DAAVA] -->

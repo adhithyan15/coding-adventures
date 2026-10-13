@@ -14,7 +14,8 @@ romanization: "vidhvā"
 concept_tag: MR-VASTU181-VIDHVA
 prerequisites: [MR-C181-navardev, MR-C181-navri]
 sounds: []
-roots: []
+roots: [sanskrit-vidhava]
+etymology_hook: "vidhvā ← Sanskrit vidhavā 'widow', a tatsama (CDIAL 11752)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C181-navri]
 <!-- hl-knowledge: introduces=[MR-LEX-C181-VASTU181-04]; assesses=[] -->
 
 **विधवा** — *vidhvā* — "a widow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विधवा** (*vidhvā*) is Sanskrit *vidhavā*, "widow", taken over whole as a learned loan, a tatsama (CDIAL 11752).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

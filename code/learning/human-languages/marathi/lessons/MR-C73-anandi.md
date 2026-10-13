@@ -14,7 +14,8 @@ romanization: "ānandī"
 concept_tag: MR-HEALTH73-ANANDI
 prerequisites: [MR-C73-tahan, MR-C73-bhuk]
 sounds: []
-roots: []
+roots: [ananda-sanskrit]
+etymology_hook: "ānandī: Sanskrit ānandin 'happy', from ānanda 'happiness', a tatsama (CDIAL 1172)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C73-bhuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C73-HEALTH73-05]; assesses=[] -->
 
 **आनंदी** — *ānandī* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आनंदी** (*ānandī*) is Sanskrit *ānandin*, "happy", a tatsama built on *ānanda*, "happiness" (CDIAL 1172).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

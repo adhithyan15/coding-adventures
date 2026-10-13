@@ -14,7 +14,8 @@ romanization: "mūtrapiṇḍ"
 concept_tag: MR-AAROGYA169-MUTRAPIND
 prerequisites: [MR-C169-phuphphus, MR-C169-yakrt]
 sounds: []
-roots: []
+roots: [sanskrit-mutra, sanskrit-pinda]
+etymology_hook: "mūtrapiṇḍ: Sanskrit mūtra 'urine' + piṇḍa 'lump, ball'; a modern compound of Sanskrit parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C169-yakrt]
 <!-- hl-knowledge: introduces=[MR-LEX-C169-AAROGYA169-05]; assesses=[] -->
 
 **मूत्रपिंड** — *mūtrapiṇḍ* — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूत्रपिंड** (*mūtrapiṇḍ*) is a modern compound of Sanskrit parts: *mūtra*, "urine", and *piṇḍa*, "lump, ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

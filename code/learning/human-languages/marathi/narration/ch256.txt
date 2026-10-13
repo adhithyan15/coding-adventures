@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to pray, then the Marathi for to recomme
 You'll want to know: उसने घेणे.
 उसने घेणे — usne gheṇe — "to borrow".
 
+The word, taken apart.
+The origin of उसने, "on loan", is not settled: neither CDIAL nor DEDR has an entry for it. घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to recommend, then the Marathi for to bo
 
 You'll want to know: जपणे.
 जपणे — japṇe — "to look after, to cherish".
+
+The word, taken apart.
+The origin of जपणे (japṇe) is not settled. CDIAL has no entry for it in this sense.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to borrow, then the Marathi for to look 
 You'll want to know: व्यक्त करणे.
 व्यक्त करणे — vyakta karṇe — "to express".
 
+The word, taken apart.
+व्यक्त is Sanskrit vyakta, "manifest, apparent", a tatsama. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to look after, then the Marathi for to e
 You'll want to know: बारीक होणे.
 बारीक होणे — bārīk hoṇe — "to get thin".
 
+The word, taken apart.
+बारीक is usually traced to Persian bārīk, "thin, fine". होणे comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to express, then the Marathi for to get 
 
 You'll want to know: खाऊ घालणे.
 खाऊ घालणे — khāū ghālṇe — "to feed".
+
+The word, taken apart.
+खाऊ, "food", comes from Sanskrit khāduka, "biting" (CDIAL 3871). घालणे, "to put", comes from a reconstructed ghalyati, "pours" (CDIAL 4457).
 
 What you've built.
 One more word for this chapter.

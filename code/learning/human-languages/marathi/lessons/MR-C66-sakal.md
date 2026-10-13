@@ -12,8 +12,9 @@ concept_tag: TIME-MORNING
 prerequisites: [MR-C38-kadhi, MR-C04-udya-bhetu]
 sounds: [retroflex-la, matra-ii]
 roots: []
+etymology_hook: "sakāḷ 'morning': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
-  max_seconds: 210
+  max_seconds: 228
 requires:
   knowledge: [MR-QUESTION-KADHI, MR-LEX-UDYA, MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB]
 introduces:

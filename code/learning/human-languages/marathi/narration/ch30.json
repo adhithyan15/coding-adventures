@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Two Sentences, One Breath",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4be44e4d25bfa5e1",
+  "sourceHash": "fnv1a64:2b6af6e8319bf2dd",
   "lessons": [
     {
       "id": "MR-C30-aani",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc7de9124f049ef6",
+      "sourceHash": "fnv1a64:b9bc65770a60d7b8",
       "notice": null,
       "blocks": [
         {
@@ -207,6 +207,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किंवा (kiṁvā) is Sanskrit kiṁ vā, \"or whether\", kept whole: CDIAL lists that phrase under kim, \"what\", beside Marathi kĩ, \"or\" (CDIAL 3164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -267,7 +278,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -302,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45e81abbe25c47df",
+      "sourceHash": "fnv1a64:e3fa0b5d89749aa2",
       "notice": null,
       "blocks": [
         {
@@ -347,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पण (paṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from punar, \"back, again, moreover, however\" (CDIAL 8273)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -407,7 +429,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

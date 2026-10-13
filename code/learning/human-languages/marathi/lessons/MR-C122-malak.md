@@ -14,7 +14,8 @@ romanization: "mālak"
 concept_tag: MR-CAN122-MALAK
 prerequisites: [MR-C121-adhikar, MR-C122-sadhan]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālak ← Arabic mālik 'owner', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C122-sadhan]
 <!-- hl-knowledge: introduces=[MR-LEX-C122-CAN122-02]; assesses=[] -->
 
 **मालक** — *mālak* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मालक** (*mālak*) is a loan from Arabic *mālik*, "owner", which reached Marathi through Persian. Its Arabic root is *m-l-k* (Lane). Marathi says *mālak*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

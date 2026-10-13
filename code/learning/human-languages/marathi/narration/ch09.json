@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:691054fb1a1b51d6",
+  "sourceHash": "fnv1a64:3d6893e7fa29bd5b",
   "lessons": [
     {
       "id": "MR-C02-naav",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a57d4393416db623",
+      "sourceHash": "fnv1a64:764adf8ff5dbd20d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:456cc7be7d690145",
+      "sourceHash": "fnv1a64:116830bb1cab4762",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c42f00bf175a11d5",
+      "sourceHash": "fnv1a64:0edabd060bdfee65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -316,7 +316,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आहे (āhe, \"is\") descends from Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi."
+              "text": "आहे (āhe, \"is\") is listed by CDIAL under Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"), though Bloch gives it another origin (CDIAL 977). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family."
             }
           ]
         },
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c921ac70e91b947d",
+      "sourceHash": "fnv1a64:47da8307e76c9c14",
       "notice": null,
       "blocks": [
         {
@@ -443,6 +443,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each word is inherited. CDIAL lists माझं (mājhaṁ) under the Sanskrit first-person base ma- (CDIAL 9691) and नाव (nāv) under Sanskrit nāman, \"name\" (CDIAL 7067). आहे (āhe) it lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -453,7 +464,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -484,7 +495,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -515,7 +526,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72204b6f78589b31",
+      "sourceHash": "fnv1a64:2a5ddfa5d1493d05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -648,7 +659,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:122744e37c4c8b59",
+      "sourceHash": "fnv1a64:91896362a80de90c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -773,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f1e3ee62732790d",
+      "sourceHash": "fnv1a64:4fad53280175252e",
       "notice": null,
       "blocks": [
         {
@@ -826,6 +837,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each word is inherited. CDIAL lists तुमचं with तुम्ही under Sanskrit yuṣmad-, \"you\" (plural), whose t- comes from tvam, \"thou\" (CDIAL 10511); नाव (nāv) under nāman, \"name\" (CDIAL 7067); and काय (kāy) under kādṛk, its reshaping of Sanskrit kīdṛk, \"of what sort\" (CDIAL 3196)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -836,7 +858,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -867,7 +889,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -898,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6e3d32b94fc62ae",
+      "sourceHash": "fnv1a64:d414df081ff47e8d",
       "notice": null,
       "blocks": [
         {

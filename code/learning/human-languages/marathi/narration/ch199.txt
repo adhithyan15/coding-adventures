@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to vote, then the Marathi for to welcome
 You'll want to know: चिकटवणे.
 चिकटवणे — cikaṭavṇe — "to stick, to glue".
 
+The word, taken apart.
+The origin of चिकटवणे (cikaṭavṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to welcome, then the Marathi for to stic
 
 You'll want to know: गाठणे.
 गाठणे — gāṭhṇe — "to reach, to catch up with".
+
+The word, taken apart.
+The origin of गाठणे (gāṭhṇe) is not settled. CDIAL has no entry for it in this sense.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to stick, then the Marathi for to reach.
 You'll want to know: भेट देणे.
 भेट देणे — bheṭ deṇe — "to visit".
 
+The word, taken apart.
+भेट, "a meeting, a present", CDIAL lists under a reconstructed bhiṭ, "meet, throng", in the form bhēṭṭ- (CDIAL 9490). देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to reach, then the Marathi for to visit.
 You'll want to know: विणणे.
 विणणे — viṇṇe — "to knit, to weave".
 
+The word, taken apart.
+विणणे (viṇṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from vināti, "weaves", a form CDIAL reconstructs from its descendants (CDIAL 11773). Bloch derived it instead from Sanskrit vayana, "weaving".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to visit, then the Marathi for to knit.
 
 You'll want to know: कापणी करणे.
 कापणी करणे — kāpṇī karṇe — "to harvest".
+
+The word, taken apart.
+कापणी, "reaping", comes from Sanskrit kalpana, "cutting" (CDIAL 2943). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

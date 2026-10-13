@@ -11,7 +11,8 @@ gloss: I'm well, thank you (mī barā āhe)
 concept_tag: WORD-WELL
 prerequisites: [MR-C03-mi, MR-C01-baram, MR-C01-dhanyavad]
 sounds: []
-roots: [asti]
+roots: [asti, ma]
+etymology_hook: "mī ← mayā 'by me' (CDIAL 9691); barā: origin not settled; āhe listed under asti (CDIAL 977)"
 reviews_of: [MR-C01-baram, MR-C01-dhanyavad, MR-C03-mi]
 duration:
   max_seconds: 220
@@ -51,6 +52,11 @@ Back in Chapter 4 you met **बरं** (*baraṁ*) standing alone as "okay/fine
 - **बरा** (*barā*) — a man is well
 - **बरी** (*barī*) — a woman is well
 - **बरं** (*baraṁ*) — the bare "okay" (neuter)
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मी** comes from Sanskrit *mayā*, "by me", on the first-person base *ma-* (CDIAL 9691). **आहे** CDIAL lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977). The origin of **बरा** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## Grammar Lens: the copula changes with the subject
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-COPULA-PERSON]; assesses=[] -->

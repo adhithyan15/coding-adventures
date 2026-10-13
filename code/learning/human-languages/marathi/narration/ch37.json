@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Who, and How Many",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c8ad87715f630f6a",
+  "sourceHash": "fnv1a64:c7dbc78d28ac4fe2",
   "lessons": [
     {
       "id": "MR-C37-kon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deb2802a2c75816f",
+      "sourceHash": "fnv1a64:01f8c72e69887b44",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b096a1e6a62b8d5f",
+      "sourceHash": "fnv1a64:f09ce4cdac81c893",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "किती (kitī) is Sanskrit कति (kati, \"how many\") barely changed. Latin quot and English how many carry the same ancient stem."
+              "text": "किती (kitī) goes back to kiyatta, \"how great\", a form CDIAL builds like Sanskrit kiyant, \"how much\" (CDIAL 3167). Latin quot and English how many carry the same ancient stem."
             },
             {
               "kind": "speech",

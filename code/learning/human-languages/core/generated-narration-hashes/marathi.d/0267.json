@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 267,
-  "sourceHash": "fnv1a64:319399747191a7e6",
+  "sourceHash": "fnv1a64:ef94fe622070c93b",
   "lessonIds": [
     "MR-C267-jvalamukhi",
     "MR-C267-pathar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch267.txt",
   "json": "marathi/narration/ch267.json",
-  "textHash": "fnv1a64:6f1517ca8bb7808a",
-  "jsonHash": "fnv1a64:e6f74b8c21fedd17",
+  "textHash": "fnv1a64:71d87238491611e2",
+  "jsonHash": "fnv1a64:932af3f22afa73f8",
   "findings": []
 }

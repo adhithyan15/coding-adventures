@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a dog, then the Marathi for a cat.
 You'll want to know: घोडा.
 घोडा — ghoḍā — "a horse".
 
+The word, taken apart.
+घोडा (ghoḍā) is a tadbhava of Sanskrit ghoṭa, "horse" (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a cat, then the Marathi for a horse.
 
 You'll want to know: गाय.
 गाय — gāy — "a cow".
+
+The word, taken apart.
+गाय (gāy) is inherited. CDIAL lists Marathi gāī, "cow", under Sanskrit gāvī, "cow", a form of go (CDIAL 4147).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a horse, then the Marathi for a cow.
 You'll want to know: शेळी.
 शेळी — sheḷī — "a goat".
 
+The word, taken apart.
+शेळी (sheḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chagala, "goat" (CDIAL 4963).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a cow, then the Marathi for a goat.
 You'll want to know: मेंढी.
 मेंढी — meṇḍhī — "a sheep".
 
+The word, taken apart.
+मेंढी (meṇḍhī) is the feminine of Marathi meṇḍhā, "ram", which CDIAL lists under Sanskrit meṇḍha, "ram", a word from the old word-lists (CDIAL 10310). CDIAL takes it as a loan-word, probably of Austroasiatic origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a goat, then the Marathi for a sheep.
 
 You'll want to know: पक्षी.
 पक्षी — pakṣī — "a bird".
+
+The word, taken apart.
+पक्षी (pakṣī) is Sanskrit pakṣin, "winged; bird", taken over whole as a learned loan, a tatsama (CDIAL 7636). It is built on pakṣa, "wing".
 
 What you've built.
 One more word for this chapter.

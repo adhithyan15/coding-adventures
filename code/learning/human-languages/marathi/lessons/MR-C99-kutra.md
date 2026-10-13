@@ -14,7 +14,8 @@ romanization: "kutrā"
 concept_tag: MR-NATURE99-KUTRA
 prerequisites: [MR-C99-vara, MR-C99-akash]
 sounds: []
-roots: []
+roots: [indo-aryan-kuttira]
+etymology_hook: "kutrā ← *kuttira 'dog', a reconstructed form; a tadbhava (CDIAL 3277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C99-akash]
 <!-- hl-knowledge: introduces=[MR-LEX-C99-NATURE99-04]; assesses=[] -->
 
 **कुत्रा** — *kutrā* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुत्रा** (*kutrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuttira*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word *\*kutta*, "dog", behind it as imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

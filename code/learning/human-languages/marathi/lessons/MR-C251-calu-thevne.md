@@ -14,7 +14,8 @@ romanization: "cālū ṭhevṇe"
 concept_tag: MR-VERB-CALU-THEVNE
 prerequisites: [MR-C250-sangh, MR-C251-prayatna-karne]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati]
+etymology_hook: "cālū: from cālṇe 'to move, walk' ← *calyati 'goes' (CDIAL 4721); ṭhevṇe is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C251-prayatna-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C251-ACT251-02]; assesses=[] -->
 
 **चालू ठेवणे** — *cālū ṭhevṇe* — "to keep going, to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चालू**, "going on", is built on *cālṇẽ*, "to move, walk", which comes from a reconstructed *\*calyati*, "goes" (CDIAL 4721). The origin of **ठेवणे**, "to keep", is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

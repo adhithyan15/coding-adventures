@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a fever, then the Marathi for a clinic.
 You'll want to know: आजारी.
 आजारी — ājārī — "ill, sick".
 
+The word, taken apart.
+आजारी (ājārī) is a loan, usually traced to Persian āzār, "harm, pain, illness". Marathi adds -ī: "having an illness".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a clinic, then the Marathi for ill.
 
 You'll want to know: वेदना.
 वेदना — vedanā — "pain".
+
+The word, taken apart.
+वेदना (vedanā) is Sanskrit vedanā, "feeling; pain", taken over whole as a learned loan, a tatsama (CDIAL 12106). CDIAL lists the inherited Marathi form as veṇ, "pain, esp. of birth".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for ill, then the Marathi for pain.
 You'll want to know: तहान.
 तहान — tahān — "thirst".
 
+The word, taken apart.
+तहान (tahān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tṛṣṇā, "thirst" (CDIAL 5941). The same root gives English thirst.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for pain, then the Marathi for thirst.
 You'll want to know: भूक.
 भूक — bhūk — "hunger".
 
+The word, taken apart.
+भूक (bhūk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣā, "the wish to eat, hunger" (CDIAL 9286). It is the "wanting" form of bhuj, "to eat".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for thirst, then the Marathi for hunger.
 
 You'll want to know: आनंदी.
 आनंदी — ānandī — "happy".
+
+The word, taken apart.
+आनंदी (ānandī) is Sanskrit ānandin, "happy", a tatsama built on ānanda, "happiness" (CDIAL 1172).
 
 What you've built.
 One more word for this chapter.

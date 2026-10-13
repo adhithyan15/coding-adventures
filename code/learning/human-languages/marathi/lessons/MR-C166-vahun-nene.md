@@ -14,7 +14,8 @@ romanization: "vāhūn neṇe"
 concept_tag: MR-VERB-VAHUN-NENE
 prerequisites: [MR-C166-gappa-basne, MR-C166-ghabarne]
 sounds: []
-roots: []
+roots: [sanskrit-vahayati, sanskrit-nayati]
+etymology_hook: "vāhūn: from vāhṇe 'to carry' ← vāhayati 'drives' (CDIAL 11612); neṇe ← nayati 'leads' (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C166-ghabarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C166-ACT166-04]; assesses=[] -->
 
 **वाहून नेणे** — *vāhūn neṇe* — "to carry, to transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाहून** is "having carried", from Marathi *vāhṇẽ*, "to carry", which CDIAL lists under Sanskrit *vāhayati*, "drives (a chariot)" (CDIAL 11612). **नेणे** comes from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

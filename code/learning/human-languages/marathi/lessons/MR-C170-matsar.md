@@ -14,7 +14,8 @@ romanization: "matsar"
 concept_tag: MR-AAROGYA170-MATSAR
 prerequisites: [MR-C169-mutrapind, MR-C170-laj]
 sounds: []
-roots: []
+roots: [sanskrit-matsara]
+etymology_hook: "matsar ← Sanskrit matsara 'exhilarating; jealous', a tatsama (CDIAL 9756)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C170-laj]
 <!-- hl-knowledge: introduces=[MR-LEX-C170-AAROGYA170-02]; assesses=[] -->
 
 **मत्सर** — *matsar* — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मत्सर** (*matsar*) is Sanskrit *matsara*, "exhilarating; jealous", taken over whole as a learned loan, a tatsama (CDIAL 9756).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

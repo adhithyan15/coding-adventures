@@ -14,7 +14,8 @@ romanization: "chātī"
 concept_tag: MR-THINGS146-CHATI
 prerequisites: [MR-C146-path, MR-C146-kambar]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chātī: as Hindi chātī ← *chātti 'chest, breast' (CDIAL 5014); CDIAL lists no Marathi form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C146-kambar]
 <!-- hl-knowledge: introduces=[MR-LEX-C146-THINGS146-05]; assesses=[] -->
 
 **छाती** — *chātī* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छाती** (*chātī*) matches Hindi *chātī*, which CDIAL traces to a reconstructed *\*chātti*, "chest, breast" (CDIAL 5014). CDIAL lists no Marathi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

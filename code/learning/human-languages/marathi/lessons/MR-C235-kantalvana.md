@@ -15,6 +15,7 @@ concept_tag: MR-GUN235-KANTALVANA
 prerequisites: [MR-C235-bhayankar, MR-C235-ascaryakarak]
 sounds: []
 roots: []
+etymology_hook: "kaṇṭāḷvāṇā: kaṇṭāḷā 'boredom' + -vāṇā; the origin of kaṇṭāḷā is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C235-ascaryakarak]
 <!-- hl-knowledge: introduces=[MR-LEX-C235-GUN235-04]; assesses=[] -->
 
 **कंटाळवाणा** — *kaṇṭāḷvāṇā* — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंटाळवाणा** (*kaṇṭāḷvāṇā*) is **कंटाळा**, "boredom", with the ending *-vāṇā*, "causing". The origin of **कंटाळा** is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,10 +11,10 @@ gloss: "seventh — and the first sign that the dictionaries never bothered to l
 concept_tag: MR-ORDINAL-SEVENTH
 prerequisites: [MR-C61-sahava, MR-C60-pahila, MR-C57-chauda, MR-C42-khaali]
 sounds: []
-roots: []
-etymology_hook: "Molesworth's dictionary has no entry for सातवा at all -- the nearest headword on the page is सातवार, a coast-term for the seventh wave"
+roots: [sanskrit-saptama]
+etymology_hook: "sātvā ← Sanskrit saptama 'seventh', a tadbhava (CDIAL 13151)"
 duration:
-  max_seconds: 210
+  max_seconds: 239
 requires:
   knowledge: [MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-PAHILA, MR-LEX-SAAT, MR-LEX-CHAUDA, MR-POSTP-KHAALI]
 introduces:
@@ -54,6 +54,11 @@ reviews_of: [MR-C61-sahava, MR-C60-pahila, MR-C57-chauda, MR-C42-khaali]
 One small thing in the sound. **सहा** ends in a vowel, so **सहावा** comes out in
 three beats — *sa-hā-vā*. **सात** ends in a consonant, so **सातवा** comes out in
 two — *sāt-vā*. The ending did not change; the number it landed on did.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **सातवा** (*sātvā*) under Sanskrit *saptama*, "seventh" (CDIAL 13151): the **-वा** is what the old ordinal ending *-ma* became.
 
 ## Grammar Lens: the dictionaries agree with you
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SATVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-PAHILA] -->

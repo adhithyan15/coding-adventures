@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to be defeated, then the Marathi for to 
 You'll want to know: आरोग्य.
 आरोग्य — ārogya — "health".
 
+The word, taken apart.
+आरोग्य (ārogya) is Sanskrit ārogya, "health", taken over whole as a learned loan, a tatsama (CDIAL 1330). It is built on aroga, "free from disease".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to take cover, then the Marathi for heal
 
 You'll want to know: मेंदू.
 मेंदू — mendū — "the brain".
+
+The word, taken apart.
+The origin of मेंदू (mendū) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for health, then the Marathi for the brain.
 You'll want to know: फुफ्फुस.
 फुफ्फुस — phuphphus — "a lung".
 
+The word, taken apart.
+फुफ्फुस (phuphphus) is Sanskrit phupphusa, "lung", taken over whole, a tatsama. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for the brain, then the Marathi for a lung.
 You'll want to know: यकृत.
 यकृत — yakṛt — "the liver".
 
+The word, taken apart.
+यकृत (yakṛt) is Sanskrit yakṛt, "liver", taken over whole as a learned loan, a tatsama (CDIAL 10394). The same ancient word as Latin iecur, "liver".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a lung, then the Marathi for the liver.
 
 You'll want to know: मूत्रपिंड.
 मूत्रपिंड — mūtrapiṇḍ — "a kidney".
+
+The word, taken apart.
+मूत्रपिंड (mūtrapiṇḍ) is a modern compound of Sanskrit parts: mūtra, "urine", and piṇḍa, "lump, ball".
 
 What you've built.
 One more word for this chapter.

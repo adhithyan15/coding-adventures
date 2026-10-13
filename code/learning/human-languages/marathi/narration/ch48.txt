@@ -18,6 +18,9 @@ That is a direction rather than a description, and it is the reason chapter fort
 It works on people too: मित्राकडे is toward my friend, or at my friend's place. Marathi does not distinguish going to somebody and going to where they are; the side of a person and their house are the same idea.
 मी मित्राकडे जातो. — mī mitrākaḍe jāto. — I go to my friend's.
 
+The word, taken apart.
+-कडे (-kaḍe) matches Marathi kaḍ, "side, waist", which CDIAL lists under Sanskrit kaṭi, "hip". CDIAL takes that word as rather from Dravidian, comparing Kannada kaḍe, "side, end" (CDIAL 2639), and DEDR compares Old Marathi kaḍe, "edge, side" (DEDR 1109).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ujvīkaḍe, ḍāvīkaḍe — right, left]
@@ -49,6 +52,9 @@ Two things follow, and both are worth noticing now rather than discovering later
 The thing possessed is the SUBJECT, so आहे agrees with it and not with you. And to deny it you negate that same verb, exactly as chapter thirty-two taught:
 माझ्याकडे पाणी नाही. — mājhyākaḍe pāṇī nāhī. — I don't have water.
 Swap the person and nothing else changes: मित्राकडे पाणी आहे, my friend has water.
+
+The word, taken apart.
+माझ्या- goes back to the Sanskrit first-person base ma- (CDIAL 9691), and -कडे (-kaḍe) matches Marathi kaḍ, "side", which CDIAL lists under kaṭi, "hip", as rather from Dravidian (CDIAL 2639). आहे CDIAL lists under asti, "is", though Bloch gives it another origin (CDIAL 977).
 
 Guided Practice.
 [pause 1 second]

@@ -11,9 +11,10 @@ gloss: the object marker -ला — put on a person, left off a thing, and Mara
 concept_tag: MR-GRAMMAR-OBJECT-LAA
 prerequisites: [MR-R46-from, MR-C09-avadne, MR-C07-pahne]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-mitra]
+etymology_hook: "mitrālā: mitra is Sanskrit mitra 'friend' (CDIAL 10124); the ending -lā has no CDIAL entry"
 duration:
-  max_seconds: 230
+  max_seconds: 232
 requires:
   knowledge: [MR-QUESTION-KUTHUN, MR-POSTP-PAASUN, MR-POSTP-BAROBAR, MR-LEX-MITRA, MR-GRAMMAR-DATIVE-LIKING, MR-POSTP-MADHYE, MR-LEX-PINE, MR-ETYMON-PINE-SAME-ROOT, MR-POSTP-NE-INSTR, MR-LEX-PAHNE, MR-LEX-PAANI, MR-GRAMMAR-OBLIQUE]
 introduces:
@@ -63,6 +64,11 @@ it on a person is a mistake rather than a shade.
 The stem is the usual one: **मित्र → मित्रा-**, then **-ला**. And now the old
 **मला** makes sense: it is **मी** through its oblique, with this same **-ला**
 on the end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मित्र** is Sanskrit *mitra*, "friend", a tatsama (CDIAL 10124). The history of the ending **-ला** is not settled: CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBJECT-LAA, MR-LEX-MITRA, MR-LEX-PAANI, MR-POSTP-BAROBAR, MR-POSTP-NE-INSTR, MR-POSTP-MADHYE, MR-LEX-PINE, MR-ETYMON-PINE-SAME-ROOT] -->

@@ -15,6 +15,7 @@ concept_tag: MR-VERB-JAPNE
 prerequisites: [MR-C255-sipharas-karne, MR-C256-usne-ghene]
 sounds: []
 roots: []
+etymology_hook: "japṇe 'to cherish': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C256-usne-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C256-ACT256-02]; assesses=[] -->
 
 **जपणे** — *japṇe* — "to look after, to cherish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **जपणे** (*japṇe*) is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

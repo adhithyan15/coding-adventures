@@ -14,7 +14,8 @@ romanization: "śikṣaṇ"
 concept_tag: MR-VASTU247-SIKSAN
 prerequisites: [MR-C247-padvi, MR-C247-grhapath]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "śikṣaṇ: Sanskrit śikṣaṇa 'teaching', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C247-grhapath]
 <!-- hl-knowledge: introduces=[MR-LEX-C247-VASTU247-04]; assesses=[] -->
 
 **शिक्षण** — *śikṣaṇ* — "education".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिक्षण** (*śikṣaṇ*) is Sanskrit *śikṣaṇa*, "teaching, instruction", a tatsama built on *śikṣ*, "to learn". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍās"
 concept_tag: MR-THINGS144-DAS
 prerequisites: [MR-C144-gadhav, MR-C144-bail]
 sounds: []
-roots: []
+roots: [sanskrit-damsha]
+etymology_hook: "ḍās ← Sanskrit daṁśa 'stinging insect', a tadbhava (CDIAL 6110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C144-bail]
 <!-- hl-knowledge: introduces=[MR-LEX-C144-THINGS144-04]; assesses=[] -->
 
 **डास** — *ḍās* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डास** (*ḍās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *daṁśa*, "stinging insect" (CDIAL 6110). It is built on *daṁś*, "to bite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

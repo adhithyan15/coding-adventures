@@ -12,6 +12,9 @@ Before the new one: say the Marathi for unpleasant, then the Marathi for enthusi
 You'll want to know: विचित्र.
 विचित्र — vicitra — "strange".
 
+The word, taken apart.
+विचित्र (vicitra) is Sanskrit vicitra, "variegated, wonderful, strange", a tatsama built on citra, "bright, variegated" (CDIAL 4803).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for enthusiastic, then the Marathi for stran
 
 You'll want to know: वेगळा / वेगळी.
 वेगळा / वेगळी — vegḷā / vegḷī — "different".
+
+The word, taken apart.
+वेगळा (vegḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from viyagna, "separate", a form CDIAL reconstructs from its descendants (CDIAL 11826). CDIAL notes the added -la- of the Marathi form.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for strange, then the Marathi for different.
 You'll want to know: सारखा / सारखी.
 सारखा / सारखी — sārkhā / sārkhī — "similar, alike".
 
+The word, taken apart.
+सारखा (sārkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sadṛkṣa, "like" (CDIAL 13119). It is sa-, "same", and dṛś, "to see".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for different, then the Marathi for similar.
 You'll want to know: योग्य.
 योग्य — yogya — "proper, right".
 
+The word, taken apart.
+योग्य (yogya) is Sanskrit yogya, "fit for yoking; fit, proper", taken over whole as a learned loan, a tatsama (CDIAL 10528). It is built on yoga, "yoking".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for similar, then the Marathi for proper.
 
 You'll want to know: अयोग्य.
 अयोग्य — ayogya — "wrong, improper".
+
+The word, taken apart.
+अयोग्य (ayogya) is Sanskrit ayogya, "unfit", a tatsama: a-, "not", and yogya, "fit, proper" (CDIAL 10528).
 
 What you've built.
 One more word for this chapter.

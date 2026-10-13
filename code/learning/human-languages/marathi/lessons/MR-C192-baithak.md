@@ -14,7 +14,8 @@ romanization: "baiṭhak"
 concept_tag: MR-KAAM192-BAITHAK
 prerequisites: [MR-C192-kampani, MR-C192-sahakari]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "baiṭhak: as Hindi baiṭhak, the noun of baiṭhnā 'to sit', from upaviśati 'sits down' (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C192-sahakari]
 <!-- hl-knowledge: introduces=[MR-LEX-C192-KAAM192-03]; assesses=[] -->
 
 **बैठक** — *baiṭhak* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैठक** (*baiṭhak*) matches Hindi *baiṭhak*, "a sitting", the noun of *baiṭhnā*, "to sit", which CDIAL lists, like **बसणे**, under Sanskrit *upaviśati*, "sits down" (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

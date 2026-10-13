@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 235,
-  "sourceHash": "fnv1a64:936d467f92a9a561",
+  "sourceHash": "fnv1a64:3b98317ab8c753b3",
   "lessonIds": [
     "MR-C235-surekh",
     "MR-C235-bhayankar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch235.txt",
   "json": "marathi/narration/ch235.json",
-  "textHash": "fnv1a64:56bc2618ee62d69e",
-  "jsonHash": "fnv1a64:72b0090f408ceae6",
+  "textHash": "fnv1a64:2495bce526a41e4f",
+  "jsonHash": "fnv1a64:0e7b93cb330f99da",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vyāyāmśāḷā"
 concept_tag: MR-VASTU185-VYAYAMSALA
 prerequisites: [MR-C184-paryavaran, MR-C184-pradusan]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama, sanskrit-shala]
+etymology_hook: "vyāyāmśāḷā: Sanskrit vyāyāma 'exercise' + śālā 'hall' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C184-pradusan]
 <!-- hl-knowledge: introduces=[MR-LEX-C185-VASTU185-01]; assesses=[] -->
 
 **व्यायामशाळा** — *vyāyāmśāḷā* — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यायामशाळा** (*vyāyāmśāḷā*) is a compound of Sanskrit parts: *vyāyāma*, "exertion, exercise", and *śālā*, "hall" (CDIAL 12414), with Marathi **ळ**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

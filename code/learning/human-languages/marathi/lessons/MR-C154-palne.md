@@ -14,7 +14,8 @@ romanization: "paḷṇe"
 concept_tag: MR-VERB-PALNE
 prerequisites: [MR-C154-paratne, MR-C154-nighne]
 sounds: []
-roots: []
+roots: [sanskrit-palayate]
+etymology_hook: "paḷṇe ← Sanskrit palāyate 'flees', a tadbhava (CDIAL 7955)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C154-nighne]
 <!-- hl-knowledge: introduces=[MR-LEX-C154-ACT154-03]; assesses=[] -->
 
 **पळणे** — *paḷṇe* — "to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पळणे** (*paḷṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *palāyate*, "flees" (CDIAL 7955).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

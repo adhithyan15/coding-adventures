@@ -14,7 +14,8 @@ romanization: "poḷī"
 concept_tag: MR-THINGS136-POLI
 prerequisites: [MR-C136-kot, MR-C136-svetar]
 sounds: []
-roots: []
+roots: [sanskrit-pauli]
+etymology_hook: "poḷī ← Sanskrit pauli 'a cake of scorched grain and ghee', a tadbhava (CDIAL 8423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C136-svetar]
 <!-- hl-knowledge: introduces=[MR-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **पोळी** — *poḷī* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोळी** (*poḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauli*, "a cake of scorched grain and ghee" (CDIAL 8423). CDIAL glosses the Marathi word "wheaten cake", and suggests, with a "perhaps", a link with Prakrit *paülaï*, "cooks".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

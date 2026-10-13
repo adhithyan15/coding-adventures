@@ -14,7 +14,8 @@ romanization: "pivḷā"
 concept_tag: MR-ADJ107-PIVLA
 prerequisites: [MR-C107-khare, MR-C107-hirva]
 sounds: []
-roots: []
+roots: [indo-aryan-pivala]
+etymology_hook: "pivḷā ← *pīvala, a form CDIAL sets beside Sanskrit pītala 'yellow' (CDIAL 8233)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C107-hirva]
 <!-- hl-knowledge: introduces=[MR-LEX-C107-ADJ107-03]; assesses=[] -->
 
 **पिवळा** — *pivḷā* — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पिवळा** (*pivḷā*) comes from *\*pīvala*, "yellow", one of the forms CDIAL reconstructs beside Sanskrit *pītala*, "yellow", built on *pīta*, "yellow" (CDIAL 8233).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

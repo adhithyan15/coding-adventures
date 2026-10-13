@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 107,
-  "sourceHash": "fnv1a64:17132e435e5e35a4",
+  "sourceHash": "fnv1a64:68c2a016972a614e",
   "lessonIds": [
     "MR-C107-khare",
     "MR-C107-hirva",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch107.txt",
   "json": "marathi/narration/ch107.json",
-  "textHash": "fnv1a64:4357915b6d86944f",
-  "jsonHash": "fnv1a64:5862660b50fc16f5",
+  "textHash": "fnv1a64:de04017a84dc5f37",
+  "jsonHash": "fnv1a64:7e4aa4c32989ba1d",
   "findings": []
 }

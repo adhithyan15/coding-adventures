@@ -14,7 +14,8 @@ romanization: "vaimānik"
 concept_tag: MR-VASTU238-VAIMANIK
 prerequisites: [MR-C237-sanketsthal, MR-C237-kalphalak]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vaimānik: Sanskrit vaimānika 'riding in a celestial car', from vimāna (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C237-kalphalak]
 <!-- hl-knowledge: introduces=[MR-LEX-C238-VASTU238-01]; assesses=[] -->
 
 **वैमानिक** — *vaimānik* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वैमानिक** (*vaimānik*) is Sanskrit *vaimānika*, "one who rides a celestial car", a tatsama built on *vimāna*, "car of the gods" (CDIAL 11823), now "aeroplane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

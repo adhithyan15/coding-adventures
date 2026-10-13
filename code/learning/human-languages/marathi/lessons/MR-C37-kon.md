@@ -11,9 +11,10 @@ gloss: who — the asking word for a person, and the third member of a family yo
 concept_tag: MR-QUESTION-KON
 prerequisites: [MR-C02-aahe, MR-C02-kaay, MR-C11-mitra, MR-A1F01-naav, MR-A1F01-bhasha, MR-C31-naa-tag]
 sounds: [matra-o, retroflex-na]
-roots: [ka-interrogative]
+roots: [ka-interrogative, sanskrit-kah-punar]
+etymology_hook: "koṇ ← Sanskrit kaḥ punar 'who, then?', which CDIAL glosses 'who?'; a tadbhava (CDIAL 2575)"
 duration:
-  max_seconds: 210
+  max_seconds: 225
 requires:
   knowledge: [MR-LEX-KAAY, MR-LEX-MITRA, MR-LEX-AAHE-COPULA]
 introduces:

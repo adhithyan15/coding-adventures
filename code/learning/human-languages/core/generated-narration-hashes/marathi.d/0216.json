@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 216,
-  "sourceHash": "fnv1a64:f346ff23573e36bd",
+  "sourceHash": "fnv1a64:2ee461ed2bb877c0",
   "lessonIds": [
     "MR-C216-srikhand",
     "MR-C216-tak",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch216.txt",
   "json": "marathi/narration/ch216.json",
-  "textHash": "fnv1a64:af096554401fe49b",
-  "jsonHash": "fnv1a64:7de0ecac2a76b23a",
+  "textHash": "fnv1a64:f9798fca56d94ff6",
+  "jsonHash": "fnv1a64:5ebeedc102af46a7",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 192,
-  "sourceHash": "fnv1a64:82fc8edefa463c3e",
+  "sourceHash": "fnv1a64:c54af69e831cb4ba",
   "lessonIds": [
     "MR-C192-kampani",
     "MR-C192-sahakari",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch192.txt",
   "json": "marathi/narration/ch192.json",
-  "textHash": "fnv1a64:92817d099b55a161",
-  "jsonHash": "fnv1a64:cd529e5ae1cae4ae",
+  "textHash": "fnv1a64:cb1cb061e7fad758",
+  "jsonHash": "fnv1a64:d53e1259378ae3ef",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "duḥkhī"
 concept_tag: MR-HEALTH74-DUHKHI
 prerequisites: [MR-C73-bhuk, MR-C73-anandi]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "duḥkhī: Sanskrit duḥkhin 'in pain', from duḥkha 'difficulty, pain', a tatsama (CDIAL 6375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C73-anandi]
 <!-- hl-knowledge: introduces=[MR-LEX-C74-HEALTH74-01]; assesses=[] -->
 
 **दुःखी** — *duḥkhī* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुःखी** (*duḥkhī*) is Sanskrit *duḥkhin*, "in pain, unhappy", a tatsama built on *duḥkha*, "difficulty, pain" (CDIAL 6375).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

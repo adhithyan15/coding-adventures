@@ -14,7 +14,8 @@ romanization: "āhār"
 concept_tag: MR-AAROGYA229-AHAR
 prerequisites: [MR-C229-patti, MR-C229-rugnavahika]
 sounds: []
-roots: []
+roots: [sanskrit-ahara]
+etymology_hook: "āhār ← Sanskrit āhāra 'fetching; taking food, food', a tatsama (CDIAL 1544)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C229-rugnavahika]
 <!-- hl-knowledge: introduces=[MR-LEX-C229-AAROGYA229-05]; assesses=[] -->
 
 **आहार** — *āhār* — "a diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आहार** (*āhār*) is Sanskrit *āhāra*, "fetching; taking food, food", taken over whole as a learned loan, a tatsama (CDIAL 1544). CDIAL lists the Marathi *āhār*, "food".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

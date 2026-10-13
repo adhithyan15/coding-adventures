@@ -15,6 +15,7 @@ concept_tag: MR-THINGS133-TOPLI
 prerequisites: [MR-C133-peti, MR-C133-pisvi]
 sounds: []
 roots: []
+etymology_hook: "ṭoplī 'basket': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C133-pisvi]
 <!-- hl-knowledge: introduces=[MR-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **टोपली** — *ṭoplī* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **टोपली** (*ṭoplī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

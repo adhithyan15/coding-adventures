@@ -14,7 +14,8 @@ romanization: "uḍṇe"
 concept_tag: MR-VERB-UDNE
 prerequisites: [MR-C81-sodne, MR-C82-phekne]
 sounds: []
-roots: []
+roots: [sanskrit-uddayate]
+etymology_hook: "uḍṇe ← Sanskrit uḍḍayate 'flies up', a tadbhava (CDIAL 1697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C82-phekne]
 <!-- hl-knowledge: introduces=[MR-LEX-C82-VERBS82-02]; assesses=[] -->
 
 **उडणे** — *uḍṇe* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उडणे** (*uḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uḍḍayate*, "flies up" (CDIAL 1697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

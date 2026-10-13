@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 30,
-  "sourceHash": "fnv1a64:4be44e4d25bfa5e1",
+  "sourceHash": "fnv1a64:2b6af6e8319bf2dd",
   "lessonIds": [
     "MR-C30-aani",
     "MR-C30-kinva",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch30.txt",
   "json": "marathi/narration/ch30.json",
-  "textHash": "fnv1a64:8b16ef63a6de2e7f",
-  "jsonHash": "fnv1a64:1761416cdf77307c",
+  "textHash": "fnv1a64:20ad9f6adb092aa2",
+  "jsonHash": "fnv1a64:c40b09550de94f55",
   "findings": []
 }

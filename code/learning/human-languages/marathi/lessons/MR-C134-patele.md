@@ -15,6 +15,7 @@ concept_tag: MR-THINGS134-PATELE
 prerequisites: [MR-C133-menbatti, MR-C134-vati]
 sounds: []
 roots: []
+etymology_hook: "pātele 'cooking pot': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C134-vati]
 <!-- hl-knowledge: introduces=[MR-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **पातेले** — *pātele* — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पातेले** (*pātele*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

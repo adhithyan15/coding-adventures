@@ -12,6 +12,9 @@ Before the new one: say the Marathi for art, then the Marathi for a team.
 You'll want to know: प्रयत्न करणे.
 प्रयत्न करणे — prayatna karṇe — "to try".
 
+The word, taken apart.
+प्रयत्न is Sanskrit prayatna, "effort", a tatsama. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a team, then the Marathi for to try.
 
 You'll want to know: चालू ठेवणे.
 चालू ठेवणे — cālū ṭhevṇe — "to keep going, to continue".
+
+The word, taken apart.
+चालू, "going on", is built on cālṇẽ, "to move, walk", which comes from a reconstructed calyati, "goes" (CDIAL 4721). The origin of ठेवणे, "to keep", is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to try, then the Marathi for to keep goi
 You'll want to know: थांबवणे.
 थांबवणे — thāmbavṇe — "to bring to a stop".
 
+The word, taken apart.
+थांबवणे (thāmbavṇe) is the "make" form of thāṁbṇẽ, "to stop", which comes from Sanskrit stambhate, "supports, arrests" (CDIAL 13683).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to keep going, then the Marathi for to b
 You'll want to know: हलवणे.
 हलवणे — halavṇe — "to move (something)".
 
+The word, taken apart.
+हलवणे (halavṇe) is the "make" form of hālṇẽ, "to move, shake", which comes from a reconstructed hallati, "moves, shakes" (CDIAL 14018).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to bring to a stop, then the Marathi for
 
 You'll want to know: गरम करणे.
 गरम करणे — garam karṇe — "to heat".
+
+The word, taken apart.
+गरम is usually traced to Persian garm, "warm, hot". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

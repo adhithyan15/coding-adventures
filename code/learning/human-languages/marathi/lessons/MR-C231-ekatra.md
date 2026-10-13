@@ -14,7 +14,8 @@ romanization: "ekatra"
 concept_tag: MR-KARAN231-EKATRA
 prerequisites: [MR-C230-darmyan, MR-C230-kayam]
 sounds: []
-roots: []
+roots: [sanskrit-ekatra]
+etymology_hook: "ekatra: Sanskrit ekatra 'in one place', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C230-kayam]
 <!-- hl-knowledge: introduces=[MR-LEX-C231-KARAN231-01]; assesses=[] -->
 
 **एकत्र** — *ekatra* — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एकत्र** (*ekatra*) is Sanskrit *ekatra*, "in one place", a tatsama: *eka*, "one", with the place ending *-tra*. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

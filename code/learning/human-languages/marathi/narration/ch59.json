@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "What It Costs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:651df1e7b88151be",
+  "sourceHash": "fnv1a64:822c2a5e71597f29",
   "lessons": [
     {
       "id": "MR-W59-ai-matra",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7d92460f7864524",
+      "sourceHash": "fnv1a64:d09ae29307573021",
       "notice": null,
       "blocks": [
         {
@@ -162,6 +162,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैसे (paise) is the plural of paisā, which CDIAL traces to a reconstructed padāṁśa, \"quarter part\", built with aṁśa, \"part\". CDIAL marks the Marathi word as probably taken from Hindi paisā, \"quarter anna\" (CDIAL 7761)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -221,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -256,7 +267,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52c5bd56eff09ac5",
+      "sourceHash": "fnv1a64:a4fe641d12a67367",
       "notice": null,
       "blocks": [
         {

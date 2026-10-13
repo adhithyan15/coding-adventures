@@ -14,7 +14,8 @@ romanization: "avjār"
 concept_tag: MR-VASTU268-AVJAR
 prerequisites: [MR-C267-cikhal, MR-C267-dhul]
 sounds: []
-roots: []
+roots: [arabic-awzar]
+etymology_hook: "avjār: usually traced, through Persian, to Arabic awzār 'tools'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C267-dhul]
 <!-- hl-knowledge: introduces=[MR-LEX-C268-VASTU268-01]; assesses=[] -->
 
 **अवजार** — *avjār* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अवजार** (*avjār*) is a loan, usually traced through Persian to Arabic *awzār*, "tools, implements".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

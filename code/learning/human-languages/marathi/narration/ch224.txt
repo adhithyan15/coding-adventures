@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to translate, then the Marathi for to ma
 You'll want to know: म्हातारे होणे.
 म्हातारे होणे — mhātāre hoṇe — "to grow old".
 
+The word, taken apart.
+म्हातारे is a form of mhātārā, "old", which CDIAL lists under Sanskrit mahattara, "greater; village eldest" (CDIAL 9932). होणे comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to make a decision, then the Marathi for
 
 You'll want to know: घटस्फोट घेणे.
 घटस्फोट घेणे — ghaṭasphoṭ gheṇe — "to get divorced".
+
+The word, taken apart.
+घटस्फोट is a modern compound of Sanskrit parts: ghaṭa, "pot", and sphoṭa, "bursting". घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to grow old, then the Marathi for to get
 You'll want to know: घर बदलणे.
 घर बदलणे — ghar badalṇe — "to move house".
 
+The word, taken apart.
+घर is "house". बदलणे, "to change", is built on badal, "exchange", from Arabic badal, "a substitute", through Persian (Lane, root b-d-l).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to get divorced, then the Marathi for to
 You'll want to know: आराम करणे.
 आराम करणे — ārām karṇe — "to rest".
 
+The word, taken apart.
+आराम is usually traced to Persian ārām, "rest, ease". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to move house, then the Marathi for to r
 
 You'll want to know: कंटाळणे.
 कंटाळणे — kaṇṭāḷṇe — "to get bored".
+
+The word, taken apart.
+The origin of कंटाळणे (kaṇṭāḷṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "gṛhapāṭh"
 concept_tag: MR-VASTU247-GRHAPATH
 prerequisites: [MR-C247-nokri, MR-C247-padvi]
 sounds: []
-roots: []
+roots: [grha-sanskrit, sanskrit-patha-reading]
+etymology_hook: "gṛhapāṭh: Sanskrit gṛha 'house' + pāṭha 'reading, lesson'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C247-padvi]
 <!-- hl-knowledge: introduces=[MR-LEX-C247-VASTU247-03]; assesses=[] -->
 
 **गृहपाठ** — *gṛhapāṭh* — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गृहपाठ** (*gṛhapāṭh*) is a modern compound of Sanskrit parts: *gṛha*, "house", and *pāṭha*, "reading, lesson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

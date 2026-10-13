@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 251,
-  "sourceHash": "fnv1a64:e8a66062d9f00c4f",
+  "sourceHash": "fnv1a64:8a08e7bce335aa4a",
   "lessonIds": [
     "MR-C251-prayatna-karne",
     "MR-C251-calu-thevne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch251.txt",
   "json": "marathi/narration/ch251.json",
-  "textHash": "fnv1a64:c6dbf97d959de31f",
-  "jsonHash": "fnv1a64:0655f9bd783d06a7",
+  "textHash": "fnv1a64:bba58a8945c00710",
+  "jsonHash": "fnv1a64:97aadedac305054f",
   "findings": []
 }

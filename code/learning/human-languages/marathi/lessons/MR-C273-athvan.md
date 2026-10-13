@@ -14,7 +14,8 @@ romanization: "āṭhvaṇ"
 concept_tag: MR-VASTU273-ATHVAN
 prerequisites: [MR-C272-jababdari, MR-C272-sandhi]
 sounds: []
-roots: []
+roots: [sanskrit-asthapayati]
+etymology_hook: "āṭhvaṇ: from āṭhavṇe 'to come to mind' ← āsthāpayati 'causes to stay' (CDIAL 1516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C272-sandhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C273-VASTU273-01]; assesses=[] -->
 
 **आठवण** — *āṭhvaṇ* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आठवण** (*āṭhvaṇ*) is built on *āṭhavṇẽ*, "to come to mind", which comes from Sanskrit *āsthāpayati*, "causes to stay, fixes into" (CDIAL 1516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 145,
-  "sourceHash": "fnv1a64:45338266a314dd31",
+  "sourceHash": "fnv1a64:237c28576dce7017",
   "lessonIds": [
     "MR-C145-gal",
     "MR-C145-jibh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch145.txt",
   "json": "marathi/narration/ch145.json",
-  "textHash": "fnv1a64:a38bc09dcc1757bb",
-  "jsonHash": "fnv1a64:1391f7c5197e7455",
+  "textHash": "fnv1a64:0093ddfe206a5f9e",
+  "jsonHash": "fnv1a64:1d06b32491e4ca2b",
   "findings": []
 }

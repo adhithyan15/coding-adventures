@@ -14,7 +14,8 @@ romanization: "sveṭar"
 concept_tag: MR-THINGS136-SVETAR
 prerequisites: [MR-C135-sart, MR-C136-kot]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "sveṭar ← English sweater"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C136-kot]
 <!-- hl-knowledge: introduces=[MR-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **स्वेटर** — *sveṭar* — "a jumper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वेटर** (*sveṭar*) is a loan from English *sweater*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

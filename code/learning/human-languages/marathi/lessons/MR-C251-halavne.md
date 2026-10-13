@@ -14,7 +14,8 @@ romanization: "halavṇe"
 concept_tag: MR-VERB-HALAVNE
 prerequisites: [MR-C251-calu-thevne, MR-C251-thambavne]
 sounds: []
-roots: []
+roots: [indo-aryan-hallati]
+etymology_hook: "halavṇe: the 'make' form of hālṇe 'to move, shake' ← *hallati (CDIAL 14018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C251-thambavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C251-ACT251-04]; assesses=[] -->
 
 **हलवणे** — *halavṇe* — "to move (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हलवणे** (*halavṇe*) is the "make" form of *hālṇẽ*, "to move, shake", which comes from a reconstructed *\*hallati*, "moves, shakes" (CDIAL 14018).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MR-VASTU269-LONCE
 prerequisites: [MR-C269-amti, MR-C269-usal]
 sounds: []
 roots: []
+etymology_hook: "loṇce 'pickle': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C269-usal]
 <!-- hl-knowledge: introduces=[MR-LEX-C269-VASTU269-05]; assesses=[] -->
 
 **लोणचे** — *loṇce* — "a pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लोणचे** (*loṇce*) is not settled. CDIAL has no entry for it. It lists Marathi *loṇ*, "salinity of soil", under Sanskrit *lavaṇa*, "salt" (CDIAL 10978), but no source here ties the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,10 +11,10 @@ gloss: the other, the second — the partner एक needs before a pair can be s
 concept_tag: MR-JOIN-EK-DUSRA
 prerequisites: [MR-C31-naa-tag]
 sounds: [matra-u, matra-aa]
-roots: []
-etymology_hook: "दुसरा is built on दोन (don, 'two') with the ordinal -सरा, so it is literally 'two-th'; the same Indo-European \\*dwo- is under English two, second-hand Latin duo, and Marathi's own दोन, which this book taught in the numbers chapter"
+roots: [indo-aryan-dvihsara]
+etymology_hook: "dusrā ← *dviḥsara 'twofold', built on Sanskrit dviḥ 'twice' (CDIAL 6676)"
 duration:
-  max_seconds: 210
+  max_seconds: 228
 requires:
   knowledge: [MR-JOIN-AANI, MR-LEX-NUMBERS-ONE-TO-FIVE]
 introduces:
@@ -52,6 +52,11 @@ inside it.
 
 Like every **-आ** word in this book it agrees: **दुसरा** for a masculine thing,
 **दुसरी** feminine, **दुसरं** neuter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुसरा** (*dusrā*) comes from *\*dviḥsara*, "twofold", a form CDIAL reconstructs on Sanskrit *dviḥ*, "twice" (CDIAL 6676).
 
 ## Grammar Lens: एक … दुसरा … — sharing a pair out
 <!-- hl-knowledge: introduces=[MR-JOIN-EK-DUSRA]; assesses=[MR-JOIN-AANI, MR-LEX-DUSRA] -->

@@ -15,6 +15,7 @@ concept_tag: MR-BHAV160-LAVKARAC
 prerequisites: [MR-C159-ghadne, MR-C160-bhavishya]
 sounds: []
 roots: []
+etymology_hook: "lavkarac: lavkar 'soon' + the emphatic -c; the origin of lavkar is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C160-bhavishya]
 <!-- hl-knowledge: introduces=[MR-LEX-C160-BHAV160-02]; assesses=[] -->
 
 **लवकरच** — *lavkarac* — "soon". **लवकर**, "early, quickly", with the emphatic **च**: **मी लवकरच येईन.** — *mī lavkarac yeīn* — "I will come soon."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लवकरच** (*lavkarac*) is **लवकर**, "early, soon", with the emphatic **-च**. The origin of **लवकर** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

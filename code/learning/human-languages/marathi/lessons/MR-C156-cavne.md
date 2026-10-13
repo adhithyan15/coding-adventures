@@ -14,7 +14,8 @@ romanization: "cāvṇe"
 concept_tag: MR-VERB-CAVNE
 prerequisites: [MR-C156-vajavne, MR-C156-oradne]
 sounds: []
-roots: []
+roots: [sanskrit-carvati]
+etymology_hook: "cāvṇe ← Sanskrit carvati 'chews', a tadbhava (CDIAL 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C156-oradne]
 <!-- hl-knowledge: introduces=[MR-LEX-C156-ACT156-04]; assesses=[] -->
 
 **चावणे** — *cāvṇe* — "to bite, to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चावणे** (*cāvṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *carvati*, "chews" (CDIAL 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

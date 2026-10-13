@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "The Rest Are Built",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c3c62a80a5d7d028",
+  "sourceHash": "fnv1a64:9b99284451f7d821",
   "lessons": [
     {
       "id": "MR-C61-sahava",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:222dcbc4dabd40d7",
+      "sourceHash": "fnv1a64:d5f0a51c06c1f2b6",
       "notice": null,
       "blocks": [
         {
@@ -100,6 +100,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहावा (sahāvā) is सहा, \"six\", with the ordinal ending -वा. CDIAL has no entry for the whole word; the ending is the one that, in सातवा (sātvā), \"seventh\", continues Sanskrit saptama (CDIAL 13151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: what a rule buys",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -179,7 +190,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -214,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e927d5f2a95f1ad",
+      "sourceHash": "fnv1a64:f87d73f5a9a81fbd",
       "notice": null,
       "blocks": [
         {
@@ -291,6 +302,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists सातवा (sātvā) under Sanskrit saptama, \"seventh\" (CDIAL 13151): the -वा is what the old ordinal ending -ma became."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the dictionaries agree with you",
           "segments": [
@@ -309,7 +331,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -405,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c6774a908ec3b75",
+      "sourceHash": "fnv1a64:b623cb7ab839dbae",
       "notice": null,
       "blocks": [
         {
@@ -482,6 +504,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists आठवा (āṭhvā) under Sanskrit aṣṭama, \"eighth\" (CDIAL 937)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the pair to keep apart",
           "segments": [
@@ -509,7 +542,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -570,7 +603,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -808,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff8fbf1df44b610f",
+      "sourceHash": "fnv1a64:d39a2bbe9727715f",
       "notice": null,
       "blocks": [
         {
@@ -881,6 +914,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists दहावा (dahāvā) under Sanskrit daśama, \"tenth\" (CDIAL 6233)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: this is where the set stops, and the ending does not",
           "segments": [
@@ -907,7 +951,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -968,7 +1012,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

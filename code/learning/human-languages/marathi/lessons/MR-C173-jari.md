@@ -14,7 +14,8 @@ romanization: "jarī"
 concept_tag: MR-KARAN173-JARI
 prerequisites: [MR-C172-madhyabhagi, MR-C173-tarihi]
 sounds: []
-roots: []
+roots: [sanskrit-yarhi]
+etymology_hook: "jarī ← Sanskrit yarhi 'when', a tadbhava (CDIAL 10429)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C173-tarihi]
 <!-- hl-knowledge: introduces=[MR-LEX-C173-KARAN173-02]; assesses=[] -->
 
 **जरी** — *jarī* — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जरी** (*jarī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yarhi*, "when" (CDIAL 10429). CDIAL glosses the Marathi word "if".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

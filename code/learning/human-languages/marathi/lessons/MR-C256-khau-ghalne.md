@@ -14,7 +14,8 @@ romanization: "khāū ghālṇe"
 concept_tag: MR-VERB-KHAU-GHALNE
 prerequisites: [MR-C256-vyakta-karne, MR-C256-barik-hone]
 sounds: []
-roots: []
+roots: [sanskrit-khaduka, indo-aryan-ghalyati]
+etymology_hook: "khāū ← khāduka (CDIAL 3871); ghālṇe ← *ghalyati 'pours' (CDIAL 4457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C256-barik-hone]
 <!-- hl-knowledge: introduces=[MR-LEX-C256-ACT256-05]; assesses=[] -->
 
 **खाऊ घालणे** — *khāū ghālṇe* — "to feed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाऊ**, "food", comes from Sanskrit *khāduka*, "biting" (CDIAL 3871). **घालणे**, "to put", comes from a reconstructed *\*ghalyati*, "pours" (CDIAL 4457).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

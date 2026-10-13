@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "This One and That One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0403dafd8795545a",
+  "sourceHash": "fnv1a64:0e869245e33e058c",
   "lessons": [
     {
       "id": "MR-C69-ha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f6a4d2038b9de81",
+      "sourceHash": "fnv1a64:bfeb1adce3b38b22",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of हा (hā) is not settled: CDIAL has no entry for the Marathi word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: it goes in front, and it never stands alone here",
           "segments": [
@@ -88,7 +99,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -150,7 +161,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -181,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad2585a2fb1661b6",
+      "sourceHash": "fnv1a64:cb82c7c4ff50663c",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +247,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तो (to) is usually traced to the old Indo-Aryan pronoun sa, \"he, that\", whose other forms are built on the stem ta-. CDIAL lists Hindi so, \"that\", under it, but no Marathi form (CDIAL 12815)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -315,7 +337,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

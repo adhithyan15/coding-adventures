@@ -14,7 +14,8 @@ romanization: "javaḷ yeṇe"
 concept_tag: MR-VERB-JAVAL-YENE
 prerequisites: [MR-C197-savay-hone, MR-C197-ghai-karne]
 sounds: []
-roots: []
+roots: [sanskrit-aiti]
+etymology_hook: "javaḷ: origin not settled; yeṇe ← aiti 'comes near' (CDIAL 2534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C197-ghai-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C197-ACT197-03]; assesses=[] -->
 
 **जवळ येणे** — *javaḷ yeṇe* — "to come near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **जवळ**, "near", is not settled: CDIAL has no entry for it. **येणे** comes from Sanskrit *aiti*, "comes near" (CDIAL 2534).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

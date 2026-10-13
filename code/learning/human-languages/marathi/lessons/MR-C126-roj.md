@@ -14,7 +14,8 @@ romanization: "roj"
 concept_tag: MR-TIME126-ROJ
 prerequisites: [MR-C126-tarikh, MR-C126-sadhya]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roj: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C126-sadhya]
 <!-- hl-knowledge: introduces=[MR-LEX-C126-TIME126-04]; assesses=[] -->
 
 **रोज** — *roj* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोज** (*roj*) is a loan, usually traced to Persian *rōz*, "day". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

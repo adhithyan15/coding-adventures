@@ -14,7 +14,8 @@ romanization: "maitrī"
 concept_tag: MR-AAROGYA257-MAITRI
 prerequisites: [MR-C257-visranti, MR-C257-cinta]
 sounds: []
-roots: []
+roots: [sanskrit-maitri]
+etymology_hook: "maitrī: Sanskrit maitrī 'friendship', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C257-cinta]
 <!-- hl-knowledge: introduces=[MR-LEX-C257-AAROGYA257-03]; assesses=[] -->
 
 **मैत्री** — *maitrī* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मैत्री** (*maitrī*) is Sanskrit *maitrī*, "friendship", a tatsama built on *mitra*, "friend". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

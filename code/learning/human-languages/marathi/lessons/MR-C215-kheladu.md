@@ -14,7 +14,8 @@ romanization: "kheḷāḍū"
 concept_tag: MR-VASTU215-KHELADU
 prerequisites: [MR-C214-lokar, MR-C214-resim]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḷāḍū: kheḷ 'play' ← *khēl- (CDIAL 3918) + -āḍū 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C214-resim]
 <!-- hl-knowledge: introduces=[MR-LEX-C215-VASTU215-01]; assesses=[] -->
 
 **खेळाडू** — *kheḷāḍū* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेळाडू** (*kheḷāḍū*) is **खेळ**, "play", with the ending *-āḍū*, "one who". CDIAL lists Marathi *kheḷ* under a reconstructed *\*khēl-*, "play" (CDIAL 3918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

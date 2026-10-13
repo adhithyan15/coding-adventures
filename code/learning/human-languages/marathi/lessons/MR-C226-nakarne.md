@@ -14,7 +14,8 @@ romanization: "nākārṇe"
 concept_tag: MR-VERB-NAKARNE
 prerequisites: [MR-C226-sucavne, MR-C226-parat-dene]
 sounds: []
-roots: []
+roots: [sanskrit-nakara]
+etymology_hook: "nākārṇe: built on nakār 'a refusal', Sanskrit nakāra 'the sound na', the word 'not'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C226-parat-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C226-ACT226-03]; assesses=[] -->
 
 **नाकारणे** — *nākārṇe* — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाकारणे** (*nākārṇe*) is built on *nakār*, "a refusal", from Sanskrit *nakāra*, "the sound *na*": *na* is "not", and *kāra* names a sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

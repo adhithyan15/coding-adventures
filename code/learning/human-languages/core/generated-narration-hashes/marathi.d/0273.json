@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 273,
-  "sourceHash": "fnv1a64:ed7166a0f3226c0e",
+  "sourceHash": "fnv1a64:05f4fc174fa04faf",
   "lessonIds": [
     "MR-C273-athvan",
     "MR-C273-svabhav",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch273.txt",
   "json": "marathi/narration/ch273.json",
-  "textHash": "fnv1a64:214b691e43ce169f",
-  "jsonHash": "fnv1a64:1711bf69a1b3947e",
+  "textHash": "fnv1a64:7d5a9396ed8560ad",
+  "jsonHash": "fnv1a64:23751d49ab4d1d2f",
   "findings": []
 }

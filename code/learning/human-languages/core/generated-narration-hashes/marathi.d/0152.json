@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 152,
-  "sourceHash": "fnv1a64:2d66145887279eee",
+  "sourceHash": "fnv1a64:8e3238f4143333c6",
   "lessonIds": [
     "MR-C152-suraksit",
     "MR-C152-dhokadayak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch152.txt",
   "json": "marathi/narration/ch152.json",
-  "textHash": "fnv1a64:40f2eb6c888dd73c",
-  "jsonHash": "fnv1a64:8388e2b6b78933a5",
+  "textHash": "fnv1a64:9d4b3def966c7644",
+  "jsonHash": "fnv1a64:693d9b23815ee977",
   "findings": []
 }

@@ -12,8 +12,9 @@ concept_tag: MR-POSTP-NE-INSTR
 prerequisites: [MR-C45-shii, MR-C07-pahne]
 sounds: [matra-e]
 roots: []
+etymology_hook: "-ne: usually traced to the Sanskrit instrumental ending -ena 'by, with'; CDIAL has no entry for it"
 duration:
-  max_seconds: 220
+  max_seconds: 228
 requires:
   knowledge: [MR-POSTP-SHII, MR-GRAMMAR-PRON-OBLIQUE, MR-LEX-DAAVA, MR-LEX-ITHE, MR-LEX-PAHNE, MR-LEX-DOLA, MR-POSTP-BAROBAR, MR-LEX-GHAR]
 introduces:
@@ -60,6 +61,11 @@ much larger job in Marathi: it also marks the SUBJECT of a past transitive verb,
 which is a rule no European language has. That is a later chapter. For now, note
 only that the ending you have just met is one you will meet again wearing a
 different hat.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-ने** (*-ne*) is usually traced to the Sanskrit instrumental ending *-ena*, "by, with", as in *hastena*, "by hand". CDIAL has no entry for the ending.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-NE-INSTR, MR-POSTP-SHII, MR-POSTP-BAROBAR, MR-LEX-DAAVA, MR-LEX-ITHE] -->

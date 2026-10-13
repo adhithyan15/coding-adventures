@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "To be able to, To manage to, Skill, Ability, Right",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:98f20a0eb09fea8c",
+  "sourceHash": "fnv1a64:f502c7c620636954",
   "lessons": [
     {
       "id": "MR-C121-sakne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f923fdfaaada550",
+      "sourceHash": "fnv1a64:b548cb12cc73d096",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शकणे (śakṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śaknoti, \"is able\" (CDIAL 12252). CDIAL lists the Marathi verb as sakṇẽ; शकणे keeps the Sanskrit ś in its spelling."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:597ddd95b11d81b8",
+      "sourceHash": "fnv1a64:a40c89d727493908",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमणे (jamṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yamyate, \"is fixed\" (CDIAL 10428). CDIAL glosses the Marathi verb \"to collect, coagulate, freeze\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ede8d738fd95b5c3",
+      "sourceHash": "fnv1a64:d5f2db08d24eb78d",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कौशल्य (kauśalya) is Sanskrit kauśalya, \"skill\", a tatsama built on kuśala, \"competent, clever\" (CDIAL 3365)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cef4b31171047081",
+      "sourceHash": "fnv1a64:28fa9859d792101f",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षमता (kṣamatā) is a tatsama: Sanskrit kṣama, \"able, fit\", with the noun ending -tā, \"-ness\". CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5af162081199f9c6",
+      "sourceHash": "fnv1a64:b4dcab58e75eec11",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधिकार (adhikār) is Sanskrit adhikāra, \"authority, a right\", taken over whole, a tatsama. It is built on kṛ, \"to do\", with adhi, \"over\". CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

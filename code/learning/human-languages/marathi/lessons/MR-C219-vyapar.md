@@ -14,7 +14,8 @@ romanization: "vyāpār"
 concept_tag: MR-VASTU219-VYAPAR
 prerequisites: [MR-C219-dar, MR-C219-utpanna]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vyāpār ← Sanskrit vyāpāra 'occupation, business', a tatsama (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C219-utpanna]
 <!-- hl-knowledge: introduces=[MR-LEX-C219-VASTU219-03]; assesses=[] -->
 
 **व्यापार** — *vyāpār* — "trade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यापार** (*vyāpār*) is Sanskrit *vyāpāra*, "occupation, business", taken over whole as a learned loan, a tatsama (CDIAL 12205). CDIAL lists the inherited Marathi form as *vāvar*, "business, activity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

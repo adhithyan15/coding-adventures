@@ -12,6 +12,9 @@ Before the new one: say the Marathi for meanwhile, then the Marathi for for good
 You'll want to know: एकत्र.
 एकत्र — ekatra — "together".
 
+The word, taken apart.
+एकत्र (ekatra) is Sanskrit ekatra, "in one place", a tatsama: eka, "one", with the place ending -tra. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for for good, then the Marathi for together.
 
 You'll want to know: कदाचित.
 कदाचित — kadācit — "perhaps".
+
+The word, taken apart.
+कदाचित (kadācit) is Sanskrit kadācit, "at some time, perhaps", a tatsama: kadā, "when", with -cit, "some-". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for together, then the Marathi for perhaps.
 You'll want to know: शिवाय.
 शिवाय — śivāy — "besides, apart from".
 
+The word, taken apart.
+शिवाय (śivāy) is a loan from Arabic siwā, "besides, other than", which reached Marathi through Persian. Its Arabic root is s-w-y (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for perhaps, then the Marathi for besides.
 You'll want to know: अर्थात.
 अर्थात — arthāt — "of course".
 
+The word, taken apart.
+अर्थात (arthāt) is Sanskrit arthāt, "from the sense, that is", a form of artha, "aim, meaning".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for besides, then the Marathi for of course.
 
 You'll want to know: म्हणजे.
 म्हणजे — mhaṇje — "that is to say".
+
+The word, taken apart.
+म्हणजे (mhaṇje) is a form of mhaṇṇẽ, "to say", which comes from Sanskrit bhaṇati, "calls aloud, speaks" (CDIAL 9383). CDIAL calls the mh- for bh- an abnormal change in a word for "saying".
 
 What you've built.
 One more word for this chapter.

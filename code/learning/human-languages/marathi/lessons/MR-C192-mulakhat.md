@@ -14,7 +14,8 @@ romanization: "mulākhat"
 concept_tag: MR-KAAM192-MULAKHAT
 prerequisites: [MR-C192-baithak, MR-C192-karar]
 sounds: []
-roots: []
+roots: [arabic-mulaqat]
+etymology_hook: "mulākhat ← Arabic mulāqāt 'meeting', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C192-karar]
 <!-- hl-knowledge: introduces=[MR-LEX-C192-KAAM192-05]; assesses=[] -->
 
 **मुलाखत** — *mulākhat* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुलाखत** (*mulākhat*) is a loan from Arabic *mulāqāt*, "meeting", which reached Marathi through Persian. Its Arabic root is *l-q-y* (Lane). Marathi writes the *q* as **ख**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

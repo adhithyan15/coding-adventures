@@ -11,9 +11,10 @@ gloss: at N o'clock — the form that puts an event at a time, and refuses to ch
 concept_tag: MR-CLOCK-AT
 prerequisites: [MR-C67-vajle]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "vājtā: a form of vājṇe 'to sound', from Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
-  max_seconds: 210
+  max_seconds: 237
 requires:
   knowledge: [MR-LEX-VAJLE, MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT, MR-GRAMMAR-TIME-II, MR-LEX-SAKAL]
 introduces:
@@ -52,6 +53,11 @@ Marathi uses two different words for them:
 |---|---|
 | **दोन वाजले** | it **is** two o'clock |
 | **दोन वाजता** | **at** two o'clock |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाजता** (*vājtā*) is a form of **वाजणे**, "to sound", which comes from Sanskrit *vādyate*, "is made to sound", the passive of *vādayati*, "makes sound" (CDIAL 11513).
 
 ## Grammar Lens: the one that never moves
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-VAJTA, MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT, MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB] -->

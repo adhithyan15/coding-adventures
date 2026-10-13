@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to call over, then the Marathi for to th
 You'll want to know: थंड करणे.
 थंड करणे — thaṇḍ karṇe — "to cool".
 
+The word, taken apart.
+थंड CDIAL lists under Sanskrit stabdha, "stiff; solidified", through a form it says was influenced by another word (CDIAL 13676). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to thank, then the Marathi for to cool.
 
 You'll want to know: रिकामे करणे.
 रिकामे करणे — rikāme karṇe — "to empty".
+
+The word, taken apart.
+रिकामा goes back to a reconstructed rikṇakarman, "doing empty work" (CDIAL 10728), and करणे to Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to cool, then the Marathi for to empty.
 You'll want to know: वजन करणे.
 वजन करणे — vajan karṇe — "to weigh".
 
+The word, taken apart.
+वजन is a loan, usually traced through Persian to Arabic wazn, "weight", whose root is w-z-n (Lane). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to empty, then the Marathi for to weigh.
 You'll want to know: तपासणे.
 तपासणे — tapāsṇe — "to check".
 
+The word, taken apart.
+The origin of तपासणे (tapāsṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to weigh, then the Marathi for to check.
 
 You'll want to know: सही करणे.
 सही करणे — sahī karṇe — "to sign".
+
+The word, taken apart.
+सही is a loan from Arabic ṣaḥīḥ, "sound, correct", which reached Marathi through Persian; its root is ṣ-ḥ-ḥ (Lane). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

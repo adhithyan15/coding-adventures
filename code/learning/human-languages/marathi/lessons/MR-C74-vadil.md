@@ -14,7 +14,8 @@ romanization: "vaḍīl"
 concept_tag: MR-HEALTH74-VADIL
 prerequisites: [MR-C73-anandi, MR-C74-duhkhi]
 sounds: []
-roots: []
+roots: [sanskrit-vadra]
+etymology_hook: "vaḍīl 'an elder': CDIAL lists it under Sanskrit vaḍra 'big', doubting a link with vṛddha (CDIAL 11225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C74-duhkhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C74-HEALTH74-02]; assesses=[] -->
 
 **वडील** — *vaḍīl* — "a father".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वडील** (*vaḍīl*) is inherited. CDIAL lists Marathi *vaḍīl*, "an elder", under Sanskrit *vaḍra*, "big", a word known from the old word-lists, and doubts a link with *vṛddha*, "grown" (CDIAL 11225).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

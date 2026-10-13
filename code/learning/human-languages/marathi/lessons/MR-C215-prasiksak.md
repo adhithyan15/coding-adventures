@@ -14,7 +14,8 @@ romanization: "praśikṣak"
 concept_tag: MR-VASTU215-PRASIKSAK
 prerequisites: [MR-C214-resim, MR-C215-kheladu]
 sounds: []
-roots: []
+roots: [sanskrit-shikshaka]
+etymology_hook: "praśikṣak: Sanskrit pra- 'forth' + śikṣaka 'one who teaches'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C215-kheladu]
 <!-- hl-knowledge: introduces=[MR-LEX-C215-VASTU215-02]; assesses=[] -->
 
 **प्रशिक्षक** — *praśikṣak* — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रशिक्षक** (*praśikṣak*) is a modern word of Sanskrit parts: *pra-*, "forth", and *śikṣaka*, "one who teaches".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

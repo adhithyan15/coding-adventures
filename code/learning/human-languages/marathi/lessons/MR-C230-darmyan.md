@@ -14,7 +14,8 @@ romanization: "darmyān"
 concept_tag: MR-VEL230-DARMYAN
 prerequisites: [MR-C230-mudat, MR-C230-darroj]
 sounds: []
-roots: []
+roots: [persian-darmiyan]
+etymology_hook: "darmyān: usually traced to Persian darmiyān 'in the middle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C230-darroj]
 <!-- hl-knowledge: introduces=[MR-LEX-C230-VEL230-04]; assesses=[] -->
 
 **दरम्यान** — *darmyān* — "meanwhile, during".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरम्यान** (*darmyān*) is a loan, usually traced to Persian *darmiyān*, "in the middle": *dar*, "in", and *miyān*, "middle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

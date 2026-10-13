@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Parts of the Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fd8b306e82091035",
+  "sourceHash": "fnv1a64:c85b9820c7fad582",
   "lessons": [
     {
       "id": "MR-C66-sakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49a1c28f58af325d",
+      "sourceHash": "fnv1a64:3b129ea009bcc575",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3f5ace2b11a8e9c",
+      "sourceHash": "fnv1a64:6759ccc723b06040",
       "notice": null,
       "blocks": [
         {
@@ -245,6 +245,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुपार (dupār) is usually explained as \"two watches\": du-, \"two\", and pahār, \"a watch of three hours\", which CDIAL lists under prahara, \"watch\". CDIAL asks whether prahara is itself a Sanskritization of Persian pahra, \"watch\" (CDIAL 8900)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending holds",
           "segments": [
@@ -272,7 +283,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -342,7 +353,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -373,7 +384,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c1d907654dec2592",
+      "sourceHash": "fnv1a64:8628d0be63ab4374",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -440,6 +451,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संध्याकाळ (sandhyākāḷ) joins Sanskrit sandhyā, \"twilight\" (CDIAL 12918), whose inherited Marathi form is sāṁj, \"evening\", to kāḷ, \"time\", from Sanskrit kāla, \"time\" (CDIAL 3084)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: third time, same ending",
           "segments": [
@@ -468,7 +490,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +559,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -568,7 +590,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:682d030f56db55b3",
+      "sourceHash": "fnv1a64:d72cbe5375711fa2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,6 +638,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रात्र (rātra) is Sanskrit rātri, \"night\", lightly reshaped. CDIAL lists the inherited Marathi form as rāt, \"night\" (CDIAL 10702)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: four for four, and what English does instead",
           "segments": [
@@ -645,7 +678,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -724,7 +757,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -755,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c00c872a6433aa38",
+      "sourceHash": "fnv1a64:60761641cd31a68b",
       "notice": null,
       "blocks": [
         {
@@ -792,6 +825,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवस (divas) is inherited from Sanskrit divasa, which meant \"heaven\" in the Brahmanas and \"day\" later; it has come down with almost no change (CDIAL 6333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the one that will not take -ी",
           "segments": [
@@ -827,7 +871,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -897,7 +941,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

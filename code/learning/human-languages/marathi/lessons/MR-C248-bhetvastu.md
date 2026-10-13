@@ -14,7 +14,8 @@ romanization: "bheṭvastū"
 concept_tag: MR-VASTU248-BHETVASTU
 prerequisites: [MR-C248-jatra, MR-C248-mejvani]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit, sanskrit-vastu]
+etymology_hook: "bheṭvastū: bheṭ 'present' ← *bhēṭṭ- (CDIAL 9490) + Sanskrit vastu 'thing' (CDIAL 11449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C248-mejvani]
 <!-- hl-knowledge: introduces=[MR-LEX-C248-VASTU248-05]; assesses=[] -->
 
 **भेटवस्तू** — *bheṭvastū* — "a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेटवस्तू** (*bheṭvastū*) is **भेट**, "a present", from a reconstructed *\*bhēṭṭ-*, "meet" (CDIAL 9490), and Sanskrit *vastu*, "thing" (CDIAL 11449).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

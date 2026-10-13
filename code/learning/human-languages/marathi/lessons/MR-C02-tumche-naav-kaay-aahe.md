@@ -11,10 +11,11 @@ gloss: what's your name? (tumchaṁ nāv kāy āhe?)
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-aahe, MR-C02-naav]
 sounds: []
-roots: [tvam, ka-interrogative, naaman, asti]
+roots: [tvam, ka-interrogative, naaman, asti, sanskrit-yushmad, sanskrit-kidrk]
+etymology_hook: "tumcaṁ ← yuṣmad- 'you' (CDIAL 10511); nāv ← nāman 'name'; kāy ← *kādṛk 'of what sort' (CDIAL 3196)"
 reviews_of: [MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-majhe-naav-aahe]
 duration:
-  max_seconds: 200
+  max_seconds: 201
 requires:
   knowledge: [MR-LEX-TU-TUMHI, MR-LEX-KAAY, MR-LEX-AAHE-COPULA, MR-LEX-NAAV, MR-LEX-MAJHE, MR-GRAMMAR-RESPECT-BY-PLURAL, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS]
 introduces:
@@ -52,6 +53,11 @@ The "your" mirrors the "my" set you learned:
 
 All three are shown here in the neuter, agreeing with the neuter **नाव**
 (*nāv*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Each word is inherited. CDIAL lists **तुमचं** with **तुम्ही** under Sanskrit *yuṣmad-*, "you" (plural), whose *t-* comes from *tvam*, "thou" (CDIAL 10511); **नाव** under *nāman*, "name" (CDIAL 7067); and **काय** under *\*kādṛk*, its reshaping of Sanskrit *kīdṛk*, "of what sort" (CDIAL 3196).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-POSSESSIVE-RESPECT, MR-GRAMMAR-RESPECT-BY-PLURAL] -->

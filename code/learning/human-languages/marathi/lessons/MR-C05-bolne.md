@@ -12,6 +12,7 @@ concept_tag: MR-VERB-BOLNE
 prerequisites: [MR-C01-yeto, MR-C02-aahe]
 sounds: [matra-o, retroflex-na]
 roots: [bol-speak]
+etymology_hook: "bolṇe ← *bōll- 'speak', a form CDIAL reconstructs behind Prakrit bolla-; a tadbhava (CDIAL 9321)"
 reviews_of: [MR-C01-yeto]
 duration:
   max_seconds: 240
@@ -48,7 +49,7 @@ variety: standard
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-BOLNE, MR-GRAMMAR-INFINITIVE-NE]; assesses=[] -->
 
-**बोलणे** (*bolṇe*, "to speak") is a native Indo-Aryan verb on the stem
+**बोलणे** (*bolṇe*, "to speak") is a native Indo-Aryan verb, from a reconstructed *\*bōll-*, "speak" (CDIAL 9321), on the stem
 **bol-** — the same *bol-* as Hindi *bolnā* and Punjabi *bolṇā*. Its ending
 **-णे** (*-ṇe*) is the Marathi **infinitive** ("to ___"): *bol-ṇe* "to speak,"
 *bheṭ-ṇe* "to meet," *ye-ṇe* "to come." Strip *-ṇe* and you have the stem to

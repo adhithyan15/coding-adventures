@@ -14,7 +14,8 @@ romanization: "āvarṇe"
 concept_tag: MR-VERB-AVARNE
 prerequisites: [MR-C167-ghasarne, MR-C167-samsay-ghene]
 sounds: []
-roots: []
+roots: [indo-aryan-avarati]
+etymology_hook: "āvarṇe ← *āvarati 'covers', a reconstructed form; a tadbhava (CDIAL 1414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C167-samsay-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C168-ACT168-01]; assesses=[] -->
 
 **आवरणे** — *āvarṇe* — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आवरणे** (*āvarṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*āvarati*, "covers", a form CDIAL reconstructs from its descendants (CDIAL 1414). CDIAL glosses the Marathi verb "to cover, restrain, gather together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

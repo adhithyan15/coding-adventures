@@ -12,6 +12,9 @@ Before the new one: say the Marathi for turmeric, then the Marathi for cumin.
 You'll want to know: हार.
 हार — hār — "a necklace, a garland".
 
+The word, taken apart.
+हार (hār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hāra, "necklace" (CDIAL 14059). CDIAL glosses the Marathi word "garland; line".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for cumin, then the Marathi for a necklace.
 
 You'll want to know: कानातले.
 कानातले — kānātle — "earrings".
+
+The word, taken apart.
+कानातले (kānātle) is "the in-ear ones": कान, "ear", from Sanskrit karṇa, "ear" (CDIAL 2830), with -त, "in", and the ending -le.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a necklace, then the Marathi for earring
 You'll want to know: बाजारपेठ.
 बाजारपेठ — bājārpeṭh — "a market quarter".
 
+The word, taken apart.
+बाजारपेठ (bājārpeṭh) joins two words for market: bājār, usually traced to Persian bāzār, and peṭh, "town quarter, market", which CDIAL lists under Sanskrit pratiṣṭhā, "foundation; homestead" (CDIAL 8608).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for earrings, then the Marathi for a market 
 You'll want to know: बंदर.
 बंदर — bandar — "a harbour".
 
+The word, taken apart.
+बंदर (bandar), "harbour", is a loan, usually traced to Persian bandar, "port".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a market quarter, then the Marathi for a
 
 You'll want to know: विहीर.
 विहीर — vihīr — "a well".
+
+The word, taken apart.
+The origin of विहीर (vihīr) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,7 @@ concept_tag: MR-LEX-SUNDAR
 prerequisites: [MR-C50-adj-invariable, MR-C45-pron-oblique, MR-C24-milne]
 sounds: [matra-u, anusvara-nasal]
 roots: [sanskrit-sundara]
+etymology_hook: "sundar ← Sanskrit sundara 'beautiful', a tatsama; CDIAL asks if it is Prakrit for sūnara 'excellent' (CDIAL 13474)"
 duration:
   max_seconds: 210
 requires:
@@ -54,7 +55,7 @@ which is the whole return on having a class rather than a list.
 The word came into Marathi from Sanskrit **सुन्दर** (*sundara*) unchanged, and
 that is exactly why it does not bend: it arrived already finished. Sanskrit
 built it from **सु-** (*su-*), "good, well" — the same prefix behind
-**सुद्धा** — so *beautiful* is, underneath, *well-made*.
+**सुद्धा** — though CDIAL asks whether **सुन्दर** is itself a Middle Indo-Aryan form of *sūnara*, "excellent" (CDIAL 13474).
 
 It is a wide word in use. Marathi says **सुंदर** of a person, a room, a song
 and a day, where English would reach for *beautiful*, *lovely*, *nice* and

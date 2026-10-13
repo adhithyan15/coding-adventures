@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 178,
-  "sourceHash": "fnv1a64:d7c516f7b898c599",
+  "sourceHash": "fnv1a64:2c7e19d72a53fc35",
   "lessonIds": [
     "MR-C178-sadnika",
     "MR-C178-jevanghar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch178.txt",
   "json": "marathi/narration/ch178.json",
-  "textHash": "fnv1a64:c95e6d8159d4a213",
-  "jsonHash": "fnv1a64:892b5c482d66adfe",
+  "textHash": "fnv1a64:8fdbfc6ae81e2cb9",
+  "jsonHash": "fnv1a64:0666ba079adc31fd",
   "findings": []
 }

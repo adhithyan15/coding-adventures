@@ -15,6 +15,7 @@ concept_tag: MR-FOOD85-SAFARCHAND
 prerequisites: [MR-C85-dal, MR-C85-phal]
 sounds: []
 roots: []
+etymology_hook: "safarcand 'apple': origin not settled; often linked with Persian safarjal 'quince', but no source here confirms it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C85-phal]
 <!-- hl-knowledge: introduces=[MR-LEX-C85-FOOD85-05]; assesses=[] -->
 
 **सफरचंद** — *safarchand* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सफरचंद** (*safarchand*) is not settled. It is often linked with Persian *safarjal*, "quince", from Arabic, but CDIAL has no entry for it and no source here confirms the link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

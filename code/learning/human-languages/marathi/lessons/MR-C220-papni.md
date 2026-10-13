@@ -14,7 +14,8 @@ romanization: "pāpṇī"
 concept_tag: MR-VASTU220-PAPNI
 prerequisites: [MR-C219-grahak, MR-C220-tac]
 sounds: []
-roots: []
+roots: [sanskrit-pakshman]
+etymology_hook: "pāpṇī ← Sanskrit pakṣman 'eyelashes', a tadbhava (CDIAL 7638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C220-tac]
 <!-- hl-knowledge: introduces=[MR-LEX-C220-VASTU220-02]; assesses=[] -->
 
 **पापणी** — *pāpṇī* — "an eyelid; eyelashes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पापणी** (*pāpṇī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣman*, "eyelashes" (CDIAL 7638). CDIAL glosses the Marathi word "eyelid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

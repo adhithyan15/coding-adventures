@@ -14,7 +14,8 @@ romanization: "pannās"
 concept_tag: MR-NUMBERS118-PANNAS
 prerequisites: [MR-C117-tis, MR-C118-chalis]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "pannās ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C118-chalis]
 <!-- hl-knowledge: introduces=[MR-LEX-C118-NUMBERS118-02]; assesses=[] -->
 
 **पन्नास** — *pannās* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पन्नास** (*pannās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty" (CDIAL 7682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

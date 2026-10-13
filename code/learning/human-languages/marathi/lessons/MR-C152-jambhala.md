@@ -15,6 +15,7 @@ concept_tag: MR-QUAL152-JAMBHALA
 prerequisites: [MR-C152-dhokadayak, MR-C152-khote]
 sounds: []
 roots: []
+etymology_hook: "jāmbhaḷā 'purple': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C152-khote]
 <!-- hl-knowledge: introduces=[MR-LEX-C152-QUAL152-04]; assesses=[] -->
 
 **जांभळा** — *jāmbhaḷā* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **जांभळा** (*jāmbhaḷā*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

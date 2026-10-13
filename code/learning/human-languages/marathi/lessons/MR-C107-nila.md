@@ -14,7 +14,8 @@ romanization: "niḷā"
 concept_tag: MR-ADJ107-NILA
 prerequisites: [MR-C107-pivla, MR-C107-lal]
 sounds: []
-roots: []
+roots: [sanskrit-nila]
+etymology_hook: "niḷā ← Sanskrit nīla 'dark blue, dark green, black', a tadbhava (CDIAL 7563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C107-lal]
 <!-- hl-knowledge: introduces=[MR-LEX-C107-ADJ107-05]; assesses=[] -->
 
 **निळा** — *niḷā* — "blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निळा** (*niḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīla*, "dark blue, dark green, black" (CDIAL 7563). CDIAL lists Marathi *nīḷ*, "blue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

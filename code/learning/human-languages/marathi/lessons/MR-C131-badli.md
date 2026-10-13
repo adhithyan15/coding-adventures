@@ -14,7 +14,8 @@ romanization: "bādlī"
 concept_tag: MR-THINGS131-BADLI
 prerequisites: [MR-C131-padda, MR-C131-kulup]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bādlī: usually traced to Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C131-kulup]
 <!-- hl-knowledge: introduces=[MR-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **बादली** — *bādlī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बादली** (*bādlī*) is a loan, usually traced to Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

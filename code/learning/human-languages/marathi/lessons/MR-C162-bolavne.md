@@ -14,7 +14,8 @@ romanization: "bolāvṇe"
 concept_tag: MR-VERB-BOLAVNE
 prerequisites: [MR-C162-vijhavne, MR-C162-udi-marne]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolāvṇe: the 'make' form of bolṇe 'to speak' ← *bōll- 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C162-udi-marne]
 <!-- hl-knowledge: introduces=[MR-LEX-C162-ACT162-04]; assesses=[] -->
 
 **बोलावणे** — *bolāvṇe* — "to call over, to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलावणे** (*bolāvṇe*) is the "make" form of **बोलणे**, "to speak", which comes from a reconstructed *\*bōll-*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

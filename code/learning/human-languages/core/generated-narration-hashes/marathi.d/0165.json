@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 165,
-  "sourceHash": "fnv1a64:1a4410ee3d9e6a30",
+  "sourceHash": "fnv1a64:4fe9a2acf4498fc6",
   "lessonIds": [
     "MR-C165-cukne",
     "MR-C165-sudharne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch165.txt",
   "json": "marathi/narration/ch165.json",
-  "textHash": "fnv1a64:00af69582e0996af",
-  "jsonHash": "fnv1a64:5c788f64a0c16840",
+  "textHash": "fnv1a64:f3ad80206d371b75",
+  "jsonHash": "fnv1a64:73885757f1c4babc",
   "findings": []
 }

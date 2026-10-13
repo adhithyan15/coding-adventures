@@ -14,7 +14,8 @@ romanization: "pagār"
 concept_tag: MR-VASTU212-PAGAR
 prerequisites: [MR-C212-pakit, MR-C212-patta]
 sounds: []
-roots: []
+roots: [portuguese-pagar]
+etymology_hook: "pagār ← Portuguese pagar 'to pay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C212-patta]
 <!-- hl-knowledge: introduces=[MR-LEX-C212-VASTU212-04]; assesses=[] -->
 
 **पगार** — *pagār* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पगार** (*pagār*) is a loan from Portuguese *pagar*, "to pay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

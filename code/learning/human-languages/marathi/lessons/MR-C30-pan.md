@@ -11,10 +11,10 @@ gloss: but — the word that lets a Marathi sentence take something back
 concept_tag: MR-JOIN-PAN
 prerequisites: [MR-C30-kinva, MR-C01-nahi]
 sounds: [unaspirated-p, retroflex-na]
-roots: []
-etymology_hook: "पण continues Sanskrit पुनर् (punar, 'again, back'), the same word that gives Marathi पुन्हा in पुन्हा भेटू — one ancestor, two descendants in this book: पुन्हा kept the meaning 'again', पण narrowed to 'on the other hand'"
+roots: [punar]
+etymology_hook: "paṇ ← Sanskrit punar 'back, again, however', a tadbhava (CDIAL 8273)"
 duration:
-  max_seconds: 210
+  max_seconds: 220
 requires:
   knowledge: [MR-JOIN-AANI, MR-JOIN-KINVA, MR-LEX-NAHI-01]
 introduces:
@@ -57,6 +57,11 @@ every sentence you can build only agrees with itself.
 word, **पुनर्** (*punar*), "again, back." One descendant kept the time meaning;
 the other kept only the *back*, and turned it into contradiction. English does
 this too: *but* began as *be-utan*, "outside."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पण** (*paṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *punar*, "back, again, moreover, however" (CDIAL 8273).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-PAN, MR-JOIN-AANI, MR-JOIN-KINVA, MR-LEX-NAHI-01] -->

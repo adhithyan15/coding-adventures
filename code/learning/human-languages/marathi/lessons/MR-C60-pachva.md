@@ -11,10 +11,10 @@ gloss: "fifth — the seam, where Marathi stops inheriting ordinals and starts b
 concept_tag: MR-ORDINAL-FIFTH
 prerequisites: [MR-C60-chautha, MR-C58-ekonis, MR-W56-au-matra, MR-C41-ghar]
 sounds: []
-roots: []
-etymology_hook: "Molesworth has an entry for पाचवा, but it is a different word entirely -- a returning sickness -- because the ordinal fifth was too predictable to need one"
+roots: [sanskrit-pancama]
+etymology_hook: "pāchvā ← Sanskrit pañcama 'fifth', a tadbhava: -ma became -vā (CDIAL 7669)"
 duration:
-  max_seconds: 240
+  max_seconds: 280
 requires:
   knowledge: [MR-LEX-CHAUTHA, MR-LEX-PAHILA, MR-LEX-TISRA, MR-LEX-DUSRA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-EKONIS, MR-SCRIPT-AU-MATRA-01, MR-LEX-GHAR]
 introduces:
@@ -54,6 +54,11 @@ reviews_of: [MR-C60-chautha, MR-C58-ekonis, MR-W56-au-matra, MR-C41-ghar]
 Say **पाच** and then say **पाचवा**. The number did not change at all. Nothing
 was worn down, nothing was replaced: **पाच** is still sitting there whole, with
 **-वा** added behind it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **पाचवा** (*pāchvā*) under Sanskrit *pañcama*, "fifth" (CDIAL 7669). The ending **-वा** that Marathi now adds to any number is what the old ordinal ending *-ma* became.
 
 ## Grammar Lens: -वा, and where the language changes its mind
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-ORDINAL-VA]; assesses=[MR-LEX-PACHVA, MR-LEX-CHAUTHA, MR-GRAMMAR-ORDINAL-SET] -->

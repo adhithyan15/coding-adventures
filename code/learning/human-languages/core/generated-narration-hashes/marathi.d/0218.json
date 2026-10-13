@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 218,
-  "sourceHash": "fnv1a64:066d357ab89cf65e",
+  "sourceHash": "fnv1a64:70323cc56b9af3f7",
   "lessonIds": [
     "MR-C218-koli",
     "MR-C218-mhais",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch218.txt",
   "json": "marathi/narration/ch218.json",
-  "textHash": "fnv1a64:7d0d2678943097b7",
-  "jsonHash": "fnv1a64:edf4129468b1453b",
+  "textHash": "fnv1a64:91877960b8c392cb",
+  "jsonHash": "fnv1a64:552ca31b2f0b55c7",
   "findings": []
 }

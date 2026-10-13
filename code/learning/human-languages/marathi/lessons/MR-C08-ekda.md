@@ -14,7 +14,8 @@ gloss: "once"
 concept_tag: MR-ANCHOR-EKDA
 prerequisites: [MR-C08-uub]
 sounds: []
-roots: []
+roots: [sanskrit-ekada]
+etymology_hook: "ekdā: Sanskrit ekadā 'once, at one time': eka 'one' + the time ending -dā; a tatsama"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **एकदा** — *ekdā* — "once".
 
 Say it: *ekdā*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ए**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एकदा** (*ekdā*) is Sanskrit *ekadā*, "once, at one time", a tatsama: *eka*, "one", with the time ending *-dā* that also closes Sanskrit *kadā*, "when". CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-EKDA] -->

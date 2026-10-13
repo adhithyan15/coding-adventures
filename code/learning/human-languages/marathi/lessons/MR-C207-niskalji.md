@@ -14,7 +14,8 @@ romanization: "niṣkāḷjī"
 concept_tag: MR-GUN207-NISKALJI
 prerequisites: [MR-C207-dhit, MR-C207-savadh]
 sounds: []
-roots: []
+roots: [sanskrit-nis, sanskrit-kaleyaka]
+etymology_hook: "niṣkāḷjī: Sanskrit niṣ- 'without' + kāḷjī 'care'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C207-savadh]
 <!-- hl-knowledge: introduces=[MR-LEX-C207-GUN207-03]; assesses=[] -->
 
 **निष्काळजी** — *niṣkāḷjī* — "careless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निष्काळजी** (*niṣkāḷjī*) is Sanskrit *niṣ-*, "without", with **काळजी**, "care": "without care".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
