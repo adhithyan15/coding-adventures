@@ -8,7 +8,7 @@ changes before same PR17288 publication; do not reattribute native evidence.
 
 Line-hop controls parse authored front matter/edges and use explicit public-layout
 endpoint fixtures. Assert exact first-edge straight commands, later-edge arc/gap
-commands, mode metadata, order and all four endpoint triangles/style/area50.
+commands, mode metadata, order and all six endpoint triangles/style/area50.
 Disabled hops preserve straight paths. Invisible and curved predecessors cannot
 create hops; curved later edges retain their original route. Check interior
 crossing coordinates, endpoint/parallel/noncrossing rejection and sorted multiple
@@ -43,3 +43,5 @@ cleanup/CV04b. Full final-source Miri DEFERRED/PENDING, neverpassed; frozen run,
 duplicate execution. Delivery FIRST then genuine final-source Miri/reruns.
 BaseESTree/ownedtypes/no new crates.io dependencies. Full Closure parity/output
 joins/all transformation lineage/fullgoal OPEN; heartbeatACTIVE.
+
+Actual full-cone red at cb41871: E0063 in retained gap_work_diagram test-only initializer after upstream adds line_hops. Add explicit None to this fixture; preserve every spacing/work assertion and production algorithm. Re-run full combined cone and strict lint. Focused rows may be retained only with nonempty unchanged complete package objects and original execution heads.
