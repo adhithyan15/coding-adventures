@@ -4783,6 +4783,34 @@ impl Compiler {
                 }
             }
         }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_runtime_real_root(operand) {
+                            saw_runtime_real_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real_root {
+                    return true;
+                }
+            }
+        }
         if direct_tokens(node).is_empty() {
             let children = direct_nodes(node);
             if children.len() == 1 {
@@ -13647,6 +13675,26 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_powered_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left ^ 2 else right ^ 1) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left ^ 2 else right ^ 1) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose powered unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
@@ -13670,6 +13718,7 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then -left else +right) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left + 1.0 else right - 0.25) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left * 2.0 else 14.0 / right) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left ^ 2 else right ^ 1) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("shared storage must remain invalid across a calling selector");
