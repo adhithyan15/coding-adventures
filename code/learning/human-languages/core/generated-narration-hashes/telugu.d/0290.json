@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 290,
-  "sourceHash": "fnv1a64:63457919826a81fd",
+  "sourceHash": "fnv1a64:be311d45874c6325",
   "lessonIds": [
     "TE-C290-pagalu",
     "TE-C290-puta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch290.txt",
   "json": "telugu/narration/ch290.json",
-  "textHash": "fnv1a64:867caacade870bab",
-  "jsonHash": "fnv1a64:f15876d645dc9e2c",
+  "textHash": "fnv1a64:45034ce6361e85b8",
+  "jsonHash": "fnv1a64:98d2e338e924f761",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "porapāṭuna"
 concept_tag: TE-KARANAM178-PORAPATUNA
 prerequisites: [TE-C177-edemaina, TE-C178-kavalani]
 sounds: []
-roots: []
+roots: [telugu-porapatu-mistake]
+etymology_hook: "porapāṭuna: origin of porapāṭu 'mistake' uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C178-kavalani]
 <!-- hl-knowledge: introduces=[TE-LEX-C178-KARANAM178-02]; assesses=[] -->
 
 **పొరపాటున** — *porapāṭuna* — "by mistake, accidentally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *porapāṭu*, "mistake", the word in **పొరపాటున** (*porapāṭuna*), is uncertain: DEDR and CDIAL list no word of this shape with this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

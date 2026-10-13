@@ -14,7 +14,8 @@ romanization: "nāgali"
 concept_tag: TE-VASTUVU234-NAGALI
 prerequisites: [TE-C234-eruvu, TE-C234-peda]
 sounds: []
-roots: []
+roots: [dravidian-nancil-plough]
+etymology_hook: "nāgali: Dravidian; DEDR 2907 lists nāgali 'plough' with Tamil nāñcil and compares Sanskrit lāṅgala"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C234-peda]
 <!-- hl-knowledge: introduces=[TE-LEX-C234-VASTUVU234-04]; assesses=[] -->
 
 **నాగలి** — *nāgali* — "a plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాగలి** (*nāgali*) is Dravidian. DEDR 2907 lists a nasalised *nāgali*, "plough", with Tamil *nāñcil* and Kannada *nēgal*, "plough", and compares Sanskrit *lāṅgala*, "plough" (CDIAL 11006). CDIAL reports a view that the Indo-Aryan and Dravidian words both come from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sāmarthyaṁ"
 concept_tag: TE-LOC105-SAMARTHYAM
 prerequisites: [TE-C105-stesan, TE-C105-bassu]
 sounds: []
-roots: []
+roots: [sanskrit-samarthya]
+etymology_hook: "sāmarthyaṁ ← Sanskrit sāmarthya 'ability, power', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C105-bassu]
 <!-- hl-knowledge: introduces=[TE-LEX-C105-LOC105-03]; assesses=[] -->
 
 **సామర్థ్యం** — *sāmarthyaṁ* — "ability".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సామర్థ్యం** (*sāmarthyaṁ*) is Sanskrit *sāmarthya*, "ability, power", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

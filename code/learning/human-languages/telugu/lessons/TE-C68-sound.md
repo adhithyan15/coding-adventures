@@ -11,7 +11,8 @@ romanization: "śabdaṁ"
 concept_tag: TE-NOUN-SOUND
 prerequisites: [TE-C67-window]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "śabdaṁ ← Sanskrit śabda 'sound, noise' (CDIAL 12298), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C67-window]
 It is Sanskrit, borrowed early and borrowed whole. It covers the smallest noise and the largest with no change: a చుక్క of water landing, or the crack that comes before rain.
 
 A room with no శబ్దం in it is not called quiet in Telugu so much as empty, and people say exactly that about a house whose children have grown up and gone.
+
+CDIAL 12298 lists Sanskrit *śabda*, "articulate sound, noise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

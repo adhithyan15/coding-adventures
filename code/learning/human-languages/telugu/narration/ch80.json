@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Wanting, Allowing, Wishing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e2bea048c1f8c50",
+  "sourceHash": "fnv1a64:b2e46185d448f8b5",
   "lessons": [
     {
       "id": "TE-C80-want",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db4ed398d379a70a",
+      "sourceHash": "fnv1a64:6540167e97a3f336",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాకు కావాలి (nāku kāvāli) is native Dravidian: nāku, \"to me\" (DEDR 5160), and kāvāli, \"it must become\", built on kā-, the stem of agu, \"to be, become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b26294ef7babf71c",
+      "sourceHash": "fnv1a64:cef102704b7bacc9",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అని (ani) is native Dravidian: the \"having said\" form of anu, \"to say\", which DEDR 868 lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: Telugu quotes forwards, not backwards",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -212,7 +234,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +283,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -292,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08a6c1d774782b04",
+      "sourceHash": "fnv1a64:caa376a47bf6ba94",
       "notice": null,
       "blocks": [
         {
@@ -333,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళవచ్చు (veḷḷavaccu) is native Dravidian: veḷḷu, \"to go\" (DEDR 5393), and vaccu, \"to come\", here \"may\" (DEDR 5270), which DEDR glosses \"to come, happen, be possible\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -343,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -392,7 +425,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -423,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaf7ba4e2dd96764",
+      "sourceHash": "fnv1a64:fd0add461a4f9892",
       "notice": null,
       "blocks": [
         {
@@ -464,6 +497,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లోపలికి రండి (lōpaliki raṇḍi) is native Dravidian: lōpala, \"inside\", which DEDR 698 lists, with the ending -ki, \"to\", and raṇḍi, \"please come\", from the verb DEDR 5270 lists as vaccu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -474,7 +518,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -523,7 +567,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -554,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00c6c5fcbd3e0811",
+      "sourceHash": "fnv1a64:a7c052725d249110",
       "notice": null,
       "blocks": [
         {
@@ -595,6 +639,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శుభాకాంక్షలు (śubhākāṅkṣalu) is Sanskrit śubha, \"auspicious, good\" (CDIAL 12532), and ākāṅkṣā, \"wish, longing\", with the Telugu plural ending -lu: \"good wishes\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -605,7 +660,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -654,7 +709,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

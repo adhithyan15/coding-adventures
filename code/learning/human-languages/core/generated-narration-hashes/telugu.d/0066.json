@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 66,
-  "sourceHash": "fnv1a64:3fbda7864839e938",
+  "sourceHash": "fnv1a64:a2cfec944f2fcedb",
   "lessonIds": [
     "TE-C66-field",
     "TE-C66-paddy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch66.txt",
   "json": "telugu/narration/ch66.json",
-  "textHash": "fnv1a64:6786ca07bbe6d742",
-  "jsonHash": "fnv1a64:6a921064e1831b39",
+  "textHash": "fnv1a64:27e28ee9c954e5df",
+  "jsonHash": "fnv1a64:fa8879c239a4c521",
   "findings": []
 }

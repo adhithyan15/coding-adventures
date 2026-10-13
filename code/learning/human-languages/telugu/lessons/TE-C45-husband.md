@@ -11,7 +11,8 @@ romanization: "bharta"
 concept_tag: TE-NOUN-HUSBAND
 prerequisites: [TE-C45-grandmother]
 sounds: []
-roots: []
+roots: [sanskrit-bhartr]
+etymology_hook: "bharta ← Sanskrit bhartṛ 'husband, bearer', from bhṛ 'to bear' (CDIAL 9402)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,8 @@ reviews_of: [TE-C45-grandmother]
 **భర్త** (*bharta*) — "husband".
 
 Sanskrit, and it opens cleanly: the root *bhṛ*, 'to bear, to carry, to support', plus the ending that names the one who does it. So the word says 'the one who supports'. That root is old enough to have relatives far outside India — Latin *fero*, 'I carry', and English *bear* both continue it.
+
+CDIAL 9402 lists Sanskrit *bhartṛ*, "husband, bearer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

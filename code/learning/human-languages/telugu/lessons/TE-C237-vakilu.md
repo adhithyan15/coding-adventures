@@ -14,7 +14,8 @@ romanization: "vakīlu"
 concept_tag: TE-PANI237-VAKILU
 prerequisites: [TE-C237-postumanu, TE-C237-kandaktaru]
 sounds: []
-roots: []
+roots: [arabic-wakil]
+etymology_hook: "vakīlu ← Arabic wakīl 'agent, advocate', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C237-kandaktaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C237-PANI237-05]; assesses=[] -->
 
 **వకీలు** — *vakīlu* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వకీలు** (*vakīlu*) is a loan from Arabic *wakīl*, "agent, advocate", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "koṇḍa"
 concept_tag: TE-THINGS121-KONDA
 prerequisites: [TE-C121-tupanu, TE-C121-ala]
 sounds: []
-roots: []
+roots: [dravidian-kunru-hill]
+etymology_hook: "koṇḍa: native Dravidian, one word with Tamil kuṉṟu 'hill' (DEDR 1864); Kannada borrowed it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C121-ala]
 <!-- hl-knowledge: introduces=[TE-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **కొండ** — *koṇḍa* — "a hill, a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొండ** (*koṇḍa*) is native Dravidian, one word with Tamil *kuṉṟu*, "hill" (DEDR 1864). DEDR notes that Kannada *koṇḍa*, "hill", is a loan from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

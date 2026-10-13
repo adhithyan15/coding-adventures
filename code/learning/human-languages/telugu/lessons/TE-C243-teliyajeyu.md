@@ -14,7 +14,8 @@ romanization: "teliyajēyu"
 concept_tag: TE-VERB-TELIYAJEYU
 prerequisites: [TE-C243-taggincu, TE-C243-pencu]
 sounds: []
-roots: []
+roots: [teliyu-become-clear-dravidian, sey-do-dravidian]
+etymology_hook: "teliyajēyu: native teliyu 'to be known' (DEDR 3433) + cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C243-pencu]
 <!-- hl-knowledge: introduces=[TE-LEX-C243-KRIYA243-04]; assesses=[] -->
 
 **తెలియజేయు** — *teliyajēyu* — "to inform, to let know".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెలియజేయు** (*teliyajēyu*) is native Dravidian: *teliya*, from *teliyu*, "to be known" (DEDR 3433), and *-jēyu*, from *cēyu*, "to do" (DEDR 1957): "to make known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rūpāyi"
 concept_tag: TE-THINGS131-RUPAYI
 prerequisites: [TE-C130-tikkettu, TE-C130-paisa]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rūpāyi ← Hindustani rupayā, from Sanskrit rūpya 'silver; stamped' (CDIAL 10805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C130-paisa]
 <!-- hl-knowledge: introduces=[TE-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **రూపాయి** — *rūpāyi* — "a rupee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రూపాయి** (*rūpāyi*) is a loan from Hindustani *rupayā*, from Sanskrit *rūpya*, "stamped; silver" (CDIAL 10805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

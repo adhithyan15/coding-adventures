@@ -11,7 +11,8 @@ romanization: "manci"
 concept_tag: TE-ADJ-GOOD
 prerequisites: [TE-C42-small]
 sounds: []
-roots: []
+roots: [telugu-manci-good]
+etymology_hook: "manci: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **చిన్న** *cinna* a moment ago. Put them side by side and noth
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **మంచి** (*manci*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-03] -->

@@ -14,7 +14,8 @@ romanization: "vyāpāri"
 concept_tag: TE-PANI194-VYAPARI
 prerequisites: [TE-C194-panimanisi, TE-C194-darji]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vyāpāri: Sanskrit vyāpārin 'one in business', from vyāpāra (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C194-darji]
 <!-- hl-knowledge: introduces=[TE-LEX-C194-PANI194-04]; assesses=[] -->
 
 **వ్యాపారి** — *vyāpāri* — "a trader, a merchant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యాపారి** (*vyāpāri*) is Sanskrit *vyāpārin*, "one in business", from *vyāpāra*, "occupation, business" (CDIAL 12205), with the final *-n* dropped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

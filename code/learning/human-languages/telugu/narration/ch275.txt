@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a subject, then the Telugu for mathematic
 You'll want to know: పూజారి.
 పూజారి — pūjāri — "a priest".
 
+The word, taken apart.
+పూజారి (pūjāri) is Sanskrit pūjā, "honour, worship" (CDIAL 8317), with the ending -āri: "one who does worship".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for mathematics, then the Telugu for a priest
 
 You'll want to know: కళాకారుడు.
 కళాకారుడు — kaḷākāruḍu — "an artist, a performer".
+
+The word, taken apart.
+కళాకారుడు (kaḷākāruḍu) is Sanskrit kalā, "any practical art" (CDIAL 2927), and kāra, "maker", with the Telugu ending -uḍu. CDIAL takes this kalā from Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a priest, then the Telugu for an artist.
 You'll want to know: కవి.
 కవి — kavi — "a poet".
 
+The word, taken apart.
+కవి (kavi) is Sanskrit kavi, "wise; wise man, poet", taken over whole as a learned loan, a tatsama (CDIAL 2964).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for an artist, then the Telugu for a poet.
 You'll want to know: సంగీతం.
 సంగీతం — saṅgītaṁ — "music".
 
+The word, taken apart.
+సంగీతం (saṅgītaṁ) is Sanskrit saṅgīta, "song with music", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a poet, then the Telugu for music.
 
 You'll want to know: నాటకం.
 నాటకం — nāṭakaṁ — "a play, a drama".
+
+The word, taken apart.
+నాటకం (nāṭakaṁ) is Sanskrit nāṭaka, "dancer, actor", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7045). The sense "a play" is the one Telugu gives it.
 
 What you've built.
 One more word for this chapter.

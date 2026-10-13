@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to begin, then the Telugu for to iron.
 You'll want to know: పరిష్కరించు.
 పరిష్కరించు — pariṣkariñcu — "to solve, to settle".
 
+The word, taken apart.
+పరిష్కరించు (pariṣkariñcu) is Sanskrit pariṣkāra, which CDIAL 7894 glosses "ornament", made into a verb with the Telugu ending -iñcu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to iron, then the Telugu for to solve.
 
 You'll want to know: తగ్గించు.
 తగ్గించు — taggiñcu — "to reduce, to lower".
+
+The word, taken apart.
+తగ్గించు (taggiñcu) is native Dravidian, made from taggu, "to decrease, be reduced", which DEDR 3178 lists with Tamil tāḻ, "to fall low, decrease".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to solve, then the Telugu for to reduce.
 You'll want to know: పెంచు.
 పెంచు — peñcu — "to raise, to increase".
 
+The word, taken apart.
+పెంచు (peñcu) is native Dravidian. DEDR 4436 lists peñcu, "to nourish, rear, increase", with Tamil pēṇu, "to cherish, foster". DEDR 4385 pencu, "potsherd", is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to reduce, then the Telugu for to raise.
 You'll want to know: తెలియజేయు.
 తెలియజేయు — teliyajēyu — "to inform, to let know".
 
+The word, taken apart.
+తెలియజేయు (teliyajēyu) is native Dravidian: teliya, from teliyu, "to be known" (DEDR 3433), and -jēyu, from cēyu, "to do" (DEDR 1957): "to make known".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to raise, then the Telugu for to inform.
 
 You'll want to know: బదిలీ చేయు.
 బదిలీ చేయు — badilī cēyu — "to transfer".
+
+The word, taken apart.
+బదిలీ చేయు (badilī cēyu) pairs badilī, "transfer", from Arabic badal, "exchange", through Persian and Hindustani, with native cēyu, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.

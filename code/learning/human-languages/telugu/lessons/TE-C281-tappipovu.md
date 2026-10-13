@@ -14,7 +14,8 @@ romanization: "tappipōvu"
 concept_tag: TE-VERB-TAPPIPOVU
 prerequisites: [TE-C281-samarpincu, TE-C281-nokku]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip, proto-dravidian-poo-go]
+etymology_hook: "tappipōvu: native tappu 'to miss' (DEDR 3071) + pōvu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C281-nokku]
 <!-- hl-knowledge: introduces=[TE-LEX-C281-KRIYA281-04]; assesses=[] -->
 
 **తప్పిపోవు** — *tappipōvu* — "to get lost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్పిపోవు** (*tappipōvu*) is native Dravidian: *tappi*, from *tappu*, "to miss, go astray", one word with Tamil *tappu* (DEDR 3071), and *pōvu*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

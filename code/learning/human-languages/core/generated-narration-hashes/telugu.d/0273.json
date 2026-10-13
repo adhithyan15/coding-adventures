@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 273,
-  "sourceHash": "fnv1a64:24d3b042cc435d96",
+  "sourceHash": "fnv1a64:c1b038c7b86b1727",
   "lessonIds": [
     "TE-C273-vaddi",
     "TE-C273-billu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch273.txt",
   "json": "telugu/narration/ch273.json",
-  "textHash": "fnv1a64:d467cfe9fcd42ac3",
-  "jsonHash": "fnv1a64:e5990f464279748f",
+  "textHash": "fnv1a64:89edcf2cf8f7ead1",
+  "jsonHash": "fnv1a64:6871dae3bffd8dd5",
   "findings": []
 }

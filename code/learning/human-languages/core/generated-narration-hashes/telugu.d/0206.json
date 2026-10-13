@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 206,
-  "sourceHash": "fnv1a64:59b55428d1ef24c6",
+  "sourceHash": "fnv1a64:7f8ad517427505ff",
   "lessonIds": [
     "TE-C206-dorlu",
     "TE-C206-jaru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch206.txt",
   "json": "telugu/narration/ch206.json",
-  "textHash": "fnv1a64:bbab729743932e9e",
-  "jsonHash": "fnv1a64:aa920bed9be65625",
+  "textHash": "fnv1a64:da78846c5f8beff8",
+  "jsonHash": "fnv1a64:37a8ec82c9369826",
   "findings": []
 }

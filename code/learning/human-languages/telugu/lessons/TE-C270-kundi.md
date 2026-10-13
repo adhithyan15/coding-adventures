@@ -14,7 +14,8 @@ romanization: "kuṇḍī"
 concept_tag: TE-VASTUVU270-KUNDI
 prerequisites: [TE-C269-ittadi, TE-C270-tapela]
 sounds: []
-roots: []
+roots: [sanskrit-kunda]
+etymology_hook: "kuṇḍī: from Sanskrit kuṇḍa 'bowl, waterpot' (CDIAL 3264), which CDIAL takes from Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C270-tapela]
 <!-- hl-knowledge: introduces=[TE-LEX-C270-VASTUVU270-02]; assesses=[] -->
 
 **కుండీ** — *kuṇḍī* — "a flowerpot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుండీ** (*kuṇḍī*) comes from Sanskrit *kuṇḍa*, "bowl, waterpot" (CDIAL 3264), a word CDIAL itself takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

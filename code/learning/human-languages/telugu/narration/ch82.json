@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Sixth to Eleventh",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:fd10fa22a23c0861",
+  "sourceHash": "fnv1a64:b076e49f60aa5a4d",
   "lessons": [
     {
       "id": "TE-C82-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a83e59350ad89661",
+      "sourceHash": "fnv1a64:a017be47dd4fb3d4",
       "notice": null,
       "blocks": [
         {
@@ -122,6 +122,10 @@
             {
               "kind": "speech",
               "text": "The numbers six to ten were the ones the first numbers lesson called Telugu's wandering half, the place where it drifts furthest from Tamil and Kannada. The ordinal ending does not care. Whatever shape the cardinal arrived in, -వ goes on it."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 2485 lists Telugu āṟu, \"six\", with Tamil āṟu."
             }
           ]
         },
@@ -197,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05f8acf5eaea304e",
+      "sourceHash": "fnv1a64:241b81b39a229165",
       "notice": null,
       "blocks": [
         {
@@ -305,6 +309,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏడవ (ēḍava) is native Dravidian: ēḍu, \"seven\", one word with Tamil ēḻu (DEDR 910), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -344,7 +359,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -375,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ff4edb50496f287",
+      "sourceHash": "fnv1a64:9b3199d7e728f203",
       "notice": null,
       "blocks": [
         {
@@ -483,6 +498,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎనిమిదవ (enimidava) is native Dravidian: enimidi, \"eight\", filed with Tamil eṭṭu (DEDR 784), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -522,7 +548,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -553,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14a29bc0e1eaa470",
+      "sourceHash": "fnv1a64:fdea08fa59dba84a",
       "notice": null,
       "blocks": [
         {
@@ -652,6 +678,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తొమ్మిదవ (tommidava) is native Dravidian: tommidi, \"nine\", filed with Tamil oṉpatu (DEDR 1025), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -691,7 +728,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -722,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3852a66588de905",
+      "sourceHash": "fnv1a64:0ca404e3f68e5e9a",
       "notice": null,
       "blocks": [
         {
@@ -821,6 +858,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పదవ (padava) is native Dravidian: padi, \"ten\", one word with Tamil pattu (DEDR 3918), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -860,7 +908,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

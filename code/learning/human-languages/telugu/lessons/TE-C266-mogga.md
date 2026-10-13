@@ -14,7 +14,8 @@ romanization: "mogga"
 concept_tag: TE-VASTUVU266-MOGGA
 prerequisites: [TE-C266-marri, TE-C266-tulasi]
 sounds: []
-roots: []
+roots: [dravidian-mugi-close]
+etymology_hook: "mogga: native Dravidian; DEDR 4893 lists mogga 'a bud' with Tamil mukiḻ 'bud'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C266-tulasi]
 <!-- hl-knowledge: introduces=[TE-LEX-C266-VASTUVU266-05]; assesses=[] -->
 
 **మొగ్గ** — *mogga* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొగ్గ** (*mogga*) is native Dravidian. DEDR 4893 lists *mogga*, "a bud", with Tamil *mukiḻ*, "to bud". DEDR compares Sanskrit *mukula*, "bud" (CDIAL 10146), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuñce"
 concept_tag: TE-VASTUVU192-KUNCE
 prerequisites: [TE-C192-vatti, TE-C192-gollem]
 sounds: []
-roots: []
+roots: [telugu-kunce-brush]
+etymology_hook: "kuñce: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'brush'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-gollem]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-03]; assesses=[] -->
 
 **కుంచె** — *kuñce* — "a paintbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కుంచె** (*kuñce*) is uncertain. DEDR and CDIAL list no word of this shape meaning "brush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

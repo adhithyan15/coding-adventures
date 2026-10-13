@@ -14,7 +14,8 @@ romanization: "kovvotti"
 concept_tag: TE-THINGS113-KOVVOTTI
 prerequisites: [TE-C112-cemca, TE-C113-poyyi, TE-C25-shubha-ratri, TE-C31-subha-madhyahnam-register]
 sounds: []
-roots: []
+roots: [dravidian-kozhu-fat, sanskrit-varti]
+etymology_hook: "kovvotti: native kovvu 'fat' (DEDR 2146) + vatti 'wick' ← Sanskrit varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C113-poyyi]
 <!-- hl-knowledge: introduces=[TE-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **కొవ్వొత్తి** — *kovvotti* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొవ్వొత్తి** (*kovvotti*) is native *kovvu*, "fat", one word with Tamil *koḻu* (DEDR 2146), and *vatti*, "wick", from Sanskrit *varti*, "wick" (CDIAL 11359): a fat-wick.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taṭṭu"
 concept_tag: TE-VERB-TATTU
 prerequisites: [TE-C206-kottu, TE-C207-callarcu]
 sounds: []
-roots: []
+roots: [dravidian-tattu-tap]
+etymology_hook: "taṭṭu: native Dravidian, one word with Tamil taṭṭu and Kannada taṭṭu (DEDR 3039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C207-callarcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C207-KRIYA207-02]; assesses=[] -->
 
 **తట్టు** — *taṭṭu* — "to tap, to pat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తట్టు** (*taṭṭu*) is native Dravidian, one word with Tamil *taṭṭu* and Kannada *taṭṭu* (DEDR 3039). DEDR lists Telugu *taṭṭu*, "to strike, knock, pat". DEDR compares Indo-Aryan words for striking, such as Sanskrit *tāḍayati*, "strikes" (CDIAL 5752).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

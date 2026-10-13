@@ -11,7 +11,8 @@ romanization: "sulabhaṁ"
 concept_tag: TE-ADJ-EASY
 prerequisites: [TE-C76-itisgood, TE-C34-tiisuko]
 sounds: []
-roots: []
+roots: [sanskrit-sulabha]
+etymology_hook: "sulabhaṁ ← Sanskrit sulabha 'easy' (CDIAL 13512), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C76-itisgood]
 Sanskrit **సు-** ("well") plus **లభ** ("got"): what is easily got. The same సు- is the శు- of శుభోదయం, softened.
 
 **తెలుగు సులభం** — "Telugu is easy." A **-ం** noun like this needs no -ది; it is already a naming word.
+
+CDIAL 13512 lists Sanskrit *sulabha*, "easy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

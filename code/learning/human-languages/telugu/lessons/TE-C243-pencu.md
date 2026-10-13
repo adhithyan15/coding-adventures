@@ -14,7 +14,8 @@ romanization: "peñcu"
 concept_tag: TE-VERB-PENCU
 prerequisites: [TE-C243-pariskarincu, TE-C243-taggincu]
 sounds: []
-roots: []
+roots: [dravidian-peenu-foster]
+etymology_hook: "peñcu: native Dravidian; DEDR 4436 lists pen(u)cu 'to nourish, increase' with Tamil pēṇu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C243-taggincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C243-KRIYA243-03]; assesses=[] -->
 
 **పెంచు** — *peñcu* — "to raise, to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెంచు** (*peñcu*) is native Dravidian. DEDR 4436 lists *peñcu*, "to nourish, rear, increase", with Tamil *pēṇu*, "to cherish, foster". DEDR 4385 *pencu*, "potsherd", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

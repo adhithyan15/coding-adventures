@@ -14,7 +14,8 @@ romanization: "appagiñcu"
 concept_tag: TE-VERB-APPAGINCU
 prerequisites: [TE-C248-mosam-ceyu, TE-C248-docuko]
 sounds: []
-roots: []
+roots: [telugu-appagincu-entrust]
+etymology_hook: "appagiñcu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to entrust'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C248-docuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C248-KRIYA248-05]; assesses=[] -->
 
 **అప్పగించు** — *appagiñcu* — "to hand over, to entrust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **అప్పగించు** (*appagiñcu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to hand over, entrust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

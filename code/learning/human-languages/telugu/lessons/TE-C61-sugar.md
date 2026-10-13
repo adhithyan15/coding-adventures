@@ -11,7 +11,8 @@ romanization: "cakkera"
 concept_tag: TE-NOUN-SUGAR
 prerequisites: [TE-C61-oil]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara]
+etymology_hook: "cakkera ← Sanskrit śarkarā 'gravel, grit' (CDIAL 12337), reshaped as a tadbhava"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C61-oil]
 Telugu also keeps బెల్లం, the unrefined block of palm or cane sugar, for everything traditional. చక్కెర is the white refined thing that came later.
 
 A pinch of చక్కెర goes into dishes an English kitchen would leave savoury, and it goes in to round off the salt rather than to make anything sweet.
+
+CDIAL 12337 lists Sanskrit *śarkarā*, "gravel, grit"; Telugu reshaped it, as Prakrit *sakkarā* had.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

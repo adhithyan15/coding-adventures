@@ -14,7 +14,8 @@ romanization: "venakāḍu"
 concept_tag: TE-VERB-VENAKADU
 prerequisites: [TE-C285-karugu, TE-C286-vayida-veyu]
 sounds: []
-roots: []
+roots: [dravidian-ven-back, dravidian-aadu-move]
+etymology_hook: "venakāḍu: native venaka 'back' (DEDR 5488) + āḍu 'to move' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C286-vayida-veyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C286-KRIYA286-02]; assesses=[] -->
 
 **వెనకాడు** — *venakāḍu* — "to hesitate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెనకాడు** (*venakāḍu*) is native Dravidian: *venaka*, "back, rear", one word with Kannada *ben*, "the back" (DEDR 5488), and *āḍu*, "to move" (DEDR 347): "to move back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nallani"
 concept_tag: TE-QUAL142-NALLANI
 prerequisites: [TE-C142-telivaina, TE-C142-bhayankaramaina]
 sounds: []
-roots: []
+roots: [dravidian-nalla-black]
+etymology_hook: "nallani: native Dravidian, one word with Tamil nallam (DEDR 3613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C142-bhayankaramaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-04]; assesses=[] -->
 
 **నల్లని** — *nallani* — "black, dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నల్లని** (*nallani*) is native Dravidian, one word with Tamil *nallam* (DEDR 3613). DEDR lists Telugu *nalla* and *nallani*, "black".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

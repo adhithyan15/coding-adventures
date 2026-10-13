@@ -14,7 +14,8 @@ romanization: "phailu"
 concept_tag: TE-VASTUVU226-PHAILU
 prerequisites: [TE-C226-patam, TE-C226-patram]
 sounds: []
-roots: []
+roots: [english-file]
+etymology_hook: "phailu ← English file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C226-patram]
 <!-- hl-knowledge: introduces=[TE-LEX-C226-VASTUVU226-03]; assesses=[] -->
 
 **ఫైలు** — *phailu* — "a file, a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫైలు** (*phailu*) is a loan from English *file*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

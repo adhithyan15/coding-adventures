@@ -14,7 +14,8 @@ romanization: "duvvena"
 concept_tag: TE-THINGS111-DUVVENA
 prerequisites: [TE-C110-meku, TE-C110-kattera]
 sounds: []
-roots: []
+roots: [dravidian-duvvu-comb]
+etymology_hook: "duvvena: native Dravidian; DEDR 689 lists duvvu 'to comb' and duvvena 'a comb'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C110-kattera]
 <!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **దువ్వెన** — *duvvena* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దువ్వెన** (*duvvena*) is native Dravidian. DEDR 689 lists *duvvu*, "to comb", and *duvvena*, "a comb", with Tamil *uḻu*, "to arrange the hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

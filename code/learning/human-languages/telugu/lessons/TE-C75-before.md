@@ -11,7 +11,8 @@ romanization: "mundu"
 concept_tag: TE-TIME-BEFORE
 prerequisites: [TE-C75-when, TE-C26-udayam]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "mundu: native Dravidian, one word with Tamil muṉ 'front' (DEDR 5020)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C75-when]
 You already have తరువాత, "after that". ముందు is its other half, and until now you could only order events one way.
 
 Like most Telugu relation words it follows its noun: **భోజనం ముందు** — "before the meal". It also means "in front" in space, which is the same idea pointed at a room instead of a day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముందు** (*mundu*) is native Dravidian, one word with Tamil *muṉ* and Kannada *munnu*, "front, before" (DEDR 5020), which lists *mundu* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

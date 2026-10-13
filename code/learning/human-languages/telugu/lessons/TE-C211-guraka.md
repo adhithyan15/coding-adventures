@@ -14,7 +14,8 @@ romanization: "guraka"
 concept_tag: TE-AROGYAM211-GURAKA
 prerequisites: [TE-C211-timmiri, TE-C211-ekkillu]
 sounds: []
-roots: []
+roots: [dravidian-kuru-snore]
+etymology_hook: "guraka: native Dravidian; DEDR 1852 lists guṟaka 'snoring' with Kannada guṟake"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C211-ekkillu]
 <!-- hl-knowledge: introduces=[TE-LEX-C211-AROGYAM211-03]; assesses=[] -->
 
 **గురక** — *guraka* — "snoring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గురక** (*guraka*) is native Dravidian. DEDR 1852 lists *guṟaka*, "snoring", with Kannada *guṟake* and Tamil *kuṟaṭṭai*, "snoring", and points to related sound-words across the region (CDIAL 4207).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cevipōgulu"
 concept_tag: TE-VASTUVU300-CEVIPOGULU
 prerequisites: [TE-C300-butlu, TE-C300-golusu]
 sounds: []
-roots: []
+roots: [dravidian-cevi-ear, dravidian-poogu-earring]
+etymology_hook: "cevipōgulu: native cevi 'ear' (DEDR 1977) + pōgu 'earring' (DEDR 4545, queried)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C300-golusu]
 <!-- hl-knowledge: introduces=[TE-LEX-C300-VASTUVU300-03]; assesses=[] -->
 
 **చెవిపోగులు** — *cevipōgulu* — "earrings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెవిపోగులు** (*cevipōgulu*) is native *cevi*, "ear", one word with Tamil *cevi* (DEDR 1977), and *pōgu*, "earring", which DEDR 4545 lists with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 135,
-  "sourceHash": "fnv1a64:2b88d0e0cbb9410e",
+  "sourceHash": "fnv1a64:6f15fa9d91f8162d",
   "lessonIds": [
     "TE-C135-miriyalu",
     "TE-C135-jilakarra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch135.txt",
   "json": "telugu/narration/ch135.json",
-  "textHash": "fnv1a64:b69184d1c1edb3d0",
-  "jsonHash": "fnv1a64:cf95cb8285c43c67",
+  "textHash": "fnv1a64:4b67f34c68063de5",
+  "jsonHash": "fnv1a64:b4bb3526d2f2fd02",
   "findings": []
 }

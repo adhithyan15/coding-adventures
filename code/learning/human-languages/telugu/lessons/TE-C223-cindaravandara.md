@@ -14,7 +14,8 @@ romanization: "cindaravandara"
 concept_tag: TE-GUNAM223-CINDARAVANDARA
 prerequisites: [TE-C223-praivetu, TE-C223-panikirani]
 sounds: []
-roots: []
+roots: [dravidian-citar-split]
+etymology_hook: "cindaravandara: a rhyming pair on cindara, which DEDR 1547 lists as cindaṟa 'fragment; ruin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C223-panikirani]
 <!-- hl-knowledge: introduces=[TE-LEX-C223-GUNAM223-04]; assesses=[] -->
 
 **చిందరవందర** — *cindaravandara* — "messy, in disarray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిందరవందర** (*cindaravandara*) is a rhyming pair built on *cindara*, which DEDR 1547 lists as *cindaṟa*, "fragment, piece; ruin", with Tamil *citar*, "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

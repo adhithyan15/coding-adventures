@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 118,
-  "sourceHash": "fnv1a64:4ba509401e3f83ff",
+  "sourceHash": "fnv1a64:6270c54daeec5089",
   "lessonIds": [
     "TE-C118-tamata",
     "TE-C118-bangaladumpa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch118.txt",
   "json": "telugu/narration/ch118.json",
-  "textHash": "fnv1a64:e2132e5b0e636a50",
-  "jsonHash": "fnv1a64:a1a9bb1fc995eeff",
+  "textHash": "fnv1a64:cd0ad68f4d2cde12",
+  "jsonHash": "fnv1a64:f5a925cc0917076c",
   "findings": []
 }

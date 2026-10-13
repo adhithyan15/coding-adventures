@@ -11,7 +11,8 @@ romanization: "tāta"
 concept_tag: TE-NOUN-GRANDFATHER
 prerequisites: [TE-C44-write]
 sounds: []
-roots: []
+roots: [dravidian-taata-grandfather]
+etymology_hook: "tāta: Dravidian, one word with Tamil tāttā and Kannada tāta (DEDR 3160), which compares Sanskrit tāta"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C44-write]
 **తాత** (*tāta*) — "grandfather".
 
 It has the same small, repeatable shape as the *nānna* and *amma* you met in the family lesson. Sanskrit carries a *tāta* too, meaning 'father' or simply 'dear one'; Telugu moved the word up a generation. Children use it for any kindly old man, not only their own grandfather.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 3160 lists **తాత** (*tāta*) as Dravidian, one word with Tamil *tāttā* and Kannada *tāta*, "grandfather". DEDR compares Sanskrit *tāta*, "father" (CDIAL 5754).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

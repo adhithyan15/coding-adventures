@@ -12,9 +12,9 @@ concept_tag: VERB-BE
 prerequisites: [TE-C31-subha-madhyahnam-register]
 sounds: [retroflex-nd, telugu-standing-u]
 roots: [dravidian-undu-be, le-absence-telugu]
-etymology_hook: "ఉండు is Telugu's own be-verb where all three sisters use iru-; and it cannot be negated at all — Telugu switches to the separate verb లే-, the root behind Chapter 1's లేదు, where Tamil, Kannada and Malayalam all negate with the shared root il-"
+etymology_hook: "uṇḍu: native Dravidian, one word with Tamil uḷ, uṇṭu (DEDR 697); its negative lē- is filed with il- (DEDR 2559)"
 duration:
-  max_seconds: 250
+  max_seconds: 290
 requires:
   knowledge: []
 introduces:
@@ -49,9 +49,9 @@ Chapter 5 met it as "to live somewhere." Here it is the verb-machine itself: **�
 One form is already in your mouth: **ఉన్నాను** (*unnānu*), "I am — right now,"
 the shape hiding inside *bāgunnānu* and *mīru elā unnāru?*
 
-Telugu is alone in this word. Tamil says **இரு** (*iru*), Kannada **ಇರು**
-(*iru*), Malayalam **ഇരിക്കുക** (*irikkuka*) — one verb, three sisters. Telugu went
-its own way, as it did with *lēdu*.
+The sisters' everyday "be" is another verb: Tamil **இரு** (*iru*), Kannada **ಇರು**
+(*iru*), Malayalam **ഇരിക്കുക** (*irikkuka*). Yet *uṇḍu* is Dravidian too: DEDR 697
+files it with Tamil *uḷ*, "to be", and *uṇṭu*, "there is".
 
 ## Sounds you'll need: the retroflex ండ
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -75,9 +75,9 @@ the verb and picks up a second one, **లే-** (*lē-*) — the root behind Cha
 So *lēdu* was never a bare word for "no." It is the **it**-form of a full verb,
 and you can now run it through its persons.
 
-This is where Telugu parted from its sisters. Tamil negates *iru* with **இல்லை**
+Tamil negates *iru* with **இல்லை**
 (*illai*), Kannada with **ಇಲ್ಲ** (*illa*), Malayalam with **ഇല്ല** (*illa*) — one
-shared root, *il-*. Telugu dropped it and grew *lē-* instead.
+shared root, *il-*. Telugu's *lē-* looks different, but DEDR 2559 files it with *il-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-UNDU-01, TE-GRAMMAR-C32-UNDU-02] -->

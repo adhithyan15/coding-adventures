@@ -14,7 +14,8 @@ romanization: "vaccē"
 concept_tag: TE-BHAVISHYAT155-VACCE
 prerequisites: [TE-C154-okasari, TE-C154-gadupu]
 sounds: []
-roots: []
+roots: [vaccu-come-dravidian]
+etymology_hook: "vaccē: native vaccu 'to come' (DEDR 5270), the 'which is coming' form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C154-gadupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C155-BHAVISHYAT155-01]; assesses=[] -->
 
 **వచ్చే** — *vaccē* — "next, coming". The future for "I" ends in **-తాను** (*-tānu*): **వచ్చే వారం నేను విజయవాడ వెళ్తాను** — *vaccē vāraṁ nēnu vijayavāḍa veḷtānu* — "Next week I will go to Vijayawada."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వచ్చే** (*vaccē*) is native Dravidian: the "which is coming" form of *vaccu*, "to come" (DEDR 5270).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

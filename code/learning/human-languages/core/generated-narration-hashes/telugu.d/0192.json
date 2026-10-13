@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 192,
-  "sourceHash": "fnv1a64:c24b7c2fd046468f",
+  "sourceHash": "fnv1a64:f05d50c2db9d3947",
   "lessonIds": [
     "TE-C192-vatti",
     "TE-C192-gollem",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch192.txt",
   "json": "telugu/narration/ch192.json",
-  "textHash": "fnv1a64:4c3793dd1938716b",
-  "jsonHash": "fnv1a64:0bda0ded9477fe09",
+  "textHash": "fnv1a64:2228bcbb4a35ab31",
+  "jsonHash": "fnv1a64:fb73dc836e9b8d16",
   "findings": []
 }

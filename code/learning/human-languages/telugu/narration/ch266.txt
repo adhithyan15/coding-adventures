@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a thief, then the Telugu for an animal.
 You'll want to know: మల్లెపువ్వు.
 మల్లెపువ్వు — mallepuvvu — "a jasmine flower".
 
+The word, taken apart.
+మల్లెపువ్వు (mallepuvvu) is malle, "jasmine", which matches Sanskrit mallikā, "jasmine" (CDIAL 9913), and native puvvu, "flower" (DEDR 4345). CDIAL compares the Dravidian jasmine words with the Sanskrit one; DEDR compares, with a query, Sanskrit puṣpa, "flower", with puvvu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for an animal, then the Telugu for a jasmine 
 
 You'll want to know: వేప.
 వేప — vēpa — "neem, the neem tree".
+
+The word, taken apart.
+వేప (vēpa) is native Dravidian, one word with Tamil vēmpu and Kannada bēvu (DEDR 5531). DEDR lists Telugu vēpa, "neem".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a jasmine flower, then the Telugu for nee
 You'll want to know: మర్రి.
 మర్రి — marri — "a banyan tree".
 
+The word, taken apart.
+మర్రి (marri) is Dravidian. DEDR 4773 lists maṟṟi, "banyan tree", with Kolami marri, "banyan".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for neem, then the Telugu for a banyan tree.
 You'll want to know: తులసి.
 తులసి — tulasi — "holy basil, tulsi".
 
+The word, taken apart.
+తులసి (tulasi) is the name DEDR 3357 lists with Tamil tuḷaci and Kannada toḷasi, "sacred basil". DEDR compares Sanskrit tulasī (CDIAL 5885) and notes that some of these forms were borrowed back from Sanskrit.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a banyan tree, then the Telugu for holy b
 
 You'll want to know: మొగ్గ.
 మొగ్గ — mogga — "a bud".
+
+The word, taken apart.
+మొగ్గ (mogga) is native Dravidian. DEDR 4893 lists mogga, "a bud", with Tamil mukiḻ, "to bud". DEDR compares Sanskrit mukula, "bud" (CDIAL 10146), which CDIAL takes from Dravidian.
 
 What you've built.
 One more word for this chapter.

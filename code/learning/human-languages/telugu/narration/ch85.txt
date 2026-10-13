@@ -14,6 +14,9 @@ You'll want to know: చలి.
 ఇవాళ చలిగా ఉంది — "it is cold today". నాకు చలిగా ఉంది — "I feel cold".
 The same frame again: with నాకు it is your body, without it it is the day.
 
+The word, taken apart.
+చలి (cali) is native Dravidian, one word with Tamil caḷi and Kannada cali, "cold, chill" (DEDR 2408).
+
 What you've built.
 The first word that works for both the weather and the body.
 
@@ -45,6 +48,9 @@ You'll want to know: వేడి.
 ఇవాళ చాలా వేడిగా ఉంది — "it is very hot today". వేడి (vēḍi) నీళ్ళు — "hot water".
 It is the pair of చలి (cali), and it slots into the same frame.
 
+The word, taken apart.
+వేడి (vēḍi) is native Dravidian. DEDR 5517 lists the Telugu word for "heat; hot" with Tamil vē, "to burn, be hot", and Kannada bē, "to be burnt".
+
 What you've built.
 Cold and hot, as a pair, in one frame.
 
@@ -74,6 +80,9 @@ Before the new one: say the Telugu for the cold, then the Telugu for heat.
 You'll want to know: భయం.
 భయం (bhayaṁ) — "fear".
 నాకు భయంగా ఉంది — "I am afraid". The frame that carried tiredness and cold now carries a feeling, with nothing else changed.
+
+The word, taken apart.
+భయం (bhayaṁ) is Sanskrit bhaya, "fear, peril", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 9390).
 
 What you've built.
 The first feeling, in a frame you can already build.
@@ -105,6 +114,9 @@ You'll want to know: కోపం.
 కోపం (kōpaṁ) — "anger".
 నాకు కోపం (kōpaṁ) వచ్చింది — "I got angry", literally "to me anger came". Anger arrives the way a fever did, on the come-verb, and the person it happens to sits in the dative.
 
+The word, taken apart.
+కోపం (kōpaṁ) is Sanskrit kopa, "anger", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3516).
+
 What you've built.
 A feeling that comes to you, like a fever.
 
@@ -134,6 +146,9 @@ Before the new one: say the Telugu for fear, then the Telugu for anger.
 You'll want to know: బాధ.
 బాధ (bādha) — "sorrow, distress".
 నాకు బాధగా ఉంది — "I feel sad". It also covers the ache behind worry, so it answers మీరు ఎలా ఉన్నారు? honestly on a bad day.
+
+The word, taken apart.
+బాధ (bādha) is Sanskrit bādhā, "distress, pain", from the verb bādh, "to press, harass" (CDIAL 9204), taken over as a learned loan, a tatsama, with the final -ā shortened.
 
 What you've built.
 An honest answer to how are you, when the answer is not బాగా.

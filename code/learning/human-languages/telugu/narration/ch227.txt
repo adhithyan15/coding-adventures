@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a form, then the Telugu for a card.
 You'll want to know: యువకుడు.
 యువకుడు — yuvakuḍu — "a young man, a youth".
 
+The word, taken apart.
+యువకుడు (yuvakuḍu) is Sanskrit yuvaka, "young man", from yuvan, "young" (CDIAL 10508), with the Telugu ending -uḍu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a card, then the Telugu for a young man.
 
 You'll want to know: పెద్దలు.
 పెద్దలు — peddalu — "elders".
+
+The word, taken apart.
+పెద్దలు (peddalu) is native Dravidian: pedda, "great, elder", one word with Tamil periya, "great, elder" (DEDR 4411), with the plural ending -lu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a young man, then the Telugu for elders.
 You'll want to know: ఇరుగుపొరుగు.
 ఇరుగుపొరుగు — iruguporugu — "neighbours".
 
+The word, taken apart.
+ఇరుగుపొరుగు (iruguporugu) is native Dravidian: irugu (DEDR 480) and porugu (DEDR 4541), both "neighbourhood". For the second, DEDR compares, with a query, Prakrit pora, "joint".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for elders, then the Telugu for neighbours.
 You'll want to know: శత్రువు.
 శత్రువు — śatruvu — "an enemy".
 
+The word, taken apart.
+శత్రువు (śatruvu) is Sanskrit śatru, "enemy", taken over whole as a learned loan, a tatsama, with the Telugu ending -vu (CDIAL 12286).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for neighbours, then the Telugu for an enemy.
 
 You'll want to know: పెళ్ళికొడుకు.
 పెళ్ళికొడుకు — peḷḷikoḍuku — "a bridegroom".
+
+The word, taken apart.
+పెళ్ళికొడుకు (peḷḷikoḍuku) is native Dravidian: peḷḷi, "marriage" (DEDR 4395), and koḍuku, "son" (DEDR 2149): "the wedding son". DEDR compares Sanskrit kuḍaka, "child", with the second.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kharīdaina"
 concept_tag: TE-GUNAM179-KHARIDAINA
 prerequisites: [TE-C179-cappani, TE-C179-taja]
 sounds: []
-roots: []
+roots: [persian-kharid, tamil-aaku-become]
+etymology_hook: "kharīdaina: Persian kharīd 'purchase' + native aina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C179-taja]
 <!-- hl-knowledge: introduces=[TE-LEX-C179-GUNAM179-04]; assesses=[] -->
 
 **ఖరీదైన** — *kharīdaina* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఖరీదైన** (*kharīdaina*) is Persian *kharīd*, "purchase", which came through Hindustani, with native *aina*, "which is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

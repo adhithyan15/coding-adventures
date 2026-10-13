@@ -14,7 +14,8 @@ romanization: "ēnugu"
 concept_tag: TE-THINGS122-ENUGU
 prerequisites: [TE-C122-avu, TE-C122-gurram]
 sounds: []
-roots: []
+roots: [dravidian-yanai-elephant]
+etymology_hook: "ēnugu: native Dravidian, one word with Tamil yāṉai and Kannada āne (DEDR 5161)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C122-gurram]
 <!-- hl-knowledge: introduces=[TE-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **ఏనుగు** — *ēnugu* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏనుగు** (*ēnugu*) is native Dravidian, one word with Tamil *yāṉai* and Kannada *āne* (DEDR 5161). DEDR gives the Telugu as *ēnūgu*, "elephant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

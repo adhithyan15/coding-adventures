@@ -14,7 +14,8 @@ romanization: "piccuka"
 concept_tag: TE-VASTUVU187-PICCUKA
 prerequisites: [TE-C187-balli, TE-C187-purugu]
 sounds: []
-roots: []
+roots: [dravidian-piccuka-sparrow]
+etymology_hook: "piccuka: Dravidian as far as DEDR records it; DEDR 4190 lists piccuka 'sparrow' from Telugu alone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C187-purugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C187-VASTUVU187-04]; assesses=[] -->
 
 **పిచ్చుక** — *piccuka* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిచ్చుక** (*piccuka*) is Dravidian as far as DEDR records it: DEDR 4190 lists *piccuka*, "sparrow", from Telugu alone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 246,
-  "sourceHash": "fnv1a64:38b64602b4a567d2",
+  "sourceHash": "fnv1a64:01b442dfd19de5ab",
   "lessonIds": [
     "TE-C246-appu-ivvu",
     "TE-C246-tirigi-ivvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch246.txt",
   "json": "telugu/narration/ch246.json",
-  "textHash": "fnv1a64:f1da9a79b781988a",
-  "jsonHash": "fnv1a64:0291cd9a0b7f91b8",
+  "textHash": "fnv1a64:a3276d56aa9205a3",
+  "jsonHash": "fnv1a64:67e92a1d54990781",
   "findings": []
 }

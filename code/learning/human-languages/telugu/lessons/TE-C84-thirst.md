@@ -11,7 +11,8 @@ romanization: "dāhaṁ"
 concept_tag: TE-WELLBEING-THIRST
 prerequisites: [TE-C84-pain, TE-C84-tiredness]
 sounds: []
-roots: []
+roots: [sanskrit-daha]
+etymology_hook: "dāhaṁ ← Sanskrit dāha 'burning; fever', a tatsama (CDIAL 6321)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C84-tiredness]
 **నాకు దాహంగా ఉంది** — "I am thirsty". Same frame as tiredness, a new noun in the middle.
 
 And you can already ask for the cure: **నాకు నీళ్ళు కావాలి**, "I want water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దాహం** (*dāhaṁ*) is Sanskrit *dāha*, "burning; fever", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6321). Telugu uses it for thirst.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

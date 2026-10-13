@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 298,
-  "sourceHash": "fnv1a64:9398accc5d483e10",
+  "sourceHash": "fnv1a64:9695cf1fe60a7096",
   "lessonIds": [
     "TE-C298-moddu",
     "TE-C298-vankara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch298.txt",
   "json": "telugu/narration/ch298.json",
-  "textHash": "fnv1a64:eafc30f1a7a23e6a",
-  "jsonHash": "fnv1a64:4147e3243d794310",
+  "textHash": "fnv1a64:d56b3c240641f812",
+  "jsonHash": "fnv1a64:37d44bd0375c809d",
   "findings": []
 }

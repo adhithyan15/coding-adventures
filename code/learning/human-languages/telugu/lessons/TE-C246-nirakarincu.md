@@ -14,7 +14,8 @@ romanization: "nirākariñcu"
 concept_tag: TE-VERB-NIRAKARINCU
 prerequisites: [TE-C246-khali-ceyu, TE-C246-taggu]
 sounds: []
-roots: []
+roots: [sanskrit-nirakarana]
+etymology_hook: "nirākariñcu: Sanskrit nirākaraṇa 'rejection' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C246-taggu]
 <!-- hl-knowledge: introduces=[TE-LEX-C246-KRIYA246-05]; assesses=[] -->
 
 **నిరాకరించు** — *nirākariñcu* — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిరాకరించు** (*nirākariñcu*) is Sanskrit *nirākaraṇa*, "rejection, refusal", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

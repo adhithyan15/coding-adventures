@@ -14,7 +14,8 @@ romanization: "āśiñcu"
 concept_tag: TE-VERB-ASHINCU
 prerequisites: [TE-C155-ikapai, TE-C155-bhavishyattu]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āśiñcu: Sanskrit āśā 'wish, expectation' (CDIAL 1456) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C155-bhavishyattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C155-BHAVISHYAT155-04]; assesses=[] -->
 
 **ఆశించు** — *āśiñcu* — "to hope, to expect". **మీరు బాగున్నారని ఆశిస్తున్నాను** — *mīru bāgunnārani āśistunnānu* — "I hope you are well."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆశించు** (*āśiñcu*) is Sanskrit *āśā*, "wish, expectation" (CDIAL 1456), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

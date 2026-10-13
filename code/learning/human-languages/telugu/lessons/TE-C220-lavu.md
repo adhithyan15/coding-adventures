@@ -14,7 +14,8 @@ romanization: "lāvu"
 concept_tag: TE-GUNAM220-LAVU
 prerequisites: [TE-C220-ucitam, TE-C220-nindu]
 sounds: []
-roots: []
+roots: [dravidian-alavu-ability]
+etymology_hook: "lāvu: native Dravidian; DEDR 291 lists lāvu 'strength, bigness, fatness' with Kannada aḷavu 'strength'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C220-nindu]
 <!-- hl-knowledge: introduces=[TE-LEX-C220-GUNAM220-03]; assesses=[] -->
 
 **లావు** — *lāvu* — "fat, thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లావు** (*lāvu*) is native Dravidian. DEDR 291 lists *lāvu*, "strength, bigness, fatness", with Kannada *aḷavu*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

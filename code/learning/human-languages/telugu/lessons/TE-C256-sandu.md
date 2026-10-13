@@ -14,7 +14,8 @@ romanization: "sandu"
 concept_tag: TE-STHALAM256-SANDU
 prerequisites: [TE-C255-nagaram, TE-C255-raccabanda]
 sounds: []
-roots: []
+roots: [telugu-sandu-lane]
+etymology_hook: "sandu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'lane'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C255-raccabanda]
 <!-- hl-knowledge: introduces=[TE-LEX-C256-STHALAM256-01]; assesses=[] -->
 
 **సందు** — *sandu* — "a lane, an alley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సందు** (*sandu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "lane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

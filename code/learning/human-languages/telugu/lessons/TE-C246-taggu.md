@@ -14,7 +14,8 @@ romanization: "taggu"
 concept_tag: TE-VERB-TAGGU
 prerequisites: [TE-C246-tirigi-ivvu, TE-C246-khali-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "taggu: native Dravidian; DEDR 3178 lists taggu 'to decrease' with Tamil tāḻ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C246-khali-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C246-KRIYA246-04]; assesses=[] -->
 
 **తగ్గు** — *taggu* — "to decrease, to go down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తగ్గు** (*taggu*) is native Dravidian. DEDR 3178 lists *taggu*, "to decrease, become less", with Tamil *tāḻ*, "to fall low, decrease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

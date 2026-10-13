@@ -13,6 +13,7 @@ You'll want to know: గురువు.
 గురువు (guruvu) — "a teacher".
 Sanskrit guru means "heavy". The teacher is the weighty one — the one whose word carries weight — and Telugu added its own -వు to make గురువు (guruvu).
 You have already said the word without being told. గురువారం, Thursday, is Guru's day: the guru there is Jupiter, the heaviest wanderer the naked eye can find and the teacher of the gods. Latin named the same weekday for Jove, which is the same planet under another name.
+CDIAL 4209 lists Sanskrit guru, "heavy".
 
 What you've built.
 The first of five roles.
@@ -45,6 +46,7 @@ You'll want to know: విద్యార్థి.
 విద్యార్థి (vidyārthi) — "a student".
 Two Sanskrit pieces welded: vidyā, knowledge, and arthin, one who seeks. A student is a knowledge-seeker, and the word says so on its face.
 vidyā grows from the root vid, "to know" — the same ancient root behind English wit and wisdom, and behind Latin vidēre, "to see". Knowing and seeing were one word long before either language existed.
+CDIAL 11741 lists Sanskrit vidyā, "knowledge", and CDIAL 640 arthin, "desiring".
 
 What you've built.
 Two: a teacher and a student.
@@ -79,6 +81,9 @@ You'll want to know: వైద్యుడు.
 వైద్యుడు (vaidyuḍu) — "a doctor, a physician".
 Look at the middle of it. vaidya is built on the very vid sitting inside విద్యార్థి (vidyārthi): a physician is one versed in the knowledge, the knowledge in question being आयुर्वेद, the science of long life.
 The ending -ుడు is not Sanskrit's but Telugu's own, marking a masculine person — the same -ుడు already carried by స్నేహితుడు.
+
+The word, taken apart.
+వైద్యుడు (vaidyuḍu) is Sanskrit vaidya, "learned; physician", taken over whole as a learned loan, a tatsama, with the Telugu ending -uḍu (CDIAL 12140).
 
 What you've built.
 Three roles, and two of them share a root.
@@ -143,6 +148,9 @@ You'll want to know: అతిథి.
 అతిథి (atithi) — "a guest".
 a-tithi — "one without a tithi", without a date on the calendar. The guest is defined by not being expected.
 The old formula అతిథి (atithi) దేవో భవ, "let the guest be a god to you", is built on exactly that: you cannot prepare for a god who arrives unannounced, so you keep the house ready instead. What a Telugu house actually does when the అతిథి (atithi) arrives has a chapter of its own, at the end of this book.
+
+The word, taken apart.
+అతిథి (atithi) is Sanskrit atithi, "guest", taken over whole as a learned loan, a tatsama. Its reading as a-tithi, "without a date", is a traditional explanation; where the Sanskrit word itself comes from is not settled.
 
 What you've built.
 Five roles: a teacher, a student, a doctor, a farmer, a guest.

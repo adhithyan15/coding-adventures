@@ -11,7 +11,8 @@ romanization: "tūkaṁ"
 concept_tag: TE-NOUN-WEIGHT
 prerequisites: [TE-C72-price]
 sounds: []
-roots: []
+roots: [telugu-tuukam-weight]
+etymology_hook: "tūkaṁ: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C72-price]
 Almost everything in an అంగడి is sold by it: బియ్యం, ఉప్పు, చక్కెర, మిరప. The ధర you are quoted is a ధర for a తూకం, so the two words travel together.
 
 It carries fairness as well. Somebody who speaks with తూకం is somebody whose words are measured, and short తూకం is a serious accusation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తూకం** (*tūkaṁ*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

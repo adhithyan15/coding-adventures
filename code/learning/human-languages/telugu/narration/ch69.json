@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Tools",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8fd410b01568f2f1",
+  "sourceHash": "fnv1a64:70fc25927524d912",
   "lessons": [
     {
       "id": "TE-C69-axe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40001783fed95808",
+      "sourceHash": "fnv1a64:2a5a36a10207f9c4",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడ్డలి (goḍḍali) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 32), under Sanskrit kuṭhāra, \"axe\" (CDIAL 3244). CDIAL itself thinks kuṭhāra probably came from Dravidian, so the word may have gone north and come back. Tamil kōṭāli and Kannada koḍali are in the same appendix entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc9532b8036fa830",
+      "sourceHash": "fnv1a64:69a3edc8b5529e0c",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రంపం (rampaṁ) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 55), under Prakrit rampa, \"knife, scraper\" (CDIAL 10629), with Tamil irampam, \"a saw\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa39a69a5b57c72a",
+      "sourceHash": "fnv1a64:cd38e07838895524",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పార (pāra) is native Dravidian, one word with Tamil pārai and Kannada pāre (DEDR 4093). DEDR lists Telugu pāra, \"spade\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97611bbf7242ed68",
+      "sourceHash": "fnv1a64:3758949cba40f673",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుత్తి (sutti) is native Dravidian, one word with Tamil cutti, Kannada suttige and Malayalam cutti (DEDR 2668). DEDR gives the Telugu as sutte."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2d7c05bde3179ee",
+      "sourceHash": "fnv1a64:284c4c546d75e8c1",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +684,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కర్ర (karra) is native Dravidian, one word with Tamil kaṟal, \"firewood\" (DEDR 1389), which gives the older Telugu spelling kaṟṟa, \"wood, stick\". DEDR compares Prakrit karālī, \"toothstick\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

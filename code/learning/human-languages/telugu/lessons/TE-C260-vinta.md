@@ -14,7 +14,8 @@ romanization: "vinta"
 concept_tag: TE-GUNAM260-VINTA
 prerequisites: [TE-C260-veccani, TE-C260-arudaina]
 sounds: []
-roots: []
+roots: [dravidian-viruntu-feast]
+etymology_hook: "vinta: native Dravidian; DEDR 5415 lists vinta 'strangeness, newness' with Tamil viruntu 'newness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C260-arudaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C260-GUNAM260-04]; assesses=[] -->
 
 **వింత** — *vinta* — "strange, odd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వింత** (*vinta*) is native Dravidian. DEDR 5415 lists *vinta*, "strangeness, newness; strange", with Tamil *viruntu*, "newcomer, newness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

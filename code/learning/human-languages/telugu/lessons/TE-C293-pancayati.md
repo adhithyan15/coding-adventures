@@ -14,7 +14,8 @@ romanization: "pañcāyatī"
 concept_tag: TE-STHALAM293-PANCAYATI
 prerequisites: [TE-C293-masidu, TE-C293-carci]
 sounds: []
-roots: []
+roots: [hindustani-pancayat]
+etymology_hook: "pañcāyatī: like Hindustani pañcāyat 'village council'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C293-carci]
 <!-- hl-knowledge: introduces=[TE-LEX-C293-STHALAM293-04]; assesses=[] -->
 
 **పంచాయతీ** — *pañcāyatī* — "the village council".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంచాయతీ** (*pañcāyatī*) matches Hindustani *pañcāyat*, "village council", which DEDR and CDIAL do not list.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

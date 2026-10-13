@@ -14,7 +14,8 @@ romanization: "vāyidā vēyu"
 concept_tag: TE-VERB-VAYIDA-VEYU
 prerequisites: [TE-C285-tarumu, TE-C285-karugu]
 sounds: []
-roots: []
+roots: [arabic-wada, dravidian-vai-put]
+etymology_hook: "vāyidā vēyu: vāyidā 'postponement', of uncertain origin, + native vēyu 'to put' (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C285-karugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C286-KRIYA286-01]; assesses=[] -->
 
 **వాయిదా వేయు** — *vāyidā vēyu* — "to postpone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *vāyidā*, "postponement", the first word of **వాయిదా వేయు** (*vāyidā vēyu*), is uncertain; DEDR and CDIAL do not list it. *Vēyu*, "to put, place", is native (DEDR 5549).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

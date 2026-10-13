@@ -14,7 +14,8 @@ romanization: "sṭāmpu"
 concept_tag: TE-VASTUVU185-STAMPU
 prerequisites: [TE-C184-bendakaya, TE-C185-kavaru]
 sounds: []
-roots: []
+roots: [english-stamp]
+etymology_hook: "sṭāmpu ← English stamp"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C185-kavaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C185-VASTUVU185-02]; assesses=[] -->
 
 **స్టాంపు** — *sṭāmpu* — "a postage stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్టాంపు** (*sṭāmpu*) is a loan from English *stamp*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "manavi"
 concept_tag: TE-NOUN-REQUEST
 prerequisites: [TE-C65-manners]
 sounds: []
-roots: []
+roots: [dravidian-manu-petition]
+etymology_hook: "manavi: native Dravidian, one word with Tamil maṉu and Kannada manave (DEDR 4775)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C65-manners]
 Where the word came from is not something any source consulted here settles, so nothing is invented for it. What is certain is the register it sits in, and that is the part a learner needs.
 
 A మనవి goes to somebody who can say no: an official, an elder, a host. The word does half the softening before you have said what you want.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మనవి** (*manavi*) is native Dravidian, one word with Tamil *maṉu* and Kannada *manave* (DEDR 4775). DEDR lists Telugu *manavi*, "a respectful request, petition".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

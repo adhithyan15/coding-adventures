@@ -12,6 +12,9 @@ Before the new one: say the Telugu for an eyebrow, then the Telugu for a cheek.
 You'll want to know: గడ్డం.
 గడ్డం — gaḍḍaṁ — "the chin; a beard".
 
+The word, taken apart.
+గడ్డం (gaḍḍaṁ) is native Dravidian, one word with Kannada gaḍḍa, "the beard about the chin, the chin" (DEDR 1156). DEDR notes that Tamil keṭṭam, "beard", is a loan from Telugu, and compares Prakrit khaḍḍa, "beard".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a cheek, then the Telugu for the chin; a 
 
 You'll want to know: మణికట్టు.
 మణికట్టు — maṇikaṭṭu — "a wrist".
+
+The word, taken apart.
+మణికట్టు (maṇikaṭṭu) is native Dravidian, one word with Tamil maṇikkaṭṭu and Kannada maṇikaṭṭu, "wrist" (DEDR 4673). DEDR notes that Sanskrit maṇibandha, "wrist", is a translation of it, its bandha rendering kaṭṭu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for the chin; a beard, then the Telugu for a 
 You'll want to know: మోచేయి.
 మోచేయి — mōcēyi — "an elbow".
 
+The word, taken apart.
+మోచేయి (mōcēyi) is native Dravidian. DEDR 4990 lists mō ceyyi, "elbow", the joint of the arm, with Tamil muḻam, "cubit".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a wrist, then the Telugu for an elbow.
 You'll want to know: చర్మం.
 చర్మం — carmaṁ — "the skin".
 
+The word, taken apart.
+చర్మం (carmaṁ) is Sanskrit carman, "hide, skin", taken over whole as a learned loan, a tatsama (CDIAL 4701).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an elbow, then the Telugu for the skin.
 
 You'll want to know: రక్తం.
 రక్తం — raktaṁ — "blood".
+
+The word, taken apart.
+రక్తం (raktaṁ) is Sanskrit rakta, "red; blood", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 10539).
 
 What you've built.
 One more word for this chapter.

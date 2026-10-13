@@ -14,7 +14,8 @@ romanization: "jīvaśāstraṁ"
 concept_tag: TE-PANI276-JIVASASTRAM
 prerequisites: [TE-C275-natakam, TE-C276-rasayanasastram]
 sounds: []
-roots: []
+roots: [sanskrit-jiva, sanskrit-shastra]
+etymology_hook: "jīvaśāstraṁ: Sanskrit jīva 'life' (CDIAL 5239) + śāstra (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C276-rasayanasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C276-PANI276-02]; assesses=[] -->
 
 **జీవశాస్త్రం** — *jīvaśāstraṁ* — "biology".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జీవశాస్త్రం** (*jīvaśāstraṁ*) is Sanskrit: *jīva*, "living being; life" (CDIAL 5239), and *śāstra*, "treatise" (CDIAL 12422), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

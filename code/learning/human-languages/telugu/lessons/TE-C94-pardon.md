@@ -11,7 +11,8 @@ romanization: "manniñcaṇḍi"
 concept_tag: TE-POLITE-PARDON
 prerequisites: [TE-C93-gladly, TE-C93-body]
 sounds: []
-roots: []
+roots: [telugu-mannincu-pardon]
+etymology_hook: "manniñcaṇḍi: origin of manniñcu uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -40,8 +41,13 @@ reviews_of: [TE-C93-body]
 
 **మన్నించండి** (*manniñcaṇḍi*) — "please pardon me".
 
-It does the work of **క్షమించండి**, and is the gentler, native word beside it. Either answers
+It does the work of **క్షమించండి**, and is the gentler word beside it. Either answers
 a mistake; **మన్నించండి** is the one to use with an elder.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *manniñcu*, the verb in **మన్నించండి** (*manniñcaṇḍi*), is uncertain: neither DEDR nor CDIAL records it. The polite ending *-aṇḍi* is the one in *raṇḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

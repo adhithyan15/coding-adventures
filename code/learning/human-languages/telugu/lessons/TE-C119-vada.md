@@ -14,7 +14,8 @@ romanization: "vaḍa"
 concept_tag: TE-THINGS119-VADA
 prerequisites: [TE-C119-idli, TE-C119-dosa]
 sounds: []
-roots: []
+roots: [sanskrit-vataka]
+etymology_hook: "vaḍa ← Sanskrit vaṭa 'round cake of pulse fried in oil', a tatsama (CDIAL 11213)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C119-dosa]
 <!-- hl-knowledge: introduces=[TE-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **వడ** — *vaḍa* — "a vada".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వడ** (*vaḍa*) is Sanskrit *vaṭa*, "round cake of pulse fried in oil", taken over whole as a learned loan, a tatsama (CDIAL 11213). Telugu softened the *ṭ* to *ḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

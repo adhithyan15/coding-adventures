@@ -14,7 +14,8 @@ romanization: "mārcu"
 concept_tag: TE-VERB-MARCU
 prerequisites: [TE-C158-tondarapadu, TE-C158-tomu]
 sounds: []
-roots: []
+roots: [dravidian-maaru-change]
+etymology_hook: "mārcu: native Dravidian; DEDR 4834 lists mārcu 'to change' with Tamil māṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C158-tomu]
 <!-- hl-knowledge: introduces=[TE-LEX-C158-KRIYA158-03]; assesses=[] -->
 
 **మార్చు** — *mārcu* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మార్చు** (*mārcu*) is native Dravidian. DEDR 4834 lists *mārcu*, "to change, alter", with Tamil *māṟu* and Kannada *māṟu*, "to change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

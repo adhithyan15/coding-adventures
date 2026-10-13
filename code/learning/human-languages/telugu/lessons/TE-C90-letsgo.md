@@ -11,7 +11,8 @@ romanization: "padaṇḍi"
 concept_tag: TE-LEAVE-LETS-GO
 prerequisites: [TE-C90-home, TE-C90-leave]
 sounds: []
-roots: []
+roots: [telugu-padandi-letsgo]
+etymology_hook: "padaṇḍi: origin uncertain; neither DEDR nor CDIAL records the verb, + the polite -aṇḍi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C90-leave]
 
 It carries the respectful **-అండి** like **raṇḍi** and **āgaṇḍi**, so it stays polite even when
 it hurries people along.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పదండి** (*padaṇḍi*) carries the polite ending *-aṇḍi*. The origin of the verb in front of it is uncertain: neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

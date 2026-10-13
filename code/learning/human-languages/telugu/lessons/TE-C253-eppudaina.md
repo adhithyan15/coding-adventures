@@ -14,7 +14,8 @@ romanization: "eppuḍainā"
 concept_tag: TE-SAMAYAM253-EPPUDAINA
 prerequisites: [TE-C252-batukamma, TE-C253-civara]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "eppuḍainā: native eppuḍu 'when' (DEDR 5151) + ainā 'even if it is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C253-civara]
 <!-- hl-knowledge: introduces=[TE-LEX-C253-SAMAYAM253-02]; assesses=[] -->
 
 **ఎప్పుడైనా** — *eppuḍainā* — "ever, at any time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎప్పుడైనా** (*eppuḍainā*) is native Dravidian: *eppuḍu*, "when", on the question base *e-* (DEDR 5151), with *ainā*, "even if it is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

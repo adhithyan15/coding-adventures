@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 191,
-  "sourceHash": "fnv1a64:3b4dbd017bc6c9da",
+  "sourceHash": "fnv1a64:34aa24eabaaf6af3",
   "lessonIds": [
     "TE-C191-rabbaru",
     "TE-C191-balbu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch191.txt",
   "json": "telugu/narration/ch191.json",
-  "textHash": "fnv1a64:8127bcf91e4b0ee9",
-  "jsonHash": "fnv1a64:4b026e748adab875",
+  "textHash": "fnv1a64:e96584fa075e7a7a",
+  "jsonHash": "fnv1a64:ab126c3e614a4972",
   "findings": []
 }

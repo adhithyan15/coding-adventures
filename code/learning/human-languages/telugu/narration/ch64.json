@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Words That Join an Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:96903cd2a3d0188e",
+  "sourceHash": "fnv1a64:150529c8936933dd",
   "lessons": [
     {
       "id": "TE-C64-also",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1db31e935f3ab22e",
+      "sourceHash": "fnv1a64:528d217edcadde34",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూడా (kūḍā) is native Dravidian, built on kūḍu, \"to join, add together\", which DEDR 1882 lists with Tamil kūṭu, \"to come together\", and Kannada kūḍu, \"to join\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c1b630a73d7ee5d",
+      "sourceHash": "fnv1a64:e56e1f5ab933d0c5",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +214,10 @@
             {
               "kind": "speech",
               "text": "With a small quantity in front it does polite work. కొంచెం మాత్రమే (mātramē), \"only a little\", accepts what is offered without taking much of it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 10023 lists Sanskrit mātrā, \"measure\"."
             }
           ]
         },
@@ -307,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:256af214a05d735b",
+      "sourceHash": "fnv1a64:5b217cb305c12cdf",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +367,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అయితే (ayitē) is native Dravidian: the \"if it is\" form of agu, \"to be, become\" (DEDR 333), one word with Tamil āku and Kannada āgu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +388,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +446,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9575a69597f58d10",
+      "sourceHash": "fnv1a64:22f35f911500b7ef",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +522,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తరువాత (taruvāta) is native Dravidian. DEDR 3142 lists taruvāta, \"afterwards, next\", itself, with taruvāyi, \"what follows\", in an entry with Tamil taṟuvāy, \"occasion\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +543,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +601,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59d2c8a323683907",
+      "sourceHash": "fnv1a64:f47f5aeb03377272",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +677,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంకా (iṅkā) is native Dravidian, on the near-pointing base i-. DEDR 410 lists iṅka, \"hereafter, still, yet\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +698,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +756,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

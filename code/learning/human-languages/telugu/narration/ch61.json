@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:adef0c8c9b04f40b",
+  "sourceHash": "fnv1a64:2af2730c6d1d8c02",
   "lessons": [
     {
       "id": "TE-C61-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7597f05648ead57",
+      "sourceHash": "fnv1a64:48ed51a18691bfa6",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెరుగు (perugu) is native Dravidian, one word with Tamil peruku, \"curdled milk\" (DEDR 4421). The same entry lists the Telugu verb pēru, \"to curdle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc8233cf22d22ace",
+      "sourceHash": "fnv1a64:b7b4e714108676e6",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నెయ్యి (neyyi) is native Dravidian, one word with Tamil ney and Kannada ney (DEDR 3746)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a6079761ee0a9f7",
+      "sourceHash": "fnv1a64:bac51b874cbe2525",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నూనె (nūne) is native Dravidian. DEDR 3746 lists nūne, \"oil\", and derives it from a reconstructed nū, \"sesame\" (DEDR 3720), and ney, \"ghee, oil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6da953e65771290",
+      "sourceHash": "fnv1a64:d0dcebd645ffd2e6",
       "notice": null,
       "blocks": [
         {
@@ -491,6 +524,10 @@
             {
               "kind": "speech",
               "text": "A pinch of చక్కెర (cakkera) goes into dishes an English kitchen would leave savoury, and it goes in to round off the salt rather than to make anything sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 12337 lists Sanskrit śarkarā, \"gravel, grit\"; Telugu reshaped it, as Prakrit sakkarā had."
             }
           ]
         },
@@ -595,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db05eabbf0aeabc2",
+      "sourceHash": "fnv1a64:9f0fb605e32fd8da",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +677,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మిరప (mirapa) was first a name for black pepper. It is usually traced to Sanskrit marica, \"peppercorn\" (CDIAL 9875), reshaped to Telugu sounds as a tadbhava, and it passed to the chilli when the chilli arrived. CDIAL itself takes the Sanskrit word from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +698,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +756,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

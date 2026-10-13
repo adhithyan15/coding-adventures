@@ -11,7 +11,8 @@ romanization: "vicāraṁ"
 concept_tag: TE-MOOD-REGRET
 prerequisites: [TE-C97-laugh, TE-C97-crying]
 sounds: []
-roots: []
+roots: [sanskrit-vicara]
+etymology_hook: "vicāraṁ ← Sanskrit vicāra 'pondering', a tatsama (CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C97-crying]
 
 **బాధ** is pain; **విచారం** is the sorrow of looking back. **విచారంగా ఉంది** — "I am sorry about
 it", "I regret it".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విచారం** (*vicāraṁ*) is Sanskrit *vicāra*, "pondering", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11683). The sense "regret" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

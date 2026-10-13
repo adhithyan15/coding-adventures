@@ -14,6 +14,7 @@ You'll want to know: స్వాగతం.
 Keep this well apart from పరవాలేదు. పరవాలేదు is what you say after somebody thanks you. స్వాగతం (svāgataṁ) is what you say when they walk in. English hands the one word "welcome" both jobs; Telugu does not.
 It is Sanskrit, and it comes apart neatly: su- "well" and āgata "come" — "well come", which is what the English word is too, arrived by an entirely separate road.
 A house says it with the door open and a gauravaṁ behind it. The ముగ్గు at the step is the same sentence without any words in it.
+CDIAL 13920 lists Sanskrit svāgata, "welcome".
 
 What you've built.
 The first thing said at a door.
@@ -47,6 +48,7 @@ You'll want to know: మర్యాద.
 మర్యాద (maryāda) is the doing half of gauravaṁ. Respect is what you feel for somebody; మర్యాద (maryāda) is what you do about it — standing up, offering the కుర్చీ, serving the atithi before yourself.
 The word is Sanskrit and its first sense was a boundary line. Manners as a line you do not step over is a picture worth keeping hold of.
 మర్యాదగా is how it usually reaches a person: మర్యాదగా మాట్లాడు, "speak with manners", which sounds sterner in English than it does in Telugu. It is closer to "be decent about it".
+CDIAL 9895 lists Sanskrit maryādā, "region, boundary".
 
 What you've built.
 Two: what you feel and what you do.
@@ -80,6 +82,9 @@ You'll want to know: మనవి.
 మనవి (manavi) is a request made from below — not దయచేసి set in front of an instruction, but the whole thing framed as a submission. ఒక మనవి (manavi), "one request", is said before the request itself arrives.
 Where the word came from is not something any source consulted here settles, so nothing is invented for it. What is certain is the register it sits in, and that is the part a learner needs.
 A మనవి (manavi) goes to somebody who can say no: an official, an elder, a host. The word does half the softening before you have said what you want.
+
+The word, taken apart.
+మనవి (manavi) is native Dravidian, one word with Tamil maṉu and Kannada manave (DEDR 4775). DEDR lists Telugu manavi, "a respectful request, petition".
 
 What you've built.
 Three.
@@ -146,6 +151,7 @@ You'll want to know: నమ్మకం.
 నమ్మకం (nammakaṁ) is trust, and it is the one word here that is Telugu's own. It is built on నమ్ము, "to believe", with the ending that turns an action into the thing itself.
 The four before it are Sanskrit and they are all about form: a welcome, manners, a request, permission. నమ్మకం (nammakaṁ) is what the form is for. A house that does all four and is still not trusted has been doing something else.
 The word also carries "belief" in the religious sense, and Telugu is content to let one word hold both. Trusting a person and believing a thing are the same act pointed in two directions.
+DEDR 3600 lists Telugu nammu, "to believe, trust", and nammakamu, "trust", with Tamil nampu and Kannada nambu.
 
 What you've built.
 Five: స్వాగతం (svāgataṁ), మర్యాద (maryāda), మనవి (manavi), అనుమతి (anumati), నమ్మకం (nammakaṁ). Enough to bring somebody in, ask something of them, and say ధన్యవాదములు when they agree.

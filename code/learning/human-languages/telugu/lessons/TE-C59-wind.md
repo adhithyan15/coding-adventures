@@ -11,7 +11,8 @@ romanization: "gāli"
 concept_tag: TE-NOUN-WIND
 prerequisites: [TE-C58-thats-all]
 sounds: []
-roots: []
+roots: [dravidian-gaali-wind]
+etymology_hook: "gāli: native Dravidian, one word with Kannada gāḷi (DEDR 1499)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C58-thats-all]
 It reaches further than weather. గాలి is breath, and it is rumour — గాలి వార్త is a story with nothing holding it up, blown in from somewhere. Air, breath and hearsay under one word is a chain a great many languages make, and it usually starts with breathing.
 
 A గాలి getting up in the evening is the ordinary reason given for cutting a visit short.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గాలి** (*gāli*) is native Dravidian, one word with Kannada *gāḷi* (DEDR 1499). DEDR lists Telugu *gāli*, "wind, air".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

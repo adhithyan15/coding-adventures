@@ -14,7 +14,8 @@ romanization: "gōdāmu"
 concept_tag: TE-STHALAM256-GODAMU
 prerequisites: [TE-C256-sorangam, TE-C256-sivaru]
 sounds: []
-roots: []
+roots: [telugu-godamu-warehouse]
+etymology_hook: "gōdāmu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'warehouse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C256-sivaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C256-STHALAM256-04]; assesses=[] -->
 
 **గోదాము** — *gōdāmu* — "a warehouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గోదాము** (*gōdāmu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "warehouse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

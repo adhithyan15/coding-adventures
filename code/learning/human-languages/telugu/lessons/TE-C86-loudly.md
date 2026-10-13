@@ -11,7 +11,8 @@ romanization: "gaṭṭigā"
 concept_tag: TE-REPAIR-LOUDLY
 prerequisites: [TE-C86-slowly, TE-C86-oncemore]
 sounds: []
-roots: []
+roots: [dravidian-kattu-harden]
+etymology_hook: "gaṭṭigā: native gaṭṭi 'hard, firm' (DEDR 1148) + -gā; DEDR compares Sanskrit kaṭhina"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C86-oncemore]
 
 **కొంచెం గట్టిగా మాట్లాడండి** — "please speak a little louder". **కొంచెం** softens it, as it
 softens any request.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గట్టిగా** (*gaṭṭigā*) is native Dravidian: *gaṭṭi*, "hard, firm", which DEDR 1148 lists with Tamil *kaṭṭu*, "to harden", followed by the adverb ending *-gā*. DEDR compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

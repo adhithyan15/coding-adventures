@@ -14,7 +14,8 @@ romanization: "iruguporugu"
 concept_tag: TE-VASTUVU227-IRUGUPORUGU
 prerequisites: [TE-C227-yuvakudu, TE-C227-peddalu]
 sounds: []
-roots: []
+roots: [dravidian-iru-be, dravidian-poru-join]
+etymology_hook: "iruguporugu: native irugu (DEDR 480) + porugu (DEDR 4541), both 'neighbourhood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C227-peddalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C227-VASTUVU227-03]; assesses=[] -->
 
 **ఇరుగుపొరుగు** — *iruguporugu* — "neighbours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇరుగుపొరుగు** (*iruguporugu*) is native Dravidian: *irugu* (DEDR 480) and *porugu* (DEDR 4541), both "neighbourhood". For the second, DEDR compares, with a query, Prakrit *pora*, "joint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,9 @@ You'll want to know: చెట్టు.
 A meaning that moves up or down the scale like that is the commonest kind of drift there is. The word holds its place in the family; what it points at slides.
 మ్రాను is another Telugu word for a tree, older-sounding and now mostly literary. చెట్టు (ceṭṭu) is what anybody says.
 
+The word, taken apart.
+చెట్టు (ceṭṭu) is native Dravidian, one word with Tamil ceṭi, Kannada ceṭṭu and Malayalam ceṭi (DEDR 1941). DEDR glosses the Tamil word "shrub, bush".
+
 What you've built.
 The thing the rest of this chapter is made of.
 
@@ -47,6 +50,9 @@ You'll want to know: కొమ్మ.
 కొమ్మ (komma) is the branch, the arm the చెట్టు (ceṭṭu) puts out sideways.
 It stands very close to కొమ్ము, the horn of an animal, and the closeness is not an accident: both are the thing that grows out and forks. A tree wearing horns is a fair description of a tree in winter.
 కొమ్మ (komma) turns up in old poetry meaning a young woman, by way of the slenderness of a branch. That sense has gone quiet, but it is why the word looks odd inside a love poem.
+
+The word, taken apart.
+కొమ్మ (komma) is native Dravidian, one word with Tamil kompu, Kannada kombu and Malayalam kompu (DEDR 2115). DEDR lists Telugu kommu, "horn", and komma, "branch", together.
 
 What you've built.
 Two: the tree and what it puts out.
@@ -81,6 +87,9 @@ You'll want to know: వేరు.
 One shape, two jobs, and they are not far apart when you think about what a root does: it is the part that is set aside, buried, kept out of the daylight and out of the reckoning.
 Telugu is comfortable letting a word carry a solid thing and an abstract idea at once. You had one working two jobs a moment ago, with చుక్క.
 
+The word, taken apart.
+వేరు (vēru) is native Dravidian, one word with Tamil vēr, Kannada bēru and Malayalam vēr (DEDR 5535). The వేరు that means "different" is another word, DEDR 5548.
+
 What you've built.
 Three: what is up, what is out, and what is under.
 
@@ -114,6 +123,9 @@ You'll want to know: విత్తనం.
 Sanskrit's bīja was borrowed in as bījaṁ, and it does the abstract work — the seed of an idea, the germ of a quarrel. విత్తనం (vittanaṁ) stays in the sack.
 The whole chapter is inside this word. A విత్తనం (vittanaṁ) becomes a చెట్టు (ceṭṭu) with a వేరు (vēru) below and a కొమ్మ (komma) above.
 
+The word, taken apart.
+విత్తనం (vittanaṁ) is native Dravidian, one word with Tamil vittu, Kannada bittu and Malayalam vittu (DEDR 5401). DEDR lists Telugu vittu, "to sow; seed", and vittanamu, "seed".
+
 What you've built.
 Four.
 
@@ -146,6 +158,9 @@ You'll want to know: మొక్క.
 మొక్క (mokka) is what the విత్తనం (vittanaṁ) becomes before it earns the name చెట్టు (ceṭṭu): a seedling, a sapling, anything small and green and rooted.
 The line between మొక్క (mokka) and చెట్టు (ceṭṭu) is about woodiness rather than height. A tomato plant stays a మొక్క (mokka) at any size, because it stays soft. A చెట్టు (ceṭṭu) has bark.
 Do not tie it to మొక్కు, "to bow, to make a vow", which sounds close. Telugu has a good many pairs like that, and a resemblance on its own settles nothing.
+
+The word, taken apart.
+The origin of మొక్క (mokka) is uncertain. DEDR does not list it in this sense; its nearest entry is DEDR 4997, which lists Telugu molaka and mōka, "sprout, shoot", with Tamil muḷai, "to sprout".
 
 What you've built.
 Five: చెట్టు (ceṭṭu), కొమ్మ (komma), వేరు (vēru), విత్తనం (vittanaṁ), మొక్క (mokka). A tree, its parts, and its beginning.

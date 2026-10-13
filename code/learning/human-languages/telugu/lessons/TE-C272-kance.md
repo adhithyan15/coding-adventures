@@ -14,7 +14,8 @@ romanization: "kañce"
 concept_tag: TE-VASTUVU272-KANCE
 prerequisites: [TE-C271-cillu, TE-C272-pandiri]
 sounds: []
-roots: []
+roots: [telugu-kance-fence]
+etymology_hook: "kañce: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'fence'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C272-pandiri]
 <!-- hl-knowledge: introduces=[TE-LEX-C272-VASTUVU272-02]; assesses=[] -->
 
 **కంచె** — *kañce* — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కంచె** (*kañce*) is uncertain. DEDR and CDIAL list no word of this shape meaning "fence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

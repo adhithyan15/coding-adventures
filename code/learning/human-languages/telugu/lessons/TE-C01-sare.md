@@ -12,6 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [TE-C01-avunu]
 sounds: [sa, e-long-vowel-sign]
 roots: [sari]
+etymology_hook: "sarē, sari: origin uncertain; usually traced to Sanskrit sadṛśa 'like, equal' (CDIAL 13120)"
 duration:
   max_seconds: 190
 requires:
@@ -53,19 +54,19 @@ Left to right: **స · రే** = *sa-rē* →
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-SARE-02]; assesses=[] -->
 
-**సరే** (*sarē*) is native Dravidian "correct, right → okay, agreed" — the
+**సరే** (*sarē*) means "correct, right → okay, agreed" — the
 verbal nod of Telugu. It is the same family word as Kannada **ಸರಿ** and
 Tamil **சரி** (*sari*), worn to *sarē* in Telugu. Say it once to agree; say
-*sarē sarē* to mean "yes yes, fine, enough."
+*sarē sarē* to mean "yes yes, fine, enough." Its origin is uncertain: DEDR has no
+entry, and it is usually traced to Sanskrit *sadṛśa*, "like, equal" (CDIAL 13120).
 
-## Grammar Lens: one Dravidian word, three scripts
+## Grammar Lens: one shared word, three scripts
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C01-SARE-03]; assesses=[] -->
 
-*sari / sarē* is a clean demonstration of family closeness: essentially one
+*sari / sarē* is a clean demonstration of how much the sisters share: one
 word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu.
-As you learn to read each, spotting a shared word shift its shape but not its
-sense is the quickest way to feel the relationship (and the whole reason to
-learn these four side by side).
+Spotting a shared word in three scripts is the quickest way to feel the
+relationship.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

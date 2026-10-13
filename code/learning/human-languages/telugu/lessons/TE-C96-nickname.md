@@ -11,7 +11,8 @@ romanization: "muddupēru"
 concept_tag: TE-NAMES-NICKNAME
 prerequisites: [TE-C95-didnthear, TE-C96-surname]
 sounds: []
-roots: []
+roots: [dravidian-muttu-kiss, peyar-dravidian]
+etymology_hook: "muddupēru: native muddu 'kiss' (DEDR 4960) + pēru 'name' (DEDR 4410)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C96-surname]
 **ముద్దుపేరు** (*muddupēru*) — "a nickname, a pet name".
 
 **ముద్దు** is "a kiss, affection", so a nickname is an *affection name*: the one family uses.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముద్దుపేరు** (*muddupēru*) is native Dravidian: *muddu*, "kiss", one word with Tamil *muttu* (DEDR 4960), and *pēru*, "name" (DEDR 4410). DEDR compares Prakrit *muddī*, "kiss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

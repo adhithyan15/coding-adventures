@@ -14,7 +14,8 @@ romanization: "poḍavu"
 concept_tag: TE-THINGS136-PODAVU
 prerequisites: [TE-C136-jamapandu, TE-C136-pancadara, TE-C42-adjective-system, TE-C42-old]
 sounds: []
-roots: []
+roots: [dravidian-podavu-height]
+etymology_hook: "poḍavu: native Dravidian, one word with Kannada poḍe (DEDR 4484)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C136-pancadara]
 <!-- hl-knowledge: introduces=[TE-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **పొడవు** — *poḍavu* — "tall, long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొడవు** (*poḍavu*) is native Dravidian, one word with Kannada *poḍe* (DEDR 4484). DEDR lists Telugu *poḍavu*, "height, length; tall, long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

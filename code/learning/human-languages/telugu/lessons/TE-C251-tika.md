@@ -14,7 +14,8 @@ romanization: "ṭīkā"
 concept_tag: TE-AROGYAM251-TIKA
 prerequisites: [TE-C251-kandaram, TE-C251-injeksanu]
 sounds: []
-roots: []
+roots: [telugu-tika-vaccination]
+etymology_hook: "ṭīkā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'vaccination'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-injeksanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C251-AROGYAM251-05]; assesses=[] -->
 
 **టీకా** — *ṭīkā* — "a vaccination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **టీకా** (*ṭīkā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "vaccination".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 193,
-  "sourceHash": "fnv1a64:96067d6ff3f4d338",
+  "sourceHash": "fnv1a64:f67c01d369004c19",
   "lessonIds": [
     "TE-C193-gita",
     "TE-C193-vrttam",
@@ -9,11 +9,11 @@
     "TE-C193-tribhujam",
     "TE-C193-cakram"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "telugu/narration/ch193.txt",
   "json": "telugu/narration/ch193.json",
-  "textHash": "fnv1a64:ce23ef71cc5fde3f",
-  "jsonHash": "fnv1a64:31ebf8c8ad93df96",
+  "textHash": "fnv1a64:85f8babe18b634cf",
+  "jsonHash": "fnv1a64:4ec77ae0b020f00c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sāikilu"
 concept_tag: TE-THINGS134-SAIKILU
 prerequisites: [TE-C133-railu, TE-C134-karu]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāikilu ← English cycle, short for bicycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C134-karu]
 <!-- hl-knowledge: introduces=[TE-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **సైకిలు** — *sāikilu* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సైకిలు** (*sāikilu*) is a loan from English *cycle*, short for *bicycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

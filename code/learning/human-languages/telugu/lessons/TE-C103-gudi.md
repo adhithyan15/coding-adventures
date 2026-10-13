@@ -14,7 +14,8 @@ romanization: "guḍi"
 concept_tag: TE-LOC103-GUDI
 prerequisites: [TE-C102-vantena, TE-C102-parku]
 sounds: []
-roots: []
+roots: [dravidian-kudi-house]
+etymology_hook: "guḍi: native Dravidian, one word with Kannada guḍi 'house, temple' (DEDR 1655), which compares Sanskrit kuṭī 'hut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C102-parku]
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-01]; assesses=[] -->
 
 **గుడి** — *guḍi* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుడి** (*guḍi*) is native Dravidian, one word with Tamil *kuṭi*, "house", and Kannada *guḍi*, "house, temple" (DEDR 1655). DEDR compares Sanskrit *kuṭī*, "hut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vaddu"
 concept_tag: TE-WORD-DONT-WANT
 prerequisites: [TE-C58-less]
 sounds: []
-roots: []
+roots: [dravidian-ol-wish]
+etymology_hook: "vaddu: native Dravidian; DEDR 1006 lists vaddu 'not wanted' under valacu 'to wish', with Tamil ollu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C58-less]
 It answers కావాలి, "I want it", and the two of them run every meal in a Telugu house. A hand over the plate and వద్దు is a complete sentence.
 
 It softens the moment you put కొంచెం's cousin in front of it, or the **-అండి** ending on the end: వద్దండి is the same refusal with the door left open.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వద్దు** (*vaddu*) is native Dravidian. DEDR 1006 lists *valadu* and *vaddu*, "it is not wanted", under the verb *valacu*, "to wish, desire", with Tamil *ollu*, "to agree", and Kannada *ol*, "to like".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

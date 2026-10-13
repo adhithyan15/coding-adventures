@@ -14,7 +14,8 @@ romanization: "ekkaḍā"
 concept_tag: TE-NISHEDHAM153-EKKADA
 prerequisites: [TE-C153-evaru, TE-C153-eppudu]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "ekkaḍā: native ekkaḍa 'where' (DEDR 5151) + -ā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C153-eppudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C153-NISHEDHAM153-03]; assesses=[] -->
 
 **ఎక్కడా** — *ekkaḍā* — "nowhere, not anywhere (with a negative verb)". **నాకు ఆ పుస్తకం ఎక్కడా దొరకలేదు** — *nāku ā pustakaṁ ekkaḍā dorakalēdu* — "I couldn't find that book anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎక్కడా** (*ekkaḍā*) is native Dravidian: *ekkaḍa*, "where" (DEDR 5151), with the ending *-ā*: with a negative verb, "nowhere".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

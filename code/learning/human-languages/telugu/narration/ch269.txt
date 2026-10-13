@@ -12,6 +12,9 @@ Before the new one: say the Telugu for the internet, then the Telugu for a websi
 You'll want to know: డబ్బా.
 డబ్బా — ḍabbā — "a tin, a can".
 
+The word, taken apart.
+డబ్బా (ḍabbā) matches Hindi ḍabbā, "box", which CDIAL 5528 traces to a reconstructed ḍabba, "box", of non-Aryan origin, perhaps from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a website, then the Telugu for a tin.
 
 You'll want to know: కంచం.
 కంచం — kañcaṁ — "an eating plate".
+
+The word, taken apart.
+కంచం (kañcaṁ) is usually traced to Sanskrit kaṁsa, "metal cup; bell-metal" (CDIAL 2576), reshaped to Telugu sounds.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a tin, then the Telugu for an eating plat
 You'll want to know: జల్లెడ.
 జల్లెడ — jalleḍa — "a sieve".
 
+The word, taken apart.
+జల్లెడ (jalleḍa) is native Dravidian. DEDR 2370 lists jalleḍa, "sieve", with Kannada jallaḍi and Tamil callaṭai, "sieve". DEDR compares the Indo-Aryan words in CDIAL 4771, such as Sanskrit cālana, "sieve".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for an eating plate, then the Telugu for a si
 You'll want to know: చెక్క.
 చెక్క — cekka — "wood, a plank".
 
+The word, taken apart.
+చెక్క (cekka) is native Dravidian. DEDR 2748 lists cekka, "piece, chip", with Kannada cekke and Tamil cakkai, "chips". DEDR compares, with a query, Sanskrit śakala, "chip, fragment" (CDIAL 12243).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a sieve, then the Telugu for wood.
 
 You'll want to know: ఇత్తడి.
 ఇత్తడి — ittaḍi — "brass".
+
+The word, taken apart.
+The origin of ఇత్తడి (ittaḍi) is uncertain. DEDR and CDIAL list no word of this shape meaning "brass".
 
 What you've built.
 One more word for this chapter.

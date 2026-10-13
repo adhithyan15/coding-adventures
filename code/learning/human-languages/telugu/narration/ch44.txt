@@ -13,6 +13,9 @@ You'll want to know: చూడు.
 చూడు (cūḍu) — "look".
 You met it earlier as "to see, to look"; here it opens the run. It also stretches to 'to look after', the same three meanings Kannada packs into nōḍu, although the two verbs themselves are not related.
 
+The word, taken apart.
+చూడు (cūḍu) is native Dravidian. DEDR 2735 lists the Telugu verb cūcu, "to see, look at", with the stem cūḍ-, beside Kannada cūpu, "sight".
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -38,6 +41,9 @@ Before the new one: what did cūḍu mean?
 You'll want to know: ఆలకించు.
 ఆలకించు (ālakiñcu) — "listen".
 'Listen attentively' — a step above simply hearing. Telugu keeps listening and asking separate, where Kannada merges them into one stem.
+
+The word, taken apart.
+ఆలకించు (ālakiñcu) is native Dravidian, one word with Kannada ālisu (DEDR 383). DEDR lists Telugu ālakincu, "to hear, listen".
 
 What you've built.
 One more. Three follow, and each reuses the ones before.
@@ -67,6 +73,9 @@ You'll want to know: మాట్లాడు.
 మాట్లాడు (māṭlāḍu) — "speak".
 From māṭa, 'word', plus āḍu, 'to play' — the same construction as Kannada's mātāḍu, built from the same two pieces.
 
+The word, taken apart.
+మాట్లాడు (māṭlāḍu) is native Dravidian: māṭa, "word", and āḍu, "to play, move". DEDR 4834 lists māṭa and māṭal-āḍu, "to speak", with Kannada mātu, "word"; āḍu is DEDR 347.
+
 What you've built.
 One more. Three follow, and each reuses the ones before.
 
@@ -93,7 +102,10 @@ Before the new one: what did māṭlāḍu mean?
 
 You'll want to know: రాయి.
 రాయి (rāyi) — "write".
-The everyday 'write'. Telugu and Kannada each kept their own Dravidian stem here rather than borrowing a shared one.
+The everyday 'write'. Telugu and Kannada both kept the inherited Dravidian stem here rather than borrowing one.
+
+The word, taken apart.
+రాయి (rāyi) is native Dravidian. DEDR 5263 lists Telugu vrāyu and rāyu, "to write", with Tamil vari and Kannada bare, "to write". DEDR compares, with a query, Prakrit rajju, "a writer".
 
 What you've built.
 That closes the run: look, listen, speak, write.

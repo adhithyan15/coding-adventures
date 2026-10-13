@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 227,
-  "sourceHash": "fnv1a64:1982f5032ce90fad",
+  "sourceHash": "fnv1a64:cf8069137f687252",
   "lessonIds": [
     "TE-C227-yuvakudu",
     "TE-C227-peddalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch227.txt",
   "json": "telugu/narration/ch227.json",
-  "textHash": "fnv1a64:da8a1287acf2ae14",
-  "jsonHash": "fnv1a64:5c418942686ee161",
+  "textHash": "fnv1a64:da3dcf653c7ad9e6",
+  "jsonHash": "fnv1a64:c484b038c2ac963c",
   "findings": []
 }

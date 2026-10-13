@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "He, She, and Whose",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e2951445602599c3",
+  "sourceHash": "fnv1a64:5441bdd7eb3854c5",
   "lessons": [
     {
       "id": "TE-C79-friends",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:108ef010600d97a6",
+      "sourceHash": "fnv1a64:a662c6c0b42de6c7",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్నేహితుడి (snēhituḍi) is the possessive of snēhituḍu, \"friend\", built on Sanskrit sneha, \"affection, love\" (CDIAL 13802), with Telugu endings."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the noun changes shape before it does a job",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -81,7 +92,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +141,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd1dc2696d09abc3",
+      "sourceHash": "fnv1a64:27fe5a8bf202921e",
       "notice": null,
       "blocks": [
         {
@@ -202,6 +213,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మా (mā) is native Dravidian: the oblique stem of mēmu, \"we\", which DEDR 5154 lists with mā-, and its inclusive partner mana, the stem of manamu (DEDR 3647)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -212,7 +234,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +283,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -292,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3030911dc686a0cf",
+      "sourceHash": "fnv1a64:9884b33c746983f5",
       "notice": null,
       "blocks": [
         {
@@ -333,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతను (atanu) is native Dravidian, built on the far-pointing base a-, \"that\": DEDR 1 lists the Telugu words for \"that man\", and āme, \"that woman\", among them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the third person is where Telugu marks gender",
           "segments": [
@@ -343,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -354,7 +387,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -403,7 +436,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -434,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d754ef90507174e",
+      "sourceHash": "fnv1a64:8e5fbd39c38deafc",
       "notice": null,
       "blocks": [
         {
@@ -475,6 +508,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నన్ను (nannu) is native Dravidian, built on nan-, the oblique stem of nēnu, \"I\" (DEDR 5160), with the object ending -nu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: people get marked, things usually do not",
           "segments": [
@@ -485,7 +529,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -545,7 +589,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -576,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3c25fa418a1dfb8",
+      "sourceHash": "fnv1a64:ed33f530e4c2be80",
       "notice": null,
       "blocks": [
         {
@@ -617,6 +661,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of గారు (gāru) is uncertain. Neither DEDR nor CDIAL records the honorific."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -627,7 +682,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -676,7 +731,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

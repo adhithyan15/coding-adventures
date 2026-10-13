@@ -11,7 +11,8 @@ romanization: "ēṇṭi saṅgati?"
 concept_tag: TE-GREET-WHATS-NEW
 prerequisites: [TE-C91-areyouwell, TE-C91-longtime]
 sounds: []
-roots: []
+roots: [yaa-dravidian, sanskrit-sangati]
+etymology_hook: "ēṇṭi saṅgati: spoken ēmiṭi 'what' (DEDR 5151) + Sanskrit saṅgati 'meeting, matter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C91-longtime]
 **ఏంటి సంగతి?** (*ēṇṭi saṅgati?*) — "what's new?", literally "what's the matter?", but warm.
 
 **ఏంటి** is the everyday spoken form of **ఏమిటి**. Use it with friends, not with a stranger.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏంటి సంగతి?** (*ēṇṭi saṅgati?*) is *ēṇṭi*, the spoken form of native *ēmiṭi*, "what" (DEDR 5151), and Sanskrit *saṅgati*, "meeting, connection, matter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

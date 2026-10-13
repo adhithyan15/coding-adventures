@@ -14,7 +14,8 @@ romanization: "naḍucu"
 concept_tag: TE-VERB-NADUCU
 prerequisites: [TE-C148-padu, TE-C148-ammu]
 sounds: []
-roots: []
+roots: [dravidian-nada-walk]
+etymology_hook: "naḍucu: native Dravidian, one word with Tamil naṭa and Kannada naḍe (DEDR 3582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C148-ammu]
 <!-- hl-knowledge: introduces=[TE-LEX-C149-ACT149-01]; assesses=[] -->
 
 **నడుచు** — *naḍucu* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నడుచు** (*naḍucu*) is native Dravidian, one word with Tamil *naṭa* and Kannada *naḍe* (DEDR 3582). DEDR lists Telugu *naḍucu*, "to walk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

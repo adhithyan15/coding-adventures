@@ -14,7 +14,8 @@ romanization: "dāṭu"
 concept_tag: TE-VERB-DATU
 prerequisites: [TE-C278-snanam-ceyu, TE-C278-tayaru-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-taantu-leap]
+etymology_hook: "dāṭu: native Dravidian; DEDR 3158 lists dāṭu 'to cross' with Kannada dāṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C278-tayaru-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C278-KRIYA278-04]; assesses=[] -->
 
 **దాటు** — *dāṭu* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దాటు** (*dāṭu*) is native Dravidian. DEDR 3158 lists a nasalised *dāṭu*, "to leap, cross over", with Kannada *dāṭu* and Tamil *tāṇṭu*, "to cross". DEDR compares Sanskrit *tāṇḍava*, "Śiva's dance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

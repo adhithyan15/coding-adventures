@@ -11,7 +11,8 @@ romanization: "puvvu"
 concept_tag: TE-NOUN-FLOWER
 prerequisites: [TE-C52-muggu]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower]
+etymology_hook: "puvvu: native Dravidian, one word with Tamil pū (DEDR 4345), which compares, with a query, Sanskrit puṣpa"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Proto-Dravidian **\*pū**, and the family kept it: Tamil பூ, Malayalam പ�
 There is that *p-* to *h-* once more on the Kannada side — the third time in this book, after పాలు beside ಹಾಲು and పండు beside ಹಣ್ಣು. A sound law you have watched work three times has stopped being a claim; it is a pattern you can predict with, and predicting is the only test a sound law ever gets.
 
 The plural stem is పూల-, which is about to matter.
+
+DEDR 4345 lists Telugu *pū*, *pūvu* and *puvvu*, "flower", with Tamil *pū* and Kannada *pūvu*. DEDR compares, with a query, Sanskrit *puṣpa*, "flower" (CDIAL 8303).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

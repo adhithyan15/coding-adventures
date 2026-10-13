@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 304,
-  "sourceHash": "fnv1a64:1fff8c2479cf935b",
+  "sourceHash": "fnv1a64:d250cf7cad228d03",
   "lessonIds": [
     "TE-C304-prakrti",
     "TE-C304-krida",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch304.txt",
   "json": "telugu/narration/ch304.json",
-  "textHash": "fnv1a64:0a506ddec9c268d7",
-  "jsonHash": "fnv1a64:10a8099603a10e19",
+  "textHash": "fnv1a64:f8a6a28e32728369",
+  "jsonHash": "fnv1a64:ae584e43674923c4",
   "findings": []
 }

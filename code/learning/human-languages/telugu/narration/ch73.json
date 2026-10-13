@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Tastes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:10b84b438829ac1a",
+  "sourceHash": "fnv1a64:754ea2c01b465680",
   "lessons": [
     {
       "id": "TE-C73-sweet",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24428fe4b6119c30",
+      "sourceHash": "fnv1a64:b0b279867cbb6734",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తీపి (tīpi) is native Dravidian, one word with Tamil tīm, \"sweet\", and Kannada sīyi, \"sweet\" (DEDR 3268), which lists tīpi itself. DEDR compares, with a query, Prakrit tiṇisa, \"honeycomb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f307c7b5d16527d",
+      "sourceHash": "fnv1a64:f34d4c009dd91c5a",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పులుపు (pulupu) is native Dravidian, one word with Tamil puḷi and Malayalam puḷikka, \"to be sour\" (DEDR 4322), which lists pulupu, \"sourness\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56239fe9055a5c73",
+      "sourceHash": "fnv1a64:29e33aada40e464a",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చేదు (cēdu) is native Dravidian. DEDR 1249 lists the Telugu word for \"bitterness; bitter\" with Tamil kaya, \"to be bitter\", and Kannada kay, \"bitterness\". DEDR compares Sanskrit kaṣāya, \"astringent\" (CDIAL 2974)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88dca0887cb28fe0",
+      "sourceHash": "fnv1a64:73ea5fc8435a6cd4",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కారం (kāraṁ) is native Dravidian, one word with Tamil kār, \"to be pungent\", and Kannada kāra, \"pungency\" (DEDR 1466). DEDR adds that the word was probably influenced by Sanskrit kṣāra, \"caustic, alkali\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efdac4cf61c0b54d",
+      "sourceHash": "fnv1a64:57ca952aad5b0de9",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +684,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వగరు (vagaru) is native Dravidian. DEDR 2674 lists ogaru and vagaru, \"astringent taste\", with Tamil uvar, \"to taste astringent\", and Kannada ogar, \"an astringent taste\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

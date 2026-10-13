@@ -14,7 +14,8 @@ romanization: "railu"
 concept_tag: TE-THINGS133-RAILU
 prerequisites: [TE-C133-kantiniru, TE-C133-padava]
 sounds: []
-roots: []
+roots: [english-rail]
+etymology_hook: "railu ← English rail"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C133-padava]
 <!-- hl-knowledge: introduces=[TE-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **రైలు** — *railu* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రైలు** (*railu*) is a loan from English *rail*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

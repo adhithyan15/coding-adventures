@@ -14,7 +14,8 @@ romanization: "tūrpu"
 concept_tag: TE-STHALAM254-TURPU
 prerequisites: [TE-C254-prantam, TE-C254-dikku]
 sounds: []
-roots: []
+roots: [dravidian-tuuru-enter]
+etymology_hook: "tūrpu: DEDR 3399 lists tūr(u)pu 'east', with a query, under tūṟu 'to enter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C254-dikku]
 <!-- hl-knowledge: introduces=[TE-LEX-C254-STHALAM254-04]; assesses=[] -->
 
 **తూర్పు** — *tūrpu* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 3399 lists **తూర్పు** (*tūrpu*), "east", with a query, under *tūṟu*, "to enter", one word with Kannada *tūṟu*, "to enter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

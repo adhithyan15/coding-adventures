@@ -14,7 +14,8 @@ romanization: "kōrika"
 concept_tag: TE-WANT107-KORIKA
 prerequisites: [TE-C106-yajamani, TE-C106-balam]
 sounds: []
-roots: []
+roots: [dravidian-kooru-desire]
+etymology_hook: "kōrika: native Dravidian, one word with Tamil kōrikkai 'wish' (DEDR 2232)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C106-balam]
 <!-- hl-knowledge: introduces=[TE-LEX-C107-WANT107-01]; assesses=[] -->
 
 **కోరిక** — *kōrika* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోరిక** (*kōrika*) is native Dravidian, one word with Tamil *kōrikkai*, "request, wish", and Kannada *kōṟike*, "wishing" (DEDR 2232), which lists *kōrika* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

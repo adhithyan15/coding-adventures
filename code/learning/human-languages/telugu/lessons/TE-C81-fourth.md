@@ -11,7 +11,8 @@ romanization: "nālugava"
 concept_tag: TE-ORDINAL-FOURTH
 prerequisites: [TE-C81-third, TE-C80-want, TE-C69-hammer, TE-C71-son-in-law, TE-C25-shubha-ratri, TE-C30-subha-sayantram]
 sounds: [long-aa]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "nālugava: native nālugu 'four' (DEDR 3655) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -54,6 +55,11 @@ reviews_of: [TE-C81-third, TE-C80-want, TE-C69-hammer, TE-C71-son-in-law]
 
 This is the longest of the ten and it is no harder than the shortest, which is the
 practical point of a regular ending. Once you can count, you can order.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాలుగవ** (*nālugava*) is native Dravidian: *nālugu*, "four", one word with Tamil *nālku* (DEDR 3655), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C81-ORDINAL-05] -->

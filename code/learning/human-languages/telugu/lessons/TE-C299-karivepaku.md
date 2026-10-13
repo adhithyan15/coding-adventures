@@ -14,7 +14,8 @@ romanization: "karivēpāku"
 concept_tag: TE-VASTUVU299-KARIVEPAKU
 prerequisites: [TE-C299-avalu, TE-C299-kottimira]
 sounds: []
-roots: []
+roots: [telugu-kari-curry, dravidian-veempu-neem, dravidian-aaku-leaf]
+etymology_hook: "karivēpāku: kari 'curry' + native vēpa 'neem' (DEDR 5531) + āku 'leaf' (DEDR 335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C299-kottimira]
 <!-- hl-knowledge: introduces=[TE-LEX-C299-VASTUVU299-04]; assesses=[] -->
 
 **కరివేపాకు** — *karivēpāku* — "curry leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కరివేపాకు** (*karivēpāku*) is *kari*, "curry", with native *vēpa*, "neem" (DEDR 5531), and *āku*, "leaf" (DEDR 335): "curry-neem leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

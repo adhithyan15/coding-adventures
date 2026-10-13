@@ -12,6 +12,7 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [TE-C02-emiti, TE-C02-nuvvu-miiru, TE-C02-peru]
 sounds: []
 roots: []
+etymology_hook: "mī pēru ēmiṭi: native mī 'your' (DEDR 3688), pēru 'name' (DEDR 4410), ēmiṭi 'what' (DEDR 5151)"
 duration:
   max_seconds: 160
 requires:
@@ -41,7 +42,7 @@ reviews_of: [TE-C02-emiti, TE-C02-nuvvu-miiru, TE-C02-naa-peru]
 
 > **మీ పేరు ఏమిటి?** = literally "**your name what?**" = "what's your name?"
 
-Three words, **no verb** — the zero copula holds for questions too.
+Three Dravidian words (DEDR 3688, 4410, 5151), **no verb** — the zero copula holds for questions too.
 
 ## Grammar Lens: answer, and the familiar version
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C02-MII-PERU-EMITI-03]; assesses=[] -->

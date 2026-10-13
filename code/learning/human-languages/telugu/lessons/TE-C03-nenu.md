@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [TE-C02-naa]
 sounds: [long-e, double-nn]
 roots: [nen-dravidian]
+etymology_hook: "nēnu: native Dravidian, one word with Tamil nāṉ and Kannada nān (DEDR 5160)"
 duration:
   max_seconds: 180
 requires:
@@ -50,6 +51,8 @@ family. Its possessive is the **నా** (*nā*, "my") you already met: *nēnu* 
 *nā* "my." For all that Telugu borrows Sanskrit vocabulary elsewhere, its most
 basic pronouns stayed Dravidian to the core — the grammar's foundations never
 changed hands.
+
+DEDR 5160 lists Telugu *ēnu* and *nēnu* with Tamil *yāṉ*, *nāṉ* and Kannada *nān*.
 
 ## Grammar Lens: "I" you can drop
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C03-NENU-03]; assesses=[] -->

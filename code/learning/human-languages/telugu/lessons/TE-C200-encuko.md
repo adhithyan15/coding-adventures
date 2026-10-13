@@ -14,7 +14,8 @@ romanization: "eñcukō"
 concept_tag: TE-VERB-ENCUKO
 prerequisites: [TE-C199-sardu, TE-C200-podupu-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-en-number]
+etymology_hook: "eñcukō: native encu 'to judge, consider' (DEDR 793) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C200-podupu-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C200-KRIYA200-02]; assesses=[] -->
 
 **ఎంచుకో** — *eñcukō* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎంచుకో** (*eñcukō*) is native Dravidian: *eñcu*, "to count, consider, judge", one word with Tamil *eṇṇu*, "to think, count" (DEDR 793), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

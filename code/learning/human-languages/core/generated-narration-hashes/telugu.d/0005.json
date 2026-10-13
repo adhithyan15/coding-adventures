@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:542b5bfdf176c1fe",
+  "sourceHash": "fnv1a64:4d004f852e385773",
   "lessonIds": [
     "TE-C05-maatlaadu",
     "TE-S01-letter-ta",
@@ -23,7 +23,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:f2e008ba3b4f9d08",
-  "jsonHash": "fnv1a64:a024d80a22d4c15e",
+  "textHash": "fnv1a64:df6dbd60d7d8d072",
+  "jsonHash": "fnv1a64:fa401693e041af44",
   "findings": []
 }

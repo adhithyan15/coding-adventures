@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 140,
-  "sourceHash": "fnv1a64:e550ffb5500fb62a",
+  "sourceHash": "fnv1a64:9c1a8f2c775fc371",
   "lessonIds": [
     "TE-C140-suraksitam",
     "TE-C140-abaddham",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch140.txt",
   "json": "telugu/narration/ch140.json",
-  "textHash": "fnv1a64:8a989df3c8e06bcd",
-  "jsonHash": "fnv1a64:1355864fa36bcfa0",
+  "textHash": "fnv1a64:14124de0a4fde582",
+  "jsonHash": "fnv1a64:50292f0f02e80d97",
   "findings": []
 }

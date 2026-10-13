@@ -11,7 +11,8 @@ romanization: "ālakiñcu"
 concept_tag: TE-VERB-LISTEN
 prerequisites: [TE-C44-look]
 sounds: []
-roots: []
+roots: [dravidian-aal-listen]
+etymology_hook: "ālakiñcu: native Dravidian, one word with Kannada ālisu (DEDR 383)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C44-look]
 **ఆలకించు** (*ālakiñcu*) — "listen".
 
 'Listen attentively' — a step above simply hearing. Telugu keeps listening and asking separate, where Kannada merges them into one stem.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆలకించు** (*ālakiñcu*) is native Dravidian, one word with Kannada *ālisu* (DEDR 383). DEDR lists Telugu *ālakincu*, "to hear, listen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

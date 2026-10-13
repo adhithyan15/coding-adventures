@@ -14,7 +14,8 @@ romanization: "palakariñcu"
 concept_tag: TE-VERB-PALAKARINCU
 prerequisites: [TE-C161-natyam-ceyu, TE-C161-jarupuko]
 sounds: []
-roots: []
+roots: [telugu-palakarincu-greet]
+etymology_hook: "palakariñcu: origin uncertain; DEDR lists paluku 'to speak' (DEDR 3887) but not this verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-jarupuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-03]; assesses=[] -->
 
 **పలకరించు** — *palakariñcu* — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పలకరించు** (*palakariñcu*) is uncertain. DEDR 3887 lists *paluku*, "to sound, answer, say", which it resembles, but not this verb itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

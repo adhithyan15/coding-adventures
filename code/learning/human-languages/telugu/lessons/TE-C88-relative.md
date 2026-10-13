@@ -11,7 +11,8 @@ romanization: "bandhuvu"
 concept_tag: TE-PEOPLE-RELATIVE
 prerequisites: [TE-C88-girl, TE-C88-person]
 sounds: []
-roots: []
+roots: [sanskrit-bandhu]
+etymology_hook: "bandhuvu ← Sanskrit bandhu 'kinsman', a tatsama (CDIAL 9144)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C88-person]
 
 **అతను మా బంధువు** — "he is our relative", with no word for *is*, the same way **నా పేరు ...**
 needs none.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బంధువు** (*bandhuvu*) is Sanskrit *bandhu*, "kinsman", taken over whole as a learned loan, a tatsama, with the Telugu ending *-vu* (CDIAL 9144).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

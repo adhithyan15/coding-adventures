@@ -14,7 +14,8 @@ romanization: "mekānikku"
 concept_tag: TE-PANI314-MEKANIKKU
 prerequisites: [TE-C314-mestri, TE-C314-plambaru]
 sounds: []
-roots: []
+roots: [english-mechanic]
+etymology_hook: "mekānikku ← English mechanic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C314-plambaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C314-PANI314-03]; assesses=[] -->
 
 **మెకానిక్కు** — *mekānikku* — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెకానిక్కు** (*mekānikku*) is a loan from English *mechanic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

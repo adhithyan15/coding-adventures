@@ -14,7 +14,8 @@ romanization: "ṭikkeṭṭu"
 concept_tag: TE-THINGS130-TIKKETTU
 prerequisites: [TE-C130-kampyutar, TE-C130-phonu, TE-C82-eleventh, TE-C82-tenth]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikkeṭṭu ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C130-phonu]
 <!-- hl-knowledge: introduces=[TE-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **టిక్కెట్టు** — *ṭikkeṭṭu* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టిక్కెట్టు** (*ṭikkeṭṭu*) is a loan from English *ticket*, with Telugu's doubled consonants and added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paṭaṁ"
 concept_tag: TE-VASTUVU226-PATAM
 prerequisites: [TE-C225-puccakaya, TE-C225-jidipappu]
 sounds: []
-roots: []
+roots: [sanskrit-pata]
+etymology_hook: "paṭaṁ ← Sanskrit paṭa 'woven cloth' (CDIAL 7692) + -ṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C225-jidipappu]
 <!-- hl-knowledge: introduces=[TE-LEX-C226-VASTUVU226-01]; assesses=[] -->
 
 **పటం** — *paṭaṁ* — "a map, a chart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పటం** (*paṭaṁ*) is Sanskrit *paṭa*, "woven cloth" (CDIAL 7692), with the Telugu ending *-ṁ*; a map was once drawn on cloth. CDIAL thinks *paṭa* probably came from an Austroasiatic language, and less likely from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

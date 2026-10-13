@@ -14,7 +14,8 @@ romanization: "cinuku"
 concept_tag: TE-VASTUVU229-CINUKU
 prerequisites: [TE-C229-gangireddu, TE-C229-enda]
 sounds: []
-roots: []
+roots: [dravidian-cinukku-drizzle]
+etymology_hook: "cinuku: native Dravidian; DEDR 2520 lists cinuku 'a drop, drizzle' with Malayalam cinaṅṅuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C229-enda]
 <!-- hl-knowledge: introduces=[TE-LEX-C229-VASTUVU229-04]; assesses=[] -->
 
 **చినుకు** — *cinuku* — "a raindrop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చినుకు** (*cinuku*) is native Dravidian. DEDR 2520 lists *cinuku*, "a drop, drizzle", with Malayalam *cinaṅṅuka*, "to rain slightly", and Kannada *jinugu*, "to drizzle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ romanization: "modaṭi"
 concept_tag: TE-ORDINAL-FIRST
 prerequisites: [TE-C80-congratulations, TE-C79-he, TE-C69-axe, TE-C71-aunt, TE-C20-padakondu-iravai, TE-C21-kukka-pilli]
 sounds: [retroflex-ti]
-roots: []
+roots: [dravidian-mutal-beginning]
+etymology_hook: "modaṭi: native Dravidian, from modalu 'beginning' (DEDR 4950), one word with Tamil mutal"
 duration:
-  max_seconds: 220
+  max_seconds: 229
 requires:
   knowledge: [TE-LEX-C80-WISH-05, TE-LEX-C79-WHO-03, TE-GRAMMAR-C79-WHO-03, TE-LEX-C69-TOOL-01, TE-LEX-C71-KIN-02, TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02, TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02]
 introduces:

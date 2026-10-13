@@ -14,7 +14,8 @@ romanization: "poḍi"
 concept_tag: TE-QUAL139-PODI
 prerequisites: [TE-C138-iruku, TE-C139-tadi]
 sounds: []
-roots: []
+roots: [dravidian-podi-powder]
+etymology_hook: "poḍi: native Dravidian; DEDR 4481 lists poḍi 'powder, dust; powdery, loose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C139-tadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C139-QUAL139-02]; assesses=[] -->
 
 **పొడి** — *poḍi* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొడి** (*poḍi*) is native Dravidian. DEDR 4481 lists *poḍi*, "powder, dust; powdery, loose", with Kannada *puḍi*, "powder"; the sense "dry" is not listed there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

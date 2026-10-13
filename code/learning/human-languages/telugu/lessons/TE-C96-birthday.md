@@ -11,7 +11,8 @@ romanization: "puṭṭinarōju"
 concept_tag: TE-NAMES-BIRTHDAY
 prerequisites: [TE-C96-nickname, TE-C96-age]
 sounds: []
-roots: []
+roots: [dravidian-puttu-born, persian-roz]
+etymology_hook: "puṭṭinarōju: native puṭṭu 'to be born' (DEDR 4264) + rōju 'day' ← Persian rōz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C96-age]
 
 **రోజు** is the day you know. On the day, say **పుట్టినరోజు శుభాకాంక్షలు** — "happy birthday",
 with the good wishes you already have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పుట్టినరోజు** (*puṭṭinarōju*) is native *puṭṭina*, "on which one was born", from *puṭṭu*, "to be born" (DEDR 4264), and *rōju*, "day", from Persian *rōz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

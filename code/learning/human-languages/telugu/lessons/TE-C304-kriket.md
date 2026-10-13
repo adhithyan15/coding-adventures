@@ -14,7 +14,8 @@ romanization: "krikeṭ"
 concept_tag: TE-VASTUVU304-KRIKET
 prerequisites: [TE-C304-krida, TE-C304-atagadu]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "krikeṭ ← English cricket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C304-atagadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C304-VASTUVU304-04]; assesses=[] -->
 
 **క్రికెట్** — *krikeṭ* — "cricket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**క్రికెట్** (*krikeṭ*) is a loan from English *cricket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

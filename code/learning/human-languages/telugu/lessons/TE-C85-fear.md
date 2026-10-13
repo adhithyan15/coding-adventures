@@ -11,7 +11,8 @@ romanization: "bhayaṁ"
 concept_tag: TE-WELLBEING-FEAR
 prerequisites: [TE-C85-cold, TE-C85-heat]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhayaṁ ← Sanskrit bhaya 'fear, peril', a tatsama (CDIAL 9390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C85-heat]
 
 **నాకు భయంగా ఉంది** — "I am afraid". The frame that carried tiredness and cold now carries a
 feeling, with nothing else changed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భయం** (*bhayaṁ*) is Sanskrit *bhaya*, "fear, peril", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

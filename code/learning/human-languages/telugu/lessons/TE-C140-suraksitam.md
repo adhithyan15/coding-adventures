@@ -14,7 +14,8 @@ romanization: "surakṣitaṁ"
 concept_tag: TE-QUAL140-SURAKSITAM
 prerequisites: [TE-C139-musali, TE-C139-prasiddha]
 sounds: []
-roots: []
+roots: [sanskrit-surakshita]
+etymology_hook: "surakṣitaṁ ← Sanskrit surakṣita 'well protected', a tatsama (CDIAL 13499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C139-prasiddha]
 <!-- hl-knowledge: introduces=[TE-LEX-C140-QUAL140-01]; assesses=[] -->
 
 **సురక్షితం** — *surakṣitaṁ* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సురక్షితం** (*surakṣitaṁ*) is Sanskrit *surakṣita*, "well protected", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13499).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

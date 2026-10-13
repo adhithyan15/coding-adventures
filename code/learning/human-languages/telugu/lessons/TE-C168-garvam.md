@@ -14,7 +14,8 @@ romanization: "garvaṁ"
 concept_tag: TE-AROGYAM168-GARVAM
 prerequisites: [TE-C167-vapu, TE-C168-asuya]
 sounds: []
-roots: []
+roots: [sanskrit-garva]
+etymology_hook: "garvaṁ ← Sanskrit garva 'pride, arrogance', a tatsama (CDIAL 4064)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C168-asuya]
 <!-- hl-knowledge: introduces=[TE-LEX-C168-AROGYAM168-02]; assesses=[] -->
 
 **గర్వం** — *garvaṁ* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గర్వం** (*garvaṁ*) is Sanskrit *garva*, "pride, arrogance", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4064).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

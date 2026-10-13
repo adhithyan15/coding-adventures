@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to mutter, then the Telugu for to separat
 You'll want to know: తలనొప్పి.
 తలనొప్పి — talanoppi — "a headache".
 
+The word, taken apart.
+తలనొప్పి (talanoppi) is native Dravidian: tala, "head" (DEDR 3103), and noppi, "pain, ache" (DEDR 3793).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to separate, then the Telugu for a headac
 
 You'll want to know: విరేచనాలు.
 విరేచనాలు — virēcanālu — "diarrhoea".
+
+The word, taken apart.
+విరేచనాలు (virēcanālu) is Sanskrit virecana, "purging", with the Telugu plural ending -lu. CDIAL 11874 lists the verb behind it, virēcayati, "empties, drains".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a headache, then the Telugu for diarrhoea
 You'll want to know: మాత్ర.
 మాత్ర — mātra — "a tablet, a pill".
 
+The word, taken apart.
+మాత్ర (mātra) is Sanskrit mātrā, "measure; minute portion", taken over whole as a learned loan, a tatsama, with the final -ā shortened (CDIAL 10023). The sense "pill" is the one Telugu gives it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for diarrhoea, then the Telugu for a tablet.
 You'll want to know: చెమట.
 చెమట — cemaṭa — "sweat".
 
+The word, taken apart.
+DEDR 2539 lists చెమట (cemaṭa), "sweat", beside cemma, "moisture", and sets these Telugu forms, with a question mark, beside Tamil cemmal, "water".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a tablet, then the Telugu for sweat.
 
 You'll want to know: వాపు.
 వాపు — vāpu — "a swelling".
+
+The word, taken apart.
+వాపు (vāpu) is native Dravidian. DEDR 5350 lists vāpu, "swelling", with Kannada bāvu, "swelling".
 
 What you've built.
 One more word for this chapter.

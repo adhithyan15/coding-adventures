@@ -14,7 +14,8 @@ romanization: "katterā"
 concept_tag: TE-THINGS110-KATTERA
 prerequisites: [TE-C110-tadu, TE-C110-meku]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "katterā ← Sanskrit kartarī 'scissors, knife', reshaped as a tadbhava (CDIAL 2858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C110-meku]
 <!-- hl-knowledge: introduces=[TE-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **కత్తెర** — *katterā* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కత్తెర** (*katterā*) comes from Sanskrit *kartarī*, "scissors, knife", reshaped to Telugu sounds: a tadbhava (CDIAL 2858).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

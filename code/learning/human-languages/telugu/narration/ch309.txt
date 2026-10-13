@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a knot, then the Telugu for a row.
 You'll want to know: గట్టు.
 గట్టు — gaṭṭu — "a bund, an embankment".
 
+The word, taken apart.
+The origin of గట్టు (gaṭṭu) is uncertain. DEDR and CDIAL list no word of this shape meaning "bund, embankment".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a row, then the Telugu for a bund.
 
 You'll want to know: పశువులు.
 పశువులు — paśuvulu — "cattle, livestock".
+
+The word, taken apart.
+పశువులు (paśuvulu) is Sanskrit paśu, "domestic animal", taken over whole as a learned loan, a tatsama (CDIAL 7984).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a bund, then the Telugu for cattle.
 You'll want to know: స్తంభం.
 స్తంభం — stambhaṁ — "a pillar, a pole".
 
+The word, taken apart.
+స్తంభం (stambhaṁ) is Sanskrit stambha, "pillar, post", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13682).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for cattle, then the Telugu for a pillar.
 You'll want to know: కుళాయి.
 కుళాయి — kuḷāyi — "a water tap, a faucet".
 
+The word, taken apart.
+The origin of కుళాయి (kuḷāyi) is uncertain. DEDR and CDIAL list no word of this shape meaning "tap".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a pillar, then the Telugu for a water tap
 
 You'll want to know: జెండా.
 జెండా — jeṇḍā — "a flag".
+
+The word, taken apart.
+జెండా (jeṇḍā) matches Hindustani jhaṇḍā, "flag", which DEDR and CDIAL do not list.
 
 What you've built.
 One more word for this chapter.

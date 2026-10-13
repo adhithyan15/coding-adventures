@@ -14,7 +14,8 @@ romanization: "pariṇāmaṁ"
 concept_tag: TE-KARANAM219-PARINAMAM
 prerequisites: [TE-C219-adharam, TE-C219-rujuvu]
 sounds: []
-roots: []
+roots: [sanskrit-parinama]
+etymology_hook: "pariṇāmaṁ ← Sanskrit pariṇāma 'change, outcome', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C219-rujuvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C219-KARANAM219-04]; assesses=[] -->
 
 **పరిణామం** — *pariṇāmaṁ* — "a development, an outcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిణామం** (*pariṇāmaṁ*) is Sanskrit *pariṇāma*, "change, development, outcome", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

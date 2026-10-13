@@ -14,6 +14,9 @@ You'll want to know: స్నేహితుడి.
 నా and నీ let you own things as I and you. Nothing let a named person own anything.
 A Telugu noun becomes an owner by changing its own ending: స్నేహితుడు becomes స్నేహితుడి (snēhituḍi). స్నేహితుడి (snēhituḍi) పేరు — "the friend's name".
 
+The word, taken apart.
+స్నేహితుడి (snēhituḍi) is the possessive of snēhituḍu, "friend", built on Sanskrit sneha, "affection, love" (CDIAL 13802), with Telugu endings.
+
 Grammar Lens: the noun changes shape before it does a job.
 Watch the shape of the noun, not just the ending. స్నేహితుడు stands on its own; స్నేహితుడి (snēhituḍi) is the form that owns something. The ending does not land on the dictionary form — the noun leans toward it first, and you have already seen the same lean in నేను becoming నాకు. Look for it in front of -కు and -లో as well.
 
@@ -48,6 +51,9 @@ You'll want to know: మా.
 Telugu splits a word English does not. మా (mā) leaves the listener out: my family, not yours. మన takes the listener in: our country, yours and mine.
 మా (mā) ఇల్లు is my household. మన దేశం is the country we share. Choosing wrong is the mistake an examiner hears first.
 
+The word, taken apart.
+మా (mā) is native Dravidian: the oblique stem of mēmu, "we", which DEDR 5154 lists with mā-, and its inclusive partner mana, the stem of manamu (DEDR 3647).
+
 What you've built.
 Two kinds of our, and the difference between them.
 
@@ -78,6 +84,9 @@ You'll want to know: అతను.
 అతను (atanu) — "he", ఆమె (āme) — "she", వాళ్ళు (vāḷḷu) — "they".
 Until now you could speak about yourself and to one other person. You could not speak about anybody, which is half of what an exam asks you to do.
 All three start on the అ- of అది and అక్కడ: the far one, the one not here. అతను (atanu) is literally "that man".
+
+The word, taken apart.
+అతను (atanu) is native Dravidian, built on the far-pointing base a-, "that": DEDR 1 lists the Telugu words for "that man", and āme, "that woman", among them.
 
 Grammar Lens: the third person is where Telugu marks gender.
 You were told Telugu marks no gender on I or you, and that is still true. The third person is the exception: అతను (atanu) వెళ్తాడు "he goes" ends in -ఆడు, ఆమె వెళ్తుంది "she goes" ends in -ఉంది, and వాళ్ళు వెళ్తారు "they go" takes the same -ఆరు you already use for మీరు. Three endings, and the verb tells you who without the pronoun.
@@ -113,6 +122,9 @@ You'll want to know: నన్ను.
 నేను is the I that does. నన్ను (nannu) is the me that is done to: అతను (atanu) నన్ను (nannu) అడిగాడు — "he asked me".
 The ending is -ను, and its partner -ని does the same on other nouns: స్నేహితుడిని అడిగాను, "I asked the friend".
 
+The word, taken apart.
+నన్ను (nannu) is native Dravidian, built on nan-, the oblique stem of nēnu, "I" (DEDR 5160), with the object ending -nu.
+
 Grammar Lens: people get marked, things usually do not.
 స్నేహితుడిని చూశాను — "I saw the friend", with -ని on the person. పుస్తకం చూశాను — "I saw the book", with nothing on the thing. Telugu marks a human object and leaves an inanimate one bare, which is very close to what Spanish does with its personal a. Mark people; leave objects alone.
 
@@ -146,6 +158,9 @@ You'll want to know: గారు.
 గారు (gāru) — the respect you attach to a name.
 It is not a word you say alone. It rides on the end of a name or a role: రాము గారు (gāru), గురువు గారు (gāru), అమ్మ గారు (gāru).
 You have had మీరు from your first introduction for respect in the pronoun. గారు (gāru) is respect in the address, and leaving it off where it belongs is heard as rudeness, not neutrality.
+
+The word, taken apart.
+The origin of గారు (gāru) is uncertain. Neither DEDR nor CDIAL records the honorific.
 
 What you've built.
 A way to say somebody's name that does not sound blunt.

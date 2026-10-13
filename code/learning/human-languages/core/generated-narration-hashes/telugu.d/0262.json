@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 262,
-  "sourceHash": "fnv1a64:674d03a611f2eca1",
+  "sourceHash": "fnv1a64:4ade9d870a5c9dc0",
   "lessonIds": [
     "TE-C262-rotte",
     "TE-C262-capati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch262.txt",
   "json": "telugu/narration/ch262.json",
-  "textHash": "fnv1a64:5f8b9609f1dc1cb7",
-  "jsonHash": "fnv1a64:ada6ec8c47fac54f",
+  "textHash": "fnv1a64:9e67959a5ff0307e",
+  "jsonHash": "fnv1a64:e756597f42f7313c",
   "findings": []
 }

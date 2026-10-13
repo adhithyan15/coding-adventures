@@ -11,7 +11,8 @@ romanization: "kṣēmaṁ"
 concept_tag: TE-FINE-WELLBEING
 prerequisites: [TE-C92-wound, TE-C92-weakness]
 sounds: []
-roots: []
+roots: [sanskrit-kshema]
+etymology_hook: "kṣēmaṁ ← Sanskrit kṣema 'ease, happiness', a tatsama (CDIAL 3745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C92-weakness]
 
 **క్షేమంగా ఉన్నారా?** — "are you keeping well?", a warmer, more formal cousin of
 **బాగున్నారా?**, heard from elders and read at the top of letters.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**క్షేమం** (*kṣēmaṁ*) is Sanskrit *kṣema*, "ease, happiness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3745).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

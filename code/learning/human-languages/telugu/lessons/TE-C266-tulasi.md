@@ -14,7 +14,8 @@ romanization: "tulasi"
 concept_tag: TE-VASTUVU266-TULASI
 prerequisites: [TE-C266-vepa, TE-C266-marri]
 sounds: []
-roots: []
+roots: [sanskrit-tulasi]
+etymology_hook: "tulasi: DEDR 3357 sets Dravidian tuḷaci forms beside Sanskrit tulasī (CDIAL 5885), some reborrowed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C266-marri]
 <!-- hl-knowledge: introduces=[TE-LEX-C266-VASTUVU266-04]; assesses=[] -->
 
 **తులసి** — *tulasi* — "holy basil, tulsi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తులసి** (*tulasi*) is the name DEDR 3357 lists with Tamil *tuḷaci* and Kannada *toḷasi*, "sacred basil". DEDR compares Sanskrit *tulasī* (CDIAL 5885) and notes that some of these forms were borrowed back from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

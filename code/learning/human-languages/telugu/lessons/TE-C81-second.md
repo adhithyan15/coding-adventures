@@ -11,7 +11,8 @@ romanization: "reṇḍava"
 concept_tag: TE-ORDINAL-SECOND
 prerequisites: [TE-C81-first, TE-C79-me, TE-C69-saw, TE-C71-brother-in-law, TE-S124-letter-e, TE-C22-pacha-pasupu]
 sounds: [retroflex-nd]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "reṇḍava: native Dravidian, from reṇḍu 'two' (DEDR 474), which lists reṇḍava itself"
 duration:
   max_seconds: 220
 requires:
@@ -48,6 +49,11 @@ reviews_of: [TE-C81-first, TE-C79-me, TE-C69-saw, TE-C71-brother-in-law]
 **రెండవ** (*reṇḍava*) — "**second**".
 
 **రెండవ రోజు** (*reṇḍava rōju*) — the second day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రెండవ** (*reṇḍava*) is native Dravidian (DEDR 474), from *reṇḍu*, "two".
 
 ## Grammar Lens: cardinal, minus its last vowel, plus -వ
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C81-ORDINAL-03]; assesses=[] -->

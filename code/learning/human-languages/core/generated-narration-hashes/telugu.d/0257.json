@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 257,
-  "sourceHash": "fnv1a64:6ca4136096c56f1e",
+  "sourceHash": "fnv1a64:7df95379c14050cb",
   "lessonIds": [
     "TE-C257-vagdanam",
     "TE-C257-rahasyam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch257.txt",
   "json": "telugu/narration/ch257.json",
-  "textHash": "fnv1a64:265f65ba7c00b23a",
-  "jsonHash": "fnv1a64:e23b2dfc3fe46f10",
+  "textHash": "fnv1a64:4b310885dc973d95",
+  "jsonHash": "fnv1a64:5b899f4afb73c0e0",
   "findings": []
 }

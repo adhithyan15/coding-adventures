@@ -14,7 +14,8 @@ romanization: "pacci"
 concept_tag: TE-GUNAM220-PACCI
 prerequisites: [TE-C220-lavu, TE-C220-sannani]
 sounds: []
-roots: []
+roots: [dravidian-paca-green]
+etymology_hook: "pacci: native Dravidian; DEDR 3821 lists pacci 'raw, unripe' with Kannada paccu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C220-sannani]
 <!-- hl-knowledge: introduces=[TE-LEX-C220-GUNAM220-05]; assesses=[] -->
 
 **పచ్చి** — *pacci* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పచ్చి** (*pacci*) is native Dravidian. DEDR 3821 lists *pacci*, "raw, unripe, green", with Kannada *pacce*, "unripeness, rawness", and Tamil *paca*, "to be green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

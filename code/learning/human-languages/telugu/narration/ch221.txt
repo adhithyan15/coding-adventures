@@ -12,6 +12,9 @@ Before the new one: say the Telugu for thin, then the Telugu for raw.
 You'll want to know: గోధుమ రంగు.
 గోధుమ రంగు — gōdhuma raṅgu — "brown".
 
+The word, taken apart.
+గోధుమ రంగు (gōdhuma raṅgu) pairs Sanskrit gōdhūma, "wheat" (CDIAL 4287), with raṅgu, "colour", from Sanskrit raṅga, "dye, colour" (CDIAL 10560): "wheat colour".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for raw, then the Telugu for brown.
 
 You'll want to know: వెండి.
 వెండి — veṇḍi — "silver".
+
+The word, taken apart.
+వెండి (veṇḍi) is native Dravidian. DEDR 5496 lists veṇḍi, "silver", under the word for "white", one word with Tamil veḷ, "white". DEDR 5481 veṇḍi, "again", is a different word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for brown, then the Telugu for silver.
 You'll want to know: లేత.
 లేత — lēta — "pale (of a colour); tender, young".
 
+The word, taken apart.
+లేత (lēta) is native Dravidian. DEDR 513 lists a nasalised lēta, "young, tender", with Tamil iḷa and Kannada eḷa, "young, tender". DEDR compares Prakrit līva, "child".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for silver, then the Telugu for pale.
 You'll want to know: గుండ్రని.
 గుండ్రని — guṇḍrani — "round".
 
+The word, taken apart.
+గుండ్రని (guṇḍrani) is native Dravidian. DEDR 1695 lists guṇḍrani, "round", under guṇḍu, "anything round", with Kannada guṇḍa, "roundness", and Tamil kuṇṭu, "ball".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for pale, then the Telugu for round.
 
 You'll want to know: పదునైన.
 పదునైన — padunaina — "sharp".
+
+The word, taken apart.
+పదునైన (padunaina) is native Dravidian: padunu, "sharpness", one word with Kannada pada, "keenness of edge" (DEDR 3907), with aina, "which is" (DEDR 333).
 
 What you've built.
 One more word for this chapter.

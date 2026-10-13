@@ -14,7 +14,8 @@ romanization: "tāgu"
 concept_tag: TE-VERB-TAGU
 prerequisites: [TE-C149-muyu, TE-C149-teruvu]
 sounds: []
-roots: []
+roots: [dravidian-traagu-drink]
+etymology_hook: "tāgu: native Dravidian; DEDR 3174 lists trāgu 'to drink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C149-teruvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C149-ACT149-04]; assesses=[] -->
 
 **తాగు** — *tāgu* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాగు** (*tāgu*) is native Dravidian. DEDR 3174 lists *trāgu* and *trāvu*, "to drink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pensilu"
 concept_tag: TE-VASTUVU185-PENSILU
 prerequisites: [TE-C185-parselu, TE-C185-tapala]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensilu ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C185-tapala]
 <!-- hl-knowledge: introduces=[TE-LEX-C185-VASTUVU185-05]; assesses=[] -->
 
 **పెన్సిలు** — *pensilu* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెన్సిలు** (*pensilu*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

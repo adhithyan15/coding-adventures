@@ -14,7 +14,7 @@ sounds: [telugu-ra, gemination-cc]
 roots: [vaccu-come-dravidian, raa-come-telugu]
 etymology_hook: "రా and వచ్చు are one verb in two shapes — the command drifted away from the stem the endings attach to, exactly as Tamil vā drifted from varu- and Kannada bā from baru-; వస్తాను is the form Chapter 4's వెళ్ళి వస్తాను has been carrying all along"
 duration:
-  max_seconds: 250
+  max_seconds: 287
 requires:
   knowledge: [TE-GRAMMAR-C32-UNDU-02, TE-LEX-C32-VELLU-01, TE-GRAMMAR-C32-VELLU-02]
 introduces:
@@ -49,7 +49,8 @@ own, the plainest thing one Telugu speaker can say to another.
 Every sister has this verb, and every sister's command-shape drifted somewhere
 different: Tamil **வா** (*vā*), Kannada **ಬಾ** (*bā*), Malayalam **വരുക**
 (*varuka*), Telugu **రా** (*rā*). A *v*, a *b*, an *r* — one old Dravidian
-come-word, worn three ways, not three separate verbs.
+come-word, worn three ways, not three separate verbs. DEDR 5270 files Telugu
+*vaccu* and *rā-* with Tamil *varu*: the verb is Dravidian.
 
 ## Grammar Lens: the word you call it by is not the word you build on
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C32-RAA-02]; assesses=[] -->

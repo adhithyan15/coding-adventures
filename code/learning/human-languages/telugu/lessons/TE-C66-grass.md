@@ -11,7 +11,8 @@ romanization: "gaḍḍi"
 concept_tag: TE-NOUN-GRASS
 prerequisites: [TE-C66-paddy]
 sounds: []
-roots: []
+roots: [dravidian-gaddi-grass]
+etymology_hook: "gaḍḍi: native Dravidian (DEDR 1158), which compares lexical Sanskrit kaṭa, khaṭa 'grass'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C66-paddy]
 The word is inherited. It covers straw as well, meaning what is left of the వరి once the grain is off, so one word runs all the way from the living plant to the dry stalk stacked beside the house.
 
 గడ్డి does insulting work too. Calling something గడ్డి is calling it worthless, which is what tends to happen to a word that means "the part nobody eats".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడ్డి** (*gaḍḍi*) is native Dravidian. DEDR 1158 lists *gaḍḍi*, "grass, straw, hay", with Kolami *gaḍḍi*, "grass", and compares the Sanskrit grass words *kaṭa* and *khaṭa*, known only from lexicons (CDIAL 2630, 3769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

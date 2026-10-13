@@ -14,7 +14,8 @@ romanization: "jābitā"
 concept_tag: TE-PANI310-JABITA
 prerequisites: [TE-C309-jenda, TE-C310-parsu]
 sounds: []
-roots: []
+roots: [arabic-zabita]
+etymology_hook: "jābitā ← Arabic ẓābiṭa 'register', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C310-parsu]
 <!-- hl-knowledge: introduces=[TE-LEX-C310-PANI310-02]; assesses=[] -->
 
 **జాబితా** — *jābitā* — "a list".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జాబితా** (*jābitā*) is a loan from Arabic *ẓābiṭa*, "rule, register", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

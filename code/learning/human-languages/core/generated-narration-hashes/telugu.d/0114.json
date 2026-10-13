@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 114,
-  "sourceHash": "fnv1a64:d31628edce922781",
+  "sourceHash": "fnv1a64:12e885f45df05d94",
   "lessonIds": [
     "TE-C114-galipatam",
     "TE-C114-cokka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch114.txt",
   "json": "telugu/narration/ch114.json",
-  "textHash": "fnv1a64:e516ed94a425c28d",
-  "jsonHash": "fnv1a64:1c21b72eac3adc47",
+  "textHash": "fnv1a64:25340e97e4e115d3",
+  "jsonHash": "fnv1a64:b2fbb632f81fa64f",
   "findings": []
 }

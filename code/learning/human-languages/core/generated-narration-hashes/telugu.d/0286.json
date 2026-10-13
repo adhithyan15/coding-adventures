@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 286,
-  "sourceHash": "fnv1a64:7613f5659b29b403",
+  "sourceHash": "fnv1a64:9b8d9a7555a81c2a",
   "lessonIds": [
     "TE-C286-vayida-veyu",
     "TE-C286-venakadu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch286.txt",
   "json": "telugu/narration/ch286.json",
-  "textHash": "fnv1a64:4242342cf7e7ccc1",
-  "jsonHash": "fnv1a64:1d3f8f0c089a60d9",
+  "textHash": "fnv1a64:02fd86f2933f873d",
+  "jsonHash": "fnv1a64:9a62d9c4be431d30",
   "findings": []
 }

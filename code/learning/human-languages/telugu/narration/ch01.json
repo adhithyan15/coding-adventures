@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:86d57b95abf5bee9",
+  "sourceHash": "fnv1a64:94fa8a1b8206e212",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -20,7 +20,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dd217a137644b023",
+      "sourceHash": "fnv1a64:c73182a011a7300d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -105,6 +105,10 @@
             {
               "kind": "speech",
               "text": "Four of the six borrowed the Sanskrit bow. Tamil alone kept its own word — the first sign that \"Dravidian family\" does not mean \"same vocabulary.\""
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 6960 lists Sanskrit namaskāra, \"adoration\", and CDIAL 6958 namas, \"a bow, adoration\"."
             }
           ]
         },
@@ -230,7 +234,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:fc2d178875dc24fa",
+      "sourceHash": "fnv1a64:7d2083107b6d5087",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -294,7 +298,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The core is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying,\" root vad, \"to speak\") = \"an utterance of '[you are] worthy.'\" Telugu then adds its own plural ending -mulu, so dhanyavāda-mulu is literally \"worthy-sayings,\" thanks in the plural of courtesy. (You'll also hear the shorter dhanyavādālu.) The Sanskrit stem is the same one inside Hindi dhanyavād and Kannada dhanyavāda."
+              "text": "The core is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\"; CDIAL 6727a) + vāda (\"a saying,\" root vad, \"to speak\"; CDIAL 11507) = \"an utterance of '[you are] worthy.'\" Telugu then adds its own plural ending -mulu, so dhanyavāda-mulu is literally \"worthy-sayings,\" thanks in the plural of courtesy. (You'll also hear the shorter dhanyavādālu.) The Sanskrit stem is the same one inside Hindi dhanyavād and Kannada dhanyavāda."
             },
             {
               "kind": "speech",
@@ -890,7 +894,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c3e79cf23aa39c5",
+      "sourceHash": "fnv1a64:0d3f2fbacde89cc9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -959,7 +963,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "అవును (avunu) is the everyday \"yes / it is so,\" a native Telugu word. It comes from the verb of being — literally close to \"it is\" — which is why the next lesson's \"no\" (kādu, \"is not\") is its exact mirror."
+              "text": "అవును (avunu) is the everyday \"yes / it is so,\" a native Telugu word. It comes from avu, the verb of being (DEDR 333) — literally \"it is\" — which is why the next lesson's \"no\" (kādu, \"is not\") is its exact mirror. DEDR compares Sanskrit ām, \"yes\"."
             }
           ]
         },
@@ -1405,7 +1409,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d77222cda3bbfab0",
+      "sourceHash": "fnv1a64:5f366723732fc1b8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1470,7 +1474,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "లేదు (lēdu) means \"there is not, it is absent.\" It is native Dravidian, but built on a different root (lē-, absence) from the il- of Tamil and Kannada. Telugu also has కాదు (kādu), \"it is not [that]\" — so Telugu splits \"no\" into two:"
+              "text": "లేదు (lēdu) means \"there is not, it is absent.\" It is native Dravidian. Its lē-, \"be not\", looks unlike the il- of Tamil and Kannada, but DEDR 2559 files them in one entry. Telugu also has కాదు (kādu), \"it is not [that]\" — so Telugu splits \"no\" into two:"
             },
             {
               "kind": "speech",
@@ -1494,7 +1498,7 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Language: Telugu. \"No / isn't\": lēdu / kādu (లేదు / కాదు). Note: native, but a different root (lē-, kā-).",
+                "Language: Telugu. \"No / isn't\": lēdu / kādu (లేదు / కాదు). Note: native; lē- is filed with il- (DEDR 2559).",
                 "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: native, root il-.",
                 "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: native, root il-.",
                 "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
@@ -1503,7 +1507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three sisters share il-; Telugu alone picked lē- / kā-. Same family, not a uniform one — a reminder that Dravidian has real internal branches."
+              "text": "Telugu's lē- looks least like the others, yet DEDR files it with il-. Kādu comes from another verb, agu, \"to be\" (DEDR 333)."
             }
           ]
         },
@@ -1514,7 +1518,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English leans on one flat \"no.\" Telugu — carefully — keeps two negatives: lēdu for \"there isn't / doesn't exist,\" kādu for \"is not [the thing you said].\" Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply — and with a different root-word from its sisters.)"
+              "text": "English leans on one flat \"no.\" Telugu — carefully — keeps two negatives: lēdu for \"there isn't / doesn't exist,\" kādu for \"is not [the thing you said].\" Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply.)"
             }
           ]
         },
@@ -1619,7 +1623,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:efe5ffade58aaa23",
+      "sourceHash": "fnv1a64:2dd53ae22d9d05f4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1684,18 +1688,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
+              "text": "సరే (sarē) means \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\" Its origin is uncertain: DEDR has no entry, and it is usually traced to Sanskrit sadṛśa, \"like, equal\" (CDIAL 13120)."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one Dravidian word, three scripts",
+          "title": "Grammar Lens: one shared word, three scripts",
           "segments": [
             {
               "kind": "speech",
-              "text": "sari / sarē is a clean demonstration of family closeness: essentially one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. As you learn to read each, spotting a shared word shift its shape but not its sense is the quickest way to feel the relationship (and the whole reason to learn these four side by side)."
+              "text": "sari / sarē is a clean demonstration of how much the sisters share: one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. Spotting a shared word in three scripts is the quickest way to feel the relationship."
             }
           ]
         },

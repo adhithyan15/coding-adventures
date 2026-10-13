@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 287,
-  "sourceHash": "fnv1a64:74b9f8b4a2cb1b43",
+  "sourceHash": "fnv1a64:69b1c328687add91",
   "lessonIds": [
     "TE-C287-chati",
     "TE-C287-pramadam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch287.txt",
   "json": "telugu/narration/ch287.json",
-  "textHash": "fnv1a64:b84f12494f0f6907",
-  "jsonHash": "fnv1a64:8f5ecba47e098b94",
+  "textHash": "fnv1a64:db5a1204fb8ae22c",
+  "jsonHash": "fnv1a64:1f57303656dc65f8",
   "findings": []
 }

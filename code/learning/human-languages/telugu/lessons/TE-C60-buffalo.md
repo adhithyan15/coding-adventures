@@ -11,7 +11,8 @@ romanization: "gēde"
 concept_tag: TE-NOUN-BUFFALO
 prerequisites: [TE-C59-fire]
 sounds: []
-roots: []
+roots: [dravidian-geede-buffalo]
+etymology_hook: "gēde: native Dravidian; DEDR 2000 lists it with Konda geyda and Kuwi gedde"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C59-fire]
 The word is inherited, and the animal is so ordinary that arriving at a village house often means being met by one before anybody comes out to say నమస్కారం.
 
 A గేదె standing in a చెరువు with only its nose above the water is the picture the word carries. That is where it spends the hottest part of the day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గేదె** (*gēde*) is native Dravidian. DEDR 2000 lists *gēde*, "a she-buffalo", with Konda *geyda* and Kuwi *gedde*; it has no Tamil or Kannada match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

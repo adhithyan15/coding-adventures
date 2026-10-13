@@ -14,7 +14,8 @@ romanization: "gēṭu"
 concept_tag: TE-STHALAM216-GETU
 prerequisites: [TE-C216-snanapu-gadi, TE-C216-punadi]
 sounds: []
-roots: []
+roots: [english-gate]
+etymology_hook: "gēṭu ← English gate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C216-punadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C216-STHALAM216-03]; assesses=[] -->
 
 **గేటు** — *gēṭu* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గేటు** (*gēṭu*) is a loan from English *gate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

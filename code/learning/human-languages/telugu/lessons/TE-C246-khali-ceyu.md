@@ -14,7 +14,8 @@ romanization: "khāḷī cēyu"
 concept_tag: TE-VERB-KHALI-CEYU
 prerequisites: [TE-C246-appu-ivvu, TE-C246-tirigi-ivvu]
 sounds: []
-roots: []
+roots: [arabic-khali, sey-do-dravidian]
+etymology_hook: "khāḷī cēyu: Arabic khālī 'empty' through Persian and Hindustani + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C246-tirigi-ivvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C246-KRIYA246-03]; assesses=[] -->
 
 **ఖాళీ చేయు** — *khāḷī cēyu* — "to empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఖాళీ చేయు** (*khāḷī cēyu*) pairs *khāḷī*, "empty", a loan from Arabic *khālī* through Persian and Hindustani, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

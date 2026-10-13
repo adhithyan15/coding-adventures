@@ -14,7 +14,8 @@ romanization: "ācāraṁ"
 concept_tag: TE-KARANAM217-ACARAM
 prerequisites: [TE-C217-tappa, TE-C217-sampradayam]
 sounds: []
-roots: []
+roots: [sanskrit-acara]
+etymology_hook: "ācāraṁ ← Sanskrit ācāra 'mode of action', a tatsama (CDIAL 1071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C217-sampradayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C217-KARANAM217-04]; assesses=[] -->
 
 **ఆచారం** — *ācāraṁ* — "a custom, a practice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆచారం** (*ācāraṁ*) is Sanskrit *ācāra*, "mode of action", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

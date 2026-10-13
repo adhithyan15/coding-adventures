@@ -14,7 +14,8 @@ romanization: "nāṭakaṁ"
 concept_tag: TE-PANI275-NATAKAM
 prerequisites: [TE-C275-kavi, TE-C275-sangitam]
 sounds: []
-roots: []
+roots: [sanskrit-nataka]
+etymology_hook: "nāṭakaṁ ← Sanskrit nāṭaka 'dancer, actor', a tatsama (CDIAL 7045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C275-sangitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C275-PANI275-05]; assesses=[] -->
 
 **నాటకం** — *nāṭakaṁ* — "a play, a drama".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాటకం** (*nāṭakaṁ*) is Sanskrit *nāṭaka*, "dancer, actor", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7045). The sense "a play" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

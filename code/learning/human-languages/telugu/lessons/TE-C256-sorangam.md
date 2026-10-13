@@ -14,7 +14,8 @@ romanization: "soraṅgaṁ"
 concept_tag: TE-STHALAM256-SORANGAM
 prerequisites: [TE-C255-raccabanda, TE-C256-sandu]
 sounds: []
-roots: []
+roots: [sanskrit-suranga]
+etymology_hook: "soraṅgaṁ ← Sanskrit suraṅgā 'subterranean passage, mine', a tatsama (CDIAL 13506)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C256-sandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C256-STHALAM256-02]; assesses=[] -->
 
 **సొరంగం** — *soraṅgaṁ* — "a tunnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సొరంగం** (*soraṅgaṁ*) is Sanskrit *suraṅgā*, "subterranean passage, mine", taken over whole as a learned loan, a tatsama (CDIAL 13506).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

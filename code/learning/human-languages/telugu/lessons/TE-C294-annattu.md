@@ -14,7 +14,8 @@ romanization: "annaṭṭu"
 concept_tag: TE-KARANAM294-ANNATTU
 prerequisites: [TE-C294-salaha, TE-C294-paiga]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "annaṭṭu: native anu 'to say' (DEDR 868) + -naṭṭu 'as if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C294-paiga]
 <!-- hl-knowledge: introduces=[TE-LEX-C294-KARANAM294-03]; assesses=[] -->
 
 **అన్నట్టు** — *annaṭṭu* — "by the way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అన్నట్టు** (*annaṭṭu*) is native Dravidian, built on *anu*, "to say, speak" (DEDR 868), with *-naṭṭu*, "as": "as was said".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

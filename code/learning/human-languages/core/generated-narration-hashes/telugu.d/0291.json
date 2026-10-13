@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 291,
-  "sourceHash": "fnv1a64:05a1e80990fdafbe",
+  "sourceHash": "fnv1a64:092f74afa9511949",
   "lessonIds": [
     "TE-C291-daksinam",
     "TE-C291-pradesam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch291.txt",
   "json": "telugu/narration/ch291.json",
-  "textHash": "fnv1a64:14a349bc373cb476",
-  "jsonHash": "fnv1a64:991b4f1ac26bfd8c",
+  "textHash": "fnv1a64:bf90357c8eedadca",
+  "jsonHash": "fnv1a64:4de30a9b40220392",
   "findings": []
 }

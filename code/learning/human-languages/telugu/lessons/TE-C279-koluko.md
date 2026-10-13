@@ -14,7 +14,8 @@ romanization: "kōlukō"
 concept_tag: TE-VERB-KOLUKO
 prerequisites: [TE-C278-datu, TE-C278-nadupu]
 sounds: []
-roots: []
+roots: [telugu-kolu-recover]
+etymology_hook: "kōlukō: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to recover'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C278-nadupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C279-KRIYA279-01]; assesses=[] -->
 
 **కోలుకో** — *kōlukō* — "to recover (from illness)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కోలుకో** (*kōlukō*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to recover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

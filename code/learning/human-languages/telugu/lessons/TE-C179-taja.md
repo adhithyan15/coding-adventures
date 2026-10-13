@@ -14,7 +14,8 @@ romanization: "tājā"
 concept_tag: TE-GUNAM179-TAJA
 prerequisites: [TE-C179-kammani, TE-C179-cappani]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "tājā ← Persian tāza 'fresh', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C179-cappani]
 <!-- hl-knowledge: introduces=[TE-LEX-C179-GUNAM179-03]; assesses=[] -->
 
 **తాజా** — *tājā* — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాజా** (*tājā*) is a loan from Persian *tāza*, "fresh", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

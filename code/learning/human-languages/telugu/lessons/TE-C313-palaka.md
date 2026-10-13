@@ -14,7 +14,8 @@ romanization: "palaka"
 concept_tag: TE-PANI313-PALAKA
 prerequisites: [TE-C312-injaniru, TE-C313-suddamukka]
 sounds: []
-roots: []
+roots: [telugu-palaka-slate]
+etymology_hook: "palaka: origin uncertain; DEDR lists the shape only in compounds for boards"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-suddamukka]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-02]; assesses=[] -->
 
 **పలక** — *palaka* — "a slate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పలక** (*palaka*) is uncertain. DEDR lists *palaka* only inside compounds for boards, such as *nettapalaka*, "dice-board" (DEDR 3742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

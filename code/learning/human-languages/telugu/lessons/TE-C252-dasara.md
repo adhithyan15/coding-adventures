@@ -14,7 +14,8 @@ romanization: "dasarā"
 concept_tag: TE-SAMAYAM252-DASARA
 prerequisites: [TE-C252-ugadi, TE-C252-dipavali]
 sounds: []
-roots: []
+roots: [sanskrit-dasahara]
+etymology_hook: "dasarā: from Sanskrit daśaharā, the festival's name"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C252-dipavali]
 <!-- hl-knowledge: introduces=[TE-LEX-C252-SAMAYAM252-03]; assesses=[] -->
 
 **దసరా** — *dasarā* — "Dasara".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దసరా** (*dasarā*) comes from Sanskrit *daśaharā*, the name of the festival.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

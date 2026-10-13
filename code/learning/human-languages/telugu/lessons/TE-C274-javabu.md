@@ -14,7 +14,8 @@ romanization: "javābu"
 concept_tag: TE-PANI274-JAVABU
 prerequisites: [TE-C274-taragati, TE-C274-patham]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javābu ← Arabic jawāb 'answer', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C274-patham]
 <!-- hl-knowledge: introduces=[TE-LEX-C274-PANI274-03]; assesses=[] -->
 
 **జవాబు** — *javābu* — "an answer, a reply".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జవాబు** (*javābu*) is a loan from Arabic *jawāb*, "answer", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

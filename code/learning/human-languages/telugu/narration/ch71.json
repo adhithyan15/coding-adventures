@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "The Wider Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c8ee9f0d8093d9d",
+  "sourceHash": "fnv1a64:ef20071767e83d7e",
   "lessons": [
     {
       "id": "TE-C71-uncle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7081f3107aff1797",
+      "sourceHash": "fnv1a64:a5b56adee790d631",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మామ (māma) is a Dravidian word, one with Tamil māmaṉ and Kannada māma, \"maternal uncle, father-in-law\" (DEDR 4813). DEDR compares Sanskrit māma, \"uncle\", and CDIAL 10055 calls that a nursery word with similar words in Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f90afaed8081ae8",
+      "sourceHash": "fnv1a64:8cf98cb56d7005d3",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అత్త (atta) is a Dravidian word, one with Tamil attai, \"father's sister, mother-in-law\", and Kannada atte, \"mother-in-law\" (DEDR 142). DEDR compares Sanskrit attā, \"mother, elder sister\", which CDIAL 222 itself takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30a2ffa1647b4d6f",
+      "sourceHash": "fnv1a64:9b76328ebc6243a1",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where బావ (bāva) comes from is not settled, and DEDR does not list it. CDIAL 9455 cites Sanskrit bhāvuka, \"sister's husband\", a word of the drama, beside bhāma, which it takes as a pet name made from bhrātṛ, \"brother\"; the Telugu word may belong with them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db5fb6d4b74656c2",
+      "sourceHash": "fnv1a64:d60c429df5b68f91",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరదలు (maradalu) is native Dravidian. DEDR 4762 lists the Telugu word as \"spouse's younger sister, younger brother's wife, younger female cross-cousin\", with a matching masculine for the younger brother-in-law."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d31e137b0c686fbc",
+      "sourceHash": "fnv1a64:c0a960f946d9c132",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +684,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అల్లుడు (alluḍu) is native Dravidian, one word with Kannada aḷiya, \"son-in-law\", and Malayalam aḷiyan, \"wife's brother\" (DEDR 2410)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

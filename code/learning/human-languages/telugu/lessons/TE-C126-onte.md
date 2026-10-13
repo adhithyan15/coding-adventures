@@ -14,7 +14,8 @@ romanization: "oṇṭe"
 concept_tag: TE-THINGS126-ONTE
 prerequisites: [TE-C126-pandi, TE-C126-gadida]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "oṇṭe ← Sanskrit uṣṭra 'buffalo; camel', reshaped as a tadbhava (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C126-gadida]
 <!-- hl-knowledge: introduces=[TE-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **ఒంటె** — *oṇṭe* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒంటె** (*oṇṭe*) comes from Sanskrit *uṣṭra*, "buffalo; camel", reshaped to Telugu sounds: a tadbhava (CDIAL 2387).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

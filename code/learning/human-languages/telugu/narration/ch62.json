@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68a2544cae0811ec",
+  "sourceHash": "fnv1a64:467afe802e723b62",
   "lessons": [
     {
       "id": "TE-C62-thread",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e94c175f737aaef",
+      "sourceHash": "fnv1a64:18b9308140272841",
       "notice": null,
       "blocks": [
         {
@@ -54,11 +54,15 @@
             },
             {
               "kind": "speech",
-              "text": "The word came in from Sanskrit, where it belongs to a family about tearing and drawing out. Thread is what you draw out of a mass of cotton."
+              "text": "The word may have come in from the north; the dictionaries do not settle it."
             },
             {
               "kind": "speech",
               "text": "దారం (dāraṁ) does ceremonial work too. The thread tied round a wrist at a festival is a దారం (dāraṁ), and once it is on it stays there until it falls off by itself."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 3167 lists Telugu dāramu, \"cord, twine\", with Tamil tār, \"cord\", and Kannada dāra, \"thread\", and asks, with a query, whether it came from Indo-Aryan, comparing Prakrit dāra, \"waist-band\", and Sanskrit davara, \"string\" (CDIAL 6225)."
             }
           ]
         },
@@ -163,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f82cdaf06bf6f0",
+      "sourceHash": "fnv1a64:37a8dfb33f59a273",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +207,10 @@
             {
               "kind": "speech",
               "text": "The same word does the వైద్యుడు's work: an injection is a సూది (sūdi), and somebody at a clinic who uses the word is not talking about mending a బట్ట."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 13551 lists Sanskrit sūcī, \"needle\"."
             }
           ]
         },
@@ -307,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4645f951a68eabae",
+      "sourceHash": "fnv1a64:c9d972aabb03cba6",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +360,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీపురు (cīpuru) is native Dravidian. DEDR 2599 lists the Telugu word for \"a broom\" with Tamil cī, \"to sweep\", and Kannada cīpari, \"broom\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +381,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +439,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +470,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27f9d6c6451d32bc",
+      "sourceHash": "fnv1a64:5173cbcc3a1651da",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +515,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడుగు (goḍugu) is native Dravidian, one word with Tamil kuṭai, Kannada koḍe and Malayalam kuṭa, \"umbrella\" (DEDR 1663). DEDR compares Sanskrit utkūṭa, \"umbrella\", a word known only from lexicons."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +536,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +594,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc8bb1b2b02cd618",
+      "sourceHash": "fnv1a64:85ebd0b7260ff4a0",
       "notice": null,
       "blocks": [
         {
@@ -626,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — from Sanskrit ādarśa, \"what shows back\"."
+              "text": "అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — usually traced, through Prakrit addāa, to Sanskrit ādarśa, \"what shows back\"."
             },
             {
               "kind": "speech",
@@ -635,6 +665,10 @@
             {
               "kind": "speech",
               "text": "Asking for one is where దయచేసి earns its keep. అద్దం (addaṁ) ఇవ్వండి on its own lands like an instruction; with దయచేసి in front it lands like a request."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 147 lists Telugu addamu, \"mirror\", notes that Tamil attam is a loan from Telugu, and compares Prakrit addāa, \"mirror\"; CDIAL 1143 lists Sanskrit ādarśa, \"mirror\"."
             }
           ]
         },

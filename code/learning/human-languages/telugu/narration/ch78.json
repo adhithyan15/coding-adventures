@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Yes or No, and I Do Not Know",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:402f0ab67bd60025",
+  "sourceHash": "fnv1a64:8cd4ceea8b3cfe38",
   "lessons": [
     {
       "id": "TE-C78-isit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b40fb8c0bf304eb6",
+      "sourceHash": "fnv1a64:6d38818aaeb5c471",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవునా (avunā) is avunu, \"yes\", which DEDR 333 lists under agu, \"to be\", with the question ending -ā. DEDR compares Sanskrit ām, \"yes\" (CDIAL 1235)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: -ఆ makes any statement a question",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -81,7 +92,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +141,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9f585a5f6695889",
+      "sourceHash": "fnv1a64:8c47ab30f634250c",
       "notice": null,
       "blocks": [
         {
@@ -202,6 +213,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెలుసా (telusā) is telusu, \"it is known\", with the question ending -ā. The verb is native Dravidian: DEDR 3433 lists teliyu, \"to be known\", with Tamil teḷi, \"to become clear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -212,7 +234,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +283,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -292,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da6545f2d55cbe53",
+      "sourceHash": "fnv1a64:9c17b37c0b21ca81",
       "notice": null,
       "blocks": [
         {
@@ -333,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాకు తెలియదు (nāku teliyadu) is native Dravidian: nāku, \"to me\", built on nā-, the oblique stem of nēnu (DEDR 5160), and teliyadu, \"it is not known\", from teliyu, \"to be known\" (DEDR 3433)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: how Telugu says a verb did not happen",
           "segments": [
@@ -343,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -354,7 +387,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -403,7 +436,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -434,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edc045c6cf7c0623",
+      "sourceHash": "fnv1a64:48f23f06918c759c",
       "notice": null,
       "blocks": [
         {
@@ -475,6 +508,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అర్థం కాలేదు (arthaṁ kālēdu) is Sanskrit artha, \"aim, meaning\" (CDIAL 638), with kālēdu, \"did not become\", built from two native Dravidian stems: kā-, \"to become\" (DEDR 333), and lē-, \"be not\" (DEDR 2559)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -485,7 +529,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -534,7 +578,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -565,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a25bb2db77a1af42",
+      "sourceHash": "fnv1a64:c9c546cda21e72f2",
       "notice": null,
       "blocks": [
         {
@@ -606,6 +650,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉన్నారా (unnārā) is native Dravidian: a form of uṇḍu, \"to be\" (DEDR 697), with the respectful -āru and the question ending -ā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -616,7 +671,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -665,7 +720,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "phōnu"
 concept_tag: TE-THINGS130-PHONU
 prerequisites: [TE-C130-tivi, TE-C130-kampyutar]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "phōnu ← English phone, short for telephone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C130-kampyutar]
 <!-- hl-knowledge: introduces=[TE-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **ఫోను** — *phōnu* — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫోను** (*phōnu*) is a loan from English *phone*, short for *telephone*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

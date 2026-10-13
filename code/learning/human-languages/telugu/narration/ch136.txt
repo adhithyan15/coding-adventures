@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a lemon, then the Telugu for grapes.
 You'll want to know: జామపండు.
 జామపండు — jāmapaṇḍu — "a guava".
 
+The word, taken apart.
+జామపండు (jāmapaṇḍu) is jāma, usually traced to Sanskrit jambū, "the rose-apple tree" (CDIAL 5131), a name passed on to the guava, and native paṇḍu, "fruit" (DEDR 4004), which DEDR compares with Sanskrit phala.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for grapes, then the Telugu for a guava.
 
 You'll want to know: పంచదార.
 పంచదార — pañcadāra — "sugar".
+
+The word, taken apart.
+The origin of పంచదార (pañcadāra) is uncertain. Neither DEDR nor CDIAL records it.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ An adjective goes before the noun and does not change: పాత పుస్త
 You'll want to know: పొడవు.
 పొడవు — poḍavu — "tall, long".
 
+The word, taken apart.
+పొడవు (poḍavu) is native Dravidian, one word with Kannada poḍe (DEDR 4484). DEDR lists Telugu poḍavu, "height, length; tall, long".
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Telugu for sugar, then the Telugu for tall.
 You'll want to know: పొట్టి.
 పొట్టి — poṭṭi — "short".
 
+The word, taken apart.
+పొట్టి (poṭṭi) is native Dravidian, one word with Tamil poṭi, "that which is small", and Kannada puṭṭa, "smallness" (DEDR 4259). DEDR compares Sanskrit puṭṭ-, "to be small" (CDIAL 8256), and Prakrit phiḍḍa, "dwarf".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Telugu for tall, then the Telugu for short.
 
 You'll want to know: బరువు.
 బరువు — baruvu — "heavy".
+
+The word, taken apart.
+The origin of బరువు (baruvu) is uncertain. DEDR does not list it. It is often linked to Sanskrit bhāra, "burden, weight" (CDIAL 9459), but the link is not settled.
 
 What you've built.
 One more word for this chapter.

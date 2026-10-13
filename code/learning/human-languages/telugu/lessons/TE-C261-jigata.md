@@ -14,7 +14,8 @@ romanization: "jigaṭa"
 concept_tag: TE-GUNAM261-JIGATA
 prerequisites: [TE-C261-cikkani, TE-C261-jiddu]
 sounds: []
-roots: []
+roots: [dravidian-jigatu-sticky]
+etymology_hook: "jigaṭa: native Dravidian; DEDR 2488 lists jigaṭa 'stickiness' with Kannada jigaṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-jiddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-04]; assesses=[] -->
 
 **జిగట** — *jigaṭa* — "sticky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జిగట** (*jigaṭa*) is native Dravidian. DEDR 2488 lists *jigaṭa*, "gum, stickiness", with Kannada *jigaṭu*, "stickiness". DEDR compares Sanskrit *cikka*, "bird-lime" (CDIAL 4780), which CDIAL reports as taken from Dravidian, or else from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

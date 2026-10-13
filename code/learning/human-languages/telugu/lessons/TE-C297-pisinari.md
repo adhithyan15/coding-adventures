@@ -14,7 +14,8 @@ romanization: "pisināri"
 concept_tag: TE-GUNAM297-PISINARI
 prerequisites: [TE-C296-sthanika, TE-C297-mondi]
 sounds: []
-roots: []
+roots: [dravidian-picinari-miser]
+etymology_hook: "pisināri: native Dravidian; DEDR 4144 lists pisināri 'miserly' with Tamil piciṉāṟi 'miser'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C297-mondi]
 <!-- hl-knowledge: introduces=[TE-LEX-C297-GUNAM297-02]; assesses=[] -->
 
 **పిసినారి** — *pisināri* — "stingy; a miser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిసినారి** (*pisināri*) is native Dravidian. DEDR 4144 lists *pisināri*, "miserly", with Tamil *piciṉāṟi*, "miser".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

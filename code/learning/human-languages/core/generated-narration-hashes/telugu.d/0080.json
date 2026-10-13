@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 80,
-  "sourceHash": "fnv1a64:8e2bea048c1f8c50",
+  "sourceHash": "fnv1a64:b2e46185d448f8b5",
   "lessonIds": [
     "TE-C80-want",
     "TE-C80-that",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch80.txt",
   "json": "telugu/narration/ch80.json",
-  "textHash": "fnv1a64:e0b87fdefafb5435",
-  "jsonHash": "fnv1a64:7d0373734296ff54",
+  "textHash": "fnv1a64:877b457bb92fdada",
+  "jsonHash": "fnv1a64:4c1529d0d14a64dd",
   "findings": []
 }

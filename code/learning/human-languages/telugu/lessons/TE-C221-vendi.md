@@ -14,7 +14,8 @@ romanization: "veṇḍi"
 concept_tag: TE-GUNAM221-VENDI
 prerequisites: [TE-C220-pacci, TE-C221-godhuma-rangu]
 sounds: []
-roots: []
+roots: [dravidian-vel-white]
+etymology_hook: "veṇḍi: native Dravidian; DEDR 5496 lists veṇḍi 'silver' under the word for 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C221-godhuma-rangu]
 <!-- hl-knowledge: introduces=[TE-LEX-C221-GUNAM221-02]; assesses=[] -->
 
 **వెండి** — *veṇḍi* — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెండి** (*veṇḍi*) is native Dravidian. DEDR 5496 lists *veṇḍi*, "silver", under the word for "white", one word with Tamil *veḷ*, "white". DEDR 5481 *veṇḍi*, "again", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

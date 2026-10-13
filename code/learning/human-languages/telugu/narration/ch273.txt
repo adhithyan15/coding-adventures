@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a stem, then the Telugu for a wing.
 You'll want to know: వడ్డీ.
 వడ్డీ — vaḍḍī — "interest (on money)".
 
+The word, taken apart.
+The origin of వడ్డీ (vaḍḍī) is uncertain. DEDR and CDIAL list no word of this shape meaning "interest on money".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a wing, then the Telugu for interest.
 
 You'll want to know: బిల్లు.
 బిల్లు — billu — "a bill".
+
+The word, taken apart.
+బిల్లు (billu) is a loan from English bill.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for interest, then the Telugu for a bill.
 You'll want to know: తగ్గింపు.
 తగ్గింపు — taggimpu — "a discount".
 
+The word, taken apart.
+తగ్గింపు (taggimpu) is native Dravidian, built on taggu, "to decrease", which DEDR 3178 lists with Tamil tāḻ, "to decrease".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a bill, then the Telugu for a discount.
 You'll want to know: సరుకులు.
 సరుకులు — sarukulu — "groceries, goods".
 
+The word, taken apart.
+సరుకులు (sarukulu) is native Dravidian. DEDR 2353 lists saraku, "article, commodity", with Tamil carakku and Kannada saraku, "goods"; సరుకులు (sarukulu) is its plural.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a discount, then the Telugu for groceries
 
 You'll want to know: కొనుగోలు.
 కొనుగోలు — konugōlu — "a purchase".
+
+The word, taken apart.
+కొనుగోలు (konugōlu) is built on native konu, "to buy, take" (DEDR 2151), one word with Tamil koḷ, "to receive, buy".
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "cāpa"
 concept_tag: TE-NOUN-MAT
 prerequisites: [TE-C55-path]
 sounds: []
-roots: []
+roots: [dravidian-caappai-mat]
+etymology_hook: "cāpa: native Dravidian, one word with Tamil cāppai and Kannada cāpe, 'mat' (DEDR 2452)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A చాప is woven from palm leaf or reed, rolled up against a wall by day and
 It belongs beside the కుర్చీ you already have. Where the chair is a borrowed thing with a borrowed name, the చాప is old and the word is inherited, and a house that has both will often put the చాప down for the people who are comfortable on the floor and keep the కుర్చీ for the guest who is not.
 
 Offering somebody a చాప is an invitation to stay a while. It is a slower gesture than pointing at a chair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చాప** (*cāpa*) is native Dravidian, one word with Tamil *cāppai*, "mat of grass or rushes", and Kannada *cāpe*, "mat" (DEDR 2452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

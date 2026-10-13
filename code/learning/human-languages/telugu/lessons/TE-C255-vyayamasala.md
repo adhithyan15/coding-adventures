@@ -14,7 +14,8 @@ romanization: "vyāyāmaśāla"
 concept_tag: TE-STHALAM255-VYAYAMASALA
 prerequisites: [TE-C254-padamara, TE-C255-myuziyam]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama, sanskrit-shala]
+etymology_hook: "vyāyāmaśāla: Sanskrit vyāyāma 'exertion' (CDIAL 12209) + śālā 'house' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C255-myuziyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C255-STHALAM255-02]; assesses=[] -->
 
 **వ్యాయామశాల** — *vyāyāmaśāla* — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యాయామశాల** (*vyāyāmaśāla*) is Sanskrit: *vyāyāma*, "exertion" (CDIAL 12209), and *śālā*, "shed, house" (CDIAL 12414), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

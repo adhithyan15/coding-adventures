@@ -14,7 +14,8 @@ romanization: "aṭu"
 concept_tag: TE-STHALAM174-ATU
 prerequisites: [TE-C173-postaphisu, TE-C174-avatala]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "aṭu: native Dravidian, on the far-pointing base a- (DEDR 1), which lists aṭu 'thus'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C174-avatala]
 <!-- hl-knowledge: introduces=[TE-LEX-C174-STHALAM174-02]; assesses=[] -->
 
 **అటు** — *aṭu* — "that way, in that direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అటు** (*aṭu*) is native Dravidian, built on the far-pointing base *a-*, "that"; DEDR 1 lists *aṭu*, "thus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -271,7 +271,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // section, paid for by trimming redundant prose; only TA-C39-evvalavu needed a raise
   // (294 -> 298 s, still under 300).
   tamil: { withoutHook: 0, withoutVisible: 0 },
-  telugu: { withoutHook: 1376, withoutVisible: 1318 },
+  // telugu: 1376 / 1318 -> 0 / 0. Every Telugu word lesson now carries an etymology_hook and
+  // says where its word comes from, almost always in a "taken apart" block. Native words cite
+  // the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only cognates
+  // the full article lists and keeping its "Cf. Skt.", "?" and Indo-Aryan-appendix notes;
+  // Sanskrit loans cite Turner's CDIAL where it has the form, with its "<- Drav." notes; both
+  // read from the moli-mandala/data files, no source text copied. English, Persian, Arabic and
+  // Portuguese loans name the donor. 98 say the origin is uncertain; 26 give the usual account.
+  telugu: { withoutHook: 0, withoutVisible: 0 },
   urdu: { withoutHook: 1123, withoutVisible: 1137 },
 };
 

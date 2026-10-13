@@ -11,7 +11,8 @@ romanization: "sutti"
 concept_tag: TE-NOUN-HAMMER
 prerequisites: [TE-C69-spade]
 sounds: []
-roots: []
+roots: [dravidian-cutti-hammer]
+etymology_hook: "sutti: native Dravidian, one word with Tamil cutti and Kannada suttige (DEDR 2668)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C69-spade]
 Telugu turned it into a word about people. Somebody who makes the same point until you give in is doing సుత్తి, and telling them to stop the సుత్తి is telling them to stop going on.
 
 In a city that second sense is now the commoner one, which is worth knowing before somebody uses it about you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సుత్తి** (*sutti*) is native Dravidian, one word with Tamil *cutti*, Kannada *suttige* and Malayalam *cutti* (DEDR 2668). DEDR gives the Telugu as *sutte*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

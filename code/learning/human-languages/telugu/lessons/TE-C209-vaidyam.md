@@ -14,7 +14,8 @@ romanization: "vaidyaṁ"
 concept_tag: TE-AROGYAM209-VAIDYAM
 prerequisites: [TE-C209-narsu, TE-C209-pariksa]
 sounds: []
-roots: []
+roots: [sanskrit-vaidya]
+etymology_hook: "vaidyaṁ ← Sanskrit vaidya 'physician' (CDIAL 12140) + -ṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C209-pariksa]
 <!-- hl-knowledge: introduces=[TE-LEX-C209-AROGYAM209-04]; assesses=[] -->
 
 **వైద్యం** — *vaidyaṁ* — "medical treatment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వైద్యం** (*vaidyaṁ*) is Sanskrit *vaidya*, "learned; physician" (CDIAL 12140), with the Telugu noun ending *-ṁ*: "the physician's art".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

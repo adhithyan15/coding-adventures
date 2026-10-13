@@ -14,7 +14,8 @@ romanization: "monna"
 concept_tag: TE-SAMAYAM213-MONNA
 prerequisites: [TE-C213-kasepu, TE-C213-sekanu]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "monna: native Dravidian; DEDR 5020 lists monna 'day before yesterday' with Kannada monne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C213-sekanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C213-SAMAYAM213-05]; assesses=[] -->
 
 **మొన్న** — *monna* — "the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొన్న** (*monna*) is native Dravidian. DEDR 5020 lists *monna*, "the day before yesterday", with Kannada *monne*, "day before yesterday", under the word for "front, before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

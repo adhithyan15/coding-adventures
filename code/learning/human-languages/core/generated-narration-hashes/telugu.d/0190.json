@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 190,
-  "sourceHash": "fnv1a64:025615a9281c9490",
+  "sourceHash": "fnv1a64:21e9b968c490a124",
   "lessonIds": [
     "TE-C190-karentu",
     "TE-C190-yantram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch190.txt",
   "json": "telugu/narration/ch190.json",
-  "textHash": "fnv1a64:31182fe3b4af8b79",
-  "jsonHash": "fnv1a64:7045df48f895f258",
+  "textHash": "fnv1a64:ba6a90a490718aad",
+  "jsonHash": "fnv1a64:847c94609380ea48",
   "findings": []
 }

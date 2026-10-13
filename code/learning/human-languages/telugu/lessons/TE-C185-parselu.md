@@ -14,7 +14,8 @@ romanization: "pārselu"
 concept_tag: TE-VASTUVU185-PARSELU
 prerequisites: [TE-C185-kavaru, TE-C185-stampu]
 sounds: []
-roots: []
+roots: [english-parcel]
+etymology_hook: "pārselu ← English parcel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C185-stampu]
 <!-- hl-knowledge: introduces=[TE-LEX-C185-VASTUVU185-03]; assesses=[] -->
 
 **పార్సెలు** — *pārselu* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పార్సెలు** (*pārselu*) is a loan from English *parcel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

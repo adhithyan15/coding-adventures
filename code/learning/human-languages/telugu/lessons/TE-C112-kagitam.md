@@ -14,7 +14,8 @@ romanization: "kāgitaṁ"
 concept_tag: TE-THINGS112-KAGITAM
 prerequisites: [TE-C112-sanci, TE-C112-kalam, TE-C83-modati-chadavu, TE-C83-lines, TE-C83-words]
 sounds: []
-roots: []
+roots: [persian-kaghaz]
+etymology_hook: "kāgitaṁ ← Persian kāghaz 'paper', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C112-kalam]
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **కాగితం** — *kāgitaṁ* — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాగితం** (*kāgitaṁ*) is a loan from Persian *kāghaz*, "paper", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a warehouse, then the Telugu for a court.
 You'll want to know: వాగ్దానం.
 వాగ్దానం — vāgdānaṁ — "a promise".
 
+The word, taken apart.
+వాగ్దానం (vāgdānaṁ) is Sanskrit vāgdāna, "giving one's word": vāc, "speech", and dāna, "giving, gift" (CDIAL 6265), with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a court, then the Telugu for a promise.
 
 You'll want to know: రహస్యం.
 రహస్యం — rahasyaṁ — "a secret".
+
+The word, taken apart.
+రహస్యం (rahasyaṁ) is Sanskrit rahasya, "private, secret", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 10669).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a promise, then the Telugu for a secret.
 You'll want to know: స్నేహం.
 స్నేహం — snēhaṁ — "friendship".
 
+The word, taken apart.
+స్నేహం (snēhaṁ) is Sanskrit snēha, "grease; oiliness; love", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13802). The sense "friendship" is the one Telugu gives it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a secret, then the Telugu for friendship.
 You'll want to know: గొడవ.
 గొడవ — goḍava — "a quarrel, a fuss".
 
+The word, taken apart.
+గొడవ (goḍava) is listed in DEDR 2048, "bother, worry, fuss", with Kannada goḍave, "concern with". DEDR 2073 goḍava, "danger", is filed apart.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for friendship, then the Telugu for a quarrel
 
 You'll want to know: సంస్కృతి.
 సంస్కృతి — saṁskṛti — "culture".
+
+The word, taken apart.
+సంస్కృతి (saṁskṛti) is Sanskrit saṁskṛti, "preparation", taken over whole as a learned loan, a tatsama (CDIAL 13040). The sense "culture" is the one Telugu gives it.
 
 What you've built.
 One more word for this chapter.

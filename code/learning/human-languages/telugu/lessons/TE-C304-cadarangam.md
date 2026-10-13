@@ -14,7 +14,8 @@ romanization: "cadaraṅgaṁ"
 concept_tag: TE-VASTUVU304-CADARANGAM
 prerequisites: [TE-C304-atagadu, TE-C304-kriket]
 sounds: []
-roots: []
+roots: [sanskrit-caturanga]
+etymology_hook: "cadaraṅgaṁ ← Sanskrit caturaṅga 'having four limbs; consisting of four parts', a tatsama (CDIAL 4596)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C304-kriket]
 <!-- hl-knowledge: introduces=[TE-LEX-C304-VASTUVU304-05]; assesses=[] -->
 
 **చదరంగం** — *cadaraṅgaṁ* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చదరంగం** (*cadaraṅgaṁ*) is Sanskrit *caturaṅga*, "having four limbs; consisting of four parts", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4596). The game of the four arms of an army took the name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

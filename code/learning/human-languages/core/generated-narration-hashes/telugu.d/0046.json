@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 46,
-  "sourceHash": "fnv1a64:ae963402190d48a0",
+  "sourceHash": "fnv1a64:eb68a21dd928c125",
   "lessonIds": [
     "TE-C46-fruit",
     "TE-C46-cloth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch46.txt",
   "json": "telugu/narration/ch46.json",
-  "textHash": "fnv1a64:02b399bcec3968fa",
-  "jsonHash": "fnv1a64:c406fb8aad7d8360",
+  "textHash": "fnv1a64:3700eef4721aa3d6",
+  "jsonHash": "fnv1a64:d9194820dcc0c9ae",
   "findings": []
 }

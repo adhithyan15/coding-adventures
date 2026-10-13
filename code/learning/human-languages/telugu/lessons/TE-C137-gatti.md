@@ -14,7 +14,8 @@ romanization: "gaṭṭi"
 concept_tag: TE-QUAL137-GATTI
 prerequisites: [TE-C137-telika, TE-C137-mettani]
 sounds: []
-roots: []
+roots: [dravidian-katti-hard]
+etymology_hook: "gaṭṭi: native Dravidian; DEDR 1148 lists gaṭṭi 'hard, firm', with Tamil kaṭṭu 'to harden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C137-mettani]
 <!-- hl-knowledge: introduces=[TE-LEX-C137-QUAL137-03]; assesses=[] -->
 
 **గట్టి** — *gaṭṭi* — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గట్టి** (*gaṭṭi*) is native Dravidian. DEDR 1148 lists *gaṭṭi*, "hard, firm", with Tamil *kaṭṭu*, "to harden", and Kannada *gaṭṭi*, "firmness". DEDR compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

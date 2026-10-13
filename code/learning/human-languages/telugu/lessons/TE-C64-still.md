@@ -11,7 +11,8 @@ romanization: "iṅkā"
 concept_tag: TE-WORD-STILL
 prerequisites: [TE-C64-after]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "iṅkā: native Dravidian, on the near-pointing base i- (DEDR 410), which lists iṅka 'still, yet'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C64-after]
 It is the natural answer to అంతే. Where అంతే closes a list off, ఇంకా says there is more of it coming, and the two make a pair the way కూడా and మాత్రమే do.
 
 Five small words, and not one of them names a thing. కూడా, మాత్రమే, అయితే, తరువాత, ఇంకా are what turn a set of separate answers into a conversation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంకా** (*iṅkā*) is native Dravidian, on the near-pointing base *i-*. DEDR 410 lists *iṅka*, "hereafter, still, yet", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

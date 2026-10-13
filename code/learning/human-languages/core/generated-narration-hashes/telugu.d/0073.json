@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 73,
-  "sourceHash": "fnv1a64:10b84b438829ac1a",
+  "sourceHash": "fnv1a64:754ea2c01b465680",
   "lessonIds": [
     "TE-C73-sweet",
     "TE-C73-sour",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch73.txt",
   "json": "telugu/narration/ch73.json",
-  "textHash": "fnv1a64:f289e207370d42d3",
-  "jsonHash": "fnv1a64:1cf4a02698490d64",
+  "textHash": "fnv1a64:6de7db1f27cb9086",
+  "jsonHash": "fnv1a64:cf3304da7cc26f58",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "garuku"
 concept_tag: TE-GUNAM261-GARUKU
 prerequisites: [TE-C261-jiddu, TE-C261-jigata]
 sounds: []
-roots: []
+roots: [telugu-garuku-rough]
+etymology_hook: "garuku: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'rough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-jigata]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-05]; assesses=[] -->
 
 **గరుకు** — *garuku* — "rough (to the touch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గరుకు** (*garuku*) is uncertain. DEDR and CDIAL list no word of this shape meaning "rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

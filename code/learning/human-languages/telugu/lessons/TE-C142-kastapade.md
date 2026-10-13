@@ -14,7 +14,8 @@ romanization: "kaṣṭapaḍē"
 concept_tag: TE-QUAL142-KASTAPADE
 prerequisites: [TE-C141-dhairyam, TE-C141-somari]
 sounds: []
-roots: []
+roots: [sanskrit-kashta, dravidian-padu-suffer]
+etymology_hook: "kaṣṭapaḍē: Sanskrit kaṣṭa 'hardship' (CDIAL 2978) + native paḍu 'to suffer' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C141-somari]
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-01]; assesses=[] -->
 
 **కష్టపడే** — *kaṣṭapaḍē* — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కష్టపడే** (*kaṣṭapaḍē*) is Sanskrit *kaṣṭa*, "hardship" (CDIAL 2978), with native *paḍu*, "to suffer, undergo" (DEDR 3853): "one who undergoes hardship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

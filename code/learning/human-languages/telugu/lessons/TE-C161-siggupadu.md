@@ -14,7 +14,8 @@ romanization: "siggupaḍu"
 concept_tag: TE-VERB-SIGGUPADU
 prerequisites: [TE-C161-jarupuko, TE-C161-palakarincu]
 sounds: []
-roots: []
+roots: [dravidian-siggu-shame, dravidian-padu-suffer]
+etymology_hook: "siggupaḍu: native siggu 'shame' (DEDR 2500) + paḍu 'to feel' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-palakarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-04]; assesses=[] -->
 
 **సిగ్గుపడు** — *siggupaḍu* — "to feel shy, to be bashful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సిగ్గుపడు** (*siggupaḍu*) is native Dravidian: *siggu*, "shame, bashfulness", one word with Kannada *siggu* (DEDR 2500), and *paḍu*, "to feel" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

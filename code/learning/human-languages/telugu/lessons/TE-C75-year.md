@@ -11,7 +11,8 @@ romanization: "saṁvatsaraṁ"
 concept_tag: TE-TIME-YEAR
 prerequisites: [TE-C75-before, TE-C27-sayantram]
 sounds: []
-roots: []
+roots: [sanskrit-samvatsara]
+etymology_hook: "saṁvatsaraṁ ← Sanskrit saṁvatsara 'year', a tatsama (CDIAL 13011)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C75-before]
 A Sanskrit tatsama, wearing the same **-ం** ending you have seen on ఉదయం and భోజనం. Telugu also says **ఏడు** for a year of age, but సంవత్సరం is the plain calendar word.
 
 You now have the hour (గంట), the day (రోజు), the month (నెల) and the year — the whole ladder of Telugu time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంవత్సరం** (*saṁvatsaraṁ*) is Sanskrit *saṁvatsara*, "year", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13011).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

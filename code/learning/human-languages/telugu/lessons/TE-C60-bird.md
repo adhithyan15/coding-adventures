@@ -11,7 +11,8 @@ romanization: "pakṣi"
 concept_tag: TE-NOUN-BIRD
 prerequisites: [TE-C60-ant]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pakṣi ← Sanskrit pakṣin 'winged; bird' (CDIAL 7636), without the final -n"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C60-ant]
 That is a split this book has met before — an inherited word doing the everyday work and a borrowed one carrying the wider idea, the same shape as నిప్పు beside అగ్ని. Once you start expecting it, half the vocabulary sorts itself.
 
 Five animals now, from the గేదె at the gate to the చీమ under it, and a నమస్కారం for whoever keeps them.
+
+CDIAL 7636 lists Sanskrit *pakṣin*, "winged; bird".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

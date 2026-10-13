@@ -14,7 +14,8 @@ romanization: "prasāraṁ cēyu"
 concept_tag: TE-VERB-PRASARAM-CEYU
 prerequisites: [TE-C244-morugu, TE-C245-sekarincu]
 sounds: []
-roots: []
+roots: [sanskrit-prasara, sey-do-dravidian]
+etymology_hook: "prasāraṁ cēyu: Sanskrit prasāra 'extension' (CDIAL 8835) + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C245-sekarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C245-KRIYA245-02]; assesses=[] -->
 
 **ప్రసారం చేయు** — *prasāraṁ cēyu* — "to broadcast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రసారం చేయు** (*prasāraṁ cēyu*) pairs Sanskrit *prasāra*, "extension, spreading" (CDIAL 8835), with the Telugu ending *-ṁ*, and native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

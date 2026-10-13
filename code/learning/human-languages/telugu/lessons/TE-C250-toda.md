@@ -14,7 +14,8 @@ romanization: "toḍa"
 concept_tag: TE-AROGYAM250-TODA
 prerequisites: [TE-C250-madama, TE-C250-cilamanda]
 sounds: []
-roots: []
+roots: [dravidian-tudai-thigh]
+etymology_hook: "toḍa: native Dravidian, one word with Tamil toṭai and Kannada toḍe (DEDR 3302)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C250-cilamanda]
 <!-- hl-knowledge: introduces=[TE-LEX-C250-AROGYAM250-04]; assesses=[] -->
 
 **తొడ** — *toḍa* — "the thigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తొడ** (*toḍa*) is native Dravidian, one word with Tamil *toṭai* and Kannada *toḍe* (DEDR 3302). DEDR lists Telugu *toḍa*, "thigh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3fbda7864839e938",
+  "sourceHash": "fnv1a64:a2cfec944f2fcedb",
   "lessons": [
     {
       "id": "TE-C66-field",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3bcfc91f262770a",
+      "sourceHash": "fnv1a64:7ed9745b7163eedc",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొలం (polaṁ) is native Dravidian, one word with Tamil pulam and Kannada pola (DEDR 4303). DEDR lists Telugu polamu, \"field, cultivated land\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb05b59590aa170",
+      "sourceHash": "fnv1a64:310299e615f2f513",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +214,10 @@
             {
               "kind": "speech",
               "text": "A వరి (vari) పొలం (polaṁ) under water with the seedlings just pushed in is the picture the coast is built on, and what is being pushed in is the మొక్క from earlier in this book."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5265 lists Telugu vari, \"paddy\", with Tamil vari."
             }
           ]
         },
@@ -307,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd41b27959064858",
+      "sourceHash": "fnv1a64:7d258b665fc7769a",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +367,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గడ్డి (gaḍḍi) is native Dravidian. DEDR 1158 lists gaḍḍi, \"grass, straw, hay\", with Kolami gaḍḍi, \"grass\", and compares the Sanskrit grass words kaṭa and khaṭa, known only from lexicons (CDIAL 2630, 3769)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +388,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +446,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37bae9b450e73e6b",
+      "sourceHash": "fnv1a64:b7e9f0375aa05ba1",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +522,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కల్లం (kallaṁ) is native Dravidian, one word with Tamil kaḷam and Malayalam kaḷam, \"threshing floor\" (DEDR 1376). DEDR compares Sanskrit khala, \"threshing floor\" (CDIAL 3834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +543,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +601,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:685d7ded3fcfc953",
+      "sourceHash": "fnv1a64:023b38b28fc7c25e",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +677,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంట (paṇṭa) is native Dravidian. DEDR 4004 lists paṇṭa, \"produce, crop\", under paṇḍu, \"to ripen\", with Tamil paḻu, \"to ripen\". DEDR compares Sanskrit phala, \"fruit\" (CDIAL 9051)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +698,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +756,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

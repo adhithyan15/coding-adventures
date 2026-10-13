@@ -11,7 +11,8 @@ romanization: "ippuḍu"
 concept_tag: TE-WORD-NOW
 prerequisites: [TE-C49-alright]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "ippuḍu: native Dravidian, 'this time': i- 'this' (DEDR 410) + the time word poddu (DEDR 4559)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C49-alright]
 The grid from the last chapter has a time row, and this is its near corner. **-ప్పుడు** is the time-piece; put a pointing vowel in front of it and the word makes itself.
 
 ఇప్పుడు is "this time" — now. అప్పుడు is "that time" — then. ఎప్పుడు is "which time" — when? You already owned the vowels; the row costs you one word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇప్పుడు** (*ippuḍu*) is native Dravidian: the near-pointing *i-*, "this", and *-ppuḍu*, "time". DEDR 410 lists *ippuḍu*, "this time, now", and DEDR 4559 sets it beside *poddu*, "time, sun", with Tamil *poḻutu*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

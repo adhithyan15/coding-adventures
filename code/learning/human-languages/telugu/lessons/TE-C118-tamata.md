@@ -14,7 +14,8 @@ romanization: "ṭamāṭā"
 concept_tag: TE-THINGS118-TAMATA
 prerequisites: [TE-C117-kobbari, TE-C117-ullipaya]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "ṭamāṭā ← English tomato, a word that came from Nahuatl through Spanish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C117-ullipaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **టమాటా** — *ṭamāṭā* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టమాటా** (*ṭamāṭā*) is a loan from English *tomato*, a word that reached English from Nahuatl through Spanish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

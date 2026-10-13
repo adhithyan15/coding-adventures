@@ -14,7 +14,8 @@ romanization: "pūjāri"
 concept_tag: TE-PANI275-PUJARI
 prerequisites: [TE-C274-visayam, TE-C274-ganitam]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūjāri: Sanskrit pūjā 'worship' (CDIAL 8317) + -āri"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C274-ganitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C275-PANI275-01]; assesses=[] -->
 
 **పూజారి** — *pūjāri* — "a priest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పూజారి** (*pūjāri*) is Sanskrit *pūjā*, "honour, worship" (CDIAL 8317), with the ending *-āri*: "one who does worship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

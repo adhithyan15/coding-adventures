@@ -11,7 +11,8 @@ romanization: "ekkuva"
 concept_tag: TE-WORD-MORE
 prerequisites: [TE-C58-a-little]
 sounds: []
-roots: []
+roots: [dravidian-ekku-rise]
+etymology_hook: "ekkuva: native Dravidian, from ekku 'to rise, increase' (DEDR 768), which lists ekkuva itself"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C58-a-little]
 Set it against కొంచెం, which you had a moment ago, and you have the two ends of a plate of food. కొంచెం is what you say when you would like the serving to stop; ఎక్కువ is what you say when it was too much.
 
 It doubles as "too much" without changing shape, so tone and face carry the difference. ఎక్కువ మాట్లాడు can be praise or a complaint depending on how it is said.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎక్కువ** (*ekkuva*) is native Dravidian, built on *ekku*, "to rise, increase". DEDR 768 lists *ekku* and *ekkuva*, "excess, more", itself, with Kannada *ekke*, "superiority".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

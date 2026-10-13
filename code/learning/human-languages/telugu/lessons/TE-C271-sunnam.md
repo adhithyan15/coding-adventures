@@ -14,7 +14,8 @@ romanization: "sunnaṁ"
 concept_tag: TE-VASTUVU271-SUNNAM
 prerequisites: [TE-C270-rolu, TE-C270-rokali]
 sounds: []
-roots: []
+roots: [sanskrit-curna]
+etymology_hook: "sunnaṁ: usually traced to Sanskrit cūrṇa 'powder' (CDIAL 4889)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C270-rokali]
 <!-- hl-knowledge: introduces=[TE-LEX-C271-VASTUVU271-01]; assesses=[] -->
 
 **సున్నం** — *sunnaṁ* — "lime, whitewash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సున్నం** (*sunnaṁ*) is usually traced to Sanskrit *cūrṇa*, "ground, powder" (CDIAL 4889), reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

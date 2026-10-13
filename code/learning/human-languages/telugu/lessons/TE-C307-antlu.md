@@ -14,7 +14,8 @@ romanization: "aṇṭlu"
 concept_tag: TE-VASTUVU307-ANTLU
 prerequisites: [TE-C307-phrijju, TE-C307-miksi]
 sounds: []
-roots: []
+roots: [dravidian-antu-stick]
+etymology_hook: "aṇṭlu: native Dravidian; DEDR 96 lists aṇṭu 'defilement by touch' with Kannada aṇṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C307-miksi]
 <!-- hl-knowledge: introduces=[TE-LEX-C307-VASTUVU307-03]; assesses=[] -->
 
 **అంట్లు** — *aṇṭlu* — "dirty dishes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అంట్లు** (*aṇṭlu*) is native Dravidian, from *aṇṭu*, "to stick; uncleanness, defilement by touch", which DEDR 96 lists with Kannada *aṇṭu*, "to stick; an impurity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

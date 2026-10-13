@@ -11,7 +11,8 @@ romanization: "kaḍupu"
 concept_tag: TE-NOUN-STOMACH
 prerequisites: [TE-C47-finger]
 sounds: []
-roots: []
+roots: [telugu-kadupu-belly]
+etymology_hook: "kaḍupu: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C47-finger]
 కడుపు is the unfussy everyday word, and it carries the commonest way of saying you have eaten enough: *kaḍupu niṇḍindi*, "the stomach has filled".
 
 It also says, gently and without ever being explicit, that a woman is expecting. Sanskrit's ఉదరం exists in Telugu and stays where the clinical register lives.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కడుపు** (*kaḍupu*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

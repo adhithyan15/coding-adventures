@@ -14,7 +14,8 @@ romanization: "cauka"
 concept_tag: TE-GUNAM179-CAUKA
 prerequisites: [TE-C179-taja, TE-C179-kharidaina]
 sounds: []
-roots: []
+roots: [telugu-cauka-cheap]
+etymology_hook: "cauka: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'cheap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C179-kharidaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C179-GUNAM179-05]; assesses=[] -->
 
 **చౌక** — *cauka* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **చౌక** (*cauka*) is uncertain. DEDR and CDIAL list no word of this shape meaning "cheap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

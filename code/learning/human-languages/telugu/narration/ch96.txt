@@ -13,6 +13,9 @@ You'll want to know: ఇంటిపేరు.
 ఇంటిపేరు (iṇṭipēru) — "a surname", literally "the house name".
 It is ఇంటి, "of the house", and పేరు, "name". In Telugu the house name comes FIRST, before the given name, so a form that asks for a first name is asking the wrong question.
 
+The word, taken apart.
+ఇంటిపేరు (iṇṭipēru) is native Dravidian: iṇṭi, "of the house" (DEDR 494), and pēru, "name" (DEDR 4410).
+
 What you've built.
 The family name, and where it goes.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for I could not hear it, then the Telugu for 
 You'll want to know: ముద్దుపేరు.
 ముద్దుపేరు (muddupēru) — "a nickname, a pet name".
 ముద్దు is "a kiss, affection", so a nickname is an affection name: the one family uses.
+
+The word, taken apart.
+ముద్దుపేరు (muddupēru) is native Dravidian: muddu, "kiss", one word with Tamil muttu (DEDR 4960), and pēru, "name" (DEDR 4410). DEDR compares Prakrit muddī, "kiss".
 
 What you've built.
 The name the family uses.
@@ -73,6 +79,9 @@ You'll want to know: వయసు.
 వయసు (vayasu) — "age".
 You have asked it already, inside నీ వయసెంత?. Now the word stands alone: మీ వయసు (vayasu) ఎంత? — "what is your age?", the respectful form.
 
+The word, taken apart.
+వయసు (vayasu) is Sanskrit vayas, "prime of life, age", taken over whole as a learned loan, a tatsama, with Telugu's added -u (CDIAL 11305).
+
 What you've built.
 The word you have been using inside a question, taken out.
 
@@ -103,6 +112,9 @@ You'll want to know: పుట్టినరోజు.
 పుట్టినరోజు (puṭṭinarōju) — "a birthday", literally "the day one was born".
 రోజు is the day you know. On the day, say పుట్టినరోజు (puṭṭinarōju) శుభాకాంక్షలు — "happy birthday", with the good wishes you already have.
 
+The word, taken apart.
+పుట్టినరోజు (puṭṭinarōju) is native puṭṭina, "on which one was born", from puṭṭu, "to be born" (DEDR 4264), and rōju, "day", from Persian rōz.
+
 What you've built.
 A day to name, and a wish to make on it.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for age, then the Telugu for a birthday.
 You'll want to know: సంతకం.
 సంతకం (santakaṁ) — "a signature".
 ఇక్కడ సంతకం (santakaṁ) చేయండి — "please sign here". A signature is something you do, with the చేయు of పని చేయు.
+
+The word, taken apart.
+The origin of సంతకం (santakaṁ) is uncertain. Neither DEDR nor CDIAL records it.
 
 What you've built.
 Surname, nickname, age, birthday, signature: every box on a form.

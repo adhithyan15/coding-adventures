@@ -14,7 +14,8 @@ romanization: "vaṅkara"
 concept_tag: TE-GUNAM298-VANKARA
 prerequisites: [TE-C297-nijayiti, TE-C298-moddu]
 sounds: []
-roots: []
+roots: [sanskrit-vankara]
+etymology_hook: "vaṅkara ← Sanskrit vaṅkara 'crooked', a tatsama (CDIAL 11193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C298-moddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C298-GUNAM298-02]; assesses=[] -->
 
 **వంకర** — *vaṅkara* — "crooked, bent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వంకర** (*vaṅkara*) is Sanskrit *vaṅkara*, "crooked", taken over whole as a learned loan, a tatsama (CDIAL 11193). CDIAL ties *vaṅka*, "bent, crooked", to a probably non-Aryan word-group.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

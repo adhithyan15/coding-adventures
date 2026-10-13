@@ -14,7 +14,8 @@ romanization: "byāṭarī"
 concept_tag: TE-VASTUVU305-BYATARI
 prerequisites: [TE-C305-kibordu, TE-C305-lyaptap]
 sounds: []
-roots: []
+roots: [english-battery]
+etymology_hook: "byāṭarī ← English battery"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C305-lyaptap]
 <!-- hl-knowledge: introduces=[TE-LEX-C305-VASTUVU305-04]; assesses=[] -->
 
 **బ్యాటరీ** — *byāṭarī* — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బ్యాటరీ** (*byāṭarī*) is a loan from English *battery*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

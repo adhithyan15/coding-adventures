@@ -14,7 +14,8 @@ romanization: "ṣaratu"
 concept_tag: TE-KARANAM178-SARATU
 prerequisites: [TE-C178-porapatuna, TE-C178-poni]
 sounds: []
-roots: []
+roots: [arabic-shart]
+etymology_hook: "ṣaratu ← Arabic sharṭ 'condition', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C178-poni]
 <!-- hl-knowledge: introduces=[TE-LEX-C178-KARANAM178-04]; assesses=[] -->
 
 **షరతు** — *ṣaratu* — "a condition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**షరతు** (*ṣaratu*) is a loan from Arabic *sharṭ*, "condition", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

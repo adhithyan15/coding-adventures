@@ -11,7 +11,8 @@ romanization: "mokka"
 concept_tag: TE-NOUN-SEEDLING
 prerequisites: [TE-C54-seed]
 sounds: []
-roots: []
+roots: [telugu-mokka-plant]
+etymology_hook: "mokka: origin uncertain; perhaps related to molaka, mōka 'sprout' (DEDR 4997)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C54-seed]
 The line between మొక్క and చెట్టు is about woodiness rather than height. A tomato plant stays a మొక్క at any size, because it stays soft. A చెట్టు has bark.
 
 Do not tie it to మొక్కు, "to bow, to make a vow", which sounds close. Telugu has a good many pairs like that, and a resemblance on its own settles nothing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **మొక్క** (*mokka*) is uncertain. DEDR does not list it in this sense; its nearest entry is DEDR 4997, which lists Telugu *molaka* and *mōka*, "sprout, shoot", with Tamil *muḷai*, "to sprout".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pappu"
 concept_tag: TE-THINGS115-PAPPU
 prerequisites: [TE-C115-gajulu, TE-C115-kura]
 sounds: []
-roots: []
+roots: [dravidian-paruppu-pulse]
+etymology_hook: "pappu: native Dravidian, one word with Tamil paruppu and Kannada pappu (DEDR 3978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C115-kura]
 <!-- hl-knowledge: introduces=[TE-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **పప్పు** — *pappu* — "dal, lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పప్పు** (*pappu*) is native Dravidian, one word with Tamil *paruppu*, Kannada *pappu* and Malayalam *parippu* (DEDR 3978). DEDR lists Telugu *pappu*, "split pulse, dal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

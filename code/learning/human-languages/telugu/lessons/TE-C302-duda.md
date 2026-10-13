@@ -14,7 +14,8 @@ romanization: "dūḍa"
 concept_tag: TE-VASTUVU302-DUDA
 prerequisites: [TE-C301-petrolu, TE-C302-eddu]
 sounds: []
-roots: []
+roots: [dravidian-duuda-calf]
+etymology_hook: "dūḍa: Dravidian as far as DEDR records it; DEDR 3378 lists dūḍa 'calf'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C302-eddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C302-VASTUVU302-02]; assesses=[] -->
 
 **దూడ** — *dūḍa* — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దూడ** (*dūḍa*) is Dravidian as far as DEDR records it: DEDR 3378 lists *dūḍa*, "a calf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

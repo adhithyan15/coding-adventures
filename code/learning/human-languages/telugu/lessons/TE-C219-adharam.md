@@ -14,7 +14,8 @@ romanization: "ādhāraṁ"
 concept_tag: TE-KARANAM219-ADHARAM
 prerequisites: [TE-C218-srama, TE-C219-ninda]
 sounds: []
-roots: []
+roots: [sanskrit-adhara]
+etymology_hook: "ādhāraṁ ← Sanskrit ādhāra 'support, substratum', a tatsama (CDIAL 1165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C219-ninda]
 <!-- hl-knowledge: introduces=[TE-LEX-C219-KARANAM219-02]; assesses=[] -->
 
 **ఆధారం** — *ādhāraṁ* — "a basis; evidence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆధారం** (*ādhāraṁ*) is Sanskrit *ādhāra*, "support, substratum", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1165).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

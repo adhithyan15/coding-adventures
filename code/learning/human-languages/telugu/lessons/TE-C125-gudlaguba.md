@@ -14,7 +14,8 @@ romanization: "guḍlagūba"
 concept_tag: TE-THINGS125-GUDLAGUBA
 prerequisites: [TE-C124-cilaka, TE-C125-pavuram]
 sounds: []
-roots: []
+roots: [dravidian-kudinai-owl]
+etymology_hook: "guḍlagūba: native Dravidian; DEDR 1657 lists it with Tamil kuṭiñai 'horned owl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C125-pavuram]
 <!-- hl-knowledge: introduces=[TE-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **గుడ్లగూబ** — *guḍlagūba* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుడ్లగూబ** (*guḍlagūba*) is native Dravidian. DEDR 1657 lists *guḍla-gūba*, "an owl", with Tamil *kuṭiñai*, "rock horned-owl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

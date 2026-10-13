@@ -68,6 +68,9 @@ You'll want to know: రెండవ.
 రెండవ (reṇḍava) — "second".
 రెండవ రోజు (reṇḍava rōju) — the second day.
 
+The word, taken apart.
+రెండవ (reṇḍava) is native Dravidian (DEDR 474), from reṇḍu, "two".
+
 Grammar Lens: cardinal, minus its last vowel, plus -వ.
 Say them together and you can hear the join: రెండు becomes రెండవ (reṇḍava).
 Take the number you already have, take its final vowel off, and put -వ (-va) on the end. That is the whole of it, and it holds for every number from two upward. Nine ordinals for the price of one ending.
@@ -113,6 +116,9 @@ You'll want to know: మూడవ.
 మూడవ వారం (mūḍava vāraṁ) — the third week.
 Two numbers in a row have now taken the same ending, which is what a rule looks like from inside: not a statement, but the second time you were not surprised. The spoken form is మూడో (mūḍō), exactly as reṇḍō was.
 
+The word, taken apart.
+మూడవ (mūḍava) is native Dravidian: mūḍu, "three", one word with Tamil mūṉṟu (DEDR 5052), with the ordinal ending -va.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mūḍava]
@@ -152,6 +158,9 @@ You'll want to know: నాలుగవ.
 నాలుగవ సంవత్సరం (nālugava saṁvatsaraṁ) — the fourth year.
 This is the longest of the ten and it is no harder than the shortest, which is the practical point of a regular ending. Once you can count, you can order.
 
+The word, taken apart.
+నాలుగవ (nālugava) is native Dravidian: nālugu, "four", one word with Tamil nālku (DEDR 3655), with the ordinal ending -va.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: nālugava]
@@ -190,6 +199,9 @@ You'll want to know: ఐదవ.
 ఐదు becomes ఐదవ (aidava). The opening ఐ is untouched — it is a single letter in Telugu, not two — and only the final u is traded for -వ.
 ఐదవ రోజు (aidava rōju) — the fifth day.
 That is one to five in order. Say modaṭi, reṇḍava, mūḍava, nālugava, aidava, and notice that only the first one had to be learned as a word.
+
+The word, taken apart.
+ఐదవ (aidava) is native Dravidian: aidu, "five", one word with Tamil aintu (DEDR 2826), with the ordinal ending -va.
 
 Guided Practice.
 [pause 1 second]

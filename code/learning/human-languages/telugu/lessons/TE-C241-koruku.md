@@ -14,7 +14,8 @@ romanization: "koruku"
 concept_tag: TE-VERB-KORUKU
 prerequisites: [TE-C240-visuru, TE-C241-mingu]
 sounds: []
-roots: []
+roots: [dravidian-kori-nibble]
+etymology_hook: "koruku: native Dravidian; DEDR 2164 lists koṟuku 'to bite' with Kannada koṟuku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C241-mingu]
 <!-- hl-knowledge: introduces=[TE-LEX-C241-KRIYA241-02]; assesses=[] -->
 
 **కొరుకు** — *koruku* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొరుకు** (*koruku*) is native Dravidian. DEDR 2164 lists *koṟuku*, "to bite, gnaw", with Kannada *koṟuku*, "to bite, gnaw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

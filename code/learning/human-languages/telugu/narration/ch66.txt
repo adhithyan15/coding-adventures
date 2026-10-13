@@ -15,6 +15,9 @@ You'll want to know: పొలం.
 The word is inherited. A గ్రామం is measured by its పొలం (polaṁ) far more than by its houses, and directions in the country are given by whose పొలం (polaṁ) you pass rather than by any బాట.
 Going out to the పొలం (polaṁ) before ఉదయం and coming back after సాయంత్రం is the shape of the day the rest of this chapter describes.
 
+The word, taken apart.
+పొలం (polaṁ) is native Dravidian, one word with Tamil pulam and Kannada pola (DEDR 4303). DEDR lists Telugu polamu, "field, cultivated land".
+
 What you've built.
 The ground everything else here stands on.
 
@@ -47,6 +50,7 @@ You'll want to know: వరి.
 Telugu counts rice three times over and this is the first of them: వరి (vari) in the పొలం (polaṁ), బియ్యం once it is husked, అన్నం once it is cooked. Three words, three states, and none of them will stand in for another.
 The word is inherited and it names the plant. English has one word for the lot and has to borrow "paddy" from Malay to get the same distinction; Telugu had it from the start.
 A వరి (vari) పొలం (polaṁ) under water with the seedlings just pushed in is the picture the coast is built on, and what is being pushed in is the మొక్క from earlier in this book.
+DEDR 5265 lists Telugu vari, "paddy", with Tamil vari.
 
 What you've built.
 Two: the ground and what is standing in it.
@@ -81,6 +85,9 @@ You'll want to know: గడ్డి.
 The word is inherited. It covers straw as well, meaning what is left of the వరి (vari) once the grain is off, so one word runs all the way from the living plant to the dry stalk stacked beside the house.
 గడ్డి (gaḍḍi) does insulting work too. Calling something గడ్డి (gaḍḍi) is calling it worthless, which is what tends to happen to a word that means "the part nobody eats".
 
+The word, taken apart.
+గడ్డి (gaḍḍi) is native Dravidian. DEDR 1158 lists gaḍḍi, "grass, straw, hay", with Kolami gaḍḍi, "grass", and compares the Sanskrit grass words kaṭa and khaṭa, known only from lexicons (CDIAL 2630, 3769).
+
 What you've built.
 Three, and this is what the animals get.
 
@@ -114,6 +121,9 @@ You'll want to know: కల్లం.
 The word is inherited. A కల్లం (kallaṁ) belongs to the గ్రామం rather than to one house, and the order in which families take their turn on it is settled by custom rather than by asking — the kind of arrangement a village is full of.
 It gets swept with a చీపురు before anything is laid down on it, and that sweeping is taken about as seriously as the ముగ్గు at a doorstep.
 
+The word, taken apart.
+కల్లం (kallaṁ) is native Dravidian, one word with Tamil kaḷam and Malayalam kaḷam, "threshing floor" (DEDR 1376). DEDR compares Sanskrit khala, "threshing floor" (CDIAL 3834).
+
 What you've built.
 Four: where the year's work gets finished.
 
@@ -146,6 +156,9 @@ You'll want to know: పంట.
 పంట (paṇṭa) is the harvest — the crop standing and the crop taken in, both at once. It is inherited, and it is what this whole chapter has been walking towards: పొలం (polaṁ), వరి (vari), గడ్డి (gaḍḍi), కల్లం (kallaṁ), and then పంట (paṇṭa).
 Telugu uses it well outside the field. A good year at anything is a మంచి పంట (paṇṭa), and somebody talking about how their children turned out will reach for the word without meaning anything about rice at all.
 When the పంట (paṇṭa) is in and the కల్లం (kallaṁ) is swept, the day and the season finish together, and there is nothing left to do but say వెళ్ళొస్తాను.
+
+The word, taken apart.
+పంట (paṇṭa) is native Dravidian. DEDR 4004 lists paṇṭa, "produce, crop", under paṇḍu, "to ripen", with Tamil paḻu, "to ripen". DEDR compares Sanskrit phala, "fruit" (CDIAL 9051).
 
 What you've built.
 Five: పొలం (polaṁ), వరి (vari), గడ్డి (gaḍḍi), కల్లం (kallaṁ), పంట (paṇṭa). A year's work in five words, and a good place to take your leave.

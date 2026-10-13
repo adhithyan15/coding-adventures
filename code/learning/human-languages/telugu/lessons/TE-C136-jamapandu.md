@@ -14,7 +14,8 @@ romanization: "jāmapaṇḍu"
 concept_tag: TE-THINGS136-JAMAPANDU
 prerequisites: [TE-C135-nimmakaya, TE-C135-draksa]
 sounds: []
-roots: []
+roots: [sanskrit-jambu, dravidian-pazhu-ripen]
+etymology_hook: "jāmapaṇḍu: jāma, usually traced to Sanskrit jambū 'rose-apple' (CDIAL 5131), + native paṇḍu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C135-draksa]
 <!-- hl-knowledge: introduces=[TE-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **జామపండు** — *jāmapaṇḍu* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జామపండు** (*jāmapaṇḍu*) is *jāma*, usually traced to Sanskrit *jambū*, "the rose-apple tree" (CDIAL 5131), a name passed on to the guava, and native *paṇḍu*, "fruit" (DEDR 4004), which DEDR compares with Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

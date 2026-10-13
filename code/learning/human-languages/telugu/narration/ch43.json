@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2f943a021852dc15",
+  "sourceHash": "fnv1a64:342de29c645ddd4b",
   "lessons": [
     {
       "id": "TE-C43-come",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6471e4d70517d9d5",
+      "sourceHash": "fnv1a64:a89b4abed00a1bdd",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రా (rā) is native Dravidian: the command form of the verb DEDR 5270 lists as vaccu, \"to come\", one word with Tamil varu (command vā) and Kannada bar (command bā)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,7 +108,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -128,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19c01768eea8c54d",
+      "sourceHash": "fnv1a64:055822976ec0aa82",
       "notice": null,
       "blocks": [
         {
@@ -165,6 +176,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూర్చో (kūrcō) is native Dravidian, the command form of kūrcuṇḍu, \"to sit\", which DEDR 1900 lists with Kannada kūr, \"to sit down\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -175,7 +197,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -215,7 +237,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -246,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75315e9df49b8811",
+      "sourceHash": "fnv1a64:c6180f786a8aadb6",
       "notice": null,
       "blocks": [
         {
@@ -283,6 +305,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిల్చో (nilcō) is native Dravidian, the command form of nilucu, \"to stand\", one word with Tamil nil and Kannada nillu (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -293,7 +326,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -333,7 +366,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -364,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c65876231cbe9d9",
+      "sourceHash": "fnv1a64:78a3c23049ef1e57",
       "notice": null,
       "blocks": [
         {
@@ -401,6 +434,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇవ్వు (ivvu) is native Dravidian. DEDR 2598 lists the Telugu verb iccu, \"to give\", with the stem ivv-, beside Tamil ī and Kannada ī, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -411,7 +455,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

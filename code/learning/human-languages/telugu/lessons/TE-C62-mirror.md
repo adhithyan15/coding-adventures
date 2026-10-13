@@ -11,7 +11,8 @@ romanization: "addaṁ"
 concept_tag: TE-NOUN-MIRROR
 prerequisites: [TE-C62-umbrella]
 sounds: []
-roots: []
+roots: [dravidian-addam-mirror]
+etymology_hook: "addaṁ: DEDR 147 lists addamu 'mirror' and compares Prakrit addāa; usually traced to Sanskrit ādarśa"
 duration:
   max_seconds: 210
 requires:
@@ -40,11 +41,13 @@ reviews_of: [TE-C62-umbrella]
 
 **అద్దం** (*addaṁ*) — "a mirror".
 
-అద్దం is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — from Sanskrit *ādarśa*, "what shows back".
+అద్దం is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — usually traced, through Prakrit *addāa*, to Sanskrit *ādarśa*, "what shows back".
 
 The other four come out of whatever grows nearby: a దారం out of cotton, a చీపురు out of leaf ribs, a గొడుగు out of palm and cane, and a సూది out of a scrap of metal from the smith at the edge of the గ్రామం. An అద్దం needs a factory.
 
 Asking for one is where దయచేసి earns its keep. అద్దం ఇవ్వండి on its own lands like an instruction; with దయచేసి in front it lands like a request.
+
+DEDR 147 lists Telugu *addamu*, "mirror", notes that Tamil *attam* is a loan from Telugu, and compares Prakrit *addāa*, "mirror"; CDIAL 1143 lists Sanskrit *ādarśa*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

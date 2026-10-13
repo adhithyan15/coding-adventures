@@ -14,7 +14,8 @@ romanization: "bugga"
 concept_tag: TE-THINGS127-BUGGA
 prerequisites: [TE-C127-bhujam, TE-C127-kanubomma]
 sounds: []
-roots: []
+roots: [dravidian-buggi-cheek]
+etymology_hook: "bugga: probably native; DEDR 4242 lists Kannada buggi 'cheek' with Telugu pukkili 'inside of the cheek'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C127-kanubomma]
 <!-- hl-knowledge: introduces=[TE-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **బుగ్గ** — *bugga* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బుగ్గ** (*bugga*) is probably native Dravidian. DEDR 4242 lists Kannada *buggi*, "cheek", with Telugu *pukkili*, "inside of the cheek", but does not list *bugga* in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

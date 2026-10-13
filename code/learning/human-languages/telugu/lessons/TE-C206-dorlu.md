@@ -14,7 +14,8 @@ romanization: "dorlu"
 concept_tag: TE-VERB-DORLU
 prerequisites: [TE-C205-kanukko, TE-C205-appu-tisuko]
 sounds: []
-roots: []
+roots: [dravidian-dorlu-roll]
+etymology_hook: "dorlu: Dravidian as far as DEDR records it; DEDR 3514 lists dor(a)lu 'to roll' from Telugu alone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C205-appu-tisuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C206-KRIYA206-01]; assesses=[] -->
 
 **దొర్లు** — *dorlu* — "to roll (over)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దొర్లు** (*dorlu*) is Dravidian as far as DEDR records it: DEDR 3514 lists *doralu*, "to roll, turn over", from Telugu alone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

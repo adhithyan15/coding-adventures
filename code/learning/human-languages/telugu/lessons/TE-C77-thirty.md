@@ -11,7 +11,8 @@ romanization: "muppai"
 concept_tag: TE-NUMBER-TENS
 prerequisites: [TE-C77-india, TE-C37-kannu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "muppai: native Dravidian; DEDR 5052 lists muppai 'thirty' itself, under mūḍu 'three'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C77-india]
 Your counting stopped at ఇరవై, twenty. The tens above it are built the same way, from the units you already know:
 
 ముప్పై 30, **నలభై** 40, **యాభై** 50, **అరవై** 60, **డెబ్బై** 70, **ఎనభై** 80, **తొంభై** 90, **వంద** 100. Every one but వంద ends in the same **-ై** twenty does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముప్పై** (*muppai*) is native Dravidian. DEDR 5052 lists *muppai*, "thirty", itself, under *mūḍu*, "three", with Kannada *mū-vattu*, "thirty".
 
 ## Grammar Lens: an age, at last
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C77-FROM-05]; assesses=[] -->

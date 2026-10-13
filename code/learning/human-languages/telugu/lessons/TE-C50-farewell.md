@@ -11,7 +11,8 @@ romanization: "veḷḷostānu"
 concept_tag: TE-PHRASE-FAREWELL
 prerequisites: [TE-C50-set-out]
 sounds: []
-roots: []
+roots: [vellu-go-dravidian, vaccu-come-dravidian]
+etymology_hook: "veḷḷostānu: native veḷḷu 'go' (DEDR 5393) + vaccu 'come' (DEDR 5270), run together"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C50-set-out]
 Two verbs you already have, welded at the seam: వెళ్ళి, "having gone", and వస్తాను, "I will come". వెళ్ళొస్తాను is *I'll go and come back*, and it is what is said at the door.
 
 What is not said is the flat "I am going". Leaving without the returning half is what is said of the dead, and the rule holds right across the South. The politeness here is not decoration laid over the grammar; it is the grammar. The reply comes back in the same shape: వెళ్ళి రండి — "go, and come".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెళ్ళొస్తాను** (*veḷḷostānu*) is two native Dravidian verbs run together: *veḷḷi*, "having gone" (DEDR 5393), and *vastānu*, "I will come", from *vaccu* (DEDR 5270).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kālcu"
 concept_tag: TE-VERB-KALCU
 prerequisites: [TE-C147-dacu, TE-C148-kapadu]
 sounds: []
-roots: []
+roots: [dravidian-kaal-burn]
+etymology_hook: "kālcu: native Dravidian; DEDR 1500 lists kālcu 'to burn' with Malayalam kāḷuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C148-kapadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C148-ACT148-02]; assesses=[] -->
 
 **కాల్చు** — *kālcu* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాల్చు** (*kālcu*) is native Dravidian. DEDR 1500 lists *kālu*, "to burn", and *kālcu*, "to burn (something)", with Malayalam *kāḷuka*, "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

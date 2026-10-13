@@ -12,6 +12,9 @@ Before the new one: say the Telugu for daily wages, then the Telugu for an emplo
 You'll want to know: కళాశాల.
 కళాశాల — kaḷāśāla — "a college".
 
+The word, taken apart.
+కళాశాల (kaḷāśāla) is Sanskrit: kalā, "any practical art" (CDIAL 2927), and śālā, "house" (CDIAL 12414): "house of the arts". CDIAL takes this kalā from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for an employee, then the Telugu for a colleg
 
 You'll want to know: విశ్వవిద్యాలయం.
 విశ్వవిద్యాలయం — viśvavidyālayaṁ — "a university".
+
+The word, taken apart.
+విశ్వవిద్యాలయం (viśvavidyālayaṁ) is Sanskrit: viśva, "all; the world" (CDIAL 11962), vidyā, "knowledge" (CDIAL 11741), and ālaya, "house" (CDIAL 1366), with the Telugu ending -ṁ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a college, then the Telugu for a universi
 You'll want to know: డిగ్రీ.
 డిగ్రీ — ḍigrī — "a degree".
 
+The word, taken apart.
+డిగ్రీ (ḍigrī) is a loan from English degree.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a university, then the Telugu for a degre
 You'll want to know: అనుభవం.
 అనుభవం — anubhavaṁ — "experience".
 
+The word, taken apart.
+అనుభవం (anubhavaṁ) is Sanskrit anubhava, "experience", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a degree, then the Telugu for experience.
 
 You'll want to know: ఖాతా.
 ఖాతా — khātā — "an account (bank)".
+
+The word, taken apart.
+ఖాతా (khātā) matches Hindustani khātā, "account, ledger", which DEDR and CDIAL do not list.
 
 What you've built.
 One more word for this chapter.

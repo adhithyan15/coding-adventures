@@ -14,7 +14,8 @@ romanization: "sahanaṁ"
 concept_tag: TE-AROGYAM168-SAHANAM
 prerequisites: [TE-C168-utsaham, TE-C168-santi]
 sounds: []
-roots: []
+roots: [sanskrit-sahana]
+etymology_hook: "sahanaṁ ← Sanskrit sahana 'endurance, patience', a tatsama (CDIAL 13305)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C168-santi]
 <!-- hl-knowledge: introduces=[TE-LEX-C168-AROGYAM168-05]; assesses=[] -->
 
 **సహనం** — *sahanaṁ* — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సహనం** (*sahanaṁ*) is Sanskrit *sahana*, "endurance, patience", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13305).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

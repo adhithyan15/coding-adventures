@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 266,
-  "sourceHash": "fnv1a64:c1d0334c4fe7d9bc",
+  "sourceHash": "fnv1a64:c0f9f56489b713db",
   "lessonIds": [
     "TE-C266-mallepuvvu",
     "TE-C266-vepa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch266.txt",
   "json": "telugu/narration/ch266.json",
-  "textHash": "fnv1a64:54026512b46d7de5",
-  "jsonHash": "fnv1a64:63aee14a80f3dafc",
+  "textHash": "fnv1a64:656f66b1a8a32128",
+  "jsonHash": "fnv1a64:5875c424227d723d",
   "findings": []
 }

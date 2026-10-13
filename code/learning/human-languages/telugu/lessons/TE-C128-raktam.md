@@ -14,7 +14,8 @@ romanization: "raktaṁ"
 concept_tag: TE-THINGS128-RAKTAM
 prerequisites: [TE-C128-moceyi, TE-C128-carmam]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "raktaṁ ← Sanskrit rakta 'red; blood', a tatsama (CDIAL 10539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C128-carmam]
 <!-- hl-knowledge: introduces=[TE-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **రక్తం** — *raktaṁ* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రక్తం** (*raktaṁ*) is Sanskrit *rakta*, "red; blood", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10539).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

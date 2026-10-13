@@ -14,7 +14,8 @@ romanization: "lāgu"
 concept_tag: TE-VERB-LAGU
 prerequisites: [TE-C240-ettu, TE-C240-moyu]
 sounds: []
-roots: []
+roots: [telugu-lagu-pull]
+etymology_hook: "lāgu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to pull'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C240-moyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C240-KRIYA240-03]; assesses=[] -->
 
 **లాగు** — *lāgu* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **లాగు** (*lāgu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to pull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

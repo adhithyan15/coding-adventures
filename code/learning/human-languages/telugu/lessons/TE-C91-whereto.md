@@ -11,7 +11,8 @@ romanization: "ekkaḍiki?"
 concept_tag: TE-GREET-WHERE-TO
 prerequisites: [TE-C91-longtime, TE-C91-whatsnew]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "ekkaḍiki: native ekkaḍa 'where' (DEDR 5151) + -ki 'to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C91-whatsnew]
 
 It is **ఎక్కడ**, "where", with the **-కి** "to" ending. Asked of a neighbour on the street it is
 a greeting, not a demand; *ఇంటికి*, "home", is a full answer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎక్కడికి?** (*ekkaḍiki?*) is native Dravidian: *ekkaḍa*, "where", which DEDR 5151 lists, with the ending *-ki*, "to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

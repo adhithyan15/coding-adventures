@@ -11,7 +11,8 @@ romanization: "bāṭa"
 concept_tag: TE-NOUN-PATH
 prerequisites: [TE-C55-village]
 sounds: []
-roots: []
+roots: [telugu-baata-path]
+etymology_hook: "bāṭa: origin not settled; perhaps a northern loan, like Hindi bāṭ, from Sanskrit vartman 'path' (CDIAL 11366)"
 duration:
   max_seconds: 210
 requires:
@@ -40,11 +41,16 @@ reviews_of: [TE-C55-village]
 
 **బాట** (*bāṭa*) — "a path, a way".
 
-బాట is the inherited word for a way, a track, the line worn by feet going the same way twice. దారి does much the same work; బాట is the more physical of the two, the ground itself.
+బాట is the plain word for a way, a track, the line worn by feet going the same way twice. దారి does much the same work; బాట is the more physical of the two, the ground itself.
 
 It goes abstract as easily as English "path" does. బాట పట్టు is to take up a way of living, and a person can be on somebody else's బాట.
 
 You can now ask your way properly: దయచేసి, which గ్రామం, which బాట, which side the నది is on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **బాట** (*bāṭa*) comes from is not settled, and DEDR does not list it. It matches the northern word for a path, Hindi *bāṭ* and Oriya *bāṭa*, which CDIAL 11366 traces to Sanskrit *vartman*, "track, path", so it may be a loan from the north.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

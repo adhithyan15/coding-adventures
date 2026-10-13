@@ -14,7 +14,8 @@ romanization: "kōṭu"
 concept_tag: TE-THINGS132-KOTU
 prerequisites: [TE-C131-beltu, TE-C132-saksu]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "kōṭu ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C132-saksu]
 <!-- hl-knowledge: introduces=[TE-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **కోటు** — *kōṭu* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోటు** (*kōṭu*) is a loan from English *coat*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "isuka"
 concept_tag: TE-NOUN-SAND
 prerequisites: [TE-C59-mist]
 sounds: []
-roots: []
+roots: [dravidian-usuku-sand]
+etymology_hook: "isuka: probably native; DEDR 575 has Kannada usuku, isaka 'sand' but not the Telugu form"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C59-mist]
 The sand of a riverbed is where cattle are watered, where lorries come at night to dig, and where a village argument about who owns the river tends to start. A plain word can carry a lot of local weather.
 
 ఇసుకలో నీళ్ళు, water in sand, is what you say about effort that soaks away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇసుక** (*isuka*) is probably native Dravidian. DEDR does not list the Telugu form, but its entry 575 gathers Kannada *usuku* and *isaka*, the Kannada word for sand, with Kolami and Konda words of the same shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

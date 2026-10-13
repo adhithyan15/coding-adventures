@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 56,
-  "sourceHash": "fnv1a64:d3c492536a0a1ad8",
+  "sourceHash": "fnv1a64:39ea71fb62677693",
   "lessonIds": [
     "TE-C56-mat",
     "TE-C56-basket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch56.txt",
   "json": "telugu/narration/ch56.json",
-  "textHash": "fnv1a64:f7690275ab1464b2",
-  "jsonHash": "fnv1a64:edb87556e0a1ca69",
+  "textHash": "fnv1a64:ff7ed08ec2f4040b",
+  "jsonHash": "fnv1a64:757298ab48b6ebfb",
   "findings": []
 }

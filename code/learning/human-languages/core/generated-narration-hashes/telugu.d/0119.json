@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 119,
-  "sourceHash": "fnv1a64:ed3806f3072855ee",
+  "sourceHash": "fnv1a64:e3be6ef3139c19aa",
   "lessonIds": [
     "TE-C119-tene",
     "TE-C119-idli",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch119.txt",
   "json": "telugu/narration/ch119.json",
-  "textHash": "fnv1a64:ad30e9f3c1515551",
-  "jsonHash": "fnv1a64:13048a4a87dc5291",
+  "textHash": "fnv1a64:7d328cf619710a1d",
+  "jsonHash": "fnv1a64:d1426e88d50ceef7",
   "findings": []
 }

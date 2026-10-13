@@ -13,7 +13,7 @@ You'll want to know: ఉండు.
 ఉండు — uṇḍu — to be, to exist, to stay.
 Chapter 5 met it as "to live somewhere." Here it is the verb-machine itself: ఉండ్- (the stem) + -త- (tense) + -ాను ("I") becomes ఉంటాను (uṇṭānu), "I stay, I will be."
 One form is already in your mouth: ఉన్నాను (unnānu), "I am — right now," the shape hiding inside bāgunnānu and mīru elā unnāru?
-Telugu is alone in this word. Tamil says இரு (iru), Kannada ಇರು (iru), Malayalam ഇരിക്കുക (irikkuka) — one verb, three sisters. Telugu went its own way, as it did with lēdu.
+The sisters' everyday "be" is another verb: Tamil இரு (iru), Kannada ಇರು (iru), Malayalam ഇരിക്കുക (irikkuka). Yet uṇḍu is Dravidian too: DEDR 697 files it with Tamil uḷ, "to be", and uṇṭu, "there is".
 
 Sounds you'll need: the retroflex ండ.
 ఉ is the standing vowel u. ండు is the retroflex cluster ṇḍ with the u sign — tongue tip curled back, then released. Both shapes are familiar from Chapter 5.
@@ -25,7 +25,7 @@ who: I. is: unnānu. is not: lēnu.
 who: he. is: unnāḍu. is not: lēḍu.
 who: it. is: undi. is not: lēdu.
 So lēdu was never a bare word for "no." It is the it-form of a full verb, and you can now run it through its persons.
-This is where Telugu parted from its sisters. Tamil negates iru with இல்லை (illai), Kannada with ಇಲ್ಲ (illa), Malayalam with ഇല്ല (illa) — one shared root, il-. Telugu dropped it and grew lē- instead.
+Tamil negates iru with இல்லை (illai), Kannada with ಇಲ್ಲ (illa), Malayalam with ഇല്ല (illa) — one shared root, il-. Telugu's lē- looks different, but DEDR 2559 files it with il-.
 
 Guided Practice.
 [pause 1 second]
@@ -53,7 +53,7 @@ You have the three pieces — stem, tense, person. Change only the middle one. T
 You'll want to know: వెళ్ళు.
 వెళ్ళు — veḷḷu — to go.
 Chapter 4 gave it to you as a bare command, veḷḷu!, "go!" Threaded up it is వెళ్తాను (veḷtānu), and its past is వెళ్ళాను (veḷḷānu), "I went."
-Telugu keeps a second go-verb beside it. The family's inherited word for going is pō-, and Telugu has it as పోవు (pōvu), పోతాను (pōtānu) — the same verb as Tamil போ (pō), Malayalam പോകുക (pōkuka) and Kannada ಹೋಗು (hōgu). So Telugu did not lose the family's word; it gave the everyday job to veḷḷu, a verb of its own whose deeper history is best left open.
+Telugu keeps a second go-verb beside it. The family's inherited word for going is pō-, and Telugu has it as పోవు (pōvu), పోతాను (pōtānu) — the same verb as Tamil போ (pō), Malayalam പോകുക (pōkuka) and Kannada ಹೋಗು (hōgu). So Telugu did not lose the family's word; it gave the everyday job to veḷḷu, which is Dravidian too: DEDR 5393 files it with Tamil viṭu, "to leave".
 
 Sounds you'll need: the doubled ళ్ళ.
 వె is va with the short-e sign. ళ్ళు is the retroflex ళ (ḷ) doubled and held — veḷ-ḷu, a real catch in the middle. The same doubling is in nīḷḷu, Chapter 15's water.
@@ -92,7 +92,7 @@ Veḷḷu threads its pieces on without a fuss: the word you call it by is the w
 You'll want to know: రా.
 రా — rā — come!
 One syllable: ర (ra) with the long-ā sign. It is a whole command on its own, the plainest thing one Telugu speaker can say to another.
-Every sister has this verb, and every sister's command-shape drifted somewhere different: Tamil வா (vā), Kannada ಬಾ (bā), Malayalam വരുക (varuka), Telugu రా (rā). A v, a b, an r — one old Dravidian come-word, worn three ways, not three separate verbs.
+Every sister has this verb, and every sister's command-shape drifted somewhere different: Tamil வா (vā), Kannada ಬಾ (bā), Malayalam വരുക (varuka), Telugu రా (rā). A v, a b, an r — one old Dravidian come-word, worn three ways, not three separate verbs. DEDR 5270 files Telugu vaccu and rā- with Tamil varu: the verb is Dravidian.
 
 Grammar Lens: the word you call it by is not the word you build on.
 Try to thread endings onto rā- and you get nothing anyone says. They attach to వచ్చు (vaccu) instead, which appears as vast- once the tense piece arrives:
@@ -161,7 +161,7 @@ Four bare commands so far — uṇḍu, veḷḷu, rā, tinu — and every one i
 You'll want to know: చూడు.
 చూడు — cūḍu — to see, to look.
 Threaded up: చూస్తాను (cūstānu), "I see, I will see," and చూశాను (cūśānu), "I saw."
-Here the sisters scatter completely. Tamil says பார் (pār), Kannada ನೋಡು (nōḍu), Malayalam കാണുക (kāṇuka), Telugu చూడు (cūḍu). Four languages, four unrelated everyday verbs.
+Here the sisters scatter completely. Tamil says பார் (pār), Kannada ನೋಡು (nōḍu), Malayalam കാണുക (kāṇuka), Telugu చూడు (cūḍu). Four languages, four different everyday verbs. Telugu's is Dravidian: DEDR 2735 lists it as cūcu, "to see".
 And yet the family's oldest seeing-root is right there in all four, sitting in a noun you can point at, "eye" — Tamil கண் (kaṇ), Kannada ಕಣ್ಣು (kaṇṇu), Malayalam കണ്ണ് (kaṇṇ), and Telugu's own eye-word, which comes later in this book. Telugu still builds on it: కనిపించు (kanipin̄cu), "to appear, to be visible." Four everyday verbs, one shared eye.
 
 Sounds you'll need: the long ూ.
@@ -201,7 +201,7 @@ Five verbs, and every one ended on -ānu, the piece that means "I." The last ver
 You'll want to know: తెలుసు.
 తెలుసు — telusu — it is known.
 Not "to know" in the English sense. It comes from తెలియు (teliyu), "to become clear, to be apparent" — a thing telusu-es to you the way a shape resolves out of fog. Its negative is తెలియదు (teliyadu), "it is not known."
-Tamil has the exact cousin, தெரி (teri). The other two sisters picked different words — Kannada ಗೊತ್ತು, gottu, Malayalam അറിയാം, aṟiyām — but all four build the sentence the same way, which is the point of this lesson.
+The verb is Dravidian: DEDR 3433 files teliyu with Tamil teḷi, "to become clear". Tamil's everyday match is தெரி (teri); Kannada and Malayalam use gottu and aṟiyām. All four build the sentence the same way.
 
 Grammar Lens: no person on the verb, so the person moves.
 నాకు తెలుసు. — nāku telusu — "I know."

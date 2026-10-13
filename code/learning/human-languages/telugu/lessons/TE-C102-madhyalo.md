@@ -14,7 +14,8 @@ romanization: "madhyalō"
 concept_tag: TE-LOC102-MADHYALO
 prerequisites: [TE-C101-bayata, TE-C101-venaka]
 sounds: []
-roots: []
+roots: [sanskrit-madhya-middle, dravidian-ul-inside]
+etymology_hook: "madhyalō: Sanskrit madhya 'middle' (CDIAL 9804) + native -lō 'in' (DEDR 698)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C101-venaka]
 <!-- hl-knowledge: introduces=[TE-LEX-C102-LOC102-01]; assesses=[] -->
 
 **మధ్యలో** — *madhyalō* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మధ్యలో** (*madhyalō*) is Sanskrit *madhya*, "middle" (CDIAL 9804), with the native ending *-lō*, "in" (DEDR 698).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

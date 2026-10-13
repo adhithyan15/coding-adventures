@@ -14,7 +14,8 @@ romanization: "citraṁ"
 concept_tag: TE-VASTUVU230-CITRAM
 prerequisites: [TE-C229-pogamancu, TE-C230-kavita]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "citraṁ ← Sanskrit citra 'conspicuous, bright; variegated', a tatsama (CDIAL 4803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C230-kavita]
 <!-- hl-knowledge: introduces=[TE-LEX-C230-VASTUVU230-02]; assesses=[] -->
 
 **చిత్రం** — *citraṁ* — "a painting, a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిత్రం** (*citraṁ*) is Sanskrit *citra*, "conspicuous, bright; variegated", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4803). Telugu uses it for "a painting, a picture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

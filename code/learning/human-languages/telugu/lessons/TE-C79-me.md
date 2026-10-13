@@ -11,7 +11,8 @@ romanization: "nannu"
 concept_tag: TE-CASE-ACCUSATIVE
 prerequisites: [TE-C79-he, TE-C32-vellu]
 sounds: []
-roots: []
+roots: [naan-dravidian]
+etymology_hook: "nannu: native Dravidian, built on nan-, the oblique stem of nēnu 'I' (DEDR 5160)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C79-he]
 నేను is the *I* that does. నన్ను is the *me* that is done to: **అతను నన్ను అడిగాడు** — "he asked me".
 
 The ending is **-ను**, and its partner **-ని** does the same on other nouns: స్నేహితుడిని అడిగాను, "I asked the friend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నన్ను** (*nannu*) is native Dravidian, built on *nan-*, the oblique stem of *nēnu*, "I" (DEDR 5160), with the object ending *-nu*.
 
 ## Grammar Lens: people get marked, things usually do not
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C79-WHO-04]; assesses=[] -->

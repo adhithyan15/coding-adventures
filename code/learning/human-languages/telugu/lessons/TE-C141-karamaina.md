@@ -14,7 +14,8 @@ romanization: "kāramaina"
 concept_tag: TE-QUAL141-KARAMAINA
 prerequisites: [TE-C141-tiyani, TE-C141-cedaina]
 sounds: []
-roots: []
+roots: [dravidian-kaar-pungent, tamil-aaku-become]
+etymology_hook: "kāramaina: native kāraṁ 'pungency' (DEDR 1466) + ayina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C141-cedaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C141-QUAL141-03]; assesses=[] -->
 
 **కారమైన** — *kāramaina* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కారమైన** (*kāramaina*) is native Dravidian: *kāraṁ*, "pungency" (DEDR 1466), which DEDR thinks was probably influenced by Sanskrit *kṣāra*, and *ayina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

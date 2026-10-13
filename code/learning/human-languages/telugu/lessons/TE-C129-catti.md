@@ -14,7 +14,8 @@ romanization: "caṭṭi"
 concept_tag: TE-THINGS129-CATTI
 prerequisites: [TE-C128-raktam, TE-C129-kitikitera]
 sounds: []
-roots: []
+roots: [dravidian-catti-pot]
+etymology_hook: "caṭṭi: Dravidian, one word with Tamil caṭṭi 'earthen pot' (DEDR 2306); some northern forms are borrowed back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C129-kitikitera]
 <!-- hl-knowledge: introduces=[TE-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **చట్టి** — *caṭṭi* — "a clay pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చట్టి** (*caṭṭi*) is a Dravidian word, one with Tamil *caṭṭi* and Kannada *caṭṭi*, "earthen pot" (DEDR 2306). DEDR points to the northern pot words in CDIAL 4736 and notes that some forms are borrowed back from them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

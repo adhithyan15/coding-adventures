@@ -14,7 +14,8 @@ romanization: "parigettu"
 concept_tag: TE-VERB-PARIGETTU
 prerequisites: [TE-C143-errati, TE-C143-egiru]
 sounds: []
-roots: []
+roots: [dravidian-pari-run]
+etymology_hook: "parigettu: native, built on pari- 'to run', the root of parugu 'running' (DEDR 3963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C143-egiru]
 <!-- hl-knowledge: introduces=[TE-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **పరిగెత్తు** — *parigettu* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిగెత్తు** (*parigettu*) is native Dravidian, built on *pari-*, "to run", the root of *parugu*, "running", which DEDR 3963 lists with Tamil *pari*, "to run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

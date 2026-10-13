@@ -14,7 +14,8 @@ romanization: "vēpa"
 concept_tag: TE-VASTUVU266-VEPA
 prerequisites: [TE-C265-jantuvu, TE-C266-mallepuvvu]
 sounds: []
-roots: []
+roots: [dravidian-veempu-neem]
+etymology_hook: "vēpa: native Dravidian, one word with Tamil vēmpu and Kannada bēvu (DEDR 5531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C266-mallepuvvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C266-VASTUVU266-02]; assesses=[] -->
 
 **వేప** — *vēpa* — "neem, the neem tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేప** (*vēpa*) is native Dravidian, one word with Tamil *vēmpu* and Kannada *bēvu* (DEDR 5531). DEDR lists Telugu *vēpa*, "neem".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

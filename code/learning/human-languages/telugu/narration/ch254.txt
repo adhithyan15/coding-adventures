@@ -12,6 +12,9 @@ Before the new one: say the Telugu for in the past, then the Telugu for dawn.
 You'll want to know: రాష్ట్రం.
 రాష్ట్రం — rāṣṭraṁ — "a state".
 
+The word, taken apart.
+రాష్ట్రం (rāṣṭraṁ) is Sanskrit rāṣṭra, "kingdom, country", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 10721).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for dawn, then the Telugu for a state.
 
 You'll want to know: ప్రాంతం.
 ప్రాంతం — prāntaṁ — "an area, a region".
+
+The word, taken apart.
+ప్రాంతం (prāntaṁ) is Sanskrit prānta, "tip, point; end, edge", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 8940). The sense "region" is the one Telugu gives it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a state, then the Telugu for an area.
 You'll want to know: దిక్కు.
 దిక్కు — dikku — "a direction".
 
+The word, taken apart.
+దిక్కు (dikku) comes from Sanskrit diś, "direction, region" (CDIAL 6339), in its joining form dik, with the Telugu ending -ku.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for an area, then the Telugu for a direction.
 You'll want to know: తూర్పు.
 తూర్పు — tūrpu — "east".
 
+The word, taken apart.
+DEDR 3399 lists తూర్పు (tūrpu), "east", with a query, under tūṟu, "to enter", one word with Kannada tūṟu, "to enter".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a direction, then the Telugu for east.
 
 You'll want to know: పడమర.
 పడమర — paḍamara — "west".
+
+The word, taken apart.
+పడమర (paḍamara) is native Dravidian. DEDR 3852 lists paḍamara, "the west", under paḍu, "to fall, lie", which Kannada uses for the setting sun.
 
 What you've built.
 One more word for this chapter.

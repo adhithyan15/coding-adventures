@@ -14,7 +14,8 @@ romanization: "pradhāna"
 concept_tag: TE-GUNAM180-PRADHANA
 prerequisites: [TE-C179-kharidaina, TE-C179-cauka]
 sounds: []
-roots: []
+roots: [sanskrit-pradhana]
+etymology_hook: "pradhāna ← Sanskrit pradhāna 'chief thing', a tatsama (CDIAL 8671)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C179-cauka]
 <!-- hl-knowledge: introduces=[TE-LEX-C180-GUNAM180-01]; assesses=[] -->
 
 **ప్రధాన** — *pradhāna* — "main, chief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రధాన** (*pradhāna*) is Sanskrit *pradhāna*, "chief thing", taken over whole as a learned loan, a tatsama (CDIAL 8671).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

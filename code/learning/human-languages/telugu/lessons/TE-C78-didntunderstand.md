@@ -11,7 +11,8 @@ romanization: "arthaṁ kālēdu"
 concept_tag: TE-REPAIR-NOTUNDERSTOOD
 prerequisites: [TE-C78-dontknow, TE-C38-hrudayam]
 sounds: []
-roots: []
+roots: [sanskrit-artha-meaning, il]
+etymology_hook: "arthaṁ kālēdu: Sanskrit artha 'meaning' (CDIAL 638) + native kā- 'become' (DEDR 333) and lē- 'not' (DEDR 2559)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C78-dontknow]
 You already have **నాకు అర్థమైంది**, "I understood" — literally "to me it became meaning". This is the same sentence with the becoming denied: కా- "become" plus లేదు.
 
 Say it, and the person you are talking to will slow down. That is the whole point of a repair phrase.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అర్థం కాలేదు** (*arthaṁ kālēdu*) is Sanskrit *artha*, "aim, meaning" (CDIAL 638), with *kālēdu*, "did not become", built from two native Dravidian stems: *kā-*, "to become" (DEDR 333), and *lē-*, "be not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

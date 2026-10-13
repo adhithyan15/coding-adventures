@@ -14,7 +14,8 @@ romanization: "kaṇḍuvā"
 concept_tag: TE-VASTUVU233-KANDUVA
 prerequisites: [TE-C232-pipa, TE-C232-maggu]
 sounds: []
-roots: []
+roots: [dravidian-kantai-cloth]
+etymology_hook: "kaṇḍuvā: DEDR 1180, with Tamil kaṇṭai, noting the view that it was taken from Indo-Aryan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C232-maggu]
 <!-- hl-knowledge: introduces=[TE-LEX-C233-VASTUVU233-01]; assesses=[] -->
 
 **కండువా** — *kaṇḍuvā* — "a shoulder cloth, a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 1180 lists **కండువా** (*kaṇḍuvā*), "upper garment", with Tamil *kaṇṭai*, "a small cloth", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801 has Oriya *khaṇḍuā*, "shawl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

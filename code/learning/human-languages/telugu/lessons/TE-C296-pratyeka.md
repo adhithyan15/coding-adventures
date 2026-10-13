@@ -14,7 +14,8 @@ romanization: "pratyēka"
 concept_tag: TE-GUNAM296-PRATYEKA
 prerequisites: [TE-C295-elagaina, TE-C296-kathinamaina]
 sounds: []
-roots: []
+roots: [sanskrit-pratyeka]
+etymology_hook: "pratyēka ← Sanskrit pratyēka 'each one, separate', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C296-kathinamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C296-GUNAM296-02]; assesses=[] -->
 
 **ప్రత్యేక** — *pratyēka* — "special, separate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రత్యేక** (*pratyēka*) is Sanskrit *pratyēka*, "each one, single", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

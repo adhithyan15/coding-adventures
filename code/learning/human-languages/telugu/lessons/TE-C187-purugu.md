@@ -14,7 +14,8 @@ romanization: "purugu"
 concept_tag: TE-VASTUVU187-PURUGU
 prerequisites: [TE-C187-tenetiga, TE-C187-balli]
 sounds: []
-roots: []
+roots: [dravidian-puzhu-worm]
+etymology_hook: "purugu: native Dravidian; DEDR 4312 lists purugu 'worm, insect' with Tamil puḻu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C187-balli]
 <!-- hl-knowledge: introduces=[TE-LEX-C187-VASTUVU187-03]; assesses=[] -->
 
 **పురుగు** — *purugu* — "an insect, a worm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పురుగు** (*purugu*) is native Dravidian. DEDR 4312 lists *purugu*, "worm, any insect", with Tamil *puḻu*, "worm", and Kannada *puḻu*, "worm, insect". DEDR compares several Sanskrit words for "worm", among them *pīlu*, "worm" (CDIAL 8240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

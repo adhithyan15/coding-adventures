@@ -14,7 +14,8 @@ romanization: "sthānika"
 concept_tag: TE-GUNAM296-STHANIKA
 prerequisites: [TE-C296-anukulamaina, TE-C296-upayogakaramaina]
 sounds: []
-roots: []
+roots: [sanskrit-sthana]
+etymology_hook: "sthānika: Sanskrit sthānika 'local', from sthāna 'place' (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C296-upayogakaramaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C296-GUNAM296-05]; assesses=[] -->
 
 **స్థానిక** — *sthānika* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్థానిక** (*sthānika*) is Sanskrit *sthānika*, "belonging to a place", from *sthāna*, "place of abode" (CDIAL 13753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

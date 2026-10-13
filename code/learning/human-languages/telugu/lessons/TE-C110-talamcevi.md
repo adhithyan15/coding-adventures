@@ -14,7 +14,8 @@ romanization: "tāḷaṁcevi"
 concept_tag: TE-THINGS110-TALAMCEVI
 prerequisites: [TE-C109-tera, TE-C110-talam]
 sounds: []
-roots: []
+roots: [dravidian-tazh-bolt, dravidian-cevi-ear]
+etymology_hook: "tāḷaṁcevi: native tāḷaṁ 'lock' (DEDR 3179) + cevi 'ear' (DEDR 1977): the lock's ear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C110-talam]
 <!-- hl-knowledge: introduces=[TE-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **తాళంచెవి** — *tāḷaṁcevi* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తాళంచెవి** (*tāḷaṁcevi*) is native Dravidian: *tāḷaṁ*, "lock" (DEDR 3179), and *cevi*, "ear", one word with Tamil *cevi* (DEDR 1977): the lock's ear. DEDR compares Sanskrit *tāḍaka*, "latch", with the first word (CDIAL 5749).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "phāraṁ"
 concept_tag: TE-VASTUVU226-PHARAM
 prerequisites: [TE-C226-patram, TE-C226-phailu]
 sounds: []
-roots: []
+roots: [english-form]
+etymology_hook: "phāraṁ ← English form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C226-phailu]
 <!-- hl-knowledge: introduces=[TE-LEX-C226-VASTUVU226-04]; assesses=[] -->
 
 **ఫారం** — *phāraṁ* — "a form (to fill in)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫారం** (*phāraṁ*) is a loan from English *form*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

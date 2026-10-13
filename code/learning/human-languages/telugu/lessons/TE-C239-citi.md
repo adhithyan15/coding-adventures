@@ -14,7 +14,8 @@ romanization: "cīṭī"
 concept_tag: TE-PANI239-CITI
 prerequisites: [TE-C239-nivedika, TE-C239-samstha]
 sounds: []
-roots: []
+roots: [telugu-citi-chit]
+etymology_hook: "cīṭī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'chit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C239-samstha]
 <!-- hl-knowledge: introduces=[TE-LEX-C239-PANI239-03]; assesses=[] -->
 
 **చీటీ** — *cīṭī* — "a chit, a slip of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **చీటీ** (*cīṭī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "a slip of paper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

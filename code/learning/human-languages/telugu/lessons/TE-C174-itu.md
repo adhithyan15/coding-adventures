@@ -14,7 +14,8 @@ romanization: "iṭu"
 concept_tag: TE-STHALAM174-ITU
 prerequisites: [TE-C174-avatala, TE-C174-atu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "iṭu: native Dravidian, on the near-pointing base i- (DEDR 410), which lists iṭu 'thus; to this place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C174-atu]
 <!-- hl-knowledge: introduces=[TE-LEX-C174-STHALAM174-03]; assesses=[] -->
 
 **ఇటు** — *iṭu* — "this way, in this direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇటు** (*iṭu*) is native Dravidian, built on the near-pointing base *i-*, "this"; DEDR 410 lists *iṭu*, "thus; to this place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pañcukō"
 concept_tag: TE-VERB-PANCUKO
 prerequisites: [TE-C205-rikardu-ceyu, TE-C205-photo-tiyu]
 sounds: []
-roots: []
+roots: [dravidian-pancu-share]
+etymology_hook: "pañcukō: native pañcu 'to divide, share' (DEDR 3936) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C205-photo-tiyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C205-KRIYA205-03]; assesses=[] -->
 
 **పంచుకో** — *pañcukō* — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంచుకో** (*pañcukō*) is native Dravidian: *pañcu*, "to distribute, divide", one word with Kannada *pañcu*, "to share" (DEDR 3936), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

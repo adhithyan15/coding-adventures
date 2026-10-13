@@ -14,7 +14,8 @@ romanization: "miksī"
 concept_tag: TE-VASTUVU307-MIKSI
 prerequisites: [TE-C306-unni, TE-C307-phrijju]
 sounds: []
-roots: []
+roots: [english-mixie]
+etymology_hook: "miksī ← English mixie"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C307-phrijju]
 <!-- hl-knowledge: introduces=[TE-LEX-C307-VASTUVU307-02]; assesses=[] -->
 
 **మిక్సీ** — *miksī* — "a mixer-grinder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మిక్సీ** (*miksī*) is a loan from English *mixie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

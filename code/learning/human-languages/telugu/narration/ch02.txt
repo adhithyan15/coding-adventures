@@ -16,7 +16,7 @@ The letters in this word.
 (Skim if you read Telugu.) ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru.
 
 The word, taken apart.
-పేరు (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for "name."
+పేరు (pēru, "name") is native Dravidian (DEDR 4410), from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for "name."
 Across the family — the same idea, six ways:
 [a table of 6 rows, read aloud]
 Language: Telugu. "Name": పేరు pēru. Source: native Dravidian (pēr).
@@ -96,6 +96,7 @@ The letters in this word.
 
 The word, taken apart.
 నా (nā) means "my." It belongs to Telugu's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for "I" in its own lesson; today you only need nā.
+DEDR 5160 lists Telugu nēnu, "I", with its oblique stems nan- and nā-, beside Tamil nāṉ.
 
 Sounds you'll need.
 న (na) + ా (long ā) becomes నా (nā) (nā).
@@ -161,6 +162,7 @@ The phrase, taken apart.
 nā (my) + pēru (name) + your name.
 నా పేరు … (nā pēru …) = "my name …" becomes "my name is…"
 Nā pēru Arun. becomes "My name is Arun."
+Both words are native Dravidian: nā (DEDR 5160) and pēru (DEDR 4410).
 
 Grammar Lens: the zero copula.
 There is no verb. Telugu sets "my name" beside "Arun" and lets the "is" be understood — the zero copula of the Dravidian family. Nā pēru Arun = literally "my name Arun."
@@ -226,7 +228,7 @@ The letters in this word.
 రు (ru).
 
 The word, taken apart.
-నువ్వు (nuvvu, familiar "you") traces to Proto-Dravidian nīn — the same native root as Tamil nī and Kannada nīnu. మీరు (mīru) is the respectful/plural "you."
+నువ్వు (nuvvu, familiar "you") traces to Proto-Dravidian nīn — the same native root as Tamil nī and Kannada nīnu (DEDR 3684, which spells the Telugu nīvu). మీరు (mīru) is the respectful/plural "you" (DEDR 3688).
 
 Grammar Lens: respect by the plural.
 nuvvu (familiar) vs. mīru (respectful, and literally plural) — the same politeness-by-plural as Tamil nīṅgaḷ, Kannada nīvu, and French vous. For a first meeting, mīru.
@@ -296,6 +298,7 @@ The letters in this word.
 
 The word, taken apart.
 ఏమిటి (ēmiṭi, "what") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Kannada ēnu, heading Telugu's question family: ēmiṭi (what), evaru (who), ekkaḍa (where), enduku (why).
+DEDR 5151 lists Telugu ēmi, "what", beside Tamil eṉṉa and Kannada ēn.
 
 Sounds you'll need.
 ఏ (ē) (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi.
@@ -429,7 +432,7 @@ Assemble the question — your + name + what — still no "is."
 The phrase, taken apart.
 మీ (mī, "your") = the possessive of mīru ("you," respectful).
 మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) = literally "your name what?" = "what's your name?"
-Three words, no verb — the zero copula holds for questions too.
+Three Dravidian words (DEDR 3688, 4410, 5151), no verb — the zero copula holds for questions too.
 
 Grammar Lens: answer, and the familiar version.
 Answer with the sentence you built: Nā pēru Arun. The familiar "your" is nī (from nuvvu): nī pēru ēmiṭi?
@@ -494,6 +497,7 @@ The full form is మిమ్మల్ని కలిసినందుకు �
 
 The word, taken apart.
 సంతోషం (santōṣam, "joy, gladness") is Sanskrit — sam- ("fully") + toṣa ("satisfaction") — the same loan Kannada uses (santōṣa). Both reach for Sanskrit where Tamil keeps its native magiḻcci. Telugu — the most Sanskritised of the four Dravidian tongues — does so most readily of all.
+CDIAL 12895 lists Sanskrit santoṣa, "satisfaction".
 
 Guided Practice.
 [pause 1 second]

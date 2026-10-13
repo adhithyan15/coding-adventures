@@ -14,7 +14,8 @@ romanization: "kuṭṭu"
 concept_tag: TE-VERB-KUTTU
 prerequisites: [TE-C147-tuducu, TE-C147-kattu]
 sounds: []
-roots: []
+roots: [dravidian-kuttu-prick]
+etymology_hook: "kuṭṭu: native Dravidian, one word with Kannada kuṭṭu (DEDR 1672)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C147-kattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C147-ACT147-03]; assesses=[] -->
 
 **కుట్టు** — *kuṭṭu* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుట్టు** (*kuṭṭu*) is native Dravidian, one word with Kannada *kuṭṭu* (DEDR 1672). DEDR lists Telugu *kuṭṭu*, "to prick, stitch, sew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

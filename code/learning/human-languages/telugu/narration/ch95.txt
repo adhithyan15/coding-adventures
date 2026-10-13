@@ -13,6 +13,9 @@ You'll want to know: తెలుగులో.
 తెలుగులో (telugulō) — "in Telugu".
 It is తెలుగు with -లో, "in", the ending you met on ఉండు. Any language takes it: ఇంగ్లీషులో, "in English".
 
+The word, taken apart.
+తెలుగులో (telugulō) is native Dravidian: telugu, the language's name, which DEDR 3426 lists as teluṅgu, and -lō, "in", which DEDR 698 lists as lō, "inside".
+
 What you've built.
 A way to name the language you want an answer in.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for an introduction, then the Telugu for in T
 You'll want to know: ఎలా అంటారు?
 ఎలా అంటారు? (elā aṇṭāru?) — "how does one say it?".
 దీన్ని తెలుగులో (telugulō) ఎలా అంటారు? (elā aṇṭāru?) — "how do you say this in Telugu?". అను, "to say", is the verb inside అని and అనుకో.
+
+The word, taken apart.
+Both words are native Dravidian: elā, "how" (DEDR 5151), and anu, "to say" (DEDR 868).
 
 What you've built.
 The one question that lets a learner learn from anyone.
@@ -73,6 +79,9 @@ You'll want to know: మెల్లగా.
 మెల్లగా (mellagā) — "gently, softly", and "slowly".
 It overlaps with నెమ్మదిగా. మెల్లగా (mellagā) leans to softness: a quiet voice, a careful hand.
 
+The word, taken apart.
+మెల్లగా (mellagā) is native Dravidian, one word with Tamil mella and Kannada mel (DEDR 5078). DEDR lists Telugu mella, "slowly", itself.
+
 What you've built.
 A second slowly, with softness in it.
 
@@ -103,6 +112,9 @@ You'll want to know: చూపించండి.
 చూపించండి (cūpiñcaṇḍi) — "please show me".
 It is built on చూడు, "see": to show is to make someone see. When a word will not come, point and say చూపించండి (cūpiñcaṇḍi).
 
+The word, taken apart.
+చూపించండి (cūpiñcaṇḍi) is native Dravidian: cūpincu, "to show", which DEDR 2735 lists under cūcu, "to see", followed by the polite ending -aṇḍi.
+
 What you've built.
 A request for when words run out.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for gently, then the Telugu for please show m
 You'll want to know: వినిపించలేదు.
 వినిపించలేదు (vinipiñcalēdu) — "I could not hear it", literally "it did not make itself heard".
 It ends in the లేదు you know. Pair it with a fix: వినిపించలేదు (vinipiñcalēdu), గట్టిగా చెప్పండి.
+
+The word, taken apart.
+వినిపించలేదు (vinipiñcalēdu) is native Dravidian: vinipincu, "to cause to hear", which DEDR 5516 lists under vinu, "to hear", and the negative lē- (DEDR 2559).
 
 What you've built.
 In Telugu, how do you say, gently, show me, I could not hear: a learner's toolkit.

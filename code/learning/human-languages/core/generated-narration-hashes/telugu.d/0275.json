@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 275,
-  "sourceHash": "fnv1a64:7f08113f73785bff",
+  "sourceHash": "fnv1a64:a381e4d672be04da",
   "lessonIds": [
     "TE-C275-pujari",
     "TE-C275-kalakarudu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch275.txt",
   "json": "telugu/narration/ch275.json",
-  "textHash": "fnv1a64:88838d86583e74e3",
-  "jsonHash": "fnv1a64:5bcedc4aaf37940f",
+  "textHash": "fnv1a64:39c7584febb7b0d2",
+  "jsonHash": "fnv1a64:350d20fe1c6c99fb",
   "findings": []
 }

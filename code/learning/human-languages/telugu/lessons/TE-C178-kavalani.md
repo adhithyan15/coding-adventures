@@ -14,7 +14,8 @@ romanization: "kāvālani"
 concept_tag: TE-KARANAM178-KAVALANI
 prerequisites: [TE-C177-asalu, TE-C177-edemaina]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "kāvālani: native kāvāli 'is wanted', from kā- 'become' (DEDR 333), + ani 'saying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C177-edemaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C178-KARANAM178-01]; assesses=[] -->
 
 **కావాలని** — *kāvālani* — "on purpose, deliberately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కావాలని** (*kāvālani*) is native Dravidian: *kāvāli*, "is wanted", from *kā-*, "to become" (DEDR 333), with *ani*, "saying": "saying it is wanted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

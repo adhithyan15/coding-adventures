@@ -14,7 +14,8 @@ romanization: "sāku"
 concept_tag: TE-KARANAM178-SAKU
 prerequisites: [TE-C178-poni, TE-C178-saratu]
 sounds: []
-roots: []
+roots: [dravidian-caakku-excuse]
+etymology_hook: "sāku: native Dravidian, one word with Tamil cākku and Kannada sāku (DEDR 2428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C178-saratu]
 <!-- hl-knowledge: introduces=[TE-LEX-C178-KARANAM178-05]; assesses=[] -->
 
 **సాకు** — *sāku* — "an excuse, a pretext".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాకు** (*sāku*) is native Dravidian, one word with Tamil *cākku* and Kannada *sāku* (DEDR 2428). DEDR lists Telugu *sāku*, "pretext, excuse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ittaḍi"
 concept_tag: TE-VASTUVU269-ITTADI
 prerequisites: [TE-C269-jalleda, TE-C269-cekka]
 sounds: []
-roots: []
+roots: [telugu-ittadi-brass]
+etymology_hook: "ittaḍi: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'brass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-cekka]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-05]; assesses=[] -->
 
 **ఇత్తడి** — *ittaḍi* — "brass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ఇత్తడి** (*ittaḍi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "brass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

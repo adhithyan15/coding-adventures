@@ -14,7 +14,8 @@ romanization: "nijāyitī"
 concept_tag: TE-GUNAM297-NIJAYITI
 prerequisites: [TE-C297-curukaina, TE-C297-allari]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijāyitī: built on Sanskrit nija 'one's own, innate' (CDIAL 7181)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C297-allari]
 <!-- hl-knowledge: introduces=[TE-LEX-C297-GUNAM297-05]; assesses=[] -->
 
 **నిజాయితీ** — *nijāyitī* — "honesty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిజాయితీ** (*nijāyitī*) is built on Sanskrit *nija*, "constant; innate, one's own" (CDIAL 7181), with an ending that DEDR and CDIAL do not explain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

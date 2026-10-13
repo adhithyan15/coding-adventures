@@ -14,7 +14,8 @@ romanization: "boggu"
 concept_tag: TE-VASTUVU233-BOGGU
 prerequisites: [TE-C233-tuppu, TE-C233-masi]
 sounds: []
-roots: []
+roots: [dravidian-boggu-charcoal]
+etymology_hook: "boggu: Dravidian as far as DEDR records it; DEDR 4467 lists boggu 'charcoal' from Telugu alone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C233-masi]
 <!-- hl-knowledge: introduces=[TE-LEX-C233-VASTUVU233-05]; assesses=[] -->
 
 **బొగ్గు** — *boggu* — "charcoal, coal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బొగ్గు** (*boggu*) is Dravidian as far as DEDR records it: DEDR 4467 lists *boggu*, "charcoal", from Telugu alone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

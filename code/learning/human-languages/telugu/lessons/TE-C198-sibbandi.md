@@ -14,7 +14,8 @@ romanization: "sibbandi"
 concept_tag: TE-PANI198-SIBBANDI
 prerequisites: [TE-C198-siphtu, TE-C198-yunipharam]
 sounds: []
-roots: []
+roots: [telugu-sibbandi-staff]
+etymology_hook: "sibbandi: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'staff'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C198-yunipharam]
 <!-- hl-knowledge: introduces=[TE-LEX-C198-PANI198-05]; assesses=[] -->
 
 **సిబ్బంది** — *sibbandi* — "staff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సిబ్బంది** (*sibbandi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "staff".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

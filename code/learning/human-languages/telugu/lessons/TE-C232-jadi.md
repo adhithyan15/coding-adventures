@@ -14,7 +14,8 @@ romanization: "jāḍī"
 concept_tag: TE-VASTUVU232-JADI
 prerequisites: [TE-C231-jiguru, TE-C231-kolabadda]
 sounds: []
-roots: []
+roots: [telugu-jadi-jar]
+etymology_hook: "jāḍī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'jar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C231-kolabadda]
 <!-- hl-knowledge: introduces=[TE-LEX-C232-VASTUVU232-01]; assesses=[] -->
 
 **జాడీ** — *jāḍī* — "a jar (for pickle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **జాడీ** (*jāḍī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "jar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

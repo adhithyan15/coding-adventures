@@ -14,7 +14,8 @@ romanization: "araceyyi"
 concept_tag: TE-AROGYAM250-ARACEYYI
 prerequisites: [TE-C249-cacu, TE-C249-percu]
 sounds: []
-roots: []
+roots: [dravidian-arankai-palm]
+etymology_hook: "araceyyi: native Dravidian; DEDR 310 lists aṟa-cēyi 'palm' with Tamil aṟaṅ-kai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C249-percu]
 <!-- hl-knowledge: introduces=[TE-LEX-C250-AROGYAM250-01]; assesses=[] -->
 
 **అరచెయ్యి** — *araceyyi* — "the palm of the hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అరచెయ్యి** (*araceyyi*) is native Dravidian. DEDR 310 lists *aṟa-cēyi*, "palm of the hand", with Tamil *aṟaṅkai*, "palm of the hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "duppaṭi"
 concept_tag: TE-WHY109-DUPPATI
 prerequisites: [TE-C109-mancam, TE-C109-dindu]
 sounds: []
-roots: []
+roots: [hindustani-dupatta]
+etymology_hook: "duppaṭi: probably a loan of the northern dupaṭṭā, which CDIAL 6413 traces to *dupaṭṭikā 'two cloths'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C109-dindu]
 <!-- hl-knowledge: introduces=[TE-LEX-C109-WHY109-04]; assesses=[] -->
 
 **దుప్పటి** — *duppaṭi* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దుప్పటి** (*duppaṭi*) is probably a loan of the northern word for a double cloth, Hindi *dupaṭṭā*, which CDIAL 6413 traces to a reconstructed \*dupaṭṭikā, "two cloths".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "guṇḍī"
 concept_tag: TE-VASTUVU300-GUNDI
 prerequisites: [TE-C300-golusu, TE-C300-cevipogulu]
 sounds: []
-roots: []
+roots: [telugu-gundi-button]
+etymology_hook: "guṇḍī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'button'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C300-cevipogulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C300-VASTUVU300-04]; assesses=[] -->
 
 **గుండీ** — *guṇḍī* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గుండీ** (*guṇḍī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "button".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

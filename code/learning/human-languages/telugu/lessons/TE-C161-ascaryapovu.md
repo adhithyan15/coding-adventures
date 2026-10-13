@@ -14,7 +14,8 @@ romanization: "āścaryapōvu"
 concept_tag: TE-VERB-ASCARYAPOVU
 prerequisites: [TE-C161-palakarincu, TE-C161-siggupadu]
 sounds: []
-roots: []
+roots: [sanskrit-ashcarya, proto-dravidian-poo-go]
+etymology_hook: "āścaryapōvu: Sanskrit āścarya 'wonderful' (CDIAL 1464) + native pōvu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-siggupadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-05]; assesses=[] -->
 
 **ఆశ్చర్యపోవు** — *āścaryapōvu* — "to be surprised, to be amazed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆశ్చర్యపోవు** (*āścaryapōvu*) is Sanskrit *āścarya*, "wonderful" (CDIAL 1464), with native *pōvu*, "to go" (DEDR 4572): "to go into wonder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

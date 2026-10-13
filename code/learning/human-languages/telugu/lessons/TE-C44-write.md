@@ -11,7 +11,8 @@ romanization: "rāyi"
 concept_tag: TE-VERB-WRITE
 prerequisites: [TE-C44-speak]
 sounds: []
-roots: []
+roots: [dravidian-varai-write]
+etymology_hook: "rāyi: native Dravidian; DEDR 5263 lists vrāyu, rāyu 'to write' with Tamil vari and Kannada bare"
 duration:
   max_seconds: 210
 requires:
@@ -40,7 +41,12 @@ reviews_of: [TE-C44-speak]
 
 **రాయి** (*rāyi*) — "write".
 
-The everyday 'write'. Telugu and Kannada each kept their own Dravidian stem here rather than borrowing a shared one.
+The everyday 'write'. Telugu and Kannada both kept the inherited Dravidian stem here rather than borrowing one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రాయి** (*rāyi*) is native Dravidian. DEDR 5263 lists Telugu *vrāyu* and *rāyu*, "to write", with Tamil *vari* and Kannada *bare*, "to write". DEDR compares, with a query, Prakrit *rajju*, "a writer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "dīpaṁ"
 concept_tag: TE-NOUN-LAMP
 prerequisites: [TE-C46-cloth]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīpaṁ ← Sanskrit dīpa 'lamp' (CDIAL 6348), a tatsama with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C46-cloth]
 దీపం is the small clay lamp with oil and a wick. Its Sanskrit root *dīp* means "to blaze", so the word names the burning rather than the vessel.
 
 Put దీప together with a word meaning "a row" and you get *dīpāvaḷi*, "a row of lamps" — the festival English spells Diwali. The ending is the tatsama neuter **-ం**, the same shape already carried by హృదయం and భోజనం.
+
+CDIAL 6348 lists Sanskrit *dīpa*, "lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dunnu"
 concept_tag: TE-VERB-DUNNU
 prerequisites: [TE-C207-tattu, TE-C207-tempu]
 sounds: []
-roots: []
+roots: [dravidian-uzhu-plough]
+etymology_hook: "dunnu: native Dravidian, one word with Tamil uḻu and Kannada uḻ (DEDR 688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C207-tempu]
 <!-- hl-knowledge: introduces=[TE-LEX-C207-KRIYA207-04]; assesses=[] -->
 
 **దున్ను** — *dunnu* — "to till (a field)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దున్ను** (*dunnu*) is native Dravidian, one word with Tamil *uḻu* and Kannada *uḻ* (DEDR 688). DEDR lists Telugu *dunnu*, "to plough, till".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

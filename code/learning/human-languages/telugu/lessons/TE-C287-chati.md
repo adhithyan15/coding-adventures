@@ -14,7 +14,8 @@ romanization: "chātī"
 concept_tag: TE-AROGYAM287-CHATI
 prerequisites: [TE-C286-varcu, TE-C286-anuko]
 sounds: []
-roots: []
+roots: [telugu-chati-chest]
+etymology_hook: "chātī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'chest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C286-anuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C287-AROGYAM287-01]; assesses=[] -->
 
 **ఛాతీ** — *chātī* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ఛాతీ** (*chātī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "chest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

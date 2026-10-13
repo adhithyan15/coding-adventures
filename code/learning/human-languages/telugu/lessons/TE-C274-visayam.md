@@ -14,7 +14,8 @@ romanization: "viṣayaṁ"
 concept_tag: TE-PANI274-VISAYAM
 prerequisites: [TE-C274-patham, TE-C274-javabu]
 sounds: []
-roots: []
+roots: [sanskrit-vishaya]
+etymology_hook: "viṣayaṁ ← Sanskrit viṣaya 'scope; sphere, region', a tatsama (CDIAL 11973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C274-javabu]
 <!-- hl-knowledge: introduces=[TE-LEX-C274-PANI274-04]; assesses=[] -->
 
 **విషయం** — *viṣayaṁ* — "a subject, a matter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విషయం** (*viṣayaṁ*) is Sanskrit *viṣaya*, "scope; sphere, region", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11973). The sense "subject, matter" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

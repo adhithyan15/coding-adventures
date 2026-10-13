@@ -11,7 +11,8 @@ romanization: "koñcem"
 concept_tag: TE-WORD-A-LITTLE
 prerequisites: [TE-C57-bone]
 sounds: []
-roots: []
+roots: [dravidian-koncam-little]
+etymology_hook: "koñcem: native Dravidian, one word with Tamil koñcam and Kannada koñca (DEDR 2041)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C57-bone]
 Ask for something plainly and you are demanding; put కొంచెం in front and you are asking. కొంచెం నీళ్ళు is a request for water that leaves the other person room. The word is a quantity in the dictionary and a manner in the mouth.
 
 Telugu shares this habit with a good many languages. English does it with "just" and "a bit", and both of those have stopped measuring anything too.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొంచెం** (*koñcem*) is native Dravidian, one word with Tamil *koñcam* and Kannada *koñca* (DEDR 2041). DEDR lists Telugu *koncemu*, "a little, a few".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

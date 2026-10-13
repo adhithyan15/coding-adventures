@@ -14,7 +14,8 @@ romanization: "cimmu"
 concept_tag: TE-VERB-CIMMU
 prerequisites: [TE-C284-tavvu, TE-C284-jarugu]
 sounds: []
-roots: []
+roots: [dravidian-cimmu-flick]
+etymology_hook: "cimmu: native Dravidian; DEDR 2548 lists cimmu 'to throw, fling' with Kannada cimmu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C284-jarugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C284-KRIYA284-04]; assesses=[] -->
 
 **చిమ్ము** — *cimmu* — "to sweep (the floor)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిమ్ము** (*cimmu*) is native Dravidian. DEDR 2548 lists *cimmu*, "to throw, fling, toss", with Kannada *cimmu*, "to push away, fling". DEDR compares Prakrit *simpaï*, "sprinkles".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

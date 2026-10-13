@@ -14,7 +14,8 @@ romanization: "baṅgāru"
 concept_tag: TE-QUAL140-BANGARU
 prerequisites: [TE-C140-abaddham, TE-C140-budida]
 sounds: []
-roots: []
+roots: [telugu-bangaru-gold]
+etymology_hook: "baṅgāru: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C140-budida]
 <!-- hl-knowledge: introduces=[TE-LEX-C140-QUAL140-04]; assesses=[] -->
 
 **బంగారు** — *baṅgāru* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బంగారు** (*baṅgāru*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

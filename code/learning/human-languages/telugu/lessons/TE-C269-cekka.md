@@ -14,7 +14,8 @@ romanization: "cekka"
 concept_tag: TE-VASTUVU269-CEKKA
 prerequisites: [TE-C269-kancam, TE-C269-jalleda]
 sounds: []
-roots: []
+roots: [dravidian-cakkai-chip]
+etymology_hook: "cekka: native Dravidian; DEDR 2748 lists cekka 'piece, chip' with Kannada cekke"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-jalleda]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-04]; assesses=[] -->
 
 **చెక్క** — *cekka* — "wood, a plank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెక్క** (*cekka*) is native Dravidian. DEDR 2748 lists *cekka*, "piece, chip", with Kannada *cekke* and Tamil *cakkai*, "chips". DEDR compares, with a query, Sanskrit *śakala*, "chip, fragment" (CDIAL 12243).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

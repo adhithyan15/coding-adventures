@@ -14,7 +14,8 @@ romanization: "darakhāstu"
 concept_tag: TE-PANI196-DARAKHASTU
 prerequisites: [TE-C196-gaduvu, TE-C196-badhyata]
 sounds: []
-roots: []
+roots: [persian-darkhwast]
+etymology_hook: "darakhāstu ← Persian darkhwāst 'request', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C196-badhyata]
 <!-- hl-knowledge: introduces=[TE-LEX-C196-PANI196-05]; assesses=[] -->
 
 **దరఖాస్తు** — *darakhāstu* — "an application".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దరఖాస్తు** (*darakhāstu*) is a loan from Persian *darkhwāst*, "request, application", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

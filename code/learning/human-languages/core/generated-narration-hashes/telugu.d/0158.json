@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 158,
-  "sourceHash": "fnv1a64:51876e03a8e31c32",
+  "sourceHash": "fnv1a64:7d162de915aa1ad9",
   "lessonIds": [
     "TE-C158-tondarapadu",
     "TE-C158-tomu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch158.txt",
   "json": "telugu/narration/ch158.json",
-  "textHash": "fnv1a64:7d42e4c47f49af2e",
-  "jsonHash": "fnv1a64:822b22515f8ad566",
+  "textHash": "fnv1a64:0e8ed16a263ce099",
+  "jsonHash": "fnv1a64:5f01d5f11b947745",
   "findings": []
 }

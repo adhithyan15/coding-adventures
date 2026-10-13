@@ -28,6 +28,7 @@ You'll want to know: ఆరవ.
 ఆరు becomes ఆరవ (ārava), and this is the shortest ordinal in the ten: three syllables, two of them the number itself.
 ఆరవ రోజు (ārava rōju) — the sixth day.
 The numbers six to ten were the ones the first numbers lesson called Telugu's wandering half, the place where it drifts furthest from Tamil and Kannada. The ordinal ending does not care. Whatever shape the cardinal arrived in, -వ goes on it.
+DEDR 2485 lists Telugu āṟu, "six", with Tamil āṟu.
 
 Guided Practice.
 [pause 1 second]
@@ -70,6 +71,9 @@ You'll want to know: ఏడవ.
 ఏడవ వారం (ēḍava vāraṁ) — the seventh week.
 Seven weeks is a useful thing to be able to say and a good place to hear that the ordinal is doing work no cardinal can do: ఏడు వారం would be seven weeks, a quantity. ఏడవ (ēḍava) వారం is the seventh one, a position.
 
+The word, taken apart.
+ఏడవ (ēḍava) is native Dravidian: ēḍu, "seven", one word with Tamil ēḻu (DEDR 910), with the ordinal ending -va.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ēḍava]
@@ -111,6 +115,9 @@ You'll want to know: ఎనిమిదవ.
 Which is the useful way to hold the rule: it is not "drop the u", it is drop whatever vowel is at the end. The ending does not know which vowel it replaced.
 Note the short ఎ at the front, against the long ఏ of the last lesson.
 
+The word, taken apart.
+ఎనిమిదవ (enimidava) is native Dravidian: enimidi, "eight", filed with Tamil eṭṭu (DEDR 784), with the ordinal ending -va.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: enimidava]
@@ -150,6 +157,9 @@ You'll want to know: తొమ్మిదవ.
 తొమ్మిదవ రోజు (tommidava rōju) — the ninth day.
 Second i-ending in a row, and the same trade. One more and the ten are closed.
 
+The word, taken apart.
+తొమ్మిదవ (tommidava) is native Dravidian: tommidi, "nine", filed with Tamil oṉpatu (DEDR 1025), with the ordinal ending -va.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: tommidava — hold the mm]
@@ -188,6 +198,9 @@ You'll want to know: పదవ.
 పది becomes పదవ (padava). Two syllables become three, and the trade is the same one you have now made nine times.
 పదవ సంవత్సరం (padava saṁvatsaraṁ) — the tenth year.
 That is the ten. Say them in order — modaṭi, reṇḍava, mūḍava, nālugava, aidava, ārava, ēḍava, enimidava, tommidava, padava — and count what you actually had to learn: one word and one ending. Latin needed ten separate words for the same stretch, and English still does.
+
+The word, taken apart.
+పదవ (padava) is native Dravidian: padi, "ten", one word with Tamil pattu (DEDR 3918), with the ordinal ending -va.
 
 Guided Practice.
 [pause 1 second]

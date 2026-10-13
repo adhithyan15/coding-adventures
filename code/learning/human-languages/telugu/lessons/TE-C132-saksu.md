@@ -14,7 +14,8 @@ romanization: "sāksu"
 concept_tag: TE-THINGS132-SAKSU
 prerequisites: [TE-C131-jebu, TE-C131-beltu]
 sounds: []
-roots: []
+roots: [english-socks]
+etymology_hook: "sāksu ← English socks"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C131-beltu]
 <!-- hl-knowledge: introduces=[TE-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **సాక్సు** — *sāksu* — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాక్సు** (*sāksu*) is a loan from English *socks*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
