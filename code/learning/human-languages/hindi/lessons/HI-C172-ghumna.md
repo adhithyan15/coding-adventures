@@ -14,7 +14,8 @@ romanization: "ghūmnā"
 concept_tag: HI-VERB-GHUMNA
 prerequisites: [HI-C172-carhna, HI-C172-utarna]
 sounds: []
-roots: []
+roots: [indo-aryan-ghummati]
+etymology_hook: "ghūmnā ← *ghummati 'revolves', a reconstructed form; a tadbhava (CDIAL 4485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C172-utarna]
 <!-- hl-knowledge: introduces=[HI-LEX-C172-ACT172-05]; assesses=[] -->
 
 **घूमना** — *ghūmnā* — "to stroll, to wander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घूमना** (*ghūmnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ghummati*, "revolves", a form CDIAL reconstructs from its descendants (CDIAL 4485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

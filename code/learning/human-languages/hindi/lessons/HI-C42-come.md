@@ -14,7 +14,8 @@ romanization: "ānā / ātā / ātī / āte"
 concept_tag: HI-VERB-COME
 prerequisites: [HI-C05-bolta-hun]
 sounds: []
-roots: []
+roots: [sanskrit-apayati]
+etymology_hook: "ānā ← Sanskrit āpayati 'causes to reach'; Prakrit āvaï 'comes' (CDIAL 1200)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: []
 **आना** (*ānā*) — "to come".
 
 Every Hindi infinitive ends in **-ना** (*-nā*), so this is 'to come' in the form a dictionary lists.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आना** (*ānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under *āpayati*, "causes to reach", from the verb whose old form *āpa* meant "came towards"; Prakrit already had *āvaï*, "comes" (CDIAL 1200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME] -->

@@ -14,7 +14,8 @@ romanization: "pul"
 concept_tag: HI-THINGS153-PUL
 prerequisites: [HI-C153-bagica, HI-C153-maidan]
 sounds: []
-roots: []
+roots: [persian-pul]
+etymology_hook: "pul: usually traced to Persian pul 'bridge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C153-maidan]
 <!-- hl-knowledge: introduces=[HI-LEX-C153-THINGS153-03]; assesses=[] -->
 
 **पुल** — *pul* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुल** (*pul*) is a loan, usually traced to Persian *pul*, "bridge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "golī"
 concept_tag: HI-THG256-GOLI
 prerequisites: [HI-C256-patti, HI-C256-tika]
 sounds: []
-roots: []
+roots: [sanskrit-golika]
+etymology_hook: "golī ← Sanskrit golikā 'little ball', a tadbhava (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C256-tika]
 <!-- hl-knowledge: introduces=[HI-LEX-C256-THG256-05]; assesses=[] -->
 
 **गोली** — *golī* — "a pill, a bullet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोली** (*golī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *golikā*, "little ball" (CDIAL 4321). It is built on *gola*, "ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cālāk"
 concept_tag: HI-QUAL243-CALAK
 prerequisites: [HI-C243-ghamandi, HI-C243-sidhasada]
 sounds: []
-roots: []
+roots: [persian-chalak]
+etymology_hook: "cālāk: usually traced to Persian chālāk 'quick, clever'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C243-sidhasada]
 <!-- hl-knowledge: introduces=[HI-LEX-C243-QUAL243-04]; assesses=[] -->
 
 **चालाक** — *cālāk* — "cunning, clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चालाक** (*cālāk*) is a loan, usually traced to Persian *chālāk*, "quick, clever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

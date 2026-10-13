@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 58,
-  "sourceHash": "fnv1a64:9666cfa39ee02888",
+  "sourceHash": "fnv1a64:8e4c8926076c5df7",
   "lessonIds": [
     "HI-C58-wall",
     "HI-C58-roof",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch58.txt",
   "json": "hindi/narration/ch58.json",
-  "textHash": "fnv1a64:e6bb27be2db90c84",
-  "jsonHash": "fnv1a64:5e631131bf3a4d25",
+  "textHash": "fnv1a64:12e281d325d06358",
+  "jsonHash": "fnv1a64:786e456891e8477e",
   "findings": []
 }

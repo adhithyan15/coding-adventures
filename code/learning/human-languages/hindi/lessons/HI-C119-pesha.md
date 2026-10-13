@@ -14,7 +14,8 @@ romanization: "peśā"
 concept_tag: HI-ABOUT-PROFESSION
 prerequisites: [HI-C118-rishtedar, HI-C119-naukri]
 sounds: []
-roots: []
+roots: [persian-pesha]
+etymology_hook: "peśā: usually traced to Persian pesha 'craft, profession'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C119-naukri]
 **पेशा** (*peśā*) — "a profession", a trade.
 
 **नौकरी** is the job you hold; **पेशा** is what you are by trade. **आपका पेशा क्या है?**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेशा** (*peśā*) is a loan, usually traced to Persian *pesha*, "craft, profession".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

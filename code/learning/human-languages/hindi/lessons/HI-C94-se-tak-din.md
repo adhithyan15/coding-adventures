@@ -14,9 +14,10 @@ romanization: "somvār se śukravār tak"
 concept_tag: HI-SPAN-DAYS
 prerequisites: [HI-C94-tak, HI-C10-somavaar-shukravaar]
 sounds: []
-roots: []
+roots: [sanskrit-sahita, sanskrit-tavatka]
+etymology_hook: "se: CDIAL gives Sanskrit sahita 'accompanied by' (13310) or sama (13173); tak ← tāvatka (CDIAL 5805)"
 duration:
-  max_seconds: 240
+  max_seconds: 255
 requires:
   knowledge: [HI-LEX-C94-SPAN-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-LEX-C90-ROUT-01]
 introduces:
@@ -45,6 +46,11 @@ word that marks a stopping point.
 **सोमवार से शुक्रवार तक** — from Monday to Friday.
 
 Two days, and **each one carries its own marker**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोमवार से शुक्रवार तक** (*somvār se śukravār tak*) frames a span with *se*, "from", and *tak*, "until". CDIAL traces *se* to Sanskrit *sahita*, "accompanied by" (CDIAL 13310), and also lists it, with a query, under *sama*, "together with" (CDIAL 13173). *tak* comes from *tāvatka*, "bought for so much" (CDIAL 5805).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C94-SPAN-02, HI-LEX-C94-SPAN-01] -->

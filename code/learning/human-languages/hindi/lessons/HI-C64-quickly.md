@@ -14,7 +14,8 @@ romanization: "jaldī"
 concept_tag: HI-ADV-QUICKLY
 prerequisites: [HI-C64-now, HI-C62-needle, HI-C63-thirst]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jaldī: Persian jald 'quick', of Arabic origin, + -ī"
 duration:
   max_seconds: 210
 requires:

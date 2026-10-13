@@ -14,7 +14,8 @@ romanization: "sūkhnā"
 concept_tag: HI-VERB-SUKHNA
 prerequisites: [HI-C225-nicorna, HI-C225-sukhana]
 sounds: []
-roots: []
+roots: [indo-aryan-shushkati]
+etymology_hook: "sūkhnā ← *śuṣkati 'becomes dry', a reconstructed form; a tadbhava (CDIAL 12552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C225-sukhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C226-ACT226-01]; assesses=[] -->
 
 **सूखना** — *sūkhnā* — "to dry (by itself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूखना** (*sūkhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śuṣkati*, "becomes dry", a form CDIAL reconstructs from its descendants (CDIAL 12552). It is built on Sanskrit *śuṣka*, "dried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

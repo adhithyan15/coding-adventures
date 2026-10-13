@@ -14,7 +14,8 @@ romanization: "ġussā"
 concept_tag: HI-THG186-GUSSA
 prerequisites: [HI-C185-tufan, HI-C185-patta]
 sounds: []
-roots: []
+roots: [arabic-ghussa]
+etymology_hook: "ġussā ← Arabic ghuṣṣa 'a choking; grief', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C185-patta]
 <!-- hl-knowledge: introduces=[HI-LEX-C186-THG186-01]; assesses=[] -->
 
 **ग़ुस्सा** — *ġussā* — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग़ुस्सा** (*ġussā*) is a loan from Arabic *ghuṣṣa*, "a choking; grief", which reached Hindi through Persian. Its Arabic root is *gh-ṣ-ṣ* (Lane). In Hindi it came to mean "anger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

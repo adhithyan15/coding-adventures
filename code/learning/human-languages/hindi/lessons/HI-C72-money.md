@@ -14,7 +14,8 @@ romanization: "paisā"
 concept_tag: HI-NOUN-MONEY
 prerequisites: [HI-C71-very, HI-C71-also, HI-C70-game]
 sounds: []
-roots: []
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṁśa 'quarter part', a reconstructed form; a tadbhava (CDIAL 7761)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ is no money", about a wallet or about a country.
 
 The ै on the प is the *ai* matra, two strokes above the headline, and it is the
 same one inside **कैसे**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैसा** (*paisā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padāṁśa*, "quarter part", a form CDIAL reconstructs from its descendants (CDIAL 7761). CDIAL glosses the Hindi word "quarter anna", a small coin; from there it came to mean money.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

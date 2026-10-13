@@ -14,7 +14,8 @@ romanization: "sirdard"
 concept_tag: HI-BODY-HEADACHE
 prerequisites: [HI-C124-nindaa, HI-C124-pasina]
 sounds: []
-roots: []
+roots: [sanskrit-shiras, persian-dard]
+etymology_hook: "sir ← Sanskrit śiras 'head' (CDIAL 12452); dard usually traced to Persian dard 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C124-pasina]
 
 It is **सिर**, "head", and **दर्द**, "pain", both yours already. **मुझे सिरदर्द है** — "I have a
 headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिरदर्द** (*sirdard*) joins two sources: *sir*, "head", from Sanskrit *śiras* (CDIAL 12452), and *dard*, "pain", usually traced to Persian *dard*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

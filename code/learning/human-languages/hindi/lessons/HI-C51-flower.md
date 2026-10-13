@@ -14,7 +14,8 @@ romanization: "phūl"
 concept_tag: HI-NOUN-FLOWER
 prerequisites: [HI-C50-salutation, HI-C49-now, HI-C50-gratitude]
 sounds: []
-roots: []
+roots: [sanskrit-phulla]
+etymology_hook: "phūl ← Sanskrit phulla 'blown (of flowers)', a tadbhava (CDIAL 9092)"
 duration:
   max_seconds: 210
 requires:

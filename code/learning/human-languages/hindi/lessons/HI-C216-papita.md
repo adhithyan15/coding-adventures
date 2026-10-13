@@ -15,6 +15,7 @@ concept_tag: HI-THG216-PAPITA
 prerequisites: [HI-C216-baigan, HI-C216-bhindi]
 sounds: []
 roots: []
+etymology_hook: "papītā: origin uncertain, usually linked with papaya, a Caribbean word spread by Iberian sailors; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C216-bhindi]
 <!-- hl-knowledge: introduces=[HI-LEX-C216-THG216-05]; assesses=[] -->
 
 **पपीता** — *papītā* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पपीता** (*papītā*) is uncertain. It is usually linked with *papaya*, a word from the Caribbean that Spanish and Portuguese sailors carried round the world, but CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

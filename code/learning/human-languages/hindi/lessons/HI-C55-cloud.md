@@ -14,7 +14,8 @@ romanization: "bādal"
 concept_tag: HI-NOUN-CLOUD
 prerequisites: [HI-C55-star, HI-C53-back, HI-C54-bird]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "bādal ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C55-star]
 बादल is usually traced to a Sanskrit adjective for 'cloudy' built on वारि (*vāri*), 'water', though the route is less tidy than the three words before it and the sources do not all agree on the steps.
 
 That is worth marking. Three clean etymologies in a row can make the fourth look clean too, and this one is not — it is probable rather than settled, and the difference matters.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बादल** (*bādal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

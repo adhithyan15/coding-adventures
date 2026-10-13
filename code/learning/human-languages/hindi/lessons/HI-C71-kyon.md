@@ -14,10 +14,10 @@ gloss: why — the k- word the deixis lesson listed and never taught
 concept_tag: HI-JOIN-KYON
 prerequisites: [HI-R70-can-want, HI-C40-deixis-system, HI-C02-kya]
 sounds: [conjunct-kya, matra-o, anusvara]
-roots: []
-etymology_hook: "क्यों is the same Sanskrit interrogative stem क- (ka-) that gave क्या, कब, कौन, कहाँ and कैसे, here on an old instrumental ending — Hindi's whole question system is one syllable with different tails, and that k- is Latin's qu- in quis and English's wh- in who by the regular sound change that turned every Indo-European kʷ- into English hw-"
+roots: [ka-interrogative, kim]
+etymology_hook: "kyoṁ: built on the Sanskrit question stem ka-, as kyā ← kim is (CDIAL 3164)"
 duration:
-  max_seconds: 230
+  max_seconds: 268
 requires:
   knowledge: [HI-CONCEPT-C02-KYA-01, HI-GRAMMAR-C40-DEIXIS-SYSTEM, HI-LEX-C40-DEIXIS-06, HI-LEX-SAKNA-01]
 introduces:
@@ -62,6 +62,8 @@ words. This is one of the ones it listed and did not teach. Its **क-** is the
 same ancient stem as **क्या** and *kaun*, and it is Latin's **qu-** in *quis*
 and English's **wh-** in *who* — one Indo-European **kʷ-**, three different
 spellings of the same sound.
+
+**क्यों** is built on Sanskrit *ka-*, the question stem behind **क्या** (CDIAL 3164).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KYON-01, HI-LEX-SAKNA-01] -->

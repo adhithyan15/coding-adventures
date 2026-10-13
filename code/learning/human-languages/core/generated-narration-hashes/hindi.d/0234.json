@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 234,
-  "sourceHash": "fnv1a64:c83e4ca6b7aae67e",
+  "sourceHash": "fnv1a64:a0fe1d0bdac5f133",
   "lessonIds": [
     "HI-C234-baya",
     "HI-C234-sidha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch234.txt",
   "json": "hindi/narration/ch234.json",
-  "textHash": "fnv1a64:6b98f86841c09566",
-  "jsonHash": "fnv1a64:0cc1a24767c16d78",
+  "textHash": "fnv1a64:68b5e721da43364f",
+  "jsonHash": "fnv1a64:116aecfd74b0b501",
   "findings": []
 }

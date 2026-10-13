@@ -14,7 +14,8 @@ romanization: "laṭaknā"
 concept_tag: HI-VERB-LATAKNA
 prerequisites: [HI-C229-chutna, HI-C230-jhukna]
 sounds: []
-roots: []
+roots: [indo-aryan-latta]
+etymology_hook: "laṭaknā: origin uncertain; CDIAL lists *laṭṭa 'hanging, tangled' (10918) but not laṭaknā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C230-jhukna]
 <!-- hl-knowledge: introduces=[HI-LEX-C230-ACT230-02]; assesses=[] -->
 
 **लटकना** — *laṭaknā* — "to hang".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लटकना** (*laṭaknā*) is uncertain. CDIAL lists a reconstructed *\*laṭṭa*, "hanging, tangled" (CDIAL 10918), but not *laṭaknā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

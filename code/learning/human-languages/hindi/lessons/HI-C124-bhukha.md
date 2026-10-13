@@ -14,7 +14,8 @@ romanization: "bhūkhā"
 concept_tag: HI-BODY-HUNGRY
 prerequisites: [HI-C123-kyachal, HI-C123-khanakhaya]
 sounds: []
-roots: []
+roots: [indo-aryan-bubhukshaka]
+etymology_hook: "bhūkhā ← *bubhukṣaka 'hungry', a reconstructed form; a tadbhava (CDIAL 9284)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C123-khanakhaya]
 **भूखा** (*bhūkhā*) — "hungry". A woman says **भूखी**.
 
 It is **भूख**, "hunger", made into a description. **मैं भूखा हूँ** — "I am hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूखा** (*bhūkhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bubhukṣaka*, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on the Sanskrit "wish to eat", *bubhukṣā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

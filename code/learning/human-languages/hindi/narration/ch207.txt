@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a lie, then the Hindi for a promise.
 You'll want to know: शर्त.
 शर्त — śart — "a condition, a bet".
 
+The word, taken apart.
+शर्त (śart) is a loan from Arabic sharṭ, "a condition", which reached Hindi through Persian. Its Arabic root is sh-r-ṭ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a promise, then the Hindi for a condition.
 
 You'll want to know: क़र्ज़.
 क़र्ज़ — qarz — "a debt, a loan".
+
+The word, taken apart.
+क़र्ज़ (qarz) is a loan from Arabic qarḍ, "a loan", which reached Hindi through Persian. Its Arabic root is q-r-ḍ (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a condition, then the Hindi for a debt.
 You'll want to know: कमाई.
 कमाई — kamāī — "earnings".
 
+The word, taken apart.
+कमाई (kamāī) is the noun of kamānā, "to earn", which CDIAL lists under a reconstructed karmāpayati, "works, earns", built on Sanskrit karman, "work" (CDIAL 2897).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a debt, then the Hindi for earnings.
 You'll want to know: बचत.
 बचत — bacat — "savings".
 
+The word, taken apart.
+बचत (bacat) is the noun of bacnā, "to be saved": what you save. CDIAL lists bacnā under Sanskrit vañcati, "moves", whose forms meant "escapes from" (CDIAL 11208).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for earnings, then the Hindi for savings.
 
 You'll want to know: ख़र्च.
 ख़र्च — kharc — "expense, spending".
+
+The word, taken apart.
+ख़र्च (kharc) is a loan from Arabic kharj, "expenditure; tribute", which reached Hindi through Persian. Its Arabic root is kh-r-j (Lane).
 
 What you've built.
 One more word for this chapter.

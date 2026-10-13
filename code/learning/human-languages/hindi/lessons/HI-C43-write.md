@@ -14,7 +14,8 @@ romanization: "likhnā"
 concept_tag: HI-VERB-WRITE
 prerequisites: [HI-C43-speak, HI-C41-old]
 sounds: []
-roots: []
+roots: [sanskrit-likhati]
+etymology_hook: "likhnā ← Sanskrit likhati 'scratches; writes', a tadbhava (CDIAL 11048)"
 duration:
   max_seconds: 210
 requires:

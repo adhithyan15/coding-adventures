@@ -14,7 +14,8 @@ romanization: "bhejnā"
 concept_tag: HI-VERB-BHEJNA
 prerequisites: [HI-C159-daurna, HI-C159-rakhna, HI-C35-lena, HI-C35-madad, HI-C35-puchna, HI-C42-give]
 sounds: []
-roots: []
+roots: [indo-aryan-bhejj]
+etymology_hook: "bhejnā ← *bhejj 'send', a reconstructed form; a tadbhava (CDIAL 9603)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C159-rakhna]
 <!-- hl-knowledge: introduces=[HI-LEX-C160-ACT160-01]; assesses=[] -->
 
 **भेजना** — *bhejnā* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेजना** (*bhejnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhejj*, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). CDIAL rejects a derivation from *visarjayati*, "sends off", and offers two possible sources, neither certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

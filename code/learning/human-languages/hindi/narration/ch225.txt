@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a team, then the Hindi for a race, running
 You'll want to know: साफ़ करना.
 साफ़ करना — sāf karnā — "to clean".
 
+The word, taken apart.
+साफ़ करना (sāf karnā) is sāf, "clean", from Arabic ṣāfī, "pure", through Persian (Lane, root ṣ-f-w), with the inherited karnā, "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a race, running, then the Hindi for to cle
 
 You'll want to know: झाड़ना.
 झाड़ना — jhāṛnā — "to dust, to sweep".
+
+The word, taken apart.
+झाड़ना (jhāṛnā) is inherited. CDIAL lists it under a reconstructed jhāṭayati, "shakes down", and asks whether the root is the same as in jharnā, "to flow" (CDIAL 5328).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to clean, then the Hindi for to dust.
 You'll want to know: पोंछना.
 पोंछना — põchnā — "to wipe".
 
+The word, taken apart.
+पोंछना (põchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from proñchati, "wipes off" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan poṁch-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to dust, then the Hindi for to wipe.
 You'll want to know: निचोड़ना.
 निचोड़ना — nicoṛnā — "to wring".
 
+The word, taken apart.
+निचोड़ना (nicoṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from niścoṭayati, "presses out", a form CDIAL reconstructs from its descendants (CDIAL 7449).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to wipe, then the Hindi for to wring.
 
 You'll want to know: सुखाना.
 सुखाना — sukhānā — "to dry (something)".
+
+The word, taken apart.
+सुखाना (sukhānā) is the causing form of sūkhnā, "to dry", which CDIAL lists under a reconstructed śuṣkati, "becomes dry", built on Sanskrit śuṣka, "dried" (CDIAL 12552).
 
 What you've built.
 One more word for this chapter.

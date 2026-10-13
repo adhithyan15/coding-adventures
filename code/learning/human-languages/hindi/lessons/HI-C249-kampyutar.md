@@ -14,7 +14,8 @@ romanization: "kampyūṭar"
 concept_tag: HI-THG249-KAMPYUTAR
 prerequisites: [HI-C249-sath, HI-C249-eksath]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "kampyūṭar ← English computer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C249-eksath]
 <!-- hl-knowledge: introduces=[HI-LEX-C249-THG249-03]; assesses=[] -->
 
 **कंप्यूटर** — *kampyūṭar* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंप्यूटर** (*kampyūṭar*) is a loan from English *computer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

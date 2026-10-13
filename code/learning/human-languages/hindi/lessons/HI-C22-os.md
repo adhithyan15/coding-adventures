@@ -14,7 +14,8 @@ gloss: "dew"
 concept_tag: HI-ANCHOR-OS
 prerequisites: [HI-S128-letter-uu]
 sounds: []
-roots: []
+roots: [sanskrit-avashya]
+etymology_hook: "os ← Sanskrit avaśyā 'hoar-frost, dew', a tadbhava (CDIAL 855)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *os*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ओ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओस** (*os*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *avaśyā*, "hoar-frost, dew" (CDIAL 855).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-OS] -->

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5fa40c8715193685",
+  "sourceHash": "fnv1a64:710edeb2833e0c9a",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4d00dd97f8ea3af",
+      "sourceHash": "fnv1a64:5a7123f516356e9e",
       "notice": null,
       "blocks": [
         {
@@ -90,6 +90,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एक दो तीन चार पाँच (ek do tīn chār pāṁch) are all tadbhavas, Sanskrit numbers reshaped by sound change. Ek comes from a doubled form of Sanskrit eka, \"one\" (CDIAL 2462); do from dva, \"two\" (CDIAL 6648); tīn from trīṇi, \"three\" (CDIAL 5994); chār from catvāraḥ, \"four\" (CDIAL 4655); and pāṁch from pañca, \"five\" (CDIAL 7655)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -129,7 +140,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

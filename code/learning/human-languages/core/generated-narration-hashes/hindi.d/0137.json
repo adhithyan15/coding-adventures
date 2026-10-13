@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 137,
-  "sourceHash": "fnv1a64:2c4e012c62693371",
+  "sourceHash": "fnv1a64:020cd76ac56f3d98",
   "lessonIds": [
     "HI-C137-svetar",
     "HI-C137-anda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch137.txt",
   "json": "hindi/narration/ch137.json",
-  "textHash": "fnv1a64:0e1949d54731b8ac",
-  "jsonHash": "fnv1a64:3e261fa352b98030",
+  "textHash": "fnv1a64:eeaae0265eee6746",
+  "jsonHash": "fnv1a64:ee30c28f12649c46",
   "findings": []
 }

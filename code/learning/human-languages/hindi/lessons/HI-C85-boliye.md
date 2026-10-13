@@ -14,7 +14,8 @@ romanization: "boliye"
 concept_tag: HI-VERB-IMPERATIVE-AAP
 prerequisites: [HI-C85-bolo, HI-C09-maaf-kijiye]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "boliye: the verb bolnā 'to speak', from a reconstructed *boll- 'speak' (CDIAL 9321), with the respectful ending -iye"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ And now the lump comes apart. **कीजिए** is *karnā*, "to do," with thi
 ending: *kar* + *-iye*. *Māf kījiye* is literally **"please do forgiveness."**
 You have been giving a respectful command since the ninth chapter without
 knowing it was one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलिए** (*boliye*) is the verb **बोलना**, "to speak", with the respectful ending *-iye*. CDIAL traces the verb to a reconstructed *\*boll-*, "speak" (CDIAL 9321).
 
 ## Grammar Lens: politeness is built in, not added on
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-02, HI-LEX-C85-IMP-01] -->

@@ -14,7 +14,8 @@ romanization: "sabzī"
 concept_tag: HI-NOUN-VEGETABLE
 prerequisites: [HI-C52-sugar, HI-C50-salutation, HI-C51-sweet]
 sounds: []
-roots: []
+roots: [persian-sabzi]
+etymology_hook: "sabzī: usually traced to Persian sabzī 'greenness, greens'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C52-sugar]
 A Persian word: *sabz* means 'green', and *-ī* turns an adjective into a noun. सब्ज़ी is 'greenery' — the green things, taken together.
 
 You have met this suffix already without being told: ख़ुशी (*khushī*), 'happiness', is *khush*, 'pleased', with the same *-ī* on the end. One ending, two words, both Persian.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सब्ज़ी** (*sabzī*) is a loan, usually traced to Persian *sabzī*, "greenness, greens". It is built on *sabz*, "green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

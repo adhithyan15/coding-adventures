@@ -14,10 +14,10 @@ romanization: "ek do tīn chār pāṁch"
 concept_tag: HI-NUMBERS-1-5
 prerequisites: [HI-C01-namaste]
 sounds: [matra-aa, matra-i, chandrabindu]
-roots: [sanskrit-eka, sanskrit-dvi, sanskrit-panca]
-etymology_hook: "पाँच pāṁch preserves Sanskrit's nasal consonant inside the vowel, written with the chandrabindu or moon-dot"
+roots: [sanskrit-eka, sanskrit-dvi, sanskrit-panca, sanskrit-tri]
+etymology_hook: "pāṁch ← Sanskrit pañca (CDIAL 7655); ek, do, tīn, chār ← eka, dva, trīṇi, catvāraḥ: all tadbhavas"
 duration:
-  max_seconds: 180
+  max_seconds: 181
 requires:
   knowledge: []
 introduces:
@@ -60,6 +60,11 @@ You'll draw them when the writing track reaches them.
 
 The **ँ** over *pāṁch* is a *chandrabindu*, "moon-dot" — it nasalises the vowel,
 the way French does in *bon*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एक दो तीन चार पाँच** (*ek do tīn chār pāṁch*) are all tadbhavas, Sanskrit numbers reshaped by sound change. *Ek* comes from a doubled form of Sanskrit *eka*, "one" (CDIAL 2462); *do* from *dva*, "two" (CDIAL 6648); *tīn* from *trīṇi*, "three" (CDIAL 5994); *chār* from *catvāraḥ*, "four" (CDIAL 4655); and *pāṁch* from *pañca*, "five" (CDIAL 7655).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C06-NUMBERS-1-5-01] -->

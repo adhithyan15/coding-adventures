@@ -14,7 +14,8 @@ romanization: "adhyāpak"
 concept_tag: HI-THG193-ADHYAPAK
 prerequisites: [HI-C192-aksar, HI-C192-kabhinahi]
 sounds: []
-roots: []
+roots: [sanskrit-adhyapaka]
+etymology_hook: "adhyāpak ← Sanskrit adhyāpaka 'teacher', a tatsama (CDIAL 278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C192-kabhinahi]
 <!-- hl-knowledge: introduces=[HI-LEX-C193-THG193-01]; assesses=[] -->
 
 **अध्यापक** — *adhyāpak* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अध्यापक** (*adhyāpak*) is Sanskrit *adhyāpaka*, "teacher", taken over whole as a learned loan, a tatsama (CDIAL 278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 224,
-  "sourceHash": "fnv1a64:5017253ec7a5ca03",
+  "sourceHash": "fnv1a64:90dba0344227c189",
   "lessonIds": [
     "HI-C224-balla",
     "HI-C224-jit",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch224.txt",
   "json": "hindi/narration/ch224.json",
-  "textHash": "fnv1a64:90d16a298a4d6f28",
-  "jsonHash": "fnv1a64:79b3d1a616317b9e",
+  "textHash": "fnv1a64:7bc44ba025bec5f6",
+  "jsonHash": "fnv1a64:d0f56d8eb6caf0f7",
   "findings": []
 }

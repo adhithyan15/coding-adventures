@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 208,
-  "sourceHash": "fnv1a64:89f7ff63129ee357",
+  "sourceHash": "fnv1a64:f535e8e1f4a08cce",
   "lessonIds": [
     "HI-C208-nuqsan",
     "HI-C208-fayda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch208.txt",
   "json": "hindi/narration/ch208.json",
-  "textHash": "fnv1a64:021c493f94f67b69",
-  "jsonHash": "fnv1a64:e3decbdd9de634ea",
+  "textHash": "fnv1a64:025eaf69f61e6352",
+  "jsonHash": "fnv1a64:f301c245838bec99",
   "findings": []
 }

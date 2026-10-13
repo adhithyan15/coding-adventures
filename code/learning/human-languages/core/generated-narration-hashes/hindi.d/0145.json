@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 145,
-  "sourceHash": "fnv1a64:38b94fca58401e22",
+  "sourceHash": "fnv1a64:c10a118074f3fc0f",
   "lessonIds": [
     "HI-C145-adhi",
     "HI-C145-kohra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch145.txt",
   "json": "hindi/narration/ch145.json",
-  "textHash": "fnv1a64:d1ed179dfe1abbac",
-  "jsonHash": "fnv1a64:eb21c5be098a7101",
+  "textHash": "fnv1a64:36cc7b3c0af9b6ff",
+  "jsonHash": "fnv1a64:10ffe87b3c6578f7",
   "findings": []
 }

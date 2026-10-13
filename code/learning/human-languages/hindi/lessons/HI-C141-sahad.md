@@ -14,7 +14,8 @@ romanization: "śahad"
 concept_tag: HI-THINGS141-SAHAD
 prerequisites: [HI-C141-makkhan, HI-C141-panir]
 sounds: []
-roots: []
+roots: [arabic-shahd]
+etymology_hook: "śahad ← Arabic shahd 'honey', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C141-panir]
 <!-- hl-knowledge: introduces=[HI-LEX-C141-THINGS141-03]; assesses=[] -->
 
 **शहद** — *śahad* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शहद** (*śahad*) is a loan from Arabic *shahd*, "honey", which reached Hindi through Persian. Its Arabic root is *sh-h-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

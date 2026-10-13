@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 112,
-  "sourceHash": "fnv1a64:9a7ee9e248f46666",
+  "sourceHash": "fnv1a64:fe5296e378301e16",
   "lessonIds": [
     "HI-C112-sahi",
     "HI-C112-galat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch112.txt",
   "json": "hindi/narration/ch112.json",
-  "textHash": "fnv1a64:046a9b7bbadacccd",
-  "jsonHash": "fnv1a64:b7c47c54e62fa541",
+  "textHash": "fnv1a64:abfcf5a45e0d68a4",
+  "jsonHash": "fnv1a64:0ae48b5ccceec692",
   "findings": []
 }

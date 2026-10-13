@@ -15,6 +15,7 @@ concept_tag: HI-THG211-CATNI
 prerequisites: [HI-C210-laddu, HI-C210-achar]
 sounds: []
 roots: []
+etymology_hook: "caṭnī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C210-achar]
 <!-- hl-knowledge: introduces=[HI-LEX-C211-THG211-01]; assesses=[] -->
 
 **चटनी** — *caṭnī* — "chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चटनी** (*caṭnī*) is uncertain. CDIAL has no entry for it. English took the word as *chutney*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

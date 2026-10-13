@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 111,
-  "sourceHash": "fnv1a64:f813032724b87852",
+  "sourceHash": "fnv1a64:e1e91ee48318b050",
   "lessonIds": [
     "HI-C111-hindime",
     "HI-C111-kaisekahte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch111.txt",
   "json": "hindi/narration/ch111.json",
-  "textHash": "fnv1a64:496d1d97d9f42e50",
-  "jsonHash": "fnv1a64:8f8d779860aa54b9",
+  "textHash": "fnv1a64:1cdd19476e654d22",
+  "jsonHash": "fnv1a64:1df922c4f8c40120",
   "findings": []
 }

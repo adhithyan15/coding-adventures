@@ -15,6 +15,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [HI-C02-meraa, HI-C02-naam, HI-C02-hai]
 sounds: []
 roots: [ma, naaman, asti]
+etymology_hook: "merā ← the Sanskrit first-person stem ma-; nām ← nāman 'name'; hai, 'is', usually traced to asti"
 duration:
   max_seconds: 180
 requires:

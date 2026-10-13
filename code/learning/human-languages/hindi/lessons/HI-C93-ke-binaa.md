@@ -14,9 +14,10 @@ romanization: "ke binā"
 concept_tag: HI-POST-COMPOUND-BINAA
 prerequisites: [HI-C93-ke-saath, HI-C37-chai]
 sounds: []
-roots: []
+roots: [sanskrit-vina]
+etymology_hook: "binā ← Sanskrit vinā 'without' (CDIAL 11772)"
 duration:
-  max_seconds: 210
+  max_seconds: 229
 requires:
   knowledge: [HI-LEX-C93-REL-01, HI-CONCEPT-C37-CHAI-01, HI-LEX-C84-POSS-01]
 introduces:
@@ -45,6 +46,11 @@ much of it you would have to change to mean the opposite.
 **चाय के बिना** — without tea.
 
 One word changed. The shape did not move.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**के बिना** (*ke binā*) is *ke* with *binā*, "without", which comes from Sanskrit *vinā*, "without" (CDIAL 11772).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-02, HI-LEX-C93-REL-01] -->

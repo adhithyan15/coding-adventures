@@ -14,7 +14,8 @@ romanization: "kisān"
 concept_tag: HI-NOUN-FARMER
 prerequisites: [HI-C47-student, HI-C45-lamp, HI-C46-ear]
 sounds: []
-roots: []
+roots: [sanskrit-krshana]
+etymology_hook: "kisān ← Sanskrit kṛṣāṇa 'ploughing', a tadbhava (CDIAL 3447)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C47-student]
 From *kṛṣāṇa*, on the Sanskrit root *kṛṣ-*, 'to plough, to drag through the ground' — the same root behind *kṛṣi*, agriculture. A farmer, in this word, is simply the one who drags the plough.
 
 Latin reached for the same picture and got there with different material: *sulcus*, a furrow, is not related to *kṛṣ-* at all. Two families, no shared word, and the identical image — which is worth noticing precisely because it proves nothing about descent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किसान** (*kisān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṛṣāṇa*, "ploughing" (CDIAL 3447). It is the present participle of *kṛṣati*, "ploughs": a farmer is "the one ploughing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

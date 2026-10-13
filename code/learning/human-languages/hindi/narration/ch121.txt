@@ -13,6 +13,9 @@ You'll want to know: ध्यान रखिए.
 ध्यान रखिए (dhyān rakhie) — "take care", literally "keep attention".
 अपना ध्यान रखिए (dhyān rakhie) — "take care of yourself", the kindest goodbye.
 
+The word, taken apart.
+ध्यान रखिए (dhyān rakhie) is "keep attention". dhyān is Sanskrit dhyāna, "meditation", a tatsama (CDIAL 6889), and rakhnā, "to keep", comes from rakṣati, "guards" (CDIAL 10547).
+
 What you've built.
 The kindest thing to say at the door.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for nice to meet you, then the Hindi for take 
 You'll want to know: संभलकर.
 संभलकर (sambhalkar) — "carefully", "steadily".
 संभलकर (sambhalkar) जाना — "go carefully", said to someone setting out after dark or in the rain.
+
+The word, taken apart.
+संभलकर (sambhalkar) is sambhalnā, "to steady oneself", with -kar, "having". CDIAL lists the verb under Sanskrit saṁbharati, "brings together", and its causing form "maintains" (CDIAL 12961).
 
 What you've built.
 A second way to wish someone safe.
@@ -73,6 +79,9 @@ You'll want to know: शुभ यात्रा.
 शुभ यात्रा (śubh yātrā) — "have a good journey".
 शुभ is the auspicious of शुभ रात्रि; यात्रा is "a journey", a formal cousin of सफ़र.
 
+The word, taken apart.
+शुभ यात्रा (śubh yātrā) is two Sanskrit words taken over whole, tatsamas: śubha, "auspicious, good", and yātrā, "journey".
+
 What you've built.
 A wish for someone setting off.
 
@@ -103,6 +112,9 @@ You'll want to know: फिर आइएगा.
 फिर आइएगा (phir āiegā) — "do come again".
 फिर is "again", and आइएगा is an extra-polite आइए, a request for later rather than now.
 
+The word, taken apart.
+फिर आइएगा (phir āiegā) is phir, "again", and āiegā, the polite future of आना, "to come". CDIAL lists phir under a reconstructed phirati, "turns", whose old form became an adverb (CDIAL 9078).
+
 What you've built.
 An invitation to return.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for a good journey, then the Hindi for come ag
 You'll want to know: चलिए.
 चलिए (calie) — "let's go", "shall we".
 It is चलना with the respectful ending of बोलिए, the verb inside चलता हूँ, "I'll be off".
+
+The word, taken apart.
+चलिए (calie) is the respectful command of calnā, "to move, go", which comes from Sanskrit calati, "goes away" (CDIAL 4715).
 
 What you've built.
 Take care, carefully, a good journey, come again, let's go.

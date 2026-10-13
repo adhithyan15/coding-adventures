@@ -13,6 +13,9 @@ You'll want to know: हिंदी में.
 हिंदी में (hindī meṁ) — "in Hindi".
 It is में, "in", the word you met on रहना, after the name of the language. अंग्रेज़ी में — "in English".
 
+The word, taken apart.
+हिंदी में (hindī meṁ) is hindī with meṁ, "in". hindī is usually traced to Persian hindī, "of Hind", the land beyond the Indus; meṁ comes from Sanskrit madhye, "in, among", a form of madhya, "middle" (CDIAL 9804).
+
 What you've built.
 A way to name the language you want an answer in.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for meaning, then the Hindi for in Hindi.
 You'll want to know: कैसे कहते हैं?
 कैसे कहते हैं? (kaise kahte haiṁ?) — "how does one say it?".
 हिंदी में (hindī meṁ) 'book' कैसे कहते हैं? (kaise kahte haiṁ?) — "how do you say 'book' in Hindi?". कहना is "to say".
+
+The word, taken apart.
+कैसे कहते हैं? (kaise kahte haiṁ?) is kaise, "how", with kahte haiṁ, "they say". kahnā, "to say", comes from Sanskrit kathayati, "converses with, describes" (CDIAL 2703).
 
 What you've built.
 The one question that lets you learn from anyone.
@@ -73,6 +79,9 @@ You'll want to know: दिखाइए.
 दिखाइए (dikhāie) — "please show me".
 It is built on देखना, "to see": to show is to make someone see.
 
+The word, taken apart.
+दिखाइए (dikhāie) is dikhānā, "to show", the causing form of देखना, "to see", with the respectful ending -ie. CDIAL traces the "see" verbs to a reconstructed dṛkṣati, "sees" (CDIAL 6507).
+
 What you've built.
 A request for when words run out.
 
@@ -103,6 +112,9 @@ You'll want to know: सुनाई नहीं दिया.
 सुनाई नहीं दिया (sunāī nahīṁ diyā) — "I could not hear it", literally "hearing was not given".
 It is built on सुनना, "to hear". Pair it with a fix: ज़ोर से बोलिए.
 
+The word, taken apart.
+सुनाई नहीं दिया (sunāī nahīṁ diyā) is sunāī, "hearing", nahīṁ, "not", and diyā, "gave". sunāī is built on sunnā, "to hear", from Sanskrit śṛṇoti, "hears" (CDIAL 12598); CDIAL lists diyā under datta, "given" (CDIAL 6140).
+
 What you've built.
 An honest reason to ask again.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for please show me, then the Hindi for I could
 You'll want to know: लिख दीजिए.
 लिख दीजिए (likh dījie) — "please write it down (for me)".
 लिखना is "to write"; दीजिए adds "for me", as in एक चाय दीजिए.
+
+The word, taken apart.
+लिख दीजिए (likh dījie) is likh, "write", from Sanskrit likhati, "scratches, writes" (CDIAL 11048), with dījie, the respectful command of denā, "to give" (CDIAL 6141).
 
 What you've built.
 In Hindi, how do you say it, show me, I could not hear, write it down.

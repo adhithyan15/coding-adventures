@@ -43,7 +43,7 @@ What did the word before this one mean?
 
 You'll want to know: छत.
 छत (chat) — "a roof".
-From Sanskrit छत्र (chatra), which meant a parasol — the thing held over a person's head. The word came down off the handle and settled onto the building.
+From a reconstructed chatti, 'covering' (CDIAL 4971), on Sanskrit chad-, 'to cover' — the root of छत्र (chatra), a parasol held over a person's head. Roof and parasol are both coverings.
 A flat छत (chat) in North India is a place people go, not only a lid: it is where washing dries and where the evening is sat out. The word covers the surface and the use at once.
 
 What you've built.
@@ -78,6 +78,9 @@ You'll want to know: खिड़की.
 The origin of खिड़की (khiṛkī) is not settled, and the derivations offered for it are guesses of varying quality rather than an agreed line.
 This is the second time this book has had to say that about a piece of an ordinary house, and it will not be the last. A word being everywhere is no guarantee that its history was written down.
 
+The word, taken apart.
+खिड़की (khiṛkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭakkikā, "side door" (CDIAL 3770). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 The third of five, and another honest gap.
 
@@ -108,6 +111,9 @@ You'll want to know: सीढ़ी.
 सीढ़ी (sīṛhī) — "a staircase, a ladder".
 सीढ़ी (sīṛhī) is traced to a Sanskrit word for a flight of steps, but the exact form behind it is disputed and the sources differ on which one it was.
 The word does not distinguish a staircase from a ladder. Both are सीढ़ी (sīṛhī), because what the word names is the going up, not the thing's construction.
+
+The word, taken apart.
+सीढ़ी (sīṛhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from śrīḍhi, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 What you've built.
 The fourth of five, and one word for two objects.

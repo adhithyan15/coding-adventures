@@ -14,7 +14,8 @@ romanization: "dvīp"
 concept_tag: HI-THG200-DVIP
 prerequisites: [HI-C200-rajdhani, HI-C200-sima]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dvīp ← Sanskrit dvīpa 'land, island', a tatsama (CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C200-sima]
 <!-- hl-knowledge: introduces=[HI-LEX-C200-THG200-05]; assesses=[] -->
 
 **द्वीप** — *dvīp* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**द्वीप** (*dvīp*) is Sanskrit *dvīpa*, "land, island", taken over whole as a learned loan, a tatsama (CDIAL 6691). It is built from *dvi-*, "two", and *ap*, "water": land with water on both sides.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

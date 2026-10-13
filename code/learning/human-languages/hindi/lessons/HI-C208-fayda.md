@@ -14,7 +14,8 @@ romanization: "fāydā"
 concept_tag: HI-THG208-FAYDA
 prerequisites: [HI-C207-kharc, HI-C208-nuqsan]
 sounds: []
-roots: []
+roots: [arabic-faida]
+etymology_hook: "fāydā ← Arabic fāʾida 'a benefit, a gain', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C208-nuqsan]
 <!-- hl-knowledge: introduces=[HI-LEX-C208-THG208-02]; assesses=[] -->
 
 **फ़ायदा** — *fāydā* — "a benefit, a profit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फ़ायदा** (*fāydā*) is a loan from Arabic *fāʾida*, "a benefit, a gain", which reached Hindi through Persian. Its Arabic root is *f-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a mountain, then the Hindi for a river.
 You'll want to know: झील.
 झील — jhīl — "a lake".
 
+The word, taken apart.
+झील (jhīl) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhilla, "swamp, lake", a form CDIAL reconstructs from its descendants (CDIAL 5392).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a river, then the Hindi for a lake.
 
 You'll want to know: समुद्र.
 समुद्र — samudra — "the sea".
+
+The word, taken apart.
+समुद्र (samudra) is Sanskrit samudra, "sea", taken over whole as a learned loan, a tatsama (CDIAL 13236).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a lake, then the Hindi for the sea.
 You'll want to know: जंगल.
 जंगल — jaṅgal — "a forest".
 
+The word, taken apart.
+जंगल (jaṅgal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāṅgala, "arid, sparse in trees" (CDIAL 5177). CDIAL notes a likely non-Aryan origin. The sense moved from "waste land" to "forest", and English took it back as jungle.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for the sea, then the Hindi for a forest.
 You'll want to know: पेड़.
 पेड़ — peṛ — "a tree".
 
+The word, taken apart.
+The origin of पेड़ (peṛ) is uncertain. CDIAL lists a Hindi peṛ only in the sense "lump", under a reconstructed peḍa (CDIAL 8377), not as "tree".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a forest, then the Hindi for a tree.
 
 You'll want to know: जड़.
 जड़ — jaṛ — "a root".
+
+The word, taken apart.
+जड़ (jaṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jaṭā, "twisted hair; fibrous root" (CDIAL 5086). CDIAL weighs a Dravidian and a Munda source for the word.
 
 What you've built.
 One more word for this chapter.

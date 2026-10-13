@@ -14,7 +14,8 @@ romanization: "āṁgan"
 concept_tag: HI-NOUN-COURTYARD
 prerequisites: [HI-C51-garland, HI-C49-journey, HI-C50-respect]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "āṁgan ← Sanskrit aṅgaṇa 'courtyard', a tadbhava (CDIAL 118)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "kachuā"
 concept_tag: HI-THINGS149-KACHUA
 prerequisites: [HI-C149-cinti, HI-C149-mendhak]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kachuā ← Sanskrit kacchapa 'turtle, tortoise', a tadbhava (CDIAL 2619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C149-mendhak]
 <!-- hl-knowledge: introduces=[HI-LEX-C149-THINGS149-04]; assesses=[] -->
 
 **कछुआ** — *kachuā* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कछुआ** (*kachuā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kacchapa*, "turtle, tortoise" (CDIAL 2619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

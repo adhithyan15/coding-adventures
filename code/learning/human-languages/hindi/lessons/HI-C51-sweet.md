@@ -14,7 +14,8 @@ romanization: "miṭhāī"
 concept_tag: HI-NOUN-SWEET
 prerequisites: [HI-C51-table, HI-C49-meeting, HI-C50-salutation, HI-S147-letter-na-retroflex]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "miṭhāī: mīṭhā 'sweet' + -āī; mīṭhā ← Sanskrit miṣṭa 'dainty, sweet' (CDIAL 10299)"
 duration:
   max_seconds: 210
 requires:

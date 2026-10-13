@@ -14,7 +14,8 @@ romanization: "bāg"
 concept_tag: HI-THG202-BAG
 prerequisites: [HI-C202-qila, HI-C202-minar]
 sounds: []
-roots: []
+roots: [persian-bagh]
+etymology_hook: "bāg: usually traced to Persian bāgh 'garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C202-minar]
 <!-- hl-knowledge: introduces=[HI-LEX-C202-THG202-05]; assesses=[] -->
 
 **बाग़** — *bāg* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाग़** (*bāg*) is a loan, usually traced to Persian *bāgh*, "garden". It is a different word from Hindi *bāg*, "rein", from Sanskrit *valgā*, "bridle" (CDIAL 11420).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

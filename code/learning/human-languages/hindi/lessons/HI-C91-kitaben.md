@@ -14,9 +14,10 @@ romanization: "kitābeṁ"
 concept_tag: HI-NOUN-PLURAL-CONSONANT
 prerequisites: [HI-C91-bacche-plural, HI-C37-kitaab]
 sounds: []
-roots: []
+roots: [arabic-kitab]
+etymology_hook: "kitāb ← Arabic kitāb 'book', root k-t-b 'to write', through Persian"
 duration:
-  max_seconds: 240
+  max_seconds: 249
 requires:
   knowledge: [HI-LEX-C91-NOUN-01, HI-CONCEPT-C37-KITAAB-01]
 introduces:
@@ -62,6 +63,8 @@ list to memorise: **change what is there, or add where nothing is.**
 
 Feminine nouns ending in a consonant, like **किताब**, are much the commonest
 case, and the nasal is what your ear should catch.
+
+**किताब** is Arabic *kitāb*, "book", which reached Hindi through Persian.
 
 ## Grammar Lens: the nasal you already write
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-02] -->

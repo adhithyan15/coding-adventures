@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 266,
-  "sourceHash": "fnv1a64:47ce05276572c720",
+  "sourceHash": "fnv1a64:30d93ed5631fbde5",
   "lessonIds": [
     "HI-C266-citkani",
     "HI-C266-ari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch266.txt",
   "json": "hindi/narration/ch266.json",
-  "textHash": "fnv1a64:5628cb381a5ce787",
-  "jsonHash": "fnv1a64:116e5ecca1f31e92",
+  "textHash": "fnv1a64:ba5e7e50d82ef549",
+  "jsonHash": "fnv1a64:310c90b276b414c2",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sūcnā"
 concept_tag: HI-READ166-SUCNA
 prerequisites: [HI-C165-bajana, HI-C165-ginna]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcnā ← Sanskrit sūcanā 'pointing out, information', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C165-ginna]
 
 The notice on the door says **आज दुकान बंद है।** (*āj dukān band hai.*) The shop
 is closed today, so come back *kal*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूचना** (*sūcnā*) is Sanskrit *sūcanā*, "pointing out, information", taken over whole as a learned loan, a tatsama. It is built on *sūc-*, "to point out", the root of *sūcī*, "needle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

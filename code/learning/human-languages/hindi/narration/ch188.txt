@@ -12,6 +12,9 @@ Before the new one: say the Hindi for the cinema, then the Hindi for a park.
 You'll want to know: बटन.
 बटन — baṭan — "a button".
 
+The word, taken apart.
+बटन (baṭan) is a loan from English button.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a park, then the Hindi for a button.
 
 You'll want to know: जेब.
 जेब — jeb — "a pocket".
+
+The word, taken apart.
+जेब (jeb) is a loan, usually traced to Persian jēb, "pocket".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a button, then the Hindi for a pocket.
 You'll want to know: दुश्मन.
 दुश्मन — duśman — "an enemy".
 
+The word, taken apart.
+दुश्मन (duśman) is a loan, usually traced to Persian dushman, "enemy".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a pocket, then the Hindi for an enemy.
 You'll want to know: चाची.
 चाची — cācī — "an aunt (father's brother's wife)".
 
+The word, taken apart.
+चाची (cācī) is a tadbhava, a word inherited and reshaped by sound change. It comes from cācca, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). cācī is its feminine. CDIAL suggests, with a query, a nursery word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for an enemy, then the Hindi for an aunt.
 
 You'll want to know: भतीजा.
 भतीजा — bhatījā — "a nephew (brother's son)".
+
+The word, taken apart.
+भतीजा (bhatījā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhrātrīya, "brother's son" (CDIAL 9672). It is built on bhrātṛ, "brother".
 
 What you've built.
 One more word for this chapter.

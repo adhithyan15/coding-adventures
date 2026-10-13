@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a player, then the Hindi for a leader.
 You'll want to know: मंत्री.
 मंत्री — mantrī — "a minister".
 
+The word, taken apart.
+मंत्री (mantrī) is Sanskrit mantrin, "wise; counsellor", taken over whole as a learned loan, a tatsama (CDIAL 9838). Hindi took its nominative, mantrī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a leader, then the Hindi for a minister.
 
 You'll want to know: राजा.
 राजा — rājā — "a king".
+
+The word, taken apart.
+राजा (rājā) is Sanskrit rājan, "chieftain, king", taken over whole as a learned loan, a tatsama (CDIAL 10679). Hindi took its nominative, rājā; CDIAL lists the inherited forms as rāy and rāo.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a minister, then the Hindi for a king.
 You'll want to know: रानी.
 रानी — rānī — "a queen".
 
+The word, taken apart.
+रानी (rānī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rājñī, "queen" (CDIAL 10692).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a king, then the Hindi for a queen.
 You'll want to know: नौकर.
 नौकर — naukar — "a servant".
 
+The word, taken apart.
+नौकर (naukar) is a loan, usually traced to Persian naukar, "servant".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a queen, then the Hindi for a servant.
 
 You'll want to know: चोर.
 चोर — cor — "a thief".
+
+The word, taken apart.
+चोर (cor) is inherited from Sanskrit cora, "thief", and has come down with almost no change (CDIAL 4931).
 
 What you've built.
 One more word for this chapter.

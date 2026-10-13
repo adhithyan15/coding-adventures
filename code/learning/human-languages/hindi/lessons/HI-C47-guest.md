@@ -14,7 +14,8 @@ romanization: "mehmān"
 concept_tag: HI-NOUN-GUEST
 prerequisites: [HI-C47-farmer, HI-C45-salt, HI-C46-nose]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mehmān: usually traced to Persian mihmān 'guest'"
 duration:
   max_seconds: 210
 requires:

@@ -14,9 +14,10 @@ romanization: "nahīṁ kī jagah"
 concept_tag: HI-NEGATION-CONTRAST
 prerequisites: [HI-C94-train, HI-C07-nahin]
 sounds: []
-roots: []
+roots: [sanskrit-nahi, persian-jaygah]
+etymology_hook: "nahīṁ ← Sanskrit nahi 'surely not' (CDIAL 7035); jagah usually traced to Persian jāygāh 'place'"
 duration:
-  max_seconds: 240
+  max_seconds: 267
 requires:
   knowledge: [HI-LEX-C94-SPAN-04, HI-LEX-C90-ROUT-02, HI-CONCEPT-C07-NAHIN-01, HI-LEX-C90-ROUT-01]
 introduces:
@@ -46,6 +47,11 @@ first one and you need to give them the second.
 
 **नहीं** stands between the two options, and the one it rejects is the one
 **before** it.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नहीं की जगह** (*nahīṁ kī jagah*) is *nahīṁ*, "not", with *kī* and *jagah*, "place". *nahīṁ* comes from Sanskrit *nahi*, "surely not" (CDIAL 7035); *jagah* is usually traced to Persian *jāygāh*, "place".
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C94-SPAN-05, HI-CONCEPT-C07-NAHIN-01] -->

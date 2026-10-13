@@ -14,7 +14,8 @@ romanization: "angrezī"
 concept_tag: HI-NOUN-ENGLISH
 prerequisites: [HI-C68-language, HI-C05-main-hindi-bolta-hun]
 sounds: []
-roots: []
+roots: [portuguese-ingles]
+etymology_hook: "angrezī: usually traced, through Persian angrez 'Englishman', to Portuguese inglês 'English'"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ members of it.
 
 Both listening papers you will one day sit key on somebody speaking two of
 these, so the pair matters more than either word alone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंग्रेज़ी** (*angrezī*) is usually traced, through Persian *angrez*, "an Englishman", to Portuguese *inglês*, "English". The *-ī* makes it "the language of the English".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

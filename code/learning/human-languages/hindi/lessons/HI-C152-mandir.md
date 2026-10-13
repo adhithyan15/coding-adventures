@@ -14,7 +14,8 @@ romanization: "mandir"
 concept_tag: HI-THINGS152-MANDIR
 prerequisites: [HI-C152-dakghar, HI-C152-pustakalay, HI-C10-somavaar-shukravaar, HI-C10-somavaar-shukravaar, HI-C10-shanivaar-ravivaar, HI-C10-shanivaar-ravivaar]
 sounds: []
-roots: []
+roots: [sanskrit-mandira]
+etymology_hook: "mandir ← Sanskrit mandira 'house, palace, temple', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C152-pustakalay]
 <!-- hl-knowledge: introduces=[HI-LEX-C152-THINGS152-04]; assesses=[] -->
 
 **मंदिर** — *mandir* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंदिर** (*mandir*) is Sanskrit *mandira*, "house, palace, temple", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

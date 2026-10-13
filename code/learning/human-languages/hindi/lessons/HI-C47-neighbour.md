@@ -14,7 +14,8 @@ romanization: "paṛosī"
 concept_tag: HI-NOUN-NEIGHBOUR
 prerequisites: [HI-C47-guest, HI-C45-soap, HI-C46-throat]
 sounds: []
-roots: []
+roots: [sanskrit-prativesha]
+etymology_hook: "paṛosī ← Sanskrit prativeśya 'neighbour', a tadbhava (CDIAL 8599)"
 duration:
   max_seconds: 210
 requires:

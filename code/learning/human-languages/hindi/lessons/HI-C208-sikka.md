@@ -14,7 +14,8 @@ romanization: "sikkā"
 concept_tag: HI-THG208-SIKKA
 prerequisites: [HI-C208-fayda, HI-C208-kimat]
 sounds: []
-roots: []
+roots: [arabic-sikka]
+etymology_hook: "sikkā ← Arabic sikka 'a die for stamping coins', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C208-kimat]
 <!-- hl-knowledge: introduces=[HI-LEX-C208-THG208-04]; assesses=[] -->
 
 **सिक्का** — *sikkā* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिक्का** (*sikkā*) is a loan from Arabic *sikka*, "a die for stamping coins", which reached Hindi through Persian. Its Arabic root is *s-k-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

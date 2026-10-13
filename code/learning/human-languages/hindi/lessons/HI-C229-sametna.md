@@ -14,7 +14,8 @@ romanization: "sameṭnā"
 concept_tag: HI-VERB-SAMETNA
 prerequisites: [HI-C228-ghumana, HI-C229-morna]
 sounds: []
-roots: []
+roots: [sanskrit-samveshtayati]
+etymology_hook: "sameṭnā ← Sanskrit saṁveṣṭayati 'wraps up', a tadbhava (CDIAL 13026)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C229-morna]
 <!-- hl-knowledge: introduces=[HI-LEX-C229-ACT229-02]; assesses=[] -->
 
 **समेटना** — *sameṭnā* — "to gather up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समेटना** (*sameṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṁveṣṭayati*, "wraps up" (CDIAL 13026). CDIAL notes an unexplained loss of aspiration.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

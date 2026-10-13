@@ -15,6 +15,9 @@ Sanskrit खेल (khela), "play, sport", from a root that meant shaking or mov
 खेल (khel) covers more than a sport with rules. A child's game is a खेल (khel), a match is a खेल (khel), and a thing somebody is not taking seriously is a खेल (khel) too. When somebody you have just met asks what you do with your evenings, this is the word the answer starts from.
 The ख is the aspirated one — a real puff of breath after the k, which is what separates खेल (khel) from क, and the difference changes the word.
 
+The word, taken apart.
+खेल (khel) is inherited from a reconstructed khel-, "play" (CDIAL 3918). CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
+
 What you've built.
 The first of five words for the hours after work.
 
@@ -52,6 +55,9 @@ The same खेल (khel) you learnt in the last lesson, with -ना on the end
 Look at what that gives you. जाना was built the same way, and so were बोलना, लिखना, सुनना. Four you already own and one you have just made — the ending is a tool, not a list to memorise.
 Remove -ना to recover खेल (khel)-, then add the present endings you know: खेलता (masculine), खेलती (feminine), and खेलते (respectful आप or plural). So मैं खेलता हूँ / मैं खेलती हूँ means "I play," while आप खेलते हैं means "you play."
 
+The word, taken apart.
+खेलना (khelnā) is inherited from a reconstructed khel-, "play" (CDIAL 3918), the verb behind khel, "a game". CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
+
 What you've built.
 A game, and the doing word that comes out of it.
 
@@ -86,6 +92,9 @@ You'll want to know: क्रिकेट.
 English, borrowed whole, and written with two things you have already met. The opening क्र is क stacked on र by the same vowel-killer ् that stacks स्ट in स्टेशन. The final ट is retroflex, because an English t always lands there.
 The ि after the stack is the short i matra, and it sits to the left of the whole cluster even though it is sounded after it — the same preposed matra you first met in a name.
 If you learn one game word in Hindi, learn this one. मैं क्रिकेट (krikeṭ) खेलता हूँ puts three of this chapter's ideas into a single sentence.
+
+The word, taken apart.
+क्रिकेट (krikeṭ) is a loan from English cricket.
 
 What you've built.
 Three: खेल (khel), खेलना, क्रिकेट (krikeṭ). A game, playing it, and one to name.
@@ -122,6 +131,9 @@ Sanskrit गान (gāna), "singing", from गै (gai-), "to sing". The root i
 Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना — and that is not an accident. गाना (gānā) is also the doing word "to sing". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word.
 Hindi does this often enough that it is worth expecting rather than being surprised by. You will meet another word with the same double life before this run of chapters is out.
 
+The word, taken apart.
+गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings" (CDIAL 4135). The noun is the verb gānā, "to sing", used for what is sung.
+
 What you've built.
 Four, and the first word you have met that is two words at once.
 
@@ -153,6 +165,9 @@ You'll want to know: आराम.
 Persian آرام (ārām), "quiet, calm, repose". It came in with the Persian half of the vocabulary and settled deep: आरामकुर्सी is an easy chair, built from आराम and the कुर्सी you already own.
 आराम (ārām) is not sleep. नींद is sleep, and you have that word. आराम (ārām) is the state of not being pushed — sitting down, breathing out, nothing owed to anybody for an hour. आराम (ārām) करना is what you say for taking that hour.
 It is also an answer. When somebody asks आप कैसे हैं?, one ordinary reply is that you are at आराम (ārām), and it says more warmly than ठीक does.
+
+The word, taken apart.
+आराम (ārām) is a loan, usually traced to Persian ārām, "rest, ease".
 
 What you've built.
 Five: खेल (khel), खेलना, क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you.

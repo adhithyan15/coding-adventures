@@ -14,7 +14,8 @@ romanization: "mazbūt"
 concept_tag: HI-QUAL212-MAZBUT
 prerequisites: [HI-C211-nibu, HI-C212-bhadda]
 sounds: []
-roots: []
+roots: [arabic-madbut]
+etymology_hook: "mazbūt ← Arabic maḍbūṭ 'held firm, secured', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C212-bhadda]
 <!-- hl-knowledge: introduces=[HI-LEX-C212-QUAL212-02]; assesses=[] -->
 
 **मज़बूत** — *mazbūt* — "strong, sturdy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मज़बूत** (*mazbūt*) is a loan from Arabic *maḍbūṭ*, "held firm, secured", which reached Hindi through Persian. Its Arabic root is *ḍ-b-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

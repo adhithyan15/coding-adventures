@@ -14,7 +14,8 @@ romanization: "bagīcā"
 concept_tag: HI-THINGS153-BAGICA
 prerequisites: [HI-C152-mandir, HI-C152-masjid]
 sounds: []
-roots: []
+roots: [persian-baghcha]
+etymology_hook: "bagīcā: usually traced to Persian bāghcha 'small garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C152-masjid]
 <!-- hl-knowledge: introduces=[HI-LEX-C153-THINGS153-01]; assesses=[] -->
 
 **बगीचा** — *bagīcā* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बगीचा** (*bagīcā*) is a loan, usually traced to Persian *bāghcha*, "small garden". It is built on *bāgh*, "garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

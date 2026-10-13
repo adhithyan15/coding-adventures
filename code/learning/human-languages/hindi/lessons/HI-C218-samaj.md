@@ -14,7 +14,8 @@ romanization: "samāj"
 concept_tag: HI-THG218-SAMAJ
 prerequisites: [HI-C217-puja, HI-C217-dharm]
 sounds: []
-roots: []
+roots: [sanskrit-samaja]
+etymology_hook: "samāj ← Sanskrit samāja 'festive gathering', a tatsama (CDIAL 13207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C217-dharm]
 <!-- hl-knowledge: introduces=[HI-LEX-C218-THG218-01]; assesses=[] -->
 
 **समाज** — *samāj* — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समाज** (*samāj*) is Sanskrit *samāja*, "festive gathering", taken over whole as a learned loan, a tatsama (CDIAL 13207).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

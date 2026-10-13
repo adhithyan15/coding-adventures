@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to fall, then the Hindi for to fly.
 You'll want to know: तैरना.
 तैरना — tairnā — "to swim".
 
+The word, taken apart.
+तैरना (tairnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tirate, "crosses over" (CDIAL 5821). CDIAL rejects a Dravidian source proposed by Bloch, and explains the ai as a blend with another verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to fly, then the Hindi for to swim.
 
 You'll want to know: नाचना.
 नाचना — nācnā — "to dance".
+
+The word, taken apart.
+नाचना (nācnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances" (CDIAL 7583).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to swim, then the Hindi for to dance.
 You'll want to know: हँसना.
 हँसना — hãsnā — "to laugh".
 
+The word, taken apart.
+हँसना (hãsnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasati, "laughs" (CDIAL 14021).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to dance, then the Hindi for to laugh.
 You'll want to know: रोना.
 रोना — ronā — "to cry".
 
+The word, taken apart.
+रोना (ronā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from roditi, "weeps" (CDIAL 10840).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to laugh, then the Hindi for to cry.
 
 You'll want to know: भूलना.
 भूलना — bhūlnā — "to forget".
+
+The word, taken apart.
+भूलना (bhūlnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhull, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538).
 
 What you've built.
 One more word for this chapter.

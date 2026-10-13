@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 210,
-  "sourceHash": "fnv1a64:2e7280bd62c38c65",
+  "sourceHash": "fnv1a64:61c291fe1131dd66",
   "lessonIds": [
     "HI-C210-paratha",
     "HI-C210-khicri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch210.txt",
   "json": "hindi/narration/ch210.json",
-  "textHash": "fnv1a64:37ff7b92114aef25",
-  "jsonHash": "fnv1a64:77e9de03e052ed56",
+  "textHash": "fnv1a64:ac45a85872468079",
+  "jsonHash": "fnv1a64:78ab7b5339aa6293",
   "findings": []
 }

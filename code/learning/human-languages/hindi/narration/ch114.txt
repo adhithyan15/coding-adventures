@@ -13,6 +13,9 @@ You'll want to know: माफ़ी.
 माफ़ी (māfī) — "an apology, pardon", the noun.
 माफ़ी (māfī) चाहता हूँ — "I beg your pardon" (a woman says चाहती). It shares its root with माफ़ कीजिए.
 
+The word, taken apart.
+माफ़ी (māfī) is usually traced, through Persian, to an Arabic word for "pardon" on the root ʿ-f-w, "to pardon, excuse" (Lane). It is the noun of the māf inside māf kījie, "forgive me".
+
 What you've built.
 The apology as a thing you ask for.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for maybe, then the Hindi for an apology.
 You'll want to know: कोई बात नहीं.
 कोई बात नहीं (koī bāt nahīṁ) — "no problem", "never mind", literally "no matter".
 It is the answer to माफ़ कीजिए, and to thanks for a small favour.
+
+The word, taken apart.
+कोई बात नहीं (koī bāt nahīṁ) is "not any matter". koī comes from Sanskrit kaścid, "someone, anyone" (CDIAL 2967), and bāt, "matter, talk", from vārttā, "tidings, business" (CDIAL 11564).
 
 What you've built.
 The answer to an apology.
@@ -73,6 +79,9 @@ You'll want to know: बधाई.
 बधाई (badhāī) — "congratulations".
 बधाई (badhāī) हो! — "congratulations!", for an exam passed, a new job, a birth.
 
+The word, taken apart.
+बधाई (badhāī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhāpayati, "increases, gladdens, congratulates" (CDIAL 11383). CDIAL glosses the Hindi word "congratulations on the birth of a child".
+
 What you've built.
 Praise for good news.
 
@@ -102,6 +111,9 @@ Before the new one: say the Hindi for no problem, then the Hindi for congratulat
 You'll want to know: शुभकामनाएँ.
 शुभकामनाएँ (śubhkāmnāẽ) — "good wishes".
 It opens on the शुभ of शुभ रात्रि, "auspicious". आपको शुभकामनाएँ (śubhkāmnāẽ) — "good wishes to you".
+
+The word, taken apart.
+शुभकामनाएँ (śubhkāmnāẽ) is two Sanskrit words taken over whole, tatsamas: śubha, "auspicious, good", and kāmanā, "a wish", with the Hindi plural ending.
 
 What you've built.
 Wishes for what is coming, beside congratulations for what is done.
@@ -133,6 +145,9 @@ You'll want to know: निमंत्रण.
 निमंत्रण (nimantraṇ) — "an invitation", the formal word.
 निमंत्रण (nimantraṇ) के लिए धन्यवाद — "thank you for the invitation", with के लिए and धन्यवाद.
 A written invitation has the three parts of the short message you learned to write: the line that names the reader, प्रिय मीरा,; the sentences under it; and the writer's name at the foot.
+
+The word, taken apart.
+निमंत्रण (nimantraṇ) is Sanskrit nimantraṇa, "invitation", taken over whole as a learned loan, a tatsama. CDIAL lists its verb, nimantrayate, "invites", whose inherited forms survive as nyotnā, "to invite" (CDIAL 7235).
 
 What you've built.
 Sorry, no problem, congratulations, wishes, and thanks for an invitation.

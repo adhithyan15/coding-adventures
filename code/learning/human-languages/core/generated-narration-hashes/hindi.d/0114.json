@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 114,
-  "sourceHash": "fnv1a64:35eee15f2b979b60",
+  "sourceHash": "fnv1a64:e02b1d18ab77a985",
   "lessonIds": [
     "HI-C114-mafi",
     "HI-C114-koibaat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch114.txt",
   "json": "hindi/narration/ch114.json",
-  "textHash": "fnv1a64:5882998be21f8a1a",
-  "jsonHash": "fnv1a64:4b2ed174b56f3366",
+  "textHash": "fnv1a64:bde4f2e2c2358755",
+  "jsonHash": "fnv1a64:ad537f78615c4b24",
   "findings": []
 }

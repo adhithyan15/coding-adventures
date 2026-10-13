@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 209,
-  "sourceHash": "fnv1a64:822b062ba5edf88e",
+  "sourceHash": "fnv1a64:c1454cd41d248617",
   "lessonIds": [
     "HI-C209-chajja",
     "HI-C209-pyala",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch209.txt",
   "json": "hindi/narration/ch209.json",
-  "textHash": "fnv1a64:0d4f09803ef0a2bf",
-  "jsonHash": "fnv1a64:23aa18cbd5b9a5e3",
+  "textHash": "fnv1a64:f3d96e7fe287ad03",
+  "jsonHash": "fnv1a64:8032cad4f548cdf6",
   "findings": []
 }

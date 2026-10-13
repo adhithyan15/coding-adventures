@@ -14,7 +14,8 @@ romanization: "khel"
 concept_tag: HI-NOUN-GAME
 prerequisites: [HI-C69-go, HI-C69-ticket, HI-C68-country, HI-C69-vehicle]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khel ← *khel- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ answer starts from.
 
 The **ख** is the aspirated one — a real puff of breath after the *k*, which is
 what separates खेल from क, and the difference changes the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेल** (*khel*) is inherited from a reconstructed *\*khel-*, "play" (CDIAL 3918). CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

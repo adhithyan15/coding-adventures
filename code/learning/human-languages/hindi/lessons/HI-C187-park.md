@@ -14,7 +14,8 @@ romanization: "pārk"
 concept_tag: HI-THG187-PARK
 prerequisites: [HI-C187-dakiya, HI-C187-sinema]
 sounds: []
-roots: []
+roots: [english-park]
+etymology_hook: "pārk ← English park"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C187-sinema]
 <!-- hl-knowledge: introduces=[HI-LEX-C187-THG187-05]; assesses=[] -->
 
 **पार्क** — *pārk* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पार्क** (*pārk*) is a loan from English *park*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

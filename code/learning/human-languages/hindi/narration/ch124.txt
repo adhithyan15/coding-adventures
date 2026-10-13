@@ -13,6 +13,9 @@ You'll want to know: भूखा.
 भूखा (bhūkhā) — "hungry". A woman says भूखी.
 It is भूख, "hunger", made into a description. मैं भूखा (bhūkhā) हूँ — "I am hungry".
 
+The word, taken apart.
+भूखा (bhūkhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bubhukṣaka, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on the Sanskrit "wish to eat", bubhukṣā.
+
 What you've built.
 Hunger, made into how you are.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for have you eaten, then the Hindi for hungry.
 You'll want to know: प्यासा.
 प्यासा (pyāsā) — "thirsty". A woman says प्यासी.
 The same move: प्यास, "thirst", becomes प्यासा (pyāsā).
+
+The word, taken apart.
+प्यासा (pyāsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pipāsita, "thirsty" (CDIAL 8200).
 
 What you've built.
 Thirst, made into how you are.
@@ -73,6 +79,9 @@ You'll want to know: नींद आ रही है.
 नींद आ रही है (nīnd ā rahī hai) — "I'm sleepy", literally "sleep is coming".
 नींद is the sleep you know. Sleep comes to you, the way anger and laughter do.
 
+The word, taken apart.
+नींद आ रही है (nīnd ā rahī hai) is "sleep is coming". nīnd comes from Sanskrit nidrā, "sleep" (CDIAL 7200).
+
 What you've built.
 Sleep, which comes to you.
 
@@ -103,6 +112,9 @@ You'll want to know: पसीना.
 पसीना (pasīnā) — "sweat".
 बहुत पसीना (pasīnā) आ रहा है — "I'm sweating a lot", literally "a lot of sweat is coming".
 
+The word, taken apart.
+पसीना (pasīnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from prasvidana, "sweating", a form CDIAL reconstructs from its descendants (CDIAL 8895). CDIAL also allows prasvinna, "sweated".
+
 What you've built.
 Sweat, in the coming frame.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for I'm sleepy, then the Hindi for sweat.
 You'll want to know: सिरदर्द.
 सिरदर्द (sirdard) — "a headache".
 It is सिर, "head", and दर्द, "pain", both yours already. मुझे सिरदर्द (sirdard) है — "I have a headache".
+
+The word, taken apart.
+सिरदर्द (sirdard) joins two sources: sir, "head", from Sanskrit śiras (CDIAL 12452), and dard, "pain", usually traced to Persian dard.
 
 What you've built.
 Hungry, thirsty, sleepy, sweat, and a headache.

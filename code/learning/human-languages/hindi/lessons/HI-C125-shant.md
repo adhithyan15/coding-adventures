@@ -14,7 +14,8 @@ romanization: "śānt"
 concept_tag: HI-CALM-CALM
 prerequisites: [HI-C124-pasina, HI-C124-sirdard]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śānt ← Sanskrit śānta 'calm', a tatsama (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C124-sirdard]
 **शांत** (*śānt*) — "calm, peaceful", of a person or a place.
 
 **शांत रहिए** — "please stay calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शांत** (*śānt*) is Sanskrit *śānta*, "calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

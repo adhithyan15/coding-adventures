@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a disease, then the Hindi for an illness.
 You'll want to know: धड़कन.
 धड़कन — dhaṛkan — "a heartbeat".
 
+The word, taken apart.
+धड़कन (dhaṛkan) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhaḍ, "throb, beat", a form CDIAL reconstructs from its descendants (CDIAL 6711). dhaṛkan is the noun of dhaṛaknā, "to throb".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for an illness, then the Hindi for a heartbeat
 
 You'll want to know: साँस.
 साँस — sā̃s — "breath".
+
+The word, taken apart.
+साँस (sā̃s) (sāṁs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvāsa, "breath, breathing" (CDIAL 12769).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a heartbeat, then the Hindi for breath.
 You'll want to know: खुजली.
 खुजली — khujlī — "an itch".
 
+The word, taken apart.
+खुजली (khujlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kharju, "itching, scab" (CDIAL 3827). CDIAL takes the word from Dravidian. The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for breath, then the Hindi for an itch.
 You'll want to know: जलन.
 जलन — jalan — "a burning feeling".
 
+The word, taken apart.
+जलन (jalan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jvalana, "burning" (CDIAL 5307).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for an itch, then the Hindi for a burning feel
 
 You'll want to know: सूजन.
 सूजन — sūjan — "a swelling".
+
+The word, taken apart.
+सूजन (sūjan) is the noun of sūjnā, "to swell", which comes from Sanskrit śūyate, "is swollen" (CDIAL 12568).
 
 What you've built.
 One more word for this chapter.

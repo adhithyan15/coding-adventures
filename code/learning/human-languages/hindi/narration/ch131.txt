@@ -12,6 +12,9 @@ Before the new one: say the Hindi for thread, then the Hindi for a comb.
 You'll want to know: तौलिया.
 तौलिया — tauliyā — "a towel".
 
+The word, taken apart.
+तौलिया (tauliyā) is usually traced to Portuguese toalha, "towel".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a comb, then the Hindi for a towel.
 
 You'll want to know: झाड़ू.
 झाड़ू — jhāṛū — "a broom".
+
+The word, taken apart.
+झाड़ू (jhāṛū) is built on jhāṛnā, "to sweep, shake off", which CDIAL lists under a reconstructed jhāṭayati, "shakes down" (CDIAL 5328).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Say तीन, चार and पाँच, then the path behind the first: trī�
 You'll want to know: डिब्बा.
 डिब्बा — ḍibbā — "a box".
 
+The word, taken apart.
+डिब्बा (ḍibbā) belongs with Hindi ḍabbā and ḍibbī, "box", which CDIAL lists under a reconstructed ḍibba, "box" (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for a broom, then the Hindi for a box.
 You'll want to know: थैला.
 थैला — thailā — "a bag".
 
+The word, taken apart.
+थैला (thailā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthavi, "sack, bag" (CDIAL 13746). The -l- is an added suffix; the Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for a box, then the Hindi for a bag.
 
 You'll want to know: मोमबत्ती.
 मोमबत्ती — mombattī — "a candle".
+
+The word, taken apart.
+मोमबत्ती (mombattī) is "wax-wick". mom, "wax", is usually traced to Persian mom, and battī, "wick", comes from Sanskrit varti, "wick" (CDIAL 11359).
 
 What you've built.
 One more word for this chapter.

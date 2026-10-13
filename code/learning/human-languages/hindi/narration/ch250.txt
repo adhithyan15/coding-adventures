@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a mobile phone, then the Hindi for a docum
 You'll want to know: फ़ाइल.
 फ़ाइल — fāil — "a file".
 
+The word, taken apart.
+फ़ाइल (fāil) is a loan from English file.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a document, then the Hindi for a file.
 
 You'll want to know: तिजोरी.
 तिजोरी — tijorī — "a safe, a strongbox".
+
+The word, taken apart.
+The origin of तिजोरी (tijorī) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a file, then the Hindi for a safe.
 You'll want to know: मोहर.
 मोहर — mohar — "a stamp, a seal".
 
+The word, taken apart.
+मोहर (mohar) is a loan, usually traced to Persian muhr, "seal, stamp".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a safe, then the Hindi for a stamp.
 You'll want to know: छूट.
 छूट — chūṭ — "a discount".
 
+The word, taken apart.
+छूट (chūṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707). chūṭ, "a let-off", is the noun of chūṭnā, "to be released".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a stamp, then the Hindi for a discount.
 
 You'll want to know: खुदरा.
 खुदरा — khuḍrā — "retail, small change".
+
+The word, taken apart.
+खुदरा (khuḍrā) is a loan, usually traced to Persian khurda, "small, small change".
 
 What you've built.
 One more word for this chapter.

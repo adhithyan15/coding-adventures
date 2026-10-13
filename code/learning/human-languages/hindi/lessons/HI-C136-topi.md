@@ -14,7 +14,8 @@ romanization: "ṭopī"
 concept_tag: HI-THINGS136-TOPI
 prerequisites: [HI-C136-sari, HI-C136-dupatta]
 sounds: []
-roots: []
+roots: [indo-aryan-toppa]
+etymology_hook: "ṭopī ← *ṭoppa 'hat, covering', a reconstructed form; a tadbhava (CDIAL 5481)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C136-dupatta]
 <!-- hl-knowledge: introduces=[HI-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **टोपी** — *ṭopī* — "a cap, a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टोपी** (*ṭopī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭoppa*, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls any link with a Munda source very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

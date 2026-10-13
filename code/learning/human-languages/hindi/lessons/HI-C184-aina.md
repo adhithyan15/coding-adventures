@@ -14,7 +14,8 @@ romanization: "āīnā"
 concept_tag: HI-THG184-AINA
 prerequisites: [HI-C184-cabi, HI-C184-almari]
 sounds: []
-roots: []
+roots: [persian-aina]
+etymology_hook: "āīnā: usually traced to Persian āīna 'mirror'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C184-almari]
 <!-- hl-knowledge: introduces=[HI-LEX-C184-THG184-04]; assesses=[] -->
 
 **आईना** — *āīnā* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आईना** (*āīnā*) is a loan, usually traced to Persian *āīna*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

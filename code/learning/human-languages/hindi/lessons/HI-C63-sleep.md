@@ -14,7 +14,8 @@ romanization: "nīnd"
 concept_tag: HI-NOUN-SLEEP
 prerequisites: [HI-C63-thirst, HI-C61-tumbler, HI-C62-basket]
 sounds: []
-roots: []
+roots: [sanskrit-nidra]
+etymology_hook: "nīnd ← Sanskrit nidrā 'sleep', a tadbhava (CDIAL 7200)"
 duration:
   max_seconds: 210
 requires:

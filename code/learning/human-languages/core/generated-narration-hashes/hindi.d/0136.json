@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 136,
-  "sourceHash": "fnv1a64:2c00ab784de3c475",
+  "sourceHash": "fnv1a64:f41d4651a7f2cf7a",
   "lessonIds": [
     "HI-C136-kurta",
     "HI-C136-sari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch136.txt",
   "json": "hindi/narration/ch136.json",
-  "textHash": "fnv1a64:256184d38b920709",
-  "jsonHash": "fnv1a64:00c86fe646f0d817",
+  "textHash": "fnv1a64:86c97319bff2282d",
+  "jsonHash": "fnv1a64:7648d04d297bd68d",
   "findings": []
 }

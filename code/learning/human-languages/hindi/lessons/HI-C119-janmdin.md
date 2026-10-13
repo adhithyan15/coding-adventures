@@ -14,7 +14,8 @@ romanization: "janmdin"
 concept_tag: HI-ABOUT-BIRTHDAY
 prerequisites: [HI-C119-shadi, HI-C119-shadishuda]
 sounds: []
-roots: []
+roots: [sanskrit-janman, sanskrit-dina]
+etymology_hook: "janm, a tatsama of janman 'birth' (CDIAL 5113); din ← dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C119-shadishuda]
 
 **दिन** is the day you know. **जन्मदिन की शुभकामनाएँ** — "happy birthday", with the good wishes
 you have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जन्मदिन** (*janmdin*) is "birth-day". *janm* is Sanskrit *janman*, "birth", taken over as a learned loan (CDIAL 5113), and *din* comes from *dina*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

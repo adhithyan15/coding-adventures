@@ -14,7 +14,8 @@ romanization: "ġaltī"
 concept_tag: HI-THG189-GALTI
 prerequisites: [HI-C189-saval, HI-C189-javab]
 sounds: []
-roots: []
+roots: [arabic-ghalat]
+etymology_hook: "ġaltī: Arabic ghalaṭ 'error', through Persian (Lane, root gh-l-ṭ), with -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C189-javab]
 <!-- hl-knowledge: introduces=[HI-LEX-C189-THG189-05]; assesses=[] -->
 
 **ग़लती** — *ġaltī* — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग़लती** (*ġaltī*) is *ġalat*, "wrong", with the ending *-ī* that makes a noun. *ġalat* comes from Arabic *ghalaṭ*, "an error", through Persian; its root is *gh-l-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

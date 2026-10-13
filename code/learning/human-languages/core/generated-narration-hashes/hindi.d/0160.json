@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 160,
-  "sourceHash": "fnv1a64:908095dc27603b79",
+  "sourceHash": "fnv1a64:472632cad5d6bf38",
   "lessonIds": [
     "HI-C160-bhejna",
     "HI-C160-lana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch160.txt",
   "json": "hindi/narration/ch160.json",
-  "textHash": "fnv1a64:4d31abacfd9b41a8",
-  "jsonHash": "fnv1a64:018f25392d28a7c1",
+  "textHash": "fnv1a64:527326cd1951c812",
+  "jsonHash": "fnv1a64:1592b76008593e77",
   "findings": []
 }

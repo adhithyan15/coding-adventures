@@ -14,7 +14,8 @@ romanization: "panīr"
 concept_tag: HI-THINGS141-PANIR
 prerequisites: [HI-C140-dahi, HI-C141-makkhan]
 sounds: []
-roots: []
+roots: [persian-panir]
+etymology_hook: "panīr: usually traced to Persian panīr 'cheese'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C141-makkhan]
 <!-- hl-knowledge: introduces=[HI-LEX-C141-THINGS141-02]; assesses=[] -->
 
 **पनीर** — *panīr* — "paneer, cottage cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पनीर** (*panīr*) is a loan, usually traced to Persian *panīr*, "cheese".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sakht"
 concept_tag: HI-QUAL155-SAKHT
 prerequisites: [HI-C154-halka, HI-C155-naram]
 sounds: []
-roots: []
+roots: [persian-sakht]
+etymology_hook: "sakht: usually traced to Persian sakht 'hard, firm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C155-naram]
 <!-- hl-knowledge: introduces=[HI-LEX-C155-QUAL155-02]; assesses=[] -->
 
 **सख़्त** — *sakht* — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सख़्त** (*sakht*) is a loan, usually traced to Persian *sakht*, "hard, firm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

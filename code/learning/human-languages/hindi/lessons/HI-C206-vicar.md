@@ -14,7 +14,8 @@ romanization: "vicār"
 concept_tag: HI-THG206-VICAR
 prerequisites: [HI-C206-salah, HI-C206-ray]
 sounds: []
-roots: []
+roots: [sanskrit-vicara]
+etymology_hook: "vicār ← Sanskrit vicāra 'pondering', a tatsama (CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C206-ray]
 <!-- hl-knowledge: introduces=[HI-LEX-C206-THG206-03]; assesses=[] -->
 
 **विचार** — *vicār* — "a thought, an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विचार** (*vicār*) is Sanskrit *vicāra*, "pondering", taken over whole as a learned loan, a tatsama (CDIAL 11683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

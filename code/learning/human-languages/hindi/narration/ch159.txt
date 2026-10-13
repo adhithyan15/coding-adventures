@@ -12,6 +12,9 @@ Before the new one: say the Hindi for low, then the Hindi for empty.
 You'll want to know: भरा.
 भरा — bharā — "full".
 
+The word, taken apart.
+भरा (bharā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, "bears, fills" (CDIAL 9397). bharā, "full", is the past form of bharnā, "to fill".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for empty, then the Hindi for full.
 
 You'll want to know: सोना.
 सोना — sonā — "to sleep".
+
+The word, taken apart.
+सोना (sonā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, "sleeps" (CDIAL 13902). It is a different word from sonā, "gold", from Sanskrit suvarṇa (CDIAL 13519).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for full, then the Hindi for to sleep.
 You'll want to know: जागना.
 जागना — jāgnā — "to wake up, to stay awake".
 
+The word, taken apart.
+जागना (jāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to sleep, then the Hindi for to wake up.
 You'll want to know: दौड़ना.
 दौड़ना — dauṛnā — "to run".
 
+The word, taken apart.
+दौड़ना (dauṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dravati, "runs" (CDIAL 6624). CDIAL notes an added -ḍ-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to wake up, then the Hindi for to run.
 
 You'll want to know: रखना.
 रखना — rakhnā — "to put, to keep".
+
+The word, taken apart.
+रखना (rakhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣati, "guards" (CDIAL 10547).
 
 What you've built.
 One more word for this chapter.

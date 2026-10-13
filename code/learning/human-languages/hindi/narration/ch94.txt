@@ -13,6 +13,9 @@ You'll want to know: हम.
 हम (ham) — "we."
 The possessive chapter said hamārā was built on हम (ham), and there the matter rested. Here is the word itself.
 
+The word, taken apart.
+हम (ham) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from asmad, "we, us (the base of the plural forms)" (CDIAL 986).
+
 Grammar Lens: where Hindi says "we" and English says "I".
 हम (ham) does a second job that has no English equivalent. In much ordinary speech it stands in for मैं, "I," when the speaker is being modest or speaking as part of a household:
 [a table of 2 rows, read aloud]
@@ -47,6 +50,9 @@ Say वह and हम (ham). You can point at one person and you can include you
 You'll want to know: वे.
 वे (ve) — "they."
 It is the plural of वह, and the relationship is visible: the same word with a different vowel.
+
+The word, taken apart.
+वे (ve) is the plural partner of वह, "that". CDIAL lists vah under Sanskrit asau, "that" (CDIAL 972), but does not list ve itself.
 
 Grammar Lens: the plural that is also a courtesy.
 The same habit you met with आप appears here. Hindi shows respect by using a plural form for one person:
@@ -85,6 +91,9 @@ You'll want to know: हमें and तुम्हें.
 हमें (hamẽ) — "to us." तुम्हें (tumhẽ) — "to you," at the tum level.
 Mujhe is the same kind of word: मैं in its oblique form, meaning to me. The liking frame was never a lump — it was a pronoun in a case, and now the rest of the set arrives with it.
 
+The word, taken apart.
+हमें / तुम्हें (hamẽ / tumhẽ) is ham, "we", and tum, "you", with an ending -ẽ, "to". CDIAL lists ham under the Sanskrit plural base asmad- (CDIAL 986) and tum under yuṣmad- (CDIAL 10511).
+
 Grammar Lens: the same bend, a third time.
 [a table of 3 rows, read aloud]
 subject: मैं. oblique: mujhe. meaning: to me.
@@ -121,6 +130,9 @@ You'll want to know: āpko and use.
 These two are built differently from the last pair. Instead of the nasal ending they take a postposition, ko, meaning to:
 आप + को becomes आपको.
 Use is the worn-down version of the same thing: us + ko, squeezed together by centuries of use, exactly as maiṅ + ko became mujhe.
+
+The word, taken apart.
+आपको / उसे (āpko / use) is āp, "you", with ko, "to", and us, "him, her", with the ending -e. āp comes from Sanskrit ātman, "self" (CDIAL 1135); CDIAL lists us under asau, "that" (CDIAL 972).
 
 Grammar Lens: the whole set, at last.
 [a table of 5 rows, read aloud]
@@ -161,6 +173,9 @@ Hindi has no article. No word for the, and no word for a.
 This is the largest single structural difference between Hindi and English, and it is worth being told once rather than discovered slowly:
 किताब — kitāb — can mean a book or the book.
 The bare noun covers both. Nothing is missing from the sentence; the slot the English article fills does not exist.
+
+The word, taken apart.
+बिना आर्टिकल (binā ārṭikal) is two words from two sources. binā, "without", comes from Sanskrit vinā, "without" (CDIAL 11772); ārṭikal is English article.
 
 Grammar Lens: what does the work instead.
 Hindi has three ways to be more specific when it needs to be, and you have all three already:

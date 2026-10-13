@@ -14,7 +14,8 @@ romanization: "hindī meṁ"
 concept_tag: HI-ASK-IN-HINDI
 prerequisites: [HI-C110-rukie, HI-C110-matlab]
 sounds: []
-roots: []
+roots: [persian-hindi, sanskrit-madhya]
+etymology_hook: "hindī ← Persian hindī 'of Hind'; meṁ ← Sanskrit madhye 'in, among' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C110-matlab]
 
 It is **में**, "in", the word you met on **रहना**, after the name of the language.
 **अंग्रेज़ी में** — "in English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिंदी में** (*hindī meṁ*) is *hindī* with *meṁ*, "in". *hindī* is usually traced to Persian *hindī*, "of Hind", the land beyond the Indus; *meṁ* comes from Sanskrit *madhye*, "in, among", a form of *madhya*, "middle" (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

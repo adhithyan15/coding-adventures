@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a border, then the Hindi for an island.
 You'll want to know: रेगिस्तान.
 रेगिस्तान — registān — "a desert".
 
+The word, taken apart.
+रेगिस्तान (registān) is a loan, usually traced to Persian rēgistān, "desert". It is built from rēg, "sand", and -stān, "place".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for an island, then the Hindi for a desert.
 
 You'll want to know: घाटी.
 घाटी — ghāṭī — "a valley".
+
+The word, taken apart.
+घाटी (ghāṭī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṭṭa, "landing place; passage" (CDIAL 4414). CDIAL notes that a Dravidian origin is supported, though a link with ghāṭā is possible.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a desert, then the Hindi for a valley.
 You'll want to know: झरना.
 झरना — jharnā — "a waterfall".
 
+The word, taken apart.
+झरना (jharnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jharati, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a valley, then the Hindi for a waterfall.
 You'll want to know: तालाब.
 तालाब — tālāb — "a pond".
 
+The word, taken apart.
+तालाब (tālāb) is usually explained as tāl, "pond", which CDIAL lists under Sanskrit talla, "pond" (CDIAL 5742), with Persian āb, "water".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a waterfall, then the Hindi for a pond.
 
 You'll want to know: खदान.
 खदान — khadān — "a mine".
+
+The word, taken apart.
+The origin of खदान (khadān) is uncertain. CDIAL does not list it, though it lists Hindi khān, "mine, quarry", under Sanskrit khāni, "mine" (CDIAL 3873).
 
 What you've built.
 One more word for this chapter.

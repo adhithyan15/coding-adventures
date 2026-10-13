@@ -14,7 +14,8 @@ romanization: "põchnā"
 concept_tag: HI-VERB-POCHNA
 prerequisites: [HI-C225-safkarna, HI-C225-jharna]
 sounds: []
-roots: []
+roots: [sanskrit-pronchati]
+etymology_hook: "põchnā ← Sanskrit proñchati 'wipes off', a tadbhava (CDIAL 9011)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C225-jharna]
 <!-- hl-knowledge: introduces=[HI-LEX-C225-ACT225-03]; assesses=[] -->
 
 **पोंछना** — *põchnā* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोंछना** (*põchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *proñchati*, "wipes off" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan *\*poṁch-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

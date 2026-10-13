@@ -14,7 +14,8 @@ romanization: "śānti"
 concept_tag: HI-THG219-SANTI
 prerequisites: [HI-C219-jel, HI-C219-azadi]
 sounds: []
-roots: []
+roots: [sanskrit-shanti]
+etymology_hook: "śānti ← Sanskrit śānti 'calm, peace', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C219-azadi]
 <!-- hl-knowledge: introduces=[HI-LEX-C219-THG219-03]; assesses=[] -->
 
 **शांति** — *śānti* — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शांति** (*śānti*) is Sanskrit *śānti*, "calm, peace", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

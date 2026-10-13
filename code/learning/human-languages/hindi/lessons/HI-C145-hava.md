@@ -14,7 +14,8 @@ romanization: "havā"
 concept_tag: HI-THINGS145-HAVA
 prerequisites: [HI-C145-kohra, HI-C145-barf]
 sounds: []
-roots: []
+roots: [persian-hava-air]
+etymology_hook: "havā ← Arabic hawāʾ 'air', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C145-barf]
 <!-- hl-knowledge: introduces=[HI-LEX-C145-THINGS145-04]; assesses=[] -->
 
 **हवा** — *havā* — "wind, air".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हवा** (*havā*) is a loan from Arabic *hawāʾ*, "air", which reached Hindi through Persian. Its Arabic root is *h-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

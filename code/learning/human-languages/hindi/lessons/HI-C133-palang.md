@@ -14,7 +14,8 @@ romanization: "palaṅg"
 concept_tag: HI-THINGS133-PALANG
 prerequisites: [HI-C133-chata, HI-C133-batua]
 sounds: []
-roots: []
+roots: [sanskrit-palyanka]
+etymology_hook: "palaṅg ← Sanskrit palyaṅka 'bed', a tadbhava (CDIAL 7964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C133-batua]
 <!-- hl-knowledge: introduces=[HI-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **पलंग** — *palaṅg* — "a bed frame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पलंग** (*palaṅg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *palyaṅka*, "bed" (CDIAL 7964). CDIAL notes that this form, with *-ṅg*, spread from the north-west.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

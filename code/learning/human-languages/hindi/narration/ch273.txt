@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a procession, then the Hindi for a speech.
 You'll want to know: पुलिस.
 पुलिस — pulis — "the police".
 
+The word, taken apart.
+पुलिस (pulis) is a loan from English police.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a speech, then the Hindi for the police.
 
 You'll want to know: दवाख़ाना.
 दवाख़ाना — davākhānā — "a pharmacy".
+
+The word, taken apart.
+दवाख़ाना (davākhānā) is davā, "medicine", from Arabic dawāʾ through Persian (Lane, root d-w-y), with Persian khāna, "house".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for the police, then the Hindi for a pharmacy.
 You'll want to know: रोगी.
 रोगी — rogī — "a patient, a sick person".
 
+The word, taken apart.
+रोगी (rogī) is Sanskrit rogin, "sick", taken over whole as a learned loan, a tatsama. Hindi took its nominative, rogī. It is built on roga, "disease".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a pharmacy, then the Hindi for a patient.
 You'll want to know: रोग.
 रोग — rog — "a disease".
 
+The word, taken apart.
+रोग (rog) is Sanskrit roga, "disease", taken over whole as a learned loan, a tatsama (CDIAL 10829).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a patient, then the Hindi for a disease.
 
 You'll want to know: बीमारी.
 बीमारी — bīmārī — "an illness".
+
+The word, taken apart.
+बीमारी (bīmārī) is bīmār, "sick", usually traced to Persian bīmār, with the ending -ī that makes a noun.
 
 What you've built.
 One more word for this chapter.

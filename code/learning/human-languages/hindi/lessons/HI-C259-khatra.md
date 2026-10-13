@@ -14,7 +14,8 @@ romanization: "khatrā"
 concept_tag: HI-THG259-KHATRA
 prerequisites: [HI-C259-ghatna, HI-C259-durghatna]
 sounds: []
-roots: []
+roots: [arabic-khatar]
+etymology_hook: "khatrā ← Arabic khaṭar 'danger, risk', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C259-durghatna]
 <!-- hl-knowledge: introduces=[HI-LEX-C259-THG259-05]; assesses=[] -->
 
 **ख़तरा** — *khatrā* — "danger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़तरा** (*khatrā*) is a loan from Arabic *khaṭar*, "danger, risk", which reached Hindi through Persian. Its Arabic root is *kh-ṭ-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

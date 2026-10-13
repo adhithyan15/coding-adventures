@@ -14,7 +14,8 @@ romanization: "buā"
 concept_tag: HI-AUNT-BUA
 prerequisites: [HI-C116-chacha, HI-C117-mausi]
 sounds: []
-roots: []
+roots: [indo-aryan-phupphi]
+etymology_hook: "buā: CDIAL lists phūphī and phūā 'father's sister' under *phupphī (CDIAL 9089); buā looks like a variant, unlisted"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C117-mausi]
 **बुआ** (*buā*) — "aunt", your father's sister.
 
 **मौसी** and **बुआ** are both "aunt" in English; in Hindi the side of the family decides.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुआ** (*buā*) is close to the Hindi words *phūphī* and *phūā*, "father's sister", which CDIAL lists under a reconstructed *\*phupphī* (CDIAL 9089). CDIAL does not list *buā* itself, so its exact path is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

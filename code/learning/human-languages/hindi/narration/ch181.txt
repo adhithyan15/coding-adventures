@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a journey, then the Hindi for luggage.
 You'll want to know: नक़्शा.
 नक़्शा — naqśā — "a map".
 
+The word, taken apart.
+नक़्शा (naqśā) is a loan from Arabic naqsh, "a painting, an engraving", which reached Hindi through Persian. Its Arabic root is n-q-sh (Lane). Hindi naqśā came through Persian naqsha, "a drawing, a plan".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for luggage, then the Hindi for a map.
 
 You'll want to know: रास्ता.
 रास्ता — rāstā — "a way, a route".
+
+The word, taken apart.
+रास्ता (rāstā) is a loan, usually traced to Persian rāsta, "straight; a road".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a map, then the Hindi for a way.
 You'll want to know: मोड़.
 मोड़ — moṛ — "a turn, a bend".
 
+The word, taken apart.
+मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, "twists" (CDIAL 10186). moṛ, "a turn", is the noun of moṛnā, "to twist, bend".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a way, then the Hindi for a turn.
 You'll want to know: चौराहा.
 चौराहा — caurāhā — "a crossroads".
 
+The word, taken apart.
+चौराहा (caurāhā) is usually explained as cau-, "four", with rāh, "road", the Persian word that रास्ता (rāstā), "a way", also belongs with. CDIAL does not list it; it lists cauhaṭṭā, "a crossing of market streets", from catur-, "four" (CDIAL 4626).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a turn, then the Hindi for a crossroads.
 
 You'll want to know: जहाज़.
 जहाज़ — jahāz — "a ship, an aeroplane".
+
+The word, taken apart.
+जहाज़ (jahāz) is a loan from Arabic jahāz, "equipment, gear", which reached Hindi through Persian. Its Arabic root is j-h-z (Lane). In Persian and Hindi it came to mean a ship.
 
 What you've built.
 One more word for this chapter.

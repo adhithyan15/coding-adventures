@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 103,
-  "sourceHash": "fnv1a64:4d3028ba5891dfbe",
+  "sourceHash": "fnv1a64:a267e7d6029b06a8",
   "lessonIds": [
     "HI-C95-jaanta-hun",
     "HI-C95-jaante-hain",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch103.txt",
   "json": "hindi/narration/ch103.json",
-  "textHash": "fnv1a64:a59402c1f250d9bb",
-  "jsonHash": "fnv1a64:6d10083e507a01a2",
+  "textHash": "fnv1a64:4c454de78433ea3a",
+  "jsonHash": "fnv1a64:34340fc9e37e506a",
   "findings": []
 }

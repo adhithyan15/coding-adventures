@@ -14,7 +14,8 @@ romanization: "gahrā"
 concept_tag: HI-QUAL158-GAHRA
 prerequisites: [HI-C157-burha, HI-C158-caura, HI-C11-laal-niila, HI-C11-laal-niila]
 sounds: []
-roots: []
+roots: [sanskrit-gabhira]
+etymology_hook: "gahrā ← Sanskrit gabhīra 'deep, solemn', a tadbhava (CDIAL 4024)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C158-caura]
 <!-- hl-knowledge: introduces=[HI-LEX-C158-QUAL158-02]; assesses=[] -->
 
 **गहरा** — *gahrā* — "deep, dark (of colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गहरा** (*gahrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gabhīra*, "deep, solemn" (CDIAL 4024).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

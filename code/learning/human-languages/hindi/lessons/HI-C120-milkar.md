@@ -14,7 +14,8 @@ romanization: "milkar acchā lagā"
 concept_tag: HI-FORM-NICE-TO-MEET
 prerequisites: [HI-C120-parichay, HI-C120-insan]
 sounds: []
-roots: []
+roots: [sanskrit-milati, sanskrit-lagyati]
+etymology_hook: "milkar ← milnā, from Sanskrit milati 'meets' (CDIAL 10133); lagā ← lagnā, from lagyati 'adheres' (CDIAL 10895)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C120-insan]
 good".
 
 It is the everyday cousin of **आपसे मिलकर ख़ुशी हुई**, built on the same **मिलना**, "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिलकर अच्छा लगा** (*milkar acchā lagā*) is "having met, it felt good". *milnā*, "to meet", comes from Sanskrit *milati*, "meets" (CDIAL 10133), and *lagnā*, "to strike one as", from *lagyati*, "adheres to" (CDIAL 10895).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

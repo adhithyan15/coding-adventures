@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8118fec7a072286e",
+  "sourceHash": "fnv1a64:290d6d68b2c7368a",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1c59d982f2ade32",
+      "sourceHash": "fnv1a64:ba563f9b6a248f31",
       "notice": null,
       "blocks": [
         {
@@ -65,24 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "That root travelled. Latin limbus is a hanging border or hem, and English took it twice:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "the hanging thing"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "word: limb. the hanging thing: what hangs off the trunk.",
-                "word: limbo. the hanging thing: the edge, the hem of things."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So लंबा (lambā) and English limb are the same old idea about hanging, arrived at from opposite ends of a continent."
+              "text": "CDIAL glosses the Sanskrit word \"pendent\", and notes that Sanskrit already used it for \"long\" in compounds (CDIAL 10951)."
             }
           ]
         },
@@ -200,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3099aa7ad53e7d75",
+      "sourceHash": "fnv1a64:17e03490d64ab3e4",
       "notice": null,
       "blocks": [
         {
@@ -242,7 +225,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पतला (patlā) goes back to Sanskrit पत्र and the root पत् (pat), \"to fall.\" A thin thing is one that has fallen flat — flattened out until there is hardly anything left of it."
+              "text": "पतला (patlā) goes back to Sanskrit pattrala, \"leafy\", which CDIAL takes to have meant \"leaf-like, thin\" (CDIAL 7736). It is built on पत्र (pattra), \"leaf\", from the root पत् (pat), \"to fly, to fall\". A thin thing is as flat as a leaf."
             },
             {
               "kind": "speech",
@@ -373,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5acdf67a5824bf7d",
+      "sourceHash": "fnv1a64:4d1ca0e10e56c8fc",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोटा (moṭā) is from Sanskrit मूर्त by way of Prakrit, carrying the sense of something solid, with body to it — a shape that has taken form rather than staying an outline."
+              "text": "मोटा (moṭā) comes from a reconstructed mōṭṭa, one of a group of related forms that CDIAL heads muṭṭa, \"defective\" (CDIAL 10187). In Hindi it carries the sense of something solid, with body to it — a shape that has taken form rather than staying an outline."
             },
             {
               "kind": "speech",
@@ -550,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6c7280ffedae163",
+      "sourceHash": "fnv1a64:9c029b3707c180ee",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +597,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit नत (nata) is behind it, meaning bent, bowed, stooping — the same root as namaste, where the bowing is a greeting. A nāṭā person is pictured as one closer to the ground."
+              "text": "CDIAL traces it to a reconstructed naṭṭa, \"defective\", and glosses the Hindi word \"short, dwarfish\" (CDIAL 6935)."
             },
             {
               "kind": "speech",

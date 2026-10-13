@@ -14,7 +14,8 @@ romanization: "ummīdvār"
 concept_tag: HI-THG260-UMMIDVAR
 prerequisites: [HI-C260-niyam, HI-C260-suci]
 sounds: []
-roots: []
+roots: [persian-ummedwar]
+etymology_hook: "ummīdvār: usually traced to Persian ummēdwār 'one who hopes; a candidate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C260-suci]
 <!-- hl-knowledge: introduces=[HI-LEX-C260-THG260-05]; assesses=[] -->
 
 **उम्मीदवार** — *ummīdvār* — "a candidate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उम्मीदवार** (*ummīdvār*) is a loan, usually traced to Persian *ummēdwār*, "one who hopes; a candidate". It is built on *ummēd*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

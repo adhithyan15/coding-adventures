@@ -14,7 +14,8 @@ romanization: "bheṛ"
 concept_tag: HI-THINGS146-BHER
 prerequisites: [HI-C146-ut, HI-C146-gadha]
 sounds: []
-roots: []
+roots: [sanskrit-bhedra]
+etymology_hook: "bheṛ ← Sanskrit bheḍra 'ram', which CDIAL takes from Austroasiatic; a tadbhava (CDIAL 9606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C146-gadha]
 <!-- hl-knowledge: introduces=[HI-LEX-C146-THINGS146-05]; assesses=[] -->
 
 **भेड़** — *bheṛ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेड़** (*bheṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bheḍra*, "ram" (CDIAL 9606). CDIAL takes the word, after Przyluski, from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

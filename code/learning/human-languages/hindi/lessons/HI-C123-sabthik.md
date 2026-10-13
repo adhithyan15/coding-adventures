@@ -14,7 +14,8 @@ romanization: "sab ṭhīk?"
 concept_tag: HI-HAAL-ALL-WELL
 prerequisites: [HI-C122-janahai, HI-C123-kyahaal]
 sounds: []
-roots: []
+roots: [sanskrit-sarva]
+etymology_hook: "sab ← Sanskrit sarva 'all' (CDIAL 13276)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C123-kyahaal]
 **सब ठीक?** (*sab ṭhīk?*) — "all well?", "everything fine?".
 
 **सब** is "all", and **ठीक** is the "fine" you know. The answer: **हाँ, सब ठीक**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सब ठीक?** (*sab ṭhīk?*) is "all fine?". *sab*, "all", comes from Sanskrit *sarva*, "all, whole" (CDIAL 13276).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: HI-NOUN-VESSEL
 prerequisites: [HI-C60-peacock]
 sounds: []
 roots: []
+etymology_hook: "bartan: origin uncertain; often traced to Sanskrit vartana, but CDIAL does not list it (CDIAL 11354 is 'turning')"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C60-peacock]
 बर्तन is the word that goes with बरतना (*baratnā*), 'to handle, to make use of', and behind both stands Sanskrit वृत् (*vṛt-*), 'to turn, to carry on'. A बर्तन is, quite literally, a thing in use.
 
 That is why one word covers the whole shelf. A pot, a pan, a tray, a lid — each has its own name, and all of them together are बर्तन. Ask politely for बर्तन and you have asked for whatever the cooking needs.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बर्तन** (*bartan*) is uncertain. It is often traced to Sanskrit *vartana*, but CDIAL does not list it, and its *vartana* means "turning, rolling" (CDIAL 11354).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

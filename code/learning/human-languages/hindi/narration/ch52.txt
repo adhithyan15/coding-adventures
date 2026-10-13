@@ -14,6 +14,9 @@ You'll want to know: चावल.
 Sanskrit's own word for rice is तण्डुल (taṇḍula), and it is not the ancestor of this one. Where chāval came from is genuinely unsettled — the dictionaries record the Prakrit forms behind it without agreeing on what stands behind those.
 That makes it the fourth everyday Hindi word you have met whose origin is honestly unknown, after बिल्ली, कुत्ता and पेट. It is worth noticing the pattern: the words a language uses most are not always the words whose history it kept.
 
+The word, taken apart.
+चावल (chāval) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL suggests, with a "possibly", that it shares a non-Aryan origin with Sanskrit taṇḍula, "rice".
+
 What you've built.
 The first of five things a kitchen is stocked with.
 
@@ -141,6 +144,9 @@ You'll want to know: सब्ज़ी.
 सब्ज़ी (sabzī) — "a vegetable, vegetables".
 A Persian word: sabz means 'green', and -ī turns an adjective into a noun. सब्ज़ी (sabzī) is 'greenery' — the green things, taken together.
 You have met this suffix already without being told: ख़ुशी (khushī), 'happiness', is khush, 'pleased', with the same -ī on the end. One ending, two words, both Persian.
+
+The word, taken apart.
+सब्ज़ी (sabzī) is a loan, usually traced to Persian sabzī, "greenness, greens". It is built on sabz, "green".
 
 What you've built.
 The fifth of five. The kitchen is stocked.

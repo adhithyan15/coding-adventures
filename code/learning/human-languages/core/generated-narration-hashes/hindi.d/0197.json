@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 197,
-  "sourceHash": "fnv1a64:d78ae3f9cc2cb17e",
+  "sourceHash": "fnv1a64:bec188d3baff35dd",
   "lessonIds": [
     "HI-C197-kaksa",
     "HI-C197-pariksa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch197.txt",
   "json": "hindi/narration/ch197.json",
-  "textHash": "fnv1a64:b8ee4afcd997d11e",
-  "jsonHash": "fnv1a64:d49ce182c2c440b5",
+  "textHash": "fnv1a64:1fee13d78f405f19",
+  "jsonHash": "fnv1a64:6e3f3ba2b7159d66",
   "findings": []
 }

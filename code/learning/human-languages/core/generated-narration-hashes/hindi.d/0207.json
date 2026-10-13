@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 207,
-  "sourceHash": "fnv1a64:2476496a03661ddc",
+  "sourceHash": "fnv1a64:c850d37a1698094a",
   "lessonIds": [
     "HI-C207-sart",
     "HI-C207-qarz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch207.txt",
   "json": "hindi/narration/ch207.json",
-  "textHash": "fnv1a64:8c79ee3dfc4c7cd7",
-  "jsonHash": "fnv1a64:f5b32b19783f7c6f",
+  "textHash": "fnv1a64:3eda0b98ab6c52b2",
+  "jsonHash": "fnv1a64:5d185993e314ecb8",
   "findings": []
 }

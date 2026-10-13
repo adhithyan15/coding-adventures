@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 239,
-  "sourceHash": "fnv1a64:58c89310df854fa8",
+  "sourceHash": "fnv1a64:29b341da57bd4f39",
   "lessonIds": [
     "HI-C239-camakdar",
     "HI-C239-dhudhla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch239.txt",
   "json": "hindi/narration/ch239.json",
-  "textHash": "fnv1a64:1f0de6fcd6e17796",
-  "jsonHash": "fnv1a64:4dfecd39abea91a3",
+  "textHash": "fnv1a64:19333bb987b8662f",
+  "jsonHash": "fnv1a64:d97db0e1344b7c05",
   "findings": []
 }

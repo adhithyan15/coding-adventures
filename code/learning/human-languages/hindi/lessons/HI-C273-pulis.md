@@ -14,7 +14,8 @@ romanization: "pulis"
 concept_tag: HI-THG273-PULIS
 prerequisites: [HI-C272-jalus, HI-C272-bhasan]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "pulis ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C272-bhasan]
 <!-- hl-knowledge: introduces=[HI-LEX-C273-THG273-01]; assesses=[] -->
 
 **पुलिस** — *pulis* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुलिस** (*pulis*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

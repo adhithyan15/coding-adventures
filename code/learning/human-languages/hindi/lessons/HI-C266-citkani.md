@@ -15,6 +15,7 @@ concept_tag: HI-THG266-CITKANI
 prerequisites: [HI-C265-dari, HI-C265-qalin]
 sounds: []
 roots: []
+etymology_hook: "ciṭkanī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C265-qalin]
 <!-- hl-knowledge: introduces=[HI-LEX-C266-THG266-01]; assesses=[] -->
 
 **चिटकनी** — *ciṭkanī* — "a latch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चिटकनी** (*ciṭkanī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

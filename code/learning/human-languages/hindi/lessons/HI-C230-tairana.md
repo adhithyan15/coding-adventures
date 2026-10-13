@@ -14,7 +14,8 @@ romanization: "tairānā"
 concept_tag: HI-VERB-TAIRANA
 prerequisites: [HI-C230-latakna, HI-C230-latkana]
 sounds: []
-roots: []
+roots: [sanskrit-tirate]
+etymology_hook: "tairānā: the causing form of tairnā 'to swim', listed under Sanskrit tirate 'crosses over' (CDIAL 5821)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C230-latkana]
 <!-- hl-knowledge: introduces=[HI-LEX-C230-ACT230-04]; assesses=[] -->
 
 **तैराना** — *tairānā* — "to float (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तैराना** (*tairānā*) is the causing form of *tairnā*, "to swim, float", which CDIAL lists under Sanskrit *tirate*, "crosses over, sails across" (CDIAL 5821).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

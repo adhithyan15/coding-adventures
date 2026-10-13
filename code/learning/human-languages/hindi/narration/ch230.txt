@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to spread, then the Hindi for to be left b
 You'll want to know: झुकना.
 झुकना — jhuknā — "to bend down, to bow".
 
+The word, taken apart.
+झुकना (jhuknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhukkati, "stoops, breaks", a form CDIAL reconstructs from its descendants (CDIAL 5399).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to be left behind, then the Hindi for to b
 
 You'll want to know: लटकना.
 लटकना — laṭaknā — "to hang".
+
+The word, taken apart.
+The origin of लटकना (laṭaknā) is uncertain. CDIAL lists a reconstructed laṭṭa, "hanging, tangled" (CDIAL 10918), but not laṭaknā itself.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to bend down, then the Hindi for to hang.
 You'll want to know: लटकाना.
 लटकाना — laṭkānā — "to hang (something)".
 
+The word, taken apart.
+लटकाना (laṭkānā) is the causing form of laṭaknā, "to hang". Its origin is uncertain: CDIAL lists a reconstructed laṭṭa, "hanging, tangled" (CDIAL 10918), but not these verbs.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to hang, then the Hindi for to hang.
 You'll want to know: तैराना.
 तैराना — tairānā — "to float (something)".
 
+The word, taken apart.
+तैराना (tairānā) is the causing form of tairnā, "to swim, float", which CDIAL lists under Sanskrit tirate, "crosses over, sails across" (CDIAL 5821).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to hang, then the Hindi for to float.
 
 You'll want to know: डूबना.
 डूबना — ḍūbnā — "to sink, to drown".
+
+The word, taken apart.
+डूबना (ḍūbnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍubb, "sink", a form CDIAL reconstructs from its descendants (CDIAL 5561). CDIAL explains it as a Middle Indo-Aryan buḍḍaï with its consonants swapped.
 
 What you've built.
 One more word for this chapter.

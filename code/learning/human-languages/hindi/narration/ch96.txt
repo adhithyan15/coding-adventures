@@ -21,6 +21,7 @@ piece: -ऊँ-. what it carries: who is acting — I.
 piece: -गा / -गी. what it carries: the future itself, agreeing with the speaker.
 English needs a second word for this: I will do. Hindi has none. The tense is welded onto the verb, the way the person is welded into hūṁ and hai.
 You have met the -गा family once before, in the farewell milenge, where the plural -एंगे was named as the future ending. That was one cell of a grid. This chapter is the grid.
+कर- comes from Sanskrit karoti, "does" (CDIAL 2814), and the -गा is usually traced to Sanskrit gata, "gone".
 
 Grammar Lens: the piece that comes from the old subjunctive.
 -गा is not a random syllable. It comes from Sanskrit गत (gata), "gone" — the participle of to go. A future in Hindi is built out of a word meaning gone, which is the same instinct behind English I am going to do it.
@@ -62,6 +63,7 @@ stem: कर-. first person, future: करूँगा (karūṅgā).
 stem: आ-. first person, future: आऊँगा (āūṅgā).
 The ending is identical. What changes is how it has to be written, and that is worth a moment.
 कर- ends in a consonant, so the long ū rides underneath it as the small mark you have used for a long time. आ- ends in a vowel, so there is nothing to ride on — and the ū has to be written as a full letter of its own.
+The stem आ- is listed by CDIAL under Sanskrit āpayati, "causes to reach" (CDIAL 1200).
 
 Grammar Lens: the letter arrives where it was promised.
 [once you have stopped driving — find: ऊ inside the word]
@@ -106,6 +108,7 @@ who: मैं. ending: -ऊँगा.
 who: वह. ending: -एगा.
 The -गा has not moved. It is the piece in front of it that changed, from -ऊँ- to -ए-, and that piece is the one carrying the person.
 So the future has the same division of labour the present had: one slot for who, one slot for when. Learning the tense is learning that the two slots are separate.
+The -गा is usually traced to Sanskrit gata, "gone".
 
 Grammar Lens: the form a paper prints.
 This is the commonest future in reading material, because most sentences on a page are about somebody other than the reader:
@@ -148,6 +151,7 @@ stem: मिल-. plural future: मिलेंगे.
 stem: आ-. plural future: आएँगे (āeṅge).
 stem: कर-. plural future: करेंगे.
 The farewell was never a lump. It was this ending, on a verb meaning to meet.
+The -गे is usually traced to Sanskrit gata, "gone".
 
 Grammar Lens: आप takes the plural, again.
 [a table of 3 rows, read aloud]
@@ -189,6 +193,7 @@ The तुम level has a vowel of its own, and you have already used it:
 where: the command. form: बोलो.
 where: the future. form: आओगे (āoge).
 Both are -ओ. That is not two facts to learn — it is one vowel that belongs to तुम wherever it appears, and you have had it since the commands chapter.
+The -गे is usually traced to Sanskrit gata, "gone".
 
 Grammar Lens: where the full letter shows up again.
 The same writing question as the first person, and the same answer:
@@ -231,6 +236,7 @@ What is new is the shape of it. You learned it as something the clock is doing r
 what it does: tells you the hour. the form: the striking form you know.
 what it does: fixes a time to act. the form: बजे.
 There is no separate word for at. The number plus बजे is the whole of it.
+The verb comes from Sanskrit vādyate, "is made to sound" (CDIAL 11513).
 
 Grammar Lens: where it stands in the sentence.
 [a table of 2 rows, read aloud]

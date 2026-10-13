@@ -14,7 +14,8 @@ romanization: "log"
 concept_tag: HI-NOUN-PEOPLE
 prerequisites: [HI-C44-family, HI-C42-give]
 sounds: []
-roots: []
+roots: [sanskrit-loka]
+etymology_hook: "log: usually traced to Sanskrit loka 'world; people' (CDIAL 11119)"
 duration:
   max_seconds: 210
 requires:

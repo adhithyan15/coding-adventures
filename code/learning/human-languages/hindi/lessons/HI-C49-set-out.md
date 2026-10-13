@@ -14,7 +14,8 @@ romanization: "nikalnā"
 concept_tag: HI-VERB-SET-OUT
 prerequisites: [HI-C49-journey, HI-C47-guest, HI-C48-perhaps]
 sounds: []
-roots: []
+roots: [indo-aryan-nishkalati]
+etymology_hook: "nikalnā ← *niṣkalati 'comes out', back-formed from Sanskrit niṣkālayati (CDIAL 7478)"
 duration:
   max_seconds: 210
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for shallow, then the Hindi for stale.
 You'll want to know: कच्चा.
 कच्चा — kaccā — "raw, unripe".
 
+The word, taken apart.
+कच्चा (kaccā) goes back to a reconstructed kacca, "raw, unripe" (CDIAL 2613). CDIAL lists older Hindi kācā and marks kaccā as taken over from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for stale, then the Hindi for raw.
 
 You'll want to know: गुनगुना.
 गुनगुना — gungunā — "lukewarm".
+
+The word, taken apart.
+The origin of गुनगुना (gungunā) is uncertain. CDIAL lists a gungun only in the sense "murmur" (CDIAL 4013).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for raw, then the Hindi for lukewarm.
 You'll want to know: रूखा.
 रूखा — rūkhā — "dry, rough".
 
+The word, taken apart.
+रूखा (rūkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rūkṣa, "dry, rough" (CDIAL 10799).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for lukewarm, then the Hindi for dry.
 You'll want to know: चिपचिपा.
 चिपचिपा — cipcipā — "sticky".
 
+The word, taken apart.
+चिपचिपा (cipcipā) doubles a syllable cip-, "sticky". CDIAL lists a reconstructed cippa, "gummy matter", and Hindi cippī, "a piece stuck on" (CDIAL 4819), but not cipcipā itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for dry, then the Hindi for sticky.
 
 You'll want to know: खुरदुरा.
 खुरदुरा — khurdurā — "rough (to the touch)".
+
+The word, taken apart.
+The origin of खुरदुरा (khurdurā) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

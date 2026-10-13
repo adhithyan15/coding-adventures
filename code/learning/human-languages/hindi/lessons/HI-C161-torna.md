@@ -14,7 +14,8 @@ romanization: "toṛnā"
 concept_tag: HI-VERB-TORNA
 prerequisites: [HI-C161-pakana, HI-C161-katna]
 sounds: []
-roots: []
+roots: [sanskrit-trotayati]
+etymology_hook: "toṛnā ← Sanskrit troṭayati 'breaks, tears', a tadbhava (CDIAL 6079)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C161-katna]
 <!-- hl-knowledge: introduces=[HI-LEX-C161-ACT161-03]; assesses=[] -->
 
 **तोड़ना** — *toṛnā* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोड़ना** (*toṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *troṭayati*, "breaks, tears" (CDIAL 6079).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

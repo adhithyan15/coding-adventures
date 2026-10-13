@@ -14,7 +14,8 @@ romanization: "becain"
 concept_tag: HI-CALM-RESTLESS
 prerequisites: [HI-C125-shant, HI-C125-ghabrahat]
 sounds: []
-roots: []
+roots: [persian-be]
+etymology_hook: "becain: Persian be- 'without' + cain 'ease'; CDIAL has no entry for cain"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C125-ghabrahat]
 **बेचैन** (*becain*) — "restless, uneasy".
 
 **बे-** is "without", and **चैन** is "peace": restless is *without peace*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेचैन** (*becain*) is "without ease". *be-* is the Persian "without"; *cain*, "ease, rest", is of uncertain origin, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

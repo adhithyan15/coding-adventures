@@ -14,9 +14,10 @@ romanization: "subah se śām tak"
 concept_tag: HI-SPAN-HOURS
 prerequisites: [HI-C94-se-tak-din, HI-C28-subah, HI-C29-shaam]
 sounds: []
-roots: []
+roots: [arabic-subh, persian-sham]
+etymology_hook: "subah ← Arabic ṣubḥ 'morning'; śām usually traced to Persian shām 'evening'; se, tak inherited"
 duration:
-  max_seconds: 210
+  max_seconds: 247
 requires:
   knowledge: [HI-LEX-C94-SPAN-02, HI-CONCEPT-C28-SUBAH-01, HI-CONCEPT-C29-SHAAM-01, HI-LEX-C88-TIME-01]
 introduces:
@@ -45,6 +46,11 @@ on. Then guess how a span between them is built.
 **सुबह से शाम तक** — from morning until evening.
 
 If you guessed, you guessed right. Nothing about the frame changed.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुबह से शाम तक** (*subah se śām tak*) sets two loans inside two inherited words. *subah* is Arabic *ṣubḥ*, "morning", which reached Hindi through Persian (Lane, root *ṣ-b-ḥ*); *śām* is usually traced to Persian *shām*, "evening". *se* and *tak* are inherited (CDIAL 13310, 5805).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C94-SPAN-03, HI-LEX-C94-SPAN-02] -->

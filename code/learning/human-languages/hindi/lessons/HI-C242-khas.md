@@ -14,7 +14,8 @@ romanization: "khās"
 concept_tag: HI-QUAL242-KHAS
 prerequisites: [HI-C241-anokha, HI-C242-sadharan]
 sounds: []
-roots: []
+roots: [arabic-khass]
+etymology_hook: "khās ← Arabic khāṣṣ 'particular, special', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C242-sadharan]
 <!-- hl-knowledge: introduces=[HI-LEX-C242-QUAL242-02]; assesses=[] -->
 
 **ख़ास** — *khās* — "special".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़ास** (*khās*) is a loan from Arabic *khāṣṣ*, "particular, special", which reached Hindi through Persian. Its Arabic root is *kh-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a mirror, then the Hindi for a ring.
 You'll want to know: चप्पल.
 चप्पल — cappal — "a sandal, a slipper".
 
+The word, taken apart.
+The origin of चप्पल (cappal) is uncertain, and CDIAL has no entry for it. DEDR lists Dravidian words for "sandal", such as Telugu ceppu (DEDR 1963), but not the Hindi word, so a link is unproven.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a ring, then the Hindi for a sandal.
 
 You'll want to know: जूता.
 जूता — jūtā — "a shoe".
+
+The word, taken apart.
+जूता (jūtā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yukta, "joined, yoked" (CDIAL 10479). CDIAL lists jūtā, "shoe", here: the shoe as the thing fastened on.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a sandal, then the Hindi for a shoe.
 You'll want to know: मोज़ा.
 मोज़ा — mozā — "a sock".
 
+The word, taken apart.
+मोज़ा (mozā) is a loan, usually traced to Persian mōza, "sock, stocking".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a shoe, then the Hindi for a sock.
 You'll want to know: कमीज़.
 कमीज़ — kamīz — "a shirt".
 
+The word, taken apart.
+कमीज़ (kamīz) is a loan from Arabic qamīṣ, "shirt", which reached Hindi through Persian. Its Arabic root is q-m-ṣ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a sock, then the Hindi for a shirt.
 
 You'll want to know: पैंट.
 पैंट — paiṇṭ — "trousers".
+
+The word, taken apart.
+पैंट (paiṇṭ) is a loan from English pants.
 
 What you've built.
 One more word for this chapter.

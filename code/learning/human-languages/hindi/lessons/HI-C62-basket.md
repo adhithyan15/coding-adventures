@@ -14,7 +14,8 @@ romanization: "ṭokrī"
 concept_tag: HI-NOUN-BASKET
 prerequisites: [HI-C62-needle, HI-C60-hen, HI-C61-tumbler]
 sounds: []
-roots: []
+roots: [indo-aryan-tokka]
+etymology_hook: "ṭokrī ← *ṭokka 'basket', a reconstructed form; a tadbhava (CDIAL 5477)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C62-needle]
 Here the trail stops early. टोकरी has no agreed Sanskrit ancestor, and the retroflex ट at the front is the sound most often credited to old contact with the Dravidian languages of the south — the same honest gap you already met under पेट.
 
 A टोकरी is woven, usually from split cane or from the ribs of a leaf, and it is what सब्ज़ी comes home from the बाज़ार in. Light, cheap, and mended rather than replaced.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टोकरी** (*ṭokrī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭokka*, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). The *-r-* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

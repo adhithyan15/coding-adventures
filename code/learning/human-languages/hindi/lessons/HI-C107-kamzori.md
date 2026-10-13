@@ -14,7 +14,8 @@ romanization: "kamzorī"
 concept_tag: HI-DOCTOR-WEAKNESS
 prerequisites: [HI-C107-aspatal, HI-C107-chot]
 sounds: []
-roots: []
+roots: [persian-kamzor]
+etymology_hook: "kamzorī: usually traced to Persian kamzor 'weak'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C107-chot]
 
 It opens on the **कम** you know, "little": weakness is having little strength.
 **कमज़ोरी लग रही है** — "I feel weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमज़ोरी** (*kamzorī*) is a loan, usually traced to Persian *kamzor*, "weak". It is built from *kam*, "little", and *zor*, "strength", with *-ī* making a noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

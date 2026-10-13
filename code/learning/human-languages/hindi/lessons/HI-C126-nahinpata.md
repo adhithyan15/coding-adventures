@@ -14,7 +14,8 @@ romanization: "mujhe nahīṁ patā"
 concept_tag: HI-WHAT-DONT-KNOW
 prerequisites: [HI-C126-samajhnahin, HI-C126-kyakaha]
 sounds: []
-roots: []
+roots: [sanskrit-pratyaya]
+etymology_hook: "patā: origin uncertain; CDIAL lists patiyānā 'to trust' under pratyaya 'belief' (CDIAL 8640)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C126-kyakaha]
 **मुझे नहीं पता** (*mujhe nahīṁ patā*) — "I don't know", literally "to me there is no knowing".
 
 The person sits in **मुझे**, the way it does for wanting and liking.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुझे नहीं पता** (*mujhe nahīṁ patā*) is "to me no knowledge". The origin of *patā*, "knowledge, address", is uncertain; CDIAL does not list it, though it lists *patyānā*, "to trust", under Sanskrit *pratyaya*, "belief" (CDIAL 8640).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

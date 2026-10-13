@@ -14,7 +14,8 @@ romanization: "āsān / mushkil"
 concept_tag: HI-ADJ-EASE
 prerequisites: [HI-C41-adjective-system, HI-C11-kaalaa-safed]
 sounds: []
-roots: []
+roots: [persian-asan, arabic-mushkil]
+etymology_hook: "āsān: usually traced to Persian āsān 'easy'; mushkil ← Arabic mushkil, root sh-k-l, through Persian"
 duration:
   max_seconds: 240
 requires:

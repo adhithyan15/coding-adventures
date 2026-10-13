@@ -14,7 +14,8 @@ romanization: "phailānā"
 concept_tag: HI-VERB-PHAILANA
 prerequisites: [HI-C229-morna, HI-C229-sametna]
 sounds: []
-roots: []
+roots: [sanskrit-prathita]
+etymology_hook: "phailānā: CDIAL lists phailnā under *praghirati 'flows forth' (8486) and prathita 'spread out' (8651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C229-sametna]
 <!-- hl-knowledge: introduces=[HI-LEX-C229-ACT229-03]; assesses=[] -->
 
 **फैलाना** — *phailānā* — "to spread (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फैलाना** (*phailānā*) is the causing form of *phailnā*, "to spread". CDIAL lists *phailnā* in two places: under a reconstructed *\*praghirati*, "flows forth" (CDIAL 8486), and under Sanskrit *prathita*, "spread out" (CDIAL 8651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

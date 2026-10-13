@@ -14,7 +14,8 @@ romanization: "pyāsā"
 concept_tag: HI-BODY-THIRSTY
 prerequisites: [HI-C123-khanakhaya, HI-C124-bhukha]
 sounds: []
-roots: []
+roots: [sanskrit-pipasita]
+etymology_hook: "pyāsā ← Sanskrit pipāsita 'thirsty', a tadbhava (CDIAL 8200)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C124-bhukha]
 **प्यासा** (*pyāsā*) — "thirsty". A woman says **प्यासी**.
 
 The same move: **प्यास**, "thirst", becomes **प्यासा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्यासा** (*pyāsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pipāsita*, "thirsty" (CDIAL 8200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

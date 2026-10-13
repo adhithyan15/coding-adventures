@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 190,
-  "sourceHash": "fnv1a64:5ce83caa7edee631",
+  "sourceHash": "fnv1a64:898a50aea0776420",
   "lessonIds": [
     "HI-C190-madad",
     "HI-C190-khabar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch190.txt",
   "json": "hindi/narration/ch190.json",
-  "textHash": "fnv1a64:1a3d5baf68465f33",
-  "jsonHash": "fnv1a64:96ad06467ae71ca7",
+  "textHash": "fnv1a64:a5e50dc5d4e184c9",
+  "jsonHash": "fnv1a64:312d59161bb86d04",
   "findings": []
 }

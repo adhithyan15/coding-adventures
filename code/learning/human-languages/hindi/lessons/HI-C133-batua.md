@@ -15,6 +15,7 @@ concept_tag: HI-THINGS133-BATUA
 prerequisites: [HI-C133-casma, HI-C133-chata]
 sounds: []
 roots: []
+etymology_hook: "baṭuā: origin uncertain; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C133-chata]
 <!-- hl-knowledge: introduces=[HI-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **बटुआ** — *baṭuā* — "a wallet, a purse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बटुआ** (*baṭuā*) is uncertain. CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

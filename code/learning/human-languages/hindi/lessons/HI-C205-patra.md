@@ -14,7 +14,8 @@ romanization: "patra"
 concept_tag: HI-THG205-PATRA
 prerequisites: [HI-C204-petrol, HI-C204-phon]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patra ← Sanskrit pattra 'wing-feather; leaf; leaf of a book', a tatsama (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C204-phon]
 <!-- hl-knowledge: introduces=[HI-LEX-C205-THG205-01]; assesses=[] -->
 
 **पत्र** — *patra* — "a letter (formal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्र** (*patra*) is Sanskrit *pattra*, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733). A letter is a leaf of writing. CDIAL lists the inherited form as *pattā*, "leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

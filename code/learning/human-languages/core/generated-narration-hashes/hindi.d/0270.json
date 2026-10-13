@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 270,
-  "sourceHash": "fnv1a64:25aecae11b7cf336",
+  "sourceHash": "fnv1a64:0ec4369cee88f86d",
   "lessonIds": [
     "HI-C270-kaddukas",
     "HI-C270-dhakkan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch270.txt",
   "json": "hindi/narration/ch270.json",
-  "textHash": "fnv1a64:1ad975ed409b7848",
-  "jsonHash": "fnv1a64:f204ffbaadde9798",
+  "textHash": "fnv1a64:2098c4fb06fa097b",
+  "jsonHash": "fnv1a64:db648ba25b2ab8ea",
   "findings": []
 }

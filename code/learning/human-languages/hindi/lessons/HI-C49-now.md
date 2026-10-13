@@ -14,7 +14,8 @@ romanization: "abhī"
 concept_tag: HI-WORD-NOW
 prerequisites: [HI-C48-absolutely, HI-C47-teacher, HI-C48-true]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "abhī: ab 'now' + emphatic -hī; CDIAL lists ab, abhī under evam eva 'exactly so', crossed with a- (CDIAL 2528)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [HI-C48-absolutely]
 
 **अभी** (*abhī*) — "right now".
 
-*Ab*, 'now', with the emphatic *-hī* welded onto it: now and nothing but now. Behind *ab* stands Sanskrit *adhunā*.
+*Ab*, 'now', with the emphatic *-hī* welded onto it: now and nothing but now. CDIAL traces *ab* to Sanskrit *evam eva*, 'exactly so', crossed with the pronoun stem *a-* (CDIAL 2528).
 
 That little *-hī* is one of the most useful pieces in the language. It narrows whatever it lands on, and you will meet it stuck to other words later. Here it turns a vague present into a pointed one — not now-ish, but this moment, and no other.
 

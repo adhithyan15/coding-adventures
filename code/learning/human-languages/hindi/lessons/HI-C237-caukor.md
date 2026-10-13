@@ -14,7 +14,8 @@ romanization: "caukor"
 concept_tag: HI-QUAL237-CAUKOR
 prerequisites: [HI-C236-alag, HI-C236-gol]
 sounds: []
-roots: []
+roots: [indo-aryan-kora]
+etymology_hook: "caukor: cau 'four' + kor 'edge', which CDIAL lists under *korā 'edge' (CDIAL 3531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C236-gol]
 <!-- hl-knowledge: introduces=[HI-LEX-C237-QUAL237-01]; assesses=[] -->
 
 **चौकोर** — *caukor* — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौकोर** (*caukor*) is "four-edged": *cau-*, "four", and *kor*, "edge, side", which CDIAL lists under a reconstructed *\*korā*, "edge" (CDIAL 3531).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

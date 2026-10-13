@@ -14,9 +14,10 @@ romanization: "karūṅgā"
 concept_tag: VERB-FUTURE
 prerequisites: [HI-C87-sintesis-atit, HI-C05-karna, HI-C04-milenge]
 sounds: []
-roots: []
+roots: [kr-do, sanskrit-gata]
+etymology_hook: "karūṅgā: kar- ← Sanskrit karoti 'does' (CDIAL 2814); the future -gā is usually traced to gata 'gone'"
 duration:
-  max_seconds: 240
+  max_seconds: 241
 requires:
   knowledge: [HI-CONCEPT-C05-KARNA-01, HI-CONCEPT-C04-MILENGE-01, HI-LEX-C87-PAST-01]
 introduces:
@@ -65,6 +66,8 @@ tense is welded onto the verb, the way the person is welded into *hūṁ* and
 You have met the **-गा** family once before, in the farewell *milenge*, where the
 plural **-एंगे** was named as the future ending. That was one cell of a grid.
 This chapter is the grid.
+
+**कर-** comes from Sanskrit *karoti*, "does" (CDIAL 2814), and the **-गा** is usually traced to Sanskrit *gata*, "gone".
 
 ## Grammar Lens: the piece that comes from the old subjunctive
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-01, HI-CONCEPT-C05-KARNA-01] -->

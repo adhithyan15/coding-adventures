@@ -14,7 +14,8 @@ romanization: "sahelī"
 concept_tag: HI-THG254-SAHELI
 prerequisites: [HI-C253-purus, HI-C253-sisu]
 sounds: []
-roots: []
+roots: [sanskrit-sakhi]
+etymology_hook: "sahelī ← Sanskrit sakhī 'woman's confidante', a tadbhava (CDIAL 13074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C253-sisu]
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-01]; assesses=[] -->
 
 **सहेली** — *sahelī* — "a female friend (of a girl)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहेली** (*sahelī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sakhī*, "woman's confidante" (CDIAL 13074). CDIAL notes an added *-l-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

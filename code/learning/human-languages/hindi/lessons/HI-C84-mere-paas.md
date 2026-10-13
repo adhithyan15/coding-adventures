@@ -14,9 +14,10 @@ romanization: "mere pās"
 concept_tag: HI-GRAMMAR-POSSESSION-PAAS
 prerequisites: [HI-C84-apna]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pās ← Sanskrit pārśva 'side'; its form pārśve meant 'near' (CDIAL 8118)"
 duration:
-  max_seconds: 240
+  max_seconds: 256
 requires:
   knowledge: [HI-LEX-C84-POSS-04, HI-CONCEPT-C02-MERAA-01, HI-LEX-C84-POSS-01]
 introduces:
@@ -53,6 +54,11 @@ possession is built out of location:
 
 The thing owned is the **subject** of that sentence, which is why *hai* agrees
 with *kitāb* and not with the speaker.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेरे पास** (*mere pās*) is *mere*, "my", with *pās*, "near". *pās* comes from Sanskrit *pārśva*, "side", whose form *pārśve* already meant "near" (CDIAL 8118).
 
 ## Grammar Lens: mere is not the plural here
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-05, HI-CONCEPT-C02-MERAA-01, HI-LEX-C84-POSS-01] -->

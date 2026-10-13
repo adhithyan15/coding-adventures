@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 94,
-  "sourceHash": "fnv1a64:2bf71ab42120d9fe",
+  "sourceHash": "fnv1a64:186c9adb2921e921",
   "lessonIds": [
     "HI-C86-ham",
     "HI-C86-ve",
@@ -16,7 +16,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch94.txt",
   "json": "hindi/narration/ch94.json",
-  "textHash": "fnv1a64:48cb8273250a13ba",
-  "jsonHash": "fnv1a64:64daf416d4e04458",
+  "textHash": "fnv1a64:b4a26cc7087f5a5e",
+  "jsonHash": "fnv1a64:cc9a9531590b4cb5",
   "findings": []
 }

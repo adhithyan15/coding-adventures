@@ -14,7 +14,8 @@ romanization: "roknā"
 concept_tag: HI-VERB-ROKNA
 prerequisites: [HI-C171-chipna, HI-C171-rukna]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "roknā ← *rokk 'stop', a reconstructed form; a tadbhava (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C171-rukna]
 <!-- hl-knowledge: introduces=[HI-LEX-C172-ACT172-01]; assesses=[] -->
 
 **रोकना** — *roknā* — "to stop (someone or something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोकना** (*roknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rokk*, "stop", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL calls its link with Sanskrit *rudh-*, "to obstruct", not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

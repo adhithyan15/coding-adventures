@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 201,
-  "sourceHash": "fnv1a64:282f181845dd857a",
+  "sourceHash": "fnv1a64:faca96e7455f2413",
   "lessonIds": [
     "HI-C201-registan",
     "HI-C201-ghati",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch201.txt",
   "json": "hindi/narration/ch201.json",
-  "textHash": "fnv1a64:b4070eb08f2994e1",
-  "jsonHash": "fnv1a64:304a3da8941c7a64",
+  "textHash": "fnv1a64:6b41b8a5345601bf",
+  "jsonHash": "fnv1a64:14064e597dd20de8",
   "findings": []
 }

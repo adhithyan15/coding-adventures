@@ -15,8 +15,9 @@ concept_tag: HI-GRAMMAR-PRESENT-HABITUAL
 prerequisites: [HI-C05-bolna, HI-C03-hun]
 sounds: [matra-a, matra-i, chandrabindu-nasal]
 roots: [bol-speak]
+etymology_hook: "bol- ← *boll- 'speak' (CDIAL 9321); -tā continues the old participle in -nt- (Prakrit hoṁta 'being', CDIAL 9416)"
 duration:
-  max_seconds: 240
+  max_seconds: 285
 requires:
   knowledge: [HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C03-HUN-01]
 introduces:
@@ -47,6 +48,11 @@ ever meet.
 
 - [बोलना](./HI-C05-bolna.md) — the infinitive, and how to strip *-nā* to get the stem.
 - [हूँ](./HI-C03-hun.md) — "I am," the verb this template leans on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The pieces of this pattern are old. *bol-*, "speak", goes back to a reconstructed *\*boll-* (CDIAL 9321), and the *-tā* ending continues the old present participle in *-nt-*, "doing", as in Prakrit *hoṁta*, "being", from Sanskrit *bhavati*, "is" (CDIAL 9416).
 
 ## Grammar Lens: stem + -tā/-tī/-te + honā
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-BOLTAHUN-01] -->

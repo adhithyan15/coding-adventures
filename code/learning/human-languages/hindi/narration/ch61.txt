@@ -14,6 +14,9 @@ You'll want to know: बर्तन.
 बर्तन (bartan) is the word that goes with बरतना (baratnā), 'to handle, to make use of', and behind both stands Sanskrit वृत् (vṛt-), 'to turn, to carry on'. A बर्तन (bartan) is, quite literally, a thing in use.
 That is why one word covers the whole shelf. A pot, a pan, a tray, a lid — each has its own name, and all of them together are बर्तन (bartan). Ask politely for बर्तन (bartan) and you have asked for whatever the cooking needs.
 
+The word, taken apart.
+The origin of बर्तन (bartan) is uncertain. It is often traced to Sanskrit vartana, but CDIAL does not list it, and its vartana means "turning, rolling" (CDIAL 11354).
+
 What you've built.
 The first of five things at the fire.
 
@@ -91,6 +94,9 @@ You'll want to know: चम्मच.
 Sanskrit had चमस (camasa), a wooden ladle lifted at sacrifices, and चम्मच (chammach) sits close enough to it that the two are often printed together. The road between them is not clean, though, so this book will show you the pair and stop there.
 What is certain is the shape of the modern word: a doubled m in the middle, and the stress landing forward. Say it twice and you will hear that it is built to be said quickly, the way the names of small everyday objects usually are.
 
+The word, taken apart.
+चम्मच (chammach) is a loan, usually traced to Persian chamcha, "spoon, ladle".
+
 What you've built.
 Two.
 
@@ -120,6 +126,9 @@ You'll want to know: गिलास.
 This one is English glass, taken whole. It arrived with the object, the way कैमरा arrived with the camera, and Hindi gave it a vowel in the middle so that a Hindi mouth could get through the gl- at the front.
 Watch what happened to the meaning on the way in. A Hindi गिलास (gilās) is a drinking tumbler and is very often made of steel, so the English word for the material now names an object in a language where the object is usually not made of it.
 
+The word, taken apart.
+गिलास (gilās) is a loan from English glass.
+
 What you've built.
 Three.
 
@@ -148,6 +157,9 @@ You'll want to know: तवा.
 तवा (tavā) — "a flat iron griddle".
 Usually traced to a Sanskrit word on the root तप् (tap-), 'to heat, to burn' — the heater. The same root is inside तपस्, the heat of hard practice, so the kitchen and the hermitage turn out to share a syllable.
 A तवा (tavā) is a flat iron disc over the fire, and it is what रोटी is made on. No तवा (tavā), no रोटी: the bread you met early on is defined by the surface it is cooked on as much as by the flour.
+
+The word, taken apart.
+तवा (tavā) is a tadbhava, a word inherited and reshaped by sound change. It comes from tapaka, "frying pan", a form CDIAL reconstructs from its descendants (CDIAL 5670). It is built on the verb tap-, "to heat".
 
 What you've built.
 Four.

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a toy, then the Hindi for a doll.
 You'll want to know: पतंग.
 पतंग — patang — "a kite".
 
+The word, taken apart.
+पतंग (patang) is usually traced to Sanskrit pataṅga, "a flying creature", but CDIAL does not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a doll, then the Hindi for a kite.
 
 You'll want to know: झूला.
 झूला — jhūlā — "a swing".
+
+The word, taken apart.
+झूला (jhūlā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhulyati, "swings", a form CDIAL reconstructs from its descendants (CDIAL 5406). jhūlā is the noun of jhūlnā, "to swing".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a kite, then the Hindi for a swing.
 You'll want to know: पर्दा.
 पर्दा — pardā — "a curtain".
 
+The word, taken apart.
+पर्दा (pardā) is a loan, usually traced to Persian parda, "curtain, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a swing, then the Hindi for a curtain.
 You'll want to know: दरी.
 दरी — darī — "a cotton rug".
 
+The word, taken apart.
+दरी (darī) is a tadbhava, a word inherited and reshaped by sound change. It comes from darikā, "split cane, mat", a form CDIAL reconstructs from its descendants (CDIAL 6194). CDIAL glosses the Hindi word "carpet".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a curtain, then the Hindi for a cotton rug
 
 You'll want to know: क़ालीन.
 क़ालीन — qālīn — "a carpet".
+
+The word, taken apart.
+क़ालीन (qālīn) is a loan, usually traced to Persian qālī, "carpet".
 
 What you've built.
 One more word for this chapter.

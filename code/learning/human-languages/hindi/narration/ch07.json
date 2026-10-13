@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1336e030dec5b35a",
+  "sourceHash": "fnv1a64:e628698599cc700a",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:193457cc918d0f4c",
+      "sourceHash": "fnv1a64:27b34319eee8e9dd",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाँ (hāṃ) comes from Sanskrit ām, \"yes\" (CDIAL 1235). CDIAL explains the h- as added for emphasis, or taken over from the verb \"to be\". The polite जी (jī) is from jīva, \"long live!\" (CDIAL 5240)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know — Saying it politely",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -114,7 +125,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

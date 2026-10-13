@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Sorry, No Problem, Congratulations",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:35eee15f2b979b60",
+  "sourceHash": "fnv1a64:e02b1d18ab77a985",
   "lessons": [
     {
       "id": "HI-C114-mafi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eec70dfd62a737f2",
+      "sourceHash": "fnv1a64:e49be3dc962315ed",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माफ़ी (māfī) is usually traced, through Persian, to an Arabic word for \"pardon\" on the root ʿ-f-w, \"to pardon, excuse\" (Lane). It is the noun of the māf inside māf kījie, \"forgive me\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d2bc4f3f2569423",
+      "sourceHash": "fnv1a64:157bc267537be84b",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोई बात नहीं (koī bāt nahīṁ) is \"not any matter\". koī comes from Sanskrit kaścid, \"someone, anyone\" (CDIAL 2967), and bāt, \"matter, talk\", from vārttā, \"tidings, business\" (CDIAL 11564)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cf8babd1cc0163a",
+      "sourceHash": "fnv1a64:469a7c90280f2861",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बधाई (badhāī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhāpayati, \"increases, gladdens, congratulates\" (CDIAL 11383). CDIAL glosses the Hindi word \"congratulations on the birth of a child\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:269ab44477e64c59",
+      "sourceHash": "fnv1a64:e29c3abf6f1ba8ca",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुभकामनाएँ (śubhkāmnāẽ) is two Sanskrit words taken over whole, tatsamas: śubha, \"auspicious, good\", and kāmanā, \"a wish\", with the Hindi plural ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96753878e15ebec7",
+      "sourceHash": "fnv1a64:5e3466bd9b61e2db",
       "notice": null,
       "blocks": [
         {
@@ -568,6 +612,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निमंत्रण (nimantraṇ) is Sanskrit nimantraṇa, \"invitation\", taken over whole as a learned loan, a tatsama. CDIAL lists its verb, nimantrayate, \"invites\", whose inherited forms survive as nyotnā, \"to invite\" (CDIAL 7235)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -578,7 +633,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -627,7 +682,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

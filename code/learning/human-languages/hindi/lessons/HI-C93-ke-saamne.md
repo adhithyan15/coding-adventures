@@ -14,9 +14,10 @@ romanization: "ke sāmne"
 concept_tag: HI-POST-COMPOUND-SAAMNE
 prerequisites: [HI-C93-ke-paas, HI-C69-station]
 sounds: []
-roots: []
+roots: [sanskrit-sammukha]
+etymology_hook: "sāmne ← Sanskrit saṁmukha 'facing, present', a tadbhava (CDIAL 12982)"
 duration:
-  max_seconds: 210
+  max_seconds: 248
 requires:
   knowledge: [HI-LEX-C93-REL-03, HI-LEX-C69-GOING-03, HI-LEX-C93-REL-01]
 introduces:
@@ -44,6 +45,11 @@ set you.
 <!-- hl-knowledge: introduces=[HI-LEX-C93-REL-04]; assesses=[] -->
 
 **दुकान स्टेशन के सामने है।** — The shop is in front of the station.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**के सामने** (*ke sāmne*) is *ke* with *sāmne*, the form of *sāmnā*, "the front", that follows it. *sāmnā* is a tadbhava, inherited and reshaped by sound change, from Sanskrit *saṁmukha*, "facing, present" (CDIAL 12982).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-04, HI-LEX-C93-REL-03] -->

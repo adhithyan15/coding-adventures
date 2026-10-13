@@ -14,7 +14,8 @@ romanization: "jī nahīṁ"
 concept_tag: HI-COMEIN-POLITE-NO
 prerequisites: [HI-C115-lijie, HI-C115-shauqse]
 sounds: []
-roots: []
+roots: [sanskrit-jiva, sanskrit-nahi]
+etymology_hook: "jī ← Sanskrit jīva 'long live!' (CDIAL 5240); nahīṁ ← nahi (CDIAL 7035)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C115-shauqse]
 **जी नहीं** (*jī nahīṁ*) — "no", said politely.
 
 It pairs with the **जी हाँ** you know: **जी** makes either answer respectful.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जी नहीं** (*jī nahīṁ*) is *jī*, the respectful word that CDIAL traces to Sanskrit *jīva*, "long live!" (CDIAL 5240), with *nahīṁ*, "not", from *nahi*, "surely not" (CDIAL 7035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kamzor"
 concept_tag: HI-QUAL212-KAMZOR
 prerequisites: [HI-C212-bhadda, HI-C212-mazbut]
 sounds: []
-roots: []
+roots: [persian-kamzor]
+etymology_hook: "kamzor: usually traced to Persian kamzōr 'weak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C212-mazbut]
 <!-- hl-knowledge: introduces=[HI-LEX-C212-QUAL212-03]; assesses=[] -->
 
 **कमज़ोर** — *kamzor* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमज़ोर** (*kamzor*) is a loan, usually traced to Persian *kamzōr*, "weak". It is built from *kam*, "little", and *zōr*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

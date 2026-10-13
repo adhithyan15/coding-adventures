@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Two Words Where English Has One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a2abf5a1b50f88ab",
+  "sourceHash": "fnv1a64:6ed3b35f3741a5e4",
   "lessons": [
     {
       "id": "HI-C93-ke-saath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19253390e82f143b",
+      "sourceHash": "fnv1a64:10c9dfc044a191eb",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "के साथ (ke sāth) is ke, the form of the possessive kā that a following word asks for, with sāth, \"with\". sāth comes from Sanskrit sārtha, \"caravan, company\", whose form sārthena meant \"in company with\" (CDIAL 13364)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -88,7 +99,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: a shape, not a word",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -175,7 +186,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -206,7 +217,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46adf79bd8fbbd5c",
+      "sourceHash": "fnv1a64:48c4019c7ad1999b",
       "notice": null,
       "blocks": [
         {
@@ -243,6 +254,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "के बिना (ke binā) is ke with binā, \"without\", which comes from Sanskrit vinā, \"without\" (CDIAL 11772)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -271,7 +293,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: two ways to write it",
           "segments": [
@@ -286,7 +308,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -335,7 +357,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -366,7 +388,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:079ad2f5e3ce31d3",
+      "sourceHash": "fnv1a64:f66a317feeb396b6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -410,6 +432,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घर के पास (ghar ke pās) is ghar, \"house\", ke and pās, \"near\". ghar comes from ghara, \"house\", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās comes from pārśva, \"side\", whose form pārśve meant \"near\" (CDIAL 8118)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -438,7 +471,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: a place answer",
           "segments": [
@@ -465,7 +498,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,7 +547,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -545,7 +578,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4701714b5fdc7ed6",
+      "sourceHash": "fnv1a64:f1f10e165a67508d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -585,6 +618,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "के सामने (ke sāmne) is ke with sāmne, the form of sāmnā, \"the front\", that follows it. sāmnā is a tadbhava, inherited and reshaped by sound change, from Sanskrit saṁmukha, \"facing, present\" (CDIAL 12982)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -612,7 +656,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: front of what",
           "segments": [
@@ -627,7 +671,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -676,7 +720,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -707,7 +751,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9f6d7d0bb1bdc14b",
+      "sourceHash": "fnv1a64:6a84d88da5011208",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -747,6 +791,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "के पीछे (ke pīche) is ke with pīche, \"behind\", a tadbhava. CDIAL lists it under a reconstructed paśca, \"hinder part\", as an old case form that took the place of Sanskrit paścāt, \"behind\" (CDIAL 7990)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -775,7 +830,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: the one glyph worth pausing on",
           "segments": [
@@ -790,7 +845,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -839,7 +894,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -870,7 +925,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d55153d2d5845437",
+      "sourceHash": "fnv1a64:044cf311395e9d2f",
       "notice": null,
       "blocks": [
         {
@@ -903,6 +958,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिवार के लिए (parivār ke liye) is parivār, \"family\", ke and liye, \"for\". liye is usually explained as a form of lenā, \"to take\", which CDIAL lists under Sanskrit labhate, \"catches, takes\" (CDIAL 10948)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -935,7 +1001,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: what for covers",
           "segments": [
@@ -963,7 +1029,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1012,7 +1078,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1043,7 +1109,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b576da13622349ae",
+      "sourceHash": "fnv1a64:e92ab51a27586196",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1118,6 +1184,10 @@
             {
               "kind": "speech",
               "text": "The reason it can bend like a noun is that in Hindi it is one. करना is both to do and the doing, which is why it could already sit where a noun sits. A word that behaves like a noun bends like a noun."
+            },
+            {
+              "kind": "speech",
+              "text": "लिए is usually explained as a form of लेना, \"to take\"."
             }
           ]
         },

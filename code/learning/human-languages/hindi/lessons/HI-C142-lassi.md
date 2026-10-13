@@ -15,6 +15,7 @@ concept_tag: HI-THINGS142-LASSI
 prerequisites: [HI-C141-ata, HI-C142-samosa]
 sounds: []
 roots: []
+etymology_hook: "lassī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C142-samosa]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **लस्सी** — *lassī* — "lassi, a yoghurt drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लस्सी** (*lassī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

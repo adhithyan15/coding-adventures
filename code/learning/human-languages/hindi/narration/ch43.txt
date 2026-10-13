@@ -13,6 +13,9 @@ You'll want to know: देखना.
 देखना (dekhnā) — "to look, to see."
 Remove infinitive -ना to find the stem देख-. Add the present endings you already know: देखता (dekhtā, masculine), देखती (dekhtī, feminine), and देखते (dekhte, respectful or plural). Later you will use देखता हूँ with an object; now the verb form will already be yours.
 
+The word, taken apart.
+देखना (dekhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dṛkṣati, "sees", a form CDIAL reconstructs from its descendants (CDIAL 6507).
+
 What you've built.
 One more regular verb. Three follow, and each reuses the ones before.
 
@@ -43,6 +46,9 @@ You'll want to know: सुनना.
 सुनना (sunnā) — "to listen, to hear".
 Hindi does not separate listening from hearing; context does the work that a second verb does in English.
 Remove infinitive -ना to find the stem सुन-. Add the present endings you already know: सुनता (suntā, masculine), सुनती (suntī, feminine), and सुनते (sunte, respectful or plural). Later you will say आप सुनते हैं — "you listen."
+
+The word, taken apart.
+सुनना (sunnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛṇoti, "hears" (CDIAL 12598).
 
 What you've built.
 One more regular verb. Three follow, and each reuses the ones before.
@@ -75,6 +81,9 @@ Before the new one: what did sunnā mean?
 You'll want to know: बोलना.
 बोलना (bolnā) — "to speak".
 'To speak' as an activity. Hindi has a second verb, kahnā, for saying a particular thing — the difference English draws between speak and say.
+
+The word, taken apart.
+बोलना (bolnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from boll, "speak", a form CDIAL reconstructs from its descendants (CDIAL 9321). CDIAL calls a borrowing from Dravidian very doubtful.
 
 What you've built.
 One more. Three follow, and each reuses the ones before.

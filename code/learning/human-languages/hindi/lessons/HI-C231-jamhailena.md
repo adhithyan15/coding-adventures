@@ -14,7 +14,8 @@ romanization: "jamhāī lenā"
 concept_tag: HI-VERB-JAMHAILENA
 prerequisites: [HI-C231-tapakna, HI-C231-chinkna]
 sounds: []
-roots: []
+roots: [indo-aryan-jrmbhayita, sanskrit-labhate]
+etymology_hook: "jamhāī ← *jṛmbhāyita 'yawning' (CDIAL 5266); lenā ← labhate (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C231-chinkna]
 <!-- hl-knowledge: introduces=[HI-LEX-C231-ACT231-04]; assesses=[] -->
 
 **जम्हाई लेना** — *jamhāī lenā* — "to yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जम्हाई लेना** (*jamhāī lenā*) is "to take a yawn". *jamhāī*, "a yawn", comes from a reconstructed *\*jṛmbhāyita*, "yawning" (CDIAL 5266), and *lenā*, "to take", from Sanskrit *labhate* (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Sons, Daughters, and Everyone Else",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6547d3556b1ec508",
+  "sourceHash": "fnv1a64:243acd4c0bd18ded",
   "lessons": [
     {
       "id": "HI-C44-son",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fce0b6a46f784b87",
+      "sourceHash": "fnv1a64:f7a0989fa5d2207e",
       "notice": null,
       "blocks": [
         {
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d905ff288f3ae35",
+      "sourceHash": "fnv1a64:d2188f05abfccbef",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +183,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेटी (beṭī) is the feminine of बेटा (beṭā), \"son\". CDIAL lists both under a reconstructed beṭṭa, in an entry headed biḍḍa, \"defective\", beside Prakrit biṭṭa, \"boy\" (CDIAL 9238). No Sanskrit source is agreed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +204,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +253,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d92ec3ff5ad42964",
+      "sourceHash": "fnv1a64:594a5f57aa047f09",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +321,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिवार (parivār) is Sanskrit parivāra, \"surroundings; followers\", taken over whole as a learned loan, a tatsama (CDIAL 7876). Hindi narrowed it to the people around you: the family."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +342,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +391,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8351cb995d456368",
+      "sourceHash": "fnv1a64:c807db474cce0496",
       "notice": null,
       "blocks": [
         {

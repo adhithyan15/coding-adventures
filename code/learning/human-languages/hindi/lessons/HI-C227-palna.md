@@ -14,7 +14,8 @@ romanization: "pālnā"
 concept_tag: HI-VERB-PALNA
 prerequisites: [HI-C227-phatna, HI-C227-pharna]
 sounds: []
-roots: []
+roots: [sanskrit-palayati]
+etymology_hook: "pālnā ← Sanskrit pālayati 'guards, protects', a tadbhava (CDIAL 8129)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C227-pharna]
 <!-- hl-knowledge: introduces=[HI-LEX-C227-ACT227-03]; assesses=[] -->
 
 **पालना** — *pālnā* — "to bring up, to keep (animals)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पालना** (*pālnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pālayati*, "guards, protects" (CDIAL 8129).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

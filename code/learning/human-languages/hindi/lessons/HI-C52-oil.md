@@ -14,7 +14,8 @@ romanization: "tel"
 concept_tag: HI-NOUN-OIL
 prerequisites: [HI-C52-lentils, HI-C50-respect, HI-C51-courtyard]
 sounds: []
-roots: []
+roots: [sanskrit-taila]
+etymology_hook: "tel ← Sanskrit taila 'sesame oil', built on tila 'sesame' (CDIAL 5958)"
 duration:
   max_seconds: 210
 requires:

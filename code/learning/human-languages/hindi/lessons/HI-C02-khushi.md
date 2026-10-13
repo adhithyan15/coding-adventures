@@ -15,6 +15,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [HI-C02-mera-naam-hai]
 sounds: [nukta-kh, matra-u, matra-i]
 roots: [khush-persian]
+etymology_hook: "khushī: khush 'happy, pleasant', usually traced to Persian khush, + -ī"
 duration:
   max_seconds: 180
 requires:

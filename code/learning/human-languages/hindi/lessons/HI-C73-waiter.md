@@ -14,7 +14,8 @@ romanization: "veṭar"
 concept_tag: HI-NOUN-WAITER
 prerequisites: [HI-C73-bill, HI-C71-very, HI-C72-expensive]
 sounds: []
-roots: []
+roots: [english-waiter]
+etymology_hook: "veṭar ← English waiter"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,11 @@ eye rather than call a title, and a raised hand does the work.
 
 So hold वेटर for reading, and expect the room itself to be quieter than the
 word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वेटर** (*veṭar*) is a loan from English *waiter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

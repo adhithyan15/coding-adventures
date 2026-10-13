@@ -14,7 +14,8 @@ romanization: "gānā"
 concept_tag: HI-NOUN-SONG
 prerequisites: [HI-C70-cricket, HI-C68-language, HI-C69-ticket]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gānā ← Sanskrit gāyati 'sings', a tadbhava (CDIAL 4135)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ around it and never by the word.
 Hindi does this often enough that it is worth expecting rather than being
 surprised by. You will meet another word with the same double life before this
 run of chapters is out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाना** (*gānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāyati*, "sings" (CDIAL 4135). The noun is the verb *gānā*, "to sing", used for what is sung.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

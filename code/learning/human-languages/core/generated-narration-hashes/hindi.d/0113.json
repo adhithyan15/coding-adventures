@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 113,
-  "sourceHash": "fnv1a64:668965992de9879b",
+  "sourceHash": "fnv1a64:4cf90aded1acc487",
   "lessonIds": [
     "HI-C113-kuchnahin",
     "HI-C113-abhinahin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch113.txt",
   "json": "hindi/narration/ch113.json",
-  "textHash": "fnv1a64:98fb819e5a2f292a",
-  "jsonHash": "fnv1a64:11c8803ee710a8a9",
+  "textHash": "fnv1a64:8afcfa7091fb475a",
+  "jsonHash": "fnv1a64:973f7d04b377239f",
   "findings": []
 }

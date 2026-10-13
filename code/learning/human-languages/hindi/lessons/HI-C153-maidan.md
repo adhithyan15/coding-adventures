@@ -14,7 +14,8 @@ romanization: "maidān"
 concept_tag: HI-THINGS153-MAIDAN
 prerequisites: [HI-C152-masjid, HI-C153-bagica]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "maidān: usually traced to Persian maidān 'open ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C153-bagica]
 <!-- hl-knowledge: introduces=[HI-LEX-C153-THINGS153-02]; assesses=[] -->
 
 **मैदान** — *maidān* — "a field, a ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मैदान** (*maidān*) is a loan, usually traced to Persian *maidān*, "open ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -19,6 +19,7 @@ You have been saying मैं नहीं जानता for a very long time
 what you had: मैं नहीं जानता. what you have now: मैं जानता हूँ (maiṁ jāntā hūṁ).
 Take नहीं out and one thing has to come back: हूँ. A Hindi present needs its to be on the end, and the negative sentence dropped it — which is ordinary and which is why the affirmative does not look like the negative with a word removed.
 The verb is जानना, and its ज is the letter drawn two chapters before this one. It was on the page long before that, inside जी and आज.
+जानना comes from Sanskrit jānāti, "knows" (CDIAL 5193).
 
 Grammar Lens: a word carried and never handed over.
 This is worth naming because it is a real gap and not a quirk of your memory. The negative lesson's headword names jāntā and glosses it as the masculine present of to know — but everything that lesson actually teaches is about नहीं: its Sanskrit root, its Indo-European cousins, its two jobs.
@@ -58,6 +59,7 @@ piece: आप. job: the respectful you.
 piece: जानते. job: the verb, agreeing with आप.
 piece: हैं. job: to be, also agreeing with आप.
 आप is grammatically plural, which is why both the verb and to be take their plural endings even when you are speaking to one person. That is not a new rule — it is the same respect-as-plural the track has used since the second chapter, turning up on a new verb.
+जानना comes from Sanskrit jānāti, "knows" (CDIAL 5193).
 
 Grammar Lens: where क्या sits.
 क्या goes at the front, and the rest of the sentence keeps its ordinary order behind it. English reshuffles a question — you know becomes do you know — and Hindi does not move anything at all.
@@ -97,6 +99,7 @@ form: चाहिए (cāhiye). what follows it: a thing.
 चाहना wants an action. It was taught alongside the rule that a Hindi verb can swallow another verb whole, and that is exactly what it does: I want to go.
 चाहिए (cāhiye) wants a noun. I want tea. English uses one word for both jobs and hides the difference; Hindi uses two forms and makes it visible.
 The other difference is that चाहिए (cāhiye) does not change. It has no masculine and feminine, no singular and plural — the same five letters whoever is speaking and whatever is wanted. After a chapter of endings that agree with everything in sight, that is a relief worth noticing.
+चाहिए (cāhiye) comes from a reconstructed cāh, "see, look for, desire", whose source CDIAL calls uncertain (CDIAL 4775).
 
 Grammar Lens: the ए on the end.
 The word ends in ए, the standing vowel drawn a few chapters back — not the sitting mark ◌े, because there is no consonant after हि for the vowel to ride on.
@@ -130,6 +133,9 @@ Say I like tea in Hindi. Look at the first word you said, and keep it in mind.
 You'll want to know: मुझे … चाहिए.
 मुझे चाय चाहिए (mujhe cāy cāhiye)। — I want tea.
 Not मैं. मुझे — to me.
+
+The phrase, taken apart.
+मुझे चाय चाहिए (mujhe cāy cāhiye) is mujhe, "to me", cāy, "tea", and cāhiye, "is wanted". CDIAL lists mujh under the Sanskrit base ma- of "me" (CDIAL 9691), and cāh, "wish", under a reconstructed cāh, "see, desire", of uncertain source (CDIAL 4775).
 
 The two words.
 This is the liking sentence again, with one word swapped:

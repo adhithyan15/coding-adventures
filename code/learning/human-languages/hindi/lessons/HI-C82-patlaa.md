@@ -14,7 +14,8 @@ romanization: "patlā"
 concept_tag: HI-ADJ-THIN
 prerequisites: [HI-C82-lambaa]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patlā ← Sanskrit pattrala 'leafy', and so 'leaf-like, thin', from pattra 'leaf' (CDIAL 7736)"
 duration:
   max_seconds: 240
 requires:
@@ -52,9 +53,10 @@ have reached for.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पतला** goes back to Sanskrit **पत्र** and the root **पत्** (*pat*), "to fall."
-A thin thing is one that has **fallen flat** — flattened out until there is
-hardly anything left of it.
+**पतला** goes back to Sanskrit *pattrala*, "leafy", which CDIAL takes
+to have meant "leaf-like, thin" (CDIAL 7736). It is built on **पत्र** (*pattra*),
+"leaf", from the root **पत्** (*pat*), "to fly, to fall". A thin thing is as
+flat as a leaf.
 
 The same root is sitting in two Hindi words you may already recognise:
 

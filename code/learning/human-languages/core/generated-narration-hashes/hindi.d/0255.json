@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 255,
-  "sourceHash": "fnv1a64:f3978eed55d368ac",
+  "sourceHash": "fnv1a64:e137c32a23afe132",
   "lessonIds": [
     "HI-C255-bahu",
     "HI-C255-damad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch255.txt",
   "json": "hindi/narration/ch255.json",
-  "textHash": "fnv1a64:ff3d33d343ae22e9",
-  "jsonHash": "fnv1a64:9c88c57ba1b56d70",
+  "textHash": "fnv1a64:cda25f37e7ee7445",
+  "jsonHash": "fnv1a64:86fffd1ea7b981b9",
   "findings": []
 }

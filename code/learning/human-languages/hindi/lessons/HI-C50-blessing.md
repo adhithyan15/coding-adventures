@@ -14,7 +14,8 @@ romanization: "āśīrvād"
 concept_tag: HI-NOUN-BLESSING
 prerequisites: [HI-C50-respect, HI-C48-perhaps, HI-C49-set-out]
 sounds: []
-roots: []
+roots: [sanskrit-ashirvada]
+etymology_hook: "āśīrvād ← Sanskrit āśīrvāda 'a spoken blessing', a tatsama"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "ghoṛā"
 concept_tag: HI-NOUN-HORSE
 prerequisites: [HI-C54-cow, HI-C52-lentils, HI-C53-knee]
 sounds: []
-roots: []
+roots: [sanskrit-ghotaka]
+etymology_hook: "ghoṛā ← Sanskrit ghoṭaka 'horse', which CDIAL calls non-Aryan, probably Dravidian (CDIAL 4516)"
 duration:
   max_seconds: 210
 requires:

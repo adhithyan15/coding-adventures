@@ -14,7 +14,8 @@ romanization: "sãbhālnā"
 concept_tag: HI-VERB-SABHALNA
 prerequisites: [HI-C174-lautana, HI-C174-sajana]
 sounds: []
-roots: []
+roots: [sanskrit-sambharayati]
+etymology_hook: "sãbhālnā ← Sanskrit saṁbhārayati 'prepares, maintains', a tadbhava (CDIAL 12961)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C174-sajana]
 <!-- hl-knowledge: introduces=[HI-LEX-C174-ACT174-03]; assesses=[] -->
 
 **सँभालना** — *sãbhālnā* — "to look after, to handle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सँभालना** (*sãbhālnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṁbhārayati*, "prepares, maintains" (CDIAL 12961). It is the causing form of *saṁbharati*, "brings together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to yawn, then the Hindi for to cough.
 You'll want to know: काँपना.
 काँपना — kā̃pnā — "to shiver, to tremble".
 
+The word, taken apart.
+काँपना (kā̃pnā) (kāṁpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kampate, "trembles, shivers" (CDIAL 2767).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to cough, then the Hindi for to shiver.
 
 You'll want to know: मुस्कुराना.
 मुस्कुराना — muskurānā — "to smile".
+
+The word, taken apart.
+मुस्कुराना (muskurānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from muss, "smile, sob", a form CDIAL reconstructs from its descendants (CDIAL 10227). CDIAL notes an added -k-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to shiver, then the Hindi for to smile.
 You'll want to know: चीखना.
 चीखना — cīkhnā — "to scream".
 
+The word, taken apart.
+The origin of चीखना (cīkhnā) is uncertain. CDIAL lists a cīkhnā only in the sense "to taste" (CDIAL 4557), which is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to smile, then the Hindi for to scream.
 You'll want to know: फुसफुसाना.
 फुसफुसाना — phusphusānā — "to whisper".
 
+The word, taken apart.
+फुसफुसाना (phusphusānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from phuss, "hissing, whispering", a form CDIAL reconstructs from its descendants (CDIAL 9099). CDIAL lists Hindi phusphus, "hissing".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to scream, then the Hindi for to whisper.
 
 You'll want to know: डाँटना.
 डाँटना — ḍā̃ṭnā — "to scold".
+
+The word, taken apart.
+डाँटना (ḍā̃ṭnā) (ḍāṁṭnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from draṭ, "press", a form CDIAL reconstructs from its descendants (CDIAL 6618). CDIAL glosses the Hindi word "to threaten, check".
 
 What you've built.
 One more word for this chapter.

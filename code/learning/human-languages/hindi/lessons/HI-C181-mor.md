@@ -14,7 +14,8 @@ romanization: "moṛ"
 concept_tag: HI-THG181-MOR
 prerequisites: [HI-C181-naqsa, HI-C181-rasta]
 sounds: []
-roots: []
+roots: [sanskrit-mutati]
+etymology_hook: "moṛ ← Sanskrit muṭati 'twists', a tadbhava (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C181-rasta]
 <!-- hl-knowledge: introduces=[HI-LEX-C181-THG181-03]; assesses=[] -->
 
 **मोड़** — *moṛ* — "a turn, a bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोड़** (*moṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṭati*, "twists" (CDIAL 10186). *moṛ*, "a turn", is the noun of *moṛnā*, "to twist, bend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 252,
-  "sourceHash": "fnv1a64:d9fb4bcc8f4e0e42",
+  "sourceHash": "fnv1a64:5c30b8ec6662bd83",
   "lessonIds": [
     "HI-C252-bori",
     "HI-C252-dali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch252.txt",
   "json": "hindi/narration/ch252.json",
-  "textHash": "fnv1a64:585e151537798e30",
-  "jsonHash": "fnv1a64:ad86997a2d16054c",
+  "textHash": "fnv1a64:8eac677985db7350",
+  "jsonHash": "fnv1a64:3b26511b009ce46b",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ulṭī"
 concept_tag: HI-THG256-ULTI
 prerequisites: [HI-C255-nanad, HI-C255-jija]
 sounds: []
-roots: []
+roots: [indo-aryan-ullatati]
+etymology_hook: "ulṭī: 'overturning', from ulaṭnā 'to be overturned', under *ullaṭati 'turns over' (CDIAL 2368)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C255-jija]
 <!-- hl-knowledge: introduces=[HI-LEX-C256-THG256-01]; assesses=[] -->
 
 **उल्टी** — *ulṭī* — "vomiting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उल्टी** (*ulṭī*) is "an overturning", from *ulaṭnā*, "to be overturned", which CDIAL lists under a reconstructed *\*ullaṭati*, "turns over" (CDIAL 2368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

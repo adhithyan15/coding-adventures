@@ -14,6 +14,9 @@ Say four everyday verbs once each: लेना, देना, पूछना, 
 You'll want to know: भेजना.
 भेजना — bhejnā — "to send".
 
+The word, taken apart.
+भेजना (bhejnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhejj, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). CDIAL rejects a derivation from visarjayati, "sends off", and offers two possible sources, neither certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for to put, then the Hindi for to send.
 
 You'll want to know: लाना.
 लाना — lānā — "to bring".
+
+The word, taken apart.
+लाना (lānā) is inherited. CDIAL lists it under Sanskrit labhate, "catches, takes", crossed with forms of dadāti, "gives" (CDIAL 10948): to bring is to take and give.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Hindi for to send, then the Hindi for to bring.
 You'll want to know: खोलना.
 खोलना — kholnā — "to open".
 
+The word, taken apart.
+खोलना (kholnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholl, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for to bring, then the Hindi for to open.
 You'll want to know: धोना.
 धोना — dhonā — "to wash".
 
+The word, taken apart.
+धोना (dhonā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL notes that this form replaced Sanskrit dhāvati, "washes".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for to open, then the Hindi for to wash.
 
 You'll want to know: नहाना.
 नहाना — nahānā — "to bathe".
+
+The word, taken apart.
+नहाना (nahānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from snāti, "bathes" (CDIAL 13786).
 
 What you've built.
 One more word for this chapter.

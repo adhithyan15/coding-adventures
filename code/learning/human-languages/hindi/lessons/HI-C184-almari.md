@@ -14,7 +14,8 @@ romanization: "almārī"
 concept_tag: HI-THG184-ALMARI
 prerequisites: [HI-C184-fars, HI-C184-cabi]
 sounds: []
-roots: []
+roots: [portuguese-armario]
+etymology_hook: "almārī: usually traced to Portuguese armário 'cupboard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C184-cabi]
 <!-- hl-knowledge: introduces=[HI-LEX-C184-THG184-03]; assesses=[] -->
 
 **अलमारी** — *almārī* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अलमारी** (*almārī*) is usually traced to Portuguese *armário*, "cupboard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

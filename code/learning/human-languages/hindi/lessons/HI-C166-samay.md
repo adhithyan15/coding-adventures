@@ -14,7 +14,8 @@ romanization: "samay"
 concept_tag: HI-READ166-SAMAY
 prerequisites: [HI-C166-sucna, HI-C166-sandesh]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samay ← Sanskrit samaya 'meeting; agreement; time', a tatsama (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [HI-C166-sandesh]
 The opening times say **दुकान सुबह नौ बजे से शाम छह बजे तक।** (*dukān subah nau
 baje se śām chah baje tak.*) Nine in the morning until six in the evening: go
 before six.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समय** (*samay*) is Sanskrit *samaya*, "meeting; agreement; time", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL lists the inherited form as *samā*, and marks the Hindi *samai* as a later borrowing from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

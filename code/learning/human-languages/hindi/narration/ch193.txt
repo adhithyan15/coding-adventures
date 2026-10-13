@@ -12,6 +12,9 @@ Before the new one: say the Hindi for often, then the Hindi for never.
 You'll want to know: अध्यापक.
 अध्यापक — adhyāpak — "a teacher".
 
+The word, taken apart.
+अध्यापक (adhyāpak) is Sanskrit adhyāpaka, "teacher", taken over whole as a learned loan, a tatsama (CDIAL 278).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for never, then the Hindi for a teacher.
 
 You'll want to know: वकील.
 वकील — vakīl — "a lawyer".
+
+The word, taken apart.
+वकील (vakīl) is a loan from Arabic wakīl, "an agent, a representative", which reached Hindi through Persian. Its Arabic root is w-k-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a teacher, then the Hindi for a lawyer.
 You'll want to know: सिपाही.
 सिपाही — sipāhī — "a soldier, a constable".
 
+The word, taken apart.
+सिपाही (sipāhī) is a loan, usually traced to Persian sipāhī, "soldier". It is built on sipāh, "army". English took the word as sepoy.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a lawyer, then the Hindi for a soldier.
 You'll want to know: दर्ज़ी.
 दर्ज़ी — darzī — "a tailor".
 
+The word, taken apart.
+दर्ज़ी (darzī) is a loan, usually traced to Persian darzī, "tailor". It is built on darz, "seam".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a soldier, then the Hindi for a tailor.
 
 You'll want to know: नाई.
 नाई — nāī — "a barber".
+
+The word, taken apart.
+नाई (nāī) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, with nāū, "barber", under Sanskrit nāpita, "barber" (CDIAL 13792).
 
 What you've built.
 One more word for this chapter.

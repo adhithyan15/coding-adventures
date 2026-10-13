@@ -15,6 +15,7 @@ concept_tag: HI-THG209-CHAJJA
 prerequisites: [HI-C208-sikka, HI-C208-not]
 sounds: []
 roots: []
+etymology_hook: "chajjā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C208-not]
 <!-- hl-knowledge: introduces=[HI-LEX-C209-THG209-01]; assesses=[] -->
 
 **छज्जा** — *chajjā* — "a balcony, a ledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **छज्जा** (*chajjā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

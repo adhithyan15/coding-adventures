@@ -14,7 +14,8 @@ romanization: "botal"
 concept_tag: HI-THINGS134-BOTAL
 prerequisites: [HI-C133-palang, HI-C133-bistar, HI-C77-practice, HI-C77-one-other, HI-C76-ninth, HI-C76-tenth]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "botal: usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C133-bistar]
 <!-- hl-knowledge: introduces=[HI-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **बोतल** — *botal* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोतल** (*botal*) is usually traced to English *bottle*; some trace it to Portuguese *botelha*, "bottle", which reached India first. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

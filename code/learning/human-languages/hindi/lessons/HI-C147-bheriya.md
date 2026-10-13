@@ -14,7 +14,8 @@ romanization: "bheṛiyā"
 concept_tag: HI-THINGS147-BHERIYA
 prerequisites: [HI-C147-hiran, HI-C147-lomri]
 sounds: []
-roots: []
+roots: [indo-aryan-bhedriya]
+etymology_hook: "bheṛiyā ← *bheḍriya 'sheep-killer', a reconstructed form; a tadbhava (CDIAL 9608b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C147-lomri]
 <!-- hl-knowledge: introduces=[HI-LEX-C147-THINGS147-04]; assesses=[] -->
 
 **भेड़िया** — *bheṛiyā* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेड़िया** (*bheṛiyā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bheḍriya*, "sheep-killer", a form CDIAL reconstructs from its descendants (CDIAL 9608b). It is built on *bheḍra*, "ram".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

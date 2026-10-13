@@ -14,7 +14,8 @@ romanization: "sandeś"
 concept_tag: HI-READ166-SANDESH
 prerequisites: [HI-C165-ginna, HI-C166-sucna]
 sounds: []
-roots: []
+roots: [sanskrit-samdesha]
+etymology_hook: "sandeś ← Sanskrit saṁdeśa 'message, information', a tatsama (CDIAL 12904)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C166-sucna]
 
 The message says **कल सुबह दस बजे दफ़्तर।** (*kal subah das baje daftar.*) The
 office, tomorrow at ten in the morning: be there at ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संदेश** (*sandeś*) is Sanskrit *saṁdeśa*, "message, information", taken over whole as a learned loan, a tatsama (CDIAL 12904). CDIAL lists the inherited form of the same word as *sãdesā*, "news".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

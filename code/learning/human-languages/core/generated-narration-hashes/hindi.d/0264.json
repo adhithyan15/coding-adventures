@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 264,
-  "sourceHash": "fnv1a64:ee825820076c0a14",
+  "sourceHash": "fnv1a64:a479b069fdb579e2",
   "lessonIds": [
     "HI-C264-sitar",
     "HI-C264-tabla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch264.txt",
   "json": "hindi/narration/ch264.json",
-  "textHash": "fnv1a64:dec43d0fa09e4e5a",
-  "jsonHash": "fnv1a64:d0e6da14ef4ddb6f",
+  "textHash": "fnv1a64:e74660a1269f8008",
+  "jsonHash": "fnv1a64:54d52249b90c6941",
   "findings": []
 }

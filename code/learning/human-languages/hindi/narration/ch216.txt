@@ -12,6 +12,9 @@ Before the new one: say the Hindi for brave, then the Hindi for kind.
 You'll want to know: मूँगफली.
 मूँगफली — mū̃gphalī — "a peanut".
 
+The word, taken apart.
+मूँगफली (mū̃gphalī) (mūṁgphalī) is "mung-pod": mūṁg, "the mung bean", from Sanskrit mudga (CDIAL 10198), and phalī, "pod", from phala, "fruit".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for kind, then the Hindi for a peanut.
 
 You'll want to know: मूली.
 मूली — mūlī — "a radish".
+
+The word, taken apart.
+मूली (mūlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mūla, "root; radish" (CDIAL 10250). CDIAL thinks a non-Aryan, perhaps Dravidian, origin likely, comparing Tamil muḷḷaṅki, "radish".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a peanut, then the Hindi for a radish.
 You'll want to know: बैंगन.
 बैंगन — bãigan — "an aubergine".
 
+The word, taken apart.
+बैंगन (bãigan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātiṅgaṇa, "the egg-plant" (CDIAL 11503). CDIAL thinks the names of this plant share one ultimate source, which Bloch took to be Dravidian; the word also passed into Persian as bādingān.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a radish, then the Hindi for an aubergine.
 You'll want to know: भिंडी.
 भिंडी — bhinḍī — "okra".
 
+The word, taken apart.
+भिंडी (bhinḍī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhiṇḍā, "okra" (CDIAL 9492).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for an aubergine, then the Hindi for okra.
 
 You'll want to know: पपीता.
 पपीता — papītā — "a papaya".
+
+The word, taken apart.
+The origin of पपीता (papītā) is uncertain. It is usually linked with papaya, a word from the Caribbean that Spanish and Portuguese sailors carried round the world, but CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

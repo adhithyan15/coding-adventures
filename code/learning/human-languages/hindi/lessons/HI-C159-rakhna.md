@@ -14,7 +14,8 @@ romanization: "rakhnā"
 concept_tag: HI-VERB-RAKHNA
 prerequisites: [HI-C159-jagna, HI-C159-daurna]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rakhnā ← Sanskrit rakṣati 'guards', a tadbhava (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C159-daurna]
 <!-- hl-knowledge: introduces=[HI-LEX-C159-QUAL159-05]; assesses=[] -->
 
 **रखना** — *rakhnā* — "to put, to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रखना** (*rakhnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

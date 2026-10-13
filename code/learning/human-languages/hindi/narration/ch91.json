@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Character, Not Mood",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:210b77358d4aaaa6",
+  "sourceHash": "fnv1a64:7c92d980ba6849c8",
   "lessons": [
     {
       "id": "HI-C83-buraa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf01234271f206d9",
+      "sourceHash": "fnv1a64:875772794d8a9d31",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,10 @@
             {
               "kind": "speech",
               "text": "A second everyday one: बुरा लगना — burā lagnā, \"to feel hurt,\" literally to strike one as bad. Hindi describes being offended as something the remark does, not something you do."
+            },
+            {
+              "kind": "speech",
+              "text": "बुरा (burā) comes from a reconstructed bura, \"defective\" (CDIAL 9289)."
             }
           ]
         },
@@ -183,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad5ac8232927409d",
+      "sourceHash": "fnv1a64:7f40066c0f02fa6f",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bbe768597c9a935",
+      "sourceHash": "fnv1a64:d1902ca6fcea9c75",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +534,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3a84af9d5ba6a971",
+      "sourceHash": "fnv1a64:a6aa80d3f9b34fa1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -716,7 +720,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a38f387ec11a19a",
+      "sourceHash": "fnv1a64:3994bb2134c8b5b1",
       "notice": null,
       "blocks": [
         {
@@ -881,7 +885,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c88b2da96174636d",
+      "sourceHash": "fnv1a64:4154ed06845e22d2",
       "notice": {
         "modality": "sight",
         "needs": [

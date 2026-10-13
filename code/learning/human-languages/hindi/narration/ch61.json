@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "At the Cooking Fire",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5ebce2fe46c24a3",
+  "sourceHash": "fnv1a64:342de3badf26efab",
   "lessons": [
     {
       "id": "HI-C61-vessel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a33fb2688e15bc8f",
+      "sourceHash": "fnv1a64:fdbb0d9f7327e765",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of बर्तन (bartan) is uncertain. It is often traced to Sanskrit vartana, but CDIAL does not list it, and its vartana means \"turning, rolling\" (CDIAL 11354)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,7 +121,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -338,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:274532ff13f76236",
+      "sourceHash": "fnv1a64:03538238df34c6ff",
       "notice": null,
       "blocks": [
         {
@@ -379,6 +390,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चम्मच (chammach) is a loan, usually traced to Persian chamcha, \"spoon, ladle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -389,7 +411,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -429,7 +451,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -460,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92f19fa9103e54e",
+      "sourceHash": "fnv1a64:148b848ecbd7a835",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +523,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिलास (gilās) is a loan from English glass."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -551,7 +584,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -582,7 +615,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49c164b9bf6e6e31",
+      "sourceHash": "fnv1a64:49965d7cfde70493",
       "notice": null,
       "blocks": [
         {
@@ -623,6 +656,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तवा (tavā) is a tadbhava, a word inherited and reshaped by sound change. It comes from tapaka, \"frying pan\", a form CDIAL reconstructs from its descendants (CDIAL 5670). It is built on the verb tap-, \"to heat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -633,7 +677,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -673,7 +717,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -704,7 +748,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea606731b807dc39",
+      "sourceHash": "fnv1a64:0d64ff7a2b4d13d6",
       "notice": null,
       "blocks": [
         {

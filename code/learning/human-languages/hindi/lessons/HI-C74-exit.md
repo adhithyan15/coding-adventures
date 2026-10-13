@@ -14,7 +14,8 @@ romanization: "nikās"
 concept_tag: HI-NOUN-EXIT
 prerequisites: [HI-C74-entrance, HI-C49-set-out, HI-C72-expensive, HI-C73-waiter]
 sounds: []
-roots: []
+roots: [sanskrit-nishkasa]
+etymology_hook: "nikās ← Sanskrit niṣkāsa 'going out', a tadbhava (CDIAL 7485)"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,11 @@ enough that you should expect it rather than be surprised.
 
 निकास is painted opposite प्रवेश over every second doorway in a station, and the
 two are read together or not at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निकास** (*nikās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *niṣkāsa*, "going out" (CDIAL 7485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a rolling pin, then the Hindi for a sieve.
 You'll want to know: कद्दूकस.
 कद्दूकस — kaddūkas — "a grater".
 
+The word, taken apart.
+कद्दूकस (kaddūkas) is kaddū, "gourd", usually traced to Persian kadū, with kas, "scraping". CDIAL has no entry for the compound.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a sieve, then the Hindi for a grater.
 
 You'll want to know: ढक्कन.
 ढक्कन — dhakkan — "a lid".
+
+The word, taken apart.
+ढक्कन (dhakkan) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍhakk, "cover", a form CDIAL reconstructs from its descendants (CDIAL 5574). CDIAL compares a Jain Sanskrit ḍhakkana, "shutting".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a grater, then the Hindi for a lid.
 You'll want to know: जग.
 जग — jag — "a jug".
 
+The word, taken apart.
+जग (jag) is a loan from English jug.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a lid, then the Hindi for a jug.
 You'll want to know: सुराही.
 सुराही — surāhī — "a water jar".
 
+The word, taken apart.
+सुराही (surāhī) is a loan from Arabic ṣurāḥī, "a long-necked flask", which reached Hindi through Persian. Its Arabic root is ṣ-r-ḥ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a jug, then the Hindi for a water jar.
 
 You'll want to know: मटका.
 मटका — maṭkā — "a clay pot".
+
+The word, taken apart.
+मटका (maṭkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛdā, "earth, clay" (CDIAL 10291). CDIAL notes an added -k-.
 
 What you've built.
 One more word for this chapter.

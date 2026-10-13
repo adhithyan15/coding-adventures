@@ -14,7 +14,8 @@ romanization: "ciṛiyāghar"
 concept_tag: HI-THG203-CIRIYAGHAR
 prerequisites: [HI-C202-minar, HI-C202-bag]
 sounds: []
-roots: []
+roots: [sanskrit-cataka, sanskrit-ghara]
+etymology_hook: "ciṛiyāghar: ciṛiyā 'bird' (CDIAL 4571) + ghar 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C202-bag]
 <!-- hl-knowledge: introduces=[HI-LEX-C203-THG203-01]; assesses=[] -->
 
 **चिड़ियाघर** — *ciṛiyāghar* — "a zoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिड़ियाघर** (*ciṛiyāghar*) is "bird-house": *ciṛiyā*, "bird", from Sanskrit *caṭaka*, "sparrow", a word imitating the call (CDIAL 4571), and *ghar*, "house", from *ghara* (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

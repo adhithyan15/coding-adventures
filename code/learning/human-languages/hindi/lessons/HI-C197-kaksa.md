@@ -14,7 +14,8 @@ romanization: "kakṣā"
 concept_tag: HI-THG197-KAKSA
 prerequisites: [HI-C196-naukar, HI-C196-cor]
 sounds: []
-roots: []
+roots: [sanskrit-kakshya]
+etymology_hook: "kakṣā ← Sanskrit kakṣā 'girdle', a tatsama (CDIAL 2592)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C196-cor]
 <!-- hl-knowledge: introduces=[HI-LEX-C197-THG197-01]; assesses=[] -->
 
 **कक्षा** — *kakṣā* — "a class, a classroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कक्षा** (*kakṣā*) is Sanskrit *kakṣā*, "girdle", taken over whole as a learned loan, a tatsama (CDIAL 2592). Hindi uses it for a classroom, and so for a class; CDIAL does not trace that sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -78,6 +78,9 @@ You'll want to know: टोकरी.
 Here the trail stops early. टोकरी (ṭokrī) has no agreed Sanskrit ancestor, and the retroflex ट at the front is the sound most often credited to old contact with the Dravidian languages of the south — the same honest gap you already met under पेट.
 A टोकरी (ṭokrī) is woven, usually from split cane or from the ribs of a leaf, and it is what सब्ज़ी comes home from the बाज़ार in. Light, cheap, and mended rather than replaced.
 
+The word, taken apart.
+टोकरी (ṭokrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭokka, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). The -r- is an added suffix.
+
 What you've built.
 Three.
 
@@ -141,6 +144,9 @@ You'll want to know: लकड़ी.
 लकड़ी (lakṛī) — "wood, a stick of firewood".
 Usually traced back to Sanskrit लगुड (laguḍa), 'a club, a staff', through a Prakrit form with a doubled consonant in the middle. A word for a stick you swing became the word for the stuff a stick is made of.
 लकड़ी (lakṛī) is both, in fact: the material and one piece of it. A bundle of it under the arm is what feeds the चूल्हा, which is why this word and that one turn up in the same sentence more often than any other pair in this book.
+
+The word, taken apart.
+लकड़ी (lakṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lakuṭa, "club, stick" (CDIAL 10875). It came through a variant lakkuṭa.
 
 What you've built.
 Five: रस्सी (rassī), सूई (sūī), टोकरी (ṭokrī), मिट्टी (miṭṭī), लकड़ी (lakṛī). Enough to say what a working pair of hands is holding.

@@ -14,7 +14,8 @@ romanization: "līṭar"
 concept_tag: HI-THG251-LITAR
 prerequisites: [HI-C251-tarazu, HI-C251-kilo]
 sounds: []
-roots: []
+roots: [english-litre]
+etymology_hook: "līṭar ← English litre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C251-kilo]
 <!-- hl-knowledge: introduces=[HI-LEX-C251-THG251-04]; assesses=[] -->
 
 **लीटर** — *līṭar* — "a litre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लीटर** (*līṭar*) is a loan from English *litre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

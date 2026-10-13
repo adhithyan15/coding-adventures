@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 196,
-  "sourceHash": "fnv1a64:3159a602ea8e930e",
+  "sourceHash": "fnv1a64:d73038716ddecc0a",
   "lessonIds": [
     "HI-C196-mantri",
     "HI-C196-raja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch196.txt",
   "json": "hindi/narration/ch196.json",
-  "textHash": "fnv1a64:3097bc87568d16ec",
-  "jsonHash": "fnv1a64:88ea293081d16557",
+  "textHash": "fnv1a64:058edfcb2183bb27",
+  "jsonHash": "fnv1a64:c5b55252bf397e99",
   "findings": []
 }

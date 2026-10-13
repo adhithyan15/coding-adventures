@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f278c7f32a65164",
+  "sourceHash": "fnv1a64:167ec4da92ca1671",
   "lessons": [
     {
       "id": "HI-C47-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:184f71f0fd1ff54a",
+      "sourceHash": "fnv1a64:e50cda5e3f873128",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिक्षक (śikṣak) is Sanskrit śikṣaka, \"one who teaches\", taken over whole as a learned loan, a tatsama. It is built on śikṣā, \"learning, study\", which also came down into everyday Hindi as sīkh, \"advice\" (CDIAL 12432)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f06e690c7c0abdb",
+      "sourceHash": "fnv1a64:61f808ae44819d28",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec865e6c771bc948",
+      "sourceHash": "fnv1a64:fc86343b0e819a18",
       "notice": null,
       "blocks": [
         {
@@ -331,6 +342,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किसान (kisān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṛṣāṇa, \"ploughing\" (CDIAL 3447). It is the present participle of kṛṣati, \"ploughs\": a farmer is \"the one ploughing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -341,7 +363,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -399,7 +421,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -430,7 +452,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f70794a04814f52",
+      "sourceHash": "fnv1a64:ab00dc0fabb921d5",
       "notice": null,
       "blocks": [
         {
@@ -570,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f62887e1e860531",
+      "sourceHash": "fnv1a64:d2bc5f679e5f87a8",
       "notice": null,
       "blocks": [
         {

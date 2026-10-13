@@ -14,7 +14,8 @@ romanization: "moṭā"
 concept_tag: HI-ADJ-THICK
 prerequisites: [HI-C82-patlaa]
 sounds: []
-roots: []
+roots: [indo-aryan-mutta]
+etymology_hook: "moṭā ← *mōṭṭa, in a word group CDIAL heads *muṭṭa 'defective' (CDIAL 10187)"
 duration:
   max_seconds: 240
 requires:
@@ -60,7 +61,8 @@ note, exactly as it does on any instrument.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मोटा** is from Sanskrit **मूर्त** by way of Prakrit, carrying the sense of
+**मोटा** comes from a reconstructed *\*mōṭṭa*, one of a group of related forms that
+CDIAL heads *\*muṭṭa*, "defective" (CDIAL 10187). In Hindi it carries the sense of
 something **solid, with body to it** — a shape that has taken form rather than
 staying an outline.
 

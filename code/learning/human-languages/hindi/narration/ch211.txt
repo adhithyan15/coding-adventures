@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a laddu, then the Hindi for pickle.
 You'll want to know: चटनी.
 चटनी — caṭnī — "chutney".
 
+The word, taken apart.
+The origin of चटनी (caṭnī) is uncertain. CDIAL has no entry for it. English took the word as chutney.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for pickle, then the Hindi for chutney.
 
 You'll want to know: मसाला.
 मसाला — masālā — "spice, a spice mix".
+
+The word, taken apart.
+मसाला (masālā) is a loan from Arabic maṣāliḥ, "things that are needful", which reached Hindi through Persian. Its Arabic root is ṣ-l-ḥ (Lane). Hindi took the plural through Persian and narrowed it to cooking.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for chutney, then the Hindi for spice.
 You'll want to know: हल्दी.
 हल्दी — haldī — "turmeric".
 
+The word, taken apart.
+हल्दी (haldī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric" (CDIAL 13992).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for spice, then the Hindi for turmeric.
 You'll want to know: धनिया.
 धनिया — dhaniyā — "coriander".
 
+The word, taken apart.
+धनिया (dhaniyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhānaka, "coriander" (CDIAL 6776).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for turmeric, then the Hindi for coriander.
 
 You'll want to know: नींबू.
 नींबू — nī̃bū — "a lemon, a lime".
+
+The word, taken apart.
+नींबू (nī̃bū) (nīṁbū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, "lime" (CDIAL 7247). CDIAL takes the Sanskrit word from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pati"
 concept_tag: HI-SPOUSE-HUSBAND
 prerequisites: [HI-C118-larka, HI-C118-larki]
 sounds: []
-roots: []
+roots: [sanskrit-pati]
+etymology_hook: "pati ← Sanskrit pati 'master, husband', a tatsama (CDIAL 7727)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C118-larki]
 **पति** (*pati*) — "a husband".
 
 **मेरे पति** — "my husband", with the respectful plural **मेरे**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पति** (*pati*) is Sanskrit *pati*, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

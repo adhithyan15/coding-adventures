@@ -14,9 +14,10 @@ romanization: "kitnā acchā!"
 concept_tag: HI-EXCLAMATIVE
 prerequisites: [HI-C92-kitna]
 sounds: []
-roots: []
+roots: [indo-aryan-kiyatta]
+etymology_hook: "kitnā ← *kiyatta 'how great?', with an added -n- (CDIAL 3167)"
 duration:
-  max_seconds: 240
+  max_seconds: 260
 requires:
   knowledge: [HI-LEX-C92-DEG-04, HI-LEX-C92-DEG-02, HI-LEX-C41-ADJ-03]
 introduces:
@@ -61,6 +62,8 @@ The difference is the verb and the voice. Drop **है**, let the pitch fall at
 end, and a question becomes an exclamation. English does the identical thing —
 *how good is it?* against *how good!* — so there is nothing new to translate,
 only a habit to notice.
+
+**कितना** comes from a reconstructed *\*kiyatta*, "how great" (CDIAL 3167).
 
 ## Grammar Lens: it still agrees, both words at once
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-05, HI-LEX-C92-DEG-02] -->

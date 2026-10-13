@@ -14,6 +14,9 @@ You'll want to know: बीज.
 Sanskrit बीज (bīja), 'seed', carried into Hindi with nothing changed but the final vowel, which the schwa rule you have just learnt takes off the end.
 It reaches well past the field. बीज (bīj) is the seed of a plant, the germ of an idea, and the origin of anything at all — one of a small set of Hindi words that a farmer and a philosopher both use without either sounding odd.
 
+The word, taken apart.
+बीज (bīj) is Sanskrit bīja, "seed", taken over whole as a learned loan, a tatsama (CDIAL 9250). CDIAL lists the inherited forms of the same word as biyā and bīā.
+
 What you've built.
 The first of five things a field holds.
 
@@ -78,6 +81,9 @@ You'll want to know: अनाज.
 Usually traced to Sanskrit अन्न (anna), 'food', through a longer form meaning 'the food that is to be eaten'. The word for food narrowed onto the one food everything else is built around.
 अनाज (anāj) is grain in the bulk sense — what is stored, weighed and sold. चावल is one kind of it, wheat is another, and अनाज (anāj) is the sack all of them come out of.
 
+The word, taken apart.
+अनाज (anāj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from annādya, "food" (CDIAL 398). It is built from anna, "food", and ādya, "to be eaten".
+
 What you've built.
 Three.
 
@@ -109,6 +115,9 @@ You'll want to know: घास.
 घास (ghās) — "grass".
 Sanskrit घास (ghāsa), 'fodder', on the root घस् (ghas-), 'to eat'. Grass is named from the eating end: it is not a plant, it is what an animal is given.
 That is still how the word behaves. Cut घास (ghās) travels home on a head or a bicycle for the भैंस and the गाय, and the lawn sense — grass you keep and do not feed to anything — is the newer, city meaning laid on top.
+
+The word, taken apart.
+घास (ghās) is inherited from Sanskrit ghāsa, "food, pasture grass", and has come down with almost no change (CDIAL 4471).
 
 What you've built.
 Four.

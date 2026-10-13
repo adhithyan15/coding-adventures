@@ -14,7 +14,8 @@ romanization: "mū̃gphalī"
 concept_tag: HI-THG216-MUGPHALI
 prerequisites: [HI-C215-bahadur, HI-C215-dayalu]
 sounds: []
-roots: []
+roots: [sanskrit-mudga, sanskrit-phala]
+etymology_hook: "mūṁgphalī: mūṁg 'mung bean' (CDIAL 10198) + phalī 'pod', from phala (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C215-dayalu]
 <!-- hl-knowledge: introduces=[HI-LEX-C216-THG216-01]; assesses=[] -->
 
 **मूँगफली** — *mū̃gphalī* — "a peanut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूँगफली** (*mūṁgphalī*) is "mung-pod": *mūṁg*, "the mung bean", from Sanskrit *mudga* (CDIAL 10198), and *phalī*, "pod", from *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

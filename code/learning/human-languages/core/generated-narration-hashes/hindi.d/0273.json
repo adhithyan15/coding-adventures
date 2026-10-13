@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 273,
-  "sourceHash": "fnv1a64:0f46adbc3ade021f",
+  "sourceHash": "fnv1a64:ece446c855ce3ab9",
   "lessonIds": [
     "HI-C273-pulis",
     "HI-C273-davakhana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch273.txt",
   "json": "hindi/narration/ch273.json",
-  "textHash": "fnv1a64:eed1c5870299b0fc",
-  "jsonHash": "fnv1a64:4f5680c6b0b0217a",
+  "textHash": "fnv1a64:8f5c69f02d446855",
+  "jsonHash": "fnv1a64:50635fbe748b7095",
   "findings": []
 }

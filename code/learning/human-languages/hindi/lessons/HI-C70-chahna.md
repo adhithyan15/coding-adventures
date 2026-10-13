@@ -14,10 +14,10 @@ gloss: to want / longing / want — infinitive / noun / masculine singular
 concept_tag: VERB-WANT
 prerequisites: [HI-C70-sakna, HI-C68-lekin]
 sounds: [matra-aa, hindi-ha]
-roots: []
-etymology_hook: "चाहना is from Sanskrit चक्ष् / छन्द् by way of Prakrit चाह- 'desire', and the noun चाह 'longing' still sits inside it; the same word is behind Urdu chāhat and behind the चाहिए that Hindi uses for wanting a THING, which is why the two look alike and take completely different objects"
+roots: [indo-aryan-cah]
+etymology_hook: "chāhnā ← Prakrit cāhaï 'wishes', from a root of uncertain source, *cāh 'see, desire' (CDIAL 4775)"
 duration:
-  max_seconds: 230
+  max_seconds: 282
 requires:
   knowledge: [HI-CONCEPT-C05-BOLNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-LEX-COME, HI-LEX-SAKNA-01]
 introduces:
@@ -65,6 +65,8 @@ Inside **चाहना** sits the noun **चाह** (*chāh*), "longing" or "
 **-ना** and the noun becomes the dictionary verb: **चाह → चाहना**. A cousin of
 it is how Hindi wants a THING rather than an action; that separate construction
 comes in a later chapter.
+
+**चाहना** comes through Prakrit *cāhaï*, "wishes", from a root of uncertain source (CDIAL 4775).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-JOIN-LEKIN-01] -->

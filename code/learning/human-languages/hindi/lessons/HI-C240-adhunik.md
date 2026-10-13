@@ -14,7 +14,8 @@ romanization: "ādhunik"
 concept_tag: HI-QUAL240-ADHUNIK
 prerequisites: [HI-C239-bhirbhar, HI-C239-abad]
 sounds: []
-roots: []
+roots: [sanskrit-adhunika]
+etymology_hook: "ādhunik ← Sanskrit ādhunika 'recent', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C239-abad]
 <!-- hl-knowledge: introduces=[HI-LEX-C240-QUAL240-01]; assesses=[] -->
 
 **आधुनिक** — *ādhunik* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आधुनिक** (*ādhunik*) is Sanskrit *ādhunika*, "recent", taken over whole as a learned loan, a tatsama. It is built on *adhunā*, "now" (CDIAL 268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

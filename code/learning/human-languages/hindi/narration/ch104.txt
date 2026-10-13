@@ -13,6 +13,9 @@ You'll want to know: तीस, चालीस.
 तीस (tīs) — thirty.
 चालीस (cālīs) — forty.
 
+The word, taken apart.
+तीस चालीस (tīs cālīs) is two tadbhavas, words inherited and reshaped by sound change. tīs comes from Sanskrit triṁśat, "thirty" (CDIAL 6015), and cālīs from catvāriṁśat, "forty" (CDIAL 4656).
+
 Grammar Lens: the tens are the part worth learning.
 [a table of 3 rows, read aloud]
 number: 20. word: बीस.
@@ -45,6 +48,9 @@ Say बीस, तीस, चालीस. Listen to the ending they share.
 You'll want to know: पचास, साठ.
 पचास (pacās) — fifty.
 साठ (sāṭh) — sixty.
+
+The word, taken apart.
+पचास साठ (pacās sāṭh) is two tadbhavas, words inherited and reshaped by sound change. pacās comes from Sanskrit pañcāśat, "fifty" (CDIAL 7682), and sāṭh from ṣaṣṭi, "sixty" (CDIAL 12804).
 
 Grammar Lens: one keeps the ending, one drops it.
 [a table of 3 rows, read aloud]
@@ -80,6 +86,9 @@ You'll want to know: सत्तर, अस्सी, नब्बे.
 सत्तर (sattar) — seventy.
 अस्सी (assī) — eighty.
 नब्बे (nabbe) — ninety.
+
+The word, taken apart.
+सत्तर अस्सी नब्बे (sattar assī nabbe) is three tadbhavas. sattar comes from Sanskrit saptati, "seventy" (CDIAL 13143), assī from aśīti, "eighty" (CDIAL 911), and nabbe from navati, "ninety" (CDIAL 6995).
 
 Grammar Lens: each one leans on a number you already count.
 [a table of 3 rows, read aloud]

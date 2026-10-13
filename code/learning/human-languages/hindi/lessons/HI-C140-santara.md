@@ -15,6 +15,7 @@ concept_tag: HI-THINGS140-SANTARA
 prerequisites: [HI-C139-seb, HI-C140-angur, HI-C21-numbers-6-10, HI-C21-six-nine-ten-history, HI-C21-six-nine-ten-history, HI-C21-six-nine-ten-history, HI-C22-gyarah-bees, HI-C22-gyarah-bees, HI-C96-sattar-assi-nabbe, HI-C96-sattar-assi-nabbe]
 sounds: []
 roots: []
+etymology_hook: "santarā: origin uncertain; often linked with Cintra (Sintra) in Portugal; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C140-angur]
 <!-- hl-knowledge: introduces=[HI-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **संतरा** — *santarā* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **संतरा** (*santarā*) is uncertain. It is often linked with the Portuguese town of Sintra, once written *Cintra*, but no source settles it, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

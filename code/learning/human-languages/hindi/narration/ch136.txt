@@ -14,6 +14,9 @@ Say हरा and पीला, green and yellow, two colour words Hindi inherit
 You'll want to know: कुर्ता.
 कुर्ता — kurtā — "a kurta".
 
+The word, taken apart.
+कुर्ता (kurtā) is a loan, usually traced to Persian kurta, "a long shirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ Say the colours and their stories: लाल, a red gem's name; नीला, in
 You'll want to know: साड़ी.
 साड़ी — sāṛī — "a sari".
 
+The word, taken apart.
+साड़ी (sāṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śāṭī, "strip of cloth, garment" (CDIAL 12381). CDIAL notes that the word also travelled west, to Pashto and to Persian shāl, the source of English shawl.
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Hindi for a kurta, then the Hindi for a sari.
 
 You'll want to know: दुपट्टा.
 दुपट्टा — dupaṭṭā — "a scarf, a dupatta".
+
+The word, taken apart.
+दुपट्टा (dupaṭṭā) is built from du-, "two", and paṭṭā, "a strip of cloth": a cloth of two breadths. CDIAL lists Hindi paṭṭī, "strip of cloth", under Sanskrit paṭṭa, "cloth", probably of non-Aryan source (CDIAL 7700), but not dupaṭṭā itself.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Before the new one: say the Hindi for a sari, then the Hindi for a scarf.
 You'll want to know: टोपी.
 टोपी — ṭopī — "a cap, a hat".
 
+The word, taken apart.
+टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls any link with a Munda source very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Hindi for a scarf, then the Hindi for a cap.
 
 You'll want to know: कोट.
 कोट — koṭ — "a coat".
+
+The word, taken apart.
+कोट (koṭ) is a loan from English coat. It is a different word from Hindi koṭ, "fort", from Sanskrit koṭṭa (CDIAL 3500).
 
 What you've built.
 One more word for this chapter.

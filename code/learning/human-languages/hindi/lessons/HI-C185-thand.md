@@ -14,7 +14,8 @@ romanization: "ṭhaṇḍ"
 concept_tag: HI-THG185-THAND
 prerequisites: [HI-C184-baris, HI-C185-dhup]
 sounds: []
-roots: []
+roots: [indo-aryan-thandha]
+etymology_hook: "ṭhaṇḍ ← *ṭhaṇḍha 'cold', under Sanskrit stabdha 'stiff' (CDIAL 13676)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C185-dhup]
 <!-- hl-knowledge: introduces=[HI-LEX-C185-THG185-02]; assesses=[] -->
 
 **ठंड** — *ṭhaṇḍ* — "cold, the cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठंड** (*ṭhaṇḍ*) comes from a reconstructed *\*ṭhaṇḍha*, "cold", which CDIAL lists under Sanskrit *stabdha*, "stiff, solidified" (CDIAL 13676). DEDR compares Dravidian words for "cool", such as Tamil *taṇ* (DEDR 3045).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

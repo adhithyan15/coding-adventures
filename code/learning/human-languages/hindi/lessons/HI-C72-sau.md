@@ -14,7 +14,8 @@ romanization: "sau"
 concept_tag: HI-NUMBERS-HUNDRED
 prerequisites: [HI-C72-buy]
 sounds: []
-roots: []
+roots: [sanskrit-shata]
+etymology_hook: "sau ← Sanskrit śata 'hundred', a tadbhava (CDIAL 12278)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ a thing costs — but you cannot yet say the number the answer usually is.
 <!-- hl-knowledge: introduces=[HI-LEX-C72-HUNDRED-01]; assesses=[] -->
 
 **सौ** (*sau*) — a hundred.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सौ** (*sau*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śata*, "hundred" (CDIAL 12278).
 
 ## Grammar Lens: two letters, and the number a price lands on
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-HUNDRED-01, HI-LEX-C72-COST-02] -->

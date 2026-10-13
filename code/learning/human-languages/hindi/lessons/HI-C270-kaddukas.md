@@ -14,7 +14,8 @@ romanization: "kaddūkas"
 concept_tag: HI-THG270-KADDUKAS
 prerequisites: [HI-C269-belan, HI-C269-chalni]
 sounds: []
-roots: []
+roots: [persian-kadu]
+etymology_hook: "kaddūkas: kaddū 'gourd', usually traced to Persian kadū, + kas 'scrape'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C269-chalni]
 <!-- hl-knowledge: introduces=[HI-LEX-C270-THG270-01]; assesses=[] -->
 
 **कद्दूकस** — *kaddūkas* — "a grater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कद्दूकस** (*kaddūkas*) is *kaddū*, "gourd", usually traced to Persian *kadū*, with *kas*, "scraping". CDIAL has no entry for the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

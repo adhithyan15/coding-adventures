@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e87855841977db89",
+  "sourceHash": "fnv1a64:b1d738d64a4f35be",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d862ff615da523d2",
+      "sourceHash": "fnv1a64:e2d7431a0b684f04",
       "notice": null,
       "blocks": [
         {
@@ -84,6 +84,10 @@
             {
               "kind": "speech",
               "text": "You have met the -गा family once before, in the farewell milenge, where the plural -एंगे was named as the future ending. That was one cell of a grid. This chapter is the grid."
+            },
+            {
+              "kind": "speech",
+              "text": "कर- comes from Sanskrit karoti, \"does\" (CDIAL 2814), and the -गा is usually traced to Sanskrit gata, \"gone\"."
             }
           ]
         },
@@ -196,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f747a20570e4b5bc",
+      "sourceHash": "fnv1a64:592167bae530cc34",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +260,10 @@
             {
               "kind": "speech",
               "text": "कर- ends in a consonant, so the long ū rides underneath it as the small mark you have used for a long time. आ- ends in a vowel, so there is nothing to ride on — and the ū has to be written as a full letter of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem आ- is listed by CDIAL under Sanskrit āpayati, \"causes to reach\" (CDIAL 1200)."
             }
           ]
         },
@@ -385,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:018876b063d2290d",
+      "sourceHash": "fnv1a64:cb76ab24307f4ea3",
       "notice": null,
       "blocks": [
         {
@@ -449,6 +457,10 @@
             {
               "kind": "speech",
               "text": "So the future has the same division of labour the present had: one slot for who, one slot for when. Learning the tense is learning that the two slots are separate."
+            },
+            {
+              "kind": "speech",
+              "text": "The -गा is usually traced to Sanskrit gata, \"gone\"."
             }
           ]
         },
@@ -561,7 +573,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8600a0ef749406fc",
+      "sourceHash": "fnv1a64:09426c12d2a91c97",
       "notice": null,
       "blocks": [
         {
@@ -622,6 +634,10 @@
             {
               "kind": "speech",
               "text": "The farewell was never a lump. It was this ending, on a verb meaning to meet."
+            },
+            {
+              "kind": "speech",
+              "text": "The -गे is usually traced to Sanskrit gata, \"gone\"."
             }
           ]
         },
@@ -735,7 +751,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f238e03ed1eecd11",
+      "sourceHash": "fnv1a64:875761944c2fdad5",
       "notice": null,
       "blocks": [
         {
@@ -791,6 +807,10 @@
             {
               "kind": "speech",
               "text": "Both are -ओ. That is not two facts to learn — it is one vowel that belongs to तुम wherever it appears, and you have had it since the commands chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "The -गे is usually traced to Sanskrit gata, \"gone\"."
             }
           ]
         },
@@ -907,7 +927,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:046fae8d1cb5937c",
+      "sourceHash": "fnv1a64:e0d7358c356321b2",
       "notice": null,
       "blocks": [
         {
@@ -971,6 +991,10 @@
             {
               "kind": "speech",
               "text": "There is no separate word for at. The number plus बजे is the whole of it."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb comes from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
             }
           ]
         },

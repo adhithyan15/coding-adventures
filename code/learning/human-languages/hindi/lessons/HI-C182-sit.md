@@ -14,7 +14,8 @@ romanization: "sīṭ"
 concept_tag: HI-THG182-SIT
 prerequisites: [HI-C181-jahaz, HI-C182-nav]
 sounds: []
-roots: []
+roots: [english-seat]
+etymology_hook: "sīṭ ← English seat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C182-nav]
 <!-- hl-knowledge: introduces=[HI-LEX-C182-THG182-02]; assesses=[] -->
 
 **सीट** — *sīṭ* — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीट** (*sīṭ*) is a loan from English *seat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

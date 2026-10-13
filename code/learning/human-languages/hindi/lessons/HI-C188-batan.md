@@ -14,7 +14,8 @@ romanization: "baṭan"
 concept_tag: HI-THG188-BATAN
 prerequisites: [HI-C187-sinema, HI-C187-park]
 sounds: []
-roots: []
+roots: [english-button]
+etymology_hook: "baṭan ← English button"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C187-park]
 <!-- hl-knowledge: introduces=[HI-LEX-C188-THG188-01]; assesses=[] -->
 
 **बटन** — *baṭan* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बटन** (*baṭan*) is a loan from English *button*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

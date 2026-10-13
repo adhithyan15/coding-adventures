@@ -14,7 +14,8 @@ romanization: "dhobī"
 concept_tag: HI-THG194-DHOBI
 prerequisites: [HI-C193-darzi, HI-C193-nai]
 sounds: []
-roots: []
+roots: [indo-aryan-dhauvati]
+etymology_hook: "dhobī ← *dhauvati 'washes', a reconstructed form; a tadbhava (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C193-nai]
 <!-- hl-knowledge: introduces=[HI-LEX-C194-THG194-01]; assesses=[] -->
 
 **धोबी** — *dhobī* — "a washerman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोबी** (*dhobī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhauvati*, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL notes that the forms with *-b-* began in the east and spread into every language around.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

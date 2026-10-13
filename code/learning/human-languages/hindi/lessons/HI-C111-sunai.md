@@ -14,7 +14,8 @@ romanization: "sunāī nahīṁ diyā"
 concept_tag: HI-ASK-DIDNT-HEAR
 prerequisites: [HI-C111-kaisekahte, HI-C111-dikhaie]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti, sanskrit-datta]
+etymology_hook: "sunāī ← sunnā, from Sanskrit śṛṇoti 'hears' (CDIAL 12598); diyā ← datta 'given' (CDIAL 6140)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C111-dikhaie]
 given".
 
 It is built on **सुनना**, "to hear". Pair it with a fix: **ज़ोर से बोलिए**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुनाई नहीं दिया** (*sunāī nahīṁ diyā*) is *sunāī*, "hearing", *nahīṁ*, "not", and *diyā*, "gave". *sunāī* is built on *sunnā*, "to hear", from Sanskrit *śṛṇoti*, "hears" (CDIAL 12598); CDIAL lists *diyā* under *datta*, "given" (CDIAL 6140).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "From, Until, and Instead",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f2d915e0ca0c2c0d",
+  "sourceHash": "fnv1a64:4767d811d16c5ef4",
   "lessons": [
     {
       "id": "HI-C94-tak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e59af705f37ef8aa",
+      "sourceHash": "fnv1a64:baaa497c45f2cfbc",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "तक (tak) also stretches across space, not only time: घर तक (tak) is as far as the house. One word covers both, because a stopping point is a stopping point whether you measure it in hours or in streets."
+            },
+            {
+              "kind": "speech",
+              "text": "तक (tak) comes from Sanskrit tāvatka, built on tāvant, \"so much\" (CDIAL 5805)."
             }
           ]
         },
@@ -178,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ed53c8709f93340",
+      "sourceHash": "fnv1a64:deb74d00526a943c",
       "notice": null,
       "blocks": [
         {
@@ -215,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोमवार से शुक्रवार तक (somvār se śukravār tak) frames a span with se, \"from\", and tak, \"until\". CDIAL traces se to Sanskrit sahita, \"accompanied by\" (CDIAL 13310), and also lists it, with a query, under sama, \"together with\" (CDIAL 13173). tak comes from tāvatka, \"bought for so much\" (CDIAL 5805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -242,7 +257,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: order is not optional",
           "segments": [
@@ -265,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -314,7 +329,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -345,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6483df87c10c5c3",
+      "sourceHash": "fnv1a64:b52ffa7ea055e7bf",
       "notice": null,
       "blocks": [
         {
@@ -382,6 +397,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुबह से शाम तक (subah se śām tak) sets two loans inside two inherited words. subah is Arabic ṣubḥ, \"morning\", which reached Hindi through Persian (Lane, root ṣ-b-ḥ); śām is usually traced to Persian shām, \"evening\". se and tak are inherited (CDIAL 13310, 5805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -406,7 +432,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: the clock row is two packages, not four words",
           "segments": [
@@ -429,7 +455,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,7 +504,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -509,7 +535,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c20f05ab3d0519c7",
+      "sourceHash": "fnv1a64:0b86d4fd11983c47",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -676,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b094f9a6f95bcd5e",
+      "sourceHash": "fnv1a64:9d011d4554d68ee4",
       "notice": null,
       "blocks": [
         {
@@ -713,6 +739,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नहीं की जगह (nahīṁ kī jagah) is nahīṁ, \"not\", with kī and jagah, \"place\". nahīṁ comes from Sanskrit nahi, \"surely not\" (CDIAL 7035); jagah is usually traced to Persian jāygāh, \"place\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "The two words",
           "segments": [
@@ -741,7 +778,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: what नहीं is negating",
           "segments": [
@@ -769,7 +806,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -818,7 +855,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

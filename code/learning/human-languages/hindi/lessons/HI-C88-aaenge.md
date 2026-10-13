@@ -14,9 +14,10 @@ romanization: "āeṅge"
 concept_tag: HI-FUTURE-PLURAL
 prerequisites: [HI-C88-aaega, HI-C86-ham, HI-C02-aap-tum]
 sounds: []
-roots: []
+roots: [sanskrit-apayati, sanskrit-gata]
+etymology_hook: "āeṅge: ā- 'come', listed by CDIAL under āpayati (CDIAL 1200); the -ge is usually traced to gata 'gone'"
 duration:
-  max_seconds: 240
+  max_seconds: 259
 requires:
   knowledge: [HI-LEX-C88-FUT-03, HI-LEX-C88-FUT-01, HI-LEX-C86-PRON-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C04-MILENGE-01]
 introduces:
@@ -61,6 +62,8 @@ Now it is a slot you can fill:
 | कर- | करेंगे |
 
 The farewell was never a lump. It was this ending, on a verb meaning *to meet*.
+
+The **-गे** is usually traced to Sanskrit *gata*, "gone".
 
 ## Grammar Lens: आप takes the plural, again
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-04, HI-CONCEPT-C02-AAPTUM-01, HI-LEX-C86-PRON-01] -->

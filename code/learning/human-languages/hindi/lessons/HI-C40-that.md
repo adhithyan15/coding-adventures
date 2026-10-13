@@ -14,7 +14,8 @@ romanization: "vah"
 concept_tag: HI-DEIXIS-THAT
 prerequisites: [HI-C40-this, HI-C38-daant]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "vah: listed by CDIAL under Sanskrit asau 'that', whose stem amu- gave the later words for 'that' (CDIAL 972)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **यह** *yah*, which you met in the last lesson. The two of them
 differ by one sound at the front — **v-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वह** (*vah*) is inherited. CDIAL lists it under Sanskrit *asau*, "that", and notes that the other forms of that word, built on a stem *amu-*, gave the later words for "that" (CDIAL 972).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02] -->

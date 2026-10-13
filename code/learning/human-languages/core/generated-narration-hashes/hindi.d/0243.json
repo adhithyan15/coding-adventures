@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 243,
-  "sourceHash": "fnv1a64:9fe1e649ac46fa0f",
+  "sourceHash": "fnv1a64:6d16b8f1028bbef5",
   "lessonIds": [
     "HI-C243-nakam",
     "HI-C243-ghamandi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch243.txt",
   "json": "hindi/narration/ch243.json",
-  "textHash": "fnv1a64:95b81162013cff92",
-  "jsonHash": "fnv1a64:3c25b4a98cdc298d",
+  "textHash": "fnv1a64:48249616a6b9e2fc",
+  "jsonHash": "fnv1a64:db904d5abc8935d6",
   "findings": []
 }

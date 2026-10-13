@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a tailor, then the Hindi for a barber.
 You'll want to know: धोबी.
 धोबी — dhobī — "a washerman".
 
+The word, taken apart.
+धोबी (dhobī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL notes that the forms with -b- began in the east and spread into every language around.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a barber, then the Hindi for a washerman.
 
 You'll want to know: बावर्ची.
 बावर्ची — bāvarcī — "a cook".
+
+The word, taken apart.
+बावर्ची (bāvarcī) is a loan, usually traced to Persian bāwarchī, "cook".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a washerman, then the Hindi for a cook.
 You'll want to know: ड्राइवर.
 ड्राइवर — ḍrāivar — "a driver".
 
+The word, taken apart.
+ड्राइवर (ḍrāivar) is a loan from English driver.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a cook, then the Hindi for a driver.
 You'll want to know: इंजीनियर.
 इंजीनियर — injīniyar — "an engineer".
 
+The word, taken apart.
+इंजीनियर (injīniyar) is a loan from English engineer.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a driver, then the Hindi for an engineer.
 
 You'll want to know: लेखक.
 लेखक — lekhak — "a writer".
+
+The word, taken apart.
+लेखक (lekhak) is Sanskrit lekhaka, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102). It is built on likh-, "to write", the root of लिखना.
 
 What you've built.
 One more word for this chapter.

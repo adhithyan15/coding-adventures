@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Lunch and Dinner",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8340106cc89e5095",
+  "sourceHash": "fnv1a64:d271c6da7b55d7b7",
   "lessons": [
     {
       "id": "HI-C79-dopahar-raat-ka-khana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00bdca1bb47f9bb9",
+      "sourceHash": "fnv1a64:8ce470812a4c7e55",
       "notice": null,
       "blocks": [
         {

@@ -14,9 +14,10 @@ romanization: "pā̃c baje"
 concept_tag: HI-TIME-APPOINTMENT
 prerequisites: [HI-C88-aaoge, HI-C18-ghanta, HI-C06-paanch-nasal]
 sounds: []
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "baje: from bajnā 'to sound' ← Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
-  max_seconds: 240
+  max_seconds: 248
 requires:
   knowledge: [HI-LEX-C88-FUT-05, HI-LEX-C88-FUT-02, HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02, HI-CONCEPT-C06-PAANCH-NASAL-01]
 introduces:
@@ -63,6 +64,8 @@ turns it into a **time to meet at**.
 | fixes a time to act | **बजे** |
 
 There is no separate word for *at*. The number plus **बजे** is the whole of it.
+
+The verb comes from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## Grammar Lens: where it stands in the sentence
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-TIME-01, HI-LEX-C88-FUT-02] -->

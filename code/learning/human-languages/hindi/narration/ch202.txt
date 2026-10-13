@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a pond, then the Hindi for a mine.
 You'll want to know: गुफ़ा.
 गुफ़ा — gufā — "a cave".
 
+The word, taken apart.
+गुफ़ा (gufā) is a tadbhava, a word inherited and reshaped by sound change. It comes from gupphā, "cave", a form CDIAL reconstructs from its descendants (CDIAL 4204). CDIAL's suggestion, Sanskrit guhā, "cave", crossed with gup-, "to hide", is marked very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a mine, then the Hindi for a cave.
 
 You'll want to know: महल.
 महल — mahal — "a palace".
+
+The word, taken apart.
+महल (mahal) is a loan from Arabic maḥall, "a place of alighting, a quarter", which reached Hindi through Persian. Its Arabic root is ḥ-l-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a cave, then the Hindi for a palace.
 You'll want to know: क़िला.
 क़िला — qilā — "a fort".
 
+The word, taken apart.
+क़िला (qilā) is a loan from Arabic qalʿa, "fortress", which reached Hindi through Persian. Its Arabic root is q-l-ʿ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a palace, then the Hindi for a fort.
 You'll want to know: मीनार.
 मीनार — mīnār — "a tower, a minaret".
 
+The word, taken apart.
+मीनार (mīnār) is a loan from Arabic manār, "a lighthouse, a minaret", which reached Hindi through Persian. Its Arabic root is n-w-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a fort, then the Hindi for a tower.
 
 You'll want to know: बाग़.
 बाग़ — bāg — "a garden".
+
+The word, taken apart.
+बाग़ (bāg) is a loan, usually traced to Persian bāgh, "garden". It is a different word from Hindi bāg, "rein", from Sanskrit valgā, "bridle" (CDIAL 11420).
 
 What you've built.
 One more word for this chapter.

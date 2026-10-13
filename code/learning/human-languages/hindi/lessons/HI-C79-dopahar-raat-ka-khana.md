@@ -14,7 +14,8 @@ romanization: "dopahar kā khānā / rāt kā khānā"
 concept_tag: HI-NOUN-MEALS
 prerequisites: [HI-C73-breakfast, HI-C37-khaana, HI-C17-dopahar-aadhi-raat]
 sounds: []
-roots: []
+roots: [pahar-traditional-watch, sanskrit-ratri]
+etymology_hook: "dopahar: do 'two' + pahar, a watch of about three hours; rāt ← Sanskrit rātrī 'night' (CDIAL 10702)"
 duration:
   max_seconds: 240
 requires:

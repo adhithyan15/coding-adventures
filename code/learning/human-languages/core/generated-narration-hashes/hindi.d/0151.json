@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 151,
-  "sourceHash": "fnv1a64:802004c1413ba886",
+  "sourceHash": "fnv1a64:d8444a2f58e1a783",
   "lessonIds": [
     "HI-C151-thori",
     "HI-C151-jibh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch151.txt",
   "json": "hindi/narration/ch151.json",
-  "textHash": "fnv1a64:9b0df700ec73581a",
-  "jsonHash": "fnv1a64:5b7c63f186c8664e",
+  "textHash": "fnv1a64:804ee8491f9bdb45",
+  "jsonHash": "fnv1a64:86cc75dd376d2533",
   "findings": []
 }

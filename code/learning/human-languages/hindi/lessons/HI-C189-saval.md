@@ -14,7 +14,8 @@ romanization: "savāl"
 concept_tag: HI-THG189-SAVAL
 prerequisites: [HI-C189-citthi, HI-C189-kahani]
 sounds: []
-roots: []
+roots: [arabic-sual]
+etymology_hook: "savāl ← Arabic suʾāl 'a question', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C189-kahani]
 <!-- hl-knowledge: introduces=[HI-LEX-C189-THG189-03]; assesses=[] -->
 
 **सवाल** — *savāl* — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सवाल** (*savāl*) is a loan from Arabic *suʾāl*, "a question", which reached Hindi through Persian. Its Arabic root is *s-ʾ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

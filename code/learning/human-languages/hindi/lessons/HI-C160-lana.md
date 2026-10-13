@@ -14,7 +14,8 @@ romanization: "lānā"
 concept_tag: HI-VERB-LANA
 prerequisites: [HI-C159-rakhna, HI-C160-bhejna]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "lānā: CDIAL lists it under Sanskrit labhate 'takes', crossed with dadāti 'gives' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C160-bhejna]
 <!-- hl-knowledge: introduces=[HI-LEX-C160-ACT160-02]; assesses=[] -->
 
 **लाना** — *lānā* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाना** (*lānā*) is inherited. CDIAL lists it under Sanskrit *labhate*, "catches, takes", crossed with forms of *dadāti*, "gives" (CDIAL 10948): to bring is to take and give.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

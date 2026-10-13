@@ -14,7 +14,8 @@ romanization: "mez"
 concept_tag: HI-NOUN-TABLE
 prerequisites: [HI-C51-courtyard, HI-C49-set-out, HI-C50-blessing]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mez: usually traced to Persian mēz, itself from Portuguese mesa 'table'"
 duration:
   max_seconds: 210
 requires:

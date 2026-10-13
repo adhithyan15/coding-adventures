@@ -14,7 +14,8 @@ romanization: "mor"
 concept_tag: HI-NOUN-PEACOCK
 prerequisites: [HI-C60-buffalo]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mor ← Sanskrit mayūra 'peacock' (CDIAL 9865), which has been traced to Dravidian or Austroasiatic"
 duration:
   max_seconds: 210
 requires:

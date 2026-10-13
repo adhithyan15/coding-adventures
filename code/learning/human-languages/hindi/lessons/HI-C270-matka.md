@@ -14,7 +14,8 @@ romanization: "maṭkā"
 concept_tag: HI-THG270-MATKA
 prerequisites: [HI-C270-jag, HI-C270-surahi]
 sounds: []
-roots: []
+roots: [sanskrit-mrda]
+etymology_hook: "maṭkā ← Sanskrit mṛdā 'earth, clay', a tadbhava (CDIAL 10291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C270-surahi]
 <!-- hl-knowledge: introduces=[HI-LEX-C270-THG270-05]; assesses=[] -->
 
 **मटका** — *maṭkā* — "a clay pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मटका** (*maṭkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛdā*, "earth, clay" (CDIAL 10291). CDIAL notes an added *-k-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

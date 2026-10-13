@@ -14,7 +14,8 @@ romanization: "pankhā"
 concept_tag: HI-THINGS132-PANKHA
 prerequisites: [HI-C132-katori, HI-C132-churi, HI-C17-dopahar-aadhi-raat, HI-C17-dopahar-aadhi-raat, HI-C25-din, HI-C25-din, HI-C26-raat, HI-C26-raat, HI-C30-dopahar-widened, HI-C30-dopahar-widened]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pankhā ← Sanskrit pakṣa 'wing, feather; fan', a tadbhava (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C132-churi]
 <!-- hl-knowledge: introduces=[HI-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **पंखा** — *pankhā* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पंखा** (*pankhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣa*, "wing, feather; fan" (CDIAL 7627). CDIAL notes the nasal and asks whether *puṅkha*, "feathered end of an arrow", crossed with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

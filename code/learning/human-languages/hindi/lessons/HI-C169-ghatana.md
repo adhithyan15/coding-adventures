@@ -14,7 +14,8 @@ romanization: "ghaṭānā"
 concept_tag: HI-VERB-GHATANA
 prerequisites: [HI-C168-chorna, HI-C169-jorna]
 sounds: []
-roots: []
+roots: [indo-aryan-ghattati]
+etymology_hook: "ghaṭānā: the causing form of ghaṭnā 'to decrease', from a reconstructed *ghaṭṭati (CDIAL 4415)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C169-jorna]
 <!-- hl-knowledge: introduces=[HI-LEX-C169-ACT169-02]; assesses=[] -->
 
 **घटाना** — *ghaṭānā* — "to reduce, to subtract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घटाना** (*ghaṭānā*) is the causing form of *ghaṭnā*, "to decrease", which CDIAL lists under a reconstructed *\*ghaṭṭati*, "decreases, is wanting" (CDIAL 4415).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

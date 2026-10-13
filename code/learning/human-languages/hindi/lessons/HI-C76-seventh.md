@@ -14,8 +14,8 @@ romanization: "sātvā̃ / sātvī̃"
 concept_tag: HI-ORDINAL-SEVENTH
 prerequisites: [HI-C76-sixth, HI-C75-second, HI-C71-kyonki, HI-C69-railway, HI-S124-letter-dha, HI-C29-shaam]
 sounds: []
-roots: []
-etymology_hook: "saat gives saatvan with the cardinal standing whole; after the hole at six the -van ending runs without interruption to the end of the number line"
+roots: [sanskrit-sapta]
+etymology_hook: "sātvāṁ ← Sanskrit saptama 'seventh', a tadbhava (CDIAL 13151)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +60,11 @@ Notice what you are now doing: you are not learning a word, you are applying
 something. Say *sāt* and the seventh follows from it without a second act of
 memory. That is what a rule buys, and it is why the four irregular ones were
 worth meeting first — they were the price, and it has been paid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सातवाँ** (*sātvāṁ*) comes from Sanskrit *saptama*, "seventh" (CDIAL 13151), the ordinal built on *sapta*, "seven".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-02] -->

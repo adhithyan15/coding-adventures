@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bdba72046954969b",
+  "sourceHash": "fnv1a64:4207efec9d841fa7",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06868495b5fe8d4d",
+      "sourceHash": "fnv1a64:05069fe6f3138dbb",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +187,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शनिवार रविवार (śanivār ravivār) are Sanskrit compounds taken over whole, tatsamas: śani, \"Saturn\", and ravi, \"the Sun\", each with vāra, \"one's turn\", which Sanskrit also used for \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know — Be honest about the contrast with Spanish and French",
           "segments": [
@@ -197,7 +208,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -237,7 +248,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice — the first five, from memory",
           "segments": [
@@ -256,7 +267,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

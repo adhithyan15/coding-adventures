@@ -14,7 +14,8 @@ romanization: "kīcaṛ"
 concept_tag: HI-THG252-KICAR
 prerequisites: [HI-C252-kali, HI-C252-kata]
 sounds: []
-roots: []
+roots: [indo-aryan-kicca]
+etymology_hook: "kīcaṛ ← *kicca 'mud, dirt', a reconstructed form; a tadbhava (CDIAL 3153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C252-kata]
 <!-- hl-knowledge: introduces=[HI-LEX-C252-THG252-05]; assesses=[] -->
 
 **कीचड़** — *kīcaṛ* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कीचड़** (*kīcaṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kicca*, "mud, dirt", a form CDIAL reconstructs from its descendants (CDIAL 3153). CDIAL compares Dravidian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

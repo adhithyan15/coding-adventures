@@ -14,7 +14,8 @@ romanization: "nāṭā"
 concept_tag: HI-ADJ-SHORT-STATURE
 prerequisites: [HI-C82-motaa]
 sounds: []
-roots: []
+roots: [indo-aryan-natta]
+etymology_hook: "nāṭā ← *naṭṭa 'defective', a form CDIAL reconstructs; it glosses the Hindi 'short, dwarfish' (CDIAL 6935)"
 duration:
   max_seconds: 240
 requires:
@@ -62,9 +63,8 @@ is busy:
 size word for a person's age and left the height meaning without an owner, and
 **नाटा** is what filled the hole.
 
-Sanskrit **नत** (*nata*) is behind it, meaning **bent, bowed, stooping** — the
-same root as *namaste*, where the bowing is a greeting. A *nāṭā* person is
-pictured as one closer to the ground.
+CDIAL traces it to a reconstructed *\*naṭṭa*, "defective", and glosses the
+Hindi word "short, dwarfish" (CDIAL 6935).
 
 A note on using it. **नाटा** is plain rather than polite, and about a person it
 can land as blunt. When you want neutral, Hindi says *qad meṅ choṭā*, "short in

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a tenant, then the Hindi for a neighbourho
 You'll want to know: गली.
 गली — galī — "a lane".
 
+The word, taken apart.
+गली (galī) is a tadbhava, a word inherited and reshaped by sound change. It comes from galī, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a neighbourhood, then the Hindi for a lane
 
 You'll want to know: नुक्कड़.
 नुक्कड़ — nukkaṛ — "a street corner".
+
+The word, taken apart.
+The origin of नुक्कड़ (nukkaṛ) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a lane, then the Hindi for a street corner
 You'll want to know: मेला.
 मेला — melā — "a fair".
 
+The word, taken apart.
+मेला (melā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, "meeting" (CDIAL 10331). It is built on mil-, "to meet", the root of milnā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a street corner, then the Hindi for a fair
 You'll want to know: जुलूस.
 जुलूस — jalūs — "a procession".
 
+The word, taken apart.
+जुलूस (jalūs) is a loan from Arabic julūs, "a sitting; enthronement", which reached Hindi through Persian. Its Arabic root is j-l-s (Lane). Hindi uses it for the procession that went with it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a fair, then the Hindi for a procession.
 
 You'll want to know: भाषण.
 भाषण — bhāṣaṇ — "a speech".
+
+The word, taken apart.
+भाषण (bhāṣaṇ) is Sanskrit bhāṣaṇa, "speaking, speech", taken over whole as a learned loan, a tatsama. It is built on bhāṣ-, "to speak", the root of भाषा.
 
 What you've built.
 One more word for this chapter.

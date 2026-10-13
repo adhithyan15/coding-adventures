@@ -14,7 +14,8 @@ romanization: "tumhārā"
 concept_tag: HI-DET-YOUR-FAMILIAR
 prerequisites: [HI-C84-hamara]
 sounds: []
-roots: []
+roots: [sanskrit-yushmad]
+etymology_hook: "tumhārā ← Sanskrit yuṣmāka 'your' (plural), with t- from tuvam 'you' (CDIAL 10511)"
 duration:
   max_seconds: 240
 requires:
@@ -45,6 +46,11 @@ lesson gives you the other one, and says when each is right.
 **तुम्हारा** (*tumhārā*) — "your," said to someone you are familiar with.
 
 Built on **तुम** (*tum*), the middle of Hindi's three *you*s.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तुम्हारा** (*tumhārā*) is inherited. It comes from *yuṣmāka*, the possessive of the Sanskrit plural "you", with its *t-* taken from *tuvam*, the singular "you" (CDIAL 10511).
 
 ## Grammar Lens: three levels, and the possessive that goes with each
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-03, HI-LEX-C84-POSS-01] -->

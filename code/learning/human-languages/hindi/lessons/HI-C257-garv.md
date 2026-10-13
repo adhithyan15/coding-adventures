@@ -14,7 +14,8 @@ romanization: "garv"
 concept_tag: HI-THG257-GARV
 prerequisites: [HI-C257-ghrna, HI-C257-samman]
 sounds: []
-roots: []
+roots: [sanskrit-garva]
+etymology_hook: "garv ← Sanskrit garva 'pride', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C257-samman]
 <!-- hl-knowledge: introduces=[HI-LEX-C257-THG257-05]; assesses=[] -->
 
 **गर्व** — *garv* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गर्व** (*garv*) is Sanskrit *garva*, "pride", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

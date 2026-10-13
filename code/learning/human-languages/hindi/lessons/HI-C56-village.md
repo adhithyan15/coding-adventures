@@ -14,7 +14,8 @@ romanization: "gā̃v"
 concept_tag: HI-NOUN-VILLAGE
 prerequisites: [HI-C56-road, HI-C54-horse, HI-C55-moon]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "gāṁv ← Sanskrit grāma 'village', a tadbhava (CDIAL 4368)"
 duration:
   max_seconds: 210
 requires:

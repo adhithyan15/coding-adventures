@@ -14,7 +14,8 @@ romanization: "ṭapaknā"
 concept_tag: HI-VERB-TAPAKNA
 prerequisites: [HI-C230-dubna, HI-C231-bahna]
 sounds: []
-roots: []
+roots: [indo-aryan-tapp]
+etymology_hook: "ṭapaknā ← *ṭapp 'drip, drop', a reconstructed form; a tadbhava (CDIAL 5444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C231-bahna]
 <!-- hl-knowledge: introduces=[HI-LEX-C231-ACT231-02]; assesses=[] -->
 
 **टपकना** — *ṭapaknā* — "to drip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टपकना** (*ṭapaknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭapp*, "drip, drop", a form CDIAL reconstructs from its descendants (CDIAL 5444). CDIAL calls it imitative of the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

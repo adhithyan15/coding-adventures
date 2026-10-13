@@ -15,6 +15,7 @@ concept_tag: VERB-BE
 prerequisites: [HI-C02-hai, HI-C03-main]
 sounds: [matra-u, chandrabindu]
 roots: [asmi]
+etymology_hook: "hūṁ: usually traced to Sanskrit asmi 'I am', the same verb as English am"
 duration:
   max_seconds: 180
 requires:

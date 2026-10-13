@@ -14,7 +14,8 @@ romanization: "rassī"
 concept_tag: HI-NOUN-ROPE
 prerequisites: [HI-C61-stove, HI-C60-monkey, HI-C61-vessel]
 sounds: []
-roots: []
+roots: [sanskrit-rashmi]
+etymology_hook: "rassī ← Sanskrit raśmi 'rope, ray'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 10648)"
 duration:
   max_seconds: 210
 requires:

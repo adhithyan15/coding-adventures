@@ -14,7 +14,8 @@ romanization: "skūṭar"
 concept_tag: HI-THG203-SKUTAR
 prerequisites: [HI-C203-surang, HI-C203-saikil]
 sounds: []
-roots: []
+roots: [english-scooter]
+etymology_hook: "skūṭar ← English scooter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C203-saikil]
 <!-- hl-knowledge: introduces=[HI-LEX-C203-THG203-05]; assesses=[] -->
 
 **स्कूटर** — *skūṭar* — "a scooter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्कूटर** (*skūṭar*) is a loan from English *scooter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

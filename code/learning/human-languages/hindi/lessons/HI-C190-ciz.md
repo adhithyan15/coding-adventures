@@ -14,7 +14,8 @@ romanization: "cīz"
 concept_tag: HI-THG190-CIZ
 prerequisites: [HI-C190-khabar, HI-C190-akhbar]
 sounds: []
-roots: []
+roots: [persian-chiz]
+etymology_hook: "cīz: usually traced to Persian chīz 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C190-akhbar]
 <!-- hl-knowledge: introduces=[HI-LEX-C190-THG190-04]; assesses=[] -->
 
 **चीज़** — *cīz* — "a thing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चीज़** (*cīz*) is a loan, usually traced to Persian *chīz*, "thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

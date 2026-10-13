@@ -14,7 +14,8 @@ romanization: "pujārī"
 concept_tag: HI-THG262-PUJARI
 prerequisites: [HI-C262-barhai, HI-C262-mochi]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pujārī: pūjā 'worship', a tatsama (CDIAL 8317), + -ārī 'one who does it'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C262-mochi]
 <!-- hl-knowledge: introduces=[HI-LEX-C262-THG262-03]; assesses=[] -->
 
 **पुजारी** — *pujārī* — "a priest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुजारी** (*pujārī*) is *pūjā*, "worship", from Sanskrit *pūjā* (CDIAL 8317), with the ending *-ārī*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

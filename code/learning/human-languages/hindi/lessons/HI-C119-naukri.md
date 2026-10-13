@@ -14,7 +14,8 @@ romanization: "naukrī"
 concept_tag: HI-ABOUT-JOB
 prerequisites: [HI-C118-patni, HI-C118-rishtedar]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukrī: usually traced to Persian naukar 'servant'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C118-rishtedar]
 **नौकरी** (*naukrī*) — "a job", employment.
 
 **आपकी नौकरी कहाँ है?** — "where is your job?", "where do you work?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नौकरी** (*naukrī*) is a loan, usually traced to Persian *naukar*, "servant". The *-ī* makes it the servant's work: a job.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

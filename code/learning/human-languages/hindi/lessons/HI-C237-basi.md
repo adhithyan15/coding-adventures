@@ -14,7 +14,8 @@ romanization: "bāsī"
 concept_tag: HI-QUAL237-BASI
 prerequisites: [HI-C237-sankara, HI-C237-uthla]
 sounds: []
-roots: []
+roots: [sanskrit-vasita]
+etymology_hook: "bāsī ← Sanskrit vāsita 'infused, scented', a tadbhava (CDIAL 11604)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C237-uthla]
 <!-- hl-knowledge: introduces=[HI-LEX-C237-QUAL237-05]; assesses=[] -->
 
 **बासी** — *bāsī* — "stale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बासी** (*bāsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāsita*, "infused, scented" (CDIAL 11604). The sense turned from "scented" to "smelling, stale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

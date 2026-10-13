@@ -11,7 +11,7 @@ Before the new run of words: what did śāyad mean, and what did bilkul mean?
 
 You'll want to know: अभी.
 अभी (abhī) — "right now".
-Ab, 'now', with the emphatic -hī welded onto it: now and nothing but now. Behind ab stands Sanskrit adhunā.
+Ab, 'now', with the emphatic -hī welded onto it: now and nothing but now. CDIAL traces ab to Sanskrit evam eva, 'exactly so', crossed with the pronoun stem a- (CDIAL 2528).
 That little -hī is one of the most useful pieces in the language. It narrows whatever it lands on, and you will meet it stuck to other words later. Here it turns a vague present into a pointed one — not now-ish, but this moment, and no other.
 
 What you've built.
@@ -44,7 +44,7 @@ Before the new one: what did abhī mean?
 You'll want to know: परसों.
 परसों (parsoṁ) — "the day after tomorrow".
 And also the day before yesterday. Like कल, which does duty for both tomorrow and yesterday, परसों (parsoṁ) counts two days out from today and leaves the direction to the sentence.
-Sanskrit parasu, 'the far day', lies underneath, and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing.
+Sanskrit paraśvas, 'the day after tomorrow', lies underneath (CDIAL 7799j), and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing.
 
 What you've built.
 Two, and both of them are about when.

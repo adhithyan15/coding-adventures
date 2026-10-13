@@ -14,7 +14,8 @@ romanization: "koṭ"
 concept_tag: HI-THINGS136-KOT
 prerequisites: [HI-C136-dupatta, HI-C136-topi]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "koṭ ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C136-topi]
 <!-- hl-knowledge: introduces=[HI-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **कोट** — *koṭ* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोट** (*koṭ*) is a loan from English *coat*. It is a different word from Hindi *koṭ*, "fort", from Sanskrit *koṭṭa* (CDIAL 3500).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

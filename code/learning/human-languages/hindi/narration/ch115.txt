@@ -13,6 +13,9 @@ You'll want to know: आइए.
 आइए (āie) — "please come", "come in".
 It is आना, "to come", with the respectful -इए. आइए (āie), आइए (āie)! — doubled, it is a warm welcome at the door.
 
+The word, taken apart.
+आइए (āie) is the respectful command of आना, "to come". CDIAL lists the verb under Sanskrit āpayati, "causes to reach" (CDIAL 1200).
+
 What you've built.
 A welcome at the door.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for an invitation, then the Hindi for please c
 You'll want to know: पधारिए.
 पधारिए (padhārie) — "please come", in its most formal, honouring form.
 The everyday āie comes first in this chapter; पधारिए (padhārie) is what you say to an honoured guest.
+
+The word, taken apart.
+पधारिए (padhārie) is the respectful command of padhārnā, "to come, to grace with one's presence". CDIAL lists it under a reconstructed paddhārayati, "steps", perhaps from pad, "foot", and dhārayati, "holds" (CDIAL 7768).
 
 What you've built.
 A second welcome, for an honoured guest.
@@ -73,6 +79,9 @@ You'll want to know: लीजिए.
 लीजिए (lījie) — "please take", "here you are", as you hand something over.
 It is लेना, "to take", with the respectful ending of बोलिए. चाय लीजिए (lījie) — "have some tea".
 
+The word, taken apart.
+लीजिए (lījie) is the respectful command of lenā, "to take". CDIAL lists lenā under Sanskrit labhate, "catches, takes" (CDIAL 10948).
+
 What you've built.
 An offer as you hand it over.
 
@@ -103,6 +112,9 @@ You'll want to know: शौक़ से.
 शौक़ से (śauq se) — "by all means", "gladly", literally "with pleasure".
 The answer when someone asks if they may: क्या मैं बैठ सकता हूँ? — शौक़ से (śauq se)!
 
+The word, taken apart.
+शौक़ से (śauq se) is "with relish". śauq comes from Arabic shawq, "longing, desire", which reached Hindi through Persian; its root is sh-w-q (Lane). se is inherited (CDIAL 13310).
+
 What you've built.
 A generous yes.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for here you are, then the Hindi for by all me
 You'll want to know: जी नहीं.
 जी नहीं (jī nahīṁ) — "no", said politely.
 It pairs with the जी हाँ you know: जी makes either answer respectful.
+
+The word, taken apart.
+जी नहीं (jī nahīṁ) is jī, the respectful word that CDIAL traces to Sanskrit jīva, "long live!" (CDIAL 5240), with nahīṁ, "not", from nahi, "surely not" (CDIAL 7035).
 
 What you've built.
 Come in, please come, here you are, by all means, and a polite no.

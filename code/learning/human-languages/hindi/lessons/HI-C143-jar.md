@@ -14,7 +14,8 @@ romanization: "jaṛ"
 concept_tag: HI-THINGS143-JAR
 prerequisites: [HI-C143-jangal, HI-C143-per]
 sounds: []
-roots: []
+roots: [sanskrit-jata]
+etymology_hook: "jaṛ ← Sanskrit jaṭā 'twisted hair; root', perhaps Dravidian or Munda; a tadbhava (CDIAL 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C143-per]
 <!-- hl-knowledge: introduces=[HI-LEX-C143-THINGS143-05]; assesses=[] -->
 
 **जड़** — *jaṛ* — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जड़** (*jaṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jaṭā*, "twisted hair; fibrous root" (CDIAL 5086). CDIAL weighs a Dravidian and a Munda source for the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

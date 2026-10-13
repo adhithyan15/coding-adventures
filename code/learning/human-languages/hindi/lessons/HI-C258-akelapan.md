@@ -14,7 +14,8 @@ romanization: "akelāpan"
 concept_tag: HI-THG258-AKELAPAN
 prerequisites: [HI-C258-himmat, HI-C258-visvas]
 sounds: []
-roots: []
+roots: [indo-aryan-ekkala]
+etymology_hook: "akelāpan: akelā 'alone' (*ekkala, CDIAL 2506) + -pan '-ness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C258-visvas]
 <!-- hl-knowledge: introduces=[HI-LEX-C258-THG258-05]; assesses=[] -->
 
 **अकेलापन** — *akelāpan* — "loneliness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अकेलापन** (*akelāpan*) is *akelā*, "alone", with *-pan*, "-ness". CDIAL lists *akelā* under a reconstructed *\*ekkala*, "alone", built on *eka*, "one" (CDIAL 2506).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

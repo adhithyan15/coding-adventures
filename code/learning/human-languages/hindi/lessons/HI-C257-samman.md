@@ -14,7 +14,8 @@ romanization: "sammān"
 concept_tag: HI-THG257-SAMMAN
 prerequisites: [HI-C257-irsya, HI-C257-ghrna]
 sounds: []
-roots: []
+roots: [sanskrit-sammana]
+etymology_hook: "sammān ← Sanskrit sammāna 'honour, respect', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C257-ghrna]
 <!-- hl-knowledge: introduces=[HI-LEX-C257-THG257-04]; assesses=[] -->
 
 **सम्मान** — *sammān* — "respect, honour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सम्मान** (*sammān*) is Sanskrit *sammāna*, "honour, respect", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

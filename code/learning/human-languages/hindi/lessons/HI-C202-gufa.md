@@ -14,7 +14,8 @@ romanization: "gufā"
 concept_tag: HI-THG202-GUFA
 prerequisites: [HI-C201-talab, HI-C201-khadan]
 sounds: []
-roots: []
+roots: [indo-aryan-guppha]
+etymology_hook: "gufā ← *gupphā 'cave', a reconstructed form; a tadbhava (CDIAL 4204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C201-khadan]
 <!-- hl-knowledge: introduces=[HI-LEX-C202-THG202-01]; assesses=[] -->
 
 **गुफ़ा** — *gufā* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुफ़ा** (*gufā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gupphā*, "cave", a form CDIAL reconstructs from its descendants (CDIAL 4204). CDIAL's suggestion, Sanskrit *guhā*, "cave", crossed with *gup-*, "to hide", is marked very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

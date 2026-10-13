@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a mother-in-law, then the Hindi for a fath
 You'll want to know: बहू.
 बहू — bahū — "a daughter-in-law".
 
+The word, taken apart.
+बहू (bahū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vadhū, "bride, young wife" (CDIAL 11250).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a father-in-law, then the Hindi for a daug
 
 You'll want to know: दामाद.
 दामाद — dāmād — "a son-in-law".
+
+The word, taken apart.
+दामाद (dāmād) is a loan, usually traced to Persian dāmād, "son-in-law".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a daughter-in-law, then the Hindi for a so
 You'll want to know: देवर.
 देवर — devar — "a husband's younger brother".
 
+The word, taken apart.
+देवर (devar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from devṛ, "husband's younger brother" (CDIAL 6546).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a son-in-law, then the Hindi for a husband
 You'll want to know: ननद.
 ननद — nanad — "a husband's sister".
 
+The word, taken apart.
+ननद (nanad) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nanāndṛ, "husband's sister" (CDIAL 6946).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a husband's younger brother, then the Hind
 
 You'll want to know: जीजा.
 जीजा — jījā — "a sister's husband".
+
+The word, taken apart.
+जीजा (jījā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jījja, "a nursery word for breast, mother, sister", a form CDIAL reconstructs from its descendants (CDIAL 5232). CDIAL glosses Hindi jījā "sister's husband".
 
 What you've built.
 One more word for this chapter.
