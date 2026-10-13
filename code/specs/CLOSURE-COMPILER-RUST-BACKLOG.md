@@ -2,6 +2,35 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 line-hop Qt security withheld -->
+CV04a native source4bd5520/main160 completed actual31902 EXIT0: full23package
+cone1463/62/1existingGDIignore, nativeTaskApp9/1, total1472/63; strict23,
+TaskAppPython46/Ruff, geometry27/Python18/Ruff, docs/lessons/whitespace PASS.
+Six earlier focused rows retain actualcb by nonempty whole-package equality.
+93539 preflight,65241 zero-test filter rejection (original native log overwritten,
+explicitly disclosed),75183 E0063 red before test-only line_hops None repair
+remain preserved. No whole updated-head security or hosted acceptance inferred.
+
+Independent review WITHHELD: new enabled hop loop scans every preceding eligible
+edge. Authored fixed-two-node duplicate edges yield N(N-1)/2 predicates with no
+crossings. Authored one LR lane Cartesian K-by-K same-height endpoint groups
+admit E=K² unique horizontal edges, no crossings, Θ(K⁴) predicate work. Exact
+geometry dedup alone is insufficient. Counted public parser/layout regressions,
+compatible resource repair and affected suites still required. Reviewer hit usage
+limit before final acceptance; never treat its partial review as PASS.
+
+Fresh origin/main9b47db7e5715d3bf219a1d6fec1020e3d9099be5 adds powered ALGOL
+selectors/automatic Swimlane ordering and source/content imports; main160 native
+frame stays frozen and source-attributed until bounded reconciliation.
+Published solePR17288 remains822; hostedrun38323457119 terminal: macOS/windows
+SUCCESS, LinuxFAILURE. Exact failure sparse_real_and_string_value_copies_run_on_beam
+b11_str_3d: Erlang beam/erl_gc.c775 Overrun stack and heap (lang-aot testline50).
+Full log preserved; actual backend failure needs repair/revalidation, not a skip.
+Auto-mergeOFF. No new publication, merge, cleanup or CV04b yet.
+Full final-source Miri DEFERRED/PENDING, neverpassed; frozen497inputs/run/source/
+receipts/target untouched/unpolled. Fullparity/outputjoins/alllineage/goalOPEN.
+<!-- /CV04 line-hop Qt security withheld -->
+
 <!-- CV04 multiplicative selector integration -->
 CV04a multiplicative-selector reconciliation integrates main `146f77f4734e136e2146f4427607758889f73a8f`
 (#17387). Spec649ef6fbaa precedes conflict-free merge/tests; actual source
