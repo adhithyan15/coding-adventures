@@ -1033,6 +1033,9 @@ Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
 The Flowchart registry's accepted `state`, `choice`, and `note` attribute shapes lower to rounded-state,
 diamond-decision, and folded-corner note geometry respectively; notes include an explicit interior crease.
+The registry's legacy internal ShapeIDs `squareRect`, `roundedRect`, `stateStart`, `stateEnd`,
+`forkJoin`, `inv_trapezoid`, `doublecircle`, and `rect_left_inv_arrow` remain accepted and lower
+through their corresponding shared semantic, layout, and backend-neutral paint shapes.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick

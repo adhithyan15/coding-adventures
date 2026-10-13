@@ -3971,6 +3971,24 @@ line "Target" [35, 50, 68, 82]"##,
                         matches!(child, PaintInstruction::Path(_))).count() == 2
                 )), "the note must lower to an outline and interior fold path");
             }
+            if fixture_name == "legacy-internal-shape-aliases" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::Rect,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::SmallCircle,
+                    &diagram_ir::DiagramShape::FramedCircle,
+                    &diagram_ir::DiagramShape::ForkJoin,
+                    &diagram_ir::DiagramShape::InvertedTrapezoid,
+                    &diagram_ir::DiagramShape::DoubleCircle,
+                    &diagram_ir::DiagramShape::Asymmetric,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 4, "legacy control aliases must retain their circle geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                )), "the legacy inverted-trapezoid alias must retain polygon geometry");
+            }
             if fixture_name == "cross-lane-rank-constraints" {
                 let validate = layout.nodes.iter().find(|node| node.id == "validate").unwrap();
                 let build = layout.nodes.iter().find(|node| node.id == "build").unwrap();
