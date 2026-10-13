@@ -4,6 +4,9 @@
 
 ### Added
 
+- `VerifiedExecutable::digest`: the SHA-256 it was pinned to (D18S P2.7b).
+  The broker launcher uses it to refuse a Seatbelt shim that is a copy of
+  the broker.
 - `VerifiedExecutable` is built on macOS too, for the Seatbelt shim and
   the agents it launches (D18S step 7, P2.7a). Its checks are the same.
 - `VerifiedExecutable::descriptor`: a duplicate of the descriptor that was

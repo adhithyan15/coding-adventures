@@ -347,8 +347,10 @@ pub enum ChiefDaemonError {
     /// and `seatbelt_shim_sha256` (D18S P2.7b): with no shim there is no
     /// confined launch, so the broker is refused rather than run bare.
     BrokerShimMissing,
-    /// `[hosts.broker] seatbelt_shim` is not the pinned binary, could not
-    /// be verified, or is the broker itself (D18S P2.7b).
+    /// `[hosts.broker] seatbelt_shim` is not the pinned binary or could not
+    /// be verified (`Some`), or is the broker itself (by inode or digest),
+    /// or the two paths fail the macOS applier's path rules (`None`)
+    /// (D18S P2.7b).
     #[cfg(target_os = "macos")]
     BrokerShim(Option<VerifyError>),
     /// `[hosts.broker]` is configured where no verified broker launch
@@ -4070,6 +4072,11 @@ hardware_key_timeout = 60
                 NEXT_DIR.fetch_add(1, Ordering::Relaxed)
             ));
             fs::create_dir(&path).unwrap();
+            // On macOS the temporary directory is reached through the
+            // `/var` symlink, and the Seatbelt applier refuses a
+            // non-canonical executable path (D18S P2.7b).
+            #[cfg(target_os = "macos")]
+            let path = fs::canonicalize(&path).unwrap();
             Self(path)
         }
     }
@@ -4308,8 +4315,8 @@ hardware_key_timeout = 60
         .unwrap()
     }
 
-    /// A pinned shim for the macOS tests: any file, since only its digest
-    /// and its identity are checked at startup.
+    /// A pinned shim for the macOS tests: any file, since startup checks
+    /// only its digest, its identity and its path, never runs it.
     #[cfg(target_os = "macos")]
     fn a_shim(directory: &TestDir) -> (PathBuf, [u8; 32]) {
         let shim = directory.0.join("shim");
@@ -4570,12 +4577,23 @@ hardware_key_timeout = 60
             )),
             Err(ChiefDaemonError::BrokerShim(Some(VerifyError::Unreadable)))
         ));
-        // The broker as its own shim would confine nothing.
+        // The broker as its own shim would confine nothing: the same file,
+        // or a copy of it, which the digest gives away.
         assert!(matches!(
             compose(broker_config_with_shim(
                 &executable,
                 digest,
                 Some((&executable, digest))
+            )),
+            Err(ChiefDaemonError::BrokerShim(None))
+        ));
+        let copy = directory.0.join("broker-copy");
+        fs::copy(&executable, &copy).unwrap();
+        assert!(matches!(
+            compose(broker_config_with_shim(
+                &executable,
+                digest,
+                Some((&copy, digest))
             )),
             Err(ChiefDaemonError::BrokerShim(None))
         ));

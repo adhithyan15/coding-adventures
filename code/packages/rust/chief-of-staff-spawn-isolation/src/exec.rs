@@ -107,6 +107,11 @@ impl VerifiedExecutable {
         &self.path
     }
 
+    /// The SHA-256 its bytes were pinned to, and matched when it was opened.
+    pub fn digest(&self) -> [u8; 32] {
+        self.digest
+    }
+
     /// A duplicate of the descriptor that was hashed: same open file, so
     /// the same bytes. Execute this, never [`Self::path`].
     pub fn descriptor(&self) -> io::Result<File> {

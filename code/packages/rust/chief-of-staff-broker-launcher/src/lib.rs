@@ -93,9 +93,16 @@ impl BrokerProgram {
         Self { broker }
     }
 
-    /// The broker and the shim that confines it. Refused when they are the
-    /// same file: the shim would then be confining itself, and the
-    /// confinement refuses that at every launch anyway.
+    /// The broker and the shim that confines it, checked now as every
+    /// launch will check them, so a layout that would refuse every launch
+    /// is refused once, here.
+    ///
+    /// Refused ([`LaunchError::Confinement`]) when the shim is the broker:
+    /// the same file, or the same bytes. A copy of the broker pinned as the
+    /// shim would ignore the shim's instructions and run unconfined,
+    /// holding the keys, so a matching digest is refused as well as a
+    /// matching inode. Also refused when either path fails the macOS
+    /// applier's path rules (canonical, owner-only ancestors, local volume).
     #[cfg(target_os = "macos")]
     pub fn new(broker: VerifiedExecutable, shim: VerifiedExecutable) -> Result<Self, LaunchError> {
         use std::os::unix::fs::MetadataExt;
@@ -104,12 +111,14 @@ impl BrokerProgram {
                 .descriptor()
                 .and_then(|file| file.metadata())
                 .map(|metadata| (metadata.dev(), metadata.ino()))
-                .map_err(|_| LaunchError::Spawn)
+                .map_err(|_| LaunchError::Confinement)
         };
-        if identity(&broker)? == identity(&shim)? {
+        if broker.digest() == shim.digest() || identity(&broker)? == identity(&shim)? {
             return Err(LaunchError::Confinement);
         }
-        Ok(Self { broker, shim })
+        let program = Self { broker, shim };
+        prepare_confinement(&program)?;
+        Ok(program)
     }
 }
 
@@ -551,10 +560,12 @@ fn discard(mut child: Child) {
 /// ```text
 ///   Linux (P2.6d-3)  chief-of-staff-linux-sandbox: it can open no file by
 ///                    path, has no network, and can never exec
-///   macOS (P2.7b)    chief-of-staff-macos-sandbox, through the shim: it
-///                    can read only its own image and the system libraries,
-///                    has no network, cannot fork, and can exec only its
-///                    own image
+///   macOS (P2.7b)    chief-of-staff-macos-sandbox, through the shim, with
+///                    the base profile only: it can read its own image,
+///                    the system libraries and the few base entries (the
+///                    random devices, /dev/null, metadata, the sysctl
+///                    allow-list), has no network, cannot fork, and can
+///                    exec only its own image
 /// ```
 ///
 /// What it holds is its keys, on those descriptors, and its pipes.

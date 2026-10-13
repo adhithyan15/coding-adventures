@@ -2269,12 +2269,20 @@ through S-I3 before two weeks are spent on Windows.
         the daemon at startup (`BrokerShimMissing`), since there is no
         confined launch without the shim. On Linux the shim is not
         opened; the Linux applier needs none.
+
+        The shim is as trusted as the broker. It runs unconfined while it
+        holds the parked key descriptors, until its `sandbox_init`, so its
+        digest is a trust anchor on the same footing as the broker's.
       - *The program.* The launcher takes a `BrokerProgram`. On Linux it
         holds the verified broker. On macOS it holds the verified broker
-        and the verified shim, and the daemon refuses a shim that is the
-        broker. Elsewhere no value of it can exist, so `launch` cannot be
-        reached and `[hosts.broker]` is still refused
-        (`BrokerUnsupported`).
+        and the verified shim. The shim is refused when it is the broker,
+        by inode or by digest: a copy of the broker pinned as the shim
+        would ignore the instructions and run unconfined, holding the
+        keys. Both paths are checked at startup against the applier's path
+        rules, as every launch checks them, so a layout that would refuse
+        every launch stops the daemon once (`BrokerShim`). Elsewhere no
+        value of it can exist, so `launch` cannot be reached and
+        `[hosts.broker]` is still refused (`BrokerUnsupported`).
       - *The launch.* It takes the Linux steps in the same order. First
         the secret directories are checked and the key slots computed.
         Then `MacosConfinement::prepare_verified` runs, with a plan of no
