@@ -8,7 +8,7 @@ CV04a source `282193e9b1911fb3846b4a107d5d11fb8bec02f0`, integrated main
 returned **actual EXIT0** on October13. The 29-package reverse-dependency cone
 and unchanged 11 LANG production selections plus 48 exact native regressions
 pass **3,347 tests/docs across 211 targets**, zero failures/1 existing archive
-ignore; strict all-target Clippy for all29, doc-shards, lessons1101 and whitespace
+ignore; strict all-target Clippy for all29, doc-shards, lessons1102 and whitespace
 checks pass. These counts retain IIR174/3 and 98 successful unchanged targets
 from actual source d5 by nonempty mode/type/blob equality; they do not fabricate
 an exit-zero for the original failed validator. Twig now passes88/2, including
