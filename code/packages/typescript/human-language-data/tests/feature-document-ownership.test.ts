@@ -89,11 +89,11 @@ describe("Human Language Data feature-document ownership", () => {
   it("keeps feature-specific sections out of the shared package README", () => {
     const readme = readFileSync(packageReadme, "utf8");
     const featureStart = readme.indexOf("## Feature contracts");
-    const validationStart = readme.indexOf("## Validation rules", featureStart);
+    const architectureStart = readme.indexOf("## Architecture", featureStart);
     expect(featureStart).toBeGreaterThan(-1);
-    expect(validationStart).toBeGreaterThan(featureStart);
+    expect(architectureStart).toBeGreaterThan(featureStart);
 
-    const featureSection = readme.slice(featureStart, validationStart);
+    const featureSection = readme.slice(featureStart, architectureStart);
     expect(featureSection).toContain("docs/feature-contracts/");
     expect(featureSection).not.toMatch(/^### /m);
     expect(featureSection).not.toMatch(

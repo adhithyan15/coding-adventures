@@ -22,6 +22,7 @@ the package-wide contract:
 
 - purpose, installation, and the stable authoring workflow;
 - basic API and command usage;
+- the stable architectural summary;
 - the package-wide validation boundary; and
 - the package scope note.
 
