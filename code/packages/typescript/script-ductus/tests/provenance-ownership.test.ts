@@ -45,6 +45,10 @@ const discoverOwners = (directory: string): string[] =>
       expect(source, `${name} starts with one level-1 heading`).toMatch(
         /^# [^#\n]+\n/,
       );
+      expect(
+        source.match(/^# /gm),
+        `${name} has exactly one level-1 heading`,
+      ).toHaveLength(1);
       return name;
     })
     .sort();
@@ -56,6 +60,7 @@ describe("stroke-source provenance ownership", () => {
       expect.arrayContaining([
         "arabic-family-poh-db.md",
         "bengali-lipitk.md",
+        "chinese-hanzi-writer.md",
         "gurmukhi-gurmukhi-sikho.md",
         "kannada-chimple.md",
         "latin-grundschrift-ujipenchars2.md",
