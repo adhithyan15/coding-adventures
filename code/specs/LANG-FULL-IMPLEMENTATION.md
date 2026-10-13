@@ -1444,7 +1444,8 @@ backend immediately) come before the enabler-dependent items.
   The exact bounded `entier(sign(...))` transform also crosses that selector;
   finite specialisation may carry the same unaliased local-rooted proof through
   a real name formal. Unary signs may wrap that exact name actual while
-  preserving the proof. Unrestricted runtime `entier`, globals, captured
+  preserving the proof, and additive composition may include finite static
+  terms. Unrestricted runtime `entier`, globals, captured
   locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

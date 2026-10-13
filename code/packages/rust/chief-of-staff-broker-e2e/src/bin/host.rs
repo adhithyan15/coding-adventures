@@ -36,7 +36,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             "text/plain".to_owned(),
             b"sunny".to_vec(),
         )?;
-        std::fs::write(result_path.trim(), format!("{response:?}"))?;
+        // Written beside the result and renamed into place: the test waits
+        // for the result to exist, and `fs::write` creates the file before
+        // it fills it, so a reader polling for it could see it empty. A
+        // rename within one directory is atomic: the result appears whole.
+        let result_path = Path::new(result_path.trim());
+        let staging = result_path.with_extension("partial");
+        std::fs::write(&staging, format!("{response:?}"))?;
+        std::fs::rename(&staging, result_path)?;
     }
     control.receive_terminate()?;
     Ok(())

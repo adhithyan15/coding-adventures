@@ -371,6 +371,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 continue;
             };
             let (resolved_node_width, resolved_node_height) = match node.shape {
+                DiagramShape::Anchor => (2.0, 2.0),
                 DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => (14.0, 14.0),
                 DiagramShape::Summary => (60.0, 60.0),
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
@@ -636,6 +637,7 @@ fn swimlane_edge_endpoints(
 
 fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
     match shape {
+        DiagramShape::Anchor => 2.0,
         DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
         DiagramShape::Summary => 60.0,
         DiagramShape::ForkJoin => 10.0,

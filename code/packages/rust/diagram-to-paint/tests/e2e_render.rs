@@ -3977,6 +3977,14 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
                 )), "labelRect must lower without visible container geometry");
             }
+            if fixture_name == "anchor-shape" {
+                let anchor = layout.nodes.iter().find(|node| node.id == "pin").unwrap();
+                assert_eq!((anchor.width, anchor.height), (2.0, 2.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse)
+                        if ellipse.rx == 1.0 && ellipse.ry == 1.0 && ellipse.stroke.is_none()
+                )), "anchor must lower to a filled two-pixel circle");
+            }
             if fixture_name == "legacy-internal-shape-aliases" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::Rect,

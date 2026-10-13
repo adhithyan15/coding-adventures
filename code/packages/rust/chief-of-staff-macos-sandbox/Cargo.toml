@@ -1,0 +1,27 @@
+[package]
+name = "chief-of-staff-macos-sandbox"
+version = "0.1.0"
+edition = "2021"
+description = "The D18S macOS applier: a pinned shim installs a deny-default Seatbelt profile, probes it, and execs the agent"
+license = "MIT"
+
+[dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+capability-cage = { path = "../capability-cage" }
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "chief-of-staff-seatbelt-shim"
+path = "src/bin/seatbelt_shim.rs"
+test = false
+
+[[bin]]
+name = "macos-sandbox-probe"
+path = "src/bin/macos_sandbox_probe.rs"
+test = false
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
