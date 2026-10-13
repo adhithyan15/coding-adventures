@@ -3979,6 +3979,16 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.ignoreCrossLaneEdges")), Some(&"false".to_string()));
             }
+            if fixture_name == "rank-crossing-optimization" {
+                let a = layout.nodes.iter().find(|node| node.id == "a").unwrap();
+                let b = layout.nodes.iter().find(|node| node.id == "b").unwrap();
+                let c = layout.nodes.iter().find(|node| node.id == "c").unwrap();
+                let d = layout.nodes.iter().find(|node| node.id == "d").unwrap();
+                assert!(a.x > c.x && d.x > b.x,
+                    "crossing optimization must separate the independent edge rank intervals");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.optimizeRanksByCrossings")), Some(&"true".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

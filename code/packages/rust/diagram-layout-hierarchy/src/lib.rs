@@ -36,6 +36,94 @@ fn swimlane_constraint_path(
     false
 }
 
+fn swimlane_rank_segments_cross(
+    first_start: (f64, f64),
+    first_end: (f64, f64),
+    second_start: (f64, f64),
+    second_end: (f64, f64),
+) -> bool {
+    let first_dx = first_end.0 - first_start.0;
+    let first_dy = first_end.1 - first_start.1;
+    let second_dx = second_end.0 - second_start.0;
+    let second_dy = second_end.1 - second_start.1;
+    let denominator = first_dx * second_dy - first_dy * second_dx;
+    if denominator.abs() < 1e-9 {
+        return false;
+    }
+    let offset_x = second_start.0 - first_start.0;
+    let offset_y = second_start.1 - first_start.1;
+    let first_t = (offset_x * second_dy - offset_y * second_dx) / denominator;
+    let second_t = (offset_x * first_dy - offset_y * first_dx) / denominator;
+    first_t > 1e-9 && first_t < 1.0 - 1e-9
+        && second_t > 1e-9 && second_t < 1.0 - 1e-9
+}
+
+fn swimlane_rank_crossing_count(
+    diagram: &SwimlaneDiagram,
+    ranks: &HashMap<String, usize>,
+) -> usize {
+    let lane_by_node = diagram.lanes.iter().enumerate().flat_map(|(lane_index, lane)|
+        lane.node_ids.iter().map(move |node_id| (node_id.as_str(), lane_index as f64))
+    ).collect::<HashMap<_, _>>();
+    diagram.edges.iter().enumerate().map(|(index, first)| {
+        diagram.edges[index + 1..].iter().filter(|second| {
+            if first.from == second.from || first.from == second.to
+                || first.to == second.from || first.to == second.to
+            {
+                return false;
+            }
+            let Some((&first_source_lane, &first_target_lane, &second_source_lane, &second_target_lane)) =
+                lane_by_node.get(first.from.as_str()).zip(lane_by_node.get(first.to.as_str()))
+                    .zip(lane_by_node.get(second.from.as_str()).zip(lane_by_node.get(second.to.as_str())))
+                    .map(|((a, b), (c, d))| (a, b, c, d))
+            else { return false };
+            swimlane_rank_segments_cross(
+                (ranks.get(&first.from).copied().unwrap_or(0) as f64, first_source_lane),
+                (ranks.get(&first.to).copied().unwrap_or(0) as f64, first_target_lane),
+                (ranks.get(&second.from).copied().unwrap_or(0) as f64, second_source_lane),
+                (ranks.get(&second.to).copied().unwrap_or(0) as f64, second_target_lane),
+            )
+        }).count()
+    }).sum()
+}
+
+fn optimize_swimlane_ranks_by_crossings(
+    diagram: &SwimlaneDiagram,
+    constraints: &[(String, String, usize)],
+    ranks: &mut HashMap<String, usize>,
+) {
+    let mut best = swimlane_rank_crossing_count(diagram, ranks);
+    for _ in 0..4 {
+        let mut changed = false;
+        for node in &diagram.nodes {
+            let mut candidate = ranks.clone();
+            *candidate.entry(node.id.clone()).or_default() += 1;
+            for _ in 0..diagram.nodes.len() {
+                let mut propagated = false;
+                for (from, to, distance) in constraints {
+                    let next = candidate.get(from).copied().unwrap_or(0) + distance;
+                    if candidate.get(to).copied().unwrap_or(0) < next {
+                        candidate.insert(to.clone(), next);
+                        propagated = true;
+                    }
+                }
+                if !propagated {
+                    break;
+                }
+            }
+            let score = swimlane_rank_crossing_count(diagram, &candidate);
+            if score < best {
+                *ranks = candidate;
+                best = score;
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+}
+
 fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram) -> Option<HashMap<String, usize>> {
     if diagram.ignore_cross_lane_edges {
         return None;
@@ -71,6 +159,9 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram) -> Option<HashMap<String
         if !changed {
             break;
         }
+    }
+    if diagram.optimize_ranks_by_crossings {
+        optimize_swimlane_ranks_by_crossings(diagram, &constraints, &mut ranks);
     }
     Some(ranks)
 }
@@ -407,6 +498,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         line_hops: diagram.line_hops,
         automatic_lane_ordering: diagram.automatic_lane_ordering,
         ignore_cross_lane_edges: diagram.ignore_cross_lane_edges,
+        optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
     }
 }
 
@@ -932,6 +1024,7 @@ mod tests {
             }],
             links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
+            optimize_ranks_by_crossings: true,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -956,6 +1049,7 @@ mod tests {
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
+            optimize_ranks_by_crossings: true,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -1042,6 +1136,7 @@ mod tests {
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
+            optimize_ranks_by_crossings: true,
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
