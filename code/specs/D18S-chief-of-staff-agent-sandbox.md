@@ -2303,6 +2303,132 @@ through S-I3 before two weeks are spent on Windows.
         fixture. The Linux-only assertions, `NoNewPrivs` and the seccomp
         mode, stay Linux-only.
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
+
+   Windows has an OS principal per agent for free, and the kernel checks it
+   on every access, so there is no filter to install and no shim to run.
+   What it lacks is a way to say any of this through Rust's `Command`:
+   `PROC_THREAD_ATTRIBUTE_*` needs `STARTUPINFOEXW`, and std's support for
+   it (`raw_attribute`) is unstable. So the applier creates the process
+   itself, with `CreateProcessW`, and owns the child it returns.
+
+   ```text
+     supervisor                                        agent
+     ------------------------------------------------  ----------------
+     WindowsConfinement::prepare_verified(plan, agent, agent_id)
+       re-verifies the agent through its held handle
+       the path is canonical and names that handle
+       the AppContainer profile for agent_id
+       an ACE: that SID may read and execute the image
+     spawn(argv, env, stdin, stdout)
+       a job: kill-on-close, one process, UI limits
+       CreateProcessW(SUSPENDED, attributes below)
+       launch checks (S-P4), from outside:
+         token is AppContainer, LPAC, that SID,
+         no capabilities, Low integrity
+         the process is in the job
+         its mitigation policies are the ones set
+         its image is the file whose handle is held
+       ResumeThread ───────────────────────────────►  first
+                                                       instruction,
+                                                       confined
+   ```
+
+   Nothing of the agent runs before the checks pass: the process is
+   created suspended, so not even its loader has run. Any failed check
+   terminates it through the job and refuses the launch (S-P3).
+
+   **The attributes.** One `PROC_THREAD_ATTRIBUTE_LIST` carries them all:
+
+   ```text
+     attribute                       value
+     ------------------------------  -----------------------------------------
+     SECURITY_CAPABILITIES           the agent's AppContainer SID, no
+                                     capabilities: no network, no
+                                     library or device access
+     ALL_APPLICATION_PACKAGES_POLICY OPT_OUT: a less privileged AppContainer
+                                     (LPAC), so ALL APPLICATION PACKAGES
+                                     (S-1-15-2-1) grants nothing (S-I5)
+     HANDLE_LIST                     stdin, stdout, stderr (NUL), and the
+                                     handles passed on (S-I3); nothing else
+     JOB_LIST                        the job, so the process is in it from
+                                     its creation
+     CHILD_PROCESS_POLICY            RESTRICTED: it can create no process
+     MITIGATION_POLICY               DEP, SEHOP, bottom-up and high-entropy
+                                     ASLR, terminate on heap corruption,
+                                     strict handle checks, no extension
+                                     points, no dynamic code, no remote or
+                                     low-label images, system32 first, no
+                                     non-Microsoft DLLs, no non-system fonts
+   ```
+
+   **The job** has `KILL_ON_JOB_CLOSE`, an active-process limit of one,
+   `DIE_ON_UNHANDLED_EXCEPTION`, and every UI restriction (desktop,
+   display settings, exit, global atoms, user handles, clipboard, system
+   parameters). The supervisor holds the only handle to it, so dropping
+   the child kills the agent and anything it could have started.
+
+   **The principal (S-I5's Windows row).** Each agent gets its own
+   AppContainer profile, named `chief-of-staff.<32 hex digits>`, the first
+   16 bytes of SHA-256 over the attested `agent_id`. `CreateAppContainerProfile`
+   needs no administrator. When the profile exists already, its SID is
+   derived from the name (`DeriveAppContainerSidFromAppContainerName`). The
+   derivation is deterministic, so the existing profile is that agent's
+   own: two agents share one only through a SHA-256 collision. Profiles
+   are kept and reused per agent, never shared.
+
+   **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
+   a path, never a handle. So:
+   - `VerifiedExecutable` on Windows opens the file sharing read only, so
+     no one can write, rename or delete it while it is held. It does not
+     follow a reparse point at the last component and refuses one, and it
+     refuses anything but a regular file. Its digest is checked through
+     the held handle at open and before every launch.
+   - The path must be canonical: exactly the final path of the held handle
+     (`GetFinalPathNameByHandleW`), case included.
+   - After the suspended creation, the child's image name
+     (`QueryFullProcessImageNameW`) must equal the held handle's final
+     path. If a parent directory was renamed and another file put at the
+     path in between, the names differ and the launch is refused.
+
+   **Reading its own image.** An LPAC token cannot read a file merely
+   because ALL APPLICATION PACKAGES may. The applier adds one ACE to the
+   agent's image: its AppContainer SID may read and execute it. The ACE
+   stays, since it grants that agent only what every launch of it needs.
+   The working directory is the system directory, which ALL RESTRICTED
+   APPLICATION PACKAGES (S-1-15-2-2) may read.
+
+   **The environment** is the closed set of the macOS applier: only names
+   set on the command, each in the grantable set, with plain values. It is
+   passed as an explicit Unicode block, never inherited.
+
+   **Residuals, recorded.**
+   - *A concurrent std spawn.* A handle on the list must be inheritable.
+     std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
+     std child created by another supervisor thread in the window between
+     marking and closing could inherit one. The applier marks the handles
+     immediately before its `CreateProcessW` and unmarks them right after.
+     The residual ends when every agent spawn goes through this applier
+     (step 9).
+   - *Grants.* No `Direct` grant exists until 8c; a plan with one is
+     refused (`Unsupported`), never run without it.
+   - *Name reuse.* An AppContainer profile outlives its agent. A reinstall
+     of the same `agent_id` gets the same SID, and so whatever ACEs the
+     previous install left. Only image ACEs are left today.
+
+   Sub-steps:
+   1. **P2.8a:** `VerifiedExecutable` on Windows, and
+      `chief-of-staff-windows-sandbox`: `WindowsConfinement` and its
+      `ConfinedChild`. Tested on `windows-2025`: a probe agent proves each
+      denial against an unconfined control. The denials are files outside
+      the agent, the network, processes, other processes' handles, the
+      registry outside its container, inherited handles, and the token
+      and policies themselves.
+   2. **P2.8b:** the broker on Windows. Its key handles go on the handle
+      list, and their values reach it in one environment variable. The
+      daemon accepts `[hosts.broker]` on Windows, and the broker end-to-end
+      tests run on `windows-2025`.
+   3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
+      SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
    as the S-I8 inner layer, not deleted.
