@@ -104,6 +104,24 @@ use storage_core::StorageBackend;
 const SKILL: &str = include_str!("../reference-agents/weather/SKILL.md");
 /// The per-agent channel broker (D18S P2.6d), built in this crate.
 const BROKER: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-broker");
+/// On macOS, the shim that confines it (D18S P2.7b), pinned the same way.
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-seatbelt-shim");
+
+/// The `[hosts.broker]` lines that pin the Seatbelt shim: required on
+/// macOS, and absent elsewhere.
+fn seatbelt_shim_lines() -> String {
+    #[cfg(target_os = "macos")]
+    {
+        let digest: String = coding_adventures_sha256::sha256(&fs::read(SHIM).unwrap())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect();
+        format!("seatbelt_shim = \"{SHIM}\"\nseatbelt_shim_sha256 = \"{digest}\"\n")
+    }
+    #[cfg(not(target_os = "macos"))]
+    String::new()
+}
 const KEY_ID: &str = "weather-reference-dev";
 const KEY_SEED: [u8; 32] = [91; 32];
 const FORECAST_URL: &str = "https://api.weather.gov/gridpoints/SEW/124,67/forecast";
@@ -470,6 +488,7 @@ fn the_weather_reference_agent_answers_from_a_real_net_fetch() {
         .iter()
         .map(|byte| format!("{byte:02x}"))
         .collect();
+    let shim = seatbelt_shim_lines();
 
     // The production data plane, with only the network edge supplied.
     let config = parse_config(&format!(
@@ -494,7 +513,7 @@ graceful_stop_timeout = 3000
 [hosts.broker]
 executable = "{broker}"
 sha256 = "{broker_digest}"
-
+{shim}
 [vault]
 storage_path = "~/vault"
 default_lease_ttl = 30
@@ -530,8 +549,13 @@ ollama_models = [
         match compose_channel_brokers(&config, &home.0, Arc::clone(&backend), Arc::clone(&clock)) {
             Ok(brokers) => brokers.expect("a broker for the channel keys"),
             // No verified broker launch here yet: the daemon would not start,
-            // so there is no turn to run (D18S P2.6d-2c).
-            Err(ChiefDaemonError::BrokerUnsupported) if !cfg!(target_os = "linux") => return,
+            // so there is no turn to run (D18S P2.6d-2c). Linux and macOS
+            // (P2.7b) both have one.
+            Err(ChiefDaemonError::BrokerUnsupported)
+                if !cfg!(any(target_os = "linux", target_os = "macos")) =>
+            {
+                return
+            }
             Err(error) => panic!("broker composition failed: {error}"),
         };
 

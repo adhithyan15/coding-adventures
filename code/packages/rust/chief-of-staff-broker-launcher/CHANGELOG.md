@@ -11,6 +11,17 @@
 
 ### Added
 
+- **The broker on macOS** (D18S P2.7b).
+  - `BrokerProgram` is what `launch` runs. On Linux it holds the verified
+    broker. On macOS it holds the verified broker and the verified Seatbelt
+    shim, and `new` refuses a shim that is the broker. Elsewhere no value
+    of it can exist.
+  - On macOS, `launch` confines the broker through
+    `MacosConfinement::apply_inheriting`, under `broker_plan()` for
+    `OsFamily::Macos`. It takes the same steps, in the same order, as on
+    Linux.
+  - **Breaking:** `launch` takes `&BrokerProgram` instead of
+    `&VerifiedExecutable`.
 - The broker runs confined (D18S P2.6d-3): `launch` starts it through
   `chief-of-staff-linux-sandbox` under `broker_plan()`, a plan with no
   capabilities, instead of spawn-isolation's `isolate_and_exec`.

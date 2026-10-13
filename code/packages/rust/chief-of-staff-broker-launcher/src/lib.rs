@@ -56,15 +56,62 @@ use chief_of_staff_host_control_protocol::{
 use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
 use storage_core::StorageBackend;
 
-/// A broker binary verified against its pinned digest (Linux).
-#[cfg(target_os = "linux")]
+/// A binary verified against its pinned digest (Linux and macOS).
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 pub use chief_of_staff_spawn_isolation::{VerifiedExecutable, VerifyError};
 
-/// Off Linux there is no verified launch yet (S-P3), so no value of this
-/// type can exist, and [`launch`] cannot be reached.
-#[cfg(not(target_os = "linux"))]
+// ---------------------------------------------------------------------------
+// The program
+// ---------------------------------------------------------------------------
+
+/// What [`launch`] runs: the verified broker, and on macOS the verified
+/// Seatbelt shim that installs its profile (D18S P2.7b).
+///
+/// ```text
+///   Linux   broker                 the applier confines it between fork
+///                                  and execveat
+///   macOS   broker + shim          the shim, a fresh image, installs the
+///                                  profile and then execs the broker
+///   other   (no value can exist)   no verified launch yet (S-P3)
+/// ```
+///
+/// Both binaries are re-verified through their descriptors at every launch.
 #[derive(Debug)]
-pub enum VerifiedExecutable {}
+pub struct BrokerProgram {
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    broker: VerifiedExecutable,
+    #[cfg(target_os = "macos")]
+    shim: VerifiedExecutable,
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    never: std::convert::Infallible,
+}
+
+impl BrokerProgram {
+    /// The broker alone: the Linux applier needs no shim.
+    #[cfg(target_os = "linux")]
+    pub fn new(broker: VerifiedExecutable) -> Self {
+        Self { broker }
+    }
+
+    /// The broker and the shim that confines it. Refused when they are the
+    /// same file: the shim would then be confining itself, and the
+    /// confinement refuses that at every launch anyway.
+    #[cfg(target_os = "macos")]
+    pub fn new(broker: VerifiedExecutable, shim: VerifiedExecutable) -> Result<Self, LaunchError> {
+        use std::os::unix::fs::MetadataExt;
+        let identity = |program: &VerifiedExecutable| {
+            program
+                .descriptor()
+                .and_then(|file| file.metadata())
+                .map(|metadata| (metadata.dev(), metadata.ino()))
+                .map_err(|_| LaunchError::Spawn)
+        };
+        if identity(&broker)? == identity(&shim)? {
+            return Err(LaunchError::Confinement);
+        }
+        Ok(Self { broker, shim })
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Errors
@@ -466,7 +513,7 @@ fn join_bounded(thread: JoinHandle<()>) -> bool {
     true
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 /// Read the broker's frames on a thread of their own, so the relay can wait
 /// on them with a deadline. The channel closes when the broker's stdout
 /// does.
@@ -499,13 +546,21 @@ fn discard(mut child: Child) {
 /// up to `ready_timeout` for a `Ready` that passes [`check_ready`]. On any
 /// failure the broker is killed and reaped.
 ///
-/// The broker runs under [`broker_plan`], a plan with no capabilities,
-/// through `chief-of-staff-linux-sandbox` (P2.6d-3): it can open no file by
-/// path, has no network, and can never exec. What it holds is its keys, on
-/// those descriptors, and its pipes.
-#[cfg(target_os = "linux")]
+/// The broker runs under [`broker_plan`], a plan with no capabilities.
+///
+/// ```text
+///   Linux (P2.6d-3)  chief-of-staff-linux-sandbox: it can open no file by
+///                    path, has no network, and can never exec
+///   macOS (P2.7b)    chief-of-staff-macos-sandbox, through the shim: it
+///                    can read only its own image and the system libraries,
+///                    has no network, cannot fork, and can exec only its
+///                    own image
+/// ```
+///
+/// What it holds is its keys, on those descriptors, and its pipes.
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 pub fn launch(
-    program: &VerifiedExecutable,
+    program: &BrokerProgram,
     binding: &HostPipelineBinding,
     keys: &BrokerKeyFiles,
     backend: &dyn StorageBackend,
@@ -518,10 +573,8 @@ pub fn launch(
     // owner-only, as P2.6c's hard-link check assumes.
     keys.check_secret_directories()?;
     let slotted = keys.slots_for(binding)?;
-    // Prepared from the verified descriptor, which it re-verifies.
-    let confinement =
-        chief_of_staff_linux_sandbox::LinuxConfinement::prepare_verified(&broker_plan()?, program)
-            .map_err(|_| LaunchError::Confinement)?;
+    // Prepared from the verified descriptors, which it re-verifies.
+    let confinement = prepare_confinement(program)?;
     let descriptors = slotted
         .iter()
         .map(|(_, path)| {
@@ -582,28 +635,60 @@ pub fn launch(
     Ok(broker)
 }
 
-/// The broker's sandbox plan: a manifest with no capabilities, for Linux
-/// (P2.6d-3). Everything the broker needs it already holds when it starts.
-#[cfg(target_os = "linux")]
+/// The broker's sandbox plan: a manifest with no capabilities, for this
+/// platform (P2.6d-3 on Linux, P2.7b on macOS). Everything the broker
+/// needs it already holds when it starts.
+#[cfg(any(target_os = "linux", target_os = "macos"))]
 pub fn broker_plan() -> Result<capability_os_sandbox::SandboxPlan, LaunchError> {
+    #[cfg(target_os = "linux")]
+    let os = capability_os_sandbox::OsFamily::Linux;
+    #[cfg(target_os = "macos")]
+    let os = capability_os_sandbox::OsFamily::Macos;
     capability_os_sandbox::plan_from_json(
         r#"{"version":1,"package":"rust/chief-of-staff-agent-broker","capabilities":[],"justification":"A per-agent channel broker holds its keys on inherited descriptors and talks to its supervisor over its pipes. It needs nothing else."}"#,
-        capability_os_sandbox::OsFamily::Linux,
+        os,
     )
     .map_err(|_| LaunchError::Confinement)
 }
 
-/// Verified launch needs `execveat`; elsewhere there is none yet, and no
-/// [`VerifiedExecutable`] can exist to call this with.
-#[cfg(not(target_os = "linux"))]
+/// The confinement each launch applies. The two platforms differ only in
+/// who installs it: the Linux applier between fork and `execveat`, and on
+/// macOS the shim, in a fresh image, before it execs the broker. Either
+/// way it is prepared afresh for each launch, re-verifying the binaries.
+#[cfg(target_os = "linux")]
+fn prepare_confinement(
+    program: &BrokerProgram,
+) -> Result<chief_of_staff_linux_sandbox::LinuxConfinement, LaunchError> {
+    chief_of_staff_linux_sandbox::LinuxConfinement::prepare_verified(
+        &broker_plan()?,
+        &program.broker,
+    )
+    .map_err(|_| LaunchError::Confinement)
+}
+
+#[cfg(target_os = "macos")]
+fn prepare_confinement(
+    program: &BrokerProgram,
+) -> Result<chief_of_staff_macos_sandbox::MacosConfinement, LaunchError> {
+    chief_of_staff_macos_sandbox::MacosConfinement::prepare_verified(
+        &broker_plan()?,
+        &program.broker,
+        &program.shim,
+    )
+    .map_err(|_| LaunchError::Confinement)
+}
+
+/// Elsewhere there is no verified launch yet, and no [`BrokerProgram`] can
+/// exist to call this with.
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
 pub fn launch(
-    program: &VerifiedExecutable,
+    program: &BrokerProgram,
     _binding: &HostPipelineBinding,
     _keys: &BrokerKeyFiles,
     _backend: &dyn StorageBackend,
     _ready_timeout: Duration,
 ) -> Result<LaunchedBroker, LaunchError> {
-    match *program {}
+    match program.never {}
 }
 
 // ---------------------------------------------------------------------------
