@@ -207,9 +207,10 @@ pub fn check_plan(plan: &SandboxPlan) -> Result<(), ConfinementError> {
     Ok(())
 }
 
-/// The AppContainer profile name for `agent_id`: `chief-of-staff.` and the
-/// first 16 bytes of its SHA-256 in lowercase hex. 47 characters, within
-/// the 64 a profile name may have, and only characters a name may hold.
+/// The AppContainer name for `agent_id`, from which its SID is derived:
+/// `chief-of-staff.` and the first 16 bytes of its SHA-256 in lowercase
+/// hex. 47 characters, within the 64 an AppContainer name may have, and
+/// only characters a name may hold.
 ///
 /// ```text
 ///   agent_id "weather-reporter"  →  chief-of-staff.<32 hex digits>

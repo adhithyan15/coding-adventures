@@ -190,6 +190,8 @@ mod windows {
     /// into the test's pipe; under strict handle checks an invalid number
     /// is fatal. Either way the test's pipe receives nothing.
     pub fn write_handle(value: &str) -> io::Result<String> {
+        // First the handles it was given, so the test sees that it ran.
+        inherited()?;
         let value: usize = value
             .parse()
             .map_err(|_| io::Error::from(io::ErrorKind::InvalidInput))?;

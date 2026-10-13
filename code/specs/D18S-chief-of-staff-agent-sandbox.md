@@ -481,7 +481,7 @@ supervisor:**
 | Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
 | OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
 | FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
-| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator. **Container names derive from the attested `agent_id`; `ERROR_ALREADY_EXISTS` without a verified matching SID is a launch failure** — otherwise two agents silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| Windows | each agent gets its own AppContainer SID, which needs no administrator. **The SID is derived from a name that is the digest of the attested `agent_id`** (`DeriveAppContainerSidFromAppContainerName`; no profile is registered, step 8), so two agents never silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
 | macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
 
 Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
@@ -603,9 +603,8 @@ apart. This design has no such namespace. Principal separation remains
 not a launch failure.
 
 Where an OS supplies per-agent principals for free it is still used: an
-AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
-administrator, so each Windows agent gets its own and profiles are never
-shared.
+AppContainer SID needs no administrator, so each Windows agent gets its own,
+derived from its `agent_id`, and never shared (step 8).
 
 #### The checkable half is key NAMES, and that is accepted
 

@@ -366,12 +366,15 @@ mod windows_access {
                 // refused rather than guessed at.
                 return Err(VerifyError::Writable);
             }
+            let allowed = entry as *const ACCESS_ALLOWED_ACE;
             // SAFETY: an ACCESS_ALLOWED_ACE: a mask, then the SID in place.
-            let allowed = unsafe { &*(entry as *const ACCESS_ALLOWED_ACE) };
-            if allowed.Mask & WRITE_CLASS == 0 {
+            if unsafe { (*allowed).Mask } & WRITE_CLASS == 0 {
                 continue;
             }
-            let sid = std::ptr::addr_of!(allowed.SidStart) as PSID;
+            // From the entry pointer itself, not a reference to the fixed
+            // part: EqualSid reads the whole SID, past the struct's end.
+            // SAFETY: the SID starts at SidStart, inside the entry.
+            let sid = unsafe { std::ptr::addr_of!((*allowed).SidStart) } as PSID;
             if !trusted.contains(sid) {
                 return Err(VerifyError::Writable);
             }

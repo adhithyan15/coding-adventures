@@ -258,10 +258,18 @@ fn only_listed_handles_are_inherited() {
         0
     );
     let value = (stray.as_raw_handle() as usize).to_string();
-    // The confined agent writes to that number. Whatever it names in the
-    // agent (nothing, or one of the agent's own handles), it is not this
-    // pipe.
-    agent.run(&["write-handle", &value]);
+    // The confined agent writes to the handle it was given, which proves it
+    // ran, and then to that number. Whatever the number names in the agent
+    // (nothing, or one of its own handles), it is not this pipe.
+    let (mut listed_reader, listed_writer) = std::io::pipe().unwrap();
+    agent.run_with(SpawnRequest {
+        arguments: vec!["write-handle".to_string(), value.clone()],
+        inherited: vec![listed_writer.into()],
+        ..SpawnRequest::default()
+    });
+    let mut listed = String::new();
+    listed_reader.read_to_string(&mut listed).unwrap();
+    assert_eq!(listed, "inherited\n", "the agent ran");
     // std's spawn inherits every inheritable handle: the control writes
     // into this pipe.
     assert_eq!(control(&["write-handle", &value]), "ok");
@@ -309,7 +317,8 @@ fn a_killed_or_dropped_agent_ends() {
     // TerminateJobObject's exit code, long before the minute is up.
     assert_eq!(child.wait().unwrap().code(), Some(1));
 
-    let child = sleeper();
+    let mut child = sleeper();
+    assert_eq!(child.try_wait().unwrap(), None, "it is running");
     let id = child.id();
     // SAFETY: an id and a wait-only right; the handle is closed below.
     let handle = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, id) };
