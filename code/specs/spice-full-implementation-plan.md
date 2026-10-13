@@ -376,7 +376,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      lowering, and Mosaic host coverage. Keep vendor libraries, arbitrary
      parameter names, expression-valued fields, and the full post-Berkeley
      model-library catalog for a separate product phase.
-   - **Mosaic SPICE WebAssembly lifecycle contract** (in progress): discovery
+   - **Mosaic SPICE WebAssembly lifecycle contract** (completed in PR #15795): discovery
      after the Berkeley-core audit: `spice-mosaic-app` exports the standard
      `mosaic_wasm_*` ABI, but its package gate validates only native Rust state.
      Add one compiled workbench artifact gate that drives the public browser
