@@ -2394,6 +2394,10 @@ through S-I3 before two weeks are spent on Windows.
    because ALL APPLICATION PACKAGES may. The applier adds one ACE to the
    agent's image: its AppContainer SID may read and execute it. The ACE
    stays, since it grants that agent only what every launch of it needs.
+   It is added by reading the list, adding to it and writing it back
+   through a handle reopened from the held one, never by path. That
+   read-modify-write is serialized within the supervisor, so two agents
+   prepared at once from one image never drop each other's entry.
    The working directory is the system directory, which ALL RESTRICTED
    APPLICATION PACKAGES (S-1-15-2-2) may read.
 
