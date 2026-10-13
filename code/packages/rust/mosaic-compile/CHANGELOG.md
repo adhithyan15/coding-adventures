@@ -12,8 +12,10 @@
 - `--fixtures` now reach that shell as the story's values, as on every
   other pipeline backend (#14459). This includes list fixtures, so
   `--strict-fixtures` passes on Compose when every value applies.
-- The #16930 refusal and the two warnings are gone. A value that cannot
-  apply still fails under `--strict-fixtures`.
+- The #16930 refusal and the two warnings are gone. A value of a shape no
+  backend renders (an object, a mixed list) still fails under
+  `--strict-fixtures`. A number or bool that does not parse keeps the
+  sample instead, as on the other native shells.
 - `tests/compose_fixtures.rs` covers the shell, its fixtures and its
   determinism. `list_fixtures.rs` adds Compose to the native backends.
 - `mosaic-compile.json`: the `fixtures` and `emit-project` descriptions now

@@ -8551,9 +8551,6 @@ fn build_compose_build_gradle_kts(
     )
 }
 
-/// The Compose app's two Kotlin sources (UI89 §3.4): `Main.kt`, the desktop
-/// entry point (window and host loader), and `MosaicAppShell.kt`, the app
-/// shell every Compose platform shares.
 /// The runnable Compose Desktop project `mosaic-compile --backend compose
 /// --emit-project` writes beside one pipeline-mode component (UI32 §2.2,
 /// EM-6, #14704), as `(relative path, contents)` pairs.
@@ -8655,6 +8652,9 @@ pub fn compose_pipeline_project_files(
     Ok(files)
 }
 
+/// The Compose app's two Kotlin sources (UI89 §3.4): `Main.kt`, the desktop
+/// entry point (window and host loader), and `MosaicAppShell.kt`, the app
+/// shell every Compose platform shares.
 struct ComposeShellSources {
     main: String,
     shell: String,
@@ -9482,7 +9482,16 @@ fn escape_kotlin_string(s: &str) -> String {
             '\n' => out.push_str("\\n"),
             '\r' => out.push_str("\\r"),
             '\t' => out.push_str("\\t"),
-            c if c.is_control() => {
+            // Line separators and bidirectional controls cannot end the
+            // literal, but they can make the generated file read differently
+            // from how it compiles ("Trojan Source"), so they are spelled out.
+            c if c.is_control()
+                || matches!(
+                    c,
+                    '\u{2028}' | '\u{2029}' | '\u{200E}'..='\u{200F}'
+                        | '\u{202A}'..='\u{202E}' | '\u{2066}'..='\u{2069}'
+                ) =>
+            {
                 write!(out, "\\u{:04X}", c as u32).unwrap();
             }
             c => out.push(c),
@@ -24715,6 +24724,10 @@ mod compose_pipeline_shell_tests {
         );
         assert!(shell.contains(r#"listOf<String>("\$a", "\${b}")"#), "{shell}");
         assert_eq!(escape_kotlin_string("plain"), "plain");
+        assert_eq!(
+            escape_kotlin_string("a\u{202E}b\u{2028}c\u{0085}"),
+            "a\\u202Eb\\u2028c\\u0085"
+        );
     }
 
     #[test]

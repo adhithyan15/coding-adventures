@@ -22,3 +22,7 @@
   in a string literal as a template, so a value such as `"${exit()}"` in a
   fixture or slot default would have run as code in the generated shell,
   and `"$5"` would not compile.
+- **Line separators and bidirectional controls** (U+2028, U+2029,
+  U+200E–U+200F, U+202A–U+202E, U+2066–U+2069) are written as `\uXXXX`.
+  They cannot end a literal, but left raw they can make a generated file
+  read differently from how it compiles ("Trojan Source").
