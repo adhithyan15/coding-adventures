@@ -1049,8 +1049,8 @@ invisible layout links,
 minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
-thick, and dotted links, including labeled bidirectional point arrows and labeled double-ended
-circle or cross markers, titles, and accessibility
+thick, and dotted links, including labeled links with independently selected point, circle, cross,
+or absent start and point, circle, or cross end markers, titles, and accessibility
 metadata with named and numeric entity
 decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
