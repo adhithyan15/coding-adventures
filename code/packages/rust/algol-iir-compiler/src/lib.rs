@@ -3861,7 +3861,7 @@ impl Compiler {
                             ProcedureParamType::Scalar(ScalarType::Real),
                         ) => {
                             self.is_selector_call_safe_runtime_real_value(actual)
-                                || self.is_selector_call_safe_signed_entier_sign_root(actual)
+                                || self.is_selector_call_safe_additive_entier_sign_root(actual)
                         }
                         _ => true,
                     }
@@ -3921,6 +3921,52 @@ impl Compiler {
         let children = direct_nodes(node);
         children.len() == 1
             && self.is_selector_call_safe_signed_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_signed_entier_sign_root(node) {
+            return true;
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            let operand_start = usize::from(matches!(
+                sequence.first(),
+                Some(Piece::Op(op)) if matches!(op.as_str(), "+" | "-")
+            ));
+            let additive_len = sequence.len().saturating_sub(operand_start);
+            if additive_len >= 3 && additive_len % 2 == 1 {
+                let mut saw_bounded_root = false;
+                for (index, piece) in sequence.iter().skip(operand_start).enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_signed_entier_sign_root(operand) {
+                            if saw_bounded_root {
+                                return false;
+                            }
+                            saw_bounded_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                return saw_bounded_root;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_additive_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_additive_entier_sign_root(children[0])
     }
 
     fn builtin_nonnegative_bounded_sign_operand<'n>(
@@ -13846,6 +13892,26 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_additive_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose additive exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure abs(x); real x; abs := x; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
@@ -13857,6 +13923,8 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real left, right, result; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) + entier(sign(right))) else relay(entier(sign(right)) + entier(sign(left))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a calling selector must not admit transformed locals or overridden builtins",
@@ -13877,6 +13945,7 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("shared storage must remain invalid across a calling selector");
