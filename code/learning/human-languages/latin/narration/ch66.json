@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Chest, Leg, Cheek, Nail, Healthy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d21bc2f9551af6ec",
+  "sourceHash": "fnv1a64:2ab784eed8fc780b",
   "lessons": [
     {
       "id": "LA-C66-pectus",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1a28d8c583fe716",
+      "sourceHash": "fnv1a64:258aa087d631f92b",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "unguis is inherited, usually traced to Proto-Indo-European h3negh-, \"nail, claw\" (EtymDB 2.1). Greek onyx, \"claw, nail\" (Lewis & Short), and English nail are cousins."
+              "text": "unguis is inherited, usually traced to Proto-Indo-European h3nogwh-, \"nail, claw\" (EtymDB 2.1 writes h3negh-, without the w that the Latin gu needs). Greek onyx, \"claw, nail\" (Lewis & Short), and English nail are cousins."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Gloomy, Drunk, Sober, Greedy, Thrifty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f30a76153ef9bd7",
+  "sourceHash": "fnv1a64:7d712ba4439283b0",
   "lessons": [
     {
       "id": "LA-C269-maestus",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:701164d5e1465851",
+      "sourceHash": "fnv1a64:f3be47329f3dca7b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ēbrius is probably inherited, from a Proto-Indo-European root h1egwh-, \"to drink\" (EtymDB 2.1); Lewis & Short still called it doubtful. Its opposite is sōbrius, \"sober\"."
+              "text": "ēbrius may be inherited, from a Proto-Indo-European root h1egwh-, \"to drink\" (EtymDB 2.1); Lewis & Short still called it doubtful. Its opposite is sōbrius, \"sober\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea38a5c1086a8374",
+      "sourceHash": "fnv1a64:c914f17f9cbe44a2",
       "notice": null,
       "blocks": [
         {

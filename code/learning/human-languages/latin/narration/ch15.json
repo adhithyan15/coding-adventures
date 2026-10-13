@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b05f6e282e1db884",
+  "sourceHash": "fnv1a64:1937041eeb3c94cc",
   "lessons": [
     {
       "id": "LA-C15-tempestas-pluit",
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de123414311f149",
+      "sourceHash": "fnv1a64:956a2996c5dea2dd",
       "notice": null,
       "blocks": [
         {
@@ -197,7 +197,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pluit is a form of pluō \"I rain\", usually traced to Proto-Indo-European pleweti, glossed \"falls like rain\" (EtymDB 2.1). calor \"heat\" was built inside Latin on caleō \"I am warm\" (Lewis & Short). sōl \"sun\" is inherited, usually traced to soh2wl, \"sun\" (EtymDB 2.1), a cousin of English sun."
+              "text": "pluit is a form of pluō \"I rain\", usually traced to Proto-Indo-European pleweti (EtymDB 2.1), from a root plew-, \"to flow, to float\". calor \"heat\" was built inside Latin on caleō \"I am warm\" (Lewis & Short). sōl \"sun\" is inherited, usually traced to soh2wl, \"sun\" (EtymDB 2.1), a cousin of English sun."
             }
           ]
         },

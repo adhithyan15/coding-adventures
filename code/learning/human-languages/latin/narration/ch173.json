@@ -4,7 +4,7 @@
   "chapter": 173,
   "title": "Health, Brain, Lung, Liver, Kidney",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ca6b40fc14e97f8d",
+  "sourceHash": "fnv1a64:e0799e24b4d8f7ea",
   "lessons": [
     {
       "id": "LA-C173-valetudo",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fe41945261bf4e3",
+      "sourceHash": "fnv1a64:3f6fff65c47ef2f0",
       "notice": null,
       "blocks": [
         {

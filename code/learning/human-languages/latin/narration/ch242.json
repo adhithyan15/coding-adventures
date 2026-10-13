@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "Few, All, Whole, Others, Other",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:878ee472cd245063",
+  "sourceHash": "fnv1a64:628964294b03fe1c",
   "lessons": [
     {
       "id": "LA-C242-pauci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:429d301211898077",
+      "sourceHash": "fnv1a64:8200374e7b5455cc",
       "notice": null,
       "blocks": [
         {

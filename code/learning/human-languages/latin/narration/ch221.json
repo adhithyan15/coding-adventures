@@ -4,7 +4,7 @@
   "chapter": 221,
   "title": "Rule, Difference, Outcome, Fortune, Accident",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd85b8770fa8b5d1",
+  "sourceHash": "fnv1a64:a67419570409383b",
   "lessons": [
     {
       "id": "LA-C221-regula",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8d2a081324c2dc7",
+      "sourceHash": "fnv1a64:48bd8d4b7c0f4007",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "discrīmen is contracted from older discerimen (Lewis & Short), from discernō, \"to separate, to distinguish\", with -men, an ending for a result: a dividing line, then a turning point."
+              "text": "discrīmen is built on crī-, the root of discernō, \"to separate, to distinguish\" (Lewis & Short), also seen in crīmen, \"a charge\", with -men, an ending for a result: a dividing line, then a turning point."
             }
           ]
         },

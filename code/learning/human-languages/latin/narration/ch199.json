@@ -4,7 +4,7 @@
   "chapter": 199,
   "title": "To compare, To persuade, To blame, To share, To avoid",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b85dcee91179b06e",
+  "sourceHash": "fnv1a64:cb59adea359b309d",
   "lessons": [
     {
       "id": "LA-C199-comparo",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6257102697454abc",
+      "sourceHash": "fnv1a64:bec3178f3094a090",
       "notice": null,
       "blocks": [
         {

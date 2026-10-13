@@ -13,7 +13,7 @@ gloss: "formerly, at one time"
 concept_tag: LA-TEMP208-QUONDAM
 prerequisites: [LA-C208-postremo, LA-C208-illico]
 sounds: []
-roots: [quondam-latin, cum-latin]
+roots: [quondam-latin, qui-latin]
 etymology_hook: "quondam 'formerly' — old quom 'when' + the pointing ending -dam"
 duration:
   max_seconds: 200

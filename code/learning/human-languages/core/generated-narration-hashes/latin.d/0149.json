@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 149,
-  "sourceHash": "fnv1a64:6e21b654954a1afd",
+  "sourceHash": "fnv1a64:d2153ff5318b22b6",
   "lessonIds": [
     "LA-C149-fuscus",
     "LA-C149-canus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch149.txt",
   "json": "latin/narration/ch149.json",
-  "textHash": "fnv1a64:9fecb40b36271fe4",
-  "jsonHash": "fnv1a64:79c23b8f5f561e34",
+  "textHash": "fnv1a64:16eeb2e9f90cdcd3",
+  "jsonHash": "fnv1a64:cd6fa6f5deab17b4",
   "findings": []
 }

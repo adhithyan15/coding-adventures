@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Rich, Poor, Foolish, Enough, Too Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4d4e16bf77d43696",
+  "sourceHash": "fnv1a64:769dc923210018b1",
   "lessons": [
     {
       "id": "LA-C98-dives",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b32a5139a9d7980",
+      "sourceHash": "fnv1a64:debd3c13889aaabe",
       "notice": null,
       "blocks": [
         {

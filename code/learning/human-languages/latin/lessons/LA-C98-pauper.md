@@ -13,7 +13,7 @@ gloss: "poor"
 concept_tag: LA-DIVES-PAUPER
 prerequisites: [LA-C97-sapiens, LA-C98-dives]
 sounds: []
-roots: [pauper-latin, paucus-latin, parere]
+roots: [pauper-latin, paucus-latin, parere-bear-latin]
 etymology_hook: "pauper 'poor' — usually explained as pau- 'little' + the root of pariō: producing little"
 duration:
   max_seconds: 200

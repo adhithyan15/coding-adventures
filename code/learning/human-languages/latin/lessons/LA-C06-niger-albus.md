@@ -13,7 +13,7 @@ sounds: [macron-long-vowel]
 roots: [niger-latin, albus-latin, ater-latin, candidus-latin]
 etymology_hook: "niger and albus each had a brightness-twin — ater 'dull black' vs niger 'gleaming black', albus 'dull white' vs candidus 'shining white' — a distinction Romance mostly dropped"
 duration:
-  max_seconds: 291
+  max_seconds: 286
 requires:
   knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
 introduces:
@@ -72,7 +72,7 @@ being how Latin-descended languages sort black and white.
 ## The words, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**niger** has no agreed origin outside Latin. *albus* "white" is inherited, usually traced to Proto-Indo-European *\*h2elbhos*, "white" (EtymDB 2.1), with Umbrian *alfu* "white" as a close cousin (Lewis & Short). *āter* "dull black" may come from a root for "fire" (EtymDB 2.1), and *candidus* "shining white" was built on *candeō* "I shine" (EtymDB 2.1).
+**niger** has no agreed origin outside Latin. *albus* "white" is inherited, usually traced to Proto-Indo-European *\*h2elbhos*, "white" (EtymDB 2.1). *āter* "dull black" may come from a root for "fire" (EtymDB 2.1), and *candidus* "shining white" was built on *candeō* "I shine" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02, LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02] -->

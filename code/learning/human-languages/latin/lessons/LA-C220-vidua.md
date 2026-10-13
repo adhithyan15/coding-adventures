@@ -13,7 +13,7 @@ gloss: "a widow"
 concept_tag: LA-RES220-VIDUA
 prerequisites: [LA-C220-advena, LA-C220-adulescens]
 sounds: []
-roots: [vidua-latin]
+roots: [viduus-latin]
 etymology_hook: "vidua 'widow' — inherited, usually traced to PIE *h1widhewh2; English widow is a cousin"
 duration:
   max_seconds: 200

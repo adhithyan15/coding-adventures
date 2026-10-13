@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 259,
-  "sourceHash": "fnv1a64:b3c74ee66a167a49",
+  "sourceHash": "fnv1a64:2f51842a65d928f0",
   "lessonIds": [
     "LA-C259-oro",
     "LA-C259-commendo",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch259.txt",
   "json": "latin/narration/ch259.json",
   "textHash": "fnv1a64:c5bf652497deda78",
-  "jsonHash": "fnv1a64:3253a19a86f2e31f",
+  "jsonHash": "fnv1a64:74b45e72ccf90e99",
   "findings": []
 }

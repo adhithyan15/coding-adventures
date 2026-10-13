@@ -13,7 +13,7 @@ sounds: [macron-long-vowel]
 roots: [medius-latin, dies-latin, nox-latin]
 etymology_hook: "medius diēs 'mid-day' and media nox 'mid-night' survived at wildly different rates: Spanish kept both halves fully alive, French kept nox/nuit but wore diēs/-di to a fossil, and English's OWN word for noon isn't even this phrase — it's nōna hōra, 'the ninth hour,' which drifted from 3pm to midday"
 duration:
-  max_seconds: 270
+  max_seconds: 265
 requires:
   knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
 introduces:
@@ -71,7 +71,7 @@ and simply replaced by another Latin phrase altogether.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**medius diēs** joins two inherited words. *medius* "middle" is usually traced to Proto-Indo-European *\*medhyos*, "middle" (EtymDB 2.1), a cousin of English mid. You met *diēs* "day" with the weekday names; *nox* "night" gets its own lesson later.
+**medius diēs** joins two inherited words: *diēs* "day", met with the weekday names, and *medius* "middle", usually traced to Proto-Indo-European *\*medhyos*, "middle" (EtymDB 2.1), a cousin of English mid.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->

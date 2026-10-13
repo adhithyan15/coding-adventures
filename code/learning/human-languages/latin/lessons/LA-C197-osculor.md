@@ -13,7 +13,7 @@ gloss: "to kiss"
 concept_tag: LA-VERB-OSCULOR
 prerequisites: [LA-C196-nemus, LA-C196-lucus]
 sounds: []
-roots: [osculari-latin, os-latin]
+roots: [osculari-latin, os-mouth-latin]
 etymology_hook: "ōsculor 'to kiss' — built on ōsculum 'little mouth, kiss', from ōs 'mouth'"
 duration:
   max_seconds: 200

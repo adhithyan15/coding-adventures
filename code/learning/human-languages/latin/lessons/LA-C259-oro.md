@@ -13,7 +13,7 @@ gloss: "to pray, to beg"
 concept_tag: LA-VERB-ORO
 prerequisites: [LA-C258-sileo, LA-C258-metuo]
 sounds: []
-roots: [orare-latin, os-latin]
+roots: [orare-latin, os-mouth-latin]
 etymology_hook: "ōrō 'to pray' — often linked with ōs 'mouth'; uncertain"
 duration:
   max_seconds: 200

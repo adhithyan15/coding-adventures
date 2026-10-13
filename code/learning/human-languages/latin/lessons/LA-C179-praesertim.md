@@ -13,7 +13,7 @@ gloss: "especially"
 concept_tag: LA-CAUSA179-PRAESERTIM
 prerequisites: [LA-C178-etsi, LA-C178-nisi]
 sounds: []
-roots: [praesertim-latin, serere-latin]
+roots: [praesertim-latin, serere-join-latin]
 etymology_hook: "praesertim 'especially' — built on praeserō 'to put in front': placed first"
 duration:
   max_seconds: 200

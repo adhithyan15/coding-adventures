@@ -14,7 +14,7 @@ concept_tag: LA-QUAL269-EBRIUS
 prerequisites: [LA-C268-adversus, LA-C269-maestus]
 sounds: []
 roots: [ebrius-latin]
-etymology_hook: "ēbrius 'drunk' — probably from PIE *h1egwh- 'to drink'"
+etymology_hook: "ēbrius 'drunk' — perhaps from PIE *h1egwh- 'to drink'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [LA-C269-maestus]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ēbrius** is probably inherited, from a Proto-Indo-European root *\*h1egwh-*, "to drink" (EtymDB 2.1); Lewis & Short still called it doubtful. Its opposite is *sōbrius*, "sober".
+**ēbrius** may be inherited, from a Proto-Indo-European root *\*h1egwh-*, "to drink" (EtymDB 2.1); Lewis & Short still called it doubtful. Its opposite is *sōbrius*, "sober".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Cherry, Plum, Cabbage, Leek, Porridge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a708bbf870f03763",
+  "sourceHash": "fnv1a64:713011215392c517",
   "lessons": [
     {
       "id": "LA-C279-cerasum",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:000d1ff5e3ff0b43",
+      "sourceHash": "fnv1a64:f3883e7958464d1d",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "porrum is inherited, usually traced to Proto-Indo-European prso-, \"leek\" (EtymDB 2.1); Greek prason, \"leek\", is a cousin (Lewis & Short)."
+              "text": "porrum is usually traced to Proto-Indo-European prso-, \"leek\" (EtymDB 2.1), which makes Greek prason, \"leek\", a cousin (Lewis & Short); some think both are instead loans from a lost language."
             }
           ]
         },

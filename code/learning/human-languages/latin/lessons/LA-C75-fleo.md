@@ -46,7 +46,7 @@ reviews_of: [LA-C75-rideo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fleō** is inherited through Proto-Italic *\*flēō*, "to weep", and is probably traced to Proto-Indo-European *\*bhleh1-*, "to cry out, to howl" (EtymDB 2.1).
+**fleō** is inherited through Proto-Italic *\*flēō*, "to weep", and probably goes back to Proto-Indo-European *\*bhleh1-*, "to cry out, to howl" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

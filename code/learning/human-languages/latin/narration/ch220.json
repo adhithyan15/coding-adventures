@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Maidservant, Freedman, Newcomer, Young person, Widow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:707527eba2b35ba3",
+  "sourceHash": "fnv1a64:ab25db2694c2f473",
   "lessons": [
     {
       "id": "LA-C220-ancilla",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:305991800e8d0361",
+      "sourceHash": "fnv1a64:7b5523f909024ec0",
       "notice": null,
       "blocks": [
         {

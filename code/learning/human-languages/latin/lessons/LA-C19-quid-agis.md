@@ -13,7 +13,7 @@ sounds: [qu-kw-sound]
 roots: [agere-latin]
 etymology_hook: "quid agis? literally asks 'what are you doing?' and is repeatedly attested as a colloquial wellbeing question in Roman comedy"
 duration:
-  max_seconds: 205
+  max_seconds: 193
 requires:
   knowledge: [LA-PHONO-VALE-01, LA-GRAMMAR-VALE-03, LA-PHONO-ITA-NON-01, LA-LEX-ITA-NON-03]
 introduces:
@@ -52,7 +52,7 @@ comfortable.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**quid agis** pairs two inherited words. *quid* "what" is usually traced to the Proto-Indo-European question stem *\*kwis* (EtymDB 2.1). *agis* "you do" is a form of *agō* "I drive, I do", usually traced to *\*h2eg-*, "to lead" (EtymDB 2.1); Greek *agō* "I lead" is its cousin (Lewis & Short).
+**quid agis** pairs two inherited words: *quid* "what", from the Proto-Indo-European question stem *\*kwis*, and *agis* "you do", from *agō*, usually traced to *\*h2eg-*, "to drive" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-VALE-01, LA-GRAMMAR-VALE-03, LA-PHONO-ITA-NON-01, LA-LEX-ITA-NON-03, LA-PRAGMATICS-QUID-AGIS-01] -->

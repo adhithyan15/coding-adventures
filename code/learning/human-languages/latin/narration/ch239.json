@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "At the same time, Perhaps, Also, As if, Because of",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:46078c8a5eb3c963",
+  "sourceHash": "fnv1a64:6ca006ba77a63789",
   "lessons": [
     {
       "id": "LA-C239-simul",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93d607d9b8767be2",
+      "sourceHash": "fnv1a64:5d645ab3f9708f1d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "propter is contracted from older propiter, built on prope, \"near\" (Lewis & Short): near by, then because of."
+              "text": "propter is contracted from an older propiter, built on prope, \"near\" (Lewis & Short): near by, then because of."
             }
           ]
         },

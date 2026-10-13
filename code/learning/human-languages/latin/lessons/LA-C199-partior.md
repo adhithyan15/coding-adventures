@@ -13,7 +13,7 @@ gloss: "to share, to divide"
 concept_tag: LA-VERB-PARTIOR
 prerequisites: [LA-C199-persuadeo, LA-C199-reprehendo]
 sounds: []
-roots: [partiri-latin, pars-latin]
+roots: [partire-latin, pars-latin]
 etymology_hook: "partior 'to share' — built on pars, partis 'a part'"
 duration:
   max_seconds: 200

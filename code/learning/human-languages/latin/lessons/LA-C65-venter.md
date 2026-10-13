@@ -14,7 +14,7 @@ concept_tag: LA-CORPUS3-VENTER
 prerequisites: [LA-C64-sanguis, LA-C65-capillus]
 sounds: []
 roots: [latin-venter]
-etymology_hook: "venter 'belly' — probably inherited, from PIE *wendtri- 'belly'; English ventriloquist, 'belly-speaker'"
+etymology_hook: "venter 'belly' — perhaps inherited, from PIE *wendtri- 'belly'; English ventriloquist, 'belly-speaker'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [LA-C65-capillus]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**venter** is probably inherited, from a Proto-Indo-European *\*wendtri-*, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
+**venter** may be inherited, from a Proto-Indo-European *\*wendtri-*, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

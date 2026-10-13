@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Wedding, Husband or wife, Parent, Grandson, Granddaughter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d637cf6cea96925c",
+  "sourceHash": "fnv1a64:238e9363d2562bd9",
   "lessons": [
     {
       "id": "LA-C273-nuptiae",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a19b47654ae90ffc",
+      "sourceHash": "fnv1a64:17c3956689390ccc",
       "notice": null,
       "blocks": [
         {

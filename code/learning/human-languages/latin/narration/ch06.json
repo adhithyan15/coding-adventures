@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:09126fcc56444dc3",
+  "sourceHash": "fnv1a64:04b3142a252602a8",
   "lessons": [
     {
       "id": "LA-C06-niger-albus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fae38e2670f2cd1",
+      "sourceHash": "fnv1a64:c177839843d24691",
       "notice": null,
       "blocks": [
         {
@@ -80,7 +80,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "niger has no agreed origin outside Latin. albus \"white\" is inherited, usually traced to Proto-Indo-European h2elbhos, \"white\" (EtymDB 2.1), with Umbrian alfu \"white\" as a close cousin (Lewis & Short). āter \"dull black\" may come from a root for \"fire\" (EtymDB 2.1), and candidus \"shining white\" was built on candeō \"I shine\" (EtymDB 2.1)."
+              "text": "niger has no agreed origin outside Latin. albus \"white\" is inherited, usually traced to Proto-Indo-European h2elbhos, \"white\" (EtymDB 2.1). āter \"dull black\" may come from a root for \"fire\" (EtymDB 2.1), and candidus \"shining white\" was built on candeō \"I shine\" (EtymDB 2.1)."
             }
           ]
         },

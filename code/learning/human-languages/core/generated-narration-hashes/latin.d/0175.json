@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 175,
-  "sourceHash": "fnv1a64:b00456e22f04134d",
+  "sourceHash": "fnv1a64:1877e46933c53369",
   "lessonIds": [
     "LA-C175-tandem",
     "LA-C175-posthac",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch175.txt",
   "json": "latin/narration/ch175.json",
   "textHash": "fnv1a64:85d0827fae003221",
-  "jsonHash": "fnv1a64:e2cab93d15163733",
+  "jsonHash": "fnv1a64:d652c32e1d4fcebf",
   "findings": []
 }

@@ -13,7 +13,7 @@ gloss: "few"
 concept_tag: LA-QUAL242-PAUCI
 prerequisites: [LA-C241-caelebs, LA-C241-pluvius]
 sounds: []
-roots: [pauci-latin, paucus-latin]
+roots: [paucus-latin]
 etymology_hook: "paucī 'few' — plural of paucus, from PIE *peh2w- 'few'; English few is a cousin"
 duration:
   max_seconds: 200

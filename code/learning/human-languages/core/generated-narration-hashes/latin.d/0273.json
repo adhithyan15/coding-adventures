@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 273,
-  "sourceHash": "fnv1a64:d637cf6cea96925c",
+  "sourceHash": "fnv1a64:238e9363d2562bd9",
   "lessonIds": [
     "LA-C273-nuptiae",
     "LA-C273-coniunx",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch273.txt",
   "json": "latin/narration/ch273.json",
   "textHash": "fnv1a64:0e5b7e073140f3eb",
-  "jsonHash": "fnv1a64:673e24b383cab49e",
+  "jsonHash": "fnv1a64:7f0fd8f71b0685ba",
   "findings": []
 }

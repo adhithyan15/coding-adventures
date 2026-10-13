@@ -13,7 +13,7 @@ gloss: "face to face"
 concept_tag: LA-LOC238-CORAM
 prerequisites: [LA-C238-citra, LA-C238-apud]
 sounds: []
-roots: [coram-latin, os-latin]
+roots: [coram-latin, os-mouth-latin]
 etymology_hook: "cōram 'face to face' — usually linked with ōs, ōris 'face' + con-"
 duration:
   max_seconds: 200

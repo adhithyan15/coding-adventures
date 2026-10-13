@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Neck, Shoulder, Knee, Heart",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d1a438e6fad64d8",
+  "sourceHash": "fnv1a64:d9014d5fc1158442",
   "lessons": [
     {
       "id": "LA-C64-collum",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c47f2f08eb94497",
+      "sourceHash": "fnv1a64:f81a125b07de4c6b",
       "notice": null,
       "blocks": [
         {

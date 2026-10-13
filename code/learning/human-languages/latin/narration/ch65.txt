@@ -45,7 +45,7 @@ You'll want to know: venter, ventris.
 venter, ventris — "the belly". A ventriloquist speaks from the belly.
 
 The word, taken apart.
-venter is probably inherited, from a Proto-Indo-European wendtri-, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
+venter may be inherited, from a Proto-Indo-European wendtri-, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: frōns, frontis.
 frōns, frontis — "the forehead, the front". English front and frontier.
 
 The word, taken apart.
-frōns, frontis, is usually traced to Proto-Indo-European bhront-, "forehead" (EtymDB 2.1). It is a different word from frōns, frondis, "leafy branches".
+frōns, frontis, is often traced to Proto-Indo-European bhront-, "forehead" (EtymDB 2.1), but the link is not certain. It is a different word from frōns, frondis, "leafy branches".
 
 What you've built.
 One more word for this chapter.

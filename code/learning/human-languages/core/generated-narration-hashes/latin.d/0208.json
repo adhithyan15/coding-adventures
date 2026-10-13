@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 208,
-  "sourceHash": "fnv1a64:0046989f086cabe0",
+  "sourceHash": "fnv1a64:be95cfe60dc99c8b",
   "lessonIds": [
     "LA-C208-denique",
     "LA-C208-postremo",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch208.txt",
   "json": "latin/narration/ch208.json",
   "textHash": "fnv1a64:6a2d0365b93cfd5a",
-  "jsonHash": "fnv1a64:49e16dbf4ed8b29e",
+  "jsonHash": "fnv1a64:048728a97753e299",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 199,
-  "sourceHash": "fnv1a64:b85dcee91179b06e",
+  "sourceHash": "fnv1a64:cb59adea359b309d",
   "lessonIds": [
     "LA-C199-comparo",
     "LA-C199-persuadeo",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch199.txt",
   "json": "latin/narration/ch199.json",
   "textHash": "fnv1a64:4fb33742a5899f28",
-  "jsonHash": "fnv1a64:9966c42dfba5f123",
+  "jsonHash": "fnv1a64:41c178c48343ceb9",
   "findings": []
 }

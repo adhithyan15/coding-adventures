@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 279,
-  "sourceHash": "fnv1a64:a708bbf870f03763",
+  "sourceHash": "fnv1a64:713011215392c517",
   "lessonIds": [
     "LA-C279-cerasum",
     "LA-C279-prunum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch279.txt",
   "json": "latin/narration/ch279.json",
-  "textHash": "fnv1a64:b897d0c8f16fcb0f",
-  "jsonHash": "fnv1a64:cb2ff3245e3d686b",
+  "textHash": "fnv1a64:321830aec7b779fe",
+  "jsonHash": "fnv1a64:2febba51a1662d19",
   "findings": []
 }

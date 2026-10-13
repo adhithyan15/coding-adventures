@@ -14,7 +14,7 @@ concept_tag: LA-VALE173-REN
 prerequisites: [LA-C173-pulmo, LA-C173-iecur]
 sounds: []
 roots: [ren-latin]
-etymology_hook: "rēn 'kidney' — inherited from Proto-Italic *hrēn; deeper origin unknown"
+etymology_hook: "rēn 'kidney' — probably inherited from Proto-Italic *hrēn; deeper origin unknown"
 duration:
   max_seconds: 200
 requires:

@@ -4,7 +4,7 @@
   "chapter": 244,
   "title": "Travelling carriage, Broad street, Aqueduct, Public baths, Amphitheatre",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f33a2c910ec9f2c0",
+  "sourceHash": "fnv1a64:3ab3d6989cbf1227",
   "lessons": [
     {
       "id": "LA-C244-raeda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0068b1a07200758",
+      "sourceHash": "fnv1a64:cff4415050ab0ce0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "raeda came from Gaulish: Quintilian counts raeda among the Gallic words in Latin (Lewis & Short). Its Celtic root is the one for riding, a cousin of English ride."
+              "text": "raeda was probably borrowed from Gaulish: Quintilian counts raeda among the Gallic words in Latin (Lewis & Short). Its Celtic root is the one for riding, a cousin of English ride."
             }
           ]
         },

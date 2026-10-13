@@ -46,7 +46,7 @@ reviews_of: [LA-C243-beatus]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**raeda** came from Gaulish: Quintilian counts *raeda* among the Gallic words in Latin (Lewis & Short). Its Celtic root is the one for riding, a cousin of English *ride*.
+**raeda** was probably borrowed from Gaulish: Quintilian counts *raeda* among the Gallic words in Latin (Lewis & Short). Its Celtic root is the one for riding, a cousin of English *ride*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

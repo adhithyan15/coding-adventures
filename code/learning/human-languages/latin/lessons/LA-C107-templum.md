@@ -46,7 +46,7 @@ reviews_of: [LA-C107-forum]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**templum** first meant a space marked out for watching the sky. Its origin is uncertain: Lewis & Short link it with Greek *temnō*, "to cut", and *temenos*, "a sacred precinct"; EtymDB 2.1 prefers a root *\*temp-*, "to stretch".
+**templum** first meant a space marked out for watching the sky. Its origin is uncertain: Lewis & Short link it with Greek *temnō*, "to cut", and *temenos*, "a sacred precinct"; EtymDB 2.1 traces it to a root *\*temp-*, "to stretch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

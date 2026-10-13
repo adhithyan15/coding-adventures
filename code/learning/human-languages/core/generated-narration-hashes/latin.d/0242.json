@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 242,
-  "sourceHash": "fnv1a64:878ee472cd245063",
+  "sourceHash": "fnv1a64:628964294b03fe1c",
   "lessonIds": [
     "LA-C242-pauci",
     "LA-C242-omnis",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch242.txt",
   "json": "latin/narration/ch242.json",
   "textHash": "fnv1a64:29c3e4e3e7d659db",
-  "jsonHash": "fnv1a64:ea530abe1b0e7b03",
+  "jsonHash": "fnv1a64:b77d45a217b4b33f",
   "findings": []
 }

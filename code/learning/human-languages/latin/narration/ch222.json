@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Gold, Silver, Bronze, Iron, Metal lead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:73ccc9289f436462",
+  "sourceHash": "fnv1a64:d588fb71ef0d4fdb",
   "lessons": [
     {
       "id": "LA-C222-aurum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89a04f1ef6135ecb",
+      "sourceHash": "fnv1a64:9453baf8abc4b073",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aurum is inherited; Old Latin had ausum, \"gold\", usually traced to Proto-Indo-European h2eh2usom, \"a glow\", from h2ews-, \"to dawn, to grow light\" (EtymDB 2.1), the root of aurōra, \"dawn\"."
+              "text": "aurum is inherited, usually traced to Proto-Indo-European h2eh2usom, \"a glow\", from h2ews-, \"to dawn, to grow light\" (EtymDB 2.1), the root of aurōra, \"dawn\". Festus records a Sabine ausum, \"gold\", which keeps the older s (Lewis & Short)."
             }
           ]
         },

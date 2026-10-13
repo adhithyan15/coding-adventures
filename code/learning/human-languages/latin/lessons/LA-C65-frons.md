@@ -14,7 +14,7 @@ concept_tag: LA-CORPUS3-FRONS
 prerequisites: [LA-C65-venter, LA-C65-tergum]
 sounds: []
 roots: [frons-latin]
-etymology_hook: "frōns 'forehead' — usually traced to PIE *bhront- 'forehead'; English front comes from it"
+etymology_hook: "frōns 'forehead' — often traced to PIE *bhront- 'forehead'; English front comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [LA-C65-tergum]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**frōns**, *frontis*, is usually traced to Proto-Indo-European *\*bhront-*, "forehead" (EtymDB 2.1). It is a different word from *frōns*, *frondis*, "leafy branches".
+**frōns**, *frontis*, is often traced to Proto-Indo-European *\*bhront-*, "forehead" (EtymDB 2.1), but the link is not certain. It is a different word from *frōns*, *frondis*, "leafy branches".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

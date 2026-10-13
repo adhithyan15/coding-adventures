@@ -46,7 +46,7 @@ reviews_of: [LA-C187-libertas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**glōria** has no sure origin. Lewis & Short connect it with Greek *kleos*, "fame", and EtymDB 2.1 records an older *gnōria*. Some tie that form to the root of *nōscō*, "to know"; neither account is settled.
+**glōria** has no sure origin. Lewis & Short connect it with Greek *kleos*, "fame", and EtymDB 2.1 records a reconstructed older *\*gnōria*. Some tie that form to the root of *nōscō*, "to know"; neither account is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

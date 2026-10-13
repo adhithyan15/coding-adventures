@@ -33,6 +33,13 @@ The 1,090 generated word lessons (LA-C63-bracchium through LA-C280-vallum, in se
   - LA-C36-salve-post-meridiem 240 → 255
 
   Seven of the eleven (C06, C12, both C19 lessons, C22, C30, C34) already computed above their declared time before this change.
+- **Review corrections.** An independent review read all 1,110 entries against EtymDB 2.1, Lewis & Short and the standard handbooks (de Vaan, Walde-Hofmann, Ernout-Meillet). It found 11 substantive errors (1.0%) and fixed them. No loan was found with the wrong donor.
+  - Reconstructions and glosses: *pluō*'s root *\*plew-* is "to flow, to float", not EtymDB's "falls like rain". Proto-Italic *\*walēō* means "to be strong". *unguis* is from *\*h3nogwh-* (the *gu* needs the w). The garbled *\*ker* is dropped from *cor*'s hook. The unattested *gnōria*, *propiter* and *sentientia* are now starred.
+  - Sources: *ausum* is Sabine, not Old Latin (Festus, via Lewis & Short; LA-C222-aurum, LA-C149-aureus). *raeda* keeps Lewis & Short's "probably" Celtic. EtymDB only records *templum*'s *\*temp-*; it does not "prefer" it.
+  - Derivations: *discrīmen* is built on the root *crī-*, not contracted from *discerimen*. *pūblicus* comes from the attested *poplicus*.
+  - Hedges: these are now "perhaps" or "often": *frōns*, *venter*, *passer*, *ēbrius*, *rēn*'s hook, and *porrum* (possibly a loan). *volup* now gives Lewis & Short's own comparison, Greek *elpis*, in place of an unsourced "probably from the root of *volō*".
+  - Durations: five hand-written blocks were tightened, and their declared time lowered to the new computed length: C06 291 → 286, C12 270 → 265, C19-quid-agis 205 → 193, C19-ut-vales 221 → 216, C36 255 → 249.
+  - Roots: three slugs merged homographs. `os-latin` is *os* "bone", so *ōs* "mouth" in cōram, ōrō and ōsculor is now `os-mouth-latin`. `parere` is *pāreō*, so *pariō* in parēns and pauper is now `parere-bear-latin`. `cum-latin` is *cum* "with", so quondam's *quom* is now `qui-latin`. Two more gave one word two senses: *serō* "join" in praesertim is now `serere-join-latin`, and avārus (*aveō* "crave") is now `avidus-latin`, not avē's `avere`. Five new slugs split an etymon the Romance tracks spell otherwise, and now use those spellings: `scala-latin`, `paucus-latin`, `viduus-latin`, `partire-latin`, and `subitus-latin` (added).
 
 ## Fixed — lessons stop leaning on words a later lesson teaches
 

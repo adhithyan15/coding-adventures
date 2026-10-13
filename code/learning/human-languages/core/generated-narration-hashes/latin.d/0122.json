@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 122,
-  "sourceHash": "fnv1a64:f2f431ba4b1a7fbf",
+  "sourceHash": "fnv1a64:dffd343495d47e0a",
   "lessonIds": [
     "LA-C122-clavus",
     "LA-C122-malleus",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch122.txt",
   "json": "latin/narration/ch122.json",
   "textHash": "fnv1a64:b5e918a6412200e6",
-  "jsonHash": "fnv1a64:d4c8b1510f3f942d",
+  "jsonHash": "fnv1a64:1265598fbe842617",
   "findings": []
 }

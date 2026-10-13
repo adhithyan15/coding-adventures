@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Nice to Meet You",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9649d304fa02ff85",
+  "sourceHash": "fnv1a64:57e98dc94354ff4a",
   "lessons": [
     {
       "id": "LA-C21-volup-est-convenisse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01f2d7b2cf6cd432",
+      "sourceHash": "fnv1a64:2231cb17207d5a28",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "volup est convēnisse is built from Latin parts. volup \"pleasant\" is shortened from an older volupis and tied to voluptās \"pleasure\" (Lewis & Short), probably from the root of volō \"I want\". convēnisse comes from conveniō \"I meet\", made of con- \"together\" and veniō \"I come\" (EtymDB 2.1); veniō is usually traced to Proto-Indo-European gwem-, \"to step\" (EtymDB 2.1)."
+              "text": "volup est convēnisse is built from Latin parts. volup \"pleasant\" goes with voluptās \"pleasure\"; Lewis & Short connect both with Greek elpis \"hope\" and compare volō \"I want\", a link still made but not certain. convēnisse comes from conveniō \"I meet\", made of con- \"together\" and veniō \"I come\" (EtymDB 2.1); veniō is usually traced to Proto-Indo-European gwem-, \"to step\" (EtymDB 2.1)."
             }
           ]
         },

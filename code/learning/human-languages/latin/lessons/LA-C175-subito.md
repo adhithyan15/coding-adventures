@@ -13,7 +13,7 @@ gloss: "suddenly"
 concept_tag: LA-TEMP175-SUBITO
 prerequisites: [LA-C175-posthac, LA-C175-adhuc]
 sounds: []
-roots: [subito-latin, subire-latin]
+roots: [subito-latin, subitus-latin, subire-latin]
 etymology_hook: "subitō 'suddenly' — from subitus 'sudden', the participle of subeō 'to come up'"
 duration:
   max_seconds: 200

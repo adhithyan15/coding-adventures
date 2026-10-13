@@ -46,7 +46,7 @@ reviews_of: [LA-C221-regula]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**discrīmen** is contracted from older *discerimen* (Lewis & Short), from *discernō*, "to separate, to distinguish", with *-men*, an ending for a result: a dividing line, then a turning point.
+**discrīmen** is built on *crī-*, the root of *discernō*, "to separate, to distinguish" (Lewis & Short), also seen in *crīmen*, "a charge", with *-men*, an ending for a result: a dividing line, then a turning point.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

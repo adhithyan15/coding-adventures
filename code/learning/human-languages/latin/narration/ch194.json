@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "Opinion, Conversation, Speech, Rumour, History",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:707a37df619b934f",
+  "sourceHash": "fnv1a64:41abaee971121e6a",
   "lessons": [
     {
       "id": "LA-C194-sententia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7f2010a37577ea1",
+      "sourceHash": "fnv1a64:b16fc974313dcfa8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sententia is shortened from sentientia, \"a feeling\" (Lewis & Short), built on sentiō, \"to feel, to think\": what one thinks."
+              "text": "sententia is shortened from an older sentientia, \"a feeling\" (Lewis & Short), built on sentiō, \"to feel, to think\": what one thinks."
             }
           ]
         },

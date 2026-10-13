@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Nail, Hammer, Saw, Axe, Ladder",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f2f431ba4b1a7fbf",
+  "sourceHash": "fnv1a64:dffd343495d47e0a",
   "lessons": [
     {
       "id": "LA-C122-clavus",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89ec789d37afcf47",
+      "sourceHash": "fnv1a64:2a8962a3bc60f558",
       "notice": null,
       "blocks": [
         {

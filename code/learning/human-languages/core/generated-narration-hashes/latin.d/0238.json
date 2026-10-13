@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 238,
-  "sourceHash": "fnv1a64:869b777f372a57d7",
+  "sourceHash": "fnv1a64:71eb72f609ac6bcd",
   "lessonIds": [
     "LA-C238-ultra",
     "LA-C238-citra",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch238.txt",
   "json": "latin/narration/ch238.json",
   "textHash": "fnv1a64:8b08980c6958b0c4",
-  "jsonHash": "fnv1a64:ea2e500c7fd3a12b",
+  "jsonHash": "fnv1a64:e81dc9f62d5a7c47",
   "findings": []
 }

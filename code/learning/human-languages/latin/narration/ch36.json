@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Good Afternoon",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b7f0dbb050ad59b5",
+  "sourceHash": "fnv1a64:d7872bf4bb78a720",
   "lessons": [
     {
       "id": "LA-C36-salve-post-meridiem",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14835edc363467e9",
+      "sourceHash": "fnv1a64:4949e22bd6af27b0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salvē you know from Chapter 1. The new word, pōmerīdiānus \"of the afternoon\", was built inside Latin from post \"after\" and merīdiānus \"of midday\" (Lewis & Short)."
+              "text": "pōmerīdiānus \"of the afternoon\" was built inside Latin from post \"after\" and merīdiānus \"of midday\" (Lewis & Short)."
             }
           ]
         },

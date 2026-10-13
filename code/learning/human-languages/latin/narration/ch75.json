@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Work, Sing, Dance, Laugh, Weep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa651364ee865849",
+  "sourceHash": "fnv1a64:7d8ed63509a7088e",
   "lessons": [
     {
       "id": "LA-C75-laboro",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0a1258be3601e9d",
+      "sourceHash": "fnv1a64:bf9fae31582bb921",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fleō is inherited through Proto-Italic flēō, \"to weep\", and is probably traced to Proto-Indo-European bhleh1-, \"to cry out, to howl\" (EtymDB 2.1)."
+              "text": "fleō is inherited through Proto-Italic flēō, \"to weep\", and probably goes back to Proto-Indo-European bhleh1-, \"to cry out, to howl\" (EtymDB 2.1)."
             }
           ]
         },

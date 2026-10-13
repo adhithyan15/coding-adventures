@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 221,
-  "sourceHash": "fnv1a64:dd85b8770fa8b5d1",
+  "sourceHash": "fnv1a64:a67419570409383b",
   "lessonIds": [
     "LA-C221-regula",
     "LA-C221-discrimen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch221.txt",
   "json": "latin/narration/ch221.json",
-  "textHash": "fnv1a64:0a68103da19f3b12",
-  "jsonHash": "fnv1a64:dc9ed32f97f3abb4",
+  "textHash": "fnv1a64:5f9274e76a76a034",
+  "jsonHash": "fnv1a64:22e8f5a1cd92d259",
   "findings": []
 }

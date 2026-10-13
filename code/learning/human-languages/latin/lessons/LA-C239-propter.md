@@ -14,7 +14,7 @@ concept_tag: LA-CAUSA239-PROPTER
 prerequisites: [LA-C239-quoque, LA-C239-quasi]
 sounds: []
 roots: [propter-latin, prope-latin]
-etymology_hook: "propter 'because of' — from older propiter, built on prope 'near'"
+etymology_hook: "propter 'because of' — from an older *propiter, built on prope 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [LA-C239-quasi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**propter** is contracted from older *propiter*, built on *prope*, "near" (Lewis & Short): near by, then because of.
+**propter** is contracted from an older *\*propiter*, built on *prope*, "near" (Lewis & Short): near by, then because of.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

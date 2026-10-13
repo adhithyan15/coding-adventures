@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "Beyond, On this side, At the house of, Face to face, By which way",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:869b777f372a57d7",
+  "sourceHash": "fnv1a64:71eb72f609ac6bcd",
   "lessons": [
     {
       "id": "LA-C238-ultra",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4b8bdab8fcc058a",
+      "sourceHash": "fnv1a64:6b683f601c4b32b8",
       "notice": null,
       "blocks": [
         {

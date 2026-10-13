@@ -13,7 +13,7 @@ gloss: "greedy"
 concept_tag: LA-QUAL269-AVARUS
 prerequisites: [LA-C269-ebrius, LA-C269-sobrius]
 sounds: []
-roots: [avarus-latin, avere]
+roots: [avarus-latin, avidus-latin]
 etymology_hook: "avārus 'greedy' — built on aveō 'to crave'; English avarice"
 duration:
   max_seconds: 200

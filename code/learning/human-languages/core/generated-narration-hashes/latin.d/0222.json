@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 222,
-  "sourceHash": "fnv1a64:73ccc9289f436462",
+  "sourceHash": "fnv1a64:d588fb71ef0d4fdb",
   "lessonIds": [
     "LA-C222-aurum",
     "LA-C222-argentum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch222.txt",
   "json": "latin/narration/ch222.json",
-  "textHash": "fnv1a64:d7120b9f6b6af259",
-  "jsonHash": "fnv1a64:60894921513465fc",
+  "textHash": "fnv1a64:89ef6d3c34409693",
+  "jsonHash": "fnv1a64:d808eb1f2d1f5503",
   "findings": []
 }

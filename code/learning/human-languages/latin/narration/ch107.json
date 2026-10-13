@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "City, Town, Forum, Temple, Shop",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d9dee4260aa732b",
+  "sourceHash": "fnv1a64:46ddacb138781122",
   "lessons": [
     {
       "id": "LA-C107-urbs",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4434650d601d07ff",
+      "sourceHash": "fnv1a64:ad7827bdfc498125",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "templum first meant a space marked out for watching the sky. Its origin is uncertain: Lewis & Short link it with Greek temnō, \"to cut\", and temenos, \"a sacred precinct\"; EtymDB 2.1 prefers a root temp-, \"to stretch\"."
+              "text": "templum first meant a space marked out for watching the sky. Its origin is uncertain: Lewis & Short link it with Greek temnō, \"to cut\", and temenos, \"a sacred precinct\"; EtymDB 2.1 traces it to a root temp-, \"to stretch\"."
             }
           ]
         },

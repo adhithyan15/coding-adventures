@@ -4,7 +4,7 @@
   "chapter": 208,
   "title": "Finally, Lastly, On the spot, Formerly, Long since",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0046989f086cabe0",
+  "sourceHash": "fnv1a64:be95cfe60dc99c8b",
   "lessons": [
     {
       "id": "LA-C208-denique",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3db1ccfbd60b484",
+      "sourceHash": "fnv1a64:845c197b16f427ba",
       "notice": null,
       "blocks": [
         {

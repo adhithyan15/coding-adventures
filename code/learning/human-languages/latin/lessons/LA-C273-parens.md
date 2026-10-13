@@ -13,7 +13,7 @@ gloss: "a parent"
 concept_tag: LA-RES273-PARENS
 prerequisites: [LA-C273-nuptiae, LA-C273-coniunx]
 sounds: []
-roots: [parens-latin, parere]
+roots: [parens-latin, parere-bear-latin]
 etymology_hook: "parēns 'parent' — the participle of pariō 'to give birth to'"
 duration:
   max_seconds: 200

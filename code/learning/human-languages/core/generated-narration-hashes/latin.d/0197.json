@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 197,
-  "sourceHash": "fnv1a64:88b1bac67019b4fa",
+  "sourceHash": "fnv1a64:2433976704b6265d",
   "lessonIds": [
     "LA-C197-osculor",
     "LA-C197-saluto",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch197.txt",
   "json": "latin/narration/ch197.json",
   "textHash": "fnv1a64:259417c24ebf636a",
-  "jsonHash": "fnv1a64:b2e86fbab61fb16c",
+  "jsonHash": "fnv1a64:7c9859afb64c1f9a",
   "findings": []
 }

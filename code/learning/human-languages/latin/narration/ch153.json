@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Cloudy, Windy, To build, To climb, To go down",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:308c16a4eb856f19",
+  "sourceHash": "fnv1a64:55e9c140a896d7a1",
   "lessons": [
     {
       "id": "LA-C153-nubilus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7f847bd7bb37899",
+      "sourceHash": "fnv1a64:6b10a2cb8cea09f1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nūbilus is built on nūbēs, \"a cloud\" (Lewis & Short), which is probably traced to Proto-Indo-European (s)newdh-, \"to cover\" (EtymDB 2.1)."
+              "text": "nūbilus is built on nūbēs, \"a cloud\" (Lewis & Short), which probably goes back to Proto-Indo-European (s)newdh-, \"to cover\" (EtymDB 2.1)."
             }
           ]
         },

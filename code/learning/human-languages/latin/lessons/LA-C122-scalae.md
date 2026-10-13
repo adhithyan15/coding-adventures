@@ -13,7 +13,7 @@ gloss: "a ladder, stairs"
 concept_tag: LA-THINGS122-SCALAE
 prerequisites: [LA-C122-serra, LA-C122-securis]
 sounds: []
-roots: [scalae-latin, scandere-latin]
+roots: [scala-latin, scandere-latin]
 etymology_hook: "scālae 'ladder, stairs' — usually derived from scandō 'to climb'"
 duration:
   max_seconds: 200

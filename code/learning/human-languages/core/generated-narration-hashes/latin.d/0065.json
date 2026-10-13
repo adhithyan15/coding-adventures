@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 65,
-  "sourceHash": "fnv1a64:8e93c9259c543089",
+  "sourceHash": "fnv1a64:1f331f2672568b9e",
   "lessonIds": [
     "LA-C65-capillus",
     "LA-C65-venter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch65.txt",
   "json": "latin/narration/ch65.json",
-  "textHash": "fnv1a64:0d1e3e84c90b01f1",
-  "jsonHash": "fnv1a64:d3c1cca8ac631bec",
+  "textHash": "fnv1a64:6ed255eaf97e59b2",
+  "jsonHash": "fnv1a64:e34b466a0c855457",
   "findings": []
 }

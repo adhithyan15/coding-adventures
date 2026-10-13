@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Peace, Leader, Victory, Freedom, Glory",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:47db871758a10546",
+  "sourceHash": "fnv1a64:185a7146f049211c",
   "lessons": [
     {
       "id": "LA-C187-pax",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57233e1c646ef488",
+      "sourceHash": "fnv1a64:bc651a7f395463a6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "glōria has no sure origin. Lewis & Short connect it with Greek kleos, \"fame\", and EtymDB 2.1 records an older gnōria. Some tie that form to the root of nōscō, \"to know\"; neither account is settled."
+              "text": "glōria has no sure origin. Lewis & Short connect it with Greek kleos, \"fame\", and EtymDB 2.1 records a reconstructed older gnōria. Some tie that form to the root of nōscō, \"to know\"; neither account is settled."
             }
           ]
         },

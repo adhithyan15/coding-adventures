@@ -14,7 +14,7 @@ concept_tag: LA-CORPUS2-COR
 prerequisites: [LA-C64-umerus, LA-C64-genu]
 sounds: []
 roots: [cor-latin]
-etymology_hook: "cor 'heart' — inherited, usually traced to PIE *ker, *krd- 'heart'; Greek kardia and English heart are cousins"
+etymology_hook: "cor 'heart' — inherited, usually traced to PIE *krd- 'heart'; Greek kardia and English heart are cousins"
 duration:
   max_seconds: 200
 requires:

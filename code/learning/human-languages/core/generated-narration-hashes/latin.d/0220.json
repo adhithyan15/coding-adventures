@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 220,
-  "sourceHash": "fnv1a64:707527eba2b35ba3",
+  "sourceHash": "fnv1a64:ab25db2694c2f473",
   "lessonIds": [
     "LA-C220-ancilla",
     "LA-C220-libertus",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch220.txt",
   "json": "latin/narration/ch220.json",
   "textHash": "fnv1a64:a7828d730faf23b9",
-  "jsonHash": "fnv1a64:264b69642ceacee4",
+  "jsonHash": "fnv1a64:4a15dcb30114d6a4",
   "findings": []
 }

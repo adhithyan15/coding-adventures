@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "Dark, Grey, Golden, Silver, Wise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6e21b654954a1afd",
+  "sourceHash": "fnv1a64:d2153ff5318b22b6",
   "lessons": [
     {
       "id": "LA-C149-fuscus",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77a1a5fb6c0b992c",
+      "sourceHash": "fnv1a64:8356bed1092c91e4",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aureus is built on aurum, \"gold\", older ausum, usually traced to Proto-Indo-European h2eh2us-, \"glow\" (EtymDB 2.1)."
+              "text": "aureus is built on aurum, \"gold\" (Sabine ausum), usually traced to Proto-Indo-European h2eh2us-, \"glow\" (EtymDB 2.1)."
             }
           ]
         },

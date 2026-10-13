@@ -4,7 +4,7 @@
   "chapter": 182,
   "title": "Public, Private, Common, Hollow, Heavy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c12d518f376d6e18",
+  "sourceHash": "fnv1a64:b5276182405a8978",
   "lessons": [
     {
       "id": "LA-C182-publicus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f410b1e43c731fe",
+      "sourceHash": "fnv1a64:b88b7b756c5b6238",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pūblicus is contracted from populicus, \"of the people\" (Lewis & Short), built on populus, \"the people\"; its spelling was probably influenced by pūbēs, \"the grown men\"."
+              "text": "pūblicus comes from older poplicus, \"of the people\", as inscriptions write it (Lewis & Short), built on populus, \"the people\"; its spelling was probably influenced by pūbēs, \"the grown men\"."
             }
           ]
         },

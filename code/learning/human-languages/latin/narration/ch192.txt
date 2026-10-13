@@ -45,7 +45,7 @@ You'll want to know: passer, passeris.
 passer, passeris — "a sparrow".
 
 The word, taken apart.
-passer is probably inherited, from a Proto-Indo-European pettro-, "flier, bird", from peth2-, "to fly" (EtymDB 2.1); the details are uncertain.
+passer may be inherited, from a Proto-Indo-European pettro-, "flier, bird", from peth2-, "to fly" (EtymDB 2.1); the details are uncertain.
 
 What you've built.
 One more word for this chapter.

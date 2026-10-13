@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 12,
-  "sourceHash": "fnv1a64:c3fe99058541b287",
+  "sourceHash": "fnv1a64:2c90e20f6f2651df",
   "lessonIds": [
     "LA-C12-medius-dies-nox"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch12.txt",
   "json": "latin/narration/ch12.json",
-  "textHash": "fnv1a64:7e1748c9b8f1a789",
-  "jsonHash": "fnv1a64:f0b13810ef1d42bb",
+  "textHash": "fnv1a64:a2cf5abda4b44b1e",
+  "jsonHash": "fnv1a64:b512ca2a4ee2b9be",
   "findings": []
 }
