@@ -17,13 +17,32 @@
 //! that the path still names the inode of this descriptor, before the
 //! spawn and again in its shim just before the exec.
 //!
+//! Windows has no exec of a handle either: `CreateProcessW` takes a path
+//! (`chief-of-staff-windows-sandbox`, D18S step 8). So on Windows the file
+//! is held open **sharing read only**: while it is held, no one can write,
+//! rename or delete it, so the bytes at its path are the bytes hashed. The
+//! confinement checks that the path is exactly this handle's final path,
+//! and that the child's image is that same name, before the child runs.
+//!
+//! ```text
+//!                 opened with                       checked each verify
+//!   Linux, macOS  O_RDONLY                          regular, not group- or
+//!                                                   world-writable, owned by
+//!                                                   root or this user, digest
+//!   Windows       read, share read only, the last   regular, not a reparse
+//!                 reparse point not followed        point, digest
+//! ```
+//!
 //! (P2.6d-2a had a second launcher here, `isolate_and_exec`, which placed
 //! the descriptors and exec'd without a sandbox. P2.6d-3 replaced it: there
 //! is one way to start a broker, and it is confined.)
 
 use std::fs::File;
 use std::io;
+#[cfg(unix)]
 use std::os::unix::fs::{FileExt, MetadataExt};
+#[cfg(windows)]
+use std::os::windows::fs::{FileExt, MetadataExt, OpenOptionsExt};
 use std::path::{Path, PathBuf};
 
 use coding_adventures_sha256::Sha256Hasher;
@@ -41,8 +60,9 @@ pub enum VerifyError {
     /// Not a regular file.
     NotRegular,
     /// Group- or world-writable: someone else could change it in place.
+    /// (Unix only.)
     Writable,
-    /// Owned by neither root nor this process's user.
+    /// Owned by neither root nor this process's user. (Unix only.)
     Owner,
     /// Larger than [`MAX_EXECUTABLE_BYTES`].
     TooLarge,
@@ -88,9 +108,7 @@ impl VerifiedExecutable {
         if !path.is_absolute() {
             return Err(VerifyError::NotAbsolute);
         }
-        // O_RDONLY: never O_PATH, which execveat would accept but which
-        // cannot be read to hash (S-I4d).
-        let file = File::open(path).map_err(|_| VerifyError::Unreadable)?;
+        let file = open_for_hashing(path).map_err(|_| VerifyError::Unreadable)?;
         let verified = Self {
             file,
             path: path.to_path_buf(),
@@ -102,7 +120,9 @@ impl VerifiedExecutable {
 
     /// The path it was opened from. On Linux it is for messages only and
     /// is never executed. On macOS it is what runs, after the confinement
-    /// has checked that it still names this descriptor's inode.
+    /// has checked that it still names this descriptor's inode. On Windows
+    /// it is what runs too, while this handle keeps the file from being
+    /// changed, renamed or deleted.
     pub fn path(&self) -> &Path {
         &self.path
     }
@@ -124,14 +144,7 @@ impl VerifiedExecutable {
         if !before.file_type().is_file() {
             return Err(VerifyError::NotRegular);
         }
-        if before.mode() & 0o022 != 0 {
-            return Err(VerifyError::Writable);
-        }
-        // SAFETY: geteuid has no preconditions and touches no memory.
-        let me = unsafe { libc::geteuid() };
-        if before.uid() != 0 && before.uid() != me {
-            return Err(VerifyError::Owner);
-        }
+        check_owner_and_mode(&before)?;
         if before.len() > MAX_EXECUTABLE_BYTES {
             return Err(VerifyError::TooLarge);
         }
@@ -139,7 +152,7 @@ impl VerifiedExecutable {
         let mut buffer = vec![0u8; 64 * 1024];
         let mut offset = 0u64;
         loop {
-            let read = match self.file.read_at(&mut buffer, offset) {
+            let read = match read_at(&self.file, &mut buffer, offset) {
                 Ok(read) => read,
                 Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
                 Err(_) => return Err(VerifyError::Unreadable),
@@ -162,4 +175,63 @@ impl VerifiedExecutable {
         }
         Ok(())
     }
+}
+
+/// Unix: `O_RDONLY`, never `O_PATH`, which `execveat` would accept but
+/// which cannot be read to hash (S-I4d).
+#[cfg(unix)]
+fn open_for_hashing(path: &Path) -> io::Result<File> {
+    File::open(path)
+}
+
+/// Windows: sharing read only, so while this handle is held nothing can
+/// write, rename or delete the file, and with the last component's reparse
+/// point not followed, so a link is opened as itself and then refused.
+#[cfg(windows)]
+fn open_for_hashing(path: &Path) -> io::Result<File> {
+    use windows_sys::Win32::Storage::FileSystem::{FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ};
+    std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(FILE_SHARE_READ)
+        .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+        .open(path)
+}
+
+/// Unix: no one but root or this user may own it or write to it.
+#[cfg(unix)]
+fn check_owner_and_mode(metadata: &std::fs::Metadata) -> Result<(), VerifyError> {
+    if metadata.mode() & 0o022 != 0 {
+        return Err(VerifyError::Writable);
+    }
+    // SAFETY: geteuid has no preconditions and touches no memory.
+    let me = unsafe { libc::geteuid() };
+    if metadata.uid() != 0 && metadata.uid() != me {
+        return Err(VerifyError::Owner);
+    }
+    Ok(())
+}
+
+/// Windows: not a reparse point (a symlink or junction opened as itself).
+/// Writers are kept out by the share mode for as long as the handle is
+/// held, which is as long as the file can run; its access control list is
+/// the Windows applier's concern (D18S step 8).
+#[cfg(windows)]
+fn check_owner_and_mode(metadata: &std::fs::Metadata) -> Result<(), VerifyError> {
+    use windows_sys::Win32::Storage::FileSystem::FILE_ATTRIBUTE_REPARSE_POINT;
+    if metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0 {
+        return Err(VerifyError::NotRegular);
+    }
+    Ok(())
+}
+
+#[cfg(unix)]
+fn read_at(file: &File, buffer: &mut [u8], offset: u64) -> io::Result<usize> {
+    file.read_at(buffer, offset)
+}
+
+/// `seek_read` moves the handle's file pointer as well; nothing here uses
+/// it.
+#[cfg(windows)]
+fn read_at(file: &File, buffer: &mut [u8], offset: u64) -> io::Result<usize> {
+    file.seek_read(buffer, offset)
 }

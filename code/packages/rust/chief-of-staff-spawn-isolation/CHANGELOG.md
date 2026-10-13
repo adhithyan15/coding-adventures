@@ -4,6 +4,12 @@
 
 ### Added
 
+- `VerifiedExecutable` on Windows (D18S step 8, P2.8a). The file is opened
+  sharing read only, so while it is held no one can write, rename or
+  delete it. A reparse point at the last component is opened as itself
+  and refused. The digest is checked through the handle, as on Unix.
+  `tests/verified_exec_windows.rs` covers the digest and path refusals and
+  the held file's immutability.
 - `VerifiedExecutable::digest`: the SHA-256 it was pinned to (D18S P2.7b).
   The broker launcher uses it to refuse a Seatbelt shim that is a copy of
   the broker.
