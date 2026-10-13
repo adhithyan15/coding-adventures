@@ -29,3 +29,7 @@ Maintain selected-cell visibility and focus across row-window replacement. Nativ
 - Regenerate and compile VisiCalc; use actual wheel actions to move beyond the initial window, verify fixed column headers and numbered rows, click and navigate after scrolling, resize and remeasure, edit/commit and restart the fixture.
 - Record realized native cell counts as well as projected VM counts and warm Release/Debug event timings. Merely using ItemsRepeater is not bounded-realization evidence.
 - Keep #14277 and #16865 open until the corresponding evidence exists; this document is not acceptance evidence.
+
+## Native layout prerequisite discovered during implementation
+
+The authored shared styles use `flex: 1` on the sheet scroll port. XAML only recognized `flex-grow`, producing an Auto grid row that kept its content height after window resize. Before viewport acceptance, lower the exact `flex: 1` shorthand through the reusable Row/Column star-sizing hints and report it as consumed. Other shorthand forms remain explicitly unsupported; this does not claim general CSS flex equivalence. Add Row and Column regression coverage.
