@@ -14,7 +14,8 @@ romanization: "rujuvu"
 concept_tag: TE-KARANAM219-RUJUVU
 prerequisites: [TE-C219-ninda, TE-C219-adharam]
 sounds: []
-roots: []
+roots: [telugu-rujuvu-proof]
+etymology_hook: "rujuvu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'proof'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C219-adharam]
 <!-- hl-knowledge: introduces=[TE-LEX-C219-KARANAM219-03]; assesses=[] -->
 
 **రుజువు** — *rujuvu* — "proof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **రుజువు** (*rujuvu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "proof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

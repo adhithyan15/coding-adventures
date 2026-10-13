@@ -11,7 +11,8 @@ romanization: "sūdi"
 concept_tag: TE-NOUN-NEEDLE
 prerequisites: [TE-C62-thread]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūdi ← Sanskrit sūcī 'needle' (CDIAL 13551), reshaped as a tadbhava"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C62-thread]
 A సూది is useless without a దారం, and a దారం is only a tangle without a సూది. That is about as neat a pair as this book has come across.
 
 The same word does the వైద్యుడు's work: an injection is a సూది, and somebody at a clinic who uses the word is not talking about mending a బట్ట.
+
+CDIAL 13551 lists Sanskrit *sūcī*, "needle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

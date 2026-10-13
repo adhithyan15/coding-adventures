@@ -11,7 +11,8 @@ romanization: "dāraṁ"
 concept_tag: TE-NOUN-THREAD
 prerequisites: [TE-C61-chilli]
 sounds: []
-roots: []
+roots: [dravidian-taar-cord]
+etymology_hook: "dāraṁ: DEDR 3167 lists dāramu with Tamil tār 'cord', and queries an Indo-Aryan source"
 duration:
   max_seconds: 210
 requires:
@@ -42,9 +43,11 @@ reviews_of: [TE-C61-chilli]
 
 దారం is thread — spun cotton, fine enough to sew with and strong enough to tie a knot that holds. It is the first thing in this chapter and the smallest.
 
-The word came in from Sanskrit, where it belongs to a family about tearing and drawing out. Thread is what you draw out of a mass of cotton.
+The word may have come in from the north; the dictionaries do not settle it.
 
 దారం does ceremonial work too. The thread tied round a wrist at a festival is a దారం, and once it is on it stays there until it falls off by itself.
+
+DEDR 3167 lists Telugu *dāramu*, "cord, twine", with Tamil *tār*, "cord", and Kannada *dāra*, "thread", and asks, with a query, whether it came from Indo-Aryan, comparing Prakrit *dāra*, "waist-band", and Sanskrit *davara*, "string" (CDIAL 6225).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

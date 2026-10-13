@@ -14,7 +14,8 @@ romanization: "jalapātaṁ"
 concept_tag: TE-THINGS122-JALAPATAM
 prerequisites: [TE-C121-ala, TE-C121-konda]
 sounds: []
-roots: []
+roots: [sanskrit-jala, sanskrit-pata]
+etymology_hook: "jalapātaṁ ← Sanskrit jala 'water' (CDIAL 5155) + pāta 'fall' (CDIAL 8052)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C121-konda]
 <!-- hl-knowledge: introduces=[TE-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **జలపాతం** — *jalapātaṁ* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జలపాతం** (*jalapātaṁ*) is Sanskrit *jala*, "water" (CDIAL 5155), and *pāta*, "fall" (CDIAL 8052): "a water-fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

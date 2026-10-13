@@ -14,7 +14,8 @@ romanization: "sōmari"
 concept_tag: TE-QUAL141-SOMARI
 prerequisites: [TE-C141-karamaina, TE-C141-dhairyam]
 sounds: []
-roots: []
+roots: [dravidian-coombu-idle]
+etymology_hook: "sōmari: native Dravidian; DEDR 2882 lists sōmari 'idler' with Tamil cōmpu 'to be idle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C141-dhairyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C141-QUAL141-05]; assesses=[] -->
 
 **సోమరి** — *sōmari* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సోమరి** (*sōmari*) is native Dravidian. DEDR 2882 lists *sōmari*, "an idle person", with Tamil *cōmpu*, "to be idle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

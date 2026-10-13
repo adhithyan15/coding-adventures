@@ -14,7 +14,8 @@ romanization: "āṭa"
 concept_tag: TE-PANI312-ATA
 prerequisites: [TE-C311-khata, TE-C312-katha]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move]
+etymology_hook: "āṭa: native Dravidian; DEDR 347 lists āṭa 'play, game' under āḍu 'to play'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C312-katha]
 <!-- hl-knowledge: introduces=[TE-LEX-C312-PANI312-02]; assesses=[] -->
 
 **ఆట** — *āṭa* — "a game, a sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆట** (*āṭa*) is native Dravidian. DEDR 347 lists *āṭa*, "play, game", under *āḍu*, "to play", one word with Tamil *āṭu* and Kannada *āḍu*, "to play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tēlika"
 concept_tag: TE-QUAL137-TELIKA
 prerequisites: [TE-C136-potti, TE-C136-baruvu]
 sounds: []
-roots: []
+roots: [dravidian-teel-float]
+etymology_hook: "tēlika: native Dravidian; DEDR 3464 lists tēlika 'lightness; light' under tēlu 'to float'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C136-baruvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C137-QUAL137-01]; assesses=[] -->
 
 **తేలిక** — *tēlika* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తేలిక** (*tēlika*) is native Dravidian. DEDR 3464 lists *tēlika*, "lightness; light, easy", under *tēlu*, "to float", with Kannada *tēlu*, "to float".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "eppuḍu vastāru?"
 concept_tag: TE-QUESTION-WHEN
 prerequisites: [TE-C75-yesterday, TE-C24-ratri]
 sounds: []
-roots: []
+roots: [yaa-dravidian, vaccu-come-dravidian]
+etymology_hook: "eppuḍu vastāru: native eppuḍu 'when' (DEDR 5151, 4559) + vaccu 'to come' (DEDR 5270)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C75-yesterday]
 The last gap in the **ఎ-** question row: ఎక్కడ where, ఎవరు who, ఎందుకు why, and now ఎప్పుడు when. The row is complete.
 
 The three days you just learned are its answers, and **మీరు** in front of it makes the question respectful.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎప్పుడు వస్తారు?** (*eppuḍu vastāru?*) is native Dravidian: *eppuḍu*, "what time, when", which DEDR 5151 and 4559 list, with the question base *e-* and the time word *poddu*; and *vastāru*, from *vaccu*, "to come" (DEDR 5270).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

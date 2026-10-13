@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 168,
-  "sourceHash": "fnv1a64:75d1a7f796c4c537",
+  "sourceHash": "fnv1a64:500cff4dab118c89",
   "lessonIds": [
     "TE-C168-asuya",
     "TE-C168-garvam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch168.txt",
   "json": "telugu/narration/ch168.json",
-  "textHash": "fnv1a64:d2bc4d04850c36e1",
-  "jsonHash": "fnv1a64:2ca3e5a724ee2a85",
+  "textHash": "fnv1a64:aa753ba8d9f785a7",
+  "jsonHash": "fnv1a64:3bd1a1a4501741e3",
   "findings": []
 }

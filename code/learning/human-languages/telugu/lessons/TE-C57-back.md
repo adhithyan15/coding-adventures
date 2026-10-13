@@ -11,7 +11,8 @@ romanization: "vīpu"
 concept_tag: TE-NOUN-BACK
 prerequisites: [TE-C57-neck]
 sounds: []
-roots: []
+roots: [dravidian-viipu-back]
+etymology_hook: "vīpu: native Dravidian; DEDR 5455 lists it with Kota and Kolami words for the backbone"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C57-neck]
 It sits with the other inherited body words you have: కాలు, పన్ను, వేలు, and now మెడ above it. The head is a different matter, since Telugu leans on borrowed words in the higher registers there, but the trunk and the limbs are almost entirely old stock.
 
 That pattern is worth noticing. The words a language borrows tend to be for things it acquired; the body was not acquired.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వీపు** (*vīpu*) is native Dravidian. DEDR 5455 lists the Telugu word for "the back" in an entry with Kota and Kolami words for the backbone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

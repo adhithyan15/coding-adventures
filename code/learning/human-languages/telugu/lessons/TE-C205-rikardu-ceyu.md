@@ -14,7 +14,8 @@ romanization: "rikārḍu cēyu"
 concept_tag: TE-VERB-RIKARDU-CEYU
 prerequisites: [TE-C204-natincu, TE-C204-giyu]
 sounds: []
-roots: []
+roots: [english-record, sey-do-dravidian]
+etymology_hook: "rikārḍu cēyu: English record + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C204-giyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C205-KRIYA205-01]; assesses=[] -->
 
 **రికార్డు చేయు** — *rikārḍu cēyu* — "to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రికార్డు చేయు** (*rikārḍu cēyu*) pairs *rikārḍu*, a loan from English *record*, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

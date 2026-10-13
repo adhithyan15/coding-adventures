@@ -12,6 +12,7 @@ concept_tag: FAREWELL-LATER
 prerequisites: [TE-C04-reepu-kaluddaam]
 sounds: [retroflex-ll]
 roots: [malli-again-dravidian, kalu-meet-dravidian]
+etymology_hook: "maḷḷī 'again' (DEDR 4761, maḷḷu 'return') and kalayu 'to meet' (DEDR 1299) are native Dravidian"
 duration:
   max_seconds: 150
 requires:
@@ -46,10 +47,10 @@ in *veḷḷu*. **కలుద్దాం** (*kaluddām*, "let's meet") you jus
 
 **మళ్ళీ కలుద్దాం** = **మళ్ళీ** (*maḷḷī*, "again") + **కలుద్దాం** (*kaluddām*, "let's
 meet") — "**we'll meet again**." Both words are native Dravidian: *maḷḷī*
-("again," from *maral*, "to return") and *kalu* ("to meet"). Where Tamil's "we'll
+("again," from *maral*, "to return"; DEDR 4761) and *kalu* ("to meet"; DEDR 1299,
+which compares Sanskrit *kalka*, "a paste"). Where Tamil's "we'll
 meet again" (*mīṇḍum sandippōm*) reaches for the Sanskrit loan *sandi* to say
-"meet," Telugu keeps the native *kalu* — a small reminder that these sisters make
-the same phrase from different stock.
+"meet," Telugu keeps the native *kalu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C04-MALLI-KALUDDAAM-01, TE-ETYMON-C04-MALLI-KALUDDAAM-02] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 106,
-  "sourceHash": "fnv1a64:18557231c930f613",
+  "sourceHash": "fnv1a64:a5c3f8eb94f2fda4",
   "lessonIds": [
     "TE-C106-avakasam",
     "TE-C106-parikaram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch106.txt",
   "json": "telugu/narration/ch106.json",
-  "textHash": "fnv1a64:f6a39823d5d17aad",
-  "jsonHash": "fnv1a64:35ae50a383bd38e0",
+  "textHash": "fnv1a64:ec650613f7480366",
+  "jsonHash": "fnv1a64:0af79e0db2b6b883",
   "findings": []
 }

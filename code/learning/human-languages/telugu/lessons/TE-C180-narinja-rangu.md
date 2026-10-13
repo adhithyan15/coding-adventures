@@ -14,7 +14,8 @@ romanization: "nāriñja raṅgu"
 concept_tag: TE-GUNAM180-NARINJA-RANGU
 prerequisites: [TE-C180-prati, TE-C180-gulabi-rangu]
 sounds: []
-roots: []
+roots: [sanskrit-naranga, sanskrit-ranga]
+etymology_hook: "nāriñja raṅgu: nāriñja, cf. Sanskrit nāraṅga 'orange tree' (CDIAL 7073), + raṅgu ← raṅga 'colour' (CDIAL 10560)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C180-gulabi-rangu]
 <!-- hl-knowledge: introduces=[TE-LEX-C180-GUNAM180-05]; assesses=[] -->
 
 **నారింజ రంగు** — *nāriñja raṅgu* — "orange (colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నారింజ రంగు** (*nāriñja raṅgu*) pairs *nāriñja*, "orange", which goes back to Sanskrit *nāraṅga*, "orange tree" (CDIAL 7073), with *raṅgu*, "colour", from Sanskrit *raṅga*, "dye, colour" (CDIAL 10560).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

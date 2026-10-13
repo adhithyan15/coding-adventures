@@ -14,7 +14,8 @@ romanization: "moddu"
 concept_tag: TE-GUNAM298-MODDU
 prerequisites: [TE-C297-allari, TE-C297-nijayiti]
 sounds: []
-roots: []
+roots: [dravidian-mottu-dullard]
+etymology_hook: "moddu: native Dravidian; DEDR 5118 lists moddu 'dull, blunt' with Kannada moddu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C297-nijayiti]
 <!-- hl-knowledge: introduces=[TE-LEX-C298-GUNAM298-01]; assesses=[] -->
 
 **మొద్దు** — *moddu* — "blunt; dull-witted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొద్దు** (*moddu*) is native Dravidian. DEDR 5118 lists *moddu*, "dull, stupid, blunt", with Kannada *moddu*, "bluntness", and Tamil *mottu*, "dullard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

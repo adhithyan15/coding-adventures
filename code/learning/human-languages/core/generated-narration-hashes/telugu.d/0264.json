@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 264,
-  "sourceHash": "fnv1a64:ba872425044bfb3f",
+  "sourceHash": "fnv1a64:26030044bbef2484",
   "lessonIds": [
     "TE-C264-cekku",
     "TE-C264-visa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch264.txt",
   "json": "telugu/narration/ch264.json",
-  "textHash": "fnv1a64:e3344a423ba01091",
-  "jsonHash": "fnv1a64:fb8dea861926dccc",
+  "textHash": "fnv1a64:2f3508d23a50302b",
+  "jsonHash": "fnv1a64:d49a4578438544f6",
   "findings": []
 }

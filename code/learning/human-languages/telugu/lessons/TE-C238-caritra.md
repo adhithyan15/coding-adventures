@@ -14,7 +14,8 @@ romanization: "caritra"
 concept_tag: TE-PANI238-CARITRA
 prerequisites: [TE-C237-vakilu, TE-C238-jnapakam]
 sounds: []
-roots: []
+roots: [sanskrit-caritra]
+etymology_hook: "caritra ← Sanskrit caritra 'going; behaviour', a tatsama (CDIAL 4691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C238-jnapakam]
 <!-- hl-knowledge: introduces=[TE-LEX-C238-PANI238-02]; assesses=[] -->
 
 **చరిత్ర** — *caritra* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చరిత్ర** (*caritra*) is Sanskrit *caritra*, "going; behaviour", taken over whole as a learned loan, a tatsama (CDIAL 4691). The sense "history" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

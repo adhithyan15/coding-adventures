@@ -11,7 +11,8 @@ romanization: "endukaṇṭē"
 concept_tag: TE-CONJ-BECAUSE
 prerequisites: [TE-C74-why, TE-C18-ganta]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-en-say]
+etymology_hook: "endukaṇṭē: native enduku 'why' (DEDR 5151) + aṇṭē 'if one says', from anu 'to say' (DEDR 868)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C74-why]
 Look at it: it *is* ఎందుకు with **అంటే** glued on — "if you ask why". Telugu answers the question by repeating it and then continuing, which is the gluing habit of your very first lesson doing real work.
 
 **నేను వెళ్తాను, ఎందుకంటే పని ఉంది** — "I'll go, because there is work."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎందుకంటే** (*endukaṇṭē*) is native Dravidian: *enduku*, "why" (DEDR 5151), and *aṇṭē*, "if you say", from *anu*, "to say" (DEDR 868).
 
 ## Grammar Lens: the reason clause comes second
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C74-LINK-05]; assesses=[] -->

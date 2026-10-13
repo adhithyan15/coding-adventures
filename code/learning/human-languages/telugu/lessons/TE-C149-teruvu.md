@@ -14,7 +14,8 @@ romanization: "teruvu"
 concept_tag: TE-VERB-TERUVU
 prerequisites: [TE-C149-naducu, TE-C149-muyu]
 sounds: []
-roots: []
+roots: [dravidian-tira-open]
+etymology_hook: "teruvu: native Dravidian, one word with Tamil tiṟa 'to open' (DEDR 3259)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C149-muyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C149-ACT149-03]; assesses=[] -->
 
 **తెరువు** — *teruvu* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెరువు** (*teruvu*) is native Dravidian, one word with Tamil *tiṟa*, "to open" (DEDR 3259), which lists the Telugu as *teṟacu*, "to open".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

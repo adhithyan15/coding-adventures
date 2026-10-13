@@ -14,7 +14,8 @@ romanization: "poṭṭi"
 concept_tag: TE-THINGS136-POTTI
 prerequisites: [TE-C136-pancadara, TE-C136-podavu]
 sounds: []
-roots: []
+roots: [dravidian-putta-small]
+etymology_hook: "poṭṭi: native Dravidian, one word with Kannada puṭṭa 'smallness' (DEDR 4259), which compares Sanskrit puṭṭ-"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C136-podavu]
 <!-- hl-knowledge: introduces=[TE-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **పొట్టి** — *poṭṭi* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొట్టి** (*poṭṭi*) is native Dravidian, one word with Tamil *poṭi*, "that which is small", and Kannada *puṭṭa*, "smallness" (DEDR 4259). DEDR compares Sanskrit *puṭṭ-*, "to be small" (CDIAL 8256), and Prakrit *phiḍḍa*, "dwarf"; CDIAL, after Burrow, takes the Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

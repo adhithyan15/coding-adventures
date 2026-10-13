@@ -14,7 +14,8 @@ romanization: "avakāśaṁ"
 concept_tag: TE-CAN106-AVAKASAM
 prerequisites: [TE-C105-naipunyam, TE-C105-hakku]
 sounds: []
-roots: []
+roots: [sanskrit-avakasha]
+etymology_hook: "avakāśaṁ ← Sanskrit avakāśa 'space; opportunity', a tatsama (CDIAL 728)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C105-hakku]
 <!-- hl-knowledge: introduces=[TE-LEX-C106-CAN106-01]; assesses=[] -->
 
 **అవకాశం** — *avakāśaṁ* — "a chance, an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అవకాశం** (*avakāśaṁ*) is Sanskrit *avakāśa*, "space; opportunity", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 728).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

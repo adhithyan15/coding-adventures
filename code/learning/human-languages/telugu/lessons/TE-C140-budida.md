@@ -14,7 +14,8 @@ romanization: "būḍida"
 concept_tag: TE-QUAL140-BUDIDA
 prerequisites: [TE-C140-suraksitam, TE-C140-abaddham]
 sounds: []
-roots: []
+roots: [sanskrit-bhuti]
+etymology_hook: "būḍida: native Dravidian; DEDR 4316 lists būḍida 'ashes', and compares Sanskrit bhūti 'ashes'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C140-abaddham]
 <!-- hl-knowledge: introduces=[TE-LEX-C140-QUAL140-03]; assesses=[] -->
 
 **బూడిద** — *būḍida* — "grey; ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బూడిద** (*būḍida*) is native Dravidian. DEDR 4316 lists *būḍida*, "ashes", with Tamil *puḻuti*, "dust". DEDR compares Sanskrit *bhūti*, "ashes", and notes that some forms in the entry are probably borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

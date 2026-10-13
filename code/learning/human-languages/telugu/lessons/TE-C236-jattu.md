@@ -14,7 +14,8 @@ romanization: "jaṭṭu"
 concept_tag: TE-PANI236-JATTU
 prerequisites: [TE-C235-labham, TE-C235-nastam]
 sounds: []
-roots: []
+roots: [telugu-jattu-team]
+etymology_hook: "jaṭṭu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'team'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C235-nastam]
 <!-- hl-knowledge: introduces=[TE-LEX-C236-PANI236-01]; assesses=[] -->
 
 **జట్టు** — *jaṭṭu* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **జట్టు** (*jaṭṭu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "team".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

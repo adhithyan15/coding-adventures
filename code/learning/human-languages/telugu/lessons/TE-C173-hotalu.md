@@ -14,7 +14,8 @@ romanization: "hōṭalu"
 concept_tag: TE-STHALAM173-HOTALU
 prerequisites: [TE-C173-varanda, TE-C173-peradu]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hōṭalu ← English hotel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C173-peradu]
 <!-- hl-knowledge: introduces=[TE-LEX-C173-STHALAM173-03]; assesses=[] -->
 
 **హోటలు** — *hōṭalu* — "a restaurant, an eating house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హోటలు** (*hōṭalu*) is a loan from English *hotel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

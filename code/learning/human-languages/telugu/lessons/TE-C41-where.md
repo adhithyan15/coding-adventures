@@ -11,7 +11,8 @@ romanization: "ekkaḍa"
 concept_tag: TE-DEIXIS-WHERE
 prerequisites: [TE-C41-who]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "ekkaḍa: native Dravidian, on the question base e- (DEDR 5151), which lists ekkaḍa itself; Tamil eṅku"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ Its partner is **ఎవరు** *evaru*, which you have just met: both open with
 **e-**, the asking sound. Its other partners, **ఇక్కడ** *ikkaḍa* and **అక్కడ**
 *akkaḍa*, differ from it only at the front. That is the whole system, and the
 last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎక్కడ** (*ekkaḍa*) is native Dravidian, built on the question base *e-*. DEDR 5151 lists *ekkaḍa*, "where", itself, with Tamil *eṅku*, "where".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-06] -->

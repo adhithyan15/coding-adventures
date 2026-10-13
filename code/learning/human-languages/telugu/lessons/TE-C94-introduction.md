@@ -11,7 +11,8 @@ romanization: "paricayaṁ"
 concept_tag: TE-POLITE-INTRODUCTION
 prerequisites: [TE-C94-offer, TE-C94-need]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya]
+etymology_hook: "paricayaṁ ← Sanskrit paricaya 'acquaintance', a tatsama (CDIAL 7807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C94-need]
 
 **మీతో పరిచయం సంతోషం** — "glad to have met you", literally "the acquaintance with you is a
 joy". A fuller form of the **సంతోషం** you said at your first meeting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిచయం** (*paricayaṁ*) is Sanskrit *paricaya*, "acquaintance", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7807).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

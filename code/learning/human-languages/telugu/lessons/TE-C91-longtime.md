@@ -11,7 +11,8 @@ romanization: "cālā rōjulaindi"
 concept_tag: TE-GREET-LONG-TIME
 prerequisites: [TE-C90-letsgo, TE-C91-areyouwell]
 sounds: []
-roots: []
+roots: [dravidian-caal-suffice, persian-roz]
+etymology_hook: "cālā rōjulaindi: native cāla 'much' (DEDR 2470) + rōju 'day' ← Persian rōz + ayindi 'it became' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C91-areyouwell]
 become".
 
 **చాలా** and **రోజు** are both yours already; **-లు** makes the days plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చాలా రోజులైంది** (*cālā rōjulaindi*) is native *cāla*, "much" (DEDR 2470), *rōjulu*, "days", from Persian *rōz*, "day", and *ayindi*, "it became", from *agu*, "to become" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "patti"
 concept_tag: TE-VASTUVU306-PATTI
 prerequisites: [TE-C306-simentu, TE-C306-tolu]
 sounds: []
-roots: []
+roots: [dravidian-parutti-cotton]
+etymology_hook: "patti: native Dravidian, one word with Tamil parutti and Kannada patti (DEDR 3976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C306-tolu]
 <!-- hl-knowledge: introduces=[TE-LEX-C306-VASTUVU306-04]; assesses=[] -->
 
 **పత్తి** — *patti* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పత్తి** (*patti*) is native Dravidian, one word with Tamil *parutti* and Kannada *patti* (DEDR 3976). DEDR lists Telugu *patti*, "cotton".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

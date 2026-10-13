@@ -14,7 +14,8 @@ romanization: "yūniphāraṁ"
 concept_tag: TE-PANI198-YUNIPHARAM
 prerequisites: [TE-C198-intarvyu, TE-C198-siphtu]
 sounds: []
-roots: []
+roots: [english-uniform]
+etymology_hook: "yūniphāraṁ ← English uniform"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C198-siphtu]
 <!-- hl-knowledge: introduces=[TE-LEX-C198-PANI198-04]; assesses=[] -->
 
 **యూనిఫారం** — *yūniphāraṁ* — "a uniform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యూనిఫారం** (*yūniphāraṁ*) is a loan from English *uniform*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "guṇṭa"
 concept_tag: TE-VASTUVU308-GUNTA
 prerequisites: [TE-C307-agarubatti, TE-C307-kunkuma]
 sounds: []
-roots: []
+roots: [dravidian-kuttam-pond]
+etymology_hook: "guṇṭa: native Dravidian; DEDR 1669 lists guṇṭa 'pit, pond' with Tamil kuṇṭu 'pit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C307-kunkuma]
 <!-- hl-knowledge: introduces=[TE-LEX-C308-VASTUVU308-01]; assesses=[] -->
 
 **గుంట** — *guṇṭa* — "a pit, a pothole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుంట** (*guṇṭa*) is native Dravidian. DEDR 1669 lists *guṇṭa*, "pit, pond", with Tamil *kuṇṭu*, "hollow, pit", and Kannada *kuṇṭe*, "pit". DEDR compares Sanskrit *kuṇḍa*, "pit, well" (CDIAL 3264), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

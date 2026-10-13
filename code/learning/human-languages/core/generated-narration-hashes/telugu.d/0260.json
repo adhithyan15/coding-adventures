@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 260,
-  "sourceHash": "fnv1a64:acb61669b486480b",
+  "sourceHash": "fnv1a64:8c5d4154da1d9143",
   "lessonIds": [
     "TE-C260-nunupaina",
     "TE-C260-veccani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch260.txt",
   "json": "telugu/narration/ch260.json",
-  "textHash": "fnv1a64:676122735a13c559",
-  "jsonHash": "fnv1a64:7bf780cebe598509",
+  "textHash": "fnv1a64:745662b9aca617d3",
+  "jsonHash": "fnv1a64:85c7cc763b4a1ad3",
   "findings": []
 }

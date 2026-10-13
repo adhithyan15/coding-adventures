@@ -14,7 +14,8 @@ romanization: "kinda"
 concept_tag: TE-LOC101-KINDA
 prerequisites: [TE-C100-duram, TE-C101-paina]
 sounds: []
-roots: []
+roots: [dravidian-kiizh-below]
+etymology_hook: "kinda: native Dravidian, one word with Tamil kīḻ 'below' (DEDR 1619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C101-paina]
 <!-- hl-knowledge: introduces=[TE-LEX-C101-LOC101-02]; assesses=[] -->
 
 **కింద** — *kinda* — "below, underneath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కింద** (*kinda*) is native Dravidian, one word with Tamil *kīḻ* and Kannada *kīḻ*, "below" (DEDR 1619), which lists *kinda* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

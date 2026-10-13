@@ -14,7 +14,8 @@ romanization: "dōcukō"
 concept_tag: TE-VERB-DOCUKO
 prerequisites: [TE-C248-pituku, TE-C248-mosam-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-doocu-plunder]
+etymology_hook: "dōcukō: native dōcu 'to rob' (DEDR 3541) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C248-mosam-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C248-KRIYA248-04]; assesses=[] -->
 
 **దోచుకో** — *dōcukō* — "to rob".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దోచుకో** (*dōcukō*) is native Dravidian: a nasalised *dōcu*, "to plunder, rob", which DEDR 3541 lists with Kannada *dōcu*, "to plunder", with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

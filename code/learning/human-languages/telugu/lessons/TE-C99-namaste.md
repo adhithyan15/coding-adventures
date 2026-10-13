@@ -11,7 +11,8 @@ romanization: "namastē"
 concept_tag: TE-WELCOME-NAMASTE
 prerequisites: [TE-C98-true, TE-C98-thatone]
 sounds: []
-roots: []
+roots: [namas]
+etymology_hook: "namastē ← Sanskrit namas te 'a bow to you': namas 'bow' (CDIAL 6958) + te 'to you'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C98-thatone]
 
 It sits beside **నమస్కారం**, your first word. Both bow: **నమస్తే** is "a bow to you", heard all
 across India; **నమస్కారం** is the fuller Telugu form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నమస్తే** (*namastē*) is Sanskrit *namas te*, "a bow to you": *namas*, "bow, adoration" (CDIAL 6958), and *te*, "to you".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

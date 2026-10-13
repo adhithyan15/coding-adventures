@@ -14,7 +14,8 @@ romanization: "selūnu"
 concept_tag: TE-STHALAM216-SELUNU
 prerequisites: [TE-C216-getu, TE-C216-bekari]
 sounds: []
-roots: []
+roots: [english-saloon]
+etymology_hook: "selūnu ← English saloon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C216-bekari]
 <!-- hl-knowledge: introduces=[TE-LEX-C216-STHALAM216-05]; assesses=[] -->
 
 **సెలూను** — *selūnu* — "a hair salon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సెలూను** (*selūnu*) is a loan from English *saloon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dūku"
 concept_tag: TE-VERB-DUKU
 prerequisites: [TE-C145-nerpu, TE-C145-maracipo]
 sounds: []
-roots: []
+roots: [dravidian-dumuku-leap]
+etymology_hook: "dūku: native Dravidian; DEDR 3326 lists it with Kannada dumuku 'to leap down'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C145-maracipo]
 <!-- hl-knowledge: introduces=[TE-LEX-C145-ACT145-04]; assesses=[] -->
 
 **దూకు** — *dūku* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దూకు** (*dūku*) is native Dravidian. DEDR 3326 lists the Telugu verb "to leap, jump" with Kannada *dumuku*, "to leap down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

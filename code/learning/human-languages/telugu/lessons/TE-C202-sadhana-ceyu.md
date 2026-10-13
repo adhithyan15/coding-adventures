@@ -14,7 +14,8 @@ romanization: "sādhana cēyu"
 concept_tag: TE-VERB-SADHANA-CEYU
 prerequisites: [TE-C202-tanikhi-ceyu, TE-C202-namodu-ceyu]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana, sey-do-dravidian]
+etymology_hook: "sādhana cēyu: Sanskrit sādhana 'completion' (CDIAL 13334) + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C202-namodu-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C202-KRIYA202-05]; assesses=[] -->
 
 **సాధన చేయు** — *sādhana cēyu* — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సాధన చేయు** (*sādhana cēyu*) pairs Sanskrit *sādhana*, "furthering, completion" (CDIAL 13334), with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

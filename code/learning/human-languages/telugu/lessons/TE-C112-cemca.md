@@ -14,7 +14,8 @@ romanization: "cemcā"
 concept_tag: TE-THINGS112-CEMCA
 prerequisites: [TE-C112-kagitam, TE-C112-glasu]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "cemcā ← Persian chamcha 'spoon', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C112-glasu]
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **చెంచా** — *cemcā* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెంచా** (*cemcā*) is a loan from Persian *chamcha*, "spoon, ladle", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "pūladaṇḍa"
 concept_tag: TE-NOUN-GARLAND
 prerequisites: [TE-C52-flower]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower, dravidian-danda-garland]
+etymology_hook: "pūladaṇḍa: pū 'flower' (DEDR 4345, which queries a link with Sanskrit puṣpa) + daṇḍa 'garland' (DEDR 3060)"
 duration:
   max_seconds: 210
 requires:
@@ -40,9 +41,9 @@ reviews_of: [TE-C52-flower]
 
 **పూలదండ** (*pūladaṇḍa*) — "a flower garland".
 
-పూల, flowers, and దండ — the same దండ that gave you దండం, the salutation, one chapter back. Sanskrit *daṇḍa* is a staff, and by extension a row. A పూలదండ is a row of flowers, strung.
+పూల, flowers, and దండ, a garland. It looks like the దండ of దండం, the salutation, one chapter back, but this one is Dravidian: DEDR 3060 lists it with Kannada *daṇḍe*, "garland, wreath". A పూలదండ is a garland of flowers, strung.
 
-So the greeting and the garland are one word used twice. You say దండం with your hands; you put పూలదండ round a neck. Both of them come from a straight line.
+So the greeting and the garland only sound alike. You say దండం with your hands; you put పూలదండ round a neck.
 
 And that closes the welcome: the ముగ్గు on the ground, the తలుపు opened, the కుర్చీ offered, and a పూలదండ of పువ్వులు for the అతిథి who sent no word ahead.
 

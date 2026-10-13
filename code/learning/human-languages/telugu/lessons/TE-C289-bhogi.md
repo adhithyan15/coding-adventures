@@ -14,7 +14,8 @@ romanization: "bhōgi"
 concept_tag: TE-SAMAYAM289-BHOGI
 prerequisites: [TE-C288-madhumeham, TE-C288-raktapotu]
 sounds: []
-roots: []
+roots: [sanskrit-bhogin]
+etymology_hook: "bhōgi: matches Sanskrit bhōgin (CDIAL 9626); the festival's naming is not explained in our sources"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C288-raktapotu]
 <!-- hl-knowledge: introduces=[TE-LEX-C289-SAMAYAM289-01]; assesses=[] -->
 
 **భోగి** — *bhōgi* — "Bhogi, the first day of Sankranti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భోగి** (*bhōgi*) matches Sanskrit *bhōgin*, which CDIAL 9626 glosses "wealthy"; how the festival came by the name is not explained in our sources.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

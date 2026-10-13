@@ -14,7 +14,8 @@ romanization: "pāḍaina"
 concept_tag: TE-QUAL140-PADAINA
 prerequisites: [TE-C140-budida, TE-C140-bangaru]
 sounds: []
-roots: []
+roots: [dravidian-paazh-ruin, tamil-aaku-become]
+etymology_hook: "pāḍaina: native pāḍu 'ruin' (DEDR 4110) + ayina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C140-bangaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C140-QUAL140-05]; assesses=[] -->
 
 **పాడైన** — *pāḍaina* — "spoiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాడైన** (*pāḍaina*) is native Dravidian: *pāḍu*, "ruin", one word with Tamil *pāḻ* (DEDR 4110), and *ayina*, "which has become" (DEDR 333). DEDR compares Prakrit *pāla*, "worn out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

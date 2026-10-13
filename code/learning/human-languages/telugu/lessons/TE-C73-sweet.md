@@ -11,7 +11,8 @@ romanization: "tīpi"
 concept_tag: TE-NOUN-SWEET
 prerequisites: [TE-C72-bargain]
 sounds: []
-roots: []
+roots: [dravidian-tiim-sweet]
+etymology_hook: "tīpi: native Dravidian, one word with Tamil tīm 'sweet' (DEDR 3268)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C72-bargain]
 It is inherited. చక్కెర gives it in a kitchen and a పండు gives it on a చెట్టు, and a person described as తీపి is being called good company.
 
 Telugu counts its tastes rather than gesturing at them, and తీపి is the one every count opens with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తీపి** (*tīpi*) is native Dravidian, one word with Tamil *tīm*, "sweet", and Kannada *sīyi*, "sweet" (DEDR 3268), which lists *tīpi* itself. DEDR compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a date, then the Telugu for a weekend.
 You'll want to know: సూర్యాస్తమయం.
 సూర్యాస్తమయం — sūryāstamayaṁ — "sunset".
 
+The word, taken apart.
+సూర్యాస్తమయం (sūryāstamayaṁ) is Sanskrit: sūrya, "sun" (CDIAL 13574), and astamaya, "setting of the sun" (CDIAL 974), with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a weekend, then the Telugu for sunset.
 
 You'll want to know: ప్రతిరోజు.
 ప్రతిరోజు — pratirōju — "every day".
+
+The word, taken apart.
+ప్రతిరోజు (pratirōju) joins Sanskrit prati, "towards, against" (CDIAL 8540), used in Telugu as "each", to rōju, "day", from Persian rōz.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for sunset, then the Telugu for every day.
 You'll want to know: సాధారణంగా.
 సాధారణంగా — sādhāraṇaṅgā — "usually, generally".
 
+The word, taken apart.
+సాధారణంగా (sādhāraṇaṅgā) is Sanskrit sādhāraṇa, "common, general", with the Telugu ending -ṁ and the adverb ending -gā.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Telugu for every day, then the Telugu for usually.
 
 You'll want to know: అరుదుగా.
 అరుదుగా — arudugā — "rarely".
+
+The word, taken apart.
+అరుదుగా (arudugā) is native Dravidian: arudu, "rare, scarce", one word with Tamil aru, "rare" (DEDR 221), followed by the adverb ending -gā.
 
 What you've built.
 One more word for this chapter.
@@ -128,6 +140,9 @@ Before the new one: say the Telugu for usually, then the Telugu for rarely.
 You'll want to know: నిరంతరం.
 నిరంతరం — nirantaraṁ — "constantly, continuously".
 [once you have stopped driving — read: two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ]
+
+The word, taken apart.
+నిరంతరం (nirantaraṁ) is Sanskrit nirantara, "without interval, perpetual", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7265).
 
 What you've built.
 One more word for this chapter.

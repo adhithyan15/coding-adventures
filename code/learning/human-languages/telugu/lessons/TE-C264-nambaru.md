@@ -14,7 +14,8 @@ romanization: "nambaru"
 concept_tag: TE-VASTUVU264-NAMBARU
 prerequisites: [TE-C264-samanu, TE-C264-vartapatrika]
 sounds: []
-roots: []
+roots: [english-number]
+etymology_hook: "nambaru ← English number"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C264-vartapatrika]
 <!-- hl-knowledge: introduces=[TE-LEX-C264-VASTUVU264-05]; assesses=[] -->
 
 **నంబరు** — *nambaru* — "a number (phone, house)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నంబరు** (*nambaru*) is a loan from English *number*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "guṭṭa"
 concept_tag: TE-NOUN-HILL
 prerequisites: [TE-C55-tank]
 sounds: []
-roots: []
+roots: [dravidian-guttu-hill]
+etymology_hook: "guṭṭa: native Dravidian, one word with Tamil kuṇṭu and Kannada guḍḍa (DEDR 1682)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C55-tank]
 That double sense is honest about the landscape. These hills look piled rather than pushed up, and a speaker naming one is naming a pile.
 
 The borrowed పర్వతం is the big mountain, the one in a poem. Nobody calls the rise behind their village a పర్వతం.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుట్ట** (*guṭṭa*) is native Dravidian, one word with Tamil *kuṇṭu* and Kannada *guḍḍa* (DEDR 1682). DEDR lists Telugu *guṭṭa*, "hill, hillock, heap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

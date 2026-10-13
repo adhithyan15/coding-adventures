@@ -14,7 +14,8 @@ romanization: "kampenī"
 concept_tag: TE-PANI236-KAMPENI
 prerequisites: [TE-C236-jattu, TE-C236-vyaparam]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kampenī ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C236-vyaparam]
 <!-- hl-knowledge: introduces=[TE-LEX-C236-PANI236-03]; assesses=[] -->
 
 **కంపెనీ** — *kampenī* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కంపెనీ** (*kampenī*) is a loan from English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

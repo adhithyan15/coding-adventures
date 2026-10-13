@@ -14,7 +14,8 @@ romanization: "evarainā"
 concept_tag: TE-NISHEDHAM153-EVARAINA
 prerequisites: [TE-C153-eppudu, TE-C153-ekkada]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "evarainā: native evaru 'who' (DEDR 5151) + ayinā 'even if it be' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C153-ekkada]
 <!-- hl-knowledge: introduces=[TE-LEX-C153-NISHEDHAM153-04]; assesses=[] -->
 
 **ఎవరైనా** — *evarainā* — "anyone, someone". A yes-or-no question ends in **-ఆ** (*-ā*): **ఉన్నారు** becomes **ఉన్నారా**. **అక్కడ ఎవరైనా ఉన్నారా?** — *akkaḍa evarainā unnārā?* — "Is anyone there?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎవరైనా** (*evarainā*) is native Dravidian: *evaru*, "who" (DEDR 5151), and *ayinā*, "even if it be", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

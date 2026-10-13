@@ -39,6 +39,6 @@ in one spot.
 Sanskrit). Telugu shares grammar and native vocabulary with Tamil, Kannada, and
 Malayalam — but, like Kannada and unlike Tamil, it borrowed **heavily** from
 Sanskrit. It also shows the family is not uniform: where its sisters say "no"
-with a word from the root *il-* (*illai / illa*), Telugu uses its own *lēdu* /
-*kādu*. The lessons trace, word by word, what is home-grown and what is
+with a word from the root *il-* (*illai / illa*), Telugu uses *lēdu* / *kādu*,
+whose *lē-* DEDR files with *il-* all the same. The lessons trace, word by word, what is home-grown and what is
 borrowed.

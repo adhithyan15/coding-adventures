@@ -14,7 +14,8 @@ romanization: "avatala"
 concept_tag: TE-STHALAM174-AVATALA
 prerequisites: [TE-C173-pakkana, TE-C173-postaphisu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "avatala: native Dravidian, on the far-pointing base a- (DEDR 1), which lists avvala 'that side, beyond'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C173-postaphisu]
 <!-- hl-knowledge: introduces=[TE-LEX-C174-STHALAM174-01]; assesses=[] -->
 
 **అవతల** — *avatala* — "on the other side, beyond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అవతల** (*avatala*) is native Dravidian, built on the far-pointing base *a-*, "that" (DEDR 1), which lists *avvala*, "that side, beyond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

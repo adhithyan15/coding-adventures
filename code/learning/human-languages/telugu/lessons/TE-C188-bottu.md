@@ -14,7 +14,8 @@ romanization: "boṭṭu"
 concept_tag: TE-VASTUVU188-BOTTU
 prerequisites: [TE-C188-ariselu, TE-C188-toranam]
 sounds: []
-roots: []
+roots: [dravidian-pottu-dot]
+etymology_hook: "boṭṭu: native Dravidian, one word with Tamil poṭṭu and Kannada boṭṭu (DEDR 4492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C188-toranam]
 <!-- hl-knowledge: introduces=[TE-LEX-C188-VASTUVU188-04]; assesses=[] -->
 
 **బొట్టు** — *boṭṭu* — "a bindi, a dot worn on the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బొట్టు** (*boṭṭu*) is native Dravidian, one word with Tamil *poṭṭu* and Kannada *boṭṭu* (DEDR 4492). DEDR lists Telugu *boṭṭu*, "a drop; the mark worn on the forehead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

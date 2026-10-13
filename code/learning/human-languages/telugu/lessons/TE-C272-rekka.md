@@ -14,7 +14,8 @@ romanization: "rekka"
 concept_tag: TE-VASTUVU272-REKKA
 prerequisites: [TE-C272-poda, TE-C272-kandam]
 sounds: []
-roots: []
+roots: [dravidian-ciraku-wing]
+etymology_hook: "rekka: native Dravidian, one word with Tamil iṟaku and Kannada ṟekke (DEDR 2591)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C272-kandam]
 <!-- hl-knowledge: introduces=[TE-LEX-C272-VASTUVU272-05]; assesses=[] -->
 
 **రెక్క** — *rekka* — "a wing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రెక్క** (*rekka*) is native Dravidian, one word with Tamil *iṟaku* and Kannada *ṟekke* (DEDR 2591). DEDR lists Telugu *rekka*, "wing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

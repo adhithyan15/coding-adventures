@@ -14,7 +14,8 @@ romanization: "oppukō"
 concept_tag: TE-VERB-OPPUKO
 prerequisites: [TE-C160-anuvadincu, TE-C160-gurtupettuko]
 sounds: []
-roots: []
+roots: [dravidian-oppu-agree]
+etymology_hook: "oppukō: native oppu 'to agree' (DEDR 924) + reflexive kō (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C160-gurtupettuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C160-KRIYA160-05]; assesses=[] -->
 
 **ఒప్పుకో** — *oppukō* — "to agree, to accept".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒప్పుకో** (*oppukō*) is native Dravidian: *oppu*, "to consent, agree", one word with Kannada *oppu*, "to agree" (DEDR 924), and *-kō*, "for oneself" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

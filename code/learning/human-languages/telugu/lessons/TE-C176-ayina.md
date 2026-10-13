@@ -14,7 +14,8 @@ romanization: "ayinā"
 concept_tag: TE-KARANAM176-AYINA
 prerequisites: [TE-C175-poga, TE-C176-lekapote]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ayinā: native Dravidian, from agu 'to be, become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C176-lekapote]
 <!-- hl-knowledge: introduces=[TE-LEX-C176-KARANAM176-02]; assesses=[] -->
 
 **అయినా** — *ayinā* — "even so, still".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అయినా** (*ayinā*) is native Dravidian, from *agu*, "to be, become" (DEDR 333): "even if it is".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

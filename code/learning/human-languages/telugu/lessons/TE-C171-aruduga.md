@@ -14,7 +14,8 @@ romanization: "arudugā"
 concept_tag: TE-SAMAYAM171-ARUDUGA
 prerequisites: [TE-C171-pratiroju, TE-C171-sadharananga]
 sounds: []
-roots: []
+roots: [dravidian-aru-rare]
+etymology_hook: "arudugā: native arudu 'rare' (DEDR 221) + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C171-sadharananga]
 <!-- hl-knowledge: introduces=[TE-LEX-C171-SAMAYAM171-04]; assesses=[] -->
 
 **అరుదుగా** — *arudugā* — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అరుదుగా** (*arudugā*) is native Dravidian: *arudu*, "rare, scarce", one word with Tamil *aru*, "rare" (DEDR 221), followed by the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

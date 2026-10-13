@@ -14,7 +14,8 @@ romanization: "sampradāyaṁ"
 concept_tag: TE-KARANAM217-SAMPRADAYAM
 prerequisites: [TE-C217-kalisi, TE-C217-tappa]
 sounds: []
-roots: []
+roots: [sanskrit-sampradaya]
+etymology_hook: "sampradāyaṁ ← Sanskrit sampradāya 'tradition', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C217-tappa]
 <!-- hl-knowledge: introduces=[TE-LEX-C217-KARANAM217-03]; assesses=[] -->
 
 **సంప్రదాయం** — *sampradāyaṁ* — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంప్రదాయం** (*sampradāyaṁ*) is Sanskrit *sampradāya*, "handing down, tradition", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

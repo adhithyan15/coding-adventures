@@ -11,7 +11,8 @@ romanization: "nemmadigā"
 concept_tag: TE-REPAIR-SLOWLY
 prerequisites: [TE-C85-anger, TE-C85-sorrow]
 sounds: []
-roots: []
+roots: [dravidian-naya-soft]
+etymology_hook: "nemmadigā: native nemmadi 'calm' (DEDR 3602) + the adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C85-sorrow]
 and the polite ending from *raṇḍi*.
 
 Notice the **-గా** at the end: the same ending that made *alasaṭagā* and *caligā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నెమ్మదిగా** (*nemmadigā*) is native Dravidian: *nemmadi*, "tranquillity; tranquil", which DEDR 3602 lists with Tamil *naya*, "to desire", and Kannada *naya*, "softness", followed by the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

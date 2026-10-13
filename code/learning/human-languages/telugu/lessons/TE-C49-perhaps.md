@@ -11,7 +11,8 @@ romanization: "ēmō"
 concept_tag: TE-WORD-PERHAPS
 prerequisites: [TE-C49-certainly]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "ēmō: native Dravidian, ēmi 'what' (DEDR 5151) with the doubting ending -ō"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C49-certainly]
 Look at the front of it and you will find the questioning ఏ- that already stands in ఏమిటి, "what". ఏమో is that question with the asking taken out and only the uncertainty left behind.
 
 It also hangs on the end of a whole sentence, where English would need a separate clause: *vastāḍēmō*, "he may come". A language with a settled, unembarrassed word for not knowing is telling you something about its manners.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏమో** (*ēmō*) is native Dravidian: *ēmi*, "what", which DEDR 5151 lists on the question base *e-*, with the doubting ending *-ō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

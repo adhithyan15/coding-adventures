@@ -14,7 +14,8 @@ romanization: "bindē"
 concept_tag: TE-THINGS129-BINDE
 prerequisites: [TE-C129-kitikitera, TE-C129-catti]
 sounds: []
-roots: []
+roots: [telugu-binde-pot]
+etymology_hook: "bindē: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C129-catti]
 <!-- hl-knowledge: introduces=[TE-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **బిందె** — *bindē* — "a water pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బిందె** (*bindē*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

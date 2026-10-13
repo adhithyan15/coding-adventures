@@ -11,7 +11,8 @@ romanization: "maryāda"
 concept_tag: TE-NOUN-MANNERS
 prerequisites: [TE-C65-welcome]
 sounds: []
-roots: []
+roots: [sanskrit-maryada]
+etymology_hook: "maryāda ← Sanskrit maryādā 'boundary' (CDIAL 9895), with the final -ā shortened"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C65-welcome]
 The word is Sanskrit and its first sense was a boundary line. Manners as a line you do not step over is a picture worth keeping hold of.
 
 మర్యాదగా is how it usually reaches a person: మర్యాదగా మాట్లాడు, "speak with manners", which sounds sterner in English than it does in Telugu. It is closer to "be decent about it".
+
+CDIAL 9895 lists Sanskrit *maryādā*, "region, boundary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

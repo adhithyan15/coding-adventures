@@ -14,7 +14,8 @@ romanization: "garuku"
 concept_tag: TE-GUNAM261-GARUKU
 prerequisites: [TE-C261-jiddu, TE-C261-jigata]
 sounds: []
-roots: []
+roots: [telugu-garuku-rough]
+etymology_hook: "garuku: probably native; DEDR 1265 lists kaṟaku 'rough' with Kannada garaku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-jigata]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-05]; assesses=[] -->
 
 **గరుకు** — *garuku* — "rough (to the touch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గరుకు** (*garuku*) is probably native Dravidian. DEDR 1265 lists Telugu *kaṟaku*, "roughness; rough", with Kannada *garaku*, "rough surface", and Tulu *garu*, "rough", and compares Sanskrit *karkaśa*, "rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

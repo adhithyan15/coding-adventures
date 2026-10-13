@@ -11,7 +11,8 @@ romanization: "takkuva"
 concept_tag: TE-WORD-LESS
 prerequisites: [TE-C58-more]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "takkuva: native Dravidian; DEDR 3178 lists it with taggu 'to decrease', beside Tamil tāḻ 'to be low'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C58-more]
 A matched pair like this is worth holding on to, because it lets you guess. Once the -కువ ending on both has registered, you can meet a Telugu word for the first time and have some idea what it is doing.
 
 తక్కువ చేసి మాట్లాడు, to speak somebody less, is to belittle them. The arithmetic goes straight into the manners.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తక్కువ** (*takkuva*) is native Dravidian. DEDR 3178 lists *takkuva*, "less, deficient", with *taggu*, "to decrease", in an entry with Tamil *tāḻ*, "to be low", and Kannada *tāḻ*, "being low".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

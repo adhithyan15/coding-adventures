@@ -14,7 +14,8 @@ romanization: "tōṭa"
 concept_tag: TE-LOC104-TOTA
 prerequisites: [TE-C104-tiram, TE-C104-karyalayam]
 sounds: []
-roots: []
+roots: [dravidian-tottam-garden]
+etymology_hook: "tōṭa: native Dravidian; DEDR 3549 lists the Telugu word for 'garden, grove' with Tamil tōṇṭu 'to dig'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C104-karyalayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C104-LOC104-03]; assesses=[] -->
 
 **తోట** — *tōṭa* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోట** (*tōṭa*) is native Dravidian. DEDR 3549 lists the Telugu word for "garden, grove" under the verb for "to scoop out", with Tamil *tōṇṭu*, "to dig".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāluva"
 concept_tag: TE-STHALAM292-KALUVA
 prerequisites: [TE-C291-cuttu2, TE-C292-gudise]
 sounds: []
-roots: []
+roots: [dravidian-kaal-channel]
+etymology_hook: "kāluva: native Dravidian; DEDR 1480 lists kāluva 'canal' with Kannada kāluve"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C292-gudise]
 <!-- hl-knowledge: introduces=[TE-LEX-C292-STHALAM292-02]; assesses=[] -->
 
 **కాలువ** — *kāluva* — "a canal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాలువ** (*kāluva*) is native Dravidian. DEDR 1480 lists *kāluva*, "canal, channel", with Kannada *kāluve*, "water-course", and Tamil *kāl*, "irrigation channel". DEDR compares Sanskrit *khalla*, "trench, canal" (CDIAL 3849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

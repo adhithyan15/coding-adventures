@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b5001f095e299914",
+  "sourceHash": "fnv1a64:faabbcc3e1b6755b",
   "lessons": [
     {
       "id": "TE-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee951af80c08516d",
+      "sourceHash": "fnv1a64:e0a24f7a216c4733",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చూడు (cūḍu) is native Dravidian. DEDR 2735 lists the Telugu verb cūcu, \"to see, look at\", with the stem cūḍ-, beside Kannada cūpu, \"sight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,7 +108,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -128,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6caf5c05a0ad26a",
+      "sourceHash": "fnv1a64:d4f6670c1d1790c6",
       "notice": null,
       "blocks": [
         {
@@ -165,6 +176,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆలకించు (ālakiñcu) is native Dravidian, one word with Kannada ālisu (DEDR 383). DEDR lists Telugu ālakincu, \"to hear, listen\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -175,7 +197,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -215,7 +237,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -246,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27f96a9cf791d50b",
+      "sourceHash": "fnv1a64:ab5fe078257f73a9",
       "notice": null,
       "blocks": [
         {
@@ -283,6 +305,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాట్లాడు (māṭlāḍu) is native Dravidian: māṭa, \"word\", and āḍu, \"to play, move\". DEDR 4834 lists māṭa and māṭal-āḍu, \"to speak\", with Kannada mātu, \"word\"; āḍu is DEDR 347."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -293,7 +326,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -333,7 +366,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -364,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d5dd9366d657b37",
+      "sourceHash": "fnv1a64:b9f7096f8c02154c",
       "notice": null,
       "blocks": [
         {
@@ -395,12 +428,23 @@
             },
             {
               "kind": "speech",
-              "text": "The everyday 'write'. Telugu and Kannada each kept their own Dravidian stem here rather than borrowing a shared one."
+              "text": "The everyday 'write'. Telugu and Kannada both kept the inherited Dravidian stem here rather than borrowing one."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాయి (rāyi) is native Dravidian. DEDR 5263 lists Telugu vrāyu and rāyu, \"to write\", with Tamil vari and Kannada bare, \"to write\". DEDR compares, with a query, Prakrit rajju, \"a writer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -411,7 +455,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

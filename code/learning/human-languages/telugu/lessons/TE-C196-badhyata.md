@@ -14,7 +14,8 @@ romanization: "bādhyata"
 concept_tag: TE-PANI196-BADHYATA
 prerequisites: [TE-C196-jarimana, TE-C196-gaduvu]
 sounds: []
-roots: []
+roots: [sanskrit-badha]
+etymology_hook: "bādhyata ← Sanskrit bādhyatā 'being bound', from bādh 'to press' (CDIAL 9204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C196-gaduvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C196-PANI196-04]; assesses=[] -->
 
 **బాధ్యత** — *bādhyata* — "a responsibility, a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాధ్యత** (*bādhyata*) is Sanskrit *bādhyatā*, "being bound, obligation", from the verb *bādh*, "to press" (CDIAL 9204), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gūḍu"
 concept_tag: TE-VASTUVU228-GUDU
 prerequisites: [TE-C228-telu, TE-C228-gabbilam]
 sounds: []
-roots: []
+roots: [dravidian-kuudu-nest]
+etymology_hook: "gūḍu: native Dravidian; DEDR 1883 lists gūḍu 'nest' with Tamil kūṭu 'nest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C228-gabbilam]
 <!-- hl-knowledge: introduces=[TE-LEX-C228-VASTUVU228-04]; assesses=[] -->
 
 **గూడు** — *gūḍu* — "a nest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గూడు** (*gūḍu*) is native Dravidian. DEDR 1883 lists a nasalised *gūḍu*, "nest, cage", with Tamil *kūṭu* and Kannada *gūḍu*, "nest". DEDR compares Sanskrit *kūṭa*, "trap for catching deer" (CDIAL 3397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

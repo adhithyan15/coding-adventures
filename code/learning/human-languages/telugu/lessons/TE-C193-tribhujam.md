@@ -14,7 +14,8 @@ romanization: "tribhujaṁ"
 concept_tag: TE-VASTUVU193-TRIBHUJAM
 prerequisites: [TE-C193-vrttam, TE-C193-caturasram]
 sounds: []
-roots: []
+roots: [sanskrit-bhuja]
+etymology_hook: "tribhujaṁ: Sanskrit tri 'three' + bhuja 'arm' (CDIAL 9525)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C193-caturasram]
 <!-- hl-knowledge: introduces=[TE-LEX-C193-VASTUVU193-04]; assesses=[] -->
 
 **త్రిభుజం** — *tribhujaṁ* — "a triangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**త్రిభుజం** (*tribhujaṁ*) is Sanskrit *tribhuja*, "three-armed": *tri*, "three", and *bhuja*, "arm" (CDIAL 9525), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

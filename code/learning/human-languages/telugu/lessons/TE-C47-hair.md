@@ -11,7 +11,8 @@ romanization: "juṭṭu"
 concept_tag: TE-NOUN-HAIR
 prerequisites: [TE-C47-tooth]
 sounds: []
-roots: []
+roots: [dravidian-juttu-tuft]
+etymology_hook: "juṭṭu: listed as Dravidian with Tamil cuṭṭi (DEDR 2655), which compares Sanskrit jūṭa and allows an Indo-Aryan loan"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C47-tooth]
 జుట్టు is the hair on a head taken as one thing — the mass, not the strand. For a single hair Telugu reaches for a different noun, వెంట్రుక.
 
 English leans on number for the same distinction --- "a hair" against "hair" --- while Telugu simply reaches for a different noun. జుట్టు also names the knot or tuft tied at the back of the head, which is most likely where the word started.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 2655 lists **జుట్టు** (*juṭṭu*) as Dravidian, one word with Tamil *cuṭṭi*, "tuft of hair", and Kannada *juṭṭu*. DEDR compares Sanskrit *jūṭa*, "twisted hair" (CDIAL 5258), and notes that some words in the entry may be loans from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "andukē"
 concept_tag: TE-WHY109-ANDUKE
 prerequisites: [TE-C108-anduvalla, TE-C108-valla]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "andukē: native andu 'there, that' (DEDR 1) + the dative -ku + the emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C108-valla]
 <!-- hl-knowledge: introduces=[TE-LEX-C109-WHY109-01]; assesses=[] -->
 
 **అందుకే** — *andukē* — "that is exactly why".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అందుకే** (*andukē*) is native Dravidian: *andu*, "that", on the far-pointing base of DEDR 1, with the dative *-ku* and the emphatic *-ē*: "for exactly that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

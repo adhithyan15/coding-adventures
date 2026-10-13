@@ -14,7 +14,8 @@ romanization: "mūla"
 concept_tag: TE-LOC104-MULA
 prerequisites: [TE-C104-karyalayam, TE-C104-tota]
 sounds: []
-roots: []
+roots: [dravidian-moolai-corner]
+etymology_hook: "mūla: native Dravidian, one word with Tamil mūlai and Kannada mūle (DEDR 5044)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C104-tota]
 <!-- hl-knowledge: introduces=[TE-LEX-C104-LOC104-04]; assesses=[] -->
 
 **మూల** — *mūla* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మూల** (*mūla*) is native Dravidian, one word with Tamil *mūlai* and Kannada *mūle* (DEDR 5044).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

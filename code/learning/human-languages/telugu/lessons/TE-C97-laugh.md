@@ -11,7 +11,8 @@ romanization: "navvu"
 concept_tag: TE-MOOD-LAUGH
 prerequisites: [TE-C96-birthday, TE-C96-signature]
 sounds: []
-roots: []
+roots: [dravidian-naku-laugh]
+etymology_hook: "navvu: native Dravidian, one word with Tamil naku and Kannada nagu (DEDR 3569)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C96-signature]
 **నవ్వు** (*navvu*) — "a laugh", and "a smile": Telugu uses one word for both.
 
 **నవ్వండి** — "smile!", with the polite ending, what a photographer says.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నవ్వు** (*navvu*) is native Dravidian, one word with Tamil *naku* and Kannada *nagu* (DEDR 3569). DEDR lists Telugu *navvu*, "to laugh, smile; laughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

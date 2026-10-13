@@ -14,7 +14,8 @@ romanization: "atyavasaraṁ"
 concept_tag: TE-AROGYAM287-ATYAVASARAM
 prerequisites: [TE-C287-ambulensu, TE-C287-bima]
 sounds: []
-roots: []
+roots: [sanskrit-atyavasara]
+etymology_hook: "atyavasaraṁ: Sanskrit ati 'very' + avasara 'occasion, need'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C287-bima]
 <!-- hl-knowledge: introduces=[TE-LEX-C287-AROGYAM287-05]; assesses=[] -->
 
 **అత్యవసరం** — *atyavasaraṁ* — "an emergency; urgent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అత్యవసరం** (*atyavasaraṁ*) is a learned word built from Sanskrit *ati*, "very", and *avasara*, "occasion, need", with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

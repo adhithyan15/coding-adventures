@@ -14,7 +14,8 @@ romanization: "nakilī"
 concept_tag: TE-GUNAM182-NAKILI
 prerequisites: [TE-C182-nissabdam, TE-C182-mannikaina]
 sounds: []
-roots: []
+roots: [arabic-naql]
+etymology_hook: "nakilī ← Arabic naql 'copy', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C182-mannikaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C182-GUNAM182-03]; assesses=[] -->
 
 **నకిలీ** — *nakilī* — "fake, counterfeit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నకిలీ** (*nakilī*) is a loan from Arabic *naql*, "copy", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

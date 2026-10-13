@@ -14,7 +14,8 @@ romanization: "cintapaṇḍu"
 concept_tag: TE-THINGS135-CINTAPANDU
 prerequisites: [TE-C135-miriyalu, TE-C135-jilakarra]
 sounds: []
-roots: []
+roots: [dravidian-cinta-tamarind, dravidian-pazhu-ripen]
+etymology_hook: "cintapaṇḍu: native cinta 'tamarind' (DEDR 2529) + paṇḍu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C135-jilakarra]
 <!-- hl-knowledge: introduces=[TE-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **చింతపండు** — *cintapaṇḍu* — "tamarind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చింతపండు** (*cintapaṇḍu*) is native Dravidian: *cinta*, "tamarind", one word with Tamil *cintam* (DEDR 2529), and *paṇḍu*, "fruit" (DEDR 4004). DEDR compares Sanskrit *ciñcā*, "tamarind", which CDIAL 4792 traces to Munda, with the first, and Sanskrit *phala*, "fruit" (CDIAL 9051), with the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

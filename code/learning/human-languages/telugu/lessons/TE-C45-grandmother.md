@@ -11,7 +11,8 @@ romanization: "ammamma"
 concept_tag: TE-NOUN-GRANDMOTHER
 prerequisites: [TE-C45-grandfather]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammamma: amma 'mother' twice; native Dravidian (DEDR 183), which compares Sanskrit ambā 'mother'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C45-grandfather]
 **అమ్మమ్మ** (*ammamma*) — "grandmother", and specifically your mother's mother.
 
 Say it slowly and you can hear what it is made of: *amma* twice over, mother of mother. Telugu keeps the two grandmothers apart, and the father's mother is *nāyanamma*, assembled the same way on *nāyana*, 'father'. Nothing here is borrowed; every piece came from the family lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అమ్మమ్మ** (*ammamma*) is *amma*, "mother", twice over. *Amma* is native Dravidian, one word with Tamil *ammā* and Kannada *amma* (DEDR 183). DEDR compares Sanskrit *ambā*, "mother" (CDIAL 574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "daggara"
 concept_tag: TE-LOC100-DAGGARA
 prerequisites: [TE-C100-edama, TE-C100-tinnaga, TE-C41-deixis-system]
 sounds: []
-roots: []
+roots: [dravidian-adu-near]
+etymology_hook: "daggara: native Dravidian; DEDR 79 lists daggaṟa 'nearness' with Tamil aṭu 'to be near'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C100-tinnaga]
 <!-- hl-knowledge: introduces=[TE-LEX-C100-LOC100-04]; assesses=[] -->
 
 **దగ్గర** — *daggara* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దగ్గర** (*daggara*) is native Dravidian. DEDR 79 lists *ḍaggaṟa* and *daggaṟa*, "nearness", with Tamil *aṭu*, "to be next, near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cīra"
 concept_tag: TE-THINGS114-CIRA
 prerequisites: [TE-C114-galipatam, TE-C114-cokka]
 sounds: []
-roots: []
+roots: [dravidian-ciirai-cloth]
+etymology_hook: "cīra: Dravidian, one word with Tamil cīrai 'cloth' (DEDR 2629); DEDR notes a mix with Sanskrit cīra and cela"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C114-cokka]
 <!-- hl-knowledge: introduces=[TE-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **చీర** — *cīra* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చీర** (*cīra*) is a Dravidian word, one with Tamil *cīrai* and Kannada *sīre*, "cloth" (DEDR 2629). DEDR notes that the Kannada word is said to come from Sanskrit *cīra*, "strip of cloth", though its sense is that of *cela*, "garment", and that the two words have probably been mixed; CDIAL 4843 in turn takes *cīra* and *cela* from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

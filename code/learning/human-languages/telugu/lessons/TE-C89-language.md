@@ -11,7 +11,8 @@ romanization: "bhāṣa"
 concept_tag: TE-ABOUT-LANGUAGE
 prerequisites: [TE-C88-relative, TE-C89-job]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāṣa ← Sanskrit bhāṣā 'speech', a tatsama (CDIAL 9479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C89-job]
 
 **మీకు ఏ భాషలు వచ్చు?** — "which languages do you know?". The knower sits in the dative, as in
 **నాకు తెలుగు వచ్చు**: a language is something that comes to you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భాష** (*bhāṣa*) is Sanskrit *bhāṣā*, "speech", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 9479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

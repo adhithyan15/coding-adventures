@@ -14,7 +14,8 @@ romanization: "oppandaṁ"
 concept_tag: TE-PANI239-OPPANDAM
 prerequisites: [TE-C239-citi, TE-C239-pinchanu]
 sounds: []
-roots: []
+roots: [dravidian-oppu-agree]
+etymology_hook: "oppandaṁ: built on native oppu 'to agree' (DEDR 924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C239-pinchanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C239-PANI239-05]; assesses=[] -->
 
 **ఒప్పందం** — *oppandaṁ* — "an agreement, a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒప్పందం** (*oppandaṁ*) is built on native *oppu*, "to consent, agree", one word with Kannada *oppu*, "to agree" (DEDR 924).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

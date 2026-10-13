@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 134,
-  "sourceHash": "fnv1a64:eb1b5fef4e64821d",
+  "sourceHash": "fnv1a64:7459dc2b6282084e",
   "lessonIds": [
     "TE-C134-karu",
     "TE-C134-saikilu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch134.txt",
   "json": "telugu/narration/ch134.json",
-  "textHash": "fnv1a64:13a3b461670a361d",
-  "jsonHash": "fnv1a64:bbeb231ff3b33337",
+  "textHash": "fnv1a64:635b280bbecc6bdb",
+  "jsonHash": "fnv1a64:98e7d771f18b59aa",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 130,
-  "sourceHash": "fnv1a64:59430822bbedc0da",
+  "sourceHash": "fnv1a64:5eeaf0eb6541b375",
   "lessonIds": [
     "TE-C130-tivi",
     "TE-C130-kampyutar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch130.txt",
   "json": "telugu/narration/ch130.json",
-  "textHash": "fnv1a64:6d07633889b54de7",
-  "jsonHash": "fnv1a64:db73afaecdf2ed50",
+  "textHash": "fnv1a64:ce2d5c159380b68c",
+  "jsonHash": "fnv1a64:70b680bbc1c63299",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bīruvā"
 concept_tag: TE-THINGS129-BIRUVA
 prerequisites: [TE-C129-catti, TE-C129-binde]
 sounds: []
-roots: []
+roots: [english-bureau]
+etymology_hook: "bīruvā: usually traced to English bureau"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C129-binde]
 <!-- hl-knowledge: introduces=[TE-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **బీరువా** — *bīruvā* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బీరువా** (*bīruvā*) is usually traced to English *bureau*, a chest of drawers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

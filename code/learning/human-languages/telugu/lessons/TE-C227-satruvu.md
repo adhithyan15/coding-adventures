@@ -14,7 +14,8 @@ romanization: "śatruvu"
 concept_tag: TE-VASTUVU227-SATRUVU
 prerequisites: [TE-C227-peddalu, TE-C227-iruguporugu]
 sounds: []
-roots: []
+roots: [sanskrit-shatru]
+etymology_hook: "śatruvu ← Sanskrit śatru 'enemy', a tatsama (CDIAL 12286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C227-iruguporugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C227-VASTUVU227-04]; assesses=[] -->
 
 **శత్రువు** — *śatruvu* — "an enemy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శత్రువు** (*śatruvu*) is Sanskrit *śatru*, "enemy", taken over whole as a learned loan, a tatsama, with the Telugu ending *-vu* (CDIAL 12286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

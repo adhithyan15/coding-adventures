@@ -14,7 +14,8 @@ romanization: "tappa"
 concept_tag: TE-KARANAM217-TAPPA
 prerequisites: [TE-C216-selunu, TE-C217-kalisi]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip]
+etymology_hook: "tappa: native Dravidian; DEDR 3071 lists tappa 'except, but' under tappu 'to miss'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C217-kalisi]
 <!-- hl-knowledge: introduces=[TE-LEX-C217-KARANAM217-02]; assesses=[] -->
 
 **తప్ప** — *tappa* — "except".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్ప** (*tappa*) is native Dravidian. DEDR 3071 lists *tappa*, "except, but", under *tappu*, "to miss, fail", one word with Tamil *tappu*, "to err".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

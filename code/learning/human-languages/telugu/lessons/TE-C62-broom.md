@@ -11,7 +11,8 @@ romanization: "cīpuru"
 concept_tag: TE-NOUN-BROOM
 prerequisites: [TE-C62-needle]
 sounds: []
-roots: []
+roots: [dravidian-ci-sweep]
+etymology_hook: "cīpuru: native Dravidian; DEDR 2599 lists it with Tamil cī 'to sweep' and Kannada cīpari 'broom'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C62-needle]
 The word is inherited. Sweeping is the first work of the morning in a Telugu house, done before the ముగ్గు goes down at the doorstep.
 
 A చీపురు is treated with a little care because of that. It is not stood on its bristles, it is not stepped over, and it is not lent out lightly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చీపురు** (*cīpuru*) is native Dravidian. DEDR 2599 lists the Telugu word for "a broom" with Tamil *cī*, "to sweep", and Kannada *cīpari*, "broom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

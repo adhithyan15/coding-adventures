@@ -14,7 +14,8 @@ romanization: "olucu"
 concept_tag: TE-VERB-OLUCU
 prerequisites: [TE-C279-kallu-tirugu, TE-C279-taku]
 sounds: []
-roots: []
+roots: [dravidian-oli-peel]
+etymology_hook: "olucu: native Dravidian; DEDR 1000 lists olucu 'to peel' with Tamil oliyal 'skin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C279-taku]
 <!-- hl-knowledge: introduces=[TE-LEX-C279-KRIYA279-05]; assesses=[] -->
 
 **ఒలుచు** — *olucu* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒలుచు** (*olucu*) is native Dravidian. DEDR 1000 lists *olucu*, "to peel, strip", with Tamil *oliyal*, "skin, hide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

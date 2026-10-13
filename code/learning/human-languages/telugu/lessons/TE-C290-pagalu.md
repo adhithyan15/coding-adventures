@@ -14,7 +14,8 @@ romanization: "pagalu"
 concept_tag: TE-SAMAYAM290-PAGALU
 prerequisites: [TE-C289-veduka, TE-C289-suryodayam]
 sounds: []
-roots: []
+roots: [dravidian-pakal-day]
+etymology_hook: "pagalu: native Dravidian, one word with Tamil pakal and Kannada pagal (DEDR 3805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C289-suryodayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C290-SAMAYAM290-01]; assesses=[] -->
 
 **పగలు** — *pagalu* — "daytime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పగలు** (*pagalu*) is native Dravidian, one word with Tamil *pakal* and Kannada *pagal* (DEDR 3805). DEDR lists Telugu *pagalu*, "day, daytime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

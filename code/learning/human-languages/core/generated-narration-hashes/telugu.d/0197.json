@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 197,
-  "sourceHash": "fnv1a64:e1f804ac58a06388",
+  "sourceHash": "fnv1a64:cc2c825a25c0a8d3",
   "lessonIds": [
     "TE-C197-vadrangi",
     "TE-C197-racayita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch197.txt",
   "json": "telugu/narration/ch197.json",
-  "textHash": "fnv1a64:b500e14cfcd04d54",
-  "jsonHash": "fnv1a64:aba8f6d48b8c8492",
+  "textHash": "fnv1a64:c612c60326ad47fa",
+  "jsonHash": "fnv1a64:f527a8672d5df4d4",
   "findings": []
 }

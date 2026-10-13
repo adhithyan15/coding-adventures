@@ -14,7 +14,8 @@ romanization: "maṇikaṭṭu"
 concept_tag: TE-THINGS128-MANIKATTU
 prerequisites: [TE-C127-bugga, TE-C128-gaddam]
 sounds: []
-roots: []
+roots: [dravidian-manikkattu-wrist]
+etymology_hook: "maṇikaṭṭu: native Dravidian, one word with Tamil maṇikkaṭṭu 'wrist' (DEDR 4673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C128-gaddam]
 <!-- hl-knowledge: introduces=[TE-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **మణికట్టు** — *maṇikaṭṭu* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మణికట్టు** (*maṇikaṭṭu*) is native Dravidian, one word with Tamil *maṇikkaṭṭu* and Kannada *maṇikaṭṭu*, "wrist" (DEDR 4673). DEDR notes that Sanskrit *maṇibandha*, "wrist", is a translation of it, its *bandha* rendering *kaṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

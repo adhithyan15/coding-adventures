@@ -14,7 +14,8 @@ romanization: "ucitaṁ"
 concept_tag: TE-GUNAM220-UCITAM
 prerequisites: [TE-C219-parinamam, TE-C219-prerana]
 sounds: []
-roots: []
+roots: [sanskrit-ucita]
+etymology_hook: "ucitaṁ ← Sanskrit ucita 'fitting, customary', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C219-prerana]
 <!-- hl-knowledge: introduces=[TE-LEX-C220-GUNAM220-01]; assesses=[] -->
 
 **ఉచితం** — *ucitaṁ* — "free (of charge)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉచితం** (*ucitaṁ*) is Sanskrit *ucita*, "fitting, customary", taken over whole as a learned loan, a tatsama, with the Telugu ending *-ṁ*. The sense "free of charge" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

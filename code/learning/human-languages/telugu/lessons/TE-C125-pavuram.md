@@ -14,7 +14,8 @@ romanization: "pāvuraṁ"
 concept_tag: TE-THINGS125-PAVURAM
 prerequisites: [TE-C124-tabelu, TE-C124-cilaka]
 sounds: []
-roots: []
+roots: [sanskrit-paravata]
+etymology_hook: "pāvuraṁ ← Sanskrit pārāvata 'turtle-dove, pigeon', reshaped as a tadbhava (CDIAL 8109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C124-cilaka]
 <!-- hl-knowledge: introduces=[TE-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **పావురం** — *pāvuraṁ* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పావురం** (*pāvuraṁ*) comes from Sanskrit *pārāvata*, "turtle-dove, pigeon", reshaped to Telugu sounds: a tadbhava (CDIAL 8109).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

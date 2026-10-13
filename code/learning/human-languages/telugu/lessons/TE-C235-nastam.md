@@ -14,7 +14,8 @@ romanization: "naṣṭaṁ"
 concept_tag: TE-PANI235-NASTAM
 prerequisites: [TE-C235-jitam, TE-C235-labham]
 sounds: []
-roots: []
+roots: [sanskrit-nashta]
+etymology_hook: "naṣṭaṁ ← Sanskrit naṣṭa 'lost, perished', a tatsama (CDIAL 7027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C235-labham]
 <!-- hl-knowledge: introduces=[TE-LEX-C235-PANI235-05]; assesses=[] -->
 
 **నష్టం** — *naṣṭaṁ* — "a loss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నష్టం** (*naṣṭaṁ*) is Sanskrit *naṣṭa*, "lost, perished", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

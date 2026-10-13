@@ -14,7 +14,8 @@ romanization: "kaṭhinamaina"
 concept_tag: TE-GUNAM296-KATHINAMAINA
 prerequisites: [TE-C295-enduko, TE-C295-elagaina]
 sounds: []
-roots: []
+roots: [sanskrit-kathina, tamil-aaku-become]
+etymology_hook: "kaṭhinamaina: Sanskrit kaṭhina 'hard' (CDIAL 2650) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C295-elagaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C296-GUNAM296-01]; assesses=[] -->
 
 **కఠినమైన** — *kaṭhinamaina* — "hard, difficult; strict, harsh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కఠినమైన** (*kaṭhinamaina*) is Sanskrit *kaṭhina*, "hard, stiff" (CDIAL 2650), with native *aina*, "which is" (DEDR 333). CDIAL reports the view that *kaṭhina* came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

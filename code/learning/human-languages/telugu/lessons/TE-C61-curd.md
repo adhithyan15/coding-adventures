@@ -11,7 +11,8 @@ romanization: "perugu"
 concept_tag: TE-NOUN-CURD
 prerequisites: [TE-C60-bird]
 sounds: []
-roots: []
+roots: [dravidian-peruku-curd]
+etymology_hook: "perugu: native Dravidian, one word with Tamil peruku 'curdled milk' (DEDR 4421)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C60-bird]
 The word is inherited, and Telugu uses the same shape for what curd does and for what anything does when it grows. Curd is milk that grew.
 
 A గేదె's పాలు set thicker than a cow's, which is one reason a village that keeps buffaloes is in no hurry to change.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెరుగు** (*perugu*) is native Dravidian, one word with Tamil *peruku*, "curdled milk" (DEDR 4421). The same entry lists the Telugu verb *pēru*, "to curdle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

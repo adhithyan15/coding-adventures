@@ -14,7 +14,8 @@ romanization: "udāharaṇa"
 concept_tag: TE-KARANAM218-UDAHARANA
 prerequisites: [TE-C218-phalitam, TE-C218-laksyam]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "udāharaṇa ← Sanskrit udāharaṇa 'example', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C218-laksyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C218-KARANAM218-03]; assesses=[] -->
 
 **ఉదాహరణ** — *udāharaṇa* — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉదాహరణ** (*udāharaṇa*) is Sanskrit *udāharaṇa*, "example, illustration", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

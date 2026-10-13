@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 209,
-  "sourceHash": "fnv1a64:4b86566f21dda408",
+  "sourceHash": "fnv1a64:6df285d3ecef9d1c",
   "lessonIds": [
     "TE-C209-durada",
     "TE-C209-narsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch209.txt",
   "json": "telugu/narration/ch209.json",
-  "textHash": "fnv1a64:3327356f2aa7b653",
-  "jsonHash": "fnv1a64:74b71ce5f2054ce6",
+  "textHash": "fnv1a64:9430968105a7d1ee",
+  "jsonHash": "fnv1a64:e684282236d27e6d",
   "findings": []
 }

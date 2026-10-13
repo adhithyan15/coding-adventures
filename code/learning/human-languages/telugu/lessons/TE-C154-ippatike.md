@@ -14,7 +14,8 @@ romanization: "ippaṭikē"
 concept_tag: TE-GATAM154-IPPATIKE
 prerequisites: [TE-C153-emaina, TE-C154-itivala]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "ippaṭikē: native ippaṭi 'of this time' (DEDR 410) + -ki 'to' + emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C154-itivala]
 <!-- hl-knowledge: introduces=[TE-LEX-C154-GATAM154-02]; assesses=[] -->
 
 **ఇప్పటికే** — *ippaṭikē* — "already". **నేను ఇప్పటికే భోజనం చేశాను** — *nēnu ippaṭikē bhōjanaṁ cēśānu* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇప్పటికే** (*ippaṭikē*) is native Dravidian: *ippaṭi*, "of this time, present", which DEDR 410 lists, with *-ki*, "to", and the emphatic *-ē*: "by exactly now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

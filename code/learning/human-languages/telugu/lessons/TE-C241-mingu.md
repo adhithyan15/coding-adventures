@@ -14,7 +14,8 @@ romanization: "miṅgu"
 concept_tag: TE-VERB-MINGU
 prerequisites: [TE-C240-nettu, TE-C240-visuru]
 sounds: []
-roots: []
+roots: [dravidian-mizhunku-gulp]
+etymology_hook: "miṅgu: native Dravidian, one word with Tamil miḻuṅku and Kannada miṅgu (DEDR 4866)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C240-visuru]
 <!-- hl-knowledge: introduces=[TE-LEX-C241-KRIYA241-01]; assesses=[] -->
 
 **మింగు** — *miṅgu* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మింగు** (*miṅgu*) is native Dravidian, one word with Tamil *miḻuṅku* and Kannada *miṅgu* (DEDR 4866). DEDR lists Telugu *miṅgu*, "to swallow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

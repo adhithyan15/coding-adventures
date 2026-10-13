@@ -14,7 +14,8 @@ romanization: "daddurlu"
 concept_tag: TE-AROGYAM169-DADDURLU
 prerequisites: [TE-C169-pundu, TE-C169-bobba]
 sounds: []
-roots: []
+roots: [telugu-daddurlu-rash]
+etymology_hook: "daddurlu: origin uncertain; DEDR has no entry; Sanskrit dadru 'skin eruption' (CDIAL 6142) is close"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C169-bobba]
 <!-- hl-knowledge: introduces=[TE-LEX-C169-AROGYAM169-03]; assesses=[] -->
 
 **దద్దుర్లు** — *daddurlu* — "a rash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **దద్దుర్లు** (*daddurlu*) is uncertain. DEDR has no entry for it. Sanskrit *dadru*, "skin eruption" (CDIAL 6142), is close in shape and sense, but CDIAL lists no Telugu word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "beṇḍakāya"
 concept_tag: TE-VASTUVU184-BENDAKAYA
 prerequisites: [TE-C184-payasam, TE-C184-dosakaya]
 sounds: []
-roots: []
+roots: [telugu-benda-okra, dravidian-kaay-fruit]
+etymology_hook: "beṇḍakāya: beṇḍa, of uncertain origin, + native kāya 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C184-dosakaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C184-VASTUVU184-05]; assesses=[] -->
 
 **బెండకాయ** — *beṇḍakāya* — "okra, lady's finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బెండకాయ** (*beṇḍakāya*) is *beṇḍa*, "okra", whose origin is uncertain, and native *kāya*, "fruit, vegetable" (DEDR 1459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

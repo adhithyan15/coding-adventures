@@ -11,7 +11,8 @@ romanization: "meṭṭu"
 concept_tag: TE-NOUN-STEP
 prerequisites: [TE-C67-threshold]
 sounds: []
-roots: []
+roots: [dravidian-mettu-step]
+etymology_hook: "meṭṭu: native Dravidian, one word with Kannada meṭṭu (DEDR 5057)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C67-threshold]
 Telugu counts them and remembers them. The steps down to a చెరువు are named in some villages, and a house with a మెట్టు at its గడప is a house standing a little above the street.
 
 The word carries rank as well. A person who has risen has climbed a మెట్టు, which is how a stair turns into a career with nobody explaining it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెట్టు** (*meṭṭu*) is native Dravidian, one word with Kannada *meṭṭu* (DEDR 5057). DEDR lists Telugu *meṭṭu*, "step, stair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mēyu"
 concept_tag: TE-VERB-MEYU
 prerequisites: [TE-C281-tappipovu, TE-C281-premincu]
 sounds: []
-roots: []
+roots: [dravidian-mey-graze]
+etymology_hook: "mēyu: native Dravidian, one word with Tamil mēy and Kannada mēyu (DEDR 5093)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C281-premincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C282-KRIYA282-01]; assesses=[] -->
 
 **మేయు** — *mēyu* — "to graze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేయు** (*mēyu*) is native Dravidian, one word with Tamil *mēy* and Kannada *mēyu* (DEDR 5093). DEDR lists Telugu *mēyu*, "to graze, feed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

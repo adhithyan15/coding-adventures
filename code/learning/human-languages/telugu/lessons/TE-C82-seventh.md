@@ -11,7 +11,8 @@ romanization: "ēḍava"
 concept_tag: TE-ORDINAL-SEVENTH
 prerequisites: [TE-C82-sixth, TE-C81-second, TE-C80-comein, TE-C70-frog, TE-C72-price, TE-C34-sahayam-ceyu, TE-C34-ishtam]
 sounds: [long-e, retroflex-da]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ēḍava: native ēḍu 'seven' (DEDR 910) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -56,6 +57,11 @@ short partner **ఎ** is a different letter and a different word.
 Seven weeks is a useful thing to be able to say and a good place to hear that the
 ordinal is doing work no cardinal can do: *ఏడు వారం* would be seven weeks, a
 quantity. *ఏడవ వారం* is the seventh one, a position.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏడవ** (*ēḍava*) is native Dravidian: *ēḍu*, "seven", one word with Tamil *ēḻu* (DEDR 910), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C82-ORDINAL-02] -->

@@ -14,7 +14,8 @@ romanization: "samudraṁ"
 concept_tag: TE-THINGS120-SAMUDRAM
 prerequisites: [TE-C119-vada, TE-C119-kaphi]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samudraṁ ← Sanskrit samudra 'sea', a tatsama (CDIAL 13236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C119-kaphi]
 <!-- hl-knowledge: introduces=[TE-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **సముద్రం** — *samudraṁ* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సముద్రం** (*samudraṁ*) is Sanskrit *samudra*, "sea", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

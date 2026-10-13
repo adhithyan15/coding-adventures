@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a mattress, then the Telugu for flour.
 You'll want to know: ఆకుకూర.
 ఆకుకూర — ākukūra — "leafy greens".
 
+The word, taken apart.
+ఆకుకూర (ākukūra) is native Dravidian: āku, "leaf", one word with Kannada āku (DEDR 335), and kūra, "vegetable, curry-stuff" (DEDR 1760).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for flour, then the Telugu for leafy greens.
 
 You'll want to know: పాలకూర.
 పాలకూర — pālakūra — "spinach".
+
+The word, taken apart.
+పాలకూర (pālakūra) is pāla-, probably the spinach name of Sanskrit pālakyā, Prakrit pālakkā (CDIAL 8126), and native kūra, "vegetable, curry-stuff" (DEDR 1760).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for leafy greens, then the Telugu for spinach
 You'll want to know: బొప్పాయి.
 బొప్పాయి — boppāyi — "a papaya".
 
+The word, taken apart.
+బొప్పాయి (boppāyi) is a form of the fruit's name papaya, which came to India with the fruit. DEDR and CDIAL do not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for spinach, then the Telugu for a papaya.
 You'll want to know: పుచ్చకాయ.
 పుచ్చకాయ — puccakāya — "a watermelon".
 
+The word, taken apart.
+పుచ్చకాయ (puccakāya) is pucca, whose origin is uncertain, and native kāya, "fruit, vegetable" (DEDR 1459). DEDR 4248 lists pucca only as the bitter colocynth.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a papaya, then the Telugu for a watermelo
 
 You'll want to know: జీడిపప్పు.
 జీడిపప్పు — jīḍipappu — "cashew nuts".
+
+The word, taken apart.
+DEDR 2005 lists jīḍi, with a query, beside Tamil cēr, "marking-nut tree"; pappu, "kernel, split pulse", is native, one word with Tamil paruppu (DEDR 3978). జీడిపప్పు (jīḍipappu) joins them.
 
 What you've built.
 One more word for this chapter.

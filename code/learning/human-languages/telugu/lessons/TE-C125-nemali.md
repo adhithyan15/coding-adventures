@@ -14,7 +14,8 @@ romanization: "nemali"
 concept_tag: TE-THINGS125-NEMALI
 prerequisites: [TE-C125-pavuram, TE-C125-gudlaguba]
 sounds: []
-roots: []
+roots: [dravidian-navil-peacock]
+etymology_hook: "nemali: native Dravidian, one word with Tamil ñamali and Kannada navilu (DEDR 2902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C125-gudlaguba]
 <!-- hl-knowledge: introduces=[TE-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **నెమలి** — *nemali* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నెమలి** (*nemali*) is native Dravidian, one word with Tamil *ñamali* and Kannada *navilu* (DEDR 2902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

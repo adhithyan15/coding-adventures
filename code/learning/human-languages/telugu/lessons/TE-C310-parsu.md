@@ -14,7 +14,8 @@ romanization: "parsu"
 concept_tag: TE-PANI310-PARSU
 prerequisites: [TE-C309-kulayi, TE-C309-jenda]
 sounds: []
-roots: []
+roots: [english-purse]
+etymology_hook: "parsu ← English purse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C309-jenda]
 <!-- hl-knowledge: introduces=[TE-LEX-C310-PANI310-01]; assesses=[] -->
 
 **పర్సు** — *parsu* — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పర్సు** (*parsu*) is a loan from English *purse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

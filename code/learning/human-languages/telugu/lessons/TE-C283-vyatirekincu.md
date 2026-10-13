@@ -14,7 +14,8 @@ romanization: "vyatirēkiñcu"
 concept_tag: TE-VERB-VYATIREKINCU
 prerequisites: [TE-C283-tolagincu, TE-C283-gurtupattu]
 sounds: []
-roots: []
+roots: [sanskrit-vyatireka]
+etymology_hook: "vyatirēkiñcu: Sanskrit vyatirēka 'contrast, exclusion' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C283-gurtupattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C283-KRIYA283-04]; assesses=[] -->
 
 **వ్యతిరేకించు** — *vyatirēkiñcu* — "to oppose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యతిరేకించు** (*vyatirēkiñcu*) is Sanskrit *vyatirēka*, "contrast, exclusion", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

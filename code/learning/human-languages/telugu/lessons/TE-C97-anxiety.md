@@ -11,7 +11,8 @@ romanization: "āndōḷana"
 concept_tag: TE-MOOD-ANXIETY
 prerequisites: [TE-C97-crying, TE-C97-regret]
 sounds: []
-roots: []
+roots: [sanskrit-andola]
+etymology_hook: "āndōḷana ← Sanskrit āndolana 'swinging, agitation', from andolayati 'swings' (CDIAL 384)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C97-regret]
 **ఆందోళన** (*āndōḷana*) — "anxiety, worry".
 
 **ఆందోళన పడకండి** — "don't worry". Telugu *falls into* worry: **పడు** is "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆందోళన** (*āndōḷana*) is Sanskrit *āndolana*, "swinging, agitation", from *andolayati*, "swings" (CDIAL 384), taken over as a learned loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

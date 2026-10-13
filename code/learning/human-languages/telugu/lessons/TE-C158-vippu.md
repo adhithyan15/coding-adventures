@@ -14,7 +14,8 @@ romanization: "vippu"
 concept_tag: TE-VERB-VIPPU
 prerequisites: [TE-C158-tomu, TE-C158-marcu]
 sounds: []
-roots: []
+roots: [dravidian-viri-open]
+etymology_hook: "vippu: native Dravidian; DEDR 5411 lists vippu 'to open, untie' with Tamil viri 'to open'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C158-marcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C158-KRIYA158-04]; assesses=[] -->
 
 **విప్పు** — *vippu* — "to take off, to untie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విప్పు** (*vippu*) is native Dravidian. DEDR 5411 lists *vippu*, "to open, untie, loosen", with Tamil *viri*, "to expand, open".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know: నెమ్మదిగా.
 నెమ్మదిగా (nemmadigā) మాట్లాడండి — "please speak slowly". You have the verb from your first chapters and the polite ending from raṇḍi.
 Notice the -గా at the end: the same ending that made alasaṭagā and caligā.
 
+The word, taken apart.
+నెమ్మదిగా (nemmadigā) is native Dravidian: nemmadi, "tranquillity; tranquil", which DEDR 3602 lists with Tamil naya, "to desire", and Kannada naya, "softness", followed by the adverb ending -gā.
+
 What you've built.
 The request a beginner needs most.
 
@@ -43,6 +46,9 @@ Before the new one: say the Telugu for sorrow, then the Telugu for slowly.
 You'll want to know: ఇంకోసారి.
 ఇంకోసారి (iṅkōsāri) — "once more, one more time".
 ఇంకోసారి (iṅkōsāri) చెప్పండి — "please say it once more". సారి is "a time, an occasion", and ఇంకో is "another".
+
+The word, taken apart.
+ఇంకోసారి (iṅkōsāri) is native Dravidian: iṅka, "still, more" (DEDR 410), with -ō, "one", and sāri, "a time, a turn", which DEDR 2464 lists with Tamil cāri, "time, turn".
 
 What you've built.
 A way to hear it again without saying you did not understand.
@@ -74,6 +80,9 @@ You'll want to know: గట్టిగా.
 గట్టిగా (gaṭṭigā) — "loudly", and also "firmly, tightly".
 కొంచెం గట్టిగా (gaṭṭigā) మాట్లాడండి — "please speak a little louder". కొంచెం softens it, as it softens any request.
 
+The word, taken apart.
+గట్టిగా (gaṭṭigā) is native Dravidian: gaṭṭi, "hard, firm", which DEDR 1148 lists with Tamil kaṭṭu, "to harden", followed by the adverb ending -gā. DEDR compares Sanskrit kaṭhina, "hard" (CDIAL 2650); CDIAL reports the view that kaṭhina came from Dravidian.
+
 What you've built.
 Slowly and loudly: the two fixes for a sentence you could not catch.
 
@@ -104,6 +113,9 @@ You'll want to know: ఒక్క నిమిషం.
 ఒక్క నిమిషం (okka nimiṣaṁ) — "one minute", said the way English says "a moment".
 నిమిషం is "a minute", and ఒక్క is "a single one", a close relative of ఒకటి, the "one" you count with.
 
+The word, taken apart.
+ఒక్క నిమిషం (okka nimiṣaṁ) is native okka, "a single", from the "one" of DEDR 990, and Sanskrit nimiṣa, "a wink, a moment", which CDIAL 7243 lists as nimeṣa.
+
 What you've built.
 A way to buy time while you find the word.
 
@@ -133,6 +145,9 @@ Before the new one: say the Telugu for loudly, then the Telugu for one minute.
 You'll want to know: ఆగండి.
 ఆగండి (āgaṇḍi) — "please wait", or "please stop".
 It is the verb ఆగు with the polite -అండి. ఆగండి (āgaṇḍi), ఒక్క నిమిషం (okka nimiṣaṁ) — "wait, one minute".
+
+The word, taken apart.
+ఆగండి (āgaṇḍi) is native Dravidian: āgu, "to stop, stay", which DEDR 340 lists with Kannada āpu, "restraint, stoppage", followed by the polite ending -aṇḍi.
 
 What you've built.
 Wait, slower, louder, once more: enough to hold a conversation you cannot yet follow.

@@ -14,7 +14,8 @@ romanization: "pogamañcu"
 concept_tag: TE-VASTUVU229-POGAMANCU
 prerequisites: [TE-C229-enda, TE-C229-cinuku]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke, dravidian-manju-mist]
+etymology_hook: "pogamañcu: native poga 'smoke' (DEDR 4240) + mañcu 'mist, dew' (DEDR 4641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C229-cinuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C229-VASTUVU229-05]; assesses=[] -->
 
 **పొగమంచు** — *pogamañcu* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొగమంచు** (*pogamañcu*) is native Dravidian: *poga*, "smoke" (DEDR 4240), and *mañcu*, "dew, frost", one word with Kannada *mañju*, "dew, fog" (DEDR 4641): "smoke-mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

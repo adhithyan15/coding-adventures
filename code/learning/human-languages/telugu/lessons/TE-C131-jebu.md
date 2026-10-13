@@ -14,7 +14,8 @@ romanization: "jēbu"
 concept_tag: TE-THINGS131-JEBU
 prerequisites: [TE-C131-batilu, TE-C131-langa]
 sounds: []
-roots: []
+roots: [arabic-jayb]
+etymology_hook: "jēbu ← Arabic jayb 'pocket', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C131-langa]
 <!-- hl-knowledge: introduces=[TE-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **జేబు** — *jēbu* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జేబు** (*jēbu*) is a loan from Arabic *jayb*, "pocket", which came through Persian and Hindustani *jēb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

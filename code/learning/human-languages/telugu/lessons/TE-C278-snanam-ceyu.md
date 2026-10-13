@@ -14,7 +14,8 @@ romanization: "snānaṁ cēyu"
 concept_tag: TE-VERB-SNANAM-CEYU
 prerequisites: [TE-C277-kammari, TE-C278-pattuko]
 sounds: []
-roots: []
+roots: [sanskrit-snana, sey-do-dravidian]
+etymology_hook: "snānaṁ cēyu: Sanskrit snāna 'bathing' (CDIAL 13789) + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C278-pattuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C278-KRIYA278-02]; assesses=[] -->
 
 **స్నానం చేయు** — *snānaṁ cēyu* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్నానం చేయు** (*snānaṁ cēyu*) pairs Sanskrit *snāna*, "bathing" (CDIAL 13789), with the Telugu ending *-ṁ*, and native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

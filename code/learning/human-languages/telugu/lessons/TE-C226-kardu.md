@@ -14,7 +14,8 @@ romanization: "kārḍu"
 concept_tag: TE-VASTUVU226-KARDU
 prerequisites: [TE-C226-phailu, TE-C226-pharam]
 sounds: []
-roots: []
+roots: [english-card]
+etymology_hook: "kārḍu ← English card"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C226-pharam]
 <!-- hl-knowledge: introduces=[TE-LEX-C226-VASTUVU226-05]; assesses=[] -->
 
 **కార్డు** — *kārḍu* — "a card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కార్డు** (*kārḍu*) is a loan from English *card*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

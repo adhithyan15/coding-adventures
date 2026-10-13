@@ -14,7 +14,8 @@ romanization: "pōlīsu"
 concept_tag: TE-PANI237-POLISU
 prerequisites: [TE-C236-prabhutvam, TE-C236-markulu]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "pōlīsu ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C236-markulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C237-PANI237-01]; assesses=[] -->
 
 **పోలీసు** — *pōlīsu* — "a police officer; the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోలీసు** (*pōlīsu*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

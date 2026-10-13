@@ -14,7 +14,8 @@ romanization: "mōyu"
 concept_tag: TE-VERB-MOYU
 prerequisites: [TE-C239-oppandam, TE-C240-ettu]
 sounds: []
-roots: []
+roots: [dravidian-moo-carry]
+etymology_hook: "mōyu: native Dravidian; DEDR 5126 lists mōyu 'to bear, carry' with Kannada mōṟ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C240-ettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C240-KRIYA240-02]; assesses=[] -->
 
 **మోయు** — *mōyu* — "to carry (a load)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మోయు** (*mōyu*) is native Dravidian. DEDR 5126 lists *mōyu*, "to bear, carry", with Kannada *mōṟ*, "to carry on the head". DEDR 5139 *mōyu*, "to be widowed", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

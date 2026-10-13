@@ -11,7 +11,8 @@ romanization: "peḷḷi"
 concept_tag: TE-ABOUT-WEDDING
 prerequisites: [TE-C89-language, TE-C89-english]
 sounds: []
-roots: []
+roots: [dravidian-pen-female]
+etymology_hook: "peḷḷi: native Dravidian; DEDR 4395 lists peṇḍli, (modern) peḷḷi 'marriage', under peṇṭi 'female'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C89-english]
 
 **మీకు పెళ్ళి అయిందా?** — "are you married?", literally "has a wedding happened to you?".
 The person sits in the dative again, and the marriage is something that happened.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెళ్ళి** (*peḷḷi*) is native Dravidian. DEDR 4395 lists *peṇḍli* and, in modern use, *peḷḷi*, "marriage", under *peṇṭi*, "female", with Tamil *peṇ*, "woman, bride". DEDR compares Sanskrit *pṛṇākā*, "young female (of deer)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

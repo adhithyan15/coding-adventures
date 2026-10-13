@@ -14,7 +14,8 @@ romanization: "kōṭa"
 concept_tag: TE-STHALAM292-KOTA
 prerequisites: [TE-C292-kaluva, TE-C292-bhavanam]
 sounds: []
-roots: []
+roots: [dravidian-kottai-fort]
+etymology_hook: "kōṭa: native Dravidian; DEDR 2207 lists kōṭa 'fort' with Tamil kōṭṭai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C292-bhavanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C292-STHALAM292-04]; assesses=[] -->
 
 **కోట** — *kōṭa* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోట** (*kōṭa*) is native Dravidian. DEDR 2207 lists *kōṭa*, "fort", with Tamil *kōṭṭai* and Kannada *kōṭe*, "fort". DEDR compares Sanskrit *kōṭṭa*, "fort" (CDIAL 3500).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

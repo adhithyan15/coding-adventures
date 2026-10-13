@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 306,
-  "sourceHash": "fnv1a64:fa3f083d259998c7",
+  "sourceHash": "fnv1a64:e6d8be3aefbe86e8",
   "lessonIds": [
     "TE-C306-ukku",
     "TE-C306-simentu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch306.txt",
   "json": "telugu/narration/ch306.json",
-  "textHash": "fnv1a64:680ac1671b855c18",
-  "jsonHash": "fnv1a64:458aa65d39d81b09",
+  "textHash": "fnv1a64:b8cccb4dc6901385",
+  "jsonHash": "fnv1a64:994ff70d87d09b06",
   "findings": []
 }

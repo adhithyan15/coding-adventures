@@ -14,7 +14,8 @@ romanization: "marri"
 concept_tag: TE-VASTUVU266-MARRI
 prerequisites: [TE-C266-mallepuvvu, TE-C266-vepa]
 sounds: []
-roots: []
+roots: [dravidian-marri-banyan]
+etymology_hook: "marri: Dravidian; DEDR 4773 lists maṟṟi 'banyan' with Kolami marri"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C266-vepa]
 <!-- hl-knowledge: introduces=[TE-LEX-C266-VASTUVU266-03]; assesses=[] -->
 
 **మర్రి** — *marri* — "a banyan tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మర్రి** (*marri*) is Dravidian. DEDR 4773 lists *maṟṟi*, "banyan tree", with Kolami *marri*, "banyan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

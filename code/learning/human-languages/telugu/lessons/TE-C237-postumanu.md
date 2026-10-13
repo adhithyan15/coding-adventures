@@ -14,7 +14,8 @@ romanization: "pōsṭumānu"
 concept_tag: TE-PANI237-POSTUMANU
 prerequisites: [TE-C237-polisu, TE-C237-draivaru]
 sounds: []
-roots: []
+roots: [english-postman]
+etymology_hook: "pōsṭumānu ← English postman"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C237-draivaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C237-PANI237-03]; assesses=[] -->
 
 **పోస్టుమాను** — *pōsṭumānu* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోస్టుమాను** (*pōsṭumānu*) is a loan from English *postman*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

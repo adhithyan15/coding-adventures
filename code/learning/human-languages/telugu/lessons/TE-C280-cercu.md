@@ -14,7 +14,8 @@ romanization: "cērcu"
 concept_tag: TE-VERB-CERCU
 prerequisites: [TE-C280-anduko, TE-C280-ceppu]
 sounds: []
-roots: []
+roots: [dravidian-ceer-join]
+etymology_hook: "cērcu: native Dravidian; DEDR 2814 lists cēru 'to join'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C280-ceppu]
 <!-- hl-knowledge: introduces=[TE-LEX-C280-KRIYA280-04]; assesses=[] -->
 
 **చేర్చు** — *cērcu* — "to admit, to enrol, to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేర్చు** (*cērcu*) is native Dravidian, made from *cēru*, "to join, reach", which DEDR 2814 lists with Tamil *cēr* and Kannada *sēr*, "to join".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

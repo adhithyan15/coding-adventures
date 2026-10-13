@@ -14,7 +14,8 @@ romanization: "jñāpakaṁ"
 concept_tag: TE-PANI238-JNAPAKAM
 prerequisites: [TE-C237-kandaktaru, TE-C237-vakilu]
 sounds: []
-roots: []
+roots: [sanskrit-jnapaka]
+etymology_hook: "jñāpakaṁ ← Sanskrit jñāpaka 'reminding', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C237-vakilu]
 <!-- hl-knowledge: introduces=[TE-LEX-C238-PANI238-01]; assesses=[] -->
 
 **జ్ఞాపకం** — *jñāpakaṁ* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జ్ఞాపకం** (*jñāpakaṁ*) is Sanskrit *jñāpaka*, "making known, reminding", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "digu"
 concept_tag: TE-VERB-DIGU
 prerequisites: [TE-C145-maracipo, TE-C145-duku]
 sounds: []
-roots: []
+roots: [dravidian-izhi-descend]
+etymology_hook: "digu: native Dravidian, one word with Tamil iḻi and Kannada iḻi (DEDR 502)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C145-duku]
 <!-- hl-knowledge: introduces=[TE-LEX-C145-ACT145-05]; assesses=[] -->
 
 **దిగు** — *digu* — "to get down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దిగు** (*digu*) is native Dravidian, one word with Tamil *iḻi* and Kannada *iḻi* (DEDR 502). DEDR lists Telugu *digu*, "to descend, alight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raddī"
 concept_tag: TE-GUNAM259-RADDI
 prerequisites: [TE-C258-abhivrddhi, TE-C258-paristhiti]
 sounds: []
-roots: []
+roots: [telugu-raddi-crowd]
+etymology_hook: "raddī: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'crowd'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C258-paristhiti]
 <!-- hl-knowledge: introduces=[TE-LEX-C259-GUNAM259-01]; assesses=[] -->
 
 **రద్దీ** — *raddī* — "crowded; a crowd, rush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **రద్దీ** (*raddī*) is uncertain. DEDR and CDIAL list no word of this shape meaning "crowd, rush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know: మరియు.
 Telugu's everyday speech often joins two things by simply saying them one after the other, or by hanging a small -ఉ on the end of each. మరియు (mariyu) is the written, spoken-carefully form, and it is the one a list on a page will use.
 Put it between two nouns you already have: నీళ్ళు మరియు (mariyu) పాలు — "water and milk".
 
+The word, taken apart.
+మరియు (mariyu) is native Dravidian. DEDR 4766 lists Telugu maṟi, "and, again, further", with Tamil maṟu and Kannada maṟu, "other, next".
+
 What you've built.
 The first way you have had to put two things in one sentence.
 
@@ -47,6 +50,9 @@ You'll want to know: కానీ.
 కానీ (kānī) — "but".
 కానీ (kānī) turns a sentence around. Where మరియు (mariyu) adds, కానీ (kānī) takes back: it warns the listener that what comes next does not match what came before.
 నాకు టీ ఇష్టం, కానీ (kānī) పాలు వద్దు — "I like tea, but no milk." This one word is what lets you disagree politely instead of only saying లేదు.
+
+The word, taken apart.
+కానీ (kānī) is native Dravidian, built on kā-, the stem of agu, "to be", that also gives kādu, "it is not" (DEDR 333).
 
 What you've built.
 Two clauses, and a way to set the second against the first.
@@ -82,6 +88,9 @@ You'll want to know: లేదా.
 You have met its first half already: లే- is the same root behind లేదు, "there isn't". లేదా (lēdā) is literally the or-else of that root — "failing that".
 టీ లేదా (lēdā) పాలు? — "tea or milk?" That is the whole of an offered choice, and you can now make one.
 
+The word, taken apart.
+లేదా (lēdā) is native Dravidian, built on lē-, "be not", the root of lēdu. DEDR 2559 lists lēka, "without; or, else", with Tamil il.
+
 What you've built.
 A choice you can put to somebody.
 
@@ -115,6 +124,9 @@ You'll want to know: ఎందుకు.
 ఎందుకు (enduku) — "why?".
 Another word off the ఎ- question row you already know: ఎక్కడ "where", ఎవరు "who", and now ఎందుకు (enduku) "why". The row keeps its shape and you keep getting the words free.
 It goes where its answer goes, not at the front: మీరు ఎందుకు (enduku) వెళ్తారు? — "why do you go?"
+
+The word, taken apart.
+ఎందుకు (enduku) is native Dravidian, built on the question base e-. DEDR 5151 lists enduku, "why", itself.
 
 What you've built.
 The question the next word answers.
@@ -151,6 +163,9 @@ You'll want to know: ఎందుకంటే.
 ఎందుకంటే (endukaṇṭē) — "because".
 Look at it: it is ఎందుకు (enduku) with అంటే glued on — "if you ask why". Telugu answers the question by repeating it and then continuing, which is the gluing habit of your very first lesson doing real work.
 నేను వెళ్తాను, ఎందుకంటే (endukaṇṭē) పని ఉంది — "I'll go, because there is work."
+
+The word, taken apart.
+ఎందుకంటే (endukaṇṭē) is native Dravidian: enduku, "why" (DEDR 5151), and aṇṭē, "if you say", from anu, "to say" (DEDR 868).
 
 Grammar Lens: the reason clause comes second.
 Telugu can put the reason first, as పని ఉంది కాబట్టి నేను వెళ్తాను. With ఎందుకంటే (endukaṇṭē) it goes second, after the thing being explained, exactly where English puts it. Use ఎందుకంటే (endukaṇṭē) while that ordering is still the one you think in.

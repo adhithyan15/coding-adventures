@@ -11,7 +11,8 @@ romanization: "kūḍā"
 concept_tag: TE-WORD-ALSO
 prerequisites: [TE-C63-health]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūḍā: native Dravidian, built on kūḍu 'to join, add together' (DEDR 1882), with Tamil kūṭu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C63-health]
 English can drop "also" almost anywhere in a sentence and let the stress carry the meaning. Telugu puts కూడా straight after whatever it includes, and that placement does the work the stress would have done.
 
 It is a small word that softens a great deal. Adding కూడా to an answer turns a flat అవును into agreement with the person who asked.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూడా** (*kūḍā*) is native Dravidian, built on *kūḍu*, "to join, add together", which DEDR 1882 lists with Tamil *kūṭu*, "to come together", and Kannada *kūḍu*, "to join".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

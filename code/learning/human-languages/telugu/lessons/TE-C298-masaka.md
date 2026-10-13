@@ -14,7 +14,8 @@ romanization: "masaka"
 concept_tag: TE-GUNAM298-MASAKA
 prerequisites: [TE-C298-cadunaina, TE-C298-bolu]
 sounds: []
-roots: []
+roots: [dravidian-macaku-dim]
+etymology_hook: "masaka: native Dravidian, one word with Kannada masaka (DEDR 4627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C298-bolu]
 <!-- hl-knowledge: introduces=[TE-LEX-C298-GUNAM298-05]; assesses=[] -->
 
 **మసక** — *masaka* — "dim, blurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మసక** (*masaka*) is native Dravidian, one word with Kannada *masaka* (DEDR 4627). DEDR lists Telugu *masaka*, "dimness, dusk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

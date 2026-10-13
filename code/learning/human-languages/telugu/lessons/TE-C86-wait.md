@@ -11,7 +11,8 @@ romanization: "āgaṇḍi"
 concept_tag: TE-REPAIR-WAIT
 prerequisites: [TE-C86-loudly, TE-C86-oneminute]
 sounds: []
-roots: []
+roots: [dravidian-aagu-stop]
+etymology_hook: "āgaṇḍi: native āgu 'to stop' (DEDR 340) + the polite -aṇḍi"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C86-oneminute]
 **ఆగండి** (*āgaṇḍi*) — "please wait", or "please stop".
 
 It is the verb **ఆగు** with the polite **-అండి**. **ఆగండి, ఒక్క నిమిషం** — "wait, one minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆగండి** (*āgaṇḍi*) is native Dravidian: *āgu*, "to stop, stay", which DEDR 340 lists with Kannada *āpu*, "restraint, stoppage", followed by the polite ending *-aṇḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

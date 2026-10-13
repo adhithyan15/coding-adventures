@@ -14,7 +14,8 @@ romanization: "kūragāyalu"
 concept_tag: TE-THINGS117-KURAGAYALU
 prerequisites: [TE-C116-cepa, TE-C116-mamsam]
 sounds: []
-roots: []
+roots: [dravidian-kuura-vegetable, dravidian-kaay-fruit]
+etymology_hook: "kūragāyalu: native kūra 'vegetable' (DEDR 1760) + kāya 'unripe fruit' (DEDR 1459) + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C116-mamsam]
 <!-- hl-knowledge: introduces=[TE-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **కూరగాయలు** — *kūragāyalu* — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కూరగాయలు** (*kūragāyalu*) is native Dravidian: *kūra*, "curry-stuff" (DEDR 1760), and *kāya*, "unripe fruit" (DEDR 1459), with the plural *-lu*. DEDR compares the Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613), with *kāya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

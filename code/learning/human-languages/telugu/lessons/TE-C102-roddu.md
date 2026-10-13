@@ -14,7 +14,8 @@ romanization: "rōḍḍu"
 concept_tag: TE-LOC102-RODDU
 prerequisites: [TE-C102-madhyalo, TE-C102-vidhi]
 sounds: []
-roots: []
+roots: [english-road]
+etymology_hook: "rōḍḍu ← English road, with Telugu's doubled -ḍḍ- and added -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C102-vidhi]
 <!-- hl-knowledge: introduces=[TE-LEX-C102-LOC102-03]; assesses=[] -->
 
 **రోడ్డు** — *rōḍḍu* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రోడ్డు** (*rōḍḍu*) is a loan from English *road*, with a doubled *-ḍḍ-* and Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

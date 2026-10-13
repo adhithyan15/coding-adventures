@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 258,
-  "sourceHash": "fnv1a64:0055e12302bc3243",
+  "sourceHash": "fnv1a64:df762783cd4fa7dc",
   "lessonIds": [
     "TE-C258-paddhati",
     "TE-C258-niyamam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch258.txt",
   "json": "telugu/narration/ch258.json",
-  "textHash": "fnv1a64:8033087404cdba2e",
-  "jsonHash": "fnv1a64:35db504fd54f7927",
+  "textHash": "fnv1a64:f327601a816d9c4b",
+  "jsonHash": "fnv1a64:f4852c4e784092fb",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tāmarapuvvu"
 concept_tag: TE-THINGS132-TAMARAPUVVU
 prerequisites: [TE-C132-dhoti, TE-C132-jakettu]
 sounds: []
-roots: []
+roots: [sanskrit-tamarasa, dravidian-pu-flower]
+etymology_hook: "tāmarapuvvu: tāmara ← Sanskrit tāmarasa 'red lotus' (CDIAL 5774) + native puvvu 'flower' (DEDR 4345)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C132-jakettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **తామరపువ్వు** — *tāmarapuvvu* — "a lotus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తామరపువ్వు** (*tāmarapuvvu*) is *tāmara*, "lotus", from Sanskrit *tāmarasa*, "red lotus" (CDIAL 5774), and native *puvvu*, "flower" (DEDR 4345), which DEDR compares, with a query, with Sanskrit *puṣpa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

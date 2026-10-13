@@ -11,7 +11,8 @@ romanization: "mariyu"
 concept_tag: TE-CONJ-AND
 prerequisites: [TE-C73-astringent, TE-C08-dayachesi, TE-C08-andi]
 sounds: []
-roots: []
+roots: [dravidian-maru-other]
+etymology_hook: "mariyu: native Dravidian; DEDR 4766 lists maṟi 'and, again' with Tamil maṟu 'other'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C73-astringent]
 Telugu's everyday speech often joins two things by simply saying them one after the other, or by hanging a small **-ఉ** on the end of each. మరియు is the written, spoken-carefully form, and it is the one a list on a page will use.
 
 Put it between two nouns you already have: **నీళ్ళు మరియు పాలు** — "water and milk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మరియు** (*mariyu*) is native Dravidian. DEDR 4766 lists Telugu *maṟi*, "and, again, further", with Tamil *maṟu* and Kannada *maṟu*, "other, next".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

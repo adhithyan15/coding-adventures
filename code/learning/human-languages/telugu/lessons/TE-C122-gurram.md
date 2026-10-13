@@ -14,7 +14,8 @@ romanization: "gurraṁ"
 concept_tag: TE-THINGS122-GURRAM
 prerequisites: [TE-C122-divi, TE-C122-avu]
 sounds: []
-roots: []
+roots: [dravidian-kutirai-horse]
+etymology_hook: "gurraṁ: DEDR 1711 lists guṟṟamu 'horse' and raises an Indo-Aryan source (ghoṭaka), which CDIAL 4516 calls non-Aryan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C122-avu]
 <!-- hl-knowledge: introduces=[TE-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **గుర్రం** — *gurraṁ* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 1711 lists *guṟṟamu*, "horse", beside Tamil *kutirai*, and raises the possibility that it came from Indo-Aryan, Sanskrit *ghoṭaka*, "horse". CDIAL 4516 in turn calls *ghoṭa* non-Aryan, probably Dravidian, so the source of **గుర్రం** (*gurraṁ*) is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

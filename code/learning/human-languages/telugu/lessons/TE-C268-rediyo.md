@@ -14,7 +14,8 @@ romanization: "rēḍiyō"
 concept_tag: TE-VASTUVU268-REDIYO
 prerequisites: [TE-C267-cikati, TE-C268-pradarsana]
 sounds: []
-roots: []
+roots: [english-radio]
+etymology_hook: "rēḍiyō ← English radio"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C268-pradarsana]
 <!-- hl-knowledge: introduces=[TE-LEX-C268-VASTUVU268-02]; assesses=[] -->
 
 **రేడియో** — *rēḍiyō* — "the radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రేడియో** (*rēḍiyō*) is a loan from English *radio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

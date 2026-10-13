@@ -14,7 +14,8 @@ romanization: "mosali"
 concept_tag: TE-VASTUVU302-MOSALI
 prerequisites: [TE-C302-gorre, TE-C302-todelu]
 sounds: []
-roots: []
+roots: [dravidian-mutalai-crocodile]
+etymology_hook: "mosali: native Dravidian; DEDR 4952 lists mosali with Tamil mutalai 'crocodile'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C302-todelu]
 <!-- hl-knowledge: introduces=[TE-LEX-C302-VASTUVU302-05]; assesses=[] -->
 
 **మొసలి** — *mosali* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొసలి** (*mosali*) is native Dravidian. DEDR 4952 lists *mosali*, "crocodile", with Tamil *mutalai* and Kannada *mosaḷe*. DEDR compares Sanskrit *mācala*, "crocodile", a lexicon word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "batukamma"
 concept_tag: TE-SAMAYAM252-BATUKAMMA
 prerequisites: [TE-C252-dasara, TE-C252-vinayaka-caviti]
 sounds: []
-roots: []
+roots: [vaazh-live-dravidian, dravidian-appa-amma]
+etymology_hook: "batukamma: native batuku 'life' (DEDR 5372) + amma 'mother' (DEDR 183)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C252-vinayaka-caviti]
 <!-- hl-knowledge: introduces=[TE-LEX-C252-SAMAYAM252-05]; assesses=[] -->
 
 **బతుకమ్మ** — *batukamma* — "Bathukamma, the Telangana flower festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బతుకమ్మ** (*batukamma*) is native Dravidian: *batuku*, "life", one word with Tamil *vāḻ*, "to live" (DEDR 5372), and *amma*, "mother" (DEDR 183), which DEDR compares with Sanskrit *ambā*, "mother" (CDIAL 574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

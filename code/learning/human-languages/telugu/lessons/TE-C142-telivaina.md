@@ -14,7 +14,8 @@ romanization: "telivaina"
 concept_tag: TE-QUAL142-TELIVAINA
 prerequisites: [TE-C141-somari, TE-C142-kastapade, TE-C83-modati-chadavu]
 sounds: []
-roots: []
+roots: [dravidian-tel-become-clear, tamil-aaku-become]
+etymology_hook: "telivaina: native telivi 'intelligence' (DEDR 3433) + ayina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C142-kastapade]
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-02]; assesses=[] -->
 
 **తెలివైన** — *telivaina* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెలివైన** (*telivaina*) is native Dravidian: *telivi*, "understanding, intelligence", which DEDR 3433 lists under *teliyu*, "to be known", and *ayina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

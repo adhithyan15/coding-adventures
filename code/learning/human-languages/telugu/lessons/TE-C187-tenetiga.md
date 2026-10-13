@@ -14,7 +14,8 @@ romanization: "tēneṭīga"
 concept_tag: TE-VASTUVU187-TENETIGA
 prerequisites: [TE-C186-kavalalu, TE-C186-papa]
 sounds: []
-roots: []
+roots: [dravidian-teen-honey, dravidian-ii-fly]
+etymology_hook: "tēneṭīga: native tēne 'honey' (DEDR 3268) + īga 'fly, bee' (DEDR 533)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C186-papa]
 <!-- hl-knowledge: introduces=[TE-LEX-C187-VASTUVU187-01]; assesses=[] -->
 
 **తేనెటీగ** — *tēneṭīga* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తేనెటీగ** (*tēneṭīga*) is native Dravidian: *tēne*, "honey", one word with Tamil *tēṉ* (DEDR 3268), and *īga*, "fly", one word with Tamil *ī*, "fly, bee" (DEDR 533). For the first, DEDR compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

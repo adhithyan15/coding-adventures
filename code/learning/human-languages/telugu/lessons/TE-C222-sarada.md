@@ -14,7 +14,8 @@ romanization: "saradā"
 concept_tag: TE-GUNAM222-SARADA
 prerequisites: [TE-C221-gundrani, TE-C221-padunaina]
 sounds: []
-roots: []
+roots: [telugu-sarada-fun]
+etymology_hook: "saradā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'fun'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C221-padunaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C222-GUNAM222-01]; assesses=[] -->
 
 **సరదా** — *saradā* — "fun; a fondness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సరదా** (*saradā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "fun, fondness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

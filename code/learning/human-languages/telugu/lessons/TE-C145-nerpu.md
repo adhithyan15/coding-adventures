@@ -14,7 +14,8 @@ romanization: "nērpu"
 concept_tag: TE-VERB-NERPU
 prerequisites: [TE-C144-vetuku, TE-C145-nercuko]
 sounds: []
-roots: []
+roots: [dravidian-ner-learn]
+etymology_hook: "nērpu: native Dravidian; DEDR 3770 lists nērupu 'to teach' beside nērcu 'to learn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C145-nercuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C145-ACT145-02]; assesses=[] -->
 
 **నేర్పు** — *nērpu* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నేర్పు** (*nērpu*) is native Dravidian. DEDR 3770 lists *nērupu*, "to teach", beside *nērcu*, "to learn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

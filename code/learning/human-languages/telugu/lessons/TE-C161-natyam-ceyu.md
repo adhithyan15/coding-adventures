@@ -14,7 +14,8 @@ romanization: "nāṭyaṁ cēyu"
 concept_tag: TE-VERB-NATYAM-CEYU
 prerequisites: [TE-C160-gurtupettuko, TE-C160-oppuko]
 sounds: []
-roots: []
+roots: [sanskrit-natya, sey-do-dravidian]
+etymology_hook: "nāṭyaṁ cēyu: Sanskrit nāṭya 'dancing' (CDIAL 7046) + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C160-oppuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-01]; assesses=[] -->
 
 **నాట్యం చేయు** — *nāṭyaṁ cēyu* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాట్యం చేయు** (*nāṭyaṁ cēyu*) pairs Sanskrit *nāṭya*, "dancing, dramatic art" (CDIAL 7046), with the Telugu ending *-ṁ*, and native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

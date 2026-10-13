@@ -13,6 +13,9 @@ You'll want to know: తాత.
 తాత (tāta) — "grandfather".
 It has the same small, repeatable shape as the nānna and amma you met in the family lesson. Sanskrit carries a tāta too, meaning 'father' or simply 'dear one'; Telugu moved the word up a generation. Children use it for any kindly old man, not only their own grandfather.
 
+The word, taken apart.
+DEDR 3160 lists తాత (tāta) as Dravidian, one word with Tamil tāttā and Kannada tāta, "grandfather". DEDR compares Sanskrit tāta, "father" (CDIAL 5754).
+
 What you've built.
 The first of four family words. Three follow, and each reuses the ones before.
 
@@ -41,6 +44,9 @@ You'll want to know: అమ్మమ్మ.
 అమ్మమ్మ (ammamma) — "grandmother", and specifically your mother's mother.
 Say it slowly and you can hear what it is made of: amma twice over, mother of mother. Telugu keeps the two grandmothers apart, and the father's mother is nāyanamma, assembled the same way on nāyana, 'father'. Nothing here is borrowed; every piece came from the family lesson.
 
+The word, taken apart.
+అమ్మమ్మ (ammamma) is amma, "mother", twice over. Amma is native Dravidian, one word with Tamil ammā and Kannada amma (DEDR 183). DEDR compares Sanskrit ambā, "mother" (CDIAL 574).
+
 What you've built.
 Two of four, and a word you could have decoded before you were taught it.
 
@@ -68,6 +74,7 @@ Before the new one: what did ammamma mean?
 You'll want to know: భర్త.
 భర్త (bharta) — "husband".
 Sanskrit, and it opens cleanly: the root bhṛ, 'to bear, to carry, to support', plus the ending that names the one who does it. So the word says 'the one who supports'. That root is old enough to have relatives far outside India — Latin fero, 'I carry', and English bear both continue it.
+CDIAL 9402 lists Sanskrit bhartṛ, "husband, bearer".
 
 What you've built.
 Three of four. The last word comes from the very same root.
@@ -96,6 +103,9 @@ Before the new one: what did bharta mean?
 You'll want to know: భార్య.
 భార్య (bhārya) — "wife".
 The same root bhṛ as the last word, with a different ending: 'she who is to be supported'. Two words, one root, and between them a picture of the household as Sanskrit's grammarians framed it rather than as anyone lives in it now. That is worth hearing plainly, because the shape of the pair is the reason it is easy to remember.
+
+The word, taken apart.
+భార్య (bhārya) is Sanskrit bhāryā, "wife", taken over whole as a learned loan, a tatsama, with the final -ā shortened (CDIAL 9471).
 
 What you've built.
 That closes the run: grandfather, grandmother, husband, wife.

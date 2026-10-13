@@ -14,7 +14,8 @@ romanization: "raddu cēyu"
 concept_tag: TE-VERB-RADDU-CEYU
 prerequisites: [TE-C280-cercu, TE-C280-jama-ceyu]
 sounds: []
-roots: []
+roots: [arabic-radd, sey-do-dravidian]
+etymology_hook: "raddu cēyu: raddu ← Arabic radd 'rejection' through Persian and Hindustani + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C280-jama-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C281-KRIYA281-01]; assesses=[] -->
 
 **రద్దు చేయు** — *raddu cēyu* — "to cancel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రద్దు చేయు** (*raddu cēyu*) pairs *raddu*, "cancellation", a loan from Arabic *radd*, "rejection", through Persian and Hindustani, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

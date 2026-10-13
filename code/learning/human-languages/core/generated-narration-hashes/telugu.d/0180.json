@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 180,
-  "sourceHash": "fnv1a64:75739054894506fc",
+  "sourceHash": "fnv1a64:b4832ddd3ae94368",
   "lessonIds": [
     "TE-C180-pradhana",
     "TE-C180-mottam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch180.txt",
   "json": "telugu/narration/ch180.json",
-  "textHash": "fnv1a64:f5504b2fa659fd06",
-  "jsonHash": "fnv1a64:8cc6241fa4684791",
+  "textHash": "fnv1a64:99a2d897f0a781fc",
+  "jsonHash": "fnv1a64:22773e3162702afd",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tōlu"
 concept_tag: TE-VASTUVU306-TOLU
 prerequisites: [TE-C306-ukku, TE-C306-simentu]
 sounds: []
-roots: []
+roots: [dravidian-tol-skin]
+etymology_hook: "tōlu: native Dravidian, one word with Tamil tōl and Kannada tōlu (DEDR 3559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C306-simentu]
 <!-- hl-knowledge: introduces=[TE-LEX-C306-VASTUVU306-03]; assesses=[] -->
 
 **తోలు** — *tōlu* — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోలు** (*tōlu*) is native Dravidian, one word with Tamil *tōl* and Kannada *tōlu* (DEDR 3559). DEDR lists Telugu *tōlu*, "skin, hide, leather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

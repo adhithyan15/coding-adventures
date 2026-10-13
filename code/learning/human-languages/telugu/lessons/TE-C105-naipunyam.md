@@ -14,7 +14,8 @@ romanization: "naipuṇyaṁ"
 concept_tag: TE-LOC105-NAIPUNYAM
 prerequisites: [TE-C105-bassu, TE-C105-samarthyam]
 sounds: []
-roots: []
+roots: [sanskrit-naipunya]
+etymology_hook: "naipuṇyaṁ ← Sanskrit naipuṇya 'skill', from nipuṇa 'skilful', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C105-samarthyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C105-LOC105-04]; assesses=[] -->
 
 **నైపుణ్యం** — *naipuṇyaṁ* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నైపుణ్యం** (*naipuṇyaṁ*) is Sanskrit *naipuṇya*, "skill", from *nipuṇa*, "skilful", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kalupu"
 concept_tag: TE-VERB-KALUPU
 prerequisites: [TE-C157-veyincu, TE-C157-udikincu]
 sounds: []
-roots: []
+roots: [dravidian-kala-mix]
+etymology_hook: "kalupu: native Dravidian; DEDR 1299 lists kalapu 'to mix' with Tamil kala 'to mix'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C157-udikincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C157-KRIYA157-04]; assesses=[] -->
 
 **కలుపు** — *kalupu* — "to mix, to stir in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కలుపు** (*kalupu*) is native Dravidian. DEDR 1299 gives it as *kalapu*, "to mix, join", with Tamil *kala* and Kannada *kalasu*, "to mix". DEDR compares Sanskrit *kalka*, "a paste" (CDIAL 2939).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

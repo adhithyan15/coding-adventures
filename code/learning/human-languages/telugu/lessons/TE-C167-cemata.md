@@ -14,7 +14,8 @@ romanization: "cemaṭa"
 concept_tag: TE-AROGYAM167-CEMATA
 prerequisites: [TE-C167-virecanalu, TE-C167-matra]
 sounds: []
-roots: []
+roots: [dravidian-cemmal-water]
+etymology_hook: "cemaṭa: native Dravidian; DEDR 2539 lists it beside cemma 'moisture', with Tamil cemmal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C167-matra]
 <!-- hl-knowledge: introduces=[TE-LEX-C167-AROGYAM167-04]; assesses=[] -->
 
 **చెమట** — *cemaṭa* — "sweat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెమట** (*cemaṭa*) is native Dravidian. DEDR 2539 lists it, "sweat", beside *cemma*, "moisture", with Tamil *cemmal*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

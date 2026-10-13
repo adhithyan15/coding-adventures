@@ -12,8 +12,9 @@ concept_tag: COURTESY-THANKS
 prerequisites: [TE-C01-namaskaram]
 sounds: [nya-conjunct, mulu-plural]
 roots: [dhanya, vada]
+etymology_hook: "dhanyavādamulu: Sanskrit dhanya 'fortunate' (CDIAL 6727a) + vāda 'speech' (CDIAL 11507) + Telugu plural -mulu"
 duration:
-  max_seconds: 260
+  max_seconds: 281
 requires:
   knowledge: []
 introduces:
@@ -52,7 +53,7 @@ this chapter, and the whole written word appears near its end.
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-DHANYAVADAMULU-02]; assesses=[] -->
 
 The core is **Sanskrit**: **dhanya** ("worthy, blessed," from *dhana*,
-"wealth") + **vāda** ("a saying," root *vad*, "to speak") = "an utterance of
+"wealth"; CDIAL 6727a) + **vāda** ("a saying," root *vad*, "to speak"; CDIAL 11507) = "an utterance of
 '[you are] worthy.'" Telugu then adds its own **plural ending -mulu**, so
 *dhanyavāda-mulu* is literally **"worthy-sayings,"** thanks in the plural of
 courtesy. (You'll also hear the shorter *dhanyavādālu*.) The Sanskrit stem is

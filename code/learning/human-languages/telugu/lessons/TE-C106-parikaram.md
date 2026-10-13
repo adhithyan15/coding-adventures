@@ -14,7 +14,8 @@ romanization: "parikaraṁ"
 concept_tag: TE-CAN106-PARIKARAM
 prerequisites: [TE-C105-hakku, TE-C106-avakasam]
 sounds: []
-roots: []
+roots: [sanskrit-parikara]
+etymology_hook: "parikaraṁ ← Sanskrit parikara 'equipment, apparatus', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C106-avakasam]
 <!-- hl-knowledge: introduces=[TE-LEX-C106-CAN106-02]; assesses=[] -->
 
 **పరికరం** — *parikaraṁ* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరికరం** (*parikaraṁ*) is Sanskrit *parikara*, "equipment, apparatus", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

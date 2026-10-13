@@ -14,7 +14,8 @@ romanization: "cakraṁ"
 concept_tag: TE-VASTUVU193-CAKRAM
 prerequisites: [TE-C193-caturasram, TE-C193-tribhujam]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "cakraṁ ← Sanskrit cakra 'wheel; potter's wheel; circle', a tatsama (CDIAL 4538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C193-tribhujam]
 <!-- hl-knowledge: introduces=[TE-LEX-C193-VASTUVU193-05]; assesses=[] -->
 
 **చక్రం** — *cakraṁ* — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చక్రం** (*cakraṁ*) is Sanskrit *cakra*, "wheel; potter's wheel; circle", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

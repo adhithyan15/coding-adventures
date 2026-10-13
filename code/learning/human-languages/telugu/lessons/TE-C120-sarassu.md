@@ -14,7 +14,8 @@ romanization: "sarassu"
 concept_tag: TE-THINGS120-SARASSU
 prerequisites: [TE-C119-kaphi, TE-C120-samudram]
 sounds: []
-roots: []
+roots: [sanskrit-saras]
+etymology_hook: "sarassu ← Sanskrit saras 'lake, pool', a tatsama (CDIAL 13254)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C120-samudram]
 <!-- hl-knowledge: introduces=[TE-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **సరస్సు** — *sarassu* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సరస్సు** (*sarassu*) is Sanskrit *saras*, "lake, pool", taken over whole as a learned loan, a tatsama, with Telugu's added *-u* (CDIAL 13254).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

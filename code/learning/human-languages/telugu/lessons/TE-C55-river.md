@@ -11,7 +11,8 @@ romanization: "nadi"
 concept_tag: TE-NOUN-RIVER
 prerequisites: [TE-C54-seedling]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "nadi ← Sanskrit nadī 'river' (CDIAL 6943), with the final -ī shortened"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *nadī* is the river, and it is built on a piece meaning "to sound, to 
 Telugu clipped the long final vowel and says నది. The inherited Telugu word is ఏరు, a stream, and it survives in place names up and down the country long after it stopped being said on its own.
 
 నది is the word you want when asking a stranger which way the water is.
+
+CDIAL 6943 lists Sanskrit *nadī*, "river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

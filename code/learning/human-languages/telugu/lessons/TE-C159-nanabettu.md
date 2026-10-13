@@ -14,7 +14,8 @@ romanization: "nānabeṭṭu"
 concept_tag: TE-VERB-NANABETTU
 prerequisites: [TE-C158-kolucu, TE-C159-pindu]
 sounds: []
-roots: []
+roots: [dravidian-nanai-wet, dravidian-pettu-put]
+etymology_hook: "nānabeṭṭu: native nānu 'to soak' (DEDR 3630) + peṭṭu 'to put' (DEDR 4390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C159-pindu]
 <!-- hl-knowledge: introduces=[TE-LEX-C159-KRIYA159-02]; assesses=[] -->
 
 **నానబెట్టు** — *nānabeṭṭu* — "to soak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నానబెట్టు** (*nānabeṭṭu*) is native Dravidian: *nānu*, "to soak", one word with Tamil *naṉai*, "to be soaked" (DEDR 3630), and *peṭṭu*, "to put" (DEDR 4390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

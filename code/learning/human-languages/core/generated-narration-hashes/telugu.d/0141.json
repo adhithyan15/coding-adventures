@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 141,
-  "sourceHash": "fnv1a64:88d8d7757bba87f1",
+  "sourceHash": "fnv1a64:69d8d5cddf136c82",
   "lessonIds": [
     "TE-C141-tiyani",
     "TE-C141-cedaina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch141.txt",
   "json": "telugu/narration/ch141.json",
-  "textHash": "fnv1a64:a592da5bd69387cc",
-  "jsonHash": "fnv1a64:b7c8be1fdd1410ab",
+  "textHash": "fnv1a64:b67060a00bb92942",
+  "jsonHash": "fnv1a64:8c4c069b82799f5a",
   "findings": []
 }

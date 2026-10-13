@@ -14,7 +14,8 @@ romanization: "māmiḍipaṇḍu"
 concept_tag: TE-THINGS117-MAMIDIPANDU
 prerequisites: [TE-C117-kuragayalu, TE-C117-aratipandu]
 sounds: []
-roots: []
+roots: [dravidian-ma-mango, dravidian-pazhu-ripen]
+etymology_hook: "māmiḍipaṇḍu: native māmiḍi 'mango' (DEDR 4782) + paṇḍu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C117-aratipandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **మామిడిపండు** — *māmiḍipaṇḍu* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మామిడిపండు** (*māmiḍipaṇḍu*) is native Dravidian: *māmiḍi*, "mango", which DEDR 4782 lists with Tamil *mā* and Kannada *māvu*; and *paṇḍu*, "fruit" (DEDR 4004). DEDR compares Sanskrit *mākanda*, "mango tree", with the first and *phala*, "fruit", with the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

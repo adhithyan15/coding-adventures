@@ -14,7 +14,8 @@ romanization: "kanubomma"
 concept_tag: TE-THINGS127-KANUBOMMA
 prerequisites: [TE-C127-mokalu, TE-C127-bhujam]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, dravidian-bommai-doll]
+etymology_hook: "kanubomma: native kanu 'eye' (DEDR 1159) + bomma 'eyebrow' (DEDR 4530)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C127-bhujam]
 <!-- hl-knowledge: introduces=[TE-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **కనుబొమ్మ** — *kanubomma* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కనుబొమ్మ** (*kanubomma*) is native Dravidian: *kanu*, "eye" (DEDR 1159), and *bomma*, which DEDR 4530 glosses "puppet, doll, effigy, eyebrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

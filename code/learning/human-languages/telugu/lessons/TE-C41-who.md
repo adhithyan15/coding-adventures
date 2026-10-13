@@ -11,7 +11,8 @@ romanization: "evaru"
 concept_tag: TE-DEIXIS-WHO
 prerequisites: [TE-C41-there]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "evaru: native Dravidian, on the question base e- (DEDR 5151), which lists evaru itself; Tamil yār"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ opens with the same **e-**. That is the pattern: the near words you know open
 with **i-** (**ఇది** *idi*, **ఇక్కడ** *ikkaḍa*), the far ones with **a-** (**అది**
 *adi*, **అక్కడ** *akkaḍa*), and the asking words with **e-**. The last lesson
 of this chapter lays it out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎవరు** (*evaru*) is native Dravidian, built on the question base *e-*. DEDR 5151 lists *evaru*, "who", itself, with Tamil *yār*, "who".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 194,
-  "sourceHash": "fnv1a64:d41152e29b8ea699",
+  "sourceHash": "fnv1a64:b527ad7a23986e16",
   "lessonIds": [
     "TE-C194-intipani",
     "TE-C194-panimanisi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch194.txt",
   "json": "telugu/narration/ch194.json",
-  "textHash": "fnv1a64:625a187f4c6d1fe3",
-  "jsonHash": "fnv1a64:82c76e158f7ac7eb",
+  "textHash": "fnv1a64:2e61e04c6b4492aa",
+  "jsonHash": "fnv1a64:695bc5cb0e92b014",
   "findings": []
 }

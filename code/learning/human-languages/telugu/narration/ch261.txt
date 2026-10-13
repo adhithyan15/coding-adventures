@@ -12,6 +12,9 @@ Before the new one: say the Telugu for strange, then the Telugu for kind.
 You'll want to know: సహజమైన.
 సహజమైన — sahajamaina — "natural".
 
+The word, taken apart.
+సహజమైన (sahajamaina) is Sanskrit sahaja, "born together, inborn" (CDIAL 13302), with native aina, "which is" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for kind, then the Telugu for natural.
 
 You'll want to know: చిక్కని.
 చిక్కని — cikkani — "thick (of a liquid)".
+
+The word, taken apart.
+చిక్కని (cikkani) is native Dravidian. DEDR 2488 lists cikkana, "thickness", with Kannada jigi, "thickness, viscidity". DEDR compares Sanskrit cikka, "bird-lime" (CDIAL 4780), which CDIAL reports as taken from Dravidian, or else from Munda.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for natural, then the Telugu for thick.
 You'll want to know: జిడ్డు.
 జిడ్డు — jiḍḍu — "greasy, oily".
 
+The word, taken apart.
+జిడ్డు (jiḍḍu) is native Dravidian. DEDR 2516 lists jiḍḍu, "oiliness, greasiness", with Kannada jiḍḍu, "a greasy substance".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for thick, then the Telugu for greasy.
 You'll want to know: జిగట.
 జిగట — jigaṭa — "sticky".
 
+The word, taken apart.
+జిగట (jigaṭa) is native Dravidian. DEDR 2488 lists jigaṭa, "gum, stickiness", with Kannada jigaṭu, "stickiness". DEDR compares Sanskrit cikka, "bird-lime" (CDIAL 4780), which CDIAL reports as taken from Dravidian, or else from Munda.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for greasy, then the Telugu for sticky.
 
 You'll want to know: గరుకు.
 గరుకు — garuku — "rough (to the touch)".
+
+The word, taken apart.
+గరుకు (garuku) is probably native Dravidian. DEDR 1265 lists Telugu kaṟaku, "roughness; rough", with Kannada garaku, "rough surface", and Tulu garu, "rough", and compares Sanskrit karkaśa, "rough".
 
 What you've built.
 One more word for this chapter.

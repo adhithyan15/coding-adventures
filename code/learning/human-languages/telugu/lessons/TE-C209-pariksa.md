@@ -14,7 +14,8 @@ romanization: "parīkṣa"
 concept_tag: TE-AROGYAM209-PARIKSA
 prerequisites: [TE-C209-durada, TE-C209-narsu]
 sounds: []
-roots: []
+roots: [sanskrit-pariksha]
+etymology_hook: "parīkṣa ← Sanskrit parīkṣā 'examination', from parīkṣatē 'examines' (CDIAL 7904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C209-narsu]
 <!-- hl-knowledge: introduces=[TE-LEX-C209-AROGYAM209-03]; assesses=[] -->
 
 **పరీక్ష** — *parīkṣa* — "a test, an examination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరీక్ష** (*parīkṣa*) is Sanskrit *parīkṣā*, "examination", from *parīkṣatē*, "observes, examines" (CDIAL 7904), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

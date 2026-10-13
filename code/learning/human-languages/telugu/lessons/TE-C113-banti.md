@@ -14,7 +14,8 @@ romanization: "banti"
 concept_tag: TE-THINGS113-BANTI
 prerequisites: [TE-C113-aggipette, TE-C113-bomma]
 sounds: []
-roots: []
+roots: [dravidian-pantu-ball]
+etymology_hook: "banti: native Dravidian, one word with Tamil pantu and Malayalam pantu (DEDR 3925)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C113-bomma]
 <!-- hl-knowledge: introduces=[TE-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **బంతి** — *banti* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బంతి** (*banti*) is native Dravidian, one word with Tamil *pantu* and Malayalam *pantu* (DEDR 3925).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

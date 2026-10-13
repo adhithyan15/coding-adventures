@@ -14,7 +14,8 @@ romanization: "upayōgakaramaina"
 concept_tag: TE-GUNAM296-UPAYOGAKARAMAINA
 prerequisites: [TE-C296-pratyeka, TE-C296-anukulamaina]
 sounds: []
-roots: []
+roots: [sanskrit-upayoga, tamil-aaku-become]
+etymology_hook: "upayōgakaramaina: Sanskrit upayōga 'use' + kara 'making' + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C296-anukulamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C296-GUNAM296-04]; assesses=[] -->
 
 **ఉపయోగకరమైన** — *upayōgakaramaina* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉపయోగకరమైన** (*upayōgakaramaina*) is Sanskrit *upayōga*, "use", with *kara*, "making", and native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

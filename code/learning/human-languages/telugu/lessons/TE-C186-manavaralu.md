@@ -14,7 +14,8 @@ romanization: "manavarālu"
 concept_tag: TE-VASTUVU186-MANAVARALU
 prerequisites: [TE-C185-pensilu, TE-C186-manavadu]
 sounds: []
-roots: []
+roots: [dravidian-marumakan-nephew]
+etymology_hook: "manavarālu: native Dravidian; DEDR 4715 lists manumarālu 'granddaughter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C186-manavadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C186-VASTUVU186-02]; assesses=[] -->
 
 **మనవరాలు** — *manavarālu* — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మనవరాలు** (*manavarālu*) is native Dravidian. DEDR 4715 lists the older *manumarālu*, "granddaughter", with Kannada *mommagaḷu*, "granddaughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

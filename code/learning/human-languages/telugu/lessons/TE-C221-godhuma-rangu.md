@@ -14,7 +14,8 @@ romanization: "gōdhuma raṅgu"
 concept_tag: TE-GUNAM221-GODHUMA-RANGU
 prerequisites: [TE-C220-sannani, TE-C220-pacci]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma, sanskrit-ranga]
+etymology_hook: "gōdhuma raṅgu: Sanskrit gōdhūma 'wheat' (CDIAL 4287) + raṅgu ← raṅga 'colour' (CDIAL 10560)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C220-pacci]
 <!-- hl-knowledge: introduces=[TE-LEX-C221-GUNAM221-01]; assesses=[] -->
 
 **గోధుమ రంగు** — *gōdhuma raṅgu* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోధుమ రంగు** (*gōdhuma raṅgu*) pairs Sanskrit *gōdhūma*, "wheat" (CDIAL 4287), with *raṅgu*, "colour", from Sanskrit *raṅga*, "dye, colour" (CDIAL 10560): "wheat colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

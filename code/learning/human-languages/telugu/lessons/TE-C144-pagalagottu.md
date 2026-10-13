@@ -14,7 +14,8 @@ romanization: "pagalagoṭṭu"
 concept_tag: TE-VERB-PAGALAGOTTU
 prerequisites: [TE-C144-vandu, TE-C144-koyu]
 sounds: []
-roots: []
+roots: [dravidian-paku-divide, dravidian-kottu-beat]
+etymology_hook: "pagalagoṭṭu: native pagulu 'to break' (DEDR 3808) + koṭṭu 'to strike' (DEDR 2063)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C144-koyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C144-ACT144-03]; assesses=[] -->
 
 **పగలగొట్టు** — *pagalagoṭṭu* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పగలగొట్టు** (*pagalagoṭṭu*) is native Dravidian: *pagulu*, "to break, crack" (DEDR 3808), and *koṭṭu*, "to strike", one word with Tamil *koṭṭu* (DEDR 2063). DEDR compares Pali *koṭṭeti*, "to beat" (CDIAL 3241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāṇeṁ"
 concept_tag: TE-PANI194-NANEM
 prerequisites: [TE-C194-darji, TE-C194-vyapari]
 sounds: []
-roots: []
+roots: [sanskrit-nanaka]
+etymology_hook: "nāṇeṁ: from Sanskrit nāṇaka 'coin' (CDIAL 7050), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C194-vyapari]
 <!-- hl-knowledge: introduces=[TE-LEX-C194-PANI194-05]; assesses=[] -->
 
 **నాణెం** — *nāṇeṁ* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాణెం** (*nāṇeṁ*) comes from Sanskrit *nāṇaka*, "coin, anything stamped" (CDIAL 7050), reshaped to Telugu sounds: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

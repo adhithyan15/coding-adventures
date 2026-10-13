@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 108,
-  "sourceHash": "fnv1a64:889545b3a6f4cfc4",
+  "sourceHash": "fnv1a64:71e05be0b1bc5da9",
   "lessonIds": [
     "TE-C108-koru",
     "TE-C108-nirnayincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch108.txt",
   "json": "telugu/narration/ch108.json",
-  "textHash": "fnv1a64:87504b4916d4fb05",
-  "jsonHash": "fnv1a64:b063b6856e0751ec",
+  "textHash": "fnv1a64:52ae42e4517573f0",
+  "jsonHash": "fnv1a64:3a4d89dd80c9cb46",
   "findings": []
 }

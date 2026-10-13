@@ -14,7 +14,8 @@ romanization: "gīyu"
 concept_tag: TE-VERB-GIYU
 prerequisites: [TE-C204-vyayamam-ceyu, TE-C204-natincu]
 sounds: []
-roots: []
+roots: [dravidian-kiiru-scratch]
+etymology_hook: "gīyu: native Dravidian; DEDR 1623 lists gīyu 'to draw (a line)' with Tamil kīṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C204-natincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C204-KRIYA204-05]; assesses=[] -->
 
 **గీయు** — *gīyu* — "to draw (a line, a picture)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గీయు** (*gīyu*) is native Dravidian. DEDR 1623 lists *gīyu*, "to scratch, draw (as a line)", with Tamil *kīṟu*, "to scratch, draw lines". DEDR compares, with a query, Sanskrit *kiraka*, "scribe" (CDIAL 3170).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

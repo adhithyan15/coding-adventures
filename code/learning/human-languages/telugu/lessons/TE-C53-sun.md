@@ -11,7 +11,8 @@ romanization: "sūryuḍu"
 concept_tag: TE-NOUN-SUN
 prerequisites: [TE-C53-sky]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūryuḍu ← Sanskrit sūrya 'sun' (CDIAL 13574), with the Telugu ending -uḍu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *sūrya* is the sun. Telugu took the word and hung **-డు** on the e
 That ending is doing something real here. సూర్యుడు is the sun as a person: the one who drives, who is greeted, who is asked for things. Telugu has a plainer inherited word for the thing in the sky, పొద్దు, which you already have, and పొద్దు is what you use to say the sun came up.
 
 So one language keeps two suns: పొద్దు for the light, సూర్యుడు for the god.
+
+CDIAL 13574 lists Sanskrit *sūrya*, "sun".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

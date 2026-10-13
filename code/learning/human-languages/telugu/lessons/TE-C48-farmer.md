@@ -11,7 +11,8 @@ romanization: "raitu"
 concept_tag: TE-NOUN-FARMER
 prerequisites: [TE-C48-doctor]
 sounds: []
-roots: []
+roots: [arabic-raiyya]
+etymology_hook: "raitu ← Arabic raʿiyya 'flock, subjects', through Persian and Hindustani raʿiyat"
 duration:
   max_seconds: 210
 requires:

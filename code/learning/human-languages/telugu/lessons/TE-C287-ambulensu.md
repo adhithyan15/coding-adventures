@@ -14,7 +14,8 @@ romanization: "ambulensu"
 concept_tag: TE-AROGYAM287-AMBULENSU
 prerequisites: [TE-C287-chati, TE-C287-pramadam]
 sounds: []
-roots: []
+roots: [english-ambulance]
+etymology_hook: "ambulensu ← English ambulance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C287-pramadam]
 <!-- hl-knowledge: introduces=[TE-LEX-C287-AROGYAM287-03]; assesses=[] -->
 
 **అంబులెన్సు** — *ambulensu* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అంబులెన్సు** (*ambulensu*) is a loan from English *ambulance*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [TE-C04-velli-vastaanu]
 sounds: [long-e]
 roots: [reepu-tomorrow-dravidian, kalu-meet-dravidian]
+etymology_hook: "rēpu 'tomorrow' (DEDR 916) and kalayu 'to join, meet' (DEDR 1299) are both native Dravidian"
 duration:
   max_seconds: 120
 requires:
@@ -44,8 +45,9 @@ reviews_of: [TE-C04-velli-vastaanu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C04-REEPU-KALUDDAAM-02]; assesses=[] -->
 
-**రేపు** (*rēpu*, "tomorrow") is native Dravidian. **కలుద్దాం** (*kaluddām*, "let's
-meet") is from **కలు** (*kalu*, "to meet, to join") — so the phrase is "**tomorrow,
+**రేపు** (*rēpu*, "tomorrow") is native Dravidian (DEDR 916). **కలుద్దాం** (*kaluddām*, "let's
+meet") is from **కలు** (*kalu*, "to meet, to join"; DEDR 1299,
+which compares Sanskrit *kalka*, "a paste") — so the phrase is "**tomorrow,
 let's meet**," the Telugu "see you tomorrow." The **-దాం** (*-ddām*) ending is
 Telugu's "let's ___" — a first-person-plural invitation: *veḷḷddām* ("let's go"),
 *tindām* ("let's eat").

@@ -11,7 +11,8 @@ romanization: "ānandaṁ"
 concept_tag: TE-WELCOME-DELIGHT
 prerequisites: [TE-C98-thatone, TE-C99-namaste]
 sounds: []
-roots: []
+roots: [ananda-sanskrit]
+etymology_hook: "ānandaṁ ← Sanskrit ānanda 'happiness', a tatsama (CDIAL 1172)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C99-namaste]
 
 **మిమ్మల్ని చూసి ఆనందంగా ఉంది** — "I am delighted to see you". Stronger than **సంతోషం**, and
 in the frame you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆనందం** (*ānandaṁ*) is Sanskrit *ānanda*, "happiness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1172).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

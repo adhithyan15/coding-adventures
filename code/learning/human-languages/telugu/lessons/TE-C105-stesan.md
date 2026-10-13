@@ -14,7 +14,8 @@ romanization: "sṭēṣan"
 concept_tag: TE-LOC105-STESAN
 prerequisites: [TE-C104-mula, TE-C104-malupu]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṭēṣan ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C104-malupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C105-LOC105-01]; assesses=[] -->
 
 **స్టేషన్** — *sṭēṣan* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్టేషన్** (*sṭēṣan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

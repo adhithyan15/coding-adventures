@@ -14,7 +14,8 @@ romanization: "pōnī"
 concept_tag: TE-KARANAM178-PONI
 prerequisites: [TE-C178-kavalani, TE-C178-porapatuna]
 sounds: []
-roots: []
+roots: [proto-dravidian-poo-go]
+etymology_hook: "pōnī: native pō 'to go' (DEDR 4572) + -nī 'let'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C178-porapatuna]
 <!-- hl-knowledge: introduces=[TE-LEX-C178-KARANAM178-03]; assesses=[] -->
 
 **పోనీ** — *pōnī* — "never mind; let it be".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోనీ** (*pōnī*) is native Dravidian: *pō*, "to go" (DEDR 4572), with *-nī*, "let": "let it go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

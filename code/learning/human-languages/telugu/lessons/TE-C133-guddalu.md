@@ -14,7 +14,8 @@ romanization: "guḍḍalu"
 concept_tag: TE-THINGS133-GUDDALU
 prerequisites: [TE-C132-jakettu, TE-C132-tamarapuvvu]
 sounds: []
-roots: []
+roots: [dravidian-guddu-cloth]
+etymology_hook: "guḍḍalu: native Dravidian, one word with Tamil kuṭṭai and Kannada guḍḍe (DEDR 1681)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C132-tamarapuvvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **గుడ్డలు** — *guḍḍalu* — "clothes, cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుడ్డలు** (*guḍḍalu*) is native Dravidian, one word with Tamil *kuṭṭai* and Kannada *guḍḍe* (DEDR 1681). DEDR lists Telugu *guḍḍa*, "cloth, a piece of cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

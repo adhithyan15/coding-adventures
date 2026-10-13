@@ -14,7 +14,8 @@ romanization: "panikirāni"
 concept_tag: TE-GUNAM223-PANIKIRANI
 prerequisites: [TE-C223-vyaktigata, TE-C223-praivetu]
 sounds: []
-roots: []
+roots: [pani-work-dravidian, dravidian-varu-come]
+etymology_hook: "panikirāni: native pani 'work' (DEDR 3884) + -ki 'for' + rāni 'not coming' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C223-praivetu]
 <!-- hl-knowledge: introduces=[TE-LEX-C223-GUNAM223-03]; assesses=[] -->
 
 **పనికిరాని** — *panikirāni* — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పనికిరాని** (*panikirāni*) is native Dravidian: *pani*, "work" (DEDR 3884), with *-ki*, "for", and *rāni*, "not coming", from *rā-*, "to come" (DEDR 5270): "not coming to use".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

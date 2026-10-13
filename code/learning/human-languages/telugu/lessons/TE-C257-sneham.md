@@ -14,7 +14,8 @@ romanization: "snēhaṁ"
 concept_tag: TE-KARANAM257-SNEHAM
 prerequisites: [TE-C257-vagdanam, TE-C257-rahasyam]
 sounds: []
-roots: []
+roots: [sanskrit-sneha]
+etymology_hook: "snēhaṁ ← Sanskrit snēha 'grease; oiliness; love', a tatsama (CDIAL 13802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C257-rahasyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C257-KARANAM257-03]; assesses=[] -->
 
 **స్నేహం** — *snēhaṁ* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్నేహం** (*snēhaṁ*) is Sanskrit *snēha*, "grease; oiliness; love", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13802). Sanskrit already used it for "friendship" too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

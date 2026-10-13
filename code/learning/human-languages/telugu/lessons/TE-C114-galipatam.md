@@ -14,7 +14,8 @@ romanization: "gālipaṭaṁ"
 concept_tag: TE-THINGS114-GALIPATAM
 prerequisites: [TE-C113-bomma, TE-C113-banti]
 sounds: []
-roots: []
+roots: [dravidian-gaali-wind, sanskrit-pata]
+etymology_hook: "gālipaṭaṁ: native gāli 'wind' (DEDR 1499) + paṭaṁ ← Sanskrit paṭa 'cloth' (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C113-banti]
 <!-- hl-knowledge: introduces=[TE-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **గాలిపటం** — *gālipaṭaṁ* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గాలిపటం** (*gālipaṭaṁ*) is native *gāli*, "wind" (DEDR 1499), and *paṭaṁ*, from Sanskrit *paṭa*, "woven cloth" (CDIAL 7692), which CDIAL itself thinks probably came from an Austroasiatic language, less likely from Dravidian: "a wind-cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

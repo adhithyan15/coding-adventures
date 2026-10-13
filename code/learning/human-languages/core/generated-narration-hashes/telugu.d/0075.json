@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 75,
-  "sourceHash": "fnv1a64:3fddc880760b01dc",
+  "sourceHash": "fnv1a64:34d17c6fa4d0cc2e",
   "lessonIds": [
     "TE-C75-today",
     "TE-C75-yesterday",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch75.txt",
   "json": "telugu/narration/ch75.json",
-  "textHash": "fnv1a64:572a6d767a48fbf0",
-  "jsonHash": "fnv1a64:001cbe8e0cfbcf95",
+  "textHash": "fnv1a64:10efef34d60daf49",
+  "jsonHash": "fnv1a64:aed37757e00a0be2",
   "findings": []
 }

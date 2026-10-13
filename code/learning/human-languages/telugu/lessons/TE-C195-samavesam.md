@@ -14,7 +14,8 @@ romanization: "samāvēśaṁ"
 concept_tag: TE-PANI195-SAMAVESAM
 prerequisites: [TE-C195-menejaru, TE-C195-sahodyogi]
 sounds: []
-roots: []
+roots: [sanskrit-samavesha]
+etymology_hook: "samāvēśaṁ ← Sanskrit samāvēśa 'coming together', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C195-sahodyogi]
 <!-- hl-knowledge: introduces=[TE-LEX-C195-PANI195-05]; assesses=[] -->
 
 **సమావేశం** — *samāvēśaṁ* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సమావేశం** (*samāvēśaṁ*) is Sanskrit *samāvēśa*, "coming together", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

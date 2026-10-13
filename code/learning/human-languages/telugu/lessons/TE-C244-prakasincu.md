@@ -14,7 +14,8 @@ romanization: "prakāśiñcu"
 concept_tag: TE-VERB-PRAKASINCU
 prerequisites: [TE-C243-badili-ceyu, TE-C244-vicu]
 sounds: []
-roots: []
+roots: [sanskrit-prakasha]
+etymology_hook: "prakāśiñcu: Sanskrit prakāśa 'lustre' (CDIAL 8437) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C244-vicu]
 <!-- hl-knowledge: introduces=[TE-LEX-C244-KRIYA244-02]; assesses=[] -->
 
 **ప్రకాశించు** — *prakāśiñcu* — "to shine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రకాశించు** (*prakāśiñcu*) is Sanskrit *prakāśa*, "clearness, lustre" (CDIAL 8437), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

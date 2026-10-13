@@ -14,7 +14,8 @@ romanization: "mottaṁ"
 concept_tag: TE-GUNAM180-MOTTAM
 prerequisites: [TE-C179-cauka, TE-C180-pradhana]
 sounds: []
-roots: []
+roots: [dravidian-mottam-total]
+etymology_hook: "mottaṁ: native Dravidian, one word with Tamil mottam and Malayalam mottam (DEDR 5119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C180-pradhana]
 <!-- hl-knowledge: introduces=[TE-LEX-C180-GUNAM180-02]; assesses=[] -->
 
 **మొత్తం** — *mottaṁ* — "total, whole; the total".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొత్తం** (*mottaṁ*) is native Dravidian, one word with Tamil *mottam* and Malayalam *mottam* (DEDR 5119). DEDR lists Telugu *mottamu*, "total, sum, whole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

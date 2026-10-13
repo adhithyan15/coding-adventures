@@ -14,7 +14,8 @@ romanization: "āviri"
 concept_tag: TE-AROGYAM211-AVIRI
 prerequisites: [TE-C211-guraka, TE-C211-vadadebba]
 sounds: []
-roots: []
+roots: [dravidian-aavi-steam]
+etymology_hook: "āviri: native Dravidian; DEDR 393 lists āviri 'vapour' with Tamil āvi 'steam'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C211-vadadebba]
 <!-- hl-knowledge: introduces=[TE-LEX-C211-AROGYAM211-05]; assesses=[] -->
 
 **ఆవిరి** — *āviri* — "steam, vapour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆవిరి** (*āviri*) is native Dravidian. DEDR 393 lists *āviri*, "vapour", with Tamil *āvi*, "steam, vapour", and Kannada *āviri*, "steam".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ānukō"
 concept_tag: TE-VERB-ANUKO
 prerequisites: [TE-C286-tappincuko, TE-C286-varcu]
 sounds: []
-roots: []
+roots: [dravidian-aan-lean]
+etymology_hook: "ānukō: native ānu 'to lean' (DEDR 408) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C286-varcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C286-KRIYA286-05]; assesses=[] -->
 
 **ఆనుకో** — *ānukō* — "to lean (against)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆనుకో** (*ānukō*) is native Dravidian: *ānu*, "to lean, recline", one word with Kannada *ānu*, "to lean against" (DEDR 408), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

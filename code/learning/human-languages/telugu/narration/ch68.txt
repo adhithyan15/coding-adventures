@@ -14,6 +14,7 @@ You'll want to know: శబ్దం.
 శబ్దం (śabdaṁ) is a sound — any sound at all, from a తలుపు closing to thunder over a పొలం.
 It is Sanskrit, borrowed early and borrowed whole. It covers the smallest noise and the largest with no change: a చుక్క of water landing, or the crack that comes before rain.
 A room with no శబ్దం (śabdaṁ) in it is not called quiet in Telugu so much as empty, and people say exactly that about a house whose children have grown up and gone.
+CDIAL 12298 lists Sanskrit śabda, "articulate sound, noise".
 
 What you've built.
 One. The most general thing an ear can take in.
@@ -48,6 +49,9 @@ You'll want to know: గొంతు.
 Somebody loud has a big గొంతు (gontu) and somebody who sings well has a sweet one. A person who speaks up for people who cannot is said to have lent them their గొంతు (gontu).
 Losing it is ordinary. After a night of దగ్గు a villager will say the గొంతు (gontu) has gone, and mean the throat and the sound at once.
 
+The word, taken apart.
+గొంతు (gontu) is native Dravidian. DEDR 1718 lists gontu, "throat, voice", with kuttuka, "throat", beside Kannada kuttige, "throat, neck".
+
 What you've built.
 Two: శబ్దం (śabdaṁ) and గొంతు (gontu). Sound in general, and the sound a person makes.
 
@@ -81,6 +85,9 @@ You'll want to know: పాట.
 The word is inherited and it is everywhere: work songs at the కల్లం, lullabies, film songs a whole state can hum. A Telugu speaker will name a పాట (pāṭa) faster than a book.
 Anything repeated past patience becomes a పాట (pāṭa) as an insult, in the way English reaches for the same old song.
 
+The word, taken apart.
+పాట (pāṭa) is native Dravidian, one word with Tamil pāṭu and Kannada pāḍu (DEDR 4065). DEDR lists Telugu pāḍu, "to sing", and pāṭa, "song".
+
 What you've built.
 Three. And a పాత పాట (pāṭa) is an old song, which is a phrase you have now earned.
 
@@ -113,6 +120,9 @@ You'll want to know: అరుపు.
 అరుపు (arupu) is a shout: a cry raised on purpose, loud enough to carry the width of a పొలం.
 It is inherited, built on the everyday word for shouting, and it is not rude in itself. Calling somebody in from work is an అరుపు (arupu), and so is the cry that warns a గ్రామం.
 It turns rude only when there is a person on the far end of it. Somebody who was shouted at will say they got an అరుపు (arupu), and everybody hears the difference without being told.
+
+The word, taken apart.
+అరుపు (arupu) is native Dravidian. DEDR 319 lists aṟacu, "to cry out, shout", and aṟapu, "a cry, shout", with Kannada aṟacu, "to cry out", and Tamil aṟai, "to speak, sound".
 
 What you've built.
 Four. Sound, voice, song, and now sound sent a distance.

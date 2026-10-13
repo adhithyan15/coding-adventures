@@ -11,7 +11,8 @@ romanization: "arupu"
 concept_tag: TE-NOUN-SHOUT
 prerequisites: [TE-C68-song]
 sounds: []
-roots: []
+roots: [dravidian-arai-cry]
+etymology_hook: "arupu: native Dravidian; DEDR 319 lists aṟacu 'to shout' and aṟapu 'a shout', with Kannada aṟacu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C68-song]
 It is inherited, built on the everyday word for shouting, and it is not rude in itself. Calling somebody in from work is an అరుపు, and so is the cry that warns a గ్రామం.
 
 It turns rude only when there is a person on the far end of it. Somebody who was shouted at will say they got an అరుపు, and everybody hears the difference without being told.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అరుపు** (*arupu*) is native Dravidian. DEDR 319 lists *aṟacu*, "to cry out, shout", and *aṟapu*, "a cry, shout", with Kannada *aṟacu*, "to cry out", and Tamil *aṟai*, "to speak, sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

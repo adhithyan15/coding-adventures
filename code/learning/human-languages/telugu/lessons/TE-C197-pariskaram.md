@@ -14,7 +14,8 @@ romanization: "pariṣkāraṁ"
 concept_tag: TE-PANI197-PARISKARAM
 prerequisites: [TE-C197-racayita, TE-C197-samasya]
 sounds: []
-roots: []
+roots: [sanskrit-pariskara]
+etymology_hook: "pariṣkāraṁ ← Sanskrit pariṣkāra 'ornament', a tatsama (CDIAL 7894)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C197-samasya]
 <!-- hl-knowledge: introduces=[TE-LEX-C197-PANI197-04]; assesses=[] -->
 
 **పరిష్కారం** — *pariṣkāraṁ* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిష్కారం** (*pariṣkāraṁ*) is Sanskrit *pariṣkāra*, "ornament", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7894). The sense "solution" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

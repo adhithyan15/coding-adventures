@@ -14,7 +14,8 @@ romanization: "santa"
 concept_tag: TE-LOC103-SANTA
 prerequisites: [TE-C103-grandhalayam, TE-C103-byanku]
 sounds: []
-roots: []
+roots: [telugu-santa-market]
+etymology_hook: "santa: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C103-byanku]
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-05]; assesses=[] -->
 
 **సంత** — *santa* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సంత** (*santa*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭṭu"
 concept_tag: TE-VERB-KATTU
 prerequisites: [TE-C146-kadugu, TE-C147-tuducu]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind]
+etymology_hook: "kaṭṭu: native Dravidian, one word with Tamil kaṭṭu and Kannada kaṭṭu (DEDR 1147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C147-tuducu]
 <!-- hl-knowledge: introduces=[TE-LEX-C147-ACT147-02]; assesses=[] -->
 
 **కట్టు** — *kaṭṭu* — "to tie, to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కట్టు** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Kannada *kaṭṭu* (DEDR 1147). DEDR lists Telugu *kaṭṭu*, "to tie, bind, build".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

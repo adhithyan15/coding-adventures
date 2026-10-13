@@ -14,7 +14,8 @@ romanization: "jalleḍa"
 concept_tag: TE-VASTUVU269-JALLEDA
 prerequisites: [TE-C269-dabba, TE-C269-kancam]
 sounds: []
-roots: []
+roots: [dravidian-cali-sift]
+etymology_hook: "jalleḍa: native Dravidian; DEDR 2370 lists jalleḍa 'sieve' with Kannada jallaḍi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-kancam]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-03]; assesses=[] -->
 
 **జల్లెడ** — *jalleḍa* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జల్లెడ** (*jalleḍa*) is native Dravidian. DEDR 2370 lists *jalleḍa*, "sieve", with Kannada *jallaḍi* and Tamil *callaṭai*, "sieve". DEDR compares the Indo-Aryan words in CDIAL 4771, such as Sanskrit *cālana*, "sieve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

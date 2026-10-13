@@ -14,7 +14,8 @@ romanization: "vyāpāraṁ"
 concept_tag: TE-PANI236-VYAPARAM
 prerequisites: [TE-C235-nastam, TE-C236-jattu]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vyāpāraṁ ← Sanskrit vyāpāra 'occupation, business', a tatsama (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C236-jattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C236-PANI236-02]; assesses=[] -->
 
 **వ్యాపారం** — *vyāpāraṁ* — "business, trade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యాపారం** (*vyāpāraṁ*) is Sanskrit *vyāpāra*, "occupation, business", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12205).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

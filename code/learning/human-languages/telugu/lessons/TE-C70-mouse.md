@@ -11,7 +11,8 @@ romanization: "eluka"
 concept_tag: TE-NOUN-MOUSE
 prerequisites: [TE-C69-stick]
 sounds: []
-roots: []
+roots: [dravidian-eli-rat]
+etymology_hook: "eluka: native Dravidian, one word with Tamil eli and Kannada eli (DEDR 833)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C69-stick]
 It is inherited. Any house with బియ్యం in it has an ఎలుక story, and the పిల్లి you already know earns its keep here.
 
 Asked whether there is one about, most people say అవును before they have thought about it, and లేదు only after going to look.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎలుక** (*eluka*) is native Dravidian, one word with Tamil *eli*, Kannada *eli* and Malayalam *eli* (DEDR 833).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

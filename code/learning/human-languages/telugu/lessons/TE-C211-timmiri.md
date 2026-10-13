@@ -14,7 +14,8 @@ romanization: "timmiri"
 concept_tag: TE-AROGYAM211-TIMMIRI
 prerequisites: [TE-C210-visugu, TE-C210-benga]
 sounds: []
-roots: []
+roots: [dravidian-timir-numbness]
+etymology_hook: "timmiri: native Dravidian; DEDR 3235 lists timmiri 'numbness' with Tamil timir"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C210-benga]
 <!-- hl-knowledge: introduces=[TE-LEX-C211-AROGYAM211-01]; assesses=[] -->
 
 **తిమ్మిరి** — *timmiri* — "numbness, pins and needles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తిమ్మిరి** (*timmiri*) is native Dravidian. DEDR 3235 lists *timmiri*, "numbness", with Tamil *timir* and Malayalam *timir*, "numbness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

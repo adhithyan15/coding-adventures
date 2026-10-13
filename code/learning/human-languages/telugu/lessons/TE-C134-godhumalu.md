@@ -14,7 +14,8 @@ romanization: "gōdhumalu"
 concept_tag: TE-THINGS134-GODHUMALU
 prerequisites: [TE-C134-vimanam, TE-C134-dhanyam]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "gōdhumalu ← Sanskrit godhūma 'wheat' (CDIAL 4287) + Telugu plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C134-dhanyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **గోధుమలు** — *gōdhumalu* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోధుమలు** (*gōdhumalu*) is Sanskrit *godhūma*, "wheat" (CDIAL 4287), with the vowel shortened and the Telugu plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "carmaṁ"
 concept_tag: TE-THINGS128-CARMAM
 prerequisites: [TE-C128-manikattu, TE-C128-moceyi]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "carmaṁ ← Sanskrit carman 'hide, skin', a tatsama (CDIAL 4701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C128-moceyi]
 <!-- hl-knowledge: introduces=[TE-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **చర్మం** — *carmaṁ* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చర్మం** (*carmaṁ*) is Sanskrit *carman*, "hide, skin", taken over whole as a learned loan, a tatsama (CDIAL 4701).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

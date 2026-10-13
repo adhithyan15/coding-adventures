@@ -14,7 +14,8 @@ romanization: "kaḷāśāla"
 concept_tag: TE-PANI311-KALASALA
 prerequisites: [TE-C310-kuli, TE-C310-udyogi]
 sounds: []
-roots: []
+roots: [sanskrit-kala, sanskrit-shala]
+etymology_hook: "kaḷāśāla: Sanskrit kalā 'art' (CDIAL 2927) + śālā 'house' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C310-udyogi]
 <!-- hl-knowledge: introduces=[TE-LEX-C311-PANI311-01]; assesses=[] -->
 
 **కళాశాల** — *kaḷāśāla* — "a college".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కళాశాల** (*kaḷāśāla*) is Sanskrit: *kalā*, "any practical art" (CDIAL 2927), and *śālā*, "house" (CDIAL 12414): "house of the arts". CDIAL takes this *kalā* from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

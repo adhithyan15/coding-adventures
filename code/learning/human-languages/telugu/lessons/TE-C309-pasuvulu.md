@@ -14,7 +14,8 @@ romanization: "paśuvulu"
 concept_tag: TE-VASTUVU309-PASUVULU
 prerequisites: [TE-C308-varusa, TE-C309-gattu]
 sounds: []
-roots: []
+roots: [sanskrit-pashu]
+etymology_hook: "paśuvulu ← Sanskrit paśu 'domestic animal', a tatsama (CDIAL 7984)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C309-gattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C309-VASTUVU309-02]; assesses=[] -->
 
 **పశువులు** — *paśuvulu* — "cattle, livestock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పశువులు** (*paśuvulu*) is Sanskrit *paśu*, "domestic animal", taken over whole as a learned loan, a tatsama (CDIAL 7984).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

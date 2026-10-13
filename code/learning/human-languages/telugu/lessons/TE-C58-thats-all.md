@@ -11,7 +11,8 @@ romanization: "antē"
 concept_tag: TE-WORD-THATS-ALL
 prerequisites: [TE-C58-no-thanks]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "antē: native Dravidian, anta 'so much' on the far-pointing base a- (DEDR 1) + emphatic -ē"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C58-no-thanks]
 It has a second life as agreement. Somebody explains why a thing went wrong and you say అంతే: that is precisely it, nothing further to add. The same word closes a sale and closes a discussion.
 
 It is a good word to leave a chapter on. కొంచెం, ఎక్కువ, తక్కువ, వద్దు — and then అంతే.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అంతే** (*antē*) is native Dravidian: *anta*, "so much", on the far-pointing base *a-* (DEDR 1), with the emphatic *-ē*, "only".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

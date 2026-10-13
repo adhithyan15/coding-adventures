@@ -14,7 +14,8 @@ romanization: "vēyiñcu"
 concept_tag: TE-VERB-VEYINCU
 prerequisites: [TE-C156-rasidu, TE-C157-cellincu]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "vēyiñcu: native Dravidian; DEDR 5517 lists vēgiñcu, vēpu 'to fry' with Tamil vē 'to burn, be cooked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C157-cellincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C157-KRIYA157-02]; assesses=[] -->
 
 **వేయించు** — *vēyiñcu* — "to fry, to roast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేయించు** (*vēyiñcu*) is native Dravidian. DEDR 5517 lists nasalised forms of *vēgiñcu* and *vēpu*, "to fry, grill", with Tamil *vē*, "to burn, be boiled, cooked", and Kannada *bēyu*, "to be cooked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

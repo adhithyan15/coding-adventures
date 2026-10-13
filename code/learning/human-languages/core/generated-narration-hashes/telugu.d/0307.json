@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 307,
-  "sourceHash": "fnv1a64:606a064bf46538e3",
+  "sourceHash": "fnv1a64:aabb25ad08a8df6b",
   "lessonIds": [
     "TE-C307-phrijju",
     "TE-C307-miksi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch307.txt",
   "json": "telugu/narration/ch307.json",
-  "textHash": "fnv1a64:29b6cab9ae1b3068",
-  "jsonHash": "fnv1a64:c4c29b01688c280e",
+  "textHash": "fnv1a64:bee5d47fbc9a1a93",
+  "jsonHash": "fnv1a64:5098b6f6af3ad6c2",
   "findings": []
 }

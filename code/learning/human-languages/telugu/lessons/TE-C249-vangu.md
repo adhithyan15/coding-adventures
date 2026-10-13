@@ -14,7 +14,8 @@ romanization: "vaṅgu"
 concept_tag: TE-VERB-VANGU
 prerequisites: [TE-C249-bharincu, TE-C249-paku]
 sounds: []
-roots: []
+roots: [dravidian-vaanku-bend]
+etymology_hook: "vaṅgu: native Dravidian; DEDR 5335 lists vaṅgu 'to bend, stoop' with Tamil vāṅku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C249-paku]
 <!-- hl-knowledge: introduces=[TE-LEX-C249-KRIYA249-03]; assesses=[] -->
 
 **వంగు** — *vaṅgu* — "to bend down, to stoop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వంగు** (*vaṅgu*) is native Dravidian. DEDR 5335 lists *vaṅgu*, "to bend, stoop", with Tamil *vāṅku*, "to bend". DEDR compares Sanskrit *vaṅka*, "bent, crooked" (CDIAL 11191), which CDIAL ties to a probably non-Aryan word-group.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

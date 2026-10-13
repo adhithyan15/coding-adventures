@@ -14,7 +14,8 @@ romanization: "maggu"
 concept_tag: TE-VASTUVU232-MAGGU
 prerequisites: [TE-C232-totti, TE-C232-pipa]
 sounds: []
-roots: []
+roots: [english-mug]
+etymology_hook: "maggu ← English mug"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C232-pipa]
 <!-- hl-knowledge: introduces=[TE-LEX-C232-VASTUVU232-05]; assesses=[] -->
 
 **మగ్గు** — *maggu* — "a mug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మగ్గు** (*maggu*) is a loan from English *mug*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

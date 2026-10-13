@@ -14,7 +14,8 @@ romanization: "paḍakagadi"
 concept_tag: TE-VASTUVU183-PADAKAGADI
 prerequisites: [TE-C182-adanapu, TE-C183-vantagadi]
 sounds: []
-roots: []
+roots: [dravidian-padu-lie]
+etymology_hook: "paḍakagadi: paḍaka 'bed' (DEDR 3852 paḍuka) + gadi 'room', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C183-vantagadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C183-VASTUVU183-02]; assesses=[] -->
 
 **పడకగది** — *paḍakagadi* — "a bedroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పడకగది** (*paḍakagadi*) is native *paḍaka*, "bed", which DEDR 3852 lists as *paḍuka*, "bed, bedding", and *gadi*, "room", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

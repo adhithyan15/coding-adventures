@@ -14,7 +14,8 @@ romanization: "anumāniñcu"
 concept_tag: TE-VERB-ANUMANINCU
 prerequisites: [TE-C162-pogadu, TE-C162-varnincu]
 sounds: []
-roots: []
+roots: [sanskrit-anumana]
+etymology_hook: "anumāniñcu: Sanskrit anumāna 'inference, thought' (CDIAL 328) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C162-varnincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C163-KRIYA163-01]; assesses=[] -->
 
 **అనుమానించు** — *anumāniñcu* — "to suspect, to doubt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అనుమానించు** (*anumāniñcu*) is Sanskrit *anumāna*, "inference, thought" (CDIAL 328), made into a verb with the Telugu ending *-iñcu*. Telugu gives it the sense "suspicion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

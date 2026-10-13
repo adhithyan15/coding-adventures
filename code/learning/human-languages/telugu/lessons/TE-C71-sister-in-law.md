@@ -11,7 +11,8 @@ romanization: "maradalu"
 concept_tag: TE-NOUN-SISTER-IN-LAW
 prerequisites: [TE-C71-brother-in-law]
 sounds: []
-roots: []
+roots: [dravidian-maradi-cousin]
+etymology_hook: "maradalu: native Dravidian; DEDR 4762 lists it as 'spouse's younger sister, younger female cross-cousin'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C71-brother-in-law]
 So it carries the same easy, teasing register that బావ does. A బావ and a మరదలు can joke across a room in a way an అన్న and a చెల్లి cannot, and Telugu films have lived off that for eighty years.
 
 It is inherited, and it belongs to the same reckoning as the rest of this chapter: the person a marriage hands you was very often somebody the family already had a word for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మరదలు** (*maradalu*) is native Dravidian. DEDR 4762 lists the Telugu word as "spouse's younger sister, younger brother's wife, younger female cross-cousin", with a matching masculine for the younger brother-in-law.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

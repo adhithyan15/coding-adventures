@@ -14,7 +14,8 @@ romanization: "toṭṭi"
 concept_tag: TE-VASTUVU232-TOTTI
 prerequisites: [TE-C232-jadi, TE-C232-basta]
 sounds: []
-roots: []
+roots: [dravidian-totti-trough]
+etymology_hook: "toṭṭi: native Dravidian, one word with Tamil toṭṭi and Kannada toṭṭi (DEDR 3484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C232-basta]
 <!-- hl-knowledge: introduces=[TE-LEX-C232-VASTUVU232-03]; assesses=[] -->
 
 **తొట్టి** — *toṭṭi* — "a tub, a trough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తొట్టి** (*toṭṭi*) is native Dravidian, one word with Tamil *toṭṭi* and Kannada *toṭṭi* (DEDR 3484). DEDR lists Telugu *toṭṭi*, "tub, trough, manger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

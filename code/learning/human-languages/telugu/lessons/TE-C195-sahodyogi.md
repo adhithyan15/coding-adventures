@@ -14,7 +14,8 @@ romanization: "sahōdyōgi"
 concept_tag: TE-PANI195-SAHODYOGI
 prerequisites: [TE-C195-gumasta, TE-C195-menejaru]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga]
+etymology_hook: "sahōdyōgi: Sanskrit saha 'with' + udyōgin 'one at work' (cf. udyōga, CDIAL 2055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C195-menejaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C195-PANI195-04]; assesses=[] -->
 
 **సహోద్యోగి** — *sahōdyōgi* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సహోద్యోగి** (*sahōdyōgi*) is Sanskrit: *saha*, "with", and *udyōgin*, "one at work", from *udyōga*, "exertion" (CDIAL 2055), with the final *-n* dropped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

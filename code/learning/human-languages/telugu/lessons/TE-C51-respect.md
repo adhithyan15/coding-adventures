@@ -11,7 +11,8 @@ romanization: "gauravaṁ"
 concept_tag: TE-NOUN-RESPECT
 prerequisites: [TE-C51-favour]
 sounds: []
-roots: []
+roots: [sanskrit-gaurava]
+etymology_hook: "gauravaṁ ← Sanskrit gaurava 'weight; venerableness', a tatsama (CDIAL 4346)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C51-favour]
 *gaurava* is the abstract noun of *guru* --- the very word met one chapter ago as the teacher. Respect is weightiness: to hold someone in గౌరవం is to grant that what they say has mass.
 
 Telugu marks the same idea in its grammar as well as its vocabulary. మీరు rather than నువ్వు, and the **-అండి** hung on the end of a verb, are గౌరవం turned into endings. A language can be polite in its words or in its shapes, and this one does both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గౌరవం** (*gauravaṁ*) is Sanskrit *gaurava*, "weight; venerableness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 4346).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

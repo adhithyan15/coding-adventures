@@ -11,7 +11,8 @@ romanization: "kiṭikī"
 concept_tag: TE-NOUN-WINDOW
 prerequisites: [TE-C67-step]
 sounds: []
-roots: []
+roots: [hindustani-khirki]
+etymology_hook: "kiṭikī: probably a northern loan, like Hindi khiṛkī, from Sanskrit khaṭakkikā 'side door' (CDIAL 3770)"
 duration:
   max_seconds: 210
 requires:
@@ -40,11 +41,13 @@ reviews_of: [TE-C67-step]
 
 **కిటికీ** (*kiṭikī*) — "a window".
 
-కిటికీ is a window. It is a borrowing, ultimately from Portuguese, and it arrived carrying the shape of window it names: a framed opening in a గోడ, rather than the small unglazed gap older houses left for గాలి.
+కిటికీ is a window. It is a borrowing, probably from the north, where Hindi says *khiṛkī*, and it arrived carrying the shape of window it names: a framed opening in a గోడ, rather than the small unglazed gap older houses left for గాలి.
 
 Telugu kept the borrowed word and the older habit side by side. A కిటికీ is opened at ఉదయం, shut against the sun in the middle of the day, and opened again by సాయంత్రం.
 
 A house with a గోడ, a కప్పు, a గడప, a మెట్టు and a కిటికీ is a whole house. Whoever is standing at any one of them is somebody you can greet.
+
+CDIAL 3770 traces Hindi *khiṛkī* and Marathi *khiḍkī* to Sanskrit *khaṭakkikā*, "side door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

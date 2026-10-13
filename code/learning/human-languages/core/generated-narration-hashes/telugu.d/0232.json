@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 232,
-  "sourceHash": "fnv1a64:1629baea2d934dcb",
+  "sourceHash": "fnv1a64:5fa874c31274d4ee",
   "lessonIds": [
     "TE-C232-jadi",
     "TE-C232-basta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch232.txt",
   "json": "telugu/narration/ch232.json",
-  "textHash": "fnv1a64:cab5bdd1883a4d00",
-  "jsonHash": "fnv1a64:d54b26b50b94cde4",
+  "textHash": "fnv1a64:1d7e9841a890c332",
+  "jsonHash": "fnv1a64:e1c0c2677cfb6df9",
   "findings": []
 }

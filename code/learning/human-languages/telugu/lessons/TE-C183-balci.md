@@ -14,7 +14,8 @@ romanization: "bālcī"
 concept_tag: TE-VASTUVU183-BALCI
 prerequisites: [TE-C183-vantagadi, TE-C183-padakagadi]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bālcī: usually traced, like Hindustani bālṭī 'bucket', to Portuguese balde"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C183-padakagadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C183-VASTUVU183-03]; assesses=[] -->
 
 **బాల్చీ** — *bālcī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాల్చీ** (*bālcī*) matches Hindustani *bālṭī*, "bucket", which is usually traced to Portuguese *balde*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

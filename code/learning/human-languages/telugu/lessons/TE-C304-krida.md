@@ -14,7 +14,8 @@ romanization: "krīḍa"
 concept_tag: TE-VASTUVU304-KRIDA
 prerequisites: [TE-C303-puja, TE-C304-prakrti]
 sounds: []
-roots: []
+roots: [sanskrit-krida]
+etymology_hook: "krīḍa ← Sanskrit krīḍā 'play, sport', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C304-prakrti]
 <!-- hl-knowledge: introduces=[TE-LEX-C304-VASTUVU304-02]; assesses=[] -->
 
 **క్రీడ** — *krīḍa* — "a sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**క్రీడ** (*krīḍa*) is Sanskrit *krīḍā*, "play, sport", taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nidra"
 concept_tag: TE-NOUN-SLEEP
 prerequisites: [TE-C63-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-nidra]
+etymology_hook: "nidra ← Sanskrit nidrā 'sleep' (CDIAL 7200), with the final -ā shortened"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C63-hunger]
 The word came from Sanskrit *nidrā* and settled without changing. Beside it Telugu keeps నిదుర, the softer everyday form, and the two are one word wearing different clothes.
 
 నిద్ర also makes a polite reason for leaving late in the evening, and it works the way గాలి worked earlier. Nobody argues with it.
+
+CDIAL 7200 lists Sanskrit *nidrā*, "sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

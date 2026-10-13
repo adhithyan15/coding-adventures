@@ -15,6 +15,9 @@ Say it: ḍappu.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, డ (ḍa), and writes it on its own.
 
+The word, taken apart.
+The origin of డప్పు (ḍappu) is uncertain. Neither DEDR nor CDIAL lists it. Both have drum words of a similar shape, but neither is a sure source: DEDR 3082 lists Telugu tappeṭa, "a kind of drum", and CDIAL 5531 lists Gujarati ḍaph under Sanskrit ḍamaru, "drum", a word CDIAL takes as imitating the sound, perhaps from Munda.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ḍappu]
@@ -77,7 +80,7 @@ The letters in this word.
 వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: vaccu ("come") with a doubled cc.
 
 The word, taken apart.
-వెళ్ళు (veḷḷu, "to go") and vaccu ("to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
+వెళ్ళు (veḷḷu, "to go") and vaccu ("to come") are native Dravidian verbs (DEDR 5393, 5270). As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
 Sounds you'll need.
 వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner is vaccu (“come”).
@@ -151,6 +154,7 @@ Language: Kannada. "go and come back" (goodbye): hōgi baruttēne.
 Language: Malayalam. "go and come back" (goodbye): pōyi varāṁ.
 Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
 The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway.
+Both verbs are native Dravidian: veḷḷu (DEDR 5393) and vaccu (DEDR 5270).
 
 Grammar Lens: the "having …d" participle.
 Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.
@@ -183,7 +187,7 @@ The letters in this word.
 రే (rē) + పు (pu) becomes రేపు (rēpu). కలుద్దాం (kaluddām) = kalu ("meet") + -ddām ("let's").
 
 The word, taken apart.
-రేపు (rēpu, "tomorrow") is native Dravidian. కలుద్దాం (kaluddām, "let's meet") is from కలు (kalu, "to meet, to join") — so the phrase is "tomorrow, let's meet," the Telugu "see you tomorrow." The -దాం (-ddām) ending is Telugu's "let's ___" — a first-person-plural invitation: veḷḷddām ("let's go"), tindām ("let's eat").
+రేపు (rēpu, "tomorrow") is native Dravidian (DEDR 916). కలుద్దాం (kaluddām, "let's meet") is from కలు (kalu, "to meet, to join"; DEDR 1299, which compares Sanskrit kalka, "a paste") — so the phrase is "tomorrow, let's meet," the Telugu "see you tomorrow." The -దాం (-ddām) ending is Telugu's "let's ___" — a first-person-plural invitation: veḷḷddām ("let's go"), tindām ("let's eat").
 
 Sounds you'll need.
 రే (rē) + పు (pu) becomes రేపు. కలుద్దాం (kaludḍām) = kalu (“meet”) + -dḍām (“let's”).
@@ -254,7 +258,7 @@ The letters in this word.
 మళ్ళీ (maḷḷī): note the doubled retroflex ళ్ళ (ḷḷ), the same sound as in veḷḷu. కలుద్దాం (kaluddām, "let's meet") you just learned.
 
 The word, taken apart.
-మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, "again") + కలుద్దాం (kaluddām, "let's meet") — "we'll meet again." Both words are native Dravidian: maḷḷī ("again," from maral, "to return") and kalu ("to meet"). Where Tamil's "we'll meet again" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say "meet," Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock.
+మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, "again") + కలుద్దాం (kaluddām, "let's meet") — "we'll meet again." Both words are native Dravidian: maḷḷī ("again," from maral, "to return"; DEDR 4761) and kalu ("to meet"; DEDR 1299, which compares Sanskrit kalka, "a paste"). Where Tamil's "we'll meet again" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say "meet," Telugu keeps the native kalu.
 
 Guided Practice.
 [pause 1 second]

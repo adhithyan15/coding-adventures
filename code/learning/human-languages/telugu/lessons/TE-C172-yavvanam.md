@@ -14,7 +14,8 @@ romanization: "yavvanaṁ"
 concept_tag: TE-SAMAYAM172-YAVVANAM
 prerequisites: [TE-C171-aruduga, TE-C171-nirantaram]
 sounds: []
-roots: []
+roots: [sanskrit-yauvana]
+etymology_hook: "yavvanaṁ ← Sanskrit yauvana 'youth, puberty', reshaped as a tadbhava (CDIAL 10537)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C171-nirantaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C172-SAMAYAM172-01]; assesses=[] -->
 
 **యవ్వనం** — *yavvanaṁ* — "youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యవ్వనం** (*yavvanaṁ*) comes from Sanskrit *yauvana*, "youth, puberty", reshaped to Telugu sounds: a tadbhava (CDIAL 10537). Telugu turned the *au* into *avva*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

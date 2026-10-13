@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 107,
-  "sourceHash": "fnv1a64:c961a071539fa96b",
+  "sourceHash": "fnv1a64:a3470c0ccc3bad36",
   "lessonIds": [
     "TE-C107-korika",
     "TE-C107-asa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch107.txt",
   "json": "telugu/narration/ch107.json",
-  "textHash": "fnv1a64:2bcb6d144e76fc76",
-  "jsonHash": "fnv1a64:62c5a9596848ba0f",
+  "textHash": "fnv1a64:be4536951a06042d",
+  "jsonHash": "fnv1a64:5519bd12c6272999",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "paṭṭaṇaṁ"
 concept_tag: TE-NOUN-TOWN
 prerequisites: [TE-C77-from, TE-C36-koduku]
 sounds: []
-roots: []
+roots: [sanskrit-pattana]
+etymology_hook: "paṭṭaṇaṁ ← Sanskrit paṭṭana 'town', reshaped as a tadbhava (CDIAL 7705)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C77-from]
 You already have గ్రామం, the village. పట్టణం is the larger settlement, the one with the shops and the bargaining in it.
 
 **నేను పట్టణం నుంచి** — "I am from a town." That sentence needs no verb, exactly like నా పేరు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పట్టణం** (*paṭṭaṇaṁ*) comes from Sanskrit *paṭṭana*, "town", reshaped to Telugu sounds: a tadbhava (CDIAL 7705). CDIAL itself thinks the Sanskrit word probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

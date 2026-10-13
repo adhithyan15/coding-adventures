@@ -14,7 +14,8 @@ romanization: "veduru"
 concept_tag: TE-VASTUVU303-VEDURU
 prerequisites: [TE-C303-mullu, TE-C303-tiga]
 sounds: []
-roots: []
+roots: [dravidian-vetir-bamboo]
+etymology_hook: "veduru: native Dravidian, one word with Tamil vetir and Kannada bidiru (DEDR 5485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C303-tiga]
 <!-- hl-knowledge: introduces=[TE-LEX-C303-VASTUVU303-03]; assesses=[] -->
 
 **వెదురు** — *veduru* — "bamboo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెదురు** (*veduru*) is native Dravidian, one word with Tamil *vetir* and Kannada *bidiru* (DEDR 5485). DEDR lists Telugu *veduru*, "bamboo".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

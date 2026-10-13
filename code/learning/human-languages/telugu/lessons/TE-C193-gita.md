@@ -14,7 +14,8 @@ romanization: "gīta"
 concept_tag: TE-VASTUVU193-GITA
 prerequisites: [TE-C192-haram, TE-C192-jada]
 sounds: []
-roots: []
+roots: [dravidian-kiiru-scratch]
+etymology_hook: "gīta: native Dravidian; DEDR 1623 lists gīta 'stroke, line' with Tamil kīṟṟu 'stroke, line'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-jada]
 <!-- hl-knowledge: introduces=[TE-LEX-C193-VASTUVU193-01]; assesses=[] -->
 
 **గీత** — *gīta* — "a line".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గీత** (*gīta*) is native Dravidian. DEDR 1623 lists a nasalised *gīta*, "stroke, line", under *gīṟu*, "to scratch", with Tamil *kīṟṟu* and Kannada *gīṭu*, "a line, stroke". DEDR compares, with a query, Sanskrit *kiraka*, "scribe" (CDIAL 3170). CDIAL 4167 *gīta*, "singing", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

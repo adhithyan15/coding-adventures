@@ -14,7 +14,8 @@ romanization: "praivēṭu"
 concept_tag: TE-GUNAM223-PRAIVETU
 prerequisites: [TE-C222-nyayamaina, TE-C223-vyaktigata]
 sounds: []
-roots: []
+roots: [english-private]
+etymology_hook: "praivēṭu ← English private"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C223-vyaktigata]
 <!-- hl-knowledge: introduces=[TE-LEX-C223-GUNAM223-02]; assesses=[] -->
 
 **ప్రైవేటు** — *praivēṭu* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రైవేటు** (*praivēṭu*) is a loan from English *private*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

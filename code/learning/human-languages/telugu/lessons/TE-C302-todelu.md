@@ -14,7 +14,8 @@ romanization: "tōḍēlu"
 concept_tag: TE-VASTUVU302-TODELU
 prerequisites: [TE-C302-duda, TE-C302-gorre]
 sounds: []
-roots: []
+roots: [dravidian-toontan-wolf]
+etymology_hook: "tōḍēlu: native Dravidian; DEDR 3548 lists tōḍēlu 'wolf' with Tamil tōṇṭāṉ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C302-gorre]
 <!-- hl-knowledge: introduces=[TE-LEX-C302-VASTUVU302-04]; assesses=[] -->
 
 **తోడేలు** — *tōḍēlu* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోడేలు** (*tōḍēlu*) is native Dravidian. DEDR 3548 lists a nasalised *tōḍēlu*, "wolf", with Tamil *tōṇṭāṉ* and Kannada *tōḷa*, "wolf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

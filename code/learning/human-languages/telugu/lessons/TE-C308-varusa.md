@@ -14,7 +14,8 @@ romanization: "varusa"
 concept_tag: TE-VASTUVU308-VARUSA
 prerequisites: [TE-C308-ancu, TE-C308-mudi]
 sounds: []
-roots: []
+roots: [dravidian-varicai-row]
+etymology_hook: "varusa: native Dravidian; DEDR 5269 lists varusa 'row, line' with Tamil varicai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C308-mudi]
 <!-- hl-knowledge: introduces=[TE-LEX-C308-VASTUVU308-05]; assesses=[] -->
 
 **వరుస** — *varusa* — "a row, a queue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వరుస** (*varusa*) is native Dravidian. DEDR 5269 lists *varusa*, "row, line, turn", with Tamil *varicai* and Kannada *varase*, "row, line".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

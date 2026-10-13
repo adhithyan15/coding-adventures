@@ -14,7 +14,8 @@ romanization: "śatābdaṁ"
 concept_tag: TE-SAMAYAM290-SATABDAM
 prerequisites: [TE-C290-puta, TE-C290-dasabdam]
 sounds: []
-roots: []
+roots: [sanskrit-shatabda]
+etymology_hook: "śatābdaṁ ← Sanskrit śatābda 'a hundred years'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C290-dasabdam]
 <!-- hl-knowledge: introduces=[TE-LEX-C290-SAMAYAM290-04]; assesses=[] -->
 
 **శతాబ్దం** — *śatābdaṁ* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శతాబ్దం** (*śatābdaṁ*) is Sanskrit *śatābda*, "a hundred years": *śata*, "hundred", and *abda*, "year", with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
