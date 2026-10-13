@@ -70,6 +70,7 @@
     "line-hops-gap",
     "automatic-lane-ordering",
     "line-hops-step",
-    "line-hops-rounded"
+    "line-hops-rounded",
+    "nested-subgraphs"
   ]
 }

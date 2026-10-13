@@ -1075,8 +1075,11 @@ backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
 visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
+Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
+parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
+clusters, and paint emits dashed labeled containers behind edge and node geometry.
 
-This is intentionally partial. Nested subgraphs, the complete Flowchart shape
+This is intentionally partial. The complete Flowchart shape
 and link catalog beyond the documented marker forms, the remaining lane layering configuration,
 and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

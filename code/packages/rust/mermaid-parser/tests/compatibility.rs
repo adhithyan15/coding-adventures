@@ -2294,6 +2294,21 @@ fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_nested_subgraphs_reach_semantic_ir() {
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
+        .expect("nested Swimlane subgraphs should parse");
+
+    assert_eq!(diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+        vec!["Engineering", "Operations"]);
+    assert_eq!(diagram.groups.len(), 2);
+    assert_eq!(diagram.groups[0].lane_id, "Engineering");
+    assert_eq!(diagram.groups[0].parent_id, None);
+    assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
+    assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
+    assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
