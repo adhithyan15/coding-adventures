@@ -14,7 +14,8 @@ romanization: "iṟaku"
 concept_tag: TA-PORUL275-IRAKU
 prerequisites: [TA-C274-katavul, TA-C274-vilanku]
 sounds: []
-roots: []
+roots: [dravidian-ciraku-wing]
+etymology_hook: "இறகு — native Dravidian (DEDR 2591); Malayalam iṟaku 'wing', Telugu ṟekka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C274-vilanku]
 <!-- hl-knowledge: introduces=[TA-LEX-C275-PORUL275-01]; assesses=[] -->
 
 **இறகு** — *iṟaku* — "a feather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இறகு** (*iṟaku*) is native Dravidian. DEDR 2591 lists Malayalam *iṟaku*, "wing" and Telugu *ṟekka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "tiṟa"
 concept_tag: TA-VERB-TIRA
 prerequisites: [TA-C65-stop, TA-C63-trust, TA-C64-threshing-floor]
 sounds: []
-roots: []
+roots: [dravidian-tira-open]
+etymology_hook: "திற — native Dravidian (DEDR 3259); Malayalam tuṟakka, Kannada teṟa 'an opening', Telugu teṟa"
 duration:
   max_seconds: 230
 requires:
@@ -53,6 +54,11 @@ anyone needs at somebody else's house.
 Across the family, one old word in four shapes: Kannada has ತೆರೆ (*tere*),
 Telugu has తెరుచు (*terucu*), and Malayalam has തുറക്കുക (*tuṟakkuka*).
 Tamil's keeps the tapped **ற** the others softened away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திற** (*tiṟa*) is native Dravidian. DEDR 3259 lists Malayalam *tuṟakka*, Kannada *teṟa*, "an opening" and Telugu *teṟa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

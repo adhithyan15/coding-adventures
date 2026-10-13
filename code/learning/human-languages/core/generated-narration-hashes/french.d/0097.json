@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 97,
-  "sourceHash": "fnv1a64:f4e89954362b57ce",
+  "sourceHash": "fnv1a64:0328ad442a8640b1",
   "lessonIds": [
     "FR-C97-dessus",
     "FR-C97-dessous",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch97.txt",
   "json": "french/narration/ch97.json",
-  "textHash": "fnv1a64:c1f5f0a4921be58f",
-  "jsonHash": "fnv1a64:0e96a6982e52e357",
+  "textHash": "fnv1a64:e02d48ce35409ef4",
+  "jsonHash": "fnv1a64:37b0d6fca92bf957",
   "findings": []
 }

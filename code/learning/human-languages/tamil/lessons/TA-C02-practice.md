@@ -11,6 +11,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C02-en-peyar, TA-C02-ungal-peyar-enna, TA-C02-magizhcci]
 sounds: []
 roots: []
+etymology_hook: "peyar, eṉ, eṉṉa and magiḻcci are all native Dravidian (DEDR 4410, 5160, 5151, 4618)"
 reviews_of: [TA-C02-peyar, TA-C02-en, TA-C02-en-peyar, TA-C02-nii-niingal, TA-C02-enna, TA-C02-ungal-peyar-enna, TA-C02-magizhcci]
 duration:
   max_seconds: 240

@@ -14,6 +14,7 @@ concept_tag: FR-QUAL159-POLI-POLIE
 prerequisites: [FR-C159-confortable, FR-C159-inconfortable]
 sounds: []
 roots: []
+etymology_hook: "poli — 'polished', from Latin politus — English polite and polish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C159-inconfortable]
 <!-- hl-knowledge: introduces=[FR-LEX-C159-QUAL159-03]; assesses=[] -->
 
 **poli / polie** — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poli** is the past participle of the verb for "to polish", ← Latin *polire*, "to smooth" (EtymDB 2.1 gives *politus*, "polished"): good manners are polish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

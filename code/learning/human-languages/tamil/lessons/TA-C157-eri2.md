@@ -14,7 +14,8 @@ romanization: "eri"
 concept_tag: TA-VERB-ERI2
 prerequisites: [TA-C157-kapparru, TA-C157-utu]
 sounds: []
-roots: []
+roots: [dravidian-eri-burn]
+etymology_hook: "எரி — native Dravidian (DEDR 811); Malayalam eriyuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C157-utu]
 <!-- hl-knowledge: introduces=[TA-LEX-C157-ACT157-04]; assesses=[] -->
 
 **எரி** — *eri* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எரி** (*eri*) is native Dravidian. DEDR 811 lists Malayalam *eriyuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

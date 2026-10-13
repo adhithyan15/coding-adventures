@@ -14,7 +14,8 @@ romanization: "āntai"
 concept_tag: TA-THINGS131-ANTAI
 prerequisites: [TA-C131-kili, TA-C131-pura, TA-C29-kaalai-vanakkam, TA-C30-maalai-vanakkam, TA-C30-maalai-vanakkam, TA-C25-iniya-iravu, TA-C25-goodnight-alternatives]
 sounds: []
-roots: []
+roots: [dravidian-aantai-owl]
+etymology_hook: "ஆந்தை — native Dravidian (DEDR 359); Kannada āndega 'night hawk'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C131-pura]
 <!-- hl-knowledge: introduces=[TA-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **ஆந்தை** — *āntai* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆந்தை** (*āntai*) is native Dravidian. DEDR 359 lists Kannada *āndega*, "night hawk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

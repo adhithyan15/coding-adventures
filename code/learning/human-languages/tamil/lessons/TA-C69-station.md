@@ -11,7 +11,8 @@ romanization: "nilaiyam"
 concept_tag: TA-NOUN-STATION
 prerequisites: [TA-C69-road, TA-C67-cap, TA-C68-bag]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "நிலையம் — from native nilai 'standing, place', from nil 'to stand' (DEDR 3675)"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ being told. It is sitting inside வானிலை (*vāṉilai*), the weather,
 
 That is worth more than the word itself: Tamil builds long words out of short ones you already
 own, and from here on you can start looking for the pieces.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிலையம்** (*nilaiyam*) is a modern use of a native word: *nilai*, "standing, place", from *nil*, "to stand" (DEDR 3675). A station is where things stand and stop.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

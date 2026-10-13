@@ -14,6 +14,7 @@ concept_tag: FR-REPAS72-CERISE
 prerequisites: [FR-C119-concombre, FR-C120-fraise]
 sounds: []
 roots: []
+etymology_hook: "cerise ← Latin cerasium, from Greek kerasion 'cherry' — English cherry and cerise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C120-fraise]
 <!-- hl-knowledge: introduces=[FR-LEX-C120-REPAS72-02]; assesses=[] -->
 
 **la cerise** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerise** ← Vulgar Latin *\*ceresia* ← Latin *cerasium*, from Greek *kerasion*, "cherry" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

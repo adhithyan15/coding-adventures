@@ -13,7 +13,8 @@ gloss: "to dry"
 concept_tag: FR-VERB-SECHER
 prerequisites: [FR-C205-economiser, FR-C205-commander]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "sécher ← Latin siccare 'to dry', from siccus — the Latin of sec"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C205-commander]
 <!-- hl-knowledge: introduces=[FR-LEX-C205-VERBES205-05]; assesses=[] -->
 
 **sécher** — "to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sécher** ← Old French *secher* ← Latin *siccare*, "to dry", from *siccus*, the Latin of *sec* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

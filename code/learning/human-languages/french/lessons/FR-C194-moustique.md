@@ -13,7 +13,8 @@ gloss: "a mosquito"
 concept_tag: FR-CHOSES194-MOUSTIQUE
 prerequisites: [FR-C194-papillon, FR-C194-mouche]
 sounds: []
-roots: []
+roots: [musca-latin]
+etymology_hook: "moustique ← Spanish mosquito 'a little fly', from Latin musca — the fly of mouche"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C194-mouche]
 <!-- hl-knowledge: introduces=[FR-LEX-C194-CHOSES194-05]; assesses=[] -->
 
 **le moustique** — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moustique** ← Spanish *mosquito*, "a little fly", from *mosca*, ← Latin *musca* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a walnut, a nut"
 concept_tag: FR-CUISINE24-NOIX
 prerequisites: [FR-C72-creme, FR-C72-poivre]
 sounds: []
-roots: []
+roots: [nux-latin]
+etymology_hook: "noix ← Latin nux, nucis 'nut' — English nucleus, 'a little nut', shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C72-poivre]
 <!-- hl-knowledge: introduces=[FR-LEX-C72-CUISINE24-05]; assesses=[] -->
 
 **la noix** — "a walnut, a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noix** ← Old French *nois* ← Latin *nux*, *nucis*, "nut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

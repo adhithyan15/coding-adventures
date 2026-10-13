@@ -13,7 +13,8 @@ gloss: "a pen"
 concept_tag: FR-CHOSES30-STYLO
 prerequisites: [FR-C77-bouteille, FR-C77-tasse]
 sounds: []
-roots: []
+roots: [stilus-latin]
+etymology_hook: "stylo — short for stylographe, from Latin stilus 'writing stick' + Greek graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C77-tasse]
 <!-- hl-knowledge: introduces=[FR-LEX-C78-CHOSES30-01]; assesses=[] -->
 
 **le stylo** — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stylo** — short for *stylographe*, a 19th-century name for a fountain pen, built from Latin *stilus*, "a writing stick" (EtymDB 2.1), and Greek *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

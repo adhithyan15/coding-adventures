@@ -13,7 +13,8 @@ gloss: "a mobile phone"
 concept_tag: FR-TRAV204-TELEPHONE-PORTABLE
 prerequisites: [FR-C204-carriere, FR-C204-imprimante]
 sounds: []
-roots: []
+roots: [portare-latin]
+etymology_hook: "téléphone portable — téléphone + portable 'that can be carried'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C204-imprimante]
 <!-- hl-knowledge: introduces=[FR-LEX-C204-TRAV204-04]; assesses=[] -->
 
 **le téléphone portable** — "a mobile phone".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**téléphone portable** — *téléphone* and *portable*, "that can be carried", ← Latin *portabilis*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

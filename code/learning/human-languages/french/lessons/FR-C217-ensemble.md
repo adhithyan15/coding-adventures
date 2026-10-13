@@ -13,7 +13,8 @@ gloss: "together"
 concept_tag: FR-POURQUOI217-ENSEMBLE
 prerequisites: [FR-C217-environ, FR-C217-seulement]
 sounds: []
-roots: []
+roots: [simul-latin]
+etymology_hook: "ensemble ← Late Latin insimul 'at the same time' — English ensemble and simultaneous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C217-seulement]
 <!-- hl-knowledge: introduces=[FR-LEX-C217-POURQUOI217-04]; assesses=[] -->
 
 **ensemble** — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ensemble** ← Late Latin *insimul*, "at the same time", from *simul*, "together" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

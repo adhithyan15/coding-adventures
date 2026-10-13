@@ -13,7 +13,8 @@ gloss: "a lift, an elevator"
 concept_tag: FR-TRAJET58-ASCENSEUR
 prerequisites: [FR-C106-taxi, FR-C106-parking]
 sounds: []
-roots: []
+roots: [ascensor-latin]
+etymology_hook: "ascenseur ← Latin ascensor 'one who climbs', from ascendere — English ascend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C106-parking]
 <!-- hl-knowledge: introduces=[FR-LEX-C106-TRAJET58-05]; assesses=[] -->
 
 **l'ascenseur** — "a lift, an elevator".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ascenseur** ← Latin *ascensor*, "one who climbs", from *ascendere*, "to climb up" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

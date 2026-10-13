@@ -1148,6 +1148,9 @@ The `rounded` curve mode lowers direction-aware orthogonal routing to line and q
 commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
 Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
 Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
+Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
+weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
+undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
@@ -1156,8 +1159,8 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, configuration-driven lane
-ordering, line hops on non-straight routes, and exact upstream routing or typography remain
+and link catalog beyond the documented marker forms, the remaining lane layering configuration,
+line hops on non-straight routes, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
 
 

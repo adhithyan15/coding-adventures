@@ -14,7 +14,8 @@ romanization: "puṉṉakai"
 concept_tag: TA-GUNAM268-PUNNAKAI
 prerequisites: [TA-C268-urcakam, TA-C268-kulappam]
 sounds: []
-roots: []
+roots: [dravidian-pul-small, dravidian-naku-laugh]
+etymology_hook: "புன்னகை — native: puṉ 'small' (DEDR 4301) + nakai 'laughter' (DEDR 3569)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C268-kulappam]
 <!-- hl-knowledge: introduces=[TA-LEX-C268-GUNAM268-03]; assesses=[] -->
 
 **புன்னகை** — *puṉṉakai* — "a smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புன்னகை** (*puṉṉakai*) is native: *puṉ*, "small, slight" (DEDR 4301), and *nakai*, "laughter, smile" (DEDR 3569): "a small laugh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

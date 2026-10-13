@@ -14,7 +14,8 @@ romanization: "naṭpu"
 concept_tag: TA-PORUL186-NATPU
 prerequisites: [TA-C186-katali, TA-C186-katal]
 sounds: []
-roots: []
+roots: [dravidian-nannu-draw-near]
+etymology_hook: "நட்பு — native Dravidian (DEDR 3588); Kannada naṇṭu 'friendship', Telugu naṇṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C186-katal]
 <!-- hl-knowledge: introduces=[TA-LEX-C186-PORUL186-05]; assesses=[] -->
 
 **நட்பு** — *naṭpu* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நட்பு** (*naṭpu*) is native Dravidian. DEDR 3588 lists Kannada *naṇṭu*, "friendship" and Telugu *naṇṭu*. It is the same family as *naṇbar*, "friend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

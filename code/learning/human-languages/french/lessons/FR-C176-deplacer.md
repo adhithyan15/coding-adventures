@@ -13,7 +13,8 @@ gloss: "to move (something)"
 concept_tag: FR-VERB-DEPLACER
 prerequisites: [FR-C176-arreter, FR-C176-changer]
 sounds: []
-roots: []
+roots: [platea-latin]
+etymology_hook: "déplacer — dé- + the word for 'place', Latin platea — English displace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C176-changer]
 <!-- hl-knowledge: introduces=[FR-LEX-C176-VERBES176-03]; assesses=[] -->
 
 **déplacer** — "to move (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**déplacer** — built from *dé-* and the word for "a place", ← Latin *platea*, "a broad street" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 156,
-  "sourceHash": "fnv1a64:54ff53765e94591a",
+  "sourceHash": "fnv1a64:93630449e698110a",
   "lessonIds": [
     "FR-C156-rarement",
     "FR-C156-ensuite",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch156.txt",
   "json": "french/narration/ch156.json",
-  "textHash": "fnv1a64:edb0d6b66bf0a40e",
-  "jsonHash": "fnv1a64:ecc8d1c9bda58a0e",
+  "textHash": "fnv1a64:7e7376b877785911",
+  "jsonHash": "fnv1a64:7602ff72ae01d676",
   "findings": []
 }

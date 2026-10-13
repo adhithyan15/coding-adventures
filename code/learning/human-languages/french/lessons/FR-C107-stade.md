@@ -14,6 +14,7 @@ concept_tag: FR-VILLE59-STADE
 prerequisites: [FR-C107-supermarche, FR-C107-cinema]
 sounds: []
 roots: []
+etymology_hook: "stade ← Latin stadium, from Greek stadion, a racecourse — English stadium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C107-cinema]
 <!-- hl-knowledge: introduces=[FR-LEX-C107-VILLE59-03]; assesses=[] -->
 
 **le stade** — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stade** ← Latin *stadium*, from Greek *stadion*, a measure of length and the racecourse of that length — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

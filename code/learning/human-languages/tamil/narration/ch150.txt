@@ -12,6 +12,9 @@ Before the new one: say the Tamil for true, then the Tamil for false.
 You'll want to know: ஊதா.
 ஊதா — ūtā — "purple".
 
+The word, taken apart.
+ஊதா (ūtā) is a loan from Hindustani ūdā, "purple". DEDR has no native entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Say the colours: கருப்பு, வெள்ளை, சிவப்ப�
 You'll want to know: சாம்பல்.
 சாம்பல் — cāmpal — "grey; ash".
 
+The word, taken apart.
+சாம்பல் (cāmpal) is native Dravidian (DEDR 2453). The entry lists cāmpal, "ashes, withered flower", under cāmpu, "to wither, to grow dim".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Tamil for purple, then the Tamil for grey; ash.
 
 You'll want to know: பாடு.
 பாடு — pāṭu — "to sing".
+
+The word, taken apart.
+பாடு (pāṭu) is native Dravidian. DEDR 4065 lists Malayalam pāṭuka, Kannada pāḍu and Telugu pāḍu.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Tamil for grey; ash, then the Tamil for to sing.
 You'll want to know: சமை.
 சமை — camai — "to cook".
 
+The word, taken apart.
+சமை (camai) is native Dravidian (DEDR 2342). The entry glosses camai "to be made, to get ready, to prepare": cooking is preparing.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Tamil for to sing, then the Tamil for to cook.
 
 You'll want to know: வெட்டு.
 வெட்டு — veṭṭu — "to cut".
+
+The word, taken apart.
+வெட்டு (veṭṭu) is native Dravidian. DEDR 5478 lists Malayalam veṭṭuka and Kannada beṭṭu.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "aluvalakam"
 concept_tag: TA-LOC115-ALUVALAKAM
 prerequisites: [TA-C115-cantai, TA-C115-katarkarai]
 sounds: []
-roots: []
+roots: [dravidian-aluval-business, dravidian-akam-inside]
+etymology_hook: "அலுவலகம் — native: aluval 'business' (DEDR 236) + akam 'house, place' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C115-katarkarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C115-LOC115-05]; assesses=[] -->
 
 **அலுவலகம்** — *aluvalakam* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அலுவலகம்** (*aluvalakam*) is native: *aluval*, "business, affair" (DEDR 236), and *akam*, "house, place" (DEDR 7): "the place of business".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

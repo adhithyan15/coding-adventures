@@ -13,7 +13,8 @@ gloss: "finally"
 concept_tag: FR-TEMPS156-ENFIN
 prerequisites: [FR-C156-rarement, FR-C156-ensuite]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "enfin — 'in the end'; fin ← Latin finis, the fin of finir"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C156-ensuite]
 <!-- hl-knowledge: introduces=[FR-LEX-C156-TEMPS156-03]; assesses=[] -->
 
 **enfin** — "finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enfin** — *en*, "in", and the word for "end", ← Latin *finis*, the *fin* of *finir*: in the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

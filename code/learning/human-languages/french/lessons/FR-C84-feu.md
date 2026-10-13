@@ -13,7 +13,8 @@ gloss: "fire"
 concept_tag: FR-NATURE36-FEU
 prerequisites: [FR-C83-neige, FR-C84-vent]
 sounds: []
-roots: []
+roots: [focus-latin]
+etymology_hook: "feu ← Latin focus 'hearth' — English focus and fuel are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C84-vent]
 <!-- hl-knowledge: introduces=[FR-LEX-C84-NATURE36-02]; assesses=[] -->
 
 **le feu** — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feu** ← Old French *fu* ← Latin *focus*, "a hearth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-LOISIRS80-FILM
 prerequisites: [FR-C128-sport, FR-C128-jeu]
 sounds: []
 roots: []
+etymology_hook: "film ← English film 'a thin skin, a membrane', then the strip in a camera"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C128-jeu]
 <!-- hl-knowledge: introduces=[FR-LEX-C128-LOISIRS80-04]; assesses=[] -->
 
 **le film** — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**film** ← English *film*, "a thin skin, a membrane", then the coated strip a camera uses — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to empty"
 concept_tag: FR-VERB-VIDER
 prerequisites: [FR-C233-repeter, FR-C234-remplir]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "vider ← Vulgar Latin *vocitare 'to empty' — the verb beside vide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C234-remplir]
 <!-- hl-knowledge: introduces=[FR-LEX-C234-VERBES234-02]; assesses=[] -->
 
 **vider** — "to empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vider** ← Old French *vuidier* ← Vulgar Latin *\*vocitare*, "to empty" (EtymDB 2.1) — inherited: the verb beside *vide*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

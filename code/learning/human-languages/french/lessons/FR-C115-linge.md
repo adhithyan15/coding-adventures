@@ -13,7 +13,8 @@ gloss: "laundry, linen"
 concept_tag: FR-MAISON67-LINGE
 prerequisites: [FR-C114-balai, FR-C115-aspirateur]
 sounds: []
-roots: []
+roots: [linum-latin]
+etymology_hook: "linge ← Latin lineus 'made of flax', from linum — English linen and line"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C115-aspirateur]
 <!-- hl-knowledge: introduces=[FR-LEX-C115-MAISON67-02]; assesses=[] -->
 
 **le linge** — "laundry, linen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**linge** ← Latin *lineus*, "made of flax", from *linum*, "flax" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

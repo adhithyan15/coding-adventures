@@ -14,6 +14,7 @@ concept_tag: FR-VERB-EXAGERER
 prerequisites: [FR-C182-diriger, FR-C182-detruire]
 sounds: []
 roots: []
+etymology_hook: "exagérer ← Latin exaggerare 'to heap up' — English exaggerate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C182-detruire]
 <!-- hl-knowledge: introduces=[FR-LEX-C182-VERBES182-04]; assesses=[] -->
 
 **exagérer** — "to exaggerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exagérer** ← Latin *exaggerare*, "to heap up" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

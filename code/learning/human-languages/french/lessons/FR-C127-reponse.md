@@ -13,7 +13,8 @@ gloss: "an answer"
 concept_tag: FR-ECOLE79-REPONSE
 prerequisites: [FR-C127-gomme, FR-C127-devoirs, FR-C45-details, FR-C45-premiere-lecture]
 sounds: []
-roots: []
+roots: [latin-respondere]
+etymology_hook: "réponse ← Latin responsa 'answers', from respondere 'to answer' — English response"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ Then answer from it: at what time is the lesson? (**À neuf heures.**)
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-03]; assesses=[] -->
 
 **la réponse** — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réponse** ← Old French *response*, from Latin *responsa*, "answers", from *respondere*, "to answer" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

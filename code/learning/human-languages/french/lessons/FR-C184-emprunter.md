@@ -14,6 +14,7 @@ concept_tag: FR-VERB-EMPRUNTER
 prerequisites: [FR-C184-defendre, FR-C184-disparaitre]
 sounds: []
 roots: []
+etymology_hook: "emprunter ← Vulgar Latin *imprumutare, from Latin promutuum 'a loan'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C184-disparaitre]
 <!-- hl-knowledge: introduces=[FR-LEX-C184-VERBES184-05]; assesses=[] -->
 
 **emprunter** — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emprunter** ← Middle French *emprunter* (EtymDB 2.1) ← Vulgar Latin *\*imprumutare*, from Latin *promutuum*, "a loan paid in advance" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

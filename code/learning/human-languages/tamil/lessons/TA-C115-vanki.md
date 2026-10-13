@@ -14,7 +14,8 @@ romanization: "vaṅki"
 concept_tag: TA-LOC115-VANKI
 prerequisites: [TA-C114-koyil, TA-C115-nulakam, TA-C10-vaara-kizhamai, TA-C10-vaara-kizhamai]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "வங்கி ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C115-nulakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C115-LOC115-02]; assesses=[] -->
 
 **வங்கி** — *vaṅki* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வங்கி** (*vaṅki*) is a loan from English *bank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

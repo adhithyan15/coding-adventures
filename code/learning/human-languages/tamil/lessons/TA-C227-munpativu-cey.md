@@ -14,7 +14,8 @@ romanization: "muṉpativu cey"
 concept_tag: TA-VERB-MUNPATIVU-CEY
 prerequisites: [TA-C227-vicari, TA-C227-pativu-cey]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-pati-imprint, sey-do-dravidian]
+etymology_hook: "முன்பதிவு செய் — native: muṉ 'before' (DEDR 5020) + pativu 'record' (DEDR 3911) + sey 'do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C227-pativu-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C227-ACT227-04]; assesses=[] -->
 
 **முன்பதிவு செய்** — *muṉpativu cey* — "to book in advance, to reserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முன்பதிவு செய்** (*muṉpativu cey*) is native: *muṉ*, "before" (DEDR 5020), *pativu*, "record" (DEDR 3911), and *sey*, "to do" (DEDR 1957): "record in advance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

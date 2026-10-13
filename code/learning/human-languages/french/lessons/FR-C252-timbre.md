@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES252-TIMBRE
 prerequisites: [FR-C252-formulaire, FR-C252-enveloppe]
 sounds: []
 roots: []
+etymology_hook: "timbre ← Latin tympanum, Greek tympanon 'a drum' — English timbre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C252-enveloppe]
 <!-- hl-knowledge: introduces=[FR-LEX-C252-CHOSES252-04]; assesses=[] -->
 
 **le timbre** — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timbre** ← Old French *timbre*, "a drum, a bell" ← Latin *tympanum*, from Greek *tympanon*, "a drum" — inherited (EtymDB 2.1): then the mark struck on a letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

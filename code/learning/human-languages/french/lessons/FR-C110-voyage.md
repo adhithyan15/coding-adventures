@@ -13,7 +13,8 @@ gloss: "a journey, a trip"
 concept_tag: FR-LIEU62-VOYAGE
 prerequisites: [FR-C110-gauche, FR-C110-monde]
 sounds: []
-roots: []
+roots: [via-latin]
+etymology_hook: "voyage ← Latin viaticum 'provisions for a journey', from via 'road' — English voyage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C110-monde]
 <!-- hl-knowledge: introduces=[FR-LEX-C110-LIEU62-04]; assesses=[] -->
 
 **le voyage** — "a journey, a trip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voyage** ← Old French *voiage* ← Latin *viaticum*, "money and food for a journey", from *via*, "a road" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

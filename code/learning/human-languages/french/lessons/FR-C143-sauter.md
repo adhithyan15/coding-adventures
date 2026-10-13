@@ -13,7 +13,8 @@ gloss: "to jump"
 concept_tag: FR-VERB-SAUTER
 prerequisites: [FR-C143-allumer, FR-C143-eteindre]
 sounds: []
-roots: []
+roots: [saltare-latin]
+etymology_hook: "sauter ← Latin saltare 'to dance, to leap' — English somersault is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C143-eteindre]
 <!-- hl-knowledge: introduces=[FR-LEX-C143-VERBES143-03]; assesses=[] -->
 
 **sauter** — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sauter** ← Latin *saltare*, "to dance, to leap" (Lewis & Short) — inherited: the *l* melted into a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

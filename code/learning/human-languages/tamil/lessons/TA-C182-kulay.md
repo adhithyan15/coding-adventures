@@ -14,7 +14,8 @@ romanization: "kuḻāy"
 concept_tag: TA-PORUL182-KULAY
 prerequisites: [TA-C181-tatimanana, TA-C182-kulircatanap-petti]
 sounds: []
-roots: []
+roots: [dravidian-kuzhal-tube]
+etymology_hook: "குழாய் — native Dravidian (DEDR 1818); Malayalam kuḻal 'tube'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C182-kulircatanap-petti]
 <!-- hl-knowledge: introduces=[TA-LEX-C182-PORUL182-02]; assesses=[] -->
 
 **குழாய்** — *kuḻāy* — "a tap, a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழாய்** (*kuḻāy*) is native Dravidian. DEDR 1818 lists Malayalam *kuḻal*, "tube". The entry gathers words for tubes and pipes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

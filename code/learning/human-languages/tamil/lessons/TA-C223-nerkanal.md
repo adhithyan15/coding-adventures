@@ -14,7 +14,8 @@ romanization: "nērkāṇal"
 concept_tag: TA-VELAI223-NERKANAL
 prerequisites: [TA-C222-celavu, TA-C222-campalam]
 sounds: []
-roots: []
+roots: [dravidian-ner-straight, dravidian-kaan-see]
+etymology_hook: "நேர்காணல் — native: nēr 'face to face' (DEDR 3772) + kāṇal 'seeing', from kāṇ (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C222-campalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C223-VELAI223-01]; assesses=[] -->
 
 **நேர்காணல்** — *nērkāṇal* — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேர்காணல்** (*nērkāṇal*) is native: *nēr*, "face to face, direct" (DEDR 3772), and *kāṇal*, "seeing", from *kāṇ* (DEDR 1443): "seeing face to face".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

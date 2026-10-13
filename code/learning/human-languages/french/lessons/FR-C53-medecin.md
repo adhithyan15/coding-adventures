@@ -13,7 +13,8 @@ gloss: "a doctor"
 concept_tag: FR-SANTE5-MEDECIN
 prerequisites: [FR-C53-toux, FR-C53-medicament]
 sounds: []
-roots: []
+roots: [medicus-latin]
+etymology_hook: "médecin — from the French for 'medicine', ← Latin medicina, from medicus 'doctor'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C53-medicament]
 <!-- hl-knowledge: introduces=[FR-LEX-C53-SANTE5-05]; assesses=[] -->
 
 **le médecin** — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**médecin** — formed in French from the word for "medicine", which ← Latin *medicina*, "the art of healing", from *medicus*, "doctor" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

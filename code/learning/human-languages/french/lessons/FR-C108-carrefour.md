@@ -13,7 +13,8 @@ gloss: "a crossroads"
 concept_tag: FR-VILLE60-CARREFOUR
 prerequisites: [FR-C108-usine, FR-C108-trottoir]
 sounds: []
-roots: []
+roots: [quattuor-latin, furca-latin]
+etymology_hook: "carrefour ← Late Latin quadrifurcum 'four forks' — English carfax, from the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C108-trottoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C108-VILLE60-04]; assesses=[] -->
 
 **le carrefour** — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carrefour** ← Old French *quarrefourc* ← Late Latin *quadrifurcum*, "a place with four forks", from *quattuor*, "four", and *furca*, "a fork" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

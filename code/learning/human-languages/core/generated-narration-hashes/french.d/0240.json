@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 240,
-  "sourceHash": "fnv1a64:6214ac0e281cbc87",
+  "sourceHash": "fnv1a64:5f3dc821174ce5d7",
   "lessonIds": [
     "FR-C240-insister",
     "FR-C240-interrompre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch240.txt",
   "json": "french/narration/ch240.json",
-  "textHash": "fnv1a64:d6cdd656195ba357",
-  "jsonHash": "fnv1a64:1277509b3f0712f7",
+  "textHash": "fnv1a64:400e65f6c9d0482a",
+  "jsonHash": "fnv1a64:62ade5e7fa047813",
   "findings": []
 }

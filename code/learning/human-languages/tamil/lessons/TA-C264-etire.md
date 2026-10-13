@@ -14,7 +14,8 @@ romanization: "etirē"
 concept_tag: TA-IDAM264-ETIRE
 prerequisites: [TA-C263-vimana-nilaiyam, TA-C263-kappal]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "எதிரே — native Dravidian (DEDR 795); Malayalam etir 'opposite', Telugu eduru"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C263-kappal]
 <!-- hl-knowledge: introduces=[TA-LEX-C264-IDAM264-01]; assesses=[] -->
 
 **எதிரே** — *etirē* — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எதிரே** (*etirē*) is native Dravidian. DEDR 795 lists Malayalam *etir*, "opposite" and Telugu *eduru*. *-ē* adds emphasis: "right opposite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

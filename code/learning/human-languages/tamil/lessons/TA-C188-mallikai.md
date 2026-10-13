@@ -14,7 +14,8 @@ romanization: "mallikai"
 concept_tag: TA-PORUL188-MALLIKAI
 prerequisites: [TA-C188-mul, TA-C188-tamarai]
 sounds: []
-roots: []
+roots: [sanskrit-mallika]
+etymology_hook: "மல்லிகை ← Sanskrit mallikā 'jasmine' (CDIAL 9913)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C188-tamarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C188-PORUL188-03]; assesses=[] -->
 
 **மல்லிகை** — *mallikai* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மல்லிகை** (*mallikai*) is a loan from Sanskrit *mallikā*, "jasmine" (CDIAL 9913). CDIAL compares Dravidian words for jasmine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

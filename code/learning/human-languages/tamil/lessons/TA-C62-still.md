@@ -11,7 +11,8 @@ romanization: "iṉṉum"
 concept_tag: TA-REPLY-STILL
 prerequisites: [TA-C62-only, TA-C60-rope, TA-C61-thirst]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "இன்னும் — native Dravidian (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C62-only]
 For something that has not finished, and for a bit more of it: இன்னும் சிறிது, a little more still. Kannada ಇನ್ನೂ (*innū*) is the same word; Telugu says ఇంకా (*iṅkā*).
 
 The ன் doubled in the middle is the soft one — the alveolar ன, not the curled ண you have in கிண்ணம். Tamil keeps three of these apart and this word wants the middle one twice.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இன்னும்** (*iṉṉum*) is native Dravidian (DEDR 410). The entry lists *iṉṉum*, "still, yet, more", among the words built on the near base *i-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

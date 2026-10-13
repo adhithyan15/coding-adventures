@@ -14,7 +14,8 @@ romanization: "muṉṉāl"
 concept_tag: TA-LOC113-MUNNAL
 prerequisites: [TA-C113-turam, TA-C113-pinnal]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "முன்னால் — native Dravidian (DEDR 5020); Malayalam mun, Kannada mun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C113-pinnal]
 <!-- hl-knowledge: introduces=[TA-LEX-C113-LOC113-05]; assesses=[] -->
 
 **முன்னால்** — *muṉṉāl* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முன்னால்** (*muṉṉāl*) is native Dravidian. DEDR 5020 lists Malayalam *mun* and Kannada *mun*. It is *muṉ*, "front", with *-āl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

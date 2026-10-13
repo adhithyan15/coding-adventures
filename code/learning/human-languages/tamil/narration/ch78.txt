@@ -20,6 +20,9 @@ Or in front of a sentence:
 ஏன் (ēṉ) தேநீர் வேண்டும்? — "Why do you want tea?"
 This is the first question in the book that cannot be answered by naming a thing. Its answer is a sentence, and the next lesson is the word that lets you give one.
 
+The word, taken apart.
+ஏன் (ēṉ) is native Dravidian (DEDR 5151). It is built on the native question base e-, "what".
+
 What you've built.
 The sixth member of a question family whose pattern you have known since chapter forty.
 
@@ -67,6 +70,9 @@ tēnīr vēṇḍum, ēṉeṉṟāl enakkut tākam.
 "I want tea, because I am thirsty."
 The second half is a whole sentence — the dative one from chapter six, to me, thirst. ஏனென்றால் (ēṉeṉṟāl) joins it on without changing either side.
 Everyday speech shortens it to ஏன்னா, the same wearing-down that made ஆனால் into ஆனா.
+
+The word, taken apart.
+ஏனென்றால் (ēṉeṉṟāl) is native: ēṉ, "why" (DEDR 5151), and eṉṟāl, "if one says", from eṉ, "to say" (DEDR 868). "Because" is "if you say why".
 
 What you've built.
 You can ask for a reason and give one.
@@ -146,6 +152,9 @@ enakkut tākam. adaṉāl tēnīr vēṇḍum.
 "I am thirsty. So I want tea."
 Same two facts as the last lesson, in the other order. Both are ordinary Tamil, and which one you reach for depends on which half you want to lead with.
 The word is அது — "that one", from chapter forty — carrying an ending that means by. By that. It can only point backwards, which is why it never opens a conversation.
+
+The word, taken apart.
+அதனால் (adaṉāl) is native: atu, "that" (DEDR 1), in its joining form ataṉ-, with -āl, "by": "by that".
 
 What you've built.
 The reason can now go on either side of the result.

@@ -13,7 +13,8 @@ gloss: "next"
 concept_tag: FR-QUALITES84-PROCHAIN
 prerequisites: [FR-C132-bruyant, FR-C132-dernier]
 sounds: []
-roots: []
+roots: [prope-latin]
+etymology_hook: "prochain ← Vulgar Latin *propeanus, from Latin prope 'near' — English approach is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C132-dernier]
 <!-- hl-knowledge: introduces=[FR-LEX-C132-QUALITES84-03]; assesses=[] -->
 
 **prochain** — "next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prochain** ← Vulgar Latin *\*propeanus*, from Latin *prope*, "near" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

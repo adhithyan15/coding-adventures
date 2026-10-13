@@ -13,7 +13,8 @@ gloss: "a plant"
 concept_tag: FR-CHOSES228-PLANTE
 prerequisites: [FR-C227-amende, FR-C228-vase]
 sounds: []
-roots: []
+roots: [planta-latin]
+etymology_hook: "plante ← Latin planta 'a sprout, a cutting' — English plant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C228-vase]
 <!-- hl-knowledge: introduces=[FR-LEX-C228-CHOSES228-02]; assesses=[] -->
 
 **la plante** — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plante** ← Latin *planta*, "a sprout, a cutting" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

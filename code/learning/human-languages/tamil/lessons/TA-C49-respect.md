@@ -11,7 +11,8 @@ romanization: "mariyādai"
 concept_tag: TA-COURTESY-RESPECT
 prerequisites: [TA-C49-affection, TA-C47-enough, TA-C48-time]
 sounds: []
-roots: []
+roots: [sanskrit-maryada]
+etymology_hook: "மரியாதை ← Sanskrit maryādā 'boundary', through a spoken form mariyādā (CDIAL 9895)"
 duration:
   max_seconds: 210
 requires:

@@ -13,7 +13,8 @@ gloss: "socks"
 concept_tag: FR-HABITS57-CHAUSSETTES
 prerequisites: [FR-C104-manteau, FR-C104-jupe]
 sounds: []
-roots: []
+roots: [calceus-latin]
+etymology_hook: "chaussettes — little hose, from Old French chauce; Latin calceus 'a shoe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C104-jupe]
 <!-- hl-knowledge: introduces=[FR-LEX-C105-HABITS57-01]; assesses=[] -->
 
 **les chaussettes** — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chaussettes** is the plural of a little form of Old French *chauce*, "hose", ← Latin *calceus*, "a shoe" (Lewis & Short), with *-ette*, "little".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

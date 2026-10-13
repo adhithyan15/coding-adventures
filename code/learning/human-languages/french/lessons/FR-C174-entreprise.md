@@ -13,7 +13,8 @@ gloss: "a company"
 concept_tag: FR-TRAV174-ENTREPRISE
 prerequisites: [FR-C173-natation, FR-C173-victoire]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "entreprise — 'undertaken': entre + prendre — English enterprise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C173-victoire]
 <!-- hl-knowledge: introduces=[FR-LEX-C174-TRAV174-01]; assesses=[] -->
 
 **l'entreprise** — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entreprise** is the past participle of the verb for "to undertake", built from *entre-* and *prendre*, "to take": a thing taken in hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

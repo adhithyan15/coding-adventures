@@ -13,7 +13,8 @@ gloss: "a postman, a postwoman"
 concept_tag: FR-METIERS77-FACTEUR
 prerequisites: [FR-C124-ingenieur, FR-C125-pompier]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "facteur ← Latin factor 'a maker, an agent' — English factor and factory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C125-pompier]
 <!-- hl-knowledge: introduces=[FR-LEX-C125-METIERS77-02]; assesses=[] -->
 
 **le facteur** — "a postman, a postwoman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facteur** ← Latin *factor*, "a maker, a doer", from *facere*, "to make, to do" (EtymDB 2.1) — a learned borrowing; the agent who delivers became the postman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

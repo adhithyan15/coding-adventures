@@ -13,7 +13,8 @@ gloss: "the stairs"
 concept_tag: FR-MAISON27-ESCALIER
 prerequisites: [FR-C74-chambre, FR-C75-sol]
 sounds: []
-roots: []
+roots: [scala-latin]
+etymology_hook: "escalier ← Occitan escalier, from Latin scala 'ladder' — English scale and escalate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C75-sol]
 <!-- hl-knowledge: introduces=[FR-LEX-C75-MAISON27-02]; assesses=[] -->
 
 **l'escalier** — "the stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escalier** ← Occitan *escalier* ← Latin *scalaria*, "steps", from *scala*, "a ladder" — borrowed from the south in the 1500s. (EtymDB 2.1 has the Middle French form.) The word French inherited from *scala* is the one for "ladder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

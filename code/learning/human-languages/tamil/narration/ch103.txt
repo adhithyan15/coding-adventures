@@ -13,6 +13,9 @@ You'll want to know: பேரன்.
 பேரன் (pēraṉ) — "a grandson".
 -அன் marks a man, as in மருமகன்.
 
+The word, taken apart.
+பேரன் (pēraṉ) is native Dravidian (DEDR 4410). The entry glosses pēraṉ "grandson (as bearing the grandfather's name)": the grandson carries the name, peyar.
+
 What you've built.
 A grandson.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a son-in-law, then the Tamil for a grandso
 You'll want to know: பேத்தி.
 பேத்தி (pētti) — "a granddaughter".
 It pairs with பேரன் (pēraṉ) the way பாட்டி pairs with தாத்தா.
+
+The word, taken apart.
+பேத்தி (pētti) is the feminine of pēraṉ, "grandson", which DEDR 4410 files with peyar, "name": the grandchild carries the grandparent's name.
 
 What you've built.
 Grandson and granddaughter.
@@ -73,6 +79,9 @@ You'll want to know: பக்கத்து வீட்டுக்கார�
 பக்கத்து வீட்டுக்காரர் (pakkattu vīṭṭukkārar) — "a neighbour", literally "the person of the house beside".
 பக்கம் is "side"; வீடு is "house".
 
+The word, taken apart.
+பக்கத்து வீட்டுக்காரர் (pakkattu vīṭṭukkārar) is "the people of the house at the side": pakkam, "side", from Sanskrit pakṣa, "wing, side" (CDIAL 7627), vīṭu, "house", native (DEDR 5393), and -kārar, "the ones who belong to".
+
 What you've built.
 A neighbour, spelled out as the house beside.
 
@@ -103,6 +112,9 @@ You'll want to know: குடும்பப் பெயர்.
 குடும்பப் பெயர் (kuṭumpap peyar) — "a family name".
 பெயர் is the "name" of your first introductions; குடும்பம் is "family". Many Tamil names use a father's initial where English uses a surname.
 
+The word, taken apart.
+குடும்பப் பெயர் (kuṭumpap peyar) is kuṭumbam, "family", from Sanskrit kuṭumba (CDIAL 3233), and native peyar, "name" (DEDR 4410).
+
 What you've built.
 A family name, and what often stands in for it.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a neighbour, then the Tamil for a family n
 You'll want to know: செல்லப்பெயர்.
 செல்லப்பெயர் (cellappeyar) — "a pet name", literally "darling-name".
 செல்லம் is "darling, pet".
+
+The word, taken apart.
+செல்லப்பெயர் (cellappeyar) is native: cellam, "treasure, darling", which DEDR 2786 files among words for wealth, and peyar, "name" (DEDR 4410).
 
 What you've built.
 Grandchildren, a neighbour, a family name, a pet name.

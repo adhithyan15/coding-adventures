@@ -14,7 +14,8 @@ romanization: "kattarikkāy"
 concept_tag: TA-PORUL243-KATTARIKKAY
 prerequisites: [TA-C243-kotumai, TA-C243-urulaikkilanku]
 sounds: []
-roots: []
+roots: [dravidian-kaay-fruit]
+etymology_hook: "கத்தரிக்காய் — kattari (origin uncertain) + native kāy 'unripe fruit, vegetable' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C243-urulaikkilanku]
 <!-- hl-knowledge: introduces=[TA-LEX-C243-PORUL243-03]; assesses=[] -->
 
 **கத்தரிக்காய்** — *kattarikkāy* — "an aubergine, a brinjal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கத்தரிக்காய்** (*kattarikkāy*) is *kattari*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459). The origin of *kattari* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

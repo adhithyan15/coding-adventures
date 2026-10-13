@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 143,
-  "sourceHash": "fnv1a64:b3096e9533bfa855",
+  "sourceHash": "fnv1a64:6c076fa642cd9e49",
   "lessonIds": [
     "TA-C143-kattaiviral",
     "TA-C143-ketta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch143.txt",
   "json": "tamil/narration/ch143.json",
-  "textHash": "fnv1a64:225ba07cc33d66dd",
-  "jsonHash": "fnv1a64:07f85b7273c11000",
+  "textHash": "fnv1a64:7b4ac9c0bee3da3e",
+  "jsonHash": "fnv1a64:069fe0360c624cf9",
   "findings": []
 }

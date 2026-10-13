@@ -15,6 +15,7 @@ concept_tag: TA-VELAI251-PATTIYAL
 prerequisites: [TA-C250-vaikkol, TA-C251-mottam]
 sounds: []
 roots: []
+etymology_hook: "பட்டியல் — origin uncertain; sometimes linked to Sanskrit paṭṭa 'tablet' (CDIAL 7699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C251-mottam]
 <!-- hl-knowledge: introduces=[TA-LEX-C251-VELAI251-02]; assesses=[] -->
 
 **பட்டியல்** — *paṭṭiyal* — "a list".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **பட்டியல்** (*paṭṭiyal*) is uncertain. DEDR has no entry for it in this sense; one account links it to Sanskrit *paṭṭa*, "slab, tablet" (CDIAL 7699).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

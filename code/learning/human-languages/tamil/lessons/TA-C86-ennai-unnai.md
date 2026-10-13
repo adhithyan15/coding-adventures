@@ -11,7 +11,8 @@ romanization: eṉṉai / uṉṉai
 concept_tag: TA-ACCUSATIVE-PRONOUNS
 prerequisites: [TA-C86-ai]
 sounds: []
-roots: []
+roots: [naan-dravidian, nii-dravidian]
+etymology_hook: "என்னை / உன்னை — native: eṉ- 'I' (DEDR 5160) and uṉ- 'you' (DEDR 3684) + the accusative -ai"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,11 @@ endings are the cheap part, and there are only so many of them.
 
 A bare verb stem is already a command — you met that with *pō!* in the farewell
 chapter — so this is a whole sentence with no machinery you have not used.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**என்னை / உன்னை** (*eṉṉai / uṉṉai*) are the native pronouns with the accusative *-ai*: *eṉ-*, the joining form of "I" (DEDR 5160), and *uṉ-*, the joining form of "you" (DEDR 3684).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C86-ENNAI-UNNAI-01, TA-GRAMMAR-C86-AI-01] -->

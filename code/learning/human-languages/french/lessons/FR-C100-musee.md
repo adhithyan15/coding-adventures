@@ -14,6 +14,7 @@ concept_tag: FR-VILLE52-MUSEE
 prerequisites: [FR-C100-parc, FR-C100-eglise]
 sounds: []
 roots: []
+etymology_hook: "musée ← Latin museum, from Greek mouseion 'a shrine of the Muses' — English museum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C100-eglise]
 <!-- hl-knowledge: introduces=[FR-LEX-C100-VILLE52-05]; assesses=[] -->
 
 **le musée** — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**musée** ← Latin *museum*, from Greek *mouseion*, "a shrine of the Muses" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

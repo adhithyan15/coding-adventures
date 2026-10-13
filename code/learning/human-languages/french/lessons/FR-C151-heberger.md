@@ -14,6 +14,7 @@ concept_tag: FR-VERB-HEBERGER
 prerequisites: [FR-C150-brancher, FR-C150-livrer]
 sounds: []
 roots: []
+etymology_hook: "héberger ← Germanic heri 'army' + bergan 'to shelter' — English harbour is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C150-livrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C151-VERBES151-01]; assesses=[] -->
 
 **héberger** — "to put up (a guest)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**héberger** ← Old French *herbergier*, "to shelter", a Germanic word: Old High German has *heribergan*, from *heri*, "army", and *bergan*, "to shelter" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

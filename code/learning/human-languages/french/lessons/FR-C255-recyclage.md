@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES255-RECYCLAGE
 prerequisites: [FR-C254-grotte, FR-C255-dechets]
 sounds: []
 roots: []
+etymology_hook: "recyclage — re- + cycle, from Greek kyklos 'a circle', + -age — English recycling"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C255-dechets]
 <!-- hl-knowledge: introduces=[FR-LEX-C255-CHOSES255-02]; assesses=[] -->
 
 **le recyclage** — "recycling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recyclage** — built from *re-*, the word for "cycle", ← Latin *cyclus*, from Greek *kyklos*, "a circle" (Lewis & Short), and *-age*; modelled on English *recycling*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

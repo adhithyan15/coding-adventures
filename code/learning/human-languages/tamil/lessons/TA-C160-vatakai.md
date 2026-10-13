@@ -14,7 +14,8 @@ romanization: "vāṭakai"
 concept_tag: TA-PATI160-VATAKAI
 prerequisites: [TA-C160-kala-attavanai, TA-C160-arivippu]
 sounds: []
-roots: []
+roots: [sanskrit-bhataka]
+etymology_hook: "வாடகை ← Sanskrit bhāṭaka 'hire, rent', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C160-arivippu]
 <!-- hl-knowledge: introduces=[TA-LEX-C160-PATI160-03]; assesses=[] -->
 
 **வாடகை** — *vāṭakai* — "rent; a fare". The money for a room, or for a ride: **வீட்டு வாடகை** — *vīṭṭu vāṭakai* — "the rent for a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாடகை** (*vāṭakai*) is a well-established loan from Sanskrit *bhāṭaka*, "hire, rent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

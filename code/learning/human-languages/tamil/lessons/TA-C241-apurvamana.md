@@ -14,7 +14,8 @@ romanization: "apūrvamāṉa"
 concept_tag: TA-GUNAM241-APURVAMANA
 prerequisites: [TA-C240-arumaiyana, TA-C241-cataranamana]
 sounds: []
-roots: []
+roots: [sanskrit-apurva]
+etymology_hook: "அபூர்வமான ← Sanskrit apūrva 'unprecedented' (CDIAL 494)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C241-cataranamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C241-GUNAM241-02]; assesses=[] -->
 
 **அபூர்வமான** — *apūrvamāṉa* — "rare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அபூர்வமான** (*apūrvamāṉa*) is a loan from Sanskrit *apūrva*, "unprecedented" (CDIAL 494). *Apūrvam* takes *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 89,
-  "sourceHash": "fnv1a64:7272cc146bef8499",
+  "sourceHash": "fnv1a64:88aa632e3fee1b19",
   "lessonIds": [
     "FR-C89-tortue",
     "FR-C89-nouveau",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch89.txt",
   "json": "french/narration/ch89.json",
-  "textHash": "fnv1a64:f55eaddff60d5369",
-  "jsonHash": "fnv1a64:c90b68738fb1ede7",
+  "textHash": "fnv1a64:ec950684e43f0c94",
+  "jsonHash": "fnv1a64:5f75726ff9cfd50d",
   "findings": []
 }

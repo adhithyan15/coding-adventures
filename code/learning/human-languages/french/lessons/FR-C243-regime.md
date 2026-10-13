@@ -13,7 +13,8 @@ gloss: "a diet"
 concept_tag: FR-SANTE243-REGIME
 prerequisites: [FR-C243-urgence, FR-C243-consultation]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "régime ← Latin regimen 'guidance, rule' — English regime and regimen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C243-consultation]
 <!-- hl-knowledge: introduces=[FR-LEX-C243-SANTE243-05]; assesses=[] -->
 
 **le régime** — "a diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**régime** ← Latin *regimen*, "guidance, rule", from *regere*, "to rule" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

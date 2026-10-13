@@ -14,6 +14,7 @@ concept_tag: FR-VERB-AMUSER
 prerequisites: [FR-C145-disputer, FR-C146-ennuyer]
 sounds: []
 roots: []
+etymology_hook: "s'amuser ← Old French amuser 'to keep idle', from muser 'to gape' — English amuse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C146-ennuyer]
 <!-- hl-knowledge: introduces=[FR-LEX-C146-VERBES146-02]; assesses=[] -->
 
 **s'amuser** — "to have fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'amuser** ← Old French *amuser*, "to keep idle", built from *a-* and *muser*, "to gape, to dawdle". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

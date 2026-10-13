@@ -14,7 +14,8 @@ romanization: "tūkku"
 concept_tag: TA-VERB-TUKKU
 prerequisites: [TA-C162-curru, TA-C162-nakar]
 sounds: []
-roots: []
+roots: [dravidian-tuunku-hang-sleep]
+etymology_hook: "தூக்கு — native Dravidian (DEDR 3376); Malayalam tūṅṅuka 'to hang'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C162-nakar]
 <!-- hl-knowledge: introduces=[TA-LEX-C162-ACT162-05]; assesses=[] -->
 
 **தூக்கு** — *tūkku* — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தூக்கு** (*tūkku*) is native Dravidian. DEDR 3376 lists Malayalam *tūṅṅuka*, "to hang". The entry lists *tūkku*, "to hang up, to take up", beside *tūṅku*, "to hang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

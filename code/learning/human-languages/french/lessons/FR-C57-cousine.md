@@ -13,7 +13,8 @@ gloss: "a cousin (female)"
 concept_tag: FR-FAMILLE9-COUSINE
 prerequisites: [FR-C57-oncle, FR-C57-tante]
 sounds: []
-roots: []
+roots: [consobrinus-latin]
+etymology_hook: "cousine ← Latin consobrina 'cousin on the mother's side' — English cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C57-tante]
 <!-- hl-knowledge: introduces=[FR-LEX-C57-FAMILLE9-05]; assesses=[] -->
 
 **la cousine** — "a cousin (female)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cousine** ← Latin *consobrina*, "a cousin on the mother's side" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

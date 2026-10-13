@@ -14,6 +14,7 @@ concept_tag: FR-SANTE186-CONFIANCE
 prerequisites: [FR-C186-amitie, FR-C186-espoir]
 sounds: []
 roots: []
+etymology_hook: "confiance — from the verb 'to entrust', Latin confidere — English confidence"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C186-espoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C186-SANTE186-03]; assesses=[] -->
 
 **la confiance** — "trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confiance** — built on the verb for "to entrust", with *-ance*; behind it is Latin *confidere*, "to trust fully". (EtymDB 2.1 links it to Latin *confidentia*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

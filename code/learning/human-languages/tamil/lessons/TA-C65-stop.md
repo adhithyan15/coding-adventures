@@ -11,7 +11,8 @@ romanization: "niṟuttu"
 concept_tag: TA-VERB-NIRUTTU
 prerequisites: [TA-C65-walk, TA-W21-read-kudi, TA-C63-hesitancy, TA-C64-crop]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "நிறுத்து — native Dravidian (DEDR 3675); Malayalam niṟuttuka 'to make to stand'"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,11 @@ four syllables to survive on.
 
 Across the family: Kannada ನಿಲ್ಲಿಸು (*nillisu*) and Malayalam നിർത്തുക
 (*nirttuka*) are built the same way, from the same standing-verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிறுத்து** (*niṟuttu*) is native Dravidian. DEDR 3675 lists Malayalam *niṟuttuka*, "to make to stand". It is the causative of *nil*, "to stand": to stop something is "to make it stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

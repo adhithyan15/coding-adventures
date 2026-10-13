@@ -14,7 +14,8 @@ romanization: "kaṭavuccīṭṭu"
 concept_tag: TA-PORUL244-KATAVUCCITTU
 prerequisites: [TA-C244-pativam, TA-C244-avanam]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross, tamil-ciittu-slip]
+etymology_hook: "கடவுச்சீட்டு — a coinage: native kaṭavu 'passing' (DEDR 1109) + cīṭṭu 'ticket' (origin uncertain)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C244-avanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C244-PORUL244-05]; assesses=[] -->
 
 **கடவுச்சீட்டு** — *kaṭavuccīṭṭu* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடவுச்சீட்டு** (*kaṭavuccīṭṭu*) is a modern coinage: native *kaṭavu*, "passing, way through", from *kaṭa*, "to cross" (DEDR 1109), and *cīṭṭu*, "ticket, slip": "the crossing ticket". The origin of *cīṭṭu* is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

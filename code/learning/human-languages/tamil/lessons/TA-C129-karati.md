@@ -14,7 +14,8 @@ romanization: "karaṭi"
 concept_tag: TA-THINGS129-KARATI
 prerequisites: [TA-C128-puli, TA-C129-cinkam]
 sounds: []
-roots: []
+roots: [dravidian-karadi-bear]
+etymology_hook: "கரடி — native Dravidian (DEDR 1263); Malayalam karaṭi, Kannada karaḍi, Telugu karaṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C129-cinkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **கரடி** — *karaṭi* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கரடி** (*karaṭi*) is native Dravidian. DEDR 1263 lists Malayalam *karaṭi*, Kannada *karaḍi* and Telugu *karaṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a lion"
 concept_tag: FR-ANIMAUX39-LION
 prerequisites: [FR-C87-mouton, FR-C87-chevre]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "lion ← Latin leo, leonis, from Greek leon — English Leo and leonine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C87-chevre]
 <!-- hl-knowledge: introduces=[FR-LEX-C87-ANIMAUX39-03]; assesses=[] -->
 
 **le lion** — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lion** ← Latin *leo*, *leonis*, from Greek *leon* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

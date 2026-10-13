@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 113,
-  "sourceHash": "fnv1a64:82a6b1f40bbe89e1",
+  "sourceHash": "fnv1a64:36e8ffac2b1feabd",
   "lessonIds": [
     "TA-C113-neraka",
     "TA-C113-arukil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch113.txt",
   "json": "tamil/narration/ch113.json",
-  "textHash": "fnv1a64:dde927e402ed7987",
-  "jsonHash": "fnv1a64:dff1acae2f3b4243",
+  "textHash": "fnv1a64:abb534d9ffa495a8",
+  "jsonHash": "fnv1a64:82d96c2dff352a08",
   "findings": []
 }

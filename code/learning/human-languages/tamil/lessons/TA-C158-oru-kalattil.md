@@ -14,7 +14,8 @@ romanization: "oru kālattil"
 concept_tag: TA-KALAM158-ORU-KALATTIL
 prerequisites: [TA-C158-erkanave, TA-C158-pona]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-kaala-time]
+etymology_hook: "ஒரு காலத்தில் — native oru 'one' (DEDR 990) + kālam ← Sanskrit kāla 'time' (CDIAL 3084) + -il"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C158-pona]
 <!-- hl-knowledge: introduces=[TA-LEX-C158-KALAM158-04]; assesses=[] -->
 
 **ஒரு காலத்தில்** — *oru kālattil* — "once, at one time". It points far back: **ஒரு காலத்தில் இங்கே ஒரு குளம் இருந்தது** — *oru kālattil iṅkē oru kuḷam iruntatu* — "There was once a pond here." **இருந்தது** is the past of **இரு**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒரு காலத்தில்** (*oru kālattil*) is native *oru*, "one" (DEDR 990), and *kālam*, "time", from Sanskrit *kāla* (CDIAL 3084), with the locative *-il*: "at one time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

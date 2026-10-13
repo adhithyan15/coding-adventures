@@ -12,6 +12,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [TA-C01-illai, TA-C01-nandri-family-register]
 sounds: [illai-negative]
 roots: [illai-not-dravidian]
+etymology_hook: "பரவாயில்லை — Persian parvā 'care, concern', through Hindustani, + native illai 'is not' (DEDR 2559)"
 reviews_of: [TA-C01-illai, TA-C01-nandri-family-register, TA-C01-nandri]
 duration:
   max_seconds: 240
@@ -40,14 +41,15 @@ reply, and it hides one of the most Tamil words there is.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பரவாயில்லை** literally means "**there is no harm**" — *paravāy* ("harm, trouble")
+**பரவாயில்லை** literally means "**there is no concern**" — *paravāy* ("care, concern")
 + *illai* ("is-not, there-is-not"). It serves as "it's okay / no worries
-/ never mind / you're welcome." The key atom, *illai*, you already
+/ never mind / you're welcome." *Paravāy* is a loan: Persian *parvā*, "care,
+concern," which reached Tamil through Hindustani. The key atom, *illai*, you already
 met in Chapter 1 — the Tamil word for negation and non-existence, the mirror of
 *iru* ("to be"). Where *iru* says "it is," *illai* says "it is not." This one word
 is shared, in almost the same shape, across Tamil, Kannada, and Malayalam
-(*illa*) — one of the deep bonds of the Dravidian south. (Telugu alone breaks
-away, using *lēdu*.)
+(*illa*) — one of the deep bonds of the Dravidian south. (Telugu's *lēdu* looks
+different, but DEDR 2559 files it with them.)
 
 ## Grammar Lens: *illai*, the all-purpose "no"
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

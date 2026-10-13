@@ -14,7 +14,8 @@ romanization: "pāttiram"
 concept_tag: TA-THINGS118-PATTIRAM
 prerequisites: [TA-C117-utaimai, TA-C118-atuppu]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "பாத்திரம் ← Sanskrit pātra 'drinking vessel, dish' (CDIAL 8055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C118-atuppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **பாத்திரம்** — *pāttiram* — "a vessel, a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாத்திரம்** (*pāttiram*) is a loan from Sanskrit *pātra*, "drinking vessel, dish" (CDIAL 8055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

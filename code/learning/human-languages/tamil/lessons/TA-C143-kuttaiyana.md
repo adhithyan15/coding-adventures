@@ -14,7 +14,8 @@ romanization: "kuṭṭaiyāṉa"
 concept_tag: TA-THINGS143-KUTTAIYANA
 prerequisites: [TA-C143-alakana, TA-C143-nilamana]
 sounds: []
-roots: []
+roots: [dravidian-kutti-small]
+etymology_hook: "குட்டையான — native Dravidian (DEDR 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C143-nilamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C143-THINGS143-05]; assesses=[] -->
 
 **குட்டையான** — *kuṭṭaiyāṉa* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குட்டையான** (*kuṭṭaiyāṉa*) is native Dravidian (DEDR 1670). The entry lists *kuṭṭai*, "shortness", among words for small and young things; *-āṉa* makes it "short".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

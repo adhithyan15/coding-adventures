@@ -13,7 +13,8 @@ gloss: "glasses"
 concept_tag: FR-CHOSES31-LUNETTES
 prerequisites: [FR-C79-argent, FR-C79-cadeau]
 sounds: []
-roots: []
+roots: [luna-latin]
+etymology_hook: "lunettes — lune 'moon' + -ette: little moons — Latin luna"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C79-cadeau]
 <!-- hl-knowledge: introduces=[FR-LEX-C79-CHOSES31-05]; assesses=[] -->
 
 **les lunettes** — "glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lunettes** — built from *lune*, "moon", with *-ette*, "little": the round lenses were little moons. *lune* ← Latin *luna*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

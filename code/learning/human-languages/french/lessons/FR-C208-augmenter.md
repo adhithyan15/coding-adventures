@@ -14,6 +14,7 @@ concept_tag: FR-VERB-AUGMENTER
 prerequisites: [FR-C208-applaudir, FR-C208-traverser]
 sounds: []
 roots: []
+etymology_hook: "augmenter ← Late Latin augmentare, from augere 'to increase' — English augment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C208-traverser]
 <!-- hl-knowledge: introduces=[FR-LEX-C208-VERBES208-03]; assesses=[] -->
 
 **augmenter** — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**augmenter** ← Late Latin *augmentare*, from *augere*, "to increase" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-ADJ45-SUCRE
 prerequisites: [FR-C93-lourd, FR-C93-leger]
 sounds: []
 roots: []
+etymology_hook: "sucré — 'sugared', from the verb made from sucre 'sugar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C93-leger]
 <!-- hl-knowledge: introduces=[FR-LEX-C93-ADJ45-05]; assesses=[] -->
 
 **sucré** — "sweet (with sugar)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sucré** is the past participle of the verb for "to sugar", made from *sucre*, "sugar": sugared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

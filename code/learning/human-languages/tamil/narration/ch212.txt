@@ -12,6 +12,9 @@ Before the new one: say the Tamil for pink, then the Tamil for brown.
 You'll want to know: பலவீனமான.
 பலவீனமான — palavīṉamāṉa — "weak".
 
+The word, taken apart.
+பலவீனமான (palavīṉamāṉa) is palavīṉam, "weakness", from Sanskrit bala, "strength" (CDIAL 9161), and hīna, "lacking" (CDIAL 14124), with -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for brown, then the Tamil for weak.
 
 You'll want to know: சுயநலமான.
 சுயநலமான — cuyanalamāṉa — "selfish".
+
+The word, taken apart.
+சுயநலமான (cuyanalamāṉa) is cuya, "self", from Sanskrit sva, and native nalam, "welfare" (DEDR 3610): "self-welfare".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for weak, then the Tamil for selfish.
 You'll want to know: பெருந்தன்மையான.
 பெருந்தன்மையான — peruntaṉmaiyāṉa — "generous, big-hearted".
 
+The word, taken apart.
+பெருந்தன்மையான (peruntaṉmaiyāṉa) is native: perum, "great" (DEDR 4411), and taṉmai, "nature, character" (DEDR 3196): "great-natured".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for selfish, then the Tamil for generous.
 You'll want to know: ஒழுக்கமான.
 ஒழுக்கமான — oḻukkamāṉa — "well-behaved, disciplined".
 
+The word, taken apart.
+ஒழுக்கமான (oḻukkamāṉa) is native Dravidian. DEDR 1011 lists Malayalam oḻukkam, "plainness". The entry glosses oḻukkam "acting according to established rules, good conduct".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for generous, then the Tamil for well-behaved.
 
 You'll want to know: அசிங்கமான.
 அசிங்கமான — aciṅkamāṉa — "ugly".
+
+The word, taken apart.
+The origin of அசிங்கமான (aciṅkamāṉa) is uncertain. Aciṅkam, "ugliness", has no entry in DEDR, and its source is not settled.
 
 What you've built.
 One more word for this chapter.

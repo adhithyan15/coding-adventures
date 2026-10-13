@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 280,
-  "sourceHash": "fnv1a64:9c9387afd9fd0856",
+  "sourceHash": "fnv1a64:8d12292a6595f161",
   "lessonIds": [
     "TA-C280-aracu",
     "TA-C280-viti",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch280.txt",
   "json": "tamil/narration/ch280.json",
-  "textHash": "fnv1a64:9533b5b1e81cf029",
-  "jsonHash": "fnv1a64:1f4efbdae389555e",
+  "textHash": "fnv1a64:8b234bcf64191767",
+  "jsonHash": "fnv1a64:55b48ed3a131921c",
   "findings": []
 }

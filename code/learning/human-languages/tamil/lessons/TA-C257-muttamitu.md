@@ -14,7 +14,8 @@ romanization: "muttamiṭu"
 concept_tag: TA-VERB-MUTTAMITU
 prerequisites: [TA-C257-vetkappatu, TA-C257-poramaippatu]
 sounds: []
-roots: []
+roots: [dravidian-muttam-kiss, dravidian-idu-put]
+etymology_hook: "முத்தமிடு — native: muttam 'kiss' (DEDR 4960) + iṭu 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C257-poramaippatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C257-ACT257-05]; assesses=[] -->
 
 **முத்தமிடு** — *muttamiṭu* — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முத்தமிடு** (*muttamiṭu*) is native: *muttam*, "kiss" (DEDR 4960, which lists Malayalam muttam and Telugu muddu), and *iṭu*, "to put" (DEDR 442): "put a kiss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

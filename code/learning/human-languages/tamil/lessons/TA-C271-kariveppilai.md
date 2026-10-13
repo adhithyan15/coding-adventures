@@ -14,7 +14,8 @@ romanization: "kaṟivēppilai"
 concept_tag: TA-PORUL271-KARIVEPPILAI
 prerequisites: [TA-C270-puri, TA-C271-kottamalli]
 sounds: []
-roots: []
+roots: [dravidian-kari-curry, dravidian-veempu-neem, dravidian-ilai-leaf]
+etymology_hook: "கறிவேப்பிலை — native: kaṟi 'curry' (DEDR 1391) + vēppilai 'neem leaf' (DEDR 5531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C271-kottamalli]
 <!-- hl-knowledge: introduces=[TA-LEX-C271-PORUL271-02]; assesses=[] -->
 
 **கறிவேப்பிலை** — *kaṟivēppilai* — "curry leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கறிவேப்பிலை** (*kaṟivēppilai*) is native: *kaṟi*, "curry, vegetables" (DEDR 1391), and *vēppilai*, "neem leaf" (DEDR 5531): "the curry neem-leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

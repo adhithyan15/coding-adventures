@@ -11,7 +11,8 @@ romanization: "kiḷampalāmā?"
 concept_tag: TA-LEAVE-SHALL-WE
 prerequisites: [TA-C106-holiday, TA-C107-takeleave]
 sounds: []
-roots: []
+roots: [dravidian-kilar-rise]
+etymology_hook: "கிளம்பலாமா? — native Dravidian (DEDR 1583); Malayalam kiḷampuka 'to rise'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C107-takeleave]
 **கிளம்பலாமா?** (*kiḷampalāmā?*) — "shall we leave?".
 
 **கிளம்பு** is "to set out"; **-லாமா** asks "shall we?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிளம்பலாமா?** (*kiḷampalāmā?*) is native Dravidian. DEDR 1583 lists Malayalam *kiḷampuka*, "to rise". The entry lists *kiḷampu*, "to rise, to start up": to leave is to get up and go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

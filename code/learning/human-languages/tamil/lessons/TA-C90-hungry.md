@@ -11,7 +11,8 @@ romanization: "pasikkiṟatu"
 concept_tag: TA-MOOD-HUNGRY
 prerequisites: [TA-C90-tears, TA-C90-alone]
 sounds: []
-roots: []
+roots: [dravidian-paci-hunger]
+etymology_hook: "பசிக்கிறது — native Dravidian (DEDR 3825)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C90-alone]
 **பசிக்கிறது** (*pasikkiṟatu*) — "I am hungry", literally "it hungers".
 
 It is **பசி**, "hunger", made into a verb. **எனக்குப் பசிக்கிறது** — "I'm hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பசிக்கிறது** (*pasikkiṟatu*) is native Dravidian (DEDR 3825). It is *paci*, "to be hungry", in the form that says "it is happening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

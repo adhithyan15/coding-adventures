@@ -14,7 +14,8 @@ romanization: "ēṇi"
 concept_tag: TA-THINGS135-ENI
 prerequisites: [TA-C135-cuttiyal, TA-C135-ani]
 sounds: []
-roots: []
+roots: [tamil-eni-ladder]
+etymology_hook: "ஏணி — origin uncertain; DEDR's ēṇi 'boundary, edge' (886) is a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C135-ani]
 <!-- hl-knowledge: introduces=[TA-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **ஏணி** — *ēṇi* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ஏணி** (*ēṇi*) is uncertain. DEDR has an *ēṇi*, "boundary, edge" (DEDR 886), but not this word for a ladder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

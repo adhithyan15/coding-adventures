@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES227-AMENDE
 prerequisites: [FR-C227-peage, FR-C227-autoroute]
 sounds: []
 roots: []
+etymology_hook: "amende — from the verb 'to make amends', Latin emendare 'to correct' — English amend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C227-autoroute]
 <!-- hl-knowledge: introduces=[FR-LEX-C227-CHOSES227-05]; assesses=[] -->
 
 **l'amende** — "a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amende** — formed from the verb for "to make amends", ← Latin *emendare*, "to correct" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

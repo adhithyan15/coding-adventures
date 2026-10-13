@@ -11,7 +11,8 @@ romanization: "varavēṟpu"
 concept_tag: TA-WELCOME-WELCOME
 prerequisites: [TA-C50-betel-leaf, TA-C48-set-out, TA-C49-many-thanks]
 sounds: []
-roots: []
+roots: [dravidian-vaa-come, dravidian-el-receive]
+etymology_hook: "வரவேற்பு — native: varavu 'coming' (DEDR 5270) + ēṟpu 'receiving' (DEDR 905)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C50-betel-leaf]
 Two pieces you can almost hear coming apart. *vara* is the coming, from *vā*, the word for 'come' you already have; *ēṟpu* is the accepting, from *ēṟṟu*, 'to receive'. A welcome, in Tamil, is the acceptance of somebody's arrival, and the word says that and nothing more.
 
 *varavēṟkiṟēṉ* is "I welcome you". At the *vāsal*, over the *kōlam*, with a *malar* and a *veṟṟilai* in hand, it is the last thing left to say at a door — and it sets you back down exactly where this book began, at a door, with *vaṇakkam*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரவேற்பு** (*varavēṟpu*) is native: *varavu*, "coming", from *varu*, "to come" (DEDR 5270), and *ēṟpu*, "receiving", from *ēl*, "to receive, to welcome" (DEDR 905). A welcome is "receiving someone's coming".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

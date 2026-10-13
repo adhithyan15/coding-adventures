@@ -13,7 +13,8 @@ gloss: "chicken"
 concept_tag: FR-VERBES19-POULET
 prerequisites: [FR-C67-trouver, FR-C67-poisson]
 sounds: []
-roots: []
+roots: [pullus-latin]
+etymology_hook: "poulet — from the word for 'hen' + -et; hen ← Latin pulla — English pullet and poultry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C67-poisson]
 <!-- hl-knowledge: introduces=[FR-LEX-C67-VERBES19-03]; assesses=[] -->
 
 **le poulet** — "chicken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poulet** — built from the French word for "hen", with *-et*, "little". The hen word ← Latin *pulla*, the feminine of *pullus*, "a young animal" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

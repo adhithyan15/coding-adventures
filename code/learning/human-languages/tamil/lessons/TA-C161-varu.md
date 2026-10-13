@@ -14,7 +14,8 @@ romanization: "vaṟu"
 concept_tag: TA-VERB-VARU
 prerequisites: [TA-C161-vil, TA-C161-koti]
 sounds: []
-roots: []
+roots: [dravidian-varu-fry]
+etymology_hook: "வறு — native Dravidian (DEDR 5325); Malayalam vaṟukka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C161-koti]
 <!-- hl-knowledge: introduces=[TA-LEX-C161-ACT161-03]; assesses=[] -->
 
 **வறு** — *vaṟu* — "to fry, to roast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வறு** (*vaṟu*) is native Dravidian. DEDR 5325 lists Malayalam *vaṟukka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

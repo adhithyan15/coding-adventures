@@ -14,6 +14,7 @@ concept_tag: FR-VERB-AVANCER
 prerequisites: [FR-C152-admirer, FR-C152-agir]
 sounds: []
 roots: []
+etymology_hook: "avancer ← Late Latin abante 'in front', from ab + ante — English advance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C152-agir]
 <!-- hl-knowledge: introduces=[FR-LEX-C152-VERBES152-03]; assesses=[] -->
 
 **avancer** — "to move forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avancer** ← Old French *avancer* ← Late Latin *abante*, "in front", from *ab* and *ante*, "before" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

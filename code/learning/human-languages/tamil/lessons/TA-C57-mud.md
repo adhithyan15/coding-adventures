@@ -11,7 +11,8 @@ romanization: "sēṟu"
 concept_tag: TA-NOUN-MUD
 prerequisites: [TA-C57-sand, TA-C55-lip, TA-C56-less]
 sounds: []
-roots: []
+roots: [dravidian-ceru-mud]
+etymology_hook: "சேறு — native Dravidian (DEDR 2020); Malayalam cēṟu, Kannada kesaṟ"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C57-sand]
 Wet earth churned up: the mud of a paddy field after rain, not dust and not clay. Here the three sisters go three ways — Malayalam *ceḷi*, Telugu *burada*, Tamil சேறு.
 
 Tamil keeps *cakati* as well, for the thicker and dirtier kind. சேறு is the working mud, the sort somebody walks into on purpose with a plough behind him.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சேறு** (*sēṟu*) is native Dravidian. DEDR 2020 lists Malayalam *cēṟu* and Kannada *kesaṟ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

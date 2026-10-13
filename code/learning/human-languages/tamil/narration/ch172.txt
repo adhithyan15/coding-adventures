@@ -12,6 +12,9 @@ Before the new one: say the Tamil for never, then the Tamil for a delay.
 You'll want to know: எதிர்காலம்.
 எதிர்காலம் — etirkālam — "the future".
 
+The word, taken apart.
+எதிர்காலம் (etirkālam) is native etir, "in front" (DEDR 795), and kālam, "time", from Sanskrit kāla (CDIAL 3084): "the time in front".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a delay, then the Tamil for the future.
 
 You'll want to know: இன்றிரவு.
 இன்றிரவு — iṉṟiravu — "tonight".
+
+The word, taken apart.
+இன்றிரவு (iṉṟiravu) is native: iṉṟu, "today" (DEDR 410), and iravu, "night" (DEDR 2552).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for the future, then the Tamil for tonight.
 You'll want to know: திடீரென்று.
 திடீரென்று — tiṭīreṉṟu — "suddenly".
 
+The word, taken apart.
+திடீரென்று (tiṭīreṉṟu) is native: DEDR 3216 lists tiṭīr-eṉal, an expression of suddenness: the sound tiṭīr, with eṉṟu, "saying", from eṉ, "to say" (DEDR 868).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for tonight, then the Tamil for suddenly.
 You'll want to know: முன்கூட்டியே.
 முன்கூட்டியே — muṉkūṭṭiyē — "in advance, beforehand".
 
+The word, taken apart.
+முன்கூட்டியே (muṉkūṭṭiyē) is native: muṉ, "before" (DEDR 5020), and kūṭṭi, "having gathered", from kūṭu, "to come together" (DEDR 1882).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for suddenly, then the Tamil for in advance.
 
 You'll want to know: நாட்காட்டி.
 நாட்காட்டி — nāṭkāṭṭi — "a calendar".
+
+The word, taken apart.
+நாட்காட்டி (nāṭkāṭṭi) is native: nāḷ, "day" (DEDR 3656), and kāṭṭi, "the one that shows", from kāṭṭu, "to show" (DEDR 1443): "the day-shower".
 
 What you've built.
 One more word for this chapter.

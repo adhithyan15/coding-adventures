@@ -14,7 +14,8 @@ romanization: "kāykaṟi"
 concept_tag: TA-THINGS123-KAYKARI
 prerequisites: [TA-C122-min, TA-C122-iraicci]
 sounds: []
-roots: []
+roots: [dravidian-kaay-fruit, dravidian-kari-curry]
+etymology_hook: "காய்கறி — native: kāy 'unripe fruit' (DEDR 1459) + kaṟi 'vegetables, curry' (DEDR 1391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C122-iraicci]
 <!-- hl-knowledge: introduces=[TA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **காய்கறி** — *kāykaṟi* — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காய்கறி** (*kāykaṟi*) is native: *kāy*, "unripe fruit" (DEDR 1459), and *kaṟi*, "vegetables, curry" (DEDR 1391; Malayalam *kaṟi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

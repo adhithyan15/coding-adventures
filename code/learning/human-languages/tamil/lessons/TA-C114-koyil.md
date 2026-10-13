@@ -14,7 +14,8 @@ romanization: "kōyil"
 concept_tag: TA-LOC114-KOYIL
 prerequisites: [TA-C114-palam, TA-C114-punka, TA-C16-thamizh-maadangal, TA-C16-thamizh-maadangal, TA-C83-date, TA-C83-date]
 sounds: []
-roots: []
+roots: [dravidian-koo-king]
+etymology_hook: "கோயில் — native Dravidian (DEDR 2177); Malayalam kōyil 'palace, temple', Telugu kōyila"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C114-punka]
 <!-- hl-knowledge: introduces=[TA-LEX-C114-LOC114-05]; assesses=[] -->
 
 **கோயில்** — *kōyil* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோயில்** (*kōyil*) is native Dravidian. DEDR 2177 lists Malayalam *kōyil*, "palace, temple" and Telugu *kōyila*. The entry lists *kōyil*, "palace, temple", under *kō*, "king": the house of a king, and of a god.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

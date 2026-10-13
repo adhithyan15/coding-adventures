@@ -14,7 +14,8 @@ romanization: "muṟukku"
 concept_tag: TA-PORUL278-MURUKKU
 prerequisites: [TA-C278-nilakkatalai, TA-C278-tarpucani]
 sounds: []
-roots: []
+roots: [dravidian-murukku-twist]
+etymology_hook: "முறுக்கு — native Dravidian (DEDR 5012); Malayalam muṟukuka 'to be twisted', Kannada muṟuku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C278-tarpucani]
 <!-- hl-knowledge: introduces=[TA-LEX-C278-PORUL278-05]; assesses=[] -->
 
 **முறுக்கு** — *muṟukku* — "murukku (a crunchy spiral snack)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முறுக்கு** (*muṟukku*) is native Dravidian. DEDR 5012 lists Malayalam *muṟukuka*, "to be twisted" and Kannada *muṟuku*. The entry glosses *muṟukku* as "a twisted cake", from "to twist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

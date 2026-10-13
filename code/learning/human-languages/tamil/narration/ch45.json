@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a5e9edbd47dabe7d",
+  "sourceHash": "fnv1a64:44999e3a7cadf38b",
   "lessons": [
     {
       "id": "TA-C45-eye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ba483c8d91298e1",
+      "sourceHash": "fnv1a64:b26686a5b9aeecff",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:330232d1bbab6020",
+      "sourceHash": "fnv1a64:ae3a7b6d4581dc68",
       "notice": null,
       "blocks": [
         {
@@ -204,6 +204,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காது (kādu) is native Dravidian. DEDR 1448 lists Malayalam kātu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -214,7 +225,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -272,7 +283,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a459274aa17e719a",
+      "sourceHash": "fnv1a64:3ffdc6f6c588a39e",
       "notice": null,
       "blocks": [
         {
@@ -344,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மூக்கு (mūkku) is native Dravidian. DEDR 5024 lists Malayalam mūkku, Kannada mūgu and Telugu mukku."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -354,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -412,7 +434,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -443,7 +465,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4a7e95c0577ad27",
+      "sourceHash": "fnv1a64:f717bb6a6245d3d6",
       "notice": null,
       "blocks": [
         {
@@ -583,7 +605,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df29cdc934af2306",
+      "sourceHash": "fnv1a64:4173cf5013cbb3ef",
       "notice": null,
       "blocks": [
         {
@@ -624,6 +646,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வயிறு (vayiṟu) is native Dravidian. DEDR 5259 lists Malayalam vayaṟu and Kannada basaṟ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -634,7 +667,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -674,7 +707,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

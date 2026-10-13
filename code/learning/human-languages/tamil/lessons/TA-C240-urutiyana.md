@@ -14,7 +14,8 @@ romanization: "uṟutiyāṉa"
 concept_tag: TA-GUNAM240-URUTIYANA
 prerequisites: [TA-C239-irakkam, TA-C239-tanimai]
 sounds: []
-roots: []
+roots: [dravidian-urai-firm]
+etymology_hook: "உறுதியான — native Dravidian (DEDR 721); Malayalam uṟekka 'to be firm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C239-tanimai]
 <!-- hl-knowledge: introduces=[TA-LEX-C240-GUNAM240-01]; assesses=[] -->
 
 **உறுதியான** — *uṟutiyāṉa* — "firm, sturdy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உறுதியான** (*uṟutiyāṉa*) is native Dravidian. DEDR 721 lists Malayalam *uṟekka*, "to be firm". It is *uṟuti*, "firmness", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-HABITS56-CHAPEAU
 prerequisites: [FR-C104-pantalon, FR-C104-chaussures]
 sounds: []
 roots: []
+etymology_hook: "chapeau ← Vulgar Latin *cappellus, from Late Latin cappa 'a hooded cloak' — English cap and cape"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C104-chaussures]
 <!-- hl-knowledge: introduces=[FR-LEX-C104-HABITS56-03]; assesses=[] -->
 
 **le chapeau** — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chapeau** ← Old French *chapel* ← Vulgar Latin *\*cappellus*, from Late Latin *cappa*, "a hooded cloak" (EtymDB 2.1) — inherited: *ca-* became *cha-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to disappear"
 concept_tag: FR-VERB-DISPARAITRE
 prerequisites: [FR-C184-cueillir, FR-C184-defendre]
 sounds: []
-roots: []
+roots: [parere]
+etymology_hook: "disparaître — dis- + 'to appear': the opposite of apparaître"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C184-defendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C184-VERBES184-04]; assesses=[] -->
 
 **disparaître** — "to disappear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disparaître** — built from *dis-*, "apart", and the verb for "to appear": the opposite of *apparaître*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

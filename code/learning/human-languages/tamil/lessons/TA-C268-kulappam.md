@@ -14,7 +14,8 @@ romanization: "kuḻappam"
 concept_tag: TA-GUNAM268-KULAPPAM
 prerequisites: [TA-C267-elitana, TA-C268-urcakam]
 sounds: []
-roots: []
+roots: [dravidian-kuzhambu-thick]
+etymology_hook: "குழப்பம் — native Dravidian (DEDR 1817); Kannada kuḻa 'confusion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C268-urcakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C268-GUNAM268-02]; assesses=[] -->
 
 **குழப்பம்** — *kuḻappam* — "confusion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழப்பம்** (*kuḻappam*) is native Dravidian. DEDR 1817 lists Kannada *kuḻa*, "confusion". It comes from *kuḻampu*, "to be stirred up, confused".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

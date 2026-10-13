@@ -11,9 +11,10 @@ romanization: avar
 concept_tag: TA-DISTAL-PERSON
 prerequisites: [TA-C37-ivar]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அவர் — native: the far base a- + respectful -ar (DEDR 1); Malayalam and Kannada say avar too"
 duration:
-  max_seconds: 240
+  max_seconds: 273
 requires:
   knowledge: [TA-LEX-IVAR-01, TA-GRAMMAR-IVAR-02]
 introduces:
@@ -53,6 +54,11 @@ Like இவர், it does not commit you to their sex, and like இவர் it
 respect. The caution is the same one the earlier lesson gave: **அவர்** is heard
 mostly of men, and **அவங்க** (*avaṅga*) does the same respectful job for a woman
 in speech.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவர்** (*avar*) is native Dravidian: the far base *a-* with the respectful *-ar* (DEDR 1). Malayalam and Kannada have *avar* too.
 
 ## Grammar Lens: the column that was empty
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-IVAR-02, TA-LEX-C37-AVAR-01] -->

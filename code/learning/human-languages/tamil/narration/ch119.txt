@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a cup, then the Tamil for a spoon.
 You'll want to know: சாவி.
 சாவி — cāvi — "a key".
 
+The word, taken apart.
+சாவி (cāvi) is a loan from Portuguese chave, "key".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a spoon, then the Tamil for a key.
 
 You'll want to know: பூட்டு.
 பூட்டு — pūṭṭu — "a lock".
+
+The word, taken apart.
+பூட்டு (pūṭṭu) is native Dravidian (DEDR 4361). The entry lists pūṭṭu, "to lock, to fasten", under pūṇ, "to put on, to be fastened".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a key, then the Tamil for a lock.
 You'll want to know: துண்டு.
 துண்டு — tuṇṭu — "a towel; a piece".
 
+The word, taken apart.
+துண்டு (tuṇṭu) is native Dravidian (DEDR 3310). The entry glosses tuṇṭu "piece, bit, strip": the towel is a strip of cloth.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Tamil for a lock, then the Tamil for a towel; a piec
 
 You'll want to know: தலையணை.
 தலையணை — talaiyaṇai — "a pillow".
+
+The word, taken apart.
+தலையணை (talaiyaṇai) is native: talai, "head" (DEDR 3103), and aṇai, "support, prop" (DEDR 123; Malayalam aṇa, "support, pillow"): "the head's support".
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Say the day words, நாள் and the formal தினம், then the night w
 
 You'll want to know: போர்வை.
 போர்வை — pōrvai — "a blanket".
+
+The word, taken apart.
+போர்வை (pōrvai) is native Dravidian. DEDR 4590 lists Malayalam pōrkkuka, "to wrap". It is the noun of pōr, "to wrap oneself in".
 
 What you've built.
 One more word for this chapter.

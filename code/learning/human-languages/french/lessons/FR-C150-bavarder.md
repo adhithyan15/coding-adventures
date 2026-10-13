@@ -14,6 +14,7 @@ concept_tag: FR-VERB-BAVARDER
 prerequisites: [FR-C150-eloigner, FR-C150-approcher]
 sounds: []
 roots: []
+etymology_hook: "bavarder — from the word for 'chatty', from 'drool': to slobber words"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C150-approcher]
 <!-- hl-knowledge: introduces=[FR-LEX-C150-VERBES150-03]; assesses=[] -->
 
 **bavarder** — "to chat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bavarder** — built from the word for "chatty", which comes from the word for "drool", probably imitative: to chatter is to slobber words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

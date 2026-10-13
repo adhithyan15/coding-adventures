@@ -11,7 +11,8 @@ romanization: "eṉṉa coṉṉīrkaḷ?"
 concept_tag: TA-LOST-WHAT-SAID
 prerequisites: [TA-C94-write, TA-C94-onemoretime]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-col-say]
+etymology_hook: "என்ன சொன்னீர்கள் — native: eṉṉa 'what' (DEDR 5151) + the past of col 'to say' (DEDR 2855)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C94-onemoretime]
 **என்ன சொன்னீர்கள்?** (*eṉṉa coṉṉīrkaḷ?*) — "what did you say?".
 
 **என்ன** is "what"; **சொன்னீர்கள்** is "you said", respectfully.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**என்ன சொன்னீர்கள்?** (*eṉṉa coṉṉīrkaḷ?*) is native: *eṉṉa*, "what" (DEDR 5151), and *coṉṉīrkaḷ*, "you said", the past of *col*, "to say" (DEDR 2855).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

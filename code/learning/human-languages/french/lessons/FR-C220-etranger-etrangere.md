@@ -13,7 +13,8 @@ gloss: "foreign"
 concept_tag: FR-QUAL220-ETRANGER-ETRANGERE
 prerequisites: [FR-C219-pareil-pareille, FR-C220-ponctuel-ponctuelle]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "étranger — étrange 'foreign' + -ier — English stranger"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C220-ponctuel-ponctuelle]
 <!-- hl-knowledge: introduces=[FR-LEX-C220-QUAL220-02]; assesses=[] -->
 
 **étranger / étrangère** — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étranger** — built from *étrange*, then meaning "foreign", with *-ier*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

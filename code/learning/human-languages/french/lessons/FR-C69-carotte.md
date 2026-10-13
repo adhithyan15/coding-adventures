@@ -13,7 +13,8 @@ gloss: "a carrot"
 concept_tag: FR-CUISINE21-CAROTTE
 prerequisites: [FR-C68-tomate, FR-C68-oignon]
 sounds: []
-roots: []
+roots: [carota-latin]
+etymology_hook: "carotte ← Latin carota, from Greek karoton — English carrot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C68-oignon]
 <!-- hl-knowledge: introduces=[FR-LEX-C69-CUISINE21-01]; assesses=[] -->
 
 **la carotte** — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carotte** ← Latin *carota* ← Greek *karoton* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VILLE60-TROTTOIR
 prerequisites: [FR-C108-bureau, FR-C108-usine]
 sounds: []
 roots: []
+etymology_hook: "trottoir — from the verb 'to trot' + -oir: a place to walk — English trot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C108-usine]
 <!-- hl-knowledge: introduces=[FR-LEX-C108-VILLE60-03]; assesses=[] -->
 
 **le trottoir** — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trottoir** — built from the verb for "to trot", from Frankish *\*trotton*, "to run" (EtymDB 2.1), with *-oir*, "a place for": a place to walk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

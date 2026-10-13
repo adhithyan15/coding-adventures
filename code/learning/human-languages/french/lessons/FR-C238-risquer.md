@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RISQUER
 prerequisites: [FR-C238-reduire, FR-C238-refuser]
 sounds: []
 roots: []
+etymology_hook: "risquer — from the word for 'risk', Old Italian risco, of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C238-refuser]
 <!-- hl-knowledge: introduces=[FR-LEX-C238-VERBES238-03]; assesses=[] -->
 
 **risquer** — "to risk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**risquer** — formed from the word for "risk", ← Old Italian *risco* (EtymDB 2.1), whose own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

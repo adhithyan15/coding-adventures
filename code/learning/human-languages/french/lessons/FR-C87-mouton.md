@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX39-MOUTON
 prerequisites: [FR-C86-poule, FR-C86-canard]
 sounds: []
 roots: []
+etymology_hook: "mouton ← Medieval Latin multo, from a Gaulish word for 'sheep' — English mutton"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C86-canard]
 <!-- hl-knowledge: introduces=[FR-LEX-C87-ANIMAUX39-01]; assesses=[] -->
 
 **le mouton** — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mouton** ← Old French *mouton* ← Medieval Latin *\*multo*, from Gaulish *\*multon-*, "sheep" (EtymDB 2.1) — inherited, a Celtic word that came into French through Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

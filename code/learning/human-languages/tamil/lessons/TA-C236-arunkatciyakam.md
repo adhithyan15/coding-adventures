@@ -14,7 +14,8 @@ romanization: "aruṅkāṭciyakam"
 concept_tag: TA-IDAM236-ARUNKATCIYAKAM
 prerequisites: [TA-C235-kilakku, TA-C235-merku]
 sounds: []
-roots: []
+roots: [dravidian-aru-rare, dravidian-kaan-see, dravidian-akam-inside]
+etymology_hook: "அருங்காட்சியகம் — a coinage: aru 'rare' (DEDR 221) + kāṭci 'show' (DEDR 1443) + akam 'house' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C235-merku]
 <!-- hl-knowledge: introduces=[TA-LEX-C236-IDAM236-01]; assesses=[] -->
 
 **அருங்காட்சியகம்** — *aruṅkāṭciyakam* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அருங்காட்சியகம்** (*aruṅkāṭciyakam*) is a modern coinage from native parts: *aru*, "rare" (DEDR 221), *kāṭci*, "sight, show" (DEDR 1443), and *akam*, "house" (DEDR 7): "the house of rare sights".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

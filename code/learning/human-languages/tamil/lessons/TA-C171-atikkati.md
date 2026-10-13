@@ -14,7 +14,8 @@ romanization: "aṭikkaṭi"
 concept_tag: TA-NERAM171-ATIKKATI
 prerequisites: [TA-C170-vayirruppokku, TA-C170-mulai]
 sounds: []
-roots: []
+roots: [dravidian-adi-abound]
+etymology_hook: "அடிக்கடி — native Dravidian (DEDR 84); Malayalam aṭikkaṭi 'repeatedly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C170-mulai]
 <!-- hl-knowledge: introduces=[TA-LEX-C171-NERAM171-01]; assesses=[] -->
 
 **அடிக்கடி** — *aṭikkaṭi* — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அடிக்கடி** (*aṭikkaṭi*) is native Dravidian. DEDR 84 lists Malayalam *aṭikkaṭi*, "repeatedly". It sits beside *aṭi*, "to be on the increase, to abound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

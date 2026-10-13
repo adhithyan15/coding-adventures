@@ -13,7 +13,8 @@ gloss: "a journalist"
 concept_tag: FR-CHOSES166-JOURNALISTE
 prerequisites: [FR-C165-tradition, FR-C166-photographe]
 sounds: []
-roots: []
+roots: [diurnum]
+etymology_hook: "journaliste — from the word for 'newspaper', built on jour 'day' — English journal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C166-photographe]
 <!-- hl-knowledge: introduces=[FR-LEX-C166-CHOSES166-02]; assesses=[] -->
 
 **le journaliste** — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**journaliste** — built from the word for "a newspaper", itself built on *jour*, "day": a daily record.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

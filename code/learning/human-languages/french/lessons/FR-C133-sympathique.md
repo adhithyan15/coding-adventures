@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES85-SYMPATHIQUE
 prerequisites: [FR-C132-celebre, FR-C132-drole]
 sounds: []
 roots: []
+etymology_hook: "sympathique — from Latin sympathia, Greek sympatheia 'fellow feeling' — English sympathy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C132-drole]
 <!-- hl-knowledge: introduces=[FR-LEX-C133-QUALITES85-01]; assesses=[] -->
 
 **sympathique** — "nice, friendly". Often shortened to **sympa**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sympathique** — built from the word for "sympathy", ← Latin *sympathia*, from Greek *sympatheia*, "fellow feeling". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

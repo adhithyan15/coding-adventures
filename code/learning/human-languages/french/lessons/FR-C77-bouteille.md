@@ -14,6 +14,7 @@ concept_tag: FR-TABLE29-BOUTEILLE
 prerequisites: [FR-C77-couteau, FR-C77-fourchette]
 sounds: []
 roots: []
+etymology_hook: "bouteille ← Medieval Latin butticula, from buttis 'a cask' — English bottle and butt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C77-fourchette]
 <!-- hl-knowledge: introduces=[FR-LEX-C77-TABLE29-04]; assesses=[] -->
 
 **la bouteille** — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bouteille** ← Medieval Latin *butticula*, from Late Latin *buttis*, "a cask" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

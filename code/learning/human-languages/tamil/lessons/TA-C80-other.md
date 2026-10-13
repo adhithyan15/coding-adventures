@@ -11,7 +11,8 @@ romanization: "maṟṟadu"
 concept_tag: TA-DEIXIS-OTHER
 prerequisites: [TA-C79-when-clause, TA-C78-why, TA-C78-because, TA-C78-therefore]
 sounds: []
-roots: []
+roots: [dravidian-maru-other]
+etymology_hook: "மற்றது — native Dravidian (DEDR 4766); Malayalam maṟṟavan 'the other (man)', Kannada maṟu 'other'"
 duration:
   max_seconds: 215
 requires:
@@ -52,6 +53,11 @@ is not — the one that is *left*, once you have picked one up.
 The tail of the word is **அது**, the same *that one* that ends அதனால். Tamil builds a
 surprising amount out of that small word, and once you hear it inside a longer one you can
 usually guess what the longer one is doing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மற்றது** (*maṟṟadu*) is native Dravidian. DEDR 4766 lists Malayalam *maṟṟavan*, "the other (man)" and Kannada *maṟu*, "other". The entry lists *maṟṟu*, "other", and *-atu* makes it "the other one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "pink"
 concept_tag: FR-COULEURS82-ROSE
 prerequisites: [FR-C129-couleur, FR-C129-prix, FR-C23-vert-jaune-more]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "rose — the colour of the flower, from Latin rosa 'a rose'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C129-prix]
 <!-- hl-knowledge: introduces=[FR-LEX-C130-COULEURS82-01]; assesses=[] -->
 
 **rose** — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rose** — the colour named after the flower, *rose*, ← Latin *rosa*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

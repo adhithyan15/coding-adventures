@@ -14,7 +14,8 @@ romanization: "toṇṭai"
 concept_tag: TA-NALAM169-TONTAI
 prerequisites: [TA-C169-kanukkal, TA-C169-ituppu]
 sounds: []
-roots: []
+roots: [dravidian-tondai-throat]
+etymology_hook: "தொண்டை — native Dravidian (DEDR 3498); Malayalam toṇṭa 'windpipe, throat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C169-ituppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C169-NALAM169-03]; assesses=[] -->
 
 **தொண்டை** — *toṇṭai* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொண்டை** (*toṇṭai*) is native Dravidian. DEDR 3498 lists Malayalam *toṇṭa*, "windpipe, throat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

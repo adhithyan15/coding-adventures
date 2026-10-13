@@ -14,6 +14,7 @@ concept_tag: FR-QUAL162-CELIBATAIRE
 prerequisites: [FR-C162-inquiet-inquiete, FR-C162-enrhume-enrhumee]
 sounds: []
 roots: []
+etymology_hook: "célibataire — from Latin caelibatus, from caelebs 'unmarried' — English celibate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C162-enrhume-enrhumee]
 <!-- hl-knowledge: introduces=[FR-LEX-C162-QUAL162-03]; assesses=[] -->
 
 **célibataire** — "single".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**célibataire** — built from the word for "celibacy", ← Latin *caelibatus*, from *caelebs*, "unmarried", with *-aire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

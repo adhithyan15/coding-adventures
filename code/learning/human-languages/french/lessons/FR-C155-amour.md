@@ -13,7 +13,8 @@ gloss: "love"
 concept_tag: FR-SANTE155-AMOUR
 prerequisites: [FR-C155-reve, FR-C155-angoisse]
 sounds: []
-roots: []
+roots: [amor-latin]
+etymology_hook: "amour ← Latin amor 'love' — the noun beside aimer; English amorous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C155-angoisse]
 <!-- hl-knowledge: introduces=[FR-LEX-C155-SANTE155-05]; assesses=[] -->
 
 **l'amour** — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amour** ← Old French *amor* ← Latin *amor*, "love" — inherited (EtymDB 2.1). Its *-our*, where French usually has *-eur* as in *douleur*, is often put down to the love poetry of the south.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

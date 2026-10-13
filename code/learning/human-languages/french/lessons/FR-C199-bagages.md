@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES199-BAGAGES
 prerequisites: [FR-C199-entree, FR-C199-sortie]
 sounds: []
 roots: []
+etymology_hook: "bagages — Old French bague 'a bundle' + -age — English baggage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C199-sortie]
 <!-- hl-knowledge: introduces=[FR-LEX-C199-CHOSES199-03]; assesses=[] -->
 
 **les bagages** — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bagages** — built from Old French *bague*, "a bundle" (EtymDB 2.1), with *-age*; *bague*'s own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

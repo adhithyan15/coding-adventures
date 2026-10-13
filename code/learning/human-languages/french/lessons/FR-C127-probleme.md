@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE79-PROBLEME
 prerequisites: [FR-C127-reponse, FR-C127-idee]
 sounds: []
 roots: []
+etymology_hook: "problème ← Latin problema, from Greek 'a thing put forward' — English problem"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C127-idee]
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-05]; assesses=[] -->
 
 **le problème** — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**problème** ← Latin *problema*, from Greek *problema*, "a thing put forward", from *proballein*, "to throw forward" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

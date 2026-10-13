@@ -78,6 +78,9 @@ You'll want to know: வயல்.
 A wet field: the flooded one that grows rice, not a dry one. Malayalam writes വയൽ and means the same thing by it.
 The dry field is a kollai, a different word altogether, and the split earns its keep. A farmer telling you which of the two he has is telling you what he can grow on it and when.
 
+The word, taken apart.
+வயல் (vayal) is native Dravidian. DEDR 5258 lists Malayalam vayal and Kannada bayal.
+
 What you've built.
 Three: high ground, and now the flat wet ground under it.
 
@@ -109,6 +112,9 @@ You'll want to know: பாதை.
 பாதை (pātai) — "a path".
 Something you can put your foot on: a track worn into the ground, a lane, a road.
 Tamil has vaḻi as well, and the two overlap less than they look as though they should. vaḻi is the way — the route, the means, the manner of going about something. பாதை (pātai) stays physical. Malayalam's everyday path-word is വഴി, the same one; Telugu's is bāṭa.
+
+The word, taken apart.
+பாதை (pātai) is probably a loan from Sanskrit patha, "path" (CDIAL 7743), with the Tamil -ai ending. DEDR has no native entry for it.
 
 What you've built.
 Four: three places, and now something joining them.

@@ -13,7 +13,8 @@ gloss: "the neck"
 concept_tag: FR-CORPS2-COU
 prerequisites: [FR-C49-doigt, FR-C49-dent]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "cou ← Latin collum 'neck' — English collar is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C49-dent]
 <!-- hl-knowledge: introduces=[FR-LEX-C50-CORPS2-01]; assesses=[] -->
 
 **le cou** — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cou** ← Latin *collum*, "neck" — inherited. (EtymDB 2.1) Old French said *col*; the *l* later melted into a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

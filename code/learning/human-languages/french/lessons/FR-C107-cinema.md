@@ -14,6 +14,7 @@ concept_tag: FR-VILLE59-CINEMA
 prerequisites: [FR-C106-ascenseur, FR-C107-supermarche]
 sounds: []
 roots: []
+etymology_hook: "cinéma — short for cinématographe, from Greek kinema 'movement' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C107-supermarche]
 <!-- hl-knowledge: introduces=[FR-LEX-C107-VILLE59-02]; assesses=[] -->
 
 **le cinéma** — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinéma** — short for *cinématographe*, a coinage of the 1890s from Greek *kinema*, "movement" (EtymDB 2.1), and *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

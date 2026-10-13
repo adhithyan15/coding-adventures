@@ -11,7 +11,8 @@ romanization: "nallā irukkīṅkaḷā?"
 concept_tag: TA-GREET-ARE-YOU-WELL
 prerequisites: [TA-C108-longtime, TA-C108-whatsnew]
 sounds: []
-roots: []
+roots: [nal-good-dravidian, dravidian-iru-be]
+etymology_hook: "நல்லா இருக்கீங்களா — native: nal 'good' (DEDR 3610) + iru 'to be' (DEDR 480), in spoken form"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C108-whatsnew]
 **நல்லா இருக்கீங்களா?** (*nallā irukkīṅkaḷā?*) — "are you well?", as people say it.
 
 **நல்லா** is spoken **நன்றாக**, "well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நல்லா இருக்கீங்களா?** (*nallā irukkīṅkaḷā?*) is native: *nallā*, spoken for *nallāka*, "well", from *nal*, "good" (DEDR 3610), and *iru*, "to be" (DEDR 480).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

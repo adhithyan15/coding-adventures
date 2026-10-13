@@ -14,6 +14,7 @@ concept_tag: FR-VERB-GARER
 prerequisites: [FR-C175-remercier, FR-C175-inviter]
 sounds: []
 roots: []
+etymology_hook: "garer ← Old French garer 'to shelter', a Germanic verb — English garage came from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C175-inviter]
 <!-- hl-knowledge: introduces=[FR-LEX-C175-VERBES175-05]; assesses=[] -->
 
 **garer** — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garer** ← Old French *garer*, *warer*, "to shelter, to guard" (EtymDB 2.1), from a Germanic verb meaning "to watch over" — borrowed: to park is to put in shelter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

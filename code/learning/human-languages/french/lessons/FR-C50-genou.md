@@ -13,7 +13,8 @@ gloss: "a knee"
 concept_tag: FR-CORPS2-GENOU
 prerequisites: [FR-C50-cou, FR-C50-epaule]
 sounds: []
-roots: []
+roots: [genu-latin]
+etymology_hook: "genou ← Vulgar Latin *genuculum 'little knee', from Latin genu — English genuflect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C50-epaule]
 <!-- hl-knowledge: introduces=[FR-LEX-C50-CORPS2-03]; assesses=[] -->
 
 **le genou** — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**genou** ← Vulgar Latin *\*genuculum*, "a little knee", from Latin *genu*, "knee" — inherited. (EtymDB 2.1 records both Latin words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

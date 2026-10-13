@@ -13,7 +13,8 @@ gloss: "a pear"
 concept_tag: FR-CUISINE22-POIRE
 prerequisites: [FR-C70-petit-dejeuner, FR-C70-riz]
 sounds: []
-roots: []
+roots: [pirum-latin]
+etymology_hook: "poire ← Latin pirum 'pear' — English pear and perry share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C70-riz]
 <!-- hl-knowledge: introduces=[FR-LEX-C70-CUISINE22-05]; assesses=[] -->
 
 **la poire** — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poire** ← Old French *peire* ← Vulgar Latin *\*pira*, from Latin *pirum*, "pear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ēṟṟukkoḷ"
 concept_tag: TA-VERB-ERRUKKOL
 prerequisites: [TA-C255-eluppu, TA-C255-pal-tulakku]
 sounds: []
-roots: []
+roots: [dravidian-eeru-climb, dravidian-kol-take]
+etymology_hook: "ஏற்றுக்கொள் — native: ēṟṟu 'having raised' (DEDR 916) + koḷ 'to take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C255-pal-tulakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C256-ACT256-01]; assesses=[] -->
 
 **ஏற்றுக்கொள்** — *ēṟṟukkoḷ* — "to accept".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏற்றுக்கொள்** (*ēṟṟukkoḷ*) is native: *ēṟṟu*, "having raised", from *ēṟu*, "to rise" (DEDR 916), and *koḷ*, "to take" (DEDR 2151): "raise and take up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

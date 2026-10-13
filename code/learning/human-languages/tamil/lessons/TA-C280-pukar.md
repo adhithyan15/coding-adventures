@@ -14,7 +14,8 @@ romanization: "pukār"
 concept_tag: TA-VELAI280-PUKAR
 prerequisites: [TA-C280-viti, TA-C280-aparatam]
 sounds: []
-roots: []
+roots: [hindustani-pukar]
+etymology_hook: "புகார் ← Hindustani pukār 'a call, an outcry' (CDIAL 8246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C280-aparatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C280-VELAI280-04]; assesses=[] -->
 
 **புகார்** — *pukār* — "a complaint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புகார்** (*pukār*) is a loan from Hindustani *pukār*, "a call, an outcry", which goes back to Indo-Aryan *pukkār*, "shout" (CDIAL 8246).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

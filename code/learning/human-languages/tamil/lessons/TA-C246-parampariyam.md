@@ -14,7 +14,8 @@ romanization: "pārampariyam"
 concept_tag: TA-PORUL246-PARAMPARIYAM
 prerequisites: [TA-C246-kalaccaram, TA-C246-palakkam]
 sounds: []
-roots: []
+roots: [sanskrit-parampara]
+etymology_hook: "பாரம்பரியம் ← Sanskrit pāramparya 'succession, handing down', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C246-palakkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C246-PORUL246-05]; assesses=[] -->
 
 **பாரம்பரியம்** — *pārampariyam* — "tradition, heritage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாரம்பரியம்** (*pārampariyam*) is a well-established loan from Sanskrit *pāramparya*, "succession, handing down", built on *paramparā*, "an unbroken series".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

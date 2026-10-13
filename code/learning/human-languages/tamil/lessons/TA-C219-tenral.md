@@ -14,7 +14,8 @@ romanization: "teṉṟal"
 concept_tag: TA-PORUL219-TENRAL
 prerequisites: [TA-C219-vanavil, TA-C219-mutupani]
 sounds: []
-roots: []
+roots: [dravidian-ten-south]
+etymology_hook: "தென்றல் — native Dravidian (DEDR 3449); Malayalam tennal 'southern breeze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C219-mutupani]
 <!-- hl-knowledge: introduces=[TA-LEX-C219-PORUL219-04]; assesses=[] -->
 
 **தென்றல்** — *teṉṟal* — "a gentle breeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தென்றல்** (*teṉṟal*) is native Dravidian. DEDR 3449 lists Malayalam *tennal*, "southern breeze". It is "the south wind", from *teṉ*, "south".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

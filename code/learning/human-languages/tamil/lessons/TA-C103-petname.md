@@ -11,7 +11,8 @@ romanization: "cellappeyar"
 concept_tag: TA-NEXTGEN-PET-NAME
 prerequisites: [TA-C103-neighbour, TA-C103-familyname]
 sounds: []
-roots: []
+roots: [dravidian-celvam-wealth, peyar-dravidian]
+etymology_hook: "செல்லப்பெயர் — native: cellam 'treasure, darling' (DEDR 2786) + peyar 'name' (DEDR 4410)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C103-familyname]
 **செல்லப்பெயர்** (*cellappeyar*) — "a pet name", literally "darling-name".
 
 **செல்லம்** is "darling, pet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செல்லப்பெயர்** (*cellappeyar*) is native: *cellam*, "treasure, darling", which DEDR 2786 files among words for wealth, and *peyar*, "name" (DEDR 4410).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

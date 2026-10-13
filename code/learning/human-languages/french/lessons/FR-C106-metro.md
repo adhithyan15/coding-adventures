@@ -14,6 +14,7 @@ concept_tag: FR-TRAJET58-METRO
 prerequisites: [FR-C105-cent, FR-C106-velo]
 sounds: []
 roots: []
+etymology_hook: "métro — short for métropolitain, from Greek metropolis 'mother city'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C106-velo]
 <!-- hl-knowledge: introduces=[FR-LEX-C106-TRAJET58-02]; assesses=[] -->
 
 **le métro** — "the underground, the metro".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**métro** — short for *métropolitain*, the city railway, from Greek *metropolis*, "a mother city", built from *meter*, "mother", and *polis*, "city". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

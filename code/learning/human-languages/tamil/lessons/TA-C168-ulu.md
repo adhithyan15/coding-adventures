@@ -14,7 +14,8 @@ romanization: "uḻu"
 concept_tag: TA-VERB-ULU
 prerequisites: [TA-C167-tonku, TA-C167-uruttu]
 sounds: []
-roots: []
+roots: [dravidian-uzhu-plough]
+etymology_hook: "உழு — native Dravidian (DEDR 688); Malayalam uḻuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C167-uruttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C168-ACT168-01]; assesses=[] -->
 
 **உழு** — *uḻu* — "to plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உழு** (*uḻu*) is native Dravidian. DEDR 688 lists Malayalam *uḻuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

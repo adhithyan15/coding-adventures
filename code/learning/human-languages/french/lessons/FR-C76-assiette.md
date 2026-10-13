@@ -13,7 +13,8 @@ gloss: "a plate"
 concept_tag: FR-MAISON28-ASSIETTE
 prerequisites: [FR-C76-couloir, FR-C76-verre]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "assiette ← Vulgar Latin *assedita 'a seating', from assidere 'to sit beside'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C76-verre]
 <!-- hl-knowledge: introduces=[FR-LEX-C76-MAISON28-05]; assesses=[] -->
 
 **l'assiette** — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**assiette** ← Vulgar Latin *\*assedita*, "a seating", from Latin *assidere*, "to sit beside" (Lewis & Short) — inherited: first a place at table, then the plate set there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

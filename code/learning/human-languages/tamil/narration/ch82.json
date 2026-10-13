@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Which One in the Line",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:121e72188add6937",
+  "sourceHash": "fnv1a64:2994c60b992a28ad",
   "lessons": [
     {
       "id": "TA-C82-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7773c9f8231a45a6",
+      "sourceHash": "fnv1a64:0780f2297859d381",
       "notice": null,
       "blocks": [
         {
@@ -104,6 +104,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதல் (mutal) is native Dravidian: mutal, \"beginning, first\" (DEDR 4950)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "cognates",
           "title": "Across the family: the word four languages built on",
           "segments": [
@@ -134,7 +145,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -174,7 +185,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -209,7 +220,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089007e5796cb957",
+      "sourceHash": "fnv1a64:4daffd06321c41fb",
       "notice": null,
       "blocks": [
         {
@@ -282,6 +293,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரண்டாவது (iraṇḍāvadu) is native: iraṇṭu, \"two\" (DEDR 474), with the ordinal ending -āvatu. That ending is usually analysed as ā, \"to become\" (DEDR 333), with -atu, \"the one\": \"the one that became two\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one ending, and one word that does not take it",
           "segments": [
@@ -312,7 +334,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -352,7 +374,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -387,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d475b2465c13aba2",
+      "sourceHash": "fnv1a64:cb70a7bf962210ce",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +494,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதலாவது (mutalāvadu) is native: mutal, \"first\" (DEDR 4950), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -546,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0979a002b364d100",
+      "sourceHash": "fnv1a64:f10685c18b5d2df0",
       "notice": null,
       "blocks": [
         {
@@ -619,6 +652,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மூன்றாவது (mūṉṟāvadu) is native: mūṉṟu, \"three\" (DEDR 5052; Malayalam mūnnu), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -658,7 +702,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -693,7 +737,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae750512c0aef201",
+      "sourceHash": "fnv1a64:23675717706d1e09",
       "notice": null,
       "blocks": [
         {
@@ -762,6 +806,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான்காவது (nāṉkāvadu) is native: nāṉku, \"four\" (DEDR 3655), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -801,7 +856,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -836,7 +891,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6c825492728b064",
+      "sourceHash": "fnv1a64:1551c91f74e6dd54",
       "notice": null,
       "blocks": [
         {
@@ -913,6 +968,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஐந்தாவது (aindāvadu) is native: aintu, \"five\" (DEDR 2826), with the ordinal ending -āvatu, from ā, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -952,7 +1018,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "cantai"
 concept_tag: TA-LOC115-CANTAI
 prerequisites: [TA-C115-nulakam, TA-C115-vanki, TA-C40-deixis-system]
 sounds: []
-roots: []
+roots: [tamil-cantai-market]
+etymology_hook: "சந்தை — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C115-vanki]
 <!-- hl-knowledge: introduces=[TA-LEX-C115-LOC115-03]; assesses=[] -->
 
 **சந்தை** — *cantai* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **சந்தை** (*cantai*) is uncertain. DEDR has no entry for it, and no well-established account of where it came from is available.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

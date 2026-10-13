@@ -11,7 +11,8 @@ romanization: "pasu"
 concept_tag: TA-NOUN-COW
 prerequisites: [TA-C57-ember, TA-C56-a-little, TA-C57-wind]
 sounds: []
-roots: []
+roots: [sanskrit-pashu]
+etymology_hook: "பசு ← Sanskrit paśu 'domestic animal' (CDIAL 7984)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C57-ember]
 The animal a Tamil household is built around. Kannada says ಹಸು (*hasu*): the same word, with the *p*-for-*h* trade Kannada makes right through its old words — the one this book pointed out when the numbers were lined up side by side. Tamil keeps the *p*.
 
 It belongs to a விவசாயி before it belongs to anybody, and in a கிராமம் it stands tied in the yard rather than shut in a shed, near enough to the வாசல் that you step around it going in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பசு** (*pasu*) is a loan from Sanskrit *paśu*, "domestic animal" (CDIAL 7984). Tamil narrowed it to the cow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

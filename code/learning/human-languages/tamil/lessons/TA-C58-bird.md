@@ -11,7 +11,8 @@ romanization: "paṟavai"
 concept_tag: TA-NOUN-BIRD
 prerequisites: [TA-C58-crow, TA-C56-let-it-be, TA-C57-ember]
 sounds: []
-roots: []
+roots: [dravidian-para-fly]
+etymology_hook: "பறவை — native Dravidian (DEDR 4020); Malayalam paṟava"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C58-crow]
 The wide word. Whatever flies is a பறவை, the கோழி and the காக்கை taken in along with everything that was never given a name of its own.
 
 Here the three go three ways: Kannada ಹಕ್ಕಿ (*hakki*), Telugu పక్షి (*pakṣi*) off the Sanskrit, and Tamil's own பறவை. The ற in the middle is the hard one, the same ற standing in ஆறு.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பறவை** (*paṟavai*) is native Dravidian. DEDR 4020 lists Malayalam *paṟava*. It comes from *paṟa*, "to fly": a bird is "the flyer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

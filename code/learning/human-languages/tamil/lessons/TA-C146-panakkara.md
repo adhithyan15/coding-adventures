@@ -14,7 +14,8 @@ romanization: "paṇakkāra"
 concept_tag: TA-QUAL146-PANAKKARA
 prerequisites: [TA-C146-pulippu, TA-C146-karam]
 sounds: []
-roots: []
+roots: [sanskrit-pana]
+etymology_hook: "பணக்கார — paṇam 'money' ← Sanskrit paṇa 'coin' (CDIAL 7715) + -kāra 'the one who has'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C146-karam]
 <!-- hl-knowledge: introduces=[TA-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **பணக்கார** — *paṇakkāra* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பணக்கார** (*paṇakkāra*) is *paṇam*, "money", from Sanskrit *paṇa*, "a coin" (CDIAL 7715), with *-kāra*, "the one who has": "moneyed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

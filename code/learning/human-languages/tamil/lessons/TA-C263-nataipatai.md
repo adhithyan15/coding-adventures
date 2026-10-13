@@ -14,7 +14,8 @@ romanization: "naṭaipātai"
 concept_tag: TA-IDAM263-NATAIPATAI
 prerequisites: [TA-C262-ippotellam, TA-C263-pokkuvarattu]
 sounds: []
-roots: []
+roots: [dravidian-nada-walk, sanskrit-patha]
+etymology_hook: "நடைபாதை — native naṭai 'walking' (DEDR 3582) + pātai 'path', probably from Sanskrit patha (CDIAL 7743)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C263-pokkuvarattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C263-IDAM263-02]; assesses=[] -->
 
 **நடைபாதை** — *naṭaipātai* — "a footpath, a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடைபாதை** (*naṭaipātai*) is native *naṭai*, "walking" (DEDR 3582), and *pātai*, "path", probably from Sanskrit *patha* (CDIAL 7743): "the walking path".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

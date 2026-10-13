@@ -14,7 +14,8 @@ romanization: "uṭaṉpiṟantavar"
 concept_tag: TA-PORUL273-UTANPIRANTAVAR
 prerequisites: [TA-C273-al, TA-C273-perror]
 sounds: []
-roots: []
+roots: [dravidian-udan-together, dravidian-peru-get]
+etymology_hook: "உடன்பிறந்தவர் — native: uṭaṉ 'together' (DEDR 945) + piṟantavar 'one born' (DEDR 4422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C273-perror]
 <!-- hl-knowledge: introduces=[TA-LEX-C273-PORUL273-03]; assesses=[] -->
 
 **உடன்பிறந்தவர்** — *uṭaṉpiṟantavar* — "a sibling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடன்பிறந்தவர்** (*uṭaṉpiṟantavar*) is native: *uṭaṉ*, "together with" (DEDR 945), and *piṟantavar*, "one who was born", from *piṟa*, "to be born" (DEDR 4422): "one born together with you".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

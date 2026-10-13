@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 71,
-  "sourceHash": "fnv1a64:f16a1af06649c453",
+  "sourceHash": "fnv1a64:1c81294471b46d36",
   "lessonIds": [
     "FR-C71-citron",
     "FR-C71-raisin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch71.txt",
   "json": "french/narration/ch71.json",
-  "textHash": "fnv1a64:e54186b720c831e9",
-  "jsonHash": "fnv1a64:3f5e49f2471a3c68",
+  "textHash": "fnv1a64:f8c68be1ec607dac",
+  "jsonHash": "fnv1a64:bfc76725554f6f52",
   "findings": []
 }

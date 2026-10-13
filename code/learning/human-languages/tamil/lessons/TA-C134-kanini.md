@@ -14,7 +14,8 @@ romanization: "kaṇiṉi"
 concept_tag: TA-THINGS134-KANINI
 prerequisites: [TA-C134-tolaikkatci, TA-C134-kaippeci]
 sounds: []
-roots: []
+roots: [sanskrit-gana]
+etymology_hook: "கணினி — a coinage on kaṇi 'to calculate', from Sanskrit gaṇ- 'to count' (CDIAL 3988)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C134-kaippeci]
 <!-- hl-knowledge: introduces=[TA-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **கணினி** — *kaṇiṉi* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கணினி** (*kaṇiṉi*) is a modern coinage on *kaṇi*, "to calculate", a Tamil form of Sanskrit *gaṇ-*, "to count" (CDIAL 3988, *gaṇa*): "the calculator".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

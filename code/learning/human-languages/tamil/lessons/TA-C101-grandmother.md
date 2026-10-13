@@ -11,7 +11,8 @@ romanization: "pāṭṭi"
 concept_tag: TA-GRAND-GRANDMOTHER
 prerequisites: [TA-C100-relative, TA-C101-grandfather]
 sounds: []
-roots: []
+roots: [dravidian-paatti-grandmother]
+etymology_hook: "பாட்டி — native Dravidian (DEDR 4066); Malayalam pāṭṭan 'grandfather'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C101-grandfather]
 **பாட்டி** (*pāṭṭi*) — "grandmother".
 
 **பாட்டி வீடு** — "grandmother's house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாட்டி** (*pāṭṭi*) is native Dravidian. DEDR 4066 lists Malayalam *pāṭṭan*, "grandfather". The entry lists *pāṭṭi*, "grandmother", beside *pāṭṭāṉ*, "grandfather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

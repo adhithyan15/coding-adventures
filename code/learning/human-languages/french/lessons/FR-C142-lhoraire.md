@@ -13,7 +13,8 @@ gloss: "opening hours, a timetable"
 concept_tag: FR-LIRE142-LHORAIRE
 prerequisites: [FR-C141-prevoir, FR-C141-organiser]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "horaire ← Latin horarius 'of the hours', from hora — the Latin of heure"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [FR-C141-organiser]
 
 The door says **Horaire : lundi – vendredi, 9 h – 18 h.** Open on weekdays from
 nine to six: not on **samedi**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**horaire** ← Latin *horarius*, "of the hours", from *hora*, "hour", the Latin of *heure* — a learned borrowing. (EtymDB 2.1 records *hora*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

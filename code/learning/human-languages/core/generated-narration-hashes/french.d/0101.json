@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 101,
-  "sourceHash": "fnv1a64:7d198792a92be61f",
+  "sourceHash": "fnv1a64:f0fa8edb4e8a7a74",
   "lessonIds": [
     "FR-C101-restaurant",
     "FR-C101-hotel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch101.txt",
   "json": "french/narration/ch101.json",
-  "textHash": "fnv1a64:d77d588db14d76ce",
-  "jsonHash": "fnv1a64:f223b77c33295ff7",
+  "textHash": "fnv1a64:ccf6558c04d86059",
+  "jsonHash": "fnv1a64:8b733fbb59d935b6",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE78-CLASSE
 prerequisites: [FR-C125-client, FR-C125-caisse]
 sounds: []
 roots: []
+etymology_hook: "classe ← Latin classis 'a division of the people' — English class"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C125-caisse]
 <!-- hl-knowledge: introduces=[FR-LEX-C126-ECOLE78-01]; assesses=[] -->
 
 **la classe** — "a class; a classroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**classe** ← Latin *classis*, "a division of the people, a class" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

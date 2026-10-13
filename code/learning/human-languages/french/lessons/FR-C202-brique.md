@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES202-BRIQUE
 prerequisites: [FR-C202-caoutchouc, FR-C202-metal]
 sounds: []
 roots: []
+etymology_hook: "brique ← Middle Dutch bricke — English brick is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C202-metal]
 <!-- hl-knowledge: introduces=[FR-LEX-C202-CHOSES202-03]; assesses=[] -->
 
 **la brique** — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brique** ← Middle Dutch *bricke* — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

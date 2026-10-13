@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 80,
-  "sourceHash": "fnv1a64:de44b207a17b2827",
+  "sourceHash": "fnv1a64:c95f246978c35c85",
   "lessonIds": [
     "FR-C80-boite",
     "FR-C80-valise",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch80.txt",
   "json": "french/narration/ch80.json",
-  "textHash": "fnv1a64:13d08d9416a0b6ce",
-  "jsonHash": "fnv1a64:b6b43615de7d0ce2",
+  "textHash": "fnv1a64:144b8d47448c64f1",
+  "jsonHash": "fnv1a64:7341e1d0224e86a0",
   "findings": []
 }

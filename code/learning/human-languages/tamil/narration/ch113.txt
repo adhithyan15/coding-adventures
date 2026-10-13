@@ -12,6 +12,9 @@ Before the new one: say the Tamil for are you well? (spoken), then the Tamil for
 You'll want to know: நேராக.
 நேராக — nērāka — "straight ahead".
 
+The word, taken apart.
+நேராக (nērāka) is native Dravidian (DEDR 3772). It is nēr, "straightness", with -āka, "in the manner of".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ One slot changes: இங்கே, அங்கே, எங்கே. Here, there
 You'll want to know: அருகில்.
 அருகில் — arukil — "near, close by".
 
+The word, taken apart.
+அருகில் (arukil) is native Dravidian (DEDR 222). It is aruku, "nearness, vicinity", with the locative -il.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Tamil for straight ahead, then the Tamil for near.
 
 You'll want to know: தூரம்.
 தூரம் — tūram — "distance; far".
+
+The word, taken apart.
+தூரம் (tūram) is a loan from Sanskrit dūra, "distant, distance" (CDIAL 6495).
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Tamil for near, then the Tamil for distance; far.
 You'll want to know: பின்னால்.
 பின்னால் — piṉṉāl — "behind".
 
+The word, taken apart.
+பின்னால் (piṉṉāl) is native Dravidian. DEDR 4205 lists Malayalam pin. It is piṉ, "back, behind", with -āl.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Tamil for distance; far, then the Tamil for behind.
 
 You'll want to know: முன்னால்.
 முன்னால் — muṉṉāl — "in front".
+
+The word, taken apart.
+முன்னால் (muṉṉāl) is native Dravidian. DEDR 5020 lists Malayalam mun and Kannada mun. It is muṉ, "front", with -āl.
 
 What you've built.
 One more word for this chapter.

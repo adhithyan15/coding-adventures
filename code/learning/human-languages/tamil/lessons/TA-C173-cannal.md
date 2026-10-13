@@ -14,7 +14,8 @@ romanization: "caṉṉal"
 concept_tag: TA-IDAM173-CANNAL
 prerequisites: [TA-C173-patukkaiyarai, TA-C173-kalipparai]
 sounds: []
-roots: []
+roots: [portuguese-janela]
+etymology_hook: "சன்னல் ← Portuguese janela 'window'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C173-kalipparai]
 <!-- hl-knowledge: introduces=[TA-LEX-C173-IDAM173-05]; assesses=[] -->
 
 **சன்னல்** — *caṉṉal* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சன்னல்** (*caṉṉal*) is a loan from Portuguese *janela*, "window".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

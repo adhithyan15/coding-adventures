@@ -13,7 +13,8 @@ gloss: "the truth"
 concept_tag: FR-CHOSES251-VERITE
 prerequisites: [FR-C251-difference, FR-C251-exemple]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "vérité ← Latin veritas 'truth', from verus 'true' — English verity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C251-exemple]
 <!-- hl-knowledge: introduces=[FR-LEX-C251-CHOSES251-04]; assesses=[] -->
 
 **la vérité** — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vérité** ← Old French *verité* ← Latin *veritas*, "truth", from *verus*, "true" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

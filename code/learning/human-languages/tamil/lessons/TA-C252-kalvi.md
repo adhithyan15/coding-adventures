@@ -14,7 +14,8 @@ romanization: "kalvi"
 concept_tag: TA-VELAI252-KALVI
 prerequisites: [TA-C252-matippen, TA-C252-palkalaikkalakam]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "கல்வி — native Dravidian (DEDR 1297); Malayalam kalkka 'to learn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C252-palkalaikkalakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C252-VELAI252-03]; assesses=[] -->
 
 **கல்வி** — *kalvi* — "education".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கல்வி** (*kalvi*) is native Dravidian. DEDR 1297 lists Malayalam *kalkka*, "to learn". It comes from *kal*, "to learn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

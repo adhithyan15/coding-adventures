@@ -13,7 +13,8 @@ gloss: "a grandfather"
 concept_tag: FR-SENTIR8-GRAND-PERE
 prerequisites: [FR-C56-content, FR-C56-fille]
 sounds: []
-roots: []
+roots: [grandis-latin, pater-latin]
+etymology_hook: "grand-père — the word for 'great' (Latin grandis) + père; English grandfather copied it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C56-fille]
 <!-- hl-knowledge: introduces=[FR-LEX-C56-SENTIR8-04]; assesses=[] -->
 
 **le grand-père** — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grand-père** — built from the French word for "big, great", from Latin *grandis* (EtymDB 2.1), and *père*, "father". English *grandfather* copied the French pattern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

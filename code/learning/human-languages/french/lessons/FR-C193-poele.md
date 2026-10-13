@@ -13,7 +13,8 @@ gloss: "a frying pan"
 concept_tag: FR-CHOSES193-POELE
 prerequisites: [FR-C193-fauteuil, FR-C193-casserole]
 sounds: []
-roots: []
+roots: [patella-latin]
+etymology_hook: "poêle ← Latin patella 'a small pan' — English patella, the kneecap"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C193-casserole]
 <!-- hl-knowledge: introduces=[FR-LEX-C193-CHOSES193-05]; assesses=[] -->
 
 **la poêle** — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poêle** ← Old French *paelle* ← Latin *patella*, "a small pan" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

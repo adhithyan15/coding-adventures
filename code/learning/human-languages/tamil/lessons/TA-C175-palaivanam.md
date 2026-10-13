@@ -14,7 +14,8 @@ romanization: "pālaivaṉam"
 concept_tag: TA-IDAM175-PALAIVANAM
 prerequisites: [TA-C174-atto, TA-C174-payani]
 sounds: []
-roots: []
+roots: [dravidian-paalai-tree, sanskrit-vana]
+etymology_hook: "பாலைவனம் — pālai, the dry land named after a plant (DEDR 4100) + vaṉam ← Sanskrit vana (CDIAL 11258)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C174-payani]
 <!-- hl-knowledge: introduces=[TA-LEX-C175-IDAM175-01]; assesses=[] -->
 
 **பாலைவனம்** — *pālaivaṉam* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாலைவனம்** (*pālaivaṉam*) is *pālai*, the dry wasteland of old Tamil poetry, named after a plant of that land (DEDR 4100), and *vaṉam*, "forest, tract", from Sanskrit *vana* (CDIAL 11258).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "pepper"
 concept_tag: FR-CUISINE24-POIVRE
 prerequisites: [FR-C72-pates, FR-C72-creme]
 sounds: []
-roots: []
+roots: [piper-latin]
+etymology_hook: "poivre ← Latin piper, from Greek peperi — English pepper came straight from Latin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C72-creme]
 <!-- hl-knowledge: introduces=[FR-LEX-C72-CUISINE24-04]; assesses=[] -->
 
 **le poivre** — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poivre** ← Old French *peivre* ← Latin *piper*, from Greek *peperi* — inherited. (EtymDB 2.1) The word travelled with the spice from India: Sanskrit has *pippali*, "long pepper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

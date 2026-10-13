@@ -14,7 +14,8 @@ romanization: "vai"
 concept_tag: TA-VERB-VAI
 prerequisites: [TA-C150-vettu, TA-C151-utai]
 sounds: []
-roots: []
+roots: [dravidian-vai-put]
+etymology_hook: "வை — native Dravidian (DEDR 5549); Kannada bay 'to deposit, put aside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C151-utai]
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-02]; assesses=[] -->
 
 **வை** — *vai* — "to put, to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வை** (*vai*) is native Dravidian. DEDR 5549 lists Kannada *bay*, "to deposit, put aside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

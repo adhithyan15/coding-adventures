@@ -13,7 +13,8 @@ gloss: "to reach"
 concept_tag: FR-VERB-ATTEINDRE
 prerequisites: [FR-C209-informer, FR-C209-plaindre]
 sounds: []
-roots: []
+roots: [tangere-latin]
+etymology_hook: "atteindre ← Latin attingere 'to touch upon, to reach' — English attain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C209-plaindre]
 <!-- hl-knowledge: introduces=[FR-LEX-C210-VERBES210-01]; assesses=[] -->
 
 **atteindre** — "to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atteindre** ← Old French *ateindre* (EtymDB 2.1) ← Latin *attingere*, "to touch upon, to reach" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

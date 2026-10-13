@@ -13,7 +13,8 @@ gloss: "to fix, to stare at"
 concept_tag: FR-VERB-FIXER
 prerequisites: [FR-C211-transporter, FR-C211-tuer]
 sounds: []
-roots: []
+roots: [figere-latin]
+etymology_hook: "fixer — from the word for 'fixed', Latin fixus, from figere 'to fasten' — English fix"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C211-tuer]
 <!-- hl-knowledge: introduces=[FR-LEX-C212-VERBES212-01]; assesses=[] -->
 
 **fixer** — "to fix, to stare at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fixer** — built from the word for "fixed", ← Latin *fixus*, from *figere*, "to fasten". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

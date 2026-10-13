@@ -14,7 +14,8 @@ romanization: "aṇil"
 concept_tag: TA-PORUL247-ANIL
 prerequisites: [TA-C247-kaluku, TA-C247-naykkutti]
 sounds: []
-roots: []
+roots: [dravidian-anil-squirrel]
+etymology_hook: "அணில் — native Dravidian (DEDR 2315); Malayalam aṇil 'squirrel', Kannada aṇil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C247-naykkutti]
 <!-- hl-knowledge: introduces=[TA-LEX-C247-PORUL247-04]; assesses=[] -->
 
 **அணில்** — *aṇil* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அணில்** (*aṇil*) is native Dravidian. DEDR 2315 lists Malayalam *aṇil*, "squirrel" and Kannada *aṇil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a decision"
 concept_tag: FR-CHOSES225-DECISION
 prerequisites: [FR-C225-experience, FR-C225-choix]
 sounds: []
-roots: []
+roots: [caedere-latin]
+etymology_hook: "décision ← Latin decisio 'a settling' — the noun beside décider"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C225-choix]
 <!-- hl-knowledge: introduces=[FR-LEX-C225-CHOSES225-03]; assesses=[] -->
 
 **la décision** — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**décision** ← Latin *decisio*, "a settling", the noun beside *décider* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

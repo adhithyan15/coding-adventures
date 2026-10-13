@@ -14,7 +14,8 @@ romanization: "tēṟṟu"
 concept_tag: TA-VERB-TERRU
 prerequisites: [TA-C258-pari, TA-C258-kurai]
 sounds: []
-roots: []
+roots: [dravidian-teeru-clear]
+etymology_hook: "தேற்று — native Dravidian (DEDR 3471); Malayalam tēṟuka 'to become clear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C258-kurai]
 <!-- hl-knowledge: introduces=[TA-LEX-C258-ACT258-04]; assesses=[] -->
 
 **தேற்று** — *tēṟṟu* — "to comfort, to console".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேற்று** (*tēṟṟu*) is native Dravidian. DEDR 3471 lists Malayalam *tēṟuka*, "to become clear". It is the causative of *tēṟu*, "to be comforted, to recover": "make someone recover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

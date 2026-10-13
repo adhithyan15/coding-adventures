@@ -14,7 +14,8 @@ romanization: "kuṟippēṭu"
 concept_tag: TA-PORUL184-KURIPPETU
 prerequisites: [TA-C184-matiya-unavu, TA-C184-iravu-unavu]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark, dravidian-eedu-leaf]
+etymology_hook: "குறிப்பேடு — native: kuṟippu 'note' (DEDR 1847) + ēṭu 'palm leaf for writing, book' (DEDR 884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C184-iravu-unavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C184-PORUL184-05]; assesses=[] -->
 
 **குறிப்பேடு** — *kuṟippēṭu* — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறிப்பேடு** (*kuṟippēṭu*) is native: *kuṟippu*, "note, memorandum", from *kuṟi*, "to mark, to note" (DEDR 1847), and *ēṭu*, "palm leaf for writing, book" (DEDR 884).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

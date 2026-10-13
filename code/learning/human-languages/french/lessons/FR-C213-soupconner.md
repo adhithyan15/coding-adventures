@@ -13,7 +13,8 @@ gloss: "to suspect"
 concept_tag: FR-VERB-SOUPCONNER
 prerequisites: [FR-C213-soulever, FR-C213-surprendre]
 sounds: []
-roots: []
+roots: [specere-latin]
+etymology_hook: "soupçonner — from Late Latin suspectio, from suspicere 'to suspect' — English suspicion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C213-surprendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C213-VERBES213-03]; assesses=[] -->
 
 **soupçonner** — "to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soupçonner** — built from the word for "suspicion", ← Late Latin *suspectio*, from *suspicere*, "to look up at, to suspect" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

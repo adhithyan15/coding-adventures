@@ -11,7 +11,8 @@ romanization: "makaṉ"
 concept_tag: TA-NOUN-SON
 prerequisites: [TA-C43-child, TA-C41-good]
 sounds: []
-roots: []
+roots: [proto-dravidian-makan-son]
+etymology_hook: "மகன் — native Dravidian (DEDR 4616); Malayalam makan, Kannada maga, Telugu maga 'male'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C43-child]
 **மகன்** (*makaṉ*) — "son".
 
 The stem is *maka-*, an old Dravidian word for offspring, and *-aṉ* is the ending Tamil puts on a male person — the same *-aṉ* already sitting on *naṇbaṉ*, 'friend'. So the word assembles in front of you: offspring, then male.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மகன்** (*makaṉ*) is native Dravidian. DEDR 4616 lists Malayalam *makan*, Kannada *maga* and Telugu *maga*, "male".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

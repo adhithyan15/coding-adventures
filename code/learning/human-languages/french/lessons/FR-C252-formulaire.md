@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES252-FORMULAIRE
 prerequisites: [FR-C251-mensonge, FR-C252-impot]
 sounds: []
 roots: []
+etymology_hook: "formulaire ← Latin formularium 'a book of forms' — English formula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C252-impot]
 <!-- hl-knowledge: introduces=[FR-LEX-C252-CHOSES252-02]; assesses=[] -->
 
 **le formulaire** — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formulaire** ← Latin *formularium*, "a book of forms", from *formula*, "a little form" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

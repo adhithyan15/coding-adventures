@@ -14,7 +14,8 @@ romanization: "toṭu"
 concept_tag: TA-VERB-TOTU
 prerequisites: [TA-C225-marru, TA-C226-arampi]
 sounds: []
-roots: []
+roots: [dravidian-todu-touch]
+etymology_hook: "தொடு — native Dravidian (DEDR 3480); Malayalam toṭuka 'to touch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C226-arampi]
 <!-- hl-knowledge: introduces=[TA-LEX-C226-ACT226-02]; assesses=[] -->
 
 **தொடு** — *toṭu* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொடு** (*toṭu*) is native Dravidian. DEDR 3480 lists Malayalam *toṭuka*, "to touch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

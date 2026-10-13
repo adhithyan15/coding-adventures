@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES197-SUCCES
 prerequisites: [FR-C197-mariee, FR-C197-veuf]
 sounds: []
 roots: []
+etymology_hook: "succès ← Latin successus 'an outcome' — English success"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C197-veuf]
 <!-- hl-knowledge: introduces=[FR-LEX-C197-CHOSES197-04]; assesses=[] -->
 
 **le succès** — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**succès** ← Latin *successus*, "an outcome", from *succedere*, "to come after" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

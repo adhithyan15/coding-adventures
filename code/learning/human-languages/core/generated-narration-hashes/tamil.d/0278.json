@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 278,
-  "sourceHash": "fnv1a64:710c616b51bc3fa5",
+  "sourceHash": "fnv1a64:04ab66105db94ec6",
   "lessonIds": [
     "TA-C278-karumpu",
     "TA-C278-ventaikkay",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch278.txt",
   "json": "tamil/narration/ch278.json",
-  "textHash": "fnv1a64:88bcefb678d28ec2",
-  "jsonHash": "fnv1a64:9209932bb40940cf",
+  "textHash": "fnv1a64:d6150f9fbdacbe13",
+  "jsonHash": "fnv1a64:6607e392093349c8",
   "findings": []
 }

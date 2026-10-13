@@ -14,7 +14,8 @@ romanization: "takkāḷi"
 concept_tag: TA-THINGS124-TAKKALI
 prerequisites: [TA-C123-tenkay, TA-C123-venkayam]
 sounds: []
-roots: []
+roots: [dravidian-takkali-tomato]
+etymology_hook: "தக்காளி — native Dravidian (DEDR 3009); Malayalam takkāḷi, Kannada takkāḷi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C123-venkayam]
 <!-- hl-knowledge: introduces=[TA-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **தக்காளி** — *takkāḷi* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தக்காளி** (*takkāḷi*) is native Dravidian. DEDR 3009 lists Malayalam *takkāḷi* and Kannada *takkāḷi*. The entry glosses it "Indian winter cherry, tomato": the name belonged to a related plant before it settled on the tomato.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

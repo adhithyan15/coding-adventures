@@ -14,7 +14,8 @@ romanization: "pottāṉ"
 concept_tag: TA-PORUL242-POTTAN
 prerequisites: [TA-C242-kalcattai, TA-C242-cattaippai]
 sounds: []
-roots: []
+roots: [portuguese-botao]
+etymology_hook: "பொத்தான் ← Portuguese botão 'button'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C242-cattaippai]
 <!-- hl-knowledge: introduces=[TA-LEX-C242-PORUL242-04]; assesses=[] -->
 
 **பொத்தான்** — *pottāṉ* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொத்தான்** (*pottāṉ*) is a loan from Portuguese *botão*, "button".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

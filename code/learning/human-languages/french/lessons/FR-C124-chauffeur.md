@@ -14,6 +14,7 @@ concept_tag: FR-METIERS76-CHAUFFEUR
 prerequisites: [FR-C124-boulanger, FR-C124-etudiant]
 sounds: []
 roots: []
+etymology_hook: "chauffeur — 'one who heats', a stoker, then a driver — English chauffeur"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C124-etudiant]
 <!-- hl-knowledge: introduces=[FR-LEX-C124-METIERS76-03]; assesses=[] -->
 
 **le chauffeur** — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chauffeur** — built from the verb for "to heat", with *-eur*: first the stoker of a steam engine, then the driver. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pōkkuvarattu"
 concept_tag: TA-IDAM263-POKKUVARATTU
 prerequisites: [TA-C262-kataiciyaka, TA-C262-ippotellam]
 sounds: []
-roots: []
+roots: [dravidian-poo-go, dravidian-vaa-come]
+etymology_hook: "போக்குவரத்து — native: pōkku 'going' (DEDR 4572) + varattu 'coming in' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C262-ippotellam]
 <!-- hl-knowledge: introduces=[TA-LEX-C263-IDAM263-01]; assesses=[] -->
 
 **போக்குவரத்து** — *pōkkuvarattu* — "traffic; transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போக்குவரத்து** (*pōkkuvarattu*) is native: *pōkku*, "going", from *pō*, "to go" (DEDR 4572), and *varattu*, "coming in" (DEDR 5270): "goings and comings".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

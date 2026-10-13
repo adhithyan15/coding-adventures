@@ -12,6 +12,9 @@ Before the new one: say the Tamil for diarrhoea, then the Tamil for the brain.
 You'll want to know: அடிக்கடி.
 அடிக்கடி — aṭikkaṭi — "often".
 
+The word, taken apart.
+அடிக்கடி (aṭikkaṭi) is native Dravidian. DEDR 84 lists Malayalam aṭikkaṭi, "repeatedly". It sits beside aṭi, "to be on the increase, to abound".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for the brain, then the Tamil for often.
 
 You'll want to know: சில நேரங்களில்.
 சில நேரங்களில் — cila nēraṅkaḷil — "sometimes".
+
+The word, taken apart.
+சில நேரங்களில் (cila nēraṅkaḷil) is native: cila, "some" (DEDR 1571; Malayalam cila), and nēram, "time" (DEDR 3774), plural and locative: "at some times".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for often, then the Tamil for sometimes.
 You'll want to know: எப்போதும்.
 எப்போதும் — eppōtum — "always".
 
+The word, taken apart.
+எப்போதும் (eppōtum) is native: eppōtu, "when" (DEDR 5151), with -um, "also, any": "at any time".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for sometimes, then the Tamil for always.
 You'll want to know: ஒருபோதும்.
 ஒருபோதும் — orupōtum — "never (with a negative verb)".
 
+The word, taken apart.
+ஒருபோதும் (orupōtum) is native: oru, "one" (DEDR 990), and pōtu, "time" (DEDR 4559), with -um: "not even once".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for always, then the Tamil for never.
 
 You'll want to know: தாமதம்.
 தாமதம் — tāmatam — "a delay".
+
+The word, taken apart.
+தாமதம் (tāmatam) is usually traced to Sanskrit tāmasa, "dark, dull" (CDIAL 5775), from tamas, "darkness, inertia": delay as sluggishness.
 
 What you've built.
 One more word for this chapter.

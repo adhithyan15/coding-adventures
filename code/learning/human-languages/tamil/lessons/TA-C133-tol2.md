@@ -14,7 +14,8 @@ romanization: "tōl"
 concept_tag: TA-THINGS133-TOL2
 prerequisites: [TA-C133-mulankal, TA-C133-muti]
 sounds: []
-roots: []
+roots: [dravidian-tol-skin]
+etymology_hook: "தோல் — native Dravidian (DEDR 3559); Malayalam tōl, Kannada tōl, Telugu tokka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C133-muti]
 <!-- hl-knowledge: introduces=[TA-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **தோல்** — *tōl* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோல்** (*tōl*) is native Dravidian. DEDR 3559 lists Malayalam *tōl*, Kannada *tōl* and Telugu *tokka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

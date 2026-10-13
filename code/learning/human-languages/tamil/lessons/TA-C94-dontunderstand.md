@@ -11,7 +11,8 @@ romanization: "puriyavillai"
 concept_tag: TA-LOST-DONT-UNDERSTAND
 prerequisites: [TA-C93-show, TA-C93-didnthear]
 sounds: []
-roots: []
+roots: [tamil-puri-become-clear, il]
+etymology_hook: "புரியவில்லை — puri 'to become clear', origin not settled, + native illai 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C93-didnthear]
 **புரியவில்லை** (*puriyavillai*) — "I don't understand", literally "it did not become clear".
 
 The most useful sentence a learner owns. It also ends in **இல்லை**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புரியவில்லை** (*puriyavillai*) is *puri*, "to become clear", with native *illai*, "not" (DEDR 2559). As an earlier lesson said, whether this *puri* is one root with an older *puri*, "to do", is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

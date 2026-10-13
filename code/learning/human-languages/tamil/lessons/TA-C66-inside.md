@@ -11,7 +11,8 @@ romanization: "uḷḷē"
 concept_tag: TA-ADVERB-ULLE
 prerequisites: [TA-W22-read-mele, TA-C64-crop, TA-C65-stop]
 sounds: [tamil-double-lla]
-roots: []
+roots: [dravidian-ul-inside]
+etymology_hook: "உள்ளே — native Dravidian (DEDR 698); Malayalam uḷḷu 'inside'"
 duration:
   max_seconds: 225
 requires:
@@ -46,6 +47,11 @@ turns a place-word into a place you can go to.
 And now it earns its keep. **உள்ளே வா** (*uḷḷē vā*) — "**come in**." That is
 what a Tamil household says at the door, and you have had **வா** since the
 coming-and-going lesson. One new word, and you can answer a doorway.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உள்ளே** (*uḷḷē*) is native Dravidian. DEDR 698 lists Malayalam *uḷḷu*, "inside".
 
 ## Why it's said this way: the doubled ள
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03] -->

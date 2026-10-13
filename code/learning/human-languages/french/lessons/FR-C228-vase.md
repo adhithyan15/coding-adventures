@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES228-VASE
 prerequisites: [FR-C227-autoroute, FR-C227-amende]
 sounds: []
 roots: []
+etymology_hook: "vase ← Latin vas 'a vessel' — English vase and vascular"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C227-amende]
 <!-- hl-knowledge: introduces=[FR-LEX-C228-CHOSES228-01]; assesses=[] -->
 
 **le vase** — "a vase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vase** ← Latin *vas*, *vasis*, "a vessel" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

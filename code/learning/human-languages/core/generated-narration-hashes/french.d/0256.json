@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 256,
-  "sourceHash": "fnv1a64:88964674d7cfac7d",
+  "sourceHash": "fnv1a64:ff326afda65afc4c",
   "lessonIds": [
     "FR-C256-outil",
     "FR-C256-guitare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch256.txt",
   "json": "french/narration/ch256.json",
-  "textHash": "fnv1a64:4c372659550de9a7",
-  "jsonHash": "fnv1a64:3ea625637f35f8d8",
+  "textHash": "fnv1a64:fe9dad419b42b4ba",
+  "jsonHash": "fnv1a64:8eabcbb38cba84a7",
   "findings": []
 }

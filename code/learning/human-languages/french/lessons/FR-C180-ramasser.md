@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RAMASSER
 prerequisites: [FR-C180-preter, FR-C180-proposer]
 sounds: []
 roots: []
+etymology_hook: "ramasser — re- + the verb 'to heap up', from Latin massa 'a lump' — English amass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C180-proposer]
 <!-- hl-knowledge: introduces=[FR-LEX-C180-VERBES180-05]; assesses=[] -->
 
 **ramasser** — "to pick up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ramasser** — built from *re-* and the verb for "to heap up", from the word for "a mass", ← Latin *massa*, "a lump" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

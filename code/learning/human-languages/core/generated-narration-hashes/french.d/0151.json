@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 151,
-  "sourceHash": "fnv1a64:8843efa55118f5e6",
+  "sourceHash": "fnv1a64:0c1b3cbc17c5d46e",
   "lessonIds": [
     "FR-C151-heberger",
     "FR-C151-prier",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch151.txt",
   "json": "french/narration/ch151.json",
-  "textHash": "fnv1a64:93ec3824cf16246c",
-  "jsonHash": "fnv1a64:916e8860e5fb0e2d",
+  "textHash": "fnv1a64:b50d9c4ef47c2087",
+  "jsonHash": "fnv1a64:fbb17df4f91b39b8",
   "findings": []
 }

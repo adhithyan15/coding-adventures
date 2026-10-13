@@ -14,7 +14,8 @@ romanization: "vīṅku"
 concept_tag: TA-VERB-VINKU
 prerequisites: [TA-C255-cuvaci, TA-C255-kunamaku]
 sounds: []
-roots: []
+roots: [dravidian-viinku-swell]
+etymology_hook: "வீங்கு — native Dravidian (DEDR 5448); Malayalam vīṅṅuka 'to swell', Kannada bīgu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C255-kunamaku]
 <!-- hl-knowledge: introduces=[TA-LEX-C255-ACT255-03]; assesses=[] -->
 
 **வீங்கு** — *vīṅku* — "to swell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வீங்கு** (*vīṅku*) is native Dravidian. DEDR 5448 lists Malayalam *vīṅṅuka*, "to swell" and Kannada *bīgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

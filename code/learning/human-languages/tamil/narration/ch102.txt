@@ -13,6 +13,9 @@ You'll want to know: பெரியப்பா.
 பெரியப்பா (periyappā) — your father's elder brother, the big father.
 பெரிய is "big". Beside சித்தப்பா, the little father.
 
+The word, taken apart.
+பெரியப்பா (periyappā) is native: periya, "big" (DEDR 4411), and appā, "father" (DEDR 156): "the big father".
+
 What you've built.
 Big father and little father.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for the father's younger brother, then the Tam
 You'll want to know: பெரியம்மா.
 பெரியம்மா (periyammā) — the big mother: your mother's elder sister, or the wife of your பெரியப்பா (periyappā).
 அம்மா is the mother you know.
+
+The word, taken apart.
+பெரியம்மா (periyammā) is native: periya, "big" (DEDR 4411), and ammā, "mother" (DEDR 183): "the big mother".
 
 What you've built.
 The big mother.
@@ -73,6 +79,9 @@ You'll want to know: மாமியார்.
 மாமியார் (māmiyār) — "a mother-in-law", the respectful word.
 It is built on the same மாமா root as the uncle.
 
+The word, taken apart.
+மாமியார் (māmiyār) is native Dravidian (DEDR 4813). The entry lists māmi, "mother-in-law", beside māmā, "uncle"; -yār is the respectful ending.
+
 What you've built.
 An in-law.
 
@@ -103,6 +112,9 @@ You'll want to know: மருமகள்.
 மருமகள் (marumakaḷ) — "a daughter-in-law".
 மகள் is "daughter"; மரு- marks the relation by marriage.
 
+The word, taken apart.
+மருமகள் (marumakaḷ) is native Dravidian. DEDR 4715 lists Malayalam marumakan. The entry lists the masculine form, "nephew, son-in-law"; here maru- is joined to makaḷ, "daughter".
+
 What you've built.
 A daughter by marriage.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a mother-in-law, then the Tamil for a daug
 You'll want to know: மருமகன்.
 மருமகன் (marumakaṉ) — "a son-in-law".
 மகன் is "son"; the same மரு- makes him family by marriage.
+
+The word, taken apart.
+மருமகன் (marumakaṉ) is native Dravidian. DEDR 4715 lists Malayalam marumakan, "sister's son" and Telugu manumāḍu, "grandson".
 
 What you've built.
 Elders and in-laws.

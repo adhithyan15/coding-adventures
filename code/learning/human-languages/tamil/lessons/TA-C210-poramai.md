@@ -14,7 +14,8 @@ romanization: "poṟāmai"
 concept_tag: TA-GUNAM210-PORAMAI
 prerequisites: [TA-C210-manam, TA-C210-kunam]
 sounds: []
-roots: []
+roots: [dravidian-poru-bear]
+etymology_hook: "பொறாமை — native Dravidian (DEDR 4565)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C210-kunam]
 <!-- hl-knowledge: introduces=[TA-LEX-C210-GUNAM210-03]; assesses=[] -->
 
 **பொறாமை** — *poṟāmai* — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொறாமை** (*poṟāmai*) is native Dravidian (DEDR 4565). The entry lists *poṟāmai*, "envy", the negative of *poṟu*, "to bear": jealousy is "not bearing" another's good.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

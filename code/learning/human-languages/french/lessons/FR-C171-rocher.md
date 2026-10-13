@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES171-ROCHER
 prerequisites: [FR-C171-plaine, FR-C171-cascade]
 sounds: []
 roots: []
+etymology_hook: "rocher — from the word for 'rock', Medieval Latin rocca, of unknown origin — English rock"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C171-cascade]
 <!-- hl-knowledge: introduces=[FR-LEX-C171-CHOSES171-04]; assesses=[] -->
 
 **le rocher** — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rocher** ← Old French *rochier*, built from the word for "rock", ← Medieval Latin *rocca*, whose origin is unknown. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

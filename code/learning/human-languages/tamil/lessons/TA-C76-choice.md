@@ -11,9 +11,10 @@ romanization: "pāl vēṇḍumā, alladu tēnīr vēṇḍumā?"
 concept_tag: TA-PRAGMATICS-OFFER-CHOICE
 prerequisites: [TA-W31-read-aanaal]
 sounds: []
-roots: []
+roots: [dravidian-al-not]
+etymology_hook: "பால் … அல்லது தேநீர் — native pāl, vēṇḍum (DEDR 5528), alladu (DEDR 234); tē- 'tea' is the one loan"
 duration:
-  max_seconds: 230
+  max_seconds: 281
 requires:
   knowledge: [TA-LEX-C76-JOIN-02, TA-SCRIPT-READ-AANAAL-01]
 introduces:
@@ -56,6 +57,11 @@ The shorter form drops the second verb, and a host at a doorway will say it that
 Answer it with the echo you learned for any yes-or-no question — name the one you want:
 
 > **தேநீர்.**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பால் வேண்டுமா, அல்லது தேநீர் வேண்டுமா?** (*pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*) is built from words met before, all native except one: *pāl*, "milk", *vēṇḍum*, "is wanted" (DEDR 5528), and *alladu*, "or" (DEDR 234). The one loan is *tēnīr*: *tē*, the travelling word for tea, on native *nīr*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

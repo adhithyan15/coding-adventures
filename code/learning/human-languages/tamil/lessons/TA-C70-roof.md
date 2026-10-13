@@ -11,7 +11,8 @@ romanization: "kūrai"
 concept_tag: TA-NOUN-ROOF
 prerequisites: [TA-C70-floor, TA-C68-bag, TA-C69-station]
 sounds: []
-roots: []
+roots: [dravidian-kuurai-roof]
+etymology_hook: "கூரை — native Dravidian (DEDR 1904); Malayalam kūra 'hut, thatch'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ have the two words for the space between them: மேலே and கீழே. Pi
 below, and every word in that sentence is one you have been taught.
 
 Its **ூ** is the long u sign, and it ends, like தரை, in **ை**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கூரை** (*kūrai*) is native Dravidian. DEDR 1904 lists Malayalam *kūra*, "hut, thatch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

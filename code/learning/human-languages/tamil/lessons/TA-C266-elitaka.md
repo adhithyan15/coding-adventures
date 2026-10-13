@@ -14,7 +14,8 @@ romanization: "eḷitāka"
 concept_tag: TA-KARANAM266-ELITAKA
 prerequisites: [TA-C265-cirai, TA-C265-ulakam]
 sounds: []
-roots: []
+roots: [dravidian-eli-easy, tamil-aaku-become]
+etymology_hook: "எளிதாக — native: eḷitu 'what is easy' (DEDR 855) + āka 'as' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C265-ulakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C266-KARANAM266-01]; assesses=[] -->
 
 **எளிதாக** — *eḷitāka* — "easily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எளிதாக** (*eḷitāka*) is native: *eḷitu*, "what is easy", from *eḷi*, "easy" (DEDR 855), and *āka*, "as" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

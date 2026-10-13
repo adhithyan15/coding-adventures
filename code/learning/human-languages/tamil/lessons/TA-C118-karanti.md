@@ -14,7 +14,8 @@ romanization: "karaṇṭi"
 concept_tag: TA-THINGS118-KARANTI
 prerequisites: [TA-C118-tattu, TA-C118-koppai]
 sounds: []
-roots: []
+roots: [dravidian-karandi-spoon]
+etymology_hook: "கரண்டி — native Dravidian (DEDR 1267); Malayalam karaṇṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C118-koppai]
 <!-- hl-knowledge: introduces=[TA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **கரண்டி** — *karaṇṭi* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கரண்டி** (*karaṇṭi*) is native Dravidian. DEDR 1267 lists Malayalam *karaṇṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

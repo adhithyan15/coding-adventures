@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES32-BOITE
 prerequisites: [FR-C79-cadeau, FR-C79-lunettes]
 sounds: []
 roots: []
+etymology_hook: "boîte ← Vulgar Latin *buxita, from Late Latin buxis 'a box' — English box"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C79-lunettes]
 <!-- hl-knowledge: introduces=[FR-LEX-C80-CHOSES32-01]; assesses=[] -->
 
 **la boîte** — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boîte** ← Old French *boiste* ← Vulgar Latin *\*buxita*, from Late Latin *buxis*, "a box" — inherited. (EtymDB 2.1) The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭṭaiviral"
 concept_tag: TA-THINGS143-KATTAIVIRAL
 prerequisites: [TA-C142-manikkattu, TA-C142-mulankai]
 sounds: []
-roots: []
+roots: [dravidian-kattai-short, dravidian-viral-finger]
+etymology_hook: "கட்டைவிரல் — native: kaṭṭai 'short and thick' (DEDR 1151) + viral 'finger' (DEDR 5409)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C142-mulankai]
 <!-- hl-knowledge: introduces=[TA-LEX-C143-THINGS143-01]; assesses=[] -->
 
 **கட்டைவிரல்** — *kaṭṭaiviral* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட்டைவிரல்** (*kaṭṭaiviral*) is native: *kaṭṭai*, "shortness, short and thick" (DEDR 1151), and *viral*, "finger" (DEDR 5409).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

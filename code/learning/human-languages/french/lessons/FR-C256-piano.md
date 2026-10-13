@@ -13,7 +13,8 @@ gloss: "a piano"
 concept_tag: FR-CHOSES256-PIANO
 prerequisites: [FR-C256-outil, FR-C256-guitare]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "piano ← Italian pianoforte 'soft-loud'; piano ← Latin planus 'smooth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C256-guitare]
 <!-- hl-knowledge: introduces=[FR-LEX-C256-CHOSES256-03]; assesses=[] -->
 
 **le piano** — "a piano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piano** ← Italian *piano*, short for *pianoforte*, "soft-loud"; *piano*, "soft", ← Latin *planus*, "flat, smooth" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

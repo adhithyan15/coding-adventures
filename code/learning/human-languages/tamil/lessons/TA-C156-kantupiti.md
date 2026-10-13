@@ -14,7 +14,8 @@ romanization: "kaṇṭupiṭi"
 concept_tag: TA-VERB-KANTUPITI
 prerequisites: [TA-C156-karrukkol, TA-C156-vel]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see, dravidian-pidi-seize]
+etymology_hook: "கண்டுபிடி — native: kaṇṭu, from kāṇ 'to see' (DEDR 1443) + piṭi 'to catch' (DEDR 4148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C156-vel]
 <!-- hl-knowledge: introduces=[TA-LEX-C156-ACT156-05]; assesses=[] -->
 
 **கண்டுபிடி** — *kaṇṭupiṭi* — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கண்டுபிடி** (*kaṇṭupiṭi*) is native: *kaṇṭu*, "having seen", from *kāṇ*, "to see" (DEDR 1443), and *piṭi*, "to catch" (DEDR 4148): "see and catch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

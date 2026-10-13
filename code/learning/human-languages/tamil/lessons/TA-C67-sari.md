@@ -11,7 +11,8 @@ romanization: "puḍavai"
 concept_tag: TA-NOUN-SARI
 prerequisites: [TA-W23-read-sattai, TA-C66-outside]
 sounds: []
-roots: []
+roots: [dravidian-pudavai-cloth]
+etymology_hook: "புடவை — native Dravidian (DEDR 4256); Malayalam puṭava, Kannada puṭṭige"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ works in a Tamil shop: say புடவை and you will be shown exactly what yo
 
 It ends in the **ை** you have now met three times over — in தலை (*talai*), the head, and twice
 inside சட்டை.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புடவை** (*puḍavai*) is native Dravidian. DEDR 4256 lists Malayalam *puṭava* and Kannada *puṭṭige*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

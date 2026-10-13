@@ -13,7 +13,8 @@ gloss: "to check"
 concept_tag: FR-VERB-VERIFIER
 prerequisites: [FR-C234-mesurer, FR-C234-peser]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "vérifier ← Medieval Latin verificare 'to make true' — English verify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C234-peser]
 <!-- hl-knowledge: introduces=[FR-LEX-C234-VERBES234-05]; assesses=[] -->
 
 **vérifier** — "to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vérifier** ← Medieval Latin *verificare*, "to make true", from *verus*, "true" — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

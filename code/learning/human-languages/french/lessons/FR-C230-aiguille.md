@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES230-AIGUILLE
 prerequisites: [FR-C229-pollution, FR-C230-fil]
 sounds: []
 roots: []
+etymology_hook: "aiguille ← Vulgar Latin *acucula 'a little needle', from acus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C230-fil]
 <!-- hl-knowledge: introduces=[FR-LEX-C230-CHOSES230-02]; assesses=[] -->
 
 **l'aiguille** — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aiguille** ← Old French *aguille* (EtymDB 2.1) ← Vulgar Latin *\*acucula*, "a little needle", from Latin *acus*, "a needle" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

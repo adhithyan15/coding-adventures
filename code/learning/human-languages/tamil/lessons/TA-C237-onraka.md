@@ -14,7 +14,8 @@ romanization: "oṉṟāka"
 concept_tag: TA-KARANAM237-ONRAKA
 prerequisites: [TA-C237-atarkup-patilaka, TA-C237-mattumallamal]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ஒன்றாக — native Dravidian (DEDR 990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C237-mattumallamal]
 <!-- hl-knowledge: introduces=[TA-LEX-C237-KARANAM237-04]; assesses=[] -->
 
 **ஒன்றாக** — *oṉṟāka* — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒன்றாக** (*oṉṟāka*) is native Dravidian (DEDR 990). It is *oṉṟu*, "one", with *-āka*: "as one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

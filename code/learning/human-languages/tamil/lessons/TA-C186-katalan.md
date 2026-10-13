@@ -14,7 +14,8 @@ romanization: "kātalaṉ"
 concept_tag: TA-PORUL186-KATALAN
 prerequisites: [TA-C185-minnancal, TA-C186-mamanar]
 sounds: []
-roots: []
+roots: [dravidian-kaadal-love]
+etymology_hook: "காதலன் — native Dravidian (DEDR 1445); Kannada kādala 'male friend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C186-mamanar]
 <!-- hl-knowledge: introduces=[TA-LEX-C186-PORUL186-02]; assesses=[] -->
 
 **காதலன்** — *kātalaṉ* — "a boyfriend, a (male) lover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காதலன்** (*kātalaṉ*) is native Dravidian. DEDR 1445 lists Kannada *kādala*, "male friend". It is *kātal*, "love", with *-aṉ* for a man.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

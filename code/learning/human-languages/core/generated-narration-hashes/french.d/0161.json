@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 161,
-  "sourceHash": "fnv1a64:b617ec03fd8da04b",
+  "sourceHash": "fnv1a64:e4c2cefbd38da51b",
   "lessonIds": [
     "FR-C161-moderne",
     "FR-C161-ancien-ancienne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch161.txt",
   "json": "french/narration/ch161.json",
-  "textHash": "fnv1a64:03b81ebbaf6e5ef0",
-  "jsonHash": "fnv1a64:dc5bb2e7a548a3db",
+  "textHash": "fnv1a64:11e6d760cba56f76",
+  "jsonHash": "fnv1a64:d357be46b3964d68",
   "findings": []
 }

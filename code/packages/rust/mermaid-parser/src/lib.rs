@@ -6195,6 +6195,7 @@ fn is_treeview_metadata_line(line: &str) -> bool {
 /// Parse Mermaid 11.16.1 Swimlane ownership lanes and Flowchart-style steps.
 pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let line_hops = parse_swimlane_line_hops(source)?;
+    let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6223,6 +6224,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         links: Vec::new(),
         callbacks: Vec::new(),
         line_hops,
+        automatic_lane_ordering,
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
@@ -6488,6 +6490,24 @@ fn parse_swimlane_line_hops(source: &str) -> Result<Option<SwimlaneLineHops>, Pa
         "gap" => Ok(Some(SwimlaneLineHops::Gap)),
         "false" => Ok(None),
         _ => Err(swimlane_error(1, "Swimlane lineHops must be true, false, arc, or gap")),
+    }
+}
+
+fn parse_swimlane_automatic_lane_ordering(source: &str) -> Result<bool, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(false);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("automaticLaneOrdering").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(false);
+    };
+    match value.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(swimlane_error(1, "Swimlane automaticLaneOrdering must be true or false")),
     }
 }
 

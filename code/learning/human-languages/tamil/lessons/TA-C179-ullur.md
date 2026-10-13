@@ -14,7 +14,8 @@ romanization: "uḷḷūr"
 concept_tag: TA-GUNAM179-ULLUR
 prerequisites: [TA-C178-palutta, TA-C179-payanulla]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside, dravidian-uur-settlement]
+etymology_hook: "உள்ளூர் — native: uḷ 'inside' (DEDR 698) + ūr 'village, town' (DEDR 752; Malayalam ūr)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C179-payanulla]
 <!-- hl-knowledge: introduces=[TA-LEX-C179-GUNAM179-02]; assesses=[] -->
 
 **உள்ளூர்** — *uḷḷūr* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உள்ளூர்** (*uḷḷūr*) is native: *uḷ*, "inside" (DEDR 698), and *ūr*, "village, town" (DEDR 752; Malayalam *ūr*): "of the town within".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a sauce"
 concept_tag: FR-REPAS74-SAUCE
 prerequisites: [FR-C121-biscuit, FR-C122-sandwich]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "sauce ← Vulgar Latin *salsa 'salted', from Latin sal — Spanish salsa is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C122-sandwich]
 <!-- hl-knowledge: introduces=[FR-LEX-C122-REPAS74-02]; assesses=[] -->
 
 **la sauce** — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sauce** ← Vulgar Latin *\*salsa*, "salted", from Latin *salsus*, from *sal*, "salt" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

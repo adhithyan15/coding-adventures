@@ -14,6 +14,7 @@ concept_tag: FR-VERB-GLISSER
 prerequisites: [FR-C183-telecharger, FR-C183-skier]
 sounds: []
 roots: []
+etymology_hook: "glisser ← Old French glicier, usually from Frankish *glidan — English glide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C183-skier]
 <!-- hl-knowledge: introduces=[FR-LEX-C183-VERBES183-05]; assesses=[] -->
 
 **glisser** — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glisser** ← Old French *glicier*, "to slip, to glide" (EtymDB 2.1), usually traced to Frankish *\*glidan*, "to glide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

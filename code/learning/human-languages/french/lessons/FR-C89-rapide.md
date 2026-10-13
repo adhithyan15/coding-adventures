@@ -13,7 +13,8 @@ gloss: "fast"
 concept_tag: FR-ANIMAUX41-RAPIDE
 prerequisites: [FR-C89-nouveau, FR-C89-vieux]
 sounds: []
-roots: []
+roots: [rapere-latin]
+etymology_hook: "rapide ← Latin rapidus 'swift', from rapere 'to seize' — English rapid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C89-vieux]
 <!-- hl-knowledge: introduces=[FR-LEX-C89-ANIMAUX41-04]; assesses=[] -->
 
 **rapide** — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rapide** ← Latin *rapidus*, "swift, snatching", from *rapere*, "to seize" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

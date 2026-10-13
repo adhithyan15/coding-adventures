@@ -14,7 +14,8 @@ romanization: "vayiṟṟuvali"
 concept_tag: TA-NALAM201-VAYIRRUVALI
 prerequisites: [TA-C201-micai, TA-C201-ullankai]
 sounds: []
-roots: []
+roots: [dravidian-vayiru-belly, dravidian-vali-pain]
+etymology_hook: "வயிற்றுவலி — native: vayiṟu 'stomach' (DEDR 5259) + vali 'pain' (DEDR 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C201-ullankai]
 <!-- hl-knowledge: introduces=[TA-LEX-C201-NALAM201-05]; assesses=[] -->
 
 **வயிற்றுவலி** — *vayiṟṟuvali* — "a stomach ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வயிற்றுவலி** (*vayiṟṟuvali*) is native: *vayiṟu*, "stomach" (DEDR 5259), and *vali*, "pain" (DEDR 5281).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

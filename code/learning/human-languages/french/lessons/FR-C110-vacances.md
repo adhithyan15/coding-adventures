@@ -13,7 +13,8 @@ gloss: "holidays"
 concept_tag: FR-LIEU62-VACANCES
 prerequisites: [FR-C110-monde, FR-C110-voyage, FR-C09-aout]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "vacances ← Latin vacare 'to be empty, to be free' — English vacation and vacant"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C110-voyage]
 <!-- hl-knowledge: introduces=[FR-LEX-C110-LIEU62-05]; assesses=[] -->
 
 **les vacances** — "holidays". Always plural in this sense.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vacances** ← Latin *vacantia*, "empty, free times", from *vacare*, "to be empty, to be free" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

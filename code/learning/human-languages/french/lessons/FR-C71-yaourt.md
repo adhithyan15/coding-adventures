@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE23-YAOURT
 prerequisites: [FR-C71-raisin, FR-C71-confiture]
 sounds: []
 roots: []
+etymology_hook: "yaourt ← Turkish yogurt — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C71-confiture]
 <!-- hl-knowledge: introduces=[FR-LEX-C71-CUISINE23-04]; assesses=[] -->
 
 **le yaourt** — "a yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**yaourt** ← Turkish *yogurt* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

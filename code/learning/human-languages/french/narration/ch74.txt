@@ -12,6 +12,9 @@ Before the new one: say the French for a key, then the French for a wall.
 You'll want to know: le toit.
 le toit — "a roof".
 
+The word, taken apart.
+toit from Latin tectum, "roof", from tegere, "to cover" (EtymDB 2.1 records the Latin word) — inherited: Latin -ct- became French -it, as in lait from Latin lac, lactis, through Vulgar Latin lacte.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a wall, then the French for a roof.
 
 You'll want to know: le jardin.
 le jardin — "a garden".
+
+The word, taken apart.
+jardin from Old French jardin (EtymDB 2.1), from Frankish gardo, "an enclosure" — borrowed from the Franks.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for a roof, then the French for a garden.
 You'll want to know: la lampe.
 la lampe — "a lamp".
 
+The word, taken apart.
+lampe from Late Latin lampada from Latin lampas, "a torch", from Greek lampas — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for a garden, then the French for a lamp.
 You'll want to know: la salle de bain.
 la salle de bain — "a bathroom".
 
+The phrase, taken apart.
+salle de bain — "room of bath": salle, "a room", from Frankish sal, "a hall" (EtymDB 2.1); de, "of"; bain, "bath", from Latin balneum (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for a lamp, then the French for a bathroom.
 
 You'll want to know: la chambre.
 la chambre — "a bedroom".
+
+The word, taken apart.
+chambre from Latin camera, "a vaulted room", from Greek kamara (EtymDB 2.1) — inherited: Latin ca- became French cha-.
 
 What you've built.
 One more word for this chapter.

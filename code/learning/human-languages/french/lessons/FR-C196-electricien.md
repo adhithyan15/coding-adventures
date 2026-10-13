@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES196-ELECTRICIEN
 prerequisites: [FR-C196-boucher, FR-C196-mecanicien]
 sounds: []
 roots: []
+etymology_hook: "électricien — from Latin electrum 'amber': rubbed amber draws things to it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C196-mecanicien]
 <!-- hl-knowledge: introduces=[FR-LEX-C196-CHOSES196-03]; assesses=[] -->
 
 **l'électricien** — "an electrician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**électricien** — built from the word for "electric", from Latin *electrum*, "amber", from Greek *elektron* (Lewis & Short): rubbed amber draws things to it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

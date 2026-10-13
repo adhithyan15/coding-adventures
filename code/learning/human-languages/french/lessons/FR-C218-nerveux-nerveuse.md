@@ -13,7 +13,8 @@ gloss: "nervous"
 concept_tag: FR-QUAL218-NERVEUX-NERVEUSE
 prerequisites: [FR-C218-jaloux-jalouse, FR-C218-fier-fiere]
 sounds: []
-roots: []
+roots: [nervus-latin]
+etymology_hook: "nerveux ← Latin nervosus 'sinewy', from nervus — English nervous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C218-fier-fiere]
 <!-- hl-knowledge: introduces=[FR-LEX-C218-QUAL218-04]; assesses=[] -->
 
 **nerveux / nerveuse** — "nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nerveux** ← Old French *nerveus* ← Latin *nervosus*, "sinewy", from *nervus*, "a sinew" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naṭuvil"
 concept_tag: TA-LOC114-NATUVIL
 prerequisites: [TA-C113-pinnal, TA-C113-munnal]
 sounds: []
-roots: []
+roots: [tamil-naTu-middle]
+etymology_hook: "நடுவில் — native Dravidian (DEDR 3584); Malayalam naṭu, Kannada naḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C113-munnal]
 <!-- hl-knowledge: introduces=[TA-LEX-C114-LOC114-01]; assesses=[] -->
 
 **நடுவில்** — *naṭuvil* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நடுவில்** (*naṭuvil*) is native Dravidian. DEDR 3584 lists Malayalam *naṭu* and Kannada *naḍu*. It is *naṭu*, "middle", with the locative *-il*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

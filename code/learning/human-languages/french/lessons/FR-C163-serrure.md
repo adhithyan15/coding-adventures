@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES163-SERRURE
 prerequisites: [FR-C163-salle-a-manger, FR-C163-balcon]
 sounds: []
 roots: []
+etymology_hook: "serrure — from the verb 'to shut', Late Latin serare 'to bolt', from sera 'a bar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C163-balcon]
 <!-- hl-knowledge: introduces=[FR-LEX-C163-CHOSES163-04]; assesses=[] -->
 
 **la serrure** — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serrure** — built from the verb for "to squeeze, to shut", ← Late Latin *serare*, "to bolt", from *sera*, "a door bar" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

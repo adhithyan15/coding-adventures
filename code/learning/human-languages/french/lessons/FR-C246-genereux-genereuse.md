@@ -13,7 +13,8 @@ gloss: "generous"
 concept_tag: FR-QUAL246-GENEREUX-GENEREUSE
 prerequisites: [FR-C245-pret-prete, FR-C245-gratuit-gratuite]
 sounds: []
-roots: []
+roots: [genus]
+etymology_hook: "généreux ← Latin generosus 'of noble birth', from genus — English generous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C245-gratuit-gratuite]
 <!-- hl-knowledge: introduces=[FR-LEX-C246-QUAL246-01]; assesses=[] -->
 
 **généreux / généreuse** — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**généreux** ← Latin *generosus*, "of noble birth", from *genus*, "birth, kind" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

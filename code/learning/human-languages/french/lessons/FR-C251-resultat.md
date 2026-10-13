@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES251-RESULTAT
 prerequisites: [FR-C250-personne-agee, FR-C250-jumeau]
 sounds: []
 roots: []
+etymology_hook: "résultat ← Medieval Latin resultatum, from resultare 'to spring back' — English result"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C250-jumeau]
 <!-- hl-knowledge: introduces=[FR-LEX-C251-CHOSES251-01]; assesses=[] -->
 
 **le résultat** — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**résultat** ← Medieval Latin *resultatum*, from *resultare*, "to spring back" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

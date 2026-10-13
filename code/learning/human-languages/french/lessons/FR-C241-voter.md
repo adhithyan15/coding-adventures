@@ -13,7 +13,8 @@ gloss: "to vote"
 concept_tag: FR-VERB-VOTER
 prerequisites: [FR-C241-trembler, FR-C241-hurler]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "voter — from English vote, Latin votum 'a vow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C241-hurler]
 <!-- hl-knowledge: introduces=[FR-LEX-C241-VERBES241-04]; assesses=[] -->
 
 **voter** — "to vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voter** — formed from the word for "a vote", ← English *vote*, from Latin *votum*, "a vow, a wish" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

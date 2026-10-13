@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES225-CHOIX
 prerequisites: [FR-C224-chercheur, FR-C225-experience]
 sounds: []
 roots: []
+etymology_hook: "choix — from the verb 'to choose', a Germanic word — English choice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C225-experience]
 <!-- hl-knowledge: introduces=[FR-LEX-C225-CHOSES225-02]; assesses=[] -->
 
 **le choix** — "a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**choix** ← Old French *chois*, formed from the verb for "to choose" (EtymDB 2.1), which came from a Germanic verb meaning "to test, to taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

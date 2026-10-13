@@ -13,7 +13,8 @@ gloss: "a discount"
 concept_tag: FR-CHOSES198-REDUCTION
 prerequisites: [FR-C197-echec, FR-C198-promesse]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "réduction ← Latin reductio 'a leading back' — English reduction"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C198-promesse]
 <!-- hl-knowledge: introduces=[FR-LEX-C198-CHOSES198-02]; assesses=[] -->
 
 **la réduction** — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réduction** ← Latin *reductio*, "a leading back", from *reducere* (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

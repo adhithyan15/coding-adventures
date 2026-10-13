@@ -14,7 +14,8 @@ romanization: "rattu cey"
 concept_tag: TA-VERB-RATTU-CEY
 prerequisites: [TA-C228-tattaccu-cey, TA-C228-molipeyar]
 sounds: []
-roots: []
+roots: [arabic-radd, sey-do-dravidian]
+etymology_hook: "ரத்து செய் — rattu ← Arabic radd 'rejection', through Hindustani, + native sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C228-molipeyar]
 <!-- hl-knowledge: introduces=[TA-LEX-C228-ACT228-03]; assesses=[] -->
 
 **ரத்து செய்** — *rattu cey* — "to cancel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரத்து செய்** (*rattu cey*) is *rattu*, "cancelled", a loan from Arabic *radd*, "rejection, cancelling", through Hindustani, with native *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

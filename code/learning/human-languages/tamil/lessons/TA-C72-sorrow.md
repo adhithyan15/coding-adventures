@@ -11,7 +11,8 @@ romanization: "varuttam"
 concept_tag: TA-NOUN-SORROW
 prerequisites: [TA-W27-read-payam, TA-C70-wall, TA-C71-run]
 sounds: []
-roots: []
+roots: [dravidian-varuntu-suffer]
+etymology_hook: "வருத்தம் — native Dravidian (DEDR 5272); Malayalam varuttam 'trouble, affliction'"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ This is the word that finishes an apology in ordinary speech. You already have �
 one you can say to a friend without sounding like a letter.
 
 Its middle is a doubled **த்த**, the same closing-and-leaning you read in சட்டை and வண்டி.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வருத்தம்** (*varuttam*) is native Dravidian. DEDR 5272 lists Malayalam *varuttam*, "trouble, affliction". It is the noun of *varuntu*, "to suffer, to grieve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

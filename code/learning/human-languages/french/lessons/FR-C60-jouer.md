@@ -13,7 +13,8 @@ gloss: "to play"
 concept_tag: FR-VERB-JOUER
 prerequisites: [FR-C60-laver, FR-C60-cuisiner]
 sounds: []
-roots: []
+roots: [iocari-latin]
+etymology_hook: "jouer ← Latin iocari 'to jest, to joke' — English joke and jocular share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C60-cuisiner]
 <!-- hl-knowledge: introduces=[FR-LEX-C60-VERBES12-04]; assesses=[] -->
 
 **jouer** — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jouer** ← Old French *joer* ← Latin *iocari*, "to jest, to joke" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

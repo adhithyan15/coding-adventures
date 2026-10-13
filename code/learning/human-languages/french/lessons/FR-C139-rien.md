@@ -14,6 +14,7 @@ concept_tag: FR-NEG139-RIEN
 prerequisites: [FR-C138-conduire, FR-C138-shabiller]
 sounds: []
 roots: []
+etymology_hook: "rien ← Latin rem 'a thing', accusative of res — anything, then nothing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C138-shabiller]
 <!-- hl-knowledge: introduces=[FR-LEX-C139-NEG139-01]; assesses=[] -->
 
 **rien** — "nothing". With a verb it takes **ne** in front: **Je ne comprends rien.** — "I understand nothing." On its own it answers a question: **Rien.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rien** ← Latin *rem*, "a thing", the accusative of *res* (Lewis & Short) — inherited: "a thing" became "anything", then, in negative sentences, "nothing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

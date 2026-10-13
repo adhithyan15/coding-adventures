@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 194,
-  "sourceHash": "fnv1a64:0480c29846f61be1",
+  "sourceHash": "fnv1a64:a8eb17bbda649614",
   "lessonIds": [
     "FR-C194-vallee",
     "FR-C194-temperature",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch194.txt",
   "json": "french/narration/ch194.json",
-  "textHash": "fnv1a64:446c4de8e5e658c3",
-  "jsonHash": "fnv1a64:80b39f69ff31c673",
+  "textHash": "fnv1a64:30a58cbb2d50f8cf",
+  "jsonHash": "fnv1a64:d13c52756b3b5c45",
   "findings": []
 }

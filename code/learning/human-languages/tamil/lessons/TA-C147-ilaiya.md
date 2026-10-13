@@ -14,7 +14,8 @@ romanization: "iḷaiya"
 concept_tag: TA-QUAL147-ILAIYA
 prerequisites: [TA-C146-panakkara, TA-C146-elai, TA-C41-adjective-system]
 sounds: []
-roots: []
+roots: [dravidian-ila-young]
+etymology_hook: "இளைய — native Dravidian (DEDR 513); Malayalam iḷa 'tender, young'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C146-elai]
 <!-- hl-knowledge: introduces=[TA-LEX-C147-QUAL147-01]; assesses=[] -->
 
 **இளைய** — *iḷaiya* — "young, younger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இளைய** (*iḷaiya*) is native Dravidian. DEDR 513 lists Malayalam *iḷa*, "tender, young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

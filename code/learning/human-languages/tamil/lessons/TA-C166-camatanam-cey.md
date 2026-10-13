@@ -14,7 +14,8 @@ romanization: "camātāṉam cey"
 concept_tag: TA-VERB-CAMATANAM-CEY
 prerequisites: [TA-C166-veti, TA-C166-poruttukkol]
 sounds: []
-roots: []
+roots: [sanskrit-samadhana, sey-do-dravidian]
+etymology_hook: "சமாதானம் செய் — camātāṉam ← Sanskrit samādhāna 'reconciliation' (CDIAL 13210) + native sey 'do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C166-poruttukkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C166-ACT166-04]; assesses=[] -->
 
 **சமாதானம் செய்** — *camātāṉam cey* — "to make peace, to calm someone down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சமாதானம் செய்** (*camātāṉam cey*) is *camātāṉam*, "peace, reconciliation", from Sanskrit *samādhāna*, "putting together, reconciliation" (CDIAL 13210), with native *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

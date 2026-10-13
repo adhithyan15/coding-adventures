@@ -13,7 +13,8 @@ gloss: "to repeat"
 concept_tag: FR-VERB-REPETER
 prerequisites: [FR-C233-construire, FR-C233-photographier]
 sounds: []
-roots: []
+roots: [petere-latin]
+etymology_hook: "répéter ← Latin repetere 'to seek once more' — English repetition"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C233-photographier]
 <!-- hl-knowledge: introduces=[FR-LEX-C233-VERBES233-05]; assesses=[] -->
 
 **répéter** — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**répéter** ← Latin *repetere*, "to go back to, to seek once more" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

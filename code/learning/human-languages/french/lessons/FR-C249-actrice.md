@@ -13,7 +13,8 @@ gloss: "an actress"
 concept_tag: FR-CHOSES249-ACTRICE
 prerequisites: [FR-C248-economie, FR-C249-acteur]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "actrice ← Latin actrix, the feminine of actor — the feminine of acteur"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C249-acteur]
 <!-- hl-knowledge: introduces=[FR-LEX-C249-CHOSES249-02]; assesses=[] -->
 
 **l'actrice** — "an actress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**actrice** ← Latin *actrix*, the feminine of *actor*: the feminine of *acteur* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "shoes"
 concept_tag: FR-HABITS56-CHAUSSURES
 prerequisites: [FR-C103-robe, FR-C104-pantalon]
 sounds: []
-roots: []
+roots: [calceus-latin]
+etymology_hook: "chaussures — from the verb 'to put on shoes', from Latin calceus 'a shoe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C104-pantalon]
 <!-- hl-knowledge: introduces=[FR-LEX-C104-HABITS56-02]; assesses=[] -->
 
 **les chaussures** — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chaussures** is the plural of the word for "footwear", built from the verb for "to put on shoes", which ← Latin *calceare*, from *calceus*, "a shoe" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

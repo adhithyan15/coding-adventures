@@ -11,7 +11,8 @@ romanization: "appaḍiyē"
 concept_tag: TA-REPLY-JUST-SO
 prerequisites: [TA-C47-perhaps, TA-C45-stomach, TA-C46-guest]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "அப்படியே — native: far base a- + paṭi 'manner' (DEDR 1 lists appaṭi) + emphatic -ē"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C47-perhaps]
 The front of it is the far pointer *a-* from *adu* and *aṅgē*; *appaḍi* is 'in that manner'; and the *-ē* on the end is how Tamil presses down on a word. In that manner, precisely.
 
 Move the pointer and the whole set follows: *ippaḍi*, 'like this', and *eppaḍi*, 'how' — which you have been saying since you first asked somebody how they were. One pattern, three words, and only the front letter moves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்படியே** (*appaḍiyē*) is native: the far base *a-* (DEDR 1, which lists *appaṭi*, "thus") with *paṭi*, "manner", and the stressing *-ē*: "in just that way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

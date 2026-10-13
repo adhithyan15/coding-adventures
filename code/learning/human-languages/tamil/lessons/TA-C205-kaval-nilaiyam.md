@@ -14,7 +14,8 @@ romanization: "kāval nilaiyam"
 concept_tag: TA-IDAM205-KAVAL-NILAIYAM
 prerequisites: [TA-C205-kattitam, TA-C205-mati]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard, dravidian-nil-stand]
+etymology_hook: "காவல் நிலையம் — native: kāval 'guard' (DEDR 1416) + nilaiyam 'station', from nil (DEDR 3675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C205-mati]
 <!-- hl-knowledge: introduces=[TA-LEX-C205-IDAM205-05]; assesses=[] -->
 
 **காவல் நிலையம்** — *kāval nilaiyam* — "a police station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காவல் நிலையம்** (*kāval nilaiyam*) is native: *kāval*, "guard, watch", from *kā*, "to guard" (DEDR 1416), and *nilaiyam*, "station", from *nil*, "to stand" (DEDR 3675).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

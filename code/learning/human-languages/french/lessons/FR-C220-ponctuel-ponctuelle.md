@@ -13,7 +13,8 @@ gloss: "punctual"
 concept_tag: FR-QUAL220-PONCTUEL-PONCTUELLE
 prerequisites: [FR-C219-different-differente, FR-C219-pareil-pareille]
 sounds: []
-roots: []
+roots: [pungere-latin]
+etymology_hook: "ponctuel ← Medieval Latin punctualis, from punctus 'a point' — English punctual"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C219-pareil-pareille]
 <!-- hl-knowledge: introduces=[FR-LEX-C220-QUAL220-01]; assesses=[] -->
 
 **ponctuel / ponctuelle** — "punctual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ponctuel** ← Medieval Latin *punctualis*, from *punctus*, "a point" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

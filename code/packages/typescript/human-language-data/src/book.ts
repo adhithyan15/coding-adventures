@@ -284,19 +284,18 @@ function escapeLatexCharacter(character: string): string {
  *   ./ES-C01-bien.md                           relative — it points at a file
  *   ../pronunciation-reference.md              in the curriculum repository.
  *                                              Return `undefined`: the caller
- *                                              prints the label as plain text
- *                                              and drops the link. "bien /
- *                                              bueno --- the adjective bueno"
- *                                              still reads correctly; a URL
- *                                              the reader cannot follow does
- *                                              not.
+ *                                              prints the label as plain text.
+ *   ../mocks/a1/writing-paper-1.md             separate assessment material;
+ *                                              the chapter renderer turns this
+ *                                              narrow path shape into a link to
+ *                                              its canonical repository file.
  *
  *   mailto:...                                 throw. Neither of the above,
  *                                              so somebody authored something
  *                                              the book has no policy for.
  *
- * Returns the absolute URL to link, or `undefined` when the destination is
- * relative and the label should be printed unlinked.
+ * Returns the absolute URL to link, or `undefined` for a relative destination.
+ * The caller may recognize an assessment-paper path using chapter context.
  */
 function absoluteBookLink(destination: string): string | undefined {
   const trimmed = destination.trim();
@@ -311,6 +310,20 @@ function absoluteBookLink(destination: string): string | undefined {
     throw new Error(`unsupported Markdown link protocol '${resolved.protocol}'`);
   }
   return resolved.href;
+}
+
+/** A separate assessment paper needs a usable locator in the standalone PDF. */
+function assessmentPaperBookLink(destination: string, language: string | undefined): string | undefined {
+  if (language === undefined) return undefined;
+  const match =
+    /^\.\.\/mocks\/(pre-a1|a1|a2|b1|b2|c1|c2)\/([A-Za-z0-9][A-Za-z0-9._-]*\.md)$/.exec(
+      destination.trim(),
+    );
+  if (!match) return undefined;
+  if (!/^[a-z]+(?:-[a-z]+)*$/.test(language)) {
+    throw new Error(`unsafe book language '${language}'`);
+  }
+  return `https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/${language}/mocks/${match[1]}/${match[2]}`;
 }
 
 /** Escape URL characters that TeX would otherwise interpret inside `\href`'s first argument. */
@@ -1157,6 +1170,7 @@ export function bookVoice(markdown: string): string {
 export function renderInlineMarkdown(
   markdown: string,
   options?: InlineRenderOptionsInput,
+  language?: string,
 ): string {
   markdown = markdown.normalize("NFC");
   const output: string[] = [];
@@ -1256,8 +1270,10 @@ export function renderInlineMarkdown(
       const labelEnd = markdown.indexOf("](", cursor + 1);
       const destinationEnd = labelEnd === -1 ? -1 : markdown.indexOf(")", labelEnd + 2);
       if (labelEnd !== -1 && destinationEnd !== -1) {
-        const destination = absoluteBookLink(markdown.slice(labelEnd + 2, destinationEnd));
-        const label = renderInlineMarkdown(markdown.slice(cursor + 1, labelEnd), options);
+        const authoredDestination = markdown.slice(labelEnd + 2, destinationEnd);
+        const destination = absoluteBookLink(authoredDestination) ??
+          assessmentPaperBookLink(authoredDestination, language);
+        const label = renderInlineMarkdown(markdown.slice(cursor + 1, labelEnd), options, language);
         output.push(
           destination === undefined
             ? label
@@ -1317,6 +1333,7 @@ function renderMarkdown(
   markdown: string,
   options?: InlineRenderOptionsInput,
   tableLayout: "grid" | "records" = "grid",
+  language?: string,
 ): string {
   // An HTML comment is BY DEFINITION not reader-facing, and this renderer used
   // to pass any non-directive one straight into the book as body text. One had
@@ -1340,14 +1357,14 @@ function renderMarkdown(
 
   const flushParagraph = (): void => {
     if (paragraph.length === 0) return;
-    output.push(renderInlineMarkdown(paragraph.join(" "), options), "");
+    output.push(renderInlineMarkdown(paragraph.join(" "), options, language), "");
     paragraph.length = 0;
   };
   const flushQuote = (): void => {
     if (quote.length === 0) return;
     output.push(
       "\\begin{quote}",
-      renderInlineMarkdown(quote.join(" "), options),
+      renderInlineMarkdown(quote.join(" "), options, language),
       "\\end{quote}",
       "",
     );
@@ -1355,7 +1372,7 @@ function renderMarkdown(
   };
   const flushListItem = (): void => {
     if (listItem.length === 0) return;
-    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "), options)}`);
+    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "), options, language)}`);
     listItem = [];
   };
   const closeList = (): void => {
@@ -1374,7 +1391,7 @@ function renderMarkdown(
     if (!isSeparator || header.length === 0) {
       output.push(
         ...tableRows.flatMap((row) => [
-          renderInlineMarkdown(`| ${row.join(" | ")} |`, options),
+          renderInlineMarkdown(`| ${row.join(" | ")} |`, options, language),
           "",
         ]),
       );
@@ -1382,14 +1399,14 @@ function renderMarkdown(
       return;
     }
     if (tableLayout === "records") {
-      const renderedHeader = header.map((cell) => renderInlineMarkdown(cell, options));
+      const renderedHeader = header.map((cell) => renderInlineMarkdown(cell, options, language));
       output.push(
         "\\begin{itemize}",
         "\\raggedright",
         "\\setlength{\\itemsep}{0.35em}",
         ...body.flatMap((row) => {
           const rendered = Array.from({ length: header.length }, (_, index) =>
-            renderInlineMarkdown(row[index] ?? "", options),
+            renderInlineMarkdown(row[index] ?? "", options, language),
           );
           return [
             "  \\item \\begin{minipage}[t]{\\linewidth}",
@@ -1413,7 +1430,7 @@ function renderMarkdown(
     ).join("");
     const cells = (row: string[]): string[] =>
       Array.from({ length: header.length }, (_, index) =>
-        renderInlineMarkdown(row[index] ?? "", options),
+        renderInlineMarkdown(row[index] ?? "", options, language),
       );
     // A row's first cell is whatever follows the previous row's `\\`, and `\\*`
     // is a LaTeX command in its own right -- the starred line break, "no page
@@ -1472,7 +1489,7 @@ function renderMarkdown(
       closeList();
       flushTable();
       output.push(
-        `\\hlblockfigure{${escapeLatexImageDestination(image.destination)}}{${renderInlineMarkdown(image.alt, options)}}`,
+        `\\hlblockfigure{${escapeLatexImageDestination(image.destination)}}{${renderInlineMarkdown(image.alt, options, language)}}`,
         "",
       );
       continue;
@@ -1612,8 +1629,12 @@ function renderReferenceMarkdown(
   return output.join("\n").trimEnd();
 }
 
-function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput): string {
-  const content = renderMarkdown(bookVoice(block.markdown), options);
+function renderBlock(
+  block: LessonBodyBlock,
+  options: InlineRenderOptionsInput | undefined,
+  language: string,
+): string {
+  const content = renderMarkdown(bookVoice(block.markdown), options, "grid", language);
   const title = renderInlineMarkdown(bookBlockTitle(block.title), options);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
   if (block.type === "etymology") return `\\begin{cousinweb}\n${content}\n\\end{cousinweb}`;
@@ -2483,7 +2504,7 @@ export function renderBookChapter(
       `\\section[${sectionShortTitle(lesson, renderOptions)}]{${renderInlineMarkdown(lessonTitle(lesson), renderOptions)}}`,
       `\\label{lesson:${id}}`,
       "",
-      ...lesson.blocks.map((block) => renderBlock(block, renderOptions)),
+      ...lesson.blocks.map((block) => renderBlock(block, renderOptions, target.language)),
     ].join("\n\n");
   });
   const tex = [

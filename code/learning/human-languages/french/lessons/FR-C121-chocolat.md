@@ -14,6 +14,7 @@ concept_tag: FR-REPAS73-CHOCOLAT
 prerequisites: [FR-C121-jus, FR-C121-glace]
 sounds: []
 roots: []
+etymology_hook: "chocolat ← Spanish chocolate, from a debated Nahuatl word — English chocolate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C121-glace]
 <!-- hl-knowledge: introduces=[FR-LEX-C121-REPAS73-04]; assesses=[] -->
 
 **le chocolat** — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chocolat** ← Spanish *chocolate*, from Nahuatl, often given as *xocolatl* (EtymDB 2.1) — borrowed; the Nahuatl form is debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

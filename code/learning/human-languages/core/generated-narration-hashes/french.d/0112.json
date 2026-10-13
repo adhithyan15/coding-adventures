@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 112,
-  "sourceHash": "fnv1a64:e258874b7f864b0f",
+  "sourceHash": "fnv1a64:722e3c0a8a62470e",
   "lessonIds": [
     "FR-C112-douche",
     "FR-C112-baignoire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch112.txt",
   "json": "french/narration/ch112.json",
-  "textHash": "fnv1a64:555728b0370b9f6c",
-  "jsonHash": "fnv1a64:1a68b28ddb8f9a82",
+  "textHash": "fnv1a64:87a37dc0d6ddb2fe",
+  "jsonHash": "fnv1a64:f9c24b83d08c0a0a",
   "findings": []
 }

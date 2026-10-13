@@ -11,7 +11,8 @@ romanization: "cōkam"
 concept_tag: TA-FEEL-SAD
 prerequisites: [TA-C88-health, TA-C88-sweat]
 sounds: []
-roots: []
+roots: [sanskrit-shoka]
+etymology_hook: "சோகம் ← Sanskrit śoka 'heat, pain, sorrow' (CDIAL 12619)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C88-sweat]
 **சோகம்** (*cōkam*) — "sadness, grief".
 
 **சோகமாக இருக்கிறேன்** — "I am sad". The **-ஆக** ending turns a feeling into how you are.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சோகம்** (*cōkam*) is a loan from Sanskrit *śoka*, "heat, pain, sorrow" (CDIAL 12619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "puyal"
 concept_tag: TA-THINGS127-PUYAL
 prerequisites: [TA-C127-iti, TA-C127-minnal, TA-C20-vaanilai, TA-C20-vaanilai, TA-C14-kaalangal, TA-C14-kaalangal]
 sounds: []
-roots: []
+roots: [dravidian-pey-rain]
+etymology_hook: "புயல் — native Dravidian (DEDR 4407)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C127-minnal]
 <!-- hl-knowledge: introduces=[TA-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **புயல்** — *puyal* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புயல்** (*puyal*) is native Dravidian (DEDR 4407). The entry lists *puyal*, "cloud, rain, gale, storm", under *pey*, "to rain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "perumai"
 concept_tag: TA-GUNAM239-PERUMAI
 prerequisites: [TA-C238-olliyana, TA-C239-emarram]
 sounds: []
-roots: []
+roots: [dravidian-peru-big]
+etymology_hook: "பெருமை — native Dravidian (DEDR 4411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C239-emarram]
 <!-- hl-knowledge: introduces=[TA-LEX-C239-GUNAM239-02]; assesses=[] -->
 
 **பெருமை** — *perumai* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெருமை** (*perumai*) is native Dravidian (DEDR 4411). It is *peru*, "great", with *-mai*: "greatness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

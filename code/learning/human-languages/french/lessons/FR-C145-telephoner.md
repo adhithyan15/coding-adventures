@@ -14,6 +14,7 @@ concept_tag: FR-VERB-TELEPHONER
 prerequisites: [FR-C145-signer, FR-C145-remplir-un-formulaire]
 sounds: []
 roots: []
+etymology_hook: "téléphoner — téléphone + -er"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C145-remplir-un-formulaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C145-VERBES145-03]; assesses=[] -->
 
 **téléphoner** — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**téléphoner** — formed from *téléphone* with the verb ending *-er*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

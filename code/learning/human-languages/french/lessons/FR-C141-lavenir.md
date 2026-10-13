@@ -13,7 +13,8 @@ gloss: "the future"
 concept_tag: FR-FUT141-LAVENIR
 prerequisites: [FR-C140-autrefois, FR-C140-se-produire]
 sounds: []
-roots: []
+roots: [venire-latin]
+etymology_hook: "avenir — the old verb 'to come about' as a noun: what is to come; Latin advenire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C140-se-produire]
 <!-- hl-knowledge: introduces=[FR-LEX-C141-FUT141-01]; assesses=[] -->
 
 **l'avenir** — "the future". French builds the future on the infinitive: **parler** becomes **je parlerai** — "I will speak" — then **tu parleras**, **il parlera**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avenir** is the old verb *avenir*, "to come about", used as a noun: what is to come. It ← Latin *advenire*, "to come to", from *venire*, "to come". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

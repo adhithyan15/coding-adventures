@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE21-GATEAU
 prerequisites: [FR-C68-oignon, FR-C69-carotte]
 sounds: []
 roots: []
+etymology_hook: "gâteau ← Old French gastel, from Frankish *wastil 'food'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C69-carotte]
 <!-- hl-knowledge: introduces=[FR-LEX-C69-CUISINE21-02]; assesses=[] -->
 
 **le gâteau** — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gâteau** ← Old French *gastel* ← Frankish *\*wastil*, "food" — borrowed from the Franks. (EtymDB 2.1) The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

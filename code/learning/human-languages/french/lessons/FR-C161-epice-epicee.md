@@ -14,6 +14,7 @@ concept_tag: FR-QUAL161-EPICE-EPICEE
 prerequisites: [FR-C161-ancien-ancienne, FR-C161-frais-fraiche]
 sounds: []
 roots: []
+etymology_hook: "épicé — 'spiced', from the word for 'spice', Latin species"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C161-frais-fraiche]
 <!-- hl-knowledge: introduces=[FR-LEX-C161-QUAL161-04]; assesses=[] -->
 
 **épicé / épicée** — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**épicé** is the past participle of the verb for "to spice", from the word for "spice", ← Latin *species*, "wares, spices" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

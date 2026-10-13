@@ -13,7 +13,8 @@ gloss: "dear; expensive"
 concept_tag: FR-ADJ42-CHER
 prerequisites: [FR-C89-facile, FR-C90-difficile]
 sounds: []
-roots: []
+roots: [carus-latin]
+etymology_hook: "cher ← Latin carus 'dear, costly' — English charity and caress share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C90-difficile]
 <!-- hl-knowledge: introduces=[FR-LEX-C90-ADJ42-02]; assesses=[] -->
 
 **cher** — "dear; expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cher** ← Latin *carus*, "dear, beloved, costly" (EtymDB 2.1) — inherited: Latin *ca-* became *che-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

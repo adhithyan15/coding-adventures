@@ -14,7 +14,8 @@ romanization: "viḻuṅku"
 concept_tag: TA-VERB-VILUNKU
 prerequisites: [TA-C226-totu, TA-C226-tummu]
 sounds: []
-roots: []
+roots: [dravidian-mizhunku-gulp]
+etymology_hook: "விழுங்கு — native Dravidian (DEDR 4866); Malayalam viḻuṅṅuka 'to swallow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C226-tummu]
 <!-- hl-knowledge: introduces=[TA-LEX-C226-ACT226-04]; assesses=[] -->
 
 **விழுங்கு** — *viḻuṅku* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விழுங்கு** (*viḻuṅku*) is native Dravidian. DEDR 4866 lists Malayalam *viḻuṅṅuka*, "to swallow". The entry lists *miḻuṅku*, "to gulp", and *viḻukku*, "a swallow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

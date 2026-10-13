@@ -14,7 +14,8 @@ romanization: "tiṟamai"
 concept_tag: TA-LOC116-TIRAMAI
 prerequisites: [TA-C116-tiruppam, TA-C116-mutiyum]
 sounds: []
-roots: []
+roots: [dravidian-tiram-ability]
+etymology_hook: "திறமை — native Dravidian (DEDR 3260); Kannada teṟa 'way, manner'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C116-mutiyum]
 <!-- hl-knowledge: introduces=[TA-LEX-C116-LOC116-05]; assesses=[] -->
 
 **திறமை** — *tiṟamai* — "a skill, talent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திறமை** (*tiṟamai*) is native Dravidian. DEDR 3260 lists Kannada *teṟa*, "way, manner".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kādu"
 concept_tag: TA-NOUN-EAR
 prerequisites: [TA-C45-eye, TA-C43-son, TA-C44-cloth]
 sounds: []
-roots: []
+roots: [dravidian-kaatu-ear]
+etymology_hook: "காது — native Dravidian (DEDR 1448); Malayalam kātu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C45-eye]
 Here it is Tamil that stands apart. *kādu* is the ear a Tamil speaker has, and the other three sisters built their everyday word on a different root altogether: Malayalam ചെവി, Telugu చెవి, Kannada ಕಿವಿ.
 
 Tamil owns that root as well. செவி (*sevi*) names the same organ and is kept for poetry and formal speech — so the word the sisters use over breakfast is the one Tamil holds back for its high register. Two words, one ear, and the occasion decides which.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காது** (*kādu*) is native Dravidian. DEDR 1448 lists Malayalam *kātu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

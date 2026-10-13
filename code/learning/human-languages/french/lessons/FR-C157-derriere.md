@@ -13,7 +13,8 @@ gloss: "behind"
 concept_tag: FR-LIEU157-DERRIERE
 prerequisites: [FR-C157-au-dessous, FR-C157-devant]
 sounds: []
-roots: []
+roots: [retro-latin]
+etymology_hook: "derrière ← Late Latin de retro 'from behind' — English retro-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C157-devant]
 <!-- hl-knowledge: introduces=[FR-LEX-C157-LIEU157-04]; assesses=[] -->
 
 **derrière** — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**derrière** ← Late Latin *de retro*, "from behind" (Lewis & Short for *retro*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

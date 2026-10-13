@@ -13,7 +13,8 @@ gloss: "happy"
 concept_tag: FR-SENTIR7-HEUREUX
 prerequisites: [FR-C55-colere, FR-C55-tristesse]
 sounds: []
-roots: []
+roots: [augurium-latin]
+etymology_hook: "heureux — Old French eur 'luck' + -eux; eur ← Latin augurium 'omen' — English augury"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C55-tristesse]
 <!-- hl-knowledge: introduces=[FR-LEX-C55-SENTIR7-05]; assesses=[] -->
 
 **heureux** — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**heureux** — built from Old French *eur*, "luck", with *-eux*, "full of": lucky, then happy. *eur* ← Latin *augurium*, "an omen". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES165-GUERRE
 prerequisites: [FR-C164-boucherie, FR-C164-fleuve]
 sounds: []
 roots: []
+etymology_hook: "guerre ← Frankish *werra 'strife' — English war is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C164-fleuve]
 <!-- hl-knowledge: introduces=[FR-LEX-C165-CHOSES165-01]; assesses=[] -->
 
 **la guerre** — "war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guerre** ← Old French *guerre* ← Medieval Latin *werra* (EtymDB 2.1), from Frankish *\*werra*, "strife" — borrowed from the Franks; Germanic *w-* became French *gu-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

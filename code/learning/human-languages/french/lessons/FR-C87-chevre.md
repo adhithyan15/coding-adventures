@@ -13,7 +13,8 @@ gloss: "a goat"
 concept_tag: FR-ANIMAUX39-CHEVRE
 prerequisites: [FR-C86-canard, FR-C87-mouton]
 sounds: []
-roots: []
+roots: [capra-latin]
+etymology_hook: "chèvre ← Latin capra 'she-goat' — English caprice and Capricorn share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C87-mouton]
 <!-- hl-knowledge: introduces=[FR-LEX-C87-ANIMAUX39-02]; assesses=[] -->
 
 **la chèvre** — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chèvre** ← Old French *chievre* ← Latin *capra*, "she-goat" (EtymDB 2.1) — inherited: *ca-* became *che-*, and *p* became *v*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

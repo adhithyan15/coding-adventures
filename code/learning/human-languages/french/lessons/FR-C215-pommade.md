@@ -13,7 +13,8 @@ gloss: "an ointment"
 concept_tag: FR-SANTE215-POMMADE
 prerequisites: [FR-C215-comprime, FR-C215-sirop]
 sounds: []
-roots: []
+roots: [pomum-latin]
+etymology_hook: "pommade ← Italian pomata, from pomo 'apple' — the apple of pomme"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C215-sirop]
 <!-- hl-knowledge: introduces=[FR-LEX-C215-SANTE215-05]; assesses=[] -->
 
 **la pommade** — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pommade** ← Italian *pomata*, from *pomo*, "apple", ← Latin *pomum* (EtymDB 2.1) — borrowed: the first ointments were made with apples.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

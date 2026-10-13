@@ -13,7 +13,8 @@ gloss: "the floor, the ground"
 concept_tag: FR-MAISON27-SOL
 prerequisites: [FR-C74-bain, FR-C74-chambre]
 sounds: []
-roots: []
+roots: [solum-latin]
+etymology_hook: "sol ← Latin solum 'ground, floor' — English soil is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C74-chambre]
 <!-- hl-knowledge: introduces=[FR-LEX-C75-MAISON27-01]; assesses=[] -->
 
 **le sol** — "the floor, the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sol** ← Latin *solum*, "ground, floor" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

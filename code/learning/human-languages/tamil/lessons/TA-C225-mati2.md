@@ -14,7 +14,8 @@ romanization: "maṭi"
 concept_tag: TA-VERB-MATI2
 prerequisites: [TA-C225-cuvai-par, TA-C225-nirappu]
 sounds: []
-roots: []
+roots: [dravidian-madanku-bend]
+etymology_hook: "மடி — native Dravidian (DEDR 4645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C225-nirappu]
 <!-- hl-knowledge: introduces=[TA-LEX-C225-ACT225-03]; assesses=[] -->
 
 **மடி** — *maṭi* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மடி** (*maṭi*) is native Dravidian (DEDR 4645). The entry gives *maṭi*, "to be bent, folded", and *maṭippu*, "fold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

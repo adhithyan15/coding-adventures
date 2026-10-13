@@ -14,7 +14,8 @@ romanization: "iravu uṇavu"
 concept_tag: TA-PORUL184-IRAVU-UNAVU
 prerequisites: [TA-C184-kalai-unavu, TA-C184-matiya-unavu]
 sounds: []
-roots: []
+roots: [proto-dravidian-cira-darkness, dravidian-un-eat]
+etymology_hook: "இரவு உணவு — native: iravu 'night' (DEDR 2552) + uṇavu 'food' (DEDR 600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C184-matiya-unavu]
 <!-- hl-knowledge: introduces=[TA-LEX-C184-PORUL184-04]; assesses=[] -->
 
 **இரவு உணவு** — *iravu uṇavu* — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இரவு உணவு** (*iravu uṇavu*) is native: *iravu*, "night" (DEDR 2552), and *uṇavu*, "food" (DEDR 600).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

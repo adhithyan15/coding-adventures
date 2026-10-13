@@ -13,7 +13,8 @@ gloss: "a career"
 concept_tag: FR-TRAV204-CARRIERE
 prerequisites: [FR-C203-correspondance, FR-C204-entretien]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "carrière ← Old Provençal carreira 'a racecourse', from Latin carrus — English career"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C204-entretien]
 <!-- hl-knowledge: introduces=[FR-LEX-C204-TRAV204-02]; assesses=[] -->
 
 **la carrière** — "a career".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carrière** — the "career" sense ← Old Provençal *carreira*, "a road, a racecourse", from Late Latin *carraria*, "a cart road", from *carrus*, "a wagon" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

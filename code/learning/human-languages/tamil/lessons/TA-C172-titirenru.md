@@ -14,7 +14,8 @@ romanization: "tiṭīreṉṟu"
 concept_tag: TA-NERAM172-TITIRENRU
 prerequisites: [TA-C172-etirkalam, TA-C172-inriravu]
 sounds: []
-roots: []
+roots: [dravidian-titiir-sudden, proto-dravidian-an-say]
+etymology_hook: "திடீரென்று — native: the sound tiṭīr + eṉṟu 'saying' (DEDR 3216, 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C172-inriravu]
 <!-- hl-knowledge: introduces=[TA-LEX-C172-NERAM172-03]; assesses=[] -->
 
 **திடீரென்று** — *tiṭīreṉṟu* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திடீரென்று** (*tiṭīreṉṟu*) is native: DEDR 3216 lists *tiṭīr-eṉal*, an expression of suddenness: the sound *tiṭīr*, with *eṉṟu*, "saying", from *eṉ*, "to say" (DEDR 868).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

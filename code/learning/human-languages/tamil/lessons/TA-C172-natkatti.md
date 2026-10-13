@@ -14,7 +14,8 @@ romanization: "nāṭkāṭṭi"
 concept_tag: TA-NERAM172-NATKATTI
 prerequisites: [TA-C172-titirenru, TA-C172-munkuttiye]
 sounds: []
-roots: []
+roots: [proto-dravidian-naal-day, dravidian-kaan-see]
+etymology_hook: "நாட்காட்டி — native: nāḷ 'day' (DEDR 3656) + kāṭṭi 'shower', from kāṭṭu 'to show' (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C172-munkuttiye]
 <!-- hl-knowledge: introduces=[TA-LEX-C172-NERAM172-05]; assesses=[] -->
 
 **நாட்காட்டி** — *nāṭkāṭṭi* — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாட்காட்டி** (*nāṭkāṭṭi*) is native: *nāḷ*, "day" (DEDR 3656), and *kāṭṭi*, "the one that shows", from *kāṭṭu*, "to show" (DEDR 1443): "the day-shower".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CORPS3-JOUE
 prerequisites: [FR-C51-menton, FR-C51-gorge]
 sounds: []
 roots: []
+etymology_hook: "joue ← Vulgar Latin *gauta 'cheek', of uncertain origin, perhaps Gaulish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C51-gorge]
 <!-- hl-knowledge: introduces=[FR-LEX-C51-CORPS3-05]; assesses=[] -->
 
 **la joue** — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joue** ← Old French *jode* ← Vulgar Latin *\*gauta*, "cheek" — inherited (EtymDB 2.1). Where *\*gauta* came from is uncertain; Gaulish is the usual guess.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

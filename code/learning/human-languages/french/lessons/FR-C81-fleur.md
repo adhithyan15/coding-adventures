@@ -13,7 +13,8 @@ gloss: "a flower"
 concept_tag: FR-NATURE33-FLEUR
 prerequisites: [FR-C80-photo, FR-C81-arbre]
 sounds: []
-roots: []
+roots: [flos-latin]
+etymology_hook: "fleur ← Latin flos, floris 'flower' — English flower and flora"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C81-arbre]
 <!-- hl-knowledge: introduces=[FR-LEX-C81-NATURE33-02]; assesses=[] -->
 
 **la fleur** — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fleur** ← Old French *flur* ← Latin *flos*, *floris*, "flower" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

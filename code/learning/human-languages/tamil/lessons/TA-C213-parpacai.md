@@ -14,7 +14,8 @@ romanization: "paṟpacai"
 concept_tag: TA-PORUL213-PARPACAI
 prerequisites: [TA-C213-mincaram, TA-C213-kuppai]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth, dravidian-pacai-glue]
+etymology_hook: "பற்பசை — native: pal 'tooth' (DEDR 3986) + pacai 'paste' (DEDR 3827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C213-kuppai]
 <!-- hl-knowledge: introduces=[TA-LEX-C213-PORUL213-04]; assesses=[] -->
 
 **பற்பசை** — *paṟpacai* — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பற்பசை** (*paṟpacai*) is native: *pal*, "tooth" (DEDR 3986), and *pacai*, "paste" (DEDR 3827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

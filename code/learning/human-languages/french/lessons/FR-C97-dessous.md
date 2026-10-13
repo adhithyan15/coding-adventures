@@ -13,7 +13,8 @@ gloss: "underneath"
 concept_tag: FR-TEMPS49-DESSOUS
 prerequisites: [FR-C96-pres, FR-C97-dessus]
 sounds: []
-roots: []
+roots: [subtus-latin]
+etymology_hook: "dessous — de + the word for 'under', from Latin subtus 'below' — English sub-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C97-dessus]
 <!-- hl-knowledge: introduces=[FR-LEX-C97-TEMPS49-02]; assesses=[] -->
 
 **dessous** — "underneath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dessous** — built from *de*, "of, from", and the word for "under", from Latin *de* and *subtus*, "below". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to slow down"
 concept_tag: FR-VERB-RALENTIR
 prerequisites: [FR-C151-prier, FR-C151-recommander]
 sounds: []
-roots: []
+roots: [lentus-latin]
+etymology_hook: "ralentir — built on the word for 'slow', from Latin lentus — English relent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C151-recommander]
 <!-- hl-knowledge: introduces=[FR-LEX-C151-VERBES151-04]; assesses=[] -->
 
 **ralentir** — "to slow down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ralentir** — built from *re-*, *a-* and the word for "slow", ← Latin *lentus*, "pliant, slow" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

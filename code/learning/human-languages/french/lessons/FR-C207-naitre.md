@@ -13,7 +13,8 @@ gloss: "to be born"
 concept_tag: FR-VERB-NAITRE
 prerequisites: [FR-C206-chauffer, FR-C206-refroidir]
 sounds: []
-roots: []
+roots: [nasci-latin]
+etymology_hook: "naître ← Latin nasci 'to be born' — English nascent and native"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C206-refroidir]
 <!-- hl-knowledge: introduces=[FR-LEX-C207-VERBES207-01]; assesses=[] -->
 
 **naître** — "to be born".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**naître** ← Old French *naistre* ← Vulgar Latin *\*nascere* ← Latin *nasci*, "to be born" (EtymDB 2.1) — inherited; the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

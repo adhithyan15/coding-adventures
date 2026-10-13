@@ -14,7 +14,8 @@ romanization: "ūtu"
 concept_tag: TA-VERB-UTU
 prerequisites: [TA-C157-marai, TA-C157-kapparru]
 sounds: []
-roots: []
+roots: [dravidian-oothu-blow]
+etymology_hook: "ஊது — native Dravidian (DEDR 741); Malayalam ūtuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C157-kapparru]
 <!-- hl-knowledge: introduces=[TA-LEX-C157-ACT157-03]; assesses=[] -->
 
 **ஊது** — *ūtu* — "to blow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊது** (*ūtu*) is native Dravidian. DEDR 741 lists Malayalam *ūtuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

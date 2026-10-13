@@ -13,7 +13,8 @@ gloss: "a vote"
 concept_tag: FR-CHOSES248-VOTE
 prerequisites: [FR-C248-maire, FR-C248-elections]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "vote ← English vote, from Latin votum 'a vow, a wish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C248-elections]
 <!-- hl-knowledge: introduces=[FR-LEX-C248-CHOSES248-03]; assesses=[] -->
 
 **le vote** — "a vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vote** ← English *vote* ← Latin *votum*, "a vow, a wish" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

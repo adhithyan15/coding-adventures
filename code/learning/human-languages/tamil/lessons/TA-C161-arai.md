@@ -14,7 +14,8 @@ romanization: "arai"
 concept_tag: TA-VERB-ARAI
 prerequisites: [TA-C161-koti, TA-C161-varu]
 sounds: []
-roots: []
+roots: [dravidian-arai-grind]
+etymology_hook: "அரை — native Dravidian (DEDR 228); Malayalam arekka 'to grind to powder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C161-varu]
 <!-- hl-knowledge: introduces=[TA-LEX-C161-ACT161-04]; assesses=[] -->
 
 **அரை** — *arai* — "to grind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அரை** (*arai*) is native Dravidian. DEDR 228 lists Malayalam *arekka*, "to grind to powder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

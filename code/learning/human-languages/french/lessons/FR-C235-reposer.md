@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REPOSER
 prerequisites: [FR-C235-demenager, FR-C235-louer]
 sounds: []
 roots: []
+etymology_hook: "se reposer ← Late Latin repausare 'to rest' — the verb beside repos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C235-louer]
 <!-- hl-knowledge: introduces=[FR-LEX-C235-VERBES235-03]; assesses=[] -->
 
 **se reposer** — "to rest".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se reposer** ← Late Latin *repausare*, "to rest" (EtymDB 2.1) — inherited: the verb beside *repos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

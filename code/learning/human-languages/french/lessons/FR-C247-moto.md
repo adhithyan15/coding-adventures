@@ -13,7 +13,8 @@ gloss: "a motorbike"
 concept_tag: FR-CHOSES247-MOTO
 prerequisites: [FR-C247-pourboire, FR-C247-arret]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "moto — short for motocyclette: motor, as in moteur, + cycle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C247-arret]
 <!-- hl-knowledge: introduces=[FR-LEX-C247-CHOSES247-04]; assesses=[] -->
 
 **la moto** — "a motorbike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moto** — short for *motocyclette*, built from the word for "motor", as in *moteur*, and the word for "cycle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

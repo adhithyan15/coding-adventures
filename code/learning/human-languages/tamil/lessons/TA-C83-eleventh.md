@@ -11,7 +11,8 @@ gloss: "eleventh — proof the ending was never a fact about one to ten"
 concept_tag: TA-ORDINAL-ELEVENTH
 prerequisites: [TA-C83-tenth, TA-C83-sixth, TA-C79-then, TA-C67-sandal, TA-C20-pathinondru-irupathu]
 sounds: []
-roots: []
+roots: [dravidian-pathu-ten, proto-dravidian-numbers]
+etymology_hook: "பதினொன்றாவது — native: patiṉ- 'ten' (DEDR 3918) + oṉṟu 'one' (DEDR 990) + the ordinal -āvatu"
 duration:
   max_seconds: 215
 requires:
@@ -47,6 +48,11 @@ reviews_of: [TA-C83-tenth, TA-C83-sixth, TA-C79-then, TA-C67-sandal]
 **பதினொன்று** was itself a built word: *patiṉ-*, the joining shape of ten, with
 *oṉṟu* welded on. Now the ordinal ending goes on top of *that*, and the result is
 a word of three parts, none of which had to be learned as a whole.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதினொன்றாவது** (*patiṉoṉṟāvadu*) is native: *patiṉ-*, the joining form of "ten" (DEDR 3918), *oṉṟu*, "one" (DEDR 990), and the ordinal ending *-āvatu*.
 
 ## Grammar Lens: the ending is a fact about numbers, not about ten
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C83-ORDINAL-07]; assesses=[TA-LEX-C83-ORDINAL-06] -->

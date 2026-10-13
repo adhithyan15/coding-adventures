@@ -14,7 +14,8 @@ romanization: "tōlvi"
 concept_tag: TA-PORUL277-TOLVI
 prerequisites: [TA-C277-kulu, TA-C277-verri]
 sounds: []
-roots: []
+roots: [dravidian-tool-lose]
+etymology_hook: "தோல்வி — native Dravidian (DEDR 3558); Malayalam tōlka 'to be defeated', Kannada sōl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C277-verri]
 <!-- hl-knowledge: introduces=[TA-LEX-C277-PORUL277-03]; assesses=[] -->
 
 **தோல்வி** — *tōlvi* — "defeat, a loss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோல்வி** (*tōlvi*) is native Dravidian. DEDR 3558 lists Malayalam *tōlka*, "to be defeated" and Kannada *sōl*. It comes from *tōl*, "to be defeated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

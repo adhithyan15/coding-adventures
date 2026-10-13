@@ -13,7 +13,8 @@ gloss: "the environment"
 concept_tag: FR-CHOSES229-ENVIRONNEMENT
 prerequisites: [FR-C229-tonnerre, FR-C229-climat]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "environnement — environ 'round about' + -ment: what lies around"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C229-climat]
 <!-- hl-knowledge: introduces=[FR-LEX-C229-CHOSES229-04]; assesses=[] -->
 
 **l'environnement** — "the environment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**environnement** — built from *environ*, "round about", with *-ment*: what lies around.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

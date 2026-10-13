@@ -14,7 +14,8 @@ romanization: "kāla aṭṭavaṇai"
 concept_tag: TA-PATI160-KALA-ATTAVANAI
 prerequisites: [TA-C159-mutivu-cey, TA-C159-etirpar]
 sounds: []
-roots: []
+roots: [sanskrit-kaala-time]
+etymology_hook: "கால அட்டவணை — kālam ← Sanskrit kāla (CDIAL 3084) + aṭṭavaṇai 'table', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [TA-C159-etirpar]
 The board says **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu
 puṟappaṭum nēram: kālai eṭṭu maṇi* — "Bus departure time: 8 a.m." The bus leaves
 at eight, so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கால அட்டவணை** (*kāla aṭṭavaṇai*) is *kālam*, "time", from Sanskrit *kāla* (CDIAL 3084), and *aṭṭavaṇai*, "table, chart". The origin of *aṭṭavaṇai* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

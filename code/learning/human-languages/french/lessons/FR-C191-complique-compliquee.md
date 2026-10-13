@@ -13,7 +13,8 @@ gloss: "complicated"
 concept_tag: FR-QUAL191-COMPLIQUE-COMPLIQUEE
 prerequisites: [FR-C190-peureux-peureuse, FR-C191-simple]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "compliqué — from Latin complicare 'to fold together' — English complicated"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C191-simple]
 <!-- hl-knowledge: introduces=[FR-LEX-C191-QUAL191-02]; assesses=[] -->
 
 **compliqué / compliquée** — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compliqué** is the past participle of the verb for "to complicate", ← Latin *complicare*, "to fold together" (Lewis & Short): folded in on itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the bill"
 concept_tag: FR-CHOSES247-ADDITION
 prerequisites: [FR-C246-bavard-bavarde, FR-C246-fache-fachee]
 sounds: []
-roots: []
+roots: [dare-latin]
+etymology_hook: "addition ← Latin additio 'an adding' — the bill adds it all up"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C246-fache-fachee]
 <!-- hl-knowledge: introduces=[FR-LEX-C247-CHOSES247-01]; assesses=[] -->
 
 **l'addition** — "the bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**addition** ← Latin *additio*, "an adding", from *addere*, "to add" (EtymDB 2.1) — a learned borrowing: the bill adds it all up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

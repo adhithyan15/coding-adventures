@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES172-CUIR
 prerequisites: [FR-C172-laine, FR-C172-soie]
 sounds: []
 roots: []
+etymology_hook: "cuir ← Latin corium 'hide, leather' — English excoriate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C172-soie]
 <!-- hl-knowledge: introduces=[FR-LEX-C172-CHOSES172-05]; assesses=[] -->
 
 **le cuir** — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuir** ← Latin *corium*, "hide, leather" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

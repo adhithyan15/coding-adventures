@@ -14,7 +14,8 @@ romanization: "ottukkoḷ"
 concept_tag: TA-VERB-OTTUKKOL
 prerequisites: [TA-C198-keli-cey, TA-C199-nampu]
 sounds: []
-roots: []
+roots: [dravidian-o-suit, dravidian-kol-take]
+etymology_hook: "ஒத்துக்கொள் — native: ottu 'agreeing', from o 'to agree' (DEDR 924) + koḷ 'to take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C199-nampu]
 <!-- hl-knowledge: introduces=[TA-LEX-C199-ACT199-02]; assesses=[] -->
 
 **ஒத்துக்கொள்** — *ottukkoḷ* — "to agree, to admit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒத்துக்கொள்** (*ottukkoḷ*) is native: *ottu*, "agreeing", from *o*, "to suit, to agree" (DEDR 924), and *koḷ*, "to take" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "pasi"
 concept_tag: TA-NOUN-HUNGER
 prerequisites: [TA-C60-comb, TA-C59-curd, TA-C60-needle]
 sounds: []
-roots: []
+roots: [dravidian-paci-hunger]
+etymology_hook: "பசி — native Dravidian (DEDR 3825); Malayalam pai, Kannada pasi"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C60-comb]
 Hunger as a thing that arrives, rather than something you are. Kannada makes it ಹಸಿವು (*hasivu*) — the *p* traded for *h* one more time, exactly as it was between பசு and ಹಸು. Telugu went elsewhere, to ఆకలి (*ākali*).
 
 Set பசி beside பசு and only the last mark separates them: one ends on the ி, the other on the ு. They are not related, and the difference is worth practising until it stops needing thought.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பசி** (*pasi*) is native Dravidian. DEDR 3825 lists Malayalam *pai* and Kannada *pasi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

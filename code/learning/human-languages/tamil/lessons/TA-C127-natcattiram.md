@@ -14,7 +14,8 @@ romanization: "naṭcattiram"
 concept_tag: TA-THINGS127-NATCATTIRAM
 prerequisites: [TA-C126-ilai, TA-C126-man, TA-C23-day-family-register, TA-C23-day-family-register, TA-C24-night-register-darkness, TA-C24-iravu]
 sounds: []
-roots: []
+roots: [sanskrit-nakshatra]
+etymology_hook: "நட்சத்திரம் ← Sanskrit nakṣatra 'star' (CDIAL 6913)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C126-man]
 <!-- hl-knowledge: introduces=[TA-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **நட்சத்திரம்** — *naṭcattiram* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நட்சத்திரம்** (*naṭcattiram*) is a loan from Sanskrit *nakṣatra*, "star" (CDIAL 6913).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
