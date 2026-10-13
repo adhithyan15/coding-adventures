@@ -224,7 +224,9 @@ losing the proof, and additive composition may include finite static terms.
 That additive form may in turn be multiplied or divided by finite static
 terms, and the resulting exact local-rooted form may be the sole dynamic base
 of a power chain whose exponents are finite and static. Unrestricted runtime
-`entier` remains conservative.
+`entier` remains conservative. One supported built-in real standard function
+may wrap that powered exact name actual. A user-declared procedure receives no
+built-in privilege and must qualify through the ordinary procedure proof.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
