@@ -14231,6 +14231,7 @@ fn validate_table_viewport_contract(
 /// including renamed emits; no runtime or application-specific dependency is
 /// allowed into the generated table control.
 fn native_table_viewport_attrs(node: &LayoutNode, ctx: &mut EmitContext<'_>) -> String {
+    if find_prop_value(node, "onViewportRows").is_none() { return String::new(); }
     let mut attrs = String::new();
     for (prop, event) in [("onViewportRows", "MosaicViewportRows"), ("onViewportShift", "MosaicViewportShift")] {
         if let Some(LayoutPropValue::EmitRef(name)) = find_prop_value(node, prop) {
@@ -17512,8 +17513,12 @@ mod tests {
         let mut measurement = table;
         measurement.props.retain(|p| p.name == "onViewportRows");
         compile(&c, &layout_with_root("Sheet", measurement), &empty_style("Sheet"));
-        compile(&component("Sheet", c.slots.clone(), vec![]),
-            &layout_with_root("Sheet", canonical_native_table_node()), &empty_style("Sheet"));
+        let mut ordinary = canonical_native_table_node();
+        ordinary.props.push(LayoutProp { name: "total-rows".into(), value: LayoutPropValue::SlotRef("unused-metadata".into()) });
+        let emitted = compile(&component("Sheet", c.slots.clone(), vec![]),
+            &layout_with_root("Sheet", ordinary), &empty_style("Sheet"));
+        assert!(!emitted.xaml.contains("MosaicTotalRows="));
+        assert!(emitted.xaml.contains("<ScrollViewer"));
     }
 
     #[test]
