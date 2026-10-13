@@ -5795,6 +5795,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 require_runtime,
                 initial_window_size,
                 &layout_choices,
+                // A package's shipped shell, not a story preview: no fixtures.
+                &HashMap::new(),
             );
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
             let main_kt = compose_main_with_host_effects(&sources.main, host_effects)?;
@@ -8549,6 +8551,107 @@ fn build_compose_build_gradle_kts(
     )
 }
 
+/// The runnable Compose Desktop project `mosaic-compile --backend compose
+/// --emit-project` writes beside one pipeline-mode component (UI32 §2.2,
+/// EM-6, #14704), as `(relative path, contents)` pairs.
+///
+/// It is the permissive shell `pkg --emit-project` writes, built by the same
+/// functions so the two cannot drift, with three differences that fit a story
+/// preview rather than a shipped package:
+///
+/// - `slot_values` (a story's fixtures) replace the sample values in
+///   `MosaicAppShell.kt`. A runtime that sends props still wins.
+/// - No layout variants, host-effect handlers, bundled runtime or window size:
+///   a pipeline compile sees one component and no manifest.
+/// - The runtime binding has no application id, so a preview never persists
+///   state under some real app's name.
+///
+/// `component_source` is the emitted `<Component>.kt`; it is copied into
+/// `src/main/kotlin/` because Gradle compiles only that source set.
+///
+/// ```text
+/// out/
+/// ├── Button.kt                      (the component, written by the caller)
+/// ├── settings.gradle.kts            ┐
+/// ├── build.gradle.kts               │ returned here
+/// ├── README.md                      │
+/// └── src/main/kotlin/               │
+///     ├── Main.kt, MosaicAppShell.kt │
+///     ├── Button.kt                  │ (the copy Gradle builds)
+///     └── MosaicPlatform.kt, …       ┘
+/// ```
+pub fn compose_pipeline_project_files(
+    component: &str,
+    component_source: &str,
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> Result<Vec<(String, String)>, BuildError> {
+    // Every file says it came from the pipeline command, not `pkg` (UI32 §3.5).
+    let banner = |text: String| {
+        text.replace(
+            "mosaic-compile pkg --backend compose --emit-project",
+            "mosaic-compile --backend compose --emit-project",
+        )
+    };
+    let sources = build_compose_main_kt(component, slots, false, None, &[], slot_values);
+    let files = vec![
+        (
+            "settings.gradle.kts".to_string(),
+            banner(build_compose_settings_gradle_kts(component)),
+        ),
+        (
+            "build.gradle.kts".to_string(),
+            banner(build_compose_build_gradle_kts(component, false, &[])),
+        ),
+        (
+            "README.md".to_string(),
+            banner(build_compose_readme(component, component, false, false)),
+        ),
+        (
+            "src/main/kotlin/Main.kt".to_string(),
+            banner(compose_main_with_platform_effects(&sources.main, None)),
+        ),
+        ("src/main/kotlin/MosaicAppShell.kt".to_string(), banner(sources.shell)),
+        (
+            format!("src/main/kotlin/{component}.kt"),
+            component_source.to_string(),
+        ),
+        (
+            "src/main/kotlin/MosaicPlatform.kt".to_string(),
+            mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT.to_string(),
+        ),
+        (
+            "src/main/kotlin/MosaicRuntimeHost.kt".to_string(),
+            mosaic_app_bindings::compose_jna_binding(),
+        ),
+        (
+            "src/main/kotlin/MosaicFileEffects.kt".to_string(),
+            mosaic_app_bindings::compose_file_effects(),
+        ),
+        (
+            "src/main/kotlin/MosaicPlatformEffects.kt".to_string(),
+            mosaic_app_bindings::compose_platform_effects(),
+        ),
+    ];
+    // A component named like a shell file (`Main`, `MosaicPlatform`, …) would
+    // overwrite it, or share its name on a case-insensitive filesystem. Refuse,
+    // as `pkg` does (UI32).
+    let copy = format!("src/main/kotlin/{component}.kt").to_lowercase();
+    if files
+        .iter()
+        .filter(|(path, _)| path.to_lowercase() == copy)
+        .count()
+        > 1
+    {
+        return Err(BuildError::Io(format!(
+            "the component {component} generates {component}.kt, which the Compose \
+             project shell also writes (one file on a case-insensitive filesystem); \
+             rename the component"
+        )));
+    }
+    Ok(files)
+}
+
 /// The Compose app's two Kotlin sources (UI89 §3.4): `Main.kt`, the desktop
 /// entry point (window and host loader), and `MosaicAppShell.kt`, the app
 /// shell every Compose platform shares.
@@ -8563,20 +8666,21 @@ fn build_compose_main_kt(
     require_runtime: bool,
     initial_window_size: Option<&WindowSize>,
     layouts: &[ComposeLayoutChoice],
+    slot_values: &HashMap<String, String>,
 ) -> ComposeShellSources {
     // UI48 §7.5 (ENV3): with layout variants, the root is chosen from the
     // observed environment -- the first rule that matches, else the default.
     let root = if layouts.is_empty() {
-        build_compose_root_invocation(component_name, component_name, slots, require_runtime)
+        build_compose_root_invocation(component_name, component_name, slots, require_runtime, slot_values)
     } else {
         let mut chooser = String::from("            when (mosaicLayoutVariant(environmentReport)) {\n");
         for layout in layouts {
-            let call = build_compose_root_invocation(component_name, &layout.root, slots, require_runtime);
+            let call = build_compose_root_invocation(component_name, &layout.root, slots, require_runtime, slot_values);
             writeln!(chooser, "                \"{}\" -> {}", layout.variant, call.trim_start())
                 .expect("write layout branch");
         }
         let default_call =
-            build_compose_root_invocation(component_name, component_name, slots, require_runtime);
+            build_compose_root_invocation(component_name, component_name, slots, require_runtime, slot_values);
         writeln!(chooser, "                else -> {}", default_call.trim_start())
             .expect("write default layout branch");
         chooser.push_str("            }");
@@ -8995,15 +9099,20 @@ fn build_compose_main_kt(
             "        is String -> value.equals(\"true\", ignoreCase = true)\n",
             "        else -> fallback\n",
             "    }}\n\n",
-            "private fun mosaicStringList(props: Map<String, Any?>, name: String): List<String> =\n",
-            "    (props[name] as? List<*>)?.map {{ it.toString() }} ?: emptyList()\n\n",
+            "private fun mosaicStringList(\n",
+            "    props: Map<String, Any?>,\n",
+            "    name: String,\n",
+            "    fallback: List<String> = emptyList(),\n",
+            "): List<String> =\n",
+            "    (props[name] as? List<*>)?.map {{ it.toString() }} ?: fallback\n\n",
             "private fun mosaicStringListList(\n",
             "    props: Map<String, Any?>,\n",
             "    name: String,\n",
+            "    fallback: List<List<String>> = emptyList(),\n",
             "): List<List<String>> =\n",
             "    (props[name] as? List<*>)?.map {{ row ->\n",
             "        (row as? List<*>)?.map {{ it.toString() }} ?: emptyList()\n",
-            "    }} ?: emptyList()\n\n",
+            "    }} ?: fallback\n\n",
             "private fun mosaicDoubleList(props: Map<String, Any?>, name: String): List<Double> =\n",
             "    (props[name] as? List<*>)?.mapNotNull {{ value ->\n",
             "        when (value) {{\n",
@@ -9099,6 +9208,7 @@ fn build_compose_root_invocation(
     root_composable: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
+    slot_values: &HashMap<String, String>,
 ) -> String {
     // A component whose signature would exceed the JVM's 255 argument slots is
     // emitted taking a single props object instead of positional parameters, so
@@ -9124,7 +9234,7 @@ fn build_compose_root_invocation(
             .unwrap();
             for slot in group {
                 let field = to_camel_case_first_lower(&slot.name);
-                let value = compose_host_value_for_slot(slot, require_runtime);
+                let value = compose_host_value_for_slot(slot, require_runtime, slot_values);
                 writeln!(out, "                        {field} = {value},").unwrap();
             }
             writeln!(out, "                    ),").unwrap();
@@ -9133,7 +9243,7 @@ fn build_compose_root_invocation(
     } else {
         for slot in slots {
             let field = to_camel_case_first_lower(&slot.name);
-            let value = compose_host_value_for_slot(slot, require_runtime);
+            let value = compose_host_value_for_slot(slot, require_runtime, slot_values);
             writeln!(out, "                {field} = {value},").unwrap();
         }
     }
@@ -9158,7 +9268,11 @@ fn build_compose_root_invocation(
     out
 }
 
-fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String {
+fn compose_host_value_for_slot(
+    slot: &SlotDecl,
+    require_runtime: bool,
+    slot_values: &HashMap<String, String>,
+) -> String {
     let slot_name = escape_kotlin_string(&slot.name);
     if require_runtime && slot.default.is_none() {
         let helper = match &slot.r#type {
@@ -9179,7 +9293,19 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
         };
         return format!("{helper}(hostProps, \"{slot_name}\")");
     }
-    let fallback = sample_kotlin_value_for_slot(slot);
+    // A story's fixture value (EM-6, #14704) replaces the sample fallback, the
+    // same step Flutter's shell takes (#14459). Props from a runtime still win:
+    // the fixture is only what the window shows when nothing else is sent.
+    let fixture = slot_values.get(&slot.name);
+    let fallback = fixture
+        .and_then(|value| kotlin_literal_for_fixture(&slot.r#type, value))
+        .unwrap_or_else(|| sample_kotlin_value_for_slot(slot));
+    // The list helpers take their fallback as an optional last argument, so a
+    // slot with no fixture is called exactly as before.
+    let list_fallback = fixture
+        .and_then(|value| kotlin_list_literal_for_fixture(&slot.r#type, value))
+        .map(|literal| format!(", {literal}"))
+        .unwrap_or_default();
     match &slot.r#type {
         SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicString(hostProps, \"{slot_name}\", {fallback})")
@@ -9188,7 +9314,7 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
         SlotType::Bool => format!("mosaicBoolean(hostProps, \"{slot_name}\", {fallback})"),
         SlotType::List(inner) => match inner.as_ref() {
             ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
-                format!("mosaicStringList(hostProps, \"{slot_name}\")")
+                format!("mosaicStringList(hostProps, \"{slot_name}\"{list_fallback})")
             }
             ListInnerType::Number => format!("mosaicDoubleList(hostProps, \"{slot_name}\")"),
             ListInnerType::Bool => format!("mosaicBooleanList(hostProps, \"{slot_name}\")"),
@@ -9201,7 +9327,7 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
                     ListInnerType::Text | ListInnerType::Image | ListInnerType::Color
                 ) =>
             {
-                format!("mosaicStringListList(hostProps, \"{slot_name}\")")
+                format!("mosaicStringListList(hostProps, \"{slot_name}\"{list_fallback})")
             }
             _ => fallback,
         },
@@ -9239,6 +9365,59 @@ fn sample_kotlin_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> S
             .first()
             .map(|v| format!("\"{}\"", escape_kotlin_string(v)))
             .unwrap_or_else(|| "\"\"".to_string()),
+    }
+}
+
+/// The Kotlin literal for a story's fixture value (EM-6, #14704), or `None`
+/// when the slot keeps its sample.
+///
+/// Fixtures travel as text (`"42"`, `"true"`, `"Overdue"`), the same map every
+/// pipeline backend reads. A number or bool that does not parse keeps the
+/// sample rather than writing a `String` where Kotlin wants a `Double`, so the
+/// project still compiles; `--strict-fixtures` is where a bad value is refused.
+///
+/// | slot type                          | fixture      | literal       |
+/// |------------------------------------|--------------|---------------|
+/// | `text`, `image`, `color`, `one-of` | `Overdue`    | `"Overdue"`   |
+/// | `number`                           | `42`         | `42.0`        |
+/// | `bool`                             | `true`       | `true`        |
+/// | lists, nodes, components           | —            | `None` (lists use [`kotlin_list_literal_for_fixture`]) |
+fn kotlin_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> Option<String> {
+    match slot_type {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
+            Some(format!("\"{}\"", escape_kotlin_string(fixture)))
+        }
+        SlotType::Number => match fixture.trim().parse::<f64>() {
+            Ok(value) if value.is_finite() => Some(kotlin_double_literal(value)),
+            _ => None,
+        },
+        SlotType::Bool => match fixture.trim() {
+            "true" | "false" => Some(fixture.trim().to_string()),
+            _ => None,
+        },
+        SlotType::List(_) | SlotType::Node | SlotType::Component(_) => None,
+    }
+}
+
+/// The Kotlin literal for a list fixture: `listOf("a", "b")` for `list<text>`,
+/// `listOf(listOf("a"), listOf("b", "c"))` for `list<list<text>>`. Lists
+/// arrive as JSON text (#15428); a shape that does not match the slot gives
+/// `None`, and the slot keeps its empty sample.
+fn kotlin_list_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> Option<String> {
+    use mosmodel_compiler::fixtures::{parse_list_fixture, ListFixture};
+    let strings = |items: &[String]| {
+        let cells: Vec<String> = items
+            .iter()
+            .map(|item| format!("\"{}\"", escape_kotlin_string(item)))
+            .collect();
+        format!("listOf<String>({})", cells.join(", "))
+    };
+    match parse_list_fixture(slot_type, fixture)? {
+        ListFixture::Text(items) => Some(strings(&items)),
+        ListFixture::TextRows(rows) => Some(format!(
+            "listOf<List<String>>({})",
+            rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+        )),
     }
 }
 
@@ -9288,16 +9467,31 @@ fn kebab_to_pascal_case_for_label(name: &str) -> String {
     out
 }
 
+/// Escape `s` for the inside of a Kotlin `"..."` literal.
+///
+/// `$` matters as much as `"`: Kotlin reads `$name` and `${...}` inside a
+/// string as a template, so an unescaped story value such as `"${exit()}"`
+/// would run as code in the generated shell, and `"$5 off"` would not compile.
 fn escape_kotlin_string(s: &str) -> String {
     let mut out = String::new();
     for ch in s.chars() {
         match ch {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
+            '$' => out.push_str("\\$"),
             '\n' => out.push_str("\\n"),
             '\r' => out.push_str("\\r"),
             '\t' => out.push_str("\\t"),
-            c if c.is_control() => {
+            // Line separators and bidirectional controls cannot end the
+            // literal, but they can make the generated file read differently
+            // from how it compiles ("Trojan Source"), so they are spelled out.
+            c if c.is_control()
+                || matches!(
+                    c,
+                    '\u{2028}' | '\u{2029}' | '\u{200E}'..='\u{200F}'
+                        | '\u{202A}'..='\u{202E}' | '\u{2066}'..='\u{2069}'
+                ) =>
+            {
                 write!(out, "\\u{:04X}", c as u32).unwrap();
             }
             c => out.push(c),
@@ -23304,7 +23498,7 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None, &[]);
+        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None, &[], &HashMap::new());
         // The anchor is in Main.kt, which is what the installer edits.
         let generated = sources.main.clone();
 
@@ -23343,7 +23537,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime, None, &[]).main;
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None, &[], &HashMap::new()).main;
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,
@@ -24374,7 +24568,7 @@ mod compose_environment_report_tests {
     use super::*;
 
     fn shell(require_runtime: bool) -> String {
-        build_compose_main_kt("Probe", &[], require_runtime, None, &[]).shell
+        build_compose_main_kt("Probe", &[], require_runtime, None, &[], &HashMap::new()).shell
     }
 
     #[test]
@@ -24420,5 +24614,171 @@ mod compose_environment_report_tests {
         assert!(!shell.contains("BoxWithConstraints"), "{shell}");
         assert!(!shell.contains("reportEnvironment"), "{shell}");
         assert!(!shell.contains("mosaicEnvironmentReport"), "{shell}");
+    }
+}
+
+/// EM-6 (#14704): story fixtures in the Compose shell, and the pipeline-mode
+/// project that carries them.
+#[cfg(test)]
+mod compose_pipeline_shell_tests {
+    use super::*;
+
+    fn slot(name: &str, r#type: SlotType) -> SlotDecl {
+        SlotDecl {
+            name: name.to_string(),
+            r#type,
+            required: false,
+            default: None,
+        }
+    }
+
+    fn fixtures(pairs: &[(&str, &str)]) -> HashMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect()
+    }
+
+    fn shell(slots: &[SlotDecl], values: &[(&str, &str)]) -> String {
+        build_compose_main_kt("Probe", slots, false, None, &[], &fixtures(values)).shell
+    }
+
+    #[test]
+    fn scalar_fixtures_become_typed_kotlin_literals() {
+        let slots = [
+            slot("label", SlotType::Text),
+            slot("count", SlotType::Number),
+            slot("on", SlotType::Bool),
+            slot("tone", SlotType::OneOf(vec!["a".into(), "b".into()])),
+        ];
+        let shell = shell(
+            &slots,
+            &[("label", "Overdue"), ("count", "42"), ("on", "true"), ("tone", "b")],
+        );
+        assert!(shell.contains(r#"mosaicString(hostProps, "label", "Overdue")"#), "{shell}");
+        assert!(shell.contains(r#"mosaicDouble(hostProps, "count", 42.0)"#), "{shell}");
+        assert!(shell.contains(r#"mosaicBoolean(hostProps, "on", true)"#), "{shell}");
+        assert!(shell.contains(r#"mosaicString(hostProps, "tone", "b")"#), "{shell}");
+        assert!(!shell.contains("Sample Label"), "{shell}");
+    }
+
+    #[test]
+    fn an_unparseable_number_or_bool_keeps_the_sample_so_kotlin_compiles() {
+        let slots = [slot("count", SlotType::Number), slot("on", SlotType::Bool)];
+        let shell = shell(&slots, &[("count", "lots"), ("on", "yes"), ("unknown", "x")]);
+        assert!(shell.contains(r#"mosaicDouble(hostProps, "count", 0.0)"#), "{shell}");
+        assert!(shell.contains(r#"mosaicBoolean(hostProps, "on", false)"#), "{shell}");
+        assert!(!shell.contains("lots"), "{shell}");
+    }
+
+    #[test]
+    fn list_fixtures_become_list_of_literals_and_mismatches_stay_empty() {
+        let slots = [
+            slot("options", SlotType::List(Box::new(ListInnerType::Text))),
+            slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+            ),
+            slot("flat", SlotType::List(Box::new(ListInnerType::Text))),
+        ];
+        let shell = shell(
+            &slots,
+            &[
+                ("options", r#"["A","B"]"#),
+                ("rows", r#"[["1","2"],["3"]]"#),
+                ("flat", r#"[["nested"]]"#),
+            ],
+        );
+        assert!(
+            shell.contains(r#"mosaicStringList(hostProps, "options", listOf<String>("A", "B"))"#),
+            "{shell}"
+        );
+        assert!(
+            shell.contains(
+                r#"mosaicStringListList(hostProps, "rows", listOf<List<String>>(listOf<String>("1", "2"), listOf<String>("3")))"#
+            ),
+            "{shell}"
+        );
+        assert!(shell.contains(r#"mosaicStringList(hostProps, "flat")"#), "{shell}");
+        // The helpers accept the fallback the call sites now pass.
+        assert!(shell.contains("fallback: List<String> = emptyList()"), "{shell}");
+        assert!(shell.contains("fallback: List<List<String>> = emptyList()"), "{shell}");
+    }
+
+    #[test]
+    fn fixture_text_cannot_open_a_kotlin_template_or_close_its_string() {
+        let slots = [
+            slot("label", SlotType::Text),
+            slot("options", SlotType::List(Box::new(ListInnerType::Text))),
+        ];
+        let shell = shell(
+            &slots,
+            &[
+                ("label", "${System.exit(1)} \"x\" $name\\"),
+                ("options", r#"["$a", "${b}"]"#),
+            ],
+        );
+        assert!(
+            shell.contains(r#""\${System.exit(1)} \"x\" \$name\\""#),
+            "{shell}"
+        );
+        assert!(shell.contains(r#"listOf<String>("\$a", "\${b}")"#), "{shell}");
+        assert_eq!(escape_kotlin_string("plain"), "plain");
+        assert_eq!(
+            escape_kotlin_string("a\u{202E}b\u{2028}c\u{0085}"),
+            "a\\u202Eb\\u2028c\\u0085"
+        );
+    }
+
+    #[test]
+    fn no_fixtures_leaves_every_call_site_as_before() {
+        let slots = [
+            slot("label", SlotType::Text),
+            slot("options", SlotType::List(Box::new(ListInnerType::Text))),
+        ];
+        let shell = shell(&slots, &[]);
+        assert!(shell.contains(r#"mosaicString(hostProps, "label", "Sample Label")"#), "{shell}");
+        assert!(shell.contains(r#"mosaicStringList(hostProps, "options")"#), "{shell}");
+    }
+
+    #[test]
+    fn the_pipeline_project_is_a_gradle_project_with_the_component_in_its_source_set() {
+        let slots = [slot("label", SlotType::Text)];
+        let files = compose_pipeline_project_files(
+            "Probe",
+            "// component\n",
+            &slots,
+            &fixtures(&[("label", "Hi")]),
+        )
+        .expect("project");
+        let get = |path: &str| {
+            files
+                .iter()
+                .find(|(p, _)| p == path)
+                .map(|(_, body)| body.clone())
+                .unwrap_or_else(|| panic!("{path} missing"))
+        };
+        assert_eq!(get("src/main/kotlin/Probe.kt"), "// component\n");
+        assert!(get("src/main/kotlin/MosaicAppShell.kt").contains(r#""label", "Hi")"#));
+        for path in ["settings.gradle.kts", "build.gradle.kts", "README.md", "src/main/kotlin/Main.kt"] {
+            let body = get(path);
+            assert!(!body.contains("mosaic-compile pkg"), "{path} keeps the pkg banner");
+        }
+        assert!(get("src/main/kotlin/Main.kt").contains("AUTO-GENERATED"));
+        // A preview has no application id, so it never persists state.
+        assert_eq!(
+            get("src/main/kotlin/MosaicRuntimeHost.kt"),
+            mosaic_app_bindings::compose_jna_binding()
+        );
+    }
+
+    #[test]
+    fn a_component_named_like_a_shell_file_is_refused() {
+        for name in ["Main", "MosaicAppShell", "mosaicplatform", "MosaicRuntimeHost"] {
+            let error = compose_pipeline_project_files(name, "", &[], &HashMap::new())
+                .expect_err(name);
+            assert!(error.to_string().contains("rename the component"), "{name}: {error}");
+        }
+        assert!(compose_pipeline_project_files("Button", "", &[], &HashMap::new()).is_ok());
     }
 }
