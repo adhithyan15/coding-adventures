@@ -1149,3 +1149,7 @@ snapshot acceptance at both direct and assigned output consumers. Sixteen
 cells cover both actuals, selector results and operand arrangements; native
 controls assert exact -4.5/1.75/-4/7 output on every available standard
 backend. Existing alias-proof guards and production bounds remain required.
+
+The BEAM native regression set includes long string constants that exceed initial
+heap space while a separate string remains live, alongside original sparse array
+copies. Local OTP29 success does not replace current-head Linux CI acceptance.

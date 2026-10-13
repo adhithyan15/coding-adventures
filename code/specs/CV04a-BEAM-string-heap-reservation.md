@@ -28,3 +28,9 @@ independent security, currenthead Linux CI including original b11_str_3d require
 Review usage limit is not PASS. Main9b47 powered/ordering imports still pending.
 Miri DEFERRED/PENDING, frozen run/497inputs/source/receipts/target untouched/unpolled;
 full compiler parity/output joins/alllineage/fullgoalOPEN, same solePR17288.
+
+Actual red62ff79f: exact lowering test fails (0reservations vs1); authored2048-byte
+native source makes real Erlang exit nonzero (no stderr), both Cargo101/0pass1fail.
+Existing six-case sparse test and300forced-GC original3d repeats passed on local
+OTP29; retained, never substituted for hosted Linux failure. Canonical runtime
+GC_TEST/test_heap semantics: https://www.erlang.org/docs/29/apps/erts/beam_makeops.html#the-macros-tab-file

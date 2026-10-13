@@ -1257,3 +1257,10 @@ Remaining COBOL features still require individual execution proofs.
 ## 0.18.0 — BEAM09 byte input (2026-09-19)
 
 Lower `getchar` with `io:get_chars/2`, EOF zero and imported-call liveness. Byte-oriented hosts must launch Erlang with `-kernel standard_io_encoding latin1`; text-language hosts retain their encoding.
+
+## Unreleased - string heap reservation
+
+Reserve two heap words per ASCII byte before str_const put_list construction,
+with checked word arithmetic and initialized normal-X roots. Empty strings need
+no heap. Exact 0/1/2048-byte lowering and authored real-Erlang long-string red
+controls accompany the repair; existing sparse BEAM11 cases remain required.
