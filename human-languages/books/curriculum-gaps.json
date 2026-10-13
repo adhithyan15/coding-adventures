@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 20476,
-    "wordLessonsWithoutVisibleEtymology": 20102,
+    "wordLessonsWithoutEtymologyHook": 19488,
+    "wordLessonsWithoutVisibleEtymology": 19031,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -43,7 +43,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 139,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27761,
+    "drivableLessons": 27759,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 186,
     "chaptersWithoutDrivablePrefixByType": 179,
@@ -13630,7 +13630,7 @@
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 0
+          "lessonsWithForeignScript": 1
         },
         {
           "language": "gujarati",
@@ -13816,7 +13816,7 @@
       "summary": {
         "lessonViolations": 0,
         "systemViolations": 0,
-        "lessonsWithForeignScript": 216,
+        "lessonsWithForeignScript": 217,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": null
       }
@@ -341469,9 +341469,9 @@
       {
         "language": "german",
         "wordLessons": 1227,
-        "wordLessonsWithoutEtymologyHook": 988,
-        "wordLessonsWithoutVisibleEtymology": 1071,
-        "wordLessonsWithoutAnyEtymology": 982
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "gujarati",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 20476,
-      "wordLessonsWithoutVisibleEtymology": 20102,
-      "wordLessonsWithoutAnyEtymology": 19452,
-      "hookPercent": 20,
-      "visiblePercent": 21
+      "wordLessonsWithoutEtymologyHook": 19488,
+      "wordLessonsWithoutVisibleEtymology": 19031,
+      "wordLessonsWithoutAnyEtymology": 18470,
+      "hookPercent": 24,
+      "visiblePercent": 25
     }
   },
   "writingStages": {
@@ -344577,7 +344577,7 @@
           {
             "language": "german",
             "lessonId": "GE-W01-eszett",
-            "blockIndex": 3,
+            "blockIndex": 4,
             "blockTitle": "Writing — drawing the eszett",
             "stage": "guided-copy",
             "level": "pre-A1",
@@ -344669,7 +344669,7 @@
           {
             "language": "german",
             "lessonId": "GE-W01-eszett",
-            "blockIndex": 3,
+            "blockIndex": 4,
             "blockTitle": "Writing — drawing the eszett",
             "stage": "guided-copy",
             "level": "pre-A1",
@@ -364511,10 +364511,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29572,
-    "voice": 27191,
-    "sight": 891,
+    "voice": 27189,
+    "sight": 893,
     "pen": 1490,
-    "coreVoice": 27761,
+    "coreVoice": 27759,
     "lessonsWithWritingSegments": 957,
     "drivablePercent": 94,
     "tracks": [
@@ -377146,12 +377146,12 @@
       {
         "language": "german",
         "lessonCount": 1384,
-        "voice": 1364,
-        "sight": 10,
+        "voice": 1362,
+        "sight": 12,
         "pen": 10,
-        "coreVoice": 1365,
-        "drivablePercent": 99,
-        "drivablePrefixTotal": 1333,
+        "coreVoice": 1363,
+        "drivablePercent": 98,
+        "drivablePrefixTotal": 1328,
         "chapters": [
           {
             "language": "german",
@@ -379420,15 +379420,16 @@
             "language": "german",
             "chapter": 151,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null,
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "GE-C151-ueberlegen",
             "unstartable": null
           },
           {
@@ -380845,15 +380846,16 @@
             "language": "german",
             "chapter": 246,
             "lessonCount": 7,
-            "voice": 7,
-            "sight": 0,
+            "voice": 6,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 6,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": null,
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "GE-C246-besichtigen",
             "unstartable": null
           },
           {
@@ -454010,21 +454012,21 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 5553,
-    "underspent": 5044,
-    "neverSpent": 3453,
+    "roots": 6034,
+    "underspent": 5486,
+    "neverSpent": 3773,
     "payoffDistribution": {
-      "0": 3453,
-      "1": 1025,
-      "2": 566,
-      "3": 272,
-      "4": 132,
-      "5": 53,
-      "6": 24,
-      "7": 16,
+      "0": 3773,
+      "1": 1100,
+      "2": 613,
+      "3": 291,
+      "4": 140,
+      "5": 58,
+      "6": 25,
+      "7": 19,
       "8": 6,
-      "9": 2,
-      "10": 2,
+      "9": 4,
+      "10": 3,
       "12": 1,
       "15": 1
     },
@@ -454053,33 +454055,33 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28636,
-    "usesBeforeIntroduction": 47351,
-    "technicalUsesBeforeIntroduction": 6834,
-    "technicalLessons": 3987,
+    "usesBeforeIntroduction": 47743,
+    "technicalUsesBeforeIntroduction": 7118,
+    "technicalLessons": 4233,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2246
+        "lessons": 2465
       },
       {
         "term": "noun",
-        "lessons": 1269
+        "lessons": 1307
       },
       {
         "term": "adjective",
-        "lessons": 380
+        "lessons": 381
+      },
+      {
+        "term": "case",
+        "lessons": 280
       },
       {
         "term": "voice",
         "lessons": 280
       },
       {
-        "term": "case",
-        "lessons": 275
-      },
-      {
         "term": "pronoun",
-        "lessons": 263
+        "lessons": 264
       }
     ]
   },
@@ -454090,7 +454092,7 @@
   },
   "glyphCoverage": {
     "filesScanned": 5916,
-    "mainCharacters": 138,
+    "mainCharacters": 139,
     "scriptCharacters": 829,
     "gaps": 0
   }
