@@ -14,7 +14,8 @@ romanization: "bijlī"
 concept_tag: HI-THINGS144-BIJLI
 prerequisites: [HI-C144-lahar, HI-C144-kinara]
 sounds: []
-roots: []
+roots: [sanskrit-vidyullata]
+etymology_hook: "bijlī ← Sanskrit vidyullatā 'forked lightning', a tadbhava (CDIAL 11745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C144-kinara]
 <!-- hl-knowledge: introduces=[HI-LEX-C144-THINGS144-05]; assesses=[] -->
 
 **बिजली** — *bijlī* — "electricity; lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिजली** (*bijlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vidyullatā*, "forked lightning" (CDIAL 11745). It is built from *vidyut*, "lightning", and *latā*, "creeper": lightning as a forking vine. The sense "electricity" came later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

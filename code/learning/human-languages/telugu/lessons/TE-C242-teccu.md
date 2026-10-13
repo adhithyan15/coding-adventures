@@ -14,7 +14,8 @@ romanization: "teccu"
 concept_tag: TE-VERB-TECCU
 prerequisites: [TE-C241-tummu, TE-C241-vanti-cesuko]
 sounds: []
-roots: []
+roots: [dravidian-taru-give]
+etymology_hook: "teccu: native Dravidian; DEDR 3098 lists teccu 'to bring' with Kannada tar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C241-vanti-cesuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C242-KRIYA242-01]; assesses=[] -->
 
 **తెచ్చు** — *teccu* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెచ్చు** (*teccu*) is native Dravidian. DEDR 3098 lists *teccu*, "to bring", with Kannada *tar*, "to bring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

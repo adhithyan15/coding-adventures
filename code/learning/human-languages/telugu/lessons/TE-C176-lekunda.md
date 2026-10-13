@@ -14,7 +14,8 @@ romanization: "lēkuṇḍā"
 concept_tag: TE-KARANAM176-LEKUNDA
 prerequisites: [TE-C176-dvara, TE-C176-gurinci]
 sounds: []
-roots: []
+roots: [il, dravidian-ul-be]
+etymology_hook: "lēkuṇḍā: native lē- 'be not' (DEDR 2559) + uṇḍu 'to be' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C176-gurinci]
 <!-- hl-knowledge: introduces=[TE-LEX-C176-KARANAM176-05]; assesses=[] -->
 
 **లేకుండా** — *lēkuṇḍā* — "without".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లేకుండా** (*lēkuṇḍā*) is native Dravidian: *lē-*, "be not", which DEDR 2559 files with Tamil *il*; and *uṇḍu*, "to be" (DEDR 697): "not being".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

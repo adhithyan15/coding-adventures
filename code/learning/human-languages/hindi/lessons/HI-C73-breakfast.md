@@ -14,7 +14,8 @@ romanization: "nāshtā"
 concept_tag: HI-NOUN-BREAKFAST
 prerequisites: [HI-C73-eating-house, HI-C72-buy, HI-C71-also, HI-C72-rupee]
 sounds: []
-roots: []
+roots: [persian-nashta]
+etymology_hook: "nāshtā: usually traced to Persian nāshtā 'not having eaten'; the meal is named for the fast it ends"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ have written in **नमस्ते** and read in **स्टेशन**.
 
 **नाश्ता** is also a doing word's companion: **नाश्ता करना** is "to have
 breakfast", built the way **आराम करना** was.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाश्ता** (*nāshtā*) is a loan, usually traced to Persian *nāshtā*, "not having eaten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

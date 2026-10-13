@@ -14,7 +14,8 @@ romanization: "pasīnā"
 concept_tag: HI-BODY-SWEAT
 prerequisites: [HI-C124-pyasa, HI-C124-nindaa]
 sounds: []
-roots: []
+roots: [indo-aryan-prasvidana]
+etymology_hook: "pasīnā ← *prasvidana 'sweating', a reconstructed form; a tadbhava (CDIAL 8895)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C124-nindaa]
 **पसीना** (*pasīnā*) — "sweat".
 
 **बहुत पसीना आ रहा है** — "I'm sweating a lot", literally "a lot of sweat is coming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पसीना** (*pasīnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prasvidana*, "sweating", a form CDIAL reconstructs from its descendants (CDIAL 8895). CDIAL also allows *prasvinna*, "sweated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cipcipā"
 concept_tag: HI-QUAL238-CIPCIPA
 prerequisites: [HI-C238-gunguna, HI-C238-rukha]
 sounds: []
-roots: []
+roots: [indo-aryan-cippa]
+etymology_hook: "cipcipā: doubled cip-, cf. *cippa 'gummy matter' (CDIAL 4819)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C238-rukha]
 <!-- hl-knowledge: introduces=[HI-LEX-C238-QUAL238-04]; assesses=[] -->
 
 **चिपचिपा** — *cipcipā* — "sticky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिपचिपा** (*cipcipā*) doubles a syllable *cip-*, "sticky". CDIAL lists a reconstructed *\*cippa*, "gummy matter", and Hindi *cippī*, "a piece stuck on" (CDIAL 4819), but not *cipcipā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

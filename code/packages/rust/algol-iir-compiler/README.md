@@ -221,7 +221,10 @@ real-name branches remain conservative. The exact bounded
 selector, including when a specialised real name formal carries the exact
 local-rooted transform. Unary signs may wrap that exact name actual without
 losing the proof, and additive composition may include finite static terms.
-Unrestricted runtime `entier` remains conservative.
+That additive form may in turn be multiplied or divided by finite static
+terms, and the resulting exact local-rooted form may be the sole dynamic base
+of a power chain whose exponents are finite and static. Unrestricted runtime
+`entier` remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is

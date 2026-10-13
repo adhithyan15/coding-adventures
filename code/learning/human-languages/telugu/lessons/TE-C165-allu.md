@@ -14,7 +14,8 @@ romanization: "allu"
 concept_tag: TE-VERB-ALLU
 prerequisites: [TE-C165-bigincu, TE-C165-guccu]
 sounds: []
-roots: []
+roots: [dravidian-allu-weave]
+etymology_hook: "allu: native Dravidian, one word with Tamil allu and Kannada allu (DEDR 260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C165-guccu]
 <!-- hl-knowledge: introduces=[TE-LEX-C165-KRIYA165-05]; assesses=[] -->
 
 **అల్లు** — *allu* — "to knit, to weave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అల్లు** (*allu*) is native Dravidian, one word with Tamil *allu* and Kannada *allu* (DEDR 260). DEDR lists Telugu *allu*, "to plait, braid, weave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

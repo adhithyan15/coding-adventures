@@ -14,7 +14,8 @@ romanization: "gājulu"
 concept_tag: TE-THINGS115-GAJULU
 prerequisites: [TE-C115-topi, TE-C115-ungaram]
 sounds: []
-roots: []
+roots: [sanskrit-kaca-glass]
+etymology_hook: "gājulu: gāju 'glass', probably a tadbhava of Sanskrit kāca 'glass' (CDIAL 3007), + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C115-ungaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **గాజులు** — *gājulu* — "bangles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గాజులు** (*gājulu*) is the plural of *gāju*, "glass", probably from Sanskrit *kāca*, "glass" (CDIAL 3007), reshaped as a tadbhava: bangles are named for what they are made of.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

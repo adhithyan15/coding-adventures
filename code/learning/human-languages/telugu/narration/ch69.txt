@@ -15,6 +15,9 @@ You'll want to know: గొడ్డలి.
 The word is inherited and old. Its first piece turns up in other Telugu words about striking, so the name says plainly what the thing does.
 Asking for one is the ordinary polite request: దయచేసి, and then the word. The person hands it over handle first, and nobody throws a గొడ్డలి (goḍḍali).
 
+The word, taken apart.
+గొడ్డలి (goḍḍali) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 32), under Sanskrit kuṭhāra, "axe" (CDIAL 3244). CDIAL itself thinks kuṭhāra probably came from Dravidian, so the word may have gone north and come back. Tamil kōṭāli and Kannada koḍali are in the same appendix entry.
+
 What you've built.
 One. Heavy, and handed over rather than thrown.
 
@@ -47,6 +50,9 @@ You'll want to know: రంపం.
 రంపం (rampaṁ) is a saw. Where the గొడ్డలి (goḍḍali) breaks wood apart, the రంపం (rampaṁ) takes it apart along a line.
 It is a borrowing, and it came in with the trade rather than ahead of it: the long two-man saw and its name reached the carpenter's shed together.
 The noise is half the word. Telugu calls a rasping sound a రంపం (rampaṁ) sound, and somebody who repeats a complaint until you give way is running a రంపం (rampaṁ) over your చెవి.
+
+The word, taken apart.
+రంపం (rampaṁ) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 55), under Prakrit rampa, "knife, scraper" (CDIAL 10629), with Tamil irampam, "a saw".
 
 What you've built.
 Two. Both of them cut; only one cuts straight.
@@ -81,6 +87,9 @@ You'll want to know: పార.
 It is the tool of the రైతు out of season: clearing a channel, banking up the edge of a పొలం, cutting a way for water to run.
 The word is inherited and it stays narrow. It does not stretch into anything figurative at all, which by itself says how firmly it belongs to the ground.
 
+The word, taken apart.
+పార (pāra) is native Dravidian, one word with Tamil pārai and Kannada pāre (DEDR 4093). DEDR lists Telugu pāra, "spade".
+
 What you've built.
 Three. The first one here you push rather than swing.
 
@@ -114,6 +123,9 @@ You'll want to know: సుత్తి.
 Telugu turned it into a word about people. Somebody who makes the same point until you give in is doing సుత్తి (sutti), and telling them to stop the సుత్తి (sutti) is telling them to stop going on.
 In a city that second sense is now the commoner one, which is worth knowing before somebody uses it about you.
 
+The word, taken apart.
+సుత్తి (sutti) is native Dravidian, one word with Tamil cutti, Kannada suttige and Malayalam cutti (DEDR 2668). DEDR gives the Telugu as sutte.
+
 What you've built.
 Four. The one whose second meaning you are likelier to hear.
 
@@ -146,6 +158,9 @@ You'll want to know: కర్ర.
 కర్ర (karra) is a stick — a length of wood, cut or picked up, for everything the other four are too particular for.
 It is inherited and completely ordinary: a walking stick for a తాత, a herding stick behind a మేక, the handle still waiting for a గొడ్డలి (goḍḍali) head.
 It is also the right thing to ask for first. దయచేసి and a కర్ర (karra) costs nobody anything, and by the time you want the సుత్తి (sutti) you already know how to ask.
+
+The word, taken apart.
+కర్ర (karra) is native Dravidian, one word with Tamil kaṟal, "firewood" (DEDR 1389), which gives the older Telugu spelling kaṟṟa, "wood, stick". DEDR compares Prakrit karālī, "toothstick".
 
 What you've built.
 Five: గొడ్డలి (goḍḍali), రంపం (rampaṁ), పార (pāra), సుత్తి (sutti), కర్ర (karra). Enough to ask for anything in a shed.

@@ -11,7 +11,8 @@ romanization: "meḍa"
 concept_tag: TE-NOUN-NECK
 prerequisites: [TE-C56-box]
 sounds: []
-roots: []
+roots: [dravidian-mitaru-neck]
+etymology_hook: "meḍa: native Dravidian, one word with Tamil miṭaṟu 'neck, throat' (DEDR 4847)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C56-box]
 It is where a పూలదండ goes, so you already had the place before you had the word.
 
 మెడ వంచు, to bend the neck, is to give in. The gesture and the phrase mean the same thing in a great many languages, because the gesture came first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెడ** (*meḍa*) is native Dravidian, one word with Tamil *miṭaṟu*, "neck, throat", and Kannada *meṭre*, "throat" (DEDR 4847). DEDR compares Prakrit *maḍa*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

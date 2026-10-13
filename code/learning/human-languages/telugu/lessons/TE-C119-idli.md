@@ -14,7 +14,8 @@ romanization: "iḍlī"
 concept_tag: TE-THINGS119-IDLI
 prerequisites: [TE-C118-vellulli, TE-C119-tene]
 sounds: []
-roots: []
+roots: [dravidian-ittali-idli]
+etymology_hook: "iḍlī: matches Kannada iḍḍali and Tamil iṭṭali (DEDR 455), where the Telugu form is iḍḍena"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C119-tene]
 <!-- hl-knowledge: introduces=[TE-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **ఇడ్లీ** — *iḍlī* — "an idli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇడ్లీ** (*iḍlī*) matches Kannada *iḍḍali* and Tamil *iṭṭali*, "steamed rice cake", in DEDR 455, where the older Telugu form is *iḍḍena*. DEDR compares Sanskrit *iṇḍarī*, "a kind of cake", a word known only from lexicons.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

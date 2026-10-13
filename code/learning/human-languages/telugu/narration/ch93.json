@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Keeping Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b4ab8e188bf4c72a",
+  "sourceHash": "fnv1a64:053375d4c9b7489a",
   "lessons": [
     {
       "id": "TE-C93-wellbeing",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0af4c27e6833be",
+      "sourceHash": "fnv1a64:a5f8a0a3d50d0e55",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్షేమం (kṣēmaṁ) is Sanskrit kṣema, \"ease, happiness\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3745)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1252870f23bf3726",
+      "sourceHash": "fnv1a64:0bdcbf8d40b33d08",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హాయిగా (hāyigā) is hāyi, \"comfort, pleasantness\", with the adverb ending -gā. The origin of hāyi is uncertain: neither DEDR nor CDIAL records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4f1a3b15a61e5fb",
+      "sourceHash": "fnv1a64:fd1ef72cdf1c4687",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుఖం (sukhaṁ) is Sanskrit sukha, \"easy; comfort, happiness\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13451)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:077186a00fccf029",
+      "sourceHash": "fnv1a64:c46cc442800a70da",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +470,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతోషంగా (santōṣaṁgā) is santōṣaṁ, \"joy\", from Sanskrit santoṣa, \"satisfaction\" (CDIAL 12895), with the Telugu adverb ending -gā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e374736c63c0ae48",
+      "sourceHash": "fnv1a64:ecb89eca6e464773",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒళ్ళు (oḷḷu) is native Dravidian, one word with Tamil uṭal and Kannada oḍal (DEDR 586). DEDR lists Telugu oḍalu and oḷḷu, \"body\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "pīta"
 concept_tag: TE-VASTUVU228-PITA
 prerequisites: [TE-C227-satruvu, TE-C227-pellikoduku]
 sounds: []
-roots: []
+roots: [telugu-pita-crab]
+etymology_hook: "pīta: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'crab'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C227-pellikoduku]
 <!-- hl-knowledge: introduces=[TE-LEX-C228-VASTUVU228-01]; assesses=[] -->
 
 **పీత** — *pīta* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పీత** (*pīta*) is uncertain. DEDR and CDIAL list no word of this shape meaning "crab"; CDIAL's *pīta*, "drunk" and "yellow", are different words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a coin, then the Hindi for a banknote.
 You'll want to know: छज्जा.
 छज्जा — chajjā — "a balcony, a ledge".
 
+The word, taken apart.
+छज्जा (chajjā) is inherited. CDIAL lists it under Sanskrit chādya, "to be sheltered", and marks the Hindi word as taken from Punjabi chajjā, "eaves, balcony" (CDIAL 5023).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a banknote, then the Hindi for a balcony.
 
 You'll want to know: प्याला.
 प्याला — pyālā — "a cup".
+
+The word, taken apart.
+प्याला (pyālā) is a loan, usually traced to Persian piyāla, "cup".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a balcony, then the Hindi for a cup.
 You'll want to know: सुई.
 सुई — suī — "a needle".
 
+The word, taken apart.
+सुई (suī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūcī, "needle" (CDIAL 13551).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a cup, then the Hindi for a needle.
 You'll want to know: बत्ती.
 बत्ती — battī — "a lamp, a light".
 
+The word, taken apart.
+बत्ती (battī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from varti, "wick; lamp" (CDIAL 11359).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a needle, then the Hindi for a lamp.
 
 You'll want to know: रोटी.
 रोटी — roṭī — "bread (flatbread)".
+
+The word, taken apart.
+रोटी (roṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from roṭṭa, "bread", a form CDIAL reconstructs from its descendants (CDIAL 10837).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "safar"
 concept_tag: HI-NOUN-JOURNEY
 prerequisites: [HI-C49-day-after, HI-C47-farmer, HI-C48-certainly]
 sounds: []
-roots: []
+roots: [arabic-safar]
+etymology_hook: "safar ← Arabic safar 'travel', through Persian (Lane, root s-f-r)"
 duration:
   max_seconds: 210
 requires:

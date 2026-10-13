@@ -14,7 +14,8 @@ romanization: "kuṅkuma"
 concept_tag: TE-VASTUVU307-KUNKUMA
 prerequisites: [TE-C307-antlu, TE-C307-agarubatti]
 sounds: []
-roots: []
+roots: [sanskrit-kunkuma]
+etymology_hook: "kuṅkuma ← Sanskrit kuṅkuma 'saffron', a tatsama (CDIAL 3214)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C307-agarubatti]
 <!-- hl-knowledge: introduces=[TE-LEX-C307-VASTUVU307-05]; assesses=[] -->
 
 **కుంకుమ** — *kuṅkuma* — "kumkum, vermilion powder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుంకుమ** (*kuṅkuma*) is Sanskrit *kuṅkuma*, "saffron", taken over whole as a learned loan, a tatsama (CDIAL 3214). Telugu uses it for the red powder worn on the forehead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

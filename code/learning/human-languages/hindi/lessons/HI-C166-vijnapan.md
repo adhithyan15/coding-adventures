@@ -14,7 +14,8 @@ romanization: "vijñāpan"
 concept_tag: HI-READ166-VIJNAPAN
 prerequisites: [HI-C166-sandesh, HI-C166-samay]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapana]
+etymology_hook: "vijñāpan ← Sanskrit vijñāpana 'making known', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C166-samay]
 
 The advert says **कमरा ख़ाली है। पानी और बिजली।** (*kamrā khālī hai. pānī aur
 bijlī.*) A room is free, with water and electricity.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विज्ञापन** (*vijñāpan*) is Sanskrit *vijñāpana*, "making known", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

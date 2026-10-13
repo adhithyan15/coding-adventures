@@ -14,7 +14,8 @@ romanization: "tummu"
 concept_tag: TE-VERB-TUMMU
 prerequisites: [TE-C241-koruku, TE-C241-pilcu]
 sounds: []
-roots: []
+roots: [dravidian-tummu-sneeze]
+etymology_hook: "tummu: native Dravidian, one word with Tamil tummu and Malayalam tummuka (DEDR 3336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C241-pilcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C241-KRIYA241-04]; assesses=[] -->
 
 **తుమ్ము** — *tummu* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తుమ్ము** (*tummu*) is native Dravidian, one word with Tamil *tummu* and Malayalam *tummuka* (DEDR 3336). DEDR lists Telugu *tummu*, "to sneeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

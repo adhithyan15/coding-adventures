@@ -14,7 +14,8 @@ romanization: "cāmṛā"
 concept_tag: HI-THG247-CAMRA
 prerequisites: [HI-C246-rui, HI-C247-resam]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "cāmṛā ← Sanskrit carman 'hide, skin', a tadbhava (CDIAL 4701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C247-resam]
 <!-- hl-knowledge: introduces=[HI-LEX-C247-THG247-02]; assesses=[] -->
 
 **चमड़ा** — *cāmṛā* — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चमड़ा** (*cāmṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *carman*, "hide, skin" (CDIAL 4701). CDIAL notes an added *-ṛ-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

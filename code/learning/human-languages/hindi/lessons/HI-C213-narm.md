@@ -14,7 +14,8 @@ romanization: "narm"
 concept_tag: HI-QUAL213-NARM
 prerequisites: [HI-C213-suraksit, HI-C213-mitha]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "narm: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C213-mitha]
 <!-- hl-knowledge: introduces=[HI-LEX-C213-QUAL213-05]; assesses=[] -->
 
 **नर्म** — *narm* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नर्म** (*narm*) is a loan, usually traced to Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

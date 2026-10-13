@@ -51,7 +51,7 @@ The letters in this word.
 (Skim if you read Devanagari.) म (ma) + े (the e-mātrā) becomes मे (me); र (ra) + ा (long ā) becomes रा (rā). Read मे, रा becomes merā.
 
 The word, taken apart.
-मेरा (merā, "my") descends from Sanskrit madīya ("of me"), on the first-person root ma- — the same ma-/me- behind English me, my, mine and Latin meus. Hindi "my" and English "my" are, at root, one word.
+मेरा (merā, "my") is listed by CDIAL under the Sanskrit first-person base ma- (CDIAL 9691) — the same ma-/me- behind English me, my, mine and Latin meus. Hindi "my" and English "my" are, at root, one word.
 
 Grammar Lens: "my" agrees with the noun.
 Hindi possessives change to match what's owned: मेरा (merā, masculine), मेरी (merī, feminine), मेरे (mere, plural). nām is masculine becomes merā nām. (You'll meet merī at your first feminine noun.)
@@ -154,8 +154,8 @@ The letters in this word.
 (Skim if you read Devanagari.) आप: independent vowel आ (ā, word-initial) + प (pa) becomes āp. तुम: त (ta) + ु (the u-sign) + म (ma) becomes tum.
 
 The word, taken apart.
-तुम (tum, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu.
-आप (āp, respectful "you") is a separate honorific word (originally "oneself").
+तुम (tum, familiar "you") from Sanskrit yuṣmad-, the plural "you", with its t- taken from tvam (CDIAL 10511); tvam is from PIE tū — the same root as English archaic thou, Latin tū, French tu.
+आप (āp, respectful "you") is a separate honorific word, from Sanskrit ātman, "self" (CDIAL 1135).
 
 Grammar Lens: three levels of "you".
 Hindi grades respect three ways: āp (respectful — strangers, elders), tum (familiar — friends, peers), tū (intimate or to a child; can insult if misused). The European tracks had two levels each; Hindi has three. For a first meeting, always āp.
@@ -222,6 +222,9 @@ The two words — assembled.
 आपका (āpkā, "your") = आप (you) + का (kā, the possessive "of," the same agreeing kā/kī/ke that matches the noun).
 आपका नाम क्या है? (āpkā nām kyā hai?) = literally "your name what is?" = "what's your name?"
 Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion.
+
+The phrase, taken apart.
+Every word in this question is inherited: āp from Sanskrit ātman, "self" (CDIAL 1135), with -kā, "of"; nām from nāman; kyā from kim (CDIAL 3164); hai, usually traced to asti.
 
 Grammar Lens: answer, and the informal version.
 Answer with the sentence you built: Merā nām Arun hai. The informal "your" swaps āpkā for tumhārā: tumhārā nām kyā hai?

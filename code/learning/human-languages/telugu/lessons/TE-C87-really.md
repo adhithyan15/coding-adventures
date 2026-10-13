@@ -11,7 +11,8 @@ romanization: "nijaṁgā"
 concept_tag: TE-RESPOND-REALLY
 prerequisites: [TE-C87-probably, TE-C87-isee]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijaṁgā: Sanskrit nija 'one's own, innate' (CDIAL 7181) + the Telugu adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C87-isee]
 
 **నిజం** is "the truth", and **-గా** turns it into a manner, as it did for *nemmadigā*. As a
 question, **నిజంగా?** is "really?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిజంగా** (*nijaṁgā*) is *nijaṁ*, "truth", from Sanskrit *nija*, "one's own, innate" (CDIAL 7181), with the Telugu adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

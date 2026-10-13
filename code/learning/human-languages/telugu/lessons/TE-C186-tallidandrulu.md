@@ -14,7 +14,8 @@ romanization: "tallidaṇḍrulu"
 concept_tag: TE-VASTUVU186-TALLIDANDRULU
 prerequisites: [TE-C186-manavadu, TE-C186-manavaralu]
 sounds: []
-roots: []
+roots: [dravidian-tallai-mother, dravidian-tantai-father]
+etymology_hook: "tallidaṇḍrulu: native talli 'mother' (DEDR 3136) + taṇḍri 'father' (DEDR 3067) + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C186-manavaralu]
 <!-- hl-knowledge: introduces=[TE-LEX-C186-VASTUVU186-03]; assesses=[] -->
 
 **తల్లిదండ్రులు** — *tallidaṇḍrulu* — "parents".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తల్లిదండ్రులు** (*tallidaṇḍrulu*) is native Dravidian: *talli*, "mother", one word with Tamil *taḷḷai* (DEDR 3136), and *taṇḍri*, "father", one word with Tamil *tantai* (DEDR 3067), with the plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

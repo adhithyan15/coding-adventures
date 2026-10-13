@@ -14,7 +14,8 @@ romanization: "kyā hāl hai?"
 concept_tag: HI-HAAL-HOW
 prerequisites: [HI-C122-ijazat, HI-C122-janahai]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "hāl ← Arabic ḥāl 'state, condition', through Persian (Lane, root ḥ-w-l)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C122-janahai]
 **क्या हाल है?** (*kyā hāl hai?*) — "how's it going?", "how are things?".
 
 **हाल** is "condition, state". Friendlier than **आप कैसे हैं?**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hāl* comes from Arabic *ḥāl*, "state, condition", through Persian; its root is *ḥ-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "asalu"
 concept_tag: TE-KARANAM177-ASALU
 prerequisites: [TE-C177-badulu, TE-C177-prakaram]
 sounds: []
-roots: []
+roots: [arabic-asl]
+etymology_hook: "asalu ← Arabic aṣl 'root, origin', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C177-prakaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C177-KARANAM177-04]; assesses=[] -->
 
 **అసలు** — *asalu* — "actually; (not) at all".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అసలు** (*asalu*) is a loan from Arabic *aṣl*, "root, origin", which came through Persian and Hindustani, where it also means "real". DEDR 41 *asalu*, "mud", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

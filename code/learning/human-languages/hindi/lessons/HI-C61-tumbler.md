@@ -14,7 +14,8 @@ romanization: "gilās"
 concept_tag: HI-NOUN-TUMBLER
 prerequisites: [HI-C61-spoon]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "gilās ← English glass"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C61-spoon]
 This one is English *glass*, taken whole. It arrived with the object, the way कैमरा arrived with the camera, and Hindi gave it a vowel in the middle so that a Hindi mouth could get through the *gl-* at the front.
 
 Watch what happened to the meaning on the way in. A Hindi गिलास is a drinking tumbler and is very often made of steel, so the English word for the material now names an object in a language where the object is usually not made of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिलास** (*gilās*) is a loan from English *glass*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

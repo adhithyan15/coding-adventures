@@ -11,7 +11,8 @@ romanization: "kālu"
 concept_tag: TE-NOUN-LEG
 prerequisites: [TE-C46-book]
 sounds: []
-roots: []
+roots: [dravidian-kal-leg]
+etymology_hook: "kālu: native Dravidian, one word with Tamil kāl and Kannada kāl (DEDR 1479)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Proto-Dravidian **\*kāl**, and every sister kept it nearly whole: Tamil கா�
 Set that beside చెయ్యి, the hand-word, which wore down so far that its family resemblance is hard to see at all. Two body-words of the same age; one held its shape and one did not, and nothing about the meaning predicts which.
 
 కాలు covers the whole limb, foot and leg together. When precision is wanted, Sanskrit's పాదం names the foot alone.
+
+DEDR 1479 lists Telugu *kālu*, "leg, foot", with Tamil *kāl* and Kannada *kāl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

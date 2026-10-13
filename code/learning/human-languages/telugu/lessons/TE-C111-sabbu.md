@@ -14,7 +14,8 @@ romanization: "sabbu"
 concept_tag: TE-THINGS111-SABBU
 prerequisites: [TE-C110-kattera, TE-C111-duvvena]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sabbu: usually traced to Arabic ṣābūn 'soap', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C111-duvvena]
 <!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **సబ్బు** — *sabbu* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సబ్బు** (*sabbu*) is usually traced to Arabic *ṣābūn*, "soap", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pīnā / pītā / khānā / khātā"
 concept_tag: VERB-DRINK
 prerequisites: [HI-C73-waiter, HI-C37-khaana]
 sounds: []
-roots: []
+roots: [sanskrit-pibati, sanskrit-khadati]
+etymology_hook: "pīnā ← Sanskrit pibati 'drinks' (CDIAL 8209); khānā ← khādati 'eats' (CDIAL 3865)"
 duration:
   max_seconds: 240
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a cotton rug, then the Hindi for a carpet.
 You'll want to know: चिटकनी.
 चिटकनी — ciṭkanī — "a latch".
 
+The word, taken apart.
+चिटकनी (ciṭkanī) is inherited: CDIAL lists it, as chiṭkanī, "bolt", under a reconstructed chaṭa, "stick, cane", in the variant chiṭṭa (CDIAL 4966). A bolt is a small stick across the door.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a carpet, then the Hindi for a latch.
 
 You'll want to know: आरी.
 आरी — ārī — "a saw".
+
+The word, taken apart.
+आरी (ārī) is listed by CDIAL in the sense "awl", under Sanskrit ārā, "shoemaker's awl" (CDIAL 1313). The sense "saw" is not recorded there.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a latch, then the Hindi for a saw.
 You'll want to know: कुदाल.
 कुदाल — kudāl — "a pickaxe, a hoe".
 
+The word, taken apart.
+कुदाल (kudāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kuddāla, "a kind of spade or mattock" (CDIAL 3286). CDIAL takes the Sanskrit word, probably, from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a saw, then the Hindi for a pickaxe.
 You'll want to know: फावड़ा.
 फावड़ा — phāvṛā — "a spade".
 
+The word, taken apart.
+फावड़ा (phāvṛā) is listed by CDIAL under Sanskrit sphya, "a flat wooden blade", but CDIAL calls the connexion possible yet obscure (CDIAL 13839).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a pickaxe, then the Hindi for a spade.
 
 You'll want to know: गद्दा.
 गद्दा — gaddā — "a mattress".
+
+The word, taken apart.
+गद्दा (gaddā) goes back to a reconstructed garda, "seat" (CDIAL 4053). CDIAL marks the Hindi form as taken over from Punjabi.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "upmā"
 concept_tag: TE-VASTUVU262-UPMA
 prerequisites: [TE-C262-rotte, TE-C262-capati]
 sounds: []
-roots: []
+roots: [telugu-upma-dish]
+etymology_hook: "upmā: origin uncertain; DEDR and CDIAL do not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C262-capati]
 <!-- hl-knowledge: introduces=[TE-LEX-C262-VASTUVU262-03]; assesses=[] -->
 
 **ఉప్మా** — *upmā* — "upma".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ఉప్మా** (*upmā*) is uncertain; DEDR and CDIAL do not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

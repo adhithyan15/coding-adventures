@@ -14,7 +14,8 @@ romanization: "vaṇuku"
 concept_tag: TE-VERB-VANUKU
 prerequisites: [TE-C201-paduko, TE-C201-avalincu]
 sounds: []
-roots: []
+roots: [dravidian-balaku-tremble]
+etymology_hook: "vaṇuku: native Dravidian; DEDR 5307 lists vaṇaku 'to tremble' with Kannada baḷaku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C201-avalincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C201-KRIYA201-04]; assesses=[] -->
 
 **వణుకు** — *vaṇuku* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వణుకు** (*vaṇuku*) is native Dravidian. DEDR 5307 lists a nasalised *vaṇaku*, "to tremble, shiver", with Kannada *baḷaku*, "to tremble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

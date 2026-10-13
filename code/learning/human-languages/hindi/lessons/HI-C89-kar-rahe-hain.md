@@ -14,9 +14,10 @@ romanization: "kar rahe haiṁ"
 concept_tag: HI-CONTINUOUS-PLURAL
 prerequisites: [HI-C89-kar-raha-hai, HI-C86-ham, HI-C85-tum-ho]
 sounds: []
-roots: []
+roots: [rah-remain, kr-do]
+etymology_hook: "rahe: from rahnā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
-  max_seconds: 240
+  max_seconds: 255
 requires:
   knowledge: [HI-LEX-C89-CONT-03, HI-LEX-C89-CONT-01, HI-LEX-C86-PRON-01, HI-LEX-C85-IMP-03, HI-CONCEPT-C02-AAPTUM-01]
 introduces:
@@ -61,6 +62,8 @@ copula. Nothing here is new — it is the two dials you already have, both turne
 one notch.
 
 At the **तुम** level the last word is **हो**: *तुम क्या कर रहे हो?*
+
+**रहे** is a form of **रहना**, from a reconstructed *\*rahati*, "remains" (CDIAL 10666).
 
 ## Grammar Lens: the question a listening paper asks
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-04, HI-CONCEPT-C02-AAPTUM-01, HI-LEX-C85-IMP-03] -->

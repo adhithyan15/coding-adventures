@@ -14,7 +14,8 @@ romanization: "kamīz"
 concept_tag: HI-THINGS135-KAMIZ
 prerequisites: [HI-C135-juta, HI-C135-moza]
 sounds: []
-roots: []
+roots: [arabic-qamis]
+etymology_hook: "kamīz ← Arabic qamīṣ 'shirt', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C135-moza]
 <!-- hl-knowledge: introduces=[HI-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **कमीज़** — *kamīz* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमीज़** (*kamīz*) is a loan from Arabic *qamīṣ*, "shirt", which reached Hindi through Persian. Its Arabic root is *q-m-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

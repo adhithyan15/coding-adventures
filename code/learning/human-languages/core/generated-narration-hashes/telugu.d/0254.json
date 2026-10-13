@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 254,
-  "sourceHash": "fnv1a64:fec42787f3e6a102",
+  "sourceHash": "fnv1a64:82837e714965c368",
   "lessonIds": [
     "TE-C254-rastram",
     "TE-C254-prantam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch254.txt",
   "json": "telugu/narration/ch254.json",
-  "textHash": "fnv1a64:759ad1f469fe84f6",
-  "jsonHash": "fnv1a64:7961d90fcc231ba8",
+  "textHash": "fnv1a64:1ff2acc1e22a664a",
+  "jsonHash": "fnv1a64:f2ff5ade4995fbb6",
   "findings": []
 }

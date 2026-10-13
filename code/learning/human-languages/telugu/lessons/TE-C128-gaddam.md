@@ -14,7 +14,8 @@ romanization: "gaḍḍaṁ"
 concept_tag: TE-THINGS128-GADDAM
 prerequisites: [TE-C127-kanubomma, TE-C127-bugga]
 sounds: []
-roots: []
+roots: [dravidian-gadda-beard]
+etymology_hook: "gaḍḍaṁ: native Dravidian, one word with Kannada gaḍḍa 'beard, chin' (DEDR 1156)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C127-bugga]
 <!-- hl-knowledge: introduces=[TE-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **గడ్డం** — *gaḍḍaṁ* — "the chin; a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడ్డం** (*gaḍḍaṁ*) is native Dravidian, one word with Kannada *gaḍḍa*, "the beard about the chin, the chin" (DEDR 1156). DEDR notes that Tamil *keṭṭam*, "beard", is a loan from Telugu, and compares Prakrit *khaḍḍa*, "beard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

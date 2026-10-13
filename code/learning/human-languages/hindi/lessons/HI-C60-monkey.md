@@ -14,7 +14,8 @@ romanization: "bandar"
 concept_tag: HI-NOUN-MONKEY
 prerequisites: [HI-W12-da-retroflex]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "bandar ← Sanskrit vānara 'monkey', which CDIAL derives from vana- 'forest' (CDIAL 11515)"
 duration:
   max_seconds: 210
 requires:

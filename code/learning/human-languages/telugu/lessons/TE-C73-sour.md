@@ -11,7 +11,8 @@ romanization: "pulupu"
 concept_tag: TE-NOUN-SOUR
 prerequisites: [TE-C73-sweet]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour]
+etymology_hook: "pulupu: native Dravidian, one word with Tamil puḷi 'sourness' (DEDR 4322)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C73-sweet]
 It is inherited and it is not a complaint. A Telugu meal wants పులుపు in it on purpose; the everyday tamarind stew is built around exactly this taste.
 
 Said of a face it means what it means in English, and it is said most often of children who have just been told no.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పులుపు** (*pulupu*) is native Dravidian, one word with Tamil *puḷi* and Malayalam *puḷikka*, "to be sour" (DEDR 4322), which lists *pulupu*, "sourness", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

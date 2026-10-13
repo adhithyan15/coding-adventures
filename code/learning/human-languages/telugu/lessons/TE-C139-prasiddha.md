@@ -14,7 +14,8 @@ romanization: "prasiddha"
 concept_tag: TE-QUAL139-PRASIDDHA
 prerequisites: [TE-C139-peda, TE-C139-musali]
 sounds: []
-roots: []
+roots: [sanskrit-prasiddha]
+etymology_hook: "prasiddha ← Sanskrit prasiddha 'celebrated', a tatsama (CDIAL 8842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C139-musali]
 <!-- hl-knowledge: introduces=[TE-LEX-C139-QUAL139-05]; assesses=[] -->
 
 **ప్రసిద్ధ** — *prasiddha* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రసిద్ధ** (*prasiddha*) is Sanskrit *prasiddha*, "celebrated", taken over whole as a learned loan, a tatsama (CDIAL 8842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

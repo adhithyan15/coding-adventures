@@ -11,7 +11,8 @@ romanization: "okka nimiṣaṁ"
 concept_tag: TE-REPAIR-ONE-MINUTE
 prerequisites: [TE-C86-oncemore, TE-C86-loudly]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-nimesha]
+etymology_hook: "okka nimiṣaṁ: native okka 'a single' (DEDR 990) + Sanskrit nimiṣa 'a wink, a moment' (CDIAL 7243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C86-loudly]
 
 **నిమిషం** is "a minute", and **ఒక్క** is "a single one", a close relative of **ఒకటి**, the "one"
 you count with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒక్క నిమిషం** (*okka nimiṣaṁ*) is native *okka*, "a single", from the "one" of DEDR 990, and Sanskrit *nimiṣa*, "a wink, a moment", which CDIAL 7243 lists as *nimeṣa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

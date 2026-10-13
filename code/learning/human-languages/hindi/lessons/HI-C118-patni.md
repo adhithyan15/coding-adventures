@@ -14,7 +14,8 @@ romanization: "patnī"
 concept_tag: HI-SPOUSE-WIFE
 prerequisites: [HI-C118-larki, HI-C118-pati]
 sounds: []
-roots: []
+roots: [sanskrit-patni]
+etymology_hook: "patnī ← Sanskrit patnī 'mistress, wife', a tatsama (CDIAL 7742)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C118-pati]
 **पत्नी** (*patnī*) — "a wife".
 
 It is built on **पति**, with the **-ई** that marks a woman. **मेरी पत्नी** — "my wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्नी** (*patnī*) is Sanskrit *patnī*, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742). It is the feminine of *pati*, "master, husband".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

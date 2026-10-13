@@ -15,6 +15,7 @@ concept_tag: HI-QUAL238-GUNGUNA
 prerequisites: [HI-C237-basi, HI-C238-kacca]
 sounds: []
 roots: []
+etymology_hook: "gungunā 'lukewarm': origin uncertain; CDIAL lists only gungun 'murmur' (4013)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C238-kacca]
 <!-- hl-knowledge: introduces=[HI-LEX-C238-QUAL238-02]; assesses=[] -->
 
 **गुनगुना** — *gungunā* — "lukewarm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गुनगुना** (*gungunā*) is uncertain. CDIAL lists a *gungun* only in the sense "murmur" (CDIAL 4013).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

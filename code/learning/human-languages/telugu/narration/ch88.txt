@@ -13,6 +13,9 @@ You'll want to know: పిల్లలు.
 పిల్లలు (pillalu) — "children".
 మీకు పిల్లలు (pillalu) ఉన్నారా? — "do you have children?", literally "to you, are there children?". The -లు at the end is the plural you met in your very first lesson.
 
+The word, taken apart.
+పిల్లలు (pillalu) is the plural of pilla, "child", which is native Dravidian, one word with Tamil piḷḷai and Kannada pilla (DEDR 4198). DEDR compares Sanskrit pillika, "chicken", and Pali pillaka, "young of an animal, child".
+
 What you've built.
 The question that follows a name in almost every first conversation.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for really, then the Telugu for children.
 You'll want to know: అబ్బాయి.
 అబ్బాయి (abbāyi) — "a boy", and in a family, "a son".
 మా అబ్బాయి (abbāyi) — "our boy", which is how a parent says "my son" out loud.
+
+The word, taken apart.
+The origin of అబ్బాయి (abbāyi) is uncertain. DEDR does not list it, though it lists its partner ammāyi, "girl", under amma, "mother" (DEDR 183).
 
 What you've built.
 A word for a boy that doubles as the everyday word for a son.
@@ -73,6 +79,9 @@ You'll want to know: అమ్మాయి.
 అమ్మాయి (ammāyi) — "a girl", and in a family, "a daughter".
 It is built like అబ్బాయి (abbāyi), and it opens on the same sound as అమ్మ, "mother". మా అమ్మాయి (ammāyi) — "our girl", "my daughter".
 
+The word, taken apart.
+అమ్మాయి (ammāyi) is native Dravidian. DEDR 183 lists ammāyi, "girl", itself, under amma, "mother", with Tamil ammā. DEDR compares Sanskrit ambā, "mother" (CDIAL 574).
+
 What you've built.
 Boy and girl as a pair, each also a word for a child of the family.
 
@@ -103,6 +112,9 @@ You'll want to know: మనిషి.
 మనిషి (maniṣi) — "a person, a human being".
 మంచి మనిషి (maniṣi) — "a good person", with the మంచి you already have. The plural changes shape: మనుషులు (manuṣulu), "people".
 
+The word, taken apart.
+మనిషి (maniṣi) comes from Sanskrit manuṣya, "human being, man", reshaped to Telugu sounds: a tadbhava (CDIAL 9828).
+
 What you've built.
 A word for anyone at all, and your first plural that changes its stem.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for a girl, then the Telugu for a person.
 You'll want to know: బంధువు.
 బంధువు (bandhuvu) — "a relative".
 అతను మా బంధువు (bandhuvu) — "he is our relative", with no word for is, the same way నా పేరు... needs none.
+
+The word, taken apart.
+బంధువు (bandhuvu) is Sanskrit bandhu, "kinsman", taken over whole as a learned loan, a tatsama, with the Telugu ending -vu (CDIAL 9144).
 
 What you've built.
 Children, a boy, a girl, a person, a relative: the people an introduction reaches for.

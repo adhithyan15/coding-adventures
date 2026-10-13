@@ -14,7 +14,8 @@ romanization: "zarūrī"
 concept_tag: HI-QUAL213-ZARURI
 prerequisites: [HI-C212-sasta, HI-C212-kathin]
 sounds: []
-roots: []
+roots: [arabic-daruri]
+etymology_hook: "zarūrī ← Arabic ḍarūrī 'necessary', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C212-kathin]
 <!-- hl-knowledge: introduces=[HI-LEX-C213-QUAL213-01]; assesses=[] -->
 
 **ज़रूरी** — *zarūrī* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज़रूरी** (*zarūrī*) is a loan from Arabic *ḍarūrī*, "necessary", which reached Hindi through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

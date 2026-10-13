@@ -12,6 +12,9 @@ Before the new one: say the Telugu for hollow, then the Telugu for dim.
 You'll want to know: శనగలు.
 శనగలు — śanagalu — "chickpeas".
 
+The word, taken apart.
+శనగలు (śanagalu) matches Sanskrit caṇaka, "chickpea" (CDIAL 4579), with the Telugu plural ending -lu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for dim, then the Telugu for chickpeas.
 
 You'll want to know: ఆవాలు.
 ఆవాలు — āvālu — "mustard seeds".
+
+The word, taken apart.
+DEDR 921 lists ఆవాలు (āvālu), "mustard seeds", with a query, beside Tamil aiyavi, "mustard", and points to a possible link with Sanskrit sarṣapa, "mustard seed" (CDIAL 13281).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for chickpeas, then the Telugu for mustard se
 You'll want to know: కొత్తిమీర.
 కొత్తిమీర — kottimīra — "coriander leaves".
 
+The word, taken apart.
+కొత్తిమీర (kottimīra) probably comes from the northern coriander word, Hindi kothmīr, Oriya kothimiri, which CDIAL 3380 traces to Sanskrit kustumbarī, "coriander"; CDIAL calls that word non-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for mustard seeds, then the Telugu for corian
 You'll want to know: కరివేపాకు.
 కరివేపాకు — karivēpāku — "curry leaves".
 
+The word, taken apart.
+కరివేపాకు (karivēpāku) is kari, "curry", with native vēpa, "neem" (DEDR 5531), and āku, "leaf" (DEDR 335): "curry-neem leaf".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for coriander leaves, then the Telugu for cur
 
 You'll want to know: మజ్జిగ.
 మజ్జిగ — majjiga — "buttermilk".
+
+The word, taken apart.
+DEDR 4630 lists మజ్జిగ (majjiga), "buttermilk", with Tamil maccikai and Kannada majjige, and asks whether the word came from Indo-Aryan, comparing Prakrit majjiā, "a curd dish".
 
 What you've built.
 One more word for this chapter.

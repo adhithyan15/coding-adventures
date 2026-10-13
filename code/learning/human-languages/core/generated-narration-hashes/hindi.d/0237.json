@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 237,
-  "sourceHash": "fnv1a64:25b15b4b684eaf9e",
+  "sourceHash": "fnv1a64:5efee2c1288e0654",
   "lessonIds": [
     "HI-C237-caukor",
     "HI-C237-tikona",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch237.txt",
   "json": "hindi/narration/ch237.json",
-  "textHash": "fnv1a64:0f1a54040b74857a",
-  "jsonHash": "fnv1a64:8e15bc4129e79a98",
+  "textHash": "fnv1a64:baa17989b39ce08b",
+  "jsonHash": "fnv1a64:51c2021616c334db",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "nāṭu"
 concept_tag: TE-VERB-NATU
 prerequisites: [TE-C281-premincu, TE-C282-meyu]
 sounds: []
-roots: []
+roots: [dravidian-natu-plant]
+etymology_hook: "nāṭu: native Dravidian; DEDR 3583 lists nāṭu 'to plant' with Tamil naṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C282-meyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C282-KRIYA282-02]; assesses=[] -->
 
 **నాటు** — *nāṭu* — "to plant (a sapling)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాటు** (*nāṭu*) is native Dravidian. DEDR 3583 lists *nāṭu*, "to plant, fix", with Tamil *naṭu* and Kannada *naḍu*, "to plant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

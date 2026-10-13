@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 78,
-  "sourceHash": "fnv1a64:402f0ab67bd60025",
+  "sourceHash": "fnv1a64:8cd4ceea8b3cfe38",
   "lessonIds": [
     "TE-C78-isit",
     "TE-C78-doyouknow",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch78.txt",
   "json": "telugu/narration/ch78.json",
-  "textHash": "fnv1a64:6d92bb18331bd208",
-  "jsonHash": "fnv1a64:e512b8aedebcc3e6",
+  "textHash": "fnv1a64:cf3d733b4ead75e2",
+  "jsonHash": "fnv1a64:fcb88874ce0314be",
   "findings": []
 }

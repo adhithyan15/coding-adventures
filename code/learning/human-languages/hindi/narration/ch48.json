@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ec35b6257d637a1",
+  "sourceHash": "fnv1a64:16416cdd77e12bcb",
   "lessons": [
     {
       "id": "HI-C48-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0f1d3d4e68f2341",
+      "sourceHash": "fnv1a64:ee407b88495955de",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a26b10dc9e0298d5",
+      "sourceHash": "fnv1a64:184888ac36d3131c",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f7d0f3c403b0d2",
+      "sourceHash": "fnv1a64:1b72fdae5c55e8a9",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0650e6fdbeb816a",
+      "sourceHash": "fnv1a64:de2713b56aeed8dd",
       "notice": null,
       "blocks": [
         {
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3c6b24455a2b84d",
+      "sourceHash": "fnv1a64:39ecc7ee9c03f6ab",
       "notice": null,
       "blocks": [
         {

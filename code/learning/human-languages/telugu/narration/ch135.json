@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Black pepper, Cumin, Tamarind, Lemon, Grapes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b88d0e0cbb9410e",
+  "sourceHash": "fnv1a64:6f15fa9d91f8162d",
   "lessons": [
     {
       "id": "TE-C135-miriyalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df9da6a1be3fc888",
+      "sourceHash": "fnv1a64:2f5924686e6f1fd8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మిరియాలు (miriyālu) comes from Sanskrit marica, \"peppercorn\", reshaped to Telugu sounds: a tadbhava (CDIAL 9875). CDIAL itself takes the Sanskrit word from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dca636ed4d08d9d2",
+      "sourceHash": "fnv1a64:caa3f1be8078b86a",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జీలకర్ర (jīlakarra) is usually traced to Sanskrit jīraka, \"cumin seed\" (CDIAL 5234), reshaped to Telugu sounds."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81c19a72719ae657",
+      "sourceHash": "fnv1a64:1b3d0e3f9517a818",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చింతపండు (cintapaṇḍu) is native Dravidian: cinta, \"tamarind\", one word with Tamil cintam (DEDR 2529), and paṇḍu, \"fruit\" (DEDR 4004). DEDR compares Sanskrit ciñcā, \"tamarind\", which CDIAL 4792 traces to Munda, with the first, and Sanskrit phala, \"fruit\" (CDIAL 9051), with the second."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:775ddde8b95cde4e",
+      "sourceHash": "fnv1a64:b2df2f4283983633",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిమ్మకాయ (nimmakāya) is nimma, from Sanskrit nimbū, \"lime\" (CDIAL 7247), which CDIAL takes from an Austroasiatic language, and native kāya, \"unripe fruit\" (DEDR 1459). DEDR compares the Indo-Aryan kacca, \"raw\" (CDIAL 2613), with kāya."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e69261acd8204aa6",
+      "sourceHash": "fnv1a64:e3fee3cba48c3cfc",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ద్రాక్ష (drākṣa) is Sanskrit drākṣā, \"vine, grape\", taken over whole as a learned loan, a tatsama, with the final -ā shortened (CDIAL 6628)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

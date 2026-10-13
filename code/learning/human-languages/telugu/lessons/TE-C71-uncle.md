@@ -11,7 +11,8 @@ romanization: "māma"
 concept_tag: TE-NOUN-UNCLE
 prerequisites: [TE-C70-spider]
 sounds: []
-roots: []
+roots: [dravidian-maama-uncle]
+etymology_hook: "māma: Dravidian, one word with Tamil māmaṉ (DEDR 4813); CDIAL 10055 calls Sanskrit māma a nursery word"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C70-spider]
 That is the whole of it: a man's sister's daughter was the expected match for his son, so the uncle a child grew up with became the father-in-law they married into.
 
 Asking after a మామ's ఆరోగ్యం is the first thing said after నమస్కారం in a house you have married into.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మామ** (*māma*) is a Dravidian word, one with Tamil *māmaṉ* and Kannada *māma*, "maternal uncle, father-in-law" (DEDR 4813). DEDR compares Sanskrit *māma*, "uncle", and CDIAL 10055 calls that a nursery word with similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

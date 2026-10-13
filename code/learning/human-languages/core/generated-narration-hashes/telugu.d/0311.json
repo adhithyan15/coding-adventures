@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 311,
-  "sourceHash": "fnv1a64:7795d95aedf0bcd7",
+  "sourceHash": "fnv1a64:52b24f30f1ad98e5",
   "lessonIds": [
     "TE-C311-kalasala",
     "TE-C311-visvavidyalayam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch311.txt",
   "json": "telugu/narration/ch311.json",
-  "textHash": "fnv1a64:286c5a9e70b40736",
-  "jsonHash": "fnv1a64:189f86cb0e69ca4e",
+  "textHash": "fnv1a64:4bb0fdc30c163a3f",
+  "jsonHash": "fnv1a64:9db337724d50e527",
   "findings": []
 }

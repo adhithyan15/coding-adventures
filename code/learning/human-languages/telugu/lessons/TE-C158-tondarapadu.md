@@ -14,7 +14,8 @@ romanization: "tondarapaḍu"
 concept_tag: TE-VERB-TONDARAPADU
 prerequisites: [TE-C157-kalupu, TE-C157-rubbu]
 sounds: []
-roots: []
+roots: [dravidian-tontaravu-trouble, dravidian-padu-suffer]
+etymology_hook: "tondarapaḍu: native tondara 'haste, trouble' (DEDR 3506) + paḍu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C157-rubbu]
 <!-- hl-knowledge: introduces=[TE-LEX-C158-KRIYA158-01]; assesses=[] -->
 
 **తొందరపడు** — *tondarapaḍu* — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తొందరపడు** (*tondarapaḍu*) is native Dravidian: *tondara*, "haste, trouble", one word with Kannada *tondare*, "trouble" (DEDR 3506), and *paḍu*, "to feel, undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "ākāśaṁ"
 concept_tag: TE-NOUN-SKY
 prerequisites: [TE-C52-garland]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāśaṁ ← Sanskrit ākāśa 'sky' (CDIAL 1008), with the Telugu ending -ṁ"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C52-garland]
 Telugu also holds an inherited word for the same overhead space, నింగి, which owes Sanskrit nothing. The two sit side by side: ఆకాశం does the ordinary work and turns up in newspapers and weather talk, while నింగి keeps to songs and poetry. A borrowed word taking the daily shift and leaving the old one the ceremony is an arrangement you have watched before, with the door.
 
 *ākāśa* travelled, too. Traders carried it east, and Malay and Indonesian still say *angkasa* for the sky.
+
+CDIAL 1008 lists Sanskrit *ākāśa*, "sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

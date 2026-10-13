@@ -14,7 +14,8 @@ romanization: "katha"
 concept_tag: TE-PANI312-KATHA
 prerequisites: [TE-C311-anubhavam, TE-C311-khata]
 sounds: []
-roots: []
+roots: [sanskrit-katha]
+etymology_hook: "katha ← Sanskrit kathā 'conversation, speech; story', a tatsama (CDIAL 2704)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C311-khata]
 <!-- hl-knowledge: introduces=[TE-LEX-C312-PANI312-01]; assesses=[] -->
 
 **కథ** — *katha* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కథ** (*katha*) is Sanskrit *kathā*, "conversation, speech; story", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 2704).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

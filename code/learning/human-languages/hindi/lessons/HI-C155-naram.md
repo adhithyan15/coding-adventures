@@ -14,7 +14,8 @@ romanization: "naram"
 concept_tag: HI-QUAL155-NARAM
 prerequisites: [HI-C154-bhari, HI-C154-halka, HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat, HI-C80-sundar-badsurat]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "naram: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C154-halka]
 <!-- hl-knowledge: introduces=[HI-LEX-C155-QUAL155-01]; assesses=[] -->
 
 **नरम** — *naram* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नरम** (*naram*) is a loan, usually traced to Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

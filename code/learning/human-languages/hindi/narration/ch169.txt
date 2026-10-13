@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to drive, then the Hindi for to leave.
 You'll want to know: जोड़ना.
 जोड़ना — joṛnā — "to join, to add".
 
+The word, taken apart.
+जोड़ना (joṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from yuṭati, "is joined", a form CDIAL reconstructs from its descendants (CDIAL 10496). CDIAL calls its link with Sanskrit yuj-, "to join", obscure.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to leave, then the Hindi for to join.
 
 You'll want to know: घटाना.
 घटाना — ghaṭānā — "to reduce, to subtract".
+
+The word, taken apart.
+घटाना (ghaṭānā) is the causing form of ghaṭnā, "to decrease", which CDIAL lists under a reconstructed ghaṭṭati, "decreases, is wanting" (CDIAL 4415).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to join, then the Hindi for to reduce.
 You'll want to know: बढ़ाना.
 बढ़ाना — baṛhānā — "to increase, to raise".
 
+The word, taken apart.
+बढ़ाना (baṛhānā) is the causing form of baṛhnā, "to increase, grow", which comes from Sanskrit vardhate, "grows, increases" (CDIAL 11376).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to reduce, then the Hindi for to increase.
 You'll want to know: बचाना.
 बचाना — bacānā — "to save, to rescue".
 
+The word, taken apart.
+बचाना (bacānā) is the causing form of bacnā, "to escape": to save is to make someone escape. CDIAL lists both under Sanskrit vañcati, "moves", whose causing form meant "escapes from" (CDIAL 11208).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to increase, then the Hindi for to save.
 
 You'll want to know: बचना.
 बचना — bacnā — "to escape, to be saved".
+
+The word, taken apart.
+बचना (bacnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vañcati, "moves; escapes from" (CDIAL 11208).
 
 What you've built.
 One more word for this chapter.

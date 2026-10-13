@@ -14,7 +14,8 @@ romanization: "bukhār"
 concept_tag: HI-NOUN-FEVER
 prerequisites: [HI-S141-nuqta-borrowed, HI-C63-sleep, HI-C61-griddle, HI-C62-clay]
 sounds: []
-roots: []
+roots: [arabic-bukhar]
+etymology_hook: "bukhār ← Arabic bukhār 'vapour, steam', through Persian (Lane, root b-kh-r)"
 duration:
   max_seconds: 210
 requires:

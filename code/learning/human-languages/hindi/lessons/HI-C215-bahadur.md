@@ -14,7 +14,8 @@ romanization: "bahādur"
 concept_tag: HI-QUAL215-BAHADUR
 prerequisites: [HI-C215-buddhiman, HI-C215-murkh]
 sounds: []
-roots: []
+roots: [turkish-bahadur]
+etymology_hook: "bahādur: usually traced, through Persian, to a Turkic or Mongol word for 'hero'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C215-murkh]
 <!-- hl-knowledge: introduces=[HI-LEX-C215-QUAL215-04]; assesses=[] -->
 
 **बहादुर** — *bahādur* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहादुर** (*bahādur*) is usually traced, through Persian, to a Turkic or Mongol word for "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

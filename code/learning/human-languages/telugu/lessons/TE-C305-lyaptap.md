@@ -14,7 +14,8 @@ romanization: "lyāpṭāp"
 concept_tag: TE-VASTUVU305-LYAPTAP
 prerequisites: [TE-C305-yap, TE-C305-kibordu]
 sounds: []
-roots: []
+roots: [english-laptop]
+etymology_hook: "lyāpṭāp ← English laptop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C305-kibordu]
 <!-- hl-knowledge: introduces=[TE-LEX-C305-VASTUVU305-03]; assesses=[] -->
 
 **ల్యాప్టాప్** — *lyāpṭāp* — "a laptop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ల్యాప్టాప్** (*lyāpṭāp*) is a loan from English *laptop*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

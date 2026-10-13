@@ -14,7 +14,8 @@ romanization: "masjid"
 concept_tag: HI-THINGS152-MASJID
 prerequisites: [HI-C152-pustakalay, HI-C152-mandir]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "masjid ← Arabic masjid 'place of prostration, mosque', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C152-mandir]
 <!-- hl-knowledge: introduces=[HI-LEX-C152-THINGS152-05]; assesses=[] -->
 
 **मस्जिद** — *masjid* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मस्जिद** (*masjid*) is a loan from Arabic *masjid*, "place of prostration, mosque", which reached Hindi through Persian. Its Arabic root is *s-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

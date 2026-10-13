@@ -14,7 +14,8 @@ romanization: "ārām se"
 concept_tag: HI-LATE-EASY
 prerequisites: [HI-C122-chhutti, HI-C122-derhogai]
 sounds: []
-roots: []
+roots: [persian-aram]
+etymology_hook: "ārām usually traced to Persian ārām 'rest'; se inherited (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C122-derhogai]
 **आराम से** (*ārām se*) — "comfortably", and as a parting, "take it easy".
 
 **आराम** is the rest you know, with **से**, "with". **आराम से बैठिए** — "sit comfortably"; at the door, **आराम से** alone is "take it easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आराम से** (*ārām se*) is "with ease". *ārām* is usually traced to Persian *ārām*, "rest", and *se*, "with", is inherited (CDIAL 13310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

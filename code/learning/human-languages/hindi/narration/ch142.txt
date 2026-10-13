@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a chilli, then the Hindi for flour.
 You'll want to know: समोसा.
 समोसा — samosā — "a samosa".
 
+The word, taken apart.
+समोसा (samosā) is a loan, usually traced to Persian sanbosa, "a fried pastry".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for flour, then the Hindi for a samosa.
 
 You'll want to know: लस्सी.
 लस्सी — lassī — "lassi, a yoghurt drink".
+
+The word, taken apart.
+लस्सी (lassī) goes back to a reconstructed lassī, "buttermilk", which CDIAL builds from Punjabi and Lahnda lassī and Sindhi lasī (CDIAL 10998). It lists no Hindi form, and it gives no older source.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a samosa, then the Hindi for lassi.
 You'll want to know: जूस.
 जूस — jūs — "juice".
 
+The word, taken apart.
+जूस (jūs) is a loan from English juice. It is a different word from Hindi jūs, "broth", from Sanskrit yūṣa (CDIAL 10521).
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Hindi for lassi, then the Hindi for juice.
 
 You'll want to know: पहाड़.
 पहाड़ — pahāṛ — "a mountain".
+
+The word, taken apart.
+पहाड़ (pahāṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from pāhāḍa, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL connects it, probably, with Sanskrit pāṣāṇa, "stone".
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Name the six seasons, not four: वसंत, ग्रीष्म, वर्�
 
 You'll want to know: नदी.
 नदी — nadī — "a river".
+
+The word, taken apart.
+नदी (nadī) is Sanskrit nadī, "river", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

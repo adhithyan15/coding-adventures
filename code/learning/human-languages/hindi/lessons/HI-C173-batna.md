@@ -14,7 +14,8 @@ romanization: "bā̃ṭnā"
 concept_tag: HI-VERB-BATNA
 prerequisites: [HI-C173-dhakna, HI-C173-bharna]
 sounds: []
-roots: []
+roots: [sanskrit-vantati]
+etymology_hook: "bāṁṭnā ← Sanskrit vaṇṭati 'shares', a tadbhava (CDIAL 11238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C173-bharna]
 <!-- hl-knowledge: introduces=[HI-LEX-C173-ACT173-03]; assesses=[] -->
 
 **बाँटना** — *bā̃ṭnā* — "to share, to divide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाँटना** (*bāṁṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaṇṭati*, "shares" (CDIAL 11238). The Sanskrit verb is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

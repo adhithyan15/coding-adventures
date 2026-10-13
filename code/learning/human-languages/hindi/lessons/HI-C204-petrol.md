@@ -14,7 +14,8 @@ romanization: "peṭrol"
 concept_tag: HI-THG204-PETROL
 prerequisites: [HI-C204-riksa, HI-C204-havaijahaz]
 sounds: []
-roots: []
+roots: [english-petrol]
+etymology_hook: "peṭrol ← English petrol"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C204-havaijahaz]
 <!-- hl-knowledge: introduces=[HI-LEX-C204-THG204-04]; assesses=[] -->
 
 **पेट्रोल** — *peṭrol* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेट्रोल** (*peṭrol*) is a loan from English *petrol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

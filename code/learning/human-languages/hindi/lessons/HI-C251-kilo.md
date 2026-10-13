@@ -14,7 +14,8 @@ romanization: "kilo"
 concept_tag: HI-THG251-KILO
 prerequisites: [HI-C251-thok, HI-C251-tarazu]
 sounds: []
-roots: []
+roots: [english-kilo]
+etymology_hook: "kilo ← English kilo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C251-tarazu]
 <!-- hl-knowledge: introduces=[HI-LEX-C251-THG251-03]; assesses=[] -->
 
 **किलो** — *kilo* — "a kilo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किलो** (*kilo*) is a loan from English *kilo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

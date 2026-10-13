@@ -14,7 +14,8 @@ romanization: "kholnā"
 concept_tag: HI-VERB-KHOLNA
 prerequisites: [HI-C160-bhejna, HI-C160-lana]
 sounds: []
-roots: []
+roots: [indo-aryan-kholl]
+etymology_hook: "kholnā ← *kholl 'to open', a reconstructed form; a tadbhava (CDIAL 3945)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C160-lana]
 <!-- hl-knowledge: introduces=[HI-LEX-C160-ACT160-03]; assesses=[] -->
 
 **खोलना** — *kholnā* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खोलना** (*kholnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kholl*, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

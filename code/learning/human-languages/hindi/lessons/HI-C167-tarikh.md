@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: HI-READ167-TARIKH
 prerequisites: [HI-C166-marammat, HI-C167-kiraya]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārīkh ← Arabic tārīkh 'a dating, a date', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [HI-C167-kiraya]
 
 The note says **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*) The
 fifth, at nine in the morning.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तारीख़** (*tārīkh*) is a loan from Arabic *tārīkh*, "a dating, a date", which reached Hindi through Persian. Its Arabic root is *ʾ-r-kh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

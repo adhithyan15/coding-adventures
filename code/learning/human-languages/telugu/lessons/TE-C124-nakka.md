@@ -14,7 +14,8 @@ romanization: "nakka"
 concept_tag: TE-THINGS124-NAKKA
 prerequisites: [TE-C123-kundelu, TE-C124-jinka]
 sounds: []
-roots: []
+roots: [dravidian-nari-jackal]
+etymology_hook: "nakka: native Dravidian, one word with Tamil nari and Kannada nari (DEDR 3606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C124-jinka]
 <!-- hl-knowledge: introduces=[TE-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **నక్క** — *nakka* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నక్క** (*nakka*) is native Dravidian, one word with Tamil *nari* and Kannada *nari* (DEDR 3606). DEDR lists Telugu *nakka*, "jackal", and Kannada has *nakke* as well.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

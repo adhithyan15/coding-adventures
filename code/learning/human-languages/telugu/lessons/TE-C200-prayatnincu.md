@@ -14,7 +14,8 @@ romanization: "prayatniñcu"
 concept_tag: TE-VERB-PRAYATNINCU
 prerequisites: [TE-C200-podupu-ceyu, TE-C200-encuko]
 sounds: []
-roots: []
+roots: [sanskrit-prayatna]
+etymology_hook: "prayatniñcu: Sanskrit prayatna 'effort' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C200-encuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C200-KRIYA200-03]; assesses=[] -->
 
 **ప్రయత్నించు** — *prayatniñcu* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రయత్నించు** (*prayatniñcu*) is Sanskrit *prayatna*, "effort", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

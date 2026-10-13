@@ -11,7 +11,8 @@ romanization: "daggu"
 concept_tag: TE-NOUN-COUGH
 prerequisites: [TE-C63-sleep]
 sounds: []
-roots: []
+roots: [dravidian-daggu-cough]
+etymology_hook: "daggu: native Dravidian; DEDR 2939 lists it with Kolami dag- 'to cough'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C63-sleep]
 Like ఆకలి and నిద్ర it comes to you rather than from you: నాకు దగ్గు, and nobody needs telling any more than that.
 
 Telugu keeps దగ్గు for the whole thing at once — the single cough, the fit of coughing, and the illness sitting behind both — where English reaches for three phrases. A మంచు morning in the hills fills a house with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దగ్గు** (*daggu*) is native Dravidian. DEDR 2939 lists *daggu*, "to cough; a cough", with Kolami *dag-*, "to cough"; it has no Tamil or Kannada match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

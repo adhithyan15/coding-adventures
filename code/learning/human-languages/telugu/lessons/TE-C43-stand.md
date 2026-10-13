@@ -11,7 +11,8 @@ romanization: "nilcō"
 concept_tag: TE-VERB-STAND
 prerequisites: [TE-C43-sit]
 sounds: []
-roots: []
+roots: [dravidian-nil-stand]
+etymology_hook: "nilcō: native Dravidian, from nilucu 'to stand', one word with Tamil nil and Kannada nillu (DEDR 3675)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C43-sit]
 **నిల్చో** (*nilcō*) — "stand".
 
 Its pair. Telugu, like the other Dravidian languages, makes the bare stem do the work of a command with nothing added.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిల్చో** (*nilcō*) is native Dravidian, the command form of *nilucu*, "to stand", one word with Tamil *nil* and Kannada *nillu* (DEDR 3675).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

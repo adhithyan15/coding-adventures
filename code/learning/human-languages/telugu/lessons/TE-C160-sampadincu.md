@@ -14,7 +14,8 @@ romanization: "sampādiñcu"
 concept_tag: TE-VERB-SAMPADINCU
 prerequisites: [TE-C159-pareyu, TE-C159-pogottuko]
 sounds: []
-roots: []
+roots: [sanskrit-sampadana]
+etymology_hook: "sampādiñcu: Sanskrit sampādana 'procuring' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C159-pogottuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C160-KRIYA160-01]; assesses=[] -->
 
 **సంపాదించు** — *sampādiñcu* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంపాదించు** (*sampādiñcu*) is Sanskrit *sampādana*, "bringing about, procuring", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

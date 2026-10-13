@@ -894,7 +894,11 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
             Arc::clone(&clock),
             sessions,
         )
-        .with_data_plane_dispatcher(data_plane_dispatcher);
+        .with_data_plane_dispatcher(data_plane_dispatcher)
+        // D18S P2.6d-2c: the daemon serves no channel operation, so a host
+        // bound to a channel never launches without a broker to hold its
+        // keys.
+        .refusing_unbrokered_channels();
         // D18S P2.6d-2b: with brokers, each agent's channel operations go to
         // its own broker process instead of the dispatcher.
         if let Some(brokers) = channel_brokers {

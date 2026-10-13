@@ -94,6 +94,10 @@ pub enum ProcessSupervisorError {
     DispatchBusy,
     /// The agent's broker ended or misbehaved; its host was ended with it.
     Broker,
+    /// The host is bound to a channel, and no channel brokers are
+    /// configured to hold its keys (D18S P2.6d-2c). Only refused when
+    /// [`ProcessHostSupervisor::refusing_unbrokered_channels`] is set.
+    ChannelsNeedBroker,
 }
 
 impl Display for ProcessSupervisorError {
@@ -117,6 +121,7 @@ impl Display for ProcessSupervisorError {
             Self::BrokerBusy => "process-supervisor: previous broker still finishing",
             Self::DispatchBusy => "process-supervisor: previous dispatch still finishing",
             Self::Broker => "process-supervisor: broker ended",
+            Self::ChannelsNeedBroker => "process-supervisor: channels need a broker",
         })
     }
 }
@@ -901,6 +906,7 @@ pub struct ProcessHostSupervisor {
     sessions: Box<dyn SessionIdSource>,
     data_plane_dispatcher: Option<Arc<dyn HostDataPlaneDispatcher>>,
     channel_brokers: Option<ChannelBrokers>,
+    refuse_unbrokered_channels: bool,
     request_budget: RequestBudget,
     instances: BTreeMap<String, OwnedInstance>,
 }
@@ -924,6 +930,7 @@ impl ProcessHostSupervisor {
             sessions,
             data_plane_dispatcher: None,
             channel_brokers: None,
+            refuse_unbrokered_channels: false,
             request_budget: RequestBudget::DEFAULT,
             instances: BTreeMap::new(),
         }
@@ -960,6 +967,24 @@ impl ProcessHostSupervisor {
     /// any misbehaviour, ends the host.
     pub fn with_channel_brokers(mut self, brokers: ChannelBrokers) -> Self {
         self.channel_brokers = Some(brokers);
+        self
+    }
+
+    /// Refuse to launch a host bound to any channel unless channel brokers
+    /// are configured (D18S P2.6d-2c), with `ChannelsNeedBroker`.
+    ///
+    /// Channel keys live only in per-agent brokers, and the daemon serves
+    /// no channel operation itself. A host bound to a channel with no
+    /// broker could therefore only fail each channel request; refusing the
+    /// launch fails it once, before any of its code runs. With brokers
+    /// configured, a channel with no key slot already fails the broker's
+    /// launch, so the host never runs in either case.
+    ///
+    /// The orchestrator always sets this. It is opt-in only so that this
+    /// crate's own tests can answer channel requests through the manual
+    /// adapter API ([`Self::pending_data_plane_request`]).
+    pub fn refusing_unbrokered_channels(mut self) -> Self {
+        self.refuse_unbrokered_channels = true;
         self
     }
 
@@ -1079,6 +1104,9 @@ impl ProcessHostSupervisor {
         ProcessSupervisorError,
     > {
         let Some(brokers) = self.channel_brokers.as_ref() else {
+            if self.refuse_unbrokered_channels && !launch_bindings.channels().is_empty() {
+                return Err(ProcessSupervisorError::ChannelsNeedBroker);
+            }
             return Ok(None);
         };
         let binding = self
@@ -2078,6 +2106,10 @@ mod tests {
                 "previous dispatch still finishing",
             ),
             (ProcessSupervisorError::Broker, "broker ended"),
+            (
+                ProcessSupervisorError::ChannelsNeedBroker,
+                "channels need a broker",
+            ),
         ];
         for (error, suffix) in cases {
             let standard: &dyn std::error::Error = &error;

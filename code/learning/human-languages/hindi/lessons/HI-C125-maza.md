@@ -14,7 +14,8 @@ romanization: "mazā"
 concept_tag: HI-CALM-FUN
 prerequisites: [HI-C125-bechain, HI-C125-mannahin]
 sounds: []
-roots: []
+roots: [maza-persian]
+etymology_hook: "mazā: usually traced to Persian maza 'taste, relish'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C125-mannahin]
 **मज़ा** (*mazā*) — "fun, enjoyment".
 
 **मज़ा आया** — "I enjoyed it", literally "fun came". It comes to you, like laughter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मज़ा** (*mazā*) is a loan, usually traced to Persian *maza*, "taste, relish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

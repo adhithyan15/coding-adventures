@@ -14,7 +14,8 @@ romanization: "daśābdaṁ"
 concept_tag: TE-SAMAYAM290-DASABDAM
 prerequisites: [TE-C290-pagalu, TE-C290-puta]
 sounds: []
-roots: []
+roots: [sanskrit-dashabda]
+etymology_hook: "daśābdaṁ ← Sanskrit daśābda 'ten years'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C290-puta]
 <!-- hl-knowledge: introduces=[TE-LEX-C290-SAMAYAM290-03]; assesses=[] -->
 
 **దశాబ్దం** — *daśābdaṁ* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దశాబ్దం** (*daśābdaṁ*) is Sanskrit *daśābda*, "ten years": *daśa*, "ten", and *abda*, "year", with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

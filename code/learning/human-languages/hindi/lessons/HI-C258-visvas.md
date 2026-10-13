@@ -14,7 +14,8 @@ romanization: "viśvās"
 concept_tag: HI-THG258-VISVAS
 prerequisites: [HI-C258-dhiraj, HI-C258-himmat]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasa]
+etymology_hook: "viśvās ← Sanskrit viśvāsa 'trust, confidence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C258-himmat]
 <!-- hl-knowledge: introduces=[HI-LEX-C258-THG258-04]; assesses=[] -->
 
 **विश्वास** — *viśvās* — "faith, confidence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विश्वास** (*viśvās*) is Sanskrit *viśvāsa*, "trust, confidence", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

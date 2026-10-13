@@ -14,7 +14,8 @@ romanization: "sēkariñcu"
 concept_tag: TE-VERB-SEKARINCU
 prerequisites: [TE-C244-vadipovu, TE-C244-morugu]
 sounds: []
-roots: []
+roots: [dravidian-cekaram-collect]
+etymology_hook: "sēkariñcu: DEDR 2801 lists sēkariñcu 'to collect' with Tamil cēkaram 'collection'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C244-morugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C245-KRIYA245-01]; assesses=[] -->
 
 **సేకరించు** — *sēkariñcu* — "to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 2801 lists **సేకరించు** (*sēkariñcu*), "to save, collect", with Tamil *cēkaram*, "acquisition, collection", and notes that the Malayalam forms look Sanskrit though Sanskrit has no such word in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

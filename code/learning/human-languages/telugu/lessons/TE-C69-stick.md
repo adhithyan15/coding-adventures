@@ -11,7 +11,8 @@ romanization: "karra"
 concept_tag: TE-NOUN-STICK
 prerequisites: [TE-C69-hammer]
 sounds: []
-roots: []
+roots: [dravidian-karal-wood]
+etymology_hook: "karra: native Dravidian, one word with Tamil kaṟal 'firewood' (DEDR 1389)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C69-hammer]
 It is inherited and completely ordinary: a walking stick for a తాత, a herding stick behind a మేక, the handle still waiting for a గొడ్డలి head.
 
 It is also the right thing to ask for first. దయచేసి and a కర్ర costs nobody anything, and by the time you want the సుత్తి you already know how to ask.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కర్ర** (*karra*) is native Dravidian, one word with Tamil *kaṟal*, "firewood" (DEDR 1389), which gives the older Telugu spelling *kaṟṟa*, "wood, stick". DEDR compares Prakrit *karālī*, "toothstick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

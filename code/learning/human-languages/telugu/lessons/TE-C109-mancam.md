@@ -14,7 +14,8 @@ romanization: "mañcaṁ"
 concept_tag: TE-WHY109-MANCAM
 prerequisites: [TE-C108-valla, TE-C109-anduke]
 sounds: []
-roots: []
+roots: [sanskrit-manca]
+etymology_hook: "mañcaṁ ← Sanskrit mañca 'stage, platform; bed', a tatsama (CDIAL 9715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C109-anduke]
 <!-- hl-knowledge: introduces=[TE-LEX-C109-WHY109-02]; assesses=[] -->
 
 **మంచం** — *mañcaṁ* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మంచం** (*mañcaṁ*) is Sanskrit *mañca*, "stage, platform; bed", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

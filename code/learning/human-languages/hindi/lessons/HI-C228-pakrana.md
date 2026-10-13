@@ -14,7 +14,8 @@ romanization: "pakṛānā"
 concept_tag: HI-VERB-PAKRANA
 prerequisites: [HI-C228-ugna, HI-C228-ugana]
 sounds: []
-roots: []
+roots: [indo-aryan-pakkad]
+etymology_hook: "pakṛānā: the causing form of pakaṛnā 'to hold', from a reconstructed *pakkaḍ 'seize' (CDIAL 7619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C228-ugana]
 <!-- hl-knowledge: introduces=[HI-LEX-C228-ACT228-03]; assesses=[] -->
 
 **पकड़ाना** — *pakṛānā* — "to hand over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पकड़ाना** (*pakṛānā*) is the causing form of *pakaṛnā*, "to hold": to hand over is to make someone hold. CDIAL lists *pakaṛnā* under a reconstructed *\*pakkaḍ*, "seize" (CDIAL 7619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

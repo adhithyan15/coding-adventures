@@ -14,7 +14,8 @@ romanization: "śubh yātrā"
 concept_tag: HI-CARE-BON-VOYAGE
 prerequisites: [HI-C121-dhyanrakhie, HI-C121-sambhalkar]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-yatra]
+etymology_hook: "śubh yātrā: Sanskrit śubha 'auspicious' + yātrā 'journey', both tatsamas"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C121-sambhalkar]
 **शुभ यात्रा** (*śubh yātrā*) — "have a good journey".
 
 **शुभ** is the auspicious of **शुभ रात्रि**; **यात्रा** is "a journey", a formal cousin of **सफ़र**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शुभ यात्रा** (*śubh yātrā*) is two Sanskrit words taken over whole, tatsamas: *śubha*, "auspicious, good", and *yātrā*, "journey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

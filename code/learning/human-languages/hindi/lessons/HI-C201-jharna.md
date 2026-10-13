@@ -14,7 +14,8 @@ romanization: "jharnā"
 concept_tag: HI-THG201-JHARNA
 prerequisites: [HI-C201-registan, HI-C201-ghati]
 sounds: []
-roots: []
+roots: [indo-aryan-jharati]
+etymology_hook: "jharnā ← *jharati 'flowing down', a reconstructed form; a tadbhava (CDIAL 5346)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C201-ghati]
 <!-- hl-knowledge: introduces=[HI-LEX-C201-THG201-03]; assesses=[] -->
 
 **झरना** — *jharnā* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झरना** (*jharnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jharati*, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

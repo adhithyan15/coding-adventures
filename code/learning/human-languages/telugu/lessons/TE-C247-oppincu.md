@@ -14,7 +14,8 @@ romanization: "oppiñcu"
 concept_tag: TE-VERB-OPPINCU
 prerequisites: [TE-C247-goku, TE-C247-gusagusaladu]
 sounds: []
-roots: []
+roots: [dravidian-oppu-agree]
+etymology_hook: "oppiñcu: native Dravidian, made from oppu 'to agree' (DEDR 924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C247-gusagusaladu]
 <!-- hl-knowledge: introduces=[TE-LEX-C247-KRIYA247-04]; assesses=[] -->
 
 **ఒప్పించు** — *oppiñcu* — "to persuade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒప్పించు** (*oppiñcu*) is native Dravidian, made from *oppu*, "to consent, agree", one word with Kannada *oppu* (DEDR 924): "to make agree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

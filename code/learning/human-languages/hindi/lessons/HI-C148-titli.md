@@ -15,6 +15,7 @@ concept_tag: HI-THINGS148-TITLI
 prerequisites: [HI-C148-tota, HI-C148-ullu]
 sounds: []
 roots: []
+etymology_hook: "titlī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C148-ullu]
 <!-- hl-knowledge: introduces=[HI-LEX-C148-THINGS148-04]; assesses=[] -->
 
 **तितली** — *titlī* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **तितली** (*titlī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

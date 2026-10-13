@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 289,
-  "sourceHash": "fnv1a64:0172af7d3baf0350",
+  "sourceHash": "fnv1a64:9ba1ee8085735bb6",
   "lessonIds": [
     "TE-C289-bhogi",
     "TE-C289-panduga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch289.txt",
   "json": "telugu/narration/ch289.json",
-  "textHash": "fnv1a64:87630e572e1d00c3",
-  "jsonHash": "fnv1a64:0359cbf73a6b1f5e",
+  "textHash": "fnv1a64:6a223f5235d9d059",
+  "jsonHash": "fnv1a64:d5fee19f7b43d04e",
   "findings": []
 }

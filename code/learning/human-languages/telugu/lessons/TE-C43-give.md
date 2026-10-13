@@ -11,7 +11,8 @@ romanization: "ivvu"
 concept_tag: TE-VERB-GIVE
 prerequisites: [TE-C43-stand]
 sounds: []
-roots: []
+roots: [dravidian-ii-give]
+etymology_hook: "ivvu: native Dravidian; DEDR 2598 lists iccu, stem ivv-, 'to give', with Tamil ī and Kannada ī"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C43-stand]
 **ఇవ్వు** (*ivvu*) — "give".
 
 The everyday 'give'. Softening it is done with a separate politeness word rather than by changing the verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇవ్వు** (*ivvu*) is native Dravidian. DEDR 2598 lists the Telugu verb *iccu*, "to give", with the stem *ivv-*, beside Tamil *ī* and Kannada *ī*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

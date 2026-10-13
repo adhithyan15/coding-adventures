@@ -14,7 +14,8 @@ romanization: "ṭīm"
 concept_tag: HI-THG224-TIM
 prerequisites: [HI-C224-jit, HI-C224-har]
 sounds: []
-roots: []
+roots: [english-team]
+etymology_hook: "ṭīm ← English team"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C224-har]
 <!-- hl-knowledge: introduces=[HI-LEX-C224-THG224-04]; assesses=[] -->
 
 **टीम** — *ṭīm* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टीम** (*ṭīm*) is a loan from English *team*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

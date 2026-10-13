@@ -14,7 +14,8 @@ romanization: "abhiruci"
 concept_tag: TE-VASTUVU189-ABHIRUCI
 prerequisites: [TE-C189-vijeta, TE-C189-patakam]
 sounds: []
-roots: []
+roots: [sanskrit-ruci]
+etymology_hook: "abhiruci ← Sanskrit abhiruci 'liking', built on ruci (CDIAL 10762)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C189-patakam]
 <!-- hl-knowledge: introduces=[TE-LEX-C189-VASTUVU189-04]; assesses=[] -->
 
 **అభిరుచి** — *abhiruci* — "a hobby; taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అభిరుచి** (*abhiruci*) is Sanskrit *abhiruci*, "liking, delight", taken over whole as a learned loan, a tatsama. It is built on *ruci*, which CDIAL 10762 glosses "light, beauty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

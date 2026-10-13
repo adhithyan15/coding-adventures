@@ -318,10 +318,14 @@ fn the_deadline_does_not_charge_the_broker_for_the_daemon_s_time() {
     assert_eq!(rig.delivered.recv_timeout(LONG).unwrap(), published(1));
     assert_eq!(rig.relay.ended(), None);
 
-    // The broker's own slowness is charged.
+    // The broker's own slowness is charged. It answers five deadlines
+    // late, not one third of one: the relay's clock starts when it queues
+    // the request, and its timed wait can wake late on a loaded runner
+    // (macOS coalesces timers), so a narrow margin let the late response
+    // win the race on macOS CI.
     rig.relay.relay(publish(2)).unwrap();
     rig.broker.next();
-    std::thread::sleep(Duration::from_millis(400));
+    std::thread::sleep(Duration::from_millis(1500));
     // Too late: the relay has already ended, so this may find no one.
     let _ = rig
         .broker

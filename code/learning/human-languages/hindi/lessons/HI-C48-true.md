@@ -14,7 +14,8 @@ romanization: "sac"
 concept_tag: HI-WORD-TRUE
 prerequisites: [HI-C47-neighbour, HI-C46-hair, HI-C47-teacher]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sac ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 210
 requires:

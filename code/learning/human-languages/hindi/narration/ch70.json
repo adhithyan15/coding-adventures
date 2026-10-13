@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b448257887444463",
+  "sourceHash": "fnv1a64:4d9ae7b59f96aa4a",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b81dd412f0feeb1a",
+      "sourceHash": "fnv1a64:d8a7622f02eacedd",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "Hindi has no separate words for can, could, may and be able to. All four run through this one verb, which is why it is worth more than its size."
+            },
+            {
+              "kind": "speech",
+              "text": "सकना comes from Sanskrit śaknoti, \"is able\" (CDIAL 12252)."
             }
           ]
         },
@@ -199,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4700f32c764a027",
+      "sourceHash": "fnv1a64:05b53d0b758b0537",
       "notice": null,
       "blocks": [
         {
@@ -255,6 +259,10 @@
             {
               "kind": "speech",
               "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. A cousin of it is how Hindi wants a THING rather than an action; that separate construction comes in a later chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "चाहना comes through Prakrit cāhaï, \"wishes\", from a root of uncertain source (CDIAL 4775)."
             }
           ]
         },

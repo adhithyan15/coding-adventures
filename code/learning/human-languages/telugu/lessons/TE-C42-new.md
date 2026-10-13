@@ -11,7 +11,8 @@ romanization: "kotta"
 concept_tag: TE-ADJ-NEW
 prerequisites: [TE-C42-good]
 sounds: []
-roots: []
+roots: [dravidian-kuzha-young]
+etymology_hook: "kotta: native Dravidian; DEDR 2149 lists krotta 'new, fresh' beside Tamil koḻuntu 'tender shoot'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **మంచి** *manci* a moment ago. Put them side by side and nothing
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొత్త** (*kotta*) is native Dravidian. DEDR 2149 lists it as *krotta*, "new, fresh", beside Tamil *koḻuntu*, "tender shoot", and Kannada *koḍa*, "tenderness". DEDR compares Sanskrit *koraka*, "bud" (CDIAL 3527), which CDIAL itself takes from Dravidian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-04] -->

@@ -11,7 +11,8 @@ romanization: "santakaṁ"
 concept_tag: TE-NAMES-SIGNATURE
 prerequisites: [TE-C96-age, TE-C96-birthday]
 sounds: []
-roots: []
+roots: [telugu-santakam-signature]
+etymology_hook: "santakaṁ: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C96-birthday]
 
 **ఇక్కడ సంతకం చేయండి** — "please sign here". A signature is something you *do*, with the
 **చేయు** of **పని చేయు**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సంతకం** (*santakaṁ*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

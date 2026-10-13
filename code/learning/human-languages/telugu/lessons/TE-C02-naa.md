@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [TE-C02-peru]
 sounds: [long-aa]
 roots: [neenu-dravidian]
+etymology_hook: "nā: native Dravidian, the oblique stem of nēnu 'I' (DEDR 5160)"
 duration:
   max_seconds: 120
 requires:
@@ -46,6 +47,8 @@ reviews_of: [TE-C02-peru]
 **నా** (*nā*) means "my." It belongs to Telugu's native Dravidian first-person
 family, not to the Indo-European family behind English *I/my*. You will meet
 the related word for "I" in its own lesson; today you only need *nā*.
+
+DEDR 5160 lists Telugu *nēnu*, "I", with its oblique stems *nan-* and *nā-*, beside Tamil *nāṉ*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

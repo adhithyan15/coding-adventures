@@ -15,6 +15,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [HI-C02-aap-tum]
 sounds: [conjunct-kya, matra-aa]
 roots: [kim]
+etymology_hook: "kyā ← Sanskrit kim 'what?', on the question stem ka- (CDIAL 3164)"
 duration:
   max_seconds: 180
 requires:

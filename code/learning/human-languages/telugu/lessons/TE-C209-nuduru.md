@@ -14,7 +14,8 @@ romanization: "nuduru"
 concept_tag: TE-AROGYAM209-NUDURU
 prerequisites: [TE-C209-pariksa, TE-C209-vaidyam]
 sounds: []
-roots: []
+roots: [dravidian-nutal-forehead]
+etymology_hook: "nuduru: native Dravidian, one word with Tamil nutal 'forehead' (DEDR 3705)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C209-vaidyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C209-AROGYAM209-05]; assesses=[] -->
 
 **నుదురు** — *nuduru* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నుదురు** (*nuduru*) is native Dravidian, one word with Tamil *nutal* and Kannada *nosalu*, "forehead" (DEDR 3705). DEDR compares Sanskrit *niṭāla*, "forehead", which CDIAL 10970 takes as a later borrowing from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

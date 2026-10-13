@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Counting Past Twenty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:484fd0ad1553fd80",
+  "sourceHash": "fnv1a64:c241b409cc2006c8",
   "lessons": [
     {
       "id": "HI-C96-tees-chaalees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36e6c4e18479ca58",
+      "sourceHash": "fnv1a64:2e2487f96ee4825a",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीस चालीस (tīs cālīs) is two tadbhavas, words inherited and reshaped by sound change. tīs comes from Sanskrit triṁśat, \"thirty\" (CDIAL 6015), and cālīs from catvāriṁśat, \"forty\" (CDIAL 4656)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the tens are the part worth learning",
           "segments": [
@@ -84,7 +95,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f063933932515003",
+      "sourceHash": "fnv1a64:43745e18d395ce8b",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पचास साठ (pacās sāṭh) is two tadbhavas, words inherited and reshaped by sound change. pacās comes from Sanskrit pañcāśat, \"fifty\" (CDIAL 7682), and sāṭh from ṣaṣṭi, \"sixty\" (CDIAL 12804)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one keeps the ending, one drops it",
           "segments": [
@@ -225,7 +247,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -265,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -296,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e76dd334714bdaac",
+      "sourceHash": "fnv1a64:91e1c3f9359d498e",
       "notice": null,
       "blocks": [
         {
@@ -337,6 +359,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सत्तर अस्सी नब्बे (sattar assī nabbe) is three tadbhavas. sattar comes from Sanskrit saptati, \"seventy\" (CDIAL 13143), assī from aśīti, \"eighty\" (CDIAL 911), and nabbe from navati, \"ninety\" (CDIAL 6995)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: each one leans on a number you already count",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -409,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

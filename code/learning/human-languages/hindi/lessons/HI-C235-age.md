@@ -14,7 +14,8 @@ romanization: "āge"
 concept_tag: HI-LOC235-AGE
 prerequisites: [HI-C235-upar, HI-C235-nice]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āge ← Sanskrit agra 'top, front', a tadbhava (CDIAL 68)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C235-nice]
 <!-- hl-knowledge: introduces=[HI-LEX-C235-LOC235-03]; assesses=[] -->
 
 **आगे** — *āge* — "ahead, in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आगे** (*āge*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agra*, "top, front" (CDIAL 68). *āge* continues the Sanskrit forms *agre*, *agreṇa*, "in front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

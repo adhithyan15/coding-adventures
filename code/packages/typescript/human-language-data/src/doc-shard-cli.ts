@@ -139,6 +139,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
   },
   {
+    // Japanese became the hottest remaining live document seam in HL44's
+    // post-#17427 report: 29 historical sections and 22 touches. Its lesson
+    // and script authors now own one newest-first entry apiece.
+    path: "code/learning/human-languages/japanese/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
     // 436 `###` entries, newest at the top. Split at level 3 rather than level
     // 2 because level 2 is the version heading and the hot spot is the entry
     // list underneath `## Unreleased` — every PR prepends there. The frozen

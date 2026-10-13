@@ -14,7 +14,8 @@ romanization: "dōsakāya"
 concept_tag: TE-VASTUVU184-DOSAKAYA
 prerequisites: [TE-C184-paccadi, TE-C184-payasam]
 sounds: []
-roots: []
+roots: [telugu-dosa-cucumber, dravidian-kaay-fruit]
+etymology_hook: "dōsakāya: dōsa, of uncertain origin, + native kāya 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C184-payasam]
 <!-- hl-knowledge: introduces=[TE-LEX-C184-VASTUVU184-04]; assesses=[] -->
 
 **దోసకాయ** — *dōsakāya* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దోసకాయ** (*dōsakāya*) is *dōsa*, "cucumber", whose origin is uncertain, and native *kāya*, "fruit, vegetable" (DEDR 1459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nallaballa"
 concept_tag: TE-PANI276-NALLABALLA
 prerequisites: [TE-C276-arthasastram, TE-C276-vyakaranam]
 sounds: []
-roots: []
+roots: [dravidian-nal-black, telugu-balla-board]
+etymology_hook: "nallaballa: native nalla 'black' (DEDR 3613) + balla 'board', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C276-vyakaranam]
 <!-- hl-knowledge: introduces=[TE-LEX-C276-PANI276-05]; assesses=[] -->
 
 **నల్లబల్ల** — *nallaballa* — "a blackboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నల్లబల్ల** (*nallaballa*) is native *nalla*, "black", which DEDR 3613 lists with Tamil *nallam*, "blackness", and *balla*, "board", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

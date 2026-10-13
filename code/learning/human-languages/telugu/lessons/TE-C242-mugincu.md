@@ -14,7 +14,8 @@ romanization: "mugiñcu"
 concept_tag: TE-VERB-MUGINCU
 prerequisites: [TE-C242-teccu, TE-C242-upayogincu]
 sounds: []
-roots: []
+roots: [dravidian-muti-end]
+etymology_hook: "mugiñcu: native Dravidian; DEDR 4891 lists mugincu 'to finish' with Kannada mugisu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C242-upayogincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C242-KRIYA242-03]; assesses=[] -->
 
 **ముగించు** — *mugiñcu* — "to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముగించు** (*mugiñcu*) is native Dravidian. DEDR 4891 lists *mugiñcu*, "to finish", with Tamil *muki*, "to finish", and Kannada *mugisu*, "to finish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

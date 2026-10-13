@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a barrel, then the Telugu for a mug.
 You'll want to know: కండువా.
 కండువా — kaṇḍuvā — "a shoulder cloth, a scarf".
 
+The word, taken apart.
+DEDR 1180 lists కండువా (kaṇḍuvā), "upper garment", with Tamil kaṇṭai, "a small cloth", and records Krishnamurti's view that the Dravidian word was taken from Indo-Aryan; CDIAL 3801, the other way round, takes Oriya khaṇḍuā, "shawl", from Dravidian, citing Telugu kaṇḍuvā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a mug, then the Telugu for a shoulder clo
 
 You'll want to know: బుడగ.
 బుడగ — buḍaga — "a bubble".
+
+The word, taken apart.
+బుడగ (buḍaga) is not itself in DEDR. The nearest entry, DEDR 4249, lists buḍabuḍa, "with a bubbling noise", and points to Sanskrit budbuda, "bubble" (CDIAL 9278), as part of a sound-word shared across the region.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a shoulder cloth, then the Telugu for a b
 You'll want to know: తుప్పు.
 తుప్పు — tuppu — "rust".
 
+The word, taken apart.
+తుప్పు (tuppu) is native Dravidian. DEDR 3343 lists tuppu, "rust", with Tamil tuppu, "rust", and Kannada tukku, "rust of iron". DEDR compares Sanskrit tuttha, "blue vitriol" (CDIAL 5855), which CDIAL thinks probably came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a bubble, then the Telugu for rust.
 You'll want to know: మసి.
 మసి — masi — "soot".
 
+The word, taken apart.
+మసి (masi) is native Dravidian. DEDR 5101 lists masi, "soot, blackness, ink", with Kannada masi, "soot", and Tamil mai, "ink, black". DEDR compares Sanskrit maṣi, "lampblack, ink" (CDIAL 9920), which CDIAL takes from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for rust, then the Telugu for soot.
 
 You'll want to know: బొగ్గు.
 బొగ్గు — boggu — "charcoal, coal".
+
+The word, taken apart.
+బొగ్గు (boggu) is native Dravidian. DEDR 4467 lists boggu, "charcoal", with Kolami bogg and Parji bog, "charcoal".
 
 What you've built.
 One more word for this chapter.

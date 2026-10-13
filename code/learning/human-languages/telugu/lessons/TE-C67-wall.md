@@ -11,7 +11,8 @@ romanization: "gōḍa"
 concept_tag: TE-NOUN-WALL
 prerequisites: [TE-C66-harvest]
 sounds: []
-roots: []
+roots: [dravidian-goode-wall]
+etymology_hook: "gōḍa: native Dravidian, one word with Kannada gōḍe 'wall' (DEDR 2207)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C66-harvest]
 The word is inherited, and it does the same figurative work English asks of a wall. Somebody who will not listen is a గోడ, and a family with nothing hidden has no గోడ inside it.
 
 Whitewashing the గోడ before a festival is its own small season in a Telugu house. A guest who arrives to a fresh one has been told they were expected, and the right thing to say at that moment is నమస్కారం.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోడ** (*gōḍa*) is native Dravidian, one word with Kannada *gōḍe*, "wall" (DEDR 2207).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

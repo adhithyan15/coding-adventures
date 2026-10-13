@@ -14,7 +14,8 @@ romanization: "cēpa"
 concept_tag: TE-THINGS116-CEPA
 prerequisites: [TE-C116-rasam, TE-C116-guddu]
 sounds: []
-roots: []
+roots: [dravidian-kayal-fish]
+etymology_hook: "cēpa: native Dravidian; DEDR 1252 lists it with Tamil kayal 'carp' and queries a link with Sanskrit kaivarta"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C116-guddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **చేప** — *cēpa* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేప** (*cēpa*) is native Dravidian. DEDR 1252 lists the Telugu word for "fish" with Tamil *kayal*, "carp", and compares, with a query, the *kai-* of Sanskrit *kaivarta*, "fisherman" (CDIAL 3469).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

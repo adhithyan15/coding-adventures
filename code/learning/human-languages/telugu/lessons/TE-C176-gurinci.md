@@ -14,7 +14,8 @@ romanization: "guriñci"
 concept_tag: TE-KARANAM176-GURINCI
 prerequisites: [TE-C176-ayina, TE-C176-dvara]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "guriñci: native Dravidian; DEDR 1847 lists guṟinci 'concerning' under guṟi 'aim'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C176-dvara]
 <!-- hl-knowledge: introduces=[TE-LEX-C176-KARANAM176-04]; assesses=[] -->
 
 **గురించి** — *guriñci* — "about, concerning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గురించి** (*guriñci*) is native Dravidian. DEDR 1847 lists *guṟinci*, "concerning", under *guṟi*, "aim, sign", one word with Tamil *kuṟi*, "aim, mark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

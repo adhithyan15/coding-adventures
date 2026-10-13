@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to touch, then the Telugu for to peel.
 You'll want to know: రుద్దు.
 రుద్దు — ruddu — "to rub, to scrub".
 
+The word, taken apart.
+రుద్దు (ruddu) is native Dravidian. DEDR 665 lists ruddu, "to rub, scour", with Tamil urai, "to rub", and Kannada ujju, "to rub". DEDR compares, with a query, Sanskrit uñchati, "gleans" (CDIAL 1680).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to peel, then the Telugu for to rub.
 
 You'll want to know: అందుకో.
 అందుకో — andukō — "to receive, to catch".
+
+The word, taken apart.
+అందుకో (andukō) is native Dravidian: andu, "to reach, take with the hand", one word with Kannada andu, "to reach" (DEDR 149), with -konu, "for oneself".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to rub, then the Telugu for to receive.
 You'll want to know: చెప్పు.
 చెప్పు — ceppu — "to tell, to say".
 
+The word, taken apart.
+చెప్పు (ceppu) is native Dravidian, one word with Tamil ceppu and Malayalam ceppuka (DEDR 1955). DEDR lists Telugu ceppu, "to say, tell". DEDR 1963 ceppu, "sandal", is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to receive, then the Telugu for to tell.
 You'll want to know: చేర్చు.
 చేర్చు — cērcu — "to admit, to enrol, to add".
 
+The word, taken apart.
+చేర్చు (cērcu) is native Dravidian, made from cēru, "to join, reach", which DEDR 2814 lists with Tamil cēr and Kannada sēr, "to join".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to tell, then the Telugu for to admit.
 
 You'll want to know: జమ చేయు.
 జమ చేయు — jama cēyu — "to deposit, to credit".
+
+The word, taken apart.
+జమ చేయు (jama cēyu) pairs jama, "deposit", a loan from Arabic jamʿ, "collection, total", through Persian and Hindustani, with native cēyu, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.

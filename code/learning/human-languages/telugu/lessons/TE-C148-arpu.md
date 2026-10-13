@@ -14,7 +14,8 @@ romanization: "ārpu"
 concept_tag: TE-VERB-ARPU
 prerequisites: [TE-C148-kapadu, TE-C148-kalcu]
 sounds: []
-roots: []
+roots: [dravidian-aru-cool]
+etymology_hook: "ārpu: native Dravidian, the causative of āṟu 'to be extinguished' (DEDR 404)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C148-kalcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C148-ACT148-03]; assesses=[] -->
 
 **ఆర్పు** — *ārpu* — "to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆర్పు** (*ārpu*) is native Dravidian: the "make it go out" form of *āṟu*, "to be extinguished, cool", which DEDR 404 lists with Tamil *āṟu*, "to cool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

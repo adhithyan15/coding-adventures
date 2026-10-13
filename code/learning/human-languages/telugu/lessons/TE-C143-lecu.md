@@ -14,7 +14,8 @@ romanization: "lēcu"
 concept_tag: TE-VERB-LECU
 prerequisites: [TE-C143-parigettu, TE-C143-nidrapo, TE-C43-come, TE-C43-give, TE-C43-sit, TE-C43-stand, TE-C44-listen, TE-C44-look, TE-C44-speak, TE-C44-write]
 sounds: []
-roots: []
+roots: [dravidian-eeru-rise]
+etymology_hook: "lēcu: native Dravidian; DEDR 916 lists lēcu 'to rise, get up', with Tamil ēṟu 'to rise'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C143-nidrapo]
 <!-- hl-knowledge: introduces=[TE-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **లేచు** — *lēcu* — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లేచు** (*lēcu*) is native Dravidian. DEDR 916 lists *lēcu*, "to rise, get up", with Tamil *ēṟu* and Kannada *ēṟu*, "to rise, ascend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

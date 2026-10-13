@@ -14,7 +14,8 @@ romanization: "vasant"
 concept_tag: HI-THG221-VASANT
 prerequisites: [HI-C221-atit, HI-C221-vartaman]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "vasant ← Sanskrit vasanta 'spring season', a tatsama (CDIAL 11439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C221-vartaman]
 <!-- hl-knowledge: introduces=[HI-LEX-C221-THG221-05]; assesses=[] -->
 
 **वसंत** — *vasant* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वसंत** (*vasant*) is Sanskrit *vasanta*, "spring season", taken over whole as a learned loan, a tatsama (CDIAL 11439).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

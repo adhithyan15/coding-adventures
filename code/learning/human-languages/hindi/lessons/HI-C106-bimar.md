@@ -14,7 +14,8 @@ romanization: "bīmār"
 concept_tag: HI-UNWELL-ILL
 prerequisites: [HI-C106-zukam, HI-C106-khansi]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmār: usually traced to Persian bīmār 'ill, sick'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C106-khansi]
 **बीमार** (*bīmār*) — "ill, sick".
 
 **मैं बीमार हूँ** — "I am ill". This one describes you, so it takes **मैं ... हूँ**, not **मुझे**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीमार** (*bīmār*) is a loan, usually traced to Persian *bīmār*, "ill, sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

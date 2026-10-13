@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Grapes, Orange, Watermelon, Coconut, Yoghurt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:99ca0a36aacb17b6",
+  "sourceHash": "fnv1a64:19e980db23199146",
   "lessons": [
     {
       "id": "HI-C140-angur",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d23b03c7d57e0b02",
+      "sourceHash": "fnv1a64:8828c72ba231c00f",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगूर (aṅgūr) is a loan, usually traced to Persian angūr, \"grape\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08f9d9997396b9d6",
+      "sourceHash": "fnv1a64:9184db09abd4b160",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of संतरा (santarā) is uncertain. It is often linked with the Portuguese town of Sintra, once written Cintra, but no source settles it, and CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35653e68b53edd3f",
+      "sourceHash": "fnv1a64:ce5303516fdd5806",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरबूज़ (tarbūz) is a loan, usually traced to Persian tarbuz, \"watermelon\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82312e04683a2b72",
+      "sourceHash": "fnv1a64:15dd3e26f1530a56",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नारियल (nāriyal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nārikela, \"coconut palm and fruit\" (CDIAL 7075). CDIAL, after Bloch, takes the Sanskrit word from a Dravidian compound, comparing Tamil nāri, \"fibre\", and kēḷi, \"coconut palm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f0a35b7b21f6b89",
+      "sourceHash": "fnv1a64:0928e93aced2c864",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दही (dahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, \"thick sour milk\" (CDIAL 6146)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

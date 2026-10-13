@@ -14,7 +14,8 @@ romanization: "sagaṁ"
 concept_tag: TE-PANI310-SAGAM
 prerequisites: [TE-C310-parsu, TE-C310-jabita]
 sounds: []
-roots: []
+roots: [telugu-sagam-half]
+etymology_hook: "sagaṁ: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'half'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C310-jabita]
 <!-- hl-knowledge: introduces=[TE-LEX-C310-PANI310-03]; assesses=[] -->
 
 **సగం** — *sagaṁ* — "half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సగం** (*sagaṁ*) is uncertain. DEDR and CDIAL list no word of this shape meaning "half".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

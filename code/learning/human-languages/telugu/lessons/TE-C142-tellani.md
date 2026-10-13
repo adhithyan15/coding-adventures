@@ -14,7 +14,8 @@ romanization: "tellani"
 concept_tag: TE-QUAL142-TELLANI
 prerequisites: [TE-C142-bhayankaramaina, TE-C142-nallani]
 sounds: []
-roots: []
+roots: [dravidian-tel-become-clear]
+etymology_hook: "tellani: native Dravidian; DEDR 3433 lists tellani 'white' under teli 'white, pure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C142-nallani]
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-05]; assesses=[] -->
 
 **తెల్లని** — *tellani* — "white, bright".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెల్లని** (*tellani*) is native Dravidian. DEDR 3433 lists *tella* and *tellani*, "white", under *teli*, "white, pure", with Tamil *teḷ*, "to become clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

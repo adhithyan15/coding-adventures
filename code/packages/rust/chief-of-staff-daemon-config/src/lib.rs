@@ -598,7 +598,9 @@ impl HostDefaultsConfig {
 /// With this table, every host bound to a channel gets its own broker
 /// process, launched before the host and holding only that agent's channel
 /// keys from `[data_plane] channel_keys`. The host's channel requests go to
-/// its broker rather than to the daemon. Without it, nothing changes.
+/// its broker rather than to the daemon. Without it, `channel_keys` must be
+/// empty: the daemon refuses to start otherwise (D18S P2.6d-2c), since it
+/// serves no channel operation itself.
 ///
 /// The digest is the trust anchor, not the path: the daemon hashes the
 /// binary through the descriptor it will execute before every launch, and

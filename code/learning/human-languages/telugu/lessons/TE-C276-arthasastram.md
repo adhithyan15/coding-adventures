@@ -14,7 +14,8 @@ romanization: "arthaśāstraṁ"
 concept_tag: TE-PANI276-ARTHASASTRAM
 prerequisites: [TE-C276-rasayanasastram, TE-C276-jivasastram]
 sounds: []
-roots: []
+roots: [sanskrit-artha, sanskrit-shastra]
+etymology_hook: "arthaśāstraṁ: Sanskrit artha 'wealth' (CDIAL 638) + śāstra (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C276-jivasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C276-PANI276-03]; assesses=[] -->
 
 **అర్థశాస్త్రం** — *arthaśāstraṁ* — "economics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అర్థశాస్త్రం** (*arthaśāstraṁ*) is Sanskrit: *artha*, "aim; thing, wealth" (CDIAL 638), and *śāstra*, "treatise" (CDIAL 12422), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

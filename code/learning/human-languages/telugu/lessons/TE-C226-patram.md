@@ -14,7 +14,8 @@ romanization: "patraṁ"
 concept_tag: TE-VASTUVU226-PATRAM
 prerequisites: [TE-C225-jidipappu, TE-C226-patam]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patraṁ ← Sanskrit pattra 'wing; leaf, petal; leaf of book', a tatsama (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C226-patam]
 <!-- hl-knowledge: introduces=[TE-LEX-C226-VASTUVU226-02]; assesses=[] -->
 
 **పత్రం** — *patraṁ* — "a document, a certificate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పత్రం** (*patraṁ*) is Sanskrit *pattra*, "wing; leaf, petal; leaf of book", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

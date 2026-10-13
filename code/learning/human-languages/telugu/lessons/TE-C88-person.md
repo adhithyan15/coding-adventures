@@ -11,7 +11,8 @@ romanization: "maniṣi"
 concept_tag: TE-PEOPLE-PERSON
 prerequisites: [TE-C88-boy, TE-C88-girl]
 sounds: []
-roots: []
+roots: [sanskrit-manushya]
+etymology_hook: "maniṣi ← Sanskrit manuṣya 'human being, man', reshaped as a tadbhava (CDIAL 9828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C88-girl]
 
 **మంచి మనిషి** — "a good person", with the **మంచి** you already have. The plural changes shape:
 **మనుషులు** (*manuṣulu*), "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మనిషి** (*maniṣi*) comes from Sanskrit *manuṣya*, "human being, man", reshaped to Telugu sounds: a tadbhava (CDIAL 9828).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

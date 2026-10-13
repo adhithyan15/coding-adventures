@@ -14,7 +14,8 @@ romanization: "dakṣiṇ"
 concept_tag: HI-LOC233-DAKSIN
 prerequisites: [HI-C232-datna, HI-C233-uttar]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dakṣiṇ ← Sanskrit dakṣiṇa 'right (hand); southern', a tatsama (CDIAL 6119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C233-uttar]
 <!-- hl-knowledge: introduces=[HI-LEX-C233-LOC233-02]; assesses=[] -->
 
 **दक्षिण** — *dakṣiṇ* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दक्षिण** (*dakṣiṇ*) is Sanskrit *dakṣiṇa*, "right (hand); southern", taken over whole as a learned loan, a tatsama (CDIAL 6119). CDIAL lists the inherited forms as *dakkhin* and *dakhin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

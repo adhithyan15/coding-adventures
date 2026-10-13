@@ -14,7 +14,8 @@ romanization: "jākeṭṭu"
 concept_tag: TE-THINGS132-JAKETTU
 prerequisites: [TE-C132-kotu, TE-C132-dhoti]
 sounds: []
-roots: []
+roots: [english-jacket]
+etymology_hook: "jākeṭṭu ← English jacket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C132-dhoti]
 <!-- hl-knowledge: introduces=[TE-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **జాకెట్టు** — *jākeṭṭu* — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జాకెట్టు** (*jākeṭṭu*) is a loan from English *jacket*, used in Telugu for a blouse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

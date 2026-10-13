@@ -14,7 +14,8 @@ romanization: "dēvuḍu"
 concept_tag: TE-VASTUVU265-DEVUDU
 prerequisites: [TE-C265-pellikuturu, TE-C265-janam]
 sounds: []
-roots: []
+roots: [sanskrit-deva]
+etymology_hook: "dēvuḍu: Sanskrit dēva 'a god' (CDIAL 6523) + -uḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C265-janam]
 <!-- hl-knowledge: introduces=[TE-LEX-C265-VASTUVU265-03]; assesses=[] -->
 
 **దేవుడు** — *dēvuḍu* — "God, a god".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దేవుడు** (*dēvuḍu*) is Sanskrit *dēva*, "heavenly; a god" (CDIAL 6523), with the Telugu ending *-uḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

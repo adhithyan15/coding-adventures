@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 213,
-  "sourceHash": "fnv1a64:2a1dfba155c5678a",
+  "sourceHash": "fnv1a64:6f6e5a21b287af50",
   "lessonIds": [
     "HI-C213-zaruri",
     "HI-C213-khatarnak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch213.txt",
   "json": "hindi/narration/ch213.json",
-  "textHash": "fnv1a64:7a2ba2577c3177e8",
-  "jsonHash": "fnv1a64:31a3db77abf90eda",
+  "textHash": "fnv1a64:047a6609b83533ce",
+  "jsonHash": "fnv1a64:b3974f3cb456ae8a",
   "findings": []
 }

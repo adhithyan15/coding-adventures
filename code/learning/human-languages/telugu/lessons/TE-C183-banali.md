@@ -14,7 +14,8 @@ romanization: "bāṇali"
 concept_tag: TE-VASTUVU183-BANALI
 prerequisites: [TE-C183-balci, TE-C183-muta]
 sounds: []
-roots: []
+roots: [dravidian-baanale-pan]
+etymology_hook: "bāṇali: native Dravidian; DEDR 4069 lists bāṇali 'frying pan' with Kannada bāṇali"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C183-muta]
 <!-- hl-knowledge: introduces=[TE-LEX-C183-VASTUVU183-05]; assesses=[] -->
 
 **బాణలి** — *bāṇali* — "a frying pan, a wok".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాణలి** (*bāṇali*) is native Dravidian. DEDR 4069 lists *bāṇali*, "frying pan", with Kannada *bāṇali*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

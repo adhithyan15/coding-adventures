@@ -14,7 +14,8 @@ romanization: "asuvidhā"
 concept_tag: HI-THG260-ASUVIDHA
 prerequisites: [HI-C259-khatra, HI-C260-suvidha]
 sounds: []
-roots: []
+roots: [sanskrit-suvidha]
+etymology_hook: "asuvidhā: a- 'not' + suvidhā 'convenience', built from Sanskrit parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C260-suvidha]
 <!-- hl-knowledge: introduces=[HI-LEX-C260-THG260-02]; assesses=[] -->
 
 **असुविधा** — *asuvidhā* — "an inconvenience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**असुविधा** (*asuvidhā*) is *suvidhā*, "convenience", from Sanskrit *su-*, "well", and *vidhā*, "arrangement", with *a-*, "not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1172,6 +1172,42 @@ fn unavailable_launch_bindings_fail_before_process_creation() {
     );
 }
 
+#[test]
+fn a_host_bound_to_channels_is_not_launched_without_a_broker() {
+    // D18S P2.6d-2c: with no broker to hold its keys, a channel-bound host
+    // could only fail each channel request. It is refused before any
+    // process exists.
+    let package = TestPackage::new("unbrokered", None);
+    let registration = package.registration("unbrokered-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(1),
+        Duration::from_secs(1),
+    )
+    .refusing_unbrokered_channels();
+    assert_eq!(
+        supervisor.start(&registration),
+        Err(ProcessSupervisorError::ChannelsNeedBroker)
+    );
+    assert_eq!(
+        supervisor.inspect(&registration),
+        Ok(SupervisorObservation::Absent)
+    );
+
+    // The refusal is the setting's: the same host launches without it
+    // (and its channel requests then reach the manual adapter API).
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(3),
+        Duration::from_secs(1),
+    );
+    supervisor.start(&registration).unwrap();
+    await_phase(&mut supervisor, &registration, SupervisorPhase::Running);
+    supervisor.stop(registration.host_name()).unwrap();
+}
+
 #[cfg(unix)]
 #[test]
 fn the_production_spawn_isolates_the_agents_descriptors() {

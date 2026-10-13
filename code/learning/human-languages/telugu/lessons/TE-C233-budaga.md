@@ -14,7 +14,8 @@ romanization: "buḍaga"
 concept_tag: TE-VASTUVU233-BUDAGA
 prerequisites: [TE-C232-maggu, TE-C233-kanduva]
 sounds: []
-roots: []
+roots: [telugu-budaga-bubble]
+etymology_hook: "buḍaga: not itself in DEDR; DEDR 4249 has buḍabuḍa 'bubbling', with Sanskrit budbuda 'bubble'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C233-kanduva]
 <!-- hl-knowledge: introduces=[TE-LEX-C233-VASTUVU233-02]; assesses=[] -->
 
 **బుడగ** — *buḍaga* — "a bubble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బుడగ** (*buḍaga*) is not itself in DEDR. The nearest entry, DEDR 4249, lists *buḍabuḍa*, "with a bubbling noise", and points to Sanskrit *budbuda*, "bubble" (CDIAL 9278), as part of a sound-word shared across the region.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

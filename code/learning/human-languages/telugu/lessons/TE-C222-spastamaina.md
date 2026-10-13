@@ -14,7 +14,8 @@ romanization: "spaṣṭamaina"
 concept_tag: TE-GUNAM222-SPASTAMAINA
 prerequisites: [TE-C222-sarada, TE-C222-adhunika]
 sounds: []
-roots: []
+roots: [sanskrit-spashta, tamil-aaku-become]
+etymology_hook: "spaṣṭamaina: Sanskrit spaṣṭa 'clear' + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C222-adhunika]
 <!-- hl-knowledge: introduces=[TE-LEX-C222-GUNAM222-03]; assesses=[] -->
 
 **స్పష్టమైన** — *spaṣṭamaina* — "clear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్పష్టమైన** (*spaṣṭamaina*) is Sanskrit *spaṣṭa*, "clear, distinct", with native *aina*, "which is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

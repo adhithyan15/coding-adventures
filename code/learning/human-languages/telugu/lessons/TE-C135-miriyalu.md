@@ -14,7 +14,8 @@ romanization: "miriyālu"
 concept_tag: TE-THINGS135-MIRIYALU
 prerequisites: [TE-C134-dhanyam, TE-C134-godhumalu]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "miriyālu ← Sanskrit marica 'peppercorn', reshaped as a tadbhava (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C134-godhumalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **మిరియాలు** — *miriyālu* — "black pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మిరియాలు** (*miriyālu*) comes from Sanskrit *marica*, "peppercorn", reshaped to Telugu sounds: a tadbhava (CDIAL 9875). CDIAL itself takes the Sanskrit word from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "samasyā"
 concept_tag: HI-THG222-SAMASYA
 prerequisites: [HI-C222-karan, HI-C222-natija]
 sounds: []
-roots: []
+roots: [sanskrit-samasya]
+etymology_hook: "samasyā ← Sanskrit samasyā 'a puzzle set to be completed', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C222-natija]
 <!-- hl-knowledge: introduces=[HI-LEX-C222-THG222-04]; assesses=[] -->
 
 **समस्या** — *samasyā* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समस्या** (*samasyā*) is Sanskrit *samasyā*, "a puzzle set to be completed", taken over whole as a learned loan, a tatsama. Hindi uses it for any problem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

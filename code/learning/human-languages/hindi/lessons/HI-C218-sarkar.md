@@ -14,7 +14,8 @@ romanization: "sarkār"
 concept_tag: HI-THG218-SARKAR
 prerequisites: [HI-C217-dharm, HI-C218-samaj]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sarkār: usually traced to Persian sarkār 'government; lordship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C218-samaj]
 <!-- hl-knowledge: introduces=[HI-LEX-C218-THG218-02]; assesses=[] -->
 
 **सरकार** — *sarkār* — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सरकार** (*sarkār*) is a loan, usually traced to Persian *sarkār*, "government; lordship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

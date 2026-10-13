@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 173,
-  "sourceHash": "fnv1a64:efbcfe522314e219",
+  "sourceHash": "fnv1a64:fb0dfed17bb9b3d8",
   "lessonIds": [
     "HI-C173-dhakna",
     "HI-C173-bharna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch173.txt",
   "json": "hindi/narration/ch173.json",
-  "textHash": "fnv1a64:07b3206049689039",
-  "jsonHash": "fnv1a64:e2f300c9b2286dad",
+  "textHash": "fnv1a64:b54578059cbd018d",
+  "jsonHash": "fnv1a64:c882c08571513c07",
   "findings": []
 }

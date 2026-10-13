@@ -14,7 +14,8 @@ romanization: "maracipō"
 concept_tag: TE-VERB-MARACIPO
 prerequisites: [TE-C145-nercuko, TE-C145-nerpu]
 sounds: []
-roots: []
+roots: [dravidian-mara-forget, proto-dravidian-poo-go]
+etymology_hook: "maracipō: native maṟacu 'to forget' (DEDR 4760) + pō 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C145-nerpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C145-ACT145-03]; assesses=[] -->
 
 **మరచిపో** — *maracipō* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మరచిపో** (*maracipō*) is native Dravidian: *maṟacu*, "to forget", one word with Malayalam *maṟakka*, "to forget" (DEDR 4760), and *pō*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

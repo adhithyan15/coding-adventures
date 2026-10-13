@@ -14,7 +14,8 @@ romanization: "kiṭikītera"
 concept_tag: TE-THINGS129-KITIKITERA
 prerequisites: [TE-C128-carmam, TE-C128-raktam]
 sounds: []
-roots: []
+roots: [hindustani-khirki, dravidian-tirai-curtain]
+etymology_hook: "kiṭikītera: kiṭikī 'window' (a northern loan, CDIAL 3770) + native tera 'curtain' (DEDR 3244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C128-raktam]
 <!-- hl-knowledge: introduces=[TE-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **కిటికీతెర** — *kiṭikītera* — "a window curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కిటికీతెర** (*kiṭikītera*) is *kiṭikī*, "window", probably a loan from the north (CDIAL 3770), and native *tera*, "curtain" (DEDR 3244).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

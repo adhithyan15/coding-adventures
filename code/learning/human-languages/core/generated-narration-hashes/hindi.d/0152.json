@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 152,
-  "sourceHash": "fnv1a64:fb3840b66b3c2e78",
+  "sourceHash": "fnv1a64:bdf19054df00e90c",
   "lessonIds": [
     "HI-C152-khun",
     "HI-C152-dakghar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch152.txt",
   "json": "hindi/narration/ch152.json",
-  "textHash": "fnv1a64:e85c488c05610eb4",
-  "jsonHash": "fnv1a64:89e0f307f9df3bba",
+  "textHash": "fnv1a64:6885f0892fc3a918",
+  "jsonHash": "fnv1a64:1fd40563043d2210",
   "findings": []
 }

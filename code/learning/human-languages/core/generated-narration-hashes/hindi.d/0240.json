@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 240,
-  "sourceHash": "fnv1a64:a798b6e053562b2d",
+  "sourceHash": "fnv1a64:dc412f1c0eca0ec6",
   "lessonIds": [
     "HI-C240-adhunik",
     "HI-C240-pracin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch240.txt",
   "json": "hindi/narration/ch240.json",
-  "textHash": "fnv1a64:d5173bba9097a05d",
-  "jsonHash": "fnv1a64:42908736488b49a8",
+  "textHash": "fnv1a64:00b1308098da750b",
+  "jsonHash": "fnv1a64:42b5175512491cc8",
   "findings": []
 }

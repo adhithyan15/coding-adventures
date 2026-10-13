@@ -14,7 +14,8 @@ romanization: "laṛnā"
 concept_tag: HI-VERB-LARNA
 prerequisites: [HI-C178-bunna, HI-C178-maarnaa]
 sounds: []
-roots: []
+roots: [indo-aryan-lad]
+etymology_hook: "laṛnā ← *laḍ 'fight', a reconstructed form; a tadbhava (CDIAL 10920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C178-maarnaa]
 <!-- hl-knowledge: introduces=[HI-LEX-C178-ACT178-03]; assesses=[] -->
 
 **लड़ना** — *laṛnā* — "to fight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लड़ना** (*laṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*laḍ*, "fight", a form CDIAL reconstructs from its descendants (CDIAL 10920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

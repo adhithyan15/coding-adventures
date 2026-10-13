@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 99,
-  "sourceHash": "fnv1a64:755d8235ea411a39",
+  "sourceHash": "fnv1a64:ec02d262c0cdd717",
   "lessonIds": [
     "TE-C99-namaste",
     "TE-C99-delight",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch99.txt",
   "json": "telugu/narration/ch99.json",
-  "textHash": "fnv1a64:d5dc1d43183798b9",
-  "jsonHash": "fnv1a64:7f530568a3089ee2",
+  "textHash": "fnv1a64:8d6f422c98bffaf4",
+  "jsonHash": "fnv1a64:12e663820f90b1bd",
   "findings": []
 }

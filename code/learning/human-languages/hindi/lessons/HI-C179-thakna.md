@@ -14,7 +14,8 @@ romanization: "thaknā"
 concept_tag: HI-VERB-THAKNA
 prerequisites: [HI-C178-darna, HI-C178-cillana]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thaknā ← *sthakk 'stop, halt', a reconstructed form; a tadbhava (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C178-cillana]
 <!-- hl-knowledge: introduces=[HI-LEX-C179-ACT179-01]; assesses=[] -->
 
 **थकना** — *thaknā* — "to get tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थकना** (*thaknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sthakk*, "stop, halt", a form CDIAL reconstructs from its descendants (CDIAL 13737). CDIAL calls a link with *sthā-*, "to stand", probable but not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "ginne"
 concept_tag: TE-NOUN-VESSEL
 prerequisites: [TE-C56-knife]
 sounds: []
-roots: []
+roots: [dravidian-kinnam-cup]
+etymology_hook: "ginne: native Dravidian, one word with Tamil kiṇṇam and Malayalam kiṇṇam (DEDR 1543)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C56-knife]
 Telugu splits its containers finely. A గిన్నె is not a కుండ, the fired clay pot, and it is not a పళ్ళెం, the flat plate. English pushes all three towards "pot" and "dish" and loses the difference between what holds heat, what holds water and what holds a meal.
 
 When a kitchen has a name for each shape, the names are telling you which shapes the kitchen actually uses.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గిన్నె** (*ginne*) is native Dravidian, one word with Tamil *kiṇṇam* and Malayalam *kiṇṇam* (DEDR 1543). DEDR lists Telugu *ginniya* and *ginne*, "cup, bowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

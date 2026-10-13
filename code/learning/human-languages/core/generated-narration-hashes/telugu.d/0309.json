@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 309,
-  "sourceHash": "fnv1a64:ea1d99c12eff196f",
+  "sourceHash": "fnv1a64:2e2a7bf93f44908a",
   "lessonIds": [
     "TE-C309-gattu",
     "TE-C309-pasuvulu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch309.txt",
   "json": "telugu/narration/ch309.json",
-  "textHash": "fnv1a64:54cca29c01b74b39",
-  "jsonHash": "fnv1a64:f1c538dc3b4c3d0a",
+  "textHash": "fnv1a64:c4017bddc4b4a9ce",
+  "jsonHash": "fnv1a64:33f9d3fd591a193c",
   "findings": []
 }

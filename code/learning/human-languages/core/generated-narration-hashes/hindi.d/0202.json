@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 202,
-  "sourceHash": "fnv1a64:83d4e0567c2769fa",
+  "sourceHash": "fnv1a64:a3def89daaa532ce",
   "lessonIds": [
     "HI-C202-gufa",
     "HI-C202-mahal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch202.txt",
   "json": "hindi/narration/ch202.json",
-  "textHash": "fnv1a64:a2107d9ca361a272",
-  "jsonHash": "fnv1a64:a5a166c4e10ec994",
+  "textHash": "fnv1a64:272b034f547fba53",
+  "jsonHash": "fnv1a64:b2aead0640c3d0d7",
   "findings": []
 }

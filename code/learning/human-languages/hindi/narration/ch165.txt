@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to arrive, then the Hindi for to come back
 You'll want to know: पकड़ना.
 पकड़ना — pakaṛnā — "to catch, to hold".
 
+The word, taken apart.
+पकड़ना (pakaṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pakkaḍ, "seize", a form CDIAL reconstructs from its descendants (CDIAL 7619). CDIAL calls a link with Sanskrit pragṛhṇāti, "holds", obscure and doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to come back, then the Hindi for to catch.
 
 You'll want to know: छूना.
 छूना — chūnā — "to touch".
+
+The word, taken apart.
+छूना (chūnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chupati, "touches" (CDIAL 5055).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to catch, then the Hindi for to touch.
 You'll want to know: समझाना.
 समझाना — samjhānā — "to explain".
 
+The word, taken apart.
+समझाना (samjhānā) is the causing form of samajhnā, "to understand": to explain is to make someone understand. CDIAL lists the verb under Sanskrit saṁbudhyate, "wakes up, understands" (CDIAL 12959).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to touch, then the Hindi for to explain.
 You'll want to know: बजाना.
 बजाना — bajānā — "to play (an instrument), to ring".
 
+The word, taken apart.
+बजाना (bajānā) is the causing form of bajnā, "to sound", which CDIAL lists under Sanskrit vādyate, "is made to sound" (CDIAL 11513).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to explain, then the Hindi for to play.
 
 You'll want to know: गिनना.
 गिनना — ginnā — "to count".
+
+The word, taken apart.
+गिनना (ginnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts" (CDIAL 3993).
 
 What you've built.
 One more word for this chapter.

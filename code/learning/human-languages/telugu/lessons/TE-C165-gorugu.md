@@ -14,7 +14,8 @@ romanization: "gorugu"
 concept_tag: TE-VERB-GORUGU
 prerequisites: [TE-C164-cuttu, TE-C165-cindu]
 sounds: []
-roots: []
+roots: [dravidian-gorugu-shave]
+etymology_hook: "gorugu: native Dravidian; DEDR 2258 lists goṟugu 'to shave' with Gondi kori-"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C165-cindu]
 <!-- hl-knowledge: introduces=[TE-LEX-C165-KRIYA165-02]; assesses=[] -->
 
 **గొరుగు** — *gorugu* — "to shave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొరుగు** (*gorugu*) is native Dravidian. DEDR 2258 lists it as *goṟugu*, "to shave", with Gondi *kori-*, "to shave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

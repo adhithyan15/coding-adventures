@@ -14,7 +14,8 @@ romanization: "galā"
 concept_tag: HI-NOUN-THROAT
 prerequisites: [HI-C46-nose]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "galā ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070)"
 duration:
   max_seconds: 210
 requires:

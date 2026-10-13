@@ -15,6 +15,7 @@ concept_tag: FAREWELL-CASUAL
 prerequisites: [HI-C03-hun, HI-C03-main]
 sounds: [matra-a]
 roots: [cal-move]
+etymology_hook: "chalnā ← Sanskrit calati 'goes away; shakes' (CDIAL 4715)"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "vīḍiyō"
 concept_tag: TE-VASTUVU305-VIDIYO
 prerequisites: [TE-C305-lyaptap, TE-C305-byatari]
 sounds: []
-roots: []
+roots: [english-video]
+etymology_hook: "vīḍiyō ← English video"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C305-byatari]
 <!-- hl-knowledge: introduces=[TE-LEX-C305-VASTUVU305-05]; assesses=[] -->
 
 **వీడియో** — *vīḍiyō* — "a video".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వీడియో** (*vīḍiyō*) is a loan from English *video*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ceppulu"
 concept_tag: TE-THINGS114-CEPPULU
 prerequisites: [TE-C114-cira, TE-C114-pance]
 sounds: []
-roots: []
+roots: [dravidian-ceruppu-sandal]
+etymology_hook: "ceppulu: native Dravidian, one word with Tamil ceruppu and Malayalam cerippu (DEDR 1963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C114-pance]
 <!-- hl-knowledge: introduces=[TE-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **చెప్పులు** — *ceppulu* — "sandals".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చెప్పులు** (*ceppulu*) is native Dravidian, one word with Tamil *ceruppu* and Malayalam *cerippu* (DEDR 1963). DEDR lists Telugu *ceppu*, "sandal, slipper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

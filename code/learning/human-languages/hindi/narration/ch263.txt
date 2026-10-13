@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a piece of jewellery, then the Hindi for a
 You'll want to know: झुमका.
 झुमका — jhumkā — "an earring".
 
+The word, taken apart.
+झुमका (jhumkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhumma, "crowd, cluster", a form CDIAL reconstructs from its descendants (CDIAL 5404). CDIAL notes an added -k-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a bangle, then the Hindi for an earring.
 
 You'll want to know: बिंदी.
 बिंदी — bindī — "a bindi".
+
+The word, taken apart.
+बिंदी (bindī) is built on Sanskrit bindu, "drop, spot", with the ending -ī (CDIAL 9240). CDIAL lists the inherited form of the word as būṁd, "drop".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for an earring, then the Hindi for a bindi.
 You'll want to know: चूड़ी.
 चूड़ी — cūṛī — "a bangle".
 
+The word, taken apart.
+चूड़ी (cūṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cūḍa, "bracelet" (CDIAL 4884). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a bindi, then the Hindi for a bangle.
 You'll want to know: पायल.
 पायल — pāyal — "an anklet".
 
+The word, taken apart.
+पायल (pāyal) goes back to a reconstructed pādala, "belonging to the feet", built on pāda, "foot" (CDIAL 8066), though CDIAL glosses the Hindi word only as "sure-footed".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a bangle, then the Hindi for an anklet.
 
 You'll want to know: बाँसुरी.
 बाँसुरी — bā̃surī — "a flute".
+
+The word, taken apart.
+बाँसुरी (bā̃surī) (bāṁsurī) belongs with Hindi bãsī, "flute", which CDIAL lists under Sanskrit vaṁśī, "flute, pipe", built on vaṁśa, "bamboo" (CDIAL 11180). CDIAL does not list bāṁsurī itself.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "anumati"
 concept_tag: HI-NOUN-PERMISSION
 prerequisites: [HI-C65-entreaty, HI-C63-sleep, HI-C64-slowly]
 sounds: []
-roots: []
+roots: [sanskrit-anumati]
+etymology_hook: "anumati ← Sanskrit anumati 'assent, permission', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C65-entreaty]
 Sanskrit, and transparent: अनु (*anu*), 'along with, after', plus मति (*mati*), 'thought'. Permission is thinking along with someone — agreeing in mind before agreeing in words.
 
 It is the formal one. On a form, at a desk, or in front of anyone whose yes carries weight, अनुमति is the word; among friends nobody says it. Hindi keeps a Sanskrit word in reserve for exactly these rooms.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनुमति** (*anumati*) is Sanskrit *anumati*, "assent, permission", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

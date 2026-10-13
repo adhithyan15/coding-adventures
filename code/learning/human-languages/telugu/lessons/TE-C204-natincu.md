@@ -14,7 +14,8 @@ romanization: "naṭiñcu"
 concept_tag: TE-VERB-NATINCU
 prerequisites: [TE-C204-ralu, TE-C204-vyayamam-ceyu]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "naṭiñcu: Sanskrit naṭa 'actor' (CDIAL 6933) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C204-vyayamam-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C204-KRIYA204-04]; assesses=[] -->
 
 **నటించు** — *naṭiñcu* — "to act (in a play or film)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నటించు** (*naṭiñcu*) is Sanskrit *naṭa*, "dancer, actor" (CDIAL 6933), made into a verb with the Telugu ending *-iñcu*. CDIAL thinks *naṭa* probably came through Middle Indo-Aryan, and keeps it apart from a look-alike verb that it takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

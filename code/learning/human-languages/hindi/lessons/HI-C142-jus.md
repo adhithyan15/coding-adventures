@@ -14,7 +14,8 @@ romanization: "jūs"
 concept_tag: HI-THINGS142-JUS
 prerequisites: [HI-C142-samosa, HI-C142-lassi]
 sounds: []
-roots: []
+roots: [english-juice]
+etymology_hook: "jūs ← English juice"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C142-lassi]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-03]; assesses=[] -->
 
 **जूस** — *jūs* — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जूस** (*jūs*) is a loan from English *juice*. It is a different word from Hindi *jūs*, "broth", from Sanskrit *yūṣa* (CDIAL 10521).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 153,
-  "sourceHash": "fnv1a64:4a71217eb00f7309",
+  "sourceHash": "fnv1a64:eb5f1947ee81a000",
   "lessonIds": [
     "HI-C153-bagica",
     "HI-C153-maidan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch153.txt",
   "json": "hindi/narration/ch153.json",
-  "textHash": "fnv1a64:191c379c847f33bd",
-  "jsonHash": "fnv1a64:3c0a39128ddd4942",
+  "textHash": "fnv1a64:709b008ebc5b7d00",
+  "jsonHash": "fnv1a64:21e6b390f474c9cf",
   "findings": []
 }

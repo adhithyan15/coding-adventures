@@ -14,7 +14,8 @@ romanization: "chūlhā"
 concept_tag: HI-NOUN-STOVE
 prerequisites: [HI-C61-griddle]
 sounds: []
-roots: []
+roots: [sanskrit-culli]
+etymology_hook: "cūlhā ← Sanskrit cullī 'fireplace', which CDIAL takes from Dravidian (CDIAL 4879)"
 duration:
   max_seconds: 210
 requires:

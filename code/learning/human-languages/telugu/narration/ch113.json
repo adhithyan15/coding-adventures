@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Stove, Candle, Matchbox, Doll, Ball",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3bf6eb665eddbcbd",
+  "sourceHash": "fnv1a64:38cb14673ec2b464",
   "lessons": [
     {
       "id": "TE-C113-poyyi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a87868bf2b8bd4d",
+      "sourceHash": "fnv1a64:f411b594ef412e94",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొయ్యి (poyyi) is native Dravidian, one word with Tamil pori and Kannada puri (DEDR 4537). DEDR lists Telugu poyi, poyyi, \"oven, stove, hearth\", under the verb for \"to fry, parch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3625003f77eda960",
+      "sourceHash": "fnv1a64:becb974b9de5e831",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొవ్వొత్తి (kovvotti) is native kovvu, \"fat\", one word with Tamil koḻu (DEDR 2146), and vatti, \"wick\", from Sanskrit varti, \"wick\" (CDIAL 11359): a fat-wick."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e4d25020f408aee",
+      "sourceHash": "fnv1a64:654bd7b72a42c858",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అగ్గిపెట్టె (aggipeṭṭe) is aggi, \"fire\", from Sanskrit agni through a Prakrit aggi (CDIAL 55), and native peṭṭe, \"box\" (DEDR 4388), which DEDR compares with Sanskrit peṭaka, \"box\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eafa047920fe8b3b",
+      "sourceHash": "fnv1a64:4183b80d36a88b42",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బొమ్మ (bomma) is native Dravidian, one word with Tamil pommai and Kannada bombe (DEDR 4530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24799ec2687958ae",
+      "sourceHash": "fnv1a64:a38faf1639354320",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బంతి (banti) is native Dravidian, one word with Tamil pantu and Malayalam pantu (DEDR 3925)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "ṣiphṭu"
 concept_tag: TE-PANI198-SIPHTU
 prerequisites: [TE-C198-tyusanu, TE-C198-intarvyu]
 sounds: []
-roots: []
+roots: [english-shift]
+etymology_hook: "ṣiphṭu ← English shift"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C198-intarvyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C198-PANI198-03]; assesses=[] -->
 
 **షిఫ్టు** — *ṣiphṭu* — "a work shift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**షిఫ్టు** (*ṣiphṭu*) is a loan from English *shift*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

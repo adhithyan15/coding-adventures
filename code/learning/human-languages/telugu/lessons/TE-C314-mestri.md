@@ -14,7 +14,8 @@ romanization: "mēstri"
 concept_tag: TE-PANI314-MESTRI
 prerequisites: [TE-C313-sira, TE-C313-hajaru]
 sounds: []
-roots: []
+roots: [portuguese-mestre]
+etymology_hook: "mēstri: usually traced to Portuguese mestre 'master'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-hajaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C314-PANI314-01]; assesses=[] -->
 
 **మేస్త్రి** — *mēstri* — "a mason, a foreman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేస్త్రి** (*mēstri*) is usually traced to Portuguese *mestre*, "master, foreman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

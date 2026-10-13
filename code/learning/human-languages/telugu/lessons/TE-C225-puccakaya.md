@@ -14,7 +14,8 @@ romanization: "puccakāya"
 concept_tag: TE-VASTUVU225-PUCCAKAYA
 prerequisites: [TE-C225-palakura, TE-C225-boppayi]
 sounds: []
-roots: []
+roots: [telugu-pucca-melon, dravidian-kaay-fruit]
+etymology_hook: "puccakāya: pucca, of uncertain origin, + native kāya (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C225-boppayi]
 <!-- hl-knowledge: introduces=[TE-LEX-C225-VASTUVU225-04]; assesses=[] -->
 
 **పుచ్చకాయ** — *puccakāya* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పుచ్చకాయ** (*puccakāya*) is *pucca*, whose origin is uncertain, and native *kāya*, "fruit, vegetable" (DEDR 1459). DEDR 4248 lists *pucca* only as the bitter colocynth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

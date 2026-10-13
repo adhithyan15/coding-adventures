@@ -11,7 +11,8 @@ romanization: "selavu"
 concept_tag: TE-LEAVE-LEAVE
 prerequisites: [TE-C90-soon, TE-C90-home]
 sounds: []
-roots: []
+roots: [dravidian-cel-pass]
+etymology_hook: "selavu: native Dravidian; DEDR 2781 lists selavu 'leave, permission, expense' under cellu 'to pass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C90-home]
 
 **ఇవాళ సెలవు** — "today is a holiday". At a formal parting, **సెలవు** alone asks leave to go,
 the way English once said "by your leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సెలవు** (*selavu*) is native Dravidian. DEDR 2781 lists *selavu*, "order, leave, permission, expense", under *cellu*, "to pass, be current", with Tamil *cel*, "to go, pass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

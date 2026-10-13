@@ -14,7 +14,8 @@ romanization: "kībōrḍu"
 concept_tag: TE-VASTUVU305-KIBORDU
 prerequisites: [TE-C304-cadarangam, TE-C305-yap]
 sounds: []
-roots: []
+roots: [english-keyboard]
+etymology_hook: "kībōrḍu ← English keyboard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C305-yap]
 <!-- hl-knowledge: introduces=[TE-LEX-C305-VASTUVU305-02]; assesses=[] -->
 
 **కీబోర్డు** — *kībōrḍu* — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కీబోర్డు** (*kībōrḍu*) is a loan from English *keyboard*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

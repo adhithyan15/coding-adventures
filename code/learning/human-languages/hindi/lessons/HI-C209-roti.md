@@ -14,7 +14,8 @@ romanization: "roṭī"
 concept_tag: HI-THG209-ROTI
 prerequisites: [HI-C209-sui, HI-C209-batti]
 sounds: []
-roots: []
+roots: [indo-aryan-rotta]
+etymology_hook: "roṭī ← *roṭṭa 'bread', a reconstructed form; a tadbhava (CDIAL 10837)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C209-batti]
 <!-- hl-knowledge: introduces=[HI-LEX-C209-THG209-05]; assesses=[] -->
 
 **रोटी** — *roṭī* — "bread (flatbread)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोटी** (*roṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*roṭṭa*, "bread", a form CDIAL reconstructs from its descendants (CDIAL 10837).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

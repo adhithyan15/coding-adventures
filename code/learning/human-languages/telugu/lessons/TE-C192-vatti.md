@@ -14,7 +14,8 @@ romanization: "vatti"
 concept_tag: TE-VASTUVU192-VATTI
 prerequisites: [TE-C191-vala, TE-C191-trasu]
 sounds: []
-roots: []
+roots: [sanskrit-varti]
+etymology_hook: "vatti ← Sanskrit varti 'wick' (CDIAL 11359), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C191-trasu]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-01]; assesses=[] -->
 
 **వత్తి** — *vatti* — "a wick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వత్తి** (*vatti*) comes from Sanskrit *varti*, "wick; lamp" (CDIAL 11359), reshaped to Telugu sounds: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

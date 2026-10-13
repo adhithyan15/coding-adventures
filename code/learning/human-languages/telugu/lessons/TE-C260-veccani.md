@@ -14,7 +14,8 @@ romanization: "veccani"
 concept_tag: TE-GUNAM260-VECCANI
 prerequisites: [TE-C259-tappanisari, TE-C260-nunupaina]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "veccani: native Dravidian; DEDR 5517 lists veccani 'hot, warm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C260-nunupaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C260-GUNAM260-02]; assesses=[] -->
 
 **వెచ్చని** — *veccani* — "warm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెచ్చని** (*veccani*) is native Dravidian. DEDR 5517 lists *veccani*, "hot, warm", under the word for "to burn", one word with Tamil *vē*, "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

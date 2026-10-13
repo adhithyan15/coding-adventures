@@ -14,7 +14,8 @@ romanization: "saṅkarā"
 concept_tag: HI-QUAL237-SANKARA
 prerequisites: [HI-C237-caukor, HI-C237-tikona]
 sounds: []
-roots: []
+roots: [sanskrit-samkata]
+etymology_hook: "saṅkarā ← Sanskrit saṁkaṭa 'contracted, narrow', a tadbhava (CDIAL 12817)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C237-tikona]
 <!-- hl-knowledge: introduces=[HI-LEX-C237-QUAL237-03]; assesses=[] -->
 
 **संकरा** — *saṅkarā* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संकरा** (*saṅkarā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṁkaṭa*, "contracted, narrow" (CDIAL 12817).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

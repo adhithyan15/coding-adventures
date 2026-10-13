@@ -14,7 +14,8 @@ romanization: "cillu"
 concept_tag: TE-VASTUVU271-CILLU
 prerequisites: [TE-C271-plastikku, TE-C271-nurugu]
 sounds: []
-roots: []
+roots: [dravidian-cilli-hole]
+etymology_hook: "cillu: native Dravidian; DEDR 2575 lists cilli 'small hole' with Tamil cilli 'hole'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C271-nurugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C271-VASTUVU271-05]; assesses=[] -->
 
 **చిల్లు** — *cillu* — "a hole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిల్లు** (*cillu*) is native Dravidian. DEDR 2575 gives it as *cilli*, "small hole", with Tamil *cilli*, "leak, hole", and Kannada *jilli*, "small hole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

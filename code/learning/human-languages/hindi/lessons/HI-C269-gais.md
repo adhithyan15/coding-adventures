@@ -14,7 +14,8 @@ romanization: "gais"
 concept_tag: HI-THG269-GAIS
 prerequisites: [HI-C268-rakh, HI-C269-koyla]
 sounds: []
-roots: []
+roots: [english-gas]
+etymology_hook: "gais ← English gas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C269-koyla]
 <!-- hl-knowledge: introduces=[HI-LEX-C269-THG269-02]; assesses=[] -->
 
 **गैस** — *gais* — "gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गैस** (*gais*) is a loan from English *gas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

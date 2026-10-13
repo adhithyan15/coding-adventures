@@ -14,7 +14,8 @@ romanization: "darjī"
 concept_tag: TE-PANI194-DARJI
 prerequisites: [TE-C194-intipani, TE-C194-panimanisi]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "darjī ← Persian darzī 'tailor', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C194-panimanisi]
 <!-- hl-knowledge: introduces=[TE-LEX-C194-PANI194-03]; assesses=[] -->
 
 **దర్జీ** — *darjī* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దర్జీ** (*darjī*) is a loan from Persian *darzī*, "tailor", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "varaku"
 concept_tag: TE-SAMAYAM212-VARAKU
 prerequisites: [TE-C212-ventane, TE-C212-civaraku]
 sounds: []
-roots: []
+roots: [dravidian-varampu-limit]
+etymology_hook: "varaku: native Dravidian; DEDR 5261 lists vaṟaku 'up to, until'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C212-civaraku]
 <!-- hl-knowledge: introduces=[TE-LEX-C212-SAMAYAM212-04]; assesses=[] -->
 
 **వరకు** — *varaku* — "until, up to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వరకు** (*varaku*) is native Dravidian. DEDR 5261 lists *vaṟaku*, "up to, until", under *vaṟa*, "limit", with Malayalam *varē* and Kannada *bare*, "up to, till".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

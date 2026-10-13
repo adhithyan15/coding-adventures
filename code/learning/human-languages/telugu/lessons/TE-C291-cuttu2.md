@@ -14,7 +14,8 @@ romanization: "cuṭṭū"
 concept_tag: TE-STHALAM291-CUTTU2
 prerequisites: [TE-C291-sarihaddu, TE-C291-eduruga]
 sounds: []
-roots: []
+roots: [dravidian-curru-revolve]
+etymology_hook: "cuṭṭū: native Dravidian; DEDR 2715 lists cuṭṭu 'all around'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C291-eduruga]
 <!-- hl-knowledge: introduces=[TE-LEX-C291-STHALAM291-05]; assesses=[] -->
 
 **చుట్టూ** — *cuṭṭū* — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చుట్టూ** (*cuṭṭū*) is native Dravidian. DEDR 2715 lists *cuṭṭu*, "a round; all around", with Tamil *cuṟṟu*, "to go around".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

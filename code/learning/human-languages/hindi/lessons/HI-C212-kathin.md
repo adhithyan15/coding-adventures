@@ -14,7 +14,8 @@ romanization: "kaṭhin"
 concept_tag: HI-QUAL212-KATHIN
 prerequisites: [HI-C212-kamzor, HI-C212-sasta]
 sounds: []
-roots: []
+roots: [sanskrit-kathina]
+etymology_hook: "kaṭhin ← Sanskrit kaṭhina 'hard, stiff', a tatsama, of a group traced to Dravidian (CDIAL 2650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C212-sasta]
 <!-- hl-knowledge: introduces=[HI-LEX-C212-QUAL212-05]; assesses=[] -->
 
 **कठिन** — *kaṭhin* — "hard, difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कठिन** (*kaṭhin*) is Sanskrit *kaṭhina*, "hard, stiff", taken over whole as a learned loan, a tatsama (CDIAL 2650). CDIAL reports that this group of words has been traced to Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

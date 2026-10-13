@@ -14,7 +14,8 @@ romanization: "cīkaṭi"
 concept_tag: TE-VASTUVU267-CIKATI
 prerequisites: [TE-C267-karuvu, TE-C267-vennela]
 sounds: []
-roots: []
+roots: [dravidian-ciikati-dark]
+etymology_hook: "cīkaṭi: native Dravidian; DEDR 2604 lists cīkaṭi 'darkness' with Parji cīkoḍ 'darkness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C267-vennela]
 <!-- hl-knowledge: introduces=[TE-LEX-C267-VASTUVU267-05]; assesses=[] -->
 
 **చీకటి** — *cīkaṭi* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చీకటి** (*cīkaṭi*) is native Dravidian. DEDR 2604 lists a nasalised *cīkaṭi*, "darkness", with Parji *cīkoḍ* and Konda *sīkaṭi*, "darkness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

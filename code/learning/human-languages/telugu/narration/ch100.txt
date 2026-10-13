@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a gift, a prize, then the Telugu for an i
 You'll want to know: కుడి.
 కుడి — kuḍi — "right (not left)".
 
+The word, taken apart.
+కుడి (kuḍi) is native Dravidian. DEDR 1654 lists kuḍi, "right, right-hand", in the same entry as kuḍucu, "to eat, drink", with Tamil kuṭi, "to drink".
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Telugu for an invitation, then the Telugu for right.
 You'll want to know: ఎడమ.
 ఎడమ — eḍama — "left (not right)".
 
+The word, taken apart.
+ఎడమ (eḍama) is native Dravidian, one word with Tamil iṭam and Kannada eḍa, "left side" (DEDR 449). DEDR compares the Indo-Aryan words for "left" in CDIAL 5539, such as Hindi ḍāwā, which CDIAL itself calls non-Aryan, perhaps from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Telugu for right, then the Telugu for left.
 
 You'll want to know: తిన్నగా.
 తిన్నగా — tinnagā — "straight ahead".
+
+The word, taken apart.
+తిన్నగా (tinnagā) is native Dravidian. DEDR 3264 lists tinna, "straight, direct", and the adverb built on it.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ One slot changes: ఇక్కడ, అక్కడ, ఎక్కడ. Here, there
 You'll want to know: దగ్గర.
 దగ్గర — daggara — "near".
 
+The word, taken apart.
+దగ్గర (daggara) is native Dravidian. DEDR 79 lists ḍaggaṟa and daggaṟa, "nearness", with Tamil aṭu, "to be next, near".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Telugu for straight ahead, then the Telugu for near.
 
 You'll want to know: దూరం.
 దూరం — dūraṁ — "far; distance".
+
+The word, taken apart.
+దూరం (dūraṁ) is Sanskrit dūra, "distant; distance", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 6495).
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "vidyārthi"
 concept_tag: TE-NOUN-STUDENT
 prerequisites: [TE-C48-teacher]
 sounds: []
-roots: []
+roots: [sanskrit-vidya]
+etymology_hook: "vidyārthi ← Sanskrit vidyā 'knowledge' (CDIAL 11741) + arthin 'desiring' (CDIAL 640)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C48-teacher]
 Two Sanskrit pieces welded: *vidyā*, knowledge, and *arthin*, one who seeks. A student is a knowledge-seeker, and the word says so on its face.
 
 *vidyā* grows from the root *vid*, "to know" — the same ancient root behind English *wit* and *wisdom*, and behind Latin *vidēre*, "to see". Knowing and seeing were one word long before either language existed.
+
+CDIAL 11741 lists Sanskrit *vidyā*, "knowledge", and CDIAL 640 *arthin*, "desiring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

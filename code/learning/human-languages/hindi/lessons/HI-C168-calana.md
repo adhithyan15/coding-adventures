@@ -14,7 +14,8 @@ romanization: "calānā"
 concept_tag: HI-VERB-CALANA
 prerequisites: [HI-C168-milana, HI-C168-badalna]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "calānā: the causing form of calnā 'to move', from Sanskrit calati (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C168-badalna]
 <!-- hl-knowledge: introduces=[HI-LEX-C168-ACT168-04]; assesses=[] -->
 
 **चलाना** — *calānā* — "to drive, to run (a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चलाना** (*calānā*) is the causing form of *calnā*, "to move, go": to drive is to make something go. *calnā* comes from Sanskrit *calati*, "goes away" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

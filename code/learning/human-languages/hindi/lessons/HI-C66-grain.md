@@ -14,7 +14,8 @@ romanization: "anāj"
 concept_tag: HI-NOUN-GRAIN
 prerequisites: [HI-C66-crop, HI-C64-slowly, HI-C65-permission]
 sounds: []
-roots: []
+roots: [sanskrit-annadya]
+etymology_hook: "anāj ← Sanskrit annādya 'food', a tadbhava (CDIAL 398)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C66-crop]
 Usually traced to Sanskrit अन्न (*anna*), 'food', through a longer form meaning 'the food that is to be eaten'. The word for food narrowed onto the one food everything else is built around.
 
 अनाज is grain in the bulk sense — what is stored, weighed and sold. चावल is one kind of it, wheat is another, and अनाज is the sack all of them come out of.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनाज** (*anāj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *annādya*, "food" (CDIAL 398). It is built from *anna*, "food", and *ādya*, "to be eaten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

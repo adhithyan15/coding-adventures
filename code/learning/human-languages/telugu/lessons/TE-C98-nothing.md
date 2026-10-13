@@ -11,7 +11,8 @@ romanization: "ēmī lēdu"
 concept_tag: TE-REPLY-NOTHING
 prerequisites: [TE-C97-anxiety, TE-C97-alone]
 sounds: []
-roots: []
+roots: [yaa-dravidian, il]
+etymology_hook: "ēmī lēdu: native ēmi 'what' (DEDR 5151) + lēdu 'there is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C97-alone]
 
 The answer to **ఏమైంది?**, "what happened?", when you would rather not say. It ends on the
 **లేదు** you have had since your first chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏమీ లేదు** (*ēmī lēdu*) is native Dravidian: *ēmī*, "anything", from *ēmi*, "what" (DEDR 5151), and *lēdu*, "there is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

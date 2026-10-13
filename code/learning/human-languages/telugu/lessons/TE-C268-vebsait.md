@@ -14,7 +14,8 @@ romanization: "vebsaiṭ"
 concept_tag: TE-VASTUVU268-VEBSAIT
 prerequisites: [TE-C268-karyakramam, TE-C268-intarnet]
 sounds: []
-roots: []
+roots: [english-website]
+etymology_hook: "vebsaiṭ ← English website"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C268-intarnet]
 <!-- hl-knowledge: introduces=[TE-LEX-C268-VASTUVU268-05]; assesses=[] -->
 
 **వెబ్సైట్** — *vebsaiṭ* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెబ్సైట్** (*vebsaiṭ*) is a loan from English *website*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

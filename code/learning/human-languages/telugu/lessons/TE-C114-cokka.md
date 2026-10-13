@@ -14,7 +14,8 @@ romanization: "cokkā"
 concept_tag: TE-THINGS114-COKKA
 prerequisites: [TE-C113-banti, TE-C114-galipatam]
 sounds: []
-roots: []
+roots: [telugu-cokkaa-shirt]
+etymology_hook: "cokkā: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C114-galipatam]
 <!-- hl-knowledge: introduces=[TE-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **చొక్కా** — *cokkā* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **చొక్కా** (*cokkā*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

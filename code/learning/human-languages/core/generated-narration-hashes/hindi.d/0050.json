@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 50,
-  "sourceHash": "fnv1a64:91a0aae17ed79ade",
+  "sourceHash": "fnv1a64:aa830dbb4d6151fc",
   "lessonIds": [
     "HI-C50-gratitude",
     "HI-C50-favour",
@@ -15,6 +15,6 @@
   "text": "hindi/narration/ch50.txt",
   "json": "hindi/narration/ch50.json",
   "textHash": "fnv1a64:6c167d6d87be08ed",
-  "jsonHash": "fnv1a64:f4759a0fb279e952",
+  "jsonHash": "fnv1a64:87b6ea256f82a0f8",
   "findings": []
 }

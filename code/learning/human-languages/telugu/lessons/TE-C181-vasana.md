@@ -14,7 +14,8 @@ romanization: "vāsana"
 concept_tag: TE-GUNAM181-VASANA
 prerequisites: [TE-C180-narinja-rangu, TE-C181-goppa]
 sounds: []
-roots: []
+roots: [sanskrit-vasa-perfume]
+etymology_hook: "vāsana ← Sanskrit vāsana 'perfuming', from vāsa 'perfume' (CDIAL 11592)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C181-goppa]
 <!-- hl-knowledge: introduces=[TE-LEX-C181-GUNAM181-02]; assesses=[] -->
 
 **వాసన** — *vāsana* — "a smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వాసన** (*vāsana*) is Sanskrit *vāsana*, "perfuming", from *vāsa*, "perfume" (CDIAL 11592), taken over as a learned loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

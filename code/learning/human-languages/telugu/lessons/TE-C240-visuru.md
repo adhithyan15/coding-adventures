@@ -14,7 +14,8 @@ romanization: "visuru"
 concept_tag: TE-VERB-VISURU
 prerequisites: [TE-C240-lagu, TE-C240-nettu]
 sounds: []
-roots: []
+roots: [dravidian-vicu-fan]
+etymology_hook: "visuru: native Dravidian; DEDR 5450 lists visuru 'to throw, fling' with Tamil vīcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C240-nettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C240-KRIYA240-05]; assesses=[] -->
 
 **విసురు** — *visuru* — "to throw, to fling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విసురు** (*visuru*) is native Dravidian. DEDR 5450 lists *visuru*, "to throw, fling", with Tamil *vīcu*, "to throw, fling". DEDR compares Sanskrit *vyajana*, "fanning; fan" (CDIAL 12043).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

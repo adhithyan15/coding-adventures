@@ -11,7 +11,8 @@ romanization: "cinna"
 concept_tag: TE-ADJ-SMALL
 prerequisites: [TE-C42-big]
 sounds: []
-roots: []
+roots: [dravidian-cinna-small]
+etymology_hook: "cinna: native Dravidian, one word with Tamil ciṉṉa and Kannada ciṇṇa (DEDR 2594)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **పెద్ద** *pedda* a moment ago. Put them side by side and noth
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిన్న** (*cinna*) is native Dravidian, one word with Tamil *ciṉṉa*, Kannada *ciṇṇa* and Malayalam *cinna* (DEDR 2594).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-02] -->

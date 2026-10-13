@@ -14,7 +14,8 @@ romanization: "sāthī"
 concept_tag: HI-THG254-SATHI
 prerequisites: [HI-C253-sisu, HI-C254-saheli]
 sounds: []
-roots: []
+roots: [indo-aryan-sarthin]
+etymology_hook: "sāthī ← *sārthin 'having part in a company', a reconstructed form; a tadbhava (CDIAL 13366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C254-saheli]
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-02]; assesses=[] -->
 
 **साथी** — *sāthī* — "a companion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साथी** (*sāthī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sārthin*, "having part in a company", a form CDIAL reconstructs from its descendants (CDIAL 13366). It is built on *sārtha*, "company".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

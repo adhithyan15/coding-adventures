@@ -14,7 +14,8 @@ romanization: "gurtupaṭṭu"
 concept_tag: TE-VERB-GURTUPATTU
 prerequisites: [TE-C283-charj-ceyu, TE-C283-tolagincu]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark, dravidian-pattu-hold]
+etymology_hook: "gurtupaṭṭu: native gurtu 'mark' (DEDR 1847) + paṭṭu 'to catch' (DEDR 4034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C283-tolagincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C283-KRIYA283-03]; assesses=[] -->
 
 **గుర్తుపట్టు** — *gurtupaṭṭu* — "to recognize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుర్తుపట్టు** (*gurtupaṭṭu*) is native Dravidian: *gurtu*, "a mark, sign" (DEDR 1847), and *paṭṭu*, "to catch, hold" (DEDR 4034): "to catch the mark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

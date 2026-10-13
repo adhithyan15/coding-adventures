@@ -14,7 +14,8 @@ romanization: "tapālā"
 concept_tag: TE-VASTUVU185-TAPALA
 prerequisites: [TE-C185-stampu, TE-C185-parselu]
 sounds: []
-roots: []
+roots: [telugu-tapala-post]
+etymology_hook: "tapālā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'post'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C185-parselu]
 <!-- hl-knowledge: introduces=[TE-LEX-C185-VASTUVU185-04]; assesses=[] -->
 
 **తపాలా** — *tapālā* — "the post, mail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తపాలా** (*tapālā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "post, mail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

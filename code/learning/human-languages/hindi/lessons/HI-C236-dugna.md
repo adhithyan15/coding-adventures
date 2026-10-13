@@ -14,7 +14,8 @@ romanization: "dugnā"
 concept_tag: HI-QUAL236-DUGNA
 prerequisites: [HI-C236-adha, HI-C236-pura]
 sounds: []
-roots: []
+roots: [indo-aryan-duguna]
+etymology_hook: "dugnā: CDIAL lists dūnā 'double' under *duguṇa 'double' (CDIAL 6390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C236-pura]
 <!-- hl-knowledge: introduces=[HI-LEX-C236-QUAL236-03]; assesses=[] -->
 
 **दुगना** — *dugnā* — "double".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुगना** (*dugnā*) belongs with Hindi *dūnā*, "double", which CDIAL lists under a reconstructed *\*duguṇa*, "double", beside Sanskrit *dviguṇa* (CDIAL 6390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "School: The Borrowed Word and the Built One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d64512e617254b42",
+  "sourceHash": "fnv1a64:6b176e86dcbba413",
   "lessons": [
     {
       "id": "HI-C81-skool",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acae2ec16b13a916",
+      "sourceHash": "fnv1a64:f2f1be4af7081f43",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80455588d0b3ef03",
+      "sourceHash": "fnv1a64:68b5e7ba84205edc",
       "notice": null,
       "blocks": [
         {

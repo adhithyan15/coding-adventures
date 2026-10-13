@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a message, then the Hindi for a conversati
 You'll want to know: सलाह.
 सलाह — salāh — "advice".
 
+The word, taken apart.
+सलाह (salāh) is a loan from Arabic ṣalāḥ, "soundness, what is right", which reached Hindi through Persian. Its Arabic root is ṣ-l-ḥ (Lane). Hindi uses it for advice.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a conversation, then the Hindi for advice.
 
 You'll want to know: राय.
 राय — rāy — "an opinion".
+
+The word, taken apart.
+राय (rāy) is a loan from Arabic raʾy, "opinion, view", which reached Hindi through Persian. Its Arabic root is r-ʾ-y (Lane). It is a different word from the older Hindi rāy, "king", from Sanskrit rājan (CDIAL 10679).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for advice, then the Hindi for an opinion.
 You'll want to know: विचार.
 विचार — vicār — "a thought, an idea".
 
+The word, taken apart.
+विचार (vicār) is Sanskrit vicāra, "pondering", taken over whole as a learned loan, a tatsama (CDIAL 11683).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for an opinion, then the Hindi for a thought.
 You'll want to know: झूठ.
 झूठ — jhūṭh — "a lie".
 
+The word, taken apart.
+झूठ (jhūṭh) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhūṭṭha, "false", a form CDIAL reconstructs from its descendants (CDIAL 5407).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a thought, then the Hindi for a lie.
 
 You'll want to know: वादा.
 वादा — vādā — "a promise".
+
+The word, taken apart.
+वादा (vādā) is a loan from Arabic waʿda, "a promise", which reached Hindi through Persian. Its Arabic root is w-ʿ-d (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "bāvarcī"
 concept_tag: HI-THG194-BAVARCI
 prerequisites: [HI-C193-nai, HI-C194-dhobi]
 sounds: []
-roots: []
+roots: [persian-bawarchi]
+etymology_hook: "bāvarcī: usually traced to Persian bāwarchī 'cook', which Persian took from Turkic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C194-dhobi]
 <!-- hl-knowledge: introduces=[HI-LEX-C194-THG194-02]; assesses=[] -->
 
 **बावर्ची** — *bāvarcī* — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बावर्ची** (*bāvarcī*) is a loan, usually traced to Persian *bāwarchī*, "cook", a word Persian itself took from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

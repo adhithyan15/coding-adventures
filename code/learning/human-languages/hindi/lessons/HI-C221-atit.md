@@ -14,7 +14,8 @@ romanization: "atīt"
 concept_tag: HI-THG221-ATIT
 prerequisites: [HI-C221-maut, HI-C221-bhavisya]
 sounds: []
-roots: []
+roots: [sanskrit-atita]
+etymology_hook: "atīt ← Sanskrit atīta 'gone by, past', a tatsama (CDIAL 220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C221-bhavisya]
 <!-- hl-knowledge: introduces=[HI-LEX-C221-THG221-03]; assesses=[] -->
 
 **अतीत** — *atīt* — "the past".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अतीत** (*atīt*) is Sanskrit *atīta*, "gone by, past", taken over whole as a learned loan, a tatsama (CDIAL 220).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

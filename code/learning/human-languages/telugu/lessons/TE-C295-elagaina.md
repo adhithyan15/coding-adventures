@@ -14,7 +14,8 @@ romanization: "elāgainā"
 concept_tag: TE-KARANAM295-ELAGAINA
 prerequisites: [TE-C295-endukaina, TE-C295-enduko]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "elāgainā: native elāgu 'how' (DEDR 5151) + ainā (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C295-enduko]
 <!-- hl-knowledge: introduces=[TE-LEX-C295-KARANAM295-05]; assesses=[] -->
 
 **ఎలాగైనా** — *elāgainā* — "somehow, by any means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎలాగైనా** (*elāgainā*) is native Dravidian: *elāgu*, "how", on the question base *e-* (DEDR 5151), with *ainā*, "even if it is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

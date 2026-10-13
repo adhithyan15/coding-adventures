@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a wave, then the Telugu for a hill.
 You'll want to know: జలపాతం.
 జలపాతం — jalapātaṁ — "a waterfall".
 
+The word, taken apart.
+జలపాతం (jalapātaṁ) is Sanskrit jala, "water" (CDIAL 5155), and pāta, "fall" (CDIAL 8052): "a water-fall".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a hill, then the Telugu for a waterfall.
 
 You'll want to know: దీవి.
 దీవి — dīvi — "an island".
+
+The word, taken apart.
+దీవి (dīvi) comes from Sanskrit dvīpa, "land, island", reshaped to Telugu sounds: a tadbhava (CDIAL 6691).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a waterfall, then the Telugu for an islan
 You'll want to know: ఆవు.
 ఆవు — āvu — "a cow".
 
+The word, taken apart.
+ఆవు (āvu) is native Dravidian, one word with Tamil ā and Kannada āvu (DEDR 334). DEDR lists Telugu āvu, "cow".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for an island, then the Telugu for a cow.
 You'll want to know: గుర్రం.
 గుర్రం — gurraṁ — "a horse".
 
+The word, taken apart.
+DEDR 1711 lists guṟṟamu, "horse", beside Tamil kutirai, and raises the possibility that it came from Indo-Aryan, Sanskrit ghoṭaka, "horse". CDIAL 4516 in turn calls ghoṭa non-Aryan, probably Dravidian, so the source of గుర్రం (gurraṁ) is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a cow, then the Telugu for a horse.
 
 You'll want to know: ఏనుగు.
 ఏనుగు — ēnugu — "an elephant".
+
+The word, taken apart.
+ఏనుగు (ēnugu) is native Dravidian, one word with Tamil yāṉai and Kannada āne (DEDR 5161). DEDR gives the Telugu as ēnūgu, "elephant".
 
 What you've built.
 One more word for this chapter.

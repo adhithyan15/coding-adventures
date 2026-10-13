@@ -14,7 +14,8 @@ romanization: "racayita"
 concept_tag: TE-PANI197-RACAYITA
 prerequisites: [TE-C196-darakhastu, TE-C197-vadrangi]
 sounds: []
-roots: []
+roots: [sanskrit-racayitr]
+etymology_hook: "racayita ← Sanskrit racayitā 'composer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C197-vadrangi]
 <!-- hl-knowledge: introduces=[TE-LEX-C197-PANI197-02]; assesses=[] -->
 
 **రచయిత** — *racayita* — "a writer, an author".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రచయిత** (*racayita*) is Sanskrit *racayitā*, "maker, composer", taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

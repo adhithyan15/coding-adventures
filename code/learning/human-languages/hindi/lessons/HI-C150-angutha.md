@@ -14,7 +14,8 @@ romanization: "aṅgūṭhā"
 concept_tag: HI-THINGS150-ANGUTHA
 prerequisites: [HI-C150-kohni, HI-C150-kalai]
 sounds: []
-roots: []
+roots: [sanskrit-angushtha]
+etymology_hook: "aṅgūṭhā ← Sanskrit aṅguṣṭha 'thumb', a tadbhava (CDIAL 137)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C150-kalai]
 <!-- hl-knowledge: introduces=[HI-LEX-C150-THINGS150-03]; assesses=[] -->
 
 **अंगूठा** — *aṅgūṭhā* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगूठा** (*aṅgūṭhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguṣṭha*, "thumb" (CDIAL 137).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

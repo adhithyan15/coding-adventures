@@ -14,7 +14,8 @@ romanization: "nōṭu"
 concept_tag: TE-PANI235-NOTU
 prerequisites: [TE-C234-nagali, TE-C234-kodavali]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "nōṭu ← English note"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C234-kodavali]
 <!-- hl-knowledge: introduces=[TE-LEX-C235-PANI235-01]; assesses=[] -->
 
 **నోటు** — *nōṭu* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నోటు** (*nōṭu*) is a loan from English *note*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

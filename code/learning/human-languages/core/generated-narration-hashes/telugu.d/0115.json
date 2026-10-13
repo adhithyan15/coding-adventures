@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 115,
-  "sourceHash": "fnv1a64:fa0899afeade3d14",
+  "sourceHash": "fnv1a64:50ad2b2bcd0bb4c2",
   "lessonIds": [
     "TE-C115-topi",
     "TE-C115-ungaram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch115.txt",
   "json": "telugu/narration/ch115.json",
-  "textHash": "fnv1a64:848fb9eea55330e0",
-  "jsonHash": "fnv1a64:487d288502629bf6",
+  "textHash": "fnv1a64:9b9c5dd4390fab1e",
+  "jsonHash": "fnv1a64:36d1d0f4fd34a892",
   "findings": []
 }

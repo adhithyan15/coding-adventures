@@ -14,7 +14,8 @@ romanization: "jarugu"
 concept_tag: TE-VERB-JARUGU
 prerequisites: [TE-C284-vadulu, TE-C284-tavvu]
 sounds: []
-roots: []
+roots: [dravidian-cari-slide]
+etymology_hook: "jarugu: native Dravidian; DEDR 2360 lists jarugu 'to occur, pass' with Kannada sari"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C284-tavvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C284-KRIYA284-03]; assesses=[] -->
 
 **జరుగు** — *jarugu* — "to happen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జరుగు** (*jarugu*) is native Dravidian. DEDR 2360 lists *jarugu*, "to pass, occur, come to pass", with Kannada *sari*, "to move, go", and Tamil *cari*, "to slip away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cūhā"
 concept_tag: HI-THINGS149-CUHA
 prerequisites: [HI-C149-mendhak, HI-C149-kachua, HI-C06-tin-char-history, HI-C06-tin-char-history]
 sounds: []
-roots: []
+roots: [indo-aryan-cuha]
+etymology_hook: "cūhā ← *cūha 'rat, mouse', a reconstructed form; a tadbhava (CDIAL 4899)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C149-kachua]
 <!-- hl-knowledge: introduces=[HI-LEX-C149-THINGS149-05]; assesses=[] -->
 
 **चूहा** — *cūhā* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूहा** (*cūhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cūha*, "rat, mouse", a form CDIAL reconstructs from its descendants (CDIAL 4899).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

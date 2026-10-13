@@ -14,7 +14,8 @@ romanization: "kalisi"
 concept_tag: TE-KARANAM217-KALISI
 prerequisites: [TE-C216-bekari, TE-C216-selunu]
 sounds: []
-roots: []
+roots: [dravidian-kala-mix]
+etymology_hook: "kalisi: native Dravidian, from kaliyu 'to join, meet' (DEDR 1299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C216-selunu]
 <!-- hl-knowledge: introduces=[TE-LEX-C217-KARANAM217-01]; assesses=[] -->
 
 **కలిసి** — *kalisi* — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కలిసి** (*kalisi*) is native Dravidian, from *kaliyu*, "to join, meet" (DEDR 1299), one word with Tamil *kala*, "to unite": "having joined".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

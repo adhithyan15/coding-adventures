@@ -14,7 +14,8 @@ romanization: "sambhalkar"
 concept_tag: HI-CARE-CAREFULLY
 prerequisites: [HI-C120-milkar, HI-C121-dhyanrakhie]
 sounds: []
-roots: []
+roots: [sanskrit-sambharati]
+etymology_hook: "sambhalnā: CDIAL lists it under Sanskrit saṁbharati 'brings together, maintains' (CDIAL 12961)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C121-dhyanrakhie]
 **संभलकर** (*sambhalkar*) — "carefully", "steadily".
 
 **संभलकर जाना** — "go carefully", said to someone setting out after dark or in the rain.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संभलकर** (*sambhalkar*) is *sambhalnā*, "to steady oneself", with *-kar*, "having". CDIAL lists the verb under Sanskrit *saṁbharati*, "brings together", and its causing form "maintains" (CDIAL 12961).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

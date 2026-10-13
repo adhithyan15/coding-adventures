@@ -11,7 +11,8 @@ romanization: "dōma"
 concept_tag: TE-NOUN-MOSQUITO
 prerequisites: [TE-C70-frog]
 sounds: []
-roots: []
+roots: [dravidian-doome-mosquito]
+etymology_hook: "dōma: native Dravidian, one word with Kannada dōme (DEDR 2991)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C70-frog]
 A దోమ is the reason for the net over a bed, for smoke at dusk, and for half the complaints of a hot సాయంత్రం.
 
 It is also the standard small annoyance. Somebody waving away a threat calls it a దోమ, and somebody who could not sleep blames one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దోమ** (*dōma*) is native Dravidian, one word with Kannada *dōme* (DEDR 2991). DEDR lists Telugu *dōma*, "mosquito".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

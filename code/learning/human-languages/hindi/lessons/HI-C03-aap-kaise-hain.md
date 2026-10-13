@@ -14,7 +14,8 @@ romanization: "āp kaise haiṁ?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [HI-C03-kaise, HI-C02-aap-tum, HI-C02-hai]
 sounds: [anusvara, matra-ai]
-roots: [ka-interrogative, asti]
+roots: [ka-interrogative, asti, sanskrit-atman]
+etymology_hook: "āp ← Sanskrit ātman 'self' (CDIAL 1135); kaise ← kīdṛśa 'of what kind?' (CDIAL 3197)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,8 @@ have met.
 **last**, exactly as in Chapter 2's *merā nām … hai*. And because *āp* is
 grammatically plural (that is how Hindi shows respect), its verb is the plural
 **haiṁ**, not the singular *hai*.
+
+**आप** comes from Sanskrit *ātman*, "self" (CDIAL 1135), and **कैसे** from *kīdṛśa*, "of what kind" (CDIAL 3197).
 
 ## Grammar Lens: respect is plural
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C03-AAPKAISEHAIN-01, HI-CONCEPT-C03-KAISE-01] -->

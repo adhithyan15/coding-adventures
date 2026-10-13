@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 154,
-  "sourceHash": "fnv1a64:e6b7892e297f6cdf",
+  "sourceHash": "fnv1a64:bdf2a09b8b4e2693",
   "lessonIds": [
     "HI-C154-garam",
     "HI-C154-gila",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch154.txt",
   "json": "hindi/narration/ch154.json",
-  "textHash": "fnv1a64:3b99e1efd5ae9908",
-  "jsonHash": "fnv1a64:1705be382d27d816",
+  "textHash": "fnv1a64:96deb96612f2337d",
+  "jsonHash": "fnv1a64:e9a2413fa2b4a4a4",
   "findings": []
 }

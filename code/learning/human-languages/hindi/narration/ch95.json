@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "The Past, And Where You Were",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0532243078ccfbeb",
+  "sourceHash": "fnv1a64:4b4e87e7ebb538a6",
   "lessons": [
     {
       "id": "HI-C87-par",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21c9573c541de282",
+      "sourceHash": "fnv1a64:69a6b14c1c4b7427",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,10 @@
             {
               "kind": "speech",
               "text": "What पर (par) wants is a point rather than an interior — a house you are at, a platform you are standing on. A place you are inside reaches for a different small word, which arrives later."
+            },
+            {
+              "kind": "speech",
+              "text": "पर (par) is usually traced to Sanskrit upari, \"above, upon\"."
             }
           ]
         },
@@ -191,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:010db34986aa3e68",
+      "sourceHash": "fnv1a64:e2768dbd4cba3ab7",
       "notice": null,
       "blocks": [
         {
@@ -369,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69fa4c2fb90d2f31",
+      "sourceHash": "fnv1a64:6ff1c67bd4036783",
       "notice": null,
       "blocks": [
         {
@@ -439,6 +443,10 @@
             {
               "kind": "speech",
               "text": "A word ending in -आ swaps that ending for -ई. You learned it on adjectives, met it again on the habitual verb, and here it is a third time. The past copula behaves like an adjective because, historically, it once was one — a participle meaning situated, agreeing with whoever was situated."
+            },
+            {
+              "kind": "speech",
+              "text": "था (thā) comes from Sanskrit sthita, \"standing, settled\" (CDIAL 13768)."
             }
           ]
         },
@@ -548,7 +556,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a5e5519cf8fcbf0",
+      "sourceHash": "fnv1a64:6b589d69791d0beb",
       "notice": null,
       "blocks": [
         {
@@ -609,6 +617,10 @@
             {
               "kind": "speech",
               "text": "For a group of women, थे (the) adds a nasal and becomes थीं — worth recognising on a page now, and not worth drilling yet."
+            },
+            {
+              "kind": "speech",
+              "text": "था (thā) comes from Sanskrit sthita, \"standing, settled\" (CDIAL 13768)."
             }
           ]
         },
@@ -719,7 +731,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:642ad4bc6c4df6b3",
+      "sourceHash": "fnv1a64:a149ab30208ca3c1",
       "notice": null,
       "blocks": [
         {
@@ -779,6 +791,10 @@
             {
               "kind": "speech",
               "text": "Hindi asks for none of that. One word, one seat, every tense. Learning the past costs you nothing extra here, because there was nothing extra to learn."
+            },
+            {
+              "kind": "speech",
+              "text": "नहीं comes from Sanskrit nahi, \"surely not\" (CDIAL 7035), and था (thā) from sthita, \"standing\" (CDIAL 13768)."
             }
           ]
         },
@@ -888,7 +904,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e2dd32f32da7cfeb",
+      "sourceHash": "fnv1a64:4e5cfd4492c86a77",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -971,6 +987,10 @@
             {
               "kind": "speech",
               "text": "English needs a whole phrase for this — used to — and Hindi needs one letter's worth of change."
+            },
+            {
+              "kind": "speech",
+              "text": "था (thā) comes from Sanskrit sthita, \"standing\" (CDIAL 13768)."
             }
           ]
         },

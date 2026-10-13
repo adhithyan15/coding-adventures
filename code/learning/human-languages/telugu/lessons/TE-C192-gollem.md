@@ -14,7 +14,8 @@ romanization: "goḷḷeṁ"
 concept_tag: TE-VASTUVU192-GOLLEM
 prerequisites: [TE-C191-trasu, TE-C192-vatti]
 sounds: []
-roots: []
+roots: [telugu-gollem-latch]
+etymology_hook: "goḷḷeṁ: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'latch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-vatti]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-02]; assesses=[] -->
 
 **గొళ్ళెం** — *goḷḷeṁ* — "a latch, a bolt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గొళ్ళెం** (*goḷḷeṁ*) is uncertain. DEDR and CDIAL list no word of this shape meaning "latch, bolt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

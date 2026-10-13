@@ -14,7 +14,8 @@ romanization: "jalānā"
 concept_tag: HI-VERB-JALANA
 prerequisites: [HI-C175-napna, HI-C175-girana]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati]
+etymology_hook: "jalānā: the causing form of jalnā 'to burn', from Sanskrit jvalati 'burns brightly' (CDIAL 5306)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C175-girana]
 <!-- hl-knowledge: introduces=[HI-LEX-C175-ACT175-03]; assesses=[] -->
 
 **जलाना** — *jalānā* — "to light, to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जलाना** (*jalānā*) is the causing form of *jalnā*, "to burn": to light is to make something burn. CDIAL lists both under Sanskrit *jvalati*, "burns brightly" (CDIAL 5306).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

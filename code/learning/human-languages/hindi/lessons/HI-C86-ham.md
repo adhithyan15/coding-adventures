@@ -14,7 +14,8 @@ romanization: "ham"
 concept_tag: HI-PRON-WE
 prerequisites: [HI-C03-main, HI-C84-hamara]
 sounds: []
-roots: []
+roots: [sanskrit-asmad]
+etymology_hook: "ham ← Sanskrit asmad 'we, us (the base of the plural forms)', a tadbhava (CDIAL 986)"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +48,11 @@ without being given it.
 
 The possessive chapter said *hamārā* was built on **हम**, and there the matter
 rested. Here is the word itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हम** (*ham*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *asmad*, "we, us (the base of the plural forms)" (CDIAL 986).
 
 ## Grammar Lens: where Hindi says "we" and English says "I"
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-01, HI-LEX-C84-POSS-02] -->

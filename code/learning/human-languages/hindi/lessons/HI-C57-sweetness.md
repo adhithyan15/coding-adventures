@@ -14,7 +14,8 @@ romanization: "miṭhās"
 concept_tag: HI-NOUN-SWEETNESS
 prerequisites: [HI-C57-fragrance, HI-C55-sky, HI-C56-field]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "miṭhās: mīṭhā 'sweet' (← Sanskrit miṣṭa, CDIAL 10299) + -ās"
 duration:
   max_seconds: 210
 requires:

@@ -12,6 +12,7 @@ concept_tag: TE-WORD-TELUGU
 prerequisites: [TE-C05-maatlaadu, TE-C03-nenu]
 sounds: [long-u]
 roots: [telugu]
+etymology_hook: "nēnu (DEDR 5160), telugu (DEDR 3426) and māṭlāḍu (DEDR 4834) are all native Dravidian words"
 duration:
   max_seconds: 180
 requires:
@@ -46,7 +47,7 @@ musical languages.
 
 **నేను తెలుగు మాట్లాడతాను** = **నేను** (*nēnu*, "I") + **తెలుగు** (*telugu*,
 "Telugu," the object) + **మాట్లాడతాను** (*māṭlāḍatānu*, "speak") — "**I Telugu
-speak**," the verb last as always. The name **తెలుగు** (*telugu*) is native, of
+speak**," the verb last as always. The name **తెలుగు** (*telugu*) is native (DEDR 3426), of
 debated origin (often linked to *tenugu*, and to the land *Trilinga*); its
 vowel-rich sound and habit of ending most words in a vowel earned it the old
 nickname "the Italian of the East." It is the language of the *Kāvya* poets and,

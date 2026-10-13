@@ -14,7 +14,8 @@ romanization: "belan"
 concept_tag: HI-THG269-BELAN
 prerequisites: [HI-C269-gais, HI-C269-karahi]
 sounds: []
-roots: []
+roots: [sanskrit-vellana]
+etymology_hook: "belan ← Sanskrit vellana 'shaking; rolling-pin', a tadbhava (CDIAL 12120)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C269-karahi]
 <!-- hl-knowledge: introduces=[HI-LEX-C269-THG269-04]; assesses=[] -->
 
 **बेलन** — *belan* — "a rolling pin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेलन** (*belan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vellana*, "shaking; rolling-pin" (CDIAL 12120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

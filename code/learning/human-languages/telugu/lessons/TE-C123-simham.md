@@ -14,7 +14,8 @@ romanization: "siṁhaṁ"
 concept_tag: TE-THINGS123-SIMHAM
 prerequisites: [TE-C122-enugu, TE-C123-puli]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "siṁhaṁ ← Sanskrit siṁha 'lion', a tatsama (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C123-puli]
 <!-- hl-knowledge: introduces=[TE-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **సింహం** — *siṁhaṁ* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సింహం** (*siṁhaṁ*) is Sanskrit *siṁha*, "lion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhūgōḷaśāstraṁ"
 concept_tag: TE-PANI238-BHUGOLASASTRAM
 prerequisites: [TE-C238-jnapakam, TE-C238-caritra]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-gola, sanskrit-shastra]
+etymology_hook: "bhūgōḷaśāstraṁ: Sanskrit bhū 'earth' (CDIAL 9546) + gōla 'ball' (CDIAL 4321) + śāstra 'treatise' (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C238-caritra]
 <!-- hl-knowledge: introduces=[TE-LEX-C238-PANI238-03]; assesses=[] -->
 
 **భూగోళశాస్త్రం** — *bhūgōḷaśāstraṁ* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భూగోళశాస్త్రం** (*bhūgōḷaśāstraṁ*) is Sanskrit: *bhū*, "earth" (CDIAL 9546), *gōla*, "ball" (CDIAL 4321), and *śāstra*, "treatise" (CDIAL 12422): "the science of the earth-ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

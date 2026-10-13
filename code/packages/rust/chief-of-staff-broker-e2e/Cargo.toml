@@ -12,8 +12,6 @@ chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 
-[target.'cfg(unix)'.dependencies]
-libc = "0.2"
 
 [dev-dependencies]
 chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }

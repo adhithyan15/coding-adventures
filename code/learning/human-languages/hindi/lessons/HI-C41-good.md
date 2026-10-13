@@ -14,7 +14,8 @@ romanization: "acchā"
 concept_tag: HI-ADJ-GOOD
 prerequisites: [HI-C41-small, HI-C39-aadmi, HI-C40-there]
 sounds: []
-roots: []
+roots: [accha]
+etymology_hook: "acchā ← Sanskrit accha 'clear, transparent'; CDIAL lists acchā as taken from Punjabi (CDIAL 142)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ You met **छोटा** *choṭā* a moment ago. Put them side by side and noth
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अच्छा** (*acchā*) goes back to Sanskrit *accha*, "clear, transparent" (CDIAL 142). CDIAL lists Hindi *āchā*, "good", and marks *acchā* itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant "shadowless".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03, HI-CONCEPT-C39-AADMI-01, HI-CONCEPT-C39-AADMI-02, HI-LEX-C40-DEIXIS-04] -->

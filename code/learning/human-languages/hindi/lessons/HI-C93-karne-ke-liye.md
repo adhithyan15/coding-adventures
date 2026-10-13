@@ -14,7 +14,8 @@ romanization: "karne ke liye"
 concept_tag: HI-INFINITIVE-OBLIQUE
 prerequisites: [HI-C93-ke-liye, HI-C05-karna, HI-C90-kaam]
 sounds: []
-roots: []
+roots: [kr-do, labh-obtain]
+etymology_hook: "karnā ← Sanskrit karoti 'does' (CDIAL 2814); liye is usually explained as a form of lenā 'to take'"
 duration:
   max_seconds: 270
 requires:
@@ -68,6 +69,8 @@ exactly as **बच्चा** does.
 The reason it can bend like a noun is that in Hindi it **is** one. **करना** is
 both *to do* and *the doing*, which is why it could already sit where a noun
 sits. A word that behaves like a noun bends like a noun.
+
+**लिए** is usually explained as a form of **लेना**, "to take".
 
 ## Grammar Lens: where the purpose goes
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-07, HI-LEX-C90-ROUT-04] -->

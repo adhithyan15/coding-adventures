@@ -14,7 +14,8 @@ romanization: "doṅga"
 concept_tag: TE-VASTUVU265-DONGA
 prerequisites: [TE-C265-janam, TE-C265-devudu]
 sounds: []
-roots: []
+roots: [dravidian-tonkan-thief]
+etymology_hook: "doṅga: native Dravidian, one word with Tamil toṅkaṉ and Malayalam toṅṅan (DEDR 2982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C265-devudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C265-VASTUVU265-04]; assesses=[] -->
 
 **దొంగ** — *doṅga* — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దొంగ** (*doṅga*) is native Dravidian, one word with Tamil *toṅkaṉ* and Malayalam *toṅṅan* (DEDR 2982). DEDR lists Telugu *doṅga*, "thief; false, furtive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

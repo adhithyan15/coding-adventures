@@ -14,7 +14,8 @@ romanization: "hickī"
 concept_tag: HI-THG275-HICKI
 prerequisites: [HI-C274-sujan, HI-C275-moc]
 sounds: []
-roots: []
+roots: [sanskrit-hikka]
+etymology_hook: "hickī: belongs with hīk 'hiccup', from Sanskrit hikkā (CDIAL 14075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C275-moc]
 <!-- hl-knowledge: introduces=[HI-LEX-C275-THG275-02]; assesses=[] -->
 
 **हिचकी** — *hickī* — "a hiccup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिचकी** (*hickī*) belongs with Hindi *hīk*, "hiccup", which CDIAL lists under Sanskrit *hikkā*, "hiccup" (CDIAL 14075). The word imitates the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

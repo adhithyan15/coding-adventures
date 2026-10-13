@@ -57,7 +57,12 @@ Channel endpoint and LLM service implementations remain injected behind
 
 `with_channel_brokers(ChannelBrokers)` gives every agent with bound channels
 its own broker process. It is opt-in; without it, channel requests go to the
-dispatcher as before.
+dispatcher or the manual adapter API.
+
+`refusing_unbrokered_channels()` (P2.6d-2c) makes a host bound to any
+channel fail to launch, with `ChannelsNeedBroker`, unless brokers are
+configured. The orchestrator always sets it, because the daemon serves no
+channel operation itself.
 
 ```text
 start(host)

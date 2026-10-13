@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- The test broker binary is `chief_of_staff_agent_broker::process::run_inherited`,
+  no longer a copy of its descriptor checks (P2.6d-2c).
+
 ### Fixed
 
 - `broker-e2e-host` writes its result beside the result path and renames it

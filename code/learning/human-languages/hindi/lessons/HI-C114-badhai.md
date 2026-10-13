@@ -14,7 +14,8 @@ romanization: "badhāī"
 concept_tag: HI-SORRY-CONGRATS
 prerequisites: [HI-C114-mafi, HI-C114-koibaat]
 sounds: []
-roots: []
+roots: [sanskrit-vardhapayati]
+etymology_hook: "badhāī ← Sanskrit vardhāpayati 'increases, gladdens, congratulates', a tadbhava (CDIAL 11383)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C114-koibaat]
 **बधाई** (*badhāī*) — "congratulations".
 
 **बधाई हो!** — "congratulations!", for an exam passed, a new job, a birth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बधाई** (*badhāī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vardhāpayati*, "increases, gladdens, congratulates" (CDIAL 11383). CDIAL glosses the Hindi word "congratulations on the birth of a child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

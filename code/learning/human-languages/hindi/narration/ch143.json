@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Lake, Sea, Forest, Tree, Root",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7ee8caa06e44bf91",
+  "sourceHash": "fnv1a64:bb0ffc0ea4e41601",
   "lessons": [
     {
       "id": "HI-C143-jhil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4279ad12f2e2716f",
+      "sourceHash": "fnv1a64:a485c3cc814abf3e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झील (jhīl) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhilla, \"swamp, lake\", a form CDIAL reconstructs from its descendants (CDIAL 5392)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5cd5ac69d2cc84",
+      "sourceHash": "fnv1a64:e396f3845b4af414",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समुद्र (samudra) is Sanskrit samudra, \"sea\", taken over whole as a learned loan, a tatsama (CDIAL 13236)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:660428cc99151f7f",
+      "sourceHash": "fnv1a64:d9ce8ca751fdda2f",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जंगल (jaṅgal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāṅgala, \"arid, sparse in trees\" (CDIAL 5177). CDIAL notes a likely non-Aryan origin. The sense moved from \"waste land\" to \"forest\", and English took it back as jungle."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:703ab680d5512e37",
+      "sourceHash": "fnv1a64:9891f868453b6d49",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेड़ (peṛ) is inherited, but only as far back as a reconstruction. CDIAL's addenda set up peḍa, \"tree\", from Punjabi and Hindi peṛ (CDIAL 8377a), and give it no Sanskrit source. It is a different word from peṛ, \"lump\" (CDIAL 8377)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76b17734c02f7dc2",
+      "sourceHash": "fnv1a64:027025961db86448",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जड़ (jaṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jaṭā, \"twisted hair; fibrous root\" (CDIAL 5086). CDIAL weighs a Dravidian and a Munda source for the word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "videśī"
 concept_tag: HI-QUAL240-VIDESI
 prerequisites: [HI-C240-pracin, HI-C240-sthaniya]
 sounds: []
-roots: []
+roots: [sanskrit-videsha]
+etymology_hook: "videśī: Sanskrit videśa 'foreign land', a tatsama, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C240-sthaniya]
 <!-- hl-knowledge: introduces=[HI-LEX-C240-QUAL240-04]; assesses=[] -->
 
 **विदेशी** — *videśī* — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विदेशी** (*videśī*) is Sanskrit *videśa*, "a foreign land", taken over whole as a tatsama, with the ending *-ī*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

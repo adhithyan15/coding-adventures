@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c00eac54cc0b8f67",
+  "sourceHash": "fnv1a64:700691fa8ac91a96",
   "lessons": [
     {
       "id": "TE-C48-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b7442f5553e9182",
+      "sourceHash": "fnv1a64:c7fecfd99dceaf78",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "You have already said the word without being told. గురువారం, Thursday, is Guru's day: the guru there is Jupiter, the heaviest wanderer the naked eye can find and the teacher of the gods. Latin named the same weekday for Jove, which is the same planet under another name."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 4209 lists Sanskrit guru, \"heavy\"."
             }
           ]
         },
@@ -159,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90240d1cb1cc29fc",
+      "sourceHash": "fnv1a64:a060bbbceb723234",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +199,10 @@
             {
               "kind": "speech",
               "text": "vidyā grows from the root vid, \"to know\" — the same ancient root behind English wit and wisdom, and behind Latin vidēre, \"to see\". Knowing and seeing were one word long before either language existed."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 11741 lists Sanskrit vidyā, \"knowledge\", and CDIAL 640 arthin, \"desiring\"."
             }
           ]
         },
@@ -300,7 +308,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:53faeae1bb6ce9a7",
+      "sourceHash": "fnv1a64:ff1ce836c579d88f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -351,6 +359,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వైద్యుడు (vaidyuḍu) is Sanskrit vaidya, \"learned; physician\", taken over whole as a learned loan, a tatsama, with the Telugu ending -uḍu (CDIAL 12140)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -361,7 +380,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -410,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -441,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0dde9ddfdd7631b",
+      "sourceHash": "fnv1a64:2cdfaf86381c0895",
       "notice": null,
       "blocks": [
         {
@@ -581,7 +600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bb163e5def3f460",
+      "sourceHash": "fnv1a64:c2520eec9c0eced0",
       "notice": null,
       "blocks": [
         {
@@ -622,6 +641,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతిథి (atithi) is Sanskrit atithi, \"guest\", taken over whole as a learned loan, a tatsama. Its reading as a-tithi, \"without a date\", is a traditional explanation; where the Sanskrit word itself comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -632,7 +662,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -690,7 +720,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

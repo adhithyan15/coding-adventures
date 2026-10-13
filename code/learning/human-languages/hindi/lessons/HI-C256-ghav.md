@@ -14,7 +14,8 @@ romanization: "ghāv"
 concept_tag: HI-THG256-GHAV
 prerequisites: [HI-C255-jija, HI-C256-ulti]
 sounds: []
-roots: []
+roots: [sanskrit-ghata]
+etymology_hook: "ghāv ← Sanskrit ghāta 'killing; blow, bruise', a tadbhava (CDIAL 4460)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C256-ulti]
 <!-- hl-knowledge: introduces=[HI-LEX-C256-THG256-02]; assesses=[] -->
 
 **घाव** — *ghāv* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाव** (*ghāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghāta*, "killing; blow, bruise" (CDIAL 4460). CDIAL lists the Hindi forms as *ghāu* and *ghāy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

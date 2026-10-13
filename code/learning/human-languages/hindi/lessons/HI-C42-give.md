@@ -14,7 +14,8 @@ romanization: "denā"
 concept_tag: HI-VERB-GIVE
 prerequisites: [HI-C42-stand]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "denā ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C42-stand]
 **देना** (*denā*) — "to give".
 
 The plain 'give', and one of the light verbs Hindi uses to build compounds of its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देना** (*denā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

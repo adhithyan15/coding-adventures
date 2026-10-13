@@ -14,7 +14,8 @@ romanization: "thok"
 concept_tag: HI-THG251-THOK
 prerequisites: [HI-C250-chut, HI-C250-khudra]
 sounds: []
-roots: []
+roots: [sanskrit-stabaka]
+etymology_hook: "thok ← Sanskrit stabaka 'cluster; quantity', a tadbhava (CDIAL 13675)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C250-khudra]
 <!-- hl-knowledge: introduces=[HI-LEX-C251-THG251-01]; assesses=[] -->
 
 **थोक** — *thok* — "wholesale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थोक** (*thok*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stabaka*, "cluster; quantity" (CDIAL 13675). CDIAL glosses the Hindi word "clump, mass, heap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

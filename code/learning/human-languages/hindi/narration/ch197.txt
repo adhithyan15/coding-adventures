@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a servant, then the Hindi for a thief.
 You'll want to know: कक्षा.
 कक्षा — kakṣā — "a class, a classroom".
 
+The word, taken apart.
+कक्षा (kakṣā) is Sanskrit kakṣā, "girdle", taken over whole as a learned loan, a tatsama (CDIAL 2592). Hindi uses it for a classroom, and so for a class; CDIAL does not trace that sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a thief, then the Hindi for a class.
 
 You'll want to know: परीक्षा.
 परीक्षा — parīkṣā — "an examination".
+
+The word, taken apart.
+परीक्षा (parīkṣā) is Sanskrit parīkṣā, "inspection, test", taken over whole as a learned loan, a tatsama (CDIAL 7904). CDIAL lists the inherited form of the same word as parakh, "examination".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a class, then the Hindi for an examination
 You'll want to know: पाठ.
 पाठ — pāṭh — "a lesson".
 
+The word, taken apart.
+पाठ (pāṭh) is Sanskrit pāṭha, "text of a book; study", taken over whole as a learned loan, a tatsama (CDIAL 8035).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for an examination, then the Hindi for a lesso
 You'll want to know: अभ्यास.
 अभ्यास — abhyās — "practice, an exercise".
 
+The word, taken apart.
+अभ्यास (abhyās) is Sanskrit abhyāsa, "repetition, practice", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a lesson, then the Hindi for practice.
 
 You'll want to know: अंक.
 अंक — aṅk — "a mark, a number".
+
+The word, taken apart.
+अंक (aṅk) is Sanskrit aṅka, "hook; mark, sign", taken over whole as a learned loan, a tatsama (CDIAL 100). CDIAL lists the inherited form as āṁk, "mark, spot".
 
 What you've built.
 One more word for this chapter.

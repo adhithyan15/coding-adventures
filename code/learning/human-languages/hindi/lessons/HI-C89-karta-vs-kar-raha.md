@@ -14,9 +14,10 @@ romanization: "do vartamān"
 concept_tag: HI-CONTINUOUS-VS-HABITUAL
 prerequisites: [HI-C89-kar-rahe-hain, HI-C05-bolta-hun, HI-C49-now]
 sounds: []
-roots: []
+roots: [sanskrit-dvi, sanskrit-vartamana]
+etymology_hook: "do vartamān: do 'two' + Sanskrit vartamāna 'existing, present', a tatsama"
 duration:
-  max_seconds: 240
+  max_seconds: 258
 requires:
   knowledge: [HI-LEX-C89-CONT-04, HI-LEX-C89-CONT-01, HI-CONCEPT-C05-BOLTAHUN-01, HI-LEX-C49-LEAVE-01]
 introduces:
@@ -63,6 +64,8 @@ So the good news is that **your instinct is already right**. Where English says
 One caution. Hindi leans on the habit form in a place English does not: for
 something happening in the near future that is already arranged, Hindi is happy
 with the habitual, where English reaches for *I am*.
+
+**वर्तमान** is Sanskrit *vartamāna*, "existing, present", a tatsama.
 
 ## Grammar Lens: which word in the sentence tells you
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-05, HI-LEX-C89-CONT-01, HI-LEX-C49-LEAVE-01] -->

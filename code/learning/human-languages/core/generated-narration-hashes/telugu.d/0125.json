@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 125,
-  "sourceHash": "fnv1a64:18e8e473ff2d5a89",
+  "sourceHash": "fnv1a64:3694d9c80eadbc57",
   "lessonIds": [
     "TE-C125-pavuram",
     "TE-C125-gudlaguba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch125.txt",
   "json": "telugu/narration/ch125.json",
-  "textHash": "fnv1a64:ee551c2df64750dc",
-  "jsonHash": "fnv1a64:0d395ea0279c5514",
+  "textHash": "fnv1a64:d6a0dfba446fbf1e",
+  "jsonHash": "fnv1a64:51163f3bd85a0d38",
   "findings": []
 }

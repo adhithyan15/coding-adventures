@@ -14,7 +14,8 @@ romanization: "aṅk"
 concept_tag: HI-THG197-ANK
 prerequisites: [HI-C197-path, HI-C197-abhyas]
 sounds: []
-roots: []
+roots: [sanskrit-anka]
+etymology_hook: "ank ← Sanskrit aṅka 'mark, sign', a tatsama (CDIAL 100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C197-abhyas]
 <!-- hl-knowledge: introduces=[HI-LEX-C197-THG197-05]; assesses=[] -->
 
 **अंक** — *aṅk* — "a mark, a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंक** (*aṅk*) is Sanskrit *aṅka*, "hook; mark, sign", taken over whole as a learned loan, a tatsama (CDIAL 100). CDIAL lists the inherited form as *āṁk*, "mark, spot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

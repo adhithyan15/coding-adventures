@@ -14,7 +14,8 @@ romanization: "suraṅg"
 concept_tag: HI-THG203-SURANG
 prerequisites: [HI-C203-ciriyaghar, HI-C203-sangrahalay]
 sounds: []
-roots: []
+roots: [sanskrit-surunga]
+etymology_hook: "suraṅg ← Sanskrit suruṅgā 'underground passage', a tadbhava (CDIAL 13506)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C203-sangrahalay]
 <!-- hl-knowledge: introduces=[HI-LEX-C203-THG203-03]; assesses=[] -->
 
 **सुरंग** — *suraṅg* — "a tunnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरंग** (*suraṅg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *suruṅgā*, "underground passage" (CDIAL 13506).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

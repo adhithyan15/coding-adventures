@@ -12,6 +12,9 @@ Before the new one: say the Hindi for west, then the Hindi for right (side).
 You'll want to know: बायाँ.
 बायाँ — bāyā̃ — "left (side)".
 
+The word, taken apart.
+बायाँ (bāyā̃) (bāyāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāma, "lefthand" (CDIAL 11533).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for right (side), then the Hindi for left.
 
 You'll want to know: सीधा.
 सीधा — sīdhā — "straight, direct".
+
+The word, taken apart.
+सीधा (sīdhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from siddha, "accomplished, perfected" (CDIAL 13401). CDIAL glosses the Hindi word "straight, honest".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for left, then the Hindi for straight.
 You'll want to know: उल्टा.
 उल्टा — ulṭā — "upside down, reversed".
 
+The word, taken apart.
+उल्टा (ulṭā) belongs with ulaṭnā, "to be overturned", which CDIAL lists under a reconstructed ullaṭati, "turns over" (CDIAL 2368).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for straight, then the Hindi for upside down.
 You'll want to know: बीच.
 बीच — bīc — "the middle".
 
+The word, taken apart.
+बीच (bīc) is a tadbhava, a word inherited and reshaped by sound change. It comes from vīcya, "middle", a form CDIAL reconstructs from its descendants (CDIAL 12042). CDIAL compares Vedic vīcyā, "among".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for upside down, then the Hindi for the middle
 
 You'll want to know: कोना.
 कोना — konā — "a corner".
+
+The word, taken apart.
+कोना (konā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from koṇa, "corner, angle" (CDIAL 3504). CDIAL, after Burrow, takes the Sanskrit word from Dravidian.
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "pannu"
 concept_tag: TE-NOUN-TOOTH
 prerequisites: [TE-C47-leg]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth]
+etymology_hook: "pannu: native Dravidian, built back from paṇḍlu, plural of palu 'tooth' (DEDR 3986); Tamil pal"
 duration:
   max_seconds: 210
 requires:
@@ -40,7 +41,7 @@ reviews_of: [TE-C47-leg]
 
 **పన్ను** (*pannu*) — "a tooth".
 
-Proto-Dravidian **\*pal**. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that *p-* to *h-* law working again exactly where the last chapter said to watch for it. Telugu took a third road, the *-l-* coming out as *-n-* and doubling.
+Proto-Dravidian **\*pal**. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that *p-* to *h-* law working again exactly where the last chapter said to watch for it. Telugu took a third road: DEDR 3986 lists *palu*, *pallu*, with the plural *paṇḍlu*, and explains *pannu* as built back from that plural.
 
 An honest warning: పన్ను is also the word for a tax. Nothing joins the tooth to the tax but an accident of sound. Telugu has a fair number of these pairs, and context is the only fix — which is what context is for.
 

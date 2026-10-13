@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 131,
-  "sourceHash": "fnv1a64:1b80b40e21b44e53",
+  "sourceHash": "fnv1a64:2dc35d6821385dd5",
   "lessonIds": [
     "TE-C131-rupayi",
     "TE-C131-batilu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch131.txt",
   "json": "telugu/narration/ch131.json",
-  "textHash": "fnv1a64:b9a916f65cfb058c",
-  "jsonHash": "fnv1a64:8897f6cb996fbba7",
+  "textHash": "fnv1a64:9a009f6f0b193df9",
+  "jsonHash": "fnv1a64:54374ad8db78476e",
   "findings": []
 }

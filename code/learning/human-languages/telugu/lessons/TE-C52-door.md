@@ -11,7 +11,8 @@ romanization: "talupu"
 concept_tag: TE-NOUN-DOOR
 prerequisites: [TE-C51-salutation]
 sounds: []
-roots: []
+roots: [dravidian-tal-obstruct]
+etymology_hook: "talupu: native Dravidian; DEDR 3123 lists it with Tamil taḷ 'to hinder, obstruct'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C51-salutation]
 తలుపు is the leaf: the panel that swings and shuts. The opening it fills is a different word — వాకిలి in everyday speech, ద్వారం in the formal Sanskrit register. Telugu keeps the hole and the thing that fills it apart, which English manages only when it is being careful.
 
 తలుపు is inherited. That ద్వారం sits beside it doing no daily work is the usual arrangement here: the old word carries the load, the borrowed one keeps the ceremony.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తలుపు** (*talupu*) is native Dravidian. DEDR 3123 lists *talupu*, "door", in an entry with Tamil *taḷ*, "to hinder, obstruct", and Kannada *taḷ*, "impediment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

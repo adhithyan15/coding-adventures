@@ -11,7 +11,8 @@ romanization: "Bhāratadēśaṁ"
 concept_tag: TE-PLACE-INDIA
 prerequisites: [TE-C77-country, TE-C37-cevi]
 sounds: []
-roots: []
+roots: [sanskrit-bharata, sanskrit-desha]
+etymology_hook: "Bhāratadēśaṁ ← Sanskrit bhārata 'of Bharata' + deśa 'country' (CDIAL 6547)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C77-country]
 Your first Telugu proper name, and you can already read half of it: **భారత** plus the దేశం you learned a moment ago.
 
 **నేను భారతదేశం నుంచి** — "I am from India." Swap in the name of wherever you are actually from and the sentence still works.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భారతదేశం** (*Bhāratadēśaṁ*) is Sanskrit *bhārata*, "of Bharata", the land of the sons of Bharata, and *deśa*, "country" (CDIAL 6547), taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

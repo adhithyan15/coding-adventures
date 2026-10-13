@@ -14,7 +14,8 @@ romanization: "sahajamaina"
 concept_tag: TE-GUNAM261-SAHAJAMAINA
 prerequisites: [TE-C260-vinta, TE-C260-dayagala]
 sounds: []
-roots: []
+roots: [sanskrit-sahaja, tamil-aaku-become]
+etymology_hook: "sahajamaina: Sanskrit sahaja 'born together' (CDIAL 13302) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C260-dayagala]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-01]; assesses=[] -->
 
 **సహజమైన** — *sahajamaina* — "natural".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సహజమైన** (*sahajamaina*) is Sanskrit *sahaja*, "born together, inborn" (CDIAL 13302), with native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

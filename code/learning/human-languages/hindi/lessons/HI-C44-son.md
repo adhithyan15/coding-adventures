@@ -14,7 +14,8 @@ romanization: "beṭā"
 concept_tag: HI-NOUN-SON
 prerequisites: [HI-C43-write, HI-C42-come]
 sounds: []
-roots: []
+roots: [indo-aryan-bitta]
+etymology_hook: "beṭā: CDIAL lists it under a reconstructed *beṭṭa, beside Prakrit biṭṭa 'boy'; no agreed Sanskrit source"
 duration:
   max_seconds: 210
 requires:

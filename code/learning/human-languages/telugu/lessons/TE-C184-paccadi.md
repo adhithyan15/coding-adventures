@@ -14,7 +14,8 @@ romanization: "paccaḍi"
 concept_tag: TE-VASTUVU184-PACCADI
 prerequisites: [TE-C183-banali, TE-C184-venna]
 sounds: []
-roots: []
+roots: [dravidian-paccadi-relish]
+etymology_hook: "paccaḍi: native Dravidian, one word with Tamil paccaṭi and Kannada paccaḍi (DEDR 3831)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C184-venna]
 <!-- hl-knowledge: introduces=[TE-LEX-C184-VASTUVU184-02]; assesses=[] -->
 
 **పచ్చడి** — *paccaḍi* — "a chutney, a pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పచ్చడి** (*paccaḍi*) is native Dravidian, one word with Tamil *paccaṭi* and Kannada *paccaḍi* (DEDR 3831). DEDR lists Telugu *paccaḍi*, "chutney".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

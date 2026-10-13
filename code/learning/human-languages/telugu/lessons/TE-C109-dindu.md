@@ -14,7 +14,8 @@ romanization: "diṇḍu"
 concept_tag: TE-WHY109-DINDU
 prerequisites: [TE-C109-anduke, TE-C109-mancam]
 sounds: []
-roots: []
+roots: [dravidian-tindu-cushion]
+etymology_hook: "diṇḍu: native Dravidian, one word with Tamil tiṇṭu and Kannada diṇḍu (DEDR 3224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C109-mancam]
 <!-- hl-knowledge: introduces=[TE-LEX-C109-WHY109-03]; assesses=[] -->
 
 **దిండు** — *diṇḍu* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దిండు** (*diṇḍu*) is native Dravidian, one word with Tamil *tiṇṭu* and Kannada *diṇḍu* (DEDR 3224). DEDR lists Telugu *diṇḍu*, "pillow, cushion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

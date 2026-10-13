@@ -14,7 +14,8 @@ romanization: "ullū"
 concept_tag: HI-THINGS148-ULLU
 prerequisites: [HI-C148-kabutar, HI-C148-tota]
 sounds: []
-roots: []
+roots: [sanskrit-uluka]
+etymology_hook: "ullū ← Sanskrit ulūka 'owl', a tadbhava (CDIAL 2359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C148-tota]
 <!-- hl-knowledge: introduces=[HI-LEX-C148-THINGS148-03]; assesses=[] -->
 
 **उल्लू** — *ullū* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उल्लू** (*ullū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ulūka*, "owl" (CDIAL 2359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

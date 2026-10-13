@@ -14,7 +14,8 @@ romanization: "lēkapōtē"
 concept_tag: TE-KARANAM176-LEKAPOTE
 prerequisites: [TE-C175-dummu, TE-C175-poga]
 sounds: []
-roots: []
+roots: [il, proto-dravidian-poo-go]
+etymology_hook: "lēkapōtē: native lēka 'without' (DEDR 2559) + pōtē 'if it goes' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C175-poga]
 <!-- hl-knowledge: introduces=[TE-LEX-C176-KARANAM176-01]; assesses=[] -->
 
 **లేకపోతే** — *lēkapōtē* — "otherwise, or else".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లేకపోతే** (*lēkapōtē*) is native Dravidian: *lēka*, "without; or, else", which DEDR 2559 files with Tamil *il*; and *pōtē*, "if it goes", from *pō*, "to go" (DEDR 4572): "if it goes without".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

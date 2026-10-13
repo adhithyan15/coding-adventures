@@ -14,7 +14,8 @@ romanization: "hãsnā"
 concept_tag: HI-VERB-HASNA
 prerequisites: [HI-C162-tairna, HI-C162-nacna]
 sounds: []
-roots: []
+roots: [sanskrit-hasati]
+etymology_hook: "hãsnā ← Sanskrit hasati 'laughs', a tadbhava (CDIAL 14021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C162-nacna]
 <!-- hl-knowledge: introduces=[HI-LEX-C162-ACT162-03]; assesses=[] -->
 
 **हँसना** — *hãsnā* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हँसना** (*hãsnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasati*, "laughs" (CDIAL 14021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

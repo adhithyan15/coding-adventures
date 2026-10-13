@@ -11,7 +11,8 @@ romanization: "mirapa"
 concept_tag: TE-NOUN-CHILLI
 prerequisites: [TE-C61-sugar]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "mirapa: usually traced to Sanskrit marica 'peppercorn' (CDIAL 9875); the pepper word passed to the chilli"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C61-sugar]
 The word is older than the plant it names. It belonged to black pepper first, and when the new pod arrived and took over the job of making food hot, the name went with the job rather than staying with the plant.
 
 Andhra cooking is built on it now, and a kitchen there measures itself by how much మిరప it can carry. Five things, and the person at the stove will ask your పేరు before the meal is over.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మిరప** (*mirapa*) was first a name for black pepper. It is usually traced to Sanskrit *marica*, "peppercorn" (CDIAL 9875), reshaped to Telugu sounds as a tadbhava, and it passed to the chilli when the chilli arrived. CDIAL itself takes the Sanskrit word from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

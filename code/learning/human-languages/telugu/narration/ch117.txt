@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a fish, then the Telugu for meat.
 You'll want to know: కూరగాయలు.
 కూరగాయలు — kūragāyalu — "vegetables".
 
+The word, taken apart.
+కూరగాయలు (kūragāyalu) is native Dravidian: kūra, "curry-stuff" (DEDR 1760), and kāya, "unripe fruit" (DEDR 1459), with the plural -lu. DEDR compares the Indo-Aryan kacca, "raw, unripe" (CDIAL 2613), with kāya.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for meat, then the Telugu for vegetables.
 
 You'll want to know: అరటిపండు.
 అరటిపండు — araṭipaṇḍu — "a banana".
+
+The word, taken apart.
+అరటిపండు (araṭipaṇḍu) is native Dravidian: araṭi, "banana tree" (DEDR 205), and paṇḍu, "fruit" (DEDR 4004). DEDR compares Sanskrit phala, "fruit", with paṇḍu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for vegetables, then the Telugu for a banana.
 You'll want to know: మామిడిపండు.
 మామిడిపండు — māmiḍipaṇḍu — "a mango".
 
+The word, taken apart.
+మామిడిపండు (māmiḍipaṇḍu) is native Dravidian: māmiḍi, "mango", which DEDR 4782 lists with Tamil mā and Kannada māvu; and paṇḍu, "fruit" (DEDR 4004). DEDR compares Sanskrit mākanda, "mango tree", with the first and phala, "fruit", with the second.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a banana, then the Telugu for a mango.
 You'll want to know: కొబ్బరి.
 కొబ్బరి — kobbari — "coconut".
 
+The word, taken apart.
+కొబ్బరి (kobbari) is native Dravidian, one word with Tamil koppari, "dried coconut kernel", and Kannada kobbari (DEDR 2105). DEDR compares Sanskrit kūrpasa, "the inner part of a coconut", a word known only from lexicons, and the northern words in CDIAL 3936.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a mango, then the Telugu for coconut.
 
 You'll want to know: ఉల్లిపాయ.
 ఉల్లిపాయ — ullipāya — "an onion".
+
+The word, taken apart.
+Ulli, "onion", the first part of ఉల్లిపాయ (ullipāya), is native Dravidian: DEDR 705 lists Telugu ulli, "onion, garlic", with Tamil and Kannada uḷḷi, and compares Sanskrit ūlī. The second part is kāya, "unripe fruit, pod" (DEDR 1459), which DEDR compares with the Indo-Aryan kacca, "raw" (CDIAL 2613).
 
 What you've built.
 One more word for this chapter.

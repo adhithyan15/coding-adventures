@@ -11,7 +11,8 @@ romanization: "āsupatri"
 concept_tag: TE-DOCTOR-HOSPITAL
 prerequisites: [TE-C92-cold-illness, TE-C92-medicine]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "āsupatri: usually explained as English hospital reshaped; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C92-medicine]
 **ఆసుపత్రి** (*āsupatri*) — "a hospital".
 
 **ఆసుపత్రి ఎక్కడ?** — "where is the hospital?", with the **ఎక్కడ** you already ask places with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆసుపత్రి** (*āsupatri*) is usually explained as a reshaping of English *hospital*. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

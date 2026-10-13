@@ -14,7 +14,8 @@ romanization: "kaṇḍakṭaru"
 concept_tag: TE-PANI237-KANDAKTARU
 prerequisites: [TE-C237-draivaru, TE-C237-postumanu]
 sounds: []
-roots: []
+roots: [english-conductor]
+etymology_hook: "kaṇḍakṭaru ← English conductor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C237-postumanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C237-PANI237-04]; assesses=[] -->
 
 **కండక్టరు** — *kaṇḍakṭaru* — "a bus conductor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కండక్టరు** (*kaṇḍakṭaru*) is a loan from English *conductor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

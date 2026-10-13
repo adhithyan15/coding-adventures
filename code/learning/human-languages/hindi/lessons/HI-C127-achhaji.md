@@ -14,7 +14,8 @@ romanization: "acchā jī"
 concept_tag: HI-NOTATALL-IS-THAT-SO
 prerequisites: [HI-C127-bilkulnahin, HI-C127-sachmuch]
 sounds: []
-roots: []
+roots: [accha, sanskrit-jiva]
+etymology_hook: "acchā ← accha 'clear', via Punjabi (CDIAL 142); jī ← jīva 'long live!' (CDIAL 5240)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C127-sachmuch]
 **अच्छा जी** (*acchā jī*) — "is that so?", or "all right then", by tone.
 
 **अच्छा** is the "good" you know; alone it already means "oh, I see". **जी** makes it polite.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अच्छा जी** (*acchā jī*) is *acchā*, "good", which goes back to Sanskrit *accha*, "clear", and reached Hindi through Punjabi (CDIAL 142), with the respectful *jī*, from *jīva*, "long live!" (CDIAL 5240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

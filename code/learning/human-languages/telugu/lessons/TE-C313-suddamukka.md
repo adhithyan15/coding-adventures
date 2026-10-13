@@ -14,7 +14,8 @@ romanization: "suddamukka"
 concept_tag: TE-PANI313-SUDDAMUKKA
 prerequisites: [TE-C312-siksakudu, TE-C312-injaniru]
 sounds: []
-roots: []
+roots: [telugu-sudda-chalk, dravidian-muri-break]
+etymology_hook: "suddamukka: sudda 'chalk', of uncertain origin, + native mukka 'piece' (DEDR 4975)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C312-injaniru]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-01]; assesses=[] -->
 
 **సుద్దముక్క** — *suddamukka* — "a piece of chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సుద్దముక్క** (*suddamukka*) is *sudda*, "chalk", whose origin is uncertain, and native *mukka*, "piece" (DEDR 4975).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

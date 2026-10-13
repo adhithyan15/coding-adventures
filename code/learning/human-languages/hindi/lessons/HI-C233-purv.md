@@ -14,7 +14,8 @@ romanization: "pūrv"
 concept_tag: HI-LOC233-PURV
 prerequisites: [HI-C233-uttar, HI-C233-daksin]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrv ← Sanskrit pūrva 'fore, first, eastern', a tatsama (CDIAL 8343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C233-daksin]
 <!-- hl-knowledge: introduces=[HI-LEX-C233-LOC233-03]; assesses=[] -->
 
 **पूर्व** — *pūrv* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूर्व** (*pūrv*) is Sanskrit *pūrva*, "fore, first, eastern", taken over whole as a learned loan, a tatsama (CDIAL 8343).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

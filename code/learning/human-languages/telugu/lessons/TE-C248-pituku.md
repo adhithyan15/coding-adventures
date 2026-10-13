@@ -14,7 +14,8 @@ romanization: "pituku"
 concept_tag: TE-VERB-PITUKU
 prerequisites: [TE-C247-batimalu, TE-C248-molakettu]
 sounds: []
-roots: []
+roots: [dravidian-pitukku-squeeze]
+etymology_hook: "pituku: native Dravidian; DEDR 4165 lists pituku 'to milk' with Tamil pitukku 'to press out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C248-molakettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C248-KRIYA248-02]; assesses=[] -->
 
 **పితుకు** — *pituku* — "to milk (a cow)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పితుకు** (*pituku*) is native Dravidian. DEDR 4165 lists *pituku*, "to milk, press out", with Tamil *pitukku*, "to squeeze out", and Kannada *hiduku*, "to squeeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

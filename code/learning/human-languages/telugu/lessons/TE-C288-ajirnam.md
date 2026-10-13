@@ -14,7 +14,8 @@ romanization: "ajīrṇaṁ"
 concept_tag: TE-AROGYAM288-AJIRNAM
 prerequisites: [TE-C287-atyavasaram, TE-C288-aparesanu]
 sounds: []
-roots: []
+roots: [sanskrit-ajirna]
+etymology_hook: "ajīrṇaṁ ← Sanskrit ajīrṇa 'indigestion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C288-aparesanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C288-AROGYAM288-02]; assesses=[] -->
 
 **అజీర్ణం** — *ajīrṇaṁ* — "indigestion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అజీర్ణం** (*ajīrṇaṁ*) is Sanskrit *ajīrṇa*, "indigestion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

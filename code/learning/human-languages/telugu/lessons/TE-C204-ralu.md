@@ -14,7 +14,8 @@ romanization: "rālu"
 concept_tag: TE-VERB-RALU
 prerequisites: [TE-C203-kuriyu, TE-C204-polcu]
 sounds: []
-roots: []
+roots: [dravidian-raalu-fall]
+etymology_hook: "rālu: native Dravidian; DEDR 233 lists rālu 'to fall, drop down'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C204-polcu]
 <!-- hl-knowledge: introduces=[TE-LEX-C204-KRIYA204-02]; assesses=[] -->
 
 **రాలు** — *rālu* — "to fall (of leaves, fruit, petals)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రాలు** (*rālu*) is native Dravidian. DEDR 233 lists *rālu*, "to fall or drop down (of leaves, tears)", with Gondi words for "to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

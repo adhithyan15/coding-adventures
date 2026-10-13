@@ -14,7 +14,8 @@ romanization: "jaṅgal"
 concept_tag: HI-THINGS143-JANGAL
 prerequisites: [HI-C143-jhil, HI-C143-samudra]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jaṅgal ← Sanskrit jāṅgala 'arid, sparse in trees', a tadbhava (CDIAL 5177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C143-samudra]
 <!-- hl-knowledge: introduces=[HI-LEX-C143-THINGS143-03]; assesses=[] -->
 
 **जंगल** — *jaṅgal* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जंगल** (*jaṅgal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāṅgala*, "arid, sparse in trees" (CDIAL 5177). CDIAL notes a likely non-Aryan origin. The sense moved from "waste land" to "forest", and English took it back as *jungle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

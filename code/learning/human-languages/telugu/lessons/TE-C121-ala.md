@@ -14,7 +14,8 @@ romanization: "ala"
 concept_tag: TE-THINGS121-ALA
 prerequisites: [TE-C121-merupu, TE-C121-tupanu]
 sounds: []
-roots: []
+roots: [dravidian-alai-wave]
+etymology_hook: "ala: native Dravidian, one word with Tamil alaṅku 'to move, shake' (DEDR 240), which queries Sanskrit alaka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C121-tupanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **అల** — *ala* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అల** (*ala*) is native Dravidian, one word with Tamil *alaṅku*, "to move, shake", and Kannada *alaku* (DEDR 240), which lists *ala*, "a wave". DEDR compares, with a query, Sanskrit *alaka*, "curl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

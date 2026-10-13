@@ -11,7 +11,8 @@ romanization: "ammāyi"
 concept_tag: TE-PEOPLE-GIRL
 prerequisites: [TE-C88-children, TE-C88-boy]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammāyi: native Dravidian; DEDR 183 lists ammāyi 'girl' under amma 'mother', which compares Sanskrit ambā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C88-boy]
 
 It is built like **అబ్బాయి**, and it opens on the same sound as **అమ్మ**, "mother".
 **మా అమ్మాయి** — "our girl", "my daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అమ్మాయి** (*ammāyi*) is native Dravidian. DEDR 183 lists *ammāyi*, "girl", itself, under *amma*, "mother", with Tamil *ammā*. DEDR compares Sanskrit *ambā*, "mother" (CDIAL 574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

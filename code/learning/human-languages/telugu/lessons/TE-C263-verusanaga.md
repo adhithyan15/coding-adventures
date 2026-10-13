@@ -14,7 +14,8 @@ romanization: "vēruśanaga"
 concept_tag: TE-VASTUVU263-VERUSANAGA
 prerequisites: [TE-C262-tiphinu, TE-C262-pesalu]
 sounds: []
-roots: []
+roots: [dravidian-veer-root, sanskrit-canaka]
+etymology_hook: "vēruśanaga: native vēru 'root' (DEDR 5535) + śanaga 'gram', cf. Sanskrit caṇaka (CDIAL 4579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C262-pesalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C263-VASTUVU263-01]; assesses=[] -->
 
 **వేరుశనగ** — *vēruśanaga* — "peanuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేరుశనగ** (*vēruśanaga*) is native *vēru*, "root" (DEDR 5535), and *śanaga*, "gram", which matches Sanskrit *caṇaka*, "chickpea" (CDIAL 4579): "root-gram".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

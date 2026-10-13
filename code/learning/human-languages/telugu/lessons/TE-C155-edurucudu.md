@@ -14,7 +14,8 @@ romanization: "edurucūḍu"
 concept_tag: TE-VERB-EDURUCUDU
 prerequisites: [TE-C155-bhavishyattu, TE-C155-ashincu]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite, dravidian-cuucu-see]
+etymology_hook: "edurucūḍu: native eduru 'the front' (DEDR 795) + cūḍu 'to look' (DEDR 2735)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C155-ashincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C155-BHAVISHYAT155-05]; assesses=[] -->
 
 **ఎదురుచూడు** — *edurucūḍu* — "to look forward to, to wait for". **నేను మీ ఉత్తరం కోసం ఎదురుచూస్తున్నాను** — *nēnu mī uttaraṁ kōsaṁ edurucūstunnānu* — "I am looking forward to your letter."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎదురుచూడు** (*edurucūḍu*) is native Dravidian: *eduru*, "the front, the point opposite", one word with Tamil *etir* (DEDR 795), and *cūḍu*, "to look" (DEDR 2735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

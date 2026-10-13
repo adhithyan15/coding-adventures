@@ -14,7 +14,8 @@ romanization: "kandhā"
 concept_tag: HI-NOUN-SHOULDER
 prerequisites: [HI-C52-vegetable, HI-C51-flower, HI-C52-rice]
 sounds: []
-roots: []
+roots: [sanskrit-skandha]
+etymology_hook: "kandhā ← Sanskrit skandha 'shoulder', a tadbhava (CDIAL 13627)"
 duration:
   max_seconds: 210
 requires:

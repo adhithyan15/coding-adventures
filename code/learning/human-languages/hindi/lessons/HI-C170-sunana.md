@@ -14,7 +14,8 @@ romanization: "sunānā"
 concept_tag: HI-VERB-SUNANA
 prerequisites: [HI-C170-bitna, HI-C170-uthana]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "sunānā: the causing form of sunnā 'to hear', from Sanskrit śṛṇoti 'hears' (CDIAL 12598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C170-uthana]
 <!-- hl-knowledge: introduces=[HI-LEX-C170-ACT170-05]; assesses=[] -->
 
 **सुनाना** — *sunānā* — "to tell (a story), to recite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुनाना** (*sunānā*) is the causing form of *sunnā*, "to hear": to tell a story is to make someone hear it. *sunnā* comes from Sanskrit *śṛṇoti*, "hears" (CDIAL 12598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

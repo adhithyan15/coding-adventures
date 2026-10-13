@@ -14,7 +14,8 @@ romanization: "ek minaṭ"
 concept_tag: HI-AGAIN-ONE-MINUTE
 prerequisites: [HI-C110-dobara, HI-C110-zorse]
 sounds: []
-roots: []
+roots: [sanskrit-eka, english-minute]
+etymology_hook: "ek ← Sanskrit eka 'one' (CDIAL 2462); minaṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C110-zorse]
 **एक मिनट** (*ek minaṭ*) — "one minute", said the way English says "a moment".
 
 English *minute*, borrowed, after the **एक** you count with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एक मिनट** (*ek minaṭ*) is *ek*, "one", from Sanskrit *eka* (CDIAL 2462), and *minaṭ*, English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

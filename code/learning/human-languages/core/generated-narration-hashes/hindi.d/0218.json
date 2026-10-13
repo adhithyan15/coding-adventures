@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 218,
-  "sourceHash": "fnv1a64:9e27dbb296484bc5",
+  "sourceHash": "fnv1a64:e0f5b3a9172d7fda",
   "lessonIds": [
     "HI-C218-samaj",
     "HI-C218-sarkar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch218.txt",
   "json": "hindi/narration/ch218.json",
-  "textHash": "fnv1a64:95ba43a2a84e322a",
-  "jsonHash": "fnv1a64:2716836904ad4540",
+  "textHash": "fnv1a64:1506d966724378af",
+  "jsonHash": "fnv1a64:a759e7c682c8315a",
   "findings": []
 }

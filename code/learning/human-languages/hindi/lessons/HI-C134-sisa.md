@@ -14,7 +14,8 @@ romanization: "śīśā"
 concept_tag: HI-THINGS134-SISA
 prerequisites: [HI-C134-pensil, HI-C134-tasvir]
 sounds: []
-roots: []
+roots: [persian-shisha]
+etymology_hook: "śīśā: usually traced to Persian shīsha 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C134-tasvir]
 <!-- hl-knowledge: introduces=[HI-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **शीशा** — *śīśā* — "a mirror, glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शीशा** (*śīśā*) is a loan, usually traced to Persian *shīsha*, "glass". It is a different word from Hindi *sīsā*, "lead", which comes from Sanskrit *sīsa* (CDIAL 13445).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

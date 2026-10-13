@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 128,
-  "sourceHash": "fnv1a64:3d8b4f2c6fe3d350",
+  "sourceHash": "fnv1a64:00b769a9d7eb115b",
   "lessonIds": [
     "TE-C128-gaddam",
     "TE-C128-manikattu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch128.txt",
   "json": "telugu/narration/ch128.json",
-  "textHash": "fnv1a64:452f26465fa46f21",
-  "jsonHash": "fnv1a64:6f608626c84038c9",
+  "textHash": "fnv1a64:09d39ca39cfe2193",
+  "jsonHash": "fnv1a64:28e2c5cc19bb2dcc",
   "findings": []
 }

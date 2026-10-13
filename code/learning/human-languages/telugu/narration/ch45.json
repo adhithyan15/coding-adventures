@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Grandparents, and the Married Pair",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fcc2f0a9f6330377",
+  "sourceHash": "fnv1a64:1649b6e0e3e7f048",
   "lessons": [
     {
       "id": "TE-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87c2af1f77877d77",
+      "sourceHash": "fnv1a64:f73b29362bea428c",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEDR 3160 lists తాత (tāta) as Dravidian, one word with Tamil tāttā and Kannada tāta, \"grandfather\". DEDR compares Sanskrit tāta, \"father\" (CDIAL 5754)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da5b37c424f87c19",
+      "sourceHash": "fnv1a64:7d49fdd46a45f5db",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +185,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అమ్మమ్మ (ammamma) is amma, \"mother\", twice over. Amma is native Dravidian, one word with Tamil ammā and Kannada amma (DEDR 183). DEDR compares Sanskrit ambā, \"mother\" (CDIAL 574)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -224,7 +246,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -255,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efc732e5115a313c",
+      "sourceHash": "fnv1a64:e9f91b3ae4cdd0de",
       "notice": null,
       "blocks": [
         {
@@ -287,6 +309,10 @@
             {
               "kind": "speech",
               "text": "Sanskrit, and it opens cleanly: the root bhṛ, 'to bear, to carry, to support', plus the ending that names the one who does it. So the word says 'the one who supports'. That root is old enough to have relatives far outside India — Latin fero, 'I carry', and English bear both continue it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 9402 lists Sanskrit bhartṛ, \"husband, bearer\"."
             }
           ]
         },
@@ -373,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff7f14ae22dbd751",
+      "sourceHash": "fnv1a64:11e241b9d69d4f11",
       "notice": null,
       "blocks": [
         {
@@ -410,6 +436,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భార్య (bhārya) is Sanskrit bhāryā, \"wife\", taken over whole as a learned loan, a tatsama, with the final -ā shortened (CDIAL 9471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -420,7 +457,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -460,7 +497,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "alavāṭu"
 concept_tag: TE-KARANAM217-ALAVATU
 prerequisites: [TE-C217-sampradayam, TE-C217-acaram]
 sounds: []
-roots: []
+roots: [dravidian-alavatu-habit]
+etymology_hook: "alavāṭu: Dravidian; DEDR 249 lists ala-vāṭu 'habit, custom', noting Tamil alavāṭṭu was taken from Telugu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C217-acaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C217-KARANAM217-05]; assesses=[] -->
 
 **అలవాటు** — *alavāṭu* — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అలవాటు** (*alavāṭu*) is Dravidian as far as DEDR records it: DEDR 249 lists *alavāṭu*, "habit, custom", under *ala-vaḍu*, "to be accustomed", and notes that Tamil *alavāṭṭu* was borrowed from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

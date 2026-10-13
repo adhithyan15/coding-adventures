@@ -14,7 +14,8 @@ romanization: "aggipeṭṭe"
 concept_tag: TE-THINGS113-AGGIPETTE
 prerequisites: [TE-C113-poyyi, TE-C113-kovvotti]
 sounds: []
-roots: []
+roots: [sanskrit-agni, dravidian-petti-box]
+etymology_hook: "aggipeṭṭe: aggi 'fire' ← Sanskrit agni (CDIAL 55) + native peṭṭe 'box' (DEDR 4388)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C113-kovvotti]
 <!-- hl-knowledge: introduces=[TE-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **అగ్గిపెట్టె** — *aggipeṭṭe* — "a matchbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అగ్గిపెట్టె** (*aggipeṭṭe*) is *aggi*, "fire", from Sanskrit *agni* through a Prakrit *aggi* (CDIAL 55), and native *peṭṭe*, "box" (DEDR 4388), which DEDR compares with Sanskrit *peṭaka*, "box".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

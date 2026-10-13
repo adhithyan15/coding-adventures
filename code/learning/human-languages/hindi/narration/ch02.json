@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:3d1b35bded4dce6f",
+  "sourceHash": "fnv1a64:43044519fb5b6ea8",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dead6a7ae2169b6f",
+      "sourceHash": "fnv1a64:9015016949a1559b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd847ce3c958c84e",
+      "sourceHash": "fnv1a64:5ac05f99017ef9ec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मेरा (merā, \"my\") descends from Sanskrit madīya (\"of me\"), on the first-person root ma- — the same ma-/me- behind English me, my, mine and Latin meus. Hindi \"my\" and English \"my\" are, at root, one word."
+              "text": "मेरा (merā, \"my\") is listed by CDIAL under the Sanskrit first-person base ma- (CDIAL 9691) — the same ma-/me- behind English me, my, mine and Latin meus. Hindi \"my\" and English \"my\" are, at root, one word."
             }
           ]
         },
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:123409156565ef87",
+      "sourceHash": "fnv1a64:0caefa16008bb94b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -470,7 +470,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94b56aa798bef470",
+      "sourceHash": "fnv1a64:70dbcb1c5d01d46e",
       "notice": null,
       "blocks": [
         {
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d495122790ba38f8",
+      "sourceHash": "fnv1a64:b59a91ffb6bb6e68",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -630,11 +630,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तुम (tum, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu."
+              "text": "तुम (tum, familiar \"you\") from Sanskrit yuṣmad-, the plural \"you\", with its t- taken from tvam (CDIAL 10511); tvam is from PIE tū — the same root as English archaic thou, Latin tū, French tu."
             },
             {
               "kind": "speech",
-              "text": "आप (āp, respectful \"you\") is a separate honorific word (originally \"oneself\")."
+              "text": "आप (āp, respectful \"you\") is a separate honorific word, from Sanskrit ātman, \"self\" (CDIAL 1135)."
             }
           ]
         },
@@ -736,7 +736,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1431b4309af4983",
+      "sourceHash": "fnv1a64:52684a2fdd976bfc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -870,7 +870,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0dc49469968e958",
+      "sourceHash": "fnv1a64:c87d9d077844cbb9",
       "notice": null,
       "blocks": [
         {
@@ -911,6 +911,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word in this question is inherited: āp from Sanskrit ātman, \"self\" (CDIAL 1135), with -kā, \"of\"; nām from nāman; kyā from kim (CDIAL 3164); hai, usually traced to asti."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: answer, and the informal version",
           "segments": [
@@ -921,7 +932,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -961,7 +972,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -992,7 +1003,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8eaad70bda8fc9d5",
+      "sourceHash": "fnv1a64:fcea1b582c52702a",
       "notice": null,
       "blocks": [
         {

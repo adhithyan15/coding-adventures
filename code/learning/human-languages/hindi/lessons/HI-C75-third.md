@@ -14,8 +14,8 @@ romanization: "tīsrā / tīsrī"
 concept_tag: HI-ORDINAL-THIRD
 prerequisites: [HI-C75-second, HI-C74-entrance, HI-A1F01-name-delayed, HI-C68-city, HI-C19-umr, HI-C25-din]
 sounds: []
-roots: []
-etymology_hook: "tin gives tisra, which shares its -sra ending with dusra and with nothing else in the language; after this the ordinals go two other ways"
+roots: [sanskrit-tri]
+etymology_hook: "tīsrā ← *triḥsara 'triple', built on Sanskrit tris 'thrice' (CDIAL 6018); dūsrā likewise (CDIAL 6676)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +59,11 @@ share an ending, **-सरा**, that they share with nothing else in the langua
 
 Two words with a private ending is not a pattern; it is a pair. The next lesson
 goes a third way, and the one after that finally states a rule.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीसरा** (*tīsrā*) comes from a reconstructed *\*triḥsara*, "triple", built on Sanskrit *tris*, "three times" (CDIAL 6018). **दूसरा** (*dūsrā*) comes the same way from *\*dviḥsara*, "twofold" (CDIAL 6676).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-04] -->

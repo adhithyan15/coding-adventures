@@ -14,7 +14,8 @@ romanization: "nālī"
 concept_tag: HI-THG267-NALI
 prerequisites: [HI-C267-maccharadani, HI-C267-nal]
 sounds: []
-roots: []
+roots: [sanskrit-nadi-tube]
+etymology_hook: "nālī: belongs with nāl 'tube', listed under Sanskrit nāḍī 'tube' (CDIAL 7047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C267-nal]
 <!-- hl-knowledge: introduces=[HI-LEX-C267-THG267-04]; assesses=[] -->
 
 **नाली** — *nālī* — "a drain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाली** (*nālī*) belongs with Hindi *nāl*, "hollow stalk, tube", and *nārī*, "tube, vein", which CDIAL lists under Sanskrit *nāḍī*, "tubular stalk, tube" (CDIAL 7047).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

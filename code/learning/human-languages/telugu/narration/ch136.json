@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Guava, Sugar, Tall, Short, Heavy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d274c5012879ef7",
+  "sourceHash": "fnv1a64:d3b821a1208ac8fa",
   "lessons": [
     {
       "id": "TE-C136-jamapandu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:490b3fc3b3fc039d",
+      "sourceHash": "fnv1a64:b0c542733526d7ac",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జామపండు (jāmapaṇḍu) is jāma, usually traced to Sanskrit jambū, \"the rose-apple tree\" (CDIAL 5131), a name passed on to the guava, and native paṇḍu, \"fruit\" (DEDR 4004), which DEDR compares with Sanskrit phala."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c936ac5aac86d23e",
+      "sourceHash": "fnv1a64:6d50ba42b47f7890",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of పంచదార (pañcadāra) is uncertain. Neither DEDR nor CDIAL records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7b854c40e1c5cdb",
+      "sourceHash": "fnv1a64:3a85d97f83ab3b25",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొడవు (poḍavu) is native Dravidian, one word with Kannada poḍe (DEDR 4484). DEDR lists Telugu poḍavu, \"height, length; tall, long\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e08e0e61e7352c83",
+      "sourceHash": "fnv1a64:6d93efb99fa46fe9",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొట్టి (poṭṭi) is native Dravidian, one word with Tamil poṭi, \"that which is small\", and Kannada puṭṭa, \"smallness\" (DEDR 4259). DEDR compares Sanskrit puṭṭ-, \"to be small\" (CDIAL 8256), and Prakrit phiḍḍa, \"dwarf\"; CDIAL, after Burrow, takes the Sanskrit from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:660444cd4304a1eb",
+      "sourceHash": "fnv1a64:d78510f630ce02a3",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of బరువు (baruvu) is uncertain. DEDR does not list it. It is often linked to Sanskrit bhāra, \"burden, weight\" (CDIAL 9459), but the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

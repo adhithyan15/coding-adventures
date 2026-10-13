@@ -14,7 +14,8 @@ romanization: "nirāśa"
 concept_tag: TE-AROGYAM210-NIRASA
 prerequisites: [TE-C210-anumanam, TE-C210-trpti]
 sounds: []
-roots: []
+roots: [sanskrit-nirasha]
+etymology_hook: "nirāśa ← Sanskrit nirāśa 'hopeless', a tatsama (CDIAL 7278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C210-trpti]
 <!-- hl-knowledge: introduces=[TE-LEX-C210-AROGYAM210-03]; assesses=[] -->
 
 **నిరాశ** — *nirāśa* — "disappointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిరాశ** (*nirāśa*) is Sanskrit *nirāśa*, "hopeless", taken over whole as a learned loan, a tatsama (CDIAL 7278). Telugu uses it as a noun, "disappointment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

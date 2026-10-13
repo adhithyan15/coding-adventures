@@ -11,7 +11,8 @@ romanization: "pedavi"
 concept_tag: TE-NOUN-LIP
 prerequisites: [TE-C57-back]
 sounds: []
-roots: []
+roots: [dravidian-pedavi-lip]
+etymology_hook: "pedavi: native Dravidian, one word with Kolami pedave 'lip' (DEDR 4400)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C57-back]
 పెదవి విరుచు — to twist the lip — is the Telugu way of saying somebody sneered. The face does the talking, and the language just reports it.
 
 It is the part that shapes the sounds you have been making all along. Every ప in this book has been made with two పెదవులు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెదవి** (*pedavi*) is native Dravidian, one word with Kolami *pedave*, "lip" (DEDR 4400). DEDR lists no Tamil or Kannada match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

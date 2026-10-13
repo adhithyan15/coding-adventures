@@ -14,7 +14,8 @@ romanization: "bīmārī"
 concept_tag: HI-THG273-BIMARI
 prerequisites: [HI-C273-rogi, HI-C273-rog]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmārī: bīmār 'sick', usually traced to Persian bīmār, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C273-rog]
 <!-- hl-knowledge: introduces=[HI-LEX-C273-THG273-05]; assesses=[] -->
 
 **बीमारी** — *bīmārī* — "an illness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीमारी** (*bīmārī*) is *bīmār*, "sick", usually traced to Persian *bīmār*, with the ending *-ī* that makes a noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

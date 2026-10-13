@@ -14,7 +14,8 @@ romanization: "sonā"
 concept_tag: HI-VERB-SONA
 prerequisites: [HI-C158-khali, HI-C159-bhara]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "sonā ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C159-bhara]
 <!-- hl-knowledge: introduces=[HI-LEX-C159-QUAL159-02]; assesses=[] -->
 
 **सोना** — *sonā* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोना** (*sonā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps" (CDIAL 13902). It is a different word from *sonā*, "gold", from Sanskrit *suvarṇa* (CDIAL 13519).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

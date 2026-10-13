@@ -14,7 +14,8 @@ romanization: "sarihaddu"
 concept_tag: TE-STHALAM291-SARIHADDU
 prerequisites: [TE-C291-daksinam, TE-C291-pradesam]
 sounds: []
-roots: []
+roots: [sari, arabic-hadd]
+etymology_hook: "sarihaddu: sari 'even' + haddu ← Arabic ḥadd 'limit' through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C291-pradesam]
 <!-- hl-knowledge: introduces=[TE-LEX-C291-STHALAM291-03]; assesses=[] -->
 
 **సరిహద్దు** — *sarihaddu* — "a border, a boundary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సరిహద్దు** (*sarihaddu*) is *sari*, "even, right", whose origin is uncertain, and *haddu*, "limit", a loan from Arabic *ḥadd*, "limit, boundary", through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

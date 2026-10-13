@@ -14,7 +14,8 @@ romanization: "gillu"
 concept_tag: TE-VERB-GILLU
 prerequisites: [TE-C246-taggu, TE-C246-nirakarincu]
 sounds: []
-roots: []
+roots: [dravidian-killu-pinch]
+etymology_hook: "gillu: native Dravidian, one word with Tamil kiḷḷu and Malayalam kiḷḷuka (DEDR 1589)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C246-nirakarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C247-KRIYA247-01]; assesses=[] -->
 
 **గిల్లు** — *gillu* — "to pinch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గిల్లు** (*gillu*) is native Dravidian, one word with Tamil *kiḷḷu* and Malayalam *kiḷḷuka* (DEDR 1589). DEDR lists Telugu *gillu*, "to pinch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

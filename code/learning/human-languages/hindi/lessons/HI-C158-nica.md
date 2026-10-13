@@ -14,7 +14,8 @@ romanization: "nīcā"
 concept_tag: HI-QUAL158-NICA
 prerequisites: [HI-C158-gahra, HI-C158-uca]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīcā ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C158-uca]
 <!-- hl-knowledge: introduces=[HI-LEX-C158-QUAL158-04]; assesses=[] -->
 
 **नीचा** — *nīcā* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नीचा** (*nīcā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low" (CDIAL 7540). CDIAL explains its *-c-* as shaped after its opposite, *ucca*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

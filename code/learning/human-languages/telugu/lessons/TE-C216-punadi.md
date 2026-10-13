@@ -14,7 +14,8 @@ romanization: "punādi"
 concept_tag: TE-STHALAM216-PUNADI
 prerequisites: [TE-C215-stediyam, TE-C216-snanapu-gadi]
 sounds: []
-roots: []
+roots: [persian-bunyad]
+etymology_hook: "punādi ← Persian bunyād 'foundation', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C216-snanapu-gadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C216-STHALAM216-02]; assesses=[] -->
 
 **పునాది** — *punādi* — "a foundation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పునాది** (*punādi*) is a loan from Persian *bunyād*, "foundation", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

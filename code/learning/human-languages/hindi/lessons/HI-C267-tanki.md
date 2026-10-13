@@ -14,7 +14,8 @@ romanization: "ṭaṅkī"
 concept_tag: HI-THG267-TANKI
 prerequisites: [HI-C267-nal, HI-C267-nali]
 sounds: []
-roots: []
+roots: [english-tank]
+etymology_hook: "ṭaṅkī ← English tank"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C267-nali]
 <!-- hl-knowledge: introduces=[HI-LEX-C267-THG267-05]; assesses=[] -->
 
 **टंकी** — *ṭaṅkī* — "a tank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टंकी** (*ṭaṅkī*) is a loan from English *tank*. The *-ī* makes a smaller one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

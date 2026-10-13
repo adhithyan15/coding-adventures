@@ -14,7 +14,8 @@ romanization: "nīce"
 concept_tag: HI-LOC235-NICE
 prerequisites: [HI-C234-kona, HI-C235-upar]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīce: the -e form of nīcā 'low', from Sanskrit nīca 'low' (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C235-upar]
 <!-- hl-knowledge: introduces=[HI-LEX-C235-LOC235-02]; assesses=[] -->
 
 **नीचे** — *nīce* — "down, below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नीचे** (*nīce*) is the adverb form of *nīcā*, "low", which comes from Sanskrit *nīca*, "low" (CDIAL 7540).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

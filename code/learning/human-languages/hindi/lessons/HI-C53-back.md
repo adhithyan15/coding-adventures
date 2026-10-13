@@ -14,7 +14,8 @@ romanization: "pīṭh"
 concept_tag: HI-NOUN-BACK
 prerequisites: [HI-C53-forehead, HI-C51-table, HI-C52-sugar]
 sounds: []
-roots: []
+roots: [sanskrit-prshti]
+etymology_hook: "pīṭh ← Sanskrit pṛṣṭi 'back', a sister of pṛṣṭha; a tadbhava (CDIAL 8370)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [HI-C53-forehead]
 
 **पीठ** (*pīṭh*) — "the back".
 
-From Sanskrit पृष्ठ (*pṛṣṭha*), 'back, surface'. The heavy *-ṛṣṭh-* in the middle collapsed and paid for itself by lengthening the vowel in front of it.
+From Sanskrit *pṛṣṭi*, 'back', a sister of पृष्ठ (*pṛṣṭha*), also "back" (CDIAL 8370). The heavy *-ṛṣṭ-* in the middle collapsed and paid for itself by lengthening the vowel in front of it.
 
 That is the same bargain that gave you कान out of *karṇa* when the ear was named — a cluster gives way, and the vowel before it grows to keep the syllable's weight. Once you have seen the trade twice it stops looking like an exception.
 

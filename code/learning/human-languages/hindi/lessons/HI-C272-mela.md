@@ -14,7 +14,8 @@ romanization: "melā"
 concept_tag: HI-THG272-MELA
 prerequisites: [HI-C272-gali, HI-C272-nukkar]
 sounds: []
-roots: []
+roots: [sanskrit-mela]
+etymology_hook: "melā ← Sanskrit mela 'meeting', a tadbhava (CDIAL 10331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C272-nukkar]
 <!-- hl-knowledge: introduces=[HI-LEX-C272-THG272-03]; assesses=[] -->
 
 **मेला** — *melā* — "a fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेला** (*melā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mela*, "meeting" (CDIAL 10331). It is built on *mil-*, "to meet", the root of *milnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

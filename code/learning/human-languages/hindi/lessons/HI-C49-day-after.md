@@ -14,7 +14,8 @@ romanization: "parsoṁ"
 concept_tag: HI-WORD-DAY-AFTER
 prerequisites: [HI-C49-now, HI-C47-student, HI-C48-enough]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "parsoṁ ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [HI-C49-now]
 
 And also the day before yesterday. Like कल, which does duty for both tomorrow and yesterday, परसों counts two days out from today and leaves the direction to the sentence.
 
-Sanskrit *parasu*, 'the far day', lies underneath, and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing.
+Sanskrit *paraśvas*, 'the day after tomorrow', lies underneath (CDIAL 7799j), and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

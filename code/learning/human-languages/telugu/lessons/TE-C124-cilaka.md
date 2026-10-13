@@ -14,7 +14,8 @@ romanization: "cilaka"
 concept_tag: TE-THINGS124-CILAKA
 prerequisites: [TE-C124-pamu, TE-C124-tabelu]
 sounds: []
-roots: []
+roots: [dravidian-kili-parrot]
+etymology_hook: "cilaka: native Dravidian, one word with Tamil kiḷi and Kannada giḷi (DEDR 1584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C124-tabelu]
 <!-- hl-knowledge: introduces=[TE-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **చిలక** — *cilaka* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిలక** (*cilaka*) is native Dravidian, one word with Tamil *kiḷi* and Kannada *giḷi* (DEDR 1584). DEDR lists Telugu *ciluka*, "parrot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

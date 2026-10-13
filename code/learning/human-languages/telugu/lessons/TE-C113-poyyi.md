@@ -14,7 +14,8 @@ romanization: "poyyi"
 concept_tag: TE-THINGS113-POYYI
 prerequisites: [TE-C112-glasu, TE-C112-cemca]
 sounds: []
-roots: []
+roots: [dravidian-pori-fry]
+etymology_hook: "poyyi: native Dravidian, one word with Tamil pori and Kannada puri (DEDR 4537)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C112-cemca]
 <!-- hl-knowledge: introduces=[TE-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **పొయ్యి** — *poyyi* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొయ్యి** (*poyyi*) is native Dravidian, one word with Tamil *pori* and Kannada *puri* (DEDR 4537). DEDR lists Telugu *poyi*, *poyyi*, "oven, stove, hearth", under the verb for "to fry, parch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

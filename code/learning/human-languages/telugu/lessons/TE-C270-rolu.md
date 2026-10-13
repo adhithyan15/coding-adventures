@@ -14,7 +14,8 @@ romanization: "rōlu"
 concept_tag: TE-VASTUVU270-ROLU
 prerequisites: [TE-C270-kundi, TE-C270-penam]
 sounds: []
-roots: []
+roots: [dravidian-ural-mortar]
+etymology_hook: "rōlu: native Dravidian, one word with Tamil ural and Kannada oral (DEDR 651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C270-penam]
 <!-- hl-knowledge: introduces=[TE-LEX-C270-VASTUVU270-04]; assesses=[] -->
 
 **రోలు** — *rōlu* — "a mortar (for pounding)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రోలు** (*rōlu*) is native Dravidian, one word with Tamil *ural* and Kannada *oral* (DEDR 651). DEDR lists Telugu *rōlu*, "mortar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

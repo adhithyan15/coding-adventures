@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 43,
-  "sourceHash": "fnv1a64:39a4fb0022e80cf5",
+  "sourceHash": "fnv1a64:5897550a9ef72303",
   "lessonIds": [
     "HI-C43-look",
     "HI-C43-listen",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch43.txt",
   "json": "hindi/narration/ch43.json",
-  "textHash": "fnv1a64:62c09ceecc061c4b",
-  "jsonHash": "fnv1a64:5ece3a5bdb1a0d73",
+  "textHash": "fnv1a64:44a110d11acbc7cd",
+  "jsonHash": "fnv1a64:4d5843d7d0dc8497",
   "findings": []
 }

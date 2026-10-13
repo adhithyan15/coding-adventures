@@ -11,7 +11,8 @@ romanization: "gāyaṁ"
 concept_tag: TE-DOCTOR-WOUND
 prerequisites: [TE-C92-medicine, TE-C92-hospital]
 sounds: []
-roots: []
+roots: [sanskrit-ghata]
+etymology_hook: "gāyaṁ ← Sanskrit ghāta 'blow, bruise', reshaped as a tadbhava (CDIAL 4460)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C92-hospital]
 
 **గాయం అయింది** — "I have been hurt", literally "a wound has happened". Like a wedding, an
 injury is something that happens.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గాయం** (*gāyaṁ*) comes from Sanskrit *ghāta*, "blow, bruise", reshaped to Telugu sounds: a tadbhava (CDIAL 4460). Prakrit *ghāya*, "wound", in the same entry, shows the same loss of the *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

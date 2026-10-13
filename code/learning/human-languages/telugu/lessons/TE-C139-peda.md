@@ -14,7 +14,8 @@ romanization: "pēda"
 concept_tag: TE-QUAL139-PEDA
 prerequisites: [TE-C139-tadi, TE-C139-podi]
 sounds: []
-roots: []
+roots: [dravidian-peetu-folly]
+etymology_hook: "pēda: native Dravidian; DEDR 4437 lists pēda 'poor, timid' with Tamil pētu 'bewilderment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C139-podi]
 <!-- hl-knowledge: introduces=[TE-LEX-C139-QUAL139-03]; assesses=[] -->
 
 **పేద** — *pēda* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పేద** (*pēda*) is native Dravidian. DEDR 4437 lists *pēda*, "poor, timid", with Tamil *pētu*, "bewilderment, sorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

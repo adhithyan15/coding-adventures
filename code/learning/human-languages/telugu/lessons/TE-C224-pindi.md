@@ -14,7 +14,8 @@ romanization: "piṇḍi"
 concept_tag: TE-VASTUVU224-PINDI
 prerequisites: [TE-C224-nela, TE-C224-parupu]
 sounds: []
-roots: []
+roots: [dravidian-pinti-flour]
+etymology_hook: "piṇḍi: native Dravidian, one word with Tamil piṇṭi (DEDR 4162)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C224-parupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C224-VASTUVU224-05]; assesses=[] -->
 
 **పిండి** — *piṇḍi* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిండి** (*piṇḍi*) is native Dravidian, one word with Tamil *piṇṭi* (DEDR 4162). DEDR lists Telugu *piṇḍi*, "flour, powder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

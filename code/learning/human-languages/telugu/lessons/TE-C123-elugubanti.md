@@ -14,7 +14,8 @@ romanization: "elugubaṇṭi"
 concept_tag: TE-THINGS123-ELUGUBANTI
 prerequisites: [TE-C123-puli, TE-C123-simham]
 sounds: []
-roots: []
+roots: [dravidian-elugu-bear]
+etymology_hook: "elugubaṇṭi: native elugu 'bear', one word with Tamil eṇku (DEDR 857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C123-simham]
 <!-- hl-knowledge: introduces=[TE-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **ఎలుగుబంటి** — *elugubaṇṭi* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎలుగుబంటి** (*elugubaṇṭi*) is built on native *elugu*, "bear", one word with Tamil *eṇku*, "bear" (DEDR 857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

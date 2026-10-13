@@ -14,7 +14,8 @@ romanization: "jhapkī"
 concept_tag: HI-THG275-JHAPKI
 prerequisites: [HI-C275-moc, HI-C275-hicki]
 sounds: []
-roots: []
+roots: [indo-aryan-jhapp]
+etymology_hook: "jhapkī: perhaps from jhapaknā, listed under *jhapp 'sudden movement' (CDIAL 5336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C275-hicki]
 <!-- hl-knowledge: introduces=[HI-LEX-C275-THG275-03]; assesses=[] -->
 
 **झपकी** — *jhapkī* — "a nap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **झपकी** (*jhapkī*) is uncertain. It may belong with *jhapaknā*, which CDIAL lists under a reconstructed *\*jhapp*, "sudden movement" (CDIAL 5336).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

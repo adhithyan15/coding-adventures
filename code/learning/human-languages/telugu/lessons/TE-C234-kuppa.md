@@ -14,7 +14,8 @@ romanization: "kuppa"
 concept_tag: TE-VASTUVU234-KUPPA
 prerequisites: [TE-C233-masi, TE-C233-boggu]
 sounds: []
-roots: []
+roots: [dravidian-kuppai-heap]
+etymology_hook: "kuppa: native Dravidian, one word with Tamil kuppai and Kannada kuppe (DEDR 1731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C233-boggu]
 <!-- hl-knowledge: introduces=[TE-LEX-C234-VASTUVU234-01]; assesses=[] -->
 
 **కుప్ప** — *kuppa* — "a heap, a pile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుప్ప** (*kuppa*) is native Dravidian, one word with Tamil *kuppai* and Kannada *kuppe* (DEDR 1731). DEDR lists Telugu *kuppa*, "heap, pile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

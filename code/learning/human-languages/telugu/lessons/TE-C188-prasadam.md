@@ -14,7 +14,8 @@ romanization: "prasādaṁ"
 concept_tag: TE-VASTUVU188-PRASADAM
 prerequisites: [TE-C187-piccuka, TE-C187-kokila]
 sounds: []
-roots: []
+roots: [sanskrit-prasada]
+etymology_hook: "prasādaṁ ← Sanskrit prasāda 'clearness, calmness; kindness, favour', a tatsama (CDIAL 8831)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C187-kokila]
 <!-- hl-knowledge: introduces=[TE-LEX-C188-VASTUVU188-01]; assesses=[] -->
 
 **ప్రసాదం** — *prasādaṁ* — "prasadam, food offered to a deity and shared".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రసాదం** (*prasādaṁ*) is Sanskrit *prasāda*, "clearness, calmness; kindness, favour", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8831). Telugu uses it for food offered to a deity and shared, a gift of grace.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

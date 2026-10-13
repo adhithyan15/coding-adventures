@@ -14,7 +14,8 @@ romanization: "qālīn"
 concept_tag: HI-THG265-QALIN
 prerequisites: [HI-C265-parda, HI-C265-dari]
 sounds: []
-roots: []
+roots: [persian-qali]
+etymology_hook: "qālīn: usually traced to Persian qālī 'carpet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C265-dari]
 <!-- hl-knowledge: introduces=[HI-LEX-C265-THG265-05]; assesses=[] -->
 
 **क़ालीन** — *qālīn* — "a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़ालीन** (*qālīn*) is a loan, usually traced to Persian *qālī*, "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

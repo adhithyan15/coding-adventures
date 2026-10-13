@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 213,
-  "sourceHash": "fnv1a64:e509e8d2a34f363a",
+  "sourceHash": "fnv1a64:f2cf584076fb1b9b",
   "lessonIds": [
     "TE-C213-akasmattuga",
     "TE-C213-pade-pade",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch213.txt",
   "json": "telugu/narration/ch213.json",
-  "textHash": "fnv1a64:d9161ef7938bc672",
-  "jsonHash": "fnv1a64:626450927f99b826",
+  "textHash": "fnv1a64:70cc2fe913d03469",
+  "jsonHash": "fnv1a64:b479072b5e0ae4bb",
   "findings": []
 }

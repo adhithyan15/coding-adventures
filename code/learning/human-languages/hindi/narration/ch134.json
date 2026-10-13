@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Bottle, Pencil, Picture, Mirror, Ring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ec65b95cdc816658",
+  "sourceHash": "fnv1a64:90efb2ee371b6a49",
   "lessons": [
     {
       "id": "HI-C134-botal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c38ba761fd23988d",
+      "sourceHash": "fnv1a64:86cd668204471316",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोतल (botal) is usually traced to English bottle; some trace it to Portuguese botelha, \"bottle\", which reached India first. CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:727066fb0a9ed42a",
+      "sourceHash": "fnv1a64:c85ab7a700a47158",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +206,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेंसिल (pensil) is a loan from English pencil."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +227,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb99b9021dc854e4",
+      "sourceHash": "fnv1a64:ba4126a2f0437c63",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तस्वीर (tasvīr) is a loan from Arabic taṣwīr, \"a picturing, a portrait\", which reached Hindi through Persian. Its Arabic root is ṣ-w-r (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fc1d8279a0f0c8d",
+      "sourceHash": "fnv1a64:32257d6124aa9fb3",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शीशा (śīśā) is a loan, usually traced to Persian shīsha, \"glass\". It is a different word from Hindi sīsā, \"lead\", which comes from Sanskrit sīsa (CDIAL 13445)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9e183da6cb5f14f",
+      "sourceHash": "fnv1a64:2c1caf414e619558",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगूठी (aṅgūṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṅguṣṭhiya, \"of the thumb\", a form CDIAL reconstructs from its descendants (CDIAL 138). It is built on aṅguṣṭha, \"thumb\": a ring was \"the thumb's thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

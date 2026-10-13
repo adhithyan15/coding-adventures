@@ -11,7 +11,8 @@ romanization: "bahumati"
 concept_tag: TE-WELCOME-GIFT
 prerequisites: [TE-C99-delight, TE-C99-congrats]
 sounds: []
-roots: []
+roots: [sanskrit-bahu]
+etymology_hook: "bahumati ← Sanskrit bahumati 'high regard', from bahu 'much' (CDIAL 9187)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C99-congrats]
 **బహుమతి** (*bahumati*) — "a gift", and "a prize".
 
 **మీకు ఒక బహుమతి** — "a gift for you", with the dative **మీకు**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బహుమతి** (*bahumati*) is Sanskrit *bahumati*, "high regard", from *bahu*, "much" (CDIAL 9187), and *mati*, "mind": a gift as a mark of regard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

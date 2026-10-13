@@ -14,7 +14,8 @@ romanization: "lōpala"
 concept_tag: TE-LOC101-LOPALA
 prerequisites: [TE-C101-paina, TE-C101-kinda]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside]
+etymology_hook: "lōpala: native Dravidian; DEDR 698 lists lōpala 'within, inside', with Tamil uḷ 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C101-kinda]
 <!-- hl-knowledge: introduces=[TE-LEX-C101-LOC101-03]; assesses=[] -->
 
 **లోపల** — *lōpala* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లోపల** (*lōpala*) is native Dravidian. DEDR 698 lists *lōpala*, "within, inside", itself, with Tamil *uḷ*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

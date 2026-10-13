@@ -14,7 +14,8 @@ romanization: "myūziyaṁ"
 concept_tag: TE-STHALAM255-MYUZIYAM
 prerequisites: [TE-C254-turpu, TE-C254-padamara]
 sounds: []
-roots: []
+roots: [english-museum]
+etymology_hook: "myūziyaṁ ← English museum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C254-padamara]
 <!-- hl-knowledge: introduces=[TE-LEX-C255-STHALAM255-01]; assesses=[] -->
 
 **మ్యూజియం** — *myūziyaṁ* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మ్యూజియం** (*myūziyaṁ*) is a loan from English *museum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

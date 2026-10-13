@@ -14,7 +14,8 @@ romanization: "kāru"
 concept_tag: TE-THINGS134-KARU
 prerequisites: [TE-C133-padava, TE-C133-railu]
 sounds: []
-roots: []
+roots: [english-car]
+etymology_hook: "kāru ← English car"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C133-railu]
 <!-- hl-knowledge: introduces=[TE-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **కారు** — *kāru* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కారు** (*kāru*) is a loan from English *car*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

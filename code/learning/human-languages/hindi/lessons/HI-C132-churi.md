@@ -14,7 +14,8 @@ romanization: "churī"
 concept_tag: HI-THINGS132-CHURI
 prerequisites: [HI-C132-machis, HI-C132-katori]
 sounds: []
-roots: []
+roots: [sanskrit-kshuri]
+etymology_hook: "churī ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C132-katori]
 <!-- hl-knowledge: introduces=[HI-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **छुरी** — *churī* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छुरी** (*churī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣurī*, "knife, dagger" (CDIAL 3727). It is the feminine of *kṣura*, "razor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

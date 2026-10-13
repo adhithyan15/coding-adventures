@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 178,
-  "sourceHash": "fnv1a64:1c9395c37fd0bffb",
+  "sourceHash": "fnv1a64:47ec4c804dc59c9f",
   "lessonIds": [
     "HI-C178-bunna",
     "HI-C178-maarnaa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch178.txt",
   "json": "hindi/narration/ch178.json",
-  "textHash": "fnv1a64:bbbbd5b12fb01b10",
-  "jsonHash": "fnv1a64:a7c3e8280bfe49fe",
+  "textHash": "fnv1a64:123b38ed0a4a7b8b",
+  "jsonHash": "fnv1a64:689ad2cb8a185ce2",
   "findings": []
 }

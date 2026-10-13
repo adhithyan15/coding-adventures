@@ -14,7 +14,8 @@ romanization: "drākṣa"
 concept_tag: TE-THINGS135-DRAKSA
 prerequisites: [TE-C135-cintapandu, TE-C135-nimmakaya]
 sounds: []
-roots: []
+roots: [sanskrit-draksha]
+etymology_hook: "drākṣa ← Sanskrit drākṣā 'vine, grape', a tatsama (CDIAL 6628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C135-nimmakaya]
 <!-- hl-knowledge: introduces=[TE-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **ద్రాక్ష** — *drākṣa* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ద్రాక్ష** (*drākṣa*) is Sanskrit *drākṣā*, "vine, grape", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 6628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

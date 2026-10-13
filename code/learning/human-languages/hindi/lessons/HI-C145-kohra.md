@@ -14,7 +14,8 @@ romanization: "kohrā"
 concept_tag: HI-THINGS145-KOHRA
 prerequisites: [HI-C144-bijli, HI-C145-adhi, HI-C20-mausam, HI-C20-mausam]
 sounds: []
-roots: []
+roots: [indo-aryan-kuha]
+etymology_hook: "kohrā ← *kuha 'fog, mist', a reconstructed form; a tadbhava (CDIAL 3386)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C145-adhi]
 <!-- hl-knowledge: introduces=[HI-LEX-C145-THINGS145-02]; assesses=[] -->
 
 **कोहरा** — *kohrā* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोहरा** (*kohrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuha*, "fog, mist", a form CDIAL reconstructs from its descendants (CDIAL 3386).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

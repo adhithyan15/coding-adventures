@@ -14,7 +14,8 @@ romanization: "buddhimān"
 concept_tag: HI-QUAL215-BUDDHIMAN
 prerequisites: [HI-C214-sacca, HI-C215-jhutha]
 sounds: []
-roots: []
+roots: [sanskrit-buddhimat]
+etymology_hook: "buddhimān ← Sanskrit buddhimat 'having intelligence', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C215-jhutha]
 <!-- hl-knowledge: introduces=[HI-LEX-C215-QUAL215-02]; assesses=[] -->
 
 **बुद्धिमान** — *buddhimān* — "clever, wise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुद्धिमान** (*buddhimān*) is Sanskrit *buddhimat*, "having intelligence", taken over whole as a learned loan, a tatsama. Hindi took its nominative, *buddhimān*. It is built on *buddhi*, "intelligence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

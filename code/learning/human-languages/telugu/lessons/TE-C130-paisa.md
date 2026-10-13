@@ -14,7 +14,8 @@ romanization: "paisā"
 concept_tag: TE-THINGS130-PAISA
 prerequisites: [TE-C130-phonu, TE-C130-tikkettu, TE-C07-numbers-1-5, TE-C07-numbers-1-5, TE-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [hindustani-paisa]
+etymology_hook: "paisā ← Hindustani paisā 'a small coin'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C130-tikkettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **పైసా** — *paisā* — "a paisa, small change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పైసా** (*paisā*) is a loan from Hindustani *paisā*, "a small copper coin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "atuku"
 concept_tag: TE-VERB-ATUKU
 prerequisites: [TE-C207-dunnu, TE-C207-pandincu]
 sounds: []
-roots: []
+roots: [dravidian-attu-join]
+etymology_hook: "atuku: native Dravidian, one word with Tamil attu and Kannada atuku (DEDR 145)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C207-pandincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C208-KRIYA208-01]; assesses=[] -->
 
 **అతుకు** — *atuku* — "to stick, to be joined together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అతుకు** (*atuku*) is native Dravidian, one word with Tamil *attu* and Kannada *atuku* (DEDR 145). DEDR lists Telugu *atuku*, "to join, solder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

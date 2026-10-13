@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 295,
-  "sourceHash": "fnv1a64:1f3aa01c8e345efc",
+  "sourceHash": "fnv1a64:ef3908314fcd0cb3",
   "lessonIds": [
     "TE-C295-vijayam",
     "TE-C295-akaram",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch295.txt",
   "json": "telugu/narration/ch295.json",
-  "textHash": "fnv1a64:c586a8c660d381ba",
-  "jsonHash": "fnv1a64:387dc22d05a63b9e",
+  "textHash": "fnv1a64:9c9d416da75eea38",
+  "jsonHash": "fnv1a64:d53bca1270dc30bd",
   "findings": []
 }

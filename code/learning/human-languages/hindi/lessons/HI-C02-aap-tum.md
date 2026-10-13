@@ -14,7 +14,8 @@ romanization: "āp / tum"
 concept_tag: PRONOUN-YOU
 prerequisites: [HI-C02-naam]
 sounds: [independent-aa, matra-u]
-roots: [tvam]
+roots: [tvam, sanskrit-yushmad, sanskrit-atman]
+etymology_hook: "tum ← Sanskrit yuṣmad- 'you (plural)', with t- from tvam (CDIAL 10511); āp ← ātman 'self' (CDIAL 1135)"
 duration:
   max_seconds: 240
 requires:
@@ -49,10 +50,11 @@ word-initial) + **प** (pa) → *āp*. **तुम**: **त** (ta) + **ु** (t
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPTUM-01] -->
 
-- **तुम** (*tum*, familiar "you") ← Sanskrit *tvam*, from PIE **\*tū** — the
+- **तुम** (*tum*, familiar "you") ← Sanskrit *yuṣmad-*, the plural "you", with its
+  *t-* taken from *tvam* (CDIAL 10511); *tvam* is from PIE **\*tū** — the
   same root as English archaic **thou**, Latin *tū*, French *tu*.
-- **आप** (*āp*, respectful "you") is a separate honorific word (originally
-  "oneself").
+- **आप** (*āp*, respectful "you") is a separate honorific word, from Sanskrit
+  *ātman*, "self" (CDIAL 1135).
 
 ## Grammar Lens: three levels of "you"
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPTUM-01] -->

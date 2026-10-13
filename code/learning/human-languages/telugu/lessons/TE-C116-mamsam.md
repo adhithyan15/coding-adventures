@@ -14,7 +14,8 @@ romanization: "māṁsaṁ"
 concept_tag: TE-THINGS116-MAMSAM
 prerequisites: [TE-C116-guddu, TE-C116-cepa]
 sounds: []
-roots: []
+roots: [sanskrit-mamsa]
+etymology_hook: "māṁsaṁ ← Sanskrit māṁsa 'flesh', a tatsama (CDIAL 9982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C116-cepa]
 <!-- hl-knowledge: introduces=[TE-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **మాంసం** — *māṁsaṁ* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మాంసం** (*māṁsaṁ*) is Sanskrit *māṁsa*, "flesh", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

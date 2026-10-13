@@ -14,7 +14,8 @@ romanization: "dhānyaṁ"
 concept_tag: TE-THINGS134-DHANYAM
 prerequisites: [TE-C134-saikilu, TE-C134-vimanam]
 sounds: []
-roots: []
+roots: [sanskrit-dhanya-grain]
+etymology_hook: "dhānyaṁ ← Sanskrit dhānya 'grain, corn', a tatsama (CDIAL 6778)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C134-vimanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **ధాన్యం** — *dhānyaṁ* — "grain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ధాన్యం** (*dhānyaṁ*) is Sanskrit *dhānya*, "grain, corn", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6778).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

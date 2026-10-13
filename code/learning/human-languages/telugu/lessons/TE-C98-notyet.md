@@ -11,7 +11,8 @@ romanization: "iṅkā lēdu"
 concept_tag: TE-REPLY-NOT-YET
 prerequisites: [TE-C97-alone, TE-C98-nothing]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, il]
+etymology_hook: "iṅkā lēdu: native iṅka 'still' (DEDR 410) + lēdu 'there is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C98-nothing]
 
 Two words you own, **ఇంకా**, "still", and **లేదు**, "there isn't". *Have you eaten?* —
 **ఇంకా లేదు**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంకా లేదు** (*iṅkā lēdu*) is native Dravidian: *iṅka*, "still, yet" (DEDR 410), and *lēdu*, "there is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

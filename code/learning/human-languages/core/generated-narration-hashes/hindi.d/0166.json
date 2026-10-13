@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 166,
-  "sourceHash": "fnv1a64:4f089ccb864dd35f",
+  "sourceHash": "fnv1a64:f951172d475302fd",
   "lessonIds": [
     "HI-C166-sucna",
     "HI-C166-sandesh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch166.txt",
   "json": "hindi/narration/ch166.json",
-  "textHash": "fnv1a64:d504c6ecb023e7a7",
-  "jsonHash": "fnv1a64:812bdda45ffba343",
+  "textHash": "fnv1a64:979dc97a3dda4f1b",
+  "jsonHash": "fnv1a64:38a582e078003e9d",
   "findings": []
 }

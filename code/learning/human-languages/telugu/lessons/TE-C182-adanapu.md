@@ -14,7 +14,8 @@ romanization: "adanapu"
 concept_tag: TE-GUNAM182-ADANAPU
 prerequisites: [TE-C182-nakili, TE-C182-sada]
 sounds: []
-roots: []
+roots: [telugu-adanamu-excess]
+etymology_hook: "adanapu: DEDR 136 lists adanamu 'exceeding, too much'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C182-sada]
 <!-- hl-knowledge: introduces=[TE-LEX-C182-GUNAM182-05]; assesses=[] -->
 
 **అదనపు** — *adanapu* — "extra, additional".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 136 lists **అదనపు** (*adanapu*) as *adanamu*, "exceeding, much, too much", and queries a link with its entry 140.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

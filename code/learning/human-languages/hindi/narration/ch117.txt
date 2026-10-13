@@ -13,6 +13,9 @@ You'll want to know: मौसी.
 मौसी (mausī) — "aunt", your mother's sister.
 It is often explained as माँ जैसी, "like a mother": the aunt closest to a mother's place.
 
+The word, taken apart.
+मौसी (mausī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mātuḥṣvasṛ, "mother's sister" (CDIAL 10001). It is built from mātṛ, "mother", and svasṛ, "sister".
+
 What you've built.
 An aunt, on your mother's side.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for the father's younger brother, then the Hin
 You'll want to know: बुआ.
 बुआ (buā) — "aunt", your father's sister.
 मौसी (mausī) and बुआ (buā) are both "aunt" in English; in Hindi the side of the family decides.
+
+The word, taken apart.
+बुआ (buā) is close to the Hindi words phūphī and phūā, "father's sister", which CDIAL lists under a reconstructed phupphī (CDIAL 9089). CDIAL does not list buā itself, so its exact path is uncertain.
 
 What you've built.
 Both aunts, and the side each belongs to.
@@ -73,6 +79,9 @@ You'll want to know: मामा.
 मामा (māmā) — "uncle", your mother's brother.
 Beside चाचा, the father's brother, it completes the uncles you meet most.
 
+The word, taken apart.
+मामा (māmā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from māma, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
+
 What you've built.
 An uncle on your mother's side.
 
@@ -103,6 +112,9 @@ You'll want to know: भाभी.
 भाभी (bhābhī) — "sister-in-law", specifically your brother's wife.
 It shares its start with भाई, "brother": she is named through him.
 
+The word, taken apart.
+भाभी (bhābhī) comes from a reconstructed bhābbha-, which CDIAL calls a nursery word; it lists Hindi bhābhī, "elder brother's wife" (CDIAL 9453a).
+
 What you've built.
 A relative by marriage, named through your brother.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for the mother's brother, then the Hindi for a
 You'll want to know: ससुराल.
 ससुराल (sasurāl) — "the in-laws' home", the family a person marries into.
 वह ससुराल (sasurāl) गई है — "she has gone to her in-laws' home".
+
+The word, taken apart.
+ससुराल (sasurāl) is built on sasur, "father-in-law", which comes from Sanskrit śvaśura (CDIAL 12753), with the place ending -āl.
 
 What you've built.
 Aunts, uncles, a sister-in-law, and the home of the in-laws.

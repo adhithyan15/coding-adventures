@@ -11,7 +11,7 @@ romanization: "jhari"
 concept_tag: TE-NOUN-STREAM
 prerequisites: [TE-S06-letter-ra, TE-S08-vowel-sign-i, TE-S171-letter-nga]
 sounds: []
-roots: []
+roots: [sanskrit-jhara]
 etymology_hook: "A learned or literary word shared with Sanskrit, used for a stream or mountain stream"
 duration:
   max_seconds: 180
@@ -54,6 +54,11 @@ sound is a breathy **jh**; the second piece is the familiar **రి**.
 **ఝరి** is an authentic learned or literary word shared with Sanskrit. It is
 not an everyday word you must force into conversation. Keep its concrete image
 today: a stream running down a slope.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jhari* is Sanskrit *jharī*, "river", which CDIAL 5343 lists beside *jhara*, "waterfall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C152-STREAM-01] -->

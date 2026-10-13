@@ -14,7 +14,8 @@ romanization: "achār"
 concept_tag: HI-THG210-ACHAR
 prerequisites: [HI-C210-halva, HI-C210-laddu]
 sounds: []
-roots: []
+roots: [persian-achar]
+etymology_hook: "achār: usually traced to Persian āchār 'pickle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C210-laddu]
 <!-- hl-knowledge: introduces=[HI-LEX-C210-THG210-05]; assesses=[] -->
 
 **अचार** — *achār* — "pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अचार** (*achār*) is a loan, usually traced to Persian *āchār*, "pickle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

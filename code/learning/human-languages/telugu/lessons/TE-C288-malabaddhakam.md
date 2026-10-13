@@ -14,7 +14,8 @@ romanization: "malabaddhakaṁ"
 concept_tag: TE-AROGYAM288-MALABADDHAKAM
 prerequisites: [TE-C288-aparesanu, TE-C288-ajirnam]
 sounds: []
-roots: []
+roots: [sanskrit-mala, sanskrit-baddha]
+etymology_hook: "malabaddhakaṁ: Sanskrit mala 'dirt' (CDIAL 9899) + baddha 'bound' (CDIAL 9126)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C288-ajirnam]
 <!-- hl-knowledge: introduces=[TE-LEX-C288-AROGYAM288-03]; assesses=[] -->
 
 **మలబద్ధకం** — *malabaddhakaṁ* — "constipation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మలబద్ధకం** (*malabaddhakaṁ*) is Sanskrit: *mala*, "dirt; excretion" (CDIAL 9899), and *baddhaka*, from *baddha*, "bound" (CDIAL 9126), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

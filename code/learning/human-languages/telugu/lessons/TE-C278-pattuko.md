@@ -14,7 +14,8 @@ romanization: "paṭṭukō"
 concept_tag: TE-VERB-PATTUKO
 prerequisites: [TE-C277-kummari, TE-C277-kammari]
 sounds: []
-roots: []
+roots: [dravidian-pattu-hold]
+etymology_hook: "paṭṭukō: native paṭṭu 'to hold, catch' (DEDR 4034) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C277-kammari]
 <!-- hl-knowledge: introduces=[TE-LEX-C278-KRIYA278-01]; assesses=[] -->
 
 **పట్టుకో** — *paṭṭukō* — "to hold, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పట్టుకో** (*paṭṭukō*) is native Dravidian: *paṭṭu*, "to hold, catch", one word with Kannada *paṭṭu*, "to seize" (DEDR 4034), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

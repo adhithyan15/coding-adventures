@@ -14,7 +14,8 @@ romanization: "carciñcu"
 concept_tag: TE-VERB-CARCINCU
 prerequisites: [TE-C201-vanuku, TE-C201-kadulu]
 sounds: []
-roots: []
+roots: [sanskrit-carca]
+etymology_hook: "carciñcu: Sanskrit carcā 'repetition, discussion' (CDIAL 4695) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C201-kadulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C202-KRIYA202-01]; assesses=[] -->
 
 **చర్చించు** — *carciñcu* — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చర్చించు** (*carciñcu*) is Sanskrit *carcā*, which CDIAL 4695 glosses "repetition", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

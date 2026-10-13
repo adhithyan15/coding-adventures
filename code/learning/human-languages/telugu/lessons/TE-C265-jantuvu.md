@@ -14,7 +14,8 @@ romanization: "jantuvu"
 concept_tag: TE-VASTUVU265-JANTUVU
 prerequisites: [TE-C265-devudu, TE-C265-donga]
 sounds: []
-roots: []
+roots: [sanskrit-jantu]
+etymology_hook: "jantuvu ← Sanskrit jantu 'offspring, creature; any animal', a tatsama (CDIAL 5110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C265-donga]
 <!-- hl-knowledge: introduces=[TE-LEX-C265-VASTUVU265-05]; assesses=[] -->
 
 **జంతువు** — *jantuvu* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జంతువు** (*jantuvu*) is Sanskrit *jantu*, "offspring, creature; any animal", taken over whole as a learned loan, a tatsama, with the Telugu ending *-vu* (CDIAL 5110).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for behind, then the Hindi for inside.
 You'll want to know: आधा.
 आधा — ādhā — "half".
 
+The word, taken apart.
+आधा (ādhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ardha, "half" (CDIAL 644).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for inside, then the Hindi for half.
 
 You'll want to know: पूरा.
 पूरा — pūrā — "whole, complete".
+
+The word, taken apart.
+पूरा (pūrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūra, "filling" (CDIAL 8330). It is built on pṛ-, "to fill".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for half, then the Hindi for whole.
 You'll want to know: दुगना.
 दुगना — dugnā — "double".
 
+The word, taken apart.
+दुगना (dugnā) belongs with Hindi dūnā, "double", which CDIAL lists under a reconstructed duguṇa, "double", beside Sanskrit dviguṇa (CDIAL 6390).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for whole, then the Hindi for double.
 You'll want to know: अलग.
 अलग — alag — "separate, different".
 
+The word, taken apart.
+अलग (alag) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from alagna, "unconnected" (CDIAL 700). It is lagna, "attached", with a-, "not".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for double, then the Hindi for separate.
 
 You'll want to know: गोल.
 गोल — gol — "round".
+
+The word, taken apart.
+गोल (gol) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gola, "ball" (CDIAL 4321).
 
 What you've built.
 One more word for this chapter.

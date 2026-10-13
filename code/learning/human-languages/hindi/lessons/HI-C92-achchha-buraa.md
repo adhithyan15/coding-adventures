@@ -14,9 +14,10 @@ romanization: "acchā / burā"
 concept_tag: HI-ADVERB-MANNER
 prerequisites: [HI-C92-thoda, HI-C41-good, HI-C83-buraa, HI-S130-letter-chha]
 sounds: []
-roots: []
+roots: [accha, indo-aryan-bura]
+etymology_hook: "acchā ← Sanskrit accha 'clear', via Punjabi (CDIAL 142); burā ← *bura 'defective' (CDIAL 9289)"
 duration:
-  max_seconds: 240
+  max_seconds: 258
 requires:
   knowledge: [HI-LEX-C92-DEG-01, HI-LEX-C41-ADJ-03, HI-LEX-C83-CHAR-01, HI-SCRIPT-RECOG-130, HI-CONCEPT-C05-BOLTAHUN-01]
 introduces:
@@ -65,6 +66,8 @@ speaker's instinct to reach for a second form is the thing to unlearn.
 **अच्छा** is also where you can now read the letter **छ**, which arrived a
 moment ago in the alphabet. It sits in the middle of the word.
 [YOU FIND: **छ** in **अच्छा**]
+
+**बुरा** comes from a reconstructed *\*bura*, "defective" (CDIAL 9289).
 
 ## Grammar Lens: it still agrees
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-02, HI-CONCEPT-C05-BOLTAHUN-01] -->

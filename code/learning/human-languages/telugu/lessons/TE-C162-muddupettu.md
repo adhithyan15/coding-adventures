@@ -14,7 +14,8 @@ romanization: "muddupeṭṭu"
 concept_tag: TE-VERB-MUDDUPETTU
 prerequisites: [TE-C161-siggupadu, TE-C161-ascaryapovu]
 sounds: []
-roots: []
+roots: [dravidian-muttu-kiss, dravidian-pettu-put]
+etymology_hook: "muddupeṭṭu: native muddu 'kiss' (DEDR 4960) + peṭṭu 'to put' (DEDR 4390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-ascaryapovu]
 <!-- hl-knowledge: introduces=[TE-LEX-C162-KRIYA162-01]; assesses=[] -->
 
 **ముద్దుపెట్టు** — *muddupeṭṭu* — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముద్దుపెట్టు** (*muddupeṭṭu*) is native Dravidian: *muddu*, "kiss", one word with Tamil *muttu* and Kannada *muddu* (DEDR 4960), and *peṭṭu*, "to put" (DEDR 4390). DEDR compares Prakrit *muddī*, "kiss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

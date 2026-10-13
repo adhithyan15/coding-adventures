@@ -14,7 +14,8 @@ romanization: "Mīrā jī"
 concept_tag: HI-ADDRESS-NAME-JI
 prerequisites: [HI-C07-haan]
 sounds: []
-roots: []
+roots: [sanskrit-jiva]
+etymology_hook: "jī ← Sanskrit jīva 'long live!', the command form of jīvati 'lives' (CDIAL 5240)"
 duration:
   max_seconds: 230
 requires:
@@ -45,6 +46,11 @@ polite one.
 **मीरा जी** (*Mīrā jī*) — how you address somebody called Mira.
 
 A name, then **जी**. That is the whole of it.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मीरा जी** (*Mīrā jī*) puts the respectful *jī* after a name. CDIAL traces *jī*, "a word of assent or respect", to Sanskrit *jīva*, "long live!", the command form of *jīvati*, "lives" (CDIAL 5240).
 
 ## Grammar Lens: the word you already had, in a new position
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C97-ADDRESS-01, HI-CONCEPT-C07-HAAN-02] -->

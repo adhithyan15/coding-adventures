@@ -14,7 +14,8 @@ romanization: "jama cēyu"
 concept_tag: TE-VERB-JAMA-CEYU
 prerequisites: [TE-C280-ceppu, TE-C280-cercu]
 sounds: []
-roots: []
+roots: [arabic-jam, sey-do-dravidian]
+etymology_hook: "jama cēyu: jama ← Arabic jamʿ 'collection, total' through Persian and Hindustani + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C280-cercu]
 <!-- hl-knowledge: introduces=[TE-LEX-C280-KRIYA280-05]; assesses=[] -->
 
 **జమ చేయు** — *jama cēyu* — "to deposit, to credit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జమ చేయు** (*jama cēyu*) pairs *jama*, "deposit", a loan from Arabic *jamʿ*, "collection, total", through Persian and Hindustani, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a pocket, then the Telugu for a belt.
 You'll want to know: సాక్సు.
 సాక్సు — sāksu — "socks".
 
+The word, taken apart.
+సాక్సు (sāksu) is a loan from English socks, with Telugu's added -u.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a belt, then the Telugu for socks.
 
 You'll want to know: కోటు.
 కోటు — kōṭu — "a coat".
+
+The word, taken apart.
+కోటు (kōṭu) is a loan from English coat, with Telugu's added -u.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for socks, then the Telugu for a coat.
 You'll want to know: ధోతి.
 ధోతి — dhōti — "a dhoti".
 
+The word, taken apart.
+ధోతి (dhōti) is a loan from Hindustani dhotī, which CDIAL 6881 sets under a reconstructed dhōtta, "cloth", perhaps related to dhauta, "washed".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a coat, then the Telugu for a dhoti.
 You'll want to know: జాకెట్టు.
 జాకెట్టు — jākeṭṭu — "a blouse".
 
+The word, taken apart.
+జాకెట్టు (jākeṭṭu) is a loan from English jacket, used in Telugu for a blouse.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a dhoti, then the Telugu for a blouse.
 
 You'll want to know: తామరపువ్వు.
 తామరపువ్వు — tāmarapuvvu — "a lotus".
+
+The word, taken apart.
+తామరపువ్వు (tāmarapuvvu) is tāmara, "lotus", from Sanskrit tāmarasa, "red lotus" (CDIAL 5774), and native puvvu, "flower" (DEDR 4345), which DEDR compares, with a query, with Sanskrit puṣpa.
 
 What you've built.
 One more word for this chapter.

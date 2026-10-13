@@ -11,7 +11,8 @@ romanization: "peṭṭe"
 concept_tag: TE-NOUN-BOX
 prerequisites: [TE-C56-vessel]
 sounds: []
-roots: []
+roots: [dravidian-petti-box]
+etymology_hook: "peṭṭe: native Dravidian, one word with Tamil peṭṭi (DEDR 4388), which compares Sanskrit peṭaka 'box'"
 duration:
   max_seconds: 210
 requires:
@@ -40,11 +41,16 @@ reviews_of: [TE-C56-vessel]
 
 **పెట్టె** (*peṭṭe*) — "a box".
 
-పెట్టె comes straight out of పెట్టు, "to put": the box is the put-place. Telugu builds a good many of its household words this way, from the thing you do to the thing you do it in.
+పెట్టె looks as if it comes out of పెట్టు, "to put" — the box as the put-place — but DEDR keeps the two words apart.
 
 Then the railways arrived and పెట్టె picked up a second job — a railway carriage is a పెట్టె, a box that people are put in. A word for putting things away ended up on the side of a train.
 
 The house is furnished now: a చాప on the floor, a బుట్ట by the door, a కత్తి and a గిన్నె in the kitchen, and a పెట్టె for what is not needed today.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెట్టె** (*peṭṭe*) is native Dravidian, one word with Tamil *peṭṭi* and Kannada *peṭṭi*, "box" (DEDR 4388). DEDR compares Sanskrit *peṭaka*, "box" (CDIAL 8164), a word CDIAL calls non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

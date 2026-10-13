@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Four Adjectives That Do Not Agree",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d9d2aec86aa3c52b",
+  "sourceHash": "fnv1a64:4e41f019ebdee98e",
   "lessons": [
     {
       "id": "HI-C80-aasaan-mushkil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e55ce8a724fbed47",
+      "sourceHash": "fnv1a64:5866aca367e6eceb",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d34c4fbac7efeb1e",
+      "sourceHash": "fnv1a64:c229efa50495c6a4",
       "notice": null,
       "blocks": [
         {

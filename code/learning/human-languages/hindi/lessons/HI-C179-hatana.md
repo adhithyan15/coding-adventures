@@ -14,7 +14,8 @@ romanization: "haṭānā"
 concept_tag: HI-VERB-HATANA
 prerequisites: [HI-C179-thakna, HI-C179-sahna]
 sounds: []
-roots: []
+roots: [indo-aryan-hatt]
+etymology_hook: "haṭānā: the causing form of haṭnā 'to move aside', from a reconstructed *haṭṭ 'move' (CDIAL 13943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C179-sahna]
 <!-- hl-knowledge: introduces=[HI-LEX-C179-ACT179-03]; assesses=[] -->
 
 **हटाना** — *haṭānā* — "to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हटाना** (*haṭānā*) is the causing form of *haṭnā*, "to move aside": to remove is to make something move aside. CDIAL lists *haṭnā* under a reconstructed *\*haṭṭ*, "move" (CDIAL 13943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vīcu"
 concept_tag: TE-VERB-VICU
 prerequisites: [TE-C243-teliyajeyu, TE-C243-badili-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-vicu-fan]
+etymology_hook: "vīcu: native Dravidian; DEDR 5450 lists vīcu 'to blow as the wind' with Tamil vīcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C243-badili-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C244-KRIYA244-01]; assesses=[] -->
 
 **వీచు** — *vīcu* — "to blow (of the wind)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వీచు** (*vīcu*) is native Dravidian. DEDR 5450 lists *vīcu*, "to blow as the wind", with Tamil *vīcu* and Kannada *bīsu*, "to blow, fan". DEDR compares Sanskrit *vyajana*, "fanning; fan" (CDIAL 12043).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

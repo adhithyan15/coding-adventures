@@ -11,7 +11,8 @@ romanization: "uppu"
 concept_tag: TE-NOUN-SALT
 prerequisites: [TE-C46-lamp]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt]
+etymology_hook: "uppu: native Dravidian, one word with Tamil uppu and Kannada uppu (DEDR 2674)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C46-lamp]
 Proto-Dravidian had **\*uppu**, and the whole family kept it almost untouched: Tamil உப்பு, Kannada ಉಪ್ಪು, Malayalam ഉപ്പ്. A word this ordinary gives nobody a reason to replace it.
 
 Notice the doubled ప్ప in the middle. Telugu likes a consonant twice inside a short word — కుక్క, పిల్లి, కన్ను all do it — and the doubling is not decoration: it is the difference between one word and another.
+
+DEDR 2674 lists Telugu *uppu*, "salt", with Tamil *uppu*, Kannada *uppu* and Malayalam *uppu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

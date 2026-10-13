@@ -14,7 +14,8 @@ romanization: "talanoppi"
 concept_tag: TE-AROGYAM167-TALANOPPI
 prerequisites: [TE-C166-gonugu, TE-C166-vidipovu]
 sounds: []
-roots: []
+roots: [dravidian-talai-head, dravidian-noo-pain]
+etymology_hook: "talanoppi: native tala 'head' (DEDR 3103) + noppi 'pain' (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C166-vidipovu]
 <!-- hl-knowledge: introduces=[TE-LEX-C167-AROGYAM167-01]; assesses=[] -->
 
 **తలనొప్పి** — *talanoppi* — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తలనొప్పి** (*talanoppi*) is native Dravidian: *tala*, "head" (DEDR 3103), and *noppi*, "pain, ache" (DEDR 3793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

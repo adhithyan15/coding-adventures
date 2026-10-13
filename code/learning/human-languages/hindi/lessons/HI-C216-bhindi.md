@@ -14,7 +14,8 @@ romanization: "bhinḍī"
 concept_tag: HI-THG216-BHINDI
 prerequisites: [HI-C216-muli, HI-C216-baigan]
 sounds: []
-roots: []
+roots: [sanskrit-bhinda]
+etymology_hook: "bhinḍī ← Sanskrit bhiṇḍā 'okra', a tadbhava (CDIAL 9492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C216-baigan]
 <!-- hl-knowledge: introduces=[HI-LEX-C216-THG216-04]; assesses=[] -->
 
 **भिंडी** — *bhinḍī* — "okra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भिंडी** (*bhinḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhiṇḍā*, "okra" (CDIAL 9492).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

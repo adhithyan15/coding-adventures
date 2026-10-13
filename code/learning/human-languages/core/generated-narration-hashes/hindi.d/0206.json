@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 206,
-  "sourceHash": "fnv1a64:1068367e6fcaa416",
+  "sourceHash": "fnv1a64:dcf2fc19b28229eb",
   "lessonIds": [
     "HI-C206-salah",
     "HI-C206-ray",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch206.txt",
   "json": "hindi/narration/ch206.json",
-  "textHash": "fnv1a64:d2113ccefdd60572",
-  "jsonHash": "fnv1a64:a0a9644c607fa6c4",
+  "textHash": "fnv1a64:3827588043eb2bf3",
+  "jsonHash": "fnv1a64:1294ccbe4e287b0f",
   "findings": []
 }

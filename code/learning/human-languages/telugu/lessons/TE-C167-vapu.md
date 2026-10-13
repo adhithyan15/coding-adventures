@@ -14,7 +14,8 @@ romanization: "vāpu"
 concept_tag: TE-AROGYAM167-VAPU
 prerequisites: [TE-C167-matra, TE-C167-cemata]
 sounds: []
-roots: []
+roots: [dravidian-vaay-swell]
+etymology_hook: "vāpu: native Dravidian; DEDR 5350 lists vāpu 'swelling' with Kannada bāvu 'swelling'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C167-cemata]
 <!-- hl-knowledge: introduces=[TE-LEX-C167-AROGYAM167-05]; assesses=[] -->
 
 **వాపు** — *vāpu* — "a swelling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వాపు** (*vāpu*) is native Dravidian. DEDR 5350 lists *vāpu*, "swelling", with Kannada *bāvu*, "swelling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pandiri"
 concept_tag: TE-VASTUVU272-PANDIRI
 prerequisites: [TE-C271-nurugu, TE-C271-cillu]
 sounds: []
-roots: []
+roots: [dravidian-pantal-shed]
+etymology_hook: "pandiri: native Dravidian, one word with Tamil pantal and Kannada pandal (DEDR 3922)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C271-cillu]
 <!-- hl-knowledge: introduces=[TE-LEX-C272-VASTUVU272-01]; assesses=[] -->
 
 **పందిరి** — *pandiri* — "a trellis; a festive canopy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పందిరి** (*pandiri*) is native Dravidian, one word with Tamil *pantal* and Kannada *pandal* (DEDR 3922). DEDR lists Telugu *pandiri*, "shed, trellis".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

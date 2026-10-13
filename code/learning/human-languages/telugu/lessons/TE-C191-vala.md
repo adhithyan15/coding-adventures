@@ -14,7 +14,8 @@ romanization: "vala"
 concept_tag: TE-VASTUVU191-VALA
 prerequisites: [TE-C191-balbu, TE-C191-kattelu]
 sounds: []
-roots: []
+roots: [dravidian-valai-net]
+etymology_hook: "vala: native Dravidian, one word with Tamil valai and Kannada bale (DEDR 5288)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C191-kattelu]
 <!-- hl-knowledge: introduces=[TE-LEX-C191-VASTUVU191-04]; assesses=[] -->
 
 **వల** — *vala* — "a net".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వల** (*vala*) is native Dravidian, one word with Tamil *valai* and Kannada *bale* (DEDR 5288). DEDR lists Telugu *vala*, "net, snare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

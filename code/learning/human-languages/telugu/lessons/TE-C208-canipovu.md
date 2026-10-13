@@ -14,7 +14,8 @@ romanization: "canipōvu"
 concept_tag: TE-VERB-CANIPOVU
 prerequisites: [TE-C208-atuku, TE-C208-pukkilincu]
 sounds: []
-roots: []
+roots: [dravidian-cel-go, proto-dravidian-poo-go]
+etymology_hook: "canipōvu: native canu 'to go, depart' (DEDR 2781) + pōvu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C208-pukkilincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C208-KRIYA208-03]; assesses=[] -->
 
 **చనిపోవు** — *canipōvu* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చనిపోవు** (*canipōvu*) is native Dravidian: *cani*, from *canu*, "to go, depart, pass" (DEDR 2781), and *pōvu*, "to go" (DEDR 4572): "to go away, pass away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

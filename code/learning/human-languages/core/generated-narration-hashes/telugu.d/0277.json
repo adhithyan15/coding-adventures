@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 277,
-  "sourceHash": "fnv1a64:ce663a92553a7e13",
+  "sourceHash": "fnv1a64:0db4b8b4a438080a",
   "lessonIds": [
     "TE-C277-phiryadu",
     "TE-C277-mangali",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch277.txt",
   "json": "telugu/narration/ch277.json",
-  "textHash": "fnv1a64:a6f71c77cc7eaa79",
-  "jsonHash": "fnv1a64:237e579ab4acecab",
+  "textHash": "fnv1a64:9c28f92a1e0f692f",
+  "jsonHash": "fnv1a64:6d6d4473d536d3bb",
   "findings": []
 }

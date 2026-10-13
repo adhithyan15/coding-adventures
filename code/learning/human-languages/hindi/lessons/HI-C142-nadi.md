@@ -14,7 +14,8 @@ romanization: "nadī"
 concept_tag: HI-THINGS142-NADI
 prerequisites: [HI-C142-jus, HI-C142-pahar, HI-C14-ritu, HI-C14-ritu]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "nadī ← Sanskrit nadī 'river', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C142-pahar]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-05]; assesses=[] -->
 
 **नदी** — *nadī* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नदी** (*nadī*) is Sanskrit *nadī*, "river", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gelucu"
 concept_tag: TE-VERB-GELUCU
 prerequisites: [TE-C147-kattu, TE-C147-kuttu]
 sounds: []
-roots: []
+roots: [dravidian-vel-win]
+etymology_hook: "gelucu: native Dravidian, one word with Tamil keli and Kannada gel (DEDR 1972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C147-kuttu]
 <!-- hl-knowledge: introduces=[TE-LEX-C147-ACT147-04]; assesses=[] -->
 
 **గెలుచు** — *gelucu* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గెలుచు** (*gelucu*) is native Dravidian, one word with Tamil *keli* and Kannada *gel* (DEDR 1972). DEDR lists Telugu *gelucu*, "to win".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

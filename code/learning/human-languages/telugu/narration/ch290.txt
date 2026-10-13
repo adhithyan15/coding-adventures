@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a celebration, then the Telugu for sunris
 You'll want to know: పగలు.
 పగలు — pagalu — "daytime".
 
+The word, taken apart.
+పగలు (pagalu) is native Dravidian, one word with Tamil pakal and Kannada pagal (DEDR 3805). DEDR lists Telugu pagalu, "day, daytime".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for sunrise, then the Telugu for daytime.
 
 You'll want to know: పూట.
 పూట — pūṭa — "a half of the day (a mealtime)".
+
+The word, taken apart.
+The origin of పూట (pūṭa) is uncertain. DEDR and CDIAL list no word of this shape meaning "half a day, a mealtime".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for daytime, then the Telugu for a half of th
 You'll want to know: దశాబ్దం.
 దశాబ్దం — daśābdaṁ — "a decade".
 
+The word, taken apart.
+దశాబ్దం (daśābdaṁ) is Sanskrit daśābda, "ten years": daśa, "ten", and abda, "year", with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a half of the day, then the Telugu for a 
 You'll want to know: శతాబ్దం.
 శతాబ్దం — śatābdaṁ — "a century".
 
+The word, taken apart.
+శతాబ్దం (śatābdaṁ) is Sanskrit śatābda, "a hundred years": śata, "hundred", and abda, "year", with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a decade, then the Telugu for a century.
 
 You'll want to know: బాల్యం.
 బాల్యం — bālyaṁ — "childhood".
+
+The word, taken apart.
+బాల్యం (bālyaṁ) is Sanskrit bālya, "childhood", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.

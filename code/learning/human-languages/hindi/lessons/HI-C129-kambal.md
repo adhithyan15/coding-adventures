@@ -14,7 +14,8 @@ romanization: "kambal"
 concept_tag: HI-THINGS129-KAMBAL
 prerequisites: [HI-C129-tala, HI-C129-takiya, HI-C05-rahna]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kambal ← Sanskrit kambala 'blanket', perhaps Austroasiatic; via Punjabi (CDIAL 2771)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C129-takiya]
 <!-- hl-knowledge: introduces=[HI-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **कंबल** — *kambal* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंबल** (*kambal*) goes back to Sanskrit *kambala*, "woollen blanket" (CDIAL 2771). CDIAL marks the Hindi form as taken over from Punjabi, and mentions a possible Austroasiatic source for the Sanskrit word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

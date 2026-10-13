@@ -14,7 +14,8 @@ romanization: "lōya"
 concept_tag: TE-STHALAM174-LOYA
 prerequisites: [TE-C174-itu, TE-C174-guha]
 sounds: []
-roots: []
+roots: [telugu-loya-valley]
+etymology_hook: "lōya: origin uncertain; DEDR 5197 has loddi 'a valley', but not lōya"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C174-guha]
 <!-- hl-knowledge: introduces=[TE-LEX-C174-STHALAM174-05]; assesses=[] -->
 
 **లోయ** — *lōya* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **లోయ** (*lōya*) is uncertain. DEDR 5197 lists *loddi*, "a valley", with Kannada *lotta*, "a hollow, ravine", but not *lōya* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

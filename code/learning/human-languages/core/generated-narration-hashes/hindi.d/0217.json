@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 217,
-  "sourceHash": "fnv1a64:176080d3697c3643",
+  "sourceHash": "fnv1a64:9969b84cea8b1c53",
   "lessonIds": [
     "HI-C217-anar",
     "HI-C217-amrud",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch217.txt",
   "json": "hindi/narration/ch217.json",
-  "textHash": "fnv1a64:64d1071621e9e9fe",
-  "jsonHash": "fnv1a64:1671624cc5f862ee",
+  "textHash": "fnv1a64:226e0104f4e3d409",
+  "jsonHash": "fnv1a64:63633eb6b6f663ea",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "hoṇṭh"
 concept_tag: HI-NOUN-LIP
 prerequisites: [HI-C53-back, HI-C51-sweet, HI-C52-vegetable]
 sounds: []
-roots: []
+roots: [sanskrit-oshtha]
+etymology_hook: "hoṇṭh ← Sanskrit oṣṭha 'lip', a tadbhava (CDIAL 2563)"
 duration:
   max_seconds: 210
 requires:

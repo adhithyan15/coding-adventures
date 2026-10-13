@@ -14,7 +14,8 @@ romanization: "bigiñcu"
 concept_tag: TE-VERB-BIGINCU
 prerequisites: [TE-C165-cindu, TE-C165-gorugu]
 sounds: []
-roots: []
+roots: [dravidian-bigi-tighten]
+etymology_hook: "bigiñcu: native Dravidian; DEDR 5382 lists bigincu 'to tighten' with Kannada bigi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C165-gorugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C165-KRIYA165-03]; assesses=[] -->
 
 **బిగించు** — *bigiñcu* — "to tighten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బిగించు** (*bigiñcu*) is native Dravidian. DEDR 5382 lists *bigiñcu*, "to tighten, fasten", with Kannada *bigi*, "to tighten", and Tamil *viku*, "to be tight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

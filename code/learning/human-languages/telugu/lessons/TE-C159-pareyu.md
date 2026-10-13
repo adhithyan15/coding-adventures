@@ -14,7 +14,8 @@ romanization: "pārēyu"
 concept_tag: TE-VERB-PAREYU
 prerequisites: [TE-C159-nanabettu, TE-C159-baguceyu]
 sounds: []
-roots: []
+roots: [dravidian-vai-put]
+etymology_hook: "pārēyu: vēyu 'to put' (DEDR 5549); the first part matches pāṟu 'to run, flow' (DEDR 4020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C159-baguceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C159-KRIYA159-04]; assesses=[] -->
 
 **పారేయు** — *pārēyu* — "to throw away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The second part of **పారేయు** (*pārēyu*) is native *vēyu*, "to put, place" (DEDR 5549). The first part matches *pāṟu*, "to run, flow" (DEDR 4020), though DEDR does not list the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

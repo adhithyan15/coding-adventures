@@ -14,7 +14,8 @@ romanization: "kaḷḷajōḍu"
 concept_tag: TE-THINGS111-KALLAJODU
 prerequisites: [TE-C111-sabbu, TE-C111-tuvvalu]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, hindustani-jor]
+etymology_hook: "kaḷḷajōḍu: native kaḷḷu 'eyes' (DEDR 1159) + jōḍu 'pair', a northern word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C111-tuvvalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **కళ్ళజోడు** — *kaḷḷajōḍu* — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కళ్ళజోడు** (*kaḷḷajōḍu*) is native *kaḷḷu*, "eyes", the plural of *kannu* (DEDR 1159), and *jōḍu*, "pair", a word from the north (Hindi *joṛ*): "a pair for the eyes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

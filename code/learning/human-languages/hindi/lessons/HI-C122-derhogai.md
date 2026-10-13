@@ -14,7 +14,8 @@ romanization: "der ho gaī"
 concept_tag: HI-LATE-LATE
 prerequisites: [HI-C121-chalie, HI-C122-chhutti]
 sounds: []
-roots: []
+roots: [persian-der, sanskrit-bhavati]
+etymology_hook: "der usually traced to Persian der 'late'; ho ← bhavati (CDIAL 9416); gaī from jānā"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C122-chhutti]
 **देर हो गई** (*der ho gaī*) — "it has got late", "I am late".
 
 **देर** is the lateness you know; **हो गई** is "has become". The first reason to leave.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देर हो गई** (*der ho gaī*) is "lateness has gone and become". *der* is usually traced to Persian *der*, "late", while *ho* and *gaī* are forms of the inherited verbs "to be" (CDIAL 9416) and "to go" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

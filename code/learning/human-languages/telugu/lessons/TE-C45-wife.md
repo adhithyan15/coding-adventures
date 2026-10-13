@@ -11,7 +11,8 @@ romanization: "bhārya"
 concept_tag: TE-NOUN-WIFE
 prerequisites: [TE-C45-husband]
 sounds: []
-roots: []
+roots: [sanskrit-bharya]
+etymology_hook: "bhārya ← Sanskrit bhāryā 'wife', a tatsama (CDIAL 9471)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C45-husband]
 **భార్య** (*bhārya*) — "wife".
 
 The same root *bhṛ* as the last word, with a different ending: 'she who is to be supported'. Two words, one root, and between them a picture of the household as Sanskrit's grammarians framed it rather than as anyone lives in it now. That is worth hearing plainly, because the shape of the pair is the reason it is easy to remember.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భార్య** (*bhārya*) is Sanskrit *bhāryā*, "wife", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 9471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tupānu"
 concept_tag: TE-THINGS121-TUPANU
 prerequisites: [TE-C121-urumu, TE-C121-merupu, TE-C14-rutuvulu, TE-C14-rutuvulu]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tupānu ← Arabic ṭūfān 'flood, storm', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C121-merupu]
 <!-- hl-knowledge: introduces=[TE-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **తుపాను** — *tupānu* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తుపాను** (*tupānu*) is a loan from Arabic *ṭūfān*, "flood, storm", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

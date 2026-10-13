@@ -14,7 +14,8 @@ romanization: "baṛhaī"
 concept_tag: HI-THG262-BARHAI
 prerequisites: [HI-C261-lohar, HI-C261-sunar]
 sounds: []
-roots: []
+roots: [sanskrit-vardhaki]
+etymology_hook: "baṛhaī ← Sanskrit vardhaki 'carpenter', a tadbhava (CDIAL 11375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C261-sunar]
 <!-- hl-knowledge: introduces=[HI-LEX-C262-THG262-01]; assesses=[] -->
 
 **बढ़ई** — *baṛhaī* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बढ़ई** (*baṛhaī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vardhaki*, "carpenter" (CDIAL 11375).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tasvīr"
 concept_tag: HI-THINGS134-TASVIR
 prerequisites: [HI-C134-botal, HI-C134-pensil]
 sounds: []
-roots: []
+roots: [arabic-taswir]
+etymology_hook: "tasvīr ← Arabic taṣwīr 'a picturing, a portrait', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C134-pensil]
 <!-- hl-knowledge: introduces=[HI-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **तस्वीर** — *tasvīr* — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तस्वीर** (*tasvīr*) is a loan from Arabic *taṣwīr*, "a picturing, a portrait", which reached Hindi through Persian. Its Arabic root is *ṣ-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

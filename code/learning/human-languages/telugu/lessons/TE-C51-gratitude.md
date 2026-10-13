@@ -11,7 +11,8 @@ romanization: "kṛtajñata"
 concept_tag: TE-NOUN-GRATITUDE
 prerequisites: [TE-C50-farewell]
 sounds: []
-roots: []
+roots: [sanskrit-krtajna]
+etymology_hook: "kṛtajñata ← Sanskrit kṛtajñatā 'gratitude', from kṛta 'done' + jña 'knowing', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C50-farewell]
 *kṛta*, "done", plus *jña*, "knowing": knowing what was done for you. That is the whole of gratitude in two Sanskrit syllables, and Telugu took it entire.
 
 Set it beside ధన్యవాదములు, the thank-you from the first pages of this book, which is "utterances of 'worthy'". One word thanks by calling the giver worthy. The other thanks by admitting the debt is remembered. They are not the same gesture, and Telugu keeps both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కృతజ్ఞత** (*kṛtajñata*) is Sanskrit *kṛtajñatā*, "gratitude", from *kṛtajña*, "knowing what has been done", taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

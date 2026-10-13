@@ -1445,7 +1445,9 @@ backend immediately) come before the enabler-dependent items.
   finite specialisation may carry the same unaliased local-rooted proof through
   a real name formal. Unary signs may wrap that exact name actual while
   preserving the proof, and additive composition may include finite static
-  terms. Unrestricted runtime `entier`, globals, captured
+  terms; that additive form may in turn be multiplied or divided by finite
+  static terms, then used as the sole dynamic base of a power chain with finite
+  static exponents. Unrestricted runtime `entier`, globals, captured
   locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

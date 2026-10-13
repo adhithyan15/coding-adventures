@@ -12,6 +12,9 @@ Before the new one: say the Telugu for Vinayaka Chavithi, then the Telugu for Ba
 You'll want to know: చివర.
 చివర — civara — "the end".
 
+The word, taken apart.
+చివర (civara) is native Dravidian, one word with Tamil cimai (DEDR 2544). DEDR lists Telugu civara, "end, tip".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for Bathukamma, then the Telugu for the end.
 
 You'll want to know: ఎప్పుడైనా.
 ఎప్పుడైనా — eppuḍainā — "ever, at any time".
+
+The word, taken apart.
+ఎప్పుడైనా (eppuḍainā) is native Dravidian: eppuḍu, "when", on the question base e- (DEDR 5151), with ainā, "even if it is", from agu, "to be" (DEDR 333).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for the end, then the Telugu for ever.
 You'll want to know: ప్రస్తుతం.
 ప్రస్తుతం — prastutaṁ — "at present, currently".
 
+The word, taken apart.
+ప్రస్తుతం (prastutaṁ) is Sanskrit prastuta, "begun, under discussion, at hand", taken over as a learned loan, a tatsama, with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for ever, then the Telugu for at present.
 You'll want to know: పూర్వం.
 పూర్వం — pūrvaṁ — "in the past, formerly".
 
+The word, taken apart.
+పూర్వం (pūrvaṁ) is Sanskrit pūrva, "fore, first, eastern, ancient", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 8343).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for at present, then the Telugu for in the pa
 
 You'll want to know: తెల్లవారుజాము.
 తెల్లవారుజాము — tellavārujāmu — "dawn, the early hours".
+
+The word, taken apart.
+తెల్లవారుజాము (tellavārujāmu) joins tellavāru, "to dawn", built on native tella, "white, clear" (DEDR 3433), and jāmu, "a watch", from Sanskrit yāma, "night watch of three hours" (CDIAL 10467).
 
 What you've built.
 One more word for this chapter.

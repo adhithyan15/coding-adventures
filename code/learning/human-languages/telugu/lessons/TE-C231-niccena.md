@@ -14,7 +14,8 @@ romanization: "niccena"
 concept_tag: TE-VASTUVU231-NICCENA
 prerequisites: [TE-C231-phyanu, TE-C231-patakaru]
 sounds: []
-roots: []
+roots: [telugu-niccena-ladder]
+etymology_hook: "niccena: probably Sanskrit niśrayaṇī 'ladder', Prakrit ṇissēṇi (CDIAL 7458), a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C231-patakaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C231-VASTUVU231-03]; assesses=[] -->
 
 **నిచ్చెన** — *niccena* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిచ్చెన** (*niccena*) probably comes from Sanskrit *niśrayaṇī*, "ladder", Prakrit *ṇissēṇi* (CDIAL 7458): a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

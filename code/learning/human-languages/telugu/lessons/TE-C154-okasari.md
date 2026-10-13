@@ -14,7 +14,8 @@ romanization: "okasāri"
 concept_tag: TE-GATAM154-OKASARI
 prerequisites: [TE-C154-ippatike, TE-C154-gata]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-caari-time]
+etymology_hook: "okasāri: native oka 'one' (DEDR 990) + sāri 'a time' (DEDR 2464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C154-gata]
 <!-- hl-knowledge: introduces=[TE-LEX-C154-GATAM154-04]; assesses=[] -->
 
 **ఒకసారి** — *okasāri* — "once, one time". **నేను ఒకసారి చెన్నై వెళ్ళాను** — *nēnu okasāri cennai veḷḷānu* — "I went to Chennai once."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఒకసారి** (*okasāri*) is native Dravidian: *oka*, "one" (DEDR 990), and *sāri*, "a time, a turn" (DEDR 2464).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

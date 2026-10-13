@@ -14,7 +14,8 @@ romanization: "prāntaṁ"
 concept_tag: TE-STHALAM254-PRANTAM
 prerequisites: [TE-C253-tellavarujamu, TE-C254-rastram]
 sounds: []
-roots: []
+roots: [sanskrit-pranta]
+etymology_hook: "prāntaṁ ← Sanskrit prānta 'tip, point; end, edge', a tatsama (CDIAL 8940)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C254-rastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C254-STHALAM254-02]; assesses=[] -->
 
 **ప్రాంతం** — *prāntaṁ* — "an area, a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రాంతం** (*prāntaṁ*) is Sanskrit *prānta*, "tip, point; end, edge", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8940). The sense "region" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "piñchanu"
 concept_tag: TE-PANI239-PINCHANU
 prerequisites: [TE-C239-samstha, TE-C239-citi]
 sounds: []
-roots: []
+roots: [english-pension]
+etymology_hook: "piñchanu ← English pension"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C239-citi]
 <!-- hl-knowledge: introduces=[TE-LEX-C239-PANI239-04]; assesses=[] -->
 
 **పింఛను** — *piñchanu* — "a pension".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పింఛను** (*piñchanu*) is a loan from English *pension*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

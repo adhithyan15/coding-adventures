@@ -14,7 +14,8 @@ romanization: "jhāṛū"
 concept_tag: HI-THINGS131-JHARU
 prerequisites: [HI-C130-kanghi, HI-C131-tauliya]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāṛū: from jhāṛnā 'to sweep, shake off', listed under *jhāṭayati 'shakes down' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C131-tauliya]
 <!-- hl-knowledge: introduces=[HI-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **झाड़ू** — *jhāṛū* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाड़ू** (*jhāṛū*) is built on *jhāṛnā*, "to sweep, shake off", which CDIAL lists under a reconstructed *\*jhāṭayati*, "shakes down" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

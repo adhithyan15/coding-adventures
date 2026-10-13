@@ -14,7 +14,8 @@ romanization: "jalan"
 concept_tag: HI-THG274-JALAN
 prerequisites: [HI-C274-saas, HI-C274-khujli]
 sounds: []
-roots: []
+roots: [sanskrit-jvalana]
+etymology_hook: "jalan ← Sanskrit jvalana 'burning', a tadbhava (CDIAL 5307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C274-khujli]
 <!-- hl-knowledge: introduces=[HI-LEX-C274-THG274-04]; assesses=[] -->
 
 **जलन** — *jalan* — "a burning feeling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जलन** (*jalan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jvalana*, "burning" (CDIAL 5307).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

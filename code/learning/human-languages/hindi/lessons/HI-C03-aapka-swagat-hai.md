@@ -15,6 +15,7 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [HI-C02-hai, HI-C01-dhanyavad]
 sounds: [sva-conjunct, matra-a]
 roots: [su-good, gam-come]
+etymology_hook: "svāgat ← Sanskrit svāgata 'welcome': su- 'well' + āgata 'come', a tatsama"
 duration:
   max_seconds: 240
 requires:

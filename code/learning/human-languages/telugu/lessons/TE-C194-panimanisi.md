@@ -14,7 +14,8 @@ romanization: "panimaniṣi"
 concept_tag: TE-PANI194-PANIMANISI
 prerequisites: [TE-C193-cakram, TE-C194-intipani]
 sounds: []
-roots: []
+roots: [pani-work-dravidian, sanskrit-manushya]
+etymology_hook: "panimaniṣi: native pani 'work' (DEDR 3884) + maniṣi 'person' ← Sanskrit manuṣya (CDIAL 9828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C194-intipani]
 <!-- hl-knowledge: introduces=[TE-LEX-C194-PANI194-02]; assesses=[] -->
 
 **పనిమనిషి** — *panimaniṣi* — "a domestic helper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పనిమనిషి** (*panimaniṣi*) is native *pani*, "work" (DEDR 3884), and *maniṣi*, "person", from Sanskrit *manuṣya*, "human being" (CDIAL 9828).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

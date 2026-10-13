@@ -14,7 +14,8 @@ romanization: "natījā"
 concept_tag: HI-THG222-NATIJA
 prerequisites: [HI-C222-patjhar, HI-C222-karan]
 sounds: []
-roots: []
+roots: [arabic-natija]
+etymology_hook: "natījā ← Arabic natīja 'result, outcome', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C222-karan]
 <!-- hl-knowledge: introduces=[HI-LEX-C222-THG222-03]; assesses=[] -->
 
 **नतीजा** — *natījā* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नतीजा** (*natījā*) is a loan from Arabic *natīja*, "result, outcome", which reached Hindi through Persian. Its Arabic root is *n-t-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mēku"
 concept_tag: TE-THINGS110-MEKU
 prerequisites: [TE-C110-talamcevi, TE-C110-tadu]
 sounds: []
-roots: []
+roots: [persian-mekh]
+etymology_hook: "mēku: usually traced to Persian mēkh 'nail, peg', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C110-tadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **మేకు** — *mēku* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేకు** (*mēku*) is usually traced to Persian *mēkh*, "nail, peg", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vivariñcu"
 concept_tag: TE-VERB-VIVARINCU
 prerequisites: [TE-C159-pogottuko, TE-C160-sampadincu]
 sounds: []
-roots: []
+roots: [sanskrit-vivarana]
+etymology_hook: "vivariñcu: Sanskrit vivaraṇa 'explanation' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C160-sampadincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C160-KRIYA160-02]; assesses=[] -->
 
 **వివరించు** — *vivariñcu* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వివరించు** (*vivariñcu*) is Sanskrit *vivaraṇa*, "opening up, explanation", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tēdī"
 concept_tag: TE-SAMAYAM170-TEDI
 prerequisites: [TE-C170-appudappudu, TE-C170-taracuga]
 sounds: []
-roots: []
+roots: [telugu-tedi-date]
+etymology_hook: "tēdī: origin not settled; Sanskrit tithi 'lunar day' (CDIAL 5810) is the usual suggestion"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C170-taracuga]
 <!-- hl-knowledge: introduces=[TE-LEX-C170-SAMAYAM170-04]; assesses=[] -->
 
 **తేదీ** — *tēdī* — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తేదీ** (*tēdī*) is not settled. Sanskrit *tithi*, "a lunar day" (CDIAL 5810), is the usual suggestion, but neither CDIAL nor DEDR lists the Telugu word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

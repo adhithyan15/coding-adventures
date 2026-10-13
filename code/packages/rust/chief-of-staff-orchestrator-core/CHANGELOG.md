@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `with_process_supervisor` sets `refusing_unbrokered_channels()` (D18S
+  P2.6d-2c): a host bound to a channel never launches without a broker.
 - `with_process_supervisor` takes an optional `ChannelBrokers`, so the
   daemon can give each agent its own channel broker (D18S P2.6d-2b).
 - Require validated request context for channel create and destroy authorization.

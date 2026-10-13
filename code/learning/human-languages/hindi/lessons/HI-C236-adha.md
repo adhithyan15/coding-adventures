@@ -14,7 +14,8 @@ romanization: "ādhā"
 concept_tag: HI-QUAL236-ADHA
 prerequisites: [HI-C235-piche, HI-C235-andar]
 sounds: []
-roots: []
+roots: [sanskrit-ardha]
+etymology_hook: "ādhā ← Sanskrit ardha 'half', a tadbhava (CDIAL 644)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C235-andar]
 <!-- hl-knowledge: introduces=[HI-LEX-C236-QUAL236-01]; assesses=[] -->
 
 **आधा** — *ādhā* — "half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आधा** (*ādhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ardha*, "half" (CDIAL 644).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

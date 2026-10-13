@@ -14,7 +14,8 @@ romanization: "ḍūbnā"
 concept_tag: HI-VERB-DUBNA
 prerequisites: [HI-C230-latkana, HI-C230-tairana]
 sounds: []
-roots: []
+roots: [indo-aryan-dubb]
+etymology_hook: "ḍūbnā ← *ḍubb 'sink', a reconstructed form; a tadbhava (CDIAL 5561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C230-tairana]
 <!-- hl-knowledge: introduces=[HI-LEX-C230-ACT230-05]; assesses=[] -->
 
 **डूबना** — *ḍūbnā* — "to sink, to drown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डूबना** (*ḍūbnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍubb*, "sink", a form CDIAL reconstructs from its descendants (CDIAL 5561). CDIAL explains it as a Middle Indo-Aryan *buḍḍaï* with its consonants swapped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

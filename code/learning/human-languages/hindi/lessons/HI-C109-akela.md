@@ -14,7 +14,8 @@ romanization: "akelā"
 concept_tag: HI-MOOD-ALONE
 prerequisites: [HI-C109-ansu, HI-C109-dukh]
 sounds: []
-roots: []
+roots: [indo-aryan-ekkala]
+etymology_hook: "akelā ← *ekkala 'alone', a reconstructed form; a tadbhava (CDIAL 2506)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C109-dukh]
 **अकेला** (*akelā*) — "alone". A woman says **अकेली**.
 
 **मैं अकेला हूँ** — "I am alone". It opens on **एक**, "one", worn down.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अकेला** (*akelā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ekkala*, "alone", a form CDIAL reconstructs from its descendants (CDIAL 2506). It is built on *eka*, "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

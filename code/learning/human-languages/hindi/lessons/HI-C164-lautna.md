@@ -15,6 +15,7 @@ concept_tag: HI-VERB-LAUTNA
 prerequisites: [HI-C164-sikhna, HI-C164-pahucna]
 sounds: []
 roots: []
+etymology_hook: "lauṭnā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C164-pahucna]
 <!-- hl-knowledge: introduces=[HI-LEX-C164-ACT164-05]; assesses=[] -->
 
 **लौटना** — *lauṭnā* — "to come back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लौटना** (*lauṭnā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

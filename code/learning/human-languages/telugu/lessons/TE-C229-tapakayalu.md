@@ -14,7 +14,8 @@ romanization: "ṭapākāyalu"
 concept_tag: TE-VASTUVU229-TAPAKAYALU
 prerequisites: [TE-C228-gudu, TE-C228-toka]
 sounds: []
-roots: []
+roots: [telugu-tapaka-cracker, dravidian-kaay-fruit]
+etymology_hook: "ṭapākāyalu: ṭapā, of uncertain origin, + native kāya (DEDR 1459) + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C228-toka]
 <!-- hl-knowledge: introduces=[TE-LEX-C229-VASTUVU229-01]; assesses=[] -->
 
 **టపాకాయలు** — *ṭapākāyalu* — "firecrackers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టపాకాయలు** (*ṭapākāyalu*) is *ṭapā*, whose origin is uncertain (it may imitate the bang), and native *kāya*, "fruit, pod" (DEDR 1459), with the plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

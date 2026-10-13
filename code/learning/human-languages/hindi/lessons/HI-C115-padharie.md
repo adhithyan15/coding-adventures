@@ -14,7 +14,8 @@ romanization: "padhārie"
 concept_tag: HI-COMEIN-COME-FORMAL
 prerequisites: [HI-C114-nimantran, HI-C115-aie]
 sounds: []
-roots: []
+roots: [indo-aryan-paddharayati]
+etymology_hook: "padhārnā ← *paddhārayati 'steps', a reconstructed form (CDIAL 7768)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C115-aie]
 **पधारिए** (*padhārie*) — "please come", in its most formal, honouring form.
 
 The everyday *āie* comes first in this chapter; **पधारिए** is what you say to an honoured guest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पधारिए** (*padhārie*) is the respectful command of *padhārnā*, "to come, to grace with one's presence". CDIAL lists it under a reconstructed *\*paddhārayati*, "steps", perhaps from *pad*, "foot", and *dhārayati*, "holds" (CDIAL 7768).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

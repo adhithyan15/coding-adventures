@@ -14,7 +14,8 @@ romanization: "nēla"
 concept_tag: TE-VASTUVU224-NELA
 prerequisites: [TE-C224-garite, TE-C224-cetta]
 sounds: []
-roots: []
+roots: [dravidian-naalam-earth]
+etymology_hook: "nēla: native Dravidian; DEDR 2913 lists nēla 'ground' with Tamil ñālam 'earth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C224-cetta]
 <!-- hl-knowledge: introduces=[TE-LEX-C224-VASTUVU224-03]; assesses=[] -->
 
 **నేల** — *nēla* — "the floor, the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నేల** (*nēla*) is native Dravidian. DEDR 2913 lists *nēla*, "ground", with Tamil *ñālam*, "earth, land". DEDR compares Sanskrit *nāla*, "field under cultivation", a lexicon and inscription word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āṭō"
 concept_tag: TE-VASTUVU301-ATO
 prerequisites: [TE-C301-nighantuvu, TE-C301-bandi]
 sounds: []
-roots: []
+roots: [english-auto]
+etymology_hook: "āṭō ← English auto"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C301-bandi]
 <!-- hl-knowledge: introduces=[TE-LEX-C301-VASTUVU301-03]; assesses=[] -->
 
 **ఆటో** — *āṭō* — "an auto-rickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆటో** (*āṭō*) is a loan from English *auto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "injīniyar"
 concept_tag: HI-THG194-INJINIYAR
 prerequisites: [HI-C194-bavarci, HI-C194-draivar]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "injīniyar ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C194-draivar]
 <!-- hl-knowledge: introduces=[HI-LEX-C194-THG194-04]; assesses=[] -->
 
 **इंजीनियर** — *injīniyar* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इंजीनियर** (*injīniyar*) is a loan from English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

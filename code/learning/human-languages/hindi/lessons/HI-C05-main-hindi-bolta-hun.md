@@ -15,6 +15,7 @@ concept_tag: HI-WORD-HINDI
 prerequisites: [HI-C05-bolta-hun, HI-C03-main, HI-C03-hun]
 sounds: [anusvara, matra-i]
 roots: [sindhu-river]
+etymology_hook: "hindī: Persian hind 'India', the Persian form of Sanskrit sindhu 'the Indus', + -ī"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "baṅgāḷādumpa"
 concept_tag: TE-THINGS118-BANGALADUMPA
 prerequisites: [TE-C117-ullipaya, TE-C118-tamata]
 sounds: []
-roots: []
+roots: [telugu-bangala-bengal, dravidian-dumpa-tuber]
+etymology_hook: "baṅgāḷādumpa: 'Bengal tuber': baṅgāḷā 'Bengal' + native dumpa 'bulb, tuber' (DEDR 3326A)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C118-tamata]
 <!-- hl-knowledge: introduces=[TE-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **బంగాళాదుంప** — *baṅgāḷādumpa* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బంగాళాదుంప** (*baṅgāḷādumpa*) is "the Bengal tuber": *baṅgāḷā*, "Bengal", and native *dumpa*, "bulbous root", which DEDR 3326A lists with Kannada *dumpa*, "a root".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

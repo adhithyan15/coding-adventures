@@ -3806,6 +3806,65 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
                 )), "labeled dotted links must lower to dashed paths");
             }
+            if fixture_name == "labeled-bidirectional-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Point
+                        && edge.end_marker == diagram_ir::EdgeMarker::Point));
+                assert_eq!(layout.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("approve"), Some("release")]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )).count() >= 6, "both endpoints of each labeled link must lower to arrowheads");
+            }
+            if fixture_name == "labeled-circle-cross-links" {
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Circle
+                ).count(), 3);
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Cross
+                        && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                ).count(), 3);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 6, "both endpoints of circle links must lower to ellipses");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )).count() >= 12, "both endpoints of cross links must lower to paired paths");
+            }
+            if fixture_name == "labeled-mixed-endpoint-markers" {
+                use diagram_ir::EdgeMarker::{Circle, Cross, None, Point};
+                assert_eq!(layout.edges.iter().map(|edge|
+                    (edge.start_marker, edge.end_marker)
+                ).collect::<Vec<_>>(), vec![
+                    (Circle, Cross), (Cross, Circle), (Point, Cross),
+                    (Circle, Point), (None, Circle), (Point, Cross),
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mixed marker links must lower circle endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )), "mixed marker links must lower cross endpoints");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
+                )), "mixed marker links must lower point endpoints");
+            }
+            if fixture_name == "labeled-open-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.end_marker == diagram_ir::EdgeMarker::None));
+                assert_eq!(layout.edges.iter().map(|edge| edge.start_marker).collect::<Vec<_>>(), vec![
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                    diagram_ir::EdgeMarker::Cross,
+                    diagram_ir::EdgeMarker::Point,
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 2, "open links must retain authored start circles");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);

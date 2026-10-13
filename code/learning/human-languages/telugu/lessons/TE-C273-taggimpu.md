@@ -14,7 +14,8 @@ romanization: "taggimpu"
 concept_tag: TE-PANI273-TAGGIMPU
 prerequisites: [TE-C273-vaddi, TE-C273-billu]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "taggimpu: native Dravidian; DEDR 3178 lists taggu 'to decrease'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C273-billu]
 <!-- hl-knowledge: introduces=[TE-LEX-C273-PANI273-03]; assesses=[] -->
 
 **తగ్గింపు** — *taggimpu* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తగ్గింపు** (*taggimpu*) is native Dravidian, built on *taggu*, "to decrease", which DEDR 3178 lists with Tamil *tāḻ*, "to decrease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

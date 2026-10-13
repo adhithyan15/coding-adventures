@@ -14,7 +14,8 @@ romanization: "karuvu"
 concept_tag: TE-VASTUVU267-KARUVU
 prerequisites: [TE-C267-indradhanussu, TE-C267-varada]
 sounds: []
-roots: []
+roots: [dravidian-karuppu-famine]
+etymology_hook: "karuvu: native Dravidian, one word with Tamil karuppu (DEDR 1286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C267-varada]
 <!-- hl-knowledge: introduces=[TE-LEX-C267-VASTUVU267-03]; assesses=[] -->
 
 **కరువు** — *karuvu* — "a drought, a famine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కరువు** (*karuvu*) is native Dravidian, one word with Tamil *karuppu* (DEDR 1286). DEDR lists Telugu *karuvu*, "famine, dearth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

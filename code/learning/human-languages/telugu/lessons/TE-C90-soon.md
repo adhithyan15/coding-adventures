@@ -11,7 +11,8 @@ romanization: "tvaragā"
 concept_tag: TE-LEAVE-SOON
 prerequisites: [TE-C89-address, TE-C90-care]
 sounds: []
-roots: []
+roots: [sanskrit-tvara]
+etymology_hook: "tvaragā: Sanskrit tvarā 'haste' + the Telugu adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C90-care]
 **త్వరగా** (*tvaragā*) — "quickly", and at a parting, "soon".
 
 **త్వరగా రండి** — "come back soon". The respectful **raṇḍi** you already have.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**త్వరగా** (*tvaragā*) is Sanskrit *tvarā*, "haste", with the Telugu adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

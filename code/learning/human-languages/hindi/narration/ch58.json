@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Inside the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9666cfa39ee02888",
+  "sourceHash": "fnv1a64:d01c0677d580399b",
   "lessons": [
     {
       "id": "HI-C58-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2fd072efd0822dc",
+      "sourceHash": "fnv1a64:f3d38dbd1d63f69d",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:caa8ff27875ff83d",
+      "sourceHash": "fnv1a64:fe0e756d186d651a",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit छत्र (chatra), which meant a parasol — the thing held over a person's head. The word came down off the handle and settled onto the building."
+              "text": "From a reconstructed chatti, 'covering' (CDIAL 4971), on Sanskrit chad-, 'to cover' — the root of छत्र (chatra), a parasol held over a person's head. Roof and parasol are both coverings."
             },
             {
               "kind": "speech",
@@ -205,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The second of five, and a parasol that turned into a roof."
+              "text": "The second of five, and a covering that became a roof."
             }
           ]
         },
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:502f8ec146e612b4",
+      "sourceHash": "fnv1a64:a43621e048488a5f",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिड़की (khiṛkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭakkikā, \"side door\" (CDIAL 3770). The Sanskrit word is known only from the old word-lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -399,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -430,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:206226d523b60adb",
+      "sourceHash": "fnv1a64:01cb4adda3bfdbf7",
       "notice": null,
       "blocks": [
         {
@@ -471,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीढ़ी (sīṛhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from śrīḍhi, \"resting-place, ladder\", a form CDIAL reconstructs from its descendants (CDIAL 12709)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -481,7 +503,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -539,7 +561,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -570,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30e849c4700835b1",
+      "sourceHash": "fnv1a64:27846ee6d67844b4",
       "notice": null,
       "blocks": [
         {

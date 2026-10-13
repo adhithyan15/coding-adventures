@@ -14,7 +14,8 @@ romanization: "maiṁ jāntā hūṁ"
 concept_tag: HI-VERB-KNOW
 prerequisites: [HI-C94-sintesis-safar, HI-C07-nahin, HI-S132-letter-ja, HI-C05-main-hindi-bolta-hun]
 sounds: []
-roots: []
+roots: [sanskrit-janati]
+etymology_hook: "jānnā ← Sanskrit jānāti 'knows' (CDIAL 5193)"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +65,8 @@ a word removed.
 
 The verb is **जानना**, and its **ज** is the letter drawn two chapters before
 this one. It was on the page long before that, inside **जी** and **आज**.
+
+**जानना** comes from Sanskrit *jānāti*, "knows" (CDIAL 5193).
 
 ## Grammar Lens: a word carried and never handed over
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-KNOW-01, HI-CONCEPT-C07-NAHIN-01] -->

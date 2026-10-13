@@ -14,7 +14,8 @@ romanization: "vaṇḍu"
 concept_tag: TE-VERB-VANDU
 prerequisites: [TE-C143-nidrapo, TE-C143-lecu]
 sounds: []
-roots: []
+roots: [dravidian-vandu-cook]
+etymology_hook: "vaṇḍu: native Dravidian; DEDR 5329 lists vaṇḍu 'to cook' with Kui vaja 'to cook'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C143-lecu]
 <!-- hl-knowledge: introduces=[TE-LEX-C144-ACT144-01]; assesses=[] -->
 
 **వండు** — *vaṇḍu* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వండు** (*vaṇḍu*) is native Dravidian. DEDR 5329 lists *vaṇḍu*, "to cook", and *vaṇṭa*, "cooking", with Kui *vaja* and Kuwi *vaj-*, "to cook".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

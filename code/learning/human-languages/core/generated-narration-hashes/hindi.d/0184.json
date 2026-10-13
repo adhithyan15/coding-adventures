@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 184,
-  "sourceHash": "fnv1a64:77b74085adb00290",
+  "sourceHash": "fnv1a64:4db1bae540de05c2",
   "lessonIds": [
     "HI-C184-fars",
     "HI-C184-cabi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch184.txt",
   "json": "hindi/narration/ch184.json",
-  "textHash": "fnv1a64:d363c5af4a070aeb",
-  "jsonHash": "fnv1a64:ccceb675857a206c",
+  "textHash": "fnv1a64:02b4be904e918dc7",
+  "jsonHash": "fnv1a64:3d1eb0ba830f82e0",
   "findings": []
 }

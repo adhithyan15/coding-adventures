@@ -15,6 +15,7 @@ concept_tag: FAREWELL
 prerequisites: [HI-C01-shukriya]
 sounds: [devanagari-independent-vowel, matra-i, matra-aa]
 roots: [al-wida]
+etymology_hook: "alvidā ← Arabic al-widāʿ 'the farewell', root w-d-ʿ, through Persian"
 duration:
   max_seconds: 240
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 102,
-  "sourceHash": "fnv1a64:f2d915e0ca0c2c0d",
+  "sourceHash": "fnv1a64:d1fe8ad284f4ada7",
   "lessonIds": [
     "HI-C94-tak",
     "HI-C94-se-tak-din",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch102.txt",
   "json": "hindi/narration/ch102.json",
-  "textHash": "fnv1a64:913df8c2325febf6",
-  "jsonHash": "fnv1a64:45d9deb81de7d245",
+  "textHash": "fnv1a64:c22e2070d59fa3d7",
+  "jsonHash": "fnv1a64:5e5b4f6b39be2285",
   "findings": []
 }

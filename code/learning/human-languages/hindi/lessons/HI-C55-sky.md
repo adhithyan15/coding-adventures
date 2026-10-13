@@ -14,7 +14,8 @@ romanization: "āsmān"
 concept_tag: HI-NOUN-SKY
 prerequisites: [HI-C55-cloud, HI-C53-lip, HI-C54-goat]
 sounds: []
-roots: []
+roots: [persian-asman]
+etymology_hook: "āsmān: usually traced to Persian āsmān 'sky'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C55-cloud]
 A Persian word, *āsmān*, whose older Iranian form is a cousin of Sanskrit अश्मन् (*aśman*) — and *aśman* means 'stone'. The sky was imagined as a stone vault overhead.
 
 Sanskrit's own everyday word for sky, आकाश (*ākāśa*), is a different word from a different root, and Hindi has both. So the sky above a Hindi speaker can be a Persian stone dome or a Sanskrit open space, depending on which word is reached for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आसमान** (*āsmān*) is a loan, usually traced to Persian *āsmān*, "sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

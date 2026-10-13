@@ -14,7 +14,8 @@ romanization: "sardu"
 concept_tag: TE-VERB-SARDU
 prerequisites: [TE-C199-arabettu, TE-C199-madatapettu]
 sounds: []
-roots: []
+roots: [telugu-sardu-arrange]
+etymology_hook: "sardu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'arrange'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C199-madatapettu]
 <!-- hl-knowledge: introduces=[TE-LEX-C199-KRIYA199-05]; assesses=[] -->
 
 **సర్దు** — *sardu* — "to arrange, to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సర్దు** (*sardu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to arrange".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

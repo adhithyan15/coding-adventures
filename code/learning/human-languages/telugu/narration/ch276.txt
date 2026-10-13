@@ -12,6 +12,9 @@ Before the new one: say the Telugu for music, then the Telugu for a play.
 You'll want to know: రసాయనశాస్త్రం.
 రసాయనశాస్త్రం — rasāyanaśāstraṁ — "chemistry".
 
+The word, taken apart.
+రసాయనశాస్త్రం (rasāyanaśāstraṁ) is Sanskrit: rasāyana, "elixir of life" (CDIAL 10659), and śāstra, "treatise" (CDIAL 12422), with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a play, then the Telugu for chemistry.
 
 You'll want to know: జీవశాస్త్రం.
 జీవశాస్త్రం — jīvaśāstraṁ — "biology".
+
+The word, taken apart.
+జీవశాస్త్రం (jīvaśāstraṁ) is Sanskrit: jīva, "living being; life" (CDIAL 5239), and śāstra, "treatise" (CDIAL 12422), with the Telugu ending -ṁ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for chemistry, then the Telugu for biology.
 You'll want to know: అర్థశాస్త్రం.
 అర్థశాస్త్రం — arthaśāstraṁ — "economics".
 
+The word, taken apart.
+అర్థశాస్త్రం (arthaśāstraṁ) is Sanskrit: artha, "aim; thing, wealth" (CDIAL 638), and śāstra, "treatise" (CDIAL 12422), with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for biology, then the Telugu for economics.
 You'll want to know: వ్యాకరణం.
 వ్యాకరణం — vyākaraṇaṁ — "grammar".
 
+The word, taken apart.
+వ్యాకరణం (vyākaraṇaṁ) is Sanskrit vyākaraṇa, "separation, grammatical analysis", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 12182).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for economics, then the Telugu for grammar.
 
 You'll want to know: నల్లబల్ల.
 నల్లబల్ల — nallaballa — "a blackboard".
+
+The word, taken apart.
+నల్లబల్ల (nallaballa) is native nalla, "black", which DEDR 3613 lists with Tamil nallam, "blackness", and balla, "board", whose origin is uncertain.
 
 What you've built.
 One more word for this chapter.

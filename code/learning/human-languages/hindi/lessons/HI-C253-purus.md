@@ -14,7 +14,8 @@ romanization: "puruṣ"
 concept_tag: HI-THG253-PURUS
 prerequisites: [HI-C253-bhukamp, HI-C253-barh]
 sounds: []
-roots: []
+roots: [sanskrit-purusha]
+etymology_hook: "puruṣ ← Sanskrit puruṣa 'man, male', a tatsama (CDIAL 8289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C253-barh]
 <!-- hl-knowledge: introduces=[HI-LEX-C253-THG253-04]; assesses=[] -->
 
 **पुरुष** — *puruṣ* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुरुष** (*puruṣ*) is Sanskrit *puruṣa*, "man, male", taken over whole as a learned loan, a tatsama (CDIAL 8289). CDIAL lists the inherited form as *purus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

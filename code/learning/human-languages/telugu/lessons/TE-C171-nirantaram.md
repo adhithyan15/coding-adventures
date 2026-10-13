@@ -14,7 +14,8 @@ romanization: "nirantaraṁ"
 concept_tag: TE-SAMAYAM171-NIRANTARAM
 prerequisites: [TE-C171-sadharananga, TE-C171-aruduga, TE-S172-letter-chha, TE-S173-letter-jha]
 sounds: []
-roots: []
+roots: [sanskrit-nirantara]
+etymology_hook: "nirantaraṁ ← Sanskrit nirantara 'without interval, perpetual', a tatsama (CDIAL 7265)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C171-aruduga]
 
 **నిరంతరం** — *nirantaraṁ* — "constantly, continuously".
 [YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిరంతరం** (*nirantaraṁ*) is Sanskrit *nirantara*, "without interval, perpetual", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7265).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍaunlōḍ cēyu"
 concept_tag: TE-VERB-DAUNLOD-CEYU
 prerequisites: [TE-C245-prasaram-ceyu, TE-C245-mudrincu]
 sounds: []
-roots: []
+roots: [english-download, sey-do-dravidian]
+etymology_hook: "ḍaunlōḍ cēyu: English download + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C245-mudrincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C245-KRIYA245-04]; assesses=[] -->
 
 **డౌన్లోడ్ చేయు** — *ḍaunlōḍ cēyu* — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**డౌన్లోడ్ చేయు** (*ḍaunlōḍ cēyu*) pairs *ḍaunlōḍ*, a loan from English *download*, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

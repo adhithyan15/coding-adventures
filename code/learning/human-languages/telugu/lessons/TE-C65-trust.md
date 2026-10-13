@@ -11,7 +11,8 @@ romanization: "nammakaṁ"
 concept_tag: TE-NOUN-TRUST
 prerequisites: [TE-C65-permission]
 sounds: []
-roots: []
+roots: [dravidian-nambu-trust]
+etymology_hook: "nammakaṁ: native Dravidian, from nammu 'to trust' (DEDR 3600), one word with Tamil nampu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C65-permission]
 The four before it are Sanskrit and they are all about form: a welcome, manners, a request, permission. నమ్మకం is what the form is for. A house that does all four and is still not trusted has been doing something else.
 
 The word also carries "belief" in the religious sense, and Telugu is content to let one word hold both. Trusting a person and believing a thing are the same act pointed in two directions.
+
+DEDR 3600 lists Telugu *nammu*, "to believe, trust", and *nammakamu*, "trust", with Tamil *nampu* and Kannada *nambu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

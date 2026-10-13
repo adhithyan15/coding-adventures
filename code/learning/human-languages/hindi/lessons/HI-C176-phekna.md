@@ -14,7 +14,8 @@ romanization: "phẽknā"
 concept_tag: HI-VERB-PHEKNA
 prerequisites: [HI-C176-khicna, HI-C176-dhakelna]
 sounds: []
-roots: []
+roots: [indo-aryan-phekk]
+etymology_hook: "phẽknā ← *phekk 'throw', a reconstructed form; a tadbhava (CDIAL 9106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C176-dhakelna]
 <!-- hl-knowledge: introduces=[HI-LEX-C176-ACT176-04]; assesses=[] -->
 
 **फेंकना** — *phẽknā* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फेंकना** (*phẽknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phekk*, "throw", a form CDIAL reconstructs from its descendants (CDIAL 9106).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

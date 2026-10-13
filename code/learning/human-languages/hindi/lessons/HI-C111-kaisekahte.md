@@ -14,7 +14,8 @@ romanization: "kaise kahte haiṁ?"
 concept_tag: HI-ASK-HOW-SAY
 prerequisites: [HI-C110-matlab, HI-C111-hindime]
 sounds: []
-roots: []
+roots: [sanskrit-kathayati]
+etymology_hook: "kahnā ← Sanskrit kathayati 'converses, describes' (CDIAL 2703)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C111-hindime]
 **कैसे कहते हैं?** (*kaise kahte haiṁ?*) — "how does one say it?".
 
 **हिंदी में 'book' कैसे कहते हैं?** — "how do you say 'book' in Hindi?". **कहना** is "to say".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kahnā*, "to say", comes from Sanskrit *kathayati*, "converses with, describes" (CDIAL 2703).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

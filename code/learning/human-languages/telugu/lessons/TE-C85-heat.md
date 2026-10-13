@@ -11,7 +11,8 @@ romanization: "vēḍi"
 concept_tag: TE-WELLBEING-HOT
 prerequisites: [TE-C84-rest, TE-C85-cold]
 sounds: []
-roots: []
+roots: [dravidian-ve-burn]
+etymology_hook: "vēḍi: native Dravidian; DEDR 5517 lists it as 'heat; hot', with Tamil vē 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C85-cold]
 **ఇవాళ చాలా వేడిగా ఉంది** — "it is very hot today". **వేడి నీళ్ళు** — "hot water".
 
 It is the pair of చలి, and it slots into the same frame.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేడి** (*vēḍi*) is native Dravidian. DEDR 5517 lists the Telugu word for "heat; hot" with Tamil *vē*, "to burn, be hot", and Kannada *bē*, "to be burnt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hāthī"
 concept_tag: HI-THINGS146-HATHI
 prerequisites: [HI-C145-ser, HI-C146-bhalu]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hāthī ← Sanskrit hastin 'having hands; elephant', a tadbhava (CDIAL 14039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C146-bhalu]
 <!-- hl-knowledge: introduces=[HI-LEX-C146-THINGS146-02]; assesses=[] -->
 
 **हाथी** — *hāthī* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाथी** (*hāthī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hastin*, "having hands; elephant" (CDIAL 14039). The elephant was "the one with a hand", its trunk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

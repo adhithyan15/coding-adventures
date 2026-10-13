@@ -14,7 +14,8 @@ romanization: "uṅglī"
 concept_tag: HI-NOUN-FINGER
 prerequisites: [HI-C46-hair, HI-C44-daughter, HI-C45-cloth]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "uṅglī ← Sanskrit aṅguli 'finger, toe', a tadbhava (CDIAL 135)"
 duration:
   max_seconds: 210
 requires:

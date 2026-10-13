@@ -14,7 +14,8 @@ romanization: "khatarnāk"
 concept_tag: HI-QUAL213-KHATARNAK
 prerequisites: [HI-C212-kathin, HI-C213-zaruri]
 sounds: []
-roots: []
+roots: [arabic-khatar]
+etymology_hook: "khatarnāk: Arabic khaṭar 'danger' (Lane) + Persian -nāk 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C213-zaruri]
 <!-- hl-knowledge: introduces=[HI-LEX-C213-QUAL213-02]; assesses=[] -->
 
 **ख़तरनाक** — *khatarnāk* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ख़तरनाक** (*khatarnāk*) is *khatar*, "danger", from Arabic *khaṭar* through Persian (Lane, root *kh-ṭ-r*), with the Persian ending *-nāk*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

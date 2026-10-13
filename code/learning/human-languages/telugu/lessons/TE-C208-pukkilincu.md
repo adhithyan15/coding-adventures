@@ -14,7 +14,8 @@ romanization: "pukkiliñcu"
 concept_tag: TE-VERB-PUKKILINCU
 prerequisites: [TE-C207-pandincu, TE-C208-atuku]
 sounds: []
-roots: []
+roots: [dravidian-pilku-gargle]
+etymology_hook: "pukkiliñcu: native Dravidian; DEDR 4241 lists pukkilincu 'to gargle', with Tamil pilku queried"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C208-atuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C208-KRIYA208-02]; assesses=[] -->
 
 **పుక్కిలించు** — *pukkiliñcu* — "to gargle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పుక్కిలించు** (*pukkiliñcu*) is native Dravidian. DEDR 4241 lists *pukkiliñcu*, "to gargle", and sets beside it, with a query, Tamil *pilku*, "to gargle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "callārcu"
 concept_tag: TE-VERB-CALLARCU
 prerequisites: [TE-C206-tokku, TE-C206-kottu]
 sounds: []
-roots: []
+roots: [dravidian-cali-cold, dravidian-aru-cool]
+etymology_hook: "callārcu: native calla 'cool' (DEDR 2408) + ārcu 'to cool' (DEDR 404)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C206-kottu]
 <!-- hl-knowledge: introduces=[TE-LEX-C207-KRIYA207-01]; assesses=[] -->
 
 **చల్లార్చు** — *callārcu* — "to cool (something) down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చల్లార్చు** (*callārcu*) is native Dravidian: *calla*, "cool, cold", one word with Kannada *caḷi*, "cold" (DEDR 2408), and *ārcu*, "to cool, extinguish", one word with Tamil *āṟṟu*, "to cool" (DEDR 404).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

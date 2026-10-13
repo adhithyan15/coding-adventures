@@ -11,7 +11,8 @@ romanization: "pillalu"
 concept_tag: TE-PEOPLE-CHILDREN
 prerequisites: [TE-C87-isee, TE-C87-really]
 sounds: []
-roots: []
+roots: [dravidian-pillai-child]
+etymology_hook: "pillalu: native pilla 'child' (DEDR 4198), one word with Tamil piḷḷai, + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C87-really]
 
 **మీకు పిల్లలు ఉన్నారా?** — "do you have children?", literally "to you, are there children?".
 The **-లు** at the end is the plural you met in your very first lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిల్లలు** (*pillalu*) is the plural of *pilla*, "child", which is native Dravidian, one word with Tamil *piḷḷai* and Kannada *pilla* (DEDR 4198). DEDR compares Sanskrit *pillika*, "chicken", and Pali *pillaka*, "young of an animal, child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

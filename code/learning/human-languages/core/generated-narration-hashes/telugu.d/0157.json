@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 157,
-  "sourceHash": "fnv1a64:e279ad549e256f0b",
+  "sourceHash": "fnv1a64:1a5e6c4cad8aa248",
   "lessonIds": [
     "TE-C157-cellincu",
     "TE-C157-veyincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch157.txt",
   "json": "telugu/narration/ch157.json",
-  "textHash": "fnv1a64:5ec87e350a9ca506",
-  "jsonHash": "fnv1a64:5eecc176b3577820",
+  "textHash": "fnv1a64:6106252e23a723d2",
+  "jsonHash": "fnv1a64:4ea8bcab799c5ca1",
   "findings": []
 }
