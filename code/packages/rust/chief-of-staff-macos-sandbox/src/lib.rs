@@ -60,7 +60,8 @@
 //!   process-exec                        the agent's canonical path
 //!   file-read*, file-map-executable     the agent; /usr/lib; /System/Library;
 //!                                       /System/Volumes/Preboot/Cryptexes/OS;
-//!                                       /System/Cryptexes/OS (dyld and its
+//!                                       /System/Cryptexes/OS;
+//!                                       /private/preboot/Cryptexes/OS (dyld and its
 //!                                       shared cache)
 //!   file-read-data                      /dev/urandom, /dev/random
 //!   file-read-data, file-write-data     /dev/null
@@ -215,11 +216,14 @@ pub fn direct_file_grants(plan: &SandboxPlan) -> Result<Vec<FileGrant>, Confinem
 /// The directories every agent may read and map executable: dyld, the
 /// system libraries, and the shared cache. A write grant may not land in
 /// one, and a shim there would make its own read probe pass.
-pub const SYSTEM_READ_ROOTS: [&str; 4] = [
+pub const SYSTEM_READ_ROOTS: [&str; 5] = [
     "/usr/lib",
     "/System/Library",
     "/System/Volumes/Preboot/Cryptexes/OS",
     "/System/Cryptexes/OS",
+    // The same cryptex as Seatbelt can name it once resolved: on Apple
+    // silicon the dyld shared cache's vnode path is under /private/preboot.
+    "/private/preboot/Cryptexes/OS",
 ];
 
 /// Whether `path` is one of [`SYSTEM_READ_ROOTS`] or beneath one. A
@@ -884,6 +888,11 @@ mod tests {
         assert!(under_system_read_root("/usr/lib"));
         assert!(under_system_read_root("/usr/lib/libSystem.B.dylib"));
         assert!(under_system_read_root("/System/Library/x"));
+        assert!(under_system_read_root(
+            "/private/preboot/Cryptexes/OS/System/Library/dyld/x"
+        ));
+        assert!(!under_system_read_root("/private/preboot/Cryptexes/OSx"));
+        assert!(!under_system_read_root("/private/preboot/ABCD/x"));
         assert!(!under_system_read_root("/usr/library"));
         assert!(!under_system_read_root("/usr/local/lib/x"));
     }

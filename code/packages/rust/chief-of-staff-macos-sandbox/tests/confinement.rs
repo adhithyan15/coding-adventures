@@ -115,11 +115,67 @@ fn stdout(output: &Output) -> String {
 fn answer(output: &Output) -> String {
     assert!(
         output.status.success(),
-        "status {:?}, stderr: {}",
+        "status {:?}, stderr: {}\n{}",
         output.status,
-        String::from_utf8_lossy(&output.stderr)
+        String::from_utf8_lossy(&output.stderr),
+        diagnose()
     );
     stdout(output)
+}
+
+/// What macOS recorded about a confined launch that failed: Seatbelt's
+/// denials from the unified log, and the newest crash report for the probe
+/// or the shim. A process killed early (dyld, say) often says nothing on
+/// stderr; these say what it was refused. Only ever run on a failure.
+fn diagnose() -> String {
+    // Give the log a moment to receive the kernel's reports.
+    std::thread::sleep(std::time::Duration::from_secs(2));
+    let mut report = String::from("--- Seatbelt denials (last 5 minutes) ---\n");
+    let denials = Command::new("/usr/bin/log")
+        .args([
+            "show",
+            "--style",
+            "compact",
+            "--last",
+            "5m",
+            "--predicate",
+            r#"eventMessage CONTAINS[c] "deny" AND (eventMessage CONTAINS "macos-sandbox-probe" OR eventMessage CONTAINS "seatbelt-shim")"#,
+        ])
+        .output();
+    match denials {
+        Ok(output) => {
+            let text = String::from_utf8_lossy(&output.stdout);
+            let lines: Vec<&str> = text.lines().collect();
+            let start = lines.len().saturating_sub(40);
+            for line in &lines[start..] {
+                report.push_str(line);
+                report.push('\n');
+            }
+        }
+        Err(error) => report.push_str(&format!("log show failed: {error}\n")),
+    }
+    report.push_str("--- newest crash report ---\n");
+    let reports = std::env::var_os("HOME")
+        .map(|home| PathBuf::from(home).join("Library/Logs/DiagnosticReports"));
+    let newest = reports
+        .and_then(|directory| fs::read_dir(directory).ok())
+        .into_iter()
+        .flatten()
+        .filter_map(Result::ok)
+        .filter(|entry| {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            name.contains("macos-sandbox-probe") || name.contains("seatbelt-shim")
+        })
+        .max_by_key(|entry| entry.metadata().and_then(|m| m.modified()).ok());
+    match newest {
+        Some(entry) => {
+            let text = fs::read_to_string(entry.path()).unwrap_or_default();
+            report.push_str(&format!("{}\n", entry.path().display()));
+            report.push_str(&text.chars().take(6000).collect::<String>());
+        }
+        None => report.push_str("none found\n"),
+    }
+    report
 }
 
 #[test]

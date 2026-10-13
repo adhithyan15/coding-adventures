@@ -2082,8 +2082,10 @@ through S-I3 before two weeks are spent on Windows.
      process-exec                  the agent's canonical path (literal)
      file-read*, file-map-exec.    the agent; /usr/lib; /System/Library;
                                    /System/Volumes/Preboot/Cryptexes/OS;
-                                   /System/Cryptexes/OS
-                                   (dyld and its shared cache)
+                                   /System/Cryptexes/OS;
+                                   /private/preboot/Cryptexes/OS
+                                   (dyld and its shared cache, under
+                                   each name Seatbelt may resolve it to)
      file-read-data                /dev/urandom, /dev/random
      file-read-data, -write-data   /dev/null
      file-read-metadata            any path (dyld stats its search paths)
