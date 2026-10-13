@@ -1063,7 +1063,9 @@ two-point routes lower to pixel-equivalent collinear cubic segments while preser
 The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
 commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
 Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
-Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
+Crossings on linear, rounded, `step`, `stepBefore`, and `stepAfter` routes lower the later edge to
+portable quadratic arc or split-subpath paint commands. As in Mermaid 11.16.1, a rewritten rounded
+route trades its corner smoothing for unambiguous crossing hops; true smoothing curves remain untouched.
 Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
 weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
 undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
@@ -1076,5 +1078,5 @@ handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
 and link catalog beyond the documented marker forms, the remaining lane layering configuration,
-line hops on non-straight routes, and exact upstream routing or typography remain
+and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
