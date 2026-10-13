@@ -47,7 +47,7 @@ reviews_of: [TA-C161-arai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கலக்கு** (*kalakku*) is native Dravidian. DEDR 1303 lists Malayalam *kalaṅṅuka*, "to be mixed, agitated". It is the causative of *kalaṅku*, "to be stirred up".
+**கலக்கு** (*kalakku*) is native Dravidian. DEDR 1303 lists Malayalam *kalaṅṅuka*, "to be mixed, agitated". It is the causative of *kalaṅku*, "to be stirred up". The entry compares Sanskrit *kaluṣa*, "turbid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

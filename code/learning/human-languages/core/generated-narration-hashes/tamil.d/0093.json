@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 93,
-  "sourceHash": "fnv1a64:fc39c69b147f0407",
+  "sourceHash": "fnv1a64:5bd3422c357654da",
   "lessonIds": [
     "TA-C93-meaning",
     "TA-C93-intamil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch93.txt",
   "json": "tamil/narration/ch93.json",
-  "textHash": "fnv1a64:46be4f066bb91e15",
-  "jsonHash": "fnv1a64:9629443f4958e07b",
+  "textHash": "fnv1a64:cbd2b1d7fab1cea8",
+  "jsonHash": "fnv1a64:0d554f4462be63e7",
   "findings": []
 }

@@ -49,7 +49,7 @@ reviews_of: [TA-C144-uyaramana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**சூடான** (*cūṭāṉa*) is native Dravidian (DEDR 2654). It is *cūṭu*, "heat", with *-āṉa*.
+**சூடான** (*cūṭāṉa*) is native Dravidian (DEDR 2654). It is *cūṭu*, "heat", with *-āṉa*. DEDR compares Sanskrit *cūḍ-*, "to singe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

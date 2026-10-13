@@ -15,7 +15,7 @@ concept_tag: TA-PORUL278-KARUMPU
 prerequisites: [TA-C277-polutupokku, TA-C277-karuttu]
 sounds: []
 roots: []
-etymology_hook: "கரும்பு — origin uncertain; DEDR has no entry for it"
+etymology_hook: "கரும்பு — native Dravidian (DEDR 1288); Malayalam karimpu, Kannada kabbu, Tulu karmbu"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C277-karuttu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **கரும்பு** (*karumpu*) is uncertain. DEDR has no entry for it.
+**கரும்பு** (*karumpu*) is native Dravidian. DEDR 1288 lists Malayalam *karimpu*, Kannada *kabbu* and Tulu *karmbu*, all "sugarcane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

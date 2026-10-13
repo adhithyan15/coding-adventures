@@ -47,7 +47,7 @@ reviews_of: [TA-C102-fatherselderbrother]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பெரியம்மா** (*periyammā*) is native: *periya*, "big" (DEDR 4411), and *ammā*, "mother" (DEDR 183): "the big mother".
+**பெரியம்மா** (*periyammā*) is native: *periya*, "big" (DEDR 4411), and *ammā*, "mother" (DEDR 183, which compares Sanskrit *ambā*, "mother"): "the big mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

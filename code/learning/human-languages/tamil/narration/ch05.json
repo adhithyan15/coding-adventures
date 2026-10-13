@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1330443b5f1375df",
+  "sourceHash": "fnv1a64:e4fe3006c8e3acad",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0629379fb5262c6",
+      "sourceHash": "fnv1a64:8d44b5f3e11d9b38",
       "notice": null,
       "blocks": [
         {

@@ -15,7 +15,7 @@ concept_tag: TA-PORUL244-POTTALAM
 prerequisites: [TA-C243-vellarikkay, TA-C244-ancal-talai]
 sounds: []
 roots: []
-etymology_hook: "பொட்டலம் — origin uncertain; DEDR has no entry for it"
+etymology_hook: "பொட்டலம் — probably from Prakrit poṭṭala 'bundle' (CDIAL 8396); DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C244-ancal-talai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **பொட்டலம்** (*poṭṭalam*) is uncertain. DEDR has no entry for it.
+**பொட்டலம்** (*poṭṭalam*) probably comes from Prakrit *poṭṭala*, "bundle" (CDIAL 8396), also in late Sanskrit. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

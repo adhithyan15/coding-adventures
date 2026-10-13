@@ -47,7 +47,7 @@ reviews_of: [TA-C142-mulankai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கட்டைவிரல்** (*kaṭṭaiviral*) is native: *kaṭṭai*, "shortness, short and thick" (DEDR 1151), and *viral*, "finger" (DEDR 5409).
+**கட்டைவிரல்** (*kaṭṭaiviral*) is native: *kaṭṭai*, "shortness, short and thick" (DEDR 1151, which compares Indo-Aryan *\*gāṭṭa*, "short"), and *viral*, "finger" (DEDR 5409).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C197-tavir]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குடிபெயர்** (*kuṭipeyar*) is native: *kuṭi*, "house, home" (DEDR 1655), and *peyar*, "to move" (DEDR 4409): "move house". The *peyar* that means "name" is a different entry.
+**குடிபெயர்** (*kuṭipeyar*) is native: *kuṭi*, "house, home" (DEDR 1655, which compares Sanskrit *kuṭi*, "hut"), and *peyar*, "to move" (DEDR 4409): "move house". The *peyar* that means "name" is a different entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

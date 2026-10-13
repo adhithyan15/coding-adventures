@@ -48,7 +48,7 @@ Tamil keeps *cakati* as well, for the thicker and dirtier kind. சேறு is 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**சேறு** (*sēṟu*) is native Dravidian. DEDR 2020 lists Malayalam *cēṟu* and Kannada *kesaṟ*.
+**சேறு** (*sēṟu*) is native Dravidian. DEDR 2020 lists Malayalam *cēṟu* and Kannada *kesaṟ*. The entry compares Sanskrit *kedāra*, "a field under water" (CDIAL 3463).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Cumin, Leafy greens, Jackfruit, Guava, Lemon",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:525491635b10d087",
+  "sourceHash": "fnv1a64:aea1fd1d86af3b46",
   "lessons": [
     {
       "id": "TA-C139-cirakam",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1261ecf98267cd5b",
+      "sourceHash": "fnv1a64:f9c90bbe191b9463",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பலாப்பழம் (palāppaḻam) is native: palā, \"jack tree\" (DEDR 3988; Malayalam plāvu), and paḻam, \"fruit\" (DEDR 4004)."
+              "text": "பலாப்பழம் (palāppaḻam) is native: palā, \"jack tree\" (DEDR 3988; Malayalam plāvu), and paḻam, \"fruit\" (DEDR 4004). DEDR compares Sanskrit panasa, \"jack tree\", and phala, \"fruit\"."
             }
           ]
         },

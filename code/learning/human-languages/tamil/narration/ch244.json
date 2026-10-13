@@ -4,7 +4,7 @@
   "chapter": 244,
   "title": "Postage stamp, Parcel, Form, Document, Passport",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:18ef8d30a7c04dee",
+  "sourceHash": "fnv1a64:94e1e016a0572e51",
   "lessons": [
     {
       "id": "TA-C244-ancal-talai",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfebeb4ffaf0fb64",
+      "sourceHash": "fnv1a64:01a9aff2eb2a6050",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of பொட்டலம் (poṭṭalam) is uncertain. DEDR has no entry for it."
+              "text": "பொட்டலம் (poṭṭalam) probably comes from Prakrit poṭṭala, \"bundle\" (CDIAL 8396), also in late Sanskrit. DEDR has no entry for it."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [TA-C134-kanini]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மின்விசிறி** (*miṉviciṟi*) is a modern coinage from native parts: *miṉ*, "lightning, electricity" (DEDR 4876), and *viciṟi*, "fan" (DEDR 5450).
+**மின்விசிறி** (*miṉviciṟi*) is a modern coinage from native parts: *miṉ*, "lightning, electricity" (DEDR 4876), and *viciṟi*, "fan" (DEDR 5450, which compares Sanskrit *vīj-*, "to fan").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

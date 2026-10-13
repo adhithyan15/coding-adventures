@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:27d420c8047244ee",
+  "sourceHash": "fnv1a64:6d1d800382fc7987",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2352cc351f48104d",
+      "sourceHash": "fnv1a64:d2e6785a11cc17d5",
       "notice": null,
       "blocks": [
         {
@@ -688,7 +688,11 @@
             },
             {
               "kind": "speech",
-              "text": "That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet, but worth noticing, because you will see it constantly."
+              "text": "Enakku and teriyum are Dravidian (DEDR 5160, 3419)."
+            },
+            {
+              "kind": "speech",
+              "text": "That extra த் on enakku is sandhi — a joining consonant Tamil inserts between certain words to smooth the seam. It belongs to neither word on its own; it exists only because they are next to each other. Nothing to learn yet; you will see it constantly."
             },
             {
               "kind": "speech",

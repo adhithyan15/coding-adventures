@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "The Harvest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dac0513a201bd51a",
+  "sourceHash": "fnv1a64:9b716f73c450cd1d",
   "lessons": [
     {
       "id": "TA-C64-paddy",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbc6fdc31309aba6",
+      "sourceHash": "fnv1a64:9a35ee66307b9d36",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "களம் (kaḷam) is native Dravidian. DEDR 1376 lists Malayalam kaḷam and Kannada kaḷa."
+              "text": "களம் (kaḷam) is native Dravidian. DEDR 1376 lists Malayalam kaḷam and Kannada kaḷa. The entry compares Sanskrit khala, \"threshing floor\" (CDIAL 3834)."
             }
           ]
         },

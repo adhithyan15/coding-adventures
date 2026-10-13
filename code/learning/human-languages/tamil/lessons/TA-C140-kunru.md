@@ -15,7 +15,7 @@ concept_tag: TA-THINGS140-KUNRU
 prerequisites: [TA-C140-urukay, TA-C140-aruvi]
 sounds: []
 roots: [dravidian-kunru-hill]
-etymology_hook: "குன்று — native Dravidian (DEDR 1864); Malayalam kunnu, Kannada koṇḍa"
+etymology_hook: "குன்று — native Dravidian (DEDR 1864); Malayalam kunnu, Telugu koṇḍa"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C140-aruvi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குன்று** (*kuṉṟu*) is native Dravidian. DEDR 1864 lists Malayalam *kunnu* and Kannada *koṇḍa*.
+**குன்று** (*kuṉṟu*) is native Dravidian. DEDR 1864 lists Malayalam *kunnu* and Telugu *koṇḍa*, which Kannada borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

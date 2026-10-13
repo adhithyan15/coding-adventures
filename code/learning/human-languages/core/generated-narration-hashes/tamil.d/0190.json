@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 190,
-  "sourceHash": "fnv1a64:081edbb759bf31ca",
+  "sourceHash": "fnv1a64:de12b7fef1de0e38",
   "lessonIds": [
     "TA-C190-yocanai",
     "TA-C190-tippetti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch190.txt",
   "json": "tamil/narration/ch190.json",
-  "textHash": "fnv1a64:ae234b1af10196f8",
-  "jsonHash": "fnv1a64:e9d509f280c68bf3",
+  "textHash": "fnv1a64:fe8bcced90e53575",
+  "jsonHash": "fnv1a64:da43c09e00a15497",
   "findings": []
 }

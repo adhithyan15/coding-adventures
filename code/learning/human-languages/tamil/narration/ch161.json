@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "To sell, To boil, To fry, To grind, To mix",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f4301db665ee761a",
+  "sourceHash": "fnv1a64:283da300a513cc5c",
   "lessons": [
     {
       "id": "TA-C161-vil",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed1e3054c730d16c",
+      "sourceHash": "fnv1a64:0e9e6f9f7a004022",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கலக்கு (kalakku) is native Dravidian. DEDR 1303 lists Malayalam kalaṅṅuka, \"to be mixed, agitated\". It is the causative of kalaṅku, \"to be stirred up\"."
+              "text": "கலக்கு (kalakku) is native Dravidian. DEDR 1303 lists Malayalam kalaṅṅuka, \"to be mixed, agitated\". It is the causative of kalaṅku, \"to be stirred up\". The entry compares Sanskrit kaluṣa, \"turbid\"."
             }
           ]
         },

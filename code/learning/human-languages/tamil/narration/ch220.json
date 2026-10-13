@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Keyboard, Camera, Radio, Programme, Film",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:644ce07c2402b297",
+  "sourceHash": "fnv1a64:ccfb13d47c66db30",
   "lessons": [
     {
       "id": "TA-C220-vicaippalakai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f19c6138056490a",
+      "sourceHash": "fnv1a64:77d5a3dc3c5261bb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "விசைப்பலகை (vicaippalakai) is a modern coinage: vicai, \"key, spring\", whose origin is uncertain, and palakai, \"board\", from Sanskrit phalaka, \"board, bench\" (CDIAL 9053)."
+              "text": "விசைப்பலகை (vicaippalakai) is a modern coinage: native vicai, \"spring, lever\" (DEDR 5450), used for \"key\", and palakai, \"board\", from Sanskrit phalaka, \"board, bench\" (CDIAL 9053)."
             }
           ]
         },

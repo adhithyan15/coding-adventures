@@ -46,7 +46,7 @@ It is **கண்**, "eye", and **நீர்**, "water".
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கண்ணீர்** (*kaṇṇīr*) is native: *kaṇ*, "eye" (DEDR 1159), and *nīr*, "water" (DEDR 3690). DEDR 1159 lists *kaṇṇīr* itself.
+**கண்ணீர்** (*kaṇṇīr*) is native: *kaṇ*, "eye" (DEDR 1159), and *nīr*, "water" (DEDR 3690). DEDR 1159 lists *kaṇṇīr* itself; DEDR 3690 compares Sanskrit *nīra*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

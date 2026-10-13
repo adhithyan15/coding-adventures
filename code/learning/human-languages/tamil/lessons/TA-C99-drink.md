@@ -49,7 +49,7 @@ the ending that a person must have.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குடியுங்கள்** (*kuṭiyuṅkaḷ*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*. It is *kuḍi*, "drink", with the polite ending.
+**குடியுங்கள்** (*kuṭiyuṅkaḷ*) is native Dravidian. DEDR 1654 lists Malayalam *kuṭi* and Kannada *kuḍi*. It is *kuḍi*, "drink", with the polite ending. DEDR compares Sanskrit *kuṭī*, "liquor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

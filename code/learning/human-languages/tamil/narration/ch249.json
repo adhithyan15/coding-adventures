@@ -4,7 +4,7 @@
   "chapter": 249,
   "title": "Game, Football, Cricket, Chess, Competition",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d2edd88d8bd3e9fb",
+  "sourceHash": "fnv1a64:0c09d515e1c87042",
   "lessons": [
     {
       "id": "TA-C249-vilaiyattu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7450da0146520fda",
+      "sourceHash": "fnv1a64:70fff4dad832e64c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "விளையாட்டு (viḷaiyāṭṭu) is native Dravidian. DEDR 5438 lists Malayalam viḷay-āṭṭu, \"play, sport\". It is the noun of viḷaiyāṭu, \"to play\"."
+              "text": "விளையாட்டு (viḷaiyāṭṭu) is native Dravidian. DEDR 5438 lists Malayalam viḷay-āṭṭu, \"play, sport\". It is the noun of viḷaiyāṭu, \"to play\". DEDR compares, with a query, Sanskrit vilāsa, \"play\"."
             }
           ]
         },

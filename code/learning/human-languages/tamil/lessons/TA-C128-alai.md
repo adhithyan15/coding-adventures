@@ -47,7 +47,7 @@ reviews_of: [TA-C127-puyal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**அலை** (*alai*) is native Dravidian. DEDR 240 lists Malayalam *ala*, "wave". It belongs with *alaṅku*, "to move, to shake".
+**அலை** (*alai*) is native Dravidian. DEDR 240 lists Malayalam *ala*, "wave". It belongs with *alaṅku*, "to move, to shake". The entry compares, with a query, Sanskrit *alaka*, "curl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

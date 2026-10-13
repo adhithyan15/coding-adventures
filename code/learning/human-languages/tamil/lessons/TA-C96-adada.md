@@ -47,7 +47,7 @@ dear, is that so?".
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**அடடா** (*aṭaṭā*) is an exclamation, a sound of surprise or pity rather than a word built from parts. DEDR has no entry for it, and its origin is uncertain.
+**அடடா** (*aṭaṭā*) is an exclamation, a sound of surprise or pity rather than a word built from parts. DEDR has no entry for it; the nearest is the exclamation *aṭā* (DEDR 70). Its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

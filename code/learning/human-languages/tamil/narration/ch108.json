@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Greetings People Actually Say",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4e23473a5470c313",
+  "sourceHash": "fnv1a64:ddf9ae783a038a76",
   "lessons": [
     {
       "id": "TA-C108-eaten",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed95a9b241fb542e",
+      "sourceHash": "fnv1a64:dc79ad3f3d55f4de",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ரொம்ப நாளாச்சு (rompa nāḷāccu) is native: rompa, \"very\", the spoken form of nirampa, \"fully\", from nira, \"to be full\" (DEDR 3672), and nāḷ, \"day\" (DEDR 3656), with ācci, \"it has become\": \"it has been many days\"."
+              "text": "ரொம்ப நாளாச்சு (rompa nāḷāccu) is native: rompa, \"very\", the spoken form of nirampa, \"fully\", from nira, \"to be full\" (DEDR 3672), and nāḷ, \"day\" (DEDR 3656), with āccu, \"it has become\": \"it has been many days\"."
             }
           ]
         },

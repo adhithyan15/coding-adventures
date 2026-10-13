@@ -47,7 +47,7 @@ reviews_of: [TA-C117-utaimai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**அடுப்பு** (*aṭuppu*) is native Dravidian. DEDR 76 lists Malayalam *aṭuppu*. It comes from *aṭu*, "to cook": the stove is the cooking place.
+**அடுப்பு** (*aṭuppu*) is native Dravidian. DEDR 76 lists Malayalam *aṭuppu*. It comes from *aṭu*, "to cook": the stove is the cooking place. The entry compares Sanskrit *aṭṭa*, "dried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

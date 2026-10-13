@@ -4,7 +4,7 @@
   "chapter": 144,
   "title": "Tall, Hot, Cold, Heavy, Light",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ad008346351cdbd",
+  "sourceHash": "fnv1a64:c8c1d9b3e5383286",
   "lessons": [
     {
       "id": "TA-C144-uyaramana",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9ff2c4676ee2797",
+      "sourceHash": "fnv1a64:a0eca72241123523",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சூடான (cūṭāṉa) is native Dravidian (DEDR 2654). It is cūṭu, \"heat\", with -āṉa."
+              "text": "சூடான (cūṭāṉa) is native Dravidian (DEDR 2654). It is cūṭu, \"heat\", with -āṉa. DEDR compares Sanskrit cūḍ-, \"to singe\"."
             }
           ]
         },

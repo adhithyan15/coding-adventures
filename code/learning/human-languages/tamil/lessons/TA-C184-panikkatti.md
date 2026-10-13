@@ -47,7 +47,7 @@ reviews_of: [TA-C183-poriyal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பனிக்கட்டி** (*paṉikkaṭṭi*) is native: *paṉi*, "dew, frost" (DEDR 4035), and *kaṭṭi*, "lump", from *kaṭṭu*, "to harden, to congeal" (DEDR 1148): "a lump of frost".
+**பனிக்கட்டி** (*paṉikkaṭṭi*) is native: *paṉi*, "dew, frost" (DEDR 4035), and *kaṭṭi*, "lump", from *kaṭṭu*, "to harden, to congeal" (DEDR 1148, which compares Sanskrit *kaṭhina*, "hard"): "a lump of frost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

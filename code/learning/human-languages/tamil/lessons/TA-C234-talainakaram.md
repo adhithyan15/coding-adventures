@@ -47,7 +47,7 @@ reviews_of: [TA-C234-natu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தலைநகரம்** (*talainakaram*) is *talai*, "head" (DEDR 3103), and *nakaram*, "city" (DEDR 3568): "the head city".
+**தலைநகரம்** (*talainakaram*) is *talai*, "head" (DEDR 3103), and *nakaram*, "city" (DEDR 3568, which compares Sanskrit *nagara*): "the head city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

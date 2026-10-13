@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 272,
-  "sourceHash": "fnv1a64:18b837c3169eb1ed",
+  "sourceHash": "fnv1a64:640b6cb3535b986b",
   "lessonIds": [
     "TA-C272-ataiyala-attai",
     "TA-C272-vari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch272.txt",
   "json": "tamil/narration/ch272.json",
-  "textHash": "fnv1a64:d1da8f07317ca787",
-  "jsonHash": "fnv1a64:cfadf50996d94707",
+  "textHash": "fnv1a64:445af1c9a5180b48",
+  "jsonHash": "fnv1a64:b0b992ed1b110016",
   "findings": []
 }

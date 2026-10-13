@@ -65,7 +65,7 @@ the places the job gets done instead.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தேநீர் / தேநீரை** (*tēnīr / tēnīrai*) is *tēnīr*, "tea", met earlier, with the accusative *-ai*. *Tēnīr* is *tē*, the travelling word for tea, welded onto native *nīr*, "water" (DEDR 3690).
+**தேநீர் / தேநீரை** (*tēnīr / tēnīrai*) is *tēnīr*, "tea", with the accusative *-ai*. *Tēnīr* is the travelling word *tē*, "tea", and native *nīr*, "water" (DEDR 3690; it compares Sanskrit *nīra*).
 
 ## Across the family: the same line, drawn at the other end
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C86-RATIONAL-01] -->

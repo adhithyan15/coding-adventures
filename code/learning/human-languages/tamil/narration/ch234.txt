@@ -109,7 +109,7 @@ You'll want to know: தலைநகரம்.
 தலைநகரம் — talainakaram — "a capital city".
 
 The word, taken apart.
-தலைநகரம் (talainakaram) is talai, "head" (DEDR 3103), and nakaram, "city" (DEDR 3568): "the head city".
+தலைநகரம் (talainakaram) is talai, "head" (DEDR 3103), and nakaram, "city" (DEDR 3568, which compares Sanskrit nagara): "the head city".
 
 What you've built.
 One more word for this chapter.

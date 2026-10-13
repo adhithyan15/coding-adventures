@@ -47,7 +47,7 @@ reviews_of: [TA-C140-matulai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ஊறுகாய்** (*ūṟukāy*) is native: *ūṟu*, "to soak, to be steeped" (DEDR 761), and *kāy*, "unripe fruit" (DEDR 1459): fruit left to steep.
+**ஊறுகாய்** (*ūṟukāy*) is native: *ūṟu*, "to soak, to be steeped" (DEDR 761), and *kāy*, "unripe fruit" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw"): fruit left to steep.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

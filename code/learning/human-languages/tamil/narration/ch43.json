@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "The Household",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:278b5c463de165a2",
+  "sourceHash": "fnv1a64:172e47d44f703b8a",
   "lessons": [
     {
       "id": "TA-C43-child",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b885e77f0fdec4a4",
+      "sourceHash": "fnv1a64:af1aa35b5531a42e",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குழந்தை (kuḻandai) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam koḻuntu, \"tender twig\", and Telugu koḍuku, \"son\"."
+              "text": "குழந்தை (kuḻandai) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam koḻuntu, \"tender twig\", and Telugu koḍuku, \"son\". The entry compares Sanskrit kuḍaka, \"child\" (CDIAL 3245)."
             }
           ]
         },
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:035a49accad2ef46",
+      "sourceHash": "fnv1a64:8d16e11a4d76b824",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மகள் (makaḷ) is native Dravidian. DEDR 4616 lists Malayalam mōḷ. It is the feminine of the same word as makaṉ, \"son\"."
+              "text": "மகள் (makaḷ) is native Dravidian. DEDR 4616 lists Malayalam mōḷ. It is the feminine of the same word as makaṉ, \"son\". The entry compares Sanskrit (lexicons) mālikā, \"daughter\"."
             }
           ]
         },
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b001c9520c9eb0e3",
+      "sourceHash": "fnv1a64:c91c4377ac0efa11",
       "notice": null,
       "blocks": [
         {

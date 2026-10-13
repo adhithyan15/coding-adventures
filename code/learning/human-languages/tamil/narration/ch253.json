@@ -4,7 +4,7 @@
   "chapter": 253,
   "title": "Artist, Officer, Judge, Pension, Certificate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9eb6b81ae900d9d5",
+  "sourceHash": "fnv1a64:ce155f9b93ec3faf",
   "lessons": [
     {
       "id": "TA-C253-kalainar",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13289c9adb10d4e8",
+      "sourceHash": "fnv1a64:085119063ceb909a",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஓய்வூதியம் (ōyvūtiyam) is a modern coinage: native ōyvu, \"rest\" (DEDR 1057), and ūtiyam, \"pay, benefit\", which DEDR 609 lists, with a query, beside a verb meaning \"to help\": \"rest pay\"."
+              "text": "ஓய்வூதியம் (ōyvūtiyam) is a modern coinage: native ōyvu, \"rest\" (DEDR 1057), and ūtiyam, \"pay\", which DEDR 609 lists, with a query, as \"profit, benefit\", beside a verb meaning \"to help\": \"rest pay\"."
             }
           ]
         },
