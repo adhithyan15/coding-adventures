@@ -3971,6 +3971,12 @@ line "Target" [35, 50, 68, 82]"##,
                         matches!(child, PaintInstruction::Path(_))).count() == 2
                 )), "the note must lower to an outline and interior fold path");
             }
+            if fixture_name == "label-rect-shape" {
+                assert_eq!(layout.nodes[1].shape, diagram_ir::DiagramShape::TextBlock);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
+                )), "labelRect must lower without visible container geometry");
+            }
             if fixture_name == "legacy-internal-shape-aliases" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::Rect,

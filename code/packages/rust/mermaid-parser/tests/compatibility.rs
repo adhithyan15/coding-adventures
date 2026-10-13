@@ -1626,6 +1626,16 @@ fn swimlane_text_block_attribute_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_label_rect_reaches_label_only_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Labels\n  caption@{ shape: labelRect, label: \"Context only\" }\nend",
+    ).expect("Mermaid 11.16.1 labelRect should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TextBlock);
+    assert_eq!(diagram.nodes[0].label, "Context only");
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 
