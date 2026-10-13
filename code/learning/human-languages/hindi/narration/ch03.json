@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5e639c7ca8723304",
+  "sourceHash": "fnv1a64:129acf9cf500dba0",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -617,7 +617,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c3029bb270e45a5c",
+      "sourceHash": "fnv1a64:7e5343a0189ea032",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -751,7 +751,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the whole reply to āp kaise haiṁ?, and say what is special about ṭhīk's origin. (Maiṁ ṭhīk hūṁ; it is a native Indian word with no European cognate.)"
+              "text": "Give the whole reply to āp kaise haiṁ?, and say where ṭhīk probably comes from. (Maiṁ ṭhīk hūṁ; from Sanskrit sthita, \"standing\".)"
             }
           ]
         }

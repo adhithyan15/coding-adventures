@@ -49,7 +49,7 @@ reviews_of: [HI-C131-jharu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**डिब्बा** (*ḍibbā*) belongs with Hindi *ḍabbā* and *ḍibbī*, "box", which CDIAL lists under a reconstructed *\*ḍibba*, "box" (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian.
+**डिब्बा** (*ḍibbā*) belongs with Hindi *ḍabbā* and *ḍibbī*, "box", which CDIAL lists under a reconstructed *\*ḍabba*, "box", and its variant *\*ḍibba* (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

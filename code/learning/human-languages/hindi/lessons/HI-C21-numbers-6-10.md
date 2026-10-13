@@ -17,7 +17,7 @@ sounds: [matra-au, retroflex-tha]
 roots: [sanskrit-sas, sanskrit-sapta, sanskrit-ashta, sanskrit-nava, sanskrit-dasa]
 etymology_hook: "sāt ← Sanskrit sapta (CDIAL 13139); chhah, āṭh, nau, das ← *kṣaṭ, aṣṭā, nava, daśa: all tadbhavas"
 duration:
-  max_seconds: 221
+  max_seconds: 214
 requires:
   knowledge: [HI-CONCEPT-C06-PAANCH-NASAL-01]
 introduces:
@@ -54,7 +54,7 @@ steps. Two more numbers here do exactly the same thing.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**छह सात आठ नौ दस** (*chhah sāt āṭh nau das*) are tadbhavas. *Chhah* comes from *\*kṣaṭ*, a variant CDIAL reconstructs beside Sanskrit *ṣaṭ*, "six" (CDIAL 12803); *sāt* from *sapta* (CDIAL 13139); *āṭh* from *aṣṭā* (CDIAL 941); *nau* from *nava* (CDIAL 6984); and *das* from *daśa* (CDIAL 6227).
+All five are tadbhavas: *chhah* from *\*kṣaṭ*, a variant CDIAL reconstructs beside *ṣaṭ*, "six" (CDIAL 12803); *sāt* from *sapta* (CDIAL 13139); *āṭh* from *aṣṭā* (CDIAL 941); *nau* from *nava* (CDIAL 6984); and *das* from *daśa* (CDIAL 6227).
 
 ## You'll want to know — sapta → satta → sāt, aṣṭa → aṭṭha → āṭh — the same mechanism again
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C21-NUMBERS-6-10-02]; assesses=[] -->

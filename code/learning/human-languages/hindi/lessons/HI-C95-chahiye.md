@@ -17,7 +17,7 @@ sounds: []
 roots: [indo-aryan-cah]
 etymology_hook: "cāhiye ← *cāh 'see, look for, desire', a root CDIAL reconstructs; its source is uncertain (CDIAL 4775)"
 duration:
-  max_seconds: 241
+  max_seconds: 240
 requires:
   knowledge: [HI-LEX-CHAHNA-01, HI-LEX-C95-KNOW-02, HI-SCRIPT-RECOG-131]
 introduces:
@@ -68,7 +68,7 @@ feminine, no singular and plural — the same five letters whoever is speaking
 and whatever is wanted. After a chapter of endings that agree with everything
 in sight, that is a relief worth noticing.
 
-**चाहिए** comes from a reconstructed *\*cāh*, "see, look for, desire", whose source CDIAL calls uncertain (CDIAL 4775).
+**चाहिए** comes from a reconstructed *\*cāh*, "desire", whose source CDIAL calls uncertain (CDIAL 4775).
 
 ## Grammar Lens: the ए on the end
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-NEED-01, HI-SCRIPT-RECOG-131] -->

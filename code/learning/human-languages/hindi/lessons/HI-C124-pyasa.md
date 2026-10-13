@@ -15,7 +15,7 @@ concept_tag: HI-BODY-THIRSTY
 prerequisites: [HI-C123-khanakhaya, HI-C124-bhukha]
 sounds: []
 roots: [sanskrit-pipasita]
-etymology_hook: "pyāsā ← Sanskrit pipāsita 'thirsty', a tadbhava (CDIAL 8200)"
+etymology_hook: "pyāsā ← *pipāsaka 'thirsty', a form CDIAL reconstructs beside Sanskrit pipāsita; a tadbhava (CDIAL 8200)"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ The same move: **प्यास**, "thirst", becomes **प्यासा**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**प्यासा** (*pyāsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pipāsita*, "thirsty" (CDIAL 8200).
+**प्यासा** (*pyāsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *\*pipāsaka*, "thirsty", a form CDIAL reconstructs beside Sanskrit *pipāsita* (CDIAL 8200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

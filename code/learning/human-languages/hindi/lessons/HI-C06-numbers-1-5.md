@@ -17,7 +17,7 @@ sounds: [matra-aa, matra-i, chandrabindu]
 roots: [sanskrit-eka, sanskrit-dvi, sanskrit-panca, sanskrit-tri]
 etymology_hook: "pāṁch ← Sanskrit pañca (CDIAL 7655); ek, do, tīn, chār ← eka, dva, trīṇi, catvāraḥ: all tadbhavas"
 duration:
-  max_seconds: 181
+  max_seconds: 180
 requires:
   knowledge: []
 introduces:
@@ -64,7 +64,7 @@ the way French does in *bon*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**एक दो तीन चार पाँच** (*ek do tīn chār pāṁch*) are all tadbhavas, Sanskrit numbers reshaped by sound change. *Ek* comes from a doubled form of Sanskrit *eka*, "one" (CDIAL 2462); *do* from *dva*, "two" (CDIAL 6648); *tīn* from *trīṇi*, "three" (CDIAL 5994); *chār* from *catvāraḥ*, "four" (CDIAL 4655); and *pāṁch* from *pañca*, "five" (CDIAL 7655).
+All five are tadbhavas, Sanskrit numbers reshaped by sound change: *ek* from a doubled form of *eka* (CDIAL 2462), *do* from *dva* (CDIAL 6648), *tīn* from *trīṇi* (CDIAL 5994), *chār* from *catvāraḥ* (CDIAL 4655), and *pāṁch* from *pañca* (CDIAL 7655).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C06-NUMBERS-1-5-01] -->

@@ -17,7 +17,7 @@ sounds: [chandrabindu-nasal, vowel-aa]
 roots: [haan, sanskrit-jiva]
 etymology_hook: "hāṁ ← Sanskrit ām 'yes', with an added h- (CDIAL 1235); jī ← jīva 'long live!' (CDIAL 5240)"
 duration:
-  max_seconds: 202
+  max_seconds: 199
 requires:
   knowledge: []
 introduces:
@@ -55,7 +55,7 @@ above it, like *ा*.)
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**हाँ** (*hāṃ*) comes from Sanskrit *ām*, "yes" (CDIAL 1235). CDIAL explains the *h-* as added for emphasis, or taken over from the verb "to be". The polite **जी** (*jī*) is from *jīva*, "long live!" (CDIAL 5240).
+**हाँ** comes from Sanskrit *ām*, "yes", with an *h-* that CDIAL calls emphatic or taken from the verb "to be" (CDIAL 1235). The polite **जी** is from *jīva*, "long live!" (CDIAL 5240).
 
 ## You'll want to know — Saying it politely
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C07-HAAN-02]; assesses=[] -->

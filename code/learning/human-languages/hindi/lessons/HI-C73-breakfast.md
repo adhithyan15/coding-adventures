@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-BREAKFAST
 prerequisites: [HI-C73-eating-house, HI-C72-buy, HI-C71-also, HI-C72-rupee]
 sounds: []
 roots: [persian-nashta]
-etymology_hook: "nāshtā: usually traced to Persian nāshtā 'breakfast'"
+etymology_hook: "nāshtā: usually traced to Persian nāshtā 'not having eaten'; the meal is named for the fast it ends"
 duration:
   max_seconds: 240
 requires:
@@ -60,7 +60,7 @@ breakfast", built the way **आराम करना** was.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**नाश्ता** (*nāshtā*) is a loan, usually traced to Persian *nāshtā*, "breakfast".
+**नाश्ता** (*nāshtā*) is a loan, usually traced to Persian *nāshtā*, "not having eaten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

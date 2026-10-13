@@ -197,7 +197,7 @@ It does two jobs that English keeps apart:
 job: a recipient. example: आदमी को (ko) — to the man.
 job: a definite or human object. example: आदमी को (ko) — the man, as the thing acted on.
 The second is the strange one to an English ear. English marks a direct object by word order and nothing else. Hindi puts को (ko) on an object when it is a person or a particular thing, and leaves it bare otherwise. Spanish does the same with a before a human object, so the demand is not unique to Hindi — only the marker is.
-CDIAL lists को (ko), as an adverb and postposition, under Sanskrit kakṣa, "armpit" (CDIAL 14342).
+CDIAL lists को (ko) under Sanskrit kakṣa, "armpit" (CDIAL 14342): "at the side of" became "to".
 
 Grammar Lens: three postpositions, one habit.
 [a table of 3 rows, read aloud]

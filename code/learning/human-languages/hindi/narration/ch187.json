@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "A church, A police station, A postman, The cinema, A park",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e7116d3a6245ef0a",
+  "sourceHash": "fnv1a64:fcdef381068b2f3f",
   "lessons": [
     {
       "id": "HI-C187-girjaghar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dfcf2c911833ea7",
+      "sourceHash": "fnv1a64:77d489be82f1906c",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डाकिया (ḍākiyā) is ḍāk, \"the post\", with the ending -iyā, \"one who deals with it\". ḍāk is of uncertain origin, and CDIAL has no entry for it."
+              "text": "डाकिया (ḍākiyā) is ḍāk, \"the post\", with the ending -iyā, \"one who deals with it\". CDIAL lists ḍāk, \"relay, post\", under a reconstructed ḍakka (CDIAL 5519)."
             }
           ]
         },

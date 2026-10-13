@@ -109,7 +109,7 @@ You'll want to know: पेड़.
 पेड़ — peṛ — "a tree".
 
 The word, taken apart.
-The origin of पेड़ (peṛ) is uncertain. CDIAL lists a Hindi peṛ only in the sense "lump", under a reconstructed peḍa (CDIAL 8377), not as "tree".
+पेड़ (peṛ) is inherited, but only as far back as a reconstruction. CDIAL's addenda set up peḍa, "tree", from Punjabi and Hindi peṛ (CDIAL 8377a), and give it no Sanskrit source. It is a different word from peṛ, "lump" (CDIAL 8377).
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bb93999763171ce2",
+  "sourceHash": "fnv1a64:e66c993b9dd17f86",
   "lessons": [
     {
       "id": "HI-C53-shoulder",
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e682cc6e6706146",
+      "sourceHash": "fnv1a64:f660c81a3d2ddd50",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit pṛṣṭi, 'back', a sister of पृष्ठ (pṛṣṭha) (CDIAL 8370). The heavy -ṛṣṭ- in the middle collapsed and paid for itself by lengthening the vowel in front of it."
+              "text": "From Sanskrit pṛṣṭi, 'back', a sister of पृष्ठ (pṛṣṭha), also \"back\" (CDIAL 8370). The heavy -ṛṣṭ- in the middle collapsed and paid for itself by lengthening the vowel in front of it."
             },
             {
               "kind": "speech",

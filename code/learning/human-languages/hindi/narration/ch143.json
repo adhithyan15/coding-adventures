@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Lake, Sea, Forest, Tree, Root",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd7f8933fd7b9a1a",
+  "sourceHash": "fnv1a64:bb0ffc0ea4e41601",
   "lessons": [
     {
       "id": "HI-C143-jhil",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:838c38f8b6ed6b5b",
+      "sourceHash": "fnv1a64:9891f868453b6d49",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of पेड़ (peṛ) is uncertain. CDIAL lists a Hindi peṛ only in the sense \"lump\", under a reconstructed peḍa (CDIAL 8377), not as \"tree\"."
+              "text": "पेड़ (peṛ) is inherited, but only as far back as a reconstruction. CDIAL's addenda set up peḍa, \"tree\", from Punjabi and Hindi peṛ (CDIAL 8377a), and give it no Sanskrit source. It is a different word from peṛ, \"lump\" (CDIAL 8377)."
             }
           ]
         },

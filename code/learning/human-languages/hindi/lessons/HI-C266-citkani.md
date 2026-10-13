@@ -15,7 +15,7 @@ concept_tag: HI-THG266-CITKANI
 prerequisites: [HI-C265-dari, HI-C265-qalin]
 sounds: []
 roots: []
-etymology_hook: "ciṭkanī: origin uncertain; CDIAL has no entry"
+etymology_hook: "ciṭkanī: CDIAL lists chiṭkanī 'bolt' under *chaṭa 'stick, cane', in the variant *chiṭṭa (CDIAL 4966)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C265-qalin]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **चिटकनी** (*ciṭkanī*) is uncertain. CDIAL has no entry for it.
+**चिटकनी** (*ciṭkanī*) is inherited: CDIAL lists it, as *chiṭkanī*, "bolt", under a reconstructed *\*chaṭa*, "stick, cane", in the variant *\*chiṭṭa* (CDIAL 4966). A bolt is a small stick across the door.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

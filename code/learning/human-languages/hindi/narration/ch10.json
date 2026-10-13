@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4207efec9d841fa7",
+  "sourceHash": "fnv1a64:2e0ec0bc0fbbc81e",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05069fe6f3138dbb",
+      "sourceHash": "fnv1a64:2de824bb4a9871c1",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शनिवार रविवार (śanivār ravivār) are Sanskrit compounds taken over whole, tatsamas: śani, \"Saturn\", and ravi, \"the Sun\", each with vāra, \"one's turn\", which Sanskrit also used for \"day of the week\" (CDIAL 11547)."
+              "text": "Both are Sanskrit compounds taken over whole, tatsamas: śani, \"Saturn\", and ravi, \"the Sun\", each with vāra, \"one's turn\", which Sanskrit also used for \"day of the week\" (CDIAL 11547)."
             }
           ]
         },

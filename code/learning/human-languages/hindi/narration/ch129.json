@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Lock, Pillow, Blanket, Curtain, Bucket",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c63151d0c4e5784c",
+  "sourceHash": "fnv1a64:9946eaf503ed323b",
   "lessons": [
     {
       "id": "HI-C129-tala",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5635bb5307b45bd",
+      "sourceHash": "fnv1a64:55f22a313c399d4e",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तकिया (takiyā) is a loan, usually traced to Persian takya, \"pillow, support\"."
+              "text": "तकिया (takiyā) is a loan, usually traced to Persian takya, \"pillow, support\", which Persian took from Arabic, on the root w-k-ʾ, \"to lean\" (Lane)."
             }
           ]
         },

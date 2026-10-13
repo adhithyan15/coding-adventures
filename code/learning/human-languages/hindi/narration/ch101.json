@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Two Words Where English Has One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ed3b35f3741a5e4",
+  "sourceHash": "fnv1a64:d9cb26f68768b6e6",
   "lessons": [
     {
       "id": "HI-C93-ke-saath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10c9dfc044a191eb",
+      "sourceHash": "fnv1a64:9d9431ca009b07bc",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "के साथ (ke sāth) is ke, the form of the possessive kā that a following word asks for, with sāth, \"with\". sāth comes from Sanskrit sārtha, \"caravan, company\", whose form sārthena meant \"in company with\" (CDIAL 13364)."
+              "text": "sāth, \"with\", comes from Sanskrit sārtha, \"caravan, company\", whose form sārthena meant \"in company with\" (CDIAL 13364)."
             }
           ]
         },
@@ -217,7 +217,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48c4019c7ad1999b",
+      "sourceHash": "fnv1a64:44209d5279aa3486",
       "notice": null,
       "blocks": [
         {
@@ -259,7 +259,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "के बिना (ke binā) is ke with binā, \"without\", which comes from Sanskrit vinā, \"without\" (CDIAL 11772)."
+              "text": "binā comes from Sanskrit vinā, \"without\" (CDIAL 11772)."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f66a317feeb396b6",
+      "sourceHash": "fnv1a64:61a59cb812b69125",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -437,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "घर के पास (ghar ke pās) is ghar, \"house\", ke and pās, \"near\". ghar comes from ghara, \"house\", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās comes from pārśva, \"side\", whose form pārśve meant \"near\" (CDIAL 8118)."
+              "text": "ghar comes from ghara, \"house\", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās, \"near\", from pārśva, \"side\", whose form pārśve meant \"near\" (CDIAL 8118)."
             }
           ]
         },
@@ -578,7 +578,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f1f10e165a67508d",
+      "sourceHash": "fnv1a64:760025bf23078938",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -623,7 +623,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "के सामने (ke sāmne) is ke with sāmne, the form of sāmnā, \"the front\", that follows it. sāmnā is a tadbhava, inherited and reshaped by sound change, from Sanskrit saṁmukha, \"facing, present\" (CDIAL 12982)."
+              "text": "sāmne is a form of sāmnā, \"the front\", a tadbhava of Sanskrit saṁmukha, \"facing\" (CDIAL 12982)."
             }
           ]
         },
@@ -751,7 +751,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6a84d88da5011208",
+      "sourceHash": "fnv1a64:84bbccd61aa9fb31",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -796,7 +796,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "के पीछे (ke pīche) is ke with pīche, \"behind\", a tadbhava. CDIAL lists it under a reconstructed paśca, \"hinder part\", as an old case form that took the place of Sanskrit paścāt, \"behind\" (CDIAL 7990)."
+              "text": "pīche, \"behind\", is a tadbhava: CDIAL lists it under a reconstructed paśca, \"hinder part\", as an old case form that replaced Sanskrit paścāt (CDIAL 7990)."
             }
           ]
         },
@@ -925,7 +925,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:044cf311395e9d2f",
+      "sourceHash": "fnv1a64:9a9547a12514d979",
       "notice": null,
       "blocks": [
         {
@@ -963,7 +963,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "परिवार के लिए (parivār ke liye) is parivār, \"family\", ke and liye, \"for\". liye is usually explained as a form of lenā, \"to take\", which CDIAL lists under Sanskrit labhate, \"catches, takes\" (CDIAL 10948)."
+              "text": "liye, \"for\", is usually explained as a form of lenā, \"to take\", which CDIAL lists under Sanskrit labhate, \"takes\" (CDIAL 10948)."
             }
           ]
         },

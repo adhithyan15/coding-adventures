@@ -47,7 +47,7 @@ reviews_of: [HI-C201-jharna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**तालाब** (*tālāb*) is usually explained as *tāl*, "pond", which CDIAL lists under Sanskrit *talla*, "pond" (CDIAL 5742), with Persian *āb*, "water".
+**तालाब** (*tālāb*) is usually explained as *tāl*, "pond", which CDIAL lists under Sanskrit *talla*, "pond", a village word that may come from Munda (CDIAL 5742), with Persian *āb*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

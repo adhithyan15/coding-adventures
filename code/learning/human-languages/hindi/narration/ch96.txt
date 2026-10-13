@@ -21,7 +21,7 @@ piece: -ऊँ-. what it carries: who is acting — I.
 piece: -गा / -गी. what it carries: the future itself, agreeing with the speaker.
 English needs a second word for this: I will do. Hindi has none. The tense is welded onto the verb, the way the person is welded into hūṁ and hai.
 You have met the -गा family once before, in the farewell milenge, where the plural -एंगे was named as the future ending. That was one cell of a grid. This chapter is the grid.
-कर- comes from Sanskrit karoti, "does" (CDIAL 2814), and the -गा is usually traced to Sanskrit gata, "gone".
+कर- is from Sanskrit karoti, "does" (CDIAL 2814); the -गा is usually traced to gata, "gone".
 
 Grammar Lens: the piece that comes from the old subjunctive.
 -गा is not a random syllable. It comes from Sanskrit गत (gata), "gone" — the participle of to go. A future in Hindi is built out of a word meaning gone, which is the same instinct behind English I am going to do it.

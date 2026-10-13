@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "At the Cooking Fire",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:342de3badf26efab",
+  "sourceHash": "fnv1a64:5ac3b3be3845f74b",
   "lessons": [
     {
       "id": "HI-C61-vessel",
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03538238df34c6ff",
+      "sourceHash": "fnv1a64:27fe38d2c64aaf4f",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +395,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चम्मच (chammach) is a loan, usually traced to Persian chamcha, \"spoon, ladle\"."
+              "text": "चम्मच (chammach) is a loan, usually traced to Persian chamcha, \"spoon, ladle\", a word Persian itself took from Turkic."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 244,
   "title": "A thousand, A hundred thousand, Ten million, Several, Both",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:79d024198f54f643",
+  "sourceHash": "fnv1a64:bc1cfad4df962920",
   "lessons": [
     {
       "id": "HI-C244-hazar",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21d85f5ac6f4c8dd",
+      "sourceHash": "fnv1a64:e1da42c35bab410e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दोनों (donõ) is do, \"two\", with the ending -õ, which makes \"both\". CDIAL has no entry for the form."
+              "text": "दोनों (donõ) is do, \"two\", with the ending -õ, which makes \"both\". CDIAL lists donõ, \"both\", beside do under Sanskrit dva, \"two\" (CDIAL 6648)."
             }
           ]
         },

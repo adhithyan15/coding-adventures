@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:710edeb2833e0c9a",
+  "sourceHash": "fnv1a64:bcfa13d042a631a7",
   "lessonIds": [
     "HI-C06-numbers-1-5",
     "HI-C06-tin-char-history",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch06.txt",
   "json": "hindi/narration/ch06.json",
-  "textHash": "fnv1a64:d77f68fb11e789d0",
-  "jsonHash": "fnv1a64:0a70c5397d25756f",
+  "textHash": "fnv1a64:f52a40d58e04d08e",
+  "jsonHash": "fnv1a64:5d26590fc75c2fb1",
   "findings": []
 }

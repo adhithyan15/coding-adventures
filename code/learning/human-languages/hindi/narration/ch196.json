@@ -4,7 +4,7 @@
   "chapter": 196,
   "title": "A minister, A king, A queen, A servant, A thief",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d73038716ddecc0a",
+  "sourceHash": "fnv1a64:b67f4fef346c4658",
   "lessons": [
     {
       "id": "HI-C196-mantri",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a7b8da5c30377de",
+      "sourceHash": "fnv1a64:0f5b085f4167b00f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नौकर (naukar) is a loan, usually traced to Persian naukar, \"servant\"."
+              "text": "नौकर (naukar) is a loan, usually traced to Persian naukar, \"servant\", which Persian took from Mongolic nökör, \"companion\"."
             }
           ]
         },

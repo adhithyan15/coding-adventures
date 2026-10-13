@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-vina]
 etymology_hook: "binā ← Sanskrit vinā 'without' (CDIAL 11772)"
 duration:
-  max_seconds: 229
+  max_seconds: 224
 requires:
   knowledge: [HI-LEX-C93-REL-01, HI-CONCEPT-C37-CHAI-01, HI-LEX-C84-POSS-01]
 introduces:
@@ -50,7 +50,7 @@ One word changed. The shape did not move.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**के बिना** (*ke binā*) is *ke* with *binā*, "without", which comes from Sanskrit *vinā*, "without" (CDIAL 11772).
+*binā* comes from Sanskrit *vinā*, "without" (CDIAL 11772).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-02, HI-LEX-C93-REL-01] -->

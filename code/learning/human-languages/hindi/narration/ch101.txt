@@ -14,7 +14,7 @@ You'll want to know: के साथ.
 English spends one word on this. Hindi spends two, and only the second one is new.
 
 The phrase, taken apart.
-के साथ (ke sāth) is ke, the form of the possessive kā that a following word asks for, with sāth, "with". sāth comes from Sanskrit sārtha, "caravan, company", whose form sārthena meant "in company with" (CDIAL 13364).
+sāth, "with", comes from Sanskrit sārtha, "caravan, company", whose form sārthena meant "in company with" (CDIAL 13364).
 
 The two words.
 Take the phrase apart and something familiar falls out:
@@ -62,7 +62,7 @@ You'll want to know: के बिना.
 One word changed. The shape did not move.
 
 The phrase, taken apart.
-के बिना (ke binā) is ke with binā, "without", which comes from Sanskrit vinā, "without" (CDIAL 11772).
+binā comes from Sanskrit vinā, "without" (CDIAL 11772).
 
 The two words.
 [a table of 2 rows, read aloud]
@@ -105,7 +105,7 @@ You'll want to know: के पास.
 पास means near. It has meant near the whole time.
 
 The phrase, taken apart.
-घर के पास (ghar ke pās) is ghar, "house", ke and pās, "near". ghar comes from ghara, "house", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās comes from pārśva, "side", whose form pārśve meant "near" (CDIAL 8118).
+ghar comes from ghara, "house", which CDIAL finds hard to derive from Sanskrit gṛha (CDIAL 4428); pās, "near", from pārśva, "side", whose form pārśve meant "near" (CDIAL 8118).
 
 The two words.
 [a table of 2 rows, read aloud]
@@ -149,7 +149,7 @@ You'll want to know: के सामने.
 दुकान स्टेशन के सामने (ke sāmne) है। — The shop is in front of the station.
 
 The phrase, taken apart.
-के सामने (ke sāmne) is ke with sāmne, the form of sāmnā, "the front", that follows it. sāmnā is a tadbhava, inherited and reshaped by sound change, from Sanskrit saṁmukha, "facing, present" (CDIAL 12982).
+sāmne is a form of sāmnā, "the front", a tadbhava of Sanskrit saṁmukha, "facing" (CDIAL 12982).
 
 The two words.
 [a table of 2 rows, read aloud]
@@ -191,7 +191,7 @@ You'll want to know: के पीछे.
 कुर्सी मेज़ के पीछे (ke pīche) है। — The chair is behind the table.
 
 The phrase, taken apart.
-के पीछे (ke pīche) is ke with pīche, "behind", a tadbhava. CDIAL lists it under a reconstructed paśca, "hinder part", as an old case form that took the place of Sanskrit paścāt, "behind" (CDIAL 7990).
+pīche, "behind", is a tadbhava: CDIAL lists it under a reconstructed paśca, "hinder part", as an old case form that replaced Sanskrit paścāt (CDIAL 7990).
 
 The two words.
 Three place words, and they do not all do the same kind of job:
@@ -232,7 +232,7 @@ You'll want to know: के लिए.
 यह परिवार के लिए (parivār ke liye) है। — This is for the family.
 
 The phrase, taken apart.
-परिवार के लिए (parivār ke liye) is parivār, "family", ke and liye, "for". liye is usually explained as a form of lenā, "to take", which CDIAL lists under Sanskrit labhate, "catches, takes" (CDIAL 10948).
+liye, "for", is usually explained as a form of lenā, "to take", which CDIAL lists under Sanskrit labhate, "takes" (CDIAL 10948).
 
 The two words.
 मेरे लिए was taught as a phrase to memorise. It was never a phrase. It was this shape with a possessive in slot 1:

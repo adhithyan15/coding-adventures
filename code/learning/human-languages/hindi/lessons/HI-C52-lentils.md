@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-LENTILS
 prerequisites: [HI-C52-rice, HI-C50-favour, HI-C51-garland]
 sounds: []
 roots: [sanskrit-dala]
-etymology_hook: "dāl ← Sanskrit dāla 'split peas' (CDIAL 6309), on dal- 'to split'"
+etymology_hook: "dāl ← Sanskrit dāla 'split peas' (CDIAL 6309), probably on dal- 'to split'"
 duration:
   max_seconds: 210
 requires:

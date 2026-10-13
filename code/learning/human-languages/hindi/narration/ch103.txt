@@ -99,7 +99,7 @@ form: चाहिए (cāhiye). what follows it: a thing.
 चाहना wants an action. It was taught alongside the rule that a Hindi verb can swallow another verb whole, and that is exactly what it does: I want to go.
 चाहिए (cāhiye) wants a noun. I want tea. English uses one word for both jobs and hides the difference; Hindi uses two forms and makes it visible.
 The other difference is that चाहिए (cāhiye) does not change. It has no masculine and feminine, no singular and plural — the same five letters whoever is speaking and whatever is wanted. After a chapter of endings that agree with everything in sight, that is a relief worth noticing.
-चाहिए (cāhiye) comes from a reconstructed cāh, "see, look for, desire", whose source CDIAL calls uncertain (CDIAL 4775).
+चाहिए (cāhiye) comes from a reconstructed cāh, "desire", whose source CDIAL calls uncertain (CDIAL 4775).
 
 Grammar Lens: the ए on the end.
 The word ends in ए, the standing vowel drawn a few chapters back — not the sitting mark ◌े, because there is no consonant after हि for the vowel to ride on.
@@ -135,7 +135,7 @@ You'll want to know: मुझे … चाहिए.
 Not मैं. मुझे — to me.
 
 The phrase, taken apart.
-मुझे चाय चाहिए (mujhe cāy cāhiye) is mujhe, "to me", cāy, "tea", and cāhiye, "is wanted". CDIAL lists mujh under the Sanskrit base ma- of "me" (CDIAL 9691), and cāh, "wish", under a reconstructed cāh, "see, desire", of uncertain source (CDIAL 4775).
+CDIAL lists mujh, "me", under the Sanskrit first-person base ma- (CDIAL 9691), and cāh, "wish", under a reconstructed cāh, "see, desire", of uncertain source (CDIAL 4775).
 
 The two words.
 This is the liking sentence again, with one word swapped:

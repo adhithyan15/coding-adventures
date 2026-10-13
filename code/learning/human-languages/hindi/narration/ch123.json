@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "How's It Going?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:168022861da9b18f",
+  "sourceHash": "fnv1a64:6ce62ff4092136c9",
   "lessons": [
     {
       "id": "HI-C123-kyahaal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebf7c3313ba3767d",
+      "sourceHash": "fnv1a64:5470c560c830ede4",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "क्या हाल है? (kyā hāl hai?) is \"what is the state?\". hāl comes from Arabic ḥāl, \"state, condition\", which reached Hindi through Persian; its root is ḥ-w-l (Lane)."
+              "text": "hāl comes from Arabic ḥāl, \"state, condition\", through Persian; its root is ḥ-w-l (Lane)."
             }
           ]
         },
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5f65ed20b77e271",
+      "sourceHash": "fnv1a64:c60d9ff5bac19f1b",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "क्या चल रहा है? (kyā cal rahā hai?) is \"what is moving?\". calnā, \"to move, go\", comes from Sanskrit calati, \"goes away\" (CDIAL 4715)."
+              "text": "calnā, \"to move, go\", comes from Sanskrit calati, \"goes away\" (CDIAL 4715)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:97bcba58caddf56a",
+  "sourceHash": "fnv1a64:5897550a9ef72303",
   "lessons": [
     {
       "id": "HI-C43-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcfd6571bbf5f338",
+      "sourceHash": "fnv1a64:6b26d86999231d21",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "देखना (dekhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dṛkṣati, \"sees\", a form CDIAL reconstructs from its descendants (CDIAL 6507)."
+              "text": "देखना (dekhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dekṣati, \"sees\", a variant CDIAL reconstructs beside dṛkṣati (CDIAL 6507)."
             }
           ]
         },

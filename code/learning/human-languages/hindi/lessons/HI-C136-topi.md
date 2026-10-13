@@ -47,7 +47,7 @@ reviews_of: [HI-C136-dupatta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**टोपी** (*ṭopī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭoppa*, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls any link with a Munda source very doubtful.
+**टोपी** (*ṭopī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭoppa*, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls a link with Sanskrit *āṭopa*, "swelling", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

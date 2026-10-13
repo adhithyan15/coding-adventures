@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "How Do You Say It?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e1e91ee48318b050",
+  "sourceHash": "fnv1a64:44b68648cb3cee23",
   "lessons": [
     {
       "id": "HI-C111-hindime",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f785e307e4a50dd",
+      "sourceHash": "fnv1a64:df099c2c7a41d620",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कैसे कहते हैं? (kaise kahte haiṁ?) is kaise, \"how\", with kahte haiṁ, \"they say\". kahnā, \"to say\", comes from Sanskrit kathayati, \"converses with, describes\" (CDIAL 2703)."
+              "text": "kahnā, \"to say\", comes from Sanskrit kathayati, \"converses with, describes\" (CDIAL 2703)."
             }
           ]
         },

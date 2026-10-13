@@ -15,7 +15,7 @@ concept_tag: HI-THG270-DHAKKAN
 prerequisites: [HI-C269-chalni, HI-C270-kaddukas]
 sounds: []
 roots: [indo-aryan-dhakk]
-etymology_hook: "dhakkan ← *ḍhakk 'cover', a reconstructed form; a tadbhava (CDIAL 5574)"
+etymology_hook: "ḍhakkan ← *ḍhakk 'cover', a reconstructed form; a tadbhava (CDIAL 5574)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C270-kaddukas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ढक्कन** (*dhakkan*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍhakk*, "cover", a form CDIAL reconstructs from its descendants (CDIAL 5574). CDIAL compares a Jain Sanskrit *ḍhakkana*, "shutting".
+**ढक्कन** (*ḍhakkan*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍhakk*, "cover", a form CDIAL reconstructs from its descendants (CDIAL 5574). CDIAL compares a Jain Sanskrit *ḍhakkana*, "shutting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

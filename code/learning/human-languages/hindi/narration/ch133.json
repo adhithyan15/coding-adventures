@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Glasses, Umbrella, Wallet, Bed frame, Bedding",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7daf697bb5a2a3e2",
+  "sourceHash": "fnv1a64:ceadbd94015e2e78",
   "lessons": [
     {
       "id": "HI-C133-casma",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9645ea9cb05b4867",
+      "sourceHash": "fnv1a64:877e12f7a9f55569",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चश्मा (caśmā) is a loan, usually traced to Persian chashma, \"eye; spring; spectacles\"."
+              "text": "चश्मा (caśmā) is a loan, usually traced to Persian chashma, \"spring, fountain\", built on chashm, \"eye\". The sense \"spectacles\" grew up in India."
             }
           ]
         },
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:319392b4cfee270d",
+      "sourceHash": "fnv1a64:32223e47a669fbe7",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of बटुआ (baṭuā) is uncertain. CDIAL does not list it."
+              "text": "The origin of बटुआ (baṭuā) is uncertain. CDIAL lists a Bihari baṭuā, \"metal dish\", under vartu, \"something round\" (CDIAL 11364), but not this word for a purse."
             }
           ]
         },

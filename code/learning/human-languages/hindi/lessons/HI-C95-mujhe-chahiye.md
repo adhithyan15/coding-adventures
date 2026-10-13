@@ -17,7 +17,7 @@ sounds: []
 roots: [ma, indo-aryan-cah]
 etymology_hook: "mujhe: mujh, the 'me' base (CDIAL 9691), + -e; cāhiye ← *cāh 'desire', of uncertain source (CDIAL 4775)"
 duration:
-  max_seconds: 273
+  max_seconds: 262
 requires:
   knowledge: [HI-LEX-C95-NEED-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-SCRIPT-RECOG-133]
 introduces:
@@ -50,7 +50,7 @@ Not **मैं**. **मुझे** — *to me*.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मुझे चाय चाहिए** (*mujhe cāy cāhiye*) is *mujhe*, "to me", *cāy*, "tea", and *cāhiye*, "is wanted". CDIAL lists *mujh* under the Sanskrit base *ma-* of "me" (CDIAL 9691), and *cāh*, "wish", under a reconstructed *\*cāh*, "see, desire", of uncertain source (CDIAL 4775).
+CDIAL lists *mujh*, "me", under the Sanskrit first-person base *ma-* (CDIAL 9691), and *cāh*, "wish", under a reconstructed *\*cāh*, "see, desire", of uncertain source (CDIAL 4775).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-NEED-02, HI-CONCEPT-C35-PASAND-01] -->

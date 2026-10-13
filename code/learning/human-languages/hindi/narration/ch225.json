@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "To clean, To dust, To wipe, To wring, To dry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:86aa892135481898",
+  "sourceHash": "fnv1a64:d4ab0dddc8287303",
   "lessons": [
     {
       "id": "HI-C225-safkarna",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c170b8668c88df43",
+      "sourceHash": "fnv1a64:4a8d9580d71fc97f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पोंछना (põchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from proñchati, \"wipes off\" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan poṁch-."
+              "text": "पोंछना (põchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from proñchati, \"wipes off\" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan poṁch-, perhaps itself from Dravidian."
             }
           ]
         },

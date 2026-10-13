@@ -53,7 +53,7 @@ adjective you will ever meet here.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**बड़ा** (*baṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and rejects a link with *vṛddha*, "grown".
+**बड़ा** (*baṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaḍra*, "big" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with *vṛddha*, "grown".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01, HI-CONCEPT-C39-DOST-01, HI-CONCEPT-C39-DOST-02, HI-CONCEPT-C39-DOST-03, HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02] -->

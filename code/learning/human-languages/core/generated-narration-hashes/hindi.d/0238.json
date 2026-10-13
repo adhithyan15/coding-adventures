@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 238,
-  "sourceHash": "fnv1a64:45c8cb0a6e21b26a",
+  "sourceHash": "fnv1a64:1479ef0f9dfbcd28",
   "lessonIds": [
     "HI-C238-kacca",
     "HI-C238-gunguna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch238.txt",
   "json": "hindi/narration/ch238.json",
-  "textHash": "fnv1a64:7095eda7ddfb3e8c",
-  "jsonHash": "fnv1a64:40c3fc715061a58c",
+  "textHash": "fnv1a64:f51127ee97a4999e",
+  "jsonHash": "fnv1a64:bebe3499972b69b5",
   "findings": []
 }

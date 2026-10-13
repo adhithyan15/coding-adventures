@@ -53,7 +53,7 @@ You'll want to know: से … तक.
 Two days, and each one carries its own marker.
 
 The phrase, taken apart.
-सोमवार से शुक्रवार तक (somvār se śukravār tak) frames a span with se, "from", and tak, "until". CDIAL traces se to Sanskrit sahita, "accompanied by" (CDIAL 13310), and also lists it, with a query, under sama, "together with" (CDIAL 13173). tak comes from tāvatka, "bought for so much" (CDIAL 5805).
+CDIAL traces se, "from", to Sanskrit sahita, "accompanied by" (CDIAL 13310), and lists it under sama too (CDIAL 13173); tak, "until", comes from tāvatka (CDIAL 5805).
 
 The two words.
 [a table of 2 rows, read aloud]
@@ -96,7 +96,7 @@ You'll want to know: सुबह से शाम तक.
 If you guessed, you guessed right. Nothing about the frame changed.
 
 The phrase, taken apart.
-सुबह से शाम तक (subah se śām tak) sets two loans inside two inherited words. subah is Arabic ṣubḥ, "morning", which reached Hindi through Persian (Lane, root ṣ-b-ḥ); śām is usually traced to Persian shām, "evening". se and tak are inherited (CDIAL 13310, 5805).
+subah is Arabic ṣubḥ, "morning", through Persian (Lane, root ṣ-b-ḥ); śām is usually traced to Persian shām, "evening"; se and tak are inherited (CDIAL 13310, 5805).
 
 The two words.
 [a table of 3 rows, read aloud]
@@ -179,7 +179,7 @@ You'll want to know: X से नहीं, Y से.
 नहीं stands between the two options, and the one it rejects is the one before it.
 
 The phrase, taken apart.
-नहीं की जगह (nahīṁ kī jagah) is nahīṁ, "not", with kī and jagah, "place". nahīṁ comes from Sanskrit nahi, "surely not" (CDIAL 7035); jagah is usually traced to Persian jāygāh, "place".
+nahīṁ comes from Sanskrit nahi, "surely not" (CDIAL 7035); jagah, "place", is usually traced to Persian jāygāh.
 
 The two words.
 Read the frame as three beats:

@@ -51,7 +51,7 @@ A flat छत in North India is a place people go, not only a lid: it is where w
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The second of five, and a parasol that turned into a roof.
+The second of five, and a covering that became a roof.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C56-ROAD-02, HI-LEX-C57-GIFT-02] -->

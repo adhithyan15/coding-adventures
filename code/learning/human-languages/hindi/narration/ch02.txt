@@ -224,7 +224,7 @@ The two words — assembled.
 Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion.
 
 The phrase, taken apart.
-आपका नाम क्या है? (āpkā nām kyā hai?) is built from inherited words: āp, "you", from Sanskrit ātman, "self" (CDIAL 1135), with the possessive -kā; nām, from nāman, "name"; kyā, from kim, "what" (CDIAL 3164); and hai, "is", usually traced to asti.
+Every word in this question is inherited: āp from Sanskrit ātman, "self" (CDIAL 1135), with -kā, "of"; nām from nāman; kyā from kim (CDIAL 3164); hai, usually traced to asti.
 
 Grammar Lens: answer, and the informal version.
 Answer with the sentence you built: Merā nām Arun hai. The informal "your" swaps āpkā for tumhārā: tumhārā nām kyā hai?

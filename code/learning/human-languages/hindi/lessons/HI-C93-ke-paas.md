@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-ghara, sanskrit-parshva]
 etymology_hook: "ghar ← ghara 'house' (CDIAL 4428); pās ← Sanskrit pārśva 'side', pārśve 'near' (CDIAL 8118)"
 duration:
-  max_seconds: 265
+  max_seconds: 257
 requires:
   knowledge: [HI-LEX-C93-REL-02, HI-CONCEPT-C36-GHAR-01, HI-LEX-C84-POSS-05, HI-LEX-C56-ROAD-04]
 introduces:
@@ -50,7 +50,7 @@ what the second one actually means, because so far you have never been told.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**घर के पास** (*ghar ke pās*) is *ghar*, "house", *ke* and *pās*, "near". *ghar* comes from *ghara*, "house", which CDIAL finds hard to derive from Sanskrit *gṛha* (CDIAL 4428); *pās* comes from *pārśva*, "side", whose form *pārśve* meant "near" (CDIAL 8118).
+*ghar* comes from *ghara*, "house", which CDIAL finds hard to derive from Sanskrit *gṛha* (CDIAL 4428); *pās*, "near", from *pārśva*, "side", whose form *pārśve* meant "near" (CDIAL 8118).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-03, HI-LEX-C84-POSS-05] -->

@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c117a095c72a09ee",
+  "sourceHash": "fnv1a64:682dd14465a9575c",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:718f4e863987a92b",
+      "sourceHash": "fnv1a64:950da3140484e7a3",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बड़ा (baṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaḍra, \"big\" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and rejects a link with vṛddha, \"grown\"."
+              "text": "बड़ा (baṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaḍra, \"big\" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with vṛddha, \"grown\"."
             }
           ]
         },
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af0b28b22d254bab",
+      "sourceHash": "fnv1a64:03424bb658e9c953",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अच्छा (acchā) goes back to Sanskrit accha, \"clear, transparent\" (CDIAL 142). CDIAL lists an older Hindi āchā, \"good\", and marks acchā itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant \"shadowless\"."
+              "text": "अच्छा (acchā) goes back to Sanskrit accha, \"clear, transparent\" (CDIAL 142). CDIAL lists Hindi āchā, \"good\", and marks acchā itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant \"shadowless\"."
             }
           ]
         },

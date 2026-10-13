@@ -15,7 +15,7 @@ concept_tag: HI-THG209-CHAJJA
 prerequisites: [HI-C208-sikka, HI-C208-not]
 sounds: []
 roots: []
-etymology_hook: "chajjā: origin uncertain; CDIAL has no entry"
+etymology_hook: "chajjā: CDIAL lists it under Sanskrit chādya 'to be sheltered', as taken from Punjabi chajjā 'eaves' (5023)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C208-not]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **छज्जा** (*chajjā*) is uncertain. CDIAL has no entry for it.
+**छज्जा** (*chajjā*) is inherited. CDIAL lists it under Sanskrit *chādya*, "to be sheltered", and marks the Hindi word as taken from Punjabi *chajjā*, "eaves, balcony" (CDIAL 5023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

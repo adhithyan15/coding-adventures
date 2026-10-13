@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Samosa, Lassi, Juice, Mountain, River",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:924c7513b11f7e6b",
+  "sourceHash": "fnv1a64:3924a948aa76f9d1",
   "lessons": [
     {
       "id": "HI-C142-samosa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:634cd10562b308ce",
+      "sourceHash": "fnv1a64:975d0d11d0379430",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of लस्सी (lassī) is uncertain. CDIAL has no entry for it."
+              "text": "लस्सी (lassī) goes back to a reconstructed lassī, \"buttermilk\", which CDIAL builds from Punjabi and Lahnda lassī and Sindhi lasī (CDIAL 10998). It lists no Hindi form, and it gives no older source."
             }
           ]
         },

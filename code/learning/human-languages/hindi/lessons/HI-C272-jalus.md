@@ -15,7 +15,7 @@ concept_tag: HI-THG272-JALUS
 prerequisites: [HI-C272-nukkar, HI-C272-mela]
 sounds: []
 roots: [arabic-julus]
-etymology_hook: "jalūs ← Arabic julūs 'a sitting; enthronement', through Persian"
+etymology_hook: "julūs ← Arabic julūs 'a sitting; enthronement', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C272-mela]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**जुलूस** (*jalūs*) is a loan from Arabic *julūs*, "a sitting; enthronement", which reached Hindi through Persian. Its Arabic root is *j-l-s* (Lane). Hindi uses it for the procession that went with it.
+**जुलूस** (*julūs*) is a loan from Arabic *julūs*, "a sitting; enthronement", which reached Hindi through Persian. Its Arabic root is *j-l-s* (Lane). Hindi uses it for the procession that went with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "A Day, In The Order It Happens",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bbc83484651a5944",
+  "sourceHash": "fnv1a64:3f46e381f53c430b",
   "lessons": [
     {
       "id": "HI-C90-se",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2628824bbb28dae3",
+      "sourceHash": "fnv1a64:4c5117976f92f862",
       "notice": null,
       "blocks": [
         {
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "CDIAL traces से (se) to Sanskrit sahita, \"together with\" (CDIAL 13310), and also lists it, with a query, under sama, \"equal\" (CDIAL 13173)."
+              "text": "CDIAL traces से (se) to Sanskrit sahita, \"together with\" (CDIAL 13310), and lists it under sama, \"equal\", too (CDIAL 13173)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Whose, And What A Postposition Does To It",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d5d4fd29ddfd361d",
+  "sourceHash": "fnv1a64:b11dc77f24ef15fe",
   "lessons": [
     {
       "id": "HI-C84-uska",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d86f7da8c014f257",
+      "sourceHash": "fnv1a64:71a472720673b11d",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +721,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मेरे पास (mere pās) is mere, \"my\", with pās, \"near\". pās comes from Sanskrit pārśva, \"side\", whose form pārśve already meant \"near\" (CDIAL 8118)."
+              "text": "pās, \"near\", comes from Sanskrit pārśva, \"side\", whose form pārśve already meant \"near\" (CDIAL 8118)."
             }
           ]
         },

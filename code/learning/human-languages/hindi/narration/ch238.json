@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "Raw, Lukewarm, Dry, Sticky, Rough",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:45c8cb0a6e21b26a",
+  "sourceHash": "fnv1a64:1479ef0f9dfbcd28",
   "lessons": [
     {
       "id": "HI-C238-kacca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1acacff3f62a791",
+      "sourceHash": "fnv1a64:d9f16740151abf1d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कच्चा (kaccā) goes back to a reconstructed kacca, \"raw, unripe\" (CDIAL 2613). CDIAL lists older Hindi kācā and marks kaccā as taken over from Punjabi."
+              "text": "कच्चा (kaccā) goes back to a reconstructed kacca, \"raw, unripe\" (CDIAL 2613). CDIAL lists Hindi kācā and marks kaccā as taken over from Punjabi."
             }
           ]
         },

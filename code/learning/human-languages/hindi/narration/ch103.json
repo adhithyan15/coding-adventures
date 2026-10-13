@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "What I Know and What I Want",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a267e7d6029b06a8",
+  "sourceHash": "fnv1a64:2c7b11c3a3839627",
   "lessons": [
     {
       "id": "HI-C95-jaanta-hun",
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5135ff44ff807450",
+      "sourceHash": "fnv1a64:bb9971ad2fa8d657",
       "notice": null,
       "blocks": [
         {
@@ -413,7 +413,7 @@
             },
             {
               "kind": "speech",
-              "text": "चाहिए (cāhiye) comes from a reconstructed cāh, \"see, look for, desire\", whose source CDIAL calls uncertain (CDIAL 4775)."
+              "text": "चाहिए (cāhiye) comes from a reconstructed cāh, \"desire\", whose source CDIAL calls uncertain (CDIAL 4775)."
             }
           ]
         },
@@ -513,7 +513,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6fd8121451468017",
+      "sourceHash": "fnv1a64:53c3be19f1b586dd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -562,7 +562,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मुझे चाय चाहिए (mujhe cāy cāhiye) is mujhe, \"to me\", cāy, \"tea\", and cāhiye, \"is wanted\". CDIAL lists mujh under the Sanskrit base ma- of \"me\" (CDIAL 9691), and cāh, \"wish\", under a reconstructed cāh, \"see, desire\", of uncertain source (CDIAL 4775)."
+              "text": "CDIAL lists mujh, \"me\", under the Sanskrit first-person base ma- (CDIAL 9691), and cāh, \"wish\", under a reconstructed cāh, \"see, desire\", of uncertain source (CDIAL 4775)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Sandal, Shoe, Sock, Shirt, Trousers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f9ad227b19c536fb",
+  "sourceHash": "fnv1a64:a7efe286ce37557a",
   "lessons": [
     {
       "id": "HI-C135-cappal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ddb2a10dbdff437b",
+      "sourceHash": "fnv1a64:629fe788e6671685",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of चप्पल (cappal) is uncertain, and CDIAL has no entry for it. DEDR lists Dravidian words for \"sandal\", such as Telugu ceppu (DEDR 1963), but not the Hindi word, so a link is unproven."
+              "text": "The origin of चप्पल (cappal) is uncertain, and CDIAL has no entry for it. DEDR, under Dravidian words for \"sandal\" such as Telugu ceppu, adds \"Cf. H. cappal\" (DEDR 1963): a comparison, not a settled source."
             }
           ]
         },

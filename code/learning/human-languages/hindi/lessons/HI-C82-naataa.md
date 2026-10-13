@@ -63,8 +63,9 @@ is busy:
 size word for a person's age and left the height meaning without an owner, and
 **नाटा** is what filled the hole.
 
-CDIAL traces it to a reconstructed *\*naṭṭa*, "defective", and glosses the
-Hindi word "short, dwarfish" (CDIAL 6935).
+CDIAL traces it to a reconstructed *\*naṭṭa*, "defective", one of its groups of
+words for things stunted or lacking, and glosses the Hindi word "short,
+dwarfish" (CDIAL 6935).
 
 A note on using it. **नाटा** is plain rather than polite, and about a person it
 can land as blunt. When you want neutral, Hindi says *qad meṅ choṭā*, "short in
@@ -99,5 +100,5 @@ needing to remember which words agree.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-04, HI-LEX-C41-ADJ-02] -->
 
 [PAUSE 3s] Why can *choṭā* not mean *short* about a person? (About a person it
-means *younger*.) What did the Sanskrit root behind **नाटा** mean? (Bent or
-bowed — the same idea as the bow in *namaste*.)
+means *younger*.) What does CDIAL reconstruct behind **नाटा**? (*\*naṭṭa*,
+"defective": something stunted.)

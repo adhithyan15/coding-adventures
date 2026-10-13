@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 250,
-  "sourceHash": "fnv1a64:f5c17bccb929b54d",
+  "sourceHash": "fnv1a64:8ef2c1a2ba243a36",
   "lessonIds": [
     "HI-C250-fail",
     "HI-C250-tijori",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch250.txt",
   "json": "hindi/narration/ch250.json",
-  "textHash": "fnv1a64:066151ccd7781cd2",
-  "jsonHash": "fnv1a64:e847becfc8b0d2ee",
+  "textHash": "fnv1a64:b1a6ec17394b18ea",
+  "jsonHash": "fnv1a64:9f75f74593f809c8",
   "findings": []
 }

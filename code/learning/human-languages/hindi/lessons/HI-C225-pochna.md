@@ -47,7 +47,7 @@ reviews_of: [HI-C225-jharna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पोंछना** (*põchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *proñchati*, "wipes off" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan *\*poṁch-*.
+**पोंछना** (*põchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *proñchati*, "wipes off" (CDIAL 9011). CDIAL suggests that the Sanskrit word itself was made over from a Middle Indo-Aryan *\*poṁch-*, perhaps itself from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

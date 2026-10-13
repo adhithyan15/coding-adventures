@@ -17,7 +17,7 @@ sounds: [devanagari-long-aa, sha-vs-sa]
 roots: [vara-sanskrit, navagraha]
 etymology_hook: "śanivār, ravivār: Sanskrit śani 'Saturn' and ravi 'the Sun' + vāra 'day of the week' (CDIAL 11547), tatsamas"
 duration:
-  max_seconds: 248
+  max_seconds: 244
 requires:
   knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]
 introduces:
@@ -51,7 +51,7 @@ French, **nothing ever got renamed**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शनिवार रविवार** (*śanivār ravivār*) are Sanskrit compounds taken over whole, tatsamas: *śani*, "Saturn", and *ravi*, "the Sun", each with *vāra*, "one's turn", which Sanskrit also used for "day of the week" (CDIAL 11547).
+Both are Sanskrit compounds taken over whole, tatsamas: *śani*, "Saturn", and *ravi*, "the Sun", each with *vāra*, "one's turn", which Sanskrit also used for "day of the week" (CDIAL 11547).
 
 ## You'll want to know — Be honest about the contrast with Spanish and French
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]; assesses=[] -->

@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-vina, english-article]
 etymology_hook: "binā ← Sanskrit vinā 'without' (CDIAL 11772); ārṭikal ← English article"
 duration:
-  max_seconds: 259
+  max_seconds: 251
 requires:
   knowledge: [HI-LEX-C86-PRON-04, HI-LEX-C40-DEIXIS-02]
 introduces:
@@ -56,7 +56,7 @@ English article fills does not exist.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**बिना आर्टिकल** (*binā ārṭikal*) is two words from two sources. *binā*, "without", comes from Sanskrit *vinā*, "without" (CDIAL 11772); *ārṭikal* is English *article*.
+*binā* comes from Sanskrit *vinā*, "without" (CDIAL 11772); *ārṭikal* is English *article*.
 
 ## Grammar Lens: what does the work instead
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-05, HI-LEX-C40-DEIXIS-02] -->

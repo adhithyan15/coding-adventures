@@ -175,7 +175,7 @@ This is the largest single structural difference between Hindi and English, and 
 The bare noun covers both. Nothing is missing from the sentence; the slot the English article fills does not exist.
 
 The word, taken apart.
-बिना आर्टिकल (binā ārṭikal) is two words from two sources. binā, "without", comes from Sanskrit vinā, "without" (CDIAL 11772); ārṭikal is English article.
+binā comes from Sanskrit vinā, "without" (CDIAL 11772); ārṭikal is English article.
 
 Grammar Lens: what does the work instead.
 Hindi has three ways to be more specific when it needs to be, and you have all three already:

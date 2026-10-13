@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Noun, And The Ending That Means Two Things",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9a298c5fe5d59aad",
+  "sourceHash": "fnv1a64:465af1a11b943f35",
   "lessons": [
     {
       "id": "HI-C91-bacche-plural",
@@ -742,7 +742,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05bc4e542085b905",
+      "sourceHash": "fnv1a64:081031ef8d2d3fa3",
       "notice": null,
       "blocks": [
         {
@@ -809,7 +809,7 @@
             },
             {
               "kind": "speech",
-              "text": "CDIAL lists को (ko), as an adverb and postposition, under Sanskrit kakṣa, \"armpit\" (CDIAL 14342)."
+              "text": "CDIAL lists को (ko) under Sanskrit kakṣa, \"armpit\" (CDIAL 14342): \"at the side of\" became \"to\"."
             }
           ]
         },

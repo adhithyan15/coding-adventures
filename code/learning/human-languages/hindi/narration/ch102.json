@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "From, Until, and Instead",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4767d811d16c5ef4",
+  "sourceHash": "fnv1a64:d1fe8ad284f4ada7",
   "lessons": [
     {
       "id": "HI-C94-tak",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deb74d00526a943c",
+      "sourceHash": "fnv1a64:0ace448550afbb28",
       "notice": null,
       "blocks": [
         {
@@ -224,7 +224,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सोमवार से शुक्रवार तक (somvār se śukravār tak) frames a span with se, \"from\", and tak, \"until\". CDIAL traces se to Sanskrit sahita, \"accompanied by\" (CDIAL 13310), and also lists it, with a query, under sama, \"together with\" (CDIAL 13173). tak comes from tāvatka, \"bought for so much\" (CDIAL 5805)."
+              "text": "CDIAL traces se, \"from\", to Sanskrit sahita, \"accompanied by\" (CDIAL 13310), and lists it under sama too (CDIAL 13173); tak, \"until\", comes from tāvatka (CDIAL 5805)."
             }
           ]
         },
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b52ffa7ea055e7bf",
+      "sourceHash": "fnv1a64:32bdaff422764450",
       "notice": null,
       "blocks": [
         {
@@ -402,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सुबह से शाम तक (subah se śām tak) sets two loans inside two inherited words. subah is Arabic ṣubḥ, \"morning\", which reached Hindi through Persian (Lane, root ṣ-b-ḥ); śām is usually traced to Persian shām, \"evening\". se and tak are inherited (CDIAL 13310, 5805)."
+              "text": "subah is Arabic ṣubḥ, \"morning\", through Persian (Lane, root ṣ-b-ḥ); śām is usually traced to Persian shām, \"evening\"; se and tak are inherited (CDIAL 13310, 5805)."
             }
           ]
         },
@@ -702,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d011d4554d68ee4",
+      "sourceHash": "fnv1a64:d9333a8a2d521417",
       "notice": null,
       "blocks": [
         {
@@ -744,7 +744,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नहीं की जगह (nahīṁ kī jagah) is nahīṁ, \"not\", with kī and jagah, \"place\". nahīṁ comes from Sanskrit nahi, \"surely not\" (CDIAL 7035); jagah is usually traced to Persian jāygāh, \"place\"."
+              "text": "nahīṁ comes from Sanskrit nahi, \"surely not\" (CDIAL 7035); jagah, \"place\", is usually traced to Persian jāygāh."
             }
           ]
         },

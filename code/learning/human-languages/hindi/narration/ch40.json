@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c6a01cfad4d17e2c",
+  "sourceHash": "fnv1a64:b98ba061ee7a75e4",
   "lessons": [
     {
       "id": "HI-C40-this",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0323864fd0c549b8",
+      "sourceHash": "fnv1a64:8a100d450b00df4e",
       "notice": null,
       "blocks": [
         {
@@ -440,7 +440,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वहाँ (vahā̃) (vahāṁ) is built inside Hindi: the stem of वह (vah), \"that\", with the same place ending -hāṁ that यहाँ (yahā̃), \"here\", has. CDIAL has no entry for it."
+              "text": "वहाँ (vahā̃) (vahāṁ) pairs the stem of वह (vah), \"that\", with the same place ending -hāṁ that यहाँ (yahā̃), \"here\", has. CDIAL has no entry for it, so its older history is left open here."
             }
           ]
         },
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:692313bf2a4c42fc",
+      "sourceHash": "fnv1a64:f871b076008708bd",
       "notice": null,
       "blocks": [
         {
@@ -693,7 +693,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कहाँ (kahā̃) (kahāṁ) is built inside Hindi: the question stem k- of क्या and कौन (kaun) with the place ending -hāṁ of यहाँ (yahā̃), \"here\", and वहाँ (vahā̃), \"there\". CDIAL has no entry for it."
+              "text": "कहाँ (kahā̃) (kahāṁ) pairs the question stem k- of क्या and कौन (kaun) with the place ending -hāṁ of यहाँ (yahā̃), \"here\", and वहाँ (vahā̃), \"there\". CDIAL has no entry for it, so its older history is left open here."
             }
           ]
         },

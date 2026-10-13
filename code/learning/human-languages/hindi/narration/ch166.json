@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "A Notice, a Message, Opening Times, an Advert, a Repair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b115d9f6e6634abc",
+  "sourceHash": "fnv1a64:f951172d475302fd",
   "lessons": [
     {
       "id": "HI-C166-sucna",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb7f91e8d9b10f53",
+      "sourceHash": "fnv1a64:8e485bae8ac4f065",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +364,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "समय (samay) is Sanskrit samaya, \"meeting; agreement; time\", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL lists the inherited form as samā, and marks the Hindi samai as a later borrowing from Sanskrit."
+              "text": "समय (samay) is Sanskrit samaya, \"meeting; agreement; time\", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL marks Hindi samā as probably, and samai as certainly, taken from Sanskrit too."
             }
           ]
         },

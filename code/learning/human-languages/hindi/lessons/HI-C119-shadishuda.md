@@ -15,7 +15,7 @@ concept_tag: HI-ABOUT-MARRIED
 prerequisites: [HI-C119-pesha, HI-C119-shadi]
 sounds: []
 roots: [persian-shadi-shuda]
-etymology_hook: "śādīśudā: usually traced to Persian shādī-shuda 'married'"
+etymology_hook: "śādīśudā: a Hindustani compound of Persian parts, shādī 'joy, wedding' + shuda 'become'"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ It is **शादी** with **-शुदा**, "having been done". **क्य�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शादीशुदा** (*śādīśudā*) is a loan, usually traced to Persian *shādī-shuda*, "married". It is built from *shādī*, "wedding", and *shuda*, "become".
+**शादीशुदा** (*śādīśudā*) is a compound made in Hindustani from Persian parts: *shādī*, "joy", which Hindi uses for a wedding, and *shuda*, "become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

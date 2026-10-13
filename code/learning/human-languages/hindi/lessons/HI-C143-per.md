@@ -15,7 +15,7 @@ concept_tag: HI-THINGS143-PER
 prerequisites: [HI-C143-samudra, HI-C143-jangal]
 sounds: []
 roots: [indo-aryan-peda]
-etymology_hook: "peṛ: origin uncertain; CDIAL lists peṛ only as 'lump' (*peḍa, CDIAL 8377)"
+etymology_hook: "peṛ ← *peḍa 'tree', which CDIAL reconstructs in its addenda from Punjabi and Hindi peṛ (CDIAL 8377a)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C143-jangal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **पेड़** (*peṛ*) is uncertain. CDIAL lists a Hindi *peṛ* only in the sense "lump", under a reconstructed *\*peḍa* (CDIAL 8377), not as "tree".
+**पेड़** (*peṛ*) is inherited, but only as far back as a reconstruction. CDIAL's addenda set up *\*peḍa*, "tree", from Punjabi and Hindi *peṛ* (CDIAL 8377a), and give it no Sanskrit source. It is a different word from *peṛ*, "lump" (CDIAL 8377).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

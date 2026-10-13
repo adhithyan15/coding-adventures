@@ -17,7 +17,7 @@ sounds: []
 roots: [kim, asti, naaman]
 etymology_hook: "āp ← Sanskrit ātman 'self' (CDIAL 1135); kyā ← kim 'what?' (CDIAL 3164); nām ← nāman 'name'"
 duration:
-  max_seconds: 241
+  max_seconds: 224
 requires:
   knowledge: [HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-HAI-01]
 introduces:
@@ -54,7 +54,7 @@ into the object slot — no reordering, no inversion.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**आपका नाम क्या है?** (*āpkā nām kyā hai?*) is built from inherited words: *āp*, "you", from Sanskrit *ātman*, "self" (CDIAL 1135), with the possessive *-kā*; *nām*, from *nāman*, "name"; *kyā*, from *kim*, "what" (CDIAL 3164); and *hai*, "is", usually traced to *asti*.
+Every word in this question is inherited: *āp* from Sanskrit *ātman*, "self" (CDIAL 1135), with *-kā*, "of"; *nām* from *nāman*; *kyā* from *kim* (CDIAL 3164); *hai*, usually traced to *asti*.
 
 ## Grammar Lens: answer, and the informal version
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-AAPTUM-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C02-KYA-01] -->

@@ -9,7 +9,7 @@ sequence: 3400
 chapter: 90
 type: word
 headword: "पतला"
-gloss: "thin — Sanskrit for what has fallen flat, and the word Hindi uses for a thin person, a thin sheet and a thin soup alike"
+gloss: "thin — Sanskrit for leaf-like, and the word Hindi uses for a thin person, a thin sheet and a thin soup alike"
 romanization: "patlā"
 concept_tag: HI-ADJ-THIN
 prerequisites: [HI-C82-lambaa]
@@ -55,15 +55,15 @@ have reached for.
 
 **पतला** goes back to Sanskrit *pattrala*, "leafy", which CDIAL takes
 to have meant "leaf-like, thin" (CDIAL 7736). It is built on **पत्र** (*pattra*),
-"leaf", from the root **पत्** (*pat*), "to fly, to fall". A thin thing is as
-flat as a leaf.
+"leaf" (first "wing-feather"), from the root **पत्** (*pat*), "to fly". A thin
+thing is as flat as a leaf.
 
-The same root is sitting in two Hindi words you may already recognise:
+The leaf word is still in everyday Hindi:
 
-| word | the falling in it |
+| word | what it is |
 |---|---|
-| **पत्ता** (*pattā*) | a leaf — the thing that falls |
-| *patjhaṛ* | autumn — literally the leaf-fall |
+| **पत्ता** (*pattā*) | a leaf |
+| *patjhaṛ* | autumn: *pat*, "leaf", with *jhaṛ*, "fall" |
 
 Autumn in Hindi is named exactly the way American English names it: **fall**.
 Two languages that never discussed it reached for the same picture.
@@ -93,6 +93,6 @@ the shape does the thing.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-02, HI-LEX-C82-BODY-01] -->
 
-[PAUSE 3s] What did the Sanskrit root **पत्** mean? (To fall.) What is a thin
-thing, by that picture? (Something flattened, fallen out flat.) Which English
+[PAUSE 3s] What did *pattrala*, behind **पतला**, mean? (Leafy, leaf-like.) What
+is a thin thing, by that picture? (Something as flat as a leaf.) Which English
 name for autumn matches the Hindi one? (*Fall*.)

@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "A lane, A street corner, A fair, A procession, A speech",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0b971cf9201d151",
+  "sourceHash": "fnv1a64:239260b8d3bbb1d3",
   "lessons": [
     {
       "id": "HI-C272-gali",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36de01618de5a3fe",
+      "sourceHash": "fnv1a64:80ff05083ac01ada",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जुलूस (jalūs) is a loan from Arabic julūs, \"a sitting; enthronement\", which reached Hindi through Persian. Its Arabic root is j-l-s (Lane). Hindi uses it for the procession that went with it."
+              "text": "जुलूस (jalūs) (julūs) is a loan from Arabic julūs, \"a sitting; enthronement\", which reached Hindi through Persian. Its Arabic root is j-l-s (Lane). Hindi uses it for the procession that went with it."
             }
           ]
         },

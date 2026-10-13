@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals in the Yard",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cbc98ec6da7e317f",
+  "sourceHash": "fnv1a64:f5933b3cbb839cdd",
   "lessons": [
     {
       "id": "HI-C60-monkey",
@@ -735,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6de332614a68db5",
+      "sourceHash": "fnv1a64:f03fc26f497b910b",
       "notice": null,
       "blocks": [
         {

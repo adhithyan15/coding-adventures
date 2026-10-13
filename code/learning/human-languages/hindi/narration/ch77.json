@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:627e86c64ee3b945",
+  "sourceHash": "fnv1a64:da99adace392616c",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -530,7 +530,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:781d3f8dd4540945",
+      "sourceHash": "fnv1a64:8316a246da626058",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -591,7 +591,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, \"sings\" (CDIAL 4135). The noun is the verb gānā, \"to sing\", used for what is sung."
+              "text": "गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under gāpayati, the second form it gives beside gāyati, \"sings\" (CDIAL 4135). The noun is the verb gānā, \"to sing\", used for what is sung."
             }
           ]
         },

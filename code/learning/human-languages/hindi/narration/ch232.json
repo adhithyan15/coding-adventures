@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "To shiver, To smile, To scream, To whisper, To scold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ccb9c872dfd7086",
+  "sourceHash": "fnv1a64:703059d6eab69c1a",
   "lessons": [
     {
       "id": "HI-C232-kapna",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e8224b71125eb5a",
+      "sourceHash": "fnv1a64:0dde7fead3d59faa",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of चीखना (cīkhnā) is uncertain. CDIAL lists a cīkhnā only in the sense \"to taste\" (CDIAL 4557), which is a different word."
+              "text": "The origin of चीखना (cīkhnā) is uncertain. CDIAL lists a cīkhnā only in the sense \"to taste\" (CDIAL 4557), which is a different word. It may be imitative, like cĩghāṛnā, \"to screech\" (CDIAL 4787)."
             }
           ]
         },

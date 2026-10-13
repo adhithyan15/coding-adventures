@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Sons, Daughters, and Everyone Else",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:243acd4c0bd18ded",
+  "sourceHash": "fnv1a64:4e3baa4eb3f74e53",
   "lessons": [
     {
       "id": "HI-C44-son",
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c807db474cce0496",
+      "sourceHash": "fnv1a64:dcf8420461d0e048",
       "notice": null,
       "blocks": [
         {

@@ -15,7 +15,7 @@ concept_tag: HI-DEIXIS-WHERE
 prerequisites: [HI-C40-who]
 sounds: []
 roots: []
-etymology_hook: "kahāṁ: the question stem k- of kyā and kaun with the place ending -hāṁ of yahāṁ; CDIAL has no entry"
+etymology_hook: "kahāṁ: question stem k- (kyā, kaun) + the place ending -hāṁ of yahāṁ; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 210
 requires:
@@ -55,7 +55,7 @@ last lesson of this chapter says so.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कहाँ** (*kahāṁ*) is built inside Hindi: the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it.
+**कहाँ** (*kahāṁ*) pairs the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it, so its older history is left open here.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-06] -->

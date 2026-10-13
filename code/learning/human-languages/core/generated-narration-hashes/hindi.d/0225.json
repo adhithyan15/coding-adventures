@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 225,
-  "sourceHash": "fnv1a64:86aa892135481898",
+  "sourceHash": "fnv1a64:d4ab0dddc8287303",
   "lessonIds": [
     "HI-C225-safkarna",
     "HI-C225-jharna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch225.txt",
   "json": "hindi/narration/ch225.json",
-  "textHash": "fnv1a64:b4d37b0306d04bb4",
-  "jsonHash": "fnv1a64:839ee44c6da3a758",
+  "textHash": "fnv1a64:308c36e795446dc0",
+  "jsonHash": "fnv1a64:25ca64859ee507a6",
   "findings": []
 }

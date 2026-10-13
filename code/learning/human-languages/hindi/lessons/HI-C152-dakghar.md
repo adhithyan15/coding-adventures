@@ -15,7 +15,7 @@ concept_tag: HI-THINGS152-DAKGHAR
 prerequisites: [HI-C151-kamar, HI-C152-khun]
 sounds: []
 roots: [sanskrit-ghara]
-etymology_hook: "ḍāk 'post' + ghar 'house' (CDIAL 4428); CDIAL has no entry for ḍāk"
+etymology_hook: "ḍāk 'post' ← *ḍakka 'relay, post' (CDIAL 5519) + ghar 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C152-khun]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**डाकघर** (*ḍākghar*) is "post-house": *ḍāk*, "the post", whose origin is uncertain and which CDIAL does not list, with *ghar*, "house", from *ghara* (CDIAL 4428).
+**डाकघर** (*ḍākghar*) is "post-house": *ḍāk*, "the post", from a reconstructed *\*ḍakka*, "relay, post", which CDIAL asks may belong with *\*ḍakk*, "shout" (CDIAL 5519), with *ghar*, "house", from *ghara* (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

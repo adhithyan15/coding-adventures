@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "A desert, A valley, A waterfall, A pond, A mine",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:faca96e7455f2413",
+  "sourceHash": "fnv1a64:6832af560feddf51",
   "lessons": [
     {
       "id": "HI-C201-registan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7146775721874dd6",
+      "sourceHash": "fnv1a64:c94a9412e9f69bce",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तालाब (tālāb) is usually explained as tāl, \"pond\", which CDIAL lists under Sanskrit talla, \"pond\" (CDIAL 5742), with Persian āb, \"water\"."
+              "text": "तालाब (tālāb) is usually explained as tāl, \"pond\", which CDIAL lists under Sanskrit talla, \"pond\", a village word that may come from Munda (CDIAL 5742), with Persian āb, \"water\"."
             }
           ]
         },

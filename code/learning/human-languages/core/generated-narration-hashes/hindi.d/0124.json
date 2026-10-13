@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 124,
-  "sourceHash": "fnv1a64:6bc19f0d2bbf740a",
+  "sourceHash": "fnv1a64:9fcf26a80ffee648",
   "lessonIds": [
     "HI-C124-bhukha",
     "HI-C124-pyasa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch124.txt",
   "json": "hindi/narration/ch124.json",
-  "textHash": "fnv1a64:09bc8808de37b8b6",
-  "jsonHash": "fnv1a64:91c3ae1603c893c2",
+  "textHash": "fnv1a64:da3e4343af15506c",
+  "jsonHash": "fnv1a64:e1cadd106a121866",
   "findings": []
 }

@@ -85,6 +85,5 @@ sound.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C03-THIK-01] -->
 
-[PAUSE 3s] Give the whole reply to *āp kaise haiṁ?*, and say what is special about
-*ṭhīk*'s origin. (*Maiṁ ṭhīk hūṁ*; it is a native Indian word with no European
-cognate.)
+[PAUSE 3s] Give the whole reply to *āp kaise haiṁ?*, and say where *ṭhīk*
+probably comes from. (*Maiṁ ṭhīk hūṁ*; from Sanskrit *sthita*, "standing".)

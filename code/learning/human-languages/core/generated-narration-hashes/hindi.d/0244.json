@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 244,
-  "sourceHash": "fnv1a64:79d024198f54f643",
+  "sourceHash": "fnv1a64:bc1cfad4df962920",
   "lessonIds": [
     "HI-C244-hazar",
     "HI-C244-lakh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch244.txt",
   "json": "hindi/narration/ch244.json",
-  "textHash": "fnv1a64:5bc1ffde8eaabf67",
-  "jsonHash": "fnv1a64:2cf7e5ec6499c94d",
+  "textHash": "fnv1a64:3a9c1812268f6d12",
+  "jsonHash": "fnv1a64:2bb407bfc0b83b43",
   "findings": []
 }

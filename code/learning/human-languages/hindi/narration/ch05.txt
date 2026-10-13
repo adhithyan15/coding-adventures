@@ -136,7 +136,7 @@ You'll want to know first.
 हूँ — "I am," the verb this template leans on.
 
 The word, taken apart.
-The pieces of this pattern are old. bol-, "speak", goes back to a reconstructed boll- (CDIAL 9321), and the -tā ending continues the old present participle in -nt-, "doing", as in Prakrit hoṁta, "being", from Sanskrit bhavati, "is" (CDIAL 9416).
+bol- goes back to a reconstructed boll-, "speak" (CDIAL 9321). The -tā continues the old present participle in -nt-, as in Prakrit hoṁta, "being" (CDIAL 9416).
 
 Grammar Lens: stem + -tā/-tī/-te + honā.
 To say what someone does in general, Hindi builds three pieces in a row: the stem, a participle ending, and the "to be" verb.

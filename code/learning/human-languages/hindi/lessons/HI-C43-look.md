@@ -15,7 +15,7 @@ concept_tag: HI-VERB-LOOK
 prerequisites: [HI-C41-big, HI-C41-small]
 sounds: []
 roots: [indo-aryan-drkshati]
-etymology_hook: "dekhnā ← *dṛkṣati 'sees', a reconstructed form; a tadbhava (CDIAL 6507)"
+etymology_hook: "dekhnā ← *dekṣati 'sees', a variant CDIAL reconstructs beside *dṛkṣati; a tadbhava (CDIAL 6507)"
 duration:
   max_seconds: 210
 requires:
@@ -52,7 +52,7 @@ with an object; now the verb form will already be yours.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**देखना** (*dekhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dṛkṣati*, "sees", a form CDIAL reconstructs from its descendants (CDIAL 6507).
+**देखना** (*dekhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dekṣati*, "sees", a variant CDIAL reconstructs beside *\*dṛkṣati* (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK] -->

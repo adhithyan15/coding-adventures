@@ -15,7 +15,7 @@ concept_tag: HI-VERB-LATAKNA
 prerequisites: [HI-C229-chutna, HI-C230-jhukna]
 sounds: []
 roots: [indo-aryan-latta]
-etymology_hook: "laṭaknā: origin uncertain; CDIAL lists *laṭṭa 'hanging, tangled' (10918) but not laṭaknā"
+etymology_hook: "laṭaknā: probably with *laṭṭa 'hanging' (CDIAL 10918), where Sindhi laṭkaṇu 'to dangle' stands; no Hindi form"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C230-jhukna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **लटकना** (*laṭaknā*) is uncertain. CDIAL lists a reconstructed *\*laṭṭa*, "hanging, tangled" (CDIAL 10918), but not *laṭaknā* itself.
+**लटकना** (*laṭaknā*) probably belongs with a reconstructed *\*laṭṭa*, "hanging, tangled" (CDIAL 10918). CDIAL lists Sindhi *laṭkaṇu*, "to hang, dangle", and Gujarati *laṭakvũ* there, but not the Hindi verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

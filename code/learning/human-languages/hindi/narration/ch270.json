@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "A grater, A lid, A jug, A water jar, A clay pot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ec4369cee88f86d",
+  "sourceHash": "fnv1a64:d395c61c0b6651bc",
   "lessons": [
     {
       "id": "HI-C270-kaddukas",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f75f8645bc312b77",
+      "sourceHash": "fnv1a64:8c45743865f259bf",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ढक्कन (dhakkan) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍhakk, \"cover\", a form CDIAL reconstructs from its descendants (CDIAL 5574). CDIAL compares a Jain Sanskrit ḍhakkana, \"shutting\"."
+              "text": "ढक्कन (dhakkan) (ḍhakkan) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍhakk, \"cover\", a form CDIAL reconstructs from its descendants (CDIAL 5574). CDIAL compares a Jain Sanskrit ḍhakkana, \"shutting\"."
             }
           ]
         },

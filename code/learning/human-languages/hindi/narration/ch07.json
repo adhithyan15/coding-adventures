@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e628698599cc700a",
+  "sourceHash": "fnv1a64:0a0efbd575c272eb",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27b34319eee8e9dd",
+      "sourceHash": "fnv1a64:0626d8c4f1b5c5f6",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हाँ (hāṃ) comes from Sanskrit ām, \"yes\" (CDIAL 1235). CDIAL explains the h- as added for emphasis, or taken over from the verb \"to be\". The polite जी (jī) is from jīva, \"long live!\" (CDIAL 5240)."
+              "text": "हाँ comes from Sanskrit ām, \"yes\", with an h- that CDIAL calls emphatic or taken from the verb \"to be\" (CDIAL 1235). The polite जी is from jīva, \"long live!\" (CDIAL 5240)."
             }
           ]
         },

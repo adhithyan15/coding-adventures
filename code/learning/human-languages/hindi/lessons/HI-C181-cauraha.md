@@ -47,7 +47,7 @@ reviews_of: [HI-C181-mor]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**चौराहा** (*caurāhā*) is usually explained as *cau-*, "four", with *rāh*, "road", the Persian word that **रास्ता**, "a way", also belongs with. CDIAL does not list it; it lists *cauhaṭṭā*, "a crossing of market streets", from *catur-*, "four" (CDIAL 4626).
+**चौराहा** (*caurāhā*) is usually explained as *cau-*, "four", with Persian *rāh*, "road". CDIAL does not list it; it lists *cauhaṭṭā*, "a crossing of market streets", from *catur-*, "four" (CDIAL 4626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

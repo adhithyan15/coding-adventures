@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b1d738d64a4f35be",
+  "sourceHash": "fnv1a64:3b30b7097f8d6959",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2d7431a0b684f04",
+      "sourceHash": "fnv1a64:7f667118cb3ffe3b",
       "notice": null,
       "blocks": [
         {
@@ -87,7 +87,7 @@
             },
             {
               "kind": "speech",
-              "text": "कर- comes from Sanskrit karoti, \"does\" (CDIAL 2814), and the -गा is usually traced to Sanskrit gata, \"gone\"."
+              "text": "कर- is from Sanskrit karoti, \"does\" (CDIAL 2814); the -गा is usually traced to gata, \"gone\"."
             }
           ]
         },

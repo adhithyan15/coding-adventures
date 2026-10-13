@@ -17,7 +17,7 @@ sounds: []
 roots: [kr-do, sanskrit-gata]
 etymology_hook: "karūṅgā: kar- ← Sanskrit karoti 'does' (CDIAL 2814); the future -gā is usually traced to gata 'gone'"
 duration:
-  max_seconds: 241
+  max_seconds: 240
 requires:
   knowledge: [HI-CONCEPT-C05-KARNA-01, HI-CONCEPT-C04-MILENGE-01, HI-LEX-C87-PAST-01]
 introduces:
@@ -67,7 +67,7 @@ You have met the **-गा** family once before, in the farewell *milenge*, wher
 plural **-एंगे** was named as the future ending. That was one cell of a grid.
 This chapter is the grid.
 
-**कर-** comes from Sanskrit *karoti*, "does" (CDIAL 2814), and the **-गा** is usually traced to Sanskrit *gata*, "gone".
+**कर-** is from Sanskrit *karoti*, "does" (CDIAL 2814); the **-गा** is usually traced to *gata*, "gone".
 
 ## Grammar Lens: the piece that comes from the old subjunctive
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-01, HI-CONCEPT-C05-KARNA-01] -->

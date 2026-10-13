@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "A button, A pocket, An enemy, An aunt (father's brother's wife), A nephew (brother's son)",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8141ec86e8e2ad7f",
+  "sourceHash": "fnv1a64:01f8ee4331ba9d19",
   "lessons": [
     {
       "id": "HI-C188-batan",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:707302e007ef6b2c",
+      "sourceHash": "fnv1a64:896cbc9c9beb862b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जेब (jeb) is a loan, usually traced to Persian jēb, \"pocket\"."
+              "text": "जेब (jeb) is a loan, usually traced to Persian jēb, \"pocket\", which is Arabic jayb, \"pocket, opening of a garment\"."
             }
           ]
         },

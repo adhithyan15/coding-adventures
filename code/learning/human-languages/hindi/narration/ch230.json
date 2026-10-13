@@ -4,7 +4,7 @@
   "chapter": 230,
   "title": "To bend down, To hang, To hang, To float, To sink",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4638775f09aa71d2",
+  "sourceHash": "fnv1a64:ed4eb9eb014b4319",
   "lessons": [
     {
       "id": "HI-C230-jhukna",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d3f123ca2d5fa78",
+      "sourceHash": "fnv1a64:917a0f4a1b686de9",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of लटकना (laṭaknā) is uncertain. CDIAL lists a reconstructed laṭṭa, \"hanging, tangled\" (CDIAL 10918), but not laṭaknā itself."
+              "text": "लटकना (laṭaknā) probably belongs with a reconstructed laṭṭa, \"hanging, tangled\" (CDIAL 10918). CDIAL lists Sindhi laṭkaṇu, \"to hang, dangle\", and Gujarati laṭakvũ there, but not the Hindi verb."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c04a11c508da24f1",
+      "sourceHash": "fnv1a64:a63aebf9c67809ef",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "लटकाना (laṭkānā) is the causing form of laṭaknā, \"to hang\". Its origin is uncertain: CDIAL lists a reconstructed laṭṭa, \"hanging, tangled\" (CDIAL 10918), but not these verbs."
+              "text": "लटकाना (laṭkānā) is the causing form of laṭaknā, \"to hang\". It probably belongs with a reconstructed laṭṭa, \"hanging, tangled\", where CDIAL lists Sindhi laṭkaṇu, \"to dangle\" (CDIAL 10918), but not the Hindi verbs."
             }
           ]
         },

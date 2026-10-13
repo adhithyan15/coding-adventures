@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 232,
-  "sourceHash": "fnv1a64:2ccb9c872dfd7086",
+  "sourceHash": "fnv1a64:703059d6eab69c1a",
   "lessonIds": [
     "HI-C232-kapna",
     "HI-C232-muskurana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch232.txt",
   "json": "hindi/narration/ch232.json",
-  "textHash": "fnv1a64:0d287fb53549f339",
-  "jsonHash": "fnv1a64:4866c5b8fda53ca6",
+  "textHash": "fnv1a64:bc6b6155dab1390f",
+  "jsonHash": "fnv1a64:3ece299b3fd39396",
   "findings": []
 }

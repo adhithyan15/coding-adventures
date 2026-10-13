@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 188,
-  "sourceHash": "fnv1a64:8141ec86e8e2ad7f",
+  "sourceHash": "fnv1a64:01f8ee4331ba9d19",
   "lessonIds": [
     "HI-C188-batan",
     "HI-C188-jeb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch188.txt",
   "json": "hindi/narration/ch188.json",
-  "textHash": "fnv1a64:2a8d281f9f43bfb2",
-  "jsonHash": "fnv1a64:b48aac38a03ef405",
+  "textHash": "fnv1a64:84ad456084ab9a8f",
+  "jsonHash": "fnv1a64:81f62bcc5e2ab93e",
   "findings": []
 }

@@ -15,7 +15,7 @@ concept_tag: HI-THG211-CATNI
 prerequisites: [HI-C210-laddu, HI-C210-achar]
 sounds: []
 roots: []
-etymology_hook: "caṭnī: origin uncertain; CDIAL has no entry"
+etymology_hook: "caṭnī: not in CDIAL; often tied to cāṭnā 'to lick', which CDIAL lists under *caṭṭ 'lick, taste' (4573)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C210-achar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **चटनी** (*caṭnī*) is uncertain. CDIAL has no entry for it. English took the word as *chutney*.
+The origin of **चटनी** (*caṭnī*) is not settled. It is often tied to *cāṭnā*, "to lick", which CDIAL lists under a reconstructed *\*caṭṭ*, "lick, taste" (CDIAL 4573), but CDIAL does not list *caṭnī* itself. English took the word as *chutney*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: HI-THINGS136-DUPATTA
 prerequisites: [HI-C136-kurta, HI-C136-sari]
 sounds: []
 roots: []
-etymology_hook: "dupaṭṭā: do 'two' + paṭṭā 'strip of cloth'; CDIAL lists paṭṭ- words but not dupaṭṭā"
+etymology_hook: "dupaṭṭā: du- 'two' + paṭṭā 'strip of cloth'; CDIAL 6413 has *dupaṭṭikā 'two cloths', with no Hindi form"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C136-sari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दुपट्टा** (*dupaṭṭā*) is built from *du-*, "two", and *paṭṭā*, "a strip of cloth": a cloth of two breadths. CDIAL lists Hindi *paṭṭī*, "strip of cloth", under Sanskrit *paṭṭa*, "cloth", probably of non-Aryan source (CDIAL 7700), but not *dupaṭṭā* itself.
+**दुपट्टा** (*dupaṭṭā*) is built from *du-*, "two", and *paṭṭā*, "a strip of cloth": a cloth of two breadths. CDIAL lists Hindi *paṭṭī*, "strip of cloth", under Sanskrit *paṭṭa*, "cloth", probably of non-Aryan source (CDIAL 7700). It also reconstructs *\*dupaṭṭikā*, "two cloths" (CDIAL 6413), but lists no Hindi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: HI-THINGS129-TAKIYA
 prerequisites: [HI-C127-chalega, HI-C129-tala]
 sounds: []
 roots: [persian-takya]
-etymology_hook: "takiyā: usually traced to Persian takya 'pillow, support'"
+etymology_hook: "takiyā: usually traced to Persian takya 'pillow, support', itself from Arabic (root w-k-ʾ 'to lean')"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C129-tala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**तकिया** (*takiyā*) is a loan, usually traced to Persian *takya*, "pillow, support".
+**तकिया** (*takiyā*) is a loan, usually traced to Persian *takya*, "pillow, support", which Persian took from Arabic, on the root *w-k-ʾ*, "to lean" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

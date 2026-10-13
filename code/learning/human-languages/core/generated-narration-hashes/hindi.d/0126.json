@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 126,
-  "sourceHash": "fnv1a64:73ae1b104440002d",
+  "sourceHash": "fnv1a64:4b83140898d17ee2",
   "lessonIds": [
     "HI-C126-phirse",
     "HI-C126-samajhnahin",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch126.txt",
   "json": "hindi/narration/ch126.json",
   "textHash": "fnv1a64:e3d52e7f9f7be572",
-  "jsonHash": "fnv1a64:f94dc908fa7fbc41",
+  "jsonHash": "fnv1a64:054a0c14343f4acb",
   "findings": []
 }

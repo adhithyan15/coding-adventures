@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2c8521d189ab2fa",
+  "sourceHash": "fnv1a64:e4a4654c528fa97e",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebefb9e1315f6a79",
+      "sourceHash": "fnv1a64:c182fb5e4869414a",
       "notice": null,
       "blocks": [
         {
@@ -248,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नाश्ता (nāshtā) is a loan, usually traced to Persian nāshtā, \"breakfast\"."
+              "text": "नाश्ता (nāshtā) is a loan, usually traced to Persian nāshtā, \"not having eaten\"."
             }
           ]
         },

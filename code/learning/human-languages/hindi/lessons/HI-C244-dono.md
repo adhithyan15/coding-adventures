@@ -15,7 +15,7 @@ concept_tag: HI-THG244-DONO
 prerequisites: [HI-C244-karor, HI-C244-kai]
 sounds: []
 roots: []
-etymology_hook: "donõ: do 'two' with the ending -õ, 'all two'; CDIAL has no entry"
+etymology_hook: "donõ: do 'two' with the ending -õ, 'all two'; CDIAL lists donõ 'both' under dva 'two' (CDIAL 6648)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C244-kai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दोनों** (*donõ*) is *do*, "two", with the ending *-õ*, which makes "both". CDIAL has no entry for the form.
+**दोनों** (*donõ*) is *do*, "two", with the ending *-õ*, which makes "both". CDIAL lists *donõ*, "both", beside *do* under Sanskrit *dva*, "two" (CDIAL 6648).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

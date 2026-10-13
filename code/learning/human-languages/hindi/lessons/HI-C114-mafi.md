@@ -15,7 +15,7 @@ concept_tag: HI-SORRY-APOLOGY
 prerequisites: [HI-C113-vahi, HI-C113-hosakta]
 sounds: []
 roots: [arabic-afw]
-etymology_hook: "māfī: usually traced, through Persian, to the Arabic root ʿ-f-w 'to pardon' (Lane)"
+etymology_hook: "māfī: māf, usually traced through Persian to Arabic muʿāf 'excused', root ʿ-f-w 'to pardon' (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -50,7 +50,7 @@ reviews_of: [HI-C113-hosakta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**माफ़ी** (*māfī*) is usually traced, through Persian, to an Arabic word for "pardon" on the root *ʿ-f-w*, "to pardon, excuse" (Lane). It is the noun of the *māf* inside *māf kījie*, "forgive me".
+**माफ़ी** (*māfī*) is *māf* with *-ī*. *māf* is usually traced, through Persian, to Arabic *muʿāf*, "excused, let off", on the root *ʿ-f-w*, "to pardon" (Lane). The same *māf* is inside *māf kījie*, "forgive me".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

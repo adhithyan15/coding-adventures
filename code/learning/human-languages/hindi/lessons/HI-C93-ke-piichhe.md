@@ -17,7 +17,7 @@ sounds: []
 roots: [indo-aryan-pashca]
 etymology_hook: "pīche ← *paśca 'hinder part', a reconstructed form; a tadbhava (CDIAL 7990)"
 duration:
-  max_seconds: 237
+  max_seconds: 232
 requires:
   knowledge: [HI-LEX-C93-REL-04, HI-LEX-C51-WELCOME-04, HI-LEX-C93-REL-03]
 introduces:
@@ -48,7 +48,7 @@ you have had since the chapter on furniture.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**के पीछे** (*ke pīche*) is *ke* with *pīche*, "behind", a tadbhava. CDIAL lists it under a reconstructed *\*paśca*, "hinder part", as an old case form that took the place of Sanskrit *paścāt*, "behind" (CDIAL 7990).
+*pīche*, "behind", is a tadbhava: CDIAL lists it under a reconstructed *\*paśca*, "hinder part", as an old case form that replaced Sanskrit *paścāt* (CDIAL 7990).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-05, HI-LEX-C93-REL-04] -->

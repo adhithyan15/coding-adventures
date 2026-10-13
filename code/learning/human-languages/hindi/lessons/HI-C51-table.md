@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-TABLE
 prerequisites: [HI-C51-courtyard, HI-C49-set-out, HI-C50-blessing]
 sounds: []
 roots: [persian-mez]
-etymology_hook: "mez: usually traced to Persian mēz, itself from Portuguese mesa 'table'"
+etymology_hook: "mez: usually traced to Persian mēz, which many take from Portuguese mesa 'table'"
 duration:
   max_seconds: 210
 requires:
@@ -44,7 +44,7 @@ reviews_of: [HI-C51-courtyard]
 
 **मेज़** (*mez*) — "a table".
 
-Persian *mez*, and behind the Persian sits Portuguese *mesa*, out of Latin *mēnsa*. Portuguese ships carried the object and its name into the Indian Ocean, which is the same route that brought कमरा in from *camera*.
+Persian *mez*, and behind the Persian, on the usual account, Portuguese *mesa*, out of Latin *mēnsa*. Portuguese ships carried the object and its name into the Indian Ocean, which is the same route that brought कमरा in from *camera*.
 
 There was no inherited word for a raised surface on four legs because the household had not had one; people ate and wrote and worked at floor level. The word arrived with the furniture, which is usually how that happens.
 

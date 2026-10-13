@@ -15,7 +15,7 @@ concept_tag: HI-THG188-JEB
 prerequisites: [HI-C187-park, HI-C188-batan]
 sounds: []
 roots: [persian-jeb]
-etymology_hook: "jeb: usually traced to Persian jēb 'pocket'"
+etymology_hook: "jeb: usually traced to Persian jēb 'pocket', itself Arabic jayb 'pocket, opening of a garment'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C188-batan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**जेब** (*jeb*) is a loan, usually traced to Persian *jēb*, "pocket".
+**जेब** (*jeb*) is a loan, usually traced to Persian *jēb*, "pocket", which is Arabic *jayb*, "pocket, opening of a garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-PEOPLE
 prerequisites: [HI-C44-family, HI-C42-give]
 sounds: []
 roots: [sanskrit-loka]
-etymology_hook: "log: usually traced to Sanskrit loka 'world; people' (CDIAL 11119)"
+etymology_hook: "log: usually traced to Sanskrit loka 'world; people'; CDIAL 11119 lists Hindi loī, loe and Prakrit loga"
 duration:
   max_seconds: 210
 requires:

@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "A map, A way, A turn, A crossroads, A ship",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd64e6645c5dd3e4",
+  "sourceHash": "fnv1a64:dd47c492f2da477e",
   "lessons": [
     {
       "id": "HI-C181-naqsa",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ba3b6e417728e54",
+      "sourceHash": "fnv1a64:cde7263e62ad8c68",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चौराहा (caurāhā) is usually explained as cau-, \"four\", with rāh, \"road\", the Persian word that रास्ता (rāstā), \"a way\", also belongs with. CDIAL does not list it; it lists cauhaṭṭā, \"a crossing of market streets\", from catur-, \"four\" (CDIAL 4626)."
+              "text": "चौराहा (caurāhā) is usually explained as cau-, \"four\", with Persian rāh, \"road\". CDIAL does not list it; it lists cauhaṭṭā, \"a crossing of market streets\", from catur-, \"four\" (CDIAL 4626)."
             }
           ]
         },

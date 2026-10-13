@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 52,
-  "sourceHash": "fnv1a64:172fb18f547ef4e2",
+  "sourceHash": "fnv1a64:06335e566f2df627",
   "lessonIds": [
     "HI-C52-rice",
     "HI-C52-lentils",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch52.txt",
   "json": "hindi/narration/ch52.json",
   "textHash": "fnv1a64:3fcdde6a2f78aebb",
-  "jsonHash": "fnv1a64:b9a9e77a63d52c65",
+  "jsonHash": "fnv1a64:60fa18a16e5da2f5",
   "findings": []
 }

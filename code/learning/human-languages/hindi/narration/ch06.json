@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:710edeb2833e0c9a",
+  "sourceHash": "fnv1a64:bcfa13d042a631a7",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a7123f516356e9e",
+      "sourceHash": "fnv1a64:0dc46caabf44d939",
       "notice": null,
       "blocks": [
         {
@@ -95,7 +95,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "एक दो तीन चार पाँच (ek do tīn chār pāṁch) are all tadbhavas, Sanskrit numbers reshaped by sound change. Ek comes from a doubled form of Sanskrit eka, \"one\" (CDIAL 2462); do from dva, \"two\" (CDIAL 6648); tīn from trīṇi, \"three\" (CDIAL 5994); chār from catvāraḥ, \"four\" (CDIAL 4655); and pāṁch from pañca, \"five\" (CDIAL 7655)."
+              "text": "All five are tadbhavas, Sanskrit numbers reshaped by sound change: ek from a doubled form of eka (CDIAL 2462), do from dva (CDIAL 6648), tīn from trīṇi (CDIAL 5994), chār from catvāraḥ (CDIAL 4655), and pāṁch from pañca (CDIAL 7655)."
             }
           ]
         },

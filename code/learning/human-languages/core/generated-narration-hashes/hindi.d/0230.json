@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 230,
-  "sourceHash": "fnv1a64:4638775f09aa71d2",
+  "sourceHash": "fnv1a64:ed4eb9eb014b4319",
   "lessonIds": [
     "HI-C230-jhukna",
     "HI-C230-latakna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch230.txt",
   "json": "hindi/narration/ch230.json",
-  "textHash": "fnv1a64:285cff667e5a55e7",
-  "jsonHash": "fnv1a64:daac3623785da8ef",
+  "textHash": "fnv1a64:fd26a3507378f4b3",
+  "jsonHash": "fnv1a64:c0507ec5e6693f6f",
   "findings": []
 }

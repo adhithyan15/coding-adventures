@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:5252dd479ac99815",
+  "sourceHash": "fnv1a64:43044519fb5b6ea8",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -870,7 +870,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:086459916b706e20",
+      "sourceHash": "fnv1a64:c87d9d077844cbb9",
       "notice": null,
       "blocks": [
         {
@@ -916,7 +916,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आपका नाम क्या है? (āpkā nām kyā hai?) is built from inherited words: āp, \"you\", from Sanskrit ātman, \"self\" (CDIAL 1135), with the possessive -kā; nām, from nāman, \"name\"; kyā, from kim, \"what\" (CDIAL 3164); and hai, \"is\", usually traced to asti."
+              "text": "Every word in this question is inherited: āp from Sanskrit ātman, \"self\" (CDIAL 1135), with -kā, \"of\"; nām from nāman; kyā from kim (CDIAL 3164); hai, usually traced to asti."
             }
           ]
         },

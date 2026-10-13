@@ -15,7 +15,7 @@ concept_tag: HI-THG196-NAUKAR
 prerequisites: [HI-C196-raja, HI-C196-rani]
 sounds: []
 roots: [persian-naukar]
-etymology_hook: "naukar: usually traced to Persian naukar 'servant'"
+etymology_hook: "naukar: usually traced to Persian naukar 'servant', from Mongolic nökör 'companion'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C196-rani]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**नौकर** (*naukar*) is a loan, usually traced to Persian *naukar*, "servant".
+**नौकर** (*naukar*) is a loan, usually traced to Persian *naukar*, "servant", which Persian took from Mongolic *nökör*, "companion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

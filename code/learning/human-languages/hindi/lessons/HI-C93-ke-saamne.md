@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-sammukha]
 etymology_hook: "sāmne ← Sanskrit saṁmukha 'facing, present', a tadbhava (CDIAL 12982)"
 duration:
-  max_seconds: 248
+  max_seconds: 236
 requires:
   knowledge: [HI-LEX-C93-REL-03, HI-LEX-C69-GOING-03, HI-LEX-C93-REL-01]
 introduces:
@@ -49,7 +49,7 @@ set you.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**के सामने** (*ke sāmne*) is *ke* with *sāmne*, the form of *sāmnā*, "the front", that follows it. *sāmnā* is a tadbhava, inherited and reshaped by sound change, from Sanskrit *saṁmukha*, "facing, present" (CDIAL 12982).
+*sāmne* is a form of *sāmnā*, "the front", a tadbhava of Sanskrit *saṁmukha*, "facing" (CDIAL 12982).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-04, HI-LEX-C93-REL-03] -->

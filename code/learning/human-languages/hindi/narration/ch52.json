@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:172fb18f547ef4e2",
+  "sourceHash": "fnv1a64:06335e566f2df627",
   "lessons": [
     {
       "id": "HI-C52-rice",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c132bfddb73a18c2",
+      "sourceHash": "fnv1a64:eff4f2c0311ecead",
       "notice": null,
       "blocks": [
         {

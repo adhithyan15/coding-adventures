@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Kurta, Sari, Scarf, Cap, Coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f41d4651a7f2cf7a",
+  "sourceHash": "fnv1a64:1d8a4058461172ce",
   "lessons": [
     {
       "id": "HI-C136-kurta",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ce569f3a4cf7aa6",
+      "sourceHash": "fnv1a64:fbc0ba641535a02f",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दुपट्टा (dupaṭṭā) is built from du-, \"two\", and paṭṭā, \"a strip of cloth\": a cloth of two breadths. CDIAL lists Hindi paṭṭī, \"strip of cloth\", under Sanskrit paṭṭa, \"cloth\", probably of non-Aryan source (CDIAL 7700), but not dupaṭṭā itself."
+              "text": "दुपट्टा (dupaṭṭā) is built from du-, \"two\", and paṭṭā, \"a strip of cloth\": a cloth of two breadths. CDIAL lists Hindi paṭṭī, \"strip of cloth\", under Sanskrit paṭṭa, \"cloth\", probably of non-Aryan source (CDIAL 7700). It also reconstructs dupaṭṭikā, \"two cloths\" (CDIAL 6413), but lists no Hindi form under it."
             }
           ]
         },
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a69a93a2ce748c03",
+      "sourceHash": "fnv1a64:9b18f799ae90b4ff",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls any link with a Munda source very doubtful."
+              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls a link with Sanskrit āṭopa, \"swelling\", very doubtful."
             }
           ]
         },

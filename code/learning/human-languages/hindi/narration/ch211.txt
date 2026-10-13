@@ -13,7 +13,7 @@ You'll want to know: चटनी.
 चटनी — caṭnī — "chutney".
 
 The word, taken apart.
-The origin of चटनी (caṭnī) is uncertain. CDIAL has no entry for it. English took the word as chutney.
+The origin of चटनी (caṭnī) is not settled. It is often tied to cāṭnā, "to lick", which CDIAL lists under a reconstructed caṭṭ, "lick, taste" (CDIAL 4573), but CDIAL does not list caṭnī itself. English took the word as chutney.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: धनिया.
 धनिया — dhaniyā — "coriander".
 
 The word, taken apart.
-धनिया (dhaniyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhānaka, "coriander" (CDIAL 6776).
+धनिया (dhaniyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhāneyaka, "coriander", which CDIAL lists beside dhānaka (CDIAL 6776).
 
 What you've built.
 One more word for this chapter.

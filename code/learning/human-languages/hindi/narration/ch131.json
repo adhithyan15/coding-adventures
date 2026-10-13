@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Towel, Broom, Box, Bag, Candle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0e41fd312cab90b8",
+  "sourceHash": "fnv1a64:5ab95707fdcf3578",
   "lessons": [
     {
       "id": "HI-C131-tauliya",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2367e7f785313d96",
+      "sourceHash": "fnv1a64:9dd8ea25a8f3872a",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डिब्बा (ḍibbā) belongs with Hindi ḍabbā and ḍibbī, \"box\", which CDIAL lists under a reconstructed ḍibba, \"box\" (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian."
+              "text": "डिब्बा (ḍibbā) belongs with Hindi ḍabbā and ḍibbī, \"box\", which CDIAL lists under a reconstructed ḍabba, \"box\", and its variant ḍibba (CDIAL 5528). CDIAL takes the group to be non-Aryan, perhaps Dravidian."
             }
           ]
         },

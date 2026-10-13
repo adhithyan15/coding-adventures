@@ -17,7 +17,7 @@ sounds: []
 roots: [arabic-hal]
 etymology_hook: "hāl ← Arabic ḥāl 'state, condition', through Persian (Lane, root ḥ-w-l)"
 duration:
-  max_seconds: 203
+  max_seconds: 200
 requires:
   knowledge: [HI-LEX-C122-LATE-04, HI-LEX-C122-LATE-05]
 introduces:
@@ -49,7 +49,7 @@ reviews_of: [HI-C122-janahai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**क्या हाल है?** (*kyā hāl hai?*) is "what is the state?". *hāl* comes from Arabic *ḥāl*, "state, condition", which reached Hindi through Persian; its root is *ḥ-w-l* (Lane).
+*hāl* comes from Arabic *ḥāl*, "state, condition", through Persian; its root is *ḥ-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

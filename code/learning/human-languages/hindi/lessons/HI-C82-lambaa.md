@@ -88,8 +88,6 @@ them moves. Nothing has to be memorised — listen for the last sound.
 - [YOU SAY: "लंबा" — *lambā*, tall]
 - [YOU SAY: the form you would use about a woman (*lambī*)]
 - [YOU SAY: "लंबा दिन" — a long day, the same word doing the other job]
-- [YOU SAY: which English word for an arm or a leg comes from the same root
-  (*limb*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

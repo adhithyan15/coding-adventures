@@ -132,7 +132,7 @@ Now notice the shape. गाना (gānā) ends in -ना, exactly like खे
 Hindi does this often enough that it is worth expecting rather than being surprised by. You will meet another word with the same double life before this run of chapters is out.
 
 The word, taken apart.
-गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings" (CDIAL 4135). The noun is the verb gānā, "to sing", used for what is sung.
+गाना (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under gāpayati, the second form it gives beside gāyati, "sings" (CDIAL 4135). The noun is the verb gānā, "to sing", used for what is sung.
 
 What you've built.
 Four, and the first word you have met that is two words at once.

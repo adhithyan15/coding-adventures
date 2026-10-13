@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 99,
-  "sourceHash": "fnv1a64:9a298c5fe5d59aad",
+  "sourceHash": "fnv1a64:465af1a11b943f35",
   "lessonIds": [
     "HI-C91-bacche-plural",
     "HI-C91-kitaben",
@@ -17,7 +17,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch99.txt",
   "json": "hindi/narration/ch99.json",
-  "textHash": "fnv1a64:37fee42647bbe05e",
-  "jsonHash": "fnv1a64:54ef0e150b6d74c6",
+  "textHash": "fnv1a64:d4bf4980169e65b1",
+  "jsonHash": "fnv1a64:386386baf5df0cd0",
   "findings": []
 }

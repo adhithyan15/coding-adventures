@@ -15,7 +15,7 @@ concept_tag: HI-THG250-KHUDRA
 prerequisites: [HI-C250-mohar, HI-C250-chut]
 sounds: []
 roots: [persian-khurda]
-etymology_hook: "khuḍrā: usually traced to Persian khurda 'small, small change'"
+etymology_hook: "khudrā: usually traced to Persian khurda 'small, small change'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C250-chut]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खुदरा** (*khuḍrā*) is a loan, usually traced to Persian *khurda*, "small, small change".
+**खुदरा** (*khudrā*) is a loan, usually traced to Persian *khurda*, "small, small change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

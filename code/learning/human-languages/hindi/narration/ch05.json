@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c3c3b66efa3a4c43",
+  "sourceHash": "fnv1a64:22f01ee85985f110",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -518,7 +518,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0675377bc87d834",
+      "sourceHash": "fnv1a64:a991b46080294558",
       "notice": null,
       "blocks": [
         {
@@ -560,7 +560,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The pieces of this pattern are old. bol-, \"speak\", goes back to a reconstructed boll- (CDIAL 9321), and the -tā ending continues the old present participle in -nt-, \"doing\", as in Prakrit hoṁta, \"being\", from Sanskrit bhavati, \"is\" (CDIAL 9416)."
+              "text": "bol- goes back to a reconstructed boll-, \"speak\" (CDIAL 9321). The -tā continues the old present participle in -nt-, as in Prakrit hoṁta, \"being\" (CDIAL 9416)."
             }
           ]
         },

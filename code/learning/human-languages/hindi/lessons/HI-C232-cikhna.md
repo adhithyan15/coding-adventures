@@ -47,7 +47,7 @@ reviews_of: [HI-C232-muskurana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **चीखना** (*cīkhnā*) is uncertain. CDIAL lists a *cīkhnā* only in the sense "to taste" (CDIAL 4557), which is a different word.
+The origin of **चीखना** (*cīkhnā*) is uncertain. CDIAL lists a *cīkhnā* only in the sense "to taste" (CDIAL 4557), which is a different word. It may be imitative, like *cĩghāṛnā*, "to screech" (CDIAL 4787).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:186c9adb2921e921",
+  "sourceHash": "fnv1a64:45c1f32b2c20e778",
   "lessons": [
     {
       "id": "HI-C86-ham",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58a603e3a946f1f9",
+      "sourceHash": "fnv1a64:03eb549cbbe9da55",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +721,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बिना आर्टिकल (binā ārṭikal) is two words from two sources. binā, \"without\", comes from Sanskrit vinā, \"without\" (CDIAL 11772); ārṭikal is English article."
+              "text": "binā comes from Sanskrit vinā, \"without\" (CDIAL 11772); ārṭikal is English article."
             }
           ]
         },

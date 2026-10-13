@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Blood, Post office, Library, Temple, Mosque",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2d1e5751d9c07cb",
+  "sourceHash": "fnv1a64:bdf19054df00e90c",
   "lessons": [
     {
       "id": "HI-C152-khun",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09c5e9e220019edc",
+      "sourceHash": "fnv1a64:8cda4183d0a4a3e7",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डाकघर (ḍākghar) is \"post-house\": ḍāk, \"the post\", whose origin is uncertain and which CDIAL does not list, with ghar, \"house\", from ghara (CDIAL 4428)."
+              "text": "डाकघर (ḍākghar) is \"post-house\": ḍāk, \"the post\", from a reconstructed ḍakka, \"relay, post\", which CDIAL asks may belong with ḍakk, \"shout\" (CDIAL 5519), with ghar, \"house\", from ghara (CDIAL 4428)."
             }
           ]
         },

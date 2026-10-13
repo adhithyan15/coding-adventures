@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-SONG
 prerequisites: [HI-C70-cricket, HI-C68-language, HI-C69-ticket]
 sounds: []
 roots: [sanskrit-gayati]
-etymology_hook: "gānā ← Sanskrit gāyati 'sings', a tadbhava (CDIAL 4135)"
+etymology_hook: "gānā: listed by CDIAL under gāpayati, the second form beside Sanskrit gāyati 'sings'; a tadbhava (CDIAL 4135)"
 duration:
   max_seconds: 240
 requires:
@@ -60,7 +60,7 @@ run of chapters is out.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**गाना** (*gānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāyati*, "sings" (CDIAL 4135). The noun is the verb *gānā*, "to sing", used for what is sung.
+**गाना** (*gānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under *gāpayati*, the second form it gives beside *gāyati*, "sings" (CDIAL 4135). The noun is the verb *gānā*, "to sing", used for what is sung.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

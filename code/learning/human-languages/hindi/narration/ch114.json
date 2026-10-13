@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Sorry, No Problem, Congratulations",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e02b1d18ab77a985",
+  "sourceHash": "fnv1a64:2328ed774f44b8ad",
   "lessons": [
     {
       "id": "HI-C114-mafi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e49be3dc962315ed",
+      "sourceHash": "fnv1a64:aa0e98120519995c",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माफ़ी (māfī) is usually traced, through Persian, to an Arabic word for \"pardon\" on the root ʿ-f-w, \"to pardon, excuse\" (Lane). It is the noun of the māf inside māf kījie, \"forgive me\"."
+              "text": "माफ़ी (māfī) is māf with -ī. māf is usually traced, through Persian, to Arabic muʿāf, \"excused, let off\", on the root ʿ-f-w, \"to pardon\" (Lane). The same māf is inside māf kījie, \"forgive me\"."
             }
           ]
         },

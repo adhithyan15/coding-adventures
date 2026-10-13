@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Hungry, Thirsty, Sleepy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6bc19f0d2bbf740a",
+  "sourceHash": "fnv1a64:9fcf26a80ffee648",
   "lessons": [
     {
       "id": "HI-C124-bhukha",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fdd136aaa450698",
+      "sourceHash": "fnv1a64:5c417dc285282628",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्यासा (pyāsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pipāsita, \"thirsty\" (CDIAL 8200)."
+              "text": "प्यासा (pyāsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pipāsaka, \"thirsty\", a form CDIAL reconstructs beside Sanskrit pipāsita (CDIAL 8200)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:4207efec9d841fa7",
+  "sourceHash": "fnv1a64:2e0ec0bc0fbbc81e",
   "lessonIds": [
     "HI-C10-somavaar-shukravaar",
     "HI-C10-shanivaar-ravivaar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch10.txt",
   "json": "hindi/narration/ch10.json",
-  "textHash": "fnv1a64:1cf22253efcbbacd",
-  "jsonHash": "fnv1a64:709f6e2ea0dba90e",
+  "textHash": "fnv1a64:31c492c08f4dc994",
+  "jsonHash": "fnv1a64:75b83921c7f3c9f5",
   "findings": []
 }

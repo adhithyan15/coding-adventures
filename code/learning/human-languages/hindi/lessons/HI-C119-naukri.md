@@ -15,7 +15,7 @@ concept_tag: HI-ABOUT-JOB
 prerequisites: [HI-C118-patni, HI-C118-rishtedar]
 sounds: []
 roots: [persian-naukar]
-etymology_hook: "naukrī: usually traced to Persian naukar 'servant'"
+etymology_hook: "naukrī: naukar 'servant', usually traced to Persian naukar, from Mongolic nökör 'companion', + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [HI-C118-rishtedar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**नौकरी** (*naukrī*) is a loan, usually traced to Persian *naukar*, "servant". The *-ī* makes it the servant's work: a job.
+**नौकरी** (*naukrī*) is a loan, usually traced to Persian *naukar*, "servant", which Persian took from Mongolic *nökör*, "companion". The *-ī* makes it the servant's work: a job.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

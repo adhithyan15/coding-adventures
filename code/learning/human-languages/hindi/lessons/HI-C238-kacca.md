@@ -47,7 +47,7 @@ reviews_of: [HI-C237-basi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कच्चा** (*kaccā*) goes back to a reconstructed *\*kacca*, "raw, unripe" (CDIAL 2613). CDIAL lists older Hindi *kācā* and marks *kaccā* as taken over from Punjabi.
+**कच्चा** (*kaccā*) goes back to a reconstructed *\*kacca*, "raw, unripe" (CDIAL 2613). CDIAL lists Hindi *kācā* and marks *kaccā* as taken over from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

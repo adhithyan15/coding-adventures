@@ -15,7 +15,7 @@ concept_tag: HI-WHAT-DONT-KNOW
 prerequisites: [HI-C126-samajhnahin, HI-C126-kyakaha]
 sounds: []
 roots: [sanskrit-pratyaya]
-etymology_hook: "patā: origin uncertain; CDIAL lists patiyānā 'to trust' under pratyaya 'belief' (CDIAL 8640)"
+etymology_hook: "patā: origin uncertain; CDIAL lists patyānā 'to trust' under pratyaya 'belief' (CDIAL 8640)"
 duration:
   max_seconds: 200
 requires:

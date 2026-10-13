@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-calati]
 etymology_hook: "cal ← Sanskrit calati 'goes away' (CDIAL 4715)"
 duration:
-  max_seconds: 206
+  max_seconds: 200
 requires:
   knowledge: [HI-LEX-C123-HAAL-02, HI-LEX-C123-HAAL-03]
 introduces:
@@ -49,7 +49,7 @@ It is **चलना**, "to go, to move", in the right-now form: what is moving 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**क्या चल रहा है?** (*kyā cal rahā hai?*) is "what is moving?". *calnā*, "to move, go", comes from Sanskrit *calati*, "goes away" (CDIAL 4715).
+*calnā*, "to move, go", comes from Sanskrit *calati*, "goes away" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

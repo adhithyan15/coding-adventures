@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-SPOON
 prerequisites: [HI-C61-vessel]
 sounds: []
 roots: [persian-chamcha]
-etymology_hook: "chammach: usually traced to Persian chamcha 'spoon, ladle'"
+etymology_hook: "chammach: usually traced to Persian chamcha 'spoon, ladle', which Persian took from Turkic"
 duration:
   max_seconds: 210
 requires:
@@ -51,7 +51,7 @@ What is certain is the shape of the modern word: a doubled *m* in the middle, an
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**चम्मच** (*chammach*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle".
+**चम्मच** (*chammach*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle", a word Persian itself took from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

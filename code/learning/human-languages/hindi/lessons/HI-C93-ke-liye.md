@@ -17,7 +17,7 @@ sounds: []
 roots: [sanskrit-labhate]
 etymology_hook: "liye: usually explained as a form of lenā 'to take', which CDIAL lists under Sanskrit labhate 'takes' (CDIAL 10948)"
 duration:
-  max_seconds: 251
+  max_seconds: 242
 requires:
   knowledge: [HI-LEX-C93-REL-05, HI-LEX-FAMILY, HI-LEX-C84-POSS-06, HI-LEX-C93-REL-01]
 introduces:
@@ -48,7 +48,7 @@ chapter. Then say the word for a family.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**परिवार के लिए** (*parivār ke liye*) is *parivār*, "family", *ke* and *liye*, "for". *liye* is usually explained as a form of *lenā*, "to take", which CDIAL lists under Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
+*liye*, "for", is usually explained as a form of *lenā*, "to take", which CDIAL lists under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-06, HI-LEX-C84-POSS-06] -->

@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "A balcony, A cup, A needle, A lamp, Bread",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c1454cd41d248617",
+  "sourceHash": "fnv1a64:01c77a1c37fbaba0",
   "lessons": [
     {
       "id": "HI-C209-chajja",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99b8a457d3318bae",
+      "sourceHash": "fnv1a64:1f0ef7527d9418b4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of छज्जा (chajjā) is uncertain. CDIAL has no entry for it."
+              "text": "छज्जा (chajjā) is inherited. CDIAL lists it under Sanskrit chādya, \"to be sheltered\", and marks the Hindi word as taken from Punjabi chajjā, \"eaves, balcony\" (CDIAL 5023)."
             }
           ]
         },

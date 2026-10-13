@@ -55,7 +55,7 @@ adjective you will ever meet here.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**अच्छा** (*acchā*) goes back to Sanskrit *accha*, "clear, transparent" (CDIAL 142). CDIAL lists an older Hindi *āchā*, "good", and marks *acchā* itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant "shadowless".
+**अच्छा** (*acchā*) goes back to Sanskrit *accha*, "clear, transparent" (CDIAL 142). CDIAL lists Hindi *āchā*, "good", and marks *acchā* itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant "shadowless".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03, HI-CONCEPT-C39-AADMI-01, HI-CONCEPT-C39-AADMI-02, HI-LEX-C40-DEIXIS-04] -->

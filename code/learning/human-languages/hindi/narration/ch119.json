@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Work and Marriage",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:708a8e3057f92524",
+  "sourceHash": "fnv1a64:2fe70e8603cecf42",
   "lessons": [
     {
       "id": "HI-C119-naukri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4190eb319449ea1d",
+      "sourceHash": "fnv1a64:9cee81cb5a2d428f",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नौकरी (naukrī) is a loan, usually traced to Persian naukar, \"servant\". The -ī makes it the servant's work: a job."
+              "text": "नौकरी (naukrī) is a loan, usually traced to Persian naukar, \"servant\", which Persian took from Mongolic nökör, \"companion\". The -ī makes it the servant's work: a job."
             }
           ]
         },
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97de28ce76be923d",
+      "sourceHash": "fnv1a64:948046b72c827591",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शादीशुदा (śādīśudā) is a loan, usually traced to Persian shādī-shuda, \"married\". It is built from shādī, \"wedding\", and shuda, \"become\"."
+              "text": "शादीशुदा (śādīśudā) is a compound made in Hindustani from Persian parts: shādī, \"joy\", which Hindi uses for a wedding, and shuda, \"become\"."
             }
           ]
         },
