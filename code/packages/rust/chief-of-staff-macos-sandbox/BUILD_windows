@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-macos-sandbox && cargo clippy -p chief-of-staff-macos-sandbox --all-targets -- -D warnings

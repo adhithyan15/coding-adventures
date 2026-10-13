@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- `broker-e2e-host` writes its result beside the result path and renames it
+  into place. `fs::write` creates the file before filling it, so the tests,
+  which poll for the result to exist, could read it empty: the race failed
+  `a_reservation_left_by_a_dead_broker_is_abandoned_at_launch` on Ubuntu CI.
+
 ### Added
 
 - End-to-end tests of D18S P2.6d-2b on Linux: the process supervisor, the

@@ -2031,7 +2031,180 @@ through S-I3 before two weeks are spent on Windows.
         holds the supervisor: another host's requests and heartbeats are
         served meanwhile (tested with a dispatcher that blocks until
         released).
-7. **macOS Seatbelt** (Tier A).
+7. **macOS Seatbelt** (Tier A). macOS has none of the three things the
+   Linux applier (steps 4 and 5) is built on:
+   - there is no `execveat`, so every exec is by path;
+   - Seatbelt is installed by `sandbox_init`, which compiles its profile
+     and so allocates. A forked child of the multi-threaded supervisor may
+     make only async-signal-safe calls, so it cannot install a profile
+     between fork and exec;
+   - there is no listener that could allow exactly one exec.
+
+   So the install happens in a fresh process image: **the Seatbelt shim**,
+   a small binary of our own, pinned by SHA-256 like the broker.
+
+   ```text
+     supervisor                         shim (fresh image)        agent
+     ---------------------------------  ------------------------  ---------
+     MacosConfinement::prepare_verified
+       re-verifies shim and agent
+       checks paths and grants
+       builds the profile (a String)
+     apply(&mut command)
+       checks the environment
+       captures argv and envp, with
+       the instructions (profile,
+       agent and grant inodes, fds)
+       parks inherited fds
+     spawn ── fork, isolate,
+              execve(shim) ──────────►  places inherited fds
+                                        checks its environment
+                                        RLIMIT_CORE = 0
+                                        same inodes?
+                                        sandbox_init(profile)
+                                        launch probes (S-P4)
+                                        only 0-2 (+ keys) open?
+                                        same inodes?
+                                        execve(agent) ──────────► first
+                                                                  instruction,
+                                                                  confined
+   ```
+
+   Seatbelt applies to the whole process and survives exec, so the agent's
+   first instruction runs under the profile (S-I4c). Any failure in the
+   shim exits 127 without exec'ing (S-P3).
+
+   **The profile.** It starts `(deny default)` and allows only these:
+
+   ```text
+     operation                     on
+     ----------------------------  ---------------------------------------
+     process-exec                  the agent's canonical path (literal)
+     file-read*, file-map-exec.    the agent; /usr/lib; /System/Library;
+                                   /System/Volumes/Preboot/Cryptexes/OS;
+                                   /System/Cryptexes/OS;
+                                   /private/preboot/Cryptexes/OS
+                                   (dyld and its shared cache, under
+                                   each name Seatbelt may resolve it to)
+     file-read-data                /dev/urandom, /dev/random
+     file-read-data, -write-data   /dev/null
+     file-read-metadata            any path (dyld stats its search paths)
+     file-read-data                the directory / itself, not beneath it
+                                   (dyld opens it to find its cache)
+     sysctl-read                   a fixed list of hw.* and kern.* names
+                                   (CPU count, page and cache sizes, OS
+                                   version; kern.bootargs and
+                                   security.mac.lockdown_mode_state,
+                                   without which dyld halts on macOS 26),
+                                   and hw.optional.*
+     signal, process-info*         the agent itself only
+     each Direct fs grant          file-read-data or file-write-data on
+                                   its literal path
+   ```
+
+   Everything else is denied: `mach-lookup` and `mach-priv-task-port`
+   (S-I5's macOS row), `process-fork`, `process-info*` for any other
+   process, `network*` (every net grant is brokered), `ipc-posix*`,
+   `iokit-open` and every other path. Every other sysctl is denied too:
+   `kern.proc.*` lists every process, and `kern.procargs2` reads the argv
+   and environment of any process of the same user, the supervisor's
+   among them (review round 1). On macOS 26 the default deny alone did
+   not refuse `kern.procargs2` or `proc_pidpath` on another process (CI,
+   P2.7a), so the profile ends with explicit denials of both,
+   `(deny process-info* (target others))` and
+   `(deny sysctl-read (sysctl-name-prefix "kern.proc"))`, last so that
+   they win.
+
+   **Grants.** A Direct grant must name an existing regular file through
+   no symlink, as on Linux. It must not be the agent or the shim, and a
+   write grant must not lie under a system library directory. Its literal
+   is the canonical path, compared byte for byte, because Seatbelt matches
+   resolved paths (`/var` is `/private/var`).
+
+   Linux pins a grant to an inode (the Landlock rule is added on a
+   descriptor). Seatbelt matches by path for the agent's whole life, so
+   on macOS what matters is who can put a different file at that path
+   (review round 1). A grant therefore gets the executables' path rules
+   below, and its file must also be owned by root or the supervisor's
+   user and writable by no one else. The shim re-checks each grant's
+   `(dev, ino)` with the agent's.
+
+   **Exec by path, pinned to an inode.** The supervisor re-verifies the
+   agent's digest through its descriptor when it prepares the
+   confinement, which a launcher does for every launch. The path is what
+   runs, so it also checks that:
+   - the path is canonical;
+   - the path names the same `(dev, ino)` as the hashed descriptor;
+   - every directory above it is owned by root or the supervisor's user
+     and is writable by no one else, unless it is sticky. "Writable" is
+     judged by the mode bits and by the ACL, on sticky directories too
+     (an ACL `delete_child` is honoured before the sticky bit): an
+     `allow` entry, inherited or not, granting `add_file`,
+     `delete_child` or any other change refuses;
+   - it lies on a local APFS or HFS volume that honours ownership. On a
+     volume that ignores ownership, every file reads as the caller's; on
+     FAT-family volumes a replaced file can reuse an inode number.
+
+   The shim checks the `(dev, ino)` again immediately before `execv`.
+   The same rules apply to the shim's own path.
+
+   **The launch probes (S-P4).** After `sandbox_init`, the shim requires
+   a denial (`EPERM`, or `EACCES`, which is not ambient either) from two
+   operations that succeed or fail differently without the profile:
+   - reading its own executable (which the supervisor just hashed, so
+     the read is permitted without the profile);
+   - a TCP connect to `127.0.0.1:1` (`ECONNREFUSED` without the profile).
+
+   Any other outcome exits 127. The profile's full coverage is checked in
+   CI by a probe agent on `macos-latest`.
+
+   **Descriptors and the environment.**
+   - `apply` captures argv and the environment, as on Linux, and the
+     child's hook execs the shim with exactly those. Changes to the
+     command afterwards do not reach the shim. A refused command is
+     poisoned, so spawning it anyway fails.
+   - Spawn isolation (step 2) marks every descriptor above 2 close-on-exec.
+   - For a broker, `apply_inheriting` parks the key descriptors as
+     close-on-exec duplicates, and closes the caller's copies. (Not at a
+     high floor: macOS's default soft descriptor limit is 256.) The
+     hook clears close-on-exec on exactly the parked ones. The shim moves
+     them to 3..3+n and closes the parked copies.
+   - Just before the exec, the shim lists its open descriptors
+     (`proc_pidinfo`, `PROC_PIDLISTFDS`) and refuses any it was not told
+     about. A list too long to read refuses too.
+   - The environment's closed set is Linux's (`GRANTABLE_ENVIRONMENT`):
+     no `DYLD_*`, ever. The supervisor checks it, and the shim checks its
+     own environment again.
+
+   **Residuals, recorded.**
+   - *Exec by path.* Between the shim's last inode check and `execv`,
+     the path can be swapped by anyone able to write its directory. The
+     directory rule leaves only root and an unsandboxed process of the
+     supervisor's own user, which already equal the supervisor.
+   - *Re-exec.* The agent may exec its own image again, under the same
+     profile. That gives it nothing it did not have.
+   - *Metadata.* `stat` (and `readlink`) of any path answers, as on
+     Linux: dyld stats its search paths.
+   - *dyld before the shim's `main`.* A `DYLD_*` variable would load code
+     into the shim before it can check anything. The supervisor never
+     passes one. Signing the shim with the Hardened Runtime makes dyld
+     ignore them, and is recommended for release builds.
+   - *Deprecated API.* `sandbox_init` with a profile string is
+     deprecated and undocumented, as recorded above. It is what
+     `sandbox-exec` and production browsers use.
+   - *Task ports.* The Hardened Runtime without `get-task-allow` (S-I5)
+     is a signing property of the release build, and is not checked at
+     launch.
+
+   Sub-steps:
+   1. **P2.7a:** the shim, `chief-of-staff-macos-sandbox`'s
+      `MacosConfinement`, and `VerifiedExecutable` on macOS. Tested on
+      `macos-latest`: a probe agent proves each denial, and that a
+      Direct grant is readable while its neighbour is not.
+   2. **P2.7b:** the broker on macOS. The launcher confines it through
+      `MacosConfinement::apply_inheriting`, and the daemon accepts
+      `[hosts.broker]` on macOS with the shim pinned in its config. The
+      broker end-to-end test runs on `macos-latest`.
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
