@@ -12,6 +12,10 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   (`Lint/CopDirectiveSyntax`), which failed `standardrb` on every main CI
   run (X-7). The comment never disabled anything. The hash literal already
   matches Standard's no-space style.
+- Added `BUILD_windows`. A Windows checkout has LF endings, and `standardrb`
+  there demands CRLF (`Layout/EndOfLine`), so the shared BUILD failed on
+  `windows-2025` once this package rebuilt. Windows now lints with
+  `--except Layout/EndOfLine`, as `x509_extension` does.
 
 ## [0.1.0] — 2026-04-26
 
