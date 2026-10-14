@@ -78,3 +78,9 @@ Supply the upstream neutral defaults, retaining every ordering/large-gap
 assertion. Preserve the compilation-failure receipt. Completed incremental
 cache alone may be reclaimed after the actual terminal result; preserve source,
 receipts, binaries and all frozen Miri artifacts. No active-target cleanup.
+
+Actual56601 EXIT1 at ebd: the full five-package suite executes1500PASS/1FAIL
+in17targets, no ignores. The sole failure is an owned unknown-target oracle's
+old node-or-edge wording; upstream now includes subgraph targets. Require the
+entire new refusal message and exact source line7/column1 while retaining all
+duplicate-ID/collision/style/visit assertions. No parser implementation change.
