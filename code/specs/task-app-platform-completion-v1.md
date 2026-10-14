@@ -237,6 +237,14 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
+**Next style item — #17481: SwiftUI drag-body spacing reports.** Both
+`HostDraggable` and `HostDropTarget` already construct a vertical stack with
+authored spacing. Recognize those constructors in the gap reporter, requiring
+every occurrence of a shared part to consume the property. Unsupported values
+and reuse on non-spacing primitives must remain reported. Verify generated
+TaskApp before retiring its four gap allowances. Drag callbacks and native
+behavior are unchanged; this is reporting reconciliation.
+
 11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
     — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
     accumulated after v0.5.1 into an immutable patch release. Keep the verified
