@@ -24032,6 +24032,7 @@ fn captured_array_jvm_float_descriptor_runtime_regression() {
     let descriptor = append(cp, Cp::Utf8("()I".into()));
     let nat = append(cp, Cp::NameAndType { name_index: name, descriptor_index: descriptor });
     let method = append(cp, Cp::Methodref { class_index: owner, name_and_type_index: nat });
+    append(cp, Cp::Utf8("([Ljava/lang/String;)V".into()));
     // main(String[]) calls main()I and accepts only42. An incorrect answer
     // throws (aconst_null; athrow), so process success proves the computation.
     // if_icmpeq at PC5 targets return at PC10: offset5, stack empty on both arms.
@@ -24044,4 +24045,20 @@ fn captured_array_jvm_float_descriptor_runtime_regression() {
     assert!(output.status.success(), "JVM float array: {}", String::from_utf8_lossy(&output.stderr));
     assert!(output.stdout.is_empty());
     eprintln!("EXECUTED: real JVM float-array allocation/store/call/load/return verified; computed42; process0");
+    // Recreate the former descriptor-only defect in the emitted class while
+    // preserving NEWARRAY T_FLOAT/FALOAD and every program instruction. The
+    // verifier must reject it, independently of the positive execution above.
+    let mut bad = class.clone();
+    bad.methods.iter_mut().find(|m| m.name == "read").unwrap().descriptor = "([I)F".into();
+    for entry in bad.constant_pool.iter_mut().flatten() {
+        if let Cp::Utf8(value) = entry {
+            if value == "([F)F" { *value = "([I)F".into(); }
+        }
+    }
+    std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&bad)).unwrap();
+    let rejected = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute descriptor-only negative JVM control");
+    assert!(!rejected.status.success());
+    let detail = String::from_utf8_lossy(&rejected.stderr);
+    assert!(detail.contains("VerifyError"), "descriptor-only control: {detail}");
+    eprintln!("EXECUTED: descriptor-only [F-> [I mutation rejected by real verifier: {detail}");
 }
