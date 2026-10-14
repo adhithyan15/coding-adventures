@@ -92,6 +92,10 @@ describe("etymology-gap direct-owner loader", () => {
         "./etymology-gap-pin-owners/arabic.owner.ts": moduleFor(owner("arabic")),
       };
 
+      expect(() =>
+        loadEtymologyGapPinOwners(resolve(root, "missing-root"), modules, ["arabic"]),
+      ).toThrow(/ENOENT/);
+
       const linkedRoot = resolve(root, "linked-root");
       symlinkSync(target, linkedRoot);
       expect(() => loadEtymologyGapPinOwners(linkedRoot, modules, ["arabic"])).toThrow(
