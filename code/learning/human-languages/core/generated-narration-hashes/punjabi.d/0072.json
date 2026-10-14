@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 72,
-  "sourceHash": "fnv1a64:747ff2494f44568c",
+  "sourceHash": "fnv1a64:8f78502984bf8c8c",
   "lessonIds": [
     "PA-C72-basta",
     "PA-C72-paisa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch72.txt",
   "json": "punjabi/narration/ch72.json",
-  "textHash": "fnv1a64:79f4e1c0748eadd8",
-  "jsonHash": "fnv1a64:4cc10571593e36ed",
+  "textHash": "fnv1a64:156df75c77698bf7",
+  "jsonHash": "fnv1a64:4d52fe032d1226ef",
   "findings": []
 }

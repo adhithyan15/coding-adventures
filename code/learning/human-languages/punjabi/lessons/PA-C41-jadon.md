@@ -11,8 +11,8 @@ gloss: when - locating one event against another
 concept_tag: PA-JOIN-JADON
 prerequisites: [PA-C41-je-write, PA-C41-je]
 sounds: [hora-o, bindi-nasal]
-roots: []
-etymology_hook: ਜਦੋਂ opens with the same ਜ as ਜੇ; Punjabi builds a whole family of clause-openers on that one letter.
+roots: [sanskrit-yada]
+etymology_hook: "jadoṁ: usually linked to Sanskrit yadā 'when', under which CDIAL lists Lahnda jāṁ but no Punjabi form (10409)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,8 @@ clause rather than following it — and look at the front of both words. The sam
 That is not a coincidence. Punjabi builds a family of clause-openers on that one
 letter, the way it builds its questions on **ਕ**. You now own two members of it,
 and the pattern is worth more than either word alone.
+
+*Jadoṁ* is usually linked to Sanskrit *yadā*, "when", on the relative stem *ya-*. CDIAL lists Lahnda *jāṁ*, "when", under *yadā* (CDIAL 10409), but no Punjabi form.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-JADON-01, PA-JOIN-JE-01] -->

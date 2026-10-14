@@ -11,7 +11,8 @@ gloss: "I speak Punjabi (the participle agrees with the speaker's gender)"
 concept_tag: PA-SENTENCE-I-SPEAK-PUNJABI
 prerequisites: [PA-C02-hai, PA-C03-main, PA-C05-panjabi]
 sounds: [kanna-aa, bindi-nasal]
-roots: []
+roots: [ma-first-person, bol-speak]
+etymology_hook: "maiṁ ← base ma- (CDIAL 9691); panjābī ← Persian panj āb 'five waters'; bol- ← *bōll 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +50,8 @@ you.
 
 **ਬੋਲਦਾ** (*boldā*) is the stem *bol-* plus **-ਦਾ** (*-dā*). Nothing new has been
 added to the verb but an ending.
+
+Its pieces come from two sources: *maiṁ* goes back to the Sanskrit first-person base *ma-* (CDIAL 9691) and *bol-* to a reconstructed *\*bōll*, "speak" (CDIAL 9321), while *panjābī* is built on Persian *panj āb*, "five waters".
 
 ## Grammar Lens: the present habitual, gendered
 <!-- hl-knowledge: introduces=[PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05]; assesses=[] -->

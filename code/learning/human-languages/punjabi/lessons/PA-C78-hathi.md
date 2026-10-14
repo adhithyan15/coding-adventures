@@ -14,7 +14,8 @@ romanization: "hāthī"
 concept_tag: PA-ANIMALS78-HATHI
 prerequisites: [PA-C78-chuha, PA-C78-sher]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hāthī: matches Hindi hāthī, which CDIAL lists under Sanskrit hastin 'having hands; elephant' (CDIAL 14039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C78-sher]
 <!-- hl-knowledge: introduces=[PA-LEX-C78-ANIMALS78-04]; assesses=[] -->
 
 **ਹਾਥੀ** — *hāthī* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਾਥੀ** (*hāthī*) matches Hindi *hāthī*, which CDIAL lists under Sanskrit *hastin*, "having hands; elephant" (CDIAL 14039). CDIAL wonders whether *hastin* remade an older, perhaps non-Aryan word for the animal, linked by folk etymology with *kara*, "hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

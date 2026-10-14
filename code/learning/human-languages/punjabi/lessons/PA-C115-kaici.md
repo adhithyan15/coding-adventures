@@ -14,7 +14,8 @@ romanization: "kaĩcī"
 concept_tag: PA-THINGS115-KAICI
 prerequisites: [PA-C115-cullha, PA-C115-bhada]
 sounds: []
-roots: []
+roots: [turkish-qaychi]
+etymology_hook: "kaĩcī: usually traced to Persian qaichī 'scissors'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C115-bhada]
 <!-- hl-knowledge: introduces=[PA-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **ਕੈਂਚੀ** — *kaĩcī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੈਂਚੀ** (*kaĩcī*) is a loan, usually traced to Persian *qaichī*, "scissors". Persian itself took the word from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

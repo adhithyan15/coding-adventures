@@ -14,7 +14,8 @@ romanization: "puttar"
 concept_tag: PA-HEALTH53-PUTTAR
 prerequisites: [PA-C53-pita, PA-C53-mata]
 sounds: []
-roots: []
+roots: [sanskrit-putra]
+etymology_hook: "puttar ← Sanskrit putra 'son', keeping its r as Lahnda puttar does; CDIAL lists Punjabi putt (8265)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C53-mata]
 <!-- hl-knowledge: introduces=[PA-LEX-C53-HEALTH53-04]; assesses=[] -->
 
 **ਪੁੱਤਰ** — *puttar* — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੁੱਤਰ** (*puttar*) goes back to Sanskrit *putra*, "son". Its doubled *tt* is an inherited sound change, and it keeps the *r*, as Lahnda *puttar* does. CDIAL lists the shorter Punjabi form *putt* beside Lahnda *puttar* (CDIAL 8265).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

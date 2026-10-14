@@ -14,7 +14,8 @@ romanization: "patī"
 concept_tag: PA-FAMILY54-PATI
 prerequisites: [PA-C54-nana, PA-C54-nani]
 sounds: []
-roots: []
+roots: [sanskrit-pati]
+etymology_hook: "patī ← Sanskrit pati 'master, husband', a tatsama (CDIAL 7727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C54-nani]
 <!-- hl-knowledge: introduces=[PA-LEX-C54-FAMILY54-05]; assesses=[] -->
 
 **ਪਤੀ** — *patī* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਤੀ** (*patī*) is Sanskrit *pati*, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727). CDIAL lists the inherited Punjabi form as *paī*, "husband".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

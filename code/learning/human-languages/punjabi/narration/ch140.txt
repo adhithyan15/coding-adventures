@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a blacksmith, then the Punjabi for a pot
 You'll want to know: ਚੁੱਪ.
 ਚੁੱਪ — cupp — "silent".
 
+The word, taken apart.
+ਚੁੱਪ (cupp) is a tadbhava, a word inherited and reshaped by sound change. It comes from cuppa, "silent", a form CDIAL reconstructs from its descendants (CDIAL 4864). CDIAL suggests, hesitantly, that it may be imitative.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a potter, then the Punjabi for silent.
 
 You'll want to know: ਕੀਮਤੀ.
 ਕੀਮਤੀ — kīmtī — "valuable".
+
+The word, taken apart.
+ਕੀਮਤੀ (kīmtī) is built on kīmat, "price", a loan from Arabic qīma, "value", which reached Punjabi through Persian; its Arabic root is q-w-m (Lane). The ending -ī makes it "having value".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for silent, then the Punjabi for valuable.
 You'll want to know: ਡੂੰਘਾ.
 ਡੂੰਘਾ — ḍū̃ghā — "deep".
 
+The word, taken apart.
+CDIAL lists ਡੂੰਘਾ (ḍū̃ghā) (ḍūṁghā), "deep", under Sanskrit gūḍha, "hidden", following another scholar's view that its sounds were swapped (CDIAL 4223).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for valuable, then the Punjabi for deep.
 You'll want to know: ਹੌਲਾ.
 ਹੌਲਾ — haulā — "light (not heavy)".
 
+The word, taken apart.
+ਹੌਲਾ (haulā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light" (CDIAL 10896). Its sounds have been swapped.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for deep, then the Punjabi for light.
 
 You'll want to know: ਭਾਰਾ.
 ਭਾਰਾ — bhārā — "heavy".
+
+The word, taken apart.
+ਭਾਰਾ (bhārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhāra, "burden, weight" (CDIAL 9459).
 
 What you've built.
 One more word for this chapter.

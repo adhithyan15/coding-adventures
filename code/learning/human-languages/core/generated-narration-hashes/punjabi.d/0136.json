@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 136,
-  "sourceHash": "fnv1a64:9818266d2b014114",
+  "sourceHash": "fnv1a64:9eee5ba32acdc3a2",
   "lessonIds": [
     "PA-C136-tali",
     "PA-C136-nahu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch136.txt",
   "json": "punjabi/narration/ch136.json",
-  "textHash": "fnv1a64:a02d4ecb663aa603",
-  "jsonHash": "fnv1a64:774584595f0d0351",
+  "textHash": "fnv1a64:a52a8e67981334a2",
+  "jsonHash": "fnv1a64:8108b6a1811ef728",
   "findings": []
 }

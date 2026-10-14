@@ -15,6 +15,7 @@ concept_tag: PA-THINGS121-CHOLE
 prerequisites: [PA-C121-kara, PA-C121-gur]
 sounds: []
 roots: []
+etymology_hook: "chole: its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C121-gur]
 <!-- hl-knowledge: introduces=[PA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **ਛੋਲੇ** — *chole* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਛੋਲੇ** (*chole*) comes from is not settled: CDIAL has no entry for it. The Punjabi word CDIAL does list for the chickpea is *caṇā*, from Sanskrit *caṇa* (CDIAL 4579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

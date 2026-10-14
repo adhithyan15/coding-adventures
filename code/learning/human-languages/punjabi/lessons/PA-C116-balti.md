@@ -14,7 +14,8 @@ romanization: "bālṭī"
 concept_tag: PA-THINGS116-BALTI
 prerequisites: [PA-C116-batan, PA-C116-kill]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bālṭī: usually traced to Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C116-kill]
 <!-- hl-knowledge: introduces=[PA-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **ਬਾਲਟੀ** — *bālṭī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਾਲਟੀ** (*bālṭī*) is a loan, usually traced to Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: I did not understand — the sentence a learner needs before any noun
 concept_tag: PA-NEG-NOT-UNDERSTOOD
 prerequisites: [PA-C37-nahin-vaak, PA-C08-samajhna, PA-C35-mainu, PA-C09-pasand]
 sounds: [bindi-nasal, breathy-jh]
-roots: []
-etymology_hook: Punjabi does not say "I understand" but "understanding came to me" — so the negative is that it did not come, and the ਮੈਨੂੰ you learned two chapters ago is what it comes to.
+roots: [sanskrit-sambudhyate]
+etymology_hook: "samajh, from samajhṇā ← saṁbudhyate 'understands' (CDIAL 12959); āī, from āuṇā ← āpayati (CDIAL 1200)"
 duration:
   max_seconds: 260
 requires:
@@ -54,6 +54,8 @@ the shape you already met in **ਮੈਨੂੰ … ਪਸੰਦ ਹੈ**, "X is 
 
 So this is not a new grammar. It is the dative frame you own, with a different
 noun in it and **ਨਹੀਂ** in the slot the last lesson gave you.
+
+*Samajh* is the stem of *samajhṇā*, "to understand", which CDIAL lists under Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959), and *āī* is a form of *āuṇā*, "to come", from *āpayati* (CDIAL 1200).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

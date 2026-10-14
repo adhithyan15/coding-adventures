@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 132,
-  "sourceHash": "fnv1a64:f35b43b9d37ee092",
+  "sourceHash": "fnv1a64:f79a162921598f0b",
   "lessonIds": [
     "PA-C132-makkhi",
     "PA-C132-madhumakkhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch132.txt",
   "json": "punjabi/narration/ch132.json",
-  "textHash": "fnv1a64:b0acad3e69a03e04",
-  "jsonHash": "fnv1a64:b1a1376fe35909ad",
+  "textHash": "fnv1a64:3a06e49a868b4b07",
+  "jsonHash": "fnv1a64:da5ae2a55f68f5b9",
   "findings": []
 }

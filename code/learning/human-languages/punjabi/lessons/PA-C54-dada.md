@@ -14,7 +14,8 @@ romanization: "dādā"
 concept_tag: PA-FAMILY54-DADA
 prerequisites: [PA-C53-puttar, PA-C53-dhi]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C53-dhi]
 <!-- hl-knowledge: introduces=[PA-LEX-C54-FAMILY54-01]; assesses=[] -->
 
 **ਦਾਦਾ** — *dādā* — "a grandfather (father's father)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਾਦਾ** (*dādā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). CDIAL lists Punjabi *dāddā*, "father's father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "uṅgal"
 concept_tag: PA-BODY50-UNGAL
 prerequisites: [PA-C49-dand, PA-C49-gala]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "uṅgal ← Sanskrit aṅguli 'finger, toe', a tadbhava (CDIAL 135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C49-gala]
 <!-- hl-knowledge: introduces=[PA-LEX-C50-BODY50-01]; assesses=[] -->
 
 **ਉਂਗਲ** — *uṅgal* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉਂਗਲ** (*uṅgal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguli*, "finger, toe" (CDIAL 135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

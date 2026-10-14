@@ -14,7 +14,8 @@ romanization: "ṭappṇā"
 concept_tag: PA-VERB-TAPPNA
 prerequisites: [PA-C148-sikhauna, PA-C148-cukkna]
 sounds: []
-roots: []
+roots: [indo-aryan-tarpati]
+etymology_hook: "ṭappṇā ← *tarpati 'jumps', a reconstructed form; a tadbhava (CDIAL 5727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C148-cukkna]
 <!-- hl-knowledge: introduces=[PA-LEX-C148-ACT148-05]; assesses=[] -->
 
 **ਟੱਪਣਾ** — *ṭappṇā* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਟੱਪਣਾ** (*ṭappṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tarpati*, "jumps", a form CDIAL reconstructs from its descendants (CDIAL 5727).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

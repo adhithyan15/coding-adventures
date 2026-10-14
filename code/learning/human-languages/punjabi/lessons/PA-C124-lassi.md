@@ -14,7 +14,8 @@ romanization: "lassī"
 concept_tag: PA-THINGS124-LASSI
 prerequisites: [PA-C124-mugphali, PA-C124-sag]
 sounds: []
-roots: []
+roots: [indo-aryan-lassi]
+etymology_hook: "lassī ← *lassī 'buttermilk', a reconstructed form; a tadbhava (CDIAL 10998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C124-sag]
 <!-- hl-knowledge: introduces=[PA-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **ਲੱਸੀ** — *lassī* — "lassi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੱਸੀ** (*lassī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lassī*, "buttermilk", a form CDIAL reconstructs from its descendants (CDIAL 10998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

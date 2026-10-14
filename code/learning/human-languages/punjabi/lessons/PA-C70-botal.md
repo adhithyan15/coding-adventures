@@ -14,7 +14,8 @@ romanization: "botal"
 concept_tag: PA-HOME70-BOTAL
 prerequisites: [PA-C70-chamcha, PA-C70-chaku]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "botal: usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C70-chaku]
 <!-- hl-knowledge: introduces=[PA-LEX-C70-HOME70-03]; assesses=[] -->
 
 **ਬੋਤਲ** — *botal* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੋਤਲ** (*botal*) is a loan, usually traced to English *bottle*, or else to Portuguese *botelha*. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

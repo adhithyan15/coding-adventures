@@ -14,7 +14,8 @@ romanization: "saccā"
 concept_tag: PA-QUAL146-SACCA
 prerequisites: [PA-C146-pakka, PA-C146-kacca]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "saccā ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C146-kacca]
 <!-- hl-knowledge: introduces=[PA-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **ਸੱਚਾ** — *saccā* — "true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੱਚਾ** (*saccā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

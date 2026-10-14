@@ -14,7 +14,8 @@ romanization: "kaṇak"
 concept_tag: PA-THINGS122-KANAK
 prerequisites: [PA-C121-mugi, PA-C122-bajra]
 sounds: []
-roots: []
+roots: [sanskrit-kanika]
+etymology_hook: "kaṇak ← Sanskrit kaṇika 'grain', a tadbhava (CDIAL 2665)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C122-bajra]
 <!-- hl-knowledge: introduces=[PA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **ਕਣਕ** — *kaṇak* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਣਕ** (*kaṇak*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṇika*, "grain" (CDIAL 2665). Punjabi narrowed "grain" to "wheat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

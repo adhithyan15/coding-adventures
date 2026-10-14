@@ -14,7 +14,8 @@ romanization: "mālak"
 concept_tag: PA-CAN111-MALAK
 prerequisites: [PA-C110-jaidad, PA-C111-daulat]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālak ← Arabic mālik 'owner', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C111-daulat]
 <!-- hl-knowledge: introduces=[PA-LEX-C111-CAN111-02]; assesses=[] -->
 
 **ਮਾਲਕ** — *mālak* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਲਕ** (*mālak*) is a loan from Arabic *mālik*, "owner", which reached Punjabi through Persian. Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

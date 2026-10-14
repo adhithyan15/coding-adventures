@@ -14,7 +14,8 @@ romanization: "chhatt"
 concept_tag: PA-HOME68-CHHATT
 prerequisites: [PA-C68-mez, PA-C68-kandh]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chhatt ← *chatti 'covering', a reconstructed form; a tadbhava (CDIAL 4971)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C68-kandh]
 <!-- hl-knowledge: introduces=[PA-LEX-C68-HOME68-03]; assesses=[] -->
 
 **ਛੱਤ** — *chhatt* — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛੱਤ** (*chhatt*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chatti*, "covering", a form CDIAL reconstructs from its descendants (CDIAL 4971). It is built on the Sanskrit root *chad*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 107,
-  "sourceHash": "fnv1a64:8042f8190a40e951",
+  "sourceHash": "fnv1a64:ba812c0c8677d64f",
   "lessonIds": [
     "PA-C107-kujh",
     "PA-C107-ap",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch107.txt",
   "json": "punjabi/narration/ch107.json",
-  "textHash": "fnv1a64:5295da29196abb88",
-  "jsonHash": "fnv1a64:56014110ab472e71",
+  "textHash": "fnv1a64:5f45b15e796843d5",
+  "jsonHash": "fnv1a64:91e7c3f689c06bca",
   "findings": []
 }

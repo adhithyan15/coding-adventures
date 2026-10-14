@@ -14,7 +14,8 @@ romanization: "guṛ"
 concept_tag: PA-THINGS121-GUR
 prerequisites: [PA-C121-vali, PA-C121-kara]
 sounds: []
-roots: []
+roots: [sanskrit-guda-molasses]
+etymology_hook: "guṛ ← Sanskrit guḍa 'boiled sugarcane juice, molasses', a tadbhava (CDIAL 4182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C121-kara]
 <!-- hl-knowledge: introduces=[PA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **ਗੁੜ** — *guṛ* — "jaggery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੁੜ** (*guṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *guḍa*, "boiled sugarcane juice, molasses" (CDIAL 4182). CDIAL asks whether it is the same word as *guḍa*, "ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

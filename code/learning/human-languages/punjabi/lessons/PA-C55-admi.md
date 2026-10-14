@@ -14,7 +14,8 @@ romanization: "ādmī"
 concept_tag: PA-FAMILY55-ADMI
 prerequisites: [PA-C55-munda, PA-C55-kuri]
 sounds: []
-roots: []
+roots: [arabic-adami]
+etymology_hook: "ādmī ← Arabic ādamī 'human, of Adam', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C55-kuri]
 <!-- hl-knowledge: introduces=[PA-LEX-C55-FAMILY55-05]; assesses=[] -->
 
 **ਆਦਮੀ** — *ādmī* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਦਮੀ** (*ādmī*) is a loan from Arabic *ādamī*, "human, of Adam", which reached Punjabi through Persian. Its Arabic root is *ʾ-d-m* (Lane). It is *Ādam*, "Adam", with the Arabic ending *-ī*, "belonging to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

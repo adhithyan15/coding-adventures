@@ -14,7 +14,8 @@ romanization: "sāhmaṇe"
 concept_tag: PA-PLACE89-SAHMANE
 prerequisites: [PA-C88-utte, PA-C88-hetham]
 sounds: []
-roots: []
+roots: [sanskrit-sammukha]
+etymology_hook: "sāhmaṇe: goes with Hindi sāmhnā 'front part', listed under Sanskrit saṁmukha 'facing, present' (CDIAL 12982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C88-hetham]
 <!-- hl-knowledge: introduces=[PA-LEX-C89-PLACE89-01]; assesses=[] -->
 
 **ਸਾਹਮਣੇ** — *sāhmaṇe* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਹਮਣੇ** (*sāhmaṇe*) goes with Hindi *sāmhnā*, "front part", which CDIAL lists under Sanskrit *saṁmukha*, "facing, present", beside Punjabi *saũhe*, "in front" (CDIAL 12982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

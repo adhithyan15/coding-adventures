@@ -14,7 +14,8 @@ romanization: "gandā"
 concept_tag: PA-QUAL143-GANDA
 prerequisites: [PA-C142-gilla, PA-C143-sukka]
 sounds: []
-roots: []
+roots: [persian-ganda]
+etymology_hook: "gandā: usually traced to Persian ganda 'stinking, foul'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C143-sukka]
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **ਗੰਦਾ** — *gandā* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੰਦਾ** (*gandā*) is a loan, usually traced to Persian *ganda*, "stinking, foul".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

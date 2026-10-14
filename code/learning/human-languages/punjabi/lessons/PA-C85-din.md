@@ -14,7 +14,8 @@ romanization: "din"
 concept_tag: PA-ADJ85-DIN
 prerequisites: [PA-C84-chitta, PA-C85-bhura]
 sounds: []
-roots: []
+roots: [sanskrit-dina]
+etymology_hook: "din: CDIAL takes it from Hindi din, or else straight from Sanskrit dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C85-bhura]
 <!-- hl-knowledge: introduces=[PA-LEX-C85-ADJ85-02]; assesses=[] -->
 
 **ਦਿਨ** — *din* — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਿਨ** (*din*) goes back to Sanskrit *dina*, "day". CDIAL takes the Punjabi word from Hindi *din*, or else, like Gujarati and Marathi *din*, straight from Sanskrit (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

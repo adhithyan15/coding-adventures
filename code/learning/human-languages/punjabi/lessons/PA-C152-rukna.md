@@ -14,7 +14,8 @@ romanization: "rukṇā"
 concept_tag: PA-VERB-RUKNA
 prerequisites: [PA-C152-bhajjna, PA-C152-ghummna]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "rukṇā: the partner of rokṇā 'to stop', under *rokk 'stop'; CDIAL notes Hindi ruknā 'to be stopped' (10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C152-ghummna]
 <!-- hl-knowledge: introduces=[PA-LEX-C152-ACT152-03]; assesses=[] -->
 
 **ਰੁਕਣਾ** — *rukṇā* — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰੁਕਣਾ** (*rukṇā*) is the partner of *rokṇā*, "to stop (something)", which CDIAL lists under a reconstructed *\*rokk*, "stop", noting Hindi *ruknā*, "to be stopped", beside *roknā* (CDIAL 10827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

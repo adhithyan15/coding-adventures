@@ -14,7 +14,8 @@ romanization: "kukkaṛ"
 concept_tag: PA-THINGS133-KUKKAR
 prerequisites: [PA-C132-makkari, PA-C132-galhar]
 sounds: []
-roots: []
+roots: [sanskrit-kukkuta]
+etymology_hook: "kukkaṛ ← Sanskrit kukkuṭa 'cock', imitative (CDIAL 3208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C132-galhar]
 <!-- hl-knowledge: introduces=[PA-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **ਕੁੱਕੜ** — *kukkaṛ* — "a rooster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੁੱਕੜ** (*kukkaṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kukkuṭa*, "cock" (CDIAL 3208). CDIAL calls the word imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

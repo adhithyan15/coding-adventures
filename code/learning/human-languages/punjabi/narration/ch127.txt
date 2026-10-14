@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a bud, then the Punjabi for an island.
 You'll want to know: ਕਿਨਾਰਾ.
 ਕਿਨਾਰਾ — kinārā — "a shore, a bank".
 
+The word, taken apart.
+ਕਿਨਾਰਾ (kinārā) is a loan, usually traced to Persian kinār, "edge, shore".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for an island, then the Punjabi for a shore.
 
 You'll want to know: ਝਰਨਾ.
 ਝਰਨਾ — jharnā — "a waterfall".
+
+The word, taken apart.
+ਝਰਨਾ (jharnā) belongs to the root jhar, "flow down", but CDIAL does not list it in the sense "waterfall". It gives Hindi jharī, "waterfall", under Sanskrit jhara, "waterfall" (CDIAL 5343), and a Punjabi jharnā only as "grating in a waterway", under jharaṇa, as in jharaṇodaka, "water from a cascade" (CDIAL 5344).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a shore, then the Punjabi for a waterfal
 You'll want to know: ਗੁਫ਼ਾ.
 ਗੁਫ਼ਾ — gufā — "a cave".
 
+The word, taken apart.
+CDIAL lists ਗੁਫ਼ਾ (gufā), in the spelling guphā, "cave", under a reconstructed gupphā, "cave" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, "cave", very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a waterfall, then the Punjabi for a cave
 You'll want to know: ਵਾਦੀ.
 ਵਾਦੀ — vādī — "a valley".
 
+The word, taken apart.
+ਵਾਦੀ (vādī) is a loan from Arabic wādī, "valley, river bed", which reached Punjabi through Persian. Its Arabic root is w-d-y (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a cave, then the Punjabi for a valley.
 
 You'll want to know: ਟਿੱਬਾ.
 ਟਿੱਬਾ — ṭibbā — "a sand hill".
+
+The word, taken apart.
+ਟਿੱਬਾ (ṭibbā) is inherited. CDIAL lists it, "mound, sandbank, hill", under ṭibba, one of the variant forms it groups under ṭappa, "hill" (CDIAL 5446).
 
 What you've built.
 One more word for this chapter.

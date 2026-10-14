@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to win, then the Punjabi for to lose.
 You'll want to know: ਛਤਰੀ.
 ਛਤਰੀ — chatrī — "an umbrella".
 
+The word, taken apart.
+ਛਤਰੀ (chatrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chattra, "parasol" (CDIAL 4972).
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Punjabi for to lose, then the Punjabi for an umbrell
 You'll want to know: ਕੌਲੀ.
 ਕੌਲੀ — kaulī — "a bowl".
 
+The word, taken apart.
+ਕੌਲੀ (kaulī) is inherited. CDIAL lists it, "little brass bowl", under kapalla, a form beside Sanskrit kapāla, "skull, cranium; cup, jar, bowl" (CDIAL 2744). CDIAL thinks the variant forms show at least some Austroasiatic influence.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Punjabi for an umbrella, then the Punjabi for a bowl
 
 You'll want to know: ਗਲਾਸ.
 ਗਲਾਸ — galās — "a glass, a tumbler".
+
+The word, taken apart.
+ਗਲਾਸ (galās) is a loan from English glass.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Say "I work." (Maiṁ kamm kardā hāṁ: the noun kamm, "work," plus karnā, "t
 You'll want to know: ਪਤੀਲਾ.
 ਪਤੀਲਾ — patīlā — "a cooking pot".
 
+The word, taken apart.
+ਪਤੀਲਾ (patīlā) matches Hindi patīlā, "copper pot", which CDIAL lists under Sanskrit pātra, "drinking vessel, dish" (CDIAL 8055). CDIAL gives no Punjabi patīlā.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Punjabi for a glass, then the Punjabi for a cooking 
 
 You'll want to know: ਕੰਘੀ.
 ਕੰਘੀ — kanghī — "a comb".
+
+The word, taken apart.
+ਕੰਘੀ (kanghī) is inherited. CDIAL lists it under kaṅkaśa, a variant of Sanskrit kaṅkata, "comb", a word of doubtful Indo-European origin, and says Hindi kaṅghī was taken from Punjabi (CDIAL 2598).
 
 What you've built.
 One more word for this chapter.

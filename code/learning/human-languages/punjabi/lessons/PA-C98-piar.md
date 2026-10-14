@@ -14,7 +14,8 @@ romanization: "piār"
 concept_tag: PA-WORLD98-PIAR
 prerequisites: [PA-C97-safar, PA-C98-chhutti]
 sounds: []
-roots: []
+roots: [sanskrit-priyakara]
+etymology_hook: "piār ← Sanskrit priyakāra 'doing a kindness', a tadbhava (CDIAL 8975)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C98-chhutti]
 <!-- hl-knowledge: introduces=[PA-LEX-C98-WORLD98-02]; assesses=[] -->
 
 **ਪਿਆਰ** — *piār* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਿਆਰ** (*piār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *priyakāra*, "doing a kindness" (CDIAL 8975).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

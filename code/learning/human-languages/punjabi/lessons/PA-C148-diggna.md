@@ -14,7 +14,8 @@ romanization: "ḍiggṇā"
 concept_tag: PA-VERB-DIGGNA
 prerequisites: [PA-C147-kamzor, PA-C148-lukna]
 sounds: []
-roots: []
+roots: [indo-aryan-gidd]
+etymology_hook: "ḍiggṇā ← *giḍḍ 'fall', a reconstructed form; a tadbhava (CDIAL 4157)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C148-lukna]
 <!-- hl-knowledge: introduces=[PA-LEX-C148-ACT148-02]; assesses=[] -->
 
 **ਡਿੱਗਣਾ** — *ḍiggṇā* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਡਿੱਗਣਾ** (*ḍiggṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*giḍḍ*, "fall", a form CDIAL reconstructs from its descendants (CDIAL 4157). Punjabi has swapped the first and last sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

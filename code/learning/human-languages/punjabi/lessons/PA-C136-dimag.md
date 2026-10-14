@@ -14,7 +14,8 @@ romanization: "dimāg"
 concept_tag: PA-THINGS136-DIMAG
 prerequisites: [PA-C136-tali, PA-C136-nahu]
 sounds: []
-roots: []
+roots: [arabic-dimagh]
+etymology_hook: "dimāg ← Arabic dimāgh 'brain', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C136-nahu]
 <!-- hl-knowledge: introduces=[PA-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **ਦਿਮਾਗ਼** — *dimāg* — "a brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਿਮਾਗ਼** (*dimāg*) is a loan from Arabic *dimāgh*, "brain", which reached Punjabi through Persian. Its Arabic root is *d-m-gh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

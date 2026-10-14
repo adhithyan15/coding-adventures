@@ -14,7 +14,8 @@ romanization: "kaī"
 concept_tag: PA-DEF107-KAI
 prerequisites: [PA-C107-apna, PA-C107-dove]
 sounds: []
-roots: []
+roots: [sanskrit-katipaya]
+etymology_hook: "kaī ← Sanskrit katipaya 'several', a tadbhava (CDIAL 2696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C107-dove]
 <!-- hl-knowledge: introduces=[PA-LEX-C107-DEF107-05]; assesses=[] -->
 
 **ਕਈ** — *kaī* — "several".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਈ** (*kaī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *katipaya*, "several" (CDIAL 2696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

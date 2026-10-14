@@ -15,6 +15,7 @@ concept_tag: PA-DEF106-KADE
 prerequisites: [PA-C105-phaggan, PA-C106-kite]
 sounds: []
 roots: []
+etymology_hook: "kade 'ever': CDIAL has no entry; Hindi kabhī is listed under evam eva 'exactly so', crossed with ka- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C106-kite]
 <!-- hl-knowledge: introduces=[PA-LEX-C106-DEF106-02]; assesses=[] -->
 
 **ਕਦੇ** — *kade* — "ever, sometime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਕਦੇ** (*kade*) comes from is not settled: CDIAL has no entry for it. It lists Hindi *kabhī*, "ever", under Sanskrit *evam eva*, "exactly so", crossed with the question stem *ka-* (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

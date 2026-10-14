@@ -856,6 +856,8 @@ where
             stroke_dash_offset: None,
         }));
         let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
         if let Some(size) = lane.style.font_size { title_font.size = size; }
         if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
         if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
@@ -884,6 +886,8 @@ where
             stroke_dash: group.style.stroke_dash.clone().or_else(|| Some(vec![6.0, 4.0])), stroke_dash_offset: None,
         }));
         let mut label_font = options.label_font.clone();
+        if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
         if let Some(size) = group.style.font_size { label_font.size = size; }
         if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
@@ -898,7 +902,7 @@ where
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
-        let stroke = edge.style.stroke.as_deref().unwrap_or("#455a64");
+        let stroke = edge.style.stroke.as_deref().unwrap_or(&diagram.theme.line_color);
         let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
             if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
         });
@@ -1033,7 +1037,26 @@ where
             edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
+            let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
+            let label_y = (edge.from.y + edge.to.y) / 2.0 - 25.0;
+            if let Some(background) = &diagram.theme.edge_label_background {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: label_x,
+                    y: label_y,
+                    width: 104.0,
+                    height: 22.0,
+                    fill: Some(background.clone()),
+                    stroke: None,
+                    stroke_width: None,
+                    corner_radius: Some(2.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = edge.style.font_size {
                 label_font.size = size;
             }
@@ -1048,20 +1071,18 @@ where
             }
             text_children.push(text_node(
                 label,
-                (edge.from.x + edge.to.x) / 2.0 - 52.0,
-                (edge.from.y + edge.to.y) / 2.0 - 25.0,
+                label_x,
+                label_y,
                 104.0,
                 22.0,
                 label_font,
-                edge.style.text_color.as_deref().map(css_to_color).unwrap_or(Color {
-                    r: 55, g: 71, b: 79, a: 255,
-                }),
+                css_to_color(edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color)),
             ));
         }
     }
     for node in &diagram.nodes {
-        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
-        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
+        let fill = node.style.fill.clone().unwrap_or_else(|| diagram.theme.main_background.clone());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
         let stroke_width = node.style.stroke_width.unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
@@ -1478,10 +1499,12 @@ where
             | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
             | DiagramShape::Summary
         ) {
-            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
-                r: 13, g: 71, b: 161, a: 255,
-            });
+            let text_color = node.style.text_color.as_deref()
+                .unwrap_or(&diagram.theme.primary_text_color);
+            let text_color = parse_css_color(text_color).unwrap_or(Color { r: 13, g: 71, b: 161, a: 255 });
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = node.style.font_size {
                 label_font.size = size;
             }
@@ -1580,6 +1603,20 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("swimlane.theme.mainBkg".into(), diagram.theme.main_background.clone());
+    metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
+    metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
+    metadata.insert("swimlane.theme.primaryTextColor".into(), diagram.theme.primary_text_color.clone());
+    metadata.insert("swimlane.theme.textColor".into(), diagram.theme.text_color.clone());
+    if let Some(background) = &diagram.theme.edge_label_background {
+        metadata.insert("swimlane.theme.edgeLabelBackground".into(), background.clone());
+    }
+    if let Some(family) = &diagram.theme.font_family {
+        metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
+    }
+    if let Some(size) = diagram.theme.font_size {
+        metadata.insert("swimlane.theme.fontSize".into(), size.to_string());
+    }
     if let Some(line_hops) = diagram.line_hops {
         metadata.insert("swimlane.lineHops".into(), match line_hops {
             SwimlaneLineHops::Arc => "arc",
@@ -1595,6 +1632,15 @@ where
         metadata.insert("swimlane.ignoreCrossLaneEdges".into(), "false".into());
         metadata.insert("swimlane.optimizeRanksByCrossings".into(),
             diagram.optimize_ranks_by_crossings.to_string());
+    }
+    if let Some(spacing) = diagram.flowchart_config.node_spacing {
+        metadata.insert("swimlane.flowchart.nodeSpacing".into(), spacing.to_string());
+    }
+    if let Some(spacing) = diagram.flowchart_config.rank_spacing {
+        metadata.insert("swimlane.flowchart.rankSpacing".into(), spacing.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.diagram_padding {
+        metadata.insert("swimlane.flowchart.diagramPadding".into(), padding.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());

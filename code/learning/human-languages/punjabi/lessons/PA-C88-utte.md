@@ -14,7 +14,8 @@ romanization: "utte"
 concept_tag: PA-PLACE88-UTTE
 prerequisites: [PA-C88-andar, PA-C88-bahar]
 sounds: []
-roots: []
+roots: [sanskrit-uttama]
+etymology_hook: "utte: CDIAL lists Old Punjabi utte 'on' as the locative uttame of Sanskrit uttama 'highest' (CDIAL 1765)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C88-bahar]
 <!-- hl-knowledge: introduces=[PA-LEX-C88-PLACE88-04]; assesses=[] -->
 
 **ਉੱਤੇ** — *utte* — "on, above".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉੱਤੇ** (*utte*) is inherited. CDIAL lists Old Punjabi *utte*, "on", as coming from *uttame*, the locative of Sanskrit *uttama*, "highest" (CDIAL 1765).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

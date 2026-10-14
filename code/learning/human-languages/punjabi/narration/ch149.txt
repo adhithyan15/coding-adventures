@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to lift, then the Punjabi for to jump.
 You'll want to know: ਤਰਨਾ.
 ਤਰਨਾ — tarnā — "to swim".
 
+The word, taken apart.
+ਤਰਨਾ (tarnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tarati, "crosses; floats, swims" (CDIAL 5702).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to jump, then the Punjabi for to swim.
 
 You'll want to know: ਚੜ੍ਹਨਾ.
 ਚੜ੍ਹਨਾ — caṛhnā — "to climb".
+
+The word, taken apart.
+ਚੜ੍ਹਨਾ (caṛhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to swim, then the Punjabi for to climb.
 You'll want to know: ਬੁਲਾਉਣਾ.
 ਬੁਲਾਉਣਾ — bulāuṇā — "to call".
 
+The word, taken apart.
+ਬੁਲਾਉਣਾ (bulāuṇā) is the causing form of bolṇā, "to speak": to call someone is to "make speak". CDIAL lists Hindi bulānā this way under a reconstructed bōll, "speak" (CDIAL 9321).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to climb, then the Punjabi for to call.
 You'll want to know: ਵਰਤਣਾ.
 ਵਰਤਣਾ — vartṇā — "to use".
 
+The word, taken apart.
+ਵਰਤਣਾ (vartṇā) is usually linked with Sanskrit vartate, "turns, moves; takes place", but CDIAL lists no Punjabi form of that verb (CDIAL 11352), so its history is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to call, then the Punjabi for to use.
 
 You'll want to know: ਬਣਾਉਣਾ.
 ਬਣਾਉਣਾ — baṇāuṇā — "to make".
+
+The word, taken apart.
+ਬਣਾਉਣਾ (baṇāuṇā) is the causing form of baṇnā, "to be made, to become". CDIAL lists baṇnā under Sanskrit vanati, "desires, gains, makes ready", and marks it as taken from Lahnda baṇṇaṇ, "to become" (CDIAL 11260).
 
 What you've built.
 One more word for this chapter.

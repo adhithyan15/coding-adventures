@@ -14,7 +14,8 @@ romanization: "shaktī"
 concept_tag: PA-CAN110-SHAKTI
 prerequisites: [PA-C109-kol, PA-C109-takat]
 sounds: []
-roots: []
+roots: [sanskrit-shakti]
+etymology_hook: "shaktī ← Sanskrit śakti 'power', a tatsama (CDIAL 12250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C109-takat]
 <!-- hl-knowledge: introduces=[PA-LEX-C110-CAN110-01]; assesses=[] -->
 
 **ਸ਼ਕਤੀ** — *shaktī* — "power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ਕਤੀ** (*shaktī*) is Sanskrit *śakti*, "power", taken over whole as a learned loan, a tatsama (CDIAL 12250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

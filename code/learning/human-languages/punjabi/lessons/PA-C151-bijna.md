@@ -14,7 +14,8 @@ romanization: "bījṇā"
 concept_tag: PA-VERB-BIJNA
 prerequisites: [PA-C151-kharcna, PA-C151-bacauna]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bījṇā: built on bīj 'seed', from Sanskrit bīja 'seed' (CDIAL 9250); CDIAL does not list the verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C151-bacauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C151-ACT151-05]; assesses=[] -->
 
 **ਬੀਜਣਾ** — *bījṇā* — "to sow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੀਜਣਾ** (*bījṇā*) is built on *bīj*, "seed", from Sanskrit *bīja*, "seed" (CDIAL 9250). CDIAL does not list the verb itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

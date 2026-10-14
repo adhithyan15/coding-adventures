@@ -14,7 +14,8 @@ romanization: "darad"
 concept_tag: PA-HEALTH52-DARAD
 prerequisites: [PA-C51-haspatal, PA-C51-bimar]
 sounds: []
-roots: []
+roots: [persian-dard]
+etymology_hook: "darad: usually traced to Persian dard 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C51-bimar]
 <!-- hl-knowledge: introduces=[PA-LEX-C52-HEALTH52-01]; assesses=[] -->
 
 **ਦਰਦ** — *darad* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਰਦ** (*darad*) is a loan, usually traced to Persian *dard*, "pain". Punjabi breaks up the *-rd* with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ gloss: "to work (lit. work-do)"
 concept_tag: PA-PHRASE-KAMM-KARNA
 prerequisites: [PA-C05-karna]
 sounds: [tippi-nasal, double-mm]
-roots: [kr-do]
+roots: [kr-do, sanskrit-karman]
+etymology_hook: "kamm ← Sanskrit karman 'act, work' (CDIAL 2892); karnā ← karoti 'does' (CDIAL 2814), both on kṛ 'to do'"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,8 @@ Both **ਕ** and **ਮ** are already yours.
 **ਕੰਮ** (*kamm*) is the noun "work" — the thing done, from the same *√kṛ* family
 as *karnā*. Said on its own it means a job, a task, a piece of business:
 *bahut kamm hai* ("there is a lot of work").
+
+Both words are inherited: *kamm* from Sanskrit *karman*, "act, work" (CDIAL 2892), and *karnā* from *karoti*, "does" (CDIAL 2814).
 
 ## Grammar Lens: noun + ਕਰਨਾ
 <!-- hl-knowledge: introduces=[PA-GRAMMAR-NOUN-PLUS-KARNA-05]; assesses=[] -->

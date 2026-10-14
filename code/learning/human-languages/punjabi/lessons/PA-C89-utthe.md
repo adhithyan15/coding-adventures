@@ -14,7 +14,8 @@ romanization: "utthe"
 concept_tag: PA-PLACE89-UTTHE
 prerequisites: [PA-C89-pichchhe, PA-C89-itthe]
 sounds: []
-roots: []
+roots: [sanskrit-ittham, sanskrit-asau]
+etymology_hook: "utthe: listed under Sanskrit ittham 'thus', with its u- from the stem of asau 'that' (CDIAL 1564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C89-itthe]
 <!-- hl-knowledge: introduces=[PA-LEX-C89-PLACE89-04]; assesses=[] -->
 
 **ਉੱਥੇ** — *utthe* — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉੱਥੇ** (*utthe*) is inherited. CDIAL lists it beside *itthe*, "here", under Sanskrit *ittham*, "thus", with its *u-* taken from the stem of *asau*, "that" (CDIAL 1564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

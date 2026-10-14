@@ -15,6 +15,7 @@ concept_tag: PA-THINGS132-TITLI
 prerequisites: [PA-C132-makkhi, PA-C132-madhumakkhi]
 sounds: []
 roots: []
+etymology_hook: "titlī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C132-madhumakkhi]
 <!-- hl-knowledge: introduces=[PA-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **ਤਿਤਲੀ** — *titlī* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਤਿਤਲੀ** (*titlī*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

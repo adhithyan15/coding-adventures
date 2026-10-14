@@ -14,7 +14,8 @@ romanization: "unnā"
 concept_tag: PA-DEF108-UNNA
 prerequisites: [PA-C107-kai, PA-C108-inna]
 sounds: []
-roots: []
+roots: [sanskrit-iyattaka]
+etymology_hook: "unnā: goes with Punjabi utṇā, listed under iyattaka 'so little', with u- from asau 'that' (CDIAL 1589)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C108-inna]
 <!-- hl-knowledge: introduces=[PA-LEX-C108-DEF108-02]; assesses=[] -->
 
 **ਉੰਨਾ** — *unnā* — "that much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉੰਨਾ** (*unnā*) goes with Punjabi *utṇā*, which CDIAL lists under Sanskrit *iyattaka*, "so little", with its *u-* taken from *asau*, "that" (CDIAL 1589). CDIAL does not list *unnā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

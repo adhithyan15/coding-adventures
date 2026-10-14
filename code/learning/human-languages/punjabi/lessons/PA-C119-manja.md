@@ -14,7 +14,8 @@ romanization: "mañjā"
 concept_tag: PA-THINGS119-MANJA
 prerequisites: [PA-C118-guddi, PA-C118-khidauna]
 sounds: []
-roots: []
+roots: [sanskrit-manca]
+etymology_hook: "mañjā ← Sanskrit mañca 'stage, platform; bed', a tadbhava (CDIAL 9715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C118-khidauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **ਮੰਜਾ** — *mañjā* — "a cot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੰਜਾ** (*mañjā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mañca*, "stage, platform; bed" (CDIAL 9715). CDIAL says Hindi *mãjā*, "bed", was taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

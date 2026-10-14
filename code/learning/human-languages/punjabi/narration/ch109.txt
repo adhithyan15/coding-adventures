@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for like that, then the Punjabi for other.
 You'll want to know: ਮਾਹਰ.
 ਮਾਹਰ — māhar — "an expert".
 
+The word, taken apart.
+ਮਾਹਰ (māhar) is a loan from Arabic māhir, "skilled", which reached Punjabi through Persian. Its Arabic root is m-h-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for other, then the Punjabi for an expert.
 
 You'll want to know: ਜਾਣਕਾਰੀ.
 ਜਾਣਕਾਰੀ — jāṇkārī — "knowledge, information".
+
+The word, taken apart.
+ਜਾਣਕਾਰੀ (jāṇkārī) is built in Punjabi on jāṇ-, the stem of jāṇnā, "to know", which CDIAL lists under Sanskrit jānāti, "knows" (CDIAL 5193), with the ending -kārī.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for an expert, then the Punjabi for knowledg
 You'll want to know: ਸਕਣਾ.
 ਸਕਣਾ — sakṇā — "to be able to, can".
 
+The word, taken apart.
+ਸਕਣਾ (sakṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śaknoti, "is able" (CDIAL 12252).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for knowledge, then the Punjabi for to be ab
 You'll want to know: ਕੋਲ.
 ਕੋਲ — kol — "near, in one's possession".
 
+The word, taken apart.
+CDIAL lists ਕੋਲ (kol), "near", used as an adverb and postposition, under Sanskrit krōḍa, "breast, bosom", through its variant kōla, "breast, lap" (CDIAL 3607). CDIAL allows that krōḍa may be non-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to be able to, then the Punjabi for near
 
 You'll want to know: ਤਾਕਤ.
 ਤਾਕਤ — tākat — "strength".
+
+The word, taken apart.
+ਤਾਕਤ (tākat) is a loan from Arabic ṭāqa, "power, ability", which reached Punjabi through Persian. Its Arabic root is ṭ-w-q (Lane).
 
 What you've built.
 One more word for this chapter.

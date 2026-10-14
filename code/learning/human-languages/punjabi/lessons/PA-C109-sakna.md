@@ -14,7 +14,8 @@ romanization: "sakṇā"
 concept_tag: PA-VERB-SAKNA
 prerequisites: [PA-C109-mahar, PA-C109-jankari]
 sounds: []
-roots: []
+roots: [sanskrit-shak-be-able]
+etymology_hook: "sakṇā ← Sanskrit śaknoti 'is able', a tadbhava (CDIAL 12252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C109-jankari]
 <!-- hl-knowledge: introduces=[PA-LEX-C109-CAN109-03]; assesses=[] -->
 
 **ਸਕਣਾ** — *sakṇā* — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਕਣਾ** (*sakṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaknoti*, "is able" (CDIAL 12252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "parsõ"
 concept_tag: PA-TIME99-PARSO
 prerequisites: [PA-C99-adhirat, PA-C99-tarka]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "parsõ ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C99-tarka]
 <!-- hl-knowledge: introduces=[PA-LEX-C99-TIME99-03]; assesses=[] -->
 
 **ਪਰਸੋਂ** — *parsõ* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਰਸੋਂ** (*parsõ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paraśvas*, "the day after tomorrow" (CDIAL 7799j). Punjabi *parsõ* means both the day after tomorrow and the day before yesterday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

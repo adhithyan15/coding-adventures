@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Who, When, Where, How Many",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5c3553a7a46872e8",
+  "sourceHash": "fnv1a64:8fc705eaebcc75d6",
   "lessons": [
     {
       "id": "PA-C43-kaun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63544abc44b8ba82",
+      "sourceHash": "fnv1a64:aa806822d3cbcc12",
       "notice": null,
       "blocks": [
         {
@@ -90,6 +90,10 @@
             {
               "kind": "speech",
               "text": "ਕ- asks, ਜ- opens the clause that answers, ਉ- points at it."
+            },
+            {
+              "kind": "speech",
+              "text": "Kauṇ is a tadbhava, inherited and worn down by sound change: CDIAL lists it under Sanskrit kaḥ punar, \"who, then\", glossed \"who\" (CDIAL 2575)."
             }
           ]
         },
@@ -165,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d3af66066342c84",
+      "sourceHash": "fnv1a64:abc0da7a680cb599",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +236,10 @@
             {
               "kind": "speech",
               "text": "That pairing runs through the whole language, and you have now seen it three times: ਜੇ … ਤਾਂ, ਜੋ … ਉਹ, and now ਕਦੋਂ (kadoṁ) against ਜਦੋਂ."
+            },
+            {
+              "kind": "speech",
+              "text": "Kadoṁ is built on the old question stem ka-, as jadoṁ is built on the relative ya-. CDIAL has no entry for it."
             }
           ]
         },
@@ -441,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df9c6c193f78cc1f",
+      "sourceHash": "fnv1a64:68b4caa0b3a746af",
       "notice": null,
       "blocks": [
         {
@@ -526,6 +534,10 @@
             {
               "kind": "speech",
               "text": "This is the question that asks where somebody lives, and asking that is most of what a spoken interview at this level is for. The book has taught house, city and village for many chapters and could not ask where any of them was."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for kitthe itself, but it lists its partners itthe, \"here\", and utthe, \"there\", under Sanskrit ittham, \"thus\" (CDIAL 1564); kitthe is the same shape with the question k-."
             }
           ]
         },
@@ -601,7 +613,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e19e38af57a306ca",
+      "sourceHash": "fnv1a64:d6c0544766907f5c",
       "notice": null,
       "blocks": [
         {
@@ -672,6 +684,10 @@
             {
               "kind": "speech",
               "text": "Two of those you had before this run. Five arrived in the last four chapters, and only one of the five cost a new letter."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists the fuller Punjabi kitnā, \"how great\", under a reconstructed kiyatta, \"how great\" (CDIAL 3167); it does not list kinnā."
             }
           ]
         },

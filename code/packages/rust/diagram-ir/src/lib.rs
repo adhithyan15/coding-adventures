@@ -1976,12 +1976,39 @@ pub struct SwimlaneEdge {
     pub curve: Option<SwimlaneEdgeCurve>,
 }
 #[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneTheme {
+    pub main_background: String, pub node_border: String, pub line_color: String,
+    pub primary_text_color: String, pub font_family: Option<String>, pub font_size: Option<f64>,
+    pub text_color: String, pub edge_label_background: Option<String>,
+}
+impl Default for SwimlaneTheme {
+    fn default() -> Self {
+        Self {
+            main_background: "#ffffff".into(),
+            node_border: "#1565c0".into(),
+            line_color: "#455a64".into(),
+            primary_text_color: "#0d47a1".into(),
+            font_family: None,
+            font_size: None,
+            text_color: "#37474f".into(),
+            edge_label_background: None,
+        }
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct SwimlaneFlowchartConfig {
+    pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
+    pub diagram_padding: Option<f64>,
+}
+#[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub groups: Vec<SwimlaneGroup>, pub nodes: Vec<SwimlaneNode>,
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
     pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
+    pub theme: SwimlaneTheme,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
@@ -2016,6 +2043,8 @@ pub struct LayoutedSwimlaneDiagram {
     pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
     pub automatic_lane_ordering: bool, pub ignore_cross_lane_edges: bool,
     pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
+    pub theme: SwimlaneTheme,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

@@ -1058,7 +1058,10 @@ endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline label
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
 or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
-decoding. Direct node
+decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
+`lineColor`, `primaryTextColor`, `fontFamily`, and `fontSize` through semantic and layout IR to default
+node, edge, and glyph paint; themed font size also participates in node measurement. `textColor` and
+`edgeLabelBackground` theme labeled handoffs with portable glyph and background paint. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
@@ -1097,6 +1100,10 @@ undirected weights, source order wins equal-cost ties, and the resolved order su
 `swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
 to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
 resolved non-default setting survives as scene metadata.
+Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuration from front matter or
+init directives survives semantic and layout IR. The values control ownership-lane separation,
+consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
+scene metadata.
 When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
 up to four deterministic local-search passes. Feasible rank delays propagate through downstream
 constraints and are retained only when the lane/rank segment crossing count strictly improves; the
@@ -1111,7 +1118,8 @@ Nested subgraphs remain ordinary child clusters inside their top-level ownership
 parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
 clusters, and paint emits dashed labeled containers behind edge and node geometry. Direct styles and
 named classes on top-level lanes or nested groups preserve portable fill, stroke, dash, corner, label
-color, and typography fields through semantic and layout IR into backend-neutral paint.
+color, and typography fields through semantic and layout IR into backend-neutral paint. Flowchart-style
+`:::class` decorators on either subgraph form resolve through the same class pipeline.
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 

@@ -14,7 +14,8 @@ romanization: "aṭṭh"
 concept_tag: PA-NUMBERS95-ATTH
 prerequisites: [PA-C94-chhe, PA-C95-satt]
 sounds: []
-roots: []
+roots: [sanskrit-ashta]
+etymology_hook: "aṭṭh ← Sanskrit aṣṭā 'eight', a tadbhava (CDIAL 941)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C95-satt]
 <!-- hl-knowledge: introduces=[PA-LEX-C95-NUMBERS95-02]; assesses=[] -->
 
 **ਅੱਠ** — *aṭṭh* — "eight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅੱਠ** (*aṭṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭā*, "eight" (CDIAL 941).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

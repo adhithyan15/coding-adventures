@@ -14,7 +14,8 @@ romanization: "masālā"
 concept_tag: PA-THINGS125-MASALA
 prerequisites: [PA-C124-khir, PA-C125-halva]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masālā ← Arabic maṣāliḥ 'things that are needful', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C125-halva]
 <!-- hl-knowledge: introduces=[PA-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **ਮਸਾਲਾ** — *masālā* — "spice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਸਾਲਾ** (*masālā*) is a loan from Arabic *maṣāliḥ*, "things that are needful", which reached Punjabi through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

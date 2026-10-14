@@ -58,6 +58,9 @@ You'll want to know: the five.
 5. Punjabi: ਪੰਜ. said: panj.
 This is Gurmukhi, not Devanagari — a related but distinct script. It does have a top line like Devanagari's, so words hang from a bar in the same way.
 
+The word, taken apart.
+All five are inherited from Sanskrit. ikk comes from ekka, which replaced eka, "one" (CDIAL 2462); do from dva, "two" (CDIAL 6648); tinn from trīṇi, "three" (CDIAL 5994); chār from catvāraḥ, "four" (CDIAL 4655); and panj from pañca, "five" (CDIAL 7655).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ikk, do, tinn, chār, panj"]

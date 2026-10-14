@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:0ddec2668c014f0a",
+  "sourceHash": "fnv1a64:98095382327864c2",
   "lessonIds": [
     "PA-C64-dal",
     "PA-C64-phal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch64.txt",
   "json": "punjabi/narration/ch64.json",
-  "textHash": "fnv1a64:ae3f1acfaf25b055",
-  "jsonHash": "fnv1a64:c4a39b5d8025e841",
+  "textHash": "fnv1a64:5bec99c67e53d5df",
+  "jsonHash": "fnv1a64:26c5f7a32f328ff8",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for black, then the Punjabi for white.
 You'll want to know: ਭੂਰਾ.
 ਭੂਰਾ — bhūrā — "brown".
 
+The word, taken apart.
+ਭੂਰਾ (bhūrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhrūra, "brown", a form CDIAL reconstructs from its descendants (CDIAL 9690). CDIAL compares Indo-European bhrū-no-, which is behind English brown.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for white, then the Punjabi for brown.
 
 You'll want to know: ਦਿਨ.
 ਦਿਨ — din — "a day".
+
+The word, taken apart.
+ਦਿਨ (din) goes back to Sanskrit dina, "day". CDIAL takes the Punjabi word from Hindi din, or else, like Gujarati and Marathi din, straight from Sanskrit (CDIAL 6328).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for brown, then the Punjabi for a day.
 You'll want to know: ਸ਼ਾਮ.
 ਸ਼ਾਮ — shām — "evening".
 
+The word, taken apart.
+ਸ਼ਾਮ (shām) is a loan, usually traced to Persian shām, "evening".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a day, then the Punjabi for evening.
 You'll want to know: ਸਵੇਰ.
 ਸਵੇਰ — saver — "morning".
 
+The word, taken apart.
+ਸਵੇਰ (saver) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, "in time, early", a form CDIAL reconstructs from its descendants (CDIAL 13291). It is built from sa-, "with", and velā, "time"; Punjabi saver means "morning, dawn".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for evening, then the Punjabi for morning.
 
 You'll want to know: ਹਫ਼ਤਾ.
 ਹਫ਼ਤਾ — haftā — "a week".
+
+The word, taken apart.
+ਹਫ਼ਤਾ (haftā) is a loan, usually traced to Persian hafta, "week". Persian hafta is built on haft, "seven".
 
 What you've built.
 One more word for this chapter.

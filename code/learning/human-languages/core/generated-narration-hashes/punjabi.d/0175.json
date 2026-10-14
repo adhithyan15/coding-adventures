@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:606cc64a9189f02f",
+  "lessonIds": [
+    "PA-R175-form-repair-again"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch175.txt",
+  "json": "punjabi/narration/ch175.json",
+  "textHash": "fnv1a64:ba093c00dc28eb83",
+  "jsonHash": "fnv1a64:a543166021058c03",
+  "findings": []
+}

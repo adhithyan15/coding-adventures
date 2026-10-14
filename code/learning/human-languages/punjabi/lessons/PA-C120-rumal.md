@@ -14,7 +14,8 @@ romanization: "rumāl"
 concept_tag: PA-THINGS120-RUMAL
 prerequisites: [PA-C119-cunni, PA-C119-peti]
 sounds: []
-roots: []
+roots: [persian-rumal]
+etymology_hook: "rumāl: usually traced to Persian rūmāl 'handkerchief'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C119-peti]
 <!-- hl-knowledge: introduces=[PA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **ਰੁਮਾਲ** — *rumāl* — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰੁਮਾਲ** (*rumāl*) is a loan, usually traced to Persian *rūmāl*, "handkerchief". It is built from *rū*, "face", and *māl*, "wiping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

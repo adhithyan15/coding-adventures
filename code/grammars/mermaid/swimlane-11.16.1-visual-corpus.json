@@ -49,6 +49,9 @@
     "quoted-unicode-lane-labels",
     "html-entity-labels",
     "metadata-entities",
+    "theme-variables",
+    "theme-typography-variables",
+    "theme-edge-label-variables",
     "inline-node-styles",
     "node-typography-styles",
     "node-corner-radius-styles",
@@ -83,6 +86,7 @@
     "line-hops-rounded",
     "nested-subgraphs",
     "styled-subgraphs",
+    "subgraph-class-decorators",
     "state-choice-note-shapes",
     "label-rect-shape",
     "anchor-shape",
@@ -90,6 +94,7 @@
     "internal-container-shapes",
     "internal-compartment-shapes",
     "legacy-internal-shape-aliases",
+    "flowchart-spacing-config",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

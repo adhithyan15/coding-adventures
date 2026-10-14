@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [PA-C02-naam]
 sounds: [laava-e, kanna-aa]
 roots: [ma-first-person]
+etymology_hook: "merā: listed by CDIAL under the Sanskrit first-person base ma-, the m- of English me (CDIAL 9691)"
 duration:
   max_seconds: 180
 requires:

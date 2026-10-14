@@ -14,7 +14,8 @@ romanization: "rakkhṇā"
 concept_tag: PA-VERB-RAKKHNA
 prerequisites: [PA-C58-vechna, PA-C58-dena]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rakkhṇā ← Sanskrit rakṣati 'guards', a tadbhava (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C58-dena]
 <!-- hl-knowledge: introduces=[PA-LEX-C58-VERBS58-03]; assesses=[] -->
 
 **ਰੱਖਣਾ** — *rakkhṇā* — "to put, to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰੱਖਣਾ** (*rakkhṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣati*, "guards" (CDIAL 10547). Punjabi turned "guard" into "keep, put".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

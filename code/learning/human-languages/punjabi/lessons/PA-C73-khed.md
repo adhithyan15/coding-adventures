@@ -14,7 +14,8 @@ romanization: "kheḍ"
 concept_tag: PA-SCHOOL73-KHED
 prerequisites: [PA-C72-javab, PA-C72-shabad]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḍ ← *kheḍḍ 'play', a reconstructed form; a tadbhava (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C72-shabad]
 <!-- hl-knowledge: introduces=[PA-LEX-C73-SCHOOL73-01]; assesses=[] -->
 
 **ਖੇਡ** — *kheḍ* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੇਡ** (*kheḍ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kheḍḍ*, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). It is the noun beside *kheḍṇā*, "to play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

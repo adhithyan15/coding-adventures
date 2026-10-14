@@ -14,7 +14,8 @@ romanization: "jhīl"
 concept_tag: PA-NATURE74-JHIL
 prerequisites: [PA-C74-jangal, PA-C74-daria]
 sounds: []
-roots: []
+roots: [indo-aryan-jhilla]
+etymology_hook: "jhīl: matches Hindi jhīl 'lake, marsh', which CDIAL lists under *jhilla 'swamp, lake' (CDIAL 5392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C74-daria]
 <!-- hl-knowledge: introduces=[PA-LEX-C74-NATURE74-04]; assesses=[] -->
 
 **ਝੀਲ** — *jhīl* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਝੀਲ** (*jhīl*) matches Hindi *jhīl*, "lake, marsh", which CDIAL lists under a reconstructed *\*jhilla*, "swamp, lake" (CDIAL 5392). CDIAL gives no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

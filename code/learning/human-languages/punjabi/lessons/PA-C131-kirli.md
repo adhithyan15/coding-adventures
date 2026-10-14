@@ -15,6 +15,7 @@ concept_tag: PA-THINGS131-KIRLI
 prerequisites: [PA-C130-kabutar, PA-C131-battakh]
 sounds: []
 roots: []
+etymology_hook: "kirlī 'lizard': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C131-battakh]
 <!-- hl-knowledge: introduces=[PA-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **ਕਿਰਲੀ** — *kirlī* — "a lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਕਿਰਲੀ** (*kirlī*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

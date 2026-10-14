@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: PA-TIME100-TARIKH
 prerequisites: [PA-C100-patjhar, PA-C100-roz]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārīkh ← Arabic tārīkh 'a dating, a date', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C100-roz]
 <!-- hl-knowledge: introduces=[PA-LEX-C100-TIME100-05]; assesses=[] -->
 
 **ਤਾਰੀਖ਼** — *tārīkh* — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਾਰੀਖ਼** (*tārīkh*) is a loan from Arabic *tārīkh*, "a dating, a date", which reached Punjabi through Persian. Its Arabic root is *ʾ-r-kh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

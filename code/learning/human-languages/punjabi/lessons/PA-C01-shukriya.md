@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [PA-C01-dhanvaad]
 sounds: []
 roots: [shukr]
+etymology_hook: "shukrīā ← Arabic shukr 'gratitude', root sh-k-r, through Persian"
 duration:
   max_seconds: 150
 requires:

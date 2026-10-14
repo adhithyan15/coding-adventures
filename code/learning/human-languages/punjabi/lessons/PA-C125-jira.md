@@ -14,7 +14,8 @@ romanization: "jīrā"
 concept_tag: PA-THINGS125-JIRA
 prerequisites: [PA-C125-masala, PA-C125-haldi]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīrā ← Sanskrit jīraka 'cumin seed', a tadbhava (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C125-haldi]
 <!-- hl-knowledge: introduces=[PA-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **ਜੀਰਾ** — *jīrā* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੀਰਾ** (*jīrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīraka*, "cumin seed" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

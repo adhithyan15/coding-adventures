@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 81,
-  "sourceHash": "fnv1a64:2a5c0c4cc8b0472e",
+  "sourceHash": "fnv1a64:636208c4e7752f95",
   "lessonIds": [
     "PA-C81-saukha",
     "PA-C81-mahinga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch81.txt",
   "json": "punjabi/narration/ch81.json",
-  "textHash": "fnv1a64:6c1061a74aabe77d",
-  "jsonHash": "fnv1a64:7050502198fac94a",
+  "textHash": "fnv1a64:40dceb2e593a27e6",
+  "jsonHash": "fnv1a64:05ebc605a2c2319b",
   "findings": []
 }

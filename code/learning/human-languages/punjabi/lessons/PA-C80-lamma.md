@@ -14,7 +14,8 @@ romanization: "lammā"
 concept_tag: PA-ADJ80-LAMMA
 prerequisites: [PA-C79-purana, PA-C80-bura]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lammā ← Sanskrit lamba 'pendent', a tadbhava (CDIAL 10951)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C80-bura]
 <!-- hl-knowledge: introduces=[PA-LEX-C80-ADJ80-02]; assesses=[] -->
 
 **ਲੰਮਾ** — *lammā* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੰਮਾ** (*lammā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lamba*, "pendent" (CDIAL 10951). The Sanskrit word already meant "long" in compounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

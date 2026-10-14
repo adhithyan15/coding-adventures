@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a goat, then the Punjabi for a sheep.
 You'll want to know: ਪੰਛੀ.
 ਪੰਛੀ — panchhī — "a bird".
 
+The word, taken apart.
+ਪੰਛੀ (panchhī) goes back to Sanskrit pakṣin, "winged; bird". CDIAL lists the Punjabi form paṅkhī under it (CDIAL 7636); panchhī is the same word with chh for the kṣ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a sheep, then the Punjabi for a bird.
 
 You'll want to know: ਚੂਹਾ.
 ਚੂਹਾ — chūhā — "a mouse".
+
+The word, taken apart.
+ਚੂਹਾ (chūhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cūha, "rat, mouse", a form CDIAL reconstructs from its descendants (CDIAL 4899).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a bird, then the Punjabi for a mouse.
 You'll want to know: ਸ਼ੇਰ.
 ਸ਼ੇਰ — sher — "a lion, a tiger".
 
+The word, taken apart.
+ਸ਼ੇਰ (sher) is a loan, usually traced to Persian sher, "lion, tiger".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a mouse, then the Punjabi for a lion.
 You'll want to know: ਹਾਥੀ.
 ਹਾਥੀ — hāthī — "an elephant".
 
+The word, taken apart.
+ਹਾਥੀ (hāthī) matches Hindi hāthī, which CDIAL lists under Sanskrit hastin, "having hands; elephant" (CDIAL 14039). CDIAL wonders whether hastin remade an older, perhaps non-Aryan word for the animal, linked by folk etymology with kara, "hand".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a lion, then the Punjabi for an elephant
 
 You'll want to know: ਬਾਂਦਰ.
 ਬਾਂਦਰ — bāndar — "a monkey".
+
+The word, taken apart.
+CDIAL lists ਬਾਂਦਰ (bāndar), from the Punjabi of Ludhiana, with Hindi bāṁdar, under Sanskrit vānara, "monkey", a word it derives from vana, "forest" (CDIAL 11515).
 
 What you've built.
 One more word for this chapter.

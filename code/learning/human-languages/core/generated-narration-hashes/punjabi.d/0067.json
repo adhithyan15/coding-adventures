@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 67,
-  "sourceHash": "fnv1a64:12706d618842d3f4",
+  "sourceHash": "fnv1a64:573af7b54b753bac",
   "lessonIds": [
     "PA-C67-nashta",
     "PA-C67-anda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch67.txt",
   "json": "punjabi/narration/ch67.json",
-  "textHash": "fnv1a64:18ae108f394f558d",
-  "jsonHash": "fnv1a64:1865393c1cf6d2f2",
+  "textHash": "fnv1a64:2de2f567020acd32",
+  "jsonHash": "fnv1a64:13c585d257af2803",
   "findings": []
 }

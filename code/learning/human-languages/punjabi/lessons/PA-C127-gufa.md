@@ -14,7 +14,8 @@ romanization: "gufā"
 concept_tag: PA-THINGS127-GUFA
 prerequisites: [PA-C127-kinara, PA-C127-jharna]
 sounds: []
-roots: []
+roots: [indo-aryan-guppha]
+etymology_hook: "gufā: CDIAL lists Punjabi guphā 'cave' under *gupphā 'cave'; a further link with guhā is very doubtful (4204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C127-jharna]
 <!-- hl-knowledge: introduces=[PA-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **ਗੁਫ਼ਾ** — *gufā* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਗੁਫ਼ਾ** (*gufā*), in the spelling *guphā*, "cave", under a reconstructed *\*gupphā*, "cave" (CDIAL 4204). CDIAL calls its own further link with Sanskrit *guhā*, "cave", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a banana, then the Punjabi for a potato.
 You'll want to know: ਟਮਾਟਰ.
 ਟਮਾਟਰ — ṭamāṭar — "a tomato".
 
+The word, taken apart.
+ਟਮਾਟਰ (ṭamāṭar) is a loan from English tomato.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a potato, then the Punjabi for a tomato.
 
 You'll want to know: ਗਾਜਰ.
 ਗਾਜਰ — gājar — "a carrot".
+
+The word, taken apart.
+ਗਾਜਰ (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot" (CDIAL 4140).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a tomato, then the Punjabi for a carrot.
 You'll want to know: ਖੰਡ.
 ਖੰਡ — khaṇḍ — "sugar".
 
+The word, taken apart.
+ਖੰਡ (khaṇḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṇḍa, "partially dried molasses" (CDIAL 3800). CDIAL lists Punjabi khaṇḍ, "coarse sugar".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a carrot, then the Punjabi for sugar.
 You'll want to know: ਲੂਣ.
 ਲੂਣ — lūṇ — "salt".
 
+The word, taken apart.
+ਲੂਣ (lūṇ) is inherited. CDIAL lists Punjabi lūṇ and nūṇ, "salt", with Lahnda lūṇ, under Sanskrit lavaṇa, "salt" (CDIAL 10978).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for sugar, then the Punjabi for salt.
 
 You'll want to know: ਮੱਖਣ.
 ਮੱਖਣ — makkhaṇ — "butter".
+
+The word, taken apart.
+ਮੱਖਣ (makkhaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mrakṣaṇa, "rubbing in; ointment, oil" (CDIAL 10378).
 
 What you've built.
 One more word for this chapter.

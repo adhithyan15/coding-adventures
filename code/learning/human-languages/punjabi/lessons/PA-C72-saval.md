@@ -14,7 +14,8 @@ romanization: "savāl"
 concept_tag: PA-SCHOOL72-SAVAL
 prerequisites: [PA-C72-basta, PA-C72-paisa]
 sounds: []
-roots: []
+roots: [arabic-sual]
+etymology_hook: "savāl ← Arabic suʾāl 'a question', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C72-paisa]
 <!-- hl-knowledge: introduces=[PA-LEX-C72-SCHOOL72-03]; assesses=[] -->
 
 **ਸਵਾਲ** — *savāl* — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਵਾਲ** (*savāl*) is a loan from Arabic *suʾāl*, "a question", which reached Punjabi through Persian. Its Arabic root is *s-ʾ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

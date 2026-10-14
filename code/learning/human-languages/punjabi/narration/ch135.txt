@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a beard, then the Punjabi for a moustach
 You'll want to know: ਗਰਦਨ.
 ਗਰਦਨ — gardan — "a neck".
 
+The word, taken apart.
+ਗਰਦਨ (gardan) is a loan, usually traced to Persian gardan, "neck".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a moustache, then the Punjabi for a neck
 
 You'll want to know: ਛਾਤੀ.
 ਛਾਤੀ — chātī — "a chest".
+
+The word, taken apart.
+ਛਾਤੀ (chātī) is a tadbhava, a word inherited and reshaped by sound change. It comes from chātti, "chest, breast", a form CDIAL reconstructs from its descendants (CDIAL 5014).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a neck, then the Punjabi for a chest.
 You'll want to know: ਪਿੱਠ.
 ਪਿੱਠ — piṭṭh — "a back".
 
+The word, taken apart.
+ਪਿੱਠ (piṭṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛṣṭi, "vertebrae; back" (CDIAL 8370).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a chest, then the Punjabi for a back.
 You'll want to know: ਲੱਕ.
 ਲੱਕ — lakk — "a waist".
 
+The word, taken apart.
+ਲੱਕ (lakk) is a tadbhava, a word inherited and reshaped by sound change. It comes from lakka, "waist, loins", a form CDIAL reconstructs from its descendants (CDIAL 10879).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a back, then the Punjabi for a waist.
 
 You'll want to know: ਕੂਹਣੀ.
 ਕੂਹਣੀ — kūhṇī — "an elbow".
+
+The word, taken apart.
+ਕੂਹਣੀ (kūhṇī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaphoṇi, "elbow" (CDIAL 2757). CDIAL takes the Sanskrit word, probably, from Munda rather than Dravidian.
 
 What you've built.
 One more word for this chapter.

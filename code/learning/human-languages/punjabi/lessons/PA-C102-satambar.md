@@ -14,7 +14,8 @@ romanization: "satambar"
 concept_tag: PA-TIME102-SATAMBAR
 prerequisites: [PA-C102-julai, PA-C102-agast]
 sounds: []
-roots: []
+roots: [english-september]
+etymology_hook: "satambar ← English September"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C102-agast]
 <!-- hl-knowledge: introduces=[PA-LEX-C102-TIME102-05]; assesses=[] -->
 
 **ਸਤੰਬਰ** — *satambar* — "September".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਤੰਬਰ** (*satambar*) is a loan from English *September*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

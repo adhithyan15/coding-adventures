@@ -14,7 +14,8 @@ romanization: "billī"
 concept_tag: PA-ANIMALS77-BILLI
 prerequisites: [PA-C76-hava, PA-C77-kutta]
 sounds: []
-roots: []
+roots: [dravidian-bidala-cat]
+etymology_hook: "billī ← *billa, a form CDIAL lists beside Sanskrit biḍāla 'cat' (CDIAL 9237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C77-kutta]
 <!-- hl-knowledge: introduces=[PA-LEX-C77-ANIMALS77-02]; assesses=[] -->
 
 **ਬਿੱਲੀ** — *billī* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਿੱਲੀ** (*billī*) is inherited. CDIAL lists it under *\*billa*, a form it sets beside Sanskrit *biḍāla*, "cat" (CDIAL 9237).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

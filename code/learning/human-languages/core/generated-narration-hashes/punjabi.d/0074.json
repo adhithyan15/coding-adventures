@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 74,
-  "sourceHash": "fnv1a64:0608073791af716a",
+  "sourceHash": "fnv1a64:4de06362bcce1045",
   "lessonIds": [
     "PA-C74-pahar",
     "PA-C74-jangal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch74.txt",
   "json": "punjabi/narration/ch74.json",
-  "textHash": "fnv1a64:b535389a0afa6b51",
-  "jsonHash": "fnv1a64:12a0dff43148f603",
+  "textHash": "fnv1a64:a7842ceda5034139",
+  "jsonHash": "fnv1a64:24757d1a9764b6e1",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for light, then the Punjabi for heavy.
 You'll want to know: ਚਲਾਕ.
 ਚਲਾਕ — calāk — "cunning".
 
+The word, taken apart.
+ਚਲਾਕ (calāk) is a loan, usually traced to Persian chālāk, "quick, clever".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for heavy, then the Punjabi for cunning.
 
 You'll want to know: ਸਿਆਣਾ.
 ਸਿਆਣਾ — siāṇā — "wise".
+
+The word, taken apart.
+ਸਿਆਣਾ (siāṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from sajāna, "clever", a form CDIAL reconstructs from its descendants (CDIAL 13088). CDIAL explains it as sajñāna, "knowing", with its j reshaped after jānāti, "knows".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for cunning, then the Punjabi for wise.
 You'll want to know: ਭੋਲਾ.
 ਭੋਲਾ — bholā — "innocent, simple".
 
+The word, taken apart.
+ਭੋਲਾ (bholā) is inherited. CDIAL lists it, "simple-minded", under bhōla, in its entry bhulla, "defective" (CDIAL 9539).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for wise, then the Punjabi for innocent.
 You'll want to know: ਗੋਲ.
 ਗੋਲ — gol — "round".
 
+The word, taken apart.
+ਗੋਲ (gol) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gola, "ball" (CDIAL 4321).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for innocent, then the Punjabi for round.
 
 You'll want to know: ਸਿੱਧਾ.
 ਸਿੱਧਾ — siddhā — "straight".
+
+The word, taken apart.
+ਸਿੱਧਾ (siddhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from siddha, "accomplished, perfected" (CDIAL 13401). CDIAL lists Lahnda siddhā, "straight, upright", beside the Punjabi form.
 
 What you've built.
 One more word for this chapter.

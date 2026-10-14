@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a flower, then the Punjabi for a leaf.
 You'll want to know: ਪਹਾੜ.
 ਪਹਾੜ — pahāṛ — "a mountain".
 
+The word, taken apart.
+ਪਹਾੜ (pahāṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from pāhāḍa, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL thinks it probably connected with Sanskrit pāṣāṇa, "stone".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a leaf, then the Punjabi for a mountain.
 
 You'll want to know: ਜੰਗਲ.
 ਜੰਗਲ — jaṅgal — "a forest".
+
+The word, taken apart.
+ਜੰਗਲ (jaṅgal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāṅgala, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL notes evidence for a non-Aryan origin; Punjabi jaṅgal means "desert, forest".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a mountain, then the Punjabi for a fores
 You'll want to know: ਦਰਿਆ.
 ਦਰਿਆ — dariā — "a river".
 
+The word, taken apart.
+ਦਰਿਆ (dariā) is a loan, usually traced to Persian daryā, "sea, great river".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a forest, then the Punjabi for a river.
 You'll want to know: ਝੀਲ.
 ਝੀਲ — jhīl — "a lake".
 
+The word, taken apart.
+ਝੀਲ (jhīl) matches Hindi jhīl, "lake, marsh", which CDIAL lists under a reconstructed jhilla, "swamp, lake" (CDIAL 5392). CDIAL gives no Punjabi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a river, then the Punjabi for a lake.
 
 You'll want to know: ਪੱਥਰ.
 ਪੱਥਰ — patthar — "a stone".
+
+The word, taken apart.
+ਪੱਥਰ (patthar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prastara, "anything strewn; flat surface; rock, stone" (CDIAL 8857).
 
 What you've built.
 One more word for this chapter.

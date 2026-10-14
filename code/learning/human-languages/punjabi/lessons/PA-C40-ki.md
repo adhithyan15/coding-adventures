@@ -11,8 +11,8 @@ gloss: that — one sihari away from the word for what
 concept_tag: PA-JOIN-KI
 prerequisites: [PA-C39-but-checkpoint, PA-C02-ki]
 sounds: [sihari-i]
-roots: []
-etymology_hook: ਕਿ and ਕੀ differ by one stroke and are two different words; the book has taught the second since you first asked a name, and never the first.
+roots: [persian-ki]
+etymology_hook: "ki 'that': usually traced to Persian ki 'that', as Hindi and Urdu ki are"
 duration:
   max_seconds: 250
 requires:
@@ -62,6 +62,8 @@ is about.
 
 English does the same with *that*, and like English, Punjabi often drops it in
 speech. Learn it in place first.
+
+*Ki* is usually traced to Persian *ki*, "that", the word Hindi and Urdu use in the same place.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-KI-01, PA-LEX-KI-02] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 102,
-  "sourceHash": "fnv1a64:8d4c98c2bb706f96",
+  "sourceHash": "fnv1a64:adf1a03441531c25",
   "lessonIds": [
     "PA-C102-mai",
     "PA-C102-jun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch102.txt",
   "json": "punjabi/narration/ch102.json",
-  "textHash": "fnv1a64:473d749d49147a52",
-  "jsonHash": "fnv1a64:28ddb0d705a7c20e",
+  "textHash": "fnv1a64:dcbaec6c292dea04",
+  "jsonHash": "fnv1a64:9a609a8c03191089",
   "findings": []
 }

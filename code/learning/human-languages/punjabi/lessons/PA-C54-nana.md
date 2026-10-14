@@ -14,7 +14,8 @@ romanization: "nānā"
 concept_tag: PA-FAMILY54-NANA
 prerequisites: [PA-C54-dada, PA-C54-dadi]
 sounds: []
-roots: []
+roots: [indo-aryan-nanna]
+etymology_hook: "nānā ← *nānna 'a term of respect for an older relative', a reconstructed form; a tadbhava (CDIAL 7059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C54-dadi]
 <!-- hl-knowledge: introduces=[PA-LEX-C54-FAMILY54-03]; assesses=[] -->
 
 **ਨਾਨਾ** — *nānā* — "a grandfather (mother's father)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਾਨਾ** (*nānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL lists Punjabi *nānā*, "mother's father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

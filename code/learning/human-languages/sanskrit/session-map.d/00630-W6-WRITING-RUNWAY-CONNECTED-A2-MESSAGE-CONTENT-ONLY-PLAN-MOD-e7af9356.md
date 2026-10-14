@@ -1,0 +1,1 @@
+| W6 | writing-runway | connected A2 message | content-only plan → model-free 70–90-word Devanagari draft → four-pass review; only taught Sanskrit atoms and external-sandhi changes are allowed, and the untimed attempt proves no A2 readiness |

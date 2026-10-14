@@ -14,7 +14,8 @@ romanization: "bhejṇā"
 concept_tag: PA-VERB-BHEJNA
 prerequisites: [PA-C60-chahuna, PA-C60-liauna]
 sounds: []
-roots: []
+roots: [indo-aryan-bhejj]
+etymology_hook: "bhejṇā ← *bhejj 'send', of uncertain deeper source (CDIAL 9603)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C60-liauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C60-VERBS60-05]; assesses=[] -->
 
 **ਭੇਜਣਾ** — *bhejṇā* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੇਜਣਾ** (*bhejṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhejj*, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). Its deeper source is uncertain: CDIAL suggests, with a "possibly", a Sanskrit verb meaning "is led to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

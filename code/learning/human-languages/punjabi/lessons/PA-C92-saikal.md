@@ -14,7 +14,8 @@ romanization: "sāīkal"
 concept_tag: PA-TOWN92-SAIKAL
 prerequisites: [PA-C92-pulis, PA-C92-kishti]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāīkal ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C92-kishti]
 <!-- hl-knowledge: introduces=[PA-LEX-C92-TOWN92-03]; assesses=[] -->
 
 **ਸਾਈਕਲ** — *sāīkal* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਈਕਲ** (*sāīkal*) is a loan from English *cycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

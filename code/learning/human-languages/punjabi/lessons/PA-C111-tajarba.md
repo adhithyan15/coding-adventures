@@ -14,7 +14,8 @@ romanization: "tajarbā"
 concept_tag: PA-CAN111-TAJARBA
 prerequisites: [PA-C111-daulat, PA-C111-malak]
 sounds: []
-roots: []
+roots: [arabic-tajriba]
+etymology_hook: "tajarbā ← Arabic tajriba 'a trial, experience', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C111-malak]
 <!-- hl-knowledge: introduces=[PA-LEX-C111-CAN111-03]; assesses=[] -->
 
 **ਤਜਰਬਾ** — *tajarbā* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਜਰਬਾ** (*tajarbā*) is a loan from Arabic *tajriba*, "a trial, experience", which reached Punjabi through Persian. Its Arabic root is *j-r-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

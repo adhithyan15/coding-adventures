@@ -14,7 +14,8 @@ romanization: "cānaṇ"
 concept_tag: PA-THINGS129-CANAN
 prerequisites: [PA-C128-canni, PA-C129-hanera]
 sounds: []
-roots: []
+roots: [indo-aryan-candrana]
+etymology_hook: "cānaṇ ← *cāndraṇa 'moonlight', a reconstructed form; a tadbhava (CDIAL 4745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C129-hanera]
 <!-- hl-knowledge: introduces=[PA-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **ਚਾਨਣ** — *cānaṇ* — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਨਣ** (*cānaṇ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāndraṇa*, "moonlight", a form CDIAL reconstructs from its descendants (CDIAL 4745). CDIAL lists Punjabi *cānaṇ*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

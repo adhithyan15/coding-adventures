@@ -14,7 +14,8 @@ romanization: "mombattī"
 concept_tag: PA-THINGS117-MOMBATTI
 prerequisites: [PA-C117-dabba, PA-C117-ghara]
 sounds: []
-roots: []
+roots: [persian-mom, sanskrit-varti]
+etymology_hook: "mom: usually traced to Persian mom 'wax'; battī ← Sanskrit varti 'wick; lamp' (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C117-ghara]
 <!-- hl-knowledge: introduces=[PA-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **ਮੋਮਬੱਤੀ** — *mombattī* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੋਮਬੱਤੀ** (*mombattī*) joins words from two sources: *mom*, "wax", usually traced to Persian *mom*, and *battī*, "wick, lamp", from Sanskrit *varti* (CDIAL 11359). A candle is a "wax lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kharīdṇā"
 concept_tag: PA-VERB-KHARIDNA
 prerequisites: [PA-C57-daurna, PA-C57-khedna]
 sounds: []
-roots: []
+roots: [persian-kharidan]
+etymology_hook: "kharīdṇā: usually traced to Persian kharīdan 'to buy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C57-khedna]
 <!-- hl-knowledge: introduces=[PA-LEX-C57-VERBS57-05]; assesses=[] -->
 
 **ਖ਼ਰੀਦਣਾ** — *kharīdṇā* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖ਼ਰੀਦਣਾ** (*kharīdṇā*) is a loan, usually traced to Persian *kharīdan*, "to buy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

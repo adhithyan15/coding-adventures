@@ -14,7 +14,8 @@ romanization: "jamāt"
 concept_tag: PA-THINGS138-JAMAT
 prerequisites: [PA-C138-bag, PA-C138-painsil]
 sounds: []
-roots: []
+roots: [arabic-jamaa]
+etymology_hook: "jamāt ← Arabic jamāʿa 'a group, an assembly', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C138-painsil]
 <!-- hl-knowledge: introduces=[PA-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **ਜਮਾਤ** — *jamāt* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਮਾਤ** (*jamāt*) is a loan from Arabic *jamāʿa*, "a group, an assembly", which reached Punjabi through Persian. Its Arabic root is *j-m-ʿ* (Lane). Punjabi uses it for a school class.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

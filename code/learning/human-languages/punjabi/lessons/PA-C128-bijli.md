@@ -14,7 +14,8 @@ romanization: "bijlī"
 concept_tag: PA-THINGS128-BIJLI
 prerequisites: [PA-C127-tibba, PA-C128-maruthal]
 sounds: []
-roots: []
+roots: [sanskrit-vidyullata]
+etymology_hook: "bijlī ← Sanskrit vidyullatā 'forked lightning', a tadbhava (CDIAL 11745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C128-maruthal]
 <!-- hl-knowledge: introduces=[PA-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **ਬਿਜਲੀ** — *bijlī* — "lightning, electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਿਜਲੀ** (*bijlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vidyullatā*, "forked lightning" (CDIAL 11745).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

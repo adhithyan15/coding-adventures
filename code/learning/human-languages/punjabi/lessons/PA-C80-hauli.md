@@ -14,7 +14,8 @@ romanization: "haulī"
 concept_tag: PA-ADJ80-HAULI
 prerequisites: [PA-C80-lamma, PA-C80-garam]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "haulī: beside haulā 'light, gentle', which CDIAL lists under Sanskrit laghu 'light', sounds swapped (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C80-garam]
 <!-- hl-knowledge: introduces=[PA-LEX-C80-ADJ80-04]; assesses=[] -->
 
 **ਹੌਲੀ** — *haulī* — "slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੌਲੀ** (*haulī*) goes with *haulā*, "light, gentle", which CDIAL lists under Sanskrit *laghu*, "light", with its sounds swapped (CDIAL 10896).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

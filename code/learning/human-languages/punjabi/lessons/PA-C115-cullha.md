@@ -14,7 +14,8 @@ romanization: "cullhā"
 concept_tag: PA-THINGS115-CULLHA
 prerequisites: [PA-C114-kambal, PA-C115-rajai]
 sounds: []
-roots: []
+roots: [sanskrit-culli]
+etymology_hook: "cullhā ← Sanskrit cullī 'fireplace', which CDIAL takes from Dravidian (CDIAL 4879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C115-rajai]
 <!-- hl-knowledge: introduces=[PA-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **ਚੁੱਲ੍ਹਾ** — *cullhā* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੁੱਲ੍ਹਾ** (*cullhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cullī*, "fireplace" (CDIAL 4879). CDIAL takes the Sanskrit word itself from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

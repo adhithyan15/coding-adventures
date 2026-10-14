@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 146,
-  "sourceHash": "fnv1a64:1777cc96c1ba9599",
+  "sourceHash": "fnv1a64:d641e8214e223b23",
   "lessonIds": [
     "PA-C146-beha",
     "PA-C146-pakka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch146.txt",
   "json": "punjabi/narration/ch146.json",
-  "textHash": "fnv1a64:31c261cea38b77a5",
-  "jsonHash": "fnv1a64:86cc3ad906ff99f3",
+  "textHash": "fnv1a64:df81117b54701718",
+  "jsonHash": "fnv1a64:6a91a6dcaea6f8f9",
   "findings": []
 }

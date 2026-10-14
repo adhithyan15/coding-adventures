@@ -14,7 +14,8 @@ romanization: "dhoṇā"
 concept_tag: PA-VERB-DHONA
 prerequisites: [PA-C58-kholhna, PA-C58-pakauna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhauvati]
+etymology_hook: "dhoṇā ← *dhauvati 'washes', a reconstructed form; a tadbhava (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C58-pakauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C59-VERBS59-01]; assesses=[] -->
 
 **ਧੋਣਾ** — *dhoṇā* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਧੋਣਾ** (*dhoṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhauvati*, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

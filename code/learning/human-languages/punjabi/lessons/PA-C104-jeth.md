@@ -14,7 +14,8 @@ romanization: "jeṭh"
 concept_tag: PA-TIME104-JETH
 prerequisites: [PA-C103-cet, PA-C103-visakh]
 sounds: []
-roots: []
+roots: [sanskrit-jyaishtha]
+etymology_hook: "jeṭh ← Sanskrit jyaiṣṭha 'the month May-June', a tadbhava (CDIAL 5293)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C103-visakh]
 <!-- hl-knowledge: introduces=[PA-LEX-C104-TIME104-01]; assesses=[] -->
 
 **ਜੇਠ** — *jeṭh* — "Jeth, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੇਠ** (*jeṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jyaiṣṭha*, "the month May-June" (CDIAL 5293).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

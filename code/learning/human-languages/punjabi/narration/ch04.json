@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:87bde09ba595d1dd",
+  "sourceHash": "fnv1a64:593ab0317964d335",
   "lessons": [
     {
       "id": "PA-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1647f55754f3b884",
+      "sourceHash": "fnv1a64:c35f5151a695ed12",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4b659952da6cdbc3",
+      "sourceHash": "fnv1a64:74491ce48f0b2db1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d0fe51dc9f943b6",
+      "sourceHash": "fnv1a64:68ae86c46966cb77",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +336,10 @@
             {
               "kind": "speech",
               "text": "ਫਿਰ ਮਿਲਾਂਗੇ = ਫਿਰ (phir, \"again\") + ਮਿਲਾਂਗੇ (milāṁge, \"we will meet\") — \"we'll meet again.\" Chapter 1 gave you sat srī akāl, the Sikh greeting that doubles as a formal goodbye; phir milāṁge is the everyday, hopeful one — the same \"promise of return\" the whole subcontinent prefers to a blunt farewell (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ). Even more casual: phir mildē hāṁ (\"(we) meet again,\" present for a near future)."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited. phir is the absolutive of phirati, \"turns\", used as an adverb (CDIAL 9078), and milāṁge is the future of milṇā, \"to meet\", from Sanskrit milati, \"meets, encounters\" (CDIAL 10133)."
             }
           ]
         },
@@ -593,7 +597,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1278b482a419e909",
+      "sourceHash": "fnv1a64:ce3fe1404bce2fd4",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -14,7 +14,8 @@ romanization: "pahilāṁ"
 concept_tag: PA-TIME87-PAHILAM
 prerequisites: [PA-C87-hamesha, PA-C87-der]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila]
+etymology_hook: "pahilāṁ: a form of pahilā 'first', which CDIAL lists under *prathilla, beside Sanskrit prathama 'first' (CDIAL 8652)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C87-der]
 <!-- hl-knowledge: introduces=[PA-LEX-C87-TIME87-04]; assesses=[] -->
 
 **ਪਹਿਲਾਂ** — *pahilāṁ* — "before, first".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਹਿਲਾਂ** (*pahilāṁ*) is a form of *pahilā*, "first". CDIAL lists *pahilā* under a reconstructed *\*prathilla*, which it builds on Sanskrit *prathama*, "first" (CDIAL 8652).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Build the Work Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0fe5bf500288198c",
+  "sourceHash": "fnv1a64:c4b79ffa84692947",
   "lessons": [
     {
       "id": "PA-W05-ka",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46761c210e292208",
+      "sourceHash": "fnv1a64:4d3cb85db72ca96b",
       "notice": null,
       "blocks": [
         {
@@ -452,6 +452,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੌਸਮ (mausam) is a loan from Arabic mawsim, \"a season, a time of assembly\", which reached Punjabi through Persian. Its Arabic root is w-s-m (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -482,7 +493,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

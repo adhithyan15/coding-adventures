@@ -14,7 +14,8 @@ romanization: "piāsā"
 concept_tag: PA-QUAL145-PIASA
 prerequisites: [PA-C145-shat, PA-C145-bhukkha]
 sounds: []
-roots: []
+roots: [sanskrit-pipasita]
+etymology_hook: "piāsā: CDIAL marks Punjabi peāsā as taken from Hindi piyāsā, under *pipāsaka 'thirsty' (CDIAL 8200)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C145-bhukkha]
 <!-- hl-knowledge: introduces=[PA-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **ਪਿਆਸਾ** — *piāsā* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਿਆਸਾ** (*piāsā*) came into Punjabi from Hindi: CDIAL lists Hindi *piyāsā*, "thirsty", under *\*pipāsaka*, a form it sets beside Sanskrit *pipāsita*, "thirsty", and marks Punjabi *peāsā* as taken from it (CDIAL 8200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

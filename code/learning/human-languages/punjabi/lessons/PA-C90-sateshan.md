@@ -14,7 +14,8 @@ romanization: "saṭeshan"
 concept_tag: PA-TOWN90-SATESHAN
 prerequisites: [PA-C90-gali, PA-C90-baink]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "saṭeshan ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C90-baink]
 <!-- hl-knowledge: introduces=[PA-LEX-C90-TOWN90-04]; assesses=[] -->
 
 **ਸਟੇਸ਼ਨ** — *saṭeshan* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਟੇਸ਼ਨ** (*saṭeshan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
