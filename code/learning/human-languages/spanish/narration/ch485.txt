@@ -14,6 +14,9 @@ barrer — "to sweep".
 Hoy me toca barrer la cocina. Today it is my turn to sweep the kitchen.
 Me toca — it is my turn.
 
+The word, taken apart.
+barrer from Latin verrere, "to sweep" (EtymDB 2.1) — inherited: the v became b.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -44,6 +47,9 @@ You'll want to know: fregar.
 fregar — "to wash up; to mop".
 Yo friego los platos y tú los secas. I wash the dishes and you dry them.
 The e breaks into ie under stress: friego, friegas.
+
+The word, taken apart.
+fregar from Latin fricare, "to rub" (EtymDB 2.1) — inherited: the -c- between vowels became -g- and the i became e.
 
 What you've built.
 One more word for reading notices, forms and messages.
@@ -76,6 +82,9 @@ limpiar — "to clean".
 Limpiamos la casa los sábados. We clean the house on Saturdays.
 The verb behind limpio, clean.
 
+The word, taken apart.
+limpiar is built on limpio, "clean", from Latin limpidus, "clear" (EtymDB 2.1) — a clear stream is a clean one. Limpio is inherited: the -d- of limpidus wore away.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -107,6 +116,9 @@ secar — "to dry".
 Seca la ropa al sol. Dry the clothes in the sun.
 Seco is dry.
 
+The word, taken apart.
+secar from Latin siccare, "to dry" (EtymDB 2.1), from siccus, "dry" — inherited: the i became e.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -137,6 +149,9 @@ You'll want to know: la basura.
 la basura — "the rubbish, the trash".
 ¿Quién saca la basura? Who takes out the rubbish?
 Sacar la basura — to take out the rubbish.
+
+The word, taken apart.
+basura comes from spoken Latin versura, "a sweeping" (EtymDB 2.1), built on verrere, "to sweep" — the verb that gave barrer.
 
 What you've built.
 One more word for reading notices, forms and messages.

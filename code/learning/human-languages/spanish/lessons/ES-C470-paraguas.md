@@ -11,6 +11,7 @@ concept_tag: ES-ASK-PARAGUAS
 prerequisites: [ES-C469-sintesis-oficina, ES-C330-parada, ES-C440-cumpleanos]
 sounds: [stress-penultimate, r-tap, diphthong-ua]
 roots: [parare-latin]
+etymology_hook: "paraguas — para- (Latin parare 'to make ready') + aguas 'waters': ready against the rain"
 duration:
   max_seconds: 275
 requires:

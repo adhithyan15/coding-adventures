@@ -10,7 +10,8 @@ gloss: "the debate"
 concept_tag: ES-REF-DEBATE
 prerequisites: [ES-C507-poblacion, ES-C507-habitante]
 sounds: []
-roots: []
+roots: [battuere-latin]
+etymology_hook: "debate — from debatir: de- + batir 'to beat', Latin battuere — English debate, battle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C507-habitante]
 > Vemos el debate en la tele.
 >
 > *We watch the debate on TV.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**debate** is the noun of *debatir*, "to argue", built from *de-* and *batir*, "to beat", Latin *battuere*. French *débattre* is built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

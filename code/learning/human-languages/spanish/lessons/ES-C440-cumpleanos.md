@@ -11,6 +11,7 @@ concept_tag: ES-EVENT-CUMPLEANOS
 prerequisites: [ES-C440-boda, ES-C349-aniversario, ES-C08-cuantos-anos]
 sounds: [enye, stress-penultimate]
 roots: [annus-latin]
+etymology_hook: "cumpleaños — cumple 'completes' + años 'years': the day the years are completed"
 duration:
   max_seconds: 270
 requires:
@@ -58,6 +59,9 @@ inside a word that is now singular.
 
 That is why *el cumpleaños* looks plural and is not. It is not an exception to
 be memorised; it is a sentence that hardened.
+
+*Cumplir* is Latin *complere*, "to fill up", and *año* is Latin *annus*, "a
+year".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C440-FIESTA-02, ES-LEX-C349-CLOCK-19] -->

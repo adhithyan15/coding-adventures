@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 503,
-  "sourceHash": "fnv1a64:0f6eecc1b8aa1fbe",
+  "sourceHash": "fnv1a64:b66553955c974cac",
   "lessonIds": [
     "ES-C503-adelgazar",
     "ES-C503-aguantar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch503.txt",
   "json": "spanish/narration/ch503.json",
-  "textHash": "fnv1a64:2016c63bd9b19493",
-  "jsonHash": "fnv1a64:6c422064f1ffd7d5",
+  "textHash": "fnv1a64:2787ce65965f0a10",
+  "jsonHash": "fnv1a64:9c1929c9f46c6750",
   "findings": []
 }

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DESPERTARSE
 prerequisites: [ES-C493-sugerir, ES-C493-duda]
 sounds: []
 roots: []
+etymology_hook: "despertarse — built on despierto 'awake', usually traced to Latin experrectus 'woken up'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C493-duda]
 > *I wake up at seven.*
 
 The e breaks into ie under stress: *me despierto*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**despertar** is built on the old participle *despierto*, "awake", usually traced to a spoken Latin *\*expertus*, a shortening of *experrectus*, "woken up" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

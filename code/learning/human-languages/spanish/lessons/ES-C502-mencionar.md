@@ -10,7 +10,8 @@ gloss: "to mention"
 concept_tag: ES-VERB-MENCIONAR
 prerequisites: [ES-C501-fuente, ES-C502-presentar]
 sounds: []
-roots: []
+roots: [mens-latin]
+etymology_hook: "mencionar — from mención, Latin mentio 'a calling to mind' — English mention, mental"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C502-presentar]
 > No mencionó el precio.
 >
 > *He did not mention the price.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mencionar** is built on *mención*, "a mention", from Latin *mentio*, *mentionem*, "a calling to mind" (Lewis & Short), from the root of *mens*, "mind". *Mención* is learned: its *-ti-* became *-ci-*, not the *z* of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

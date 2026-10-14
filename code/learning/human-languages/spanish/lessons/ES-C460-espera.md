@@ -11,6 +11,7 @@ concept_tag: ES-ASK-ESPERA
 prerequisites: [ES-C460-solicitar, ES-C40-esperar, ES-C458-plazo]
 sounds: [st-no-e, r-tap, stress-penultimate]
 roots: [sperare-latin]
+etymology_hook: "espera — from esperar, Latin sperare 'to hope' — kin to esperanza"
 duration:
   max_seconds: 275
 requires:

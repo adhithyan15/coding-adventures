@@ -2296,6 +2296,21 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_positional_link_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
+    ).expect("positional link styles should parse");
+
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#64748b"));
+    assert_eq!(diagram.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
+    assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
+}
+
+#[test]
 fn swimlane_edge_animation_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeAnimation;
 

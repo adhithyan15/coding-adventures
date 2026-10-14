@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-COMILLAS
 prerequisites: [ES-C424-raya]
 sounds: []
 roots: []
+etymology_hook: "comillas — coma 'comma' + -illa: 'little commas', the quotation marks"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,8 @@ Spanish uses three shapes and puts them in an order of preference:
 The outermost pair is the angular one. Nesting works from the outside in, so the
 English-looking pair appears **inside** the Spanish-looking one, rather than
 first.
+
+*Comillas* is *coma*, "comma", with the small-ending *-illa*: little commas.
 
 ## Grammar Lens: what they are actually for
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-05, ES-ORTH-C424-04] -->

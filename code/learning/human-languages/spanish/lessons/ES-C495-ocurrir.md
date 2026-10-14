@@ -10,7 +10,8 @@ gloss: "to happen"
 concept_tag: ES-VERB-OCURRIR
 prerequisites: [ES-C494-calentar, ES-C495-noticia]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "ocurrir ← Latin occurrere 'to run to meet': ob- + currere 'to run' — English occur"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C495-noticia]
 > *What happened last night?*
 
 A little more formal than *pasar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ocurrir** ← Latin *occurrere*, "to run to meet" (EtymDB 2.1): *ob-*, "towards", and *currere*, "to run" — a learned word. What happens is what runs into you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

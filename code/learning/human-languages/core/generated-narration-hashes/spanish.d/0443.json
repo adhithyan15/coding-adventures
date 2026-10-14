@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 443,
-  "sourceHash": "fnv1a64:c15c4f28d9317846",
+  "sourceHash": "fnv1a64:a06fb53f1c45b6fa",
   "lessonIds": [
     "ES-C443-doler",
     "ES-C443-interesar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch443.txt",
   "json": "spanish/narration/ch443.json",
-  "textHash": "fnv1a64:da95027c4d4722c2",
-  "jsonHash": "fnv1a64:4685358e0e8afcaa",
+  "textHash": "fnv1a64:ffc44653a640da6f",
+  "jsonHash": "fnv1a64:1a4b867cd83c8277",
   "findings": []
 }

@@ -11,8 +11,9 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ES-C03-me, ES-C03-llamar]
 sounds: [ll-y]
 roots: [clamare]
+etymology_hook: "me llamo — me 'myself' + llamo 'I call': literally 'I call myself'"
 duration:
-  max_seconds: 180
+  max_seconds: 199
 requires:
   knowledge: [ES-LEX-ME, ES-LEX-LLAMO]
 introduces:
@@ -45,6 +46,8 @@ introduce yourself. But notice Spanish doesn't say "my name is" at all.
 
 **me llamo** = **me** ("myself") + **llamo** ("I call") = literally **"I call
 myself."** Then the name: *Me llamo Susana* — "I call myself Susan."
+
+*Me* is Latin *me*, and *llamo* is Latin *clamo*, "I call out".
 
 ## Grammar Lens: reflexive verbs
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-COMA
 prerequisites: [ES-C424-punto]
 sounds: []
 roots: []
+etymology_hook: "coma ← Greek komma 'a piece cut off' — English comma"
 duration:
   max_seconds: 240
 requires:

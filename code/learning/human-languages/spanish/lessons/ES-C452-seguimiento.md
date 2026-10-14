@@ -11,6 +11,7 @@ concept_tag: ES-TRADE-SEGUIMIENTO
 prerequisites: [ES-C452-ruta, ES-C401-seguir, ES-C450-entrenamiento]
 sounds: [diphthong-ie, g-soft-gw, stress-penultimate]
 roots: [sequi-latin]
+etymology_hook: "seguimiento — seguir + -miento; seguir is Latin sequi 'to follow' — English sequence"
 duration:
   max_seconds: 275
 requires:

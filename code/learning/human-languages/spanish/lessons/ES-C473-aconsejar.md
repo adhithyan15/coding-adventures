@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACONSEJAR
 prerequisites: [ES-C472-sintesis-encuesta, ES-C321-consejo, ES-C353-biblioteca]
 sounds: [j-jota, s-clear, stress-final]
 roots: [consilium-latin]
+etymology_hook: "aconsejar — a- + consejo; Latin consilium 'deliberation' — English counsel"
 duration:
   max_seconds: 270
 requires:
@@ -71,16 +72,16 @@ advice itself follows with no preposition at all.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C473-CONSEJO-01] -->
 
-*El consejo* already traced it: Latin **consilium**, a deliberation — from
-**con-**, together, and a root about **calling** or taking counsel.
+*El consejo* already traced it: Latin **consilium**, a deliberation, a
+considering together.
 
-So advising is, underneath, a **sitting together**: the word does not mean
-telling somebody what to do. English keeps the same sense in **counsel** and
-**council**, which are the same Latin word split into two spellings, one for
-the advice and one for the people giving it.
+So advising is, underneath, **deliberating together**: the word does not mean
+telling somebody what to do. English keeps *consilium* in **counsel**;
+**council**, the body that meets, is a look-alike from a different Latin word,
+*concilium*, a calling-together.
 
-That is a distinction English had to invent twice. Spanish does it with one
-noun and one verb.
+Spanish does the advising with one noun and one verb: *el consejo* and
+*aconsejar*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C473-CONSEJO-01, ES-LEX-C353-WHERE-24] -->
@@ -94,5 +95,5 @@ noun and one verb.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C473-CONSEJO-01] -->
 
 [PAUSE 3s] To advise? (**Aconsejar**.) Built from? (**El consejo**, with *a-*
-on the front.) What does *consilium* mean underneath? (**A sitting
+on the front.) What does *consilium* mean underneath? (**A considering
 together**.)

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-TRASLADAR
 prerequisites: [ES-C439-anden, ES-C346-oficina, ES-C355-piso]
 sounds: [stress-final]
 roots: [trans-latin, latus-latin]
+etymology_hook: "trasladar — tras- (Latin trans 'across') + -ladar (latus 'carried') — English translate"
 duration:
   max_seconds: 270
 requires:
@@ -60,7 +61,7 @@ house among friends you would hear *mudarse*, but the notice on the door will sa
 
 **Carried across.** English has the same two pieces bolted together in
 **translate**, which is a text carried across into another language, and in
-**relate**, **collate** and **dilate**.
+**relate** and **collate**.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-02] -->

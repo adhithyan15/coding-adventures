@@ -11,6 +11,7 @@ concept_tag: ES-SPORT-NATACION
 prerequisites: [ES-C438-polideportivo, ES-C417-nadar]
 sounds: [written-accent, stress-final]
 roots: [natare-latin]
+etymology_hook: "natación ← Latin natatio, from natare 'to swim' — the learned twin of nadar"
 duration:
   max_seconds: 260
 requires:
@@ -50,7 +51,9 @@ timetable, the club and the medal call it.
 **nat-** from Latin *natāre*, to swim, plus **-ción**, the ending you met on
 *documentación* for turning an action into a thing.
 
-*documentar* gave *documentación*; *natar* gives *natación*. Same machine.
+Latin had the noun ready-made, *natatio*, "a swimming" (Lewis & Short), and
+Spanish took it from books. The same *natare*, worn down in speech, is *nadar*,
+"to swim": the *t* became *d*.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C438-CUERPO-02, ES-LEX-NADAR] -->

@@ -4,7 +4,7 @@
   "chapter": 468,
   "title": "Dos grados",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8d95a963b23de30a",
+  "sourceHash": "fnv1a64:be59ae1a31b1db89",
   "lessons": [
     {
       "id": "ES-C468-chaqueta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b565e8f7b4d945b6",
+      "sourceHash": "fnv1a64:f3bb88e676820780",
       "notice": null,
       "blocks": [
         {
@@ -187,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ba194dc69afcac2",
+      "sourceHash": "fnv1a64:74f05ee45fd95a42",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c2c8368ac29d184",
+      "sourceHash": "fnv1a64:2bc7463d6f43e478",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6b70c6ce222451c",
+      "sourceHash": "fnv1a64:ce21987cd8986e80",
       "notice": null,
       "blocks": [
         {

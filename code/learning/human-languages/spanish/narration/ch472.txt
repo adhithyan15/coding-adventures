@@ -61,7 +61,7 @@ what you do: una encuesta. what you get: a picture of what a group thinks.
 Preguntar wants one reply and stops. An encuesta is built to be counted, which is why Spanish treats it as a thing you make rather than something you say. That is also why a notice will report lo que dice la encuesta — the survey speaks, not the people in it.
 
 The word, taken apart.
-Latin inquisita, things sought out, from inquirere: in- plus quaerere, to seek.
+French enquête, an inquiry, from Latin inquirere: in- plus quaerere, to seek.
 Now look at what you already hold. Querer is that same quaerere. The verb that means to want in Spanish meant to seek in Latin, and encuesta is its other child — so wanting and asking are one word underneath, which is truer of people than either word admits on its own.
 English took the same root repeatedly: an inquest, an inquiry, a question, a quest, and require — all seekings.
 
@@ -183,7 +183,7 @@ Three libraries copying a system is a success story. The same three copying a so
 
 The word, taken apart.
 Latin copia — abundance, plenty. Not a duplicate: the word for plenty.
-The sense travelled because to copy a manuscript was to make there be more of it. A medieval scribe producing a second manuscript was making copia, abundance, and the name of the result eventually became the name of the act.
+How plenty became a duplicate is not settled. The usual account runs through medieval Latin copiare, where copia also meant the means or leave to do something: leave to make a transcript became the transcript itself.
 The old meaning is still in English copious, meaning plentiful, and in cornucopia, the horn of plenty. Set those beside una copia and the journey is visible: from having a lot, to having another one.
 
 Guided Practice.

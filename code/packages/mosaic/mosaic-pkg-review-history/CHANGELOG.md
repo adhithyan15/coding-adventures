@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed — 3 stale style-drop pins removed (X-7)
+
+The emitters now lower these, so the gate's inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every main CI run.
+Removed from `ALLOWED_STYLE_DROPS`: `(Qt, "padding-bottom")`, `(Flutter, "color")`, `(Flutter, "padding-bottom")`. Comments that only explained
+removed pins went with them.
+
 ### Fixed — the Flutter `font-size` pin was licensing a drop that no longer happens
 
 Flutter now projects numeric typography onto its text controls, so

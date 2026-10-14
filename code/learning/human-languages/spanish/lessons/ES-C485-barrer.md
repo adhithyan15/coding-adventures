@@ -10,7 +10,8 @@ gloss: "to sweep"
 concept_tag: ES-VERB-BARRER
 prerequisites: [ES-C484-agradecer, ES-C484-ahorrar]
 sounds: []
-roots: []
+roots: [verrere-latin]
+etymology_hook: "barrer ← Latin verrere 'to sweep', inherited, its v turned to b"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C484-ahorrar]
 > *Today it is my turn to sweep the kitchen.*
 
 *Me toca* — it is my turn.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barrer** ← Latin *verrere*, "to sweep" (EtymDB 2.1) — inherited: the *v* became *b*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

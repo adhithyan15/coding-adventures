@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ARREPENTIRSE
 prerequisites: [ES-C443-concentrarse, ES-C20-perdon, ES-C437-equivocarse]
 sounds: [rolled-rr, stress-final]
 roots: [paenitere-latin]
+etymology_hook: "arrepentirse — a- + Old Spanish repentirse, from Latin paenitere 'to cause regret'; not sentir"
 duration:
   max_seconds: 285
 requires:

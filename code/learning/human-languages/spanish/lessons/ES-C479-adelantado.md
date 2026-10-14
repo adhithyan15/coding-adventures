@@ -10,7 +10,8 @@ gloss: "in advance; early, ahead"
 concept_tag: ES-REF-ADELANTADO
 prerequisites: [ES-C479-cancelar, ES-C479-obligatorio]
 sounds: []
-roots: []
+roots: [ante-latin]
+etymology_hook: "adelantado — from adelantar, built on adelante 'forward', Old Spanish denante, Latin de in ante"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C479-obligatorio]
 > *You have to pay in advance.*
 
 *El reloj va adelantado* — the clock is fast.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adelantado** is the participle of *adelantar*, "to move forward", built on *adelante*, "forward", and *delante*, "in front", from Old Spanish *denante* (EtymDB 2.1), Latin *de in ante*, "from in front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

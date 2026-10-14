@@ -56,9 +56,9 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// Style properties this package is currently known to lose, by backend.
 /// Every entry is measured and the inverse-ratchet test rejects stale pins.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // Flutter gained reporting in #12022. This pre-existing loss is pinned
-    // until the emitter carries button typography to the native child.
-    (Backend::Flutter, "font-weight"),
+    // Empty since X-7 (2026-10-13): every drop this package used to pin is
+    // now lowered by its emitter. A new drop fails the gate until it is either
+    // fixed or pinned here with the reason it cannot be yet.
 ];
 
 fn package_root() -> PathBuf {

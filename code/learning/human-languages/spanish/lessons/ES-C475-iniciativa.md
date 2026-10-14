@@ -10,7 +10,8 @@ gloss: "initiative"
 concept_tag: ES-REF-INICIATIVA
 prerequisites: [ES-C474-golpe, ES-C475-profesional]
 sounds: []
-roots: []
+roots: [initium-latin]
+etymology_hook: "iniciativa — iniciar 'to begin' (Latin initiare, from initium) + -tiva — English initiative"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C475-profesional]
 > *We value initiative.*
 
 *Por iniciativa propia* — on your own initiative.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iniciativa** is built from *iniciar*, "to begin" — Latin *initiare* (EtymDB 2.1), from *initium*, "a beginning" — with the ending *-tiva*. English *initiative* is built the same way. *Iniciar* is learned: its *-ti-* became *-ci-*, not the *z* of words worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

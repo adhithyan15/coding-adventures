@@ -11,6 +11,7 @@ concept_tag: ES-VERB-MIRAR
 prerequisites: [ES-C445-sintesis-puesto, ES-C272-mira, ES-C16-ver, ES-C286-ojo]
 sounds: [r-tap, stress-final]
 roots: [mirari]
+etymology_hook: "mirar ← Latin mirari 'to wonder at' — kin to milagro; English miracle, admire"
 duration:
   max_seconds: 280
 requires:

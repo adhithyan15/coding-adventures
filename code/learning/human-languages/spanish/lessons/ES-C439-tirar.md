@@ -11,6 +11,7 @@ concept_tag: ES-VERB-TIRAR
 prerequisites: [ES-C439-cortar, ES-C366-caja, ES-C279-puerta]
 sounds: [stress-final, r-tap]
 roots: []
+etymology_hook: "tirar — origin unsettled; a Gothic verb meaning 'to tear' is the usual suggestion"
 duration:
   max_seconds: 275
 requires:

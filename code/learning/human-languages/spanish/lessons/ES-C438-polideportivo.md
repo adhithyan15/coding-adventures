@@ -11,6 +11,7 @@ concept_tag: ES-PLACE-POLIDEPORTIVO
 prerequisites: [ES-C437-sintesis-plan, ES-C412-deporte, ES-C412-gimnasio]
 sounds: [stress-penultimate]
 roots: [deportare-latin]
+etymology_hook: "polideportivo — Greek poli- 'many' + deportivo, from deporte 'sport'"
 duration:
   max_seconds: 245
 requires:

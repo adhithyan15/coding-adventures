@@ -11,6 +11,7 @@ concept_tag: ES-VERB-METER
 prerequisites: [ES-C455-tender, ES-C332-permiso, ES-C366-caja]
 sounds: [t-dental, stress-final]
 roots: [mittere-latin]
+etymology_hook: "meter ← Latin mittere 'to send' — kin to permiso, admitir; English permit, mission"
 duration:
   max_seconds: 275
 requires:

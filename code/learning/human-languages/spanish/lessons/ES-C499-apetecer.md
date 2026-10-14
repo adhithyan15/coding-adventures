@@ -10,7 +10,8 @@ gloss: "to feel like, to fancy"
 concept_tag: ES-VERB-APETECER
 prerequisites: [ES-C499-batido, ES-C499-anadir]
 sounds: []
-roots: []
+roots: [petere-latin]
+etymology_hook: "apetecer — Latin appetere 'to reach for' + -ecer — English appetite"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C499-anadir]
 > *Do you feel like a coffee?*
 
 It works like *gustar*: *me apetece*. Used mostly in Spain; elsewhere *tener ganas de*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apetecer** is Latin *appetere*, "to reach for, to desire" (Lewis & Short), with the ending *-ecer*. English *appetite* comes from the same verb. The *-t-* between vowels was kept, the mark of a word taken from books.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

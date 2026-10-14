@@ -10,7 +10,8 @@ gloss: closed — the participle doing an adjective's job, and the sign you read
 concept_tag: ES-SIGN-CERRADO
 prerequisites: [ES-C439-trasladar, ES-C37-cerrar, ES-C37-abrir, ES-C279-puerta]
 sounds: [rolled-rr, stress-penultimate]
-roots: [claudere-latin]
+roots: [serare-latin]
+etymology_hook: "cerrado — cerrar + -ado; cerrar is Late Latin serare 'to bolt', not claudere"
 duration:
   max_seconds: 275
 requires:
@@ -55,9 +56,10 @@ letting anything through**.
 **cerrar** plus **-ado**, the ending that turns an *-ar* verb into its past
 participle. Nothing exotic: *hablar* gives *hablado*, *cerrar* gives *cerrado*.
 
-Underneath sits Latin **claudere**, to shut, which you met under *cerrar*. It is
-still visible in **la clausura**, **excluir** and English **closure**, **clause**
-and **claustrophobia** — a fear named for a shut room.
+Underneath sits Late Latin **serare**, to bolt, from *sera*, the bar across a
+door, as you met under *cerrar* — not Latin **claudere**, to shut, which is
+visible instead in **la clausura**, **excluir** and English **closure**,
+**clause** and **claustrophobia**.
 
 ## Grammar Lens: two participles, two shapes
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-03, ES-GRAMMAR-ABIERTO-03] -->

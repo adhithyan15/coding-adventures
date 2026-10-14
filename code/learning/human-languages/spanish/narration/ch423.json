@@ -4,7 +4,7 @@
   "chapter": 423,
   "title": "Character, Not Mood",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:630c97ea6b4a6276",
+  "sourceHash": "fnv1a64:99d636e5889d3818",
   "lessons": [
     {
       "id": "ES-C423-antipatico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73ec866383a2c46f",
+      "sourceHash": "fnv1a64:0b711aad164d9582",
       "notice": null,
       "blocks": [
         {
@@ -117,7 +117,7 @@
             },
             {
               "kind": "speech",
-              "text": "Anti- is doing exactly the job you already know it does in English: antibiotic, antiseptic, Antiarctic — against life, against rot, opposite the Bear."
+              "text": "Anti- is doing exactly the job you already know it does in English: antibiotic, antiseptic, Antarctic — against life, against rot, opposite the Bear."
             }
           ]
         },
@@ -231,7 +231,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:111ddec0863d34a4",
+      "sourceHash": "fnv1a64:da585925145825c6",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bad7550e9f5e2531",
+      "sourceHash": "fnv1a64:f09af2bf7c75502e",
       "notice": null,
       "blocks": [
         {
@@ -624,17 +624,17 @@
     {
       "id": "ES-C423-serio",
       "sequence": 9860,
-      "title": "serio — the opposite of cheerful, and a word about weight",
+      "title": "serio — the opposite of cheerful, and a word about gravity",
       "headword": "serio",
       "romanization": "serio",
-      "gloss": "serious, earnest — Latin serius, weighty; the metaphor of heaviness for gravity of manner is so old that Latin had already forgotten it was a metaphor",
+      "gloss": "serious, earnest — Latin serius, grave and earnest, a word of uncertain origin; Spanish keeps it for manner, and uses grave for a bad accident",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:027e746549eecf6b",
+      "sourceHash": "fnv1a64:ae14c5749245f056",
       "notice": null,
       "blocks": [
         {
@@ -687,7 +687,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "serio — \"serious, earnest.\" Latin serius, whose first meaning was weighty, heavy."
+              "text": "serio — \"serious, earnest.\" Latin serius, \"grave, earnest\" (Lewis & Short) — a word of uncertain origin, which Lewis & Short tentatively ties to severus, \"severe\"."
             },
             {
               "kind": "speech",
@@ -707,7 +707,7 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish does the same with serio and grave. The metaphor is so worn that nobody hears it any more: a serious person is a person who is hard to lift."
+              "text": "Spanish does the same with grave. The metaphor is so worn that nobody hears it any more: a grave person is a person who is hard to lift."
             },
             {
               "kind": "speech",
@@ -806,7 +806,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did Latin serius first mean? (Weighty, heavy.) Does Spanish serio mean grave in the sense of a bad accident? (No — that is grave.) How many syllables is serio? (Two: SE-rio.)"
+              "text": "What did Latin serius mean? (Grave, earnest.) Does Spanish serio mean grave in the sense of a bad accident? (No — that is grave.) How many syllables is serio? (Two: SE-rio.)"
             }
           ]
         }
@@ -825,7 +825,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ea4fde801ff2d56",
+      "sourceHash": "fnv1a64:6b8e33eac365d123",
       "notice": null,
       "blocks": [
         {
@@ -1022,7 +1022,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9cb82c2c10db36f",
+      "sourceHash": "fnv1a64:dac030b06291ece4",
       "notice": null,
       "blocks": [
         {

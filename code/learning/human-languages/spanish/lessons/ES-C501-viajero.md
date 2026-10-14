@@ -10,7 +10,8 @@ gloss: "the traveller, the passenger"
 concept_tag: ES-REF-VIAJERO
 prerequisites: [ES-C500-ley, ES-C500-libertad]
 sounds: []
-roots: []
+roots: [via-latin]
+etymology_hook: "viajero — viaje 'journey' + -ero; viaje is Catalan viatge, Latin viaticum, from via 'road'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C500-libertad]
 > *Passengers must get off the train.*
 
 A woman is *la viajera*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viajero** is *viaje*, "a journey", with *-ero*. *Viaje* came from Catalan *viatge*, Latin *viaticum*, "money for a journey", built on *via*, "a road".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

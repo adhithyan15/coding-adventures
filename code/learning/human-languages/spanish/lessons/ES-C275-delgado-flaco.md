@@ -11,6 +11,7 @@ concept_tag: CONNOTATION-CHOICE
 prerequisites: [ES-C275-si-que]
 sounds: [vowel-a, vowel-e]
 roots: [delicatus, flaccus]
+etymology_hook: "delgado ← Latin delicatus — English delicate; flaco ← flaccus 'drooping' — flaccid"
 duration:
   max_seconds: 240
 requires:

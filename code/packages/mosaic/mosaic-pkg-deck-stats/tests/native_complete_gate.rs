@@ -63,8 +63,6 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// Measured against the real analyzer, not copied from a sibling. Every entry
 /// is also asserted to STILL be dropped, below.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    (Backend::SwiftUI, "align"),
-    (Backend::SwiftUI, "border-bottom-style"),
     (Backend::SwiftUI, "flex-grow"),
     // `gap` was here and is gone. It was never dropped: `Column` and `Row`
     // open `VStack(spacing:)` / `HStack(spacing:)` from the part's own style.
@@ -72,8 +70,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // and `gap` is lowered at view-construction time, where no modifier scan
     // can see it. A gap a `Box`, `Stack` or `HostScroll` genuinely discards is
     // still reported, so this entry would come back if one appeared here.
-    (Backend::Compose, "border-bottom-style"),
-    (Backend::Xaml, "border-bottom-style"),
     // ---- Qt (#15245) ----
     //
     // These became visible the moment Qt started reporting its drops in
@@ -85,21 +81,11 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // doc comment on how a stale pin turns into a standing licence.
     //
     // alignment is not threaded onto the element yet.
-    (Backend::Qt, "align"),
     (Backend::Qt, "text-align"),
-    //
-    // per-edge border halves are not lowered here.
-    (Backend::Qt, "border-bottom-color"),
-    (Backend::Qt, "border-bottom-style"),
-    (Backend::Qt, "border-bottom-width"),
     //
     // Qt expresses this through the container chosen (RowLayout /
     // ColumnLayout / Flow), not through a property on a built element.
     (Backend::Qt, "flex-grow"),
-    //
-    // #15247 -- `qml_padding` reads ONE value and fans it to all four
-    // edges, so any longhand beyond the one it picks is lost.
-    (Backend::Qt, "padding-bottom"),
     //
     // a percentage width has no direct QML analogue; the emitter declines
     // rather than collapsing it.
@@ -107,14 +93,7 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // ---- Flutter (#12022) ----
     // These pre-existing losses became measurable when Flutter gained drop
     // reporting. Each pin is checked below and must disappear with its gap.
-    (Backend::Flutter, "align"),
-    (Backend::Flutter, "border-bottom-style"),
-    (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
     (Backend::Flutter, "font-weight"),
-    (Backend::Flutter, "padding-bottom"),
-    (Backend::Flutter, "text-align"),
-    (Backend::Flutter, "width"),
 ];
 
 fn package_root() -> PathBuf {

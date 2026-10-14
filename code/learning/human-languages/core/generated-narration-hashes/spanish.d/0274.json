@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 274,
-  "sourceHash": "fnv1a64:f6d1337876a5e344",
+  "sourceHash": "fnv1a64:278384102d54977b",
   "lessonIds": [
     "ES-C274-mas-vale-pajaro",
     "ES-C274-ser-un-quijote",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch274.txt",
   "json": "spanish/narration/ch274.json",
-  "textHash": "fnv1a64:71776e37b4c7e811",
-  "jsonHash": "fnv1a64:77325eac4b86c2e2",
+  "textHash": "fnv1a64:dedd80453a0441d4",
+  "jsonHash": "fnv1a64:3cfa65a168af9a29",
   "findings": []
 }

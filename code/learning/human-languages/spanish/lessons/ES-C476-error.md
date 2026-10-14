@@ -10,7 +10,8 @@ gloss: "the mistake, the error"
 concept_tag: ES-REF-ERROR
 prerequisites: [ES-C476-practicar, ES-C476-comprender]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "error ← Latin error 'a wandering', from errare 'to wander' — English error, erratic"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C476-comprender]
 > *There is a mistake on the bill.*
 
 *Por error* — by mistake.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**error** ← Latin *error*, "a wandering, a going astray" (EtymDB 2.1), from *errare*, "to wander" — taken from Latin unchanged. A mistake is a step off the path.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

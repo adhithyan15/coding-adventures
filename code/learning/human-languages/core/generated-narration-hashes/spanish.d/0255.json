@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 255,
-  "sourceHash": "fnv1a64:b916900e98279da3",
+  "sourceHash": "fnv1a64:5d9215b00d7e92ce",
   "lessonIds": [
     "ES-C65-vi-di",
     "ES-C65-di"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch255.txt",
   "json": "spanish/narration/ch255.json",
-  "textHash": "fnv1a64:08ca955835b76a71",
-  "jsonHash": "fnv1a64:d932a714343b69ed",
+  "textHash": "fnv1a64:075634c700398ad7",
+  "jsonHash": "fnv1a64:9f92419490d5001e",
   "findings": []
 }

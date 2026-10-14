@@ -11,6 +11,7 @@ concept_tag: ES-BILL-COSTE
 prerequisites: [ES-C456-aceptar, ES-C402-costar, ES-C311-precio]
 sounds: [s-t-cluster, stress-penultimate]
 roots: [constare-latin]
+etymology_hook: "coste — from costar, Latin constare 'to stand firm' — English cost, constant"
 duration:
   max_seconds: 275
 requires:

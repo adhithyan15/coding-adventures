@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 103,
-  "sourceHash": "fnv1a64:623242bacad15b1e",
+  "sourceHash": "fnv1a64:f4a6a3db9d5daf51",
   "lessonIds": [
     "ES-C14-ayer",
     "ES-C14-ser-ir-preterite",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch103.txt",
   "json": "spanish/narration/ch103.json",
-  "textHash": "fnv1a64:8eaa3af66c2e4bcb",
-  "jsonHash": "fnv1a64:4d6d54574839e292",
+  "textHash": "fnv1a64:d677569dabc2a18a",
+  "jsonHash": "fnv1a64:27cdd78624dfd1ee",
   "findings": []
 }

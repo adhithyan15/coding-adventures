@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 508,
-  "sourceHash": "fnv1a64:f7c183de4964e993",
+  "sourceHash": "fnv1a64:8de8a3c784e1058f",
   "lessonIds": [
     "ES-C508-increible",
     "ES-C508-independiente",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch508.txt",
   "json": "spanish/narration/ch508.json",
-  "textHash": "fnv1a64:59c40692079b58a4",
-  "jsonHash": "fnv1a64:9a25f0ce32172dbc",
+  "textHash": "fnv1a64:3c189d56c8b918bd",
+  "jsonHash": "fnv1a64:55b785f3d6a08c66",
   "findings": []
 }

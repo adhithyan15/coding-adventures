@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-SIGLAS
 prerequisites: [ES-C426-voladitas]
 sounds: []
 roots: []
+etymology_hook: "sigla ← Late Latin sigla 'abbreviations', the plural taken as one word"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,9 @@ Unlike an abbreviation, **a sigla takes no points at all**:
 
 The two you will actually meet on a form are **DNI** — *Documento Nacional de
 Identidad*, the Spanish identity card — and **UE**, the European Union.
+
+*Sigla* is Late Latin *sigla*, "abbreviations" (Lewis & Short), a plural taken
+as one word.
 
 ## Grammar Lens: the plural, which is the strange part
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C426-05, ES-ORTH-C426-03] -->

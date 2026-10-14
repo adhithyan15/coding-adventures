@@ -11,6 +11,7 @@ concept_tag: ES-THING-BOMBERO
 prerequisites: [ES-C427-policia]
 sounds: [m-b-cluster, b-soft, stress-penultimate]
 roots: []
+etymology_hook: "bombero — bomba 'a pump' + -ero: the person who works the pump"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +59,8 @@ attaches to **things** rather than to verbs:
 
 So Spanish has **-dor** for *the one who does the action* and **-ero** for *the
 one who works with the thing*.
+
+*Bomba* is usually taken to imitate the sound of a boom.
 
 ## Grammar Lens: three endings, three logics
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-04, ES-LEX-C427-AGENT-01, ES-LEX-C427-AGENT-03] -->

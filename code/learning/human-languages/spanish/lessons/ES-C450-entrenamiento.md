@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-ENTRENAMIENTO
 prerequisites: [ES-C450-cesped, ES-C400-tren, ES-C36-correr]
 sounds: [diphthong-ie, nasal-n, stress-penultimate]
 roots: [train-french]
+etymology_hook: "entrenamiento — from entrenar, French entraîner 'to drag along' — kin to tren"
 duration:
   max_seconds: 280
 requires:

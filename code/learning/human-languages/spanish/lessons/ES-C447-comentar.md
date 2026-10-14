@@ -11,6 +11,7 @@ concept_tag: ES-VERB-COMENTAR
 prerequisites: [ES-C447-analisis, ES-C34-pensar]
 sounds: [stress-final, nasal-n]
 roots: [mente-latin]
+etymology_hook: "comentar ← Latin commentari 'to think over', on the root of mens 'mind'"
 duration:
   max_seconds: 270
 requires:
@@ -52,10 +53,11 @@ judgement on any of them.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C447-JUICIO-02, ES-ETYMON-PENSAR-02] -->
 
-Latin **com-** together, plus **mens**, **mentem** — the **mind**.
+Latin **commentari**, to think over: **com-** together, plus the root of
+**mens**, **mentem** — the **mind**.
 
 To *comentar* is **to mind something over with somebody**. The mind is sitting
-inside the word, and it is the same *mentem* behind **la mente**, **mental**, and
+inside the word, and it is the same root behind **la mente**, **mental**, and
 the ending **-mente** that turns a Spanish adjective into an adverb:
 *rápidamente* is, at root, *with a rapid mind*.
 

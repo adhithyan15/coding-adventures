@@ -10,7 +10,8 @@ gloss: "to introduce; to present"
 concept_tag: ES-VERB-PRESENTAR
 prerequisites: [ES-C501-senal, ES-C501-fuente]
 sounds: []
-roots: []
+roots: [praesens-latin]
+etymology_hook: "presentar ← Latin praesentare 'to place before', from praesens 'at hand' — English present"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C501-fuente]
 > *Let me introduce my friend Ana.*
 
 *Presentar un documento* — to hand in a document.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**presentar** ← Latin *praesentare*, "to place before, to show" (EtymDB 2.1), from *praesens*, "present, at hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

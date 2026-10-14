@@ -11,6 +11,7 @@ concept_tag: ES-ASK-SENCILLO
 prerequisites: [ES-C471-principiante, ES-C398-dificil, ES-C398-facil]
 sounds: [ll-y, soft-c, stress-penultimate]
 roots: [singulus-latin]
+etymology_hook: "sencillo ← spoken Latin *singellus, from singulus 'one at a time' — English single"
 duration:
   max_seconds: 275
 requires:
@@ -67,7 +68,7 @@ good. Hear it as *easy* and you lose the point the speaker is making.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C471-CURSO-05] -->
 
-Latin **singulus**, one at a time, single — through a late form *singellus*.
+Latin **singulus**, one at a time, single — through a spoken form *\*singellus*.
 English took the same root for **single**, **singular** and **singly**.
 
 That is why *un billete sencillo* means a **single**: the word's oldest sense

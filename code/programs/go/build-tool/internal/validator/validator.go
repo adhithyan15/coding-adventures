@@ -63,19 +63,36 @@ var ciManagedToolchainLanguages = map[string]bool{
 // ValidateBuildFiles returns an error describing every package whose BUILD file
 // is inconsistent with the inferred dependency graph.
 func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph) error {
+	return ValidateBuildFilesAgainst(packages, packages, graph)
+}
+
+// ValidateBuildFilesAgainst checks only `packages`, but resolves every name and
+// path it meets against `known`.
+//
+// The two differ on a CI shard. A shard builds a subset of the repo, and a
+// package's test-only dependencies (a cpanfile `on 'test'` block, for one) are
+// not graph edges, so they are not pulled into that subset. Resolving names
+// against the subset alone left those dependencies unknown. The packages they
+// in turn require then looked like undeclared references, so a shard failed or
+// passed depending on which packages it happened to hold (X-7: shards 14 and
+// 15 of every main run since July).
+//
+//	known    = every package on this platform   → names and paths resolve
+//	packages = the packages this run builds     → the ones that are checked
+func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *directedgraph.Graph) error {
 	if graph == nil {
 		return nil
 	}
 
-	pathToPkg := make(map[string]string, len(packages))
+	pathToPkg := make(map[string]string, len(known))
 	pythonKnownNames := make(map[string]string)
-	for _, pkg := range packages {
+	for _, pkg := range known {
 		pathToPkg[filepath.Clean(pkg.Path)] = pkg.Name
 		if pkg.Language == "python" {
 			pythonKnownNames["coding-adventures-"+strings.ToLower(filepath.Base(pkg.Path))] = pkg.Name
 		}
 	}
-	perlKnownNames := buildPerlKnownNames(packages)
+	perlKnownNames := buildPerlKnownNames(known)
 
 	var problems []string
 	for _, pkg := range packages {

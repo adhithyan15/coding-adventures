@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "Reading Between the Lines --- Imply, Invert, Look It Up, Re-tune",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8e48bf1a3e011c6e",
+  "sourceHash": "fnv1a64:c80be5d0c0541245",
   "lessons": [
     {
       "id": "ES-C272-es-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96746d24a5ad8b93",
+      "sourceHash": "fnv1a64:6217ae5b2da8b3ee",
       "notice": null,
       "blocks": [
         {
@@ -77,6 +77,10 @@
             {
               "kind": "speech",
               "text": "The words supply a reason; the refusal is left for you to work out. That gap between what is said and what is meant has a name in linguistics — an implicature — and Spanish leans on it harder than English does."
+            },
+            {
+              "kind": "speech",
+              "text": "Es is Latin est, \"is\"; que goes back to Latin quid, \"what\"."
             }
           ]
         },
@@ -167,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5507efdf72e3c554",
+      "sourceHash": "fnv1a64:7971ebceb62167a3",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18783ffaa958b342",
+      "sourceHash": "fnv1a64:e64d44c4fc265a96",
       "notice": null,
       "blocks": [
         {
@@ -471,7 +475,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f65367a5a9497e04",
+      "sourceHash": "fnv1a64:a421712b3d143388",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -531,7 +535,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the command form of mirar, \"to look\" — Latin mirari, \"to wonder at, to marry at\", which also gave English miracle, admire and mirror."
+              "text": "It is the command form of mirar, \"to look\" — Latin mirari, \"to wonder at, to marvel at\", which also gave English miracle, admire and mirror."
             },
             {
               "kind": "speech",

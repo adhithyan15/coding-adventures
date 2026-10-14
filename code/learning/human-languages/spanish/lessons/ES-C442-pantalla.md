@@ -11,6 +11,7 @@ concept_tag: ES-THING-PANTALLA
 prerequisites: [ES-C442-reunion, ES-C393-ordenador, ES-C404-movil]
 sounds: [ll-digraph, stress-penultimate]
 roots: []
+etymology_hook: "pantalla — history unsettled; a lampshade before it was a screen"
 duration:
   max_seconds: 275
 requires:

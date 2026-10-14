@@ -10,7 +10,8 @@ gloss: "the sign, the signal"
 concept_tag: ES-REF-SENAL
 prerequisites: [ES-C501-conducir, ES-C501-regresar]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "señal ← Late Latin signale, from signum 'a sign': -gn- became ñ — English signal"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C501-regresar]
 > *Follow the signs to the airport.*
 
 *Una señal de tráfico* — a road sign. *No hay señal* — there is no signal, on a phone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**señal** ← Late Latin *signale* (EtymDB 2.1), from *signum*, "a mark, a sign" — inherited: the *-gn-* became *ñ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

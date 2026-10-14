@@ -10,7 +10,8 @@ gloss: "bored; boring"
 concept_tag: ES-REF-ABURRIDO
 prerequisites: [ES-C476-comprender, ES-C476-error]
 sounds: []
-roots: []
+roots: [abhorrere-latin]
+etymology_hook: "aburrido — from aburrir, Latin abhorrere 'to shrink from' — kin to aborrecer 'to loathe', English abhor"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C476-error]
 > *The film is boring.*
 
 With *estar* it means bored (*estoy aburrido*); with *ser* it means boring (*es aburrido*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aburrido** is the participle of *aburrir*, "to bore", from Latin *abhorrere*, "to shrink back from, to shudder at" (Lewis & Short) — inherited. With the ending *-ecer*, the same Latin verb also gave *aborrecer*, "to loathe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

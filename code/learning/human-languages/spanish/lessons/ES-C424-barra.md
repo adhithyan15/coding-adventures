@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-BARRA
 prerequisites: [ES-C424-guion]
 sounds: []
 roots: []
+etymology_hook: "barra ← spoken Latin *barra 'a bar', of unknown origin — English bar"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,9 @@ Three jobs, all of which turn up on an A1 reading paper:
 The middle one is the useful surprise: **c/** on a Spanish address is *calle*,
 the street. An envelope, a form or a shop sign will print it that way, and it is
 unreadable if nobody has told you.
+
+*Barra* goes back to a spoken Latin *\*barra*, "a bar", whose own origin is
+unknown — the same word as English *bar*.
 
 ## Grammar Lens: the mark that means "per"
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-08, ES-ORTH-C424-07] -->

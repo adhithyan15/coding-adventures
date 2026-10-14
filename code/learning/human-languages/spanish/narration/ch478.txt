@@ -14,6 +14,9 @@ el equipaje — "the luggage".
 El equipaje de mano no puede pesar más de diez kilos. Hand luggage cannot weigh more than ten kilos.
 It is singular, like English luggage: mi equipaje.
 
+The word, taken apart.
+equipaje from French équipage, "a ship's crew and gear" (EtymDB 2.1), from équiper, "to fit out a ship", a word of Germanic origin related to English ship.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -44,6 +47,9 @@ You'll want to know: el calzado.
 el calzado — "the footwear".
 Lleva calzado cómodo. Wear comfortable footwear.
 A notice word for shoes in general; one shoe is un zapato.
+
+The word, taken apart.
+calzado is the participle of calzar, "to put on shoes", from Latin calceare (EtymDB 2.1), built on calceus, "a shoe" — inherited: the Latin -ce- became -z-.
 
 What you've built.
 One more word for reading notices, forms and messages.
@@ -76,6 +82,9 @@ el sitio — "the place; the room, the space".
 No hay sitio en el coche. There is no room in the car.
 Un sitio web is a website.
 
+The word, taken apart.
+sitio goes back to Latin situs, "a position, a site" (EtymDB 2.1); how it came by its ending -io is not settled. English site comes from the same Latin word.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -107,6 +116,9 @@ el espacio — "the space".
 El espacio es pequeño pero tiene luz. The space is small but it has light.
 More formal than sitio, and the word for outer space too.
 
+The word, taken apart.
+espacio from Latin spatium, "room, extent" (EtymDB 2.1) — a learned borrowing, with the e- Spanish puts before sp-.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -137,6 +149,9 @@ You'll want to know: disponible.
 disponible — "available".
 La habitación está disponible desde el lunes. The room is available from Monday.
 Used with estar.
+
+The word, taken apart.
+disponible is built from disponer, "to arrange, to have at hand", with -ible, "able to be". Disponer is Latin disponere, "to set in order": dis-, "apart", and ponere, "to put".
 
 What you've built.
 One more word for reading notices, forms and messages.

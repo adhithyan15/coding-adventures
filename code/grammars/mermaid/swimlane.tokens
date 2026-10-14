@@ -14,6 +14,7 @@ CLICK_LINE = /[ \t]*click[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]+[^\r\n]+/
 CLASS_DEF_LINE = /[ \t]*classDef[ \t]+[A-Za-z_][A-Za-z0-9_-]*[ \t]+[^;\r\n]+[ \t]*;?/
 CLASS_LINE = /[ \t]*class[ \t]+[A-Za-z_][A-Za-z0-9_,]*[ \t]+[A-Za-z_][A-Za-z0-9_,-]*[ \t]*;?/
 STYLE_LINE = /[ \t]*style[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]+[^\r\n]+/
+LINK_STYLE_LINE = /[ \t]*linkStyle[ \t]+(?:default|[0-9]+(?:[ \t]*,[ \t]*[0-9]+)*)[ \t]+[^;\r\n]+[ \t]*;?/
 EDGE_CONFIG_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*@\{[^\r\n}]+\}[ \t]*/
 DOTTED_LABEL_CONTINUATION_LINE = /[ \t]*[xo<]?-\.[^\r\n]+\.+-[xo>]?[^\r\n]+/
 DOTTED_LABEL_EDGE_LINE = /[ \t]*[A-Za-z_][^\r\n]*[xo<]?-\.[^\r\n]+\.+-[xo>]?[^\r\n]+/

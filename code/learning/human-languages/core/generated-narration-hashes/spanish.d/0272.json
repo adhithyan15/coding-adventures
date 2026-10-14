@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 272,
-  "sourceHash": "fnv1a64:8e48bf1a3e011c6e",
+  "sourceHash": "fnv1a64:c80be5d0c0541245",
   "lessonIds": [
     "ES-C272-es-que",
     "ES-C272-si-claro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch272.txt",
   "json": "spanish/narration/ch272.json",
-  "textHash": "fnv1a64:ab89fa75a95f827d",
-  "jsonHash": "fnv1a64:d264a6e35fff2604",
+  "textHash": "fnv1a64:99b0b9b2305c575e",
+  "jsonHash": "fnv1a64:578b8d3236bbcbad",
   "findings": []
 }

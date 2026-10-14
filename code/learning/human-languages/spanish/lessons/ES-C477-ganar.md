@@ -11,6 +11,7 @@ concept_tag: ES-VERB-GANAR
 prerequisites: [ES-C477-alquiler, ES-C477-multa]
 sounds: []
 roots: []
+etymology_hook: "ganar — probably Gothic *ganan 'to covet', perhaps crossed with the Germanic verb behind French gagner"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C477-multa]
 > *She earns a thousand euros a month.*
 
 The same verb wins a game: *ganar un partido*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ganar** is probably Germanic. The usual account traces it to Gothic *\*ganan*, "to covet" (EtymDB 2.1 records this line), perhaps crossed with the Germanic verb for grazing and hunting that is behind French *gagner*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

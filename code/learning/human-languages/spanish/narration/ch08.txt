@@ -56,6 +56,9 @@ you're addressing: tú (informal). form: estás. reads as: "you are".
 you're addressing: usted (formal). form: está. reads as: "you are".
 Notice that está is also "he is / she is." That is not a coincidence and not something extra to learn — it is the usted-takes-he/she-forms rule you already met, showing up for the first time in a real verb.
 
+The word, taken apart.
+estás and está are forms of estar, Latin stare, "to stand": Latin stas and stat, "you stand" and "it stands", with the e- Spanish puts before st-.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "estás" … "está" — the two forms you'll ask with]

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACOMPANAR
 prerequisites: [ES-C446-mover, ES-C436-companero, ES-C26-pan]
 sounds: [enye, stress-final]
 roots: [panis-latin]
+etymology_hook: "acompañar — a- + compañ(ero) + -ar: to be the one you share bread with"
 duration:
   max_seconds: 275
 requires:

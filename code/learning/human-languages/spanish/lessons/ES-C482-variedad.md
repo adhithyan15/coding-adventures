@@ -10,7 +10,8 @@ gloss: "the variety"
 concept_tag: ES-REF-VARIEDAD
 prerequisites: [ES-C482-justo, ES-C482-rapido]
 sounds: []
-roots: []
+roots: [varius-latin]
+etymology_hook: "variedad ← Latin varietas 'difference', from varius 'different' — English variety"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C482-rapido]
 > Hay mucha variedad de fruta.
 >
 > *There is a wide variety of fruit.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**variedad** ← Latin *varietas*, "difference, variety" (EtymDB 2.1), from *varius*, "different"; its ending is the *-dad* of *ciudad*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

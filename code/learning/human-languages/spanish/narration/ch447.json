@@ -4,7 +4,7 @@
   "chapter": 447,
   "title": "Juzgar",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ba0490158eaec2b0",
+  "sourceHash": "fnv1a64:6d9e409aec1f1f47",
   "lessons": [
     {
       "id": "ES-C447-analisis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c62186577879b61f",
+      "sourceHash": "fnv1a64:0bd41154840e4797",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:883aad0cccad4bb1",
+      "sourceHash": "fnv1a64:33702ba00ab41e4f",
       "notice": null,
       "blocks": [
         {
@@ -232,11 +232,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin com- together, plus mens, mentem — the mind."
+              "text": "Latin commentari, to think over: com- together, plus the root of mens, mentem — the mind."
             },
             {
               "kind": "speech",
-              "text": "To comentar is to mind something over with somebody. The mind is sitting inside the word, and it is the same mentem behind la mente, mental, and the ending -mente that turns a Spanish adjective into an adverb: rápidamente is, at root, with a rapid mind."
+              "text": "To comentar is to mind something over with somebody. The mind is sitting inside the word, and it is the same root behind la mente, mental, and the ending -mente that turns a Spanish adjective into an adverb: rápidamente is, at root, with a rapid mind."
             },
             {
               "kind": "table",
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68622d933d496853",
+      "sourceHash": "fnv1a64:768b1501a99c706b",
       "notice": null,
       "blocks": [
         {
@@ -502,7 +502,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e682fa026984e7fb",
+      "sourceHash": "fnv1a64:af5d06a529cea23b",
       "notice": null,
       "blocks": [
         {

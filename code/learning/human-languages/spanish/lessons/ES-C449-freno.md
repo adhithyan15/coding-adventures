@@ -11,6 +11,7 @@ concept_tag: ES-FIX-FRENO
 prerequisites: [ES-C449-arreglar, ES-C363-bicicleta]
 sounds: [r-tap, stress-penultimate]
 roots: [frenum-latin]
+etymology_hook: "freno ← Latin frenum 'a bit, a bridle' — English frenulum"
 duration:
   max_seconds: 270
 requires:

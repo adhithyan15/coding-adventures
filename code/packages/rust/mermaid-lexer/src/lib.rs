@@ -1224,6 +1224,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_swimlane_positional_link_styles() {
+        let tokens = try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na --> b\nlinkStyle default stroke:#64748b\nlinkStyle 0, 2 stroke:#dc2626;\n",
+        ).expect("positional link styles should tokenize");
+
+        assert_eq!(tokens.iter().filter(|token|
+            custom_name(token) == Some("LINK_STYLE_LINE")
+        ).count(), 2);
+    }
+
+    #[test]
     fn comments_are_skipped() {
         let tokens =
             tokenize_mermaid("%% heading comment\nflowchart TD\n%% edge comment\nA --- B\n");

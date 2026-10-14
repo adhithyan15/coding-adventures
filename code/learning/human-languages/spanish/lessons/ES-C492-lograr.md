@@ -10,7 +10,8 @@ gloss: "to manage, to achieve"
 concept_tag: ES-VERB-LOGRAR
 prerequisites: [ES-C491-propina, ES-C492-intentar]
 sounds: []
-roots: []
+roots: [lucrari-latin]
+etymology_hook: "lograr ← Latin lucrari 'to gain', inherited — learned twin lucro 'profit'; English lucre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C492-intentar]
 > Por fin logró aprobar.
 >
 > *At last she managed to pass.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lograr** ← Latin *lucrari*, "to gain, to profit" (EtymDB 2.1) — inherited: the *-c-* became *-g-* and the *u* became *o*. *Lucro*, "profit", is the same word taken from books.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

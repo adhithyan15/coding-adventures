@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENTREGAR
 prerequisites: [ES-C458-plazo, ES-C406-documento, ES-C452-almacen]
 sounds: [pr-cluster, g-hard, stress-final]
 roots: [integrare-latin]
+etymology_hook: "entregar ← Latin integrare 'to make whole', from integer — English integrity"
 duration:
   max_seconds: 275
 requires:

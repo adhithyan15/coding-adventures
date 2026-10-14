@@ -11,6 +11,7 @@ concept_tag: PARAGRAPH-PLAN
 prerequisites: [ES-C272-mira]
 sounds: [vowel-a, vowel-o]
 roots: [primarius, locus]
+etymology_hook: "primer ← Latin primarius 'first-rank'; lugar ← Latin localis, from locus 'place'"
 duration:
   max_seconds: 240
 requires:
@@ -51,7 +52,7 @@ reviews_of: [ES-C272-mira]
 **en primer lugar** — "in the first place, firstly."
 
 *Primer* is Latin **primarius**, "of the first rank" — English **primary**,
-**prime**. *Lugar* is **locus**, "place" — English **local**, **locate**.
+**prime**. *Lugar* is Latin **localis**, "of a place", from **locus**, "place" — English **local**, **locate**.
 Literally: *in the first place*, and English kept the phrase intact.
 
 Its partners are *en segundo lugar* and *por último*, "lastly."

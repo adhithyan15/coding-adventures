@@ -10,7 +10,8 @@ gloss: "pollution"
 concept_tag: ES-REF-CONTAMINACION
 prerequisites: [ES-C503-paciente, ES-C504-reciclar]
 sounds: []
-roots: []
+roots: [contaminare-latin]
+etymology_hook: "contaminación ← Latin contaminatio 'a defiling', from contaminare — English contamination"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C504-reciclar]
 > La contaminación es un problema en las ciudades grandes.
 >
 > *Pollution is a problem in big cities.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contaminación** ← Latin *contaminatio*, "a defiling" (EtymDB 2.1), from *contaminare*, "to defile" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

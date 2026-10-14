@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACUDIR
 prerequisites: [ES-C483-finalidad, ES-C483-mejora]
 sounds: []
 roots: []
+etymology_hook: "acudir — usually traced to Old Spanish recudir 'to come back', from Latin recutere 'to strike back'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C483-mejora]
 > *Come to the office with your passport.*
 
 Notices use it where speech would use *ir* or *venir*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acudir** is usually explained as Old Spanish *recudir*, "to come back, to turn to", with its prefix changed to *a-*; *recudir* is Latin *recutere*, "to strike back, to make rebound" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

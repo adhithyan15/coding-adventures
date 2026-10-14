@@ -11,6 +11,7 @@ concept_tag: ES-VERB-OFRECER
 prerequisites: [ES-C436-grupo, ES-C431-cobrar]
 sounds: []
 roots: []
+etymology_hook: "ofrecer ← Latin ob- 'toward' + ferre 'to carry' — kin to transferir, referir"
 duration:
   max_seconds: 245
 requires:
@@ -61,6 +62,8 @@ see it you will read words you have never met:
 *ofrezco*, not *ofreco*. Every verb ending **-cer** after a vowel does the same
 — *conocer / conozco*, *parecer / parezco* — so learning this one buys the
 pattern for a large family.
+
+*Ofrecer* is spoken Latin *\*offerescere*, built on Latin *offerre*, "to offer".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-03, ES-LEX-AYUDAR-05] -->

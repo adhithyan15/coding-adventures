@@ -11,6 +11,7 @@ concept_tag: ES-GIVE-PELIGROSO
 prerequisites: [ES-C461-donar, ES-C449-taladro, ES-C454-accidente]
 sounds: [l-clear, g-hard, stress-penultimate]
 roots: [periculum-latin]
+etymology_hook: "peligroso — peligro ← Latin periculum 'a trial', with r and l swapped — English peril"
 duration:
   max_seconds: 275
 requires:

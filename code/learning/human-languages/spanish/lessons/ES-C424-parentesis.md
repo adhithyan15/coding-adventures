@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-PARENTESIS
 prerequisites: [ES-C424-comillas]
 sounds: []
 roots: []
+etymology_hook: "paréntesis ← Greek parenthesis: para 'beside' + en 'in' + thesis 'a putting'"
 duration:
   max_seconds: 240
 requires:

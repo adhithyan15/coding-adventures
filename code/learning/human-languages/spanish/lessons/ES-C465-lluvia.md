@@ -11,6 +11,7 @@ concept_tag: ES-ASK-LLUVIA
 prerequisites: [ES-C465-temperatura, ES-C30-llueve, ES-C316-llanto]
 sounds: [ll-y, diphthong-ia, stress-penultimate]
 roots: [pluere-latin]
+etymology_hook: "lluvia ← Latin pluvia 'rain': pl- became ll- — English pluvial"
 duration:
   max_seconds: 275
 requires:

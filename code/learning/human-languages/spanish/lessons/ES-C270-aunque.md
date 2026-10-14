@@ -11,6 +11,7 @@ concept_tag: CONNECTIVE-ALTHOUGH
 prerequisites: [ES-C270-sin-embargo]
 sounds: [vowel-e, vowel-o]
 roots: [adhuc que]
+etymology_hook: "aunque — aun 'even, still' (Latin adhuc) + que 'that': even granting that"
 duration:
   max_seconds: 240
 requires:
@@ -55,7 +56,7 @@ Latin **adhuc**, "up to this point, still." So *aunque* is, at root, **"even
 that"** — even granting that.
 
 You have watched this fusion happen twice already: *ayer* out of *ad heri*, and
-*hablaré* out of *hablar habeo*. Spanish builds most of its small words this way,
+*hablaré* out of *hablar* + *he*. Spanish builds most of its small words this way,
 by saying two words often enough that they become one.
 
 ## What you've built
