@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:50da0c66ffe458de",
+  "sourceHash": "fnv1a64:bc11c25ae495a4c4",
   "lessons": [
     {
       "id": "MW-C90-dopar",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac2083f357bfa7f6",
+      "sourceHash": "fnv1a64:12ea3799f459d926",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "परभात (parbhāt) is a semi-tatsama: Sanskrit prabhāta, \"shone forth; daybreak\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the pr with a vowel. The inherited descendant is Gujarati paroḍh, \"dawn\"."
+              "text": "परभात (parbhāt) is a semi-tatsama: Sanskrit prabhāta, \"shone forth; daybreak\", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the pr with a vowel. The inherited line shows in Prakrit pahāya, \"dawn\", which CDIAL lists under it."
             }
           ]
         },

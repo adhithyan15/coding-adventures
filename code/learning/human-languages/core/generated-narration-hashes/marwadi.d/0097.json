@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 97,
-  "sourceHash": "fnv1a64:f8904796385b5d68",
+  "sourceHash": "fnv1a64:36f435bcb1e83dfb",
   "lessonIds": [
     "MW-C97-hethai",
     "MW-C97-bichai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch97.txt",
   "json": "marwadi/narration/ch97.json",
-  "textHash": "fnv1a64:bafcd6b4e3b6e63e",
-  "jsonHash": "fnv1a64:ed05234c00154b5f",
+  "textHash": "fnv1a64:6f7ce7a132b38e47",
+  "jsonHash": "fnv1a64:da44abdb7bd81236",
   "findings": []
 }

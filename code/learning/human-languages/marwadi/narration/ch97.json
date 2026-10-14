@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Underneath, In the middle, Near, Opposite, Left",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8904796385b5d68",
+  "sourceHash": "fnv1a64:36f435bcb1e83dfb",
   "lessons": [
     {
       "id": "MW-C97-hethai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56f3cc9805aa2469",
+      "sourceHash": "fnv1a64:b42885ed3f8b7781",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हेठै (heṭhai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adhastāt, \"underneath\". CDIAL gives no Marwari form in this entry (CDIAL 248); the match is through Hindi heṭh and Gujarati heṭhe."
+              "text": "हेठै (heṭhai) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to adhastāt, \"underneath\", through a variant CDIAL reconstructs, adhiṣṭāt, whose ṣṭ gave the ṭh. CDIAL gives no Marwari form in this entry (CDIAL 248); the match is through Hindi heṭh and Gujarati heṭhe, which it lists under adhiṣṭāt."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bedece61d014b4b",
+      "sourceHash": "fnv1a64:169850f22f552786",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डावो (ḍāvo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍavva, \"lefthand, crosswise\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5539); the match is through Hindi ḍāwā. CDIAL calls the word non-Aryan, and cites a view that it is Dravidian."
+              "text": "डावो (ḍāvo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍāva, \"lefthand\", one of a group of forms CDIAL reconstructs from their descendants and heads ḍavva, \"lefthand, crosswise\". CDIAL gives no Marwari form in this entry (CDIAL 5539); the match is through Hindi ḍāwā, which it lists under ḍāva. CDIAL calls the word non-Aryan, and cites a view that it is Dravidian."
             }
           ]
         },

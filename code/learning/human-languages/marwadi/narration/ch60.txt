@@ -81,7 +81,7 @@ You'll want to know: मिरच.
 मिरच — mirach — "a chilli".
 
 The word, taken apart.
-मिरच (mirach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marīca, "peppercorn". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi mirc. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli.
+मिरच (mirach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maricca, a variant CDIAL reconstructs beside Sanskrit marīca, "peppercorn". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi mirc, which it lists under maricca. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli.
 
 What you've built.
 One more word for this chapter.

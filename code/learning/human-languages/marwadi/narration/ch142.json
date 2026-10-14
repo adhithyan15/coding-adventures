@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Light, Hard, Soft, Wet, Dry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5c78087b1269a8c4",
+  "sourceHash": "fnv1a64:2fd95ff58cc53306",
   "lessons": [
     {
       "id": "MW-C142-halko",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb307367d62da7eb",
+      "sourceHash": "fnv1a64:d328cab061e3fbe7",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सूको (sūko) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, \"dried\". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi sūkā and Gujarati sūkũ."
+              "text": "सूको (sūko) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, \"dried\". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi sūkā and Gujarati sūkũ. The verb made from it, śuṣkati, \"becomes dry\", does have Old Marwari sūkaï, \"dries up\" (CDIAL 12552)."
             }
           ]
         },

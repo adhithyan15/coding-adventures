@@ -47,7 +47,7 @@ reviews_of: [MW-C142-gilo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सूको** (*sūko*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi *sūkā* and Gujarati *sūkũ*.
+**सूको** (*sūko*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi *sūkā* and Gujarati *sūkũ*. The verb made from it, *\*śuṣkati*, "becomes dry", does have Old Marwari *sūkaï*, "dries up" (CDIAL 12552).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

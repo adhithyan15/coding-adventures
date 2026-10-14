@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 106,
-  "sourceHash": "fnv1a64:7e40ac060a1e9c33",
+  "sourceHash": "fnv1a64:3bdf1ddcc73e1e78",
   "lessonIds": [
     "MW-C106-thelno",
     "MW-C106-uthavno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch106.txt",
   "json": "marwadi/narration/ch106.json",
-  "textHash": "fnv1a64:33b7ab35363ab060",
-  "jsonHash": "fnv1a64:81dd24e3b130a921",
+  "textHash": "fnv1a64:4291b94b1cdbd91a",
+  "jsonHash": "fnv1a64:65efda0164cb3d19",
   "findings": []
 }

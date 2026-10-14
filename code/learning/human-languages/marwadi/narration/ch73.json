@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "New, Old, Good, Bad, Long",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ad0f9aaaa695008",
+  "sourceHash": "fnv1a64:2188008d73bc47c7",
   "lessons": [
     {
       "id": "MW-C73-nuvo",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b2f7193985665b7",
+      "sourceHash": "fnv1a64:9b2dc780364ff438",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of माड़ो (māṛo) is not settled. CDIAL, searched by form and by meaning, has no entry for it."
+              "text": "CDIAL gives no Marwari row for माड़ो (māṛo), but it lists Sindhi māṛo, \"thin, wicked\", and Punjabi māṛā, \"thin, weak, bad\", under māḍa, one of a large group of reconstructed words it heads maṭṭa, \"defective\" (CDIAL 9723). māṛo matches these in shape and sense, so it probably belongs to the same group, though CDIAL does not say so for Marwari."
             }
           ]
         },

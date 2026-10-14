@@ -15,7 +15,7 @@ concept_tag: MW-VERB-GAVNO
 prerequisites: [MW-C54-hasno, MW-C54-rovno]
 sounds: []
 roots: [sanskrit-gayati]
-etymology_hook: "gāvṇo ← Sanskrit gāyati 'sings', a tadbhava (CDIAL 4135, Old Marwari row)"
+etymology_hook: "gāvṇo: CDIAL lists Old Marwari gāve under gāpayati, beside Sanskrit gāyati 'sings' (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C54-rovno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**गावणो** (*gāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāyati*, "sings". CDIAL lists Old Marwari *gāve* under it (CDIAL 4135).
+**गावणो** (*gāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to *gāyati*, "sings": CDIAL lists Old Marwari *gāve* under the second form beside it, *gāpayati*, whose *p* became the *v* of *gāvṇo* (CDIAL 4135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

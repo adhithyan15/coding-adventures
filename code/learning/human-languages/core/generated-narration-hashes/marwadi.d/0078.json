@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 78,
-  "sourceHash": "fnv1a64:4833267b25c73163",
+  "sourceHash": "fnv1a64:ce07c299f619f05e",
   "lessonIds": [
     "MW-C78-din",
     "MW-C78-rat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch78.txt",
   "json": "marwadi/narration/ch78.json",
-  "textHash": "fnv1a64:8c8cff785c416e0b",
-  "jsonHash": "fnv1a64:3393a0bd84c3da89",
+  "textHash": "fnv1a64:386b5fb67cc2ab0c",
+  "jsonHash": "fnv1a64:ae00f332e23c281c",
   "findings": []
 }

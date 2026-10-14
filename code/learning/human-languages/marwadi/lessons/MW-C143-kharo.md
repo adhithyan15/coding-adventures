@@ -47,7 +47,7 @@ reviews_of: [MW-C143-tato]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खारो** (*khāro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣāra*, "corrosive; alkali". CDIAL lists Marwari *khāro* under it (CDIAL 3674).
+**खारो** (*khāro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣāra*, "corrosive; alkali". CDIAL lists Marwari *khāro* under it, glossed "bitter"; Hindi *khārā* and Gujarati *khārũ* there mean "alkaline, saline" (CDIAL 3674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

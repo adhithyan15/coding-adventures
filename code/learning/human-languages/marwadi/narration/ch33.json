@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dcb510e2a1d67a4d",
+  "sourceHash": "fnv1a64:74aa7482be88cf56",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:389c56609316b4b7",
+      "sourceHash": "fnv1a64:2bbab93f1fb18a8f",
       "notice": null,
       "blocks": [
         {
@@ -78,7 +78,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chha is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣ, \"six\". CDIAL lists Marwari cha under it (CDIAL 12803)."
+              "text": "chha is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, \"six\": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803)."
             }
           ]
         },
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6910a63f4f11e729",
+      "sourceHash": "fnv1a64:b933f50fd01e3313",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "छ (chha) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣ, \"six\". CDIAL lists Marwari cha under it (CDIAL 12803)."
+              "text": "छ (chha) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, \"six\": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803)."
             }
           ]
         },

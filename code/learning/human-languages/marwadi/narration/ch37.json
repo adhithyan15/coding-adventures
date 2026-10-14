@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0a5bbad1cfefaa6",
+  "sourceHash": "fnv1a64:2c579b1443a071a5",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -635,7 +635,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8c556970aaa1728",
+      "sourceHash": "fnv1a64:0aef6170b0097b92",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "terā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from trayodaśa, \"thirteen\". CDIAL lists Marwari terā under it (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
+              "text": "terā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit trayodaśa, \"thirteen\": CDIAL lists Marwari terā under a variant it reconstructs, trayēdaśa (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
             }
           ]
         },
@@ -775,7 +775,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:50f5f0bb2fb2ebdd",
+      "sourceHash": "fnv1a64:b5bd9990b80b276b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -852,7 +852,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तेरा (terā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from trayodaśa, \"thirteen\". CDIAL lists Marwari terā under it (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
+              "text": "तेरा (terā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit trayodaśa, \"thirteen\": CDIAL lists Marwari terā under a variant it reconstructs, trayēdaśa (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
             }
           ]
         },

@@ -14,7 +14,7 @@ romanization: "ghaṛī"
 concept_tag: MW-CLOTHES85-GHARI
 prerequisites: [MW-C85-jeb, MW-C85-anguthi]
 sounds: []
-roots: [sanskrit-ghata]
+roots: [sanskrit-ghati]
 etymology_hook: "ghaṛī ← Sanskrit ghaṭī 'pot, water-clock', a tadbhava (CDIAL 4406, Marwari row)"
 duration:
   max_seconds: 200

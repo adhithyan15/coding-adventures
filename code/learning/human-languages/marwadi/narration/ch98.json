@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Right, Town square, Crossroads, Turn, Path",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a71b85b8d5491cad",
+  "sourceHash": "fnv1a64:162a99fba9f774fd",
   "lessons": [
     {
       "id": "MW-C98-jimano",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d060e5c4abb7fb4a",
+      "sourceHash": "fnv1a64:3d580ae0925f844d",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, \"twists\". CDIAL gives no Marwari form in this entry (CDIAL 10186); the match is through Hindi moṛnā and Gujarati moṛvũ. It is the noun of the verb \"to turn, to bend\". CDIAL notes that the Sanskrit verb partly ran together with a look-alike it takes from Dravidian."
+              "text": "मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mōṭati, a form beside muṭati, \"twists\". CDIAL gives no Marwari form in this entry (CDIAL 10186); the match is through Hindi moṛnā and Gujarati moṛvũ, which it lists under mōṭati. It is the noun of the verb \"to turn, to bend\". CDIAL notes that the Sanskrit verb partly ran together with a look-alike it takes from Dravidian."
             }
           ]
         },

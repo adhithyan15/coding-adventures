@@ -47,7 +47,7 @@ reviews_of: [MW-C128-lugro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कांचळी** (*kā̃chaḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kañculī*, "bodice". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati *kā̃cḷī*.
+**कांचळी** (*kā̃chaḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kañculī*, "bodice". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati *kā̃cḷī*. Its base word, *\*kañcu*, "snake's skin; bodice", does have Old Marwari *kaṃcū*, "bodice" (CDIAL 2626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

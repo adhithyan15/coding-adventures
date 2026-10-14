@@ -14,8 +14,8 @@ romanization: "mochṛī"
 concept_tag: MW-THINGS129-MOCHRI
 prerequisites: [MW-C129-kamij, MW-C129-chappal]
 sounds: []
-roots: []
-etymology_hook: "mochṛī 'embroidered shoes': origin not settled; CDIAL has no entry for it"
+roots: [indo-aryan-moca]
+etymology_hook: "mochṛī: like Sindhi mocaṛu 'shoe', from *mōca 'shoe', an Iranian loan (CDIAL 10349)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C129-chappal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **मोचड़ी** (*mochṛī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+**मोचड़ी** (*mochṛī*) matches Sindhi *mocaṛu*, "shoe", which CDIAL lists under *\*mōca*, "shoe", a word it takes from Iranian (Pahlavi *mōč*, "shoe"); Hindi *mocī*, "cobbler", is in the same entry (CDIAL 10349). CDIAL gives no Marwari form, so the match is through Sindhi, and the *ṛ* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

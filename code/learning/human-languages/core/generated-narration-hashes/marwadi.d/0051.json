@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 51,
-  "sourceHash": "fnv1a64:2c3e8ed3b25c7cd3",
+  "sourceHash": "fnv1a64:175e5aa571b2a1d0",
   "lessonIds": [
     "MW-C51-pino",
     "MW-C51-jano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch51.txt",
   "json": "marwadi/narration/ch51.json",
-  "textHash": "fnv1a64:b1e55c1ed7ea258c",
-  "jsonHash": "fnv1a64:16f6b3bcef1873c0",
+  "textHash": "fnv1a64:2f66374214892652",
+  "jsonHash": "fnv1a64:cce213bce2ef6cfb",
   "findings": []
 }

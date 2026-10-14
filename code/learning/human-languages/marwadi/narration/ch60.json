@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Sugar, Salt, Chilli, Yoghurt, Oil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2c9196bde62ae3a",
+  "sourceHash": "fnv1a64:7235eb2b6bb57801",
   "lessons": [
     {
       "id": "MW-C60-khad",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:216aa01e2f9910cc",
+      "sourceHash": "fnv1a64:284302efd3338c65",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मिरच (mirach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marīca, \"peppercorn\". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi mirc. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli."
+              "text": "मिरच (mirach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maricca, a variant CDIAL reconstructs beside Sanskrit marīca, \"peppercorn\". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi mirc, which it lists under maricca. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli."
             }
           ]
         },

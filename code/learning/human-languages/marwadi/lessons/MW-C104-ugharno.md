@@ -47,7 +47,7 @@ reviews_of: [MW-C104-kharidno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**उघाड़णो** (*ughāṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *udghāṭayati*, "opens". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi *ughāṛnā* and Gujarati *ughāṛvũ*. It is built on *ud*, "up", and the root *ghaṭ*.
+**उघाड़णो** (*ughāṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *udghāṭayati*, "opens". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi *ughāṛnā* and Gujarati *ughāṛvũ*. Under the related noun *udghāṭa*, "act of opening", CDIAL does list Old Marwari *ughāṛo*, "open" (CDIAL 1972). It is built on *ud*, "up", and the root *ghaṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

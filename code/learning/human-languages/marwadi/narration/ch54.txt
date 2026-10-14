@@ -115,7 +115,7 @@ You'll want to know: गावणो.
 गावणो — gāvṇo — "to sing".
 
 The word, taken apart.
-गावणो (gāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings". CDIAL lists Old Marwari gāve under it (CDIAL 4135).
+गावणो (gāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to gāyati, "sings": CDIAL lists Old Marwari gāve under the second form beside it, gāpayati, whose p became the v of gāvṇo (CDIAL 4135).
 
 What you've built.
 One more word for this chapter.

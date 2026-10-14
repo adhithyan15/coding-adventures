@@ -58,7 +58,7 @@ Hear it twice. Say it once as if the thing you are asking about were in front of
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The new piece in *ye kitṇe kū hai* is *kū*, which CDIAL does not list, so its history is not settled. *kitṇe*, "how much", is from *\*kiyatta* (CDIAL 3167); *ye* and *hai* are older (CDIAL 2530, 1031).
+The new piece in *ye kitṇe kū hai* is *kū*, which CDIAL does not list, so its history is not settled; compare Hindi *ko* (CDIAL 14342). *kitṇe*, "how much", is from *\*kiyatta* (CDIAL 3167); *ye* and *hai* are older (CDIAL 2530, 1031).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01] -->

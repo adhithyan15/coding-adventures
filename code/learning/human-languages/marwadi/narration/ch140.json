@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Mouse, Fly, Mosquito, Ant, Scorpion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab467f3ef6a284c2",
+  "sourceHash": "fnv1a64:edd3ab8467e3bfac",
   "lessons": [
     {
       "id": "MW-C140-undro",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce31ed72ba99ab46",
+      "sourceHash": "fnv1a64:bf40c40b703a8316",
       "notice": null,
       "blocks": [
         {

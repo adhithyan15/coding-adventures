@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Show It To Me: The First Transaction",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0dad8b4da3cd4229",
+  "sourceHash": "fnv1a64:4278b1529b7b6f47",
   "lessons": [
     {
       "id": "MW-C21-hear-ye",
@@ -245,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31153c829b51016a",
+      "sourceHash": "fnv1a64:963ac739e5f70f6c",
       "notice": null,
       "blocks": [
         {
@@ -309,7 +309,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dikhāvo, \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", a present stem it reconstructs from Sanskrit (CDIAL 6507)."
+              "text": "dikhāvo, \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507)."
             }
           ]
         },
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ffc479f250ae54f",
+      "sourceHash": "fnv1a64:006e747a52550439",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +522,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दिखावो (dikhāvo), \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", a present stem it reconstructs from Sanskrit (CDIAL 6507)."
+              "text": "दिखावो (dikhāvo), \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507)."
             }
           ]
         },

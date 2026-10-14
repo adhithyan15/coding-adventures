@@ -15,7 +15,7 @@ concept_tag: MW-LOC98-MOR
 prerequisites: [MW-C98-chauk, MW-C98-chauraho]
 sounds: []
 roots: [sanskrit-mutati]
-etymology_hook: "moṛ ← Sanskrit muṭati 'twists', a tadbhava (CDIAL 10186, Hindi and Gujarati rows)"
+etymology_hook: "moṛ ← mōṭati, a form beside Sanskrit muṭati 'twists' (CDIAL 10186, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C98-chauraho]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मोड़** (*moṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṭati*, "twists". CDIAL gives no Marwari form in this entry (CDIAL 10186); the match is through Hindi *moṛnā* and Gujarati *moṛvũ*. It is the noun of the verb "to turn, to bend". CDIAL notes that the Sanskrit verb partly ran together with a look-alike it takes from Dravidian.
+**मोड़** (*moṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mōṭati*, a form beside *muṭati*, "twists". CDIAL gives no Marwari form in this entry (CDIAL 10186); the match is through Hindi *moṛnā* and Gujarati *moṛvũ*, which it lists under *mōṭati*. It is the noun of the verb "to turn, to bend". CDIAL notes that the Sanskrit verb partly ran together with a look-alike it takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

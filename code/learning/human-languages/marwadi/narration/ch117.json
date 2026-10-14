@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Why, Reason, For, Because of, Because",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0a68076669101e5",
+  "sourceHash": "fnv1a64:e5fd51e701192a61",
   "lessons": [
     {
       "id": "MW-C117-kyu",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a11a5c50a2e48832",
+      "sourceHash": "fnv1a64:7758bc724205519c",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वास्तै (vāstai) is a loan from Arabic wāsiṭa, \"means, intermediary\", which reached Marwadi through Persian. Its Arabic root is w-s-ṭ (Lane). Persian vāsṭe, \"for the sake of\", grew from it; Marwadi ends it in -ai."
+              "text": "वास्तै (vāstai) is a loan from Arabic wāsiṭa, \"means, intermediary\", which reached Marwadi through Persian. Its Arabic root is w-s-ṭ (Lane). Hindi and Urdu vāste, \"for the sake of\", grew from its oblique form; Marwadi ends it in -ai."
             }
           ]
         },

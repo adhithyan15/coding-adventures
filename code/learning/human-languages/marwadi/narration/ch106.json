@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "To push, To lift, To drop, To burn, To sew",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e40ac060a1e9c33",
+  "sourceHash": "fnv1a64:3bdf1ddcc73e1e78",
   "lessons": [
     {
       "id": "MW-C106-thelno",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7f40671c4f9206d",
+      "sourceHash": "fnv1a64:ee2a6ac55a176e89",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बाळणो (bāḷṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dvālayati, \"kindles\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6671); the match is through Hindi bālnā and Gujarati bāḷvũ. CDIAL sets it beside Sanskrit jvālayati, \"kindles\"."
+              "text": "बाळणो (bāḷṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dvālayati, \"kindles\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6671); the match is through Hindi bālnā and Gujarati bāḷvũ. CDIAL sets it beside Sanskrit jvālayati, \"kindles\". Its plain partner dvalati, \"burns\", has Old Marwari balaï (CDIAL 6654)."
             }
           ]
         },

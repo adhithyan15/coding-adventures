@@ -47,7 +47,7 @@ reviews_of: [MW-C128-ghaghro]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**लूगड़ो** (*lūgṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lugga*, "defective", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *lovaṛī* under it (CDIAL 11072). The Old Marwari row means "a woman's waist garment"; in the same large group of "defective" words, Hindi *lugṛā* means "rag" and Gujarati *lugṛũ* "clothes". How the senses connect is not settled.
+**लूगड़ो** (*lūgṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lugga*, "defective", a form CDIAL reconstructs from its descendants. In this large group of "defective" words, Hindi *lugṛā* means "rag" and Gujarati *lugṛũ* "clothes", and CDIAL's additions give a Rajasthani *lūgṛī*, "scarf, a woman's coloured wrap" (CDIAL 11072). How the senses connect is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: MW-VERB-DEKHNO
 prerequisites: [MW-C51-jano, MW-C51-avno]
 sounds: []
 roots: [indo-aryan-drkshati]
-etymology_hook: "dekhṇo ← *dṛkṣati 'sees', reconstructed (CDIAL 6507, Marwari row)"
+etymology_hook: "dekhṇo ← *dekṣati 'sees', a variant CDIAL reconstructs beside *dṛkṣati (CDIAL 6507, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C51-avno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**देखणो** (*dekhṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dṛkṣati*, "sees", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *dekhṇo* under it (CDIAL 6507).
+**देखणो** (*dekhṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dekṣati*, "sees", a variant CDIAL reconstructs from its descendants beside *\*dṛkṣati*. CDIAL lists Marwari *dekhṇo* under it (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

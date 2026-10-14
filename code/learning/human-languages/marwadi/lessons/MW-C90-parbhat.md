@@ -47,7 +47,7 @@ reviews_of: [MW-C90-dinugai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**परभात** (*parbhāt*) is a semi-tatsama: Sanskrit *prabhāta*, "shone forth; daybreak", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the *pr* with a vowel. The inherited descendant is Gujarati *paroḍh*, "dawn".
+**परभात** (*parbhāt*) is a semi-tatsama: Sanskrit *prabhāta*, "shone forth; daybreak", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the *pr* with a vowel. The inherited line shows in Prakrit *pahāya*, "dawn", which CDIAL lists under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

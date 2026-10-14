@@ -51,7 +51,7 @@ meaning together; the unfamiliar vowel mark waits for the next lesson.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*dukān* is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane).
+*dukān* is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane), though Lane notes that some take the Arabic word itself from Persian.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01] -->

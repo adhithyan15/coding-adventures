@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Game, Letter, Tree, Leaf, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7bc4f8dbfb7ae609",
+  "sourceHash": "fnv1a64:f413ca37b53fb343",
   "lessons": [
     {
       "id": "MW-C67-khel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f77d31de8e40a1b0",
+      "sourceHash": "fnv1a64:186415ef8a9813a0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खेल (khel) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, \"play\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khelaï under it (CDIAL 3918). It is the noun of the verb khelṇo, \"to play\". CDIAL says that if Sanskrit krīḍati, \"plays\", is of non-Aryan origin, these forms may share its source."
+              "text": "खेल (khel) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, \"play\", or from khell, forms CDIAL reconstructs from their descendants. CDIAL lists Old Marwari khelaï under khel (CDIAL 3918). It is the noun of the verb khelṇo, \"to play\". CDIAL says that if Sanskrit krīḍati, \"plays\", is of non-Aryan origin, these forms may share its source."
             }
           ]
         },
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35e270b64e24210c",
+      "sourceHash": "fnv1a64:24094942f3529919",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डूंगर (ḍū̃gar) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍuṅga, \"hill\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi ḍū̃gar and Gujarati ḍũgar. CDIAL sets it in a large group of reconstructed words for \"hill\" headed ṭakka, and explains the -r as an added suffix."
+              "text": "डूंगर (ḍū̃gar) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍuṅga, \"hill\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi ḍū̃gar and Gujarati ḍũgar. CDIAL sets it in a large group of reconstructed words for \"hill\" headed ṭakka, and explains the -r as an added suffix. CDIAL takes the variety of these forms as a sign of a non-Aryan, perhaps Munda, source."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Turban, Long skirt, Woman's wrap, Bodice, Long coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b57dc5395315bdb8",
+  "sourceHash": "fnv1a64:7128e3b996c18de7",
   "lessons": [
     {
       "id": "MW-C128-pagri",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a89af5784654afc8",
+      "sourceHash": "fnv1a64:727004a4e470514a",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "लूगड़ो (lūgṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from lugga, \"defective\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari lovaṛī under it (CDIAL 11072). The Old Marwari row means \"a woman's waist garment\"; in the same large group of \"defective\" words, Hindi lugṛā means \"rag\" and Gujarati lugṛũ \"clothes\". How the senses connect is not settled."
+              "text": "लूगड़ो (lūgṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from lugga, \"defective\", a form CDIAL reconstructs from its descendants. In this large group of \"defective\" words, Hindi lugṛā means \"rag\" and Gujarati lugṛũ \"clothes\", and CDIAL's additions give a Rajasthani lūgṛī, \"scarf, a woman's coloured wrap\" (CDIAL 11072). How the senses connect is not settled."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:331116ee4ff2f23e",
+      "sourceHash": "fnv1a64:15576d8269d5af92",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कांचळी (kā̃chaḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kañculī, \"bodice\". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati kā̃cḷī."
+              "text": "कांचळी (kā̃chaḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kañculī, \"bodice\". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati kā̃cḷī. Its base word, kañcu, \"snake's skin; bodice\", does have Old Marwari kaṃcū, \"bodice\" (CDIAL 2626)."
             }
           ]
         },

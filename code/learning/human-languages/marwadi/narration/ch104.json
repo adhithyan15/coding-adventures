@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "To buy, To uncover, To call, To ask for, To look",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7ef5025c6fdf1ae6",
+  "sourceHash": "fnv1a64:a1b9a0bea74471a0",
   "lessons": [
     {
       "id": "MW-C104-kharidno",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b31d76e96062603f",
+      "sourceHash": "fnv1a64:bac4f81e0c097739",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उघाड़णो (ughāṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from udghāṭayati, \"opens\". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi ughāṛnā and Gujarati ughāṛvũ. It is built on ud, \"up\", and the root ghaṭ."
+              "text": "उघाड़णो (ughāṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from udghāṭayati, \"opens\". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi ughāṛnā and Gujarati ughāṛvũ. Under the related noun udghāṭa, \"act of opening\", CDIAL does list Old Marwari ughāṛo, \"open\" (CDIAL 1972). It is built on ud, \"up\", and the root ghaṭ."
             }
           ]
         },

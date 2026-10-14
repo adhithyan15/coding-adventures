@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Shirt, Sandals, Embroidered shoes, Thick bangle, Bangle",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3c4d6301172d6901",
+  "sourceHash": "fnv1a64:55f3e3795cba72e5",
   "lessons": [
     {
       "id": "MW-C129-kamij",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1be9a3f399df86a2",
+      "sourceHash": "fnv1a64:b958d96f1fd67437",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of मोचड़ी (mochṛī) is not settled. CDIAL, searched by form and by meaning, has no entry for it."
+              "text": "मोचड़ी (mochṛī) matches Sindhi mocaṛu, \"shoe\", which CDIAL lists under mōca, \"shoe\", a word it takes from Iranian (Pahlavi mōč, \"shoe\"); Hindi mocī, \"cobbler\", is in the same entry (CDIAL 10349). CDIAL gives no Marwari form, so the match is through Sindhi, and the ṛ is an added suffix."
             }
           ]
         },

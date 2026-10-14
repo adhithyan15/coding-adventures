@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 80,
-  "sourceHash": "fnv1a64:42362b059bafe51a",
+  "sourceHash": "fnv1a64:edfcbe58fdff7d3e",
   "lessonIds": [
     "MW-C80-hamesa",
     "MW-C80-kadi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch80.txt",
   "json": "marwadi/narration/ch80.json",
-  "textHash": "fnv1a64:ecb5f396a1bcd348",
-  "jsonHash": "fnv1a64:838b3fea2d2b05ef",
+  "textHash": "fnv1a64:c5ec81ab3162400b",
+  "jsonHash": "fnv1a64:7d46507fc2eb8e85",
   "findings": []
 }

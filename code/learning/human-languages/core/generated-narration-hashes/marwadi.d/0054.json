@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 54,
-  "sourceHash": "fnv1a64:8dc7ed6cc3f96a04",
+  "sourceHash": "fnv1a64:11feec3c640f6e41",
   "lessonIds": [
     "MW-C54-kholno",
     "MW-C54-hasno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch54.txt",
   "json": "marwadi/narration/ch54.json",
-  "textHash": "fnv1a64:13c5f9175c69cc28",
-  "jsonHash": "fnv1a64:3a8ac472def15d3b",
+  "textHash": "fnv1a64:498c45846d482b17",
+  "jsonHash": "fnv1a64:cd9a93a7b35594d4",
   "findings": []
 }

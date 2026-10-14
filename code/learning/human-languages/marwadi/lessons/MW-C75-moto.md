@@ -15,7 +15,7 @@ concept_tag: MW-ADJ75-MOTO
 prerequisites: [MW-C75-garib, MW-C75-mailo]
 sounds: []
 roots: [indo-aryan-mutta]
-etymology_hook: "moṭo: CDIAL lists Old Marwari moṭaü 'big, fat' in a group headed *muṭṭa (CDIAL 10187)"
+etymology_hook: "moṭo: CDIAL lists Old Marwari moṭaü 'big, fat' under *mōṭṭa, in a group headed *muṭṭa (CDIAL 10187)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C75-mailo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मोटो** (*moṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*muṭṭa*, "defective", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *moṭaü* under it (CDIAL 10187). CDIAL lists it among a large group of reconstructed forms headed *\*muṭṭa*; how the sense "fat, big" fits that group is not settled.
+**मोटो** (*moṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*mōṭṭa*, a form CDIAL reconstructs from its descendants, and CDIAL lists Old Marwari *moṭaü* under it (CDIAL 10187). *\*mōṭṭa* is one of a large group of reconstructed forms CDIAL heads *\*muṭṭa*, "defective"; how the sense "fat, big" fits that group is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

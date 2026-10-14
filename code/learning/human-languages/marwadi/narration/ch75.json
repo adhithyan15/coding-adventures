@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Low, Empty, Poor, Dirty, Fat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0c429181a024ebfa",
+  "sourceHash": "fnv1a64:41c01419f3ea583f",
   "lessons": [
     {
       "id": "MW-C75-nicho",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22d95388af671ae5",
+      "sourceHash": "fnv1a64:1d7db7535f70bf9d",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोटो (moṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from muṭṭa, \"defective\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari moṭaü under it (CDIAL 10187). CDIAL lists it among a large group of reconstructed forms headed muṭṭa; how the sense \"fat, big\" fits that group is not settled."
+              "text": "मोटो (moṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from mōṭṭa, a form CDIAL reconstructs from its descendants, and CDIAL lists Old Marwari moṭaü under it (CDIAL 10187). mōṭṭa is one of a large group of reconstructed forms CDIAL heads muṭṭa, \"defective\"; how the sense \"fat, big\" fits that group is not settled."
             }
           ]
         },

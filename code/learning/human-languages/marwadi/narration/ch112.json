@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Need, Greed, Dream, Expectation, One's will",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd76cab7a26af944",
+  "sourceHash": "fnv1a64:f27339ed306b7345",
   "lessons": [
     {
       "id": "MW-C112-jarurat",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:134372618a9bde9c",
+      "sourceHash": "fnv1a64:fdc0bc39c1c38928",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सपनो (sapno) goes back to Sanskrit svapna, \"sleep, dream\" (CDIAL 13904), with the sv worn down to s. CDIAL does not list a Marwari or Hindi form under it."
+              "text": "सपनो (sapno) goes back to Sanskrit svapna, \"sleep, dream\" (CDIAL 13904), with the sv worn down to s. CDIAL gives no Marwari form there, and it takes forms like Nepali sapanā, \"dream\", as early loans from Sanskrit or possibly inherited words."
             }
           ]
         },

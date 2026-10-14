@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "To drink, To go, To come, To see, To hear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2c3e8ed3b25c7cd3",
+  "sourceHash": "fnv1a64:175e5aa571b2a1d0",
   "lessons": [
     {
       "id": "MW-C51-pino",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bda3f71afc7c9c6e",
+      "sourceHash": "fnv1a64:6de175e962fdabbe",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "देखणो (dekhṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dṛkṣati, \"sees\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari dekhṇo under it (CDIAL 6507)."
+              "text": "देखणो (dekhṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dekṣati, \"sees\", a variant CDIAL reconstructs from its descendants beside dṛkṣati. CDIAL lists Marwari dekhṇo under it (CDIAL 6507)."
             }
           ]
         },

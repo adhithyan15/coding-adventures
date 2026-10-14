@@ -14,7 +14,7 @@ romanization: "ghaṛo"
 concept_tag: MW-THINGS118-GHARO
 prerequisites: [MW-C118-karahi, MW-C118-hadi]
 sounds: []
-roots: [sanskrit-ghata]
+roots: [sanskrit-ghata-pot]
 etymology_hook: "ghaṛo ← Sanskrit ghaṭa 'pot', a tadbhava (CDIAL 4406, Marwari row)"
 duration:
   max_seconds: 200

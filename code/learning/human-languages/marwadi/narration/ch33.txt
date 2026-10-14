@@ -18,7 +18,7 @@ That single difference is the whole of it. The tongue does the same thing in bot
 The same number is also printed chhe, with a vowel mark after the consonant. Both are in use; count with the bare form for now and read the other when a page prints it.
 
 The word, taken apart.
-chha is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣ, "six". CDIAL lists Marwari cha under it (CDIAL 12803).
+chha is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, "six": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803).
 
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
@@ -39,7 +39,7 @@ One sign, made in chapter 9, and nothing added to it.
 The other printed spelling is छे, and it is worth a moment. That is छ (chha) with the mark of the letter chapter 32 taught — the same vowel, riding on a consonant instead of standing alone. It is also, exactly, the second syllable of पाछे. A chunk the hand has been writing since chapter 9 turns out to be a number.
 
 The word, taken apart.
-छ (chha) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣ, "six". CDIAL lists Marwari cha under it (CDIAL 12803).
+छ (chha) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, "six": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803).
 
 Guided Practice.
 [once you have stopped driving — write: छ (chha), then छे beneath it, then ए beside both]

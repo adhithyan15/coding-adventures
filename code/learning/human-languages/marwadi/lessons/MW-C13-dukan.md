@@ -48,7 +48,7 @@ reviews_of: [MW-C13-hear-dukan, MW-W13-u-matra, MW-C10-bajar, MW-C11-barsaat, MW
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दुकान** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane).
+**दुकान** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane), though Lane notes that some take the Arabic word itself from Persian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DUKAN-01] -->

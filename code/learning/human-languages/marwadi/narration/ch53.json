@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "To play, To sell, To give, To take, To keep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e93a9fe3930cbcc5",
+  "sourceHash": "fnv1a64:111df90fcc0604b3",
   "lessons": [
     {
       "id": "MW-C53-khelno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5739dba9d0b63300",
+      "sourceHash": "fnv1a64:f2f70170d899faec",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खेलणो (khelṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, \"play\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari khelaï under it (CDIAL 3918). CDIAL heads a group of reconstructed words for \"play\" khēḍ, and says that if Sanskrit krīḍati, \"plays\", is of non-Aryan origin, these may share its source."
+              "text": "खेलणो (khelṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from khel, \"play\", or from khell, forms CDIAL reconstructs from their descendants. CDIAL lists Old Marwari khelaï under khel (CDIAL 3918). CDIAL heads a group of reconstructed words for \"play\" khēḍ, and says that if Sanskrit krīḍati, \"plays\", is of non-Aryan origin, these may share its source."
             }
           ]
         },

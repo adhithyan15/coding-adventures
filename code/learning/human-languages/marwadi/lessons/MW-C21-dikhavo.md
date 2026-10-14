@@ -51,7 +51,7 @@ Three groups, one for each beat you already hear. **ि** is written before
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दिखावो** (*dikhāvo*), "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", a present stem it reconstructs from Sanskrit (CDIAL 6507).
+**दिखावो** (*dikhāvo*), "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", and its variant *\*dekṣati*, present stems it reconstructs from Sanskrit (CDIAL 6507).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01] -->

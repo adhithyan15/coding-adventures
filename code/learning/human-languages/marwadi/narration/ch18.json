@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Shop, Item, and Price: One New Vowel Mark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e9146c2daaa3e4f",
+  "sourceHash": "fnv1a64:488456bda4c2a047",
   "lessons": [
     {
       "id": "MW-C13-hear-dukan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3e3ee80cf301f23",
+      "sourceHash": "fnv1a64:6403f23888f94acb",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dukān is a loan from Arabic dukkān, \"shop\", which reached Marwadi through Persian. Its Arabic root is d-k-n (Lane)."
+              "text": "dukān is a loan from Arabic dukkān, \"shop\", which reached Marwadi through Persian. Its Arabic root is d-k-n (Lane), though Lane notes that some take the Arabic word itself from Persian."
             }
           ]
         },
@@ -224,7 +224,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ce41fc9156d31df",
+      "sourceHash": "fnv1a64:24d70472990221d7",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दुकान (dukān) is a loan from Arabic dukkān, \"shop\", which reached Marwadi through Persian. Its Arabic root is d-k-n (Lane)."
+              "text": "दुकान (dukān) is a loan from Arabic dukkān, \"shop\", which reached Marwadi through Persian. Its Arabic root is d-k-n (Lane), though Lane notes that some take the Arabic word itself from Persian."
             }
           ]
         },

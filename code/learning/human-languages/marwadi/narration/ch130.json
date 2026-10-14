@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Forehead ornament, Nose ring, Anklet, Millet, Millet porridge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bfa2863abeb7977d",
+  "sourceHash": "fnv1a64:da92f66def2d2d43",
   "lessons": [
     {
       "id": "MW-C130-borlo",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9af885645cfc1111",
+      "sourceHash": "fnv1a64:015d487010635947",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पायल (pāyal) is a tadbhava, a word inherited and reshaped by sound change. It comes from pādala, \"appertaining to the feet\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 8066); the match is through Hindi pāyal. It is built on pāda, \"foot\"."
+              "text": "पायल (pāyal) is a tadbhava, a word inherited and reshaped by sound change. It comes from pādala, \"appertaining to the feet\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 8066); the match is through Hindi pāyal, though CDIAL glosses that form only \"sure-footed\", not \"anklet\". It is built on pāda, \"foot\"."
             }
           ]
         },

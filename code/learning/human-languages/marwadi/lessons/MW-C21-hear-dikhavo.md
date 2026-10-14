@@ -58,7 +58,7 @@ system of asking forms behind it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*dikhāvo*, "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", a present stem it reconstructs from Sanskrit (CDIAL 6507).
+*dikhāvo*, "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", and its variant *\*dekṣati*, present stems it reconstructs from Sanskrit (CDIAL 6507).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DIKHAVO-01] -->

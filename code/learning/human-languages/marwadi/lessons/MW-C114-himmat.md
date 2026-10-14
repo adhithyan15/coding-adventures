@@ -47,7 +47,7 @@ reviews_of: [MW-C114-takat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**हिम्मत** (*himmat*) is a loan from Arabic *himma*, "resolve, aspiration", which reached Marwadi through Persian. Its Arabic root is *h-m-m* (Lane). Persian added the ending *-t*, *himmat*.
+**हिम्मत** (*himmat*) is a loan from Arabic *himma*, "resolve, aspiration", which reached Marwadi through Persian. Its Arabic root is *h-m-m* (Lane). Its final *-t* is the Arabic feminine ending, which Persian sounds in full.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

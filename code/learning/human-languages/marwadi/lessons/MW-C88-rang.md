@@ -47,7 +47,7 @@ reviews_of: [MW-C87-duniya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**रंग** (*raṅg*) has two possible sources that may have merged: Sanskrit *raṅga*, "dye, colour", under which CDIAL lists Hindi *rā̃g*, "dye" (CDIAL 10560), and Persian *rang*, "colour", the more likely source of the exact form.
+**रंग** (*raṅg*) has two possible sources that may have merged: Sanskrit *raṅga*, "dye, colour", under which CDIAL lists Hindi *rā̃g*, "dye" (CDIAL 10560), and Persian *rang*, "colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

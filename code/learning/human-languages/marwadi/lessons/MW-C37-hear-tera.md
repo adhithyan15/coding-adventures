@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-THIRTEEN
 prerequisites: [MW-C37-baara]
 sounds: [dental-t, long-aa]
 roots: [sanskrit-trayodasha]
-etymology_hook: "terā ← Sanskrit trayodaśa 'thirteen', a tadbhava (CDIAL 6001, Marwari row)"
+etymology_hook: "terā ← *trayēdaśa, CDIAL's variant of Sanskrit trayodaśa 'thirteen'; a tadbhava (CDIAL 6001)"
 duration:
   max_seconds: 180
 requires:
@@ -58,7 +58,7 @@ words that is worth holding: **a consonant off the small number, then -ārā or
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*terā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *trayodaśa*, "thirteen". CDIAL lists Marwari *terā* under it (CDIAL 6001). It is "three" and *daśa*, "ten".
+*terā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit *trayodaśa*, "thirteen": CDIAL lists Marwari *terā* under a variant it reconstructs, *\*trayēdaśa* (CDIAL 6001). It is "three" and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-TERA-01, MW-LEX-BAARA-01] -->

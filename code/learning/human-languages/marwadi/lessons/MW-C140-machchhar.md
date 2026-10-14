@@ -14,7 +14,7 @@ romanization: "machchhar"
 concept_tag: MW-THINGS140-MACHCHHAR
 prerequisites: [MW-C140-undro, MW-C140-makhi]
 sounds: []
-roots: [sanskrit-matsara]
+roots: [sanskrit-matsara-mosquito]
 etymology_hook: "machchhar ← Sanskrit matsara 'mosquito, fly', a tadbhava (CDIAL 9757, Hindi row)"
 duration:
   max_seconds: 200

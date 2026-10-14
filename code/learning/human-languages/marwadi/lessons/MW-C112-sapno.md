@@ -47,7 +47,7 @@ reviews_of: [MW-C112-lalach]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सपनो** (*sapno*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), with the *sv* worn down to *s*. CDIAL does not list a Marwari or Hindi form under it.
+**सपनो** (*sapno*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), with the *sv* worn down to *s*. CDIAL gives no Marwari form there, and it takes forms like Nepali *sapanā*, "dream", as early loans from Sanskrit or possibly inherited words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Hot, Salty, Sour, Bitter, Spicy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e423331415c58627",
+  "sourceHash": "fnv1a64:47a8f1bb6dcf84ce",
   "lessons": [
     {
       "id": "MW-C143-tato",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0928dcd563b75c83",
+      "sourceHash": "fnv1a64:815b3f7caeb8eaa9",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खारो (khāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣāra, \"corrosive; alkali\". CDIAL lists Marwari khāro under it (CDIAL 3674)."
+              "text": "खारो (khāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣāra, \"corrosive; alkali\". CDIAL lists Marwari khāro under it, glossed \"bitter\"; Hindi khārā and Gujarati khārũ there mean \"alkaline, saline\" (CDIAL 3674)."
             }
           ]
         },

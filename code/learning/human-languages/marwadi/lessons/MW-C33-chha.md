@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-SIX-WRITTEN
 prerequisites: [MW-C33-hear-chha]
 sounds: [aspirated-chh, short-a]
 roots: [sanskrit-shash]
-etymology_hook: "chha ← Sanskrit ṣaṣ 'six', a tadbhava (CDIAL 12803, Marwari row)"
+etymology_hook: "chha ← *kṣaṭ, CDIAL's variant of Sanskrit ṣaṣ 'six'; a tadbhava (CDIAL 12803, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -54,7 +54,7 @@ a number.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**छ** (*chha*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣaṣ*, "six". CDIAL lists Marwari *cha* under it (CDIAL 12803).
+**छ** (*chha*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit *ṣaṣ*, "six": CDIAL lists Marwari *cha* under a variant it reconstructs, *\*kṣaṭ* (CDIAL 12803).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-E-01, MW-SCRIPT-E-MATRA-01] -->

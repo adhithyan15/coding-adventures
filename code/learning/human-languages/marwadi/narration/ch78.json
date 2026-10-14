@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Day, Night, Morning, Month, Year",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4833267b25c73163",
+  "sourceHash": "fnv1a64:ce07c299f619f05e",
   "lessons": [
     {
       "id": "MW-C78-din",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2673dd9f2ed2ffda",
+      "sourceHash": "fnv1a64:8b4b66d79ff67832",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सवेरो (savero) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, \"in time, early\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi saverā and Gujarati saverā. It is built on sa-, \"with\", and velā, \"time\"."
+              "text": "सवेरो (savero) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, \"in time, early\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi sawerā and Gujarati saverā. It is built on sa-, \"with\", and velā, \"time\"."
             }
           ]
         },

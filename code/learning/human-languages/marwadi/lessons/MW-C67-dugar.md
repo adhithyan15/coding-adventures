@@ -15,7 +15,7 @@ concept_tag: MW-SCHOOL67-DUGAR
 prerequisites: [MW-C67-rukh, MW-C67-patto]
 sounds: []
 roots: [indo-aryan-dunga]
-etymology_hook: "ḍū̃gar ← *ḍuṅga 'hill', in a reconstructed group, with an added -r (CDIAL 5423)"
+etymology_hook: "ḍū̃gar ← *ḍuṅga 'hill', with an added -r; CDIAL suspects a non-Aryan, perhaps Munda, source (CDIAL 5423)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C67-patto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**डूंगर** (*ḍū̃gar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍuṅga*, "hill", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi *ḍū̃gar* and Gujarati *ḍũgar*. CDIAL sets it in a large group of reconstructed words for "hill" headed *\*ṭakka*, and explains the *-r* as an added suffix.
+**डूंगर** (*ḍū̃gar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍuṅga*, "hill", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5423); the match is through Hindi *ḍū̃gar* and Gujarati *ḍũgar*. CDIAL sets it in a large group of reconstructed words for "hill" headed *\*ṭakka*, and explains the *-r* as an added suffix. CDIAL takes the variety of these forms as a sign of a non-Aryan, perhaps Munda, source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

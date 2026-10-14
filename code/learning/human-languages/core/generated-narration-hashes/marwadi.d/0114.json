@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 114,
-  "sourceHash": "fnv1a64:4ab3b3c28faa8397",
+  "sourceHash": "fnv1a64:7b14788e2fda91e8",
   "lessonIds": [
     "MW-C114-sakno",
     "MW-C114-hunar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch114.txt",
   "json": "marwadi/narration/ch114.json",
-  "textHash": "fnv1a64:78efa8f4a81e0136",
-  "jsonHash": "fnv1a64:63487073657510ae",
+  "textHash": "fnv1a64:b924872af4ed14c2",
+  "jsonHash": "fnv1a64:fafabd341b1740ac",
   "findings": []
 }

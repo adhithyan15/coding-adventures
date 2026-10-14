@@ -47,7 +47,7 @@ reviews_of: [MW-C52-daurno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खेलणो** (*khelṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khel*, "play", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *khelaï* under it (CDIAL 3918). CDIAL heads a group of reconstructed words for "play" *\*khēḍ*, and says that if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these may share its source.
+**खेलणो** (*khelṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khel*, "play", or from *\*khell*, forms CDIAL reconstructs from their descendants. CDIAL lists Old Marwari *khelaï* under *\*khel* (CDIAL 3918). CDIAL heads a group of reconstructed words for "play" *\*khēḍ*, and says that if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these may share its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

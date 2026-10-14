@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 130,
-  "sourceHash": "fnv1a64:bfa2863abeb7977d",
+  "sourceHash": "fnv1a64:da92f66def2d2d43",
   "lessonIds": [
     "MW-C130-borlo",
     "MW-C130-nath",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch130.txt",
   "json": "marwadi/narration/ch130.json",
-  "textHash": "fnv1a64:99f5a422b51c5a2c",
-  "jsonHash": "fnv1a64:be5f44315792c5e6",
+  "textHash": "fnv1a64:24676d121af6bed4",
+  "jsonHash": "fnv1a64:f014eb3480b01256",
   "findings": []
 }

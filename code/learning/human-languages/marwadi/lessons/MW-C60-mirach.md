@@ -15,7 +15,7 @@ concept_tag: MW-VERBS60-MIRACH
 prerequisites: [MW-C60-khad, MW-C60-lun]
 sounds: []
 roots: [sanskrit-marica]
-etymology_hook: "mirach ← Sanskrit marīca 'peppercorn', itself from Austroasiatic (CDIAL 9875)"
+etymology_hook: "mirach ← *maricca, a variant of Sanskrit marīca 'peppercorn', itself from Austroasiatic (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C60-lun]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मिरच** (*mirach*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *marīca*, "peppercorn". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi *mirc*. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli.
+**मिरच** (*mirach*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *\*maricca*, a variant CDIAL reconstructs beside Sanskrit *marīca*, "peppercorn". CDIAL gives no Marwari form in this entry (CDIAL 9875); the match is through Hindi *mirc*, which it lists under *\*maricca*. CDIAL takes the Sanskrit word itself from an Austroasiatic language. The name moved from black pepper to the chilli.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Sock, Pocket, Ring, Watch, Cap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c667f01b2817d539",
+  "sourceHash": "fnv1a64:9526861de94db18b",
   "lessons": [
     {
       "id": "MW-C85-mojo",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f766f5e08958f22b",
+      "sourceHash": "fnv1a64:a04363af4ad91773",
       "notice": null,
       "blocks": [
         {
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:904e400453722efd",
+      "sourceHash": "fnv1a64:e804b730bf4837fb",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5481); the match is through Hindi ṭopī and Gujarati ṭopī. CDIAL records a proposal that it comes from Munda; it is not settled."
+              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5481); the match is through Hindi ṭopī and Gujarati ṭopī. CDIAL calls a link with Sanskrit āṭopa, which one proposal takes from Munda, very doubtful."
             }
           ]
         },

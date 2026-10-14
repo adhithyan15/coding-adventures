@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Star, Sun, Moon, Sea, Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4bc773fe6d207663",
+  "sourceHash": "fnv1a64:0cfa0eaf12d51325",
   "lessons": [
     {
       "id": "MW-C69-taro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:babfe55ebbb12e6a",
+      "sourceHash": "fnv1a64:0fecfee04defcaa6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तारो (tāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tārā, \"fixed star\". CDIAL gives no Marwari form in this entry (CDIAL 5798); the match is through Hindi tārā and Gujarati tāro. English star is a distant cousin."
+              "text": "तारो (tāro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists Hindi tārā and Gujarati tāro, \"star\", under tāraka, \"belonging to the stars\", a form beside Sanskrit tārā, \"fixed star\" (CDIAL 5798); it gives no Marwari form there. English star is a distant cousin."
             }
           ]
         },

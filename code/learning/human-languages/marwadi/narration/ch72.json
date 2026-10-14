@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Monkey, Snake, Peacock, Big, Small",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8f05ca0a381cc38",
+  "sourceHash": "fnv1a64:0e1768cd0b186c79",
   "lessons": [
     {
       "id": "MW-C72-badro",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7422b25a3a057e5",
+      "sourceHash": "fnv1a64:194659fd305de68c",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोर (mor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mayūra, \"peacock\". CDIAL lists Old Marwari moraḍī under it (CDIAL 9865). The Old Marwari row means \"peahen\"; Hindi and Gujarati have mor. CDIAL records proposals that the Sanskrit word came from Dravidian or from Austroasiatic."
+              "text": "मोर (mor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mayūra, \"peacock\", through a shorter form CDIAL reconstructs, mōra, under which it lists the Old Marwari feminine moraḍī and Hindi and Gujarati mor (CDIAL 9865). CDIAL records proposals that the Sanskrit word came from Dravidian or from Austroasiatic."
             }
           ]
         },

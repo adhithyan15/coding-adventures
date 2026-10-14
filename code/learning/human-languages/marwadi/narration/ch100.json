@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Gate, Gateway, Mansion, Fair, Weekly market",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffa0397fffef3394",
+  "sourceHash": "fnv1a64:baf0e3e6af874c24",
   "lessons": [
     {
       "id": "MW-C100-darvajo",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098c711097c4e788",
+      "sourceHash": "fnv1a64:e87cd93adef26274",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मेळो (meḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, \"meeting\". CDIAL lists Marwari meḷo under it (CDIAL 10331). It is built on the root mil, \"to meet\"."
+              "text": "मेळो (meḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, \"meeting\". CDIAL lists Marwari meḷo under it, though in the sense \"embrace\"; the sense \"fair\" matches Hindi melā and Gujarati meḷo there (CDIAL 10331). It is built on the root mil, \"to meet\"."
             }
           ]
         },

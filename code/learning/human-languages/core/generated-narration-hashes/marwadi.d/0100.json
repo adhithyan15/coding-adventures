@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 100,
-  "sourceHash": "fnv1a64:ffa0397fffef3394",
+  "sourceHash": "fnv1a64:baf0e3e6af874c24",
   "lessonIds": [
     "MW-C100-darvajo",
     "MW-C100-pol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch100.txt",
   "json": "marwadi/narration/ch100.json",
-  "textHash": "fnv1a64:6a67bc04323cc110",
-  "jsonHash": "fnv1a64:c09bae8d2c22b8da",
+  "textHash": "fnv1a64:606be563904be987",
+  "jsonHash": "fnv1a64:67a3bcd8b139645e",
   "findings": []
 }

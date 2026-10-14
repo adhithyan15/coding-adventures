@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "To be able to, Skill, Strength, Courage, Owner",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ab3b3c28faa8397",
+  "sourceHash": "fnv1a64:7b14788e2fda91e8",
   "lessons": [
     {
       "id": "MW-C114-sakno",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9025773c6d7bc343",
+      "sourceHash": "fnv1a64:f1e0d86884d9887b",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ताकत (tākat) is a loan from Arabic ṭāqa, \"power, ability\", which reached Marwadi through Persian. Its Arabic root is ṭ-w-q (Lane). Persian added the ending -t, ṭāqat."
+              "text": "ताकत (tākat) is a loan from Arabic ṭāqa, \"power, ability\", which reached Marwadi through Persian. Its Arabic root is ṭ-w-q (Lane). Its final -t is the Arabic feminine ending, which Persian sounds in full."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:284b5e5cfeddfc73",
+      "sourceHash": "fnv1a64:41585e8d18292625",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हिम्मत (himmat) is a loan from Arabic himma, \"resolve, aspiration\", which reached Marwadi through Persian. Its Arabic root is h-m-m (Lane). Persian added the ending -t, himmat."
+              "text": "हिम्मत (himmat) is a loan from Arabic himma, \"resolve, aspiration\", which reached Marwadi through Persian. Its Arabic root is h-m-m (Lane). Its final -t is the Arabic feminine ending, which Persian sounds in full."
             }
           ]
         },

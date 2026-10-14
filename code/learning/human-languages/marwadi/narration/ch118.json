@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Hearth, Griddle, Wok, Cooking pot, Water pot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4cd5654785c4757",
+  "sourceHash": "fnv1a64:1a9cb60d1d3950a4",
   "lessons": [
     {
       "id": "MW-C118-chulho",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66fe5362be6837dd",
+      "sourceHash": "fnv1a64:0373661985c3f0ef",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Grapes, Lemon, Flour, Onion, Sweets",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:79efcb6585d4ed59",
+  "sourceHash": "fnv1a64:799d920a4092b825",
   "lessons": [
     {
       "id": "MW-C61-angur",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d375899518d5f43c",
+      "sourceHash": "fnv1a64:3752ed5e0ee966a4",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नींबू (nīmbū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, \"the lime\". CDIAL gives no Marwari form in this entry (CDIAL 7247); the match is through Hindi nīmbū. CDIAL takes the Sanskrit word itself from an Austroasiatic language."
+              "text": "नींबू (nīmbū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimbū, \"the lime\". CDIAL gives no Marwari form in this entry (CDIAL 7247); the match is through Hindi nimbū. CDIAL takes the Sanskrit word itself from an Austroasiatic language."
             }
           ]
         },

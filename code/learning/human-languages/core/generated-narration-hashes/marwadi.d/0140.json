@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 140,
-  "sourceHash": "fnv1a64:ab467f3ef6a284c2",
+  "sourceHash": "fnv1a64:edd3ab8467e3bfac",
   "lessonIds": [
     "MW-C140-undro",
     "MW-C140-makhi",
@@ -14,6 +14,6 @@
   "text": "marwadi/narration/ch140.txt",
   "json": "marwadi/narration/ch140.json",
   "textHash": "fnv1a64:9d7cf3d28c9abfff",
-  "jsonHash": "fnv1a64:a87131a260807b12",
+  "jsonHash": "fnv1a64:c0f3639ea19580ba",
   "findings": []
 }

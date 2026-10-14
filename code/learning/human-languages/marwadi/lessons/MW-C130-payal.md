@@ -47,7 +47,7 @@ reviews_of: [MW-C130-nath]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पायल** (*pāyal*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pādala*, "appertaining to the feet", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 8066); the match is through Hindi *pāyal*. It is built on *pāda*, "foot".
+**पायल** (*pāyal*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pādala*, "appertaining to the feet", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 8066); the match is through Hindi *pāyal*, though CDIAL glosses that form only "sure-footed", not "anklet". It is built on *pāda*, "foot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

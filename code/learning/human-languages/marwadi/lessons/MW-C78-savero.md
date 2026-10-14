@@ -47,7 +47,7 @@ reviews_of: [MW-C78-rat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सवेरो** (*savero*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi *saverā* and Gujarati *saverā*. It is built on *sa-*, "with", and *velā*, "time".
+**सवेरो** (*savero*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13291); the match is through Hindi *sawerā* and Gujarati *saverā*. It is built on *sa-*, "with", and *velā*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Always, Sometimes, Quickly, Delay, Before",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42362b059bafe51a",
+  "sourceHash": "fnv1a64:edfcbe58fdff7d3e",
   "lessons": [
     {
       "id": "MW-C80-hamesa",
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38ad7314cccd230e",
+      "sourceHash": "fnv1a64:9726e90ca2ae58b7",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पैलां (pailā̃) is a tadbhava, a word inherited and reshaped by sound change. It comes from prathila, \"first\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari pahalo under it (CDIAL 8652). पैलां (pailā̃), \"before\", is a form of the word for \"first\", built on Sanskrit prathama, \"first\"."
+              "text": "पैलां (pailā̃) is a tadbhava, a word inherited and reshaped by sound change. It comes from prathilla, \"first\", a form CDIAL reconstructs from its descendants beside prathila. CDIAL lists Old Marwari pahalo under it (CDIAL 8652). पैलां (pailā̃), \"before\", is a form of the word for \"first\", built on Sanskrit prathama, \"first\"."
             }
           ]
         },

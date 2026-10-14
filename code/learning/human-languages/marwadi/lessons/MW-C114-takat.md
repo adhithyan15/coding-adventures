@@ -47,7 +47,7 @@ reviews_of: [MW-C114-hunar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ताकत** (*tākat*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Marwadi through Persian. Its Arabic root is *ṭ-w-q* (Lane). Persian added the ending *-t*, *ṭāqat*.
+**ताकत** (*tākat*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Marwadi through Persian. Its Arabic root is *ṭ-w-q* (Lane). Its final *-t* is the Arabic feminine ending, which Persian sounds in full.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

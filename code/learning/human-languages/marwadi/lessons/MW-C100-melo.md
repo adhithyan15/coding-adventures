@@ -47,7 +47,7 @@ reviews_of: [MW-C100-haveli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मेळो** (*meḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mela*, "meeting". CDIAL lists Marwari *meḷo* under it (CDIAL 10331). It is built on the root *mil*, "to meet".
+**मेळो** (*meḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mela*, "meeting". CDIAL lists Marwari *meḷo* under it, though in the sense "embrace"; the sense "fair" matches Hindi *melā* and Gujarati *meḷo* there (CDIAL 10331). It is built on the root *mil*, "to meet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
