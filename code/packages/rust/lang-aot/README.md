@@ -23,7 +23,8 @@ bounded transform, additive composition with finite static terms, and
 multiplication or division of that additive form by finite static terms. A
 single additional built-in `entier` may wrap a supported bounded transform
 rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
-name-formal result is also allowed when its actual has the same proof. Unary
+name-formal result is also allowed when its actual has the same proof. One exact
+additive unit offset may remain inside that bounded transform. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`

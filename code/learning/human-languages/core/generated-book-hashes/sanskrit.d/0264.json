@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:8c64d672cc1175cc",
+  "lessonIds": [
+    "SA-C264-karisyami",
+    "SA-C264-pathisyami",
+    "SA-C264-near-term-plan",
+    "SA-C264-mixed-plan-practice",
+    "SA-C264-first-person-future-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch264-what-i-will-do-next.tex"
+}
