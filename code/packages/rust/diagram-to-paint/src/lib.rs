@@ -9405,6 +9405,98 @@ mod tests {
     }
 
     #[test]
+    fn authored_swimlane_edge_typography_preserves_complete_query_and_glyph_trace() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone()); Ok(FakeHandle)
+            }
+        }
+        let source = r#"swimlane-beta LR
+subgraph Review
+  request[Request]
+  review[Review]
+  done[Done]
+end
+request submit@-- submit --> review release@-- release --> done
+classDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:"Helvetica Neue",color:#7c2d12
+class submit urgent
+style release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d
+"#;
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored edge typography parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions {
+            background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font,
+            shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver,
+        };
+        let scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Helvetica").with_weight(FontWeight(700)),
+            FontQuery::named("Helvetica Neue").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+            FontQuery::named("Helvetica").with_weight(FontWeight(500)),
+            FontQuery::named("Helvetica"),
+        ]);
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::GlyphRun(run) = instruction {
+                let text: String = run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph character")).collect();
+                Some((text, run.font_size, run.fill.as_deref(), run.font_ref.as_str()))
+            } else { None }
+        }).collect();
+        assert_eq!(runs, vec![
+            ("Review".to_owned(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("submit".to_owned(), 22.0, Some("rgb(124, 45, 18)"), "fake:test"),
+            ("release".to_owned(), 18.0, Some("rgb(20, 83, 45)"), "fake:test"),
+            ("Request".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("Review".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("Done".to_owned(), 14.0, Some("rgb(38, 50, 56)"), "fake:test"),
+        ]);
+    }
+
+    #[test]
+    fn authored_swimlane_corner_styles_preserve_all_rectangle_fields_and_refusals() {
+        let source = "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact";
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored corners parse");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!((layout.nodes[0].style.corner_radius, layout.nodes[1].style.corner_radius), (Some(16.0), Some(4.0)));
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let rectangles: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Rect(rectangle) = instruction { Some(rectangle.clone()) } else { None }
+        }).collect();
+        let lane = &layout.lanes[0];
+        let mut expected = vec![PaintRect {
+            base: PaintBase::default(), x: lane.x, y: lane.y, width: lane.width, height: lane.height,
+            fill: Some("#f8fafc".into()), stroke: Some("#78909c".into()), stroke_width: Some(1.5),
+            corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
+        }];
+        for (node, fill, stroke, radius) in [
+            (&layout.nodes[0], "#fef3c7", "#b45309", 16.0),
+            (&layout.nodes[1], "#dcfce7", "#166534", 4.0),
+        ] {
+            expected.push(PaintRect {
+                base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
+                fill: Some(fill.into()), stroke: Some(stroke.into()), stroke_width: Some(2.0),
+                corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None,
+            });
+        }
+        assert_eq!(rectangles, expected, "every rectangle, in order, including defaults and all fields");
+        for (declarations, message) in [
+            ("rx:4px,ry:8px", "rx and ry must match"),
+            ("rx:-1px", "invalid Swimlane style number"),
+            ("rx:NaN", "invalid Swimlane style number"),
+            ("ry:inf", "invalid Swimlane style number"),
+        ] {
+            let invalid = format!("swimlane-beta LR\nsubgraph A\none[One]\nend\nstyle one {declarations}");
+            let error = mermaid_parser::parse_swimlane(&invalid).expect_err("invalid corner radius must be refused at its number/style boundary");
+            assert!(format!("{error:?}").contains(message), "{declarations}: {error:?}");
+        }
+    }
+
+    #[test]
     fn authored_swimlane_typography_preserves_complete_query_and_glyph_trace() {
         struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
         impl FontResolver for RecordingResolver {
