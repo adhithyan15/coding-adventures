@@ -88,7 +88,15 @@ directions; valid default/zero/cap controls pass. Spec334 +tests0fd precede
 production7d011987, which adds padding to the existing finite0..=65536 guard.
 Actual complete14-package cone at7d:847PASS/0FAIL/0ignore/32targets plus strict
 alltargets Clippy PASS. Failed receipts remain preserved. Independent exact
-source review pending final report; no hosted acceptance inferred.
+source review at7d passes admission/hop scope but withholds valid-padding
+enclosure: LR/RL fixed150 lanes can clip accepted taller nodes. Spec37a24
+precedes exact20cell golden control03e55282; actual red4FAIL (LR/RL100/cap),
+initialE0609 compile failure separately preserved. Productionefd2e023 changes
+only horizontal cross extent to max150,nodeHeight+18. Complete14-package
+cone848/0/0 over32targets plus strictalltargets PASS. Final independent report
+pending; no hosted acceptance inferred. Framed maina2bb has66paths/5overlaps;
+spec CV04a-unit-offset-main-reconciliation.md precedes next actual import and
+six-package compiler/native/downstream validation, including full LANG.
 
 SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
 No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.

@@ -42,6 +42,14 @@ Validation is source-attributed: Windows applicable packages and standalone
 checks are recorded separately from Unix-only/hosted and whole-PR gates.
 Final-source Miri is **DEFERRED/PENDING**, never passed.
 
+The imported node-padding field is admitted by the same finite0..=65536
+checked spacing boundary. Large accepted node heights expand horizontal lanes
+with the existing cross-axis inset, preserving default dimensions and keeping
+nodes inside lanes/canvas. Direct invalid-value red controls and complete
+four-direction golden layouts precede these repairs. Current efd2e023 affected
+cone passes848 tests/32targets plus strict all-target lint. General malformed
+caller IR and whole-PR/hosted acceptance remain separate.
+
 
 ## Global curves and checked ranks
 
