@@ -45,6 +45,10 @@ topology. Keep the complete ordering/reference equality and every endpoint-bit
 assertion; replace obsolete NaN normalization with mandatory finite assertions.
 Add exact independent self-loop anchor expectations in all four directions,
 with ordering/hops variations. Preserve the original failing suite receipt.
+Pin the distinct InvalidDerivedGeometry result using a caller-owned NaN font
+size on an otherwise valid rectangle diagram, and the legacy wrapper panic.
+This exercises the documented output gate, without claiming arbitrary style
+validation at ingestion.
 
 Run full affected diagram suites, complete updated reverse cone and standalone
 transport benchmark, strict lint/docs plus independent exact-source review.
@@ -52,3 +56,11 @@ Prior source-attributed transport scoped acceptance does not accept this repair.
 Miri DEFERRED/PENDING; frozen run unchanged. Whole456/general P2/hosted native3OS/
 exact-head CI/conflict/full Closure parity and transformation lineage remain
 OPEN. No delivery before applicable repairs and review acceptance.
+
+The recomputed cone includes40 packages after IOCP changes. Actual Windows
+7b1ef57a full-cone compilation stopped at tcp-reactor's existing explicit
+`compile_error!("tcp-reactor currently requires Unix-style file descriptors")`.
+Preserve this failed receipt and complete unchanged tcp-reactor object proof.
+Validate the other39 on Windows and the standalone benchmark; tcp-reactor's
+actual Unix suite remains required on Unix/hosted checks and must not be reported
+as Windows execution acceptance or silently removed from the complete cone.
