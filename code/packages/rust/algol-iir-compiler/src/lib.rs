@@ -150,6 +150,21 @@ impl ScalarType {
     }
 }
 
+/// Grammar wrappers carry neither an operator nor an independent value. Each
+/// classifier already falls back to its single child. Taking that route first
+/// avoids re-running every competing proof over the same wrapper suffix.
+/// Typed call/variable nodes keep their earlier shape checks even for malformed
+/// caller-owned ASTs; token-bearing parentheses/operators are never stripped.
+fn selector_transparent_child(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if matches!(node.rule_name.as_str(), "proc_call" | "variable")
+        || !direct_tokens(node).is_empty()
+    {
+        return None;
+    }
+    let children = direct_nodes(node);
+    if children.len() == 1 { Some(children[0]) } else { None }
+}
+
 // Observe real classifier entry work only in the dedicated per-thread control.
 // A test budget stops the old pathological refusal without waiting for a timer;
 // ordinary tests have no active budget and production has no counter or cap.
@@ -3843,6 +3858,9 @@ impl Compiler {
     fn is_direct_formatter_safe_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_direct_formatter_safe_real_procedure_call(child);
+        }
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3890,6 +3908,9 @@ impl Compiler {
     fn is_selector_call_safe_real_procedure_result(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_real_procedure_result(child);
+        }
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3933,6 +3954,9 @@ impl Compiler {
     fn is_selector_call_safe_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_entier_sign_root(child);
+        }
         if node.rule_name == "proc_call" {
             let source_name = direct_tokens(node)
                 .into_iter()
@@ -3962,6 +3986,9 @@ impl Compiler {
     fn is_selector_call_safe_signed_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_entier_sign_root(node) {
             return true;
         }
@@ -3983,6 +4010,9 @@ impl Compiler {
     fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_additive_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_signed_entier_sign_root(node) {
             return true;
         }
@@ -4034,6 +4064,9 @@ impl Compiler {
     ) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_multiplicative_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_additive_entier_sign_root(node) {
             return true;
         }
@@ -4077,6 +4110,9 @@ impl Compiler {
     fn is_selector_call_safe_powered_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_powered_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_multiplicative_entier_sign_root(node) {
             return true;
         }
@@ -4132,6 +4168,9 @@ impl Compiler {
     ) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_standard_entier_sign_root_with_depth(child, remaining_standard_calls);
+        }
         if self.is_selector_call_safe_powered_entier_sign_root(node) {
             return true;
         }
@@ -4886,6 +4925,9 @@ impl Compiler {
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_runtime_real_value(child);
+        }
         if self.is_selector_call_safe_real_procedure_result(node) {
             return true;
         }
@@ -5030,6 +5072,9 @@ impl Compiler {
     fn is_selector_call_safe_runtime_real_root(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_runtime_real_root(child);
+        }
         if self.is_selector_call_safe_runtime_real_value(node) {
             return true;
         }
@@ -5159,6 +5204,9 @@ impl Compiler {
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
         #[cfg(test)]
         selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_runtime_real_assignment_value(child);
+        }
         if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
         }

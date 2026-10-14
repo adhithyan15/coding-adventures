@@ -590,3 +590,9 @@ cannot erase that scalar's provenance; a selector that promotes either root
 still refuses output. Paired direct/assigned name refusal and value controls
 check both actuals and outcomes, with exact -1/1 native stdout. Every earlier
 alias, shared-root, tracked-literal and production-limit control stays required.
+
+Refusal-path classifier controls count actual entries for the computed-name
+selector matrix, with a per-program limit of 8192. Zero-token grammar wrappers
+take the same single-child fallback before alternative proofs repeat it; typed
+call/variable nodes, operator tokens and standard-call depth keep their guards.
+This bounds the tested refusal family without claiming whole-compiler linearity.
