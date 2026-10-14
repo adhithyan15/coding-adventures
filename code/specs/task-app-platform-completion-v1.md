@@ -237,14 +237,14 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
-**Next style item — #17481: SwiftUI drag-body spacing reports.** Both
+**Completed in #17483 — #17481: SwiftUI drag-body spacing reports.** Both
 `HostDraggable` and `HostDropTarget` already construct a vertical stack with
 authored spacing. Recognize those constructors in the gap reporter, requiring
 every occurrence of a shared part to consume the property. Unsupported values
 and reuse on non-spacing primitives must remain reported. Verify generated
 TaskApp before retiring its four gap allowances. Fresh package-expanded
 generation measures 59 style drops and no gap drops, down from 63; native
-runtime generation and Swift compilation remain required in macOS CI.
+runtime generation and Swift compilation passed in the macOS release CI lane.
 Drag callbacks and native
 behavior are unchanged; this is reporting reconciliation.
 
