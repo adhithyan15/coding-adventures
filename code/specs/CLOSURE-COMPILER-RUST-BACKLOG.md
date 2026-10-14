@@ -3,54 +3,70 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
-October14 local source9aa50e7d: required current-main integration and bounded
-repairs PASS locally; final documentation/carrier review and publication remain
-PENDING. SolePR17288 remains published4c with auto-merge OFF. Its macOS CI
-actually failed TaskApp iOS UI first-row assertion; no code cause established.
-Retry request403 because workflow was still running, no accepted rerun.
+October 14: bounded native and Railroad reconciliation PASS locally. Delivery
+source is 9aa50e7d; documentation carrier fc7281d4 has passed documentation,
+lessons and production-plan checks. Publication to sole PR #17288 is PENDING;
+auto-merge remains OFF. Exact published-head CI, independent final carrier
+review and actual merge reachability remain delivery gates.
 
-Native/compiler source63b8647b: complete affected6-package unfiltered suites
-ACTUALLY EXIT0,1769PASS/0FAIL/1existingignore across78targets; ALGOL854 and full
-LANG480 included, strictalltargets0. Tests SHA
+Native/compiler source 63b8647b: complete affected six-package unfiltered
+suites ACTUALLY EXIT 0, 1769 PASS / 0 FAIL / 1 existing ignored over 78 targets;
+ALGOL 854 and full LANG 480 included, strict all-targets EXIT 0. Tests SHA256:
 acec2ec5b6f8b81afafbe614496673d0920bb3e744b4e1961c5c8b15545c75ad.
-Exact4c shared sign helper remains narrow; dedicated flat-unit proof admits
-one conditional front with BOTH strict roots. An exact read-once NameReal
-identity evaluates its actual before general call invalidation, preserving
-actual alias effects without cached/fresh proof forwarding. Malformed wrappers,
-signatures, nonidentity bodies and name-writing conditions retain refusal.
-Owned16runtime sources96actual cells on6availablebackends verify exact stdout,
-Exit0 and orderedCL0/CR2 evaluation; CLR execution is not inferred. Source63b
-independent scoped review PASSc415e4e99bb5d5ee58e56c65640db0b3e06db89d3bd8f39977f5d2f5931442e7.
+The shared sign helper remains narrow. A dedicated flat-unit proof admits one
+conditional front with BOTH strict roots; exact read-once NameReal identity
+evaluation preserves actual alias effects without cached/fresh proof forwarding.
+Malformed wrappers/signatures/nonidentity bodies and name-writing conditions
+retain refusal. Sixteen owned runtime sources / 96 actual cells on six available
+backends verify exact stdout, normal exit and ordered CL0/CR2 evaluation; CLR
+execution is not inferred. Independent source63 review PASS, SHA256:
+c415e4e99bb5d5ee58e56c65640db0b3e06db89d3bd8f39977f5d2f5931442e7.
 
-Separate successor checkout/target preserves that native source and frozen Miri.
-Spec910652 precedes actualmain3a Railroad+Sanskrit merge2f744c8d: closed51paths,
-44pure incoming/7independent exact threeway overlaps/225137retained ownedobjects.
-Incoming finite overflow, gap cancellation and zero-padding glyph findings had
-actual168parser admission/18glyph-box failures; compile-only harness/API reds
-remain distinct. Final9aa: complete14-package diagram/parser/paint/downstream
-suites ACTUALLY EXIT0,865PASS/0FAIL/0ignore across33targets, strictalltargets0.
-Tests SHA8c8881bfdbadcd664d18c04a7473c822080382e4ad816d55f51ca16fe570f6a4.
+Separate successor checkout/target preserves native and frozen Miri inputs.
+Spec910652 precedes actual main3a Railroad/Sanskrit merge2f744c8d: closed 51
+paths, 44 pure incoming / 7 independently exact overlaps / 225137 retained
+owned objects. Incoming overflow, gap cancellation and zero-padding glyph
+findings had actual 168 parser admission / 18 glyph-box failures; compile-only
+harness/API reds remain distinct. Final9aa complete fourteen-package diagram/
+parser/paint/downstream suites ACTUALLY EXIT 0, 865 PASS / 0 FAIL / 0 ignored
+over 33 targets, strict all-targets EXIT 0. Tests SHA256:
+8c8881bfdbadcd664d18c04a7473c822080382e4ad816d55f51ca16fe570f6a4.
 
-All3Railroad settings have finite inclusive0..65536 parser+typed checked
-admission; independent sequence extents use n-1gaps; small leaf label boxes
-stay enclosed. Controls cover168exact parser refusals/120retained configs,
-84typed refusals/96geometry/40empty-singleton cells, ordered distinct-leaf flat/
-nested connectors+two-rule gaps, and18typed+66source complete ordered glyph
-traces/actualmetricbounds/exact3metadata keys. Producer defaultintent retained;
-all oldhop32/16,8192,geometry16128 and production-limit controls preserved.
-Complete forward native166packages/2800objects exact63b to9aa; registry376
-identities/checksums exact. Source attribution is not additive test execution.
+All three Railroad settings have finite inclusive 0..65536 parser and checked
+typed admission. Sequence extents use n-1 gaps; small leaf label boxes stay
+enclosed. Controls verify 168 exact parser refusals / 120 retained configs,
+84 typed refusals / 96 geometry / 40 empty-singleton cells, ordered distinct-leaf
+flat/nested connectors and two-rule gaps, plus 18 typed / 66 source complete
+ordered glyph traces, metric bounds and exact metadata. Old hop32/16, 8192,
+geometry16128 and production-limit controls are preserved. Independent final9aa
+security PASS, report SHA256:
+4f7e57d5d2c409d4ecd9f68d8ef8d8eb4b75491b8ea71894881a235130240981.
 
-Final independent9aa source review, docs/checker/lessons/current productionplan
-and exact-head carrier review gate samePR push. Exact published-head terminal
-acceptable required checks, review-clean/conflict-free state and actual fetched
-main merge reachability still gate merge/cleanup. BaseESTree/ownedtypes/no new
-crates.io retained. Full Closure parity/fullbyte-source/alltransformationlineage/
-CV04b, generic recursive conditional/range composition, arbitrary Railroad
-font/forged-layout/depth/remeasure and general floating-hop resource debt OPEN.
-Miri DEFERRED/PENDING, neverpassed; frozen497 checkout/inputs/target/run/receipts
-untouched and unpolled. Implementation/delivery precedes genuine final-source
-Miri; full objective remains OPEN and heartbeat ACTIVE.
+Complete native forward closure: 166 packages / 2800 objects exact63 to9aa;
+carrier changes only README/changelog documentation. Complete standalone
+Closure36-package inventory: all3699 objects exact316e tofc. Earlier standalone
+1093 tests / 181 targets and strict EXIT0 remain source-attributed execution;
+the separate failed historical affected run is not relabeled. Registry376
+identities/checksums exact; no new crates.io dependencies. R2 checker runtime460
+files exact to the preserved build, checker source/config exact63. Actual R2
+doc-shard check EXIT0, lessons1253/0 problems, diffcheck0. Actual unforced current
+production plan EXIT0 selects Closure native tests on Linux/macOS/Windows and
+Windows OS suites using the source-identical, previously tested Go planner.
+Receipts: CV04a-railroad-carrier-fc7281d4-{validation,doc-checks}.json.
+
+Fresh audit main085 contains unrelated Arabic curriculum changes after the
+integrated main3a. Published4c macOS CI actually failed the TaskApp iOS first-row
+assertion; no code cause established. Retry request403 while workflow running,
+no accepted rerun. These old-head checks do not establish successor acceptance.
+Current published-head terminal acceptable required checks, review-clean/
+conflict-free state and fetched-main merge reachability gate merge and cleanup.
+
+Base ESTree / owned types retained. Full Closure parity, output-byte/source joins,
+all transformation lineage/CV04b, generic conditional/range composition and
+Railroad custom-font/forged-layout/depth/remeasure/general floating-hop debts
+remain OPEN. Miri DEFERRED/PENDING, never passed; frozen497 checkout, inputs,
+target, run and receipts untouched and unpolled. Implementation/delivery comes
+first, genuine final-source Miri afterward. Full objective OPEN; heartbeat ACTIVE.
 <!-- /CV04a pathwise pending checkpoint -->
 
 <!-- CV04a active delivery checkpoint -->
