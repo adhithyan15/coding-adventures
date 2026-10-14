@@ -1162,12 +1162,13 @@ mod tests {
         }).collect();
         SwimlaneDiagram {
             direction, title: None, accessibility_title: None, accessibility_description: None,
-            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: ids }],
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: ids, classes: Vec::new(), style: Default::default() }],
             nodes, edges, links: Vec::new(), callbacks: Vec::new(), line_hops: None,
             automatic_lane_ordering: false,
             groups: Vec::new(),
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: false,
+            theme: Default::default(),
         }
     }
 
@@ -1176,6 +1177,7 @@ mod tests {
         let ids = (0..lane_count).map(|i| format!("lane{i}")).collect::<Vec<_>>();
         let lanes = ids.iter().enumerate().map(|(i, id)| SwimlaneLane {
             id: id.clone(), label: id.clone(), node_ids: vec![format!("node{i}")],
+            classes: Vec::new(), style: Default::default(),
         }).collect();
         let nodes = ids.iter().enumerate().map(|(i, id)| SwimlaneNode {
             id: format!("node{i}"), label: format!("Node{i}"), lane_id: Some(id.clone()),
@@ -1198,6 +1200,7 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None,
             automatic_lane_ordering: true, ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: false,
+            theme: Default::default(),
         }
     }
 

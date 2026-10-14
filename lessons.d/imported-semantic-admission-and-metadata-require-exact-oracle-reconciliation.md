@@ -12,6 +12,11 @@ refusal separately, and keep every theme key in complete enabled/disabled scene
 comparisons. Preserve failed receipts; no source or global acceptance follows
 from importing code or passing a previously executed component.
 
+The next full suite stopped during compilation because two owned hierarchy
+builders lacked imported lane classes/style and diagram theme fields. Supply
+the upstream neutral defaults; retain every ordering and large-gap assertion.
+Distinguish a compile failure with zero tests from a runtime test failure.
+
 Unfiltered offline metadata also requested an uncached existing Android package
 before native tests. Resolve the complete graph for the tested Windows platform,
 then verify the entire resulting registry identity set. That proves Windows
