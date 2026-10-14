@@ -74,27 +74,9 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// the moment one does -- including a `gap` on a `Box`, `Stack` or
 /// `HostScroll`, which really is discarded and really is still reported.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // ---- Qt (#15245) ----
-    //
-    // These became visible the moment Qt started reporting its drops in
-    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
-    // been rendering without them on Qt since the parts were authored, and
-    // nothing could see them because the backend reported no drops at all.
-    //
-    // Pinned so the gate stays honest, NOT to bless them -- see this list's
-    // doc comment on how a stale pin turns into a standing licence.
-    //
-    // #15247 -- `qml_padding` reads ONE value and fans it to all four
-    // edges, so any longhand beyond the one it picks is lost.
-    (Backend::Qt, "padding"),
-    (Backend::Qt, "padding-bottom"),
-    // ---- Flutter (#12022) ----
-    // These pre-existing losses became measurable when Flutter gained drop
-    // reporting. Each pin is checked below and must disappear with its gap.
-    (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-weight"),
-    (Backend::Flutter, "padding"),
-    (Backend::Flutter, "padding-bottom"),
+    // Empty since X-7 (2026-10-13): every drop this package used to pin is
+    // now lowered by its emitter. A new drop fails the gate until it is either
+    // fixed or pinned here with the reason it cannot be yet.
 ];
 
 fn package_root() -> PathBuf {

@@ -868,6 +868,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// detect job.
 
 	var packages []discovery.Package
+	// Every package on this platform, before any shard or language filter.
+	var knownPackages []discovery.Package
 	var graph *directedgraph.Graph
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
@@ -929,6 +931,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 				}
 			}
 			packages = packagesForPlatform(packages, runtime.GOOS)
+			// Before the shard and language filters narrow the list: BUILD
+			// validation resolves names against every package (X-7).
+			knownPackages = packages
 			platformState := bp.StateForPlatform(runtime.GOOS)
 
 			// Reconstruct dependency graph from edges.
@@ -1179,7 +1184,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// discovery means "has a BUILD file". The two orphan gates independently
 		// scan Cargo manifests and direct established-lane roots so missing fronts
 		// cannot remain structurally invisible.
-		buildErr := validator.ValidateBuildFiles(packages, graph)
+		if knownPackages == nil {
+			knownPackages = packages
+		}
+		buildErr := validator.ValidateBuildFilesAgainst(packages, knownPackages, graph)
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
 		packageRootErr := validator.ValidateNoOrphanPackageRoots(repoRoot)
 		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)

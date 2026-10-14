@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed — 5 stale style-drop pins removed (X-7)
+
+The emitters now lower these, so the gate's inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every main CI run.
+Removed from `ALLOWED_STYLE_DROPS`: `(Qt, "width")`, `(Flutter, "width")`, `(Flutter, "border-radius")`, `(Flutter, "color")`, `(Flutter, "font-size")`. Comments that only explained
+removed pins went with them.
+
 - The native gate's comment now says Compose lowers the fields'
   `width: 100%` (since #15967, a text field outside a Row fills its parent).
 
