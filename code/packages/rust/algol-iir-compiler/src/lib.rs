@@ -16251,8 +16251,13 @@ mod tests {
                 let main = module.get_function("main").expect("has main");
                 assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
                 let six = standard_name_depth_boundary_source(condition, assigned, 6);
-                let error = compile_source(&six, "test").expect_err("the unchanged source parser limit precedes six-layer semantic classification");
-                assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
+                let error = compile_source(&six, "test").expect_err("six-layer source must be refused at its actual consumer boundary");
+                if assigned {
+                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "condition={condition}, assigned={assigned}: {error:?}");
+                } else {
+                    // Direct output adds grammar nesting before classification.
+                    assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
+                }
             }
         }
     }
