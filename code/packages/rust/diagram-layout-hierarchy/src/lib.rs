@@ -271,10 +271,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         DiagramDirection::Lr | DiagramDirection::Rl
     );
     let lane_header = 38.0;
-    let lane_gap = 12.0;
+    let outer_padding = diagram.flowchart_config.diagram_padding.unwrap_or(12.0);
+    let lane_gap = diagram.flowchart_config.node_spacing.unwrap_or(12.0);
     let node_width = 132.0;
     let node_height = 54.0;
-    let node_gap = 42.0;
+    let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
@@ -320,11 +321,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let (width, height) = if horizontal_flow {
         (
             lane_along.max(420.0),
-            title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+            title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
         )
     } else {
         (
-            diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+            diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
             title_height + lane_along.max(420.0),
         )
     };
@@ -338,17 +339,17 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     for (lane_index, lane) in ordered_lanes.into_iter().enumerate() {
         let (x, y, lane_width, lane_height) = if horizontal_flow {
             (
-                12.0,
+                outer_padding,
                 title_height + lane_index as f64 * (lane_cross + lane_gap),
-                width - 24.0,
+                width - outer_padding * 2.0,
                 lane_cross,
             )
         } else {
             (
-                12.0 + lane_index as f64 * (lane_cross + lane_gap),
+                outer_padding + lane_index as f64 * (lane_cross + lane_gap),
                 title_height,
                 lane_cross,
-                height - title_height - 12.0,
+                height - title_height - outer_padding,
             )
         };
         lanes.push(LayoutedSwimlaneLane {
@@ -506,6 +507,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         automatic_lane_ordering: diagram.automatic_lane_ordering,
         ignore_cross_lane_edges: diagram.ignore_cross_lane_edges,
         optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
+        flowchart_config: diagram.flowchart_config.clone(),
         theme: diagram.theme.clone(),
     }
 }
@@ -1044,6 +1046,7 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
             theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
@@ -1070,6 +1073,7 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
             theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
@@ -1160,6 +1164,7 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
             theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);

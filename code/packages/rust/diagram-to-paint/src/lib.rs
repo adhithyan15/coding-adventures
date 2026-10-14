@@ -1633,6 +1633,15 @@ where
         metadata.insert("swimlane.optimizeRanksByCrossings".into(),
             diagram.optimize_ranks_by_crossings.to_string());
     }
+    if let Some(spacing) = diagram.flowchart_config.node_spacing {
+        metadata.insert("swimlane.flowchart.nodeSpacing".into(), spacing.to_string());
+    }
+    if let Some(spacing) = diagram.flowchart_config.rank_spacing {
+        metadata.insert("swimlane.flowchart.rankSpacing".into(), spacing.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.diagram_padding {
+        metadata.insert("swimlane.flowchart.diagramPadding".into(), padding.to_string());
+    }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
         metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());

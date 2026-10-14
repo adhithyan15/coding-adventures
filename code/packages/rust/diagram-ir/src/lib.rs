@@ -1995,6 +1995,11 @@ impl Default for SwimlaneTheme {
         }
     }
 }
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct SwimlaneFlowchartConfig {
+    pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
+    pub diagram_padding: Option<f64>,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
@@ -2002,6 +2007,7 @@ pub struct SwimlaneDiagram {
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
     pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
 }
 #[derive(Clone, Debug, PartialEq)]
@@ -2037,6 +2043,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
     pub automatic_lane_ordering: bool, pub ignore_cross_lane_edges: bool,
     pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
 }
 

@@ -2586,6 +2586,27 @@ fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[First]\n  second[Second]\nend\nfirst --> second";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n{source}"
+    )).expect("Flowchart spacing front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{source}"
+    )).expect("Flowchart spacing init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.node_spacing, Some(96.0));
+    assert_eq!(front_matter.flowchart_config.rank_spacing, Some(28.0));
+    assert_eq!(front_matter.flowchart_config.diagram_padding, Some(32.0));
+    assert_eq!(directive.flowchart_config.node_spacing, Some(72.0));
+    assert_eq!(directive.flowchart_config.rank_spacing, Some(24.0));
+    assert_eq!(directive.flowchart_config.diagram_padding, Some(18.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    rankSpacing: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart spacing must be rejected");
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");
