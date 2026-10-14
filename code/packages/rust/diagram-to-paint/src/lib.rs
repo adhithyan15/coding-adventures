@@ -10565,7 +10565,7 @@ emphasized --> direct
         }
     }
 
-    fn varied_support_empty_hop_evidence() -> Vec<(usize, bool, usize, usize)> {
+    fn varied_support_empty_hop_evidence(context: &str) -> Vec<(usize, bool, usize, usize)> {
         // Direct caller-layout inputs: the parser supplies the ordinary edge
         // style/marker template, while these exact endpoints are test-authored.
         let mut evidence = Vec::new();
@@ -10626,7 +10626,7 @@ emphasized --> direct
                             let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
                             assert_eq!(enabled, disabled, "complete scene: count={count}, nonparallel={nonparallel}, mode={mode:?}, axes={exchange_axes}, reverse={reverse}");
                             assert!(work > 0, "existing eligibility/insertion/drop counter remains active");
-                            eprintln!("varied-support empty: count={count} nonparallel={nonparallel} mode={mode:?} axes={exchange_axes} reverse={reverse} predicates={predicates} existing_index_work={work}");
+                            eprintln!("varied-support empty: context={context} count={count} nonparallel={nonparallel} mode={mode:?} axes={exchange_axes} reverse={reverse} predicates={predicates} existing_index_work={work}");
                             evidence.push((count,nonparallel,predicates,work));
                         }
                     }
@@ -10639,12 +10639,12 @@ emphasized --> direct
 
     #[test]
     fn line_hop_varied_support_empty_complete_scene_equivalence() {
-        let _ = varied_support_empty_hop_evidence();
+        let _ = varied_support_empty_hop_evidence("equivalence");
     }
 
     #[test]
     fn line_hop_varied_support_empty_discovery_work_bound() {
-        let evidence = varied_support_empty_hop_evidence();
+        let evidence = varied_support_empty_hop_evidence("work");
         let failures = evidence.iter().filter(|&&(count,_,predicates,work)| {
             let levels = (usize::BITS - count.leading_zeros()) as usize + 1;
             predicates > 2 * count * levels || work > 64 * count * levels

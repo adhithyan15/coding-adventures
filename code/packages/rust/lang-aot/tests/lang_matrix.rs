@@ -23897,6 +23897,7 @@ fn algol_entier_nested_name_actual_both_branches_complete_normally() {
             let available = toolchain_available(backend);
             let Some(result) = run(backend, &program) else {
                 assert!(!available, "{backend:?} available but nested entier name-actual control did not run: {source}");
+                eprintln!("entier native unavailable backend={backend:?} source={source:?}");
                 continue;
             };
             if let RunResult::Completed { code, stdout } = &result {
