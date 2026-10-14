@@ -9861,6 +9861,14 @@ mod tests {
                         };
                         let bare = mermaid_parser::parse_swimlane(&source(false)).unwrap();
                         let parsed = mermaid_parser::parse_swimlane(&source(true)).unwrap();
+                        let mut directive_fields = Vec::new();
+                        if themed_font { directive_fields.extend(["\"fontFamily\": \"Theme Font\"".to_string(), "\"fontSize\": \"16px\"".to_string()]); }
+                        for (bit,name,value) in [(1,"clusterBkg","#fef3c7"),(2,"clusterBorder","#b45309"),(4,"titleColor","#7c2d12")] {
+                            if mask & bit != 0 { directive_fields.push(format!("\"{name}\": \"{value}\"")); }
+                        }
+                        let directive_source = format!("---\nconfig:\n  themeVariables:\n    clusterBkg: '#ff0000'\n    clusterBorder: '#00ff00'\n    titleColor: '#0000ff'\n---\n%%{{init: {{\"themeVariables\": {{{}}}}}}}%%\n{body}", directive_fields.join(", "));
+                        let directive = mermaid_parser::parse_swimlane(&directive_source).unwrap();
+                        assert_eq!(directive, parsed, "the whole directive object overrides conflicting front matter, including absent-field defaults");
                         assert_eq!(parsed.theme.cluster_background.as_deref(), (mask & 1 != 0).then_some("#fef3c7"));
                         assert_eq!(parsed.theme.cluster_border.as_deref(), (mask & 2 != 0).then_some("#b45309"));
                         assert_eq!(parsed.theme.title_color.as_deref(), (mask & 4 != 0).then_some("#7c2d12"));
@@ -9871,6 +9879,7 @@ mod tests {
                         assert_eq!(normalized, bare, "complete authored IR differs only in pinned theme fields");
                         let layout = diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
                         assert_eq!((layout.lanes.len(), layout.groups.len()), (1,1));
+                        assert_eq!(layout, diagram_layout_hierarchy::try_layout_swimlane(&directive).unwrap());
                         if overrides {
                             assert_eq!(layout.lanes[0].style.fill.as_deref(), Some("#dbeafe"));
                             assert_eq!(layout.groups[0].style.fill.as_deref(), Some("#ecfdf5"));
