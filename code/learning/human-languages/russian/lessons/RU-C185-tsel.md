@@ -14,7 +14,8 @@ romanization: "tsel"
 concept_tag: RU-PRICH185-TSEL
 prerequisites: [RU-C184-ottuda, RU-C185-prichina]
 sounds: []
-roots: []
+roots: [german-ziel]
+etymology_hook: "цель came through Polish cel from Middle High German zil 'a target'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C185-prichina]
 <!-- hl-knowledge: introduces=[RU-LEX-C185-PRICH185-02]; assesses=[] -->
 
 **цель** (*tsel*) — "a goal, an aim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**цель** came through Polish *cel* from Middle High German *zil*, "a target" (Vasmer). German *Ziel* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

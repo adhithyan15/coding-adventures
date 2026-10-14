@@ -4,6 +4,21 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now
+  resolves names and paths against every package on the platform, not just
+  the shard's. A package's test-only dependencies (a cpanfile `on 'test'`
+  block) are not graph edges, so they are not pulled into its shard. Their
+  own prerequisites then looked like undeclared references. Shards 14 and 15
+  of every main run failed this way:
+  `perl/brainfuck-wasm-compiler … undeclared local package refs:
+  perl/wasm-execution` and the same for `perl/ir-to-wasm-compiler` (X-7).
+  The new `ValidateBuildFilesAgainst(packages, known, graph)` still checks
+  only the shard's packages. `ValidateBuildFiles` is unchanged, and
+  discovery mode still validates as before. A validator test pins the shard
+  case, and all 15 shards of a local `-force -shard-count 15` plan now pass.
+
 ### Added
 
 - Case-exact native CI selection for the five checked `plan-*.json` fixtures.

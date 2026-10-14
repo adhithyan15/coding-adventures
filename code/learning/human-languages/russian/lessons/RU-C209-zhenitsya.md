@@ -14,7 +14,8 @@ romanization: "zhenítsya"
 concept_tag: RU-VERB-ZHENITSYA
 prerequisites: [RU-C209-obeshchat, RU-C209-shutit]
 sounds: []
-roots: []
+roots: [pie-gwenh2]
+etymology_hook: "жениться is from жена 'wife' + -иться: to take a wife"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C209-shutit]
 <!-- hl-knowledge: introduces=[RU-LEX-C209-ACT209-05]; assesses=[] -->
 
 **жениться** (*zhenítsya*) — "to get married (of a man)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жениться** comes from *жена*, "wife", with *-иться*: to take a wife. *жена* is a cousin of Greek *gynḗ*, "woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

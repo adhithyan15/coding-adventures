@@ -14,7 +14,8 @@ romanization: "kartóshka"
 concept_tag: RU-VEG-POTATOES
 prerequisites: [RU-C44-cherry, RU-C44-berry]
 sounds: []
-roots: []
+roots: [italian-tartufolo]
+etymology_hook: "картошка is картофель + -ошка; картофель ← German Kartoffel, from Italian tartufolo 'truffle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C44-berry]
 <!-- hl-knowledge: introduces=[RU-LEX-C45-VEG-01]; assesses=[] -->
 
 **картошка** (*kartóshka*) — "potatoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**картошка** is *картофель*, "potato", with the fond *-ошка*. *картофель* came from German *Kartoffel*, which comes from Italian *tartufolo*, "truffle": the tubers looked like truffles (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

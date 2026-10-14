@@ -10,7 +10,8 @@ gloss: "to compete"
 concept_tag: ES-VERB-COMPETIR
 prerequisites: [ES-C498-campeonato, ES-C498-deportista]
 sounds: []
-roots: []
+roots: [petere-latin]
+etymology_hook: "competir ← Latin competere 'to seek together': con- + petere 'to seek' — English compete"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C498-deportista]
 > *He competes in the hundred metres.*
 
 The e breaks into i: *compito*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**competir** ← Latin *competere*, "to strive together, to meet" (EtymDB 2.1): *con-* and *petere*, "to seek" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

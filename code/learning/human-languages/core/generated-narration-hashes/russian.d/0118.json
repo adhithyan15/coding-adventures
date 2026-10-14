@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 118,
-  "sourceHash": "fnv1a64:5623fa2a15bfe6fd",
+  "sourceHash": "fnv1a64:0a5811c6b8e43738",
   "lessonIds": [
     "RU-C118-squirrel",
     "RU-C118-owl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch118.txt",
   "json": "russian/narration/ch118.json",
-  "textHash": "fnv1a64:98e8cbd2670e7077",
-  "jsonHash": "fnv1a64:625f0695fcdb5fb0",
+  "textHash": "fnv1a64:6ead9f8ab1627535",
+  "jsonHash": "fnv1a64:34ef8b3ad639ccb6",
   "findings": []
 }

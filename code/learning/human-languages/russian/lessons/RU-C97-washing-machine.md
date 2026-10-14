@@ -14,7 +14,8 @@ romanization: "stirálnaya mashína"
 concept_tag: RU-THINGS97-WASHING-MACHINE
 prerequisites: [RU-C96-rubbish, RU-C97-broom]
 sounds: []
-roots: []
+roots: [pie-terh1, machina-latin]
+etymology_hook: "стиральная машина is 'washing machine': стирать, from тереть 'to rub', + машина"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C97-broom]
 <!-- hl-knowledge: introduces=[RU-LEX-C97-THINGS97-02]; assesses=[] -->
 
 **стиральная машина** (*stirálnaya mashína*) — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стиральная машина** is "washing machine": *стиральная*, from *стирать*, "to wash", from *тереть*, "to rub" (Latin *terō*, "I rub", is a cousin), with *машина*, "machine", from German *Maschine* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

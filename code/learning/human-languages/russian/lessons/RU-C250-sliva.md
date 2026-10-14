@@ -14,7 +14,8 @@ romanization: "slíva"
 concept_tag: RU-VESHCH250-SLIVA
 prerequisites: [RU-C249-vetchina, RU-C250-arbuz]
 sounds: []
-roots: []
+roots: [slavic-sliva]
+etymology_hook: "слива first named a colour; Latin lividus 'bluish' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C250-arbuz]
 <!-- hl-knowledge: introduces=[RU-LEX-C250-VESHCH250-02]; assesses=[] -->
 
 **слива** (*slíva*) — "a plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слива** ← Proto-Slavic *\*sliva* — inherited; it first named a colour (Vasmer). Vasmer relates it to Latin *līvidus*, "bluish", and Old High German *slêha*, "sloe": English *sloe* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

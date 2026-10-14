@@ -14,7 +14,8 @@ romanization: "programmíst"
 concept_tag: RU-RABOTA229-PROGRAMMIST
 prerequisites: [RU-C229-bukhgalter, RU-C229-menedzher]
 sounds: []
-roots: []
+roots: [greek-programma]
+etymology_hook: "программист is программа 'a program' + -ист; программа is Greek prógramma 'a public notice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C229-menedzher]
 <!-- hl-knowledge: introduces=[RU-LEX-C229-RABOTA229-04]; assesses=[] -->
 
 **программист** (*programmíst*) — "a programmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**программист** is *программа*, "a program", with *-ист*, "one who works at". *программа* goes back to Greek *prógramma*, "a public notice", from *prográphein*, "to write before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

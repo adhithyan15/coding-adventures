@@ -9,7 +9,8 @@ headword: "el / él"
 gloss: the acute accent separates the article el from the pronoun él
 prerequisites: [ES-W01-acento]
 sounds: [stress]
-roots: []
+roots: [ille]
+etymology_hook: "él 'he' ← Latin ille 'that one', the same word as the article el; the accent only labels it"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ The **tilde diacrítica** separates words that otherwise look alike:
 The two words are pronounced alike. Here the accent does not move stress; it
 labels meaning and grammar. Other pairs will arrive only when you know both
 words, so this lesson asks you to hold one contrast, not memorize a list.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**él**, "he", is Latin *ille*, "that one" — the same Latin word that gave the article *el*. The two were once one word; the accent is a much later spelling mark that tells them apart on the page.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT, ES-SCRIPT-ACUTE-ACCENT] -->

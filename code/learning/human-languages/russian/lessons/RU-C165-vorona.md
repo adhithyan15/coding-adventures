@@ -14,7 +14,8 @@ romanization: "voróna"
 concept_tag: RU-VESHCH165-VORONA
 prerequisites: [RU-C164-vozdukh, RU-C164-zemlya]
 sounds: []
-roots: []
+roots: [slavic-vorna]
+etymology_hook: "ворона ← Proto-Slavic *vorna; Lithuanian várna 'crow' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C164-zemlya]
 <!-- hl-knowledge: introduces=[RU-LEX-C165-VESHCH165-01]; assesses=[] -->
 
 **ворона** (*voróna*) — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ворона** ← Proto-Slavic *\*vorna* — inherited, a cousin of Lithuanian *várna* and Old Prussian *warne*, "crow" (Vasmer); it goes with *ворон*, "raven". Church Slavonic has *врана*, "crow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pochtalón"
 concept_tag: RU-THINGS109-POSTMAN
 prerequisites: [RU-C109-engineer, RU-C109-firefighter]
 sounds: []
-roots: []
+roots: [positus-latin]
+etymology_hook: "почтальон came through German Postillion from French postillon, reshaped after почта 'post'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C109-firefighter]
 <!-- hl-knowledge: introduces=[RU-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **почтальон** (*pochtalón*) — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**почтальон** — from 1705, also *постильон*; it came through German *Postillion* from French *postillon*, Italian *postiglione*, "a post rider", and took its *-ч-* and *-а-* from *почта*, "post" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

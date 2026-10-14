@@ -14,7 +14,8 @@ romanization: "ostanávlivatsya"
 concept_tag: RU-VERB-OSTANAVLIVATSYA
 prerequisites: [RU-C146-povorachivat, RU-C146-peresekat]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "останавливаться is о- + станавливать, from стать 'to stand', + -ся: to bring oneself to a stand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C146-peresekat]
 <!-- hl-knowledge: introduces=[RU-LEX-C146-ACT146-04]; assesses=[] -->
 
 **останавливаться** (*ostanávlivatsya*) — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**останавливаться** is *о-* with *-станавливать*, from *стать*, "to stand", and *-ся*, "oneself": to bring yourself to a standstill.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

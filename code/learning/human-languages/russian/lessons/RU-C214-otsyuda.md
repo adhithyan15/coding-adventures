@@ -14,7 +14,8 @@ romanization: "otsyúda"
 concept_tag: RU-MESTO214-OTSYUDA
 prerequisites: [RU-C213-kvartira, RU-C213-etazh]
 sounds: []
-roots: []
+roots: [slavic-si]
+etymology_hook: "отсюда is от 'from' + сюда 'here', on the old pronoun сь 'this'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C213-etazh]
 <!-- hl-knowledge: introduces=[RU-LEX-C214-MESTO214-01]; assesses=[] -->
 
 **отсюда** (*otsyúda*) — "from here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отсюда** is *от*, "from", with *-сюда*, built on the old pronoun *сей*, "this", like *откуда*, "from where" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

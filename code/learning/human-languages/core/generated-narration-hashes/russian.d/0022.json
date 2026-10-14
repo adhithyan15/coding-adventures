@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 22,
-  "sourceHash": "fnv1a64:af3c4fc4899b0cf5",
+  "sourceHash": "fnv1a64:69e164dbf8f30ccc",
   "lessonIds": [
     "RU-C22-kto",
     "RU-C22-kakoy",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "russian/narration/ch22.txt",
   "json": "russian/narration/ch22.json",
-  "textHash": "fnv1a64:35ef0f552c0c7df3",
-  "jsonHash": "fnv1a64:a9a299f8cdff6917",
+  "textHash": "fnv1a64:1fa1b3e2b311b6dd",
+  "jsonHash": "fnv1a64:341bb1f51ce066c3",
   "findings": []
 }

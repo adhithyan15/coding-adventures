@@ -14,7 +14,8 @@ romanization: "konéchno"
 concept_tag: RU-PRICH215-KONECHNO
 prerequisites: [RU-C214-vverkh, RU-C214-vniz]
 sounds: []
-roots: []
+roots: [slavic-chenti]
+etymology_hook: "конечно is from конечный 'final', from конец 'end': 'at the end, definitely'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C214-vniz]
 <!-- hl-knowledge: introduces=[RU-LEX-C215-PRICH215-01]; assesses=[] -->
 
 **конечно** (*konéchno*) — "of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**конечно** is the adverb of *конечный*, "final", from *конец*, "end": "finally, surely", and so "of course".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "víza"
 concept_tag: RU-VESHCH247-VIZA
 prerequisites: [RU-C247-naushniki, RU-C247-pasport]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "виза ← French visa, from Latin visa 'things seen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C247-pasport]
 <!-- hl-knowledge: introduces=[RU-LEX-C247-VESHCH247-04]; assesses=[] -->
 
 **виза** (*víza*) — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**виза** is a recent loan from French *visa*, "an endorsement", from Latin *vīsa*, "things seen" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

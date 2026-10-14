@@ -14,7 +14,8 @@ romanization: "tólstyy"
 concept_tag: RU-QUAL130-FAT
 prerequisites: [RU-C130-heavy, RU-C130-thin]
 sounds: []
-roots: []
+roots: [slavic-tulstu]
+etymology_hook: "толстый ← Proto-Slavic *tŭlstŭ; Lithuanian tulžti 'to swell' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C130-thin]
 <!-- hl-knowledge: introduces=[RU-LEX-C130-QUAL130-05]; assesses=[] -->
 
 **толстый** (*tólstyy*) — "fat, thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**толстый** ← Proto-Slavic *\*tŭlstŭ* — inherited. Vasmer relates it to Lithuanian *tulžti*, "to swell", and Latvian *tùlzt*, "to swell up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

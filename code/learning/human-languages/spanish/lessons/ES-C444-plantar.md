@@ -6,11 +6,12 @@ sequence: 11370
 chapter: 444
 type: word
 headword: plantar
-gloss: to plant — to press in with the sole of the foot, which is what planta meant
+gloss: to plant — Latin plantare, from planta, which meant both a cutting and the sole of the foot
 concept_tag: ES-VERB-PLANTAR
 prerequisites: [ES-C444-madera, ES-C390-planta, ES-C354-jardin, ES-C362-tierra]
 sounds: [pl-cluster, stress-final]
 roots: [planta-latin]
+etymology_hook: "plantar ← Latin plantare; planta meant a cutting and also the sole of the foot"
 duration:
   max_seconds: 275
 requires:
@@ -27,7 +28,7 @@ variety: general
 reviews_of: [ES-C390-planta, ES-C354-jardin, ES-C362-tierra]
 ---
 
-# plantar — pressed in with the foot
+# plantar — to set in the ground
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PLANTA, ES-LEX-C354-WHERE-30, ES-LEX-C362-WHERE-36] -->
@@ -47,7 +48,8 @@ to leave them planted where they were waiting.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-03, ES-LEX-PLANTA] -->
 
-**la planta** has three meanings in Spanish and one origin.
+**plantar** is Latin *plantare*, "to plant", from *planta*, the word you met as
+**la planta**, which has three meanings in Spanish.
 
 | the sense | what it names |
 |---|---|
@@ -55,27 +57,25 @@ to leave them planted where they were waiting.
 | una planta | a growing plant |
 | la primera planta | a storey of a building |
 
-Latin **planta** was the sole of the foot, and nothing else. To *plantāre* was
-to **press a cutting into the soil with your heel** — the actual gesture a
-Roman gardener made. The plant is named after the foot that put it there.
-
-The storey follows the same foot: a *planta* of a building is a **floor plan**,
-the outline you would leave standing on it, which is why English **plan** is the
-same word again.
+Latin **planta** already meant both a cutting set in the ground and the sole of
+the foot (Lewis & Short), and nobody can say for certain whether that was one
+word or two. One old explanation joins them: a cutting was pressed into the
+soil with the sole. Treat that as a guess. How *planta* reached the storey of a
+building is not settled either.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-03, ES-LEX-C444-CASA-02] -->
 
 This is worth holding next to **madera**.
 
-*Madera* went the other way: a concrete thing (timber) whose name was borrowed
-upward into an abstraction (matter). *Planta* started as a body part and spread
-sideways into two unrelated-looking objects — a shrub and a floor of a building.
+*Madera* has a story you can follow: a concrete thing (timber) whose name was
+borrowed upward into an abstraction (matter). *Planta* is the other kind of
+word: three senses that look unrelated, and the history that would join them
+is not certain.
 
-Neither is a word splitting into homonyms by accident. Both are **one image
-being reused**, and if you can recover the image you get the whole family
-instead of three separate entries. For *planta*, the image is a foot pressing
-down.
+Where the history is open, learn the senses side by side and let the story
+stay a guess. A family you can recover is a gift; a family you invent is a
+false friend.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-03, ES-LEX-C354-WHERE-30] -->
@@ -83,10 +83,10 @@ down.
 [PAUSE 1s]
 - [YOU SAY: *plantar*]
 - [YOU SAY: we planted a tree in the garden]
-- [YOU SAY: the three meanings of *planta*, and the one picture behind them]
+- [YOU SAY: the three meanings of *planta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-03] -->
 
-[PAUSE 3s] To plant? (**Plantar**.) What did Latin *planta* mean? (**The sole
-of the foot**.) What is *la primera planta*? (**The first floor**.)
+[PAUSE 3s] To plant? (**Plantar**.) What did Latin *planta* mean? (**A cutting,
+and the sole of the foot**.) What is *la primera planta*? (**The first floor**.)

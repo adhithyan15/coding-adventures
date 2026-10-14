@@ -11,6 +11,7 @@ concept_tag: WORD-WELL
 prerequisites: [ES-C01-hola]
 sounds: [diphthong-ie, v-b]
 roots: [bene, bonus]
+etymology_hook: "bien ← Latin bene 'well' — English benefit, benevolent, benediction"
 duration:
   max_seconds: 240
 requires:

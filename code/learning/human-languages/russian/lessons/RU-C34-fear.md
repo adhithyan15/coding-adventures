@@ -14,7 +14,8 @@ romanization: "strakh"
 concept_tag: RU-FEEL-FEAR
 prerequisites: [RU-C33-thirst, RU-C34-joy]
 sounds: []
-roots: []
+roots: [slavic-strakhu]
+etymology_hook: "страх ← Proto-Slavic *straxŭ, perhaps first 'a freezing stiff'; the origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C34-joy]
 <!-- hl-knowledge: introduces=[RU-LEX-C34-FEEL-02]; assesses=[] -->
 
 **страх** (*strakh*) — "fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**страх** ← Proto-Slavic *\*straxŭ* — inherited. Its deeper origin is not settled: one account Vasmer reports gives it a first sense of "numbness" and compares Lithuanian *stregti*, "to freeze stiff".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

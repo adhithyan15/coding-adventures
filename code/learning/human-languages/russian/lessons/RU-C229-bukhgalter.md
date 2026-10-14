@@ -14,7 +14,8 @@ romanization: "bukhgálter"
 concept_tag: RU-RABOTA229-BUKHGALTER
 prerequisites: [RU-C228-imya, RU-C229-sekretar]
 sounds: []
-roots: []
+roots: [german-buchhalter]
+etymology_hook: "бухгалтер ← German Buchhalter 'book-keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C229-sekretar]
 <!-- hl-knowledge: introduces=[RU-LEX-C229-RABOTA229-02]; assesses=[] -->
 
 **бухгалтер** (*bukhgálter*) — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бухгалтер** — from Peter the Great's time; it comes from German *Buchhalter*, "book-keeper" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

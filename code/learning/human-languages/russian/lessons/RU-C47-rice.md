@@ -14,7 +14,8 @@ romanization: "ris"
 concept_tag: RU-PANTRY-RICE
 prerequisites: [RU-C47-sugar, RU-C47-honey]
 sounds: []
-roots: []
+roots: [oryza-latin]
+etymology_hook: "рис probably came through Low German rīs or Dutch rijs, from Romance, from Greek oryza"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C47-honey]
 <!-- hl-knowledge: introduces=[RU-LEX-C47-PANTRY-03]; assesses=[] -->
 
 **рис** (*ris*) — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рис** probably came through Low German *rîs* or Dutch *rijs*, from Italian *riso*, from Latin *oryza* and Greek *óryza*, which came out of India (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

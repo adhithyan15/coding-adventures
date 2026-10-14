@@ -14,7 +14,8 @@ romanization: "lisá"
 concept_tag: RU-ANIMALS2-FOX
 prerequisites: [RU-C61-wolf, RU-C61-bear]
 sounds: []
-roots: []
+roots: [slavic-lisu]
+etymology_hook: "лиса: Vasmer calls the origin unclear; a link with Latin vulpes 'fox' is guesswork"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C61-bear]
 <!-- hl-knowledge: introduces=[RU-LEX-C61-ANIMALS2-05]; assesses=[] -->
 
 **лиса** (*lisá*) — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лиса** goes with *лис*, "a fox", Old Church Slavonic *лиса*. Vasmer calls the origin unclear: tracing it to the family of Latin *vulpēs* and Lithuanian *lãpė*, "fox", is guesswork, he says, and other links are doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

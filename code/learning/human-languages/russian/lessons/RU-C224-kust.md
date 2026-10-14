@@ -14,7 +14,8 @@ romanization: "kust"
 concept_tag: RU-VESHCH224-KUST
 prerequisites: [RU-C224-yel, RU-C224-sosna]
 sounds: []
-roots: []
+roots: [slavic-kustu]
+etymology_hook: "куст ← Proto-Slavic *kŭstŭ; Lithuanian kúokštas 'a bush' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C224-sosna]
 <!-- hl-knowledge: introduces=[RU-LEX-C224-VESHCH224-04]; assesses=[] -->
 
 **куст** (*kust*) — "a bush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**куст** ← Proto-Slavic *\*kŭstŭ* — inherited. Vasmer relates it to Lithuanian *kúokštas*, "a bush", and *kùkštas*, "a tuft of straw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

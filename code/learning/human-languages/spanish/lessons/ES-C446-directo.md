@@ -11,6 +11,7 @@ concept_tag: ES-QUAL-DIRECTO
 prerequisites: [ES-C446-acompanar, ES-C401-recto, ES-C400-tren]
 sounds: [k-hard, stress-penultimate]
 roots: [dirigere-latin]
+etymology_hook: "directo — di- + recto, Latin rectus 'straightened': dirigere, to set straight"
 duration:
   max_seconds: 275
 requires:

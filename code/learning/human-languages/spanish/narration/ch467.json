@@ -4,7 +4,7 @@
   "chapter": 467,
   "title": "El huerto comunitario",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:21473c93421be13f",
+  "sourceHash": "fnv1a64:b1214917e3f39feb",
   "lessons": [
     {
       "id": "ES-C467-producir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cf9fcbf28839168",
+      "sourceHash": "fnv1a64:fd6affa2b3b6064f",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98dbe8ba9d3068c6",
+      "sourceHash": "fnv1a64:5bda7855e0ca9e42",
       "notice": null,
       "blocks": [
         {
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7203a28619b7f4de",
+      "sourceHash": "fnv1a64:9861c139957a3dab",
       "notice": null,
       "blocks": [
         {
@@ -535,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfaf9588e4d9232e",
+      "sourceHash": "fnv1a64:f3bc4c619944797f",
       "notice": null,
       "blocks": [
         {

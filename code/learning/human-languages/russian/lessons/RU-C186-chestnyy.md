@@ -14,7 +14,8 @@ romanization: "chéstnyy"
 concept_tag: RU-KACH186-CHESTNYY
 prerequisites: [RU-C185-naprimer, RU-C186-grubyy]
 sounds: []
-roots: []
+roots: [slavic-chisti]
+etymology_hook: "честный is честь 'honour' + -ный; честь goes with чтить 'to honour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C186-grubyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C186-KACH186-02]; assesses=[] -->
 
 **честный** (*chéstnyy*) — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**честный** is *честь*, "honour", with *-ный*. Vasmer puts *честь* with *чтить*, "to honour", and relates it to Sanskrit *cítti-*, "thought, understanding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

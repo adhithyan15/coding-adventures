@@ -14,7 +14,8 @@ romanization: "peresádka"
 concept_tag: RU-VESHCH198-PERESADKA
 prerequisites: [RU-C198-passazhir, RU-C198-vagon]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "пересадка is пере- 'across' + садка, from садить 'to seat': changing seats"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C198-vagon]
 <!-- hl-knowledge: introduces=[RU-LEX-C198-VESHCH198-03]; assesses=[] -->
 
 **пересадка** (*peresádka*) — "a transfer, a change (of trains)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пересадка** is *пере-*, "across", with *-садка*, from *садить*, "to seat": changing from one seat to another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vek"
 concept_tag: RU-TIME85-CENTURY
 prerequisites: [RU-C85-weekend, RU-C85-date]
 sounds: []
-roots: []
+roots: [slavic-veku]
+etymology_hook: "век ← Proto-Slavic *věkŭ 'strength, lifetime'; Lithuanian viẽkas 'strength, life' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C85-date]
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-04]; assesses=[] -->
 
 **век** (*vek*) — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**век** ← Proto-Slavic *\*věkŭ* — inherited; first "strength, a lifetime", then "an age", then "a century". Vasmer relates it to Lithuanian *viẽkas*, "strength, life", and Gothic *weihan*, "to fight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

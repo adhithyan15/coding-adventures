@@ -11,8 +11,8 @@ concept_tag: RU-ADVERB-SLOWLY
 romanization: myédlenna
 prerequisites: [RU-C21-povtorite]
 sounds: []
-roots: []
-etymology_hook: "медленно is built on медлить, 'to delay' — a native Slavic word, so the adverb is literally delayedly rather than slowly"
+roots: [slavic-muditi]
+etymology_hook: "медленно is the adverb of Proto-Slavic *mŭdĭlĭnŭ 'slow', with медлить 'to delay' (Vasmer)"
 duration:
   max_seconds: 250
 requires:
@@ -49,12 +49,12 @@ reviews_of: [RU-C21-povtorite, RU-C17-drugoy, RU-C05-brat]
 - **медленно** — *myédlenna* — **slowly**
 
 Stress the first syllable, and let the two unstressed **о** and **е** at the end
-soften: *MYÉD-len-na*.
+soften: *MYÉD-len-na*. It is the adverb of the Russian word for "slow", Proto-Slavic
+*\*mŭdĭlĭnŭ*, with *медлить*, "to delay" (Vasmer).
 
 Its shape is worth a moment. Russian makes an adverb by putting **-о** on the end
 of a describing word, and that is the whole rule — no ending to agree with
-anything, nothing to change. It is the simplest piece of grammar in this chapter
-and one of the most productive in the language.
+anything, nothing to change. It is one of the most productive rules in the language.
 
 ## Grammar lens — the second repair move
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-GOVORITE-MEDLENNO-01]; assesses=[RU-LEX-MEDLENNO-01, RU-LEX-GOVORIT, RU-GRAMMAR-IMPERATIVE-ITE-01, RU-LEX-POVTORITE-01] -->

@@ -14,7 +14,8 @@ romanization: "bogátyy"
 concept_tag: RU-KACH156-BOGATYY
 prerequisites: [RU-C155-lenivyy, RU-C155-vezhlivyy]
 sounds: []
-roots: []
+roots: [slavic-bogu]
+etymology_hook: "богатый is from *bogŭ, either 'god' or 'a share, wealth'; Vasmer gives both"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C155-vezhlivyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C156-KACH156-01]; assesses=[] -->
 
 **богатый** (*bogátyy*) — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**богатый** comes from Proto-Slavic *\*bogŭ*: Vasmer gives both readings, "god", so "favoured by the gods" like Latin *fortūnātus*, and "a share, wealth", as in *убогий*, "poor", "without a share".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "márka"
 concept_tag: RU-VESHCH161-MARKA
 prerequisites: [RU-C161-anketa, RU-C161-konvert]
 sounds: []
-roots: []
+roots: [marka-germanic]
+etymology_hook: "марка ← German Marke 'a mark, a token', from merken 'to notice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C161-konvert]
 <!-- hl-knowledge: introduces=[RU-LEX-C161-VESHCH161-03]; assesses=[] -->
 
 **марка** (*márka*) — "a postage stamp; a brand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**марка** comes from German *Marke*, "a mark, a sign", Middle High German *marc*, from *merken*, "to notice" (Vasmer). The *марка* that names the old German coin is German *Mark*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

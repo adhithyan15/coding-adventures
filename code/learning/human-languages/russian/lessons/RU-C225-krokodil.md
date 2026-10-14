@@ -14,7 +14,8 @@ romanization: "krokodíl"
 concept_tag: RU-VESHCH225-KROKODIL
 prerequisites: [RU-C224-kust, RU-C224-ovtsa]
 sounds: []
-roots: []
+roots: [greek-krokodeilos]
+etymology_hook: "крокодил is a western loan, perhaps through German Krokodil, from Latin crocodilus, Greek krokodeilos"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C224-ovtsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C225-VESHCH225-01]; assesses=[] -->
 
 **крокодил** (*krokodíl*) — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**крокодил** is a western loan, perhaps through German *Krokodil*, from Latin *crocodīlus*, Greek *krokódeilos*; Old Russian *korkodilŭ* came straight from Greek (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

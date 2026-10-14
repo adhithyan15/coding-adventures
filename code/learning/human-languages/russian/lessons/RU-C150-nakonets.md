@@ -14,7 +14,8 @@ romanization: "nakonéts"
 concept_tag: RU-VREMYA150-NAKONETS
 prerequisites: [RU-C150-kazhdyy, RU-C150-snachala]
 sounds: []
-roots: []
+roots: [slavic-chenti]
+etymology_hook: "наконец is на 'at' + конец 'the end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C150-snachala]
 <!-- hl-knowledge: introduces=[RU-LEX-C150-VREMYA150-04]; assesses=[] -->
 
 **наконец** (*nakonéts*) — "at last, finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наконец** is *на*, "at, on", with *конец*, "the end". Vasmer relates *конец* to Latin *recēns*, "fresh", and Old Irish *cinim*, "I arise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "róza"
 concept_tag: RU-VESHCH195-ROZA
 prerequisites: [RU-C195-vetka, RU-C195-koren]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "роза came through German Rose from Latin rosa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C195-koren]
 <!-- hl-knowledge: introduces=[RU-LEX-C195-VESHCH195-04]; assesses=[] -->
 
 **роза** (*róza*) — "a rose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**роза** came through German *Rose* from Latin *rosa*, "a rose" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

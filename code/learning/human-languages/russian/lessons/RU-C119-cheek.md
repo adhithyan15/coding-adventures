@@ -14,7 +14,8 @@ romanization: "shcheká"
 concept_tag: RU-THINGS119-CHEEK
 prerequisites: [RU-C119-ankle, RU-C119-wrist]
 sounds: []
-roots: []
+roots: [slavic-shcheka]
+etymology_hook: "щека: Vasmer reports a link with Old Norse skegg 'beard', and doubts others"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C119-wrist]
 <!-- hl-knowledge: introduces=[RU-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **щека** (*shcheká*) — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**щека** ← Proto-Slavic *\*ščeka* — inherited. It is thought to be related to Old Norse *skegg*, "beard", and *skagi*, "a cape" (Vasmer); dialects use it for a steep river bank.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

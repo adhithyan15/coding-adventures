@@ -14,7 +14,8 @@ romanization: "sport"
 concept_tag: RU-THINGS112-SPORT
 prerequisites: [RU-C112-page, RU-C112-music]
 sounds: []
-roots: []
+roots: [english-sport]
+etymology_hook: "спорт ← English sport, short for disport 'amusement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C112-music]
 <!-- hl-knowledge: introduces=[RU-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **спорт** (*sport*) — "sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спорт** comes from English *sport*, cut from *disport*, "amusement", from Old French *desporter*, "to carry away (from work)" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

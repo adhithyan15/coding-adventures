@@ -11,6 +11,7 @@ concept_tag: ES-ASK-ESTADO
 prerequisites: [ES-C473-recomendar, ES-C04-estar, ES-C431-pedido]
 sounds: [d-soft, stress-penultimate]
 roots: [stare-latin]
+etymology_hook: "estado ← Latin status 'a standing', from stare 'to stand' — English state, estate"
 duration:
   max_seconds: 275
 requires:

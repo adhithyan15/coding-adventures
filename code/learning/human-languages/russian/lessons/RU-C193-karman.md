@@ -14,7 +14,8 @@ romanization: "karmán"
 concept_tag: RU-VESHCH193-KARMAN
 prerequisites: [RU-C193-shlyapa, RU-C193-remen]
 sounds: []
-roots: []
+roots: [turkic-karman]
+etymology_hook: "карман: Turkic karman is either its source or a loan from Russian; Vasmer reports both"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C193-remen]
 <!-- hl-knowledge: introduces=[RU-LEX-C193-VESHCH193-03]; assesses=[] -->
 
 **карман** (*karmán*) — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**карман** — Old Russian already had the name *Kormanŭ*. Turkic *karman*, "a pocket, a purse", was once taken as the source; Radloff saw it as a loan from Russian, and Räsänen again argued for a Turkic origin (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

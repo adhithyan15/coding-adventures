@@ -14,7 +14,8 @@ romanization: "mésyats"
 concept_tag: RU-TIME1-MONTH
 prerequisites: [RU-C68-day, RU-C68-week]
 sounds: []
-roots: []
+roots: [pie-meh1nos]
+etymology_hook: "месяц ← Proto-Slavic *měsęcĭ 'moon, month'; Latin mensis and English moon are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C68-week]
 <!-- hl-knowledge: introduces=[RU-LEX-C68-TIME1-03]; assesses=[] -->
 
 **месяц** (*mésyats*) — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**месяц** ← Proto-Slavic *\*měsęcĭ*, "moon; month" — inherited. Vasmer lists Sanskrit *mās-*, Greek *mḗn* and Latin *mēnsis*, "month", and Lithuanian *mėnuo*, "moon": English *moon* and *month* are cousins. A month is one round of the moon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6237,6 +6237,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
+    let mut pending_link_styles = Vec::new();
     let mut pending_edge_configs = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
@@ -6335,6 +6336,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
         if let Some(value) = line.strip_prefix("style ") {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("linkStyle ") {
+            pending_link_styles.push(parse_swimlane_link_style(value, line_number)?);
             continue;
         }
         if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
@@ -6464,6 +6469,24 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
         if !matched {
             return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+        }
+    }
+    for (targets, style, line) in pending_link_styles {
+        match targets {
+            SwimlaneLinkStyleTargets::Default => {
+                for edge in &mut diagram.edges {
+                    merge_state_style(&mut edge.style, &style);
+                }
+            }
+            SwimlaneLinkStyleTargets::Indices(indices) => {
+                for index in indices {
+                    let edge = diagram.edges.get_mut(index).ok_or_else(|| swimlane_error(
+                        line,
+                        format!("Swimlane linkStyle references unknown edge index {index}"),
+                    ))?;
+                    merge_state_style(&mut edge.style, &style);
+                }
+            }
         }
     }
     Ok(diagram)
@@ -6643,6 +6666,46 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
         return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
     };
     Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+enum SwimlaneLinkStyleTargets {
+    Default,
+    Indices(Vec<usize>),
+}
+
+fn parse_swimlane_link_style(
+    value: &str,
+    line: usize,
+) -> Result<(SwimlaneLinkStyleTargets, DiagramStyle, usize), ParseError> {
+    let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+    let value = value.trim();
+    let Some(declaration_start) = value.char_indices().find_map(|(index, character)| {
+        if !character.is_whitespace() {
+            return None;
+        }
+        let selector = value[..index].trim_end();
+        let declarations = value[index..].trim_start();
+        (!selector.ends_with(',') && declarations.contains(':')).then_some(index)
+    }) else {
+        return Err(swimlane_error(line, "Swimlane linkStyle requires targets and declarations"));
+    };
+    let selector = value[..declaration_start].trim();
+    let declarations = value[declaration_start..].trim();
+    let targets = if selector.eq_ignore_ascii_case("default") {
+        SwimlaneLinkStyleTargets::Default
+    } else {
+        let indices = selector.split(',').map(str::trim).map(|index| {
+            index.parse::<usize>().map_err(|_| swimlane_error(
+                line,
+                format!("invalid Swimlane linkStyle edge index {index:?}"),
+            ))
+        }).collect::<Result<Vec<_>, _>>()?;
+        if indices.is_empty() {
+            return Err(swimlane_error(line, "Swimlane linkStyle requires at least one edge index"));
+        }
+        SwimlaneLinkStyleTargets::Indices(indices)
+    };
+    Ok((targets, parse_swimlane_style_declarations(declarations, line)?, line))
 }
 
 fn parse_swimlane_edge_config(
@@ -7226,8 +7289,9 @@ fn parse_swimlane_shape_attributes(
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
                     "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
-                    "rounded" | "event" | "state" | "roundedrect" => DiagramShape::RoundedRect,
-                    "circle" | "circ" => DiagramShape::Ellipse,
+                    "rounded" | "event" | "state" | "roundedrect" | "kanbanitem"
+                    | "defaultmindmapnode" => DiagramShape::RoundedRect,
+                    "circle" | "circ" | "mindmapcircle" => DiagramShape::Ellipse,
                     "choice" | "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "hourglass" | "collate" => DiagramShape::Hourglass,
@@ -7249,7 +7313,7 @@ fn parse_swimlane_shape_attributes(
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
-                    "rectwithtitle" => DiagramShape::TitledRect,
+                    "rectwithtitle" | "classbox" | "erbox" | "requirementbox" => DiagramShape::TitledRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
                     "anchor" => DiagramShape::Anchor,

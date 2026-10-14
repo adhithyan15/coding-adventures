@@ -14,7 +14,8 @@ romanization: "khram"
 concept_tag: RU-MESTO153-KHRAM
 prerequisites: [RU-C153-sportzal, RU-C153-mechet]
 sounds: []
-roots: []
+roots: [slavic-khoromu]
+etymology_hook: "храм is Church Slavonic, beside native хоромы 'a mansion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C153-mechet]
 <!-- hl-knowledge: introduces=[RU-LEX-C153-MESTO153-03]; assesses=[] -->
 
 **храм** (*khram*) — "a temple, a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**храм** — taken from Church Slavonic, says Vasmer, beside native *хоромы*, "a large wooden house": *-ра-* against *-оро-*. A temple is the house of God.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

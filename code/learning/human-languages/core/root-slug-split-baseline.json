@@ -107,14 +107,6 @@
       ]
     },
     {
-      "key": "dicere|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "dicere",
-        "dicere-latin"
-      ]
-    },
-    {
       "key": "dies|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -195,14 +187,6 @@
       ]
     },
     {
-      "key": "habitare|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "habitare",
-        "habitare-latin"
-      ]
-    },
-    {
       "key": "ille|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -274,14 +258,6 @@
       "slugs": [
         "magis",
         "magis-latin"
-      ]
-    },
-    {
-      "key": "merces|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "merces",
-        "merces-latin"
       ]
     },
     {
@@ -554,14 +530,6 @@
       "slugs": [
         "sic",
         "sic-latin"
-      ]
-    },
-    {
-      "key": "sperare|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "sperare",
-        "sperare-latin"
       ]
     },
     {

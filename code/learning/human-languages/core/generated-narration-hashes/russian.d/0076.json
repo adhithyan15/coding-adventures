@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 76,
-  "sourceHash": "fnv1a64:fa5275fd84e2dae1",
+  "sourceHash": "fnv1a64:d0a7d25c313ec596",
   "lessonIds": [
     "RU-C76-forty",
     "RU-C76-fifty",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch76.txt",
   "json": "russian/narration/ch76.json",
-  "textHash": "fnv1a64:e984c99e9d000318",
-  "jsonHash": "fnv1a64:765e51f2234ed22d",
+  "textHash": "fnv1a64:1a0d0165d9fcad92",
+  "jsonHash": "fnv1a64:b642e834149d130a",
   "findings": []
 }

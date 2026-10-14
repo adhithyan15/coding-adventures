@@ -14,7 +14,8 @@ romanization: "slúshat"
 concept_tag: RU-VERB-SLUSHAT
 prerequisites: [RU-C40-bezhat, RU-C40-igrat]
 sounds: []
-roots: []
+roots: [pie-klew]
+etymology_hook: "слушать ← Proto-Slavic *slušati, from слух 'hearing'; Lithuanian klausyti 'to listen' and English listen are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C40-igrat]
 <!-- hl-knowledge: introduces=[RU-LEX-C41-VERB4-01]; assesses=[] -->
 
 **слушать** (*slúshat*) — "to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слушать** ← Proto-Slavic *\*slušati*, built on *слух*, "hearing" — inherited. Vasmer relates it to Lithuanian *klausýti*, "to listen", and Old High German *hlosēn*, "to listen"; English *listen* is a cousin, from PIE *\*ḱlew-*, "to hear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

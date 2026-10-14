@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CONCENTRARSE
 prerequisites: [ES-C443-acercarse, ES-C347-centro, ES-C410-examen]
 sounds: [soft-c, stress-final]
 roots: [centrum-latin, kentron-greek]
+etymology_hook: "concentrarse — con- + centro; centro is Latin centrum, Greek kentron 'a goad's point'"
 duration:
   max_seconds: 275
 requires:
@@ -62,6 +63,9 @@ doing it to yourself.
 That is the third verb in this chapter built by putting a prefix and an ending
 on a word you already owned — *acercarse* on *cerca*, *concentrarse* on
 *centro*. Look for the bare word inside before you look anything up.
+
+*Centro* is Latin *centrum*, from Greek *kentron*, the sharp point of a goad,
+and so the fixed point of a pair of compasses.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-04] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CONECTAR
 prerequisites: [ES-C469-impresora, ES-C393-internet, ES-C469-imprimir]
 sounds: [k-hard, stress-final, r-tap]
 roots: [connect-english, nectere-latin]
+etymology_hook: "conectar ← English connect, from Latin conectere: con- + nectere 'to tie'"
 duration:
   max_seconds: 275
 requires:

@@ -14,7 +14,8 @@ romanization: "vyklyuchát"
 concept_tag: RU-VERB-VYKLYUCHAT
 prerequisites: [RU-C175-podnimat, RU-C175-vklyuchat]
 sounds: []
-roots: []
+roots: [pie-kleh2w]
+etymology_hook: "выключать is вы- 'out' + ключать, from ключ 'a key': to shut out, to switch off"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C175-vklyuchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C175-ACT175-04]; assesses=[] -->
 
 **выключать** (*vyklyuchát*) — "to switch off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выключать** is *вы-*, "out", with *-ключать*, from *ключ*, "a key": to shut out, to switch off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

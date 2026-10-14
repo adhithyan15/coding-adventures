@@ -12,6 +12,9 @@ Before the new one: say the Russian for first, then the Russian for second.
 You'll want to know: голова.
 голова (golová) — "the head".
 
+The word, taken apart.
+голова (golová) from Proto-Slavic golva, "head" — inherited, and a cousin of Lithuanian galvà, "head" (Vasmer). East Slavic says -оло- where Church Slavonic says -ла-, so the same word came back from church books as глава, "chapter; the head of something".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for second, then the Russian for the head.
 
 You'll want to know: рука.
 рука (ruká) — "a hand, an arm". One word for both.
+
+The word, taken apart.
+рука (ruká) from Proto-Slavic rǫka, "hand" — inherited; the old nasal ǫ became Russian у. Vasmer pairs it with Lithuanian rankà, "hand", and links both with Lithuanian riñkti, "to gather": the hand as the gatherer.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for the head, then the Russian for a hand.
 You'll want to know: нога.
 нога (nogá) — "a leg, a foot". One word for both, like рука (ruká).
 
+The word, taken apart.
+нога (nogá) from Proto-Slavic noga — inherited. Vasmer gives "claw" as the first sense and lists Lithuanian nagà, "hoof", Latin unguis, "nail", and Old High German nagal, "nail": English nail is a cousin, from PIE h₃nogʷʰ-, "nail, claw".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for a hand, then the Russian for a leg.
 You'll want to know: живот.
 живот (zhivót) — "the belly".
 
+The word, taken apart.
+живот (zhivót) from Proto-Slavic životŭ, "life" — inherited, from the root of жить, "to live". Old Russian životŭ meant "life, property"; "belly" came later (Vasmer). Lithuanian gyvatà, "life", and Latin vīta, "life", are cousins (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for a leg, then the Russian for the belly.
 
 You'll want to know: зуб.
 зуб (zub) — "a tooth".
+
+The word, taken apart.
+зуб (zub) from Proto-Slavic zǫbŭ, "tooth" — inherited. Vasmer sets it beside Sanskrit jámbha-, "tooth", Greek gómphos, "peg", and Old High German kamb, "comb", so English comb is a cousin, from PIE ǵómbʰos, "tooth, peg".
 
 What you've built.
 One more word for this chapter.

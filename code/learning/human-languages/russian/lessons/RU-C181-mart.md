@@ -14,7 +14,8 @@ romanization: "mart"
 concept_tag: RU-VREMYA181-MART
 prerequisites: [RU-C181-yanvar, RU-C181-fevral]
 sounds: []
-roots: []
+roots: [latin-martius]
+etymology_hook: "март came through Byzantine Greek martios from Latin martius, the month of Mars"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C181-fevral]
 <!-- hl-knowledge: introduces=[RU-LEX-C181-VREMYA181-03]; assesses=[] -->
 
 **март** (*mart*) — "March".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**март** — Old Russian *marŭtŭ*; it came through Byzantine Greek *mártios* from Latin *mārtius*, the month of Mars (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

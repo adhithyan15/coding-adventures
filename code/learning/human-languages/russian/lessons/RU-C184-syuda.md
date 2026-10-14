@@ -14,7 +14,8 @@ romanization: "syudá"
 concept_tag: RU-MESTO184-SYUDA
 prerequisites: [RU-C184-vezde, RU-C184-tuda]
 sounds: []
-roots: []
+roots: [slavic-si]
+etymology_hook: "сюда is built like куда 'where to' and туда 'there', on the old pronoun сь 'this'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C184-tuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C184-MESTO184-04]; assesses=[] -->
 
 **сюда** (*syudá*) — "to here, this way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сюда** is built like *куда*, "where to", and *туда*, "there", on the old pronoun *\*sĭ*, "this" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

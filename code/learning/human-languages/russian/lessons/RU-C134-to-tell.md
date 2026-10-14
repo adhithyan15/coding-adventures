@@ -14,7 +14,8 @@ romanization: "rasskázyvat"
 concept_tag: RU-VERB-TO-TELL
 prerequisites: [RU-C133-to-rent, RU-C133-to-repair]
 sounds: []
-roots: []
+roots: [slavic-kazati]
+etymology_hook: "рассказывать is рас- + сказывать, from сказать 'to say', from казать 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C133-to-repair]
 <!-- hl-knowledge: introduces=[RU-LEX-C134-ACT134-01]; assesses=[] -->
 
 **рассказывать** (*rasskázyvat*) — "to tell (a story)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рассказывать** is *рас-*, "out, through", with *-сказывать*, from *сказать*, "to say", which Vasmer derives from *казать*, "to show": telling is showing in words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

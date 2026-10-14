@@ -14,7 +14,8 @@ romanization: "mýlo"
 concept_tag: RU-THINGS96-SOAP
 prerequisites: [RU-C95-blanket, RU-C96-towel]
 sounds: []
-roots: []
+roots: [slavic-myti]
+etymology_hook: "мыло ← Proto-Slavic *mydlo, from мыть 'to wash': what you wash with"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C96-towel]
 <!-- hl-knowledge: introduces=[RU-LEX-C96-THINGS96-02]; assesses=[] -->
 
 **мыло** (*mýlo*) — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мыло** ← Proto-Slavic *\*mydlo*, built on *мыть*, "to wash" (Vasmer): the thing you wash with.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

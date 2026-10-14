@@ -14,7 +14,8 @@ romanization: "raschyóska"
 concept_tag: RU-THINGS96-COMB
 prerequisites: [RU-C96-soap, RU-C96-toothbrush]
 sounds: []
-roots: []
+roots: [slavic-chesati]
+etymology_hook: "расчёска is рас- + чесать 'to comb' + -ка; Lithuanian kasyti 'to scratch' is a cousin of чесать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C96-toothbrush]
 <!-- hl-knowledge: introduces=[RU-LEX-C96-THINGS96-04]; assesses=[] -->
 
 **расчёска** (*raschyóska*) — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**расчёска** is *рас-*, "apart", with *чесать*, "to comb", and *-ка*. *чесать* ← Proto-Slavic *\*česati*, a cousin of Lithuanian *kasýti*, "to scratch" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

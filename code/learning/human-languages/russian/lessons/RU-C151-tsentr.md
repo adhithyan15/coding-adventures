@@ -14,7 +14,8 @@ romanization: "tsentr"
 concept_tag: RU-MESTO151-TSENTR
 prerequisites: [RU-C150-yeshchyo, RU-C151-mesto]
 sounds: []
-roots: []
+roots: [centrum-latin]
+etymology_hook: "центр came through German Zentrum from Latin centrum, Greek kentron 'the point of a compass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C151-mesto]
 <!-- hl-knowledge: introduces=[RU-LEX-C151-MESTO151-02]; assesses=[] -->
 
 **центр** (*tsentr*) — "the centre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**центр** — recorded from the 1600s; it came through German *Zentrum* from Latin *centrum*, Greek *kéntron*, "a sharp point; the fixed leg of a compass" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "svetofór"
 concept_tag: RU-LOC89-TRAFFIC-LIGHTS
 prerequisites: [RU-C89-corner, RU-C89-crossroads]
 sounds: []
-roots: []
+roots: [slavic-svetu]
+etymology_hook: "светофор is свет 'light' + -фор, from Greek -phoros 'carrying': a light-carrier"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C89-crossroads]
 <!-- hl-knowledge: introduces=[RU-LEX-C89-LOC89-05]; assesses=[] -->
 
 **светофор** (*svetofór*) — "traffic lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**светофор** is *свет*, "light", with *-фор*, from Greek *-phóros*, "carrying": "light-bearer", a Soviet coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

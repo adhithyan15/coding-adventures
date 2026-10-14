@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 491,
-  "sourceHash": "fnv1a64:60c6cf14f152125b",
+  "sourceHash": "fnv1a64:a3c225753912e9c6",
   "lessonIds": [
     "ES-C491-recibo",
     "ES-C491-oferta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch491.txt",
   "json": "spanish/narration/ch491.json",
-  "textHash": "fnv1a64:2a3fad0bc548caed",
-  "jsonHash": "fnv1a64:7b0f403af8208ee2",
+  "textHash": "fnv1a64:371fa7a16d2dec6e",
+  "jsonHash": "fnv1a64:3ecea19b5bbb945a",
   "findings": []
 }

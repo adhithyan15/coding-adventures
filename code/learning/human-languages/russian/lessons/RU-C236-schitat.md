@@ -14,7 +14,8 @@ romanization: "schitát"
 concept_tag: RU-VERB-SCHITAT
 prerequisites: [RU-C235-ulybatsya, RU-C235-serditsya]
 sounds: []
-roots: []
+roots: [slavic-chisti]
+etymology_hook: "считать is с- + читать, which once meant 'to count'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C235-serditsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C236-ACT236-01]; assesses=[] -->
 
 **считать** (*schitát*) — "to count; to consider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**считать** is *с-* with *читать*, "to read", which once meant "to count", as in *число*, "a number".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

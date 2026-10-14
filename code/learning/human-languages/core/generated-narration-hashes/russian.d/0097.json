@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 97,
-  "sourceHash": "fnv1a64:5f62da71eb5c438a",
+  "sourceHash": "fnv1a64:c5c69d357f590bb0",
   "lessonIds": [
     "RU-C97-broom",
     "RU-C97-washing-machine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch97.txt",
   "json": "russian/narration/ch97.json",
-  "textHash": "fnv1a64:62890b83a683a3f9",
-  "jsonHash": "fnv1a64:d13fe49aeed3993b",
+  "textHash": "fnv1a64:fe2760ebe1306b4a",
+  "jsonHash": "fnv1a64:94321ffb997403ab",
   "findings": []
 }

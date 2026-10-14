@@ -10,7 +10,8 @@ gloss: "the job, employment"
 concept_tag: ES-REF-EMPLEO
 prerequisites: [ES-C489-ayuntamiento, ES-C489-buzon]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "empleo — from emplear, French employer, Latin implicare 'to fold in' — English employ"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C489-buzon]
 > *I am looking for a job as a cook.*
 
 *Oficina de empleo* — job centre.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empleo** is the noun of *emplear*, "to use, to employ", taken from French *employer*, which goes back to Latin *implicare*, "to fold in, to involve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

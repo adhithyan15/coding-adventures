@@ -14,7 +14,8 @@ romanization: "doch"
 concept_tag: RU-FAMILY1-DAUGHTER
 prerequisites: [RU-C34-tiredness, RU-C35-son]
 sounds: []
-roots: []
+roots: [pie-dhugh2ter]
+etymology_hook: "дочь ← Proto-Slavic *dŭťi; English daughter, German Tochter and Greek thygatēr are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C35-son]
 <!-- hl-knowledge: introduces=[RU-LEX-C35-FAMILY1-02]; assesses=[] -->
 
 **дочь** (*doch*) — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дочь** ← Proto-Slavic *\*dŭťi*, Old Russian *дочи* — inherited from PIE *\*dʰugh₂tḗr*, "daughter". Vasmer lists Lithuanian *duktė*, Sanskrit *duhitā*, Greek *thygátēr* and Gothic *daúhtar*: English *daughter* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

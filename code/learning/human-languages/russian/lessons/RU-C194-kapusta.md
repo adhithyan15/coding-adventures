@@ -14,7 +14,8 @@ romanization: "kapústa"
 concept_tag: RU-VESHCH194-KAPUSTA
 prerequisites: [RU-C194-pelmeni, RU-C194-salat]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "капуста is probably a blend of Latin composita 'mixed' and Old High German chapuz 'cabbage head', from Latin caput"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C194-salat]
 <!-- hl-knowledge: introduces=[RU-LEX-C194-VESHCH194-03]; assesses=[] -->
 
 **капуста** (*kapústa*) — "cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**капуста** — recorded from 1193; Vasmer thinks it probably blends Medieval Latin *composita*, Italian *composta*, "a mixture, pickled greens", with Old High German *chapuz*, "cabbage", from Latin *caputium*, "a cabbage head", from *caput*, "head".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

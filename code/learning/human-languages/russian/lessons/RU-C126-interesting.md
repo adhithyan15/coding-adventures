@@ -14,7 +14,8 @@ romanization: "interésnyy"
 concept_tag: RU-QUAL126-INTERESTING
 prerequisites: [RU-C126-famous, RU-C126-important]
 sounds: []
-roots: []
+roots: [interesse-latin]
+etymology_hook: "интересный is from интерес, through Polish interes or German Interesse, Latin interesse 'to matter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C126-important]
 <!-- hl-knowledge: introduces=[RU-LEX-C126-QUAL126-04]; assesses=[] -->
 
 **интересный** (*interésnyy*) — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**интересный** is built on *интерес*, "interest", recorded from 1703, which came perhaps through Polish *interes* or German *Interesse* from Medieval Latin *interesse*, "to matter" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

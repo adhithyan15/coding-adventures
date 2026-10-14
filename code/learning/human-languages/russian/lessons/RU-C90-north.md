@@ -14,7 +14,8 @@ romanization: "séver"
 concept_tag: RU-LOC90-NORTH
 prerequisites: [RU-C90-car-park, RU-C90-lift]
 sounds: []
-roots: []
+roots: [slavic-severu]
+etymology_hook: "север ← Proto-Slavic *sěverŭ, first 'north wind'; Lithuanian šiaurỹs 'north wind' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C90-lift]
 <!-- hl-knowledge: introduces=[RU-LEX-C90-LOC90-03]; assesses=[] -->
 
 **север** (*séver*) — "the north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**север** ← Proto-Slavic *\*sěverŭ* — inherited; dialects still use *сивер* for "the north wind". Vasmer relates it to Lithuanian *šiaurỹs*, "north wind", and Latin *caurus*, "north-west wind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

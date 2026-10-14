@@ -11,6 +11,7 @@ concept_tag: ES-THING-CARRITO
 prerequisites: [ES-C444-cubrir, ES-C391-supermercado, ES-C363-coche]
 sounds: [rolled-rr, stress-penultimate]
 roots: [carrus-latin]
+etymology_hook: "carrito — carro 'cart' + -ito; carro is Latin carrus, from Gaulish — English car, carry"
 duration:
   max_seconds: 285
 requires:

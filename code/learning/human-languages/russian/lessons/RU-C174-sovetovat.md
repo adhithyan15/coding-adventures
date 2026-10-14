@@ -14,7 +14,8 @@ romanization: "sovétovat"
 concept_tag: RU-VERB-SOVETOVAT
 prerequisites: [RU-C173-zharit, RU-C173-nalivat]
 sounds: []
-roots: []
+roots: [vet]
+etymology_hook: "советовать is from совет 'advice', со- + вет 'counsel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C173-nalivat]
 <!-- hl-knowledge: introduces=[RU-LEX-C174-ACT174-01]; assesses=[] -->
 
 **советовать** (*sovétovat*) — "to advise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**советовать** comes from *совет*, "advice", *со-*, "together", with old *вет*, "counsel, word" (Vasmer), the root also of *ответ*, "answer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "igrá"
 concept_tag: RU-THINGS113-GAME
 prerequisites: [RU-C112-music, RU-C112-sport]
 sounds: []
-roots: []
+roots: [slavic-igra]
+etymology_hook: "игра ← Proto-Slavic *jĭgra; Vasmer relates it to Sanskrit ejati 'stirs, moves'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C112-sport]
 <!-- hl-knowledge: introduces=[RU-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **игра** (*igrá*) — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**игра** ← Proto-Slavic *\*jĭgra* — inherited. Vasmer relates it to Lithuanian *áikštytis*, "to be playful", and Sanskrit *ejati*, "stirs, moves".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

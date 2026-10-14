@@ -1655,6 +1655,31 @@ fn swimlane_internal_rect_with_title_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_container_shapes_reach_shared_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  card@{ shape: kanbanItem, label: \"Card\" }\n  topic@{ shape: mindmapCircle, label: \"Topic\" }\n  branch@{ shape: defaultMindmapNode, label: \"Branch\" }\nend\ncard --> topic --> branch",
+    ).expect("Mermaid 11.16.1 internal container shapes should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::RoundedRect,
+        &DiagramShape::Ellipse,
+        &DiagramShape::RoundedRect,
+    ]);
+}
+
+#[test]
+fn swimlane_internal_compartment_shapes_reach_titled_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Internal\n  classifier@{ shape: classBox, label: \"Class\" }\n  entity@{ shape: erBox, label: \"Entity\" }\n  requirement@{ shape: requirementBox, label: \"Requirement\" }\nend\nclassifier --> entity --> requirement",
+    ).expect("Mermaid 11.16.1 internal compartment shapes should parse");
+
+    assert!(diagram.nodes.iter().all(|node|
+        node.shape == diagram_ir::DiagramShape::TitledRect));
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 
@@ -2268,6 +2293,21 @@ fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
     assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
     assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
     assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
+fn swimlane_positional_link_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;",
+    ).expect("positional link styles should parse");
+
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#64748b"));
+    assert_eq!(diagram.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(2.0));
+    assert_eq!(diagram.edges[2].style.stroke_dash.as_deref(), Some([7.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[2].style.text_color.as_deref(), Some("#991b1b"));
 }
 
 #[test]

@@ -14,7 +14,8 @@ romanization: "gúby"
 concept_tag: RU-THINGS119-LIPS
 prerequisites: [RU-C119-wrist, RU-C119-cheek]
 sounds: []
-roots: []
+roots: [slavic-goba]
+etymology_hook: "губы is the plural of губа 'lip'; its deeper origin is unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C119-cheek]
 <!-- hl-knowledge: introduces=[RU-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **губы** (*gúby*) — "lips".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**губы** is the plural of *губа*, "lip", Proto-Slavic *\*gǫba*. Its deeper origin is unclear: Vasmer weighs Greek *gamphaí*, "jaws", and the *губа* that means "sponge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

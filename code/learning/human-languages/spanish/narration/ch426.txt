@@ -59,6 +59,7 @@ Many Spanish surnames contain a small word: de, del, la, las. Whether it is capi
 written: with the first name. form: Pedro de la Cruz.
 written: without it. form: el señor De la Cruz.
 With the forename present, the small word is lower-case. Standing alone at the head of the name, it takes the capital.
+Inicial is Latin initialis, "at the beginning" (Lewis & Short), from initium, "a beginning".
 
 Grammar Lens: why the rule has that shape.
 It is not arbitrary. De originally meant from — Pedro de la Cruz was Pedro from the Cross, a description of where he came from rather than a name. A description does not take a capital, which is the rule from the last lesson exactly.
@@ -97,6 +98,7 @@ short: D. full: don, a courtesy title before a first name.
 short: Dña. full: doña, its feminine.
 short: Dr. full: doctor, blank.
 The point is not decoration. Sr without it is an error, because the point is what marks the word as shortened.
+Abreviatura is Late Latin abbreviatura, from brevis, "short".
 
 Grammar Lens: don and señor are not the same word.
 The distinction is one an English speaker has no equivalent for:
@@ -140,6 +142,7 @@ written: 1.ª. read: primera.
 written: 2.º. read: segundo.
 written: n.º. read: número.
 English writes 1st and 2nd, changing the ending with the number. Spanish writes the same raised letter every time and changes it only for gender: º for a masculine word, ª for a feminine one.
+Voladita is built on volar, "to fly", Latin volare, with the small-ending -ita.
 
 Grammar Lens: the point goes before the raised letter.
 [a table of 2 rows, read aloud]
@@ -178,6 +181,7 @@ Unlike an abbreviation, a sigla takes no points at all:
 correct: DNI. wrong: D.N.I.
 correct: ONU. wrong: O.N.U.
 The two you will actually meet on a form are DNI — Documento Nacional de Identidad, the Spanish identity card — and UE, the European Union.
+Sigla is Late Latin sigla, "abbreviations" (Lewis & Short), a plural taken as one word.
 
 Grammar Lens: the plural, which is the strange part.
 A sigla does not take an -s in writing. It is made plural by doubling its letters, with a space in the middle:
@@ -219,6 +223,7 @@ kg means kilogram.
 h means hour.
 km is never km. and never kms. A symbol has no plural and no point, because it is not a shortened Spanish word — it is the same sign in every language.
 You have already read one in use: km/h, which you learned to say aloud as kilómetros por hora.
+Símbolo is Latin symbolus, "a sign, a token" (Lewis & Short), from Greek symbolon.
 
 Grammar Lens: the compass, and where the euro goes.
 The four points of the compass have symbols that match their Spanish names, and one does not match the English:

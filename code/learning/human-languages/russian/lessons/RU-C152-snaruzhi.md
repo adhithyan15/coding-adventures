@@ -14,7 +14,8 @@ romanization: "snarúzhi"
 concept_tag: RU-MESTO152-SNARUZHI
 prerequisites: [RU-C152-vokrug, RU-C152-vnutri]
 sounds: []
-roots: []
+roots: [slavic-ruzh]
+etymology_hook: "снаружи is с 'from' + наружи, from dialect ружь 'outward look'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C152-vnutri]
 <!-- hl-knowledge: introduces=[RU-LEX-C152-MESTO152-04]; assesses=[] -->
 
 **снаружи** (*snarúzhi*) — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**снаружи** is *с*, "from", with *наружи*, "outside", built on dialect *ружь*, "the outward look" (Vasmer), which he relates to Latvian *raũdzît*, "to look".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

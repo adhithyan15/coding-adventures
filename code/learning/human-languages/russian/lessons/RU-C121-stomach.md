@@ -14,7 +14,8 @@ romanization: "zhelúdok"
 concept_tag: RU-THINGS121-STOMACH
 prerequisites: [RU-C121-nail-2, RU-C121-skin]
 sounds: []
-roots: []
+roots: [slavic-zheludu]
+etymology_hook: "желудок: some tie it to жёлудь 'acorn', others doubt the link"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C121-skin]
 <!-- hl-knowledge: introduces=[RU-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **желудок** (*zhelúdok*) — "a stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**желудок** — Old Russian also *желудь*, "stomach". Brückner and Mladenov linked it with *жёлудь*, "acorn", but others reject this because the accents differ, Vasmer reports; Lithuanian *skilándis*, "a stuffed pig's stomach", is built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

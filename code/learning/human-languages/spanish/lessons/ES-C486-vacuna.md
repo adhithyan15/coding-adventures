@@ -10,7 +10,8 @@ gloss: "the vaccine"
 concept_tag: ES-REF-VACUNA
 prerequisites: [ES-C486-respirar, ES-C486-aspirina]
 sounds: []
-roots: []
+roots: [vacca-latin]
+etymology_hook: "vacuna — built on vacuno 'of cattle', Latin vacca 'cow': the first vaccine used cowpox"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C486-aspirina]
 > *The vaccine is free for older people.*
 
 *Vacunarse* — to get vaccinated.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vacuna** is built on *vacuno*, "of cattle" (EtymDB 2.1), from Latin *vacca*, "cow": the first vaccine, in 1796, was made from cowpox.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

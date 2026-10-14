@@ -14,7 +14,8 @@ romanization: "famíliya"
 concept_tag: RU-VESHCH255-FAMILIYA
 prerequisites: [RU-C254-roditeli, RU-C254-plemyannik]
 sounds: []
-roots: []
+roots: [familia-latin]
+etymology_hook: "фамилия came through Polish familia or German Familie from Latin familia 'a household'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C254-plemyannik]
 <!-- hl-knowledge: introduces=[RU-LEX-C255-VESHCH255-01]; assesses=[] -->
 
 **фамилия** (*famíliya*) — "a surname".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фамилия** — first "a family", from the early 1700s; it came through Polish *familia* or German *Familie* from Latin *familia*, "a household" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

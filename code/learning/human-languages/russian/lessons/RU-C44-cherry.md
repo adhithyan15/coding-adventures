@@ -14,7 +14,8 @@ romanization: "víshnya"
 concept_tag: RU-FRUIT-CHERRY
 prerequisites: [RU-C44-apple, RU-C44-pear]
 sounds: []
-roots: []
+roots: [slavic-vishnja]
+etymology_hook: "вишня ← Proto-Slavic *višĭnja; German Weichsel 'sour cherry' is a cousin, Vasmer says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C44-pear]
 <!-- hl-knowledge: introduces=[RU-LEX-C44-FRUIT-04]; assesses=[] -->
 
 **вишня** (*víshnya*) — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вишня** ← Proto-Slavic *\*višĭnja* — inherited. Vasmer relates it to Old High German *wîhsila*, "sour cherry", and through it to Latin *viscum*, "birdlime", because cherry gum and mistletoe berries were both used to snare birds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

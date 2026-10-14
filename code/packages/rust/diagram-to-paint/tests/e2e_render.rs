@@ -3890,6 +3890,16 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.classes")),
                     Some(&"urgent".to_string()));
             }
+            if fixture_name == "positional-link-styles" {
+                assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+                assert_eq!(layout.edges[1].style.stroke.as_deref(), Some("#64748b"));
+                assert_eq!(layout.edges[2].style.stroke.as_deref(), Some("#dc2626"));
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626")
+                        && path.stroke_width == Some(5.0)
+                        && path.stroke_dash.as_deref() == Some(&[7.0, 3.0])
+                )).count(), 2, "positional link styles must lower to backend-neutral path paint");
+            }
             if fixture_name == "edge-animation-config" {
                 assert!(layout.edges.iter().all(|edge| edge.animate));
                 assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
@@ -4053,6 +4063,29 @@ line "Target" [35, 50, 68, 82]"##,
                             matches!(command, PathCommand::QuadTo { .. })).count() == 4
                             && path.commands.len() == 12
                 )), "rectWithTitle must lower to a rounded container and title divider");
+            }
+            if fixture_name == "internal-container-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Ellipse,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                ]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "mindmapCircle must retain circular paint geometry");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius.unwrap_or_default() > 2.0
+                )).count() >= 2, "internal card and branch nodes must retain rounded paint geometry");
+            }
+            if fixture_name == "internal-compartment-shapes" {
+                assert!(layout.nodes.iter().all(|node|
+                    node.shape == diagram_ir::DiagramShape::TitledRect));
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path)
+                        if path.commands.iter().filter(|command|
+                            matches!(command, PathCommand::QuadTo { .. })).count() == 4
+                            && path.commands.len() == 12
+                )).count(), 3, "internal compartment shapes must retain title-divider geometry");
             }
             if fixture_name == "legacy-internal-shape-aliases" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![

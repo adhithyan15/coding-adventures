@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 167,
-  "sourceHash": "fnv1a64:63f735c975805e75",
+  "sourceHash": "fnv1a64:859e30443d590185",
   "lessonIds": [
     "RU-C167-elektrichka",
     "RU-C167-mototsikl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch167.txt",
   "json": "russian/narration/ch167.json",
-  "textHash": "fnv1a64:595ac0fcf921e8c6",
-  "jsonHash": "fnv1a64:84290b9ccdd8ef2a",
+  "textHash": "fnv1a64:ec0f077d58b5036e",
+  "jsonHash": "fnv1a64:98f2aaffbbfc2d40",
   "findings": []
 }

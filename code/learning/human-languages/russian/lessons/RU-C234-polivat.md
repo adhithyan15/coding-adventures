@@ -14,7 +14,8 @@ romanization: "polivát"
 concept_tag: RU-VERB-POLIVAT
 prerequisites: [RU-C234-podmetat, RU-C234-sazhat]
 sounds: []
-roots: []
+roots: [slavic-liti]
+etymology_hook: "поливать is по- + ливать, from лить 'to pour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C234-sazhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C234-ACT234-03]; assesses=[] -->
 
 **поливать** (*polivát*) — "to water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поливать** is *по-* with *-ливать*, from *лить*, "to pour": to pour over. *лить* is a cousin of Lithuanian *líeti*, "to pour" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

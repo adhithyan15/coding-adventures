@@ -14,7 +14,8 @@ romanization: "khudózhnik"
 concept_tag: RU-RABOTA256-KHUDOZHNIK
 prerequisites: [RU-C256-professor, RU-C256-zhurnalist]
 sounds: []
-roots: []
+roots: [gothic-handags]
+etymology_hook: "художник is from old xudogŭ 'skilled', borrowed from Gothic *handags, from handus 'hand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C256-zhurnalist]
 <!-- hl-knowledge: introduces=[RU-LEX-C256-RABOTA256-03]; assesses=[] -->
 
 **художник** (*khudózhnik*) — "an artist, a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**художник** comes from Old Russian *xudogŭ*, "skilled", from *\*xǫdogŭ*, borrowed from a Gothic *\*handags*, "handy", from *handus*, "hand" (Vasmer). English *hand* is a cousin of the Gothic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

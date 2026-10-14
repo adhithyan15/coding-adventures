@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 130,
-  "sourceHash": "fnv1a64:ee6c2934078b521c",
+  "sourceHash": "fnv1a64:74c63bf4c810c165",
   "lessonIds": [
     "RU-C130-bitter",
     "RU-C130-salty",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch130.txt",
   "json": "russian/narration/ch130.json",
-  "textHash": "fnv1a64:d87fe25159b2b896",
-  "jsonHash": "fnv1a64:7263be78e395a0c3",
+  "textHash": "fnv1a64:37f4b63a8a56bb48",
+  "jsonHash": "fnv1a64:fabb28972f491a48",
   "findings": []
 }

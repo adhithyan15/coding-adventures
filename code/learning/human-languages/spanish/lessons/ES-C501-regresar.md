@@ -10,7 +10,8 @@ gloss: "to come back, to return"
 concept_tag: ES-VERB-REGRESAR
 prerequisites: [ES-C501-viajero, ES-C501-conducir]
 sounds: []
-roots: []
+roots: [gradi-latin]
+etymology_hook: "regresar — from regreso, Latin regressus 'a going back', from regredi 'to step back'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C501-conducir]
 > *We are coming back on Sunday.*
 
 A close twin of *volver*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regresar** is built on *regreso*, "a return", from Latin *regressus*, "a going back" (EtymDB 2.1), from *regredi*, "to step back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

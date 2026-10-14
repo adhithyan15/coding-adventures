@@ -14,7 +14,8 @@ romanization: "mechét"
 concept_tag: RU-MESTO153-MECHET
 prerequisites: [RU-C152-szadi, RU-C153-sportzal]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "мечеть ← Turkish and Arabic mesjid 'a mosque', through Tatar mäčit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C153-sportzal]
 <!-- hl-knowledge: introduces=[RU-LEX-C153-MESTO153-02]; assesses=[] -->
 
 **мечеть** (*mechét*) — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мечеть** — recorded from 1584; it comes from Turkish and Arabic *mäsdžid*, "a place of prostration, a mosque", through Tatar *mäčit* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

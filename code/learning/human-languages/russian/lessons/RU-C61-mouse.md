@@ -14,7 +14,8 @@ romanization: "mysh"
 concept_tag: RU-ANIMALS2-MOUSE
 prerequisites: [RU-C60-pig, RU-C61-bird]
 sounds: []
-roots: []
+roots: [pie-mus]
+etymology_hook: "мышь ← Proto-Slavic *myšĭ; Latin mus, Greek mys and English mouse are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C61-bird]
 <!-- hl-knowledge: introduces=[RU-LEX-C61-ANIMALS2-02]; assesses=[] -->
 
 **мышь** (*mysh*) — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мышь** ← Proto-Slavic *\*myšĭ* — inherited from PIE *\*muHs*, "mouse". Vasmer lists Sanskrit *mūṣ-*, Greek *mŷs*, Latin *mūs* and Old High German *mûs*: English *mouse* is a cousin. Trubachev adds that it may first have meant "the grey one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

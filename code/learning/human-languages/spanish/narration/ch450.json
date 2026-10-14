@@ -4,7 +4,7 @@
   "chapter": 450,
   "title": "El césped y el patio",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f40bfc9b8e065dce",
+  "sourceHash": "fnv1a64:80347c021fe8ea18",
   "lessons": [
     {
       "id": "ES-C450-patio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:049696e9c6e4f4ae",
+      "sourceHash": "fnv1a64:72029f958a2c2e36",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4545e977c3cf6416",
+      "sourceHash": "fnv1a64:556b17f753c88077",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4493df826baec852",
+      "sourceHash": "fnv1a64:1ffeb287677a7a61",
       "notice": null,
       "blocks": [
         {
@@ -505,7 +505,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1a9ad2e379fd5b8",
+      "sourceHash": "fnv1a64:28836567c8c454d3",
       "notice": null,
       "blocks": [
         {
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebd4e2f05d49c1fa",
+      "sourceHash": "fnv1a64:68bb2d7f547de2ad",
       "notice": null,
       "blocks": [
         {

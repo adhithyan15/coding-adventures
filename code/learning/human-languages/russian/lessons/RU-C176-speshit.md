@@ -14,7 +14,8 @@ romanization: "speshít"
 concept_tag: RU-VERB-SPESHIT
 prerequisites: [RU-C176-vozvrashchatsya, RU-C176-opazdyvat]
 sounds: []
-roots: []
+roots: [slavic-spech]
+etymology_hook: "спешить is from спех 'haste'; Vasmer ties it to old *spěti 'to succeed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C176-opazdyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C176-ACT176-03]; assesses=[] -->
 
 **спешить** (*speshít*) — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спешить** comes from *спех*, "haste" (Vasmer), the root of old *\*spěti*, "to succeed, to get on", as in *успех*, "success".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

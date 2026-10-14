@@ -14,7 +14,8 @@ romanization: "smotrét"
 concept_tag: RU-VERB-TO-LOOK
 prerequisites: [RU-C135-to-lose, RU-C135-to-win]
 sounds: []
-roots: []
+roots: [slavic-motriti]
+etymology_hook: "смотреть is с- + Proto-Slavic *motriti 'to watch'; Lithuanian matyti 'to see' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C135-to-win]
 <!-- hl-knowledge: introduces=[RU-LEX-C135-ACT135-03]; assesses=[] -->
 
 **смотреть** (*smotrét*) — "to look, to watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**смотреть** is *с-* with Proto-Slavic *\*motriti*, "to watch" — inherited; dialects still say *мотреть*. Vasmer relates it to Lithuanian *matýti*, "to see", and Greek *mateúō*, "I seek".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

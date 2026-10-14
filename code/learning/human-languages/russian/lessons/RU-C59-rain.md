@@ -14,7 +14,8 @@ romanization: "dozhd"
 concept_tag: RU-WEATHER-RAIN
 prerequisites: [RU-C58-star, RU-C58-cloud]
 sounds: []
-roots: []
+roots: [slavic-duzhdi]
+etymology_hook: "дождь ← Proto-Slavic *dŭždžĭ; probably related to Norwegian dusk 'drizzle', though the origin is debated"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C58-cloud]
 <!-- hl-knowledge: introduces=[RU-LEX-C59-WEATHER-01]; assesses=[] -->
 
 **дождь** (*dozhd*) — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дождь** ← Proto-Slavic *\*dŭždžĭ* — inherited. Vasmer thinks it probably goes with Norwegian *dusk-regn* and Swedish *regn-dusk*, "drizzle"; he also reports a view that starts from *\*dus-dius*, "bad weather", so the origin is debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

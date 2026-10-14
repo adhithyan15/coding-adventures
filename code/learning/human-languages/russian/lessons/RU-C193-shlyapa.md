@@ -14,7 +14,8 @@ romanization: "shlyápa"
 concept_tag: RU-VESHCH193-SHLYAPA
 prerequisites: [RU-C192-lineyka, RU-C192-papka]
 sounds: []
-roots: []
+roots: [german-schlappe]
+etymology_hook: "шляпа ← Bavarian Schlappe 'a cap', Middle High German slappe 'a soft hat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C192-papka]
 <!-- hl-knowledge: introduces=[RU-LEX-C193-VESHCH193-01]; assesses=[] -->
 
 **шляпа** (*shlyápa*) — "a brimmed hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шляпа** — recorded from 1589; it comes from Bavarian *Schlappe*, "a cap", Middle High German *slappe*, "a soft, drooping hat" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

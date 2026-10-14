@@ -14,7 +14,8 @@ romanization: "chístyy"
 concept_tag: RU-KACH156-CHISTYY
 prerequisites: [RU-C156-bogatyy, RU-C156-bednyy]
 sounds: []
-roots: []
+roots: [slavic-chistu]
+etymology_hook: "чистый ← Proto-Slavic *čistŭ; Old Prussian skijstan 'clean' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C156-bednyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C156-KACH156-03]; assesses=[] -->
 
 **чистый** (*chístyy*) — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чистый** ← Proto-Slavic *\*čistŭ* — inherited. Vasmer relates it to Old Prussian *skijstan*, "clean", and Lithuanian *skýstas*, "liquid", and perhaps to *цедить*, "to strain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

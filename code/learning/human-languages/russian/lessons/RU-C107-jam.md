@@ -14,7 +14,8 @@ romanization: "varénye"
 concept_tag: RU-THINGS107-JAM
 prerequisites: [RU-C106-sausage, RU-C106-peach]
 sounds: []
-roots: []
+roots: [slavic-variti]
+etymology_hook: "варенье is from варить 'to boil': fruit boiled in sugar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C106-peach]
 <!-- hl-knowledge: introduces=[RU-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **варенье** (*varénye*) — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**варенье** is a noun from *варить*, "to boil, to cook": fruit boiled with sugar. Vasmer relates *варить* to Lithuanian *virti*, "to boil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

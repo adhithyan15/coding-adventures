@@ -11,6 +11,7 @@ concept_tag: ES-MED-URGENCIA
 prerequisites: [ES-C447-comentar, ES-C333-prisa, ES-C353-hospital]
 sounds: [g-soft, stress-penultimate]
 roots: [urgere-latin]
+etymology_hook: "urgencia ← Latin urgere 'to press, to push hard' — English urgent"
 duration:
   max_seconds: 280
 requires:

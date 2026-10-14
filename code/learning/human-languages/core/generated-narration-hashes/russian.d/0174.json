@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 174,
-  "sourceHash": "fnv1a64:c0f2017941decf2a",
+  "sourceHash": "fnv1a64:a85ff7f89f1d40fa",
   "lessonIds": [
     "RU-C174-sovetovat",
     "RU-C174-opisyvat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch174.txt",
   "json": "russian/narration/ch174.json",
-  "textHash": "fnv1a64:89e7ebf1b029017f",
-  "jsonHash": "fnv1a64:e28d6dce3515e452",
+  "textHash": "fnv1a64:f855910b5b4231d1",
+  "jsonHash": "fnv1a64:253cb0c74b3c7a8f",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 488,
   "title": "Encuentros y despedidas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c75874f75eda45f",
+  "sourceHash": "fnv1a64:e9899bf6851862c2",
   "lessons": [
     {
       "id": "ES-C488-casarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d8e7c4b655c294d",
+      "sourceHash": "fnv1a64:039f722d87f9ac7d",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "casarse is the reflexive of casar, \"to marry\" (EtymDB 2.1), built on casa, \"house\": to marry was to set up house. Casa is Latin casa, \"a hut, a cottage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3399964a1bd0185",
+      "sourceHash": "fnv1a64:7fbabd1a7d6cb122",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "divorciarse is built on divorcio, \"divorce\", Latin divortium, \"a separation\" (Lewis & Short), from divertere, \"to turn different ways\" — the verb behind divertirse, \"to have fun\". Divorcio is learned: its -ti- became -ci-, not the z of speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6603aa3feb620e78",
+      "sourceHash": "fnv1a64:ef94b58b5fac71e1",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enamorarse is en-, amor, \"love\", and -ar: to go into love. Amor is Latin amor."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ec31b9e425e62b7",
+      "sourceHash": "fnv1a64:74db8ddfbe314b65",
       "notice": null,
       "blocks": [
         {
@@ -449,6 +482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "despedirse contains pedir, \"to ask\", from Latin petere; EtymDB 2.1 traces it to de and Latin expetere, \"to ask for, to demand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -459,7 +503,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +552,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -539,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4bd572e3db1dd41",
+      "sourceHash": "fnv1a64:75278432d09d4e5a",
       "notice": null,
       "blocks": [
         {
@@ -580,6 +624,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saludar from Latin salutare, \"to greet, to wish good health\" (EtymDB 2.1), from salus, salutis, \"health\" — inherited: the -t- became -d-. The salud you raise a glass to is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -590,7 +645,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -639,7 +694,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "slyózy"
 concept_tag: RU-VESHCH200-SLYOZY
 prerequisites: [RU-C200-shutka, RU-C200-smekh]
 sounds: []
-roots: []
+roots: [slavic-slizu]
+etymology_hook: "слёзы ← Proto-Slavic *slĭza; Vasmer thinks it more likely goes with слизь 'slime'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C200-smekh]
 <!-- hl-knowledge: introduces=[RU-LEX-C200-VESHCH200-04]; assesses=[] -->
 
 **слёзы** (*slyózy*) — "tears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слёзы** is the plural of *слеза*, "a tear", Proto-Slavic *\*slĭza* — inherited. Vasmer thinks it more likely belongs with *слизь*, "slime", and Middle Low German *slîk*, "slime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

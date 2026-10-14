@@ -14,7 +14,8 @@ romanization: "rússkiy"
 concept_tag: RU-KACH189-RUSSKIY
 prerequisites: [RU-C189-mestnyy, RU-C189-inostrannyy]
 sounds: []
-roots: []
+roots: [slavic-rusi]
+etymology_hook: "русский is from Русь; Vasmer traces Русь to Old Norse Róþsmenn 'rowers', an account still debated"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C189-inostrannyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C189-KACH189-05]; assesses=[] -->
 
 **русский** (*rússkiy*) — "Russian".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**русский** comes from *Русь*, the old name of the land and its people (Vasmer). Vasmer traces *Русь* to Old Norse *Róþsmenn*, "rowers, seafarers", the name of the Scandinavian newcomers, which reached the Slavs through the Finns, who still call Sweden *Ruotsi*; Trubachev's note cites critics of that account, so it is still debated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

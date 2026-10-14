@@ -14,7 +14,8 @@ romanization: "sóus"
 concept_tag: RU-THINGS105-SAUCE
 prerequisites: [RU-C105-biscuits, RU-C105-sandwich]
 sounds: []
-roots: []
+roots: [salsus-latin]
+etymology_hook: "соус ← French sauce, from Latin salsa 'salted', perhaps through English"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C105-sandwich]
 <!-- hl-knowledge: introduces=[RU-LEX-C105-THINGS105-05]; assesses=[] -->
 
 **соус** (*sóus*) — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**соус** comes from French *sauce*, from Latin *salsa*, "salted (broth)", perhaps through English *sauce* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

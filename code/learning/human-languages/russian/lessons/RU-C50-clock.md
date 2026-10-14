@@ -14,7 +14,8 @@ romanization: "chasý"
 concept_tag: RU-HOME3-CLOCK
 prerequisites: [RU-C50-garden, RU-C50-bathroom]
 sounds: []
-roots: []
+roots: [slavic-chasu]
+etymology_hook: "часы is the plural of час 'hour', Proto-Slavic *časŭ 'time'; Old Prussian kīsman 'time' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C50-bathroom]
 <!-- hl-knowledge: introduces=[RU-LEX-C50-HOME3-05]; assesses=[] -->
 
 **часы** (*chasý*) — "a clock, a watch". Always plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**часы** is the plural of *час*, "an hour": a clock is "the hours". *час* ← Proto-Slavic *\*časŭ*, "time, a while", a cousin of Old Prussian *kīsman*, "time", and Albanian *kohë*, "time, weather" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to rule out, to discard"
 concept_tag: ES-VERB-DESCARTAR
 prerequisites: [ES-C481-resolver, ES-C481-recuperar]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "descartar — des- + carta 'a card': to throw a card out of your hand — English discard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C481-recuperar]
 > El médico descarta una infección.
 >
 > *The doctor rules out an infection.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descartar** is built from *des-* and *carta*, "a card": to throw a card out of your hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

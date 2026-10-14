@@ -14,7 +14,8 @@ romanization: "davléniye"
 concept_tag: RU-ZDOROV211-DAVLENIYE
 prerequisites: [RU-C211-kost, RU-C211-puls]
 sounds: []
-roots: []
+roots: [slavic-daviti]
+etymology_hook: "давление is from давить 'to press'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C211-puls]
 <!-- hl-knowledge: introduces=[RU-LEX-C211-ZDOROV211-04]; assesses=[] -->
 
 **давление** (*davléniye*) — "pressure; blood pressure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**давление** is a noun from *давить*, "to press, to squeeze". Vasmer relates *давить* to Avestan *dav-*, "to press".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

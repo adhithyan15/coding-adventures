@@ -11,8 +11,9 @@ concept_tag: GREETING-MORNING
 prerequisites: [ES-C01-bien, ES-C01-dia]
 sounds: [diphthong-ue, accent-i]
 roots: [bonus, dies]
+etymology_hook: "buenos días — 'good days': bueno is Latin bonus, its o opened to ue; día is Latin dies"
 duration:
-  max_seconds: 240
+  max_seconds: 250
 requires:
   knowledge: [ES-LEX-DIA]
 introduces:
@@ -59,6 +60,9 @@ stopping to think about *good* or *morning*.
 > The shape of it — why *buenos* and not *bueno* — is a real rule, and a useful
 > one. It is also not the rule you need in order to say hello before lunch. It
 > comes later, once you have enough words for it to be worth explaining.
+
+*Buenos* is Latin *bonus*, "good", its stressed *o* opened into *ue*; *días* is
+the *dies* of the last lesson.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-COPIAR
 prerequisites: [ES-C472-lectura, ES-C472-usuario, ES-C353-biblioteca]
 sounds: [k-hard, p-b-hard, stress-final, diphthong-ia]
 roots: [copia-latin]
+etymology_hook: "copiar ← Medieval Latin copiare, from copia 'plenty; means, leave' — English copy, copious"
 duration:
   max_seconds: 270
 requires:
@@ -72,9 +73,9 @@ sometimes turn on which one the text said.
 Latin **copia** — **abundance**, plenty. Not *a duplicate*: the word for
 plenty.
 
-The sense travelled because to copy a manuscript was to make there be **more
-of it**. A medieval scribe producing a second manuscript was making *copia*,
-abundance, and the name of the result eventually became the name of the act.
+How plenty became a duplicate is not settled. The usual account runs through
+medieval Latin *copiare*, where *copia* also meant the means or leave to do something:
+leave to make a transcript became the transcript itself.
 
 The old meaning is still in English **copious**, meaning plentiful, and in
 **cornucopia**, the horn of plenty. Set those beside *una copia* and the

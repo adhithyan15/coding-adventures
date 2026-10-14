@@ -14,7 +14,8 @@ romanization: "znakómitsya"
 concept_tag: RU-VERB-ZNAKOMITSYA
 prerequisites: [RU-C140-gladit, RU-C141-vstrechat]
 sounds: []
-roots: []
+roots: [pie-gneh]
+etymology_hook: "знакомиться is from знакомый 'acquainted', built on знать 'to know'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C141-vstrechat]
 <!-- hl-knowledge: introduces=[RU-LEX-C141-ACT141-02]; assesses=[] -->
 
 **знакомиться** (*znakómitsya*) — "to get acquainted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**знакомиться** is *знакомый*, "acquainted", made into a verb with *-иться*. *знакомый* is built on *знать*, "to know", a cousin of English *know*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

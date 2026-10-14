@@ -14,7 +14,8 @@ romanization: "tsirk"
 concept_tag: RU-MESTO242-TSIRK
 prerequisites: [RU-C242-kafe, RU-C242-zoopark]
 sounds: []
-roots: []
+roots: [circus-latin]
+etymology_hook: "цирк probably came through German Zirkus from Latin circus 'a ring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C242-zoopark]
 <!-- hl-knowledge: introduces=[RU-LEX-C242-MESTO242-05]; assesses=[] -->
 
 **цирк** (*tsirk*) — "a circus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**цирк** probably came through German *Zirkus* from Latin *circus*, "a ring, a circle" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

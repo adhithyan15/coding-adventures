@@ -63,6 +63,7 @@
     "labeled-open-links",
     "edge-identifiers",
     "edge-class-styles",
+    "positional-link-styles",
     "edge-animation-config",
     "edge-curve-config",
     "edge-step-curves",
@@ -80,6 +81,8 @@
     "label-rect-shape",
     "anchor-shape",
     "rect-with-title-shape",
+    "internal-container-shapes",
+    "internal-compartment-shapes",
     "legacy-internal-shape-aliases",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 480,
-  "sourceHash": "fnv1a64:eed60c9934c611cc",
+  "sourceHash": "fnv1a64:406760ea78c96883",
   "lessonIds": [
     "ES-C480-afirmar",
     "ES-C480-comunicar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch480.txt",
   "json": "spanish/narration/ch480.json",
-  "textHash": "fnv1a64:7fcd8f37b5251306",
-  "jsonHash": "fnv1a64:8fc15e487afe29eb",
+  "textHash": "fnv1a64:211908362f53261b",
+  "jsonHash": "fnv1a64:b27cd9d88d05e512",
   "findings": []
 }

@@ -15,6 +15,9 @@ register: formal (stranger, elder, customer). question: ¿Cómo está usted?
 register: informal (friend, peer, child). question: ¿Cómo estás?
 The formal version uses the third-person ending está plus usted. The informal version uses second-person estás and normally omits tú. This is the same relationship contrast you drilled with se llama / te llamas.
 
+The phrase, taken apart.
+cómo estás is two words you have taken apart: cómo is Latin quo modo, "in what manner", and estás is Latin stas, "you stand".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: to a doctor you just met — "¿Cómo está usted?"]

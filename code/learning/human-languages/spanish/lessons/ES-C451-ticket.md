@@ -11,6 +11,7 @@ concept_tag: ES-TURN-TICKET
 prerequisites: [ES-C451-mostrar, ES-C268-billete, ES-C313-entrada]
 sounds: [k-hard, t-dental, stress-penultimate]
 roots: [estiquier-old-french]
+etymology_hook: "ticket ← English ticket, from Old French estiquet 'a label' — kin to etiqueta"
 duration:
   max_seconds: 275
 requires:

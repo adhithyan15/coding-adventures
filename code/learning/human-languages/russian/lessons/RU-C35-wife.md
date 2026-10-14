@@ -14,7 +14,8 @@ romanization: "zhená"
 concept_tag: RU-FAMILY1-WIFE
 prerequisites: [RU-C35-grandmother, RU-C35-husband]
 sounds: []
-roots: []
+roots: [pie-gwenh2]
+etymology_hook: "жена ← Proto-Slavic *žena 'woman'; Greek gynē and English queen are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C35-husband]
 <!-- hl-knowledge: introduces=[RU-LEX-C35-FAMILY1-05]; assesses=[] -->
 
 **жена** (*zhená*) — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жена** ← Proto-Slavic *\*žena*, "woman, wife" — inherited from PIE *\*gʷénh₂*, "woman". Vasmer lists Greek *gynē*, Sanskrit *jani-* and Gothic *qinō*, "wife": English *queen* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

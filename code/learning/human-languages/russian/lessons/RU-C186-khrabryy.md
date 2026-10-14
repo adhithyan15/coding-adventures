@@ -14,7 +14,8 @@ romanization: "khrábryy"
 concept_tag: RU-KACH186-KHRABRYY
 prerequisites: [RU-C186-grubyy, RU-C186-chestnyy]
 sounds: []
-roots: []
+roots: [slavic-khorobru]
+etymology_hook: "храбрый is Church Slavonic, beside native хоробрый"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C186-chestnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C186-KACH186-03]; assesses=[] -->
 
 **храбрый** (*khrábryy*) — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**храбрый** — taken from Church Slavonic, says Vasmer, beside native *хоробрый*: *-ра-* against *-оро-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

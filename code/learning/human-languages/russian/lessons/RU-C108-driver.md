@@ -14,7 +14,8 @@ romanization: "vodítel"
 concept_tag: RU-THINGS108-DRIVER
 prerequisites: [RU-C108-farmer, RU-C108-baker]
 sounds: []
-roots: []
+roots: [slavic-voditi]
+etymology_hook: "водитель is водить 'to drive, to lead' + -тель, 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C108-baker]
 <!-- hl-knowledge: introduces=[RU-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **водитель** (*vodítel*) — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**водитель** is *водить*, "to lead; to drive", with *-тель*, "one who does it". Vasmer relates *водить* to Lithuanian *vadýti*, "to lead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

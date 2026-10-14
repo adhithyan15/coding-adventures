@@ -14,7 +14,8 @@ romanization: "stirát"
 concept_tag: RU-VERB-STIRAT
 prerequisites: [RU-C140-zavtrakat, RU-C140-uzhinat]
 sounds: []
-roots: []
+roots: [pie-terh1]
+etymology_hook: "стирать is from тирать, the ongoing form of тереть 'to rub': washing by rubbing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C140-uzhinat]
 <!-- hl-knowledge: introduces=[RU-LEX-C140-ACT140-04]; assesses=[] -->
 
 **стирать** (*stirát*) — "to do the laundry, to wash (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стирать** comes from *тирать*, the repeated form of *тереть*, "to rub" (Vasmer): clothes were washed by rubbing. Latin *terō*, "I rub", is a cousin of *тереть*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

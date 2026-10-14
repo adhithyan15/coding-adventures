@@ -14,7 +14,8 @@ romanization: "subbóta"
 concept_tag: RU-WEEK1-SATURDAY
 prerequisites: [RU-C70-thursday, RU-C70-friday]
 sounds: []
-roots: []
+roots: [hebrew-shabbat]
+etymology_hook: "суббота ← Greek *sambaton or Balkan Latin *sambata, both from Hebrew shabbat 'the day of rest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C70-friday]
 <!-- hl-knowledge: introduces=[RU-LEX-C70-WEEK1-05]; assesses=[] -->
 
 **суббота** (*subbóta*) — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**суббота** — Vasmer supports a source in Byzantine Greek *\*sámbaton*; others prefer Balkan Latin *\*sambata*. Both come from Hebrew *shabbat*, "the day of rest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

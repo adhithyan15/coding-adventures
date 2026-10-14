@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 77,
-  "sourceHash": "fnv1a64:c425b602d00feac2",
+  "sourceHash": "fnv1a64:7e713d5372d81af1",
   "lessonIds": [
     "RU-C77-city",
     "RU-C77-street",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch77.txt",
   "json": "russian/narration/ch77.json",
-  "textHash": "fnv1a64:bada4949504d3733",
-  "jsonHash": "fnv1a64:b232feca33a16d84",
+  "textHash": "fnv1a64:60b91a9e6855b797",
+  "jsonHash": "fnv1a64:72d0e6aebbf7f474",
   "findings": []
 }

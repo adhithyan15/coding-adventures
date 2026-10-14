@@ -14,7 +14,8 @@ romanization: "basséyn"
 concept_tag: RU-LOC88-SWIMMING-POOL
 prerequisites: [RU-C88-cinema, RU-C88-supermarket]
 sounds: []
-roots: []
+roots: [french-bassin]
+etymology_hook: "бассейн ← French bassin 'a basin', since 1764; Italian bacino is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C88-supermarket]
 <!-- hl-knowledge: introduces=[RU-LEX-C88-LOC88-04]; assesses=[] -->
 
 **бассейн** (*basséyn*) — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бассейн** — recorded from 1764; it comes from French *bassin*, "a basin, a bowl", which goes with Italian *bacino* and a Gaulish *bacca*, "a water vessel" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ALIMENTAR
 prerequisites: [ES-C467-suficiente, ES-C457-medicamento, ES-C467-producir]
 sounds: [stress-final, r-tap]
 roots: [alere-latin]
+etymology_hook: "alimentar — from Latin alere 'to nourish, to rear' — kin to English adult, alumnus"
 duration:
   max_seconds: 275
 requires:

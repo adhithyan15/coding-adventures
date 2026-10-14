@@ -14,7 +14,8 @@ romanization: "iyúl"
 concept_tag: RU-VREMYA212-IYUL
 prerequisites: [RU-C211-sila, RU-C212-iyun]
 sounds: []
-roots: []
+roots: [latin-iulius]
+etymology_hook: "июль came through Byzantine Greek ioulios from Latin iulius, the month of Julius Caesar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C212-iyun]
 <!-- hl-knowledge: introduces=[RU-LEX-C212-VREMYA212-02]; assesses=[] -->
 
 **июль** (*iyúl*) — "July".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**июль** — Old Russian *июль*; it came through Byzantine Greek *ioúlios* from Latin *iūlius*, the month named for Julius Caesar (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

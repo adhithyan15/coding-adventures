@@ -14,7 +14,8 @@ romanization: "igrúshka"
 concept_tag: RU-VESHCH221-IGRUSHKA
 prerequisites: [RU-C220-printer, RU-C220-pult]
 sounds: []
-roots: []
+roots: [slavic-igra]
+etymology_hook: "игрушка is from игра 'a game': a thing to play with"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C220-pult]
 <!-- hl-knowledge: introduces=[RU-LEX-C221-VESHCH221-01]; assesses=[] -->
 
 **игрушка** (*igrúshka*) — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**игрушка** is built on *игра*, "a game", with *-ушка*: a thing to play with.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

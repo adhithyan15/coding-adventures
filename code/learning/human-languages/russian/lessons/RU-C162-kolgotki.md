@@ -14,7 +14,8 @@ romanization: "kolgótki"
 concept_tag: RU-VESHCH162-KOLGOTKI
 prerequisites: [RU-C162-bluzka, RU-C162-futbolka]
 sounds: []
-roots: []
+roots: [czech-kalhoty]
+etymology_hook: "колготки ← Czech kalhotky, the diminutive of kalhoty 'trousers'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C162-futbolka]
 <!-- hl-knowledge: introduces=[RU-LEX-C162-VESHCH162-03]; assesses=[] -->
 
 **колготки** (*kolgótki*) — "tights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**колготки** comes from Czech *kalhotky*, "panties", the diminutive of *kalhoty*, "trousers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

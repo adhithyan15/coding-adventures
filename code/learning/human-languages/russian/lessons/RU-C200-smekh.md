@@ -14,7 +14,8 @@ romanization: "smekh"
 concept_tag: RU-VESHCH200-SMEKH
 prerequisites: [RU-C200-sekret, RU-C200-shutka]
 sounds: []
-roots: []
+roots: [slavic-smijati]
+etymology_hook: "смех ← Proto-Slavic *směxŭ, with смеяться 'to laugh'; English smile is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C200-shutka]
 <!-- hl-knowledge: introduces=[RU-LEX-C200-VESHCH200-03]; assesses=[] -->
 
 **смех** (*smekh*) — "laughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**смех** ← Proto-Slavic *\*směxŭ*, with *смеяться*, "to laugh" — inherited (Vasmer). Vasmer relates the root to Sanskrit *smáyate*, "smiles", and Middle English *smilen*, "to smile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

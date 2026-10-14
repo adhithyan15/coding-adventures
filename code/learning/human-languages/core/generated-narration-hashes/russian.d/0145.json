@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 145,
-  "sourceHash": "fnv1a64:03d7f36c60b19491",
+  "sourceHash": "fnv1a64:2f340a9bba2c0ce9",
   "lessonIds": [
     "RU-C145-podpisyvat",
     "RU-C145-pechatat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch145.txt",
   "json": "russian/narration/ch145.json",
-  "textHash": "fnv1a64:d99a5ae44b37bf16",
-  "jsonHash": "fnv1a64:68c36ca9907083f5",
+  "textHash": "fnv1a64:3c32f4608910ff09",
+  "jsonHash": "fnv1a64:b07e688771884551",
   "findings": []
 }

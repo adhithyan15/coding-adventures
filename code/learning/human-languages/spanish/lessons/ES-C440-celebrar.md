@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CELEBRAR
 prerequisites: [ES-C440-cumpleanos, ES-C349-fiesta, ES-C413-musica]
 sounds: [stress-final, soft-c]
 roots: [celebrare-latin]
+etymology_hook: "celebrar ← Latin celebrare, from celeber 'crowded' — English celebrate, celebrity"
 duration:
   max_seconds: 265
 requires:

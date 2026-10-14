@@ -14,7 +14,8 @@ romanization: "rýnok"
 concept_tag: RU-TOWN1-MARKET
 prerequisites: [RU-C77-street, RU-C77-shop]
 sounds: []
-roots: []
+roots: [germanic-hringaz]
+etymology_hook: "рынок came through Polish rynek from Middle High German rinc 'ring, town square'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C77-shop]
 <!-- hl-knowledge: introduces=[RU-LEX-C77-TOWN1-04]; assesses=[] -->
 
 **рынок** (*rýnok*) — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рынок** came through Polish *rynek* and Czech *rynk*, "town square", from Middle High German *rinc*, "a ring, a square" (Vasmer): the market sat in the ring of the square. German *Ring* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

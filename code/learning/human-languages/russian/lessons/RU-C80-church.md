@@ -14,7 +14,8 @@ romanization: "tsérkov"
 concept_tag: RU-PLACES-CHURCH
 prerequisites: [RU-C80-hotel, RU-C80-pharmacy]
 sounds: []
-roots: []
+roots: [kyriakon-greek]
+etymology_hook: "церковь came through early Germanic, Gothic or Old Bavarian, from Greek kyriakon 'the Lord's (house)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C80-pharmacy]
 <!-- hl-knowledge: introduces=[RU-LEX-C80-PLACES-03]; assesses=[] -->
 
 **церковь** (*tsérkov*) — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**церковь** ← Old Russian *цьркы*. Its source is sought in a Gothic *\*kirikô* or an Old Bavarian *kirkô*, "church", and the Germanic word comes from Greek *kyriakón*, "the Lord's (house)" (Vasmer). German *Kirche* and English *church* come from the same Greek word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

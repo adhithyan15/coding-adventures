@@ -11,6 +11,7 @@ concept_tag: ES-TRADE-RUTA
 prerequisites: [ES-C452-almacen, ES-C448-roto, ES-C302-calle]
 sounds: [r-tap, t-dental, stress-penultimate]
 roots: [rumpere-latin]
+etymology_hook: "ruta ← French route, from Latin via rupta 'a broken way' — kin to roto; English route, rout"
 duration:
   max_seconds: 275
 requires:
@@ -74,11 +75,13 @@ what was in the way: trees felled, rock broken, a line opened where there had
 been none.
 
 Latin then dropped the *via* and kept the adjective, which is how a word
-meaning "broken" ended up meaning "route". English took it from French as
+meaning "broken" ended up meaning "route". French wore it down to *route*, and
+Spanish took *ruta* from French. English took it from French too, as
 **route**, and also as **rout** — an army broken open — and **routine**, a way
 so well worn that you no longer choose it.
 
-So *roto* and *ruta* are one word. A broken plate and a road through a
+So *roto* and *ruta* are one Latin word: *roto* inherited, *ruta* borrowed
+back. A broken plate and a road through a
 mountain are the same idea applied to two different obstacles.
 
 ## Guided Practice

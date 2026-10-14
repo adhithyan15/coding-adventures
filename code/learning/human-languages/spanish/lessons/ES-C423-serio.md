@@ -6,11 +6,12 @@ sequence: 9860
 chapter: 423
 type: word
 headword: serio
-gloss: serious, earnest — Latin serius, weighty; the metaphor of heaviness for gravity of manner is so old that Latin had already forgotten it was a metaphor
+gloss: serious, earnest — Latin serius, grave and earnest, a word of uncertain origin; Spanish keeps it for manner, and uses grave for a bad accident
 concept_tag: ES-COUNT-SERIOUS
 prerequisites: [ES-C423-trabajador]
 sounds: [s-clear, r-tap, stress-penultimate]
 roots: [serius-latin]
+etymology_hook: "serio ← Latin serius 'grave, earnest', of uncertain origin — English serious"
 duration:
   max_seconds: 240
 requires:
@@ -27,7 +28,7 @@ variety: general
 reviews_of: [ES-C423-trabajador, ES-C380-alegre]
 ---
 
-# serio — the opposite of cheerful, and a word about weight
+# serio — the opposite of cheerful, and a word about gravity
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C380-COUNT-37] -->
@@ -52,8 +53,9 @@ scale.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-C423-CHAR-04]; assesses=[] -->
 
-**serio** — "serious, earnest." Latin **serius**, whose first meaning was
-**weighty, heavy**.
+**serio** — "serious, earnest." Latin **serius**, "grave, earnest" (Lewis &
+Short) — a word of uncertain origin, which Lewis & Short tentatively ties to
+*severus*, "severe".
 
 Every language seems to reach for weight when it wants to talk about gravity of
 manner, and English does it three separate times without noticing:
@@ -62,8 +64,8 @@ manner, and English does it three separate times without noticing:
 - a **weighty** decision
 - a matter of some **gravity**
 
-Spanish does the same with *serio* and *grave*. The metaphor is so worn that
-nobody hears it any more: a serious person is a person who is **hard to lift**.
+Spanish does the same with *grave*. The metaphor is so worn that nobody hears
+it any more: a grave person is a person who is **hard to lift**.
 
 One warning worth having. English *serious* has drifted toward meaning *bad* —
 *a serious accident*. Spanish *serio* stayed with the manner: a *persona seria*
@@ -95,6 +97,6 @@ agreement rule.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C423-CHAR-04] -->
 
-[PAUSE 3s] What did Latin *serius* first mean? (Weighty, heavy.) Does Spanish
+[PAUSE 3s] What did Latin *serius* mean? (Grave, earnest.) Does Spanish
 *serio* mean *grave* in the sense of a bad accident? (No — that is *grave*.)
 How many syllables is *serio*? (Two: *SE-rio*.)

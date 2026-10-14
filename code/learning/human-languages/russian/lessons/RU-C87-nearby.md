@@ -14,7 +14,8 @@ romanization: "ryádom"
 concept_tag: RU-LOC87-NEARBY
 prerequisites: [RU-C86-to-the-left, RU-C87-straight-on]
 sounds: []
-roots: []
+roots: [slavic-redu]
+etymology_hook: "рядом is a form of ряд 'a row': 'in a row with', side by side"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C87-straight-on]
 <!-- hl-knowledge: introduces=[RU-LEX-C87-LOC87-02]; assesses=[] -->
 
 **рядом** (*ryádom*) — "nearby, next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рядом** is *ряд*, "a row", in the form that says "by, with": "in the same row", side by side. Vasmer relates *ряд* to Lithuanian *rinda*, "a row, a line".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-COUNT-INTELLIGENT
 prerequisites: [ES-C423-antipatico, ES-C380-alegre]
 sounds: [g-soft, stress-penultimate]
 roots: [legere-latin]
+etymology_hook: "inteligente ← Latin intellegere: inter 'between' + legere 'to pick out'"
 duration:
   max_seconds: 240
 requires:

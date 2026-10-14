@@ -14,7 +14,8 @@ romanization: "tudá"
 concept_tag: RU-MESTO184-TUDA
 prerequisites: [RU-C184-vperedi, RU-C184-vezde]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "туда ← Old Russian туда, on the pronoun of тот 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C184-vezde]
 <!-- hl-knowledge: introduces=[RU-LEX-C184-MESTO184-03]; assesses=[] -->
 
 **туда** (*tudá*) — "to there, that way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**туда** ← Old Russian *туда* — inherited, built on the stem of *тот*, "that" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

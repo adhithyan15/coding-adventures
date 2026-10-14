@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Big, Small, Old, Long, Short",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a6b92f491aad8a84",
+  "sourceHash": "fnv1a64:760c9f8d53830912",
   "lessons": [
     {
       "id": "RU-C65-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c2f3e1d744e8e72",
+      "sourceHash": "fnv1a64:f7097781b7ff7442",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "большой (bolshóy) is built on the comparative больший, \"greater\", Proto-Slavic bolĭjĭ — inherited. Vasmer relates it to Sanskrit bálīyān, \"stronger\", and bálam, \"strength\", and Greek beltíōn, \"better\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b241108d1d9e2bb",
+      "sourceHash": "fnv1a64:760662f5b524269e",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "маленький (málenkiy) is малый, \"small\", with the fond -енький. малый from Proto-Slavic malŭ, related, Vasmer says, to Gothic smals, \"small\", and Greek mêlon, \"sheep, small cattle\": English small is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92c3df2b43e8c397",
+      "sourceHash": "fnv1a64:ccefa8ee2e7664dd",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "старый (stáryy) from Proto-Slavic starŭ — inherited. Vasmer relates it to Lithuanian stóras, \"thick, stout\", and Old Norse stórr, \"big, strong\": old was first \"grown, strong\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa66024c29c97ce2",
+      "sourceHash": "fnv1a64:64ed970f672ddae2",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "длинный (dlínnyy) is длина, \"length\", with the adjective ending -ный, on the root of долгий, \"long (in time)\". Vasmer relates долгий to Lithuanian ìlgas, Sanskrit dīrghá- and Greek dolichós, all \"long\", from PIE dḷh₁gʰós."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37a8eec17bc3d8b5",
+      "sourceHash": "fnv1a64:70630203c30e3656",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "короткий (korótkiy) from Proto-Slavic kortŭkŭ — inherited; Church Slavonic has краткий, \"brief\". Vasmer relates it to Lithuanian kartùs, \"bitter\", and Sanskrit kaṭu-, \"sharp\", and perhaps to Latin curtus, \"cut short\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

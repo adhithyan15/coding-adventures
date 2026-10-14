@@ -14,7 +14,8 @@ romanization: "nekrasívyy"
 concept_tag: RU-KACH243-NEKRASIVYY
 prerequisites: [RU-C243-vysokiy, RU-C243-nizkiy]
 sounds: []
-roots: []
+roots: [slavic-krasa]
+etymology_hook: "некрасивый is не 'not' + красивый 'beautiful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C243-nizkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C243-KACH243-05]; assesses=[] -->
 
 **некрасивый** (*nekrasívyy*) — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**некрасивый** is *не*, "not", with *красивый*, "beautiful", from *краса*, "beauty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

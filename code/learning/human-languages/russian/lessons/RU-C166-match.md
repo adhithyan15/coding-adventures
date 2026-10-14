@@ -14,7 +14,8 @@ romanization: "match"
 concept_tag: RU-VESHCH166-MATCH
 prerequisites: [RU-C166-konki, RU-C166-komanda]
 sounds: []
-roots: []
+roots: [english-match]
+etymology_hook: "матч ← English match 'a contest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C166-komanda]
 <!-- hl-knowledge: introduces=[RU-LEX-C166-VESHCH166-04]; assesses=[] -->
 
 **матч** (*match*) — "a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**матч** comes from English *match*, "a contest between equals".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

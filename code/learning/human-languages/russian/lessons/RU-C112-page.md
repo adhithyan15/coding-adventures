@@ -14,7 +14,8 @@ romanization: "stranítsa"
 concept_tag: RU-THINGS112-PAGE
 prerequisites: [RU-C112-problem, RU-C112-sentence]
 sounds: []
-roots: []
+roots: [slavic-storna]
+etymology_hook: "страница is built on страна, the Church Slavonic shape of сторона 'side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C112-sentence]
 <!-- hl-knowledge: introduces=[RU-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **страница** (*stranítsa*) — "a page".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**страница** is built on *страна*, the Church Slavonic shape of *сторона*, "side": a page is one side of a leaf.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

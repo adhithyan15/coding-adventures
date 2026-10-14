@@ -14,7 +14,8 @@ romanization: "gorá"
 concept_tag: RU-NATURE2-MOUNTAIN
 prerequisites: [RU-C55-grass, RU-C55-village]
 sounds: []
-roots: []
+roots: [slavic-gora]
+etymology_hook: "гора ← Proto-Slavic *gora; Sanskrit giri 'mountain' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C55-village]
 <!-- hl-knowledge: introduces=[RU-LEX-C56-NATURE2-01]; assesses=[] -->
 
 **гора** (*gorá*) — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гора** ← Proto-Slavic *\*gora* — inherited, related to Sanskrit *girí-*, "mountain", Avestan *gairi-* and Lithuanian *girià*, "forest" (Vasmer). Bulgarian *гора* still means "forest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

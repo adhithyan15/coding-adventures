@@ -14,7 +14,8 @@ romanization: "puteshéstviye"
 concept_tag: RU-LOC92-JOURNEY
 prerequisites: [RU-C92-bicycle, RU-C92-suitcase]
 sounds: []
-roots: []
+roots: [pie-pent]
+etymology_hook: "путешествие is путь 'way' + шествие 'a procession', from шествовать 'to walk solemnly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C92-suitcase]
 <!-- hl-knowledge: introduces=[RU-LEX-C92-LOC92-03]; assesses=[] -->
 
 **путешествие** (*puteshéstviye*) — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**путешествие** is *путь*, "way, road", with *шествие*, "a procession", from *шествовать*, "to march". *путь* ← Proto-Slavic *\*pǫtĭ*, a cousin of Sanskrit *pánthās*, "path", and Latin *pōns*, "bridge" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

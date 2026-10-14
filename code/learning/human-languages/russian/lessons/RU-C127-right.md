@@ -14,7 +14,8 @@ romanization: "právilnyy"
 concept_tag: RU-QUAL127-RIGHT
 prerequisites: [RU-C127-angry, RU-C127-serious]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "правильный is правило 'a rule' + -ный; правило is from правый 'straight, right'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C127-serious]
 <!-- hl-knowledge: introduces=[RU-LEX-C127-QUAL127-05]; assesses=[] -->
 
 **правильный** (*právilnyy*) — "right, correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**правильный** is *правило*, "a rule", with *-ный*. *правило* is built on *правый*, "right, straight", which Vasmer derives, probably, from *\*prō-vos*, "forward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

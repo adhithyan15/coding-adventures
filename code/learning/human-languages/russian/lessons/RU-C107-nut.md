@@ -14,7 +14,8 @@ romanization: "orékh"
 concept_tag: RU-THINGS107-NUT
 prerequisites: [RU-C106-peach, RU-C107-jam]
 sounds: []
-roots: []
+roots: [slavic-orechu]
+etymology_hook: "орех ← Proto-Slavic *orěxŭ; Lithuanian riešutas 'nut' is compared, though a substrate source is also suggested"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C107-jam]
 <!-- hl-knowledge: introduces=[RU-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **орех** (*orékh*) — "a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**орех** ← Proto-Slavic *\*orěxŭ* — inherited. Vasmer compares Lithuanian *ríešutas*, "nut", and Albanian *arrë*, "walnut"; Machek saw in the Baltic and Slavic words a loan from an older, unknown language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

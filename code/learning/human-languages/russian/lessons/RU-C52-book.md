@@ -14,7 +14,8 @@ romanization: "kníga"
 concept_tag: RU-SCHOOL-BOOK
 prerequisites: [RU-C51-knife, RU-C51-fork]
 sounds: []
-roots: []
+roots: [slavic-kuniga]
+etymology_hook: "книга ← Proto-Slavic *kŭniga, probably a loan through early Turkic, ultimately from Chinese 'scroll'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C51-fork]
 <!-- hl-knowledge: introduces=[RU-LEX-C52-SCHOOL-01]; assesses=[] -->
 
 **книга** (*kníga*) — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**книга** ← Proto-Slavic *\*kŭniga*. Vasmer, following Räsänen, takes it as a loan through early Turkic, Danube Bulgar *\*küiniv*, ultimately from Chinese *k'üen*, "a scroll"; Hungarian *könyv*, "book", has the same source. He finds the older Assyrian account less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

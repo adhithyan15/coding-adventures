@@ -14,7 +14,8 @@ romanization: "tualét"
 concept_tag: RU-VESHCH190-TUALET
 prerequisites: [RU-C190-rakovina, RU-C190-kran]
 sounds: []
-roots: []
+roots: [french-toilette]
+etymology_hook: "туалет ← French toilette, first 'a small cloth', from toile 'linen', Latin tela"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C190-kran]
 <!-- hl-knowledge: introduces=[RU-LEX-C190-VESHCH190-04]; assesses=[] -->
 
 **туалет** (*tualét*) — "a toilet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**туалет** comes from French *toilette*, first "a small cloth" for the dressing table, from *toile*, "linen", Latin *tēla*, "a web" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

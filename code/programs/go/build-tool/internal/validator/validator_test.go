@@ -361,6 +361,49 @@ on 'test' => sub {
 	}
 }
 
+// X-7: a CI shard holds perl/a and perl/c but not perl/b, c's test-only
+// dependency (test deps are not graph edges, so nothing pulls b into the
+// shard). Resolving names against the shard alone cannot see b, so a, which
+// b brings in, looked undeclared. Resolving against every package does not.
+func TestValidateBuildFilesAgainstResolvesNamesOutsideTheShard(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:     "perl/b",
+			relPath:  "code/packages/perl/b",
+			lang:     "perl",
+			commands: []string{`cd ../a`},
+		},
+		{
+			name:     "perl/c",
+			relPath:  "code/packages/perl/c",
+			lang:     "perl",
+			commands: []string{`cd ../a`, `cd ../b`},
+		},
+	})
+	writeBuildFile(t, pkgs[2].Path, "cpanfile", `
+on 'test' => sub {
+    requires 'coding-adventures-b';
+};
+`)
+	graph := graphWithEdges([2]string{"perl/a", "perl/b"})
+	graph.AddNode("perl/c")
+	shard := []discovery.Package{pkgs[0], pkgs[2]}
+
+	err := ValidateBuildFiles(shard, graph)
+	if err == nil || !strings.Contains(err.Error(), "perl/c") {
+		t.Fatalf("expected the shard-only check to reproduce the false error, got %v", err)
+	}
+	if err := ValidateBuildFilesAgainst(shard, pkgs, graph); err != nil {
+		t.Fatalf("expected names outside the shard to resolve, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesRejectsPerlReferenceOutsideTestPhase(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

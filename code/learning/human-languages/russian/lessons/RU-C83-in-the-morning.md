@@ -14,7 +14,8 @@ romanization: "útrom"
 concept_tag: RU-TIME83-IN-THE-MORNING
 prerequisites: [RU-C83-early, RU-C83-late]
 sounds: []
-roots: []
+roots: [slavic-utro]
+etymology_hook: "утром is a form of утро 'morning', 'by morning'; утро is old Slavic, hard to explain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C83-late]
 <!-- hl-knowledge: introduces=[RU-LEX-C83-TIME83-05]; assesses=[] -->
 
 **утром** (*útrom*) — "in the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**утром** is *утро*, "morning", in the form that says "by, during": "in the morning". *утро* ← Proto-Slavic *\*jutro*; Vasmer calls its origin difficult, with links to *уже*, "already", or to Latin *iugum*, "yoke", as "the time of yoking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -274,9 +274,28 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
   portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },
-  russian: { withoutHook: 1135, withoutVisible: 1148 },
+  // russian: 1135 / 1148 -> 0 / 0. All 1,135 generated word lessons gained a taken-apart
+  // block and a matching hook, and 13 earlier hand-written lessons the measure missed gained
+  // the half they lacked (six as a block, seven as one origin sentence in an existing section,
+  // paid for by trimming prose; only RU-C02-menya-zovut needed a raise, 240 -> 275 s). Source:
+  // Vasmer's Russisches etymologisches Woerterbuch (Russian edition, with Trubachev's notes),
+  // paraphrased and cited, never copied; Church Slavonic shapes are named by their sound
+  // change, and loans name the donor and the route. 86 say the origin is uncertain or disputed
+  // and give Vasmer's usual account with his hedges.
+  russian: { withoutHook: 0, withoutVisible: 0 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },
-  spanish: { withoutHook: 486, withoutVisible: 209 },
+  // spanish: 486 / 209 -> 0 / 0. 287 lessons with an origin in their body gained a hook that
+  // agrees with it, 199 gained a "taken apart" block and a hook (185 of them the generated
+  // wave ES-C475-profesional through ES-C511-soler), and the ten hook-only lessons gained a
+  // block or, for ES-C52-como-se-dice at 299 s, one origin sentence. Sources: EtymDB 2.1
+  // (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row and relabelled by Spanish sound
+  // change, with Lewis & Short for Latin forms EtymDB lacks; Arabic loans name the Arabic word.
+  // 16 new ones say the origin is uncertain or only usually traced. 41 older passages that
+  // misreported an origin were corrected, and 22 blocks that never named one gained a sentence.
+  // A full review of all 497 then fixed loan routes (empresa, bailar, ruta), etyma (aceptar,
+  // opinión, portero, apoyar), hedges (andén, jubilar, copiar) and labels, and gave 26 more
+  // blocks that named only Spanish parts a sentence saying where the parts come from.
+  spanish: { withoutHook: 0, withoutVisible: 0 },
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
   // but four have a "taken apart" block: native words cite the Dravidian Etymological
   // Dictionary (Burrow & Emeneau, DEDR) and Sanskrit loans cite Turner's CDIAL, both read

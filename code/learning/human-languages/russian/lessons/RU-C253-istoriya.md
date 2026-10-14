@@ -14,7 +14,8 @@ romanization: "istóriya"
 concept_tag: RU-VESHCH253-ISTORIYA
 prerequisites: [RU-C252-plavaniye, RU-C253-skazka]
 sounds: []
-roots: []
+roots: [historia-latin]
+etymology_hook: "история came perhaps through German Historie from Latin historia, Greek historia 'inquiry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C253-skazka]
 <!-- hl-knowledge: introduces=[RU-LEX-C253-VESHCH253-02]; assesses=[] -->
 
 **история** (*istóriya*) — "a story; history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**история** — from Peter the Great's time; perhaps through German *Historie* from Latin *historia*, Greek *historía*, "inquiry, a narrative" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

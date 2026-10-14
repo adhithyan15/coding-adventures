@@ -14,7 +14,8 @@ romanization: "pchelá"
 concept_tag: RU-THINGS120-BEE
 prerequisites: [RU-C120-monkey, RU-C120-elephant]
 sounds: []
-roots: []
+roots: [slavic-bichela]
+etymology_hook: "пчела ← Proto-Slavic *bĭčela; Lithuanian bitė and Old High German bia 'bee' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C120-elephant]
 <!-- hl-knowledge: introduces=[RU-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **пчела** (*pchelá*) — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пчела** ← Proto-Slavic *\*bĭčela* — inherited; *б* turned to *п* before *ч*. Vasmer relates it to Irish *bech*, Lithuanian *bìtė* and Old High German *bîa*, all "bee": English *bee* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

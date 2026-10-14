@@ -14,7 +14,8 @@ romanization: "inogdá"
 concept_tag: RU-WHEN-SOMETIMES
 prerequisites: [RU-C73-alittle, RU-C74-always]
 sounds: []
-roots: []
+roots: [slavic-inu]
+etymology_hook: "иногда is иной 'other' + -гда, as in когда 'when': 'at another time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C74-always]
 <!-- hl-knowledge: introduces=[RU-LEX-C74-WHEN-02]; assesses=[] -->
 
 **иногда** (*inogdá*) — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**иногда** is *иной*, "other", with the time ending *-гда* of *когда*, "when" (Vasmer); Old Russian *иногда* meant "once, at another time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

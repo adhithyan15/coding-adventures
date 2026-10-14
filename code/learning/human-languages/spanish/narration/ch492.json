@@ -4,7 +4,7 @@
   "chapter": 492,
   "title": "Intentarlo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f7f4143878b272e",
+  "sourceHash": "fnv1a64:f228c8d21b78e9aa",
   "lessons": [
     {
       "id": "ES-C492-intentar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfd705b8e6502f0c",
+      "sourceHash": "fnv1a64:2d5ce44aafbce579",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intentar from Latin intentare, \"to stretch out towards\" (EtymDB 2.1), built on tendere, \"to stretch\" — a learned word. To try is to reach for something."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd8620be4c222c62",
+      "sourceHash": "fnv1a64:1d5496e6bcf76676",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lograr from Latin lucrari, \"to gain, to profit\" (EtymDB 2.1) — inherited: the -c- became -g- and the u became o. Lucro, \"profit\", is the same word taken from books."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -197,7 +219,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -277,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2539c352c1628d12",
+      "sourceHash": "fnv1a64:b6ee51e28a18e955",
       "notice": null,
       "blocks": [
         {
@@ -314,6 +336,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "evitar from Latin evitare, \"to shun\" (EtymDB 2.1): e-, \"out\", and vitare, \"to avoid\" — a learned word: the -t- between vowels stayed t."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -324,7 +357,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +406,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7fc9ac2d148b182",
+      "sourceHash": "fnv1a64:cd9f5bd7be43aa76",
       "notice": null,
       "blocks": [
         {
@@ -445,6 +478,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "elegir from Latin eligere, \"to pick out\" (EtymDB 2.1): e-, \"out\", and legere, \"to gather, to choose\" — the legere inside inteligente, \"intelligent\". A learned word: speech lost the -g-, as legere became leer."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -455,7 +499,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -504,7 +548,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -535,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8b5e2eba06e26ac",
+      "sourceHash": "fnv1a64:7f92f8d274148c85",
       "notice": null,
       "blocks": [
         {
@@ -576,6 +620,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cumplir from Latin complere, \"to fill up, to complete\" (EtymDB 2.1) — inherited: the o became u. To keep a promise is to fill it; to turn an age is to complete it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -586,7 +641,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -635,7 +690,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

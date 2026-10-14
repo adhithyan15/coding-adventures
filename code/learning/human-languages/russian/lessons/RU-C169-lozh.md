@@ -14,7 +14,8 @@ romanization: "lozh"
 concept_tag: RU-VESHCH169-LOZH
 prerequisites: [RU-C169-mneniye, RU-C169-pravda]
 sounds: []
-roots: []
+roots: [slavic-lugati]
+etymology_hook: "ложь goes with лгать 'to lie'; Gothic liugan 'to lie' and English lie are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C169-pravda]
 <!-- hl-knowledge: introduces=[RU-LEX-C169-VESHCH169-05]; assesses=[] -->
 
 **ложь** (*lozh*) — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ложь** goes with *лгать*, "to tell lies" (Vasmer), Proto-Slavic *\*lŭgati*; Gothic *liugan*, "to lie", and English *lie*, "a falsehood", come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

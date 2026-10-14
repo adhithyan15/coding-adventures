@@ -10,7 +10,8 @@ gloss: "to relax"
 concept_tag: ES-VERB-RELAJARSE
 prerequisites: [ES-C487-enfadarse, ES-C487-preocuparse]
 sounds: []
-roots: []
+roots: [laxare-latin]
+etymology_hook: "relajarse ← Latin relaxare 'to loosen': re- + laxare 'to slacken' — English relax, lax"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C487-preocuparse]
 > Los domingos me relajo en casa.
 >
 > *On Sundays I relax at home.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**relajar** ← Latin *relaxare*, "to loosen" (EtymDB 2.1): *re-* and *laxare*, "to slacken" — inherited: the Latin *x* became *j*, as *axis* became *eje*, "axle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

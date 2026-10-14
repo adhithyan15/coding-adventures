@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Rain, Snow, Wind, Weather, World",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e430446ab674b6cd",
+  "sourceHash": "fnv1a64:bc31ad4c2bcc7419",
   "lessons": [
     {
       "id": "RU-C59-rain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07a883e73a3fb53b",
+      "sourceHash": "fnv1a64:e0b61024bc822941",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дождь (dozhd) from Proto-Slavic dŭždžĭ — inherited. Vasmer thinks it probably goes with Norwegian dusk-regn and Swedish regn-dusk, \"drizzle\"; he also reports a view that starts from dus-dius, \"bad weather\", so the origin is debated."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:908643dacadfb098",
+      "sourceHash": "fnv1a64:8dee830813c5b4a5",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "снег (sneg) from Proto-Slavic sněgŭ — inherited. Vasmer lists Lithuanian sniẽgas, Gothic snaiws, Greek nípha and Latin nix, all \"snow\": English snow is a cousin, from PIE sneygʷʰ-, \"to snow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:627f5b071922f9c4",
+      "sourceHash": "fnv1a64:1330cb9221556924",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ветер (véter) from Proto-Slavic větrŭ — inherited, from the root of веять, \"to blow\" (Vasmer). Vasmer lists Lithuanian vėjas, \"wind\", and Sanskrit vāta-, \"wind\"; English wind is probably a cousin, from the same PIE root h₂weh₁-, \"to blow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e025b538c6a8aa5a",
+      "sourceHash": "fnv1a64:4e00977faf4d477c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "погода (pogóda) is по- with год, which in Old Russian meant \"time, a fitting moment\" (Vasmer); the same root is in годиться, \"to be fit\". Weather was first \"fair, fitting time\", as in непогода, \"bad weather\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d94cba37b6e5344f",
+      "sourceHash": "fnv1a64:86716271f1e5fd1b",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мир (mir) from Proto-Slavic mirŭ, \"peace\" — inherited, related to Old Lithuanian mieras, \"peace\", and Latvian miêrs (Vasmer). The sense \"village community\" grew from \"peaceful community\", and from it \"the world\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

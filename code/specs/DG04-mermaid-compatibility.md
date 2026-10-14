@@ -1042,6 +1042,10 @@ The internal `anchor` ShapeID survives as dedicated semantic IR, uses the upstre
 layout, and lowers to a label-free filled circle in backend-neutral paint.
 The internal `rectWithTitle` ShapeID survives as dedicated semantic IR and lowers to a rounded
 container with a title divider in backend-neutral paint.
+The internal `kanbanItem`, `mindmapCircle`, and `defaultMindmapNode` ShapeIDs remain accepted in
+attribute form and lower through shared rounded-container or circular semantic, layout, and paint geometry.
+The internal `classBox`, `erBox`, and `requirementBox` ShapeIDs remain accepted in attribute form and
+lower through shared titled-container semantic, layout, and backend-neutral paint geometry.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
@@ -1061,6 +1065,8 @@ clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
+into the same backend-neutral edge style fields.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers

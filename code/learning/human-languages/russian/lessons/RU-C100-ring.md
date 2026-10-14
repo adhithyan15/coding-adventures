@@ -14,7 +14,8 @@ romanization: "koltsó"
 concept_tag: RU-THINGS100-RING
 prerequisites: [RU-C99-camera, RU-C99-purse]
 sounds: []
-roots: []
+roots: [pie-kwel-turn]
+etymology_hook: "кольцо is built on коло 'a wheel, a circle'; Greek kyklos 'circle' and English wheel are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C99-purse]
 <!-- hl-knowledge: introduces=[RU-LEX-C100-THINGS100-01]; assesses=[] -->
 
 **кольцо** (*koltsó*) — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кольцо** is built on old *коло*, "a wheel, a circle" (Vasmer), the root of *колесо*, "wheel". Vasmer relates it to Greek *kýklos*, "circle", and Old Norse *hvel*, "wheel": English *wheel* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

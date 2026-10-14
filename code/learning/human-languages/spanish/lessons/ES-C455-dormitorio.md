@@ -11,6 +11,7 @@ concept_tag: ES-ROOM-DORMITORIO
 prerequisites: [ES-C455-pintar, ES-C36-dormir, ES-C355-piso]
 sounds: [r-tap, diphthong-io, stress-penultimate]
 roots: [dormire-latin]
+etymology_hook: "dormitorio ← Latin dormitorium 'a sleeping place', from dormire — English dormitory"
 duration:
   max_seconds: 275
 requires:
@@ -81,8 +82,8 @@ can read a lot of signs:
 | el velat**orio** | keeping watch over the dead |
 
 English took *dormitorium* whole as **dormitory**, and shortened it to *dorm*.
-It also has **dormant**, lying asleep, and the **dormouse**, named for how much
-of the year it spends doing exactly that.
+It also has **dormant**, lying asleep, and the **dormouse**, probably named for how
+much of the year it spends doing exactly that.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-02, ES-LEX-DORMIR-04] -->

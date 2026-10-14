@@ -14,7 +14,8 @@ romanization: "svinína"
 concept_tag: RU-VESHCH249-SVININA
 prerequisites: [RU-C249-smetana, RU-C249-tvorog]
 sounds: []
-roots: []
+roots: [pie-suh]
+etymology_hook: "свинина is свинья 'a pig' + -ина, a suffix for meat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C249-tvorog]
 <!-- hl-knowledge: introduces=[RU-LEX-C249-VESHCH249-03]; assesses=[] -->
 
 **свинина** (*svinína*) — "pork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свинина** is *свинья*, "a pig", with *-ина*, a suffix for meat. *свинья* is a cousin of English *swine*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

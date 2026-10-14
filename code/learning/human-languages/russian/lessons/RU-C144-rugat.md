@@ -14,7 +14,8 @@ romanization: "rugát"
 concept_tag: RU-VERB-RUGAT
 prerequisites: [RU-C144-nenavidet, RU-C144-khvalit]
 sounds: []
-roots: []
+roots: [slavic-rogu]
+etymology_hook: "ругать ← Old Russian ругати ся 'to mock', from rugŭ 'mockery'; Vasmer compares Latin ringor 'to snarl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C144-khvalit]
 <!-- hl-knowledge: introduces=[RU-LEX-C144-ACT144-05]; assesses=[] -->
 
 **ругать** (*rugát*) — "to scold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ругать** ← Old Russian *ругатися*, "to mock", from *rugŭ*, "mockery". Vasmer compares Latin *ringor*, "I bare my teeth, snarl"; Machek suggested other links, so the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

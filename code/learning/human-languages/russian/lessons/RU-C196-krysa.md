@@ -14,7 +14,8 @@ romanization: "krýsa"
 concept_tag: RU-VESHCH196-KRYSA
 prerequisites: [RU-C195-roza, RU-C195-dub]
 sounds: []
-roots: []
+roots: [slavic-krysa]
+etymology_hook: "крыса: Vasmer finds none of the proposed explanations reliable"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C195-dub]
 <!-- hl-knowledge: introduces=[RU-LEX-C196-VESHCH196-01]; assesses=[] -->
 
 **крыса** (*krýsa*) — "a rat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**крыса** — Vasmer finds none of the existing explanations reliable: a reshaping of the root of *грызть*, "to gnaw", links with *крот*, "mole", or *кровь*, "blood", and others.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

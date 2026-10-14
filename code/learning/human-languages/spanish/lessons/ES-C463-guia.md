@@ -11,6 +11,7 @@ concept_tag: ES-TRIP-GUIA
 prerequisites: [ES-C463-organizar, ES-C457-guardia, ES-C401-seguir]
 sounds: [g-hard, accent-i, hiatus-ia, stress-penultimate]
 roots: [witan-germanic]
+etymology_hook: "guía — Germanic, the source unsettled; *witan 'to watch over' is the usual candidate"
 duration:
   max_seconds: 280
 requires:

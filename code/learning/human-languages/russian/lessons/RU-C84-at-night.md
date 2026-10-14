@@ -14,7 +14,8 @@ romanization: "nóchyu"
 concept_tag: RU-TIME84-AT-NIGHT
 prerequisites: [RU-C84-in-the-daytime, RU-C84-in-the-evening]
 sounds: []
-roots: []
+roots: [pie-nokwts]
+etymology_hook: "ночью is a form of ночь 'night' meaning 'during the night'; Latin nox is a cousin of ночь"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C84-in-the-evening]
 <!-- hl-knowledge: introduces=[RU-LEX-C84-TIME84-03]; assesses=[] -->
 
 **ночью** (*nóchyu*) — "at night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ночью** is *ночь*, "night", in the form that says "by, during": "at night". *ночь* is a cousin of Latin *nox* and English *night* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

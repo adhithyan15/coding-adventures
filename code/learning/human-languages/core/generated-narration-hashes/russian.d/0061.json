@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 61,
-  "sourceHash": "fnv1a64:99a90b24623e4e91",
+  "sourceHash": "fnv1a64:e59092541c9434d2",
   "lessonIds": [
     "RU-C61-bird",
     "RU-C61-mouse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch61.txt",
   "json": "russian/narration/ch61.json",
-  "textHash": "fnv1a64:8dbf48b8094f47e3",
-  "jsonHash": "fnv1a64:601a606e9ce49207",
+  "textHash": "fnv1a64:9b796912ee114b39",
+  "jsonHash": "fnv1a64:2fa04053c636f219",
   "findings": []
 }

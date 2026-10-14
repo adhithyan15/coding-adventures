@@ -14,7 +14,8 @@ romanization: "gazéta"
 concept_tag: RU-VESHCH192-GAZETA
 prerequisites: [RU-C191-zaryadka, RU-C191-noutbuk]
 sounds: []
-roots: []
+roots: [italian-gazzetta]
+etymology_hook: "газета ← Italian gazzetta, from a Venetian coin paid for the news sheet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C191-noutbuk]
 <!-- hl-knowledge: introduces=[RU-LEX-C192-VESHCH192-01]; assesses=[] -->
 
 **газета** (*gazéta*) — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**газета** comes from Italian *gazzetta*, the source also of French *gazette*; Vasmer traces it to Venetian *gazeta*, a small coin paid for the news sheet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

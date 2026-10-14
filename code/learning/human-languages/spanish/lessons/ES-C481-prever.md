@@ -10,7 +10,8 @@ gloss: "to foresee, to expect"
 concept_tag: ES-VERB-PREVER
 prerequisites: [ES-C481-recuperar, ES-C481-descartar]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "prever — pre- 'before' + ver 'to see', like Latin praevidere 'to foresee'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C481-descartar]
 > *Rain is expected for the weekend.*
 
 Built on *ver*, and conjugated like it: *preveo*, *prevé*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prever** is *pre-*, "before", and *ver*, "to see", matching Latin *praevidere*, "to foresee" (EtymDB 2.1); it bends like *ver*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

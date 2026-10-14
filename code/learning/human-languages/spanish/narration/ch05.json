@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The Three Words for You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bef6a274ce936d64",
+  "sourceHash": "fnv1a64:3c6793cd2ce3ac6f",
   "lessons": [
     {
       "id": "ES-C03-tu-usted",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c78c76e98f5e043",
+      "sourceHash": "fnv1a64:6120da204cc0b2fb",
       "notice": null,
       "blocks": [
         {
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbcf0163fbb9f35f",
+      "sourceHash": "fnv1a64:89b6eebe9c931937",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +203,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tú o usted is two pronouns and the small word between them. O, \"or\", is Latin aut, \"or\", worn down to its vowel; tú is Latin tu, the cousin of thou. Where usted came from has a lesson of its own, two lessons on."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: usted takes he/she forms",
           "segments": [
@@ -217,7 +228,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -257,7 +268,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -442,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:469def272bcc1174",
+      "sourceHash": "fnv1a64:df0b5e973dcec6f3",
       "notice": null,
       "blocks": [
         {
@@ -571,7 +582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a5cd1a3ddc3f199",
+      "sourceHash": "fnv1a64:7f20d0ef3f809710",
       "notice": null,
       "blocks": [
         {
@@ -607,6 +618,10 @@
             {
               "kind": "speech",
               "text": "Hear the word as one piece for now. The next micro-lesson slows down and explains the written accent that Spanish question words carry."
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from Latin quem, \"whom\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "zubnáya pásta"
 concept_tag: RU-VESHCH219-ZUBNAYA-PASTA
 prerequisites: [RU-C218-glavnyy, RU-C218-obychnyy]
 sounds: []
-roots: []
+roots: [pie-gombhos, pasta-latin]
+etymology_hook: "зубная паста is 'tooth paste': зуб 'tooth' + паста, probably from Italian pasta 'dough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C218-obychnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C219-VESHCH219-01]; assesses=[] -->
 
 **зубная паста** (*zubnáya pásta*) — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зубная паста** is "tooth paste": *зубная*, from *зуб*, "tooth", with *паста*, "a paste", which Vasmer thinks more likely from Italian *pasta*, "dough", than from Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

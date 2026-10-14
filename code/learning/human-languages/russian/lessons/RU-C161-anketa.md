@@ -14,7 +14,8 @@ romanization: "ankéta"
 concept_tag: RU-VESHCH161-ANKETA
 prerequisites: [RU-C160-yashchik, RU-C160-lampochka]
 sounds: []
-roots: []
+roots: [quaerere-latin]
+etymology_hook: "анкета ← French enquête 'an inquiry', related to Latin quaestio 'a question'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C160-lampochka]
 <!-- hl-knowledge: introduces=[RU-LEX-C161-VESHCH161-01]; assesses=[] -->
 
 **анкета** (*ankéta*) — "a form, a questionnaire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**анкета** comes from French *enquête*, "an inquiry", which goes back, Vasmer says, to the Latin family of *quaestiō*, "a question".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

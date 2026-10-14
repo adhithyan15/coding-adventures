@@ -14,7 +14,8 @@ romanization: "podnimátsya"
 concept_tag: RU-VERB-TO-GO-UP
 prerequisites: [RU-C132-to-sit-down, RU-C132-to-fall]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "подниматься is под- 'up' + нимать 'to take' + -ся: to raise oneself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C132-to-fall]
 <!-- hl-knowledge: introduces=[RU-LEX-C133-ACT133-01]; assesses=[] -->
 
 **подниматься** (*podnimátsya*) — "to go up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подниматься** is *под-*, "up from under", with *-нимать*, from the old verb *\*jęti*, "to take", and *-ся*, "oneself": to lift yourself up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

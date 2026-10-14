@@ -14,7 +14,8 @@ romanization: "mésto"
 concept_tag: RU-MESTO151-MESTO
 prerequisites: [RU-C150-nakonets, RU-C150-yeshchyo]
 sounds: []
-roots: []
+roots: [slavic-mesto]
+etymology_hook: "место ← Proto-Slavic *město 'place'; Ukrainian misto and Polish miasto took the sense 'town'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C150-yeshchyo]
 <!-- hl-knowledge: introduces=[RU-LEX-C151-MESTO151-01]; assesses=[] -->
 
 **место** (*mésto*) — "a place; a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**место** ← Proto-Slavic *\*město*, "a place" — inherited. Its sense "town", in Ukrainian *misto* and Polish *miasto*, Vasmer explains as a copy of Middle High German *stat*, "place; town".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

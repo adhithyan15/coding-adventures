@@ -10,7 +10,8 @@ gloss: "the pupil, the student"
 concept_tag: ES-REF-ALUMNO
 prerequisites: [ES-C475-material, ES-C475-jardinero]
 sounds: []
-roots: []
+roots: [alere-latin]
+etymology_hook: "alumno ← Latin alumnus 'a foster child, a pupil', from alere 'to nourish' — English alumnus"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C475-jardinero]
 > *Each pupil has a book.*
 
 A girl or woman is *la alumna*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alumno** ← Latin *alumnus*, "a foster child, a pupil" (EtymDB 2.1), from *alere*, "to feed, to bring up" — a learned borrowing: worn down in speech, its *-mn-* would have changed, as *damnum* became *daño*, "harm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

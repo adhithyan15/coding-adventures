@@ -14,7 +14,8 @@ romanization: "chyórnyy"
 concept_tag: RU-COLOUR1-BLACK
 prerequisites: [RU-C62-goat, RU-C63-white]
 sounds: []
-roots: []
+roots: [slavic-chirnu]
+etymology_hook: "чёрный ← Proto-Slavic *čĭrnŭ; Sanskrit kṛṣṇa 'black' and Old Prussian kirsnan 'black' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C63-white]
 <!-- hl-knowledge: introduces=[RU-LEX-C63-COLOUR1-02]; assesses=[] -->
 
 **чёрный** (*chyórnyy*) — "black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чёрный** ← Proto-Slavic *\*čĭrnŭ*, from *\*čĭrxnŭ* — inherited. Vasmer relates it to Old Prussian *kirsnan*, "black", and Sanskrit *kṛṣṇá-*, "black", the name of Krishna.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

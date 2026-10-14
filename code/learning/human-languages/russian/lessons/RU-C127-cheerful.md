@@ -14,7 +14,8 @@ romanization: "vesyólyy"
 concept_tag: RU-QUAL127-CHEERFUL
 prerequisites: [RU-C126-interesting, RU-C126-boring]
 sounds: []
-roots: []
+roots: [slavic-veselu]
+etymology_hook: "весёлый ← Proto-Slavic *veselŭ; Latvian vesels 'healthy' and Sanskrit vasu 'good' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C126-boring]
 <!-- hl-knowledge: introduces=[RU-LEX-C127-QUAL127-01]; assesses=[] -->
 
 **весёлый** (*vesyólyy*) — "cheerful, fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**весёлый** ← Proto-Slavic *\*veselŭ* — inherited. Vasmer relates it to Latvian *vesels*, "healthy, whole", and Sanskrit *vásu-*, "good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

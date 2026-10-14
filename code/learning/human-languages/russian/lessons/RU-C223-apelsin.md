@@ -14,7 +14,8 @@ romanization: "apelsín"
 concept_tag: RU-VESHCH223-APELSIN
 prerequisites: [RU-C222-kefir, RU-C223-fasol]
 sounds: []
-roots: []
+roots: [dutch-appelsien]
+etymology_hook: "апельсин ← Dutch appelsien, 'apple of China', from French pomme de Sine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C223-fasol]
 <!-- hl-knowledge: introduces=[RU-LEX-C223-VESHCH223-02]; assesses=[] -->
 
 **апельсин** (*apelsín*) — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**апельсин** comes from Dutch *appelsien*, "apple of China", like German *Apfelsine*, after French *pomme de Sine*; the Portuguese brought the fruit from China (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

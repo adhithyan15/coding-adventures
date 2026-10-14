@@ -11,6 +11,7 @@ concept_tag: ES-QUAL-FIJO
 prerequisites: [ES-C441-firmar, ES-C427-empresa, ES-C439-cerrado]
 sounds: [j-jota, stress-penultimate]
 roots: [figere-latin]
+etymology_hook: "fijo — the worn-down participle of Latin figere 'to fasten' — English fix, transfix"
 duration:
   max_seconds: 275
 requires:

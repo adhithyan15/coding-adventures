@@ -12,6 +12,9 @@ Before the new one: say the Russian for a doctor, then the Russian for a hospita
 You'll want to know: температура.
 температура (temperatúra) — "a temperature, a fever".
 
+The word, taken apart.
+температура (temperatúra) from Latin temperātūra, "due measure, mixing", from temperāre, "to mix in proportion" — borrowed in modern times, probably through German Temperatur.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a hospital, then the Russian for a tempe
 
 You'll want to know: кашель.
 кашель (káshel) — "a cough".
+
+The word, taken apart.
+кашель (káshel) from Proto-Slavic kašĭlĭ — inherited, a cousin of Lithuanian kosulỹs, Sanskrit kāsa- and Old High German huosto, all "cough" (Vasmer).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for a temperature, then the Russian for a co
 You'll want to know: отдых.
 отдых (ótdykh) — "rest".
 
+The word, taken apart.
+отдых (ótdykh) is от-, "back, away", with дых, "breath", from the verb дышать, "to breathe": rest is getting your breath back. For the root, Vasmer compares Lithuanian dūsėti, "to pant".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for a cough, then the Russian for rest.
 You'll want to know: голод.
 голод (gólod) — "hunger".
 
+The word, taken apart.
+голод (gólod) from Proto-Slavic goldŭ — inherited. Vasmer links it with Church Slavonic žĭlděti, "to crave", and Sanskrit gṛdhyati, "is greedy". The Church Slavonic shape is глад, "famine", with -ла- for Russian -оло-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for rest, then the Russian for hunger.
 
 You'll want to know: жажда.
 жажда (zházhda) — "thirst". вода answers it.
+
+The word, taken apart.
+жажда (zházhda) — taken from Church Slavonic, says Vasmer: -жд- is the Church Slavonic sound where East Slavic has -ж-, and Old Russian had the native жажа. Both go back to Proto-Slavic žędja.
 
 What you've built.
 One more word for this chapter.

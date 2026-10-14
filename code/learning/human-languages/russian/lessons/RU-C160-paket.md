@@ -14,7 +14,8 @@ romanization: "pakét"
 concept_tag: RU-VESHCH160-PAKET
 prerequisites: [RU-C159-komod, RU-C160-bokal]
 sounds: []
-roots: []
+roots: [paquet-french]
+etymology_hook: "пакет probably came through German Paket from French paquet 'a bundle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C160-bokal]
 <!-- hl-knowledge: introduces=[RU-LEX-C160-VESHCH160-02]; assesses=[] -->
 
 **пакет** (*pakét*) — "a bag (plastic or paper)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пакет** — older *покет*, from 1700; it probably came through German *Paket* from French *paquet*, "a bundle" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

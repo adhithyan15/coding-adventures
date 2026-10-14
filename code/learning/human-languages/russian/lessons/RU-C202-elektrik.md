@@ -14,7 +14,8 @@ romanization: "elektrík"
 concept_tag: RU-RABOTA202-ELEKTRIK
 prerequisites: [RU-C201-kollega, RU-C201-direktor]
 sounds: []
-roots: []
+roots: [elektron-greek]
+etymology_hook: "электрик is from электричество 'electricity', Greek ēlektron 'amber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C201-direktor]
 <!-- hl-knowledge: introduces=[RU-LEX-C202-RABOTA202-01]; assesses=[] -->
 
 **электрик** (*elektrík*) — "an electrician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**электрик** is built on *электричество*, "electricity", from Greek *ḗlektron*, "amber", which gives a spark when rubbed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

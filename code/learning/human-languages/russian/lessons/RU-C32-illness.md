@@ -14,7 +14,8 @@ romanization: "bolézn"
 concept_tag: RU-HEALTH1-ILLNESS
 prerequisites: [RU-C31-blood, RU-C32-pain]
 sounds: []
-roots: []
+roots: [slavic-boli]
+etymology_hook: "болезнь is болеть 'to be ill' with the old noun suffix -знь, as in жизнь 'life'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C32-pain]
 <!-- hl-knowledge: introduces=[RU-LEX-C32-HEALTH1-02]; assesses=[] -->
 
 **болезнь** (*bolézn*) — "an illness". Built on **боль**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**болезнь** — built from *болеть*, "to be ill", the verb of *боль*, "pain", with the old noun suffix *-знь* that also makes *жизнь*, "life".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

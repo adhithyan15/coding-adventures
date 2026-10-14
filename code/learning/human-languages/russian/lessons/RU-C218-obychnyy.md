@@ -14,7 +14,8 @@ romanization: "obýchnyy"
 concept_tag: RU-KACH218-OBYCHNYY
 prerequisites: [RU-C218-pokhozhiy, RU-C218-glavnyy]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "обычный is from обычай 'a custom', from *ob-vyčajĭ, on the root of привыкнуть 'to get used to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C218-glavnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C218-KACH218-05]; assesses=[] -->
 
 **обычный** (*obýchnyy*) — "ordinary, usual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обычный** is built on *обычай*, "a custom", from *\*ob-vyčajĭ* (Vasmer), on the root of *привыкнуть*, "to get used to", which is also the root of *учить*, "to teach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rádost"
 concept_tag: RU-FEEL-JOY
 prerequisites: [RU-C33-hunger, RU-C33-thirst]
 sounds: []
-roots: []
+roots: [slavic-radu]
+etymology_hook: "радость is рад 'glad' + -ость; рад is old Slavic, its deeper origin disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C33-thirst]
 <!-- hl-knowledge: introduces=[RU-LEX-C34-FEEL-01]; assesses=[] -->
 
 **радость** (*rádost*) — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**радость** is *рад*, "glad", with *-ость*, the suffix that makes nouns of quality. *рад* goes back to Proto-Slavic *\*radŭ*; Vasmer finds a link with Old English *rōt*, "cheerful", likely, but reports a rival account.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

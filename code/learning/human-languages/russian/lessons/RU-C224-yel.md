@@ -14,7 +14,8 @@ romanization: "yel"
 concept_tag: RU-VESHCH224-YEL
 prerequisites: [RU-C223-vinograd, RU-C224-beryoza]
 sounds: []
-roots: []
+roots: [slavic-jedla]
+etymology_hook: "ель ← Proto-Slavic *jedlĭ; Lithuanian eglė 'spruce' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C224-beryoza]
 <!-- hl-knowledge: introduces=[RU-LEX-C224-VESHCH224-02]; assesses=[] -->
 
 **ель** (*yel*) — "a spruce, a fir tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ель** ← Proto-Slavic *\*jedlĭ* — inherited, a cousin of Lithuanian *ẽglė* and Old Prussian *addle*, "fir, spruce" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vólosy"
 concept_tag: RU-BODY2-HAIR
 prerequisites: [RU-C29-belly, RU-C29-tooth]
 sounds: []
-roots: []
+roots: [slavic-volsu]
+etymology_hook: "волосы ← Proto-Slavic *volsŭ 'a hair'; Avestan varəsa 'hair' is a cousin, and власы the Church Slavonic twin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C29-tooth]
 <!-- hl-knowledge: introduces=[RU-LEX-C30-BODY2-01]; assesses=[] -->
 
 **волосы** (*vólosy*) — "hair". Plural, like English "locks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**волосы** is the plural of *волос*, "a hair", ← Proto-Slavic *\*volsŭ* — inherited. Vasmer compares Avestan *varəsa-*, "hair". Russian *-оло-* faces Church Slavonic *-ла-* again: the church form is *власы*, an old word for "hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

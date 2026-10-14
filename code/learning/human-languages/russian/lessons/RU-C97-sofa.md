@@ -14,7 +14,8 @@ romanization: "diván"
 concept_tag: RU-THINGS97-SOFA
 prerequisites: [RU-C97-broom, RU-C97-washing-machine]
 sounds: []
-roots: []
+roots: [persian-divan]
+etymology_hook: "диван probably came from French divan 'a couch', from Turkish and Persian divan 'a council chamber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C97-washing-machine]
 <!-- hl-knowledge: introduces=[RU-LEX-C97-THINGS97-03]; assesses=[] -->
 
 **диван** (*diván*) — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**диван** — Vasmer thinks it more likely came from the West, French *divan*, "a couch", than straight from its Turkish and Persian source *divan*, "a council, a council chamber" with its cushioned benches.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

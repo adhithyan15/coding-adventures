@@ -10,7 +10,8 @@ gloss: "to trust"
 concept_tag: ES-VERB-FIARSE
 prerequisites: [ES-C509-acuerdo, ES-C510-disculparse]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "fiarse ← spoken Latin *fidare, from fidere 'to trust' — English fidelity"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C510-disculparse]
 > *I do not trust him.*
 
 It goes with *de*: *fiarse de alguien*. Note the accent in *me fío*. In much of Latin America, *confiar en* is more common.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiarse** comes from spoken Latin *\*fidare* (EtymDB 2.1), built on *fidere*, "to trust" — inherited: the *-d-* fell away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

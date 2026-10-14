@@ -14,7 +14,8 @@ romanization: "bábochka"
 concept_tag: RU-THINGS117-BUTTERFLY
 prerequisites: [RU-C117-rabbit, RU-C117-tiger]
 sounds: []
-roots: []
+roots: [slavic-baba]
+etymology_hook: "бабочка is a diminutive of бабка 'granny': a butterfly as a dead ancestor's soul"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C117-tiger]
 <!-- hl-knowledge: introduces=[RU-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **бабочка** (*bábochka*) — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бабочка** is a diminutive of *бабка*, "granny" (Vasmer), from the belief that the soul of a dead person lives on as a butterfly; Greek *psychḗ* is both "soul" and "butterfly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

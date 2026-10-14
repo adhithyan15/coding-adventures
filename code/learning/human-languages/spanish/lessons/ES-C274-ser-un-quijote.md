@@ -11,6 +11,7 @@ concept_tag: CULTURAL-ALLUSION
 prerequisites: [ES-C274-mas-vale-pajaro]
 sounds: [vowel-a, vowel-e]
 roots: [quijote]
+etymology_hook: "quijote — Don Quixote, Cervantes' hero of 1605, now a common noun — English quixotic"
 duration:
   max_seconds: 240
 requires:

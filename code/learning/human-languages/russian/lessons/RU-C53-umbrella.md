@@ -14,7 +14,8 @@ romanization: "zont"
 concept_tag: RU-THINGS-UMBRELLA
 prerequisites: [RU-C53-bag, RU-C53-phone]
 sounds: []
-roots: []
+roots: [dutch-zondek]
+etymology_hook: "зонт is shortened from зонтик, from Dutch zondek 'a sun-cover', a sailors' word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C53-phone]
 <!-- hl-knowledge: introduces=[RU-LEX-C53-THINGS-03]; assesses=[] -->
 
 **зонт** (*zont*) — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зонт** is cut back from *зонтик*, from older *зондек*, a sailors' word from Dutch *zondek*, "an awning against the sun" (Vasmer). The *-ик* was heard as a diminutive, so *зонт* was made as the "full" form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

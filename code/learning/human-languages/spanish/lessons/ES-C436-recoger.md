@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECOGER
 prerequisites: [ES-C436-prestar, ES-C431-pedido]
 sounds: []
 roots: []
+etymology_hook: "recoger — re- 'back' + coger 'to take': to take back up"
 duration:
   max_seconds: 255
 requires:
@@ -64,6 +65,9 @@ to remember four English translations is four times the work for less accuracy.
 **Watch the spelling**: *recojo* with a **j** in the yo form, because *ge* would
 be said differently from *go*. The sound stays put and the letter moves, which
 is the reverse of what English spelling usually does to you.
+
+*Recoger* is Latin *recolligere*, "to gather up again" (Lewis & Short); *coger*
+is *colligere*, "to gather".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-05, ES-LEX-C431-PEDIDO-01, ES-LEX-C434-MAQ-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 157,
-  "sourceHash": "fnv1a64:d9989d39eb25d129",
+  "sourceHash": "fnv1a64:9351c5bbbe1dde09",
   "lessonIds": [
     "RU-C157-goluboy",
     "RU-C157-sladkiy",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch157.txt",
   "json": "russian/narration/ch157.json",
-  "textHash": "fnv1a64:9cb67b6e3026fa04",
-  "jsonHash": "fnv1a64:661dffdca1cd40a5",
+  "textHash": "fnv1a64:4485f959665751fa",
+  "jsonHash": "fnv1a64:579c44591b50fc23",
   "findings": []
 }

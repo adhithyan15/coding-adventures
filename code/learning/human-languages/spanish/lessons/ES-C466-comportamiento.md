@@ -11,6 +11,7 @@ concept_tag: ES-ASK-COMPORTAMIENTO
 prerequisites: [ES-C466-visible, ES-C463-importar, ES-C450-entrenamiento]
 sounds: [stress-penultimate, diphthong-ie]
 roots: [comportare-latin]
+etymology_hook: "comportamiento — comportarse, Latin com- + portare 'to carry': carrying yourself"
 duration:
   max_seconds: 275
 requires:

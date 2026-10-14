@@ -12,6 +12,9 @@ Before the new one: say the Russian for a woman, then the Russian for a boy.
 You'll want to know: ошибка.
 ошибка (oshíbka) — "a mistake".
 
+The word, taken apart.
+ошибка (oshíbka) comes from ошибиться, "to make a mistake", first "to miss, to strike past the target", from шибать, "to strike" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a boy, then the Russian for a mistake.
 
 You'll want to know: правило.
 правило (právilo) — "a rule".
+
+The word, taken apart.
+правило (právilo) is править, "to set straight, to rule", with -ло, a suffix for a tool: "what sets things straight". правый is "straight, right".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for a mistake, then the Russian for a rule.
 You'll want to know: пример.
 пример (primér) — "an example".
 
+The word, taken apart.
+пример (primér) is при-, "by, against", with мер, from мера, "a measure": something to measure against. Vasmer relates мера to Latin mētior, "I measure".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for a rule, then the Russian for an example.
 You'll want to know: значение.
 значение (znachéniye) — "a meaning".
 
+The word, taken apart.
+значение (znachéniye) comes from значить, "to mean", from знак, "a sign", which goes with знать, "to know" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for an example, then the Russian for a meani
 
 You'll want to know: имя.
 имя (ímya) — "a first name".
+
+The word, taken apart.
+имя (ímya) from Proto-Slavic jĭmę — inherited. Vasmer lists Old Prussian emmens, Latin nōmen, Gothic namō and Old High German -nuomen: English name is a cousin, from PIE h₁nómṇ.
 
 What you've built.
 One more word for this chapter.

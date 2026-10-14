@@ -14,7 +14,8 @@ romanization: "schastlívyy"
 concept_tag: RU-KACH216-SCHASTLIVYY
 prerequisites: [RU-C216-spokoynyy, RU-C216-nervnyy]
 sounds: []
-roots: []
+roots: [slavic-chesti]
+etymology_hook: "счастливый is from счастье 'luck', usually *sŭ- 'good' + часть 'a share': 'a good lot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C216-nervnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C216-KACH216-03]; assesses=[] -->
 
 **счастливый** (*schastlívyy*) — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**счастливый** is built on *счастье*, "luck, happiness", usually explained as "a good share", from *часть*, "a share" (Vasmer). Vasmer relates *часть* to Lithuanian *kąsti*, "to bite": a share is a bite.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

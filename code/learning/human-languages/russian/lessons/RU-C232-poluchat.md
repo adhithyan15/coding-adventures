@@ -14,7 +14,8 @@ romanization: "poluchát"
 concept_tag: RU-VERB-POLUCHAT
 prerequisites: [RU-C232-zvonit, RU-C232-otpravlyat]
 sounds: []
-roots: []
+roots: [slavic-luchiti]
+etymology_hook: "получать is по- + лучать, from лучить 'to hit upon, to come upon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C232-otpravlyat]
 <!-- hl-knowledge: introduces=[RU-LEX-C232-ACT232-05]; assesses=[] -->
 
 **получать** (*poluchát*) — "to receive, to get".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**получать** is *по-* with *-лучать*, from *лучить*, "to hit upon", the root of *случиться*, "to happen" (Vasmer): to receive is to come upon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

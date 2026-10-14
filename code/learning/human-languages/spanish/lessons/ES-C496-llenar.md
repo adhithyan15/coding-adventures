@@ -10,7 +10,8 @@ gloss: "to fill"
 concept_tag: ES-VERB-LLENAR
 prerequisites: [ES-C496-colocar, ES-C496-quitar]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "llenar — built on lleno 'full', Latin plenus: pl- became ll- — English plenty, replenish"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C496-quitar]
 > *Fill the bottle with water.*
 
 The verb behind *lleno*, full.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**llenar** is built on *lleno*, "full", from Latin *plenus*, "full" — inherited: the *pl-* became *ll-*, as *clamare* became *llamar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

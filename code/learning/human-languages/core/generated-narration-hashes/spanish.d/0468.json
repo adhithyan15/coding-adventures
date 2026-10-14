@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 468,
-  "sourceHash": "fnv1a64:8d95a963b23de30a",
+  "sourceHash": "fnv1a64:be59ae1a31b1db89",
   "lessonIds": [
     "ES-C468-chaqueta",
     "ES-C468-grado",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch468.txt",
   "json": "spanish/narration/ch468.json",
   "textHash": "fnv1a64:c698debd74eae995",
-  "jsonHash": "fnv1a64:c28886743fea9611",
+  "jsonHash": "fnv1a64:973c5f8fe18450c8",
   "findings": []
 }

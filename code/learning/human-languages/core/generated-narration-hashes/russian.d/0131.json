@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 131,
-  "sourceHash": "fnv1a64:9db75d06a53b5951",
+  "sourceHash": "fnv1a64:e436c9010cc1c6a2",
   "lessonIds": [
     "RU-C131-to-begin",
     "RU-C131-to-visit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch131.txt",
   "json": "russian/narration/ch131.json",
-  "textHash": "fnv1a64:944aca2936f47681",
-  "jsonHash": "fnv1a64:9a60352399df1796",
+  "textHash": "fnv1a64:3d4cf20b1d233eb3",
+  "jsonHash": "fnv1a64:5d5d43b7f97a2594",
   "findings": []
 }

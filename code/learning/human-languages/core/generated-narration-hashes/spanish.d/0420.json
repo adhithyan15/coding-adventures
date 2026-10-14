@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 420,
-  "sourceHash": "fnv1a64:4c7eaade2d3c34c0",
+  "sourceHash": "fnv1a64:4a25ed8910f44420",
   "lessonIds": [
     "ES-C420-teatro",
     "ES-C420-exposicion",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch420.txt",
   "json": "spanish/narration/ch420.json",
   "textHash": "fnv1a64:3f5226de96b392ad",
-  "jsonHash": "fnv1a64:d7d63c6039e0bd65",
+  "jsonHash": "fnv1a64:85d2c57029062dfa",
   "findings": []
 }

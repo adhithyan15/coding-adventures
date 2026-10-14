@@ -11,6 +11,7 @@ concept_tag: ES-ASK-LECTURA
 prerequisites: [ES-C472-surgir, ES-C441-factura, ES-C34-leer]
 sounds: [l-clear, r-tap, stress-penultimate]
 roots: [legere-latin]
+etymology_hook: "lectura — Latin legere 'to gather, to read' + -ura — English lecture"
 duration:
   max_seconds: 275
 requires:

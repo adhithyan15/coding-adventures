@@ -14,7 +14,8 @@ romanization: "kúkla"
 concept_tag: RU-VESHCH221-KUKLA
 prerequisites: [RU-C221-igrushka, RU-C221-myach]
 sounds: []
-roots: []
+roots: [cucullus-latin]
+etymology_hook: "кукла ← Byzantine Greek koukla 'a doll', from Latin cuculla 'a hood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C221-myach]
 <!-- hl-knowledge: introduces=[RU-LEX-C221-VESHCH221-03]; assesses=[] -->
 
 **кукла** (*kúkla*) — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кукла** ← Byzantine Greek *koúkla*, "a doll", from Latin *cuculla*, "a hood" (Vasmer); Old Russian *кукольник* meant "a conjurer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

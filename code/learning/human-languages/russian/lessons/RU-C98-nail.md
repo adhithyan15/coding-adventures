@@ -14,7 +14,8 @@ romanization: "gvozd"
 concept_tag: RU-THINGS98-NAIL
 prerequisites: [RU-C98-bucket, RU-C98-rope]
 sounds: []
-roots: []
+roots: [slavic-gvozdi]
+etymology_hook: "гвоздь ← Proto-Slavic *gvozdĭ, beside a Slavic word for 'forest'; German Quaste 'tassel' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C98-rope]
 <!-- hl-knowledge: introduces=[RU-LEX-C98-THINGS98-04]; assesses=[] -->
 
 **гвоздь** (*gvozd*) — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гвоздь** ← Proto-Slavic *\*gvozdĭ* — inherited. Vasmer will not separate it from old Slavic *gvozd*, "a forest", and compares German *Quaste*, "a tassel", and Old Norse *kvistr*, "a twig": a nail was first a wooden peg.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

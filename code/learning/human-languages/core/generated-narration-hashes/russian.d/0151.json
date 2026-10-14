@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 151,
-  "sourceHash": "fnv1a64:6b1e31097988c843",
+  "sourceHash": "fnv1a64:f0f70890d4aa4508",
   "lessonIds": [
     "RU-C151-mesto",
     "RU-C151-tsentr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch151.txt",
   "json": "russian/narration/ch151.json",
-  "textHash": "fnv1a64:d880d7e5c743db42",
-  "jsonHash": "fnv1a64:5437e523a220eadd",
+  "textHash": "fnv1a64:7f74e373465fa7a4",
+  "jsonHash": "fnv1a64:0098017ebdfcb591",
   "findings": []
 }

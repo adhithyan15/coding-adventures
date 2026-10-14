@@ -11,6 +11,7 @@ concept_tag: SUMMARY-COMPRESSION
 prerequisites: [ES-C277-por-un-lado]
 sounds: [vowel-e, vowel-o]
 roots: [resumere]
+etymology_hook: "resumen ← Latin resumere: re- 'again' + sumere 'to take up' — a summary, not a CV"
 duration:
   max_seconds: 240
 requires:

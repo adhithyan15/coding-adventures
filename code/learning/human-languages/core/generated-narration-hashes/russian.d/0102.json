@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 102,
-  "sourceHash": "fnv1a64:a597621ab371c0e0",
+  "sourceHash": "fnv1a64:a2a2374fd2e84a27",
   "lessonIds": [
     "RU-C102-boots",
     "RU-C102-skirt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch102.txt",
   "json": "russian/narration/ch102.json",
-  "textHash": "fnv1a64:9240b5d4227b8638",
-  "jsonHash": "fnv1a64:5ac36780478c9d63",
+  "textHash": "fnv1a64:41d07662a4e0fedc",
+  "jsonHash": "fnv1a64:c11c678f0505bba5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "próvod"
 concept_tag: RU-VESHCH191-PROVOD
 prerequisites: [RU-C191-batareya, RU-C191-rozetka]
 sounds: []
-roots: []
+roots: [slavic-voditi]
+etymology_hook: "провод is про- 'through' + вод, from водить 'to lead': what leads current through"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C191-rozetka]
 <!-- hl-knowledge: introduces=[RU-LEX-C191-VESHCH191-03]; assesses=[] -->
 
 **провод** (*próvod*) — "a wire, a cable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**провод** is *про-*, "through", with *вод*, from *водить*, "to lead": a wire leads current through.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

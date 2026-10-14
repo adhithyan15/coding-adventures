@@ -14,7 +14,8 @@ romanization: "svechá"
 concept_tag: RU-THINGS100-CANDLE
 prerequisites: [RU-C100-ring, RU-C100-photograph]
 sounds: []
-roots: []
+roots: [slavic-svetu]
+etymology_hook: "свеча ← Proto-Slavic *světja, from свет 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C100-photograph]
 <!-- hl-knowledge: introduces=[RU-LEX-C100-THINGS100-03]; assesses=[] -->
 
 **свеча** (*svechá*) — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свеча** ← Proto-Slavic *\*světja*, built on *свет*, "light" (Vasmer); Vasmer compares Sanskrit *śvetya-*, "bright".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

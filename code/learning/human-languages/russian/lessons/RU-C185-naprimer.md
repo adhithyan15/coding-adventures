@@ -14,7 +14,8 @@ romanization: "naprimér"
 concept_tag: RU-PRICH185-NAPRIMER
 prerequisites: [RU-C185-rezultat, RU-C185-znachit]
 sounds: []
-roots: []
+roots: [slavic-mera]
+etymology_hook: "например is на 'for' + пример 'an example', from мера 'a measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C185-znachit]
 <!-- hl-knowledge: introduces=[RU-LEX-C185-PRICH185-05]; assesses=[] -->
 
 **например** (*naprimér*) — "for example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**например** is *на*, "for", with *пример*, "an example", from *при-* and *мера*, "a measure": something held up to measure by. Vasmer relates *мера* to Latin *mētior*, "I measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

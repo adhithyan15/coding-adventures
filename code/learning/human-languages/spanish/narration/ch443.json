@@ -4,7 +4,7 @@
   "chapter": 443,
   "title": "El Animo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c15c4f28d9317846",
+  "sourceHash": "fnv1a64:a06fb53f1c45b6fa",
   "lessons": [
     {
       "id": "ES-C443-doler",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adfda1f8e34d4b04",
+      "sourceHash": "fnv1a64:5ff22c6f5280d031",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06e520cfff7c9be2",
+      "sourceHash": "fnv1a64:ebb729759178e08f",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87dbb93a203ce329",
+      "sourceHash": "fnv1a64:db4b6f66569ed68d",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e48032a387397b2",
+      "sourceHash": "fnv1a64:ab5320ef73be74ea",
       "notice": null,
       "blocks": [
         {
@@ -572,6 +572,10 @@
             {
               "kind": "speech",
               "text": "That is the third verb in this chapter built by putting a prefix and an ending on a word you already owned — acercarse on cerca, concentrarse on centro. Look for the bare word inside before you look anything up."
+            },
+            {
+              "kind": "speech",
+              "text": "Centro is Latin centrum, from Greek kentron, the sharp point of a goad, and so the fixed point of a pair of compasses."
             }
           ]
         },
@@ -670,7 +674,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f55e3ba92ff85615",
+      "sourceHash": "fnv1a64:c86d1aef1894336c",
       "notice": null,
       "blocks": [
         {

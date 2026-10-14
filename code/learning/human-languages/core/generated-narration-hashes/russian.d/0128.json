@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 128,
-  "sourceHash": "fnv1a64:06bc884fbdaaeaec",
+  "sourceHash": "fnv1a64:3a52843f8b863a86",
   "lessonIds": [
     "RU-C128-wrong",
     "RU-C128-ready",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch128.txt",
   "json": "russian/narration/ch128.json",
-  "textHash": "fnv1a64:f52189eee4c2e18a",
-  "jsonHash": "fnv1a64:7e82b3c452979675",
+  "textHash": "fnv1a64:d3a4a65a3972e028",
+  "jsonHash": "fnv1a64:737696d4576a9939",
   "findings": []
 }

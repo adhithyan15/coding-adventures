@@ -14,7 +14,8 @@ romanization: "stoyánka"
 concept_tag: RU-LOC90-CAR-PARK
 prerequisites: [RU-C89-crossroads, RU-C89-traffic-lights]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "стоянка is стоять 'to stand' + -нка: a place where cars stand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C89-traffic-lights]
 <!-- hl-knowledge: introduces=[RU-LEX-C90-LOC90-01]; assesses=[] -->
 
 **стоянка** (*stoyánka*) — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стоянка** is *стоять*, "to stand", with *-нка*: a place where something stands.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

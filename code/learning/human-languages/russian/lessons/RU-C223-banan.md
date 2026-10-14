@@ -14,7 +14,8 @@ romanization: "banán"
 concept_tag: RU-VESHCH223-BANAN
 prerequisites: [RU-C223-apelsin, RU-C223-limon]
 sounds: []
-roots: []
+roots: [kongo-banana]
+etymology_hook: "банан probably came from French banane, from a word of the Kongo language"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C223-limon]
 <!-- hl-knowledge: introduces=[RU-LEX-C223-VESHCH223-04]; assesses=[] -->
 
 **банан** (*banán*) — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**банан** probably came from French *banane*, from a word of Kikongo, a language of the Congo (Vasmer); German *Banane* would have given a feminine noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

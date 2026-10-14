@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECORDAR
 prerequisites: [ES-C463-sintesis-guia, ES-C364-corazon, ES-C356-cita]
 sounds: [r-tap, d-soft, diphthong-ue, stress-final]
 roots: [cor-latin]
+etymology_hook: "recordar ← Latin recordari: re- 'back' + cor 'heart' — English record"
 duration:
   max_seconds: 280
 requires:
@@ -76,7 +77,7 @@ memory and thought there rather than in the head. That is the same *cor* inside
 **el corazón**, which you have had for many chapters.
 
 The family is everywhere once seen: **el acuerdo**, an agreement — hearts
-brought together — and **recordar**'s English cousin **record**, which is
+brought together — and **recordar**'s English relative **record**, which is
 literally a thing committed to memory. **Courage** is *cor* too, by way of
 French, and so is **concordance**.
 

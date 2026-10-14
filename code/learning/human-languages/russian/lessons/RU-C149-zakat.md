@@ -14,7 +14,8 @@ romanization: "zakát"
 concept_tag: RU-VREMYA149-ZAKAT
 prerequisites: [RU-C149-sutki, RU-C149-rassvet]
 sounds: []
-roots: []
+roots: [slavic-katiti]
+etymology_hook: "закат is за- 'behind' + кат, from катить 'to roll': the sun rolling down behind"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C149-rassvet]
 <!-- hl-knowledge: introduces=[RU-LEX-C149-VREMYA149-05]; assesses=[] -->
 
 **закат** (*zakát*) — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**закат** is *за-*, "behind", with *кат*, from *катиться*, "to roll": sunset is the sun rolling down behind the horizon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

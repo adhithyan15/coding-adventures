@@ -14,7 +14,8 @@ romanization: "uchítel"
 concept_tag: RU-PEOPLE-TEACHER
 prerequisites: [RU-C37-neighbour, RU-C37-guest]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "учитель is учить 'to teach' + -тель, 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C37-guest]
 <!-- hl-knowledge: introduces=[RU-LEX-C37-PEOPLE-03]; assesses=[] -->
 
 **учитель** (*uchítel*) — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**учитель** is *учить*, "to teach", with *-тель*, "one who does it"; Old Church Slavonic already had it. The verb goes back to Proto-Slavic *\*učiti*, "to accustom" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

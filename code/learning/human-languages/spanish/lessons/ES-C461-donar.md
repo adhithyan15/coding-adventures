@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DONAR
 prerequisites: [ES-C460-sintesis-pedir, ES-C20-perdon, ES-C300-sangre]
 sounds: [d-soft, nasal-n, stress-final]
 roots: [donare-latin]
+etymology_hook: "donar ← Latin donare 'to give' — kin to perdón, don; English donate, pardon"
 duration:
   max_seconds: 275
 requires:

@@ -14,7 +14,8 @@ romanization: "zelyónyy"
 concept_tag: RU-COLOUR1-GREEN
 prerequisites: [RU-C63-red, RU-C63-blue]
 sounds: []
-roots: []
+roots: [pie-ghel-shine]
+etymology_hook: "зелёный ← Proto-Slavic *zelenŭ; Lithuanian žãlias 'green' is a cousin, from a root 'to sprout, gleam'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C63-blue]
 <!-- hl-knowledge: introduces=[RU-LEX-C63-COLOUR1-05]; assesses=[] -->
 
 **зелёный** (*zelyónyy*) — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зелёный** ← Proto-Slavic *\*zelenŭ* — inherited. Vasmer relates it to Lithuanian *žãlias*, "green", and *žélti*, "to grow over", and further to *золото*, "gold", and Sanskrit *hári-*, "yellow". German *gelb*, "yellow", comes from the same PIE root, *\*ǵʰelh₃-*, "to be green, yellow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "fast, quick"
 concept_tag: ES-REF-RAPIDO
 prerequisites: [ES-C482-parecido, ES-C482-justo]
 sounds: []
-roots: []
+roots: [rapere-latin]
+etymology_hook: "rápido ← Latin rapidus 'snatching, swift', from rapere 'to snatch' — English rapid"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C482-justo]
 > *The fast train gets there sooner.*
 
 As an adverb it also means quickly: *ven rápido*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rápido** ← Latin *rapidus*, "snatching, swift" (EtymDB 2.1), from *rapere*, "to snatch" — a learned borrowing: the stress stays on the first syllable and the *-p-* is kept.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

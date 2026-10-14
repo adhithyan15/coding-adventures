@@ -14,7 +14,8 @@ romanization: "benzín"
 concept_tag: RU-VESHCH167-BENZIN
 prerequisites: [RU-C167-mototsikl, RU-C167-gruzovik]
 sounds: []
-roots: []
+roots: [arabic-luban]
+etymology_hook: "бензин ← French benzine, from benzoe, from Arabic lubān jāwī 'Javanese incense'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C167-gruzovik]
 <!-- hl-knowledge: introduces=[RU-LEX-C167-VESHCH167-04]; assesses=[] -->
 
 **бензин** (*benzín*) — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бензин** comes from French *benzine*, from Medieval Latin *benzoe*, a resin, from Arabic *lubān jāwī*, "incense of Java" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

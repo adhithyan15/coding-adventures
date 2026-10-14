@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Lion, Monkey, Elephant, Bee, Ant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:821a8a1d55b96e24",
+  "sourceHash": "fnv1a64:4dc0c479f6a31b19",
   "lessons": [
     {
       "id": "RU-C120-lion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36ad4199e8e7d3b7",
+      "sourceHash": "fnv1a64:323159476b412051",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лев (lev) from Old High German lëwo, from Latin leō, Greek léōn (Vasmer). Vasmer thinks it came through books, since a spoken loan would have given лёв, and that the word's ultimate source is probably Semitic."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a023362aead7813a",
+      "sourceHash": "fnv1a64:9aae569578c1eae8",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обезьяна (obezyána) — Old Russian обезьяна (obezyána), recorded by Afanasy Nikitin; it comes from Turkish and Persian abuzine, \"monkey\", reshaped, it is thought, to look like Russian words with о- and без-, an account Vasmer finds not fully satisfying."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed3e3a6c4edcbc41",
+      "sourceHash": "fnv1a64:0496fff19f4f5203",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "слон (slon) — origin disputed. It is usually read as a bookish coinage from прислониться, \"to lean\", after the old Physiologus, which says the elephant sleeps leaning on a tree; Vasmer thinks that link is folk etymology and finds a loan from Turkic arslan, \"lion\", acceptable in its sounds."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47d6729b2ab7326f",
+      "sourceHash": "fnv1a64:504d2a84b9150310",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пчела (pchelá) from Proto-Slavic bĭčela — inherited; б turned to п before ч. Vasmer relates it to Irish bech, Lithuanian bìtė and Old High German bîa, all \"bee\": English bee is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89b0b16150e08ca1",
+      "sourceHash": "fnv1a64:7d1a8b9381106cf1",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "муравей (muravéy) from Proto-Slavic morvĭjĭ — inherited. Vasmer lists Irish moirb, Avestan maoiri- and Old Norse maurr, all \"ant\"; Latin formīca, \"ant\", is related too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

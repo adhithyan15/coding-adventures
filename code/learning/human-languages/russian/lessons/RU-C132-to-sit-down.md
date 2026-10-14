@@ -14,7 +14,8 @@ romanization: "sadítsya"
 concept_tag: RU-VERB-TO-SIT-DOWN
 prerequisites: [RU-C132-to-wash, RU-C132-to-get-up]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "садиться ← Proto-Slavic *saditi 'to seat', the 'make sit' partner of сидеть 'to sit', + -ся"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C132-to-get-up]
 <!-- hl-knowledge: introduces=[RU-LEX-C132-ACT132-04]; assesses=[] -->
 
 **садиться** (*sadítsya*) — "to sit down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**садиться** is *садить*, "to seat", with *-ся*, "oneself": to seat yourself. *садить* ← Proto-Slavic *\*saditi*, the "make sit" form of *сидеть*, "to sit"; Vasmer relates it to Sanskrit *sādáyati*, "seats", and Gothic *satjan*, "to set".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

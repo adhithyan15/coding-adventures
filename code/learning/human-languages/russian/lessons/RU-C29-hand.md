@@ -14,7 +14,8 @@ romanization: "ruká"
 concept_tag: RU-BODY1-HAND
 prerequisites: [RU-C26-vtoroy-tretiy, RU-C29-head]
 sounds: []
-roots: []
+roots: [slavic-roka]
+etymology_hook: "рука ← Proto-Slavic *rǫka; Lithuanian rankà 'hand' is a cousin, linked with riñkti 'to gather'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C29-head]
 <!-- hl-knowledge: introduces=[RU-LEX-C29-BODY1-02]; assesses=[] -->
 
 **рука** (*ruká*) — "a hand, an arm". One word for both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рука** ← Proto-Slavic *\*rǫka*, "hand" — inherited; the old nasal *ǫ* became Russian *у*. Vasmer pairs it with Lithuanian *rankà*, "hand", and links both with Lithuanian *riñkti*, "to gather": the hand as the gatherer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

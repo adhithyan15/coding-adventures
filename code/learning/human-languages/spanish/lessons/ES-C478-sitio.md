@@ -10,7 +10,8 @@ gloss: "the place; the room, the space"
 concept_tag: ES-REF-SITIO
 prerequisites: [ES-C478-equipaje, ES-C478-calzado]
 sounds: []
-roots: []
+roots: [situs-latin]
+etymology_hook: "sitio ← Latin situs 'a position, a site' — English site"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C478-calzado]
 > *There is no room in the car.*
 
 *Un sitio web* is a website.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sitio** goes back to Latin *situs*, "a position, a site" (EtymDB 2.1); how it came by its ending *-io* is not settled. English *site* comes from the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

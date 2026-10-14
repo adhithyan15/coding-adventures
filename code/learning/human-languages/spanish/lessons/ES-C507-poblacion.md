@@ -10,7 +10,8 @@ gloss: "the population"
 concept_tag: ES-REF-POBLACION
 prerequisites: [ES-C507-votar, ES-C507-impuesto]
 sounds: []
-roots: []
+roots: [populus-latin]
+etymology_hook: "población ← Late Latin populatio, from populus 'a people' — kin to pueblo; English population"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C507-impuesto]
 > La población del pueblo es pequeña.
 >
 > *The village's population is small.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**población** ← Late Latin *populatio* (EtymDB 2.1), from *populus*, "a people" — the word that also became *pueblo*, "a town, a people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

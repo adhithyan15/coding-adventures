@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, an Advert, an Entrance, an Exit, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:807496254df92061",
+  "sourceHash": "fnv1a64:42f3225b5bfe68fe",
   "lessons": [
     {
       "id": "RU-C139-raspisaniye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3f3a621cab7b747",
+      "sourceHash": "fnv1a64:34f40fea109487cd",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "расписание (raspisániye) is рас-, \"out\", with писание, \"writing\", from писать, \"to write\": a timetable is written out. Vasmer relates писать to Lithuanian piešti, \"to draw\", and Sanskrit piṃśáti, \"adorns\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84403eb0912f5cda",
+      "sourceHash": "fnv1a64:ce4a8eda880e91c2",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "реклама (rekláma) came through German Reklame from French réclame, first \"the call to a hunting falcon\", from réclamer, \"to call back\", Latin clāmāre, \"to shout\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2833b5b306cce45e",
+      "sourceHash": "fnv1a64:b323026fbb81474e",
       "notice": null,
       "blocks": [
         {
@@ -337,6 +359,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вход (vkhod) is в, \"in\", with ход, \"a going\", from ходить, \"to walk\": the way in."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -347,7 +380,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799e5874c550e665",
+      "sourceHash": "fnv1a64:0daf989847150355",
       "notice": null,
       "blocks": [
         {
@@ -473,6 +506,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выход (výkhod) is вы-, \"out\", with ход, \"a going\": the way out."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -483,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -532,7 +576,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -563,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:291bd683ed5848df",
+      "sourceHash": "fnv1a64:d64fe282ecd9a258",
       "notice": null,
       "blocks": [
         {
@@ -596,6 +640,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "чек (chek) came through English check, \"cheque\". Vasmer traced the English word, through Arabic, to Persian čäk, \"a document\"; English dictionaries take cheque from check, \"a control\", from the chess word check, Persian shāh, \"king\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -606,7 +661,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -655,7 +710,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "svézhiy"
 concept_tag: RU-KACH217-SVEZHIY
 prerequisites: [RU-C217-gladkiy, RU-C217-prokhladnyy]
 sounds: []
-roots: []
+roots: [slavic-svezhi]
+etymology_hook: "свежий ← Proto-Slavic *svěžĭ; Vasmer reports comparisons with Gothic swikns 'pure', with doubts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C217-prokhladnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C217-KACH217-04]; assesses=[] -->
 
 **свежий** (*svézhiy*) — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**свежий** ← Proto-Slavic *\*svěžĭ* — inherited. It has been compared with Gothic *swikns*, "pure", and Lithuanian *sveĩkas*, "healthy", but Vasmer notes doubts about the Latvian evidence, so the origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

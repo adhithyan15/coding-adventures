@@ -10,7 +10,8 @@ gloss: "to shave"
 concept_tag: ES-VERB-AFEITARSE
 prerequisites: [ES-C485-secar, ES-C485-basura]
 sounds: []
-roots: []
+roots: [affectare-latin]
+etymology_hook: "afeitarse — from Latin affectare 'to strive after'; Spanish first used it for adorning, then shaving"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C485-basura]
 > *My father shaves every morning.*
 
 Reflexive, because you shave yourself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**afeitar** ← Latin *affectare*, "to strive after" (Lewis & Short). In Spanish it first meant "to adorn, to make up", and only later "to shave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

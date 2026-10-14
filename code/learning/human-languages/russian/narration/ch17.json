@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "But, Twice Over",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1b20cd90c405962d",
+  "sourceHash": "fnv1a64:ad3e5de8f50d5276",
   "lessons": [
     {
       "id": "RU-C17-no",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f6d5e847ef2e7065",
+      "sourceHash": "fnv1a64:b412c510647e4660",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -601,6 +601,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "другой (drugóy) was first the same word as друг, \"friend\", says Vasmer: Proto-Slavic drugŭ, \"companion\", a cousin of Lithuanian draũgas, \"companion\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar lens — один … другой …",
           "segments": [
@@ -619,7 +630,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -659,7 +670,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

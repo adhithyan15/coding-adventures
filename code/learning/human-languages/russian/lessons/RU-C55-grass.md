@@ -14,7 +14,8 @@ romanization: "travá"
 concept_tag: RU-NATURE1-GRASS
 prerequisites: [RU-C55-flower, RU-C55-leaf]
 sounds: []
-roots: []
+roots: [slavic-trava]
+etymology_hook: "трава ← Proto-Slavic *trava, from a root 'to consume': grass is what grazing animals eat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C55-leaf]
 <!-- hl-knowledge: introduces=[RU-LEX-C55-NATURE1-04]; assesses=[] -->
 
 **трава** (*travá*) — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**трава** ← Proto-Slavic *\*trava* — inherited, from the root of Old Russian *трути*, "to use up, to consume" (Vasmer): grass as the fodder that is eaten. The same root is in *травить*, "to poison".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

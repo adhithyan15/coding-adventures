@@ -14,7 +14,8 @@ romanization: "pólnoch"
 concept_tag: RU-TIME83-MIDNIGHT
 prerequisites: [RU-C82-such, RU-C83-midday]
 sounds: []
-roots: []
+roots: [pie-nokwts]
+etymology_hook: "полночь is пол- 'half' + ночь 'night'; Latin nox and English night are cousins of ночь"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C83-midday]
 <!-- hl-knowledge: introduces=[RU-LEX-C83-TIME83-02]; assesses=[] -->
 
 **полночь** (*pólnoch*) — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полночь** is *пол-*, "half", with *ночь*, "night". *ночь* ← Proto-Slavic *\*noťĭ*, a cousin of Lithuanian *naktìs*, Latin *nox* and English *night* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

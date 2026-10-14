@@ -49,7 +49,8 @@ reviews_of: [RU-C22-kakoy, RU-C19-pochemu, RU-C21-medlenno, RU-C07-sestra]
 
 - **сколько** — *skólka* — **how many, how much**
 
-Stress the first syllable; the final **о** is unstressed and says *a*.
+Stress the first syllable; the final **о** is unstressed and says *a*. Vasmer traces
+it to Proto-Slavic *\*kolikŭ*, "how great", with an *с-* probably from *sŭ*, "about".
 
 English splits this question in two and makes you choose: *how many* for things
 you can count, *how much* for things you cannot. Russian does not. One word
@@ -57,9 +58,6 @@ covers both, and the noun after it changes shape instead — which is a case thi
 book has not opened, so for now keep to the question on its own.
 
 - **сколько?** — a complete question, like the rest of the family.
-
-The smallest answer it can take is **один**, the number whose root became English
-*one*, *an*, *a*, *alone* and *only*.
 
 Its answer word is **столько**, "that many" — the same swap you saw when
 **почему** became **потому**: question-stem out, pointing-stem in.
@@ -81,9 +79,6 @@ question-stem wearing a different ending:
 Seven questions, one root. And two of them have pointing-word answers built by
 the same swap — **потому** for **почему**, **столько** for **сколько** — so the
 family supplies its own replies.
-
-Learning any one of these in Russian really is most of the way to learning all of
-them, which is not true of the English set at all.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SKOLKO-01, RU-GRAMMAR-QUESTION-FAMILY-01] -->

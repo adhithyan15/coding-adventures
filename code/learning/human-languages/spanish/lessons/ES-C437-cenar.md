@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CENAR
 prerequisites: [ES-C437-tardar, ES-C07-comer]
 sounds: []
 roots: []
+etymology_hook: "cenar ← Latin cenare, from cena 'the main meal of the day'"
 duration:
   max_seconds: 235
 requires:
@@ -61,6 +62,9 @@ anything at all today.
 
 So the three verbs are a set, and *comer* belongs to it as well as to the
 general sense.
+
+*Cenar* is Latin *cenare*, from *cena*, the main meal of the Roman day (Lewis &
+Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-05, ES-LEX-COMER, ES-LEX-C437-PLAN-04] -->

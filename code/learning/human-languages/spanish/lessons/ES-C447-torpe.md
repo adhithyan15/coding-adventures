@@ -11,6 +11,7 @@ concept_tag: ES-QUAL-TORPE
 prerequisites: [ES-C447-urgencia, ES-C380-feo]
 sounds: [stress-penultimate, r-tap]
 roots: [turpis-latin]
+etymology_hook: "torpe ← Latin turpis 'ugly, shameful' — English turpitude"
 duration:
   max_seconds: 275
 requires:

@@ -14,7 +14,8 @@ romanization: "khodít"
 concept_tag: RU-VERB-KHODIT
 prerequisites: [RU-C143-letat, RU-C143-yezdit]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "ходить ← Proto-Slavic *xoditi, from ход 'a going'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C143-yezdit]
 <!-- hl-knowledge: introduces=[RU-LEX-C143-ACT143-03]; assesses=[] -->
 
 **ходить** (*khodít*) — "to walk, to go (on foot)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ходить** ← Proto-Slavic *\*xoditi*, built on *ход*, "a going" (Vasmer) — inherited. The same root is in *вход*, "entrance", and *выход*, "exit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

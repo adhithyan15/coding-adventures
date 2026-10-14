@@ -14,7 +14,8 @@ romanization: "nómer"
 concept_tag: RU-VESHCH255-NOMER
 prerequisites: [RU-C255-familiya, RU-C255-vozrast]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "номер came through German Nummer from Latin numerus 'a number'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C255-vozrast]
 <!-- hl-knowledge: introduces=[RU-LEX-C255-VESHCH255-03]; assesses=[] -->
 
 **номер** (*nómer*) — "a number; a hotel room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**номер** — *нумер* in 1704; the form with *-о-* comes from German *Nummer*, from Latin *numerus*, "a number" (Vasmer). A hotel room is a numbered room.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-FIX-RUEDA
 prerequisites: [ES-C449-freno, ES-C347-alrededor, ES-C363-bicicleta]
 sounds: [diphthong-ue, d-soft, stress-penultimate]
 roots: [rota-latin]
+etymology_hook: "rueda ← Latin rota 'wheel': stressed o became ue — English rotate, rotunda"
 duration:
   max_seconds: 275
 requires:

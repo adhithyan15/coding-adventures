@@ -10,7 +10,8 @@ gloss: "to have fun, to enjoy yourself"
 concept_tag: ES-VERB-DIVERTIRSE
 prerequisites: [ES-C487-preocuparse, ES-C487-relajarse]
 sounds: []
-roots: []
+roots: [divertere-latin]
+etymology_hook: "divertirse ← Latin divertere 'to turn aside': di- + vertere 'to turn' — English divert"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C487-relajarse]
 > *We had a lot of fun at the party.*
 
 The e breaks into ie under stress: *me divierto*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divertir** ← Latin *divertere*, "to turn aside" (EtymDB 2.1): *di-*, "apart", and *vertere*, "to turn". Fun is a turning aside from cares.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
