@@ -27,6 +27,57 @@ fn conditional_identity_specialization_keeps_nonidentity_calls() {
 }
 
 #[test]
+fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity() {
+    fn declaration(node: &GrammarASTNode) -> &GrammarASTNode {
+        if node.rule_name == "procedure_decl" { return node; }
+        direct_nodes(node).into_iter().find_map(|child| {
+            fn find(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+                if node.rule_name == "procedure_decl" { return Some(node); }
+                direct_nodes(node).into_iter().find_map(find)
+            }
+            find(child)
+        }).expect("procedure declaration")
+    }
+    let ast = parse_algol("begin real procedure relay(x); real x; relay := x end");
+    let decl = declaration(&ast).clone();
+    let mut compiler = Compiler::default();
+    compiler.register_proc_sig(&decl).unwrap();
+    let identity = compiler.resolve_procedure_identity("relay");
+    let sig = compiler.proc_sigs[&identity].clone();
+    assert!(compiler.is_read_once_real_name_identity(&identity, &sig));
+    for mutation in 0..5 {
+        let mut damaged = decl.clone();
+        match mutation {
+            0 => damaged.children.push(ASTNodeOrToken::Node(first_direct_node(&decl, "proc_body").unwrap().clone())),
+            1 => {
+                let ASTNodeOrToken::Node(body) = damaged.children.iter_mut().find(|child| matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="proc_body")).unwrap() else { unreachable!() };
+                body.children.push(body.children[0].clone());
+            }
+            2 => damaged.rule_name = "not_a_procedure".into(),
+            3 => {
+                let ASTNodeOrToken::Node(body) = damaged.children.iter_mut().find(|child| matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="proc_body")).unwrap() else { unreachable!() };
+                body.children.clear();
+            }
+            _ => damaged.children.retain(|child| !matches!(child,ASTNodeOrToken::Node(n) if n.rule_name=="formal_params")),
+        }
+        compiler.proc_decls.insert(identity.clone(), damaged);
+        assert!(!compiler.is_read_once_real_name_identity(&identity, &sig), "damaged tree {mutation}");
+    }
+    compiler.proc_decls.insert(identity.clone(), decl);
+    let mut wrong_sig = sig.clone(); wrong_sig.ret = Some(ScalarType::Integer);
+    assert!(!compiler.is_read_once_real_name_identity(&identity, &wrong_sig));
+    wrong_sig = sig.clone(); wrong_sig.params[0].mode = ProcedureParamMode::Value;
+    assert!(!compiler.is_read_once_real_name_identity(&identity, &wrong_sig));
+    compiler.proc_scope_names.push(HashSet::new());
+    let other = parse_algol("begin real procedure relay(x); real x; relay := x + x end");
+    compiler.register_proc_sig(declaration(&other)).unwrap();
+    let shadow = compiler.resolve_procedure_identity("relay");
+    assert_ne!(shadow, identity);
+    assert!(!compiler.is_read_once_real_name_identity(&shadow, &compiler.proc_sigs[&shadow]));
+    assert!(compiler.is_read_once_real_name_identity(&identity, &sig));
+}
+
+#[test]
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
     let mut failures = Vec::new();
     for (name, expression) in [
