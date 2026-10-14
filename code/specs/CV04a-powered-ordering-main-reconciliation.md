@@ -1,5 +1,49 @@
 # CV04a: powered selectors and automatic lane ordering
 
+## October14 resume frame
+
+The new complete resume audit pins main
+`5526f94f956ac390fc667af525dabef602ec7fce`; the published sole PR17288 remains
+at822 with real merge conflicts, terminal Linux/CI-gate failures and auto-merge
+OFF. The closed inventory from native main160 contains31,873 changed paths,
+202 implementation/spec/grammar/CI paths. The earlier894 frame remains historical.
+Source867 includes the explicit false fixture repair after actual cfa compile
+EXIT101/E0063; no new ordering/powered runtime validation is claimed yet.
+
+New imports include orthogonal hops, nested/default Swimlane lanes, cross-lane
+ranks/crossing minimization, state/note/internal shapes and positional link
+styles/curves; further bounded ALGOL standard transforms/name actuals; Chief
+per-host workers and macOS sandbox/broker shims; native Mosaic Path binding,
+file-operation names, Compose pipeline mode and TaskApp's calendar grid; CI
+leaf-target/NDK/discovery repairs and source/content policy shards. Record exact
+mode/type/blob imports before changing owned compatibility fixtures. Resolve
+actual source conflicts without discarding either upstream behavior or prior
+owned regressions. Every new required owned fixture field needs an explicit
+behavior-preserving value and an actual compile-red record before repair.
+
+Retain the exact line-hop work controls while reconciling the new orthogonal
+segment traversal. Preserve ordered segment/crossing identities, duplicate
+drawing multiplicity, styles/markers and visible/invisible/curved eligibility.
+Reassess the ordering proposal against the imported rank/crossing algorithms;
+its arithmetic proof does not validate their implementation. Extend the bounded
+selector controls to actual changed admission paths rather than assuming older
+value/name evidence covers new standard transforms and name actuals.
+
+Compute the full affected reverse cones from current metadata and validate
+changed compiler/native/Mosaic/Chief/diagram consumers and relevant CI/build
+tool changes. Prior3347/211 evidence remains attributed to source282/main160;
+retain only demonstrably unchanged complete source domains. No Windows probe
+clears the published Linux failure, and no source-only content inventory proves
+book/runtime correctness. Primary unrelated edits remain untouched.
+
+The short-lived original build-plan artifact is now absent from the live CI
+run. Preserve its original archive/plan/receipt hashes and the actual failed
+audit77312. A bounded audit refinement records UNAVAILABLE with fresh artifact
+acceptance false; it does not weaken any required check or overwrite historical
+evidence. Current job/head metadata still confirms LinuxFAILURE and macOS/
+WindowsSUCCESS; all-three acceptance stays false. All final security/CI/merge
+gates and Miri DEFERRED/PENDING requirements below remain binding.
+
 ## Source boundary
 
 This bounded reconciliation starts after actual native session97289 EXIT0 at
