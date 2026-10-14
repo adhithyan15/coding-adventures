@@ -859,9 +859,15 @@ operators lower to the same recursive Railroad IR. Predicate labels preserve
 the pinned transformer's special-node convention, and a pinned syntax corpus
 plus native Metal-to-PNG fixture exercise the backend-neutral path.
 
+Railroad `padding`, `verticalSeparation`, and `horizontalSeparation` settings
+from Mermaid init directives or YAML front matter survive typed semantic IR.
+Layout applies them to outer bounds, rule and branch separation, and sequential
+element spacing and content boxes before PaintScene lowering; the resolved values remain
+available as backend-neutral scene metadata.
+
 This is intentionally partial. Upstream curve geometry, theme/config
-overrides, and exact typography remain unsupported rather than being counted
-as compatible.
+overrides beyond the documented spacing fields, and exact typography remain
+unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 

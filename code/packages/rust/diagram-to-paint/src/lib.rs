@@ -1960,13 +1960,13 @@ fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Po
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new(); let mut text_children = Vec::new();
-    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.config.padding, 5.0, diagram.width - diagram.config.padding * 2.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
     for rule in &diagram.rules {
         let center = rule.y + rule.height / 2.0;
-        text_children.push(text_node_no_wrap(&rule.name, 10.0, center - 14.0, 92.0, 28.0,
+        text_children.push(text_node_no_wrap(&rule.name, diagram.config.padding, center - 14.0, 92.0, 28.0,
             options.label_font.clone(), Color { r: 30, g: 64, b: 175, a: 255 }));
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: 110.0, cy: center,
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: diagram.config.padding + 100.0, cy: center,
             rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
         let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
         instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: end_x + 6.0, cy: center,
@@ -1979,8 +1979,10 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: element.x, y: element.y,
                 width: element.width, height: element.height, fill: Some(fill.into()), stroke: Some(stroke.into()),
                 stroke_width: Some(1.7), corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
-            text_children.push(text_node_no_wrap(&element.label, element.x + 10.0, element.y + 7.0,
-                element.width - 20.0, 24.0, options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+            text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
+                element.y + (element.height - 24.0) / 2.0,
+                (element.width - diagram.config.padding * 2.0).max(1.0), 24.0,
+                options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -1990,9 +1992,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.extend(text_scene.instructions); let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("railroad.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("railroad.verticalSeparation".into(), diagram.config.vertical_separation.to_string());
+    metadata.insert("railroad.horizontalSeparation".into(), diagram.config.horizontal_separation.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
