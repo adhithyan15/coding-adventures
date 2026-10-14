@@ -2647,6 +2647,23 @@ fn swimlane_flowchart_wrapping_width_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_node_padding_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    padding: 24\n---\n{source}"
+    )).expect("Flowchart node padding front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"padding\": 20}}}}}}%%\n{source}"
+    )).expect("Flowchart node padding init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.padding, Some(24.0));
+    assert_eq!(directive.flowchart_config.padding, Some(20.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    padding: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart node padding must be rejected");
+}
+
+#[test]
 fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeCurve;
 
