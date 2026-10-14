@@ -99,6 +99,7 @@
     "flowchart-curve-config",
     "flowchart-spacing-config",
     "flowchart-wrapping-width",
+    "flowchart-node-padding",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

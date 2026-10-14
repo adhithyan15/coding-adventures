@@ -334,14 +334,16 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
     let outer_padding = diagram.flowchart_config.diagram_padding.unwrap_or(12.0);
     let lane_gap = diagram.flowchart_config.node_spacing.unwrap_or(12.0);
     let node_width = 132.0;
-    let node_height = 54.0;
+    let node_height = diagram.flowchart_config.padding
+        .map(|padding| 26.0 + padding * 2.0).unwrap_or(54.0).max(54.0);
     let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram, &link_gaps)?;
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_count = max_rank.checked_add(1).ok_or(SwimlaneLayoutError::RankArithmeticOverflow)?;
     let rank_slot_width = diagram.nodes.iter().map(|node|
         swimlane_node_width(&node.shape, &node.label, &node.style,
-            diagram.theme.font_size.unwrap_or(13.0), diagram.flowchart_config.wrapping_width)
+            diagram.theme.font_size.unwrap_or(13.0), diagram.flowchart_config.wrapping_width,
+            diagram.flowchart_config.padding)
     ).fold(node_width, f64::max);
     let max_group_depth = diagram.groups.iter().map(|group| {
         let mut depth = 1usize;
@@ -353,7 +355,8 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
         }
         depth
     }).max().unwrap_or(0);
-    let lane_cross = 150.0 + 60.0 * max_group_depth as f64;
+    let lane_cross = if horizontal_flow { 150.0 } else { (rank_slot_width + 18.0).max(150.0) }
+        + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
         lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
     } else if cross_lane_ranks.is_some() {
@@ -364,7 +367,7 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
                 diagram.nodes.iter().find(|node| &node.id == node_id)
                     .map(|node| swimlane_node_width(
                         &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
-                        diagram.flowchart_config.wrapping_width,
+                        diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
                     ))
             }).collect::<Vec<_>>();
             let gap_units = lane.node_ids.windows(2).map(|pair|
@@ -445,11 +448,10 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
                 DiagramShape::LightningBolt => (35.0, 70.0),
-                _ if horizontal_flow => (swimlane_node_width(
+                _ => (swimlane_node_width(
                     &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
-                    diagram.flowchart_config.wrapping_width,
+                    diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
                 ), node_height),
-                _ => (node_width, node_height),
             };
             let rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.get(node_id)).copied();
             let (node_x, node_y) = if let (true, Some(rank)) = (horizontal_flow, rank) {
@@ -950,6 +952,7 @@ fn swimlane_node_width(
     style: &diagram_ir::DiagramStyle,
     theme_font_size: f64,
     wrapping_width: Option<f64>,
+    padding: Option<f64>,
 ) -> f64 {
     match shape {
         DiagramShape::Anchor => 2.0,
@@ -960,8 +963,10 @@ fn swimlane_node_width(
         _ => {
             let font_scale = style.font_size.unwrap_or(theme_font_size) / 13.0;
             let weight_scale = if style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
-            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + 28.0)
-                .clamp(132.0, wrapping_width.unwrap_or(360.0).max(132.0))
+            let horizontal_padding = padding.map(|value| value * 2.0).unwrap_or(28.0);
+            let minimum_width = 104.0 + horizontal_padding;
+            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + horizontal_padding)
+                .clamp(minimum_width, wrapping_width.unwrap_or(360.0).max(minimum_width))
         }
     }
 }

@@ -3651,6 +3651,16 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::GlyphRun(run) if run.glyphs.len() > 20
                 )), "wrapped node text must lower to backend-neutral glyph paint");
             }
+            if fixture_name == "flowchart-node-padding" {
+                assert_eq!(layout.flowchart_config.padding, Some(24.0));
+                assert_eq!((layout.nodes[0].width, layout.nodes[0].height), (152.0, 74.0),
+                    "padding must expand backend-neutral process-node geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.width == 152.0 && rect.height == 74.0
+                )), "padded process geometry must lower to portable rectangle paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.padding")), Some(&"24".to_string()));
+            }
             if fixture_name == "flowchart-curve-config" {
                 assert_eq!(layout.flowchart_config.curve,
                     Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));

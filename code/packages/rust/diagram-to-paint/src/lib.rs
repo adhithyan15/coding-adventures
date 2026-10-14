@@ -1561,7 +1561,15 @@ where
                     node.width - 16.0,
                     node.height * 2.0 / 3.0 - 8.0,
                 ),
-                _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                _ => diagram.flowchart_config.padding.map_or(
+                    (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                    |padding| (
+                        node.x + padding,
+                        node.y + padding,
+                        (node.width - padding * 2.0).max(1.0),
+                        (node.height - padding * 2.0).max(1.0),
+                    ),
+                ),
             };
             text_children.push(text_node(
                 &node.label,
@@ -1689,6 +1697,9 @@ where
     }
     if let Some(width) = diagram.flowchart_config.wrapping_width {
         metadata.insert("swimlane.flowchart.wrappingWidth".into(), width.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.padding {
+        metadata.insert("swimlane.flowchart.padding".into(), padding.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
