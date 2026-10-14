@@ -52,6 +52,7 @@
     "theme-variables",
     "theme-typography-variables",
     "theme-edge-label-variables",
+    "theme-cluster-variables",
     "inline-node-styles",
     "node-typography-styles",
     "node-corner-radius-styles",
