@@ -1,0 +1,1036 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C207-bbsa
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12480
+chapter: 207
+type: word
+headword: "ব্যবসা"
+gloss: "business"
+romanization: "bæbsā"
+concept_tag: BN-KAJ207-BBSA
+prerequisites: [BN-C207-dokandar, BN-C207-khodder]
+sounds: []
+roots: [sanskrit-vyavasaya]
+etymology_hook: "bæbsā ← Sanskrit vyavasāya 'resolve; trade', a tadbhava (CDIAL 11831)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C207-KAJ207-02, BN-LEX-C207-KAJ207-03]
+introduces:
+  knowledge: [BN-LEX-C207-KAJ207-04]
+practises:
+  knowledge: [BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-02, BN-LEX-C207-KAJ207-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C207-khodder]
+---
+
+# ব্যবসা (bæbsā) — business
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-02, BN-LEX-C207-KAJ207-03] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a shopkeeper, then the Bengali for a customer.
+
+## You'll want to know: ব্যবসা
+<!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-04]; assesses=[] -->
+
+**ব্যবসা** — *bæbsā* — "business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যবসা** (*bæbsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vyavasāya*, "resolve; trade" (CDIAL 11831). CDIAL lists Bengali *byabsā*, "business", and notes the pull of the learned *byabasāyī*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-02, BN-LEX-C207-KAJ207-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *bæbsā*]
+- [YOU SAY: *bæbsā*, once more]
+- [YOU SAY: say *bæbsā*]
+- [YOU RECALL: say the Bengali for a shopkeeper, then the Bengali for a customer, then say *bæbsā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-02, BN-LEX-C207-KAJ207-03] -->
+
+[PAUSE 3s] What does ব্যবসা mean? ("Business".) Say it once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C207-dam
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12450
+chapter: 207
+type: word
+headword: "দাম"
+gloss: "a price"
+romanization: "dām"
+concept_tag: BN-KAJ207-DAM
+prerequisites: [BN-C206-tre, BN-C206-chhakni]
+sounds: []
+roots: [sanskrit-dramma]
+etymology_hook: "dām ← Sanskrit dramma 'a coin', a tadbhava (CDIAL 6622)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C206-JINIS206-04, BN-LEX-C206-JINIS206-05]
+introduces:
+  knowledge: [BN-LEX-C207-KAJ207-01]
+practises:
+  knowledge: [BN-LEX-C207-KAJ207-01, BN-LEX-C206-JINIS206-04, BN-LEX-C206-JINIS206-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C206-chhakni]
+---
+
+# দাম (dām) — a price
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C206-JINIS206-04, BN-LEX-C206-JINIS206-05] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a tray, then the Bengali for a strainer.
+
+## You'll want to know: দাম
+<!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-01]; assesses=[] -->
+
+**দাম** — *dām* — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাম** (*dām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dramma*, "a coin" (CDIAL 6622). CDIAL lists Bengali *dām*, "price", and takes *dramma* from Greek *drachmē* through Middle Persian.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-01, BN-LEX-C206-JINIS206-04, BN-LEX-C206-JINIS206-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dām*]
+- [YOU SAY: *dām*, once more]
+- [YOU SAY: say *dām*]
+- [YOU RECALL: say the Bengali for a tray, then the Bengali for a strainer, then say *dām* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-01, BN-LEX-C206-JINIS206-04, BN-LEX-C206-JINIS206-05] -->
+
+[PAUSE 3s] What does দাম mean? ("A price".) Say it once more.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C207-dokandar
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12460
+chapter: 207
+type: word
+headword: "দোকানদার"
+gloss: "a shopkeeper"
+romanization: "dokāndār"
+concept_tag: BN-KAJ207-DOKANDAR
+prerequisites: [BN-C206-chhakni, BN-C207-dam]
+sounds: []
+roots: [arabic-dukkan, persian-dar]
+etymology_hook: "dokāndār: dokān 'shop' ← Arabic dukkān, through Persian, + Persian -dār 'holder'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C206-JINIS206-05, BN-LEX-C207-KAJ207-01]
+introduces:
+  knowledge: [BN-LEX-C207-KAJ207-02]
+practises:
+  knowledge: [BN-LEX-C207-KAJ207-02, BN-LEX-C206-JINIS206-05, BN-LEX-C207-KAJ207-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C207-dam]
+---
+
+# দোকানদার (dokāndār) — a shopkeeper
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C206-JINIS206-05, BN-LEX-C207-KAJ207-01] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a strainer, then the Bengali for a price.
+
+## You'll want to know: দোকানদার
+<!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-02]; assesses=[] -->
+
+**দোকানদার** — *dokāndār* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দোকানদার** (*dokāndār*) is *dokān*, "shop", from Arabic *dukkān*, which reached Bengali through Persian (Lane), + the Persian ending *-dār*, "holder".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-02, BN-LEX-C206-JINIS206-05, BN-LEX-C207-KAJ207-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dokāndār*]
+- [YOU SAY: *dokāndār*, once more]
+- [YOU SAY: say *dokāndār*]
+- [YOU RECALL: say the Bengali for a strainer, then the Bengali for a price, then say *dokāndār* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-02, BN-LEX-C206-JINIS206-05, BN-LEX-C207-KAJ207-01] -->
+
+[PAUSE 3s] What does দোকানদার mean? ("A shopkeeper".) Say it once more.
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C207-khodder
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12470
+chapter: 207
+type: word
+headword: "খদ্দের"
+gloss: "a customer"
+romanization: "khôdder"
+concept_tag: BN-KAJ207-KHODDER
+prerequisites: [BN-C207-dam, BN-C207-dokandar]
+sounds: []
+roots: [persian-kharidar]
+etymology_hook: "khôdder: usually traced to Persian kharīdār 'buyer'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C207-KAJ207-01, BN-LEX-C207-KAJ207-02]
+introduces:
+  knowledge: [BN-LEX-C207-KAJ207-03]
+practises:
+  knowledge: [BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-01, BN-LEX-C207-KAJ207-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C207-dokandar]
+---
+
+# খদ্দের (khôdder) — a customer
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-01, BN-LEX-C207-KAJ207-02] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a price, then the Bengali for a shopkeeper.
+
+## You'll want to know: খদ্দের
+<!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-03]; assesses=[] -->
+
+**খদ্দের** — *khôdder* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খদ্দের** (*khôdder*) is usually traced to Persian *kharīdār*, "buyer", worn down in Bengali.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-01, BN-LEX-C207-KAJ207-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *khôdder*]
+- [YOU SAY: *khôdder*, once more]
+- [YOU SAY: say *khôdder*]
+- [YOU RECALL: say the Bengali for a price, then the Bengali for a shopkeeper, then say *khôdder* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-01, BN-LEX-C207-KAJ207-02] -->
+
+[PAUSE 3s] What does খদ্দের mean? ("A customer".) Say it once more.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C207-kompani
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12490
+chapter: 207
+type: word
+headword: "কোম্পানি"
+gloss: "a company"
+romanization: "kompāni"
+concept_tag: BN-KAJ207-KOMPANI
+prerequisites: [BN-C207-khodder, BN-C207-bbsa]
+sounds: []
+roots: [english-company]
+etymology_hook: "kompāni ← English company"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-04]
+introduces:
+  knowledge: [BN-LEX-C207-KAJ207-05]
+practises:
+  knowledge: [BN-LEX-C207-KAJ207-05, BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C207-bbsa]
+---
+
+# কোম্পানি (kompāni) — a company
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-04] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a customer, then the Bengali for business.
+
+## You'll want to know: কোম্পানি
+<!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-05]; assesses=[] -->
+
+**কোম্পানি** — *kompāni* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কোম্পানি** (*kompāni*) is a loan from English *company*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-05, BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kompāni*]
+- [YOU SAY: *kompāni*, once more]
+- [YOU SAY: say *kompāni*]
+- [YOU RECALL: say the Bengali for a customer, then the Bengali for business, then say *kompāni* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-05, BN-LEX-C207-KAJ207-03, BN-LEX-C207-KAJ207-04] -->
+
+[PAUSE 3s] What does কোম্পানি mean? ("A company".) Say it once more.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C208-mali
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12520
+chapter: 208
+type: word
+headword: "মালি"
+gloss: "a gardener"
+romanization: "māli"
+concept_tag: BN-KAJ208-MALI
+prerequisites: [BN-C208-pailot, BN-C208-nabik]
+sounds: []
+roots: [sanskrit-malin]
+etymology_hook: "māli ← Sanskrit mālin 'garlanded; gardener', a tadbhava (CDIAL 10094)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C208-KAJ208-01, BN-LEX-C208-KAJ208-02]
+introduces:
+  knowledge: [BN-LEX-C208-KAJ208-03]
+practises:
+  knowledge: [BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-01, BN-LEX-C208-KAJ208-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C208-nabik]
+---
+
+# মালি (māli) — a gardener
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-01, BN-LEX-C208-KAJ208-02] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a pilot, then the Bengali for a sailor.
+
+## You'll want to know: মালি
+<!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-03]; assesses=[] -->
+
+**মালি** — *māli* — "a gardener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মালি** (*māli*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mālin*, "garlanded; gardener" (CDIAL 10094). CDIAL lists Bengali *māli*, "gardener".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-01, BN-LEX-C208-KAJ208-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *māli*]
+- [YOU SAY: *māli*, once more]
+- [YOU SAY: say *māli*]
+- [YOU RECALL: say the Bengali for a pilot, then the Bengali for a sailor, then say *māli* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-01, BN-LEX-C208-KAJ208-02] -->
+
+[PAUSE 3s] What does মালি mean? ("A gardener".) Say it once more.
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C208-mnejar
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12540
+chapter: 208
+type: word
+headword: "ম্যানেজার"
+gloss: "a manager"
+romanization: "mænejār"
+concept_tag: BN-KAJ208-MNEJAR
+prerequisites: [BN-C208-mali, BN-C208-sochib]
+sounds: []
+roots: [english-manager]
+etymology_hook: "mænejār ← English manager"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-04]
+introduces:
+  knowledge: [BN-LEX-C208-KAJ208-05]
+practises:
+  knowledge: [BN-LEX-C208-KAJ208-05, BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C208-sochib]
+---
+
+# ম্যানেজার (mænejār) — a manager
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-04] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a gardener, then the Bengali for a secretary.
+
+## You'll want to know: ম্যানেজার
+<!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-05]; assesses=[] -->
+
+**ম্যানেজার** — *mænejār* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ম্যানেজার** (*mænejār*) is a loan from English *manager*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-05, BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *mænejār*]
+- [YOU SAY: *mænejār*, once more]
+- [YOU SAY: say *mænejār*]
+- [YOU RECALL: say the Bengali for a gardener, then the Bengali for a secretary, then say *mænejār* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-05, BN-LEX-C208-KAJ208-03, BN-LEX-C208-KAJ208-04] -->
+
+[PAUSE 3s] What does ম্যানেজার mean? ("A manager".) Say it once more.
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C208-nabik
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12510
+chapter: 208
+type: word
+headword: "নাবিক"
+gloss: "a sailor"
+romanization: "nābik"
+concept_tag: BN-KAJ208-NABIK
+prerequisites: [BN-C207-kompani, BN-C208-pailot]
+sounds: []
+roots: [sanskrit-navika]
+etymology_hook: "nābik ← Sanskrit nāvika 'boatman, sailor', a tatsama"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C207-KAJ207-05, BN-LEX-C208-KAJ208-01]
+introduces:
+  knowledge: [BN-LEX-C208-KAJ208-02]
+practises:
+  knowledge: [BN-LEX-C208-KAJ208-02, BN-LEX-C207-KAJ207-05, BN-LEX-C208-KAJ208-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C208-pailot]
+---
+
+# নাবিক (nābik) — a sailor
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-05, BN-LEX-C208-KAJ208-01] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a company, then the Bengali for a pilot.
+
+## You'll want to know: নাবিক
+<!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-02]; assesses=[] -->
+
+**নাবিক** — *nābik* — "a sailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাবিক** (*nābik*) is Sanskrit *nāvika*, "boatman, sailor", taken over whole as a learned loan, a tatsama.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-02, BN-LEX-C207-KAJ207-05, BN-LEX-C208-KAJ208-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *nābik*]
+- [YOU SAY: *nābik*, once more]
+- [YOU SAY: say *nābik*]
+- [YOU RECALL: say the Bengali for a company, then the Bengali for a pilot, then say *nābik* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-02, BN-LEX-C207-KAJ207-05, BN-LEX-C208-KAJ208-01] -->
+
+[PAUSE 3s] What does নাবিক mean? ("A sailor".) Say it once more.
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C208-pailot
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12500
+chapter: 208
+type: word
+headword: "পাইলট"
+gloss: "a pilot"
+romanization: "pāilôṭ"
+concept_tag: BN-KAJ208-PAILOT
+prerequisites: [BN-C207-bbsa, BN-C207-kompani]
+sounds: []
+roots: [english-pilot]
+etymology_hook: "pāilôṭ ← English pilot"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-05]
+introduces:
+  knowledge: [BN-LEX-C208-KAJ208-01]
+practises:
+  knowledge: [BN-LEX-C208-KAJ208-01, BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C207-kompani]
+---
+
+# পাইলট (pāilôṭ) — a pilot
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-05] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for business, then the Bengali for a company.
+
+## You'll want to know: পাইলট
+<!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-01]; assesses=[] -->
+
+**পাইলট** — *pāilôṭ* — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাইলট** (*pāilôṭ*) is a loan from English *pilot*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-01, BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *pāilôṭ*]
+- [YOU SAY: *pāilôṭ*, once more]
+- [YOU SAY: say *pāilôṭ*]
+- [YOU RECALL: say the Bengali for business, then the Bengali for a company, then say *pāilôṭ* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-01, BN-LEX-C207-KAJ207-04, BN-LEX-C207-KAJ207-05] -->
+
+[PAUSE 3s] What does পাইলট mean? ("A pilot".) Say it once more.
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C208-sochib
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 12530
+chapter: 208
+type: word
+headword: "সচিব"
+gloss: "a secretary (government official)"
+romanization: "sôchib"
+concept_tag: BN-KAJ208-SOCHIB
+prerequisites: [BN-C208-nabik, BN-C208-mali]
+sounds: []
+roots: [sanskrit-saciva]
+etymology_hook: "sôchib ← Sanskrit saciva 'companion; minister', a tatsama"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C208-KAJ208-02, BN-LEX-C208-KAJ208-03]
+introduces:
+  knowledge: [BN-LEX-C208-KAJ208-04]
+practises:
+  knowledge: [BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-02, BN-LEX-C208-KAJ208-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C208-mali]
+---
+
+# সচিব (sôchib) — a secretary (government official)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-02, BN-LEX-C208-KAJ208-03] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a sailor, then the Bengali for a gardener.
+
+## You'll want to know: সচিব
+<!-- hl-knowledge: introduces=[BN-LEX-C208-KAJ208-04]; assesses=[] -->
+
+**সচিব** — *sôchib* — "a secretary (government official)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সচিব** (*sôchib*) is Sanskrit *saciva*, "companion; minister", taken over whole as a learned loan, a tatsama.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-02, BN-LEX-C208-KAJ208-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sôchib*]
+- [YOU SAY: *sôchib*, once more]
+- [YOU SAY: say *sôchib*]
+- [YOU RECALL: say the Bengali for a sailor, then the Bengali for a gardener, then say *sôchib* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-02, BN-LEX-C208-KAJ208-03] -->
+
+[PAUSE 3s] What does সচিব mean? ("A secretary (government official)".) Say it once more.
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C209-dhar-deoya
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 12720
+chapter: 209
+type: word
+headword: "ধার দেওয়া"
+gloss: "to lend"
+romanization: "dhār deoyā"
+concept_tag: BN-VERB-DHAR-DEOYA
+prerequisites: [BN-C208-mnejar, BN-C209-dhar-neoya]
+sounds: []
+roots: [sanskrit-uddhara, sanskrit-dadati]
+etymology_hook: "dhār deoyā: dhār 'loan' ← uddhāra (CDIAL 2018) + deoyā 'to give' ← dadāti (CDIAL 6141)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C208-KAJ208-05, BN-LEX-C209-ACT209-01]
+introduces:
+  knowledge: [BN-LEX-C209-ACT209-02]
+practises:
+  knowledge: [BN-LEX-C209-ACT209-02, BN-LEX-C208-KAJ208-05, BN-LEX-C209-ACT209-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C209-dhar-neoya]
+---
+
+# ধার দেওয়া (dhār deoyā) — to lend
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-05, BN-LEX-C209-ACT209-01] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a manager, then the Bengali for to borrow.
+
+## You'll want to know: ধার দেওয়া
+<!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-02]; assesses=[] -->
+
+**ধার দেওয়া** — *dhār deoyā* — "to lend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধার দেওয়া** (*dhār deoyā*) is *dhār*, "a loan", from Sanskrit *uddhāra*, "loan" (CDIAL 2018), + *deoyā*, "to give", from Sanskrit *dadāti*, "gives" (CDIAL 6141).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-02, BN-LEX-C208-KAJ208-05, BN-LEX-C209-ACT209-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dhār deoyā*]
+- [YOU SAY: *dhār deoyā*, once more]
+- [YOU SAY: say *dhār deoyā*]
+- [YOU RECALL: say the Bengali for a manager, then the Bengali for to borrow, then say *dhār deoyā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-02, BN-LEX-C208-KAJ208-05, BN-LEX-C209-ACT209-01] -->
+
+[PAUSE 3s] What does ধার দেওয়া mean? ("To lend".) Say it once more.
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C209-dhar-neoya
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 12710
+chapter: 209
+type: word
+headword: "ধার নেওয়া"
+gloss: "to borrow"
+romanization: "dhār neoyā"
+concept_tag: BN-VERB-DHAR-NEOYA
+prerequisites: [BN-C208-sochib, BN-C208-mnejar]
+sounds: []
+roots: [sanskrit-uddhara, sanskrit-nayati]
+etymology_hook: "dhār neoyā: dhār 'loan' ← uddhāra (CDIAL 2018) + neoyā 'to take' ← nayati (CDIAL 6966)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-05]
+introduces:
+  knowledge: [BN-LEX-C209-ACT209-01]
+practises:
+  knowledge: [BN-LEX-C209-ACT209-01, BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C208-mnejar]
+---
+
+# ধার নেওয়া (dhār neoyā) — to borrow
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-05] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for a secretary (government official), then the Bengali for a manager.
+
+## You'll want to know: ধার নেওয়া
+<!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-01]; assesses=[] -->
+
+**ধার নেওয়া** — *dhār neoyā* — "to borrow".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধার নেওয়া** (*dhār neoyā*) is *dhār*, "a loan", from Sanskrit *uddhāra*, "loan" (CDIAL 2018), + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-01, BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dhār neoyā*]
+- [YOU SAY: *dhār neoyā*, once more]
+- [YOU SAY: say *dhār neoyā*]
+- [YOU RECALL: say the Bengali for a secretary (government official), then the Bengali for a manager, then say *dhār neoyā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-01, BN-LEX-C208-KAJ208-04, BN-LEX-C208-KAJ208-05] -->
+
+[PAUSE 3s] What does ধার নেওয়া mean? ("To borrow".) Say it once more.
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C209-jomano
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 12730
+chapter: 209
+type: word
+headword: "জমানো"
+gloss: "to save up"
+romanization: "jômāno"
+concept_tag: BN-VERB-JOMANO
+prerequisites: [BN-C209-dhar-neoya, BN-C209-dhar-deoya]
+sounds: []
+roots: [sanskrit-yamyate]
+etymology_hook: "jômāno ← Sanskrit yamyate 'is fixed', a tadbhava (CDIAL 10428)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C209-ACT209-01, BN-LEX-C209-ACT209-02]
+introduces:
+  knowledge: [BN-LEX-C209-ACT209-03]
+practises:
+  knowledge: [BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-01, BN-LEX-C209-ACT209-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C209-dhar-deoya]
+---
+
+# জমানো (jômāno) — to save up
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-01, BN-LEX-C209-ACT209-02] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for to borrow, then the Bengali for to lend.
+
+## You'll want to know: জমানো
+<!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-03]; assesses=[] -->
+
+**জমানো** — *jômāno* — "to save up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জমানো** (*jômāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yamyate*, "is fixed" (CDIAL 10428). CDIAL lists Bengali *jamā*, "to collect", and its causing form *jamāna*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-01, BN-LEX-C209-ACT209-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *jômāno*]
+- [YOU SAY: *jômāno*, once more]
+- [YOU SAY: say *jômāno*]
+- [YOU RECALL: say the Bengali for to borrow, then the Bengali for to lend, then say *jômāno* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-01, BN-LEX-C209-ACT209-02] -->
+
+[PAUSE 3s] What does জমানো mean? ("To save up".) Say it once more.
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C209-khoroch-kora
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 12740
+chapter: 209
+type: word
+headword: "খরচ করা"
+gloss: "to spend"
+romanization: "khôrôch kôrā"
+concept_tag: BN-VERB-KHOROCH-KORA
+prerequisites: [BN-C209-dhar-deoya, BN-C209-jomano]
+sounds: []
+roots: [arabic-kharj, sanskrit-karoti]
+etymology_hook: "khôrôch kôrā: khôrôch ← Arabic kharj 'expenditure', through Persian, + kôrā (CDIAL 2814)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C209-ACT209-02, BN-LEX-C209-ACT209-03]
+introduces:
+  knowledge: [BN-LEX-C209-ACT209-04]
+practises:
+  knowledge: [BN-LEX-C209-ACT209-04, BN-LEX-C209-ACT209-02, BN-LEX-C209-ACT209-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C209-jomano]
+---
+
+# খরচ করা (khôrôch kôrā) — to spend
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-02, BN-LEX-C209-ACT209-03] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for to lend, then the Bengali for to save up.
+
+## You'll want to know: খরচ করা
+<!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-04]; assesses=[] -->
+
+**খরচ করা** — *khôrôch kôrā* — "to spend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খরচ করা** (*khôrôch kôrā*) is *khôrôch*, "expense", from Arabic *kharj*, "expenditure", which reached Bengali through Persian (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-04, BN-LEX-C209-ACT209-02, BN-LEX-C209-ACT209-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *khôrôch kôrā*]
+- [YOU SAY: *khôrôch kôrā*, once more]
+- [YOU SAY: say *khôrôch kôrā*]
+- [YOU RECALL: say the Bengali for to lend, then the Bengali for to save up, then say *khôrôch kôrā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-04, BN-LEX-C209-ACT209-02, BN-LEX-C209-ACT209-03] -->
+
+[PAUSE 3s] What does খরচ করা mean? ("To spend".) Say it once more.
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-C209-ojon-kora
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 12750
+chapter: 209
+type: word
+headword: "ওজন করা"
+gloss: "to weigh"
+romanization: "ojôn kôrā"
+concept_tag: BN-VERB-OJON-KORA
+prerequisites: [BN-C209-jomano, BN-C209-khoroch-kora]
+sounds: []
+roots: [arabic-wazn, sanskrit-karoti]
+etymology_hook: "ojôn kôrā: ojôn 'weight' ← Arabic wazn, through Persian, + kôrā (CDIAL 2814)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-04]
+introduces:
+  knowledge: [BN-LEX-C209-ACT209-05]
+practises:
+  knowledge: [BN-LEX-C209-ACT209-05, BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C209-khoroch-kora]
+---
+
+# ওজন করা (ojôn kôrā) — to weigh
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-04] -->
+
+[PAUSE 2s] Before the new one: say the Bengali for to save up, then the Bengali for to spend.
+
+## You'll want to know: ওজন করা
+<!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-05]; assesses=[] -->
+
+**ওজন করা** — *ojôn kôrā* — "to weigh".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওজন করা** (*ojôn kôrā*) is *ojôn*, "weight", from Arabic *wazn*, "weight", which reached Bengali through Persian (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-05, BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ojôn kôrā*]
+- [YOU SAY: *ojôn kôrā*, once more]
+- [YOU SAY: say *ojôn kôrā*]
+- [YOU RECALL: say the Bengali for to save up, then the Bengali for to spend, then say *ojôn kôrā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C209-ACT209-05, BN-LEX-C209-ACT209-03, BN-LEX-C209-ACT209-04] -->
+
+[PAUSE 3s] What does ওজন করা mean? ("To weigh".) Say it once more.
+`;export{x as a,h as c,l as d,s as f,t as h,C as i,p as l,r as m,D as n,y as o,a as p,T as r,_ as s,k as t,d as u};
