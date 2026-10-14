@@ -9694,7 +9694,7 @@ mod tests {
             for (node_spacing, rank_spacing, padding) in [(20.0, 30.0, 40.0), (0.0, 0.0, 0.0)] {
                 let source = format!("---\nconfig:\n  flowchart:\n    nodeSpacing: {node_spacing}\n    rankSpacing: {rank_spacing}\n    diagramPadding: {padding}\n---\n{body}");
                 let parsed = mermaid_parser::parse_swimlane(&source).expect("ordinary spacing parses");
-                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding), wrapping_width: None, curve: None };
+                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding), wrapping_width: None, padding: None, curve: None };
                 assert_eq!(parsed.flowchart_config, config);
                 let mut normalized = parsed.clone(); normalized.flowchart_config = Default::default();
                 assert_eq!(normalized, bare, "every non-config parser field remains exact");
