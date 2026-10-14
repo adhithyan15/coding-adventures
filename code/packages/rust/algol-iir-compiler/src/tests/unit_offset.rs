@@ -38,13 +38,13 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
             find(child)
         }).expect("procedure declaration")
     }
-    let ast = parse_algol("begin real procedure relay(x); real x; relay := x end");
+    let ast = parse_algol("begin real procedure relay(x); real x; relay := x; real saved; saved := 0.0 end");
     let decl = declaration(&ast).clone();
     let mut compiler = Compiler::default();
     compiler.register_proc_sig(&decl).unwrap();
     let identity = compiler.resolve_procedure_identity("relay");
     let sig = compiler.proc_sigs[&identity].clone();
-    assert!(compiler.is_read_once_real_name_identity(&identity, &sig));
+    assert!(compiler.is_read_once_real_name_identity(&identity, &sig), "{decl:#?}");
     for mutation in 0..5 {
         let mut damaged = decl.clone();
         match mutation {
@@ -69,7 +69,7 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
     wrong_sig = sig.clone(); wrong_sig.params[0].mode = ProcedureParamMode::Value;
     assert!(!compiler.is_read_once_real_name_identity(&identity, &wrong_sig));
     compiler.proc_scope_names.push(HashSet::new());
-    let other = parse_algol("begin real procedure relay(x); real x; relay := x + x end");
+    let other = parse_algol("begin real procedure relay(x); real x; relay := x + x; real saved; saved := 0.0 end");
     compiler.register_proc_sig(declaration(&other)).unwrap();
     let shadow = compiler.resolve_procedure_identity("relay");
     assert_ne!(shadow, identity);

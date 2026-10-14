@@ -10,4 +10,6 @@ rejected the candidate before tests ran. A small local function expresses the
 single elided borrowing lifetime directly. Preserve the compilation-failure
 receipt separately; it is not an executed semantic test result.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+Parsed declaration fixtures also need their grammar-required separator before
+the enclosing block's statement. Keep a minimal valid enclosing assignment,
+so a guard test reaches the guard rather than failing in the parser.
