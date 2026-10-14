@@ -1059,7 +1059,8 @@ thick, and dotted links, including labeled links with independently selected poi
 or absent markers at either endpoint, titles, and accessibility
 metadata with named and numeric entity
 decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
-and `lineColor` through semantic and layout IR to default node and edge paint. Direct node
+`lineColor`, `primaryTextColor`, `fontFamily`, and `fontSize` through semantic and layout IR to default
+node, edge, and glyph paint; themed font size also participates in node measurement. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
 weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers

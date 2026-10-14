@@ -6559,6 +6559,10 @@ fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
         main_background: value("mainBkg").unwrap_or(defaults.main_background),
         node_border: value("nodeBorder").unwrap_or(defaults.node_border),
         line_color: value("lineColor").unwrap_or(defaults.line_color),
+        primary_text_color: value("primaryTextColor").unwrap_or(defaults.primary_text_color),
+        font_family: value("fontFamily"),
+        font_size: value("fontSize").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0),
     }
 }
 

@@ -2029,6 +2029,17 @@ fn swimlane_theme_variables_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_theme_typography_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"primaryTextColor\": \"#7c2d12\", \"fontFamily\": \"Helvetica Neue\", \"fontSize\": \"19px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed typography]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme typography should parse");
+
+    assert_eq!(diagram.theme.primary_text_color, "#7c2d12");
+    assert_eq!(diagram.theme.font_family.as_deref(), Some("Helvetica Neue"));
+    assert_eq!(diagram.theme.font_size, Some(19.0));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",

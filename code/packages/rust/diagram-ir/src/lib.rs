@@ -1978,6 +1978,7 @@ pub struct SwimlaneEdge {
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneTheme {
     pub main_background: String, pub node_border: String, pub line_color: String,
+    pub primary_text_color: String, pub font_family: Option<String>, pub font_size: Option<f64>,
 }
 impl Default for SwimlaneTheme {
     fn default() -> Self {
@@ -1985,6 +1986,9 @@ impl Default for SwimlaneTheme {
             main_background: "#ffffff".into(),
             node_border: "#1565c0".into(),
             line_color: "#455a64".into(),
+            primary_text_color: "#0d47a1".into(),
+            font_family: None,
+            font_size: None,
         }
     }
 }

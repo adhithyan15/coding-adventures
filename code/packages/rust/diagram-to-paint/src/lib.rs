@@ -856,6 +856,8 @@ where
             stroke_dash_offset: None,
         }));
         let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
         if let Some(size) = lane.style.font_size { title_font.size = size; }
         if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
         if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
@@ -884,6 +886,8 @@ where
             stroke_dash: group.style.stroke_dash.clone().or_else(|| Some(vec![6.0, 4.0])), stroke_dash_offset: None,
         }));
         let mut label_font = options.label_font.clone();
+        if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
         if let Some(size) = group.style.font_size { label_font.size = size; }
         if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
@@ -1034,6 +1038,8 @@ where
         ));
         if let Some(label) = &edge.label {
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = edge.style.font_size {
                 label_font.size = size;
             }
@@ -1478,10 +1484,12 @@ where
             | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
             | DiagramShape::Summary
         ) {
-            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
-                r: 13, g: 71, b: 161, a: 255,
-            });
+            let text_color = node.style.text_color.as_deref()
+                .unwrap_or(&diagram.theme.primary_text_color);
+            let text_color = parse_css_color(text_color).unwrap_or(Color { r: 13, g: 71, b: 161, a: 255 });
             let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
             if let Some(size) = node.style.font_size {
                 label_font.size = size;
             }
@@ -1583,6 +1591,13 @@ where
     metadata.insert("swimlane.theme.mainBkg".into(), diagram.theme.main_background.clone());
     metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
     metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
+    metadata.insert("swimlane.theme.primaryTextColor".into(), diagram.theme.primary_text_color.clone());
+    if let Some(family) = &diagram.theme.font_family {
+        metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
+    }
+    if let Some(size) = diagram.theme.font_size {
+        metadata.insert("swimlane.theme.fontSize".into(), size.to_string());
+    }
     if let Some(line_hops) = diagram.line_hops {
         metadata.insert("swimlane.lineHops".into(), match line_hops {
             SwimlaneLineHops::Arc => "arc",
