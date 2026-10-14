@@ -98,3 +98,10 @@ against the conservative maximum resolved node height max(nodeHeight,70).
 The unexpanded cross extent max(nodeHeight+18,150) must leave a58-unit prefix
 before content; reserve any deficit once, in addition to the per-title bands.
 This covers every existing fixed-height shape and retains exact zero geometry.
+
+Candidate7731 passes the expanded80 admission/16128 geometry controls. Add a
+cross-layer painter control over four directions, node padding None/100/cap
+and title margins zero/100+7/cap+cap. Compare complete emitted title glyph runs
+(IDs, positions, font and color) with independent declared title boxes lowered
+through the text primitive, and require the glyph extents inside those boxes.
+This is stronger than checking metadata keys or merely finding a title token.
