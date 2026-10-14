@@ -222,6 +222,12 @@ field shapes, script-glyph coverage (where script data exists), and core-concept
 coverage (enforced only for tracks that declare `parity: complete`). The
 integration test runs it against the real curriculum, so drift breaks CI.
 
+The direct etymology-gap owner tests reject linked roots and children on every
+platform. Windows uses a directory junction when native symlink privilege is
+unavailable; Linux CI still exercises the real file-symlink case. The test
+asserts that each fixture is actually a link before checking the loader's
+refusal, so a missing link capability cannot silently turn this guard green.
+
 Exact script-inventory evidence is partitioned by ownership under
 `tests/script-inventories/`. A stable glob in `tests/integration.test.ts`
 discovers those evidence modules while loading the corpus once. Japanese, Urdu,
